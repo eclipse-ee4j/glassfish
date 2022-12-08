@@ -81,14 +81,6 @@ public class ApplicationITest extends RestTestBase {
         }
     }
 
-    private static String getFileNameWithoutSuffix(final String filename) {
-        if (filename.contains(".")) {
-            return filename.substring(0, filename.lastIndexOf("."));
-        } else {
-            return filename;
-        }
-    }
-
     @Test
     public void testApplicationDisableEnable() throws URISyntaxException {
         Map<String, String> deployedApp = deployApp(getWar("test"), appName, appName);
@@ -206,5 +198,12 @@ public class ApplicationITest extends RestTestBase {
         } finally {
             managementClient.delete("/domain/applications/application/" + appName, Map.of("target", "domain"));
         }
+    }
+
+    private static String getFileNameWithoutSuffix(final String filename) {
+        if (filename.contains(".")) {
+            return filename.substring(0, filename.lastIndexOf("."));
+        }
+        return filename;
     }
 }

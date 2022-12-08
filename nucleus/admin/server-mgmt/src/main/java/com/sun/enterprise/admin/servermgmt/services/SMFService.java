@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,30 +17,28 @@
 
 package com.sun.enterprise.admin.servermgmt.services;
 
-import com.sun.enterprise.universal.process.ProcessManager;
-import com.sun.enterprise.universal.process.ProcessManagerException;
-import com.sun.enterprise.util.OS;
-import static com.sun.enterprise.util.StringUtils.ok;
-import com.sun.enterprise.util.SystemPropertyConstants;
-import com.sun.enterprise.util.ProcessExecutor;
-import com.sun.enterprise.util.io.FileUtils;
-import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.enterprise.universal.io.SmartFile;
+import com.sun.enterprise.universal.process.ProcessManager;
+import com.sun.enterprise.util.OS;
+import com.sun.enterprise.util.ProcessExecutor;
+import com.sun.enterprise.util.SystemPropertyConstants;
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.io.ServerDirs;
 
 import java.io.File;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Arrays;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.Properties;
-import static com.sun.enterprise.admin.servermgmt.services.Constants.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import static com.sun.enterprise.admin.servermgmt.services.Constants.AS_ADMIN_USER_TN;
+import static com.sun.enterprise.admin.servermgmt.services.Constants.CREDENTIALS_TN;
+import static com.sun.enterprise.admin.servermgmt.services.Constants.PRIVILEGES_TN;
+import static com.sun.enterprise.admin.servermgmt.services.Constants.README;
+import static com.sun.enterprise.admin.servermgmt.services.Constants.TIMEOUT_SECONDS_TN;
 
 /**
  * Represents the SMF Service. Holds the tokens and their values that are consumed by the SMF templates. The recommended
@@ -97,8 +96,9 @@ public final class SMFService extends ServiceAdapter {
         boolean previousManifestExists = new File(getManifestFilePath()).exists();
         try {
             isConfigValid(); //safe, throws exception if not valid
-            if (info.trace)
+            if (info.trace) {
                 printOut(toString());
+            }
             validateManifest(getManifestFilePath());
             previousManifestExists = false;
             ServicesUtils.tokenReplaceTemplateAtDestination(tokensAndValues(), getManifestFileTemplatePath(), getManifestFilePath());
@@ -116,12 +116,14 @@ public final class SMFService extends ServiceAdapter {
     public void deleteServiceInternal() {
         try {
             String serviceName = info.serviceName;
-            if (!ok(serviceName))
+            if (!ok(serviceName)) {
                 throw new RuntimeException(Strings.get("internal.error", "no service name is set"));
+            }
             String me = System.getProperty("user.name");
             StringBuilder sb = new StringBuilder();
-            if (!isUserSmfAuthorized(me, sb))
+            if (!isUserSmfAuthorized(me, sb)) {
                 throw new RuntimeException(Strings.get("noSmfAuth", me, sb.toString()));
+            }
             ProcessManager pm = new ProcessManager(SVCADM, "disable", info.serviceName);
             pm.setEcho(false);
             pm.execute();
@@ -145,6 +147,7 @@ public final class SMFService extends ServiceAdapter {
     /**
      * Returns timeout in seconds before the master boot restarter should give up starting this service.
      */
+    @Override
     public int getTimeoutSeconds() {
         final int to = Integer.parseInt(getTokenMap().get(TIMEOUT_SECONDS_TN));
         return (to);
@@ -155,6 +158,7 @@ public final class SMFService extends ServiceAdapter {
      *
      * @param number a non-negative integer representing timeout. A value of zero implies infinite timeout.
      */
+    @Override
     public void setTimeoutSeconds(final int number) {
         Integer to = Integer.valueOf(number);
         if (to < 0) {
@@ -191,6 +195,7 @@ public final class SMFService extends ServiceAdapter {
      *
      * @return String representing addtional properties of the service. May return default properties as well.
      */
+    @Override
     public String getServiceProperties() {
         return (getTokenMap().get(PRIVILEGES_TN));
     }
@@ -200,6 +205,7 @@ public final class SMFService extends ServiceAdapter {
      *
      * @param must be a colon separated String, if not null. No effect, if null is passed.
      */
+    @Override
     public void setServiceProperties(final String cds) {
         /* For now, we have to take care of only net_privaddr privilege property.
          * Additional properties will result in additional tokens being replaced.
@@ -226,6 +232,7 @@ public final class SMFService extends ServiceAdapter {
      * @throws RuntimeException if the configuration is not valid
      * @return true if the configuration is valid, an exception is thrown otherwise
      */
+    @Override
     public boolean isConfigValid() {
         final Set<String> keys = getTokenMap().keySet();
         for (final String k : keys) {
@@ -254,8 +261,9 @@ public final class SMFService extends ServiceAdapter {
      *
      * @return a copy of tokens and values
      */
+    @Override
     public Map<String, String> tokensAndValues() {
-        return (new HashMap<String, String>(getTokenMap())); //send only copy
+        return (new HashMap<>(getTokenMap())); //send only copy
     }
 
     /**
@@ -263,6 +271,7 @@ public final class SMFService extends ServiceAdapter {
      * configuration location of the service. It is expected that these are set before calling this method. If the <b> Fully
      * Qualified Service Name </b> is invalid, a RuntimeException results.
      */
+    @Override
     public String getManifestFilePath() {
         final String fn = new StringBuilder().append(MANIFEST_HOME).append(info.fqsn).append("/").append(MANIFEST_FILE_SUFFIX).toString();
         return (fn);
@@ -273,14 +282,17 @@ public final class SMFService extends ServiceAdapter {
      * location then the file will be copied from inside this jar file to the file system. The type of the service must be
      * set before calling this method, otherwise a runtime exception results.
      */
+    @Override
     public String getManifestFileTemplatePath() {
         String ir = System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
-        if (!ok(ir))
+        if (!ok(ir)) {
             throw new RuntimeException("Internal Error - System Property not set: " + SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
+        }
 
         File rootDir = SmartFile.sanitize(new File(ir));
-        if (!rootDir.isDirectory())
+        if (!rootDir.isDirectory()) {
             throw new RuntimeException("Internal Error - Not a directory: " + rootDir);
+        }
 
         File templatesDir = new File(rootDir, REL_PATH_TEMPLATES);
         String filename = MANIFEST_FILE_TEMPL_SUFFIX;
@@ -299,6 +311,7 @@ public final class SMFService extends ServiceAdapter {
      *
      * @return a String according to above description, never returns null
      */
+    @Override
     public String toString() {
         /* toString method useful for debugging */
         final StringBuilder sb = new StringBuilder();
@@ -313,6 +326,7 @@ public final class SMFService extends ServiceAdapter {
     /**
      * For safety -- this is similar to the subversion dry-run command. It does everything except create the service.
      */
+    @Override
     public String getSuccessMessage() {
         String msg = Strings.get("SMFServiceCreated", info.smfFullServiceName, info.type.toString(), info.serverDirs.getServerParentDir(),
                 getManifestFilePath(), info.serviceName);
@@ -350,7 +364,7 @@ public final class SMFService extends ServiceAdapter {
 
     private Set<String> ps2Pairs(final String cds) {
         final StringTokenizer p = new StringTokenizer(cds, SP_DELIMITER);
-        final Set<String> tokens = new HashSet<String>();
+        final Set<String> tokens = new HashSet<>();
         while (p.hasMoreTokens()) {
             tokens.add(p.nextToken());
         }
@@ -378,10 +392,12 @@ public final class SMFService extends ServiceAdapter {
         final String AUTH1 = "solaris.*";
         final String AUTH2 = "solaris.smf.*";
         final String AUTH3 = "solaris.smf.modify";
-        if (System.getProperty("PATH_2_AUTHS") != null)
+        if (System.getProperty("PATH_2_AUTHS") != null) {
             path2Auths = System.getProperty("PATH_2_AUTHS");
-        if (System.getProperty("AUTH_TOKEN") != null)
+        }
+        if (System.getProperty("AUTH_TOKEN") != null) {
             at = System.getProperty("AUTH_TOKEN");
+        }
         try {
             final String[] cmd = new String[] { path2Auths, user };
             ProcessExecutor pe = new ProcessExecutor(cmd);
@@ -435,49 +451,59 @@ public final class SMFService extends ServiceAdapter {
             }
         }
         if (!manifest.getParentFile().mkdirs()) {
-            if (info.trace)
+            if (info.trace) {
                 printOut("Failed to create manifest parent file: " + manifest.getParentFile().getAbsolutePath());
+            }
         }
-        if (info.trace)
+        if (info.trace) {
             printOut("Manifest validated: " + manifestPath);
+        }
     }
 
     private void validateService() throws Exception {
         final String[] cmda = new String[] { SMFService.SVCCFG, "validate", getManifestFilePath() };
         final ProcessExecutor pe = new ProcessExecutor(cmda);
         pe.execute();
-        if (info.trace)
+        if (info.trace) {
             printOut("Validated the SMF Service: " + info.fqsn + " using: " + SMFService.SVCCFG);
+        }
     }
 
     private boolean importService() throws Exception {
         final String[] cmda = new String[] { SMFService.SVCCFG, "import", getManifestFilePath() };
         final ProcessExecutor pe = new ProcessExecutor(cmda);
 
-        if (info.dryRun)
+        if (info.dryRun) {
             cleanupManifest();
-        else
+        }
+        else {
             pe.execute(); //throws ExecException in case of an error
+        }
 
-        if (info.trace)
+        if (info.trace) {
             printOut("Imported the SMF Service: " + info.fqsn);
+        }
         return (true);
     }
 
     private void cleanupManifest() throws RuntimeException {
         final File manifest = new File(getManifestFilePath());
         if (manifest.exists()) {
-            if (!manifest.delete())
+            if (!manifest.delete()) {
                 manifest.deleteOnExit();
-            if (info.trace)
+            }
+            if (info.trace) {
                 printOut("Attempted deleting failed service manifest: " + manifest.getAbsolutePath());
+            }
         }
         final File failedServiceNode = manifest.getParentFile();
         if (failedServiceNode.exists()) {
-            if (!failedServiceNode.delete())
+            if (!failedServiceNode.delete()) {
                 failedServiceNode.deleteOnExit();
-            if (info.trace)
+            }
+            if (info.trace) {
                 printOut("Attempted deleting failed service folder: " + failedServiceNode.getAbsolutePath());
+            }
         }
     }
 
@@ -489,22 +515,24 @@ public final class SMFService extends ServiceAdapter {
     // todo -- fix the filename!!
     // todo
     // todo
+    @Override
     public void writeReadmeFile(String msg) {
         File f = new File(getServerDirs().getServerDir(), README);
         ServicesUtils.appendTextToFile(f, msg);
     }
 
     @Override
-    public final String getLocationArgsStart() {
-        if (isDomain())
+    public String getLocationArgsStart() {
+        if (isDomain()) {
             return " --domaindir " + getServerDirs().getServerParentDir().getPath() + " ";
-        else
+        } else {
             return " --nodedir " + getServerDirs().getServerGrandParentDir().getPath() + " --node "
                     + getServerDirs().getServerParentDir().getName() + " ";
+        }
     }
 
     @Override
-    public final String getLocationArgsStop() {
+    public String getLocationArgsStop() {
         return getLocationArgsStart(); // same with SMF
     }
 }

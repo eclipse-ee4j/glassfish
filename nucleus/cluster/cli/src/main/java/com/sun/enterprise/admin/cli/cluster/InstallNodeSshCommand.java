@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,28 +17,30 @@
 
 package com.sun.enterprise.admin.cli.cluster;
 
-import java.util.logging.Level;
-
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
 import com.sun.enterprise.util.SystemPropertyConstants;
-import com.sun.enterprise.util.io.FileUtils;
-import java.io.*;
-import java.util.*;
 
 import jakarta.inject.Inject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
 
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.cluster.ssh.launcher.SSHLauncher;
 import org.glassfish.cluster.ssh.sftp.SFTPClient;
 import org.glassfish.cluster.ssh.util.SSHUtil;
-
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * @author Byron Nevins
@@ -54,7 +57,7 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
     @Inject
     private SSHLauncher sshLauncher;
     //storing password to prevent prompting twice
-    private Map<String, char[]> sshPasswords = new HashMap<String, char[]>();
+    private final Map<String, char[]> sshPasswords = new HashMap<>();
 
     @Override
     String getRawRemoteUser() {
@@ -179,9 +182,10 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
                 sftpChannel.cd(sftpChannel.getHome());
                 sftpChannel.cd(sshInstallDir);
                 sftpChannel.put(zipFile.getAbsolutePath(), zipFile.getName());
-                if (logger.isLoggable(Level.FINER))
+                if (logger.isLoggable(Level.FINER)) {
                     logger.finer("Copied " + zip + " to " + host + ":" +
                                                                 sshInstallDir);
+                }
             }
             catch (SftpException ex) {
                 logger.info(Strings.get("cannot.copy.zip.file", zip, host));
@@ -196,9 +200,10 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
                     logger.info(Strings.get("jar.failed", host, outStream.toString()));
                     throw new CommandException("Remote command output: " + outStream.toString());
                 }
-                if (logger.isLoggable(Level.FINER))
+                if (logger.isLoggable(Level.FINER)) {
                     logger.finer("Installed " + getArchiveName() + " into " +
                                     host + ":" + sshInstallDir);
+                }
             }
             catch (IOException ioe) {
                 logger.info(Strings.get("jar.failed", host, outStream.toString()));
@@ -209,9 +214,10 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
                 logger.info("Removing " + host + ":" + sshInstallDir + "/" + getArchiveName());
                 sftpChannel.cd(sftpChannel.getHome());
                 sftpChannel.rm(sshInstallDir + "/" + getArchiveName());
-                if (logger.isLoggable(Level.FINER))
+                if (logger.isLoggable(Level.FINER)) {
                     logger.finer("Removed " + host + ":" + sshInstallDir + "/" +
                                                             getArchiveName());
+                }
             }
             catch (SftpException ioe) {
                 logger.info(Strings.get("remove.glassfish.failed", host, sshInstallDir));
@@ -234,9 +240,10 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
                         sftpClient.chmod(sshInstallDir + "/" + binDirFile, 0755);
                     }
                 }
-                if (logger.isLoggable(Level.FINER))
+                if (logger.isLoggable(Level.FINER)) {
                     logger.finer("Fixed file permissions of all bin files " +
                                     "under " + host + ":" + sshInstallDir);
+                }
             }
             catch (SftpException ioe) {
                 logger.info(Strings.get("fix.permissions.failed", host, sshInstallDir));
@@ -248,11 +255,12 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
                             + sshInstallDir + "/" + SystemPropertyConstants.getComponentName() + "/lib");
                 try {
                     sftpClient.chmod((sshInstallDir + "/" + SystemPropertyConstants.getComponentName() + "/lib/nadmin"), 0755);
-                    if (logger.isLoggable(Level.FINER))
+                    if (logger.isLoggable(Level.FINER)) {
                         logger.finer("Fixed file permission for nadmin under " +
                                     host + ":" + sshInstallDir + "/" +
                                     SystemPropertyConstants.getComponentName() +
                                     "/lib/nadmin");
+                    }
                 }
                 catch (SftpException ioe) {
                     logger.info(Strings.get("fix.permissions.failed", host, sshInstallDir));
@@ -272,9 +280,9 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
      */
     private void searchAndFixBinDirectoryFiles(String installDir, SFTPClient sftpClient) throws SftpException {
         for (LsEntry directoryEntry : (List<LsEntry>) sftpClient.getSftpChannel().ls(installDir)) {
-            if (directoryEntry.getFilename().equals(".") || directoryEntry.getFilename().equals(".."))
+            if (directoryEntry.getFilename().equals(".") || directoryEntry.getFilename().equals("..")) {
                 continue;
-            else if (directoryEntry.getAttrs().isDir()) {
+            } else if (directoryEntry.getAttrs().isDir()) {
                 String subDir = installDir + "/" + directoryEntry.getFilename();
                 if (directoryEntry.getFilename().equals("bin")) {
                     fixAllFiles(subDir, sftpClient);
@@ -294,9 +302,9 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
      */
     private void fixAllFiles(String binDir, SFTPClient sftpClient) throws SftpException {
         for (LsEntry directoryEntry : (List<LsEntry>) sftpClient.getSftpChannel().ls(binDir)) {
-            if (directoryEntry.getFilename().equals(".") || directoryEntry.getFilename().equals(".."))
+            if (directoryEntry.getFilename().equals(".") || directoryEntry.getFilename().equals("..")) {
                 continue;
-            else {
+            } else {
                 String fName = binDir + "/" + directoryEntry.getFilename();
                 sftpClient.chmod(fName, 0755);
             }
@@ -320,15 +328,17 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
             String cmd = "'" + sshInstallDir + "/" + SystemPropertyConstants.getComponentName() + asadmin;
             int status = sshLauncher.runCommand(cmd, outStream);
             if (status == 0) {
-                if (logger.isLoggable(Level.FINER))
+                if (logger.isLoggable(Level.FINER)) {
                     logger.finer(host + ":'" + cmd + "'" +
                                 " returned [" + outStream.toString() + "]");
+                }
                 throw new CommandException(Strings.get("install.dir.exists", sshInstallDir));
             }
             else {
-                if (logger.isLoggable(Level.FINER))
+                if (logger.isLoggable(Level.FINER)) {
                     logger.finer(host + ":'" + cmd + "'" +
                                 " failed [" + outStream.toString() + "]");
+                }
             }
         }
         catch (IOException ex) {
@@ -339,8 +349,9 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
 
     @Override
     final void precopy() throws CommandException {
-        if (getForce())
+        if (getForce()) {
             return;
+        }
 
         boolean prompt = promptPass;
         for (String host : hosts) {
@@ -363,21 +374,17 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
 
             try {
                 SFTPClient sftpClient = sshLauncher.getSFTPClient();
-                if (sftpClient.exists(sshInstallDir)){
+                if (sftpClient.exists(sshInstallDir)) {
                     checkIfAlreadyInstalled(host, sshInstallDir);
                 }
                 sftpClient.close();
-            }
-            catch (SftpException ex) {
+            } catch (SftpException ex) {
                 throw new CommandException(ex);
-            }
-            catch (IOException ex) {
+            } catch (IOException ex) {
                 throw new CommandException(ex);
-            }
-            catch (JSchException ex) {
+            } catch (JSchException ex) {
                 throw new CommandException(ex);
-            }
-            catch (InterruptedException ex) {
+            } catch (InterruptedException ex) {
                 throw new CommandException(ex);
             }
         }

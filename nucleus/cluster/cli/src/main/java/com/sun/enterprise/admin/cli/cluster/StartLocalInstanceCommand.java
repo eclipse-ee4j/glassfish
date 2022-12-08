@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,29 +17,32 @@
 
 package com.sun.enterprise.admin.cli.cluster;
 
-import java.io.*;
-import java.util.*;
-import java.util.logging.*;
-
+import com.sun.enterprise.admin.cli.CLIConstants;
 import com.sun.enterprise.admin.launcher.GFLauncher;
 import com.sun.enterprise.admin.launcher.GFLauncherException;
 import com.sun.enterprise.admin.launcher.GFLauncherFactory;
 import com.sun.enterprise.admin.launcher.GFLauncherInfo;
-import com.sun.enterprise.universal.xml.MiniXmlParserException;
-
-
-
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.component.*;
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
-import org.glassfish.hk2.api.PerLookup;
-
-import com.sun.enterprise.admin.cli.*;
-import com.sun.enterprise.util.ObjectAnalyzer;
-import static com.sun.enterprise.admin.cli.CLIConstants.*;
 import com.sun.enterprise.admin.servermgmt.cli.StartServerCommand;
 import com.sun.enterprise.admin.servermgmt.cli.StartServerHelper;
+import com.sun.enterprise.universal.xml.MiniXmlParserException;
+import com.sun.enterprise.util.ObjectAnalyzer;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Level;
+
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.CommandException;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
+
+import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_DEBUG_OFF;
+import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_DEBUG_ON;
+import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_NORMAL;
 
 /**
  * Start a local server instance.
@@ -91,8 +95,9 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand
 
         File dir = getServerDirs().getServerDir();
 
-        if(!dir.isDirectory())
+        if(!dir.isDirectory()) {
             throw new CommandException(Strings.get("Instance.noSuchInstance"));
+        }
     }
 
     /**
@@ -100,8 +105,9 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand
     @Override
     protected int executeCommand() throws CommandException {
 
-        if (logger.isLoggable(Level.FINER))
+        if (logger.isLoggable(Level.FINER)) {
             logger.finer(toString());
+        }
 
         if (sync.equals("none")) {
             logger.info(Strings.get("Instance.nosync"));
@@ -122,20 +128,16 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand
             createLauncher();
             final String mpv = getMasterPassword();
 
-            helper = new StartServerHelper(
-                        logger,
-                        programOpts.isTerse(),
-                        getServerDirs(),
-                        launcher,
-                        mpv,
-                        debug);
+            helper = new StartServerHelper(programOpts.isTerse(), getServerDirs(), launcher, mpv, debug);
 
-            if(!helper.prepareForLaunch())
+            if (!helper.prepareForLaunch()) {
                 return ERROR;
+            }
 
-            if(dry_run) {
-                if (logger.isLoggable(Level.FINE))
+            if (dry_run) {
+                if (logger.isLoggable(Level.FINE)) {
                     logger.fine(Strings.get("dry_run_msg"));
+                }
                 List<String> cmd = getLauncher().getCommandLine();
                 StringBuilder sb = new StringBuilder();
                 for (String s : cmd) {
@@ -168,14 +170,15 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand
                             return returnValue;
                     }
 
-                    if (env.debug())
+                    if (env.debug()) {
                         System.setProperty(CLIConstants.WALL_CLOCK_START_PROP,
                                             "" + System.currentTimeMillis());
+                    }
                     getLauncher().relaunch();
                 }
 
             } else {
-                helper.waitForServer();
+                helper.waitForServerStart();
                 helper.report();
                 return SUCCESS;
             }
@@ -213,7 +216,7 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand
      * start this server instance.
      */
     private String[] respawnArgs() {
-        List<String> args = new ArrayList<String>(15);
+        List<String> args = new ArrayList<>(15);
         args.addAll(Arrays.asList(programOpts.getProgramArguments()));
 
         // now the start-local-instance specific arguments
@@ -236,18 +239,22 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand
             args.add(node);
         }
         if (ok(instanceName))
+         {
             args.add(instanceName);     // the operand
+        }
 
-        if (logger.isLoggable(Level.FINER))
+        if (logger.isLoggable(Level.FINER)) {
             logger.finer("Respawn args: " + args.toString());
+        }
         String[] a = new String[args.size()];
         args.toArray(a);
         return a;
     }
 
     private GFLauncher getLauncher() {
-        if(launcher == null)
+        if(launcher == null) {
             throw new RuntimeException(Strings.get("internal.error", "GFLauncher was not initialized"));
+        }
 
         return launcher;
     }
@@ -256,8 +263,9 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand
     }
 
     private GFLauncherInfo getInfo() {
-        if(info == null)
+        if(info == null) {
             throw new RuntimeException(Strings.get("internal.error", "GFLauncherInfo was not initialized"));
+        }
 
             return info;
     }
@@ -266,6 +274,7 @@ public class StartLocalInstanceCommand extends SynchronizeInstanceCommand
             info = inf;
     }
 
+    @Override
     public String toString() {
         return ObjectAnalyzer.toStringWithSuper(this);
     }

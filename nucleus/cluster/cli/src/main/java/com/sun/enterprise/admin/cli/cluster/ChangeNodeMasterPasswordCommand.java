@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,19 +22,19 @@ import com.sun.enterprise.admin.servermgmt.RepositoryConfig;
 import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
 import com.sun.enterprise.security.store.PasswordAdapter;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.universal.xml.MiniXmlParser;
 import com.sun.enterprise.universal.xml.MiniXmlParserException;
 import com.sun.enterprise.util.HostAndPort;
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.CommandException;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.CommandException;
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * The change-master-password command for a node.
@@ -43,7 +44,6 @@ import java.util.List;
  */
 @Service(name = "_change-master-password-node")
 @PerLookup
-
 public  class ChangeNodeMasterPasswordCommand extends LocalInstanceCommand {
 
     @Param(name = "nodedir", optional = true)
@@ -78,18 +78,21 @@ public  class ChangeNodeMasterPasswordCommand extends LocalInstanceCommand {
             }
 
             ArrayList<String> serverNames = getInstanceDirs(serverDir);
-            for (String serverName: serverNames)
-                if (isRunning(serverDir, serverName))
+            for (String serverName: serverNames) {
+                if (isRunning(serverDir, serverName)) {
                     throw new CommandException(strings.get("instance.is.running",
                             serverName));
+                }
+            }
 
             oldPassword = passwords.get("AS_ADMIN_MASTERPASSWORD");
             if (oldPassword == null) {
                 char[] opArr = super.readPassword(strings.get("old.mp"));
                 oldPassword = opArr != null ? new String(opArr) : null;
             }
-            if (oldPassword == null)
+            if (oldPassword == null) {
                 throw new CommandException(strings.get("no.console"));
+            }
 
             // for each instance iterate through the instances first,
             // read each keystore with the old password,
@@ -159,13 +162,12 @@ public  class ChangeNodeMasterPasswordCommand extends LocalInstanceCommand {
             pwdFile.setReadable(true);
             pwdFile.setWritable(true);
         } catch (Exception ex) {
-            throw new CommandException(strings.get("masterPasswordFileNotCreated", pwdFile),
-                ex);
+            throw new CommandException(strings.get("masterPasswordFileNotCreated", pwdFile), ex);
         }
     }
 
 
-    /*
+    /**
      * This will encrypt the keystore
      */
     public void encryptKeystore(String f) throws CommandException {
@@ -191,40 +193,37 @@ public  class ChangeNodeMasterPasswordCommand extends LocalInstanceCommand {
      */
     private ArrayList<String> getInstanceDirs(File parent) throws CommandException {
 
-         ArrayList<String> instancesList = new ArrayList<String>();
-         File[] files = parent.listFiles(new FileFilter() {
-             public boolean accept(File f) {
-                 return f.isDirectory();
-             }
-         });
+        ArrayList<String> instancesList = new ArrayList<>();
+        File[] files = parent.listFiles(File::isDirectory);
+        if (files == null || files.length == 0) {
+            throw new CommandException(strings.get("Instance.noInstanceDirs", parent));
+        }
 
-         if (files == null || files.length == 0) {
-             throw new CommandException(
-                     strings.get("Instance.noInstanceDirs", parent));
-         }
+        for (File f : files) {
+            if (!f.getName().equals("agent")) {
+                instancesList.add(f.getName());
+            }
+        }
+        return instancesList;
 
-         for (File f : files) {
-             if (!f.getName().equals("agent"))
-                 instancesList.add(f.getName());
-         }
-         return instancesList;
+    }
 
-     }
 
-    private boolean isRunning(File nodeDirChild, String serverName)
-            throws CommandException {
+    private boolean isRunning(File nodeDirChild, String serverName) throws CommandException {
         try {
             File serverDir = new File(nodeDirChild, serverName);
             File configDir = new File(serverDir, "config");
             File domainXml = new File(configDir, "domain.xml");
-            if (!domainXml.exists())
+            if (!domainXml.exists()) {
                 return false;
+            }
             MiniXmlParser parser = new MiniXmlParser(domainXml, serverName);
             List<HostAndPort> addrSet = parser.getAdminAddresses();
-            if (addrSet.size() <= 0)
+            if (addrSet.isEmpty()) {
                 throw new CommandException(strings.get("NoAdminPort"));
+            }
             HostAndPort addr = addrSet.get(0);
-            return isRunning(addr.getHost(), addr.getPort());
+            return ProcessUtils.isListening(addr);
         } catch (MiniXmlParserException ex) {
             throw new CommandException(strings.get("NoAdminPortEx", ex), ex);
         }

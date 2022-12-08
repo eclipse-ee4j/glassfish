@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,14 +19,20 @@ package com.sun.enterprise.v3.admin;
 
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.module.ModulesRegistry;
+
+import jakarta.inject.Inject;
+
 import org.glassfish.api.Async;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
-import jakarta.inject.Inject;
-import org.jvnet.hk2.annotations.Service;
-
+import org.glassfish.api.admin.AccessRequired;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 
 /**
@@ -52,7 +59,7 @@ import org.glassfish.hk2.api.PerLookup;
 public class RestartDomainCommand extends RestartServer implements AdminCommand {
 
     @Inject
-    ModulesRegistry registry;
+    private ModulesRegistry registry;
     // no default value!  We use the Boolean as a tri-state.
     @Param(name = "debug", optional = true)
     private String debug;
@@ -76,11 +83,13 @@ public class RestartDomainCommand extends RestartServer implements AdminCommand 
      *
      * Client code that started us should notice the return value of 10 and restart us.
      */
+    @Override
     public void execute(AdminCommandContext context) {
         setRegistry(registry);
         setServerName(env.getInstanceRoot().getName());
-        if (debug != null)
+        if (debug != null) {
             setDebug(Boolean.parseBoolean(debug));
+        }
 
         doExecute(context);
     }

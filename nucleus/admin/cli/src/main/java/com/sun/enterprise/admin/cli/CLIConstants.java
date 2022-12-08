@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,20 +17,19 @@
 
 package com.sun.enterprise.admin.cli;
 
+import java.lang.System.Logger.Level;
+
 /**
  * Constants for use in this package and "sub" packages
  *
  * @author bnevins
  */
-public class CLIConstants {
-    ////////////////////////////////////////////////////////////////////////////
-    ///////       public                   /////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
+public final class CLIConstants {
     public static final int DEFAULT_ADMIN_PORT = 4848;
     public static final String DEFAULT_HOSTNAME = "localhost";
-    public static final String EOL = System.getProperty("line.separator");
+    public static final String EOL = System.lineSeparator();
 
-    public static final long WAIT_FOR_DAS_TIME_MS = 10 * 60 * 1000; // 10 minutes
+    public static final long WAIT_FOR_DAS_TIME_MS = getEnv("AS_START_TIMEOUT", 60_000L);
     public static final int RESTART_NORMAL = 10;
     public static final int RESTART_DEBUG_ON = 11;
     public static final int RESTART_DEBUG_OFF = 12;
@@ -38,7 +38,7 @@ public class CLIConstants {
     public static final int SUCCESS = 0;
     public static final int ERROR = 1;
     public static final int WARNING = 4;
-    public static final long DEATH_TIMEOUT_MS = 1 * 60 * 1000;
+    public static final long DEATH_TIMEOUT_MS = getEnv("AS_STOP_TIMEOUT", 60_000);
 
     public static final String K_ADMIN_PORT = "agent.adminPort";
     public static final String K_ADMIN_HOST = "agent.adminHost";
@@ -63,13 +63,27 @@ public class CLIConstants {
     public static final String NODEAGENT_DEFAULT_HOST_ADDRESS = "0.0.0.0";
     public static final String NODEAGENT_JMX_DEFAULT_PROTOCOL = "rmi_jrmp";
     public static final String HOST_NAME_PROPERTY = "com.sun.aas.hostName";
-    public static final int RESTART_CHECK_INTERVAL_MSEC = 300;
-
-    ////////////////////////////////////////////////////////////////////////////
-    ///////       private                   ////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
+    public static final int RESTART_CHECK_INTERVAL_MSEC = 10;
 
     private CLIConstants() {
         // no instances allowed!
+    }
+
+    private static long getEnv(String name, long defaultValue) {
+        String value = System.getenv(name);
+        if (value == null) {
+            return defaultValue;
+        }
+        try {
+            long parsedValue = Long.parseLong(value);
+            if (parsedValue > 0L) {
+                return parsedValue;
+            }
+            System.getLogger(CLIConstants.class.getName()).log(Level.WARNING, "The value of the environment property {0} must be positive.", name);
+            return defaultValue;
+        } catch (NumberFormatException e) {
+            System.getLogger(CLIConstants.class.getName()).log(Level.WARNING, "Environment property {0} is set to a value {1} which cannot be parsed to long.", name, value);
+            return defaultValue;
+        }
     }
 }

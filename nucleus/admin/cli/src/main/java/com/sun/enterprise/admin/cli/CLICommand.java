@@ -966,6 +966,7 @@ public abstract class CLICommand implements PostConstruct {
      * @throws CommandValidationException if there's something wrong with the options or arguments
      */
     protected void validate() throws CommandException {
+
     }
 
     /**
@@ -1252,7 +1253,7 @@ public abstract class CLICommand implements PostConstruct {
     }
 
     protected static boolean ok(String s) {
-        return s != null && s.length() > 0;
+        return s != null && !s.isEmpty();
     }
 
     // shorthand for this too-verbose operation

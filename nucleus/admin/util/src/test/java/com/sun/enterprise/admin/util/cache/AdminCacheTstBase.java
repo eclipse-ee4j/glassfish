@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -51,7 +51,7 @@ public abstract class AdminCacheTstBase {
     @BeforeAll
     public static void setUpClass() throws Exception {
         // Clean up temp directory
-        final File dir = new File(AsadminSecurityUtil.getDefaultClientDir(), TEST_CACHE_COTEXT);
+        final File dir = new File(AsadminSecurityUtil.GF_CLIENT_DIR, TEST_CACHE_COTEXT);
         recursiveDelete(dir);
         // Test to create and write data
         if (!dir.mkdirs()) {
@@ -70,7 +70,7 @@ public abstract class AdminCacheTstBase {
 
     @AfterAll
     public static void tearDownClass() throws Exception {
-        recursiveDelete(new File(AsadminSecurityUtil.getDefaultClientDir(), TEST_CACHE_COTEXT));
+        recursiveDelete(new File(AsadminSecurityUtil.GF_CLIENT_DIR, TEST_CACHE_COTEXT));
     }
 
 
@@ -80,7 +80,7 @@ public abstract class AdminCacheTstBase {
         final String qeen1 = "Crazy Little Thing Called Love";
         final String qeen1Key = TEST_CACHE_COTEXT + "Qeen1";
         cache.put(qeen1Key, qeen1);
-        File f = new File(AsadminSecurityUtil.getDefaultClientDir(), qeen1Key);
+        File f = new File(AsadminSecurityUtil.GF_CLIENT_DIR, qeen1Key);
         assertTrue(f.exists());
         assertTrue(f.isFile());
         String str = cache.get(qeen1Key, String.class);
@@ -91,7 +91,7 @@ public abstract class AdminCacheTstBase {
         final String qeen2 = "You\'re My Best Friend";
         final String qeen2Key = TEST_CACHE_COTEXT + "A-Night-at-the-Opera/Qeen2";
         cache.put(qeen2Key, qeen2);
-        f = new File(AsadminSecurityUtil.getDefaultClientDir(), qeen2Key);
+        f = new File(AsadminSecurityUtil.GF_CLIENT_DIR, qeen2Key);
         assertTrue(f.exists());
         assertTrue(f.isFile());
         str = cache.get(qeen2Key, String.class);

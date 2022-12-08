@@ -39,6 +39,7 @@ kill_process(){
   kill_clean `jps | grep ASMain | awk '{print $1}'`
   kill_clean `jps | grep DerbyControl | awk '{print $1}'`
   kill_clean `jps | grep DirectoryServer | awk '{print $1}'`
+  kill_clean `jps | grep imq | awk '{print $1}'`
 }
 
 test_init(){
@@ -70,7 +71,9 @@ unzip_test_resources(){
   done
 }
 
-copy_test_artifacts(){
+# this function is used as a trap
+copy_test_artifacts() {
+  sleep 1; # imq sometimes stops after the domain
   printf "\n%s \n\n" "===== COPY TEST ARTIFACTS ====="
   mkdir -p ${WORKSPACE}/results/junitreports
   tar -cf ${WORKSPACE}/results/domainArchive.tar.gz ${S1AS_HOME}/domains

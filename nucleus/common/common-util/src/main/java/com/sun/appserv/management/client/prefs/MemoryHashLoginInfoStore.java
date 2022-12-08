@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,10 +22,20 @@ import com.sun.enterprise.universal.GFBase64Decoder;
 import com.sun.enterprise.universal.GFBase64Encoder;
 import com.sun.enterprise.util.Utility;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /** A {@link LoginInfoStore} that reads the information from the default file ".gfclient/pass"
  * and stores it as a map in the memory. It is not guaranteed that the concurrent
@@ -34,13 +45,14 @@ import java.util.*;
  */
 public class MemoryHashLoginInfoStore implements LoginInfoStore {
 
-    public static final String DEFAULT_STORE_NAME = "pass";
+    private static final String DEFAULT_STORE_NAME = "pass";
 
     private static final GFBase64Encoder encoder = new GFBase64Encoder();
     private static final GFBase64Decoder decoder = new GFBase64Decoder();
 
     private Map<HostPortKey, LoginInfo> state;
     private final File store;
+
     /**
      * Creates a new instance of MemoryHashLoginInfoStore. A side effect of calling
      * this constructor is that if the default store does not exist, it will be created.
@@ -50,33 +62,30 @@ public class MemoryHashLoginInfoStore implements LoginInfoStore {
         BufferedReader br = null;
         BufferedWriter bw = null;
         try {
-            final File dir = AsadminSecurityUtil.getDefaultClientDir();
-            store = new File(dir, DEFAULT_STORE_NAME);
-
+            store = new File(AsadminSecurityUtil.GF_CLIENT_DIR, DEFAULT_STORE_NAME);
             if (store.createNewFile()) {
                 bw = new BufferedWriter(new FileWriter(store));
                 FileMapTransform.writePreamble(bw);
-                state = new HashMap<HostPortKey, LoginInfo> ();
-            }
-            else {
+                state = new HashMap<>();
+            } else {
                 br = new BufferedReader(new FileReader(store));
                 state = FileMapTransform.readAll(br);
             }
-        }
-        catch(final Exception e) {
+        } catch (final Exception e) {
             throw new StoreException(e);
-        }
-        finally {
+        } finally {
             try {
-                if (br != null)
+                if (br != null) {
                     br.close();
-            }
-            catch(final Exception ee) {} //ignore
+                }
+            } catch (final Exception ee) {
+            } // ignore
             try {
-                if (bw != null)
+                if (bw != null) {
                     bw.close();
-            }
-            catch(final Exception ee) {} //ignore
+                }
+            } catch (final Exception ee) {
+            } // ignore
         }
     }
 
@@ -87,8 +96,9 @@ public class MemoryHashLoginInfoStore implements LoginInfoStore {
 
     @Override
     public void store(final LoginInfo login, boolean overwrite) throws StoreException {
-        if (login == null)
+        if (login == null) {
             throw new IllegalArgumentException("null_arg");
+        }
         final String host = login.getHost();
         final int port    = login.getPort();
         if (!overwrite && this.exists(host, port)) {
@@ -177,8 +187,9 @@ public class MemoryHashLoginInfoStore implements LoginInfoStore {
          */
         try
         {
-            if(store == null || !store.exists())
+            if(store == null || !store.exists()) {
                 return;
+            }
 
             ProcessBuilder pb = new ProcessBuilder("chmod", "0600", store.getAbsolutePath());
             pb.start();
@@ -193,13 +204,15 @@ public class MemoryHashLoginInfoStore implements LoginInfoStore {
         private FileMapTransform() {} //disallow
         static Map<HostPortKey, LoginInfo> readAll(final BufferedReader reader) throws IOException, URISyntaxException {
             String line;
-            final Map<HostPortKey, LoginInfo> map = new HashMap<HostPortKey, LoginInfo> ();
+            final Map<HostPortKey, LoginInfo> map = new HashMap<> ();
             while ((line = reader.readLine()) != null) {
-                if (line.startsWith("#"))
+                if (line.startsWith("#")) {
                     continue; //ignore comments
+                }
                 final int si = line.indexOf(' '); //index of space
-                if (si == -1)
+                if (si == -1) {
                     throw new IOException("Error: invalid record: " + line);
+                }
                 final URI uri         = new URI(line.substring(0, si));
                 final String encp     = line.substring(si+1, line.length());
                 final HostPortKey key = uri2Key(uri);
@@ -211,11 +224,9 @@ public class MemoryHashLoginInfoStore implements LoginInfoStore {
         static void writeAll(final Collection<LoginInfo> logins, final BufferedWriter writer) throws IOException, URISyntaxException {
             writePreamble(writer);
             //write out sorted, because not more than 100 logins are expected to be there
-            final List<LoginInfo> list = new ArrayList<LoginInfo>(logins);
+            final List<LoginInfo> list = new ArrayList<>(logins);
             Collections.sort(list);
-            final Iterator<LoginInfo> it = list.iterator();
-            while (it.hasNext()) {
-                final LoginInfo login = it.next();
+            for (LoginInfo login : list) {
                 //System.out.println("wrote: " + login);
                 writeOne(login, writer);
             }
@@ -274,7 +285,7 @@ public class MemoryHashLoginInfoStore implements LoginInfoStore {
         }
         @Override
         public int hashCode() {
-            return ( (int) (53 * host.hashCode() + 31 * port) );
+            return ( 53 * host.hashCode() + 31 * port );
         }
     }
 }

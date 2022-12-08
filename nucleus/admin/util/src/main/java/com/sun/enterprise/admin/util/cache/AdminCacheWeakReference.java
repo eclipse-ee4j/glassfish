@@ -16,6 +16,8 @@
 
 package com.sun.enterprise.admin.util.cache;
 
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,67 +31,23 @@ import java.util.Map;
  * @author mmares
  */
 public class AdminCacheWeakReference implements AdminCache {
-
-    private final static class CachedItem {
-
-        private WeakReference item;
-        private long updated = -1;
-        private Date lastUpdateInStore;
-
-        private CachedItem(final Object item) {
-            setItem(item);
-        }
-
-        private CachedItem(final Object item, final Date lastUpdateInStore) {
-            setItem(item);
-            this.lastUpdateInStore = lastUpdateInStore;
-        }
-
-        private CachedItem(final Date lastUpdateInStore) {
-            this.lastUpdateInStore = lastUpdateInStore;
-        }
-
-        public Object getItem() {
-            if (item == null) {
-                return null;
-            } else {
-                return item.get();
-            }
-        }
-
-        public void setItem(Object item) {
-            if (item == null) {
-                this.item = null;
-            } else {
-                this.item = new WeakReference(item);
-            }
-            this.updated = System.currentTimeMillis();
-        }
-
-        public Date getLastUpdateInStore() {
-            return lastUpdateInStore;
-        }
-
-        public void setLastUpdateInStore(Date lastUpdateInStore) {
-            this.lastUpdateInStore = lastUpdateInStore;
-        }
-
-        public long getUpdated() {
-            return updated;
-        }
-
-    }
+    private static final Logger LOG = System.getLogger(AdminCacheWeakReference.class.getName());
 
     private static final AdminCacheWeakReference instance = new AdminCacheWeakReference();
 
-    private AdminCacheFileStore fileCache = AdminCacheFileStore.getInstance();
-    private final Map<String, CachedItem> cache = new HashMap<String, CachedItem>();
+    private final AdminCacheFileStore fileCache = AdminCacheFileStore.getInstance();
+    private final Map<String, CachedItem> cache = new HashMap<>();
+
+    public static AdminCacheWeakReference getInstance() {
+        return instance;
+    }
 
     private AdminCacheWeakReference() {
     }
 
     @Override
-    public <A> A get(final String key, final Class<A> clazz) {
+    public synchronized <A> A get(final String key, final Class<A> clazz) {
+        LOG.log(Level.DEBUG, "get(key={0}, clazz={1})", key, clazz);
         if (key == null || key.isEmpty()) {
             throw new IllegalArgumentException("Attribute key must be unempty.");
         }
@@ -120,30 +78,32 @@ public class AdminCacheWeakReference implements AdminCache {
     }
 
     @Override
-    public void put(final String key, final Object data) {
+    public synchronized void put(final String key, final Object data) {
+        LOG.log(Level.DEBUG, "put(key={0}, data={1})", key, data);
         fileCache.put(key, data);
         cache.put(key, new CachedItem(data, new Date()));
     }
 
     @Override
-    public boolean contains(final String key) {
+    public synchronized boolean contains(final String key) {
+        LOG.log(Level.TRACE, "contains(key={0})", key);
         if (key == null || key.isEmpty()) {
             throw new IllegalArgumentException("Attribute key must be unempty.");
         }
         CachedItem item = cache.get(key);
         if (item != null) {
             return true;
-        } else {
-            boolean result = fileCache.contains(key);
-            if (result) {
-                cache.put(key, new CachedItem(null));
-            }
-            return result;
         }
+        boolean result = fileCache.contains(key);
+        if (result) {
+            cache.put(key, new CachedItem(null));
+        }
+        return result;
     }
 
     @Override
-    public Date lastUpdated(String key) {
+    public synchronized Date lastUpdated(String key) {
+        LOG.log(Level.TRACE, "lastUpdated(key={0})", key);
         if (key == null || key.isEmpty()) {
             throw new IllegalArgumentException("Attribute key must be unempty.");
         }
@@ -157,7 +117,8 @@ public class AdminCacheWeakReference implements AdminCache {
                 cache.put(key, new CachedItem(result));
             } else {
                 if (item.updated != -1 && item.updated < result.getTime()) {
-                    item.setItem(null); //Cleare it because it was changed after load
+                    // Clear it because it was changed after load
+                    item.setItem(null);
                 }
                 item.lastUpdateInStore = result;
             }
@@ -165,8 +126,52 @@ public class AdminCacheWeakReference implements AdminCache {
         return result;
     }
 
-    public static AdminCacheWeakReference getInstance() {
-        return instance;
-    }
+    private static final class CachedItem {
 
+        private WeakReference<?> item;
+        private long updated = -1;
+        private Date lastUpdateInStore;
+
+        private CachedItem(final Object item) {
+            setItem(item);
+        }
+
+        private CachedItem(final Object item, final Date lastUpdateInStore) {
+            setItem(item);
+            this.lastUpdateInStore = lastUpdateInStore;
+        }
+
+        private CachedItem(final Date lastUpdateInStore) {
+            this.lastUpdateInStore = lastUpdateInStore;
+        }
+
+        public Object getItem() {
+            if (item == null) {
+                return null;
+            }
+            return item.get();
+        }
+
+        public void setItem(Object item) {
+            if (item == null) {
+                this.item = null;
+            } else {
+                this.item = new WeakReference<>(item);
+            }
+            this.updated = System.currentTimeMillis();
+        }
+
+        public Date getLastUpdateInStore() {
+            return lastUpdateInStore;
+        }
+
+        public void setLastUpdateInStore(Date lastUpdateInStore) {
+            this.lastUpdateInStore = lastUpdateInStore;
+        }
+
+        public long getUpdated() {
+            return updated;
+        }
+
+    }
 }

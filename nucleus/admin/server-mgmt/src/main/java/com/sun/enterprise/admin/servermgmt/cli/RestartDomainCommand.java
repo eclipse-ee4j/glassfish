@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,19 +18,20 @@
 package com.sun.enterprise.admin.servermgmt.cli;
 
 import com.sun.enterprise.admin.cli.CLICommand;
-import java.io.*;
-import java.util.*;
-import org.glassfish.api.Param;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.api.admin.*;
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.hk2.api.ServiceLocator;
-
-import com.sun.enterprise.admin.cli.remote.*;
+import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+import com.sun.enterprise.util.HostAndPort;
 
 import jakarta.inject.Inject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.CommandException;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * THe restart-domain command. The local portion of this command is only used to block until:
@@ -63,21 +65,22 @@ public class RestartDomainCommand extends StopDomainCommand {
     @Override
     protected void doCommand() throws CommandException {
 
-        if (!isRestartable())
+        if (!isRestartable()) {
             throw new CommandException(Strings.get("restartDomain.notRestartable"));
+        }
 
-        int oldServerPid = getServerPid(); // might be < 0
-
-        // run the remote restart-domain command and throw away the output
+        // Save old values before executing restart
+        final int oldPid = getServerPid();
+        final HostAndPort oldAdminAddress = getAdminAddress();
+        final HostAndPort newAdminEndpoint = getAdminAddress("server");
         RemoteCLICommand cmd = new RemoteCLICommand("restart-domain", programOpts, env);
-
-        if (debug != null)
-            cmd.executeAndReturnOutput("restart-domain", "--debug", debug.toString());
-        else
+        if (debug == null) {
             cmd.executeAndReturnOutput("restart-domain");
+        } else {
+            cmd.executeAndReturnOutput("restart-domain", "--debug", debug.toString());
+        }
 
-        waitForRestart(oldServerPid);
-
+        waitForRestart(oldPid, oldAdminAddress, newAdminEndpoint);
         logger.info(strings.get("restartDomain.success"));
     }
 
@@ -86,8 +89,9 @@ public class RestartDomainCommand extends StopDomainCommand {
      */
     @Override
     protected int dasNotRunning() throws CommandException {
-        if (!isLocal())
+        if (!isLocal()) {
             throw new CommandException(Strings.get("restart.dasNotRunningNoRestart"));
+        }
         logger.warning(strings.get("restart.dasNotRunning"));
         CLICommand cmd = habitat.getService(CLICommand.class, "start-domain");
         /*
@@ -104,7 +108,7 @@ public class RestartDomainCommand extends StopDomainCommand {
          *
          * Only --debug, --domaindir, and the operand apply here.
          */
-        List<String> opts = new ArrayList<String>();
+        List<String> opts = new ArrayList<>();
         opts.add("start-domain");
         if (debug != null) {
             opts.add("--debug");
@@ -113,11 +117,10 @@ public class RestartDomainCommand extends StopDomainCommand {
         if (domainDirParam != null) {
             opts.add("--domaindir");
             opts.add(domainDirParam);
-            // XXX - would this be better?
-            //opts.add(getDomainRootDir().toString());
         }
-        if (getDomainName() != null)
+        if (getDomainName() != null) {
             opts.add(getDomainName());
+        }
 
         return cmd.execute(opts.toArray(new String[opts.size()]));
     }

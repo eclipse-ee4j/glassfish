@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,9 @@
 
 package com.sun.enterprise.security.store;
 
-import static com.sun.enterprise.util.CULoggerInfo.errorCreatingDirectory;
-import static com.sun.enterprise.util.SystemPropertyConstants.CLIENT_TRUSTSTORE_PASSWORD_PROPERTY;
-import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PROPERTY;
-import static java.util.logging.Level.FINE;
+import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+import com.sun.enterprise.util.CULoggerInfo;
+import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.BufferedInputStream;
 import java.io.Console;
@@ -28,6 +28,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -35,8 +36,8 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.logging.Logger;
 
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-import com.sun.enterprise.util.CULoggerInfo;
+import static com.sun.enterprise.util.SystemPropertyConstants.CLIENT_TRUSTSTORE_PASSWORD_PROPERTY;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PROPERTY;
 
 /**
  * Various utility methods related to certificate-based security.
@@ -49,7 +50,8 @@ import com.sun.enterprise.util.CULoggerInfo;
  */
 public class AsadminSecurityUtil {
 
-    private static final File DEFAULT_CLIENT_DIR = new File(System.getProperty("user.home"), ".gfclient");
+    /** Existing writable GlassFish client directory. It is used for caching data, locating SSH keys, etc. */
+    public static final File GF_CLIENT_DIR = initGfClientDir();
 
     private static final Logger logger = CULoggerInfo.getLogger();
     private static final LocalStringsImpl strmgr = new LocalStringsImpl(AsadminSecurityUtil.class);
@@ -58,6 +60,27 @@ public class AsadminSecurityUtil {
 
     private AsadminTruststore asadminTruststore;
     private KeyStore asadminKeystore;
+
+
+    private static File initGfClientDir() {
+        String env = System.getenv("GF_CLIENT_DIR");
+        File clientDir = env == null ? new File(FileUtils.USER_HOME, ".gfclient") : new File(env);
+        FileUtils.ensureWritableDir(clientDir);
+        return clientDir;
+    }
+
+
+    /**
+     * @param host
+     * @param port
+     * @return $GF_CLIENT_DIR/cache/{host}_{port}/session
+     */
+    public static File getGfClientSessionFile(final String host, final int port) {
+        Path sessionFilePath = Path.of("cache", host + "_" + port, "session");
+        File file = GF_CLIENT_DIR.toPath().resolve(sessionFilePath).toFile();
+        FileUtils.ensureWritableDir(file.getParentFile());
+        return file;
+    }
 
 
     /**
@@ -90,27 +113,11 @@ public class AsadminSecurityUtil {
 
 
     /**
-     * Returns the master password for the keystore and truststore, as set by the system property (defaulted if the property is not
-     * set).
-     *
-     * @return
+     * @return the master password for the keystore and truststore, as set by the system property
+     * (defaulted if the property is not set).
      */
     public static char[] getAsadminTruststorePassword() {
         return System.getProperty(CLIENT_TRUSTSTORE_PASSWORD_PROPERTY, "changeit").toCharArray();
-    }
-
-    /**
-     * Get the default location for client related files
-     */
-    public static File getDefaultClientDir() {
-        if (!DEFAULT_CLIENT_DIR.isDirectory()) {
-            if (DEFAULT_CLIENT_DIR.mkdirs() == false) {
-                logger.log(FINE, errorCreatingDirectory, DEFAULT_CLIENT_DIR);
-                // return the File anyway, the user of the file will report the failure
-            }
-        }
-
-        return DEFAULT_CLIENT_DIR;
     }
 
     private AsadminSecurityUtil(final char[] commandLineMasterPassword, final boolean isPromptable) {
@@ -246,7 +253,6 @@ public class AsadminSecurityUtil {
         if (location == null) {
             return null;
         }
-
         return new BufferedInputStream(new FileInputStream(location));
     }
 

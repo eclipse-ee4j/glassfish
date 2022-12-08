@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,25 +17,22 @@
 
 package com.sun.enterprise.admin.cli.cluster;
 
-import java.io.*;
-import java.util.*;
+import com.sun.enterprise.admin.cli.CLICommand;
+import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
+import com.sun.enterprise.util.HostAndPort;
 
 import jakarta.inject.Inject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
-import org.glassfish.api.admin.CommandValidationException;
-
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
-
-import com.sun.enterprise.admin.cli.CLICommand;
-import com.sun.enterprise.admin.cli.remote.*;
+import org.jvnet.hk2.annotations.Service;
 
 /**
- *
  * @author Byron Nevins
  */
 @Service(name = "restart-local-instance")
@@ -48,26 +46,28 @@ public class RestartLocalInstanceCommand extends StopLocalInstanceCommand {
     private ServiceLocator habitat;
 
     @Override
-    protected final int doRemoteCommand() throws CommandException {
+    protected final void doCommand() throws CommandException {
         // see StopLocalInstance for comments.  These 2 lines can be refactored.
         setLocalPassword();
         programOpts.setInteractive(false);
 
-        if(!isRestartable())
+        if (!isRestartable()) {
             throw new CommandException(Strings.get("restart.notRestartable"));
+        }
 
-        int oldServerPid = getServerPid(); // might be < 0
-
-        // run the remote restart-domain command and throw away the output
+        // Save old values before executing restart
+        final int oldPid = getServerPid();
+        final HostAndPort adminAddress = getAdminAddress(getServerDirs().getServerName());
+        // run the remote restart-instance command and throw away the output
         RemoteCLICommand cmd = new RemoteCLICommand("_restart-instance", programOpts, env);
-
-        if (debug != null)
-            cmd.executeAndReturnOutput("_restart-instance", "--debug", debug.toString());
-        else
+        if (debug == null) {
             cmd.executeAndReturnOutput("_restart-instance");
+        } else {
+            cmd.executeAndReturnOutput("_restart-instance", "--debug", debug.toString());
+        }
 
-        waitForRestart(oldServerPid);
-        return 0;
+        waitForRestart(oldPid, adminAddress, adminAddress);
+        logger.info("Successfully restarted the instance.");
     }
 
     @Override
@@ -88,7 +88,7 @@ public class RestartLocalInstanceCommand extends StopLocalInstanceCommand {
          *
          * Only --debug, --nodedir, -node, and the operand apply here.
          */
-        List<String> opts = new ArrayList<String>();
+        List<String> opts = new ArrayList<>();
         opts.add("start-local-instance");
         if (debug != null) {
             opts.add("--debug");
@@ -102,8 +102,9 @@ public class RestartLocalInstanceCommand extends StopLocalInstanceCommand {
             opts.add("--node");
             opts.add(node);
         }
-        if (instanceName != null)
+        if (instanceName != null) {
             opts.add(instanceName);
+        }
 
         return cmd.execute(opts.toArray(new String[opts.size()]));
     }

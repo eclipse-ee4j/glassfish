@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,38 +17,45 @@
 
 package com.sun.enterprise.v3.admin.cluster;
 
-import java.io.*;
-import java.util.*;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-
-import jakarta.inject.Inject;
-
-import org.glassfish.api.admin.*;
-import org.jvnet.hk2.annotations.Optional;
-
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.component.*;
-
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.ActionReport.ExitCode;
-import org.glassfish.api.admin.config.ApplicationName;
-import com.sun.enterprise.config.serverbeans.Applications;
 import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.ApplicationRef;
+import com.sun.enterprise.config.serverbeans.Applications;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.util.cluster.SyncRequest;
-import com.sun.enterprise.util.cluster.SyncRequest.ModTime;
 import com.sun.enterprise.security.auth.realm.file.FileRealm;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.util.cluster.SyncRequest;
+import com.sun.enterprise.util.cluster.SyncRequest.ModTime;
+
+import jakarta.inject.Inject;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.ActionReport.ExitCode;
+import org.glassfish.api.admin.Payload;
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.deployment.versioning.VersioningUtils;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.PostConstruct;
+import org.jvnet.hk2.annotations.Optional;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * The core server synchronization logic.  Given a request from
@@ -78,14 +86,14 @@ public final class ServerSynchronizer implements PostConstruct {
 
     private Logger logger;
 
-    private static enum SyncLevel { TOP, DIRECTORY, RECURSIVE };
+    private enum SyncLevel { TOP, DIRECTORY, RECURSIVE }
 
     private final static LocalStringManagerImpl strings =
         new LocalStringManagerImpl(ServerSynchronizer.class);
 
     @Override
     public void postConstruct() {
-        domainRootUri = env.getDomainRoot().toURI();
+        domainRootUri = env.getInstanceRoot().toURI();
     }
 
     /**
@@ -97,21 +105,22 @@ public final class ServerSynchronizer implements PostConstruct {
                             ActionReport report, Logger logger) {
         this.logger = logger;
         try {
-            if (logger.isLoggable(Level.FINE))
+            if (logger.isLoggable(Level.FINE)) {
                 logger.fine("ServerSynchronizer: synchronization request for " +
                         "server " + server.getName() + ", directory " + sr.dir);
+            }
             // handle the request appropriately based on the directory
-            if (sr.dir.equals("config"))
+            if (sr.dir.equals("config")) {
                 synchronizeConfig(payload, server, sr);
-            else if (sr.dir.equals("applications"))
+            } else if (sr.dir.equals("applications")) {
                 synchronizeApplications(payload, server, sr);
-            else if (sr.dir.equals("lib"))
+            } else if (sr.dir.equals("lib")) {
                 synchronizeLib(payload, server, sr);
-            else if (sr.dir.equals("docroot"))
+            } else if (sr.dir.equals("docroot")) {
                 synchronizeDocroot(payload, server, sr);
-            else if (sr.dir.equals("config-specific"))
+            } else if (sr.dir.equals("config-specific")) {
                 synchronizeConfigSpecificDir(payload, server, sr);
-            else {
+            } else {
                 report.setActionExitCode(ExitCode.FAILURE);
                 report.setMessage(
                         strings.getLocalString("serversync.unknown.dir",
@@ -148,8 +157,9 @@ public final class ServerSynchronizer implements PostConstruct {
                 break;
             }
         }
-        if (domainXmlMT == null)        // couldn't find it, fake it
+        if (domainXmlMT == null) { // couldn't find it, fake it
             domainXmlMT = new ModTime("domain.xml", 0);
+        }
 
         File configDir = env.getConfigDirPath();
         if (!syncFile(domainRootUri, configDir, domainXmlMT, payload)) {
@@ -166,19 +176,22 @@ public final class ServerSynchronizer implements PostConstruct {
         getRealmFileNames(server, configFileSet);
 
         for (ModTime mt : sr.files) {
-            if (mt.name.equals("domain.xml"))   // did domain.xml above
+            if (mt.name.equals("domain.xml")) { // did domain.xml above
                 continue;
+            }
             if (configFileSet.contains(mt.name)) {
                 // if client has file, remove it from set
                 configFileSet.remove(mt.name);
                 syncFile(domainRootUri, configDir, mt, payload);
-            } else
+            } else {
                 removeFile(domainRootUri, configDir, mt, payload);
+            }
         }
 
         // now do all the remaining files the client doesn't have
-        for (String name : configFileSet)
+        for (String name : configFileSet) {
             syncFile(domainRootUri, configDir, new ModTime(name, 0), payload);
+        }
     }
 
     /**
@@ -186,31 +199,34 @@ public final class ServerSynchronizer implements PostConstruct {
      * Names are all relative to the config directory.
      */
     private Set<String> getConfigFileNames() {
-        Set<String> files = new LinkedHashSet<String>();
+        Set<String> files = new LinkedHashSet<>();
         BufferedReader in = null;
         try {
             File configDir = env.getConfigDirPath();
             File f = new File(configDir, "config-files");
-            if (f.exists())
+            if (f.exists()) {
                 in = new BufferedReader(new InputStreamReader(
                                                 new FileInputStream(f)));
-            else {
+            } else {
                 InputStream res =
                     getClass().getResourceAsStream("/META-INF/config-files");
-                if (res != null)
+                if (res != null) {
                     in = new BufferedReader(new InputStreamReader(res));
-                else
+                } else {
                     logger.severe("ServerSynchronizer: can't find list of " +
                                 "config files to synchronize!");
+                }
             }
             String line;
             if (in != null) {
                 while ((line = in.readLine()) != null) {
-                    if (line.startsWith("#"))   // ignore comment lines
+                    if (line.startsWith("#")) { // ignore comment lines
                         continue;
+                    }
                     line = line.trim();
-                    if (line.length() == 0)     // ignore blank lines
+                    if (line.length() == 0) { // ignore blank lines
                         continue;
+                    }
                     files.add(line);
                 }
             }
@@ -222,8 +238,9 @@ public final class ServerSynchronizer implements PostConstruct {
             }
         } finally {
             try {
-                if (in != null)
+                if (in != null) {
                     in.close();
+                }
             } catch (IOException cex) {
             }
         }
@@ -241,11 +258,13 @@ public final class ServerSynchronizer implements PostConstruct {
         Config config = domain.getConfigNamed(server.getConfigRef());
         for (String file : FileRealm.getRealmFileNames(config)) {
             File rfile = new File(file);
-            if (!rfile.exists())        // skip if file doesn't exist
+            if (!rfile.exists()) { // skip if file doesn't exist
                 continue;
+            }
             URI f = configURI.relativize(rfile.toURI());
-            if (!f.isAbsolute())        // if file is in config dir, add it
+            if (!f.isAbsolute()) { // if file is in config dir, add it
                 files.add(f.toString());
+            }
         }
     }
 
@@ -261,19 +280,24 @@ public final class ServerSynchronizer implements PostConstruct {
                             Payload.Outbound payload)
                             throws URISyntaxException {
         File f = fileOf(base, mt.name);
-        if (!f.exists())
+        if (!f.exists()) {
             return false;
+        }
         if (mt.time != 0 && f.lastModified() == mt.time)
+         {
             return false;     // success, nothing to do
-        if (logger.isLoggable(Level.FINEST))
+        }
+        if (logger.isLoggable(Level.FINEST)) {
             logger.finest("ServerSynchronizer: file " + mt.name +
                             " out of date, time " + f.lastModified());
+        }
         try {
-            if (logger.isLoggable(Level.FINE))
+            if (logger.isLoggable(Level.FINE)) {
                 logger.fine("ServerSynchronizer: sending file " + f +
                                 (mt.time == 0 ?
                                     " because it doesn't exist on the instance":
                                     " because it was out of date"));
+            }
             payload.requestFileReplacement("application/octet-stream",
                 root.relativize(f.toURI()),
                 "configChange", null, f, true);
@@ -296,13 +320,15 @@ public final class ServerSynchronizer implements PostConstruct {
                             Payload.Outbound payload)
                             throws URISyntaxException {
         File f = fileOf(base, mt.name);
-        if (logger.isLoggable(Level.FINEST))
+        if (logger.isLoggable(Level.FINEST)) {
             logger.finest("ServerSynchronizer: file " + mt.name +
                             " removed from client");
+        }
         try {
-            if (logger.isLoggable(Level.FINE))
+            if (logger.isLoggable(Level.FINE)) {
                 logger.fine("ServerSynchronizer: removing file " + f +
                             " because it does not exist on the DAS");
+            }
             payload.requestFileRemoval(
                 root.relativize(f.toURI()),
                 "configChange", null);
@@ -324,9 +350,10 @@ public final class ServerSynchronizer implements PostConstruct {
     private void synchronizeApplications(Payload.Outbound payload,
                                     Server server, SyncRequest sr)
                                     throws URISyntaxException {
-        if (logger.isLoggable(Level.FINER))
+        if (logger.isLoggable(Level.FINER)) {
             logger.finer("ServerSynchronizer: " +
                             "synchronize application instance " + sr.instance);
+        }
         Map<String, Application> apps = getApps(server);
         File appsDir = env.getApplicationRepositoryPath();
 
@@ -335,14 +362,16 @@ public final class ServerSynchronizer implements PostConstruct {
                 syncApp(apps.get(mt.name), appsDir, mt, payload);
                 // if client has app, remove it from set
                 apps.remove(mt.name);
-            } else
+            } else {
                 removeApp(apps.get(mt.name), appsDir, mt, payload);
+            }
         }
 
         // now do all the remaining apps the client doesn't have
-        for (Map.Entry<String, Application> e : apps.entrySet())
+        for (Map.Entry<String, Application> e : apps.entrySet()) {
             syncApp(e.getValue(), appsDir, new ModTime(e.getKey(), 0),
                                                         payload);
+        }
     }
 
     /**
@@ -355,24 +384,29 @@ public final class ServerSynchronizer implements PostConstruct {
             return getAllApps();
         */
 
-        Map<String, Application> apps = new HashMap<String, Application>();
+        Map<String, Application> apps = new HashMap<>();
         if (applications == null)
+         {
             return apps;        // no apps
+        }
 
         // all apps are under <server>, even in a cluster
         for (ApplicationRef ref : server.getApplicationRef()) {
             Application app = applications.getApplication(ref.getRef());
             if (app != null) {
-                if (logger.isLoggable(Level.FINEST))
+                if (logger.isLoggable(Level.FINEST)) {
                     logger.finest("ServerSynchronizer: got app " +
                                                                 app.getName());
+                }
                 if (Boolean.parseBoolean(app.getDirectoryDeployed())) {
-                    if (logger.isLoggable(Level.FINEST))
+                    if (logger.isLoggable(Level.FINEST)) {
                         logger.finest("ServerSynchronizer: " +
                                 "skipping directory deployed app: " +
                                 app.getName());
-                } else
+                    }
+                } else {
                     apps.put(VersioningUtils.getRepositoryName(app.getName()), app);
+                }
             }
         }
         return apps;
@@ -415,17 +449,21 @@ public final class ServerSynchronizer implements PostConstruct {
     private boolean syncApp(Application app, File base, ModTime mt,
                             Payload.Outbound payload)
                             throws URISyntaxException {
-        if (logger.isLoggable(Level.FINER))
+        if (logger.isLoggable(Level.FINER)) {
             logger.finer("ServerSynchronizer: sync app " + mt.name);
+        }
         try {
             File appDir = fileOf(base, mt.name);
             if (syncArchive) {
                 File archive = app.application();
-                if (logger.isLoggable(Level.FINEST))
+                if (logger.isLoggable(Level.FINEST)) {
                     logger.finest("ServerSynchronizer: check archive " +
                                                                     archive);
+                }
                 if (mt.time != 0 && archive.lastModified() == mt.time)
+                 {
                     return false;     // success, nothing to do
+                }
 
                 // attach the archive file
                 attachAppArchive(archive, payload);
@@ -435,23 +473,27 @@ public final class ServerSynchronizer implements PostConstruct {
                  * instance, we're just going to unzip it.
                  */
             } else {
-                if (logger.isLoggable(Level.FINEST))
+                if (logger.isLoggable(Level.FINEST)) {
                     logger.finest("ServerSynchronizer: check app dir " +
                                                                         appDir);
+                }
                 if (mt.time != 0 && appDir.lastModified() == mt.time)
+                 {
                     return false;     // success, nothing to do
+                }
 
                 /*
                  * Recursively attach the application directory and
                  * all the generated directories.  The client will
                  * remove the old versions before installing the new ones.
                  */
-                if (logger.isLoggable(Level.FINE))
+                if (logger.isLoggable(Level.FINE)) {
                     logger.fine("ServerSynchronizer: sending files for " +
                                 "application " + mt.name +
                                 (mt.time == 0 ?
                                     " because it doesn't exist on the instance":
                                     " because it was out of date"));
+                }
                 attachAppDir(appDir, payload);
             }
 
@@ -485,7 +527,7 @@ public final class ServerSynchronizer implements PostConstruct {
     private void synchronizeLib(Payload.Outbound payload,
                                     Server server, SyncRequest sr)
                                     throws URISyntaxException {
-        List<String> skip = new ArrayList<String>();
+        List<String> skip = new ArrayList<>();
         skip.add("databases");
         synchronizeDirectory(payload, server, sr,
                                 env.getLibPath(), skip, SyncLevel.RECURSIVE);
@@ -498,7 +540,7 @@ public final class ServerSynchronizer implements PostConstruct {
                                     Server server, SyncRequest sr)
                                     throws URISyntaxException {
         synchronizeDirectory(payload, server, sr,
-                                new File(env.getDomainRoot(), "docroot"), null,
+                                new File(env.getInstanceRoot(), "docroot"), null,
                                 SyncLevel.DIRECTORY);
     }
 
@@ -508,8 +550,9 @@ public final class ServerSynchronizer implements PostConstruct {
     private void synchronizeDirectory(Payload.Outbound payload,
             Server server, SyncRequest sr, File dir, List<String> skip,
             SyncLevel level) throws URISyntaxException {
-        if (logger.isLoggable(Level.FINEST))
+        if (logger.isLoggable(Level.FINEST)) {
             logger.finest("ServerSynchronizer: directory is " + dir);
+        }
         List<String> fileSet = getFileNames(dir, skip, level);
         synchronizeDirectory(payload, server, sr, dir, fileSet);
     }
@@ -523,13 +566,15 @@ public final class ServerSynchronizer implements PostConstruct {
                 // if client has file, remove it from set
                 fileSet.remove(mt.name);
                 syncFile(domainRootUri, dir, mt, payload);
-            } else
+            } else {
                 removeFile(domainRootUri, dir, mt, payload);
+            }
         }
 
         // now do all the remaining files the client doesn't have
-        for (String name : fileSet)
+        for (String name : fileSet) {
             syncFile(domainRootUri, dir, new ModTime(name, 0), payload);
+        }
     }
 
     /**
@@ -545,17 +590,19 @@ public final class ServerSynchronizer implements PostConstruct {
         String configDirName = server.getConfigRef();
         File configDir = env.getConfigDirPath();
         File configSpecificDir = new File(configDir, configDirName);
-        if (logger.isLoggable(Level.FINEST))
+        if (logger.isLoggable(Level.FINEST)) {
             logger.finest("ServerSynchronizer: " +
                         "config-specific directory is " + configSpecificDir);
+        }
         if (!configSpecificDir.exists()) {
-            if (logger.isLoggable(Level.FINE))
+            if (logger.isLoggable(Level.FINE)) {
                 logger.fine("ServerSynchronizer: no config-specific " +
                         "directory to synchronize: " + configSpecificDir);
+            }
             return;             // nothing to do
         }
 
-        List<String> fileSet = new ArrayList<String>();
+        List<String> fileSet = new ArrayList<>();
         getFileNames(configSpecificDir, configDir, null, fileSet,
                                                         SyncLevel.DIRECTORY);
         synchronizeDirectory(payload, server, sr, configDir, fileSet);
@@ -567,13 +614,14 @@ public final class ServerSynchronizer implements PostConstruct {
      */
     private List<String> getFileNames(File dir, List<String> skip,
                                         SyncLevel level) {
-        List<String> names = new ArrayList<String>();
-        if (dir.exists())
+        List<String> names = new ArrayList<>();
+        if (dir.exists()) {
             getFileNames(dir, dir, skip, names, level);
-        else {
-            if (logger.isLoggable(Level.FINEST))
+        } else {
+            if (logger.isLoggable(Level.FINEST)) {
                 logger.finest("ServerSynchronizer: directory doesn't exist: " +
                                                                         dir);
+            }
         }
         return names;
     }
@@ -589,8 +637,9 @@ public final class ServerSynchronizer implements PostConstruct {
         if (level == SyncLevel.TOP) {
             String name = baseDir.toURI().relativize(dir.toURI()).getPath();
             // if name is a directory, it will end with "/"
-            if (name.endsWith("/"))
+            if (name.endsWith("/")) {
                 name = name.substring(0, name.length() - 1);
+            }
             names.add(name);
             return 1;     // nothing else
         }
@@ -599,10 +648,12 @@ public final class ServerSynchronizer implements PostConstruct {
             File f = new File(dir, file);
             String name = baseDir.toURI().relativize(f.toURI()).getPath();
             // if name is a directory, it will end with "/"
-            if (name.endsWith("/"))
+            if (name.endsWith("/")) {
                 name = name.substring(0, name.length() - 1);
-            if (skip != null && skip.contains(name))
+            }
+            if (skip != null && skip.contains(name)) {
                 continue;
+            }
             if (f.isDirectory() && level == SyncLevel.RECURSIVE) {
                 int subFileCnt = getFileNames(f, baseDir, skip, names, level);
                 if (subFileCnt == 0) {
@@ -640,9 +691,10 @@ public final class ServerSynchronizer implements PostConstruct {
      */
     private void attachAppDir(File dir, Payload.Outbound payload)
                                 throws IOException {
-        if (logger.isLoggable(Level.FINER))
+        if (logger.isLoggable(Level.FINER)) {
             logger.finer("ServerSynchronizer: attach directory " +
                             domainRootUri.relativize(dir.toURI()));
+        }
         if (!dir.exists()) {
             logger.finer("ServerSynchronizer: nothing to attach");
             return;
@@ -659,10 +711,11 @@ public final class ServerSynchronizer implements PostConstruct {
     private void removeApp(Application app, File base, ModTime mt,
                             Payload.Outbound payload)
                             throws URISyntaxException {
-        if (logger.isLoggable(Level.FINE))
+        if (logger.isLoggable(Level.FINE)) {
             logger.fine("ServerSynchronizer: removing files for application " +
                         mt.name +
                         " because it is no longer deployed to this instance");
+        }
         try {
             File dir = fileOf(base, mt.name);
             removeDir(dir, payload);

@@ -204,16 +204,6 @@ public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
         return root;
     }
 
-    /**
-     * @return the instance root
-     * @deprecated  As of GlassFish 3.1 replaced with {@link #getInstanceRoot() }
-     */
-    @Deprecated
-    @Override
-    public File getDomainRoot() {
-        return getInstanceRoot();
-    }
-
 
     @Override
     public StartupContext getStartupContext() {

@@ -17,7 +17,7 @@
 package com.oracle.hk2.devtest.cdi.ejb1.ppp;
 
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.hk2.bootstrap.PopulatorPostProcessor;
+import org.glassfish.hk2.api.PopulatorPostProcessor;
 import org.glassfish.hk2.utilities.DescriptorImpl;
 
 import com.oracle.hk2.devtest.cdi.ejb1.scoped.HK2Service;

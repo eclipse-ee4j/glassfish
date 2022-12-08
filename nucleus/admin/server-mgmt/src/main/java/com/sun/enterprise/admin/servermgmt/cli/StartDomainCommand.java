@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,17 @@
 
 package com.sun.enterprise.admin.servermgmt.cli;
 
-import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_DEBUG_OFF;
-import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_DEBUG_ON;
-import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_NORMAL;
-import static com.sun.enterprise.admin.cli.CLIConstants.WALL_CLOCK_START_PROP;
-import static java.util.logging.Level.FINER;
-import static org.glassfish.api.admin.RuntimeType.DAS;
+import com.sun.enterprise.admin.cli.Environment;
+import com.sun.enterprise.admin.launcher.GFLauncher;
+import com.sun.enterprise.admin.launcher.GFLauncherException;
+import com.sun.enterprise.admin.launcher.GFLauncherFactory;
+import com.sun.enterprise.admin.launcher.GFLauncherInfo;
+import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
+import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+import com.sun.enterprise.universal.process.ProcessStreamDrainer;
+import com.sun.enterprise.universal.xml.MiniXmlParserException;
+
+import jakarta.inject.Inject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,17 +44,12 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.security.common.FileRealmHelper;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.admin.cli.Environment;
-import com.sun.enterprise.admin.launcher.GFLauncher;
-import com.sun.enterprise.admin.launcher.GFLauncherException;
-import com.sun.enterprise.admin.launcher.GFLauncherFactory;
-import com.sun.enterprise.admin.launcher.GFLauncherInfo;
-import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-import com.sun.enterprise.universal.process.ProcessStreamDrainer;
-import com.sun.enterprise.universal.xml.MiniXmlParserException;
-
-import jakarta.inject.Inject;
+import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_DEBUG_OFF;
+import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_DEBUG_ON;
+import static com.sun.enterprise.admin.cli.CLIConstants.RESTART_NORMAL;
+import static com.sun.enterprise.admin.cli.CLIConstants.WALL_CLOCK_START_PROP;
+import static java.util.logging.Level.FINER;
+import static org.glassfish.api.admin.RuntimeType.DAS;
 
 /**
  * The start-domain command.
@@ -100,7 +101,7 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
     private StartServerHelper startServerHelper;
 
     // the name of the master password option
-    private String newpwName = Environment.getPrefix() + "NEWPASSWORD";
+    private final String newpwName = Environment.getPrefix() + "NEWPASSWORD";
 
     @Override
     public List<String> getLauncherArgs() {
@@ -125,9 +126,9 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
             createLauncher();
             String masterPassword = getMasterPassword();
 
-            startServerHelper = new StartServerHelper(logger, programOpts.isTerse(), getServerDirs(), glassFishLauncher, masterPassword);
+            startServerHelper = new StartServerHelper(programOpts.isTerse(), getServerDirs(), glassFishLauncher, masterPassword);
 
-            if (startServerHelper.prepareForLaunch() == false) {
+            if (!startServerHelper.prepareForLaunch()) {
                 return ERROR;
             }
 
@@ -184,7 +185,7 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
                 }
 
             } else {
-                startServerHelper.waitForServer();
+                startServerHelper.waitForServerStart();
                 startServerHelper.report();
                 return SUCCESS;
             }
@@ -220,7 +221,7 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
     }
 
     /**
-     * Return the asadmin command line arguments necessary to start this domain admin server.
+     * @return the asadmin command line arguments necessary to start this domain admin server.
      */
     private String[] respawnArgs() {
         List<String> args = new ArrayList<>(15);
@@ -245,7 +246,7 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
         return a;
     }
 
-    /*
+    /**
      * If this domain needs to be upgraded and --upgrade wasn't specified, first start the domain to do the upgrade and then
      * start the domain again for real.
      */
@@ -282,7 +283,7 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
         // continue with normal start...
     }
 
-    /*
+    /**
      * Check to make sure that at least one admin user is able to login. If none is found, then prompt for an admin
      * password.
      *

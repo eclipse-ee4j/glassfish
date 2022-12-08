@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,14 @@
 
 package com.sun.enterprise.util.io;
 
-import java.io.*;
-import java.io.File;
-
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.util.ObjectAnalyzer;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * The hierarchy of directories above a running DAS or server instance can get
@@ -59,7 +62,23 @@ import com.sun.enterprise.util.ObjectAnalyzer;
  * Created: April 19, 2010
  */
 public class ServerDirs {
-    // do-nothing constructor
+
+    private final String serverName;
+    private final File serverDir;
+    private final File parentDir;
+    private final File agentDir;
+    private final File grandParentDir;
+    private final File configDir;
+    private final File domainXml;
+    private final File pidFile;
+    private final File lastPidFile;
+    private final boolean valid;
+    private final String localPassword;
+    private final File localPasswordFile;
+    private final File dasPropertiesFile; // this only makes sense for instances...
+    // Can be shared among classes in the package
+    static final LocalStringsImpl strings = new LocalStringsImpl(ServerDirs.class);
+
     /**
      *
      */
@@ -72,22 +91,23 @@ public class ServerDirs {
         configDir = null;
         domainXml = null;
         pidFile = null;
+        lastPidFile = null;
         valid = false;
         localPassword = null;
         localPasswordFile = null;
         dasPropertiesFile = null;
     }
 
-    public ServerDirs(File leaf) throws IOException {
-        if (leaf == null) {
+    public ServerDirs(final File serverDir) throws IOException {
+        if (serverDir == null) {
             throw new IllegalArgumentException(strings.get("ServerDirs.nullArg", "ServerDirs.ServerDirs()"));
         }
 
-        if (!leaf.isDirectory()) {
-            throw new IOException(strings.get("ServerDirs.badDir", leaf));
+        if (!serverDir.isDirectory()) {
+            throw new IOException(strings.get("ServerDirs.badDir", serverDir));
         }
 
-        serverDir = SmartFile.sanitize(leaf);
+        this.serverDir = SmartFile.sanitize(serverDir);
         serverName = serverDir.getName();
 
         // note that serverDir has been "smart-filed" so we don't have to worry
@@ -103,64 +123,26 @@ public class ServerDirs {
         configDir = new File(serverDir, "config");
         domainXml = new File(configDir, "domain.xml");
         pidFile = new File(configDir, "pid");
+        lastPidFile = new File(configDir, "pid.prev");
         localPasswordFile = new File(configDir, "local-password");
 
-        String localPasswordBuffer = null;  // need an atomic assign tor localPassword
-        BufferedReader r = null;
-        try {
-            r = new BufferedReader(new FileReader(localPasswordFile));
-            localPasswordBuffer = r.readLine();
-        }
-        catch (Exception e) {
-            // needs no handling
-        }
-        finally {
-            localPassword = localPasswordBuffer;
-            if (r != null) {
-                try {
-                    r.close();
-                }
-                catch (IOException ex) {
-                    // ignore
-                }
+        if (localPasswordFile.exists()) {
+            try (BufferedReader r = new BufferedReader(new FileReader(localPasswordFile))) {
+                localPassword = r.readLine();
             }
+        } else {
+            localPassword = null;
         }
-
-        // bnevins May 17 -- perhaps we should have a NodeAgentDirs ???
         agentDir = new File(parentDir, "agent");
         dasPropertiesFile = new File(parentDir, "agent/config/das.properties");
         valid = true;
     }
 
-    public final String getServerName() {
-        if (!valid) {
-            return null;
-        }
-
-        return serverName;
-    }
-
     /**
-     * Return a message suitable for printing, not just for errors.
-     * @return
+     * @return domain name or instance name
      */
-    public final String deletePidFile() {
-        if (!valid) {
-            return "Internal Error: ServerDirs is in an invalid state";
-        }
-
-        if (!pidFile.isFile()) {
-            return null;
-        }
-
-        String message = "pid file " + pidFile + " exists, removing it.";
-
-        if (!pidFile.delete()) {
-            // Hmmm... can't delete it, don't use it
-            // TODO -- try to go inside it and delete the contents
-            return message + "  Couldn't remove pid file";
-        }
-        return message;
+    public final String getServerName() {
+        return valid ? serverName : null;
     }
 
     public ServerDirs refresh() throws IOException {
@@ -169,55 +151,47 @@ public class ServerDirs {
 
     // getters & setters section below
     public final File getServerDir() {
-        if (!valid) {
-            return null;
-        }
-        return serverDir;
+        return valid ? serverDir : null;
     }
 
     public final File getAgentDir(){
-         if (!valid) {
-            return null;
-        }
-        return agentDir;
+         return valid ? agentDir : null;
     }
 
     public final File getServerParentDir() {
-        if (!valid) {
-            return null;
-        }
-        return parentDir;
+        return valid ? parentDir : null;
     }
 
     public final File getServerGrandParentDir() {
-        if (!valid) {
-            return null;
-        }
-        return grandParentDir;
+        return valid ? grandParentDir : null;
     }
 
     public final File getDomainXml() {
-        if (!valid) {
-            return null;
-        }
-
-        return domainXml;
+        return valid ? domainXml : null;
     }
 
     public final File getConfigDir() {
-        if (!valid) {
-            return null;
-        }
-
-        return configDir;
+        return valid ? configDir : null;
     }
 
+    /**
+     * If the server is running, must exist.
+     * If the server is stopped, shoud be deleted, but it cannot be guaranteed.
+     *
+     * @return file containing the process ID.
+     */
     public final File getPidFile() {
-        if (!valid) {
-            return null;
-        }
+        return valid ? pidFile : null;
+    }
 
-        return pidFile;
+    /**
+     * If the server is running, must exist.
+     * If the server is stopped, shoud be deleted, but it cannot be guaranteed.
+     *
+     * @return file containing the process ID.
+     */
+    public final File getLastPidFile() {
+        return lastPidFile;
     }
 
     public final File getDasPropertiesFile() {
@@ -229,11 +203,7 @@ public class ServerDirs {
     }
 
     public final File getLocalPasswordFile() {
-        if (!valid) {
-            return null;
-        }
-
-        return localPasswordFile;
+        return valid ? localPasswordFile : null;
     }
 
     public final boolean isValid() {
@@ -244,22 +214,4 @@ public class ServerDirs {
     public String toString() {
         return ObjectAnalyzer.toString(this);
     }
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////           All Private Below           /////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-    private final String serverName;
-    private final File serverDir;
-    private final File parentDir;
-    private final File agentDir;
-    private final File grandParentDir;
-    private final File configDir;
-    private final File domainXml;
-    private final File pidFile;
-    private final boolean valid;
-    private final String localPassword;
-    private final File localPasswordFile;
-    private final File dasPropertiesFile; // this only makes sense for instances...
-    // Can be shared among classes in the package
-    static final LocalStringsImpl strings = new LocalStringsImpl(ServerDirs.class);
-    // root-dir/config/domain.xml
 }

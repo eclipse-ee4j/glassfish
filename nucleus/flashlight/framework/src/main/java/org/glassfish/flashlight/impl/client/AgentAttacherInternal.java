@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,19 +18,28 @@
 package org.glassfish.flashlight.impl.client;
 
 import com.sun.enterprise.universal.io.SmartFile;
-import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.tools.attach.VirtualMachine;
+
 import java.io.File;
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.flashlight.FlashlightLoggerInfo;
-import static org.glassfish.flashlight.FlashlightLoggerInfo.*;
+
 import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
+import static org.glassfish.flashlight.FlashlightLoggerInfo.ATTACH_AGENT_EXCEPTION;
+import static org.glassfish.flashlight.FlashlightLoggerInfo.INVALID_PID;
+import static org.glassfish.flashlight.FlashlightLoggerInfo.MISSING_AGENT_JAR;
+import static org.glassfish.flashlight.FlashlightLoggerInfo.MISSING_AGENT_JAR_DIR;
 
 /**
  * created May 26, 2011
  * @author Byron Nevins
  */
 final class AgentAttacherInternal {
+    private static final Logger LOG = FlashlightLoggerInfo.getLogger();
+    private static boolean isAttached = false;
+
     static boolean isAttached() {
         return isAttached;
     }
@@ -38,16 +48,18 @@ final class AgentAttacherInternal {
         return attachAgent(-1, "");
     }
 
-    static boolean attachAgent(int pid, String options) {
+    static boolean attachAgent(long pid, String options) {
         try {
-            if (isAttached)
+            if (isAttached) {
                 return true;
-
-            if(pid < 0)
-                pid = ProcessUtils.getPid();
+            }
 
             if (pid < 0) {
-                logger.log(Level.WARNING, INVALID_PID);
+                pid = ProcessHandle.current().pid();
+            }
+
+            if (pid < 0) {
+                LOG.log(Level.WARNING, INVALID_PID);
                 return false;
             }
 
@@ -56,28 +68,24 @@ final class AgentAttacherInternal {
             File dir = new File(ir, "lib" + File.separator + "monitor");
 
             if (!dir.isDirectory()) {
-                logger.log(Level.WARNING, MISSING_AGENT_JAR_DIR, dir);
+                LOG.log(Level.WARNING, MISSING_AGENT_JAR_DIR, dir);
                 return false;
             }
 
             File agentJar = new File(dir, "flashlight-agent.jar");
 
             if (!agentJar.isFile()) {
-                logger.log(Level.WARNING, MISSING_AGENT_JAR, dir);
+                LOG.log(Level.WARNING, MISSING_AGENT_JAR, dir);
                 return false;
             }
 
             vm.loadAgent(SmartFile.sanitize(agentJar.getPath()), options);
             isAttached = true;
-        }
-        catch (Throwable t) {
-            logger.log(Level.WARNING, ATTACH_AGENT_EXCEPTION, t.getMessage());
+        } catch (Throwable t) {
+            LOG.log(Level.WARNING, ATTACH_AGENT_EXCEPTION, t.getMessage());
             isAttached = false;
         }
 
         return isAttached;
     }
-    private static final Object syncOnMe = new Object();
-    private static final Logger logger = FlashlightLoggerInfo.getLogger();
-    private static boolean isAttached = false;
 }

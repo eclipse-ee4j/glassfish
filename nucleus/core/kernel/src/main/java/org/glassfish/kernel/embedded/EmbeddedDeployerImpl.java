@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,30 +17,38 @@
 
 package org.glassfish.kernel.embedded;
 
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.DasConfig;
 import com.sun.enterprise.deploy.shared.ArchiveFactory;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.v3.common.PlainTextActionReporter;
+
+import jakarta.inject.Inject;
+
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.inject.Inject;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.UndeployCommandParameters;
-import org.glassfish.api.deployment.archive.*;
-import org.glassfish.deployment.common.*;
+import org.glassfish.api.deployment.archive.ArchiveHandler;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.deployment.common.DeploymentContextImpl;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.data.*;
+import org.glassfish.internal.data.ApplicationInfo;
+import org.glassfish.internal.data.ModuleInfo;
 import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.internal.deployment.ExtendedDeploymentContext;
 import org.glassfish.internal.deployment.SnifferManager;
-import org.glassfish.internal.embedded.*;
+import org.glassfish.internal.embedded.EmbeddedDeployer;
+import org.glassfish.internal.embedded.LifecycleException;
 import org.glassfish.internal.embedded.Server;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.jvnet.hk2.annotations.Service;
@@ -77,7 +86,7 @@ public class EmbeddedDeployerImpl implements EmbeddedDeployer {
     @Inject
     DasConfig config;
 
-    Map<String, EmbeddedDeployedInfo> deployedApps = new HashMap<String, EmbeddedDeployedInfo>();
+    Map<String, EmbeddedDeployedInfo> deployedApps = new HashMap<>();
 
     final static Logger logger = KernelLoggerInfo.getLogger();
 
@@ -88,7 +97,7 @@ public class EmbeddedDeployerImpl implements EmbeddedDeployer {
 
     @Override
     public File getAutoDeployDir() {
-        return new File(env.getDomainRoot(), config.getAutodeployDir());
+        return new File(env.getInstanceRoot(), config.getAutodeployDir());
     }
 
     @Override
@@ -102,7 +111,7 @@ public class EmbeddedDeployerImpl implements EmbeddedDeployer {
                 ConfigSupport.apply(new SingleConfigCode<DasConfig>() {
                     @Override
                     public Object run(DasConfig dasConfig) throws PropertyVetoException, TransactionFailure {
-                        dasConfig.setAutodeployEnabled(Boolean.valueOf(flag).toString());
+                        dasConfig.setAutodeployEnabled(Boolean.toString(flag));
                         return null;
                     }
                 }, config);

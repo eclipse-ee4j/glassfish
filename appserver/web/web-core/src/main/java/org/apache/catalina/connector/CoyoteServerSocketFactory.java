@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -52,19 +53,16 @@ import java.net.ServerSocket;
 public class CoyoteServerSocketFactory
     implements org.apache.catalina.net.ServerSocketFactory {
 
-    private String algorithm = null;
-    private boolean clientAuth = false;
-    private String keystoreFile =
-        System.getProperty("user.home") + File.separator + ".keystore";
-    private String randomFile =
-        System.getProperty("user.home") + File.separator + "random.pem";
-    private String rootFile =
-        System.getProperty("user.home") + File.separator + "root.pem";
+    private String algorithm;
+    private boolean clientAuth;
+    private String keystoreFile;
+    private String randomFile;
+    private String rootFile;
     private String keystorePass = "changeit";
     private String keystoreType = "JKS";
     private String protocol = "TLS";
     private String protocols;
-    private String sslImplementation = null;
+    private String sslImplementation;
     private String cipherSuites;
     private String keyAlias;
 
@@ -124,9 +122,10 @@ public class CoyoteServerSocketFactory
     public void setKeystoreFile(String keystoreFile) {
 
         File file = new File(keystoreFile);
-        if (!file.isAbsolute())
+        if (!file.isAbsolute()) {
             file = new File(System.getProperty("catalina.base"),
                             keystoreFile);
+        }
         this.keystoreFile = file.getAbsolutePath();
     }
 
@@ -147,9 +146,10 @@ public class CoyoteServerSocketFactory
     public void setRandomFile(String randomFile) {
 
         File file = new File(randomFile);
-        if (!file.isAbsolute())
+        if (!file.isAbsolute()) {
             file = new File(System.getProperty("catalina.base"),
                             randomFile);
+        }
         this.randomFile = file.getAbsolutePath();
     }
 
@@ -170,9 +170,10 @@ public class CoyoteServerSocketFactory
     public void setRootFile(String rootFile) {
 
         File file = new File(rootFile);
-        if (!file.isAbsolute())
+        if (!file.isAbsolute()) {
             file = new File(System.getProperty("catalina.base"),
                             rootFile);
+        }
         this.rootFile = file.getAbsolutePath();
     }
 
@@ -314,16 +315,19 @@ public class CoyoteServerSocketFactory
     // --------------------------------------------------------- Public Methods
 
 
+    @Override
     public ServerSocket createSocket(int port) {
         return (null);
     }
 
 
+    @Override
     public ServerSocket createSocket(int port, int backlog) {
         return (null);
     }
 
 
+    @Override
     public ServerSocket createSocket(int port, int backlog,
                                      InetAddress ifAddress) {
         return (null);

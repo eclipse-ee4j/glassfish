@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,45 +17,48 @@
 
 package com.sun.enterprise.universal.process;
 
-import java.io.*;
-import java.lang.management.ManagementFactory;
+import com.sun.enterprise.universal.io.SmartFile;
+import com.sun.enterprise.util.HostAndPort;
+import com.sun.enterprise.util.OS;
+import com.sun.enterprise.util.io.FileUtils;
 
-import com.sun.enterprise.universal.io.*;
-import com.sun.enterprise.util.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.lang.ProcessHandle.Info;
+import java.lang.System.Logger;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.nio.file.Files;
+import java.text.MessageFormat;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 import static com.sun.enterprise.util.StringUtils.ok;
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.TRACE;
 
 /**
  * Includes a somewhat kludgy way to get the pid for "me". Another casualty of
  * the JDK catering to the LEAST common denominator. Some obscure OS might not
  * have a pid! The name returned from the JMX method is like so: 12345
  *
- * @mycomputername where 12345 is the PID
  * @author bnevins
+ * @author David Matejcek
  */
 public final class ProcessUtils {
-    static final File jpsExe;
-    static final String jpsName;
-    static final File jstackExe;
-    static final String jstackName;
+
+    private static final Logger LOG = System.getLogger(ProcessUtils.class.getName());
+
+    private static final int SOCKET_TIMEOUT = 5000;
+    private static final String[] PATH = getSystemPath();
 
     private ProcessUtils() {
         // all static class -- no instances allowed!!
     }
 
-    // for informal testing.  Too difficult to make a unit test...
-    public static void main(String[] args) {
-        debug = true;
-        for (String s : args) {
-            String ret = killJvm(s);
-
-            if (ret == null)
-                ret = "SUCCESS!!";
-
-            System.out.println(s + " ===> " + ret);
-        }
-    }
 
     /**
      * Look for <strong>name</strong> in the Path. If it is found and if it is
@@ -64,7 +68,7 @@ public final class ProcessUtils {
      * @return the File object or null
      */
     public static File getExe(String name) {
-        for (String path : paths) {
+        for (String path : PATH) {
             File f = new File(path + "/" + name);
 
             if (f.canExecute()) {
@@ -74,221 +78,179 @@ public final class ProcessUtils {
         return null;
     }
 
-    /**
-     * Try and find the Process ID of "our" process.
-     *
-     * @return the process id or -1 if not known
-     */
-    public static int getPid() {
-        return pid;
-    }
 
     /**
-     * Kill the process with the given Process ID.
+     * Saves current pid file to the file.
      *
-     * @param pid
-     * @return a String if the process was not killed for any reason including
-     * if it does not exist. Return null if it was killed.
+     * @param pidFile
+     * @throws IOException
      */
-    public static String kill(int pid) {
+    public static void saveCurrentPid(final File pidFile) throws IOException {
+        FileUtils.writeStringToFile(Long.toString(ProcessHandle.current().pid()), pidFile);
+    }
+
+
+    public static boolean isAlive(final File pidFile) {
+        if (!pidFile.exists()) {
+            return false;
+        }
+        final long pid;
         try {
-            String pidString = Integer.toString(pid);
-            ProcessManager pm = null;
-            String cmdline;
-
-            if (OS.isWindowsForSure()) {
-                pm = new ProcessManager("taskkill", "/F", "/T", "/pid", pidString);
-                cmdline = "taskkill /F /T /pid " + pidString;
-            }
-            else {
-                pm = new ProcessManager("kill", "-9", "" + pidString);
-                cmdline = "kill -9 " + pidString;
-            }
-
-            pm.setEcho(false);
-            pm.execute();
-            int exitValue = pm.getExitValue();
-
-            if (exitValue == 0)
-                return null;
-            else
-                return Strings.get("ProcessUtils.killerror", cmdline,
-                        pm.getStderr() + pm.getStdout(), "" + exitValue);
+            pid = loadPid(pidFile);
+        } catch (Exception e) {
+            LOG.log(TRACE, "Could not load the pid file " + pidFile
+                + ", therefore we assume that the process stopped.", e);
+            return false;
         }
-        catch (ProcessManagerException ex) {
-            return ex.getMessage();
-        }
+        return isAlive(pid);
     }
+
+
+    public static boolean isAlive(final long pid) {
+        Optional<ProcessHandle> handle = ProcessHandle.of(pid);
+        if (handle.isEmpty()) {
+            return false;
+        }
+        if (!handle.get().isAlive()) {
+            return false;
+        }
+        Info info = handle.get().info();
+        if (info.commandLine().isEmpty()) {
+            LOG.log(TRACE, "Could not retrieve command line for the pid {0},"
+                + " therefore we assume that the process stopped.");
+            return false;
+        }
+        return true;
+    }
+
 
     /**
-     * Kill the JVM with the given main classname. The classname can be
-     * fully-qualified or just the classname (i.e. without the package name
-     * prepended).
-     *
-     * @param pid
-     * @return a String if the process was not killed for any reason including
-     * if it does not exist. Return null if it was killed.
+     * @param pidFile existing file containing pid.
+     * @return pid from the file
+     * @throws IllegalArgumentException non-existing, empty or unparseable file
      */
-    public static String killJvm(String classname) {
-        List<Integer> pids = Jps.getPid(classname);
-        StringBuilder sb = new StringBuilder();
-        int numDead = 0;
-
-        for (int p : pids) {
-            String s = kill(p);
-            if (s != null)
-                sb.append(s).append('\n');
-            else
-                ++numDead;
+    public static long loadPid(final File pidFile) throws IllegalArgumentException {
+        try {
+            return Long.parseLong(FileUtils.readSmallFile(pidFile).trim());
+        } catch (NumberFormatException | IOException e) {
+            throw new IllegalArgumentException("Could not parse the PID file: " + pidFile, e);
         }
-        String err = sb.toString();
-
-        if (err.length() > 0 || numDead <= 0)
-            return Strings.get("ProcessUtils.killjvmerror", err, numDead);
-        return null;
     }
+
 
     /**
-     * If we can determine it -- find out if the process that owns the given
-     * process id is running.
-     *
-     * @param aPid
-     * @return true if it's running, false if not and null if we don't know. I.e
-     * the return value is a true tri-state Boolean.
+     * @param endpoint endpoint host and port to use.
+     * @return true if the endpoint is listening on socket
      */
-    public static Boolean isProcessRunning(int aPid) {
-        try {
-            if (OS.isWindowsForSure())
-                return isProcessRunningWindows(aPid);
-            else
-                return isProcessRunningUnix(aPid);
-        }
-        catch (Exception e) {
-            return null;
+    public static boolean isListening(HostAndPort endpoint) {
+        try (Socket server = new Socket()) {
+            // Max 5 seconds to connect. It is an extreme value for local endpoint.
+            server.connect(new InetSocketAddress(endpoint.getHost(), endpoint.getPort()), SOCKET_TIMEOUT);
+            return true;
+        } catch (Exception ex) {
+            LOG.log(TRACE, "An attempt to open a socket to " + endpoint
+                + " resulted in exception. Therefore we assume the server has stopped.", ex);
+            return false;
         }
     }
-    //////////////////////////////////////////////////////////////////////////
-    //////////     all private below     /////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////
-    private static final int pid;
-    private static final String[] paths;
-   private static boolean debug;
 
-   private static boolean isProcessRunningWindows(int aPid) throws ProcessManagerException {
-        String pidString = Integer.toString(aPid);
-        ProcessManager pm = new ProcessManager("tasklist", "/NH", "/FI", "\"pid eq " + pidString + "\"");
-        pm.setEcho(false);
-        pm.execute();
-        String out = pm.getStdout() + pm.getStderr();
 
-        /* output is either
-         (1)
-         INFO: No tasks running with the specified criteria.
-         (2)
-         java.exe                    3760 Console                 0     64,192 K
-         */
-
-        if (debug) {
-            System.out.println("------------   Output from tasklist   ----------");
-            System.out.println(out);
-            System.out.println("------------------------------------------------");
+    /**
+     * Kill the process with the given Process ID and wait until it's gone - that means
+     * that the watchedPidFile is deleted OR the process is not resolved as alive by
+     * the {@link ProcessHandle#isAlive()} OR we cannot retrieve the command line of
+     * the process via {@link Info#commandLine()}.
+     *
+     * @param pidFile - used to load pid
+     * @param watchedPidFile - if this file vanish, we expect that the process stopped.
+     * @param timeout - timeout to wait until to meet conditions meaning that the process stopped
+     * @param printDots - print one dot per second when waiting.
+     * @throws KillNotPossibleException It wasn't possible to send the kill signal to the process.
+     * @throws KillTimeoutException Signal was sent, but process is still alive after the timeout.
+     */
+    public static void kill(File pidFile,
+        File watchedPidFile, Duration timeout, boolean printDots) throws KillNotPossibleException, KillTimeoutException {
+        LOG.log(DEBUG, "kill(pidFile={0}, watchedPidFile={1}, timeout={2}, printDots={3})",
+            pidFile, watchedPidFile, timeout, printDots);
+        if (!pidFile.exists()) {
+            return;
         }
-
-        if (ok(out)) {
-            // check for java.exe because tasklist or some other command might
-            // be reusing the pid. This isn't a guarantee because some other
-            // java process might be reusing the pid.
-            if (out.indexOf("java.exe") >= 0 && out.indexOf(pidString) >= 0)
-                return true;
-            else
-                return false;
+        final long pid = loadPid(pidFile);
+        if (!isAlive(pid)) {
+            LOG.log(INFO, "Process with pid {0} has already stopped.", pid);
+            return;
         }
-
-        throw new ProcessManagerException("unknown");
-    }
-
-    private static Boolean isProcessRunningUnix(int aPid) throws ProcessManagerException {
-        ProcessManager pm = new ProcessManager("kill", "-0", "" + aPid);
-        pm.setEcho(false);
-        pm.execute();
-        int retval = pm.getExitValue();
-        return retval == 0 ? Boolean.TRUE : Boolean.FALSE;
-    }
-
-    static {
-        // variables named with 'temp' are here so that we can legally set the
-        // 2 final variables above.
-
-        int tempPid = -1;
-
-        try {
-            String pids = ManagementFactory.getRuntimeMXBean().getName();
-            int index = -1;
-
-            if (ok(pids) && (index = pids.indexOf('@')) >= 0) {
-                tempPid = Integer.parseInt(pids.substring(0, index));
+        final Optional<ProcessHandle> handleOptional = ProcessHandle.of(pid);
+        final Optional<String> commandLine = handleOptional.get().info().commandLine();
+        LOG.log(INFO, "Killing process with pid {0} and command line {1}", pid, commandLine);
+        if (!handleOptional.get().destroyForcibly()) {
+            // Maybe the process died in between?
+            if (isAlive(pid)) {
+                // ... no, it did not.
+                throw new KillNotPossibleException(
+                    "It wasn't possible to destroy the process with pid=" + pid + ". Check your system permissions.");
             }
+            return;
         }
-        catch (Exception e) {
-            tempPid = -1;
+        // This is because File.exists() can cache file attributes
+        Supplier<Boolean> deathSign = () -> !isAlive(pid) || !Files.exists(watchedPidFile.toPath());
+        if (!waitFor(deathSign, timeout, printDots)) {
+            throw new KillTimeoutException(MessageFormat.format(
+                "The process {0} was killed, but it is still alive after timeout {1} s.", pid, timeout.getSeconds()));
         }
-        // final assignment
-        pid = tempPid;
+    }
 
-        String tempPaths = null;
 
+    /**
+     * @param sign logic defining what we are waiting for.
+     * @param timeout
+     * @param printDots print dot each second and new line in the end.
+     * @return true if the sign returned true before timeout.
+     */
+    public static boolean waitFor(Supplier<Boolean> sign, Duration timeout, boolean printDots) {
+        LOG.log(DEBUG, "waitFor(sign={0}, timeout={1}, printDots={2})", sign, timeout, printDots);
+        final Instant start = Instant.now();
+        try {
+            final Instant deadline = start.plus(timeout);
+            Instant nextDot = start;
+            while (Instant.now().isBefore(deadline)) {
+                if (sign.get()) {
+                    return true;
+                }
+                if (printDots) {
+                    Instant now = Instant.now();
+                    if (now.isAfter(nextDot)) {
+                        nextDot = now.plusSeconds(1L);
+                        System.out.print(".");
+                        System.out.flush();
+                    }
+                }
+                Thread.yield();
+            }
+            return false;
+        } finally {
+            if (printDots) {
+                System.out.println();
+            }
+            LOG.log(INFO, "Waiting finished after {0} ms.", Duration.between(start, Instant.now()).toMillis());
+        }
+    }
+
+
+    private static String[] getSystemPath() {
+        String tempPaths;
         if (OS.isWindows()) {
             tempPaths = System.getenv("Path");
-
-            if (!ok(tempPaths))
-                tempPaths = System.getenv("PATH"); // give it a try
-        }
-        else {
+            if (!ok(tempPaths)) {
+                tempPaths = System.getenv("PATH");
+            }
+        } else {
             tempPaths = System.getenv("PATH");
         }
 
-        if (ok(tempPaths))
-            paths = tempPaths.split(File.pathSeparator);
-        else
-            paths = new String[0];
-
-        if (OS.isWindows()) {
-            jpsName = "jps.exe";
-            jstackName = "jstack.exe";
+        if (ok(tempPaths)) {
+            return tempPaths.split(File.pathSeparator);
         }
-        else {
-            jpsName = "jps";
-            jstackName = "jstack";
-        }
-
-        // byron sez:
-        // looks VERY messy here.  Please feel free to clean up.  I just don't
-        // want to invest the time to do it right now.
-
-        final String javaroot = System.getProperty("java.home");
-        final String relpath = "/bin";
-        final File fhere1 = new File(javaroot + relpath + "/" + jpsName);
-        final File fhere2 = new File(javaroot + relpath + "/" + jstackName);
-        File fthere1 = new File(javaroot + "/.." + relpath + "/" + jpsName);
-        File fthere2 = new File(javaroot + "/.." + relpath + "/" + jstackName);
-
-        if (fhere1.isFile()) {
-            jpsExe = SmartFile.sanitize(fhere1);
-        }
-        else if (fthere1.isFile()) {
-            jpsExe = SmartFile.sanitize(fthere1);
-        }
-        else {
-            jpsExe = null;
-        }
-        if (fhere2.isFile()) {
-            jstackExe = SmartFile.sanitize(fhere2);
-        }
-        else if (fthere2.isFile()) {
-            jstackExe = SmartFile.sanitize(fthere2);
-        }
-        else {
-            jstackExe = null;
-        }
+        return new String[0];
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,8 +24,21 @@ import com.sun.enterprise.util.ObjectAnalyzer;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.io.ServerDirs;
-import java.io.*;
-import static com.sun.enterprise.admin.servermgmt.services.Constants.*;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import static com.sun.enterprise.admin.servermgmt.services.Constants.CREDENTIALS_START_TN;
+import static com.sun.enterprise.admin.servermgmt.services.Constants.CREDENTIALS_STOP_TN;
+import static com.sun.enterprise.admin.servermgmt.services.Constants.DISPLAY_NAME_TN;
+import static com.sun.enterprise.admin.servermgmt.services.Constants.README;
+import static com.sun.enterprise.admin.servermgmt.services.Constants.START_ARG_END;
+import static com.sun.enterprise.admin.servermgmt.services.Constants.START_ARG_START;
+import static com.sun.enterprise.admin.servermgmt.services.Constants.STOP_ARG_END;
+import static com.sun.enterprise.admin.servermgmt.services.Constants.STOP_ARG_START;
 
 /**
  * Warning: there is lots of file twiddling going on in this class. It is the nature of the beast.
@@ -59,10 +73,11 @@ public class WindowsService extends NonSMFServiceAdapter {
             trace("Target XML file written: " + targetXml);
             trace("**********   Object Dump  **********\n" + this.toString());
 
-            if (uninstall() == 0 && !info.dryRun)
+            if (uninstall() == 0 && !info.dryRun) {
                 trace(Strings.get("windows.services.uninstall.good"));
-            else
+            } else {
                 trace("No preexisting Service with that id and/or name was found");
+            }
 
             install();
         } catch (RuntimeException re) {
@@ -75,11 +90,13 @@ public class WindowsService extends NonSMFServiceAdapter {
     @Override
     public void deleteServiceInternal() {
         try {
-            if (!isInstalled())
+            if (!isInstalled()) {
                 throw new RuntimeException(Strings.get("not_installed"));
+            }
 
-            if (!targetWin32Exe.canExecute())
+            if (!targetWin32Exe.canExecute()) {
                 throw new RuntimeException(Strings.get("cant_exec"));
+            }
 
             ProcessManager pm = new ProcessManager(targetWin32Exe.getAbsolutePath(), "stop");
             pm.setEcho(false);
@@ -91,11 +108,13 @@ public class WindowsService extends NonSMFServiceAdapter {
 
             trace("Uninstalled Windows Service");
 
-            if (!targetWin32Exe.delete())
+            if (!targetWin32Exe.delete()) {
                 targetWin32Exe.deleteOnExit();
+            }
 
-            if (!targetXml.delete())
+            if (!targetXml.delete()) {
                 targetXml.deleteOnExit();
+            }
 
             trace("deleted " + targetWin32Exe + targetXml);
             trace(toString());
@@ -106,8 +125,9 @@ public class WindowsService extends NonSMFServiceAdapter {
 
     @Override
     public final String getSuccessMessage() {
-        if (info.dryRun)
+        if (info.dryRun) {
             return Strings.get("dryrun");
+        }
 
         return Strings.get("WindowsServiceCreated", info.serviceName, getTokenMap().get(Constants.DISPLAY_NAME_TN),
                 getServerDirs().getServerDir(), targetXml, targetWin32Exe);
@@ -118,8 +138,9 @@ public class WindowsService extends NonSMFServiceAdapter {
         // TODO 1/19/2010 bnevins duplicated in SMFService
         File f = new File(getServerDirs().getServerDir(), README);
 
-        if (StringUtils.ok(xmlFileCopy))
+        if (StringUtils.ok(xmlFileCopy)) {
             msg += xmlFileCopy;
+        }
 
         ServicesUtils.appendTextToFile(f, msg);
     }
@@ -169,8 +190,9 @@ public class WindowsService extends NonSMFServiceAdapter {
             setSourceWin32Exe();
             targetDir = new File(getServerDirs().getServerDir(), TARGET_DIR);
             if (!targetDir.isDirectory()) {
-                if (!targetDir.mkdirs())
+                if (!targetDir.mkdirs()) {
                     throw new RuntimeException(Strings.get("noTargetDir", targetDir));
+                }
             }
             targetWin32Exe = new File(targetDir, info.serviceName + "Service.exe");
             targetXml = new File(targetDir, info.serviceName + "Service.xml");
@@ -183,8 +205,9 @@ public class WindowsService extends NonSMFServiceAdapter {
     //////////////////////////   ALL PRIVATE BELOW    /////////////////////
     ///////////////////////////////////////////////////////////////////////
     private boolean isInstalled() {
-        if (targetDir == null || targetWin32Exe == null || targetXml == null)
+        if (targetDir == null || targetWin32Exe == null || targetXml == null) {
             throw new RuntimeException(Strings.get("internal.error", "call to isInstall() before initializeInternal()"));
+        }
 
         return targetWin32Exe.isFile() && targetXml.isFile();
     }
@@ -202,11 +225,13 @@ public class WindowsService extends NonSMFServiceAdapter {
                 copyStream(in, out);
                 trace("Copied from inside the jar to " + sourceWin32Exe);
             } finally {
-                if (in != null)
+                if (in != null) {
                     in.close();
+                }
 
-                if (out != null)
+                if (out != null) {
                     out.close();
+                }
             }
         }
         trace("Source executable: " + sourceWin32Exe);
@@ -233,8 +258,9 @@ public class WindowsService extends NonSMFServiceAdapter {
         // password file
         // note: you do NOT want to give a "--user" arg -- it can only appear
         // if there is a password file too
-        if (info.passwordFile == null)
+        if (info.passwordFile == null) {
             return " ";
+        }
 
         // 2. --
         String user = info.appserverUser; // might be null
@@ -256,15 +282,16 @@ public class WindowsService extends NonSMFServiceAdapter {
     }
 
     private int uninstall() throws ProcessManagerException {
-        if (info.dryRun || !targetWin32Exe.canExecute())
+        if (info.dryRun || !targetWin32Exe.canExecute()) {
             return 0;
+        }
         // it is NOT an error to not be able to uninstall
         ProcessManager mgr = new ProcessManager(targetWin32Exe.getPath(), "uninstall");
         mgr.setEcho(false);
-        mgr.execute();
+        int exitValue = mgr.execute();
         trace("Uninstall STDERR: " + mgr.getStderr());
         trace("Uninstall STDOUT: " + mgr.getStdout());
-        return mgr.getExitValue();
+        return exitValue;
     }
 
     private void install() throws ProcessManagerException {
@@ -278,19 +305,20 @@ public class WindowsService extends NonSMFServiceAdapter {
                 // oh well....
             }
 
-            if (!targetWin32Exe.delete())
+            if (!targetWin32Exe.delete()) {
                 dryRun("Dry Run error: delete failed for targetWin32Exe " + targetWin32Exe);
+            }
 
-            if (!targetXml.delete())
+            if (!targetXml.delete()) {
                 dryRun("Dry Run error: delete failed for targetXml " + targetXml);
+            }
         } else {
             ProcessManager mgr = new ProcessManager(targetWin32Exe.getPath(), "install");
             mgr.setEcho(false);
-            mgr.execute();
-            int ret = mgr.getExitValue();
-
-            if (ret != 0)
+            int ret = mgr.execute();
+            if (ret != 0) {
                 throw new RuntimeException(Strings.get("windows.services.install.bad", "" + ret, mgr.getStdout(), mgr.getStderr()));
+            }
 
             trace("Install STDERR: " + mgr.getStderr());
             trace("Install STDOUT: " + mgr.getStdout());
@@ -300,15 +328,18 @@ public class WindowsService extends NonSMFServiceAdapter {
     private void handlePreExisting(File targetWin32Exe, File targetXml, boolean force) {
         if (targetWin32Exe.exists() || targetXml.exists()) {
             if (force) {
-                if (!targetWin32Exe.delete())
+                if (!targetWin32Exe.delete()) {
                     trace("HandlePreExisting error: could not delete targetWin32Exe.");
+                }
 
-                if (!targetXml.delete())
+                if (!targetXml.delete()) {
                     trace("HandlePreExisting error: could not delete targetXml.");
+                }
 
-                if (targetWin32Exe.exists() || targetXml.exists())
+                if (targetWin32Exe.exists() || targetXml.exists()) {
                     throw new RuntimeException(Strings.get("services.alreadyCreated",
                             new File(targetDir, getServerDirs().getServerName() + "Service").toString() + ".*", "del"));
+                }
             }
         }
     }

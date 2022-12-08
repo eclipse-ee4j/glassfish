@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,11 @@
 
 package org.glassfish.api.admin;
 
+import com.sun.enterprise.module.bootstrap.StartupContext;
+
 import java.io.File;
 
 import org.jvnet.hk2.annotations.Contract;
-
-import com.sun.enterprise.module.bootstrap.StartupContext;
 
 /**
  * Allow access to the environment under which GlassFish operates.
@@ -41,10 +42,7 @@ public interface ServerEnvironment {
 
     /**
      * @return the instance root
-     * @deprecated As of GlassFish 3.1 replaced with {@link #getInstanceRoot() }
      */
-    @Deprecated File getDomainRoot();
-
     File getInstanceRoot();
 
     /**

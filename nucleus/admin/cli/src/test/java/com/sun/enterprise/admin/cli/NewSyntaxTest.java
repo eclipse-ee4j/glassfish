@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
 /**
@@ -42,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class NewSyntaxTest {
 
     @Test
-    public void testGetProgramOptionsForDefaults() throws CommandValidationException, CommandException {
+    public void defaults() throws CommandValidationException, CommandException {
         // this is the command line with *just* the command name on it.
         // Everything should be defaulted in that case.
         String[] argv = new String[] {"foo"};
@@ -59,13 +60,14 @@ public class NewSyntaxTest {
 
 
     @Test
-    public void hostB4Cmd() throws CommandValidationException, CommandException {
+    public void stdCmdLine() throws CommandValidationException, CommandException {
         String cmd = "new-command";
         String opt1Name = "--opt1";
         String opt1Value = "operand1";
-        String host = "foo";
+        String host = "glassfish.org";
         int port = 4544;
-        String[] cmdline = new String[] {"--host", host, "--port", "" + port, "--secure", cmd, opt1Name, opt1Value};
+        String[] cmdline = new String[] {"--host", host, "--port", Integer.toString(port), "--secure", cmd,
+            opt1Name, opt1Value};
         ProgramOptions po = parseCommand(cmdline);
 
         // now test program options
@@ -74,6 +76,19 @@ public class NewSyntaxTest {
         assertTrue(po.isSecure());
     }
 
+
+    @Test
+    public void invalidHost() throws CommandValidationException, CommandException {
+        String host = "IamNonExistingHostname.LocalDomain";
+        String[] cmdline = new String[] {"--host", host, "new-command"};
+        try {
+            ProgramOptions po = parseCommand(cmdline);
+            fail("Expected exception, but retrieved: " + po);
+        } catch (CommandException e) {
+            assertEquals("Provided hostname could not be resolved to an IP address: IamNonExistingHostname.LocalDomain",
+                e.getMessage());
+        }
+    }
 
     private ProgramOptions parseCommand(String[] argv) throws CommandValidationException, CommandException {
         Parser rcp = new Parser(argv, 0, ProgramOptions.getValidOptions(), false);

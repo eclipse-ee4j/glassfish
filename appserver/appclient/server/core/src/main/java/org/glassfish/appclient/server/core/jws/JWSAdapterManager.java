@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -143,8 +143,8 @@ public class JWSAdapterManager implements PostConstruct {
         iiopService = config.getExtensionByType(IiopService.class);
         umbrellaRoot = new File(installRootURI).getParentFile();
         umbrellaRootURI = umbrellaRoot.toURI();
-        systemLevelSignedJARsRoot = new File(serverEnv.getDomainRoot(), JWS_SIGNED_SYSTEM_JARS_ROOT);
-        domainLevelSignedJARsRoot = new File(serverEnv.getDomainRoot(), JWS_SIGNED_DOMAIN_JARS_ROOT);
+        systemLevelSignedJARsRoot = new File(serverEnv.getInstanceRoot(), JWS_SIGNED_SYSTEM_JARS_ROOT);
+        domainLevelSignedJARsRoot = new File(serverEnv.getInstanceRoot(), JWS_SIGNED_DOMAIN_JARS_ROOT);
     }
 
     public static String signingAlias(final DeploymentContext dc) {
@@ -181,7 +181,7 @@ public class JWSAdapterManager implements PostConstruct {
             AppClientHTTPAdapter sysAdapter = new AppClientHTTPAdapter(
                     NamingConventions.JWSAPPCLIENT_SYSTEM_PREFIX,
                     new Properties(),
-                    serverEnv.getDomainRoot(),
+                    serverEnv.getInstanceRoot(),
                     new File(installRootURI),
                     iiopService,
                     orbFactory);
@@ -419,7 +419,7 @@ public class JWSAdapterManager implements PostConstruct {
         final AppClientHTTPAdapter adapter = new AppClientHTTPAdapter(
                 contextRoot, staticContent,
                 dynamicContent, tokens,
-                serverEnv.getDomainRoot(),
+                serverEnv.getInstanceRoot(),
                 new File(installRootURI),
                 iiopService,
                 orbFactory);

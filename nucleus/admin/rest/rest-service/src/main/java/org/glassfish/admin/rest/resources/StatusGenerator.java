@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,8 +18,14 @@
 package org.glassfish.admin.rest.resources;
 
 import com.sun.enterprise.config.serverbeans.Domain;
+
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+
+import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -31,52 +38,58 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Vector;
 import java.util.logging.Level;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.core.MediaType;
+
 import org.glassfish.admin.rest.RestLogging;
-import org.glassfish.admin.rest.RestService;
-import org.glassfish.admin.rest.utils.Util;
 import org.glassfish.admin.rest.generator.ClassWriter;
 import org.glassfish.admin.rest.generator.CommandResourceMetaData;
 import org.glassfish.admin.rest.generator.CommandResourceMetaData.ParameterMetaData;
-
 import org.glassfish.admin.rest.generator.ResourcesGenerator;
 import org.glassfish.admin.rest.generator.ResourcesGeneratorBase;
+import org.glassfish.admin.rest.utils.Util;
 import org.glassfish.admin.rest.utils.xml.RestActionReporter;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.CommandModel;
+import org.glassfish.api.admin.CommandModel.ParamModel;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.RestRedirect;
 import org.glassfish.api.admin.RestRedirects;
 import org.glassfish.hk2.api.MultiException;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.ConfigModel;
 import org.jvnet.hk2.config.Dom;
 import org.jvnet.hk2.config.DomDocument;
 
 /**
+ * Generates a report containing lists of admin commands, and also a property file in user's home
+ * directory named {@value #FILE}
+ *
  * @author Ludovic Champenois ludo@java.net
  */
 @Path("/status/")
 public class StatusGenerator extends AbstractResource {
 
-    protected StringBuilder status = new StringBuilder();
-    private Set<String> commandsUsed = new TreeSet<String>();
-    private Set<String> allCommands = new TreeSet<String>();
-    private Set<String> restRedirectCommands = new TreeSet<String>();
-    private Map<String, String> commandsToResources = new TreeMap<String, String>();
-    private Map<String, String> resourcesToDeleteCommands = new TreeMap<String, String>();
-    private Properties propsI18N = new SortedProperties();
+    private static final File FILE = new File(System.getProperty("user.home"), "GlassFishI18NData.properties");
+
+    private final Set<String> commandsUsed = new TreeSet<>();
+    private final Set<String> allCommands = new TreeSet<>();
+    private final Set<String> restRedirectCommands = new TreeSet<>();
+    private final Map<String, String> commandsToResources = new TreeMap<>();
+    private final Map<String, String> resourcesToDeleteCommands = new TreeMap<>();
+    private final Properties propsI18N = new SortedProperties();
+    private final ServiceLocator globalLocator = Globals.getDefaultHabitat();
 
     static private class SortedProperties extends Properties {
 
+        private static final long serialVersionUID = 1L;
+
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        @Override
         public Enumeration keys() {
-            Enumeration keysEnum = super.keys();
-            Vector<String> keyList = new Vector<String>();
+            Enumeration<?> keysEnum = super.keys();
+            Vector<String> keyList = new Vector<>();
             while (keysEnum.hasMoreElements()) {
                 keyList.add((String) keysEnum.nextElement());
             }
@@ -88,48 +101,44 @@ public class StatusGenerator extends AbstractResource {
     @GET
     @Produces({ "text/plain" })
     public String getPlain() {
-        //        status.append("\n------------------------");
-        //        status.append("Status of Command usage\n");
-        try {
-            Domain entity = serviceLocator.getService(Domain.class);
-            Dom dom = Dom.unwrap(entity);
-            DomDocument document = dom.document;
+        Domain domain = locate(Domain.class);
+        if (domain != null) {
+            Dom dom = Dom.unwrap(domain);
+            DomDocument<?> document = dom.document;
             ConfigModel rootModel = dom.document.getRoot().model;
 
             ResourcesGenerator resourcesGenerator = new NOOPResourcesGenerator(serviceLocator);
             resourcesGenerator.generateSingle(rootModel, document);
             resourcesGenerator.endGeneration();
-        } catch (Exception ex) {
-            RestLogging.restLogger.log(Level.SEVERE, null, ex);
-            //retVal = "Exception encountered during generation process: " + ex.toString() + "\nPlease look at server.log for more information.";
         }
 
+        final StringBuilder status = new StringBuilder();
         status.append("\n------------------------");
         status.append("All Commands used in REST Admin:\n");
-        for (String ss : commandsUsed) {
-            status.append(ss + "\n");
+        for (String command : commandsUsed) {
+            status.append(command).append('\n');
         }
 
-        listOfCommands();
-        for (String ss : commandsUsed) {
-            allCommands.remove(ss);
+        detectFromCommandRunner(allCommands);
+        for (String command : commandsUsed) {
+            allCommands.remove(command);
         }
 
         status.append("\n------------------------");
         status.append("Missing Commands not used in REST Admin:\n");
 
-        for (String ss : allCommands) {
-            if (hasTargetParam(ss)) {
-                status.append(ss + "          has a target param " + "\n");
+        for (String command : allCommands) {
+            if (hasTargetParam(command)) {
+                status.append(command).append("          has a target param ").append('\n');
             } else {
-                status.append(ss + "\n");
+                status.append(command).append('\n');
             }
         }
         status.append("\n------------------------");
         status.append("REST-REDIRECT Commands defined on ConfigBeans:\n");
 
         for (String ss : restRedirectCommands) {
-            status.append(ss + "\n");
+            status.append(ss).append('\n');
         }
 
         status.append("\n------------------------");
@@ -139,9 +148,9 @@ public class StatusGenerator extends AbstractResource {
         while (entryIterator.hasNext()) {
             Map.Entry<String, String> entry = entryIterator.next();
             if (hasTargetParam(entry.getKey())) {
-                status.append(entry.getKey() + "   :::target:::   " + entry.getValue() + "\n");
+                status.append(entry.getKey()).append("   :::target:::   ").append(entry.getValue()).append('\n');
             } else {
-                status.append(entry.getKey() + "      :::      " + entry.getValue() + "\n");
+                status.append(entry.getKey()).append("      :::      ").append(entry.getValue()).append('\n');
             }
         }
         status.append("\n------------------------");
@@ -150,24 +159,15 @@ public class StatusGenerator extends AbstractResource {
         entryIterator = resourcesToDeleteCommands.entrySet().iterator();
         while (entryIterator.hasNext()) {
             Map.Entry<String, String> entry = entryIterator.next();
-            status.append(entry.getKey() + "      :::      " + entry.getValue() + "\n");
+            status.append(entry.getKey()).append("      :::      ").append(entry.getValue()).append('\n');
         }
 
-        FileOutputStream f = null;
-        try {
-            f = new FileOutputStream(System.getProperty("user.home") + "/GlassFishI18NData.properties");
+        // FIXME: Wouldn't be better to send it to the client?
+        RestLogging.restLogger.log(Level.INFO, "Storing properties to the file {0}", FILE);
+        try (FileOutputStream f = new FileOutputStream(FILE)) {
             propsI18N.store(f, "");
-
         } catch (Exception ex) {
             RestLogging.restLogger.log(Level.SEVERE, null, ex);
-        } finally {
-            if (f != null) {
-                try {
-                    f.close();
-                } catch (IOException ex) {
-                    RestLogging.restLogger.log(Level.SEVERE, null, ex);
-                }
-            }
         }
         return status.toString();
     }
@@ -175,25 +175,24 @@ public class StatusGenerator extends AbstractResource {
     @GET
     @Produces({ MediaType.TEXT_HTML })
     public String getHtml() {
-        try {
-            Domain entity = serviceLocator.getService(Domain.class);
+        Domain entity = locate(Domain.class);
+        if (entity != null) {
             Dom dom = Dom.unwrap(entity);
-            DomDocument document = dom.document;
+            DomDocument<?> document = dom.document;
             ConfigModel rootModel = dom.document.getRoot().model;
 
             ResourcesGenerator resourcesGenerator = new NOOPResourcesGenerator(serviceLocator);
             resourcesGenerator.generateSingle(rootModel, document);
             resourcesGenerator.endGeneration();
-        } catch (Exception ex) {
-            RestLogging.restLogger.log(Level.SEVERE, null, ex);
         }
 
+        final StringBuilder status = new StringBuilder();
         status.append("<h4>All Commands used in REST Admin</h4>\n<ul>\n");
         for (String ss : commandsUsed) {
             status.append("<li>").append(ss).append("</li>\n");
         }
 
-        listOfCommands();
+        detectFromCommandRunner(allCommands);
         for (String ss : commandsUsed) {
             allCommands.remove(ss);
         }
@@ -210,8 +209,8 @@ public class StatusGenerator extends AbstractResource {
 
         status.append("</ul>\n<hr/>\n").append("<h4>REST-REDIRECT Commands defined on ConfigBeans</h4>\n<ul>\n");
 
-        for (String ss : restRedirectCommands) {
-            status.append("<li>").append(ss).append("</li>\n");
+        for (String command : restRedirectCommands) {
+            status.append("<li>").append(command).append("</li>\n");
         }
 
         status.append("</ul>\n<hr/>\n").append("<h4>Commands to Resources Mapping Usage in REST Admin</h4>\n")
@@ -234,50 +233,76 @@ public class StatusGenerator extends AbstractResource {
         }
         status.append("</table>");
 
-        FileOutputStream f = null;
-        try {
-            f = new FileOutputStream(System.getProperty("user.home") + "/GlassFishI18NData.properties");
+        // FIXME: Wouldn't be better to send it to the client?
+        RestLogging.restLogger.log(Level.INFO, "Storing properties to the file {0}", FILE);
+        try (FileOutputStream f = new FileOutputStream(FILE)) {
             propsI18N.store(f, "");
-
         } catch (Exception ex) {
             RestLogging.restLogger.log(Level.SEVERE, null, ex);
-        } finally {
-            if (f != null) {
-                try {
-                    f.close();
-                } catch (IOException ex) {
-                    RestLogging.restLogger.log(Level.SEVERE, null, ex);
-                }
-            }
         }
         return status.toString();
     }
 
-    public void listOfCommands() {
-        CommandRunner cr = serviceLocator.getService(CommandRunner.class);
+    private void detectFromCommandRunner(Set<String> commands) {
+        CommandRunner cr = locate(CommandRunner.class);
         RestActionReporter ar = new RestActionReporter();
         ParameterMap parameters = new ParameterMap();
         cr.getCommandInvocation("list-commands", ar, getSubject()).parameters(parameters).execute();
         List<ActionReport.MessagePart> children = ar.getTopMessagePart().getChildren();
-        for (ActionReport.MessagePart part : children) {
-            allCommands.add(part.getMessage());
-
+        if (children != null) {
+            for (ActionReport.MessagePart part : children) {
+                commands.add(part.getMessage());
+            }
         }
         ar = new RestActionReporter();
         parameters = new ParameterMap();
         parameters.add("DEFAULT", "_");
         cr.getCommandInvocation("list-commands", ar, getSubject()).parameters(parameters).execute();
         children = ar.getTopMessagePart().getChildren();
-        for (ActionReport.MessagePart part : children) {
-            allCommands.add(part.getMessage());
+        if (children != null) {
+            for (ActionReport.MessagePart part : children) {
+                commands.add(part.getMessage());
+            }
+        }
+    }
 
+    private <T> T locate(Class<T> clazz) {
+        return globalLocator.getService(clazz);
+    }
+
+    private Boolean hasTargetParam(String command) {
+        try {
+            if (command != null) {
+                Collection<CommandModel.ParamModel> params;
+                params = getParamMetaData(command);
+
+                CommandModel.ParamModel paramModel;
+                for (ParamModel param : params) {
+                    paramModel = param;
+                    //   Param param = paramModel.getParam();
+                    if (paramModel.getName().equals("target")) {
+                        return true;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            RestLogging.restLogger.log(Level.FINE, e.getMessage(), e);
         }
 
+        return false;
     }
+
+    private Collection<CommandModel.ParamModel> getParamMetaData(String commandName) {
+        CommandRunner cr = locate(CommandRunner.class);
+        CommandModel cm = cr.getModel(commandName, RestLogging.restLogger);
+        Collection<CommandModel.ParamModel> params = cm.getParameters();
+        return params;
+    }
+
 
     class NOOPClassWriter implements ClassWriter {
 
-        private String className;
+        private final String className;
 
         public NOOPClassWriter(String className, String baseClassName, String resourcePath) {
             this.className = className;
@@ -289,23 +314,14 @@ public class StatusGenerator extends AbstractResource {
         @Override
         public void createGetCommandResourcePaths(List<CommandResourceMetaData> commandMetaData) {
             for (CommandResourceMetaData metaData : commandMetaData) {
-                //                StatusGenerator.this.status.append("   ");
-                //                StatusGenerator.this.status.append(metaData.command);
                 commandsUsed.add(metaData.command);
-
                 if (commandsToResources.containsKey(metaData.command)) {
                     String val = commandsToResources.get(metaData.command) + ", " + className;
                     commandsToResources.put(metaData.command, val);
-
                 } else {
                     commandsToResources.put(metaData.command, className);
                 }
-
-                //                StatusGenerator.this.status.append("\n");
             }
-
-            //            StatusGenerator.this.status.append("\n");
-
         }
 
         @Override
@@ -327,9 +343,6 @@ public class StatusGenerator extends AbstractResource {
 
         @Override
         public void createGetDeleteCommand(String commandName) {
-            //            StatusGenerator.this.status.append("   ");
-            //            StatusGenerator.this.status.append(commandName);
-            //            StatusGenerator.this.status.append("\n");
             commandsUsed.add(commandName);
             if (commandsToResources.containsKey(commandName)) {
                 String val = commandsToResources.get(commandName) + ", " + className;
@@ -343,9 +356,6 @@ public class StatusGenerator extends AbstractResource {
 
         @Override
         public void createGetPostCommand(String commandName) {
-            //            StatusGenerator.this.status.append("   ");
-            //            StatusGenerator.this.status.append(commandName);
-            //            StatusGenerator.this.status.append("\n");
             commandsUsed.add(commandName);
             if (commandsToResources.containsKey(commandName)) {
                 String val = commandsToResources.get(commandName) + ", " + className;
@@ -367,14 +377,10 @@ public class StatusGenerator extends AbstractResource {
 
         @Override
         public void createGetPostCommandForCollectionLeafResource(String commandName) {
-            //            StatusGenerator.this.status.append("   ");
-            //            StatusGenerator.this.status.append(commandName);
-            //            StatusGenerator.this.status.append("\n");
             commandsUsed.add(commandName);
             if (commandsToResources.containsKey(commandName)) {
                 String val = commandsToResources.get(commandName) + ", " + className;
                 commandsToResources.put(commandName, val);
-
             } else {
                 commandsToResources.put(commandName, className);
             }
@@ -382,9 +388,6 @@ public class StatusGenerator extends AbstractResource {
 
         @Override
         public void createGetDeleteCommandForCollectionLeafResource(String commandName) {
-            //            StatusGenerator.this.status.append("   ");
-            //            StatusGenerator.this.status.append(commandName);
-            //            StatusGenerator.this.status.append("\n");
             commandsUsed.add(commandName);
             if (commandsToResources.containsKey(commandName)) {
                 String val = commandsToResources.get(commandName) + ", " + className;
@@ -420,17 +423,17 @@ public class StatusGenerator extends AbstractResource {
         @Override
         public void configModelVisited(ConfigModel model) {
             //I18n Calculation
-            for (String a : model.getAttributeNames()) {
-                String key = model.targetTypeName + "." + Util.eleminateHypen(a);
-                propsI18N.setProperty(key + ".label", a);
-                propsI18N.setProperty(key + ".help", a);
+            for (String attrName : model.getAttributeNames()) {
+                String key = model.targetTypeName + "." + Util.eleminateHypen(attrName);
+                propsI18N.setProperty(key + ".label", attrName);
+                propsI18N.setProperty(key + ".help", attrName);
             }
 
             Class<? extends ConfigBeanProxy> cbp = null;
             try {
                 cbp = (Class<? extends ConfigBeanProxy>) model.classLoaderHolder.loadClass(model.targetTypeName);
             } catch (MultiException e) {
-                e.printStackTrace();
+                RestLogging.restLogger.log(Level.WARNING, "Cannot load " + model.targetTypeName, e);
                 return;
             }
             RestRedirects restRedirects = cbp.getAnnotation(RestRedirects.class);
@@ -444,35 +447,5 @@ public class StatusGenerator extends AbstractResource {
                 }
             }
         }
-    }
-
-    public Boolean hasTargetParam(String command) {
-        try {
-            if (command != null) {
-                Collection<CommandModel.ParamModel> params;
-                params = getParamMetaData(command);
-
-                Iterator<CommandModel.ParamModel> iterator = params.iterator();
-                CommandModel.ParamModel paramModel;
-                while (iterator.hasNext()) {
-                    paramModel = iterator.next();
-                    //   Param param = paramModel.getParam();
-                    if (paramModel.getName().equals("target")) {
-                        return true;
-                    }
-                }
-            }
-        } catch (Exception e) {
-            RestLogging.restLogger.log(Level.FINE, e.getMessage());
-        }
-
-        return false;
-    }
-
-    public Collection<CommandModel.ParamModel> getParamMetaData(String commandName) {
-        CommandRunner cr = serviceLocator.getService(CommandRunner.class);
-        CommandModel cm = cr.getModel(commandName, RestLogging.restLogger);
-        Collection<CommandModel.ParamModel> params = cm.getParameters();
-        return params;
     }
 }

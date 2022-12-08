@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,41 +17,39 @@
 
 package com.sun.enterprise.v3.server;
 
+import com.sun.appserv.server.util.Version;
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Configs;
 import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.JavaConfig;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.SystemProperty;
-import com.sun.enterprise.util.io.FileUtils;
-import java.io.File;
-import java.util.Collections;
-import java.util.List;
-
-import org.glassfish.hk2.runlevel.RunLevel;
-import org.glassfish.internal.api.InitRunLevel;
-import com.sun.enterprise.config.serverbeans.JavaConfig;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.universal.process.ProcessUtils;
-import com.sun.enterprise.util.net.NetUtils;
 import com.sun.enterprise.util.SystemPropertyConstants;
-import com.sun.appserv.server.util.Version;
-import com.sun.enterprise.universal.io.SmartFile;
+import com.sun.enterprise.util.io.ServerDirs;
+import com.sun.enterprise.util.net.NetUtils;
 
-import org.jvnet.hk2.annotations.Optional;
-import org.glassfish.hk2.api.PostConstruct;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.config.support.TranslatedConfigView;
-import org.glassfish.api.admin.ServerEnvironment;
-
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-import java.util.logging.Logger;
+import java.io.File;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.config.support.TranslatedConfigView;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.runlevel.RunLevel;
+import org.glassfish.internal.api.InitRunLevel;
 import org.glassfish.kernel.KernelLoggerInfo;
+import org.jvnet.hk2.annotations.Optional;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Init run level service to take care of vm related tasks.
@@ -58,25 +57,29 @@ import org.glassfish.kernel.KernelLoggerInfo;
  * @author Jerome Dochez
  * @author Byron Nevins
  */
-// TODO: eventually use CageBuilder so that this gets triggered when JavaConfig enters Habitat.
 @Service
 @RunLevel( value=InitRunLevel.VAL, mode=RunLevel.RUNLEVEL_MODE_NON_VALIDATING)
 public class SystemTasksImpl implements SystemTasks, PostConstruct {
 
-    // in embedded environment, JavaConfig is pointless, so make this optional
-    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME) @Optional
-
-    JavaConfig javaConfig;
-
-    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
-    Server server;
+    private static final Logger LOG = KernelLoggerInfo.getLogger();
+    private final static LocalStringsImpl I18N = new LocalStringsImpl(SystemTasks.class);
 
     @Inject
-    Domain domain;
+    private ServerEnvironment env;
 
-    Logger _logger = KernelLoggerInfo.getLogger();
+    // in embedded environment, JavaConfig is pointless, so make this optional
+    @Inject
+    @Optional
+    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    private JavaConfig javaConfig;
 
-    private final static LocalStringsImpl strings = new LocalStringsImpl(SystemTasks.class);
+    @Inject
+    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    private Server server;
+
+    @Inject
+    private Domain domain;
+
 
     @Override
     public void postConstruct() {
@@ -84,30 +87,20 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
         setSystemPropertiesFromEnv();
         setSystemPropertiesFromDomainXml();
         resolveJavaConfig();
-        _logger.fine("SystemTasks: loaded server named: " + server.getName());
+        LOG.log(Level.FINE, "SystemTasks: loaded server named: {0}", server.getName());
     }
 
     @Override
     public void writePidFile() {
         File pidFile = null;
-
         try {
-            pidFile = SmartFile.sanitize(getPidFile());
-            File pidFileCopy = new File(pidFile.getPath() + ".prev");
-            String pidString = getPidString();
-            FileUtils.writeStringToFile(pidString, pidFile);
-            FileUtils.writeStringToFile(pidString, pidFileCopy);
-        }
-        catch (PidException pe) {
-            _logger.warning(pe.getMessage());
-        }
-        catch (Exception e) {
-            _logger.warning(strings.get("internal_error", e));
-        }
-        finally {
-            if (pidFile != null) {
-                pidFile.deleteOnExit();
-            }
+            ServerDirs serverDirs = new ServerDirs(env.getInstanceRoot());
+            ProcessUtils.saveCurrentPid(serverDirs.getLastPidFile());
+            pidFile = serverDirs.getPidFile();
+            pidFile.deleteOnExit();
+            ProcessUtils.saveCurrentPid(pidFile);
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, I18N.get("internal_error", e), e);
         }
     }
 
@@ -115,7 +108,7 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
         System.setProperty("glassfish.version", Version.getFullVersion());
     }
 
-    /*
+    /**
      * Here is where we make the change Post-TP2 to *not* use JVM System Properties
      */
     private void setSystemProperty(String name, String value) {
@@ -125,20 +118,12 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
     private void setSystemPropertiesFromEnv() {
         // adding our version of some system properties.
         setSystemProperty(SystemPropertyConstants.JAVA_ROOT_PROPERTY, System.getProperty("java.home"));
-
         String hostname = "localhost";
-
-
         try {
             // canonical name checks to make sure host is proper
             hostname = NetUtils.getCanonicalHostName();
-
-
-        }
-        catch (Exception ex) {
-            if (_logger != null) {
-                _logger.log(Level.SEVERE, KernelLoggerInfo.exceptionHostname, ex);
-            }
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, KernelLoggerInfo.exceptionHostname, ex);
         }
         if (hostname != null) {
             setSystemProperty(SystemPropertyConstants.HOST_NAME_PROPERTY, hostname);
@@ -157,25 +142,14 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
         List<SystemProperty> domainSPList = domain.getSystemProperty();
         List<SystemProperty> configSPList = getConfigSystemProperties();
         Cluster cluster = server.getCluster();
-        List<SystemProperty> clusterSPList = null;
-
-
-        if (cluster != null) {
-            clusterSPList = cluster.getSystemProperty();
-
-
-        }
+        final List<SystemProperty> clusterSPList = cluster == null ? null : cluster.getSystemProperty();
         List<SystemProperty> serverSPList = server.getSystemProperty();
 
-        setSystemProperties(
-                domainSPList);
-        setSystemProperties(
-                configSPList);
-
+        setSystemProperties(domainSPList);
+        setSystemProperties(configSPList);
 
         if (clusterSPList != null) {
             setSystemProperties(clusterSPList);
-
 
         }
         setSystemProperties(serverSPList);
@@ -194,7 +168,7 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
                     break;
                 }
             }
-            return (List<SystemProperty>) (config != null ? config.getSystemProperty() : Collections.emptyList());
+            return config == null ? Collections.emptyList() : config.getSystemProperty();
         }
         catch (Exception e) {  //possible NPE if domain.xml has issues!
             return Collections.emptyList();
@@ -204,16 +178,13 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
     private void resolveJavaConfig() {
         if (javaConfig != null) {
             Pattern p = Pattern.compile("-D([^=]*)=(.*)");
-
             for (String jvmOption : javaConfig.getJvmOptions()) {
                 Matcher m = p.matcher(jvmOption);
-
                 if (m.matches()) {
-                    setSystemProperty(m.group(1), TranslatedConfigView.getTranslatedValue(m.group(2)).toString());
-
-                    if (_logger.isLoggable(Level.FINE)) {
-                        _logger.fine("Setting " + m.group(1) + " = " + TranslatedConfigView.getTranslatedValue(m.group(2)));
-                    }
+                    String name = m.group(1);
+                    String value = TranslatedConfigView.expandValue(m.group(2));
+                    LOG.log(Level.FINEST, "Setting {0}={1}", new Object[] {name, value});
+                    setSystemProperty(name, value);
                 }
             }
         }
@@ -230,49 +201,7 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
         }
     }
 
-    private String getPidString() {
-        return "" + ProcessUtils.getPid();
-    }
-
-    private File getPidFile() throws PidException {
-        try {
-            String configDirString = System.getProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY);
-
-            if (!ok(configDirString))
-                throw new PidException(strings.get("internal_error",
-                        "Null or empty value for the System Property: "
-                        + SystemPropertyConstants.INSTANCE_ROOT_PROPERTY));
-
-            File configDir = new File(new File(configDirString), "config");
-
-            if (!configDir.isDirectory())
-                throw new PidException(strings.get("bad_config_dir", configDir));
-
-            File pidFile = new File(configDir, "pid");
-
-            if (pidFile.exists()) {
-                if (!pidFile.delete() || pidFile.exists()) {
-                    throw new PidException(strings.get("cant_delete_pid_file", pidFile));
-                }
-            }
-            return pidFile;
-        }
-        catch (PidException pe) {
-            throw pe;
-        }
-        catch (Exception e) {
-            throw new PidException(e.getMessage());
-        }
-    }
-
     private static boolean ok(String s) {
-        return s != null && s.length() > 0;
-    }
-
-    private static class PidException extends Exception {
-
-        public PidException(String s) {
-            super(s);
-        }
+        return s != null && !s.isEmpty();
     }
 }

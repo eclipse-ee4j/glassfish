@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,16 +18,23 @@
 package com.sun.enterprise.v3.admin.cluster;
 
 import com.sun.enterprise.module.ModulesRegistry;
-import org.glassfish.api.*;
-import org.glassfish.api.admin.*;
-import jakarta.inject.Inject;
 import com.sun.enterprise.v3.admin.RestartServer;
 
-import org.jvnet.hk2.annotations.Service;
+import jakarta.inject.Inject;
+
+import org.glassfish.api.Async;
+import org.glassfish.api.I18n;
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandLock;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 /**
- *
  * @author bnevins
  */
 @Service(name = "_restart-instance")
@@ -38,7 +46,7 @@ import org.glassfish.hk2.api.PerLookup;
 public class RestartInstanceInstanceCommand extends RestartServer implements AdminCommand {
 
     @Inject
-    ModulesRegistry registry;
+    private ModulesRegistry registry;
     @Inject
     private ServerEnvironment env;
     // no default value!  We use the Boolean as a tri-state.
@@ -48,17 +56,16 @@ public class RestartInstanceInstanceCommand extends RestartServer implements Adm
     @Override
     public void execute(AdminCommandContext context) {
         if (!env.isInstance()) {
-            String msg = Strings.get("restart.instance.notInstance",
-                    env.getRuntimeType().toString());
-
+            String msg = Strings.get("restart.instance.notInstance", env.getRuntimeType());
             context.getLogger().warning(msg);
             return;
         }
         setRegistry(registry);
         setServerName(env.getInstanceName());
 
-        if (debug != null)
+        if (debug != null) {
             setDebug(debug);
+        }
 
         doExecute(context);
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,16 +26,8 @@ import com.sun.enterprise.server.logging.LogFacade;
 import com.sun.enterprise.server.logging.logviewer.backend.LogFilterForInstance;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
-import org.glassfish.admin.payload.PayloadImpl;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.I18n;
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
-import jakarta.inject.Inject;
 
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.hk2.api.ServiceLocator;
+import jakarta.inject.Inject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,8 +37,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.admin.payload.PayloadImpl;
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.I18n;
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.Payload;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Created by IntelliJ IDEA.
@@ -91,6 +99,7 @@ public class CollectLogFiles implements AdminCommand {
     @Inject
     LoggingConfigImpl loggingConfig;
 
+    @Override
     public void execute(AdminCommandContext context) {
 
         final ActionReport report = context.getActionReport();
@@ -123,7 +132,7 @@ public class CollectLogFiles implements AdminCommand {
 
                 String sourceDir = "";
                 if (logFileDetails.contains("${com.sun.aas.instanceRoot}/logs")) {
-                    sourceDir = env.getDomainRoot() + File.separator + "logs";
+                    sourceDir = env.getInstanceRoot() + File.separator + "logs";
                 } else {
                     sourceDir = logFileDetails.substring(0, logFileDetails.lastIndexOf(File.separator));
                 }
@@ -142,7 +151,7 @@ public class CollectLogFiles implements AdminCommand {
             try {
                 String zipFilePath = getZipFilePath().getAbsolutePath();
                 zipFile = loggingConfig.createZipFile(zipFilePath);
-                if (zipFile == null || new File(zipFile) == null) {
+                if (zipFile == null) {
                     // Failure during zip
                     final String errorMsg = localStrings.getLocalString(
                             "collectlogfiles.creatingZip", "Error while creating zip file {0}.", zipFilePath);
@@ -269,7 +278,7 @@ public class CollectLogFiles implements AdminCommand {
             try {
                 String sourceDir = "";
                 if (logFileDetails.contains("${com.sun.aas.instanceRoot}/logs")) {
-                    sourceDir = env.getDomainRoot() + File.separator + "logs";
+                    sourceDir = env.getInstanceRoot() + File.separator + "logs";
                 } else {
                     sourceDir = logFileDetails.substring(0, logFileDetails.lastIndexOf(File.separator));
                 }
@@ -410,7 +419,9 @@ public class CollectLogFiles implements AdminCommand {
                     int bytesRead;
 
                     while ((bytesRead = from.read(buffer)) != -1)
+                     {
                         to.write(buffer, 0, bytesRead); // write
+                    }
                 }
                 catch (Exception ex) {
                     final String errorMsg = localStrings.getLocalString(
@@ -420,8 +431,12 @@ public class CollectLogFiles implements AdminCommand {
                     report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                     return;
                 } finally {
-                    if (from != null) try { from.close(); } catch (Exception ex) {}
-                    if (to != null) try { to.close(); } catch (Exception ex) {}
+                    if (from != null) {
+                        try { from.close(); } catch (Exception ex) {}
+                    }
+                    if (to != null) {
+                        try { to.close(); } catch (Exception ex) {}
+                    }
                 }
 
 
@@ -457,7 +472,7 @@ public class CollectLogFiles implements AdminCommand {
         //code to files to output directory
         try {
             // GLASSFISH-17627: ignore zipFile, but add files directly, similarly to zipFile
-            List<File> files = new ArrayList<File>(Arrays.asList(tempDirectory.listFiles()));
+            List<File> files = new ArrayList<>(Arrays.asList(tempDirectory.listFiles()));
 
             for (int i = 0; i < files.size(); i++) {
                 File file = files.get(i);
@@ -494,7 +509,9 @@ public class CollectLogFiles implements AdminCommand {
                 outboundPayload.writeTo(targetStream);
                 targetStream.flush();
                 } finally {
-                    if (targetStream != null) targetStream.close();
+                    if (targetStream != null) {
+                        targetStream.close();
+                    }
                 }
             }
         }
@@ -588,8 +605,7 @@ public class CollectLogFiles implements AdminCommand {
         boolean noFileFound = true;
 
         if (allLogFileNames != null) { // This check for,  if directory doesn't present or missing on machine. It happens due to bug 16451
-            for (int i = 0; i < allLogFileNames.length; i++) {
-                File file = allLogFileNames[i];
+            for (File file : allLogFileNames) {
                 String fileName = file.getName();
                 // code to remove . and .. file which is return
                 if (file.isFile() && !fileName.equals(".") && !fileName.equals("..") && fileName.contains(".log")

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,17 +15,11 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * LocalStringsImpl.java
- *
- * Created on December 3, 2005, 5:26 PM
- *
- */
 package com.sun.enterprise.universal.i18n;
 
-import java.util.*;
-import java.util.ResourceBundle;
 import java.text.MessageFormat;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * This class makes getting localized strings super-simple.  This is the companion
@@ -50,9 +45,14 @@ import java.text.MessageFormat;
  * <li>String s = sh.get("xyz", "something", "foo", "whatever");
  * </ul>
  *
- * @author bnevins
+ * @author bnevins 2005
  */
 public class LocalStringsImpl {
+    private ResourceBundle bundle;
+    private String propsName = "LocalStrings";
+    private static final String thisPackage = "com.elf.util";
+    private static final ResourceBundle.Control rbcontrol = ResourceBundle.Control
+        .getControl(ResourceBundle.Control.FORMAT_PROPERTIES);
 
     /**
      * Create a LocalStringsImpl instance.
@@ -163,7 +163,7 @@ public class LocalStringsImpl {
      */
     public boolean getBoolean(String indexString, boolean defaultValue) {
         try {
-            return Boolean.valueOf(getBundle().getString(indexString));
+            return Boolean.parseBoolean(getBundle().getString(indexString));
         }
         catch (Exception e) {
             // it is not an error to have no key...
@@ -171,9 +171,7 @@ public class LocalStringsImpl {
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-    private ResourceBundle getBundle() {
+    public ResourceBundle getBundle() {
         return bundle;
     }
 
@@ -204,8 +202,6 @@ public class LocalStringsImpl {
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-
     private void setBundle(Class clazz) {
 
         try {
@@ -225,8 +221,6 @@ public class LocalStringsImpl {
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-
     private void setBundle(String className) {
         try {
             String props = className.substring(0, className.lastIndexOf('.')) + "." + propsName;
@@ -236,11 +230,4 @@ public class LocalStringsImpl {
             bundle = null;
         }
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    private ResourceBundle bundle;
-    private String propsName = "LocalStrings";
-    private static final String thisPackage = "com.elf.util";
-    private static final ResourceBundle.Control rbcontrol =
-            ResourceBundle.Control.getControl(ResourceBundle.Control.FORMAT_PROPERTIES);
 }

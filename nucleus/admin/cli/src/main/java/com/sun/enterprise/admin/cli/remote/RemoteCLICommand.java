@@ -37,7 +37,6 @@ import com.sun.enterprise.security.store.AsadminSecurityUtil;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.SystemPropertyConstants;
-
 import java.io.BufferedReader;
 import java.io.Console;
 import java.io.File;
@@ -105,8 +104,8 @@ public class RemoteCLICommand extends CLICommand {
 
         private static final String JSESSIONID = "JSESSIONID";
         private static final String COOKIE_HEADER = "Cookie";
-        private CookieManager cookieManager = null;
-        private File sessionCache = null;
+        private CookieManager cookieManager;
+        private final File sessionCache;
         private final ProgressStatusPrinter statusPrinter;
 
         /**
@@ -123,17 +122,9 @@ public class RemoteCLICommand extends CLICommand {
                 super.setEnableCommandModelCache(false);
             }
 
-            StringBuilder sessionFilePath = new StringBuilder();
-
-            // Store the cache at: $GFCLIENT/cache/{host}_{port}/session
-            sessionFilePath.append("cache").append(File.separator);
-            sessionFilePath.append(host).append("_");
-            sessionFilePath.append(port).append(File.separator);
-            sessionFilePath.append("session");
-
-            sessionCache = new File(AsadminSecurityUtil.getDefaultClientDir(), sessionFilePath.toString());
-            statusPrinter = new ProgressStatusPrinter(env.debug() || env.trace() || System.console() == null, env.debug() || env.trace(),
-                    logger);
+            sessionCache = AsadminSecurityUtil.getGfClientSessionFile(host, port);
+            statusPrinter = new ProgressStatusPrinter(env.debug() || env.trace() || System.console() == null,
+                env.debug() || env.trace(), logger);
             if (!programOpts.isTerse()) {
                 super.registerListener(CommandProgress.EVENT_PROGRESSSTATUS_CHANGE, statusPrinter);
                 super.registerListener(CommandProgress.EVENT_PROGRESSSTATUS_STATE, statusPrinter);
@@ -736,7 +727,7 @@ public class RemoteCLICommand extends CLICommand {
             }
             ar = rac.getActionReport();
             if (!returnActionReport && !returnOutput) {
-                if (output.length() > 0) {
+                if (!output.isEmpty()) {
                     logger.info(output);
                 }
             }

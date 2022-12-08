@@ -64,6 +64,9 @@ public class ClassPathUtils {
     public static String getMainClass(File clientJarFile) {
         try (JarFile jarFile = new JarFile(clientJarFile)) {
             Manifest manifest = jarFile.getManifest();
+            if (manifest == null) {
+                return null;
+            }
             Attributes mainAttributes = manifest.getMainAttributes();
             return mainAttributes.getValue("Main-Class");
         } catch (IOException e) {

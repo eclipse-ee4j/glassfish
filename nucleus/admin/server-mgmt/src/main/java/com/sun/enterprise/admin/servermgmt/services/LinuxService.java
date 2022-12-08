@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,6 @@
 
 package com.sun.enterprise.admin.servermgmt.services;
 
-import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.universal.process.ProcessManager;
 import com.sun.enterprise.universal.process.ProcessManagerException;
 import com.sun.enterprise.util.OS;
@@ -24,29 +24,27 @@ import com.sun.enterprise.util.ObjectAnalyzer;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.io.ServerDirs;
+
 import java.io.File;
-import java.util.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import static com.sun.enterprise.admin.servermgmt.services.Constants.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.List;
+
+import static com.sun.enterprise.admin.servermgmt.services.Constants.INITD;
+import static com.sun.enterprise.admin.servermgmt.services.Constants.README;
+import static com.sun.enterprise.admin.servermgmt.services.Constants.REGEXP_PATTERN_BEGIN;
+import static com.sun.enterprise.admin.servermgmt.services.Constants.SERVICEUSER_START_TN;
+import static com.sun.enterprise.admin.servermgmt.services.Constants.SERVICEUSER_STOP_TN;
 
 /**
  *
  * @author Byron Nevins
  */
 public class LinuxService extends NonSMFServiceAdapter {
-    static boolean apropos() {
-        if (LINUX_HACK)
-            return true;
-
-        return OS.isLinux();
-    }
 
     LinuxService(ServerDirs dirs, AppserverServiceType type) {
         super(dirs, type);
-        if (!apropos()) {
+        if (!OS.isLinux()) {
             // programmer error
             throw new IllegalArgumentException(Strings.get("internal.error", "Constructor called but Linux Services are not available."));
         }
@@ -76,10 +74,11 @@ public class LinuxService extends NonSMFServiceAdapter {
             trace("Target file written: " + target);
             trace("**********   Object Dump  **********\n" + this.toString());
 
-            if (deleteLinks() == 0 && !info.dryRun)
+            if (deleteLinks() == 0 && !info.dryRun) {
                 System.out.println(Strings.get("linux.services.uninstall.good"));
-            else
+            } else {
                 trace("No preexisting Service with that name was found");
+            }
 
             install();
         } catch (RuntimeException ex) {
@@ -102,8 +101,9 @@ public class LinuxService extends NonSMFServiceAdapter {
 
     @Override
     public final String getSuccessMessage() {
-        if (info.dryRun)
+        if (info.dryRun) {
             return Strings.get("dryrun");
+        }
 
         return Strings.get("LinuxServiceCreated", info.serviceName, info.type.toString(), target, getFinalUser(), target.getName());
     }
@@ -149,9 +149,11 @@ public class LinuxService extends NonSMFServiceAdapter {
 
         // try to make this as forgiving as possible.
         File[] rcDirs = new File[8]; // 0, 1, 2...6, S
-        if (!setRcDirs(new File(Constants.ETC), rcDirs))
-            if (!setRcDirs(new File(Constants.INITD), rcDirs))
+        if (!setRcDirs(new File(Constants.ETC), rcDirs)) {
+            if (!setRcDirs(new File(Constants.INITD), rcDirs)) {
                 throw new RuntimeException(Strings.get("no_rc2"));
+            }
+        }
 
         // now we have an array of at least some rc directories.
         addKills(rcDirs);
@@ -159,13 +161,10 @@ public class LinuxService extends NonSMFServiceAdapter {
     }
 
     private boolean setRcDirs(File dir, File[] rcDirs) {
-
-        if (LINUX_HACK) {
-            return true;
-        }
         // some have 4 missing, some have S missing etc.  All seem to have 5
-        if (!new File(dir, "rc5.d").isDirectory())
+        if (!new File(dir, "rc5.d").isDirectory()) {
             return false;
+        }
 
         for (int i = 0; i < 7; i++) {
             rcDirs[i] = new File(dir, "rc" + i + ".d");
@@ -181,38 +180,48 @@ public class LinuxService extends NonSMFServiceAdapter {
     }
 
     private void addKills(File[] rcDirs) {
-        if (rcDirs[0] != null)
+        if (rcDirs[0] != null) {
             killDirs.add(rcDirs[0]);
-        if (rcDirs[1] != null)
+        }
+        if (rcDirs[1] != null) {
             killDirs.add(rcDirs[1]);
-        if (rcDirs[6] != null)
+        }
+        if (rcDirs[6] != null) {
             killDirs.add(rcDirs[6]);
-        if (rcDirs[7] != null)
+        }
+        if (rcDirs[7] != null) {
             killDirs.add(rcDirs[7]);
+        }
     }
 
     private void addStarts(File[] rcDirs) {
-        if (rcDirs[2] != null)
+        if (rcDirs[2] != null) {
             startDirs.add(rcDirs[2]);
-        if (rcDirs[3] != null)
+        }
+        if (rcDirs[3] != null) {
             startDirs.add(rcDirs[3]);
-        if (rcDirs[4] != null)
+        }
+        if (rcDirs[4] != null) {
             startDirs.add(rcDirs[4]);
-        if (rcDirs[5] != null)
+        }
+        if (rcDirs[5] != null) {
             startDirs.add(rcDirs[5]);
+        }
     }
 
     private File validate(File rcdir) {
-        if (rcdir == null)
+        if (rcdir == null) {
             return null;
+        }
 
         // On OEL for instance the files are links to the real dir like this:
         //  /etc/rc0.d --> /etc/rc.d/rc0.d
         // let's use the REAL dirs just to be safe...
         rcdir = FileUtils.safeGetCanonicalFile(rcdir);
 
-        if (!rcdir.isDirectory())
+        if (!rcdir.isDirectory()) {
             return null;
+        }
 
         return rcdir;
     }
@@ -226,11 +235,13 @@ public class LinuxService extends NonSMFServiceAdapter {
      * Make sure that the dir exists and that we can write into it
      */
     private void checkDir(File dir, String notDirMsg) {
-        if (!dir.isDirectory())
+        if (!dir.isDirectory()) {
             throw new RuntimeException(Strings.get(notDirMsg, dir));
+        }
 
-        if (!dir.canWrite())
+        if (!dir.canWrite()) {
             throw new RuntimeException(Strings.get("no_write_dir", dir));
+        }
     }
 
     private void handlePreExisting(boolean force) {
@@ -254,32 +265,34 @@ public class LinuxService extends NonSMFServiceAdapter {
 
     // meant to be overridden bu subclasses
     int uninstall() {
-        if (target.delete())
+        if (target.delete()) {
             trace("Deleted " + target);
+        }
 
         return deleteLinks();
     }
 
     private int deleteLinks() {
         trace("Deleting link files...");
-        List<File> deathRow = new LinkedList<File>();
+        List<File> deathRow = new LinkedList<>();
 
-        if (!StringUtils.ok(targetName)) // invariant
+        if (!StringUtils.ok(targetName)) { // invariant
             throw new RuntimeException("Programmer Internal Error");
+        }
 
         String regexp = REGEXP_PATTERN_BEGIN + targetName;
 
-        List<File> allDirs = new ArrayList<File>(killDirs);
+        List<File> allDirs = new ArrayList<>(killDirs);
         allDirs.addAll(startDirs);
 
         for (File dir : allDirs) {
             File[] matches = FileUtils.findFilesInDir(dir, regexp);
 
-            if (matches.length < 1)
+            if (matches.length < 1) {
                 continue; // perfectly normal
-            else if (matches.length == 1)
+            } else if (matches.length == 1) {
                 deathRow.add(matches[0]);
-            else {
+            } else {
                 tooManyLinks(matches); // error!!
             }
         }
@@ -288,10 +301,11 @@ public class LinuxService extends NonSMFServiceAdapter {
             if (info.dryRun) {
                 dryRun("Would have deleted: " + f);
             } else {
-                if (!f.delete())
+                if (!f.delete()) {
                     throw new RuntimeException(Strings.get("cant_delete", f));
-                else
+                } else {
                     trace("Deleted " + f);
+                }
             }
         }
         return deathRow.size();
@@ -314,12 +328,11 @@ public class LinuxService extends NonSMFServiceAdapter {
             cmds[3] = link.getAbsolutePath();
             String cmd = toString(cmds);
 
-            if (LINUX_HACK)
-                trace(cmd);
-            else if (info.dryRun)
+            if (info.dryRun) {
                 dryRun(cmd);
-            else
+            } else {
                 createLink(link, cmds);
+            }
         }
     }
 
@@ -341,10 +354,11 @@ public class LinuxService extends NonSMFServiceAdapter {
         StringBuffer theMatches = new StringBuffer();
         boolean first = true;
         for (File f : matches) {
-            if (first)
+            if (first) {
                 first = false;
-            else
+            } else {
                 theMatches.append("\n");
+            }
 
             theMatches.append(f.getAbsolutePath());
         }
@@ -366,29 +380,33 @@ public class LinuxService extends NonSMFServiceAdapter {
         String u = getFinalUserButNotRoot();
         hasStartStopTokens = (u != null);
 
-        if (hasStartStopTokens)
+        if (hasStartStopTokens) {
             return "su --login " + u + " --command \"";
+        }
         return "";
     }
 
     private String getServiceUserStop() {
-        if (hasStartStopTokens)
+        if (hasStartStopTokens) {
             return "\"";
+        }
         return "";
     }
 
     private String getFinalUser() {
-        if (StringUtils.ok(info.serviceUser))
+        if (StringUtils.ok(info.serviceUser)) {
             return info.serviceUser;
-        else
+        } else {
             return info.osUser;
+        }
     }
 
     private String getFinalUserButNotRoot() {
         String u = getFinalUser();
 
-        if ("root".equals(u))
+        if ("root".equals(u)) {
             return null;
+        }
 
         return u;
     }
@@ -397,8 +415,9 @@ public class LinuxService extends NonSMFServiceAdapter {
         // for creating messages/error reports
         StringBuilder sb = new StringBuilder();
 
-        for (String s : arr)
+        for (String s : arr) {
             sb.append(s).append(" ");
+        }
 
         return sb.toString();
     }
@@ -406,8 +425,8 @@ public class LinuxService extends NonSMFServiceAdapter {
     private String targetName;
     File target;
     private static final String TEMPLATE_FILE_NAME = "linux-service.template";
-    private List<File> killDirs = new ArrayList<File>();
-    private List<File> startDirs = new ArrayList<File>();
+    private final List<File> killDirs = new ArrayList<>();
+    private final List<File> startDirs = new ArrayList<>();
     private String sFile;
     private String kFile;
     private boolean hasStartStopTokens = false;

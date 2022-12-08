@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,14 +18,16 @@
 package com.sun.enterprise.admin.cli.cluster;
 
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
+import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.StringUtils;
-import java.io.*;
 
+import java.io.File;
 
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.CommandException;
+import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 
 /**
@@ -76,8 +79,9 @@ public class DeleteLocalInstanceCommand extends LocalInstanceCommand {
             throws CommandException, CommandValidationException {
         instanceName = instanceName0;
         super.validate();
-        if (!StringUtils.ok(getServerDirs().getServerName()))
+        if (!StringUtils.ok(getServerDirs().getServerName())) {
             throw new CommandException(Strings.get("DeleteInstance.noInstanceName"));
+        }
 
         File dasProperties = getServerDirs().getDasPropertiesFile();
 
@@ -85,17 +89,16 @@ public class DeleteLocalInstanceCommand extends LocalInstanceCommand {
             setDasDefaults(dasProperties);
         }
 
-        if (!getServerDirs().getServerDir().isDirectory())
+        if (!getServerDirs().getServerDir().isDirectory()) {
             throw new CommandException(Strings.get("DeleteInstance.noWhack",
                     getServerDirs().getServerDir()));
+        }
     }
 
-    /**
-     */
     @Override
     protected int executeCommand()
             throws CommandException, CommandValidationException {
-        if (isRunning()) {
+        if (ProcessUtils.isAlive(getServerDirs().getPidFile())) {
             throw new CommandException(Strings.get("DeleteInstance.running"));
         }
 

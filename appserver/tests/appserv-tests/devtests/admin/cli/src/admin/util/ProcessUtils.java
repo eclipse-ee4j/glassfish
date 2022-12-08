@@ -30,19 +30,6 @@ public final class ProcessUtils {
         // all static class -- no instances allowed!!
     }
 
-    // for informal testing.  Too difficult to make a unit test...
-    public static void main(String[] args) {
-        debug = true;
-        for (String s : args) {
-            String ret = killJvm(s);
-
-            if(ret == null)
-                ret = "SUCCESS!!";
-
-            System.out.println(s + " ===> " + ret);
-        }
-    }
-
     public static File getExe(String name) {
         for (String path : paths) {
             File f = new File(path + "/" + name);
@@ -95,35 +82,6 @@ public final class ProcessUtils {
         catch (ProcessManagerException ex) {
             return ex.getMessage();
         }
-    }
-
-    /**
-     * Kill the JVM with the given main classname.  The classname can be fully-qualified
-     * or just the classname (i.e. without the package name prepended).
-     * @param pid
-     * @return a String if the process was not killed for any reason including if it does not exist.
-     *  Return null if it was killed.
-     */
-    public static String killJvm(String classname) {
-        List<Integer> pids = Jps.getPid(classname);
-        StringBuilder sb = new StringBuilder();
-        int numDead = 0;
-
-        for (int pid : pids) {
-            String s = kill(pid);
-            if (s != null)
-                sb.append(s).append('\n');
-            else {
-                ++numDead;
-                System.out.println("KILLED " + classname + " with PID: " + pid);
-            }
-        }
-        String err = sb.toString();
-
-        if (err.length() > 0 || numDead <= 0)
-            return err + " " + numDead + " killed successfully.";
-
-        return null;
     }
 
     /**

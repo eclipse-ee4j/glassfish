@@ -95,7 +95,7 @@ public class FlashlightLoggerInfo {
     public static final String MISSING_AGENT_JAR_DIR = LOGMSG_PREFIX + "-00503";
 
     @LogMessageInfo(
-            message = "Encountered exception during agent attach",
+            message = "Encountered exception during agent attach: {0}",
             level = "WARNING")
     public static final String ATTACH_AGENT_EXCEPTION = LOGMSG_PREFIX + "-00504";
 

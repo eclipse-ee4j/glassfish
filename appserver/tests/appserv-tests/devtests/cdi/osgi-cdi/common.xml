@@ -1571,18 +1571,6 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
   <property file="${env.APS_HOME}/config/pointbase.properties"/>
 </target>
 
-<!-- setup IMQ for RI Build -->
-<target name="setup-mq-common" depends="init-common">
-    <echo message="Executing Datastore setup for S1MQ. Required only for RI"
-        level="verbose"/>
-    <echo message="${IMQDBMGR} -javahome ${java.home}
-        -b ${admin.domain}_${appserver.instance.name} create all"
-        level="verbose"/>
-  <exec executable="${IMQDBMGR}" failonerror="true">
-     <arg line="-javahome ${java.home} -b ${admin.domain}_${appserver.instance.name} create all" />
-  </exec>
-</target>
-
 <target name="import-wsdl" depends="init-common">
     <mkdir dir="${build.classes.dir}"/>
     <exec executable="${WSCOMPILE}">

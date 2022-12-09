@@ -176,7 +176,6 @@ AS_ADMIN_MASTERPASSWORD=${master.password}</echo>
     <property name="WSIMPORT" value="${env.S1AS_HOME}/bin/wsimport.bat" />
     <property name="pb.start.server" value="${env.S1AS_HOME}/pointbase/server/StartServer.bat" />
     <property name="pb.start.server1" value="${env.S1AS_HOME}/pointbase/server/StartServer1.bat" />
-    <property name="IMQDBMGR" value="${env.S1AS_HOME}/imq/bin/imqdbmgr.bat" />
     <property name="ld.library.path" location="${env.S1AS_HOME}/lib;${env.S1AS_HOME}/bin" />
 </target>
 
@@ -201,7 +200,6 @@ AS_ADMIN_MASTERPASSWORD=${master.password}</echo>
     <property name="WSIMPORT" value="${env.S1AS_HOME}/bin/wsimport" />
     <property name="pb.start.server" value="${env.S1AS_HOME}/pointbase/server/StartServer" />
     <property name="pb.start.server1" value="${env.S1AS_HOME}/pointbase/server/StartServer1" />
-    <property name="IMQDBMGR" value="${env.S1AS_HOME}/imq/bin/imqdbmgr" />
     <property name="ld.library.path" location="${env.S1AS_HOME}/lib:${env.S1AS_HOME}/bin" />
 </target>
 

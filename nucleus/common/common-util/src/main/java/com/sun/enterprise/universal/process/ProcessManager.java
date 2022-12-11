@@ -120,7 +120,7 @@ public final class ProcessManager {
                 return process.exitValue();
             } catch (IllegalThreadStateException tse) {
                 // this means that the process is still running...
-                throw new ProcessManagerTimeoutException(tse);
+                throw new ProcessManagerTimeoutException("Process is still running.", tse);
             }
         } catch (ProcessManagerException pme) {
             throw pme;
@@ -159,7 +159,7 @@ public final class ProcessManager {
             return;
         }
         if (process == null) {
-            throw new ProcessManagerException(Strings.get("null.process"));
+            throw new ProcessManagerException("Parameter process was null.");
         }
         try (PrintWriter pipe = new PrintWriter(new BufferedWriter(new OutputStreamWriter(process.getOutputStream())))) {
             for (String stdinLine : stdinLines) {
@@ -192,7 +192,7 @@ public final class ProcessManager {
 
     private void waitForever(Process process) throws InterruptedException, ProcessManagerException {
         if (process == null) {
-            throw new ProcessManagerException(Strings.get("null.process"));
+            throw new ProcessManagerException("Parameter process was null.");
         }
         process.waitFor();
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,21 +15,31 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * ProcessManagerException.java
- * Any errors in ProcessManager will cause this to be thrown
- * @since JDK 1.4
- * @author bnevins
- * Created on October 28, 2005, 10:08 PM
- */
 package com.sun.enterprise.universal.process;
 
+/**
+ * ProcessManagerException.java
+ * Any errors in ProcessManager will cause this to be thrown
+ *
+ * @since JDK 1.4
+ * @author bnevins 2005
+ */
 public class ProcessManagerException extends Exception {
+
+    private static final long serialVersionUID = -4175171348489033516L;
+
 
     public ProcessManagerException(Throwable cause) {
         super(cause);
     }
+
+
     public ProcessManagerException(String message) {
         super(message);
+    }
+
+
+    public ProcessManagerException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

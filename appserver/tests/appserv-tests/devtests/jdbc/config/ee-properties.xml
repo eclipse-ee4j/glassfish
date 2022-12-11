@@ -187,9 +187,7 @@ includes="*.jar"/>
     refid="jwsdp_classpath_jars"/>
 </target>
 
-<target name="setToolProperty"
-  depends="setOSConditions,setToolWin,setToolUnix">
-</target>
+<target name="setToolProperty" depends="setOSConditions" />
 
 <target name="setOSConditions">
   <condition property="isUnix">

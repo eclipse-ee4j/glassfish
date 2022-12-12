@@ -187,9 +187,7 @@ includes="*.jar"/>
     refid="jwsdp_classpath_jars"/>
 </target>
 
-<target name="setToolProperty"
-  depends="setOSConditions,setToolWin,setToolUnix">
-</target>
+<target name="setToolProperty" depends="setOSConditions" />
 
 <target name="setOSConditions">
   <condition property="isUnix">
@@ -198,42 +196,6 @@ includes="*.jar"/>
   <condition property="isWindows">
     <os family="windows" />
   </condition>
-</target>
-
-<target name="setToolWin" if="isWindows">
-  <property name="APPCLIENT" value="${env.S1AS_HOME}/bin/appclient.bat"/>
-  <property name="ASADMIN" value="${env.S1AS_HOME}/bin/asadmin.bat"/>
-  <property name="IMQCMD" value="${env.S1AS_HOME}/imq/bin/imqcmd.exe"/>
-  <property name="IMQBROKERD" value="${env.S1AS_HOME}/imq/bin/imqbrokerd.exe"/>
-  <property name="ASANT" value="${env.S1AS_HOME}/bin/asant.bat"/>
-  <property name="CAPTURESCHEMA" value="${env.S1AS_HOME}/bin/capture-schema.bat"/>
-  <property name="CHECKPATCH" value="${env.S1AS_HOME}/bin/checkpatch.bat"/>
-  <property name="INSTALLPATCH" value="${env.S1AS_HOME}/bin/installpatch.bat"/>
-  <property name="JSPC" value="${env.S1AS_HOME}/bin/jspc.bat"/>
-  <property name="LISTPATCH" value="${env.S1AS_HOME}/bin/listpatch.bat"/>
-  <property name="PACKAGE-APPCLIENT" value="${env.S1AS_HOME}/bin/package-appclient.bat"/>
-  <property name="VERIFIER" value="${env.S1AS_HOME}/bin/verifier.bat"/>
-  <property name="RMIC" value="${env.S1AS_HOME}/jdk/bin/rmic.exe"/>
-  <property name="TNAMESERV" value="${env.S1AS_HOME}/jdk/bin/tnameserv.exe"/>
-  <property name="WSCOMPILE" value="${env.S1AS_HOME}/bin/wscompile.bat"/>
-</target>
-
-<target name="setToolUnix" if="isUnix">
-  <property name="APPCLIENT" value="${env.S1AS_HOME}/bin/appclient"/>
-  <property name="ASADMIN" value="${env.S1AS_HOME}/bin/asadmin"/>
-  <property name="IMQCMD" value="${env.S1AS_HOME}/imq/bin/imqcmd"/>
-  <property name="IMQBROKERD" value="${env.S1AS_HOME}/imq/bin/imqbrokerd"/>
-  <property name="ASANT" value="${env.S1AS_HOME}/bin/asant"/>
-  <property name="CAPTURESCHEMA" value="${env.S1AS_HOME}/bin/capture-schema"/>
-  <property name="CHECKPATCH" value="${env.S1AS_HOME}/bin/checkpatch"/>
-  <property name="INSTALLPATCH" value="${env.S1AS_HOME}/bin/installpatch"/>
-  <property name="JSPC" value="${env.S1AS_HOME}/bin/jspc"/>
-  <property name="LISTPATCH" value="${env.S1AS_HOME}/bin/listpatch"/>
-  <property name="PACKAGE-APPCLIENT" value="${env.S1AS_HOME}/bin/package-appclient"/>
-  <property name="VERIFIER" value="${env.S1AS_HOME}/bin/verifier"/>
-  <property name="RMIC" value="${env.S1AS_HOME}/jdk/bin/rmic"/>
-  <property name="TNAMESERV" value="${env.S1AS_HOME}/jdk/bin/tnameserv"/>
-  <property name="WSCOMPILE" value="${env.S1AS_HOME}/bin/wscompile"/>
 </target>
 
 <target name="fixFiles" depends="setOSConditions" >

@@ -24,7 +24,7 @@ import com.sun.enterprise.admin.util.TokenValue;
 import com.sun.enterprise.admin.util.TokenValueSet;
 import com.sun.enterprise.security.store.PasswordAdapter;
 import com.sun.enterprise.util.OS;
-import com.sun.enterprise.util.ProcessExecutor;
+
 
 //import javax.management.remote.JMXAuthenticator;
 //import com.sun.enterprise.admin.server.core.jmx.auth.ASJMXAuthenticator;
@@ -46,9 +46,7 @@ import com.sun.enterprise.util.zip.ZipFile;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -608,35 +606,6 @@ public class RepositoryManager extends MasterPasswordFileManager {
 
     }
 
-    /**
-     * Create MQ instance.
-     */
-    protected void createMQInstance(RepositoryConfig config) throws RepositoryException {
-        final PEFileLayout layout = getFileLayout(config);
-        final File broker = layout.getImqBrokerExecutable();
-        final File mqVarHome = layout.getImqVarHome();
-        try {
-            FileUtils.mkdirsMaybe(mqVarHome);
-            final List<String> cmdInput = new ArrayList<>();
-            cmdInput.add(broker.getAbsolutePath());
-            cmdInput.add("-init");
-            cmdInput.add("-varhome");
-            cmdInput.add(mqVarHome.getAbsolutePath());
-            ProcessExecutor pe = new ProcessExecutor(cmdInput.toArray(new String[cmdInput.size()]));
-            pe.execute(false, false);
-        } catch (Exception ioe) {
-            /*
-             * Dont do anything. * IMQ instance is created just to make sure
-             * that Off line IMQ commands can be executed, even before starting
-             * the broker. A typical scenario is while on-demand startup is off,
-             * user might try to do imqusermgr. Here broker may not have
-             * started.
-             *
-             * Failure in creating the instance doesnt need to abort domain
-             * creation.
-             */
-        }
-    }
 
     /**
      * Create the timer database wal file.

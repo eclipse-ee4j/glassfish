@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +19,9 @@ package com.sun.enterprise.universal.process;
 
 public class ProcessManagerTimeoutException extends ProcessManagerException {
 
-    public ProcessManagerTimeoutException(Throwable cause) {
-        super(cause);
+    private static final long serialVersionUID = -634378999869311994L;
+
+    public ProcessManagerTimeoutException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

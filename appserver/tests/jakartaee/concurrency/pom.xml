@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.glassfish.main.tests.jakartaee</groupId>
         <artifactId>jakartaee</artifactId>
-        <version>7.0.0-SNAPSHOT</version>
+        <version>7.0.0-RC1</version>
     </parent>
     <artifactId>jakarta.enterprise.concurrent-tck-ext</artifactId>
     <name>GlassFish Concurrency tests</name>

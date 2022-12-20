@@ -49,7 +49,7 @@
     </xsd:documentation>
   </xsd:annotation>
 
-  <xsd:include schemaLocation="jakartaee_9.xsds"/>
+  <xsd:include schemaLocation="jakartaee_9.xsd"/>
 
   <xsd:element name="handler-chains"
                type="jakartaee:service-ref_handler-chainsType">

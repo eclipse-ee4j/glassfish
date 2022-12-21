@@ -22,7 +22,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -41,12 +43,12 @@ import static java.lang.reflect.Modifier.isPublic;
  */
 public class ComponentDefinition implements ComponentInfo {
 
-    private static final Set<String> EXCLUDED_FROM_ANNOTATION_PROCESSING = Set.of(
+    private static final Set<String> EXCLUDED_FROM_ANNOTATION_PROCESSING = Collections.unmodifiableSet(new HashSet<>(Set.of(
         "jakarta.servlet.GenericServlet",
         "jakarta.servlet.http.HttpServlet",
         "org.glassfish.wasp.servlet.JspServlet",
         "org.apache.catalina.servlets.DefaultServlet"
-    );
+    )));
 
     private final Class<?> clazz;
     private final List<Constructor<?>> constructors = new ArrayList<>();
@@ -135,18 +137,14 @@ public class ComponentDefinition implements ComponentInfo {
      *
      * @return true if the class should not be processed
      */
-    private boolean isExcludedFromAnnotationProcessing(Class<?> clazz) {
+    static boolean isExcludedFromAnnotationProcessing(Class<?> clazz) {
         if (clazz.getPackage() == null) {
             return false;
         }
         if (clazz.getPackage().getName().startsWith("java.lang")) {
             return true;
         }
-        if (clazz.getCanonicalName() == null) {
-            return false;
-        } else {
-            return EXCLUDED_FROM_ANNOTATION_PROCESSING.contains(clazz.getCanonicalName());
-        }
+        return EXCLUDED_FROM_ANNOTATION_PROCESSING.contains(clazz.getCanonicalName());
     }
 
 

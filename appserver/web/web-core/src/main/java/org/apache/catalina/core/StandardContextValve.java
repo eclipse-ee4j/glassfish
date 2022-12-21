@@ -241,7 +241,7 @@ final class StandardContextValve
      * @param path to be normalized
      * @return normalized path or null
      */
-    protected static String normalize(String path) {
+    static String normalize(String path) {
         if (path == null) {
             return null;
         }

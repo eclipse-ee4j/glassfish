@@ -241,7 +241,7 @@ final class StandardContextValve
      * @param path to be normalized
      * @return normalized path or null
      */
-    protected String normalize(String path) {
+    protected static String normalize(String path) {
         if (path == null) {
             return null;
         }
@@ -292,7 +292,7 @@ final class StandardContextValve
      * @param path to be normalized
      * @return normalized path
      */
-    private String evaluateNormalizedPathWithSinglePoint(String path) {
+    private static String evaluateNormalizedPathWithSinglePoint(String path) {
         // Resolve occurrences of "/./" in the normalized path
         while (true) {
             int idx = path.indexOf("/./");

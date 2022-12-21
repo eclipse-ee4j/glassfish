@@ -82,13 +82,13 @@ public class StandardContextValveTest {
         String path2 = "/app/./some/./something/./my.jsp";
         String path3 = "./my.jsp";
 
-        String result = standardContextValve.normalize(path1);
+        String result = StandardContextValve.normalize(path1);
         assertEquals("/my.jsp", result);
 
-        result = standardContextValve.normalize(path2);
+        result = StandardContextValve.normalize(path2);
         assertEquals("/app/some/something/my.jsp", result);
 
-        result = standardContextValve.normalize(path3);
+        result = StandardContextValve.normalize(path3);
         assertEquals("/my.jsp", result);
     }
 }

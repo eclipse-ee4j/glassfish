@@ -86,4 +86,13 @@ public class StandardContextValveTest {
         String result = StandardContextValve.normalize(path);
         assertEquals(expected, result);
     }
+
+    @ParameterizedTest
+    @CsvSource({
+        "/app/./some/./something/./my.jsp, /app/some/something/my.jsp"
+    })
+    public void evaluateNormalizedPathWithSinglePointTest(String path, String expected) {
+        var normalized = StandardContextValve.evaluateNormalizedPathWithSinglePoint(path);
+        assertEquals(expected, normalized);
+    }
 }

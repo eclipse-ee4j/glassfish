@@ -9990,7 +9990,7 @@ Please provide a valid specification version for this optional package
 +
   Action: Resolve the situation described in the message, if necessary.
 
-[[sthref1941]]NCLS-SECURITY-05054 The SSL certificate has expired: \{0} ::
+[[sthref1941]]NCLS-SECURITY-05054 The SSL certificate with alias \{0} has expired: \{1} ::
   Cause: Certificate expired.
 +
   Action: Check the expiration date of the certificate.

@@ -23,9 +23,9 @@ import org.apache.catalina.HttpResponse;
 import org.easymock.Capture;
 import org.glassfish.grizzly.http.util.DataChunk;
 import org.glassfish.web.valve.GlassFishValve;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.easymock.EasyMock.captureInt;
 import static org.easymock.EasyMock.createNiceMock;
@@ -76,19 +76,14 @@ public class StandardContextValveTest {
     /**
      * Tests URLs after normalization
      */
-    @Test
-    public void normalizeURLTest() {
-        String path1 = "/app/../some/../something/../my.jsp";
-        String path2 = "/app/./some/./something/./my.jsp";
-        String path3 = "./my.jsp";
-
-        String result = standardContextValve.normalize(path1);
-        assertEquals("/my.jsp", result);
-
-        result = standardContextValve.normalize(path2);
-        assertEquals("/app/some/something/my.jsp", result);
-
-        result = standardContextValve.normalize(path3);
-        assertEquals("/my.jsp", result);
+    @ParameterizedTest
+    @CsvSource({
+        "/app/../some/../something/../my.jsp, /my.jsp",
+        "/app/./some/./something/./my.jsp, /app/some/something/my.jsp",
+        "./my.jsp, /my.jsp"
+    })
+    public void normalizeURLTest(String path, String expected) {
+        String result = StandardContextValve.normalize(path);
+        assertEquals(expected, result);
     }
 }

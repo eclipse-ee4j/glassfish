@@ -39,7 +39,6 @@ import jakarta.persistence.Query;
 import jakarta.persistence.PersistenceContext;
 
 import jakarta.annotation.Resource;
-import jakarta.annotation.PreDestroy;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -248,11 +247,6 @@ public class TimerBean implements TimerLocal {
     // These data members contain derived state for
     // some immutable fields.
     //
-
-    // deserialized state from blob
-    private boolean blobLoaded_;
-    private Object timedObjectPrimaryKey_;
-    private transient Serializable info_;
 
     public TimerState createTimer
         (String timerId, long containerId, long applicationId, String ownerId,

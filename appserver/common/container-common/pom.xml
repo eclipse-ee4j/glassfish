@@ -33,6 +33,10 @@
 
     <name>Container Common</name>
 
+    <properties>
+        <command.security.maven.plugin.isFailureFatal>false</command.security.maven.plugin.isFailureFatal>
+    </properties>
+
     <developers>
         <developer>
             <id>maheshk</id>

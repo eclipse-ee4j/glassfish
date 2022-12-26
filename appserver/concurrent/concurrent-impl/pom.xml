@@ -32,6 +32,10 @@
 
     <name>Concurrent Implementation Module</name>
 
+    <properties>
+        <command.security.maven.plugin.isFailureFatal>false</command.security.maven.plugin.isFailureFatal>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.concurrent</groupId>

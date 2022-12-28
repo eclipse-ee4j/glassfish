@@ -137,10 +137,9 @@
         <wasp.version>3.2.1</wasp.version>
 
         <!-- Used for Jakarta SOAP (XML Web Services) -->
-        <xmlsec.version>3.0.2</xmlsec.version>
+        <xmlsec.version>4.0.0-SNAPSHOT</xmlsec.version>
         <woodstox.version>6.5.1</woodstox.version>
         <stax2-api.version>4.2.2</stax2-api.version>
-
 
         <!-- Jakarta CDI -->
         <jakarta.cdi-api.version>4.0.1</jakarta.cdi-api.version>
@@ -461,14 +460,16 @@
                 <version>${webservices.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish.metro</groupId>
-                <artifactId>webservices-extra-xmlsec</artifactId>
-                <version>${webservices.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.santuario</groupId>
                 <artifactId>xmlsec</artifactId>
                 <version>${xmlsec.version}</version>
+            </dependency>
+            <!-- Dependency of xmlsec -->
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>1.15</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.woodstox</groupId>

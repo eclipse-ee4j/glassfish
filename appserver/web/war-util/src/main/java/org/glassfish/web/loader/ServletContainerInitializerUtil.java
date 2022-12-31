@@ -50,9 +50,9 @@ public class ServletContainerInitializerUtil {
 
     private static final ResourceBundle rb = log.getResourceBundle();
 
-    public static interface LogContext {
+    public interface LogContext {
 
-        public default Level getNonCriticalClassloadingErrorLogLevel() {
+        default Level getNonCriticalClassloadingErrorLogLevel() {
             return Level.WARNING;
         }
     }
@@ -65,7 +65,7 @@ public class ServletContainerInitializerUtil {
      *
      * @return Iterable over all ServletContainerInitializers that were found
      */
-    public static Iterable<ServletContainerInitializer> getServletContainerInitializers(
+    public static ServiceLoader<ServletContainerInitializer> getServletContainerInitializers(
             Map<String, String> webFragmentMap, List<Object> absoluteOrderingList,
             boolean hasOthers, ClassLoader cl) {
         /*
@@ -86,7 +86,7 @@ public class ServletContainerInitializerUtil {
 
             // Create a new List of URLs with missing fragments removed from
             // the currentUrls
-            List<URL> newClassLoaderUrlList = new ArrayList<URL>();
+            List<URL> newClassLoaderUrlList = new ArrayList<>();
             for (URL classLoaderUrl : webAppCl.getURLs()) {
                 // Check that the URL is using file protocol, else ignore it
                 if (!"file".equals(classLoaderUrl.getProtocol())) {
@@ -152,10 +152,10 @@ public class ServletContainerInitializerUtil {
         // initializers are interested
         for (ServletContainerInitializer sc : initializers) {
             if(interestList == null) {
-                interestList = new HashMap<Class<?>, List<Class<? extends ServletContainerInitializer>>>();
+                interestList = new HashMap<>();
             }
             Class<? extends ServletContainerInitializer> sciClass = sc.getClass();
-            HandlesTypes ann = (HandlesTypes) sciClass.getAnnotation(HandlesTypes.class);
+            HandlesTypes ann = sciClass.getAnnotation(HandlesTypes.class);
             if(ann == null) {
                 // This initializer does not contain @HandlesTypes
                 // This means it should always be called for all web apps
@@ -164,7 +164,7 @@ public class ServletContainerInitializerUtil {
                         interestList.get(ServletContainerInitializerUtil.class);
                 if(currentInitializerList == null) {
                     List<Class<? extends ServletContainerInitializer>> arr =
-                            new ArrayList<Class<? extends ServletContainerInitializer>>();
+                            new ArrayList<>();
                     arr.add(sciClass);
                     interestList.put(ServletContainerInitializerUtil.class, arr);
                 } else {
@@ -178,7 +178,7 @@ public class ServletContainerInitializerUtil {
                                 interestList.get(c);
                         if(currentInitializerList == null) {
                             List<Class<? extends ServletContainerInitializer>> arr =
-                                    new ArrayList<Class<? extends ServletContainerInitializer>>();
+                                    new ArrayList<>();
                             arr.add(sciClass);
                             interestList.put(c, arr);
                         } else {
@@ -221,7 +221,7 @@ public class ServletContainerInitializerUtil {
         // If an initializer was present without any @HandleTypes, it
         // must be called with a null set of classes
         if(interestList.containsKey(ServletContainerInitializerUtil.class)) {
-            initializerList = new HashMap<Class<? extends ServletContainerInitializer>, Set<Class<?>>>();
+            initializerList = new HashMap<>();
             List<Class<? extends ServletContainerInitializer>> initializersWithoutHandleTypes =
                     interestList.get(ServletContainerInitializerUtil.class);
             for(Class<? extends ServletContainerInitializer> c : initializersWithoutHandleTypes) {
@@ -257,10 +257,12 @@ public class ServletContainerInitializerUtil {
                                     Enumeration<JarEntry> entries = jf.entries();
                                     while(entries.hasMoreElements()) {
                                         JarEntry anEntry = entries.nextElement();
-                                        if(anEntry.isDirectory())
+                                        if(anEntry.isDirectory()) {
                                             continue;
-                                        if(!anEntry.getName().endsWith(".class"))
+                                        }
+                                        if(!anEntry.getName().endsWith(".class")) {
                                             continue;
+                                        }
                                         InputStream jarInputStream = null;
                                         try {
                                             jarInputStream = jf.getInputStream(anEntry);
@@ -413,10 +415,11 @@ public class ServletContainerInitializerUtil {
 
             Class<?> c = e.getKey();
             Type type = classInfo.getBy(c.getName());
-            if (type==null)
+            if (type==null) {
                 continue;
+            }
 
-            Set<Class<?>> resultSet = new HashSet<Class<?>>();
+            Set<Class<?>> resultSet = new HashSet<>();
             if (type instanceof AnnotationType) {
                 for (AnnotatedElement ae : ((AnnotationType) type).allAnnotatedTypes()) {
                     if (ae instanceof Member) {
@@ -456,13 +459,13 @@ public class ServletContainerInitializerUtil {
                 }
             }
             if(initializerList == null) {
-                initializerList = new HashMap<Class<? extends ServletContainerInitializer>, Set<Class<?>>>();
+                initializerList = new HashMap<>();
             }
             List<Class<? extends ServletContainerInitializer>> containerInitializers = e.getValue();
             for(Class<? extends ServletContainerInitializer> initializer : containerInitializers) {
                 Set<Class<?>> classSet = initializerList.get(initializer);
                 if(classSet == null) {
-                    classSet = new HashSet<Class<?>>();
+                    classSet = new HashSet<>();
                 }
                 classSet.addAll(resultSet);
                 initializerList.put(initializer, classSet);
@@ -495,9 +498,9 @@ public class ServletContainerInitializerUtil {
             if(resultFromClassInfo.isEmpty()) {
                 continue;
             }
-            Set<Class<?>> resultSet = new HashSet<Class<?>>();
-            for(Iterator<String> iter = resultFromClassInfo.iterator(); iter.hasNext();) {
-                String className = iter.next().replace('/', '.');
+            Set<Class<?>> resultSet = new HashSet<>();
+            for (String string : resultFromClassInfo) {
+                String className = string.replace('/', '.');
                 try {
                     Class aClass = cl.loadClass(className);
                     resultSet.add(aClass);
@@ -510,13 +513,13 @@ public class ServletContainerInitializerUtil {
                 }
             }
             if(initializerList == null) {
-                initializerList = new HashMap<Class<? extends ServletContainerInitializer>, Set<Class<?>>>();
+                initializerList = new HashMap<>();
             }
             List<Class<? extends ServletContainerInitializer>> containerInitializers = e.getValue();
             for(Class<? extends ServletContainerInitializer> initializer : containerInitializers) {
                 Set<Class<?>> classSet = initializerList.get(initializer);
                 if(classSet == null) {
-                    classSet = new HashSet<Class<?>>();
+                    classSet = new HashSet<>();
                 }
                 classSet.addAll(resultSet);
                 initializerList.put(initializer, classSet);

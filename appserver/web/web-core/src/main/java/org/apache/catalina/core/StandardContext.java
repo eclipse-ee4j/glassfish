@@ -71,6 +71,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ServiceConfigurationError;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.Stack;
 import java.util.TreeMap;
@@ -753,7 +754,7 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
     private MySecurityManager mySecurityManager;
 
     // Iterable over all ServletContainerInitializers that were discovered
-    private Iterable<ServletContainerInitializer> servletContainerInitializers;
+    private ServiceLoader<ServletContainerInitializer> servletContainerInitializers;
 
     // The major Servlet spec version of the web.xml
     private int effectiveMajorVersion;
@@ -773,6 +774,7 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
     // Fine tune log levels for ServletContainerInitializerUtil to avoid spurious or too verbose logging
     protected ServletContainerInitializerUtil.LogContext logContext
             = new ServletContainerInitializerUtil.LogContext() {
+                @Override
                 public Level getNonCriticalClassloadingErrorLogLevel() {
                     return isStandaloneModule() ? Level.WARNING : Level.FINE;
                 }
@@ -5252,20 +5254,16 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
         return true;
     }
 
-    protected void callServletContainerInitializers() throws LifecycleException {
-        List<ServletContainerInitializer> loadedServletContainerInitializers = new ArrayList<>();
-        for (ServletContainerInitializer servletContainerInitializer : servletContainerInitializers) {
-            try {
-                loadedServletContainerInitializers.add(servletContainerInitializer);
-            } catch (ServiceConfigurationError e) {
-                log.log(SEVERE, "", e);
-            }
-        }
+    public void setServletContainerInitializerInterestList(ServiceLoader<ServletContainerInitializer> initializers) {
+        servletContainerInitializers = initializers;
+    }
 
-        // Get the list of ServletContainerInitializers and the classes
-        // they are interested in
-        var interestList = getInterestList(loadedServletContainerInitializers);
-        var initializerList = getInitializerList(loadedServletContainerInitializers, interestList, getTypes(), getClassLoader(), logContext);
+    protected void callServletContainerInitializers() throws LifecycleException {
+        List<ServletContainerInitializer> initializers = loadServletContainerInitializers();
+
+        // Get the list of ServletContainerInitializers and the classes they are interested in
+        var interestList = getInterestList(initializers);
+        var initializerList = getInitializerList(initializers, interestList, getTypes(), getClassLoader(), logContext);
 
         if (initializerList == null) {
             return;
@@ -5287,8 +5285,8 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
                 }
                 try {
                     if (log.isLoggable(FINE)) {
-                        log.log(FINE,
-                                "Calling ServletContainerInitializer [" + initializer + "] onStartup with classes " + e.getValue());
+                        log.log(FINE, "Calling ServletContainerInitializer [" + initializer
+                            + "] onStartup with classes " + e.getValue());
                     }
 
                     ServletContainerInitializer iniInstance = initializer.getDeclaredConstructor().newInstance();
@@ -5297,10 +5295,8 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
                     fireContainerEvent(AFTER_CONTEXT_INITIALIZER_ON_STARTUP, iniInstance);
                 } catch (Throwable t) {
                     String msg = format(rb.getString(INVOKING_SERVLET_CONTAINER_INIT_EXCEPTION),
-                            initializer.getCanonicalName());
-                    log.log(SEVERE, msg, t);
-                    // TMP until EE 10 support is ready
-                    // throw new LifecycleException(t);
+                        initializer.getCanonicalName());
+                    throw new LifecycleException(msg, t);
                 }
             }
         } finally {
@@ -5308,27 +5304,49 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
         }
     }
 
-    public void setServletContainerInitializerInterestList(Iterable<ServletContainerInitializer> initializers) {
-        servletContainerInitializers = initializers;
+
+    private List<ServletContainerInitializer> loadServletContainerInitializers() {
+        List<ServletContainerInitializer> initializers = new ArrayList<>();
+        Iterator<ServletContainerInitializer> iterator = servletContainerInitializers.iterator();
+        // Note: don't let editors to change it to foreach, both hasNext and next can throw an error!
+        while (true) {
+            try {
+                if (!iterator.hasNext()) {
+                    break;
+                }
+            } catch (ServiceConfigurationError e) {
+                log.log(WARNING,
+                    "Could not call hasNext! The initializer is probably not visible for the classloader. Moving on ...",
+                    e);
+                try {
+                    iterator.next();
+                } catch (ServiceConfigurationError ignore) {
+                    // just move on
+                }
+                continue;
+            }
+            try {
+                initializers.add(iterator.next());
+            } catch (ServiceConfigurationError e) {
+                log.log(WARNING, "Could not call next! The initializer could not be created. Skipped ...", e);
+            }
+        }
+        return initializers;
     }
 
     /**
      * Creates a classloader for this context.
      */
     public void createLoader() {
-        ClassLoader parent = null;
+        final ClassLoader defaultLoader;
         if (getPrivileged()) {
-            if (log.isLoggable(FINE)) {
-                log.log(FINE, "Configuring privileged default Loader");
-            }
-            parent = this.getClass().getClassLoader();
+            log.log(FINE, "Configuring privileged default Loader");
+            defaultLoader = this.getClass().getClassLoader();
         } else {
-            if (log.isLoggable(FINE)) {
-                log.log(FINE, "Configuring non-privileged default Loader");
-            }
-            parent = getParentClassLoader();
+            log.log(FINE, "Configuring non-privileged default Loader");
+            defaultLoader = getParentClassLoader();
         }
-        WebappLoader webappLoader = new WebappLoader(parent);
+        WebappLoader webappLoader = new WebappLoader(defaultLoader);
         webappLoader.setDelegate(getDelegate());
         webappLoader.setUseMyFaces(useMyFaces);
         setLoader(webappLoader);
@@ -5389,9 +5407,12 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
             // Stop ContainerBackgroundProcessor thread
             super.threadStop();
 
-            if ((manager != null) && (manager instanceof Lifecycle)) {
+            if (manager instanceof Lifecycle) {
                 if (manager instanceof StandardManager) {
-                    ((StandardManager) manager).stop(isShutdown);
+                    StandardManager standardManager = (StandardManager) manager;
+                    if (standardManager.isStarted()) {
+                        standardManager.stop(isShutdown);
+                    }
                 } else {
                     ((Lifecycle) manager).stop();
                 }

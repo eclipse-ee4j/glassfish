@@ -63,6 +63,7 @@ public class StandardManager
             // NOOP
         }
 
+        @Override
         public Void run() throws Exception{
            doLoadFromFile();
            return null;
@@ -72,14 +73,15 @@ public class StandardManager
     private class PrivilegedDoUnload
         implements PrivilegedExceptionAction<Void> {
 
-        private boolean expire;
-        private boolean isShutdown;
+        private final boolean expire;
+        private final boolean isShutdown;
 
         PrivilegedDoUnload(boolean expire, boolean shutDown) {
             this.expire = expire;
             isShutdown = shutDown;
         }
 
+        @Override
         public Void run() throws Exception{
             doUnload(expire, isShutdown);
             return null;
@@ -155,8 +157,9 @@ public class StandardManager
     public void setContainer(Container container) {
 
         // De-register from the old Container (if any)
-        if ((this.container != null) && (this.container instanceof Context))
+        if ((this.container != null) && (this.container instanceof Context)) {
             ((Context) this.container).removePropertyChangeListener(this);
+        }
 
         // Default processing provided by our superclass
         super.setContainer(container);
@@ -334,6 +337,7 @@ public class StandardManager
      * found during the reload
      * @exception IOException if a read error occurs
      */
+    @Override
     public void load() throws ClassNotFoundException, IOException {
         if (SecurityUtil.isPackageProtectionEnabled()){
             try{
@@ -452,8 +456,9 @@ public class StandardManager
             try {
                 Integer count = (Integer) ois.readObject();
                 int n = count.intValue();
-                if (log.isLoggable(Level.FINE))
+                if (log.isLoggable(Level.FINE)) {
                     log.log(Level.FINE, "Loading " + n + " persisted sessions");
+                }
                 for (int i = 0; i < n; i++) {
                     StandardSession session =
                         StandardSession.deserialize(ois, this);
@@ -508,6 +513,7 @@ public class StandardManager
      *
      * @exception IOException if an input/output error occurs
      */
+    @Override
     public void unload() throws IOException {
         unload(true, false);
     }
@@ -547,8 +553,9 @@ public class StandardManager
                 if (exception instanceof IOException){
                     throw (IOException)exception;
                 }
-                if (log.isLoggable(Level.FINE))
+                if (log.isLoggable(Level.FINE)) {
                     log.log(Level.FINE, "Unreported exception in unLoad() " + exception);
+                }
             }
         } else {
             doUnload(doExpire, isShutdown);
@@ -589,7 +596,7 @@ public class StandardManager
                     try {
                         fos.close();
                     } catch(IOException f) {
-                        ;
+
                     }
                     fos = null;
                 }
@@ -606,113 +613,55 @@ public class StandardManager
         }
     }
 
-    /*
+    /**
      * Writes all active sessions to the given output stream.
      *
      * @param os the output stream to which to write the sessions
-     * @param doExpire true if the sessions that were written should also be
-     * expired, false otherwise
+     * @param doExpire true if the sessions that were written should also be expired, false otherwise
      */
-    public void writeSessions(OutputStream os, boolean doExpire)
-            throws IOException {
-        ObjectOutputStream oos = null;
-        try {
-            if (container != null) {
-                oos = ((StandardContext) container).createObjectOutputStream(
-                        new BufferedOutputStream(os));
-            } else {
-                oos = new ObjectOutputStream(new BufferedOutputStream(os));
-            }
-        } catch (IOException e) {
-            String msg = MessageFormat.format(rb.getString(LogFacade.SAVING_PERSISTED_SESSION_IO_EXCEPTION),
-                                              e);
-            log.log(Level.SEVERE, msg, e);
-            if (oos != null) {
-                try {
-                    oos.close();
-                } catch (IOException f) {
-                    // Ignore
-                }
-                oos = null;
-            }
-            throw e;
-        }
-
-        // Write the number of active sessions, followed by the details
+    public void writeSessions(OutputStream os, boolean doExpire) throws IOException {
         StandardSession[] currentStandardSessions = null;
-        synchronized (sessions) {
-            if (log.isLoggable(Level.FINE))
-                log.log(Level.FINE, "Unloading " + sessions.size() + " sessions");
-            try {
-                // START SJSAS 6375689
+        try (ObjectOutputStream oos = wrapStream(os)) {
+            // Write the number of active sessions, followed by the details
+            synchronized (sessions) {
+                log.log(Level.FINE, "Unloading {0} sessions", sessions.size());
                 for (Session actSession : findSessions()) {
                     StandardSession session = (StandardSession) actSession;
                     session.passivate();
                 }
-                // END SJSAS 6375689
                 Session[] currentSessions = findSessions();
                 int size = currentSessions.length;
                 currentStandardSessions = new StandardSession[size];
                 oos.writeObject(Integer.valueOf(size));
                 for (int i = 0; i < size; i++) {
-                    StandardSession session =
-                        (StandardSession) currentSessions[i];
+                    StandardSession session = (StandardSession) currentSessions[i];
                     currentStandardSessions[i] = session;
-                    /* SJSAS 6375689
-                    session.passivate();
-                    */
                     oos.writeObject(session);
                 }
-            } catch (IOException e) {
-                String msg = MessageFormat.format(rb.getString(LogFacade.SAVING_PERSISTED_SESSION_IO_EXCEPTION),
-                        e);
-                log.log(Level.SEVERE, msg, e);
-                if (oos != null) {
-                    try {
-                        oos.close();
-                    } catch (IOException f) {
-                        // Ignore
-                    }
-                    oos = null;
-                }
-                throw e;
-            }
-        }
-
-        // Flush and close the output stream
-        try {
-            oos.flush();
-        } catch (IOException e) {
-            if (oos != null) {
-                try {
-                    oos.close();
-                } catch (IOException f) {
-                    // Ignore
-                }
-                oos = null;
-            }
-            throw e;
-        } finally {
-            try {
-                if (oos != null) {
-                    oos.close();
-                }
-            } catch (IOException f) {
-                // ignore
+                oos.flush();
             }
         }
 
         if (doExpire) {
             // Expire all the sessions we just wrote
-            if (log.isLoggable(Level.FINE))
-                log.log(Level.FINE, "Expiring " + currentStandardSessions.length + " persisted sessions");
+            log.log(Level.FINE, "Expiring {0} persisted sessions", currentStandardSessions.length);
             for (StandardSession session : currentStandardSessions) {
                 try {
                     session.expire(false);
                 } catch (Throwable t) {
                     // Ignore
+                    log.log(Level.FINEST, "Expiration failed.", t);
                 }
             }
+        }
+    }
+
+
+    private ObjectOutputStream wrapStream(OutputStream os) throws IOException {
+        if (container == null) {
+            return new ObjectOutputStream(new BufferedOutputStream(os));
+        } else {
+            return ((StandardContext) container).createObjectOutputStream(new BufferedOutputStream(os));
         }
     }
 
@@ -741,6 +690,7 @@ public class StandardManager
      *
      * @param listener The listener to add
      */
+    @Override
     public void addLifecycleListener(LifecycleListener listener) {
         lifecycle.addLifecycleListener(listener);
     }
@@ -750,6 +700,7 @@ public class StandardManager
      * Gets the (possibly empty) list of lifecycle listeners
      * associated with this StandardManager.
      */
+    @Override
     public List<LifecycleListener> findLifecycleListeners() {
         return lifecycle.findLifecycleListeners();
     }
@@ -760,6 +711,7 @@ public class StandardManager
      *
      * @param listener The listener to remove
      */
+    @Override
     public void removeLifecycleListener(LifecycleListener listener) {
         lifecycle.removeLifecycleListener(listener);
     }
@@ -772,10 +724,12 @@ public class StandardManager
      * @exception LifecycleException if this component detects a fatal error
      *  that prevents this component from being used
      */
+    @Override
     public void start() throws LifecycleException {
 
-        if( ! initialized )
+        if( ! initialized ) {
             init();
+        }
 
         // Validate and update our current component state
         if (started) {
@@ -788,11 +742,13 @@ public class StandardManager
         started = true;
 
         // Force initialization of the random number generator
-        if (log.isLoggable(Level.FINEST))
+        if (log.isLoggable(Level.FINEST)) {
             log.log(Level.FINEST, "Force random number initialization starting");
+        }
         generateSessionId();
-        if (log.isLoggable(Level.FINEST))
+        if (log.isLoggable(Level.FINEST)) {
             log.log(Level.FINEST, "Force random number initialization completed");
+        }
 
         // Load unloaded sessions, if any
         try {
@@ -805,6 +761,14 @@ public class StandardManager
     }
 
     /**
+     * @return true after the start lifecycle phase started and until the stop lifecycle phase started.
+     */
+    public final boolean isStarted() {
+        return started;
+    }
+
+
+    /**
      * Gracefully terminate the active use of the public methods of this
      * component.  This method should be the last one called on a given
      * instance of this component.
@@ -812,6 +776,7 @@ public class StandardManager
      * @exception LifecycleException if this component detects a fatal error
      *  that needs to be reported
      */
+    @Override
     public void stop() throws LifecycleException {
         stop(false);
     }
@@ -829,13 +794,12 @@ public class StandardManager
      */
     public void stop(boolean isShutdown) throws LifecycleException {
 
-        if (log.isLoggable(Level.FINE))
-            log.log(Level.FINE, "Stopping");
+        log.log(Level.FINE, "Stopping");
 
         // Validate and update our current component state
-        if (!started)
-            throw new LifecycleException
-                (rb.getString(LogFacade.MANAGER_NOT_STARTED_INFO));
+        if (!started) {
+            throw new LifecycleException(rb.getString(LogFacade.MANAGER_NOT_STARTED_INFO));
+        }
         lifecycle.fireLifecycleEvent(STOP_EVENT, null);
         started = false;
 
@@ -882,11 +846,13 @@ public class StandardManager
      *
      * @param event The property change event that has occurred
      */
+    @Override
     public void propertyChange(PropertyChangeEvent event) {
 
         // Validate the source of this event
-        if (!(event.getSource() instanceof Context))
+        if (!(event.getSource() instanceof Context)) {
             return;
+        }
 
         // Process a relevant property change
         if ("sessionTimeout".equals(event.getPropertyName())) {
@@ -917,8 +883,9 @@ public class StandardManager
         }
         // END SJSAS 6359401
 
-        if ((pathname == null) || (pathname.length() == 0))
+        if ((pathname == null) || (pathname.length() == 0)) {
             return (null);
+        }
         File file = new File(pathname);
         if (!file.isAbsolute()) {
             if (container instanceof Context) {
@@ -926,8 +893,9 @@ public class StandardManager
                     ((Context) container).getServletContext();
                 File tempdir = (File)
                     servletContext.getAttribute(ServletContext.TEMPDIR);
-                if (tempdir != null)
+                if (tempdir != null) {
                     file = new File(tempdir, pathname);
+                }
             }
         }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,7 +22,6 @@ import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -32,10 +31,12 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.glassfish.common.util.GlassfishUrlClassLoader;
+
 /**
  * A class loader that loads classes from all jar files in a specified directory.
  */
-public class DirectoryClassLoader extends URLClassLoader {
+public class DirectoryClassLoader extends GlassfishUrlClassLoader {
 
     private static final LocalStringsImpl STRINGS = new LocalStringsImpl(DirectoryClassLoader.class);
     private static final int MAX_DEPTH = 5;
@@ -90,15 +91,5 @@ public class DirectoryClassLoader extends URLClassLoader {
         } catch (final IOException e) {
             throw new IllegalStateException(STRINGS.get("DirError", dir), e);
         }
-    }
-
-
-    @Override
-    public String toString() {
-        final StringBuilder b = new StringBuilder();
-        b.append(getClass().getName()).append('@').append(hashCode()).append("(\n");
-        Arrays.stream(getURLs()).forEach(u -> b.append(u).append('\n'));
-        b.append(')');
-        return b.toString();
     }
 }

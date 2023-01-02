@@ -17,7 +17,6 @@
 
 package org.glassfish.appclient.client.acc.agent;
 
-import static java.security.AccessController.doPrivileged;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -30,6 +29,8 @@ import java.util.Enumeration;
 import org.glassfish.appclient.common.ClassPathUtils;
 import org.glassfish.common.util.GlassfishUrlClassLoader;
 
+import static java.security.AccessController.doPrivileged;
+
 /**
  * Used as the system class loader during app client launch.
  * <p>
@@ -39,7 +40,7 @@ import org.glassfish.common.util.GlassfishUrlClassLoader;
  *
  * @author tjquinn
  */
-public class ACCAgentClassLoader extends URLClassLoader {
+public class ACCAgentClassLoader extends GlassfishUrlClassLoader {
 
     private boolean isActive = true;
 

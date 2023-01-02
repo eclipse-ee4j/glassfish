@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -229,24 +229,20 @@ public class AppClientContainer {
 
     private Builder builder;
 
-    private Cleanup cleanup = null;
+    private Cleanup cleanup;
 
     private State state = State.INSTANTIATED; // HK2 will create the instance
 
-    private ClientMainClassSetting clientMainClassSetting = null;
+    private ClientMainClassSetting clientMainClassSetting;
 
     private URLClassLoader classLoader = (URLClassLoader) Thread.currentThread().getContextClassLoader();
 
-    private final Collection<EntityManagerFactory> emfs = null;
+    private Launchable client;
 
-//    private boolean isJWS = false;
-
-    private Launchable client = null;
-
-    private CallbackHandler callerSuppliedCallbackHandler = null;
+    private CallbackHandler callerSuppliedCallbackHandler;
 
     /** returned from binding the app client to naming; used in preparing component invocation */
-    private String componentId = null;
+    private String componentId;
 
 
     /*
@@ -474,7 +470,7 @@ public class AppClientContainer {
     }
 
     private void dumpLoaderURLs() {
-        final String sep = System.getProperty("line.separator");
+        final String sep = System.lineSeparator();
         final ClassLoader ldr = Thread.currentThread().getContextClassLoader();
         if (ldr instanceof ACCClassLoader) {
             final ACCClassLoader loader = (ACCClassLoader) ldr;

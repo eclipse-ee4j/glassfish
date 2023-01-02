@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -101,13 +101,8 @@ public class EjbJarHandler extends AbstractArchiveHandler {
 
     @Override
     public ClassLoader getClassLoader(final ClassLoader parent, DeploymentContext context) {
-        ASURLClassLoader cloader = AccessController.doPrivileged(new PrivilegedAction<ASURLClassLoader>() {
-
-            @Override
-            public ASURLClassLoader run() {
-                return new ASURLClassLoader(parent);
-            }
-        });
+        PrivilegedAction<ASURLClassLoader> action = () -> new ASURLClassLoader(parent);
+        ASURLClassLoader cloader = AccessController.doPrivileged(action);
 
         try {
             String compatProp = context.getAppProps().getProperty(DeploymentProperties.COMPATIBILITY);

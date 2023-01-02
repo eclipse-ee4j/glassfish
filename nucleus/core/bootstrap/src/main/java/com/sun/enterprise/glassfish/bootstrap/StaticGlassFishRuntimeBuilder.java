@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,23 +21,23 @@ import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.bootstrap.Main;
 import com.sun.enterprise.module.bootstrap.Which;
 import com.sun.enterprise.module.common_impl.AbstractFactory;
-import org.glassfish.embeddable.BootstrapProperties;
-import org.glassfish.embeddable.GlassFishException;
-import org.glassfish.embeddable.GlassFishRuntime;
-import org.glassfish.embeddable.spi.RuntimeBuilder;
-import org.glassfish.hk2.bootstrap.impl.Hk2LoaderPopulatorPostProcessor;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.common.util.GlassfishUrlClassLoader;
+import org.glassfish.embeddable.BootstrapProperties;
+import org.glassfish.embeddable.GlassFishException;
+import org.glassfish.embeddable.GlassFishRuntime;
+import org.glassfish.embeddable.spi.RuntimeBuilder;
 
 /**
  * @author bhavanishankar@dev.java.net
@@ -48,6 +49,7 @@ public class StaticGlassFishRuntimeBuilder implements RuntimeBuilder {
     private static final String JAR_EXT = ".jar";
     final List<String> moduleExcludes = Arrays.asList("jsftemplating.jar", "gf-client-module.jar");
 
+    @Override
     public GlassFishRuntime build(BootstrapProperties bsProps) throws GlassFishException {
         /* Step 1. Build the classloader. */
         // The classloader should contain installRoot/modules/**/*.jar files.
@@ -76,6 +78,7 @@ public class StaticGlassFishRuntimeBuilder implements RuntimeBuilder {
         return glassFishRuntime;
     }
 
+    @Override
     public boolean handles(BootstrapProperties bsProps) {
         // See GLASSFISH-16743 for the reason behind additional check
         final String builderName = bsProps.getProperty(Constants.BUILDER_NAME_PROPERTY);
@@ -103,7 +106,7 @@ public class StaticGlassFishRuntimeBuilder implements RuntimeBuilder {
 
     private List<URL> getModuleJarURLs(String installRoot) {
         if(installRoot == null) {
-            return new ArrayList();
+            return new ArrayList<>();
         }
         JarFile jarfile = null;
         try {
@@ -112,7 +115,7 @@ public class StaticGlassFishRuntimeBuilder implements RuntimeBuilder {
             String mainClassName = jarfile.getManifest().
                     getMainAttributes().getValue("Main-Class");
             if (UberMain.class.getName().equals(mainClassName)) {
-                return new ArrayList();
+                return new ArrayList<>();
             }
         } catch (Exception ex) {
             logger.log(Level.WARNING, LogFacade.CAUGHT_EXCEPTION, ex);
@@ -128,8 +131,9 @@ public class StaticGlassFishRuntimeBuilder implements RuntimeBuilder {
 
         File modulesDir = new File(installRoot, "modules/");
         final File autostartModulesDir = new File(modulesDir, "autostart/");
-        final List<URL> moduleJarURLs = new ArrayList<URL>();
+        final List<URL> moduleJarURLs = new ArrayList<>();
         modulesDir.listFiles(new FileFilter() {
+            @Override
             public boolean accept(File pathname) {
                 if (pathname.isDirectory() && !pathname.equals(autostartModulesDir)) {
                     pathname.listFiles(this);
@@ -160,7 +164,8 @@ public class StaticGlassFishRuntimeBuilder implements RuntimeBuilder {
         return true;
     }
 
-    private static class StaticClassLoader extends URLClassLoader {
+    private static class StaticClassLoader extends GlassfishUrlClassLoader {
+
         public StaticClassLoader(ClassLoader parent, List<URL> moduleJarURLs) {
             super(moduleJarURLs.toArray(new URL[moduleJarURLs.size()]), parent);
         }

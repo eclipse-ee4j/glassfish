@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -42,8 +43,9 @@ public abstract class ClassPathManager {
             ;
 
     /** instance of appropriate type of class path manager, depending on the Java runtime version */
-    private static volatile ClassPathManager mgr = null;
-
+    private static volatile ClassPathManager mgr;
+    /** the JNLP class loader active during the instantiation of this mgr */
+    private final ClassLoader jnlpClassLoader;
     private final boolean keepJWSClassLoader;
 
     /**
@@ -67,8 +69,6 @@ public abstract class ClassPathManager {
         return mgr;
     }
 
-    /** the JNLP class loader active during the instantiation of this mgr */
-    private ClassLoader jnlpClassLoader = null;
 
     /**
      *Returns a new instance of the manager.

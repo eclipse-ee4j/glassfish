@@ -21,7 +21,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLStreamHandlerFactory;
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 
 /**
@@ -73,7 +72,10 @@ public class GlassfishUrlClassLoader extends URLClassLoader {
      */
     @Override
     public String toString() {
-        return getClass().getName() + "@" + Integer.toHexString(hashCode()) + ": "
-            + Arrays.stream(getURLs()).collect(Collectors.toList());
+        final StringBuilder text = new StringBuilder(1024);
+        text.append(getClass().getName()).append('@').append(Integer.toHexString(hashCode())).append("[\n");
+        Arrays.stream(getURLs()).forEach(u -> text.append(u).append('\n'));
+        text.append(']');
+        return text.toString();
     }
 }

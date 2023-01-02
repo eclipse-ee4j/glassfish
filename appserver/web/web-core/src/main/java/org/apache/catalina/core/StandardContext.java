@@ -5272,22 +5272,18 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
         // Allow programmatic registration of ServletContextListeners, but
         // only within the scope of ServletContainerInitializer#onStartup
         isProgrammaticServletContextListenerRegistrationAllowed = true;
-
-        // We have the list of initializers and the classes that satisfy
-        // the condition. Time to call the initializers
-        ServletContext ctxt = this.getServletContext();
         try {
+            // We have the list of initializers and the classes that satisfy
+            // the condition. Time to call the initializers
+            ServletContext ctxt = this.getServletContext();
             for (var e : initializerList.entrySet()) {
                 Class<? extends ServletContainerInitializer> initializer = e.getKey();
-                // See IT 11333
                 if (isUseMyFaces() && FACES_INITIALIZER.equals(initializer.getName())) {
                     continue;
                 }
                 try {
-                    if (log.isLoggable(FINE)) {
-                        log.log(FINE, "Calling ServletContainerInitializer [" + initializer
-                            + "] onStartup with classes " + e.getValue());
-                    }
+                    log.log(FINE, "Calling ServletContainerInitializer [{0}] onStartup with classes {1} ",
+                        new Object[] {initializer, e.getValue()});
 
                     ServletContainerInitializer iniInstance = initializer.getDeclaredConstructor().newInstance();
                     fireContainerEvent(BEFORE_CONTEXT_INITIALIZER_ON_STARTUP, iniInstance);

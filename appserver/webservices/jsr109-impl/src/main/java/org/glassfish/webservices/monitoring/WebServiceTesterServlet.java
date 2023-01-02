@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -48,6 +48,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.jaxb.runtime.api.JAXBRIContext;
 import org.glassfish.webservices.LogUtils;
 import org.glassfish.webservices.WebServiceContractImpl;
@@ -87,8 +88,8 @@ public class WebServiceTesterServlet extends HttpServlet {
         "org.glassfish.metro.webservices-osgi",
     });
 
-    private static final Hashtable<String, Class> gsiClasses = new Hashtable<String, Class>();
-    private static final Hashtable<String, Object> ports = new Hashtable<String, Object>();
+    private static final Hashtable<String, Class> gsiClasses = new Hashtable<>();
+    private static final Hashtable<String, Object> ports = new Hashtable<>();
     // resources...
     private static final LocalStringManagerImpl localStrings =
         new LocalStringManagerImpl(WebServiceTesterServlet.class);
@@ -122,7 +123,7 @@ public class WebServiceTesterServlet extends HttpServlet {
                 out.print("<HR>");
                 out.print("</HTML>");
                 out.close();
-            } catch(Exception ex) {};
+            } catch(Exception ex) {}
         }
     }
 
@@ -225,8 +226,9 @@ public class WebServiceTesterServlet extends HttpServlet {
                    "enterprise.webservice.monitoring.formInput",
                            "<INPUT TYPE=TEXT NAME=PARAM{0}{1} title=\"{0} parameter of type {2}\">",
                            m.getName(), i, parameters[i].getName()));
-                if (i!=parameters.length-1)
+                if (i!=parameters.length-1) {
                     out.print(",");
+                }
             }
             out.print(")");
             out.print("<BR>");
@@ -541,17 +543,16 @@ public class WebServiceTesterServlet extends HttpServlet {
         // classes clashes.
         // the immediate classloader is the WebApp classloader, its parent is the
         // application classloader, we want the parent of that one
-        ClassLoader testerCL = new URLClassLoader(urls, currentLoader.getParent());
-        try {
+        try (GlassfishUrlClassLoader testerCL = new GlassfishUrlClassLoader(urls, currentLoader.getParent())) {
             Thread.currentThread().setContextClassLoader(testerCL);
             String serviceClassName = getServiceClass(
                     JAXBRIContext.mangleNameToClassName(serviceName.getLocalPart()),
                     classesDir);
-            if (serviceClassName==null) {
+            if (serviceClassName == null) {
                 throw new RuntimeException("Service Class not generated as expected");
             }
 
-            Class serviceClass = testerCL.loadClass(serviceClassName);
+            Class<?> serviceClass = testerCL.loadClass(serviceClassName);
             Service service = Service.create(new URL(sb.toString()), serviceName);
             if (service==null) {
                 throw new RuntimeException("Cannot load Service");
@@ -559,13 +560,13 @@ public class WebServiceTesterServlet extends HttpServlet {
 
             // find the right port... for this look at the @WebService annotation in SEI and get the portName
             String portClassName = getPortClass(myEndpoint, serviceClass);
-            if (portClassName==null) {
+            if (portClassName == null) {
                 throw new RuntimeException("Cannot find the correct port class.");
             }
 
-            Class portClass = testerCL.loadClass(portClassName);
+            Class<?> portClass = testerCL.loadClass(portClassName);
             Object port = service.getPort(myEndpoint.getDescriptor().getWsdlPort(), portClass);
-            if (port==null) {
+            if (port == null) {
                 throw new RuntimeException("Cannot find the correct port class.");
             }
 
@@ -609,13 +610,13 @@ public class WebServiceTesterServlet extends HttpServlet {
             System.setProperty("java.class.path", classpath1);
 
             String[] wsimportArgs = new String[7];
-            wsimportArgs[0]="-d";
-            wsimportArgs[1]=classesDir.getAbsolutePath();
-            wsimportArgs[2]="-keep";
-            wsimportArgs[3]=wsdlLocation.toExternalForm();
-            wsimportArgs[4]="-target";
-            wsimportArgs[5]="3.0";
-            wsimportArgs[6]="-extension";
+            wsimportArgs[0] = "-d";
+            wsimportArgs[1] = classesDir.getAbsolutePath();
+            wsimportArgs[2] = "-keep";
+            wsimportArgs[3] = wsdlLocation.toExternalForm();
+            wsimportArgs[4] = "-target";
+            wsimportArgs[5] = "3.0";
+            wsimportArgs[6] = "-extension";
             WSToolsObjectFactory tools = WSToolsObjectFactory.newInstance();
             logger.log(Level.INFO, LogUtils.WSIMPORT_INVOKE, wsdlLocation);
             boolean success = tools.wsimport(System.out, wsimportArgs);
@@ -674,20 +675,16 @@ public class WebServiceTesterServlet extends HttpServlet {
         }
     }
 
-    private String getPortClass(Endpoint ep, Class serviceClass)
-                                            throws Exception {
 
-        for(Method m : serviceClass.getMethods()) {
-            WebEndpoint webEP = (WebEndpoint)
-                m.getAnnotation(WebEndpoint.class);
-            if(webEP == null || webEP.name() == null ||
-                    webEP.name().length() == 0) {
+    private String getPortClass(Endpoint ep, Class<?> serviceClass) throws Exception {
+        for (Method m : serviceClass.getMethods()) {
+            WebEndpoint webEP = (WebEndpoint) m.getAnnotation(WebEndpoint.class);
+            if (webEP == null || webEP.name() == null || webEP.name().length() == 0) {
                 continue;
             }
             String getPortMethodName = "get" +
                     JAXBRIContext.mangleNameToClassName(webEP.name());
-            Method getPortMethod =
-                    serviceClass.getMethod(getPortMethodName, (Class[])null);
+            Method getPortMethod = serviceClass.getMethod(getPortMethodName);
             return getPortMethod.getReturnType().getName();
         }
         return null;
@@ -696,7 +693,7 @@ public class WebServiceTesterServlet extends HttpServlet {
     private List<File> getListOfFiles(File path) {
 
         File[] files = path != null ? path.listFiles() : null;
-        List<File> result = new ArrayList<File>();
+        List<File> result = new ArrayList<>();
         if (files == null) {
             return result;
         }

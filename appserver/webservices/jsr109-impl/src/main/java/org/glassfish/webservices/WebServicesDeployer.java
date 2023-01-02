@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -68,6 +68,7 @@ import org.glassfish.api.deployment.UndeployCommandParameters;
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
+import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.deployment.common.DeploymentException;
 import org.glassfish.javaee.core.deployment.JavaEEDeployer;
 import org.glassfish.loader.util.ASClassLoaderUtil;
@@ -149,12 +150,9 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer, We
             String moduleCP = getModuleClassPath(dc);
             final List<URL> moduleCPUrls = ASClassLoaderUtil.getURLsFromClasspath(moduleCP, File.pathSeparator, null);
             final ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-            URLClassLoader newCl = AccessController.doPrivileged(new PrivilegedAction<URLClassLoader>() {
-                @Override
-                public URLClassLoader run() {
-                    return new URLClassLoader(ASClassLoaderUtil.convertURLListToArray(moduleCPUrls), oldCl);
-                }
-            });
+            PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader(
+                ASClassLoaderUtil.convertURLListToArray(moduleCPUrls), oldCl);
+            URLClassLoader newCl = AccessController.doPrivileged(action);
 
             Thread.currentThread().setContextClassLoader(newCl);
             WebServicesDescriptor wsDesc = bundle.getWebServices();

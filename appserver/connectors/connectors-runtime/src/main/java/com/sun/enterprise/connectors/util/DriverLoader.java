@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -441,43 +441,6 @@ public class DriverLoader implements ConnectorConstants {
         return isResType;
     }
 
-
-    /**
-     * This method should be executed before driverLoaders are queries for
-     * classloader to load the classname.
-     * @param classname
-     * @return
-     */
-    //TODO remove later
-    /*private boolean loadClass(File f, String classname, String resType) {
-        List<URL> urls = new ArrayList<URL>();
-        Class urlCls = null;
-        boolean isLoaded = false;
-        try {
-            urls.add(f.toURI().toURL());
-        } catch (MalformedURLException ex) {
-        }
-        ClassLoader loader = ConnectorRuntime.getRuntime().getConnectorClassLoader();
-        if (!urls.isEmpty()) {
-            ClassLoader urlClassLoader =
-                    new URLClassLoader(urls.toArray(new URL[urls.size()]), loader);
-            try {
-                urlCls = urlClassLoader.loadClass(classname);
-            } catch (ClassNotFoundException ex) {
-            }
-            isLoaded = isResType(urlCls, resType);
-            if(isLoaded) {
-                //Loaded the class and verified it to be a jdbc driver implementing
-                //java.sql.Driver or implementing javax.sql.DataSource
-                //Register the url classloader for later use.
-                //For ojdbc14 n ojdbc5 (same class names different url class loaders
-                //will be added.
-                classLoaders.put(classname, urlClassLoader);
-            }
-        } else {
-        }
-        return isLoaded;
-    }*/
 
     private String getClassName(String classname) {
         classname = classname.replaceAll("/", ".");

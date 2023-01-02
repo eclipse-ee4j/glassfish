@@ -30,7 +30,7 @@ import org.glassfish.api.deployment.ApplicationContainer;
 import org.glassfish.api.deployment.ApplicationContext;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.appclient.server.core.jws.JavaWebStartInfo;
-
+import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -169,14 +169,8 @@ public class AppClientServerApplication implements
          * This cannot be null or it prevents the framework from invoking unload
          * on the deployer for this app.
          */
-        return AccessController.doPrivileged(new PrivilegedAction<URLClassLoader>() {
-
-            @Override
-            public URLClassLoader run() {
-                return new URLClassLoader(new URL[0]);
-            }
-
-        });
+        PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader(new URL[0]);
+        return AccessController.doPrivileged(action);
     }
 
     public DeploymentContext dc() {

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,18 @@
 
 package org.glassfish.appclient.client;
 
-import static org.glassfish.appclient.client.acc.CommandLaunchInfo.ClientLaunchType.UNKNOWN;
+import com.sun.enterprise.container.common.spi.util.InjectionException;
+import com.sun.enterprise.deployment.node.SaxParserHandlerBundled;
+import com.sun.enterprise.universal.glassfish.TokenResolver;
+import com.sun.enterprise.util.JDK;
+import com.sun.enterprise.util.LocalStringManager;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.ValidationEvent;
+import jakarta.xml.bind.util.ValidationEventCollector;
 
 import java.io.BufferedReader;
 import java.io.CharArrayWriter;
@@ -34,7 +46,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -63,32 +74,21 @@ import org.glassfish.appclient.client.acc.config.ClientCredential;
 import org.glassfish.appclient.client.acc.config.MessageSecurityConfig;
 import org.glassfish.appclient.client.acc.config.Property;
 import org.glassfish.appclient.client.acc.config.TargetServer;
+import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-import com.sun.enterprise.container.common.spi.util.InjectionException;
-import com.sun.enterprise.deployment.node.SaxParserHandlerBundled;
-import com.sun.enterprise.universal.glassfish.TokenResolver;
-import com.sun.enterprise.util.JDK;
-import com.sun.enterprise.util.LocalStringManager;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Unmarshaller;
-import jakarta.xml.bind.ValidationEvent;
-import jakarta.xml.bind.util.ValidationEventCollector;
+import static org.glassfish.appclient.client.acc.CommandLaunchInfo.ClientLaunchType.UNKNOWN;
 
 /**
- *
  * @author tjquinn
  */
 public class AppClientFacade {
 
     private static final String ACC_CONFIG_CONTENT_PROPERTY_NAME = "glassfish-acc.xml.content";
     private static final String MAN_PAGE_PATH = "/org/glassfish/appclient/client/acc/appclient.1m";
-    private static final String LINE_SEP = System.getProperty("line.separator");
+    private static final String LINE_SEP = System.lineSeparator();
 
     private static final Class<?> stringsAnchor = ACCClassLoader.class;
     private static LocalStringManager localStrings = new LocalStringManagerImpl(stringsAnchor);
@@ -249,9 +249,9 @@ public class AppClientFacade {
 
     private static String getUsage() {
         return localStrings.getLocalString(stringsAnchor, "main.usage",
-                "appclient [ <classfile> | -client <appjar> ] [-mainclass <appClass-name>|-name <display-name>] [-xml <xml>] [-textauth] [-user <username>] [-password <password>|-passwordfile <password-file>] [-targetserver host[:port][,host[:port]...] [app-args]")
-                + System.getProperty("line.separator") + localStrings.getLocalString(stringsAnchor, "main.usage.1",
-                        "  or  :\n\tappclient [ <valid JVM options and valid ACC options> ] [ <appClass-name> | -jar <appjar> ] [app args]");
+        "appclient [ <classfile> | -client <appjar> ] [-mainclass <appClass-name>|-name <display-name>] [-xml <xml>] [-textauth] [-user <username>] [-password <password>|-passwordfile <password-file>] [-targetserver host[:port][,host[:port]...] [app-args]")
+        + System.lineSeparator() + localStrings.getLocalString(stringsAnchor, "main.usage.1",
+        "  or  :\n\tappclient [ <valid JVM options and valid ACC options> ] [ <appClass-name> | -jar <appjar> ] [app args]");
     }
 
     private static ACCClassLoader initClassLoader(final boolean loaderShouldTransform) throws MalformedURLException {
@@ -383,7 +383,7 @@ public class AppClientFacade {
 
     private static ClassLoader prepareLoaderToFindClassFile(final ClassLoader currentLoader) throws MalformedURLException {
         File currentDirPath = new File(System.getProperty("user.dir"));
-        ClassLoader newLoader = new URLClassLoader(new URL[] { currentDirPath.toURI().toURL() }, currentLoader);
+        ClassLoader newLoader = new GlassfishUrlClassLoader(new URL[] { currentDirPath.toURI().toURL() }, currentLoader);
         return newLoader;
     }
 
@@ -503,7 +503,7 @@ public class AppClientFacade {
         writer.close();
         reader.close();
 
-        Map<String, String> mapping = new HashMap<String, String>();
+        Map<String, String> mapping = new HashMap<>();
         Properties props = System.getProperties();
         for (Enumeration e = props.propertyNames(); e.hasMoreElements();) {
             String propName = (String) e.nextElement();

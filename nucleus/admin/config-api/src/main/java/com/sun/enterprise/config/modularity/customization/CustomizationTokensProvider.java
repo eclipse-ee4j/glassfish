@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,17 +22,11 @@ import com.sun.enterprise.config.modularity.annotation.HasCustomizationTokens;
 import com.sun.enterprise.config.util.ConfigApiLoggerInfo;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.single.StaticModulesRegistry;
-import com.sun.enterprise.util.LocalStringManager;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
 
-import org.glassfish.hk2.api.ServiceLocator;
-
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
@@ -42,24 +37,25 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.common.util.GlassfishUrlClassLoader;
+import org.glassfish.hk2.api.ServiceLocator;
+
 /**
  * @author Masoud Kalali
  */
-
 public class CustomizationTokensProvider {
 
     private static final Logger LOG = ConfigApiLoggerInfo.getLogger();
 
-    private static final LocalStringManager strings = new LocalStringManagerImpl(CustomizationTokensProvider.class);
     private ServiceLocator locator;
-    ConfigModularityUtils mu;
+    private ConfigModularityUtils mu;
 
     public List<ConfigCustomizationToken> getPresentConfigCustomizationTokens() throws NoSuchFieldException, IllegalAccessException {
         String runtimeType = "admin";
         initializeLocator();
         mu = locator.getService(ConfigModularityUtils.class);
         List<Class> l = mu.getAnnotatedConfigBeans(HasCustomizationTokens.class);
-        List<ConfigCustomizationToken> ctk = new ArrayList<ConfigCustomizationToken>();
+        List<ConfigCustomizationToken> ctk = new ArrayList<>();
         Set s = new HashSet();
         for (Class cls : l) {
             if (!s.contains(cls)) {
@@ -85,7 +81,7 @@ public class CustomizationTokensProvider {
         initializeLocator();
         mu = locator.getService(ConfigModularityUtils.class);
         List<Class> l = mu.getAnnotatedConfigBeans(HasCustomizationTokens.class);
-        List<ConfigCustomizationToken> ctk = new ArrayList<ConfigCustomizationToken>();
+        List<ConfigCustomizationToken> ctk = new ArrayList<>();
         Set s = new HashSet();
         for (Class cls : l) {
             if (!s.contains(cls)) {
@@ -109,7 +105,7 @@ public class CustomizationTokensProvider {
     }
 
     private List<ConfigCustomizationToken> getTokens(Class configBean, String runtimeType) {
-        List<ConfigCustomizationToken> ctk = new ArrayList<ConfigCustomizationToken>();
+        List<ConfigCustomizationToken> ctk = new ArrayList<>();
         List<ConfigBeanDefaultValue> defaultValues = mu.getDefaultConfigurations(configBean, runtimeType);
         for (ConfigBeanDefaultValue def : defaultValues) {
             ctk.addAll(def.getCustomizationTokens());
@@ -118,42 +114,36 @@ public class CustomizationTokensProvider {
     }
 
     protected void initializeLocator() {
-        final ClassLoader ecl = CustomizationTokensProvider.class.getClassLoader();
         File inst = new File(System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
         final File ext = new File(inst, "modules");
         LOG.log(Level.FINE, "asadmin modules directory: {0}", ext);
         if (ext.isDirectory()) {
-            AccessController.doPrivileged(new PrivilegedAction() {
-                @Override
-                public Object run() {
-                    try {
-                        URLClassLoader pl = new URLClassLoader(getJars(ext));
-                        ModulesRegistry registry = new StaticModulesRegistry(pl);
-                        locator = registry.createServiceLocator("default");
-                        return pl;
-                    } catch (IOException ex) {
-                        // any failure here is fatal
-                        LOG.log(Level.SEVERE, ConfigApiLoggerInfo.MODULES_CL_FAILED, ex);
-                    }
-                    return ecl;
+            PrivilegedAction<Void> action = () -> {
+                try {
+                    GlassfishUrlClassLoader classLoader = new GlassfishUrlClassLoader(getJars(ext));
+                    ModulesRegistry registry = new StaticModulesRegistry(classLoader);
+                    locator = registry.createServiceLocator("default");
+                } catch (IOException ex) {
+                    // any failure here is fatal
+                    LOG.log(Level.SEVERE, ConfigApiLoggerInfo.MODULES_CL_FAILED, ex);
                 }
-            });
+                return null;
+            };
+            AccessController.doPrivileged(action);
         } else {
             LOG.log(Level.FINER, "Modules directory does not exist");
         }
     }
 
     private static URL[] getJars(File dir) throws IOException {
-        File[] fjars = dir.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                return name.endsWith(".jar");
-            }
-        });
-        if (fjars == null)
+        File[] fjars = dir.listFiles((dir1, name) -> name.endsWith(".jar"));
+        if (fjars == null) {
             throw new IOException("No Jar Files in the HK2Modules Directory!");
+        }
         URL[] jars = new URL[fjars.length];
-        for (int i = 0; i < fjars.length; i++)
+        for (int i = 0; i < fjars.length; i++) {
             jars[i] = fjars[i].toURI().toURL();
+        }
         return jars;
     }
 }

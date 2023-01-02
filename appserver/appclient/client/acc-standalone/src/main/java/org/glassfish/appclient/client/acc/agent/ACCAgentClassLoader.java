@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,6 +28,7 @@ import java.security.PrivilegedAction;
 import java.util.Enumeration;
 
 import org.glassfish.appclient.common.ClassPathUtils;
+import org.glassfish.common.util.GlassfishUrlClassLoader;
 
 /**
  * Used as the system class loader during app client launch.
@@ -52,7 +53,7 @@ public class ACCAgentClassLoader extends URLClassLoader {
 
 
     private static URLClassLoader prepareLoader(ClassLoader parent) {
-        PrivilegedAction<URLClassLoader> action = () -> new URLClassLoader(
+        PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader(
             new URL[] {ClassPathUtils.getGFClientJarURL()}, new ClassLoaderWrapper(parent));
         return doPrivileged(action);
     }

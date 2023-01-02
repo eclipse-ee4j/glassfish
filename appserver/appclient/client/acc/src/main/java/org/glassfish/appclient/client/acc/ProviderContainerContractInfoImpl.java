@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,6 +36,7 @@ import java.util.HashSet;
 
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.glassfish.persistence.jpa.ProviderContainerContractInfoBase;
 
@@ -79,14 +80,8 @@ public class ProviderContainerContractInfoImpl extends ProviderContainerContract
 
     @Override
     public ClassLoader getTempClassloader() {
-        return AccessController.doPrivileged(new PrivilegedAction<URLClassLoader>() {
-
-                @Override
-                public URLClassLoader run() {
-                    return new URLClassLoader(classLoader.getURLs());
-                }
-
-            });
+        PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader(classLoader.getURLs());
+        return AccessController.doPrivileged(action);
     }
 
     @Override

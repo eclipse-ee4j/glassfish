@@ -16,6 +16,7 @@
 
 package org.glassfish.web.loader;
 
+import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.deployment.common.ClassDependencyBuilder;
 import org.glassfish.hk2.classmodel.reflect.*;
 
@@ -112,18 +113,10 @@ public class ServletContainerInitializerUtil {
             }
 
             // Create temporary classloader for ServiceLoader#load
-            // TODO: Have temporary classloader honor delegate flag from
-            // sun-web.xml
-            URL[] urlsForNewClassLoader =
-                new URL[newClassLoaderUrlList.size()];
-            final URL[] urlArray = newClassLoaderUrlList.toArray(urlsForNewClassLoader);
-
-            cl = AccessController.doPrivileged(new PrivilegedAction<URLClassLoader>() {
-                @Override
-                public URLClassLoader run() {
-                    return new URLClassLoader(urlArray, webAppCl.getParent());
-                }
-            });
+            // TODO: Have temporary classloader honor delegate flag from sun-web.xml
+            final URL[] urlArray = newClassLoaderUrlList.toArray(URL[]::new);
+            PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader(urlArray, webAppCl.getParent());
+            cl = AccessController.doPrivileged(action);
         }
 
         return ServiceLoader.load(ServletContainerInitializer.class, cl);

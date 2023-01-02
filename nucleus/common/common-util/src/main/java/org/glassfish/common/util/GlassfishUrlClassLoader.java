@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,17 +14,22 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.glassfish.bootstrap;
+package org.glassfish.common.util;
 
+import java.io.Closeable;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.net.URLStreamHandlerFactory;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
 
 /**
- * {@link URLClassLoader} with overriden {@link #toString()} method, so it prints list of managed
- * URLs
+ * {@link URLClassLoader} with logs and overriden {@link #toString()} method so it prints list
+ * of managed URLs.
+ * <p>
+ * This classloader is {@link Closeable}! As of JDK11+ {@link #close()} just closes any
+ * unclosed resource streams which could survive the class loader.
  *
  * @author David Matejcek
  */
@@ -34,10 +39,32 @@ public class GlassfishUrlClassLoader extends URLClassLoader {
      * Initializes the internal classpath.
      *
      * @param urls
+     */
+    public GlassfishUrlClassLoader(URL[] urls) {
+        super(urls);
+    }
+
+
+    /**
+     * Initializes the internal classpath.
+     *
+     * @param urls
      * @param parent
      */
     public GlassfishUrlClassLoader(URL[] urls, ClassLoader parent) {
         super(urls, parent);
+    }
+
+
+    /**
+     * Initializes the internal classpath.
+     *
+     * @param urls
+     * @param parent
+     * @param factory
+     */
+    public GlassfishUrlClassLoader(URL[] urls, ClassLoader parent, URLStreamHandlerFactory factory) {
+        super(urls, parent, factory);
     }
 
 

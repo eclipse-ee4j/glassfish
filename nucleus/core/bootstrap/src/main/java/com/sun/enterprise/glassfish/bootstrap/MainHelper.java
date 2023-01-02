@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,6 +38,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 // WARNING: There must not be any references to java.util.logging.* instances in static initialization except levels.
+//          They would cause initialization of the JVM logging which we do AFTER this.
 import static com.sun.enterprise.glassfish.bootstrap.LogFacade.BOOTSTRAP_LOGGER;
 import static com.sun.enterprise.module.bootstrap.ArgumentManager.argsToMap;
 import static java.util.logging.Level.FINE;
@@ -62,12 +63,12 @@ public class MainHelper {
     }
 
     private static int getMajorJdkVersion() {
-      String jv = System.getProperty("java.version");
-      String[] split = jv.split("[\\._\\-]+");
-      if (split.length > 0) {
-        return Integer.parseInt(split[0]);
-      }
-      return -1;
+        String jv = System.getProperty("java.version");
+        String[] split = jv.split("[\\._\\-]+");
+        if (split.length > 0) {
+            return Integer.parseInt(split[0]);
+        }
+        return -1;
     }
 
     static String whichPlatform() {
@@ -308,14 +309,12 @@ public class MainHelper {
         return null;
     }
 
-    /* package */
-
     static File findInstallRoot() {
-        File bootstrapFile = findBootstrapFile(); // glassfish/modules/glassfish.jar
-        return bootstrapFile.getParentFile().getParentFile(); // glassfish/
+        // glassfish/modules/glassfish.jar
+        File bootstrapFile = findBootstrapFile();
+        // glassfish/
+        return bootstrapFile.getParentFile().getParentFile();
     }
-
-    /* package */
 
     static File findInstanceRoot(File installRoot, Properties args) {
         Properties asEnv = parseAsEnv(installRoot);
@@ -468,11 +467,9 @@ public class MainHelper {
 
     private static boolean wasStartedByCLI(final Properties props) {
         // if we were started by CLI there will be some special args set...
-
-        return
-                props.getProperty("-asadmin-classpath") != null &&
-                        props.getProperty("-asadmin-classname") != null &&
-                        props.getProperty("-asadmin-args") != null;
+        return props.getProperty("-asadmin-classpath") != null
+            && props.getProperty("-asadmin-classname") != null
+            && props.getProperty("-asadmin-args") != null;
     }
 
     /**
@@ -574,8 +571,10 @@ public class MainHelper {
             case Knopflerfish:
             case Equinox:
                 return true;
+            case Static:
+            default:
+                return false;
         }
-        return false;
     }
 
     static class ClassLoaderBuilder {
@@ -749,11 +748,11 @@ public class MainHelper {
 
     static class EquinoxHelper extends PlatformHelper {
 
-        /* if equinox is installed under glassfish/eclipse this would be the
-         *  glassfish/eclipse/plugins dir that contains the equinox jars
-         *  can be null
-         * */
-        private static File pluginsDir = null;
+        /**
+         * If equinox is installed under glassfish/eclipse this would be the
+         * glassfish/eclipse/plugins dir that contains the equinox jars can be null
+         */
+        private static File pluginsDir;
 
         @Override
         protected void setFwDir() {
@@ -841,7 +840,8 @@ public class MainHelper {
 
         @Override
         protected File getFrameworkConfigFile() {
-            return null;  // no config file for this platform.
+            // no config file for this platform.
+            return null;
         }
     }
 }

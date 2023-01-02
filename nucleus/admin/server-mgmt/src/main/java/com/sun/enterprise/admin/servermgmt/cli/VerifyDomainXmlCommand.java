@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,16 +17,13 @@
 
 package com.sun.enterprise.admin.servermgmt.cli;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-
-import com.sun.enterprise.admin.cli.*;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.single.StaticModulesRegistry;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
+
+import java.io.File;
+import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -33,15 +31,12 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.CommandException;
+import org.glassfish.api.admin.CommandValidationException;
+import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.hk2.api.ServiceLocatorFactory;
-import org.glassfish.hk2.bootstrap.HK2Populator;
-import org.glassfish.hk2.bootstrap.impl.ClasspathDescriptorFileFinder;
-import org.glassfish.hk2.bootstrap.impl.Hk2LoaderPopulatorPostProcessor;
-import org.glassfish.internal.api.*;
+import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.component.*;
 import org.jvnet.hk2.config.ConfigParser;
 import org.jvnet.hk2.config.Dom;
 import org.jvnet.hk2.config.DomDocument;
@@ -60,7 +55,6 @@ public final class VerifyDomainXmlCommand extends LocalDomainCommand {
     @Param(name = "domain_name", primary = true, optional = true)
     private String domainName0;
 
-    private static final LocalStringsImpl strings = new LocalStringsImpl(VerifyDomainXmlCommand.class);
 
     @Override
     protected void validate() throws CommandException, CommandValidationException {
@@ -77,7 +71,7 @@ public final class VerifyDomainXmlCommand extends LocalDomainCommand {
         logger.log(Level.FINER, "Domain XML file = {0}", domainXMLFile);
         try {
             // get the list of JAR files from the modules directory
-            ArrayList<URL> urls = new ArrayList<URL>();
+            ArrayList<URL> urls = new ArrayList<>();
             File idir = new File(System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
             File mdir = new File(idir, "modules");
             File[] files = mdir.listFiles();
@@ -91,28 +85,24 @@ public final class VerifyDomainXmlCommand extends LocalDomainCommand {
 
             final URL[] urlsA = urls.toArray(new URL[urls.size()]);
 
-            ClassLoader cl = (ClassLoader) AccessController.doPrivileged(new PrivilegedAction() {
-                @Override
-                public Object run() {
-                    return new URLClassLoader(urlsA, Globals.class.getClassLoader());
-                }
-            });
-
+            PrivilegedAction<ClassLoader> action = () -> new GlassfishUrlClassLoader(urlsA, Globals.class.getClassLoader());
+            ClassLoader cl = AccessController.doPrivileged(action);
             ModulesRegistry registry = new StaticModulesRegistry(cl);
             ServiceLocator serviceLocator = registry.createServiceLocator("default");
 
             ConfigParser parser = new ConfigParser(serviceLocator);
             URL domainURL = domainXMLFile.toURI().toURL();
-            DomDocument doc = parser.parse(domainURL);
+            DomDocument<?> doc = parser.parse(domainURL);
             Dom domDomain = doc.getRoot();
             Domain domain = domDomain.createProxy(Domain.class);
             DomainXmlVerifier validator = new DomainXmlVerifier(domain);
 
-            if (validator.invokeConfigValidator())
+            if (validator.invokeConfigValidator()) {
                 return 1;
+            }
+            return 0;
         } catch (Exception e) {
             throw new CommandException(e);
         }
-        return 0;
     }
 }

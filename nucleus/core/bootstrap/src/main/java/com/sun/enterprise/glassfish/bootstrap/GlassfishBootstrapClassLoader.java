@@ -27,6 +27,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.glassfish.common.util.GlassfishUrlClassLoader;
+
 
 /**
  * This classloader is located between OSGI classloader and system JDK extensions classloader,
@@ -40,7 +42,7 @@ import java.util.stream.Collectors;
  *
  * @author David Matejcek
  */
-public class GlassfishBootstrapClassLoader extends URLClassLoader {
+public class GlassfishBootstrapClassLoader extends GlassfishUrlClassLoader {
 
     /**
      * Initializes the classloader.
@@ -51,16 +53,6 @@ public class GlassfishBootstrapClassLoader extends URLClassLoader {
      */
     public GlassfishBootstrapClassLoader(final File glassfishDir, final ClassLoader parent) throws IOException {
         super(createUrls(glassfishDir), parent);
-    }
-
-
-    /**
-     * Returns class name, hash code and list of managed urls.
-     */
-    @Override
-    public String toString() {
-        return getClass().getName() + "@" + Integer.toHexString(hashCode()) + ": "
-            + Arrays.stream(getURLs()).collect(Collectors.toList());
     }
 
 

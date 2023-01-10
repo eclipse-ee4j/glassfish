@@ -179,7 +179,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      * Use this variable to invoke the security manager when a resource is
      * loaded by this classloader.
      */
-    private final boolean packageDefinitionEnabled = System.getProperty("package.definition") != null;
+    private final boolean packageDefinitionEnabled = Boolean.getBoolean("package.definition");
 
     /**
      * Associated directory context giving access to the resources in this

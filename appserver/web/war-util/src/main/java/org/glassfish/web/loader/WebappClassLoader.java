@@ -1522,19 +1522,16 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
     @Override
     public void preDestroy() {
         try {
-            stop();
+            close();
         } catch (Exception e) {
             throw new IllegalStateException("There were issues with closing " + this, e);
         }
     }
 
-    /**
-     * Stop the class loader.
-     */
-    public void stop() throws IOException {
-        if (!started) {
-            return;
-        }
+
+    @Override
+    public void close() throws IOException {
+        LOG.log(DEBUG, "close()");
 
         // Clearing references should be done before setting started to
         // false, due to possible side effects.
@@ -1551,7 +1548,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         }
 
         // FIXME: close is called twice = unclear dependencies and order.
-        close();
+        super.close();
 
         started = false;
 
@@ -1573,7 +1570,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         }
 
         try {
-            close();
+            super.close();
         } catch (Exception e) {
             // ignore
         }

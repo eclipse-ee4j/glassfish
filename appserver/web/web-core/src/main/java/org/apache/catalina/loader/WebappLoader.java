@@ -699,7 +699,7 @@ public class WebappLoader
      */
     public void stopNestedClassLoader() throws LifecycleException {
         try {
-            classLoader.stop();
+            classLoader.close();
         } catch (Exception e) {
             throw new LifecycleException(e);
         }

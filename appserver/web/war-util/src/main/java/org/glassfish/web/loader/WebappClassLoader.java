@@ -387,13 +387,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      * and defined repositories.
      */
     public WebappClassLoader(URL[] urls, ClassLoader parent) {
-        super(new URL[0], parent);
-
-        if (urls != null && urls.length > 0) {
-            for (URL url : urls) {
-                super.addURL(url);
-            }
-        }
+        super(urls, parent);
         init();
     }
 

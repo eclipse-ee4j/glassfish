@@ -36,7 +36,7 @@ public class LogFacade {
     @LoggerInfo(subsystem="WEB", description="WEB Util Logger", publish=true)
     private static final String WEB_UTIL_LOGGER = "jakarta.enterprise.web.util";
 
-    public static final Logger LOGGER =
+    private static final Logger LOGGER =
             Logger.getLogger(WEB_UTIL_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
 
     private LogFacade() {}
@@ -44,6 +44,11 @@ public class LogFacade {
     public static Logger getLogger() {
         return LOGGER;
     }
+
+    public static System.Logger getSysLogger(Class<?> clazz) {
+        return System.getLogger(clazz.getName(), LOGGER.getResourceBundle());
+    }
+
 
     private static final String prefix = "AS-WEB-UTIL-";
 

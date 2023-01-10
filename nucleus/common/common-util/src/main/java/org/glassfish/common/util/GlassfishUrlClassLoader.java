@@ -34,6 +34,11 @@ import java.util.Arrays;
  */
 public class GlassfishUrlClassLoader extends URLClassLoader {
 
+    static {
+        registerAsParallelCapable();
+    }
+
+
     /**
      * Initializes the internal classpath.
      *

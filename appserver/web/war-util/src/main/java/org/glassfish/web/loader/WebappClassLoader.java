@@ -136,6 +136,10 @@ import org.glassfish.web.util.IntrospectionUtils;
 public class WebappClassLoader extends GlassfishUrlClassLoader
     implements Reloader, InstrumentableClassLoader, PreDestroy, DDPermissionsLoader, JarFileResourcesProvider {
 
+    static {
+        registerAsParallelCapable();
+    }
+
     /** First try parent classloader, then own resources. */
     public static final boolean DELEGATE_DEFAULT = true;
     private static final Logger logger = LogFacade.getLogger();

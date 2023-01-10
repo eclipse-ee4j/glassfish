@@ -360,17 +360,6 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      */
     boolean antiJARLocking;
 
-    // ----------------------------------------------------------- Constructors
-
-    /**
-     * Construct a new ClassLoader with no defined repositories and no
-     * parent ClassLoader.
-     */
-    public WebappClassLoader() {
-        super(new URL[0]);
-        init();
-    }
-
 
     /**
      * Construct a new ClassLoader with the given parent ClassLoader,
@@ -391,41 +380,6 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         init();
     }
 
-
-    // ------------------------------------------------------------- Properties
-
-    protected class PrivilegedFindResource
-        implements PrivilegedAction<ResourceEntry> {
-
-        private final File file;
-        private final String path;
-
-        PrivilegedFindResource(File file, String path) {
-            this.file = file;
-            this.path = path;
-        }
-
-        @Override
-        public ResourceEntry run() {
-            return findResourceInternal(file, path);
-        }
-    }
-
-
-    protected static final class PrivilegedGetClassLoader
-        implements PrivilegedAction<ClassLoader> {
-
-        public Class<?> clazz;
-
-        public PrivilegedGetClassLoader(Class<?> clazz){
-            this.clazz = clazz;
-        }
-
-        @Override
-        public ClassLoader run() {
-            return clazz.getClassLoader();
-        }
-    }
 
     /**
      * Sets the given package names that may always be overriden, regardless of whether they belong
@@ -2298,7 +2252,8 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         ResourceEntry entry = resourceEntries.get(name);
         if (entry != null) {
             return entry;
-        } else if (notFoundResources.containsKey(name)) {
+        }
+        if (notFoundResources.containsKey(name)) {
             return null;
         }
 
@@ -2348,24 +2303,22 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         int repositoriesLength = repositories.length;
         Resource resource = null;
 
-        for (int i=0; (entry == null) && (i < repositoriesLength); i++) {
+        for (int i = 0; entry == null && i < repositoriesLength; i++) {
 
             try {
-
                 String fullPath = repositories[i] + path;
                 Object lookupResult = resources.lookup(fullPath);
                 if (lookupResult instanceof Resource) {
                     resource = (Resource) lookupResult;
                 }
 
-                // Note : Not getting an exception here means the resource was
-                // found
-                if (securityManager != null) {
-                    PrivilegedAction<ResourceEntry> dp =
-                        new PrivilegedFindResource(files[i], path);
-                    entry = AccessController.doPrivileged(dp);
+                // Note : Not getting an exception here means the resource was found
+                File file = files[i];
+                if (securityManager == null) {
+                    entry = findResourceInternal(file, path);
                 } else {
-                    entry = findResourceInternal(files[i], path);
+                    PrivilegedAction<ResourceEntry> dp = () -> findResourceInternal(file, path);
+                    entry = AccessController.doPrivileged(dp);
                 }
 
                 ResourceAttributes attributes =
@@ -2825,41 +2778,32 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         });
     }
 
+    @Override
+    protected Object getClassLoadingLock(String className) {
+        return super.getClassLoadingLock(className);
+    }
+
+
     private String getJavaVersion() {
-
-        String version = null;
-
         SecurityManager sm = System.getSecurityManager();
-        if (sm != null) {
-            version = AccessController.doPrivileged(
-                new PrivilegedAction<String>() {
-                    @Override
-                    public String run() {
-                        return System.getProperty("java.version");
-                    }
-                });
-        } else {
-            version = System.getProperty("java.version");
+        if (sm == null) {
+            return System.getProperty("java.version");
         }
-
-        return version;
+        PrivilegedAction<String> action = () -> System.getProperty("java.version");
+        return AccessController.doPrivileged(action);
     }
 
     private void setAccessible(final Field field) {
-
         SecurityManager sm = System.getSecurityManager();
-        if (sm != null) {
-            AccessController.doPrivileged(new PrivilegedAction<Void>() {
-                @Override
-                public Void run() {
-                    field.setAccessible(true);
-                    return null;
-                }
-            });
-        } else {
+        if (sm == null) {
             field.setAccessible(true);
+        } else {
+            PrivilegedAction<Void> action = () -> {
+                field.setAccessible(true);
+                return null;
+            };
+            AccessController.doPrivileged(action);
         }
-
     }
 
     /**

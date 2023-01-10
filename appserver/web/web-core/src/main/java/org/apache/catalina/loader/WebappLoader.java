@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
- * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -628,12 +628,8 @@ public class WebappLoader
             if (cl instanceof WebappClassLoader) {
                 classLoader = (WebappClassLoader) cl;
             } else {
-                classLoader = AccessController.doPrivileged(new PrivilegedAction<WebappClassLoader>() {
-                    @Override
-                    public WebappClassLoader run() {
-                        return new WebappClassLoader(cl);
-                    }
-                });
+                PrivilegedAction<WebappClassLoader> action = () -> new WebappClassLoader(cl);
+                classLoader = AccessController.doPrivileged(action);
             }
             classLoader.setResources(container.getResources());
             classLoader.setDelegate(this.delegate);

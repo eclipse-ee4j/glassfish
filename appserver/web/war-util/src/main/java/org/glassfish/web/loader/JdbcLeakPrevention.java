@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -41,8 +42,8 @@ import java.util.List;
  */
 public class JdbcLeakPrevention {
 
-    public List<String> clearJdbcDriverRegistrations() throws SQLException {
-        List<String> driverNames = new ArrayList<String>();
+    public List<String> clearJdbcDriverRegistrations(ClassLoader classLoader) throws SQLException {
+        List<String> driverNames = new ArrayList<>();
 
         /*
          * DriverManager.getDrivers() has a nasty side-effect of registering
@@ -53,7 +54,7 @@ public class JdbcLeakPrevention {
          * ensuring that both original drivers and any loaded as a result of the
          * side-effects are all de-registered.
          */
-        HashSet<Driver> originalDrivers = new HashSet<Driver>();
+        HashSet<Driver> originalDrivers = new HashSet<>();
         Enumeration<Driver> drivers = DriverManager.getDrivers();
         while (drivers.hasMoreElements()) {
             originalDrivers.add(drivers.nextElement());
@@ -62,8 +63,7 @@ public class JdbcLeakPrevention {
         while (drivers.hasMoreElements()) {
             Driver driver = drivers.nextElement();
             // Only unload the drivers this web app loaded
-            if (driver.getClass().getClassLoader() !=
-                this.getClass().getClassLoader()) {
+            if (driver.getClass().getClassLoader() != classLoader) {
                 continue;
             }
             // Only report drivers that were originally registered. Skip any

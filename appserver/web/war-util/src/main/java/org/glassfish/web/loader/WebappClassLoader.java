@@ -1495,9 +1495,8 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         }
 
         // FIXME: close is called twice = unclear dependencies and order.
-        super.close();
-
         started = false;
+        super.close();
 
         int length = files.length;
         for (int i = 0; i < length; i++) {
@@ -1603,72 +1602,21 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         java.beans.Introspector.flushCaches();
     }
 
-    /**
-     * Deregister any JDBC drivers registered by the webapp that the webapp
-     * forgot. This is made unnecessary complex because a) DriverManager
-     * checks the class loader of the calling class (it would be much easier
-     * if it checked the context class loader) b) using reflection would
-     * create a dependency on the DriverManager implementation which can,
-     * and has, changed.
-     *
-     * We can't just create an instance of JdbcLeakPrevention as it will be
-     * loaded by the common class loader (since it's .class file is in the
-     * $CATALINA_HOME/lib directory). This would fail DriverManager's check
-     * on the class loader of the calling class. So, we load the bytes via
-     * our parent class loader but define the class with this class loader
-     * so the JdbcLeakPrevention looks like a webapp class to the
-     * DriverManager.
-     *
-     * If only apps cleaned up after themselves...
-     */
-    private final void clearReferencesJdbc() {
-        InputStream is = getResourceAsStream(
-                "org/glassfish/web/loader/JdbcLeakPrevention.class");
-        // We know roughly how big the class will be (~ 1K) so allow 2k as a
-        // starting point
-        byte[] classBytes = new byte[2048];
-        int offset = 0;
+
+    private void clearReferencesJdbc() {
         try {
-            int read = is.read(classBytes, offset, classBytes.length-offset);
-            while (read > -1) {
-                offset += read;
-                if (offset == classBytes.length) {
-                    // Buffer full - double size
-                    byte[] tmp = new byte[classBytes.length * 2];
-                    System.arraycopy(classBytes, 0, tmp, 0, classBytes.length);
-                    classBytes = tmp;
-                }
-                read = is.read(classBytes, offset, classBytes.length-offset);
-            }
-            Class<?> lpClass =
-                defineClass("org.glassfish.web.loader.JdbcLeakPrevention",
-                    classBytes, 0, offset, this.getClass().getProtectionDomain());
-            Object obj = lpClass.getDeclaredConstructor().newInstance();
-            @SuppressWarnings("unchecked") // clearJdbcDriverRegistrations() returns List<String>
-            List<String> driverNames = (List<String>) obj.getClass().getMethod(
-                    "clearJdbcDriverRegistrations").invoke(obj);
+            List<String> driverNames = new JdbcLeakPrevention().clearJdbcDriverRegistrations(this);
             String msg = rb.getString(LogFacade.CLEAR_JDBC);
             for (String name : driverNames) {
                 LOG.log(WARNING, MessageFormat.format(msg, contextName, name));
             }
         } catch (Exception e) {
-            // So many things to go wrong above...
-            Throwable t = ExceptionUtils.unwrapInvocationTargetException(e);
-            ExceptionUtils.handleThrowable(t);
-            LOG.log(WARNING, getString(LogFacade.JDBC_REMOVE_FAILED, contextName), t);
-        } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException ioe) {
-                    LOG.log(WARNING, getString(LogFacade.JDBC_REMOVE_STREAM_ERROR, contextName), ioe);
-                }
-            }
+            LOG.log(WARNING, getString(LogFacade.JDBC_REMOVE_FAILED, contextName), e);
         }
     }
 
 
-    private final void clearReferencesStaticFinal() {
+    private void clearReferencesStaticFinal() {
 
         Collection<ResourceEntry> values = resourceEntries.values();
         Iterator<ResourceEntry> loadedClasses = values.iterator();

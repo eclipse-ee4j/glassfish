@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,11 +17,18 @@
 
 package com.sun.enterprise.connectors.util;
 
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
+import com.sun.enterprise.deployment.EnvironmentProperty;
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.logging.LogDomains;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -30,13 +37,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
-import com.sun.enterprise.deployment.EnvironmentProperty;
-import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.logging.LogDomains;
+import org.glassfish.common.util.GlassfishUrlClassLoader;
 
 /**
  * This is a utility class to obtain the properties of a
@@ -50,87 +51,6 @@ public class RARUtils {
 
     private final static Logger _logger = LogDomains.getLogger(RARUtils.class, LogDomains.RSR_LOGGER);
     private static StringManager localStrings = StringManager.getManager(RARUtils.class);
-
-    /**
-     * Finds the properties of a RA JavaBean bundled in a RAR
-     * without exploding the RAR
-     *
-     * @param pathToDeployableUnit a physical,accessible location of the connector module.
-     * [either a RAR for RAR-based deployments or a directory for Directory based deployments]
-     * @return A Map that is of <String RAJavaBeanPropertyName, String defaultPropertyValue>
-     * An empty map is returned in the case of a 1.0 RAR
-     */
-/* TODO V3
-    public static Map getRABeanProperties (String pathToDeployableUnit) throws ConnectorRuntimeException {
-        File f = new File(pathToDeployableUnit);
-        if (!f.exists()){
-            String i18nMsg = I18N.getString(
-                "rar_archive_not_found", pathToDeployableUnit);
-            throw new ConnectorRuntimeException( i18nMsg );
-        }
-        if(f.isDirectory()) {
-            return getRABeanPropertiesForDirectoryBasedDeployment(pathToDeployableUnit);
-        } else {
-            return getRABeanPropertiesForRARBasedDeployment(pathToDeployableUnit);
-        }
-    }
-*/
-
-/*
-    private static Map getRABeanPropertiesForRARBasedDeployment(String rarLocation){
-        ConnectorRARClassLoader jarCL =
-                            (new ConnectorRARClassLoader(rarLocation,
-                             ApplicationServer.getServerContext().getCommonClassLoader()));
-        String raClassName = ConnectorDDTransformUtils.
-                                    getResourceAdapterClassName(rarLocation);
-        _logger.finer("RA class :  " + raClassName);
-        Map hMap = new HashMap();
-        try {
-           hMap = extractRABeanProps(raClassName, jarCL);
-        } catch (ClassNotFoundException e) {
-            _logger.info(e.getMessage());
-            _logger.log(Level.FINE, "Error while trying to find class "
-                            + raClassName + "in RAR at " + rarLocation, e);
-        }
-        return hMap;
-    }
-*/
-
-/*
-    private static Map getRABeanPropertiesForDirectoryBasedDeployment(
-                    String directoryLocation) {
-        Map hMap = new HashMap();
-        //Use the deployment APIs to get the name of the resourceadapter
-        //class through the connector descriptor
-        try {
-            ConnectorDescriptor cd = ConnectorDDTransformUtils.
-                                getConnectorDescriptor(directoryLocation);
-            String raClassName = cd.getResourceAdapterClass();
-
-            File f = new File(directoryLocation);
-            URLClassLoader ucl = new URLClassLoader(new URL[]{f.toURI().toURL()},
-                                  ApplicationServer.getServerContext().getCommonClassLoader());
-            hMap = extractRABeanProps(raClassName, ucl);
-        } catch (IOException e) {
-            _logger.info(e.getMessage());
-            _logger.log(Level.FINE, "IO Error while trying to read connector" +
-                   "descriptor to get resource-adapter properties", e);
-        } catch (ClassNotFoundException e) {
-            _logger.info(e.getMessage());
-            _logger.log(Level.FINE, "Unable to find class while trying to read connector" +
-                   "descriptor to get resource-adapter properties", e);
-        } catch (ConnectorRuntimeException e) {
-            _logger.info(e.getMessage());
-            _logger.log(Level.FINE, "Error while trying to read connector" +
-                   "descriptor to get resource-adapter properties", e);
-        } catch (Exception e) {
-            _logger.info(e.getMessage());
-            _logger.log(Level.FINE, "Error while trying to read connector" +
-                   "descriptor to get resource-adapter properties", e);
-        }
-        return hMap;
-    }
-*/
 
     /**
      * A valid resource adapter java bean property should either be one of the
@@ -245,7 +165,6 @@ public class RARUtils {
      * @throws ConnectorRuntimeException when unable to load the .rar
      */
     private static ClassLoader getClassLoader(String file) throws ConnectorRuntimeException {
-        ClassLoader cl = null;
         File f = new File(file);
         validateRARLocation(f);
         try {
@@ -255,21 +174,11 @@ public class RARUtils {
                 List<URL> urls = new ArrayList<>();
                 urls.add(f.toURI().toURL());
                 appendURLs(urls, f);
-                cl = new URLClassLoader(urls.toArray(new URL[urls.size()]), commonClassLoader);
-            } else {
-                cl = new ConnectorRARClassLoader(file, commonClassLoader);
+                return new GlassfishUrlClassLoader(urls.toArray(URL[]::new), commonClassLoader);
             }
-            return cl;
+            return new ConnectorRARClassLoader(file, commonClassLoader);
         } catch (IOException ioe) {
-            _logger.info(ioe.getMessage());
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "IO Error while trying to read connector "
-                        + "descriptor to get resource-adapter properties", ioe);
-            }
-            ConnectorRuntimeException cre = new ConnectorRuntimeException(
-                    "unable to read connector descriptor from : " + file);
-            cre.setStackTrace(ioe.getStackTrace());
-            throw cre;
+            throw new ConnectorRuntimeException("unable to read connector descriptor from " + file, ioe);
         }
     }
 

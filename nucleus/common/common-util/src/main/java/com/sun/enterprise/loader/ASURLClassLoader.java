@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,7 +37,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.security.AccessController;
@@ -71,6 +70,7 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 
 import org.glassfish.api.deployment.InstrumentableClassLoader;
+import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.PreDestroy;
 
 import static java.util.logging.Level.INFO;
@@ -85,7 +85,7 @@ import static java.util.logging.Level.INFO;
  * @author Sivakumar Thyagarajan
  * @since  JDK 1.4
  */
-public class ASURLClassLoader extends URLClassLoader
+public class ASURLClassLoader extends GlassfishUrlClassLoader
     implements JasperAdapter, InstrumentableClassLoader, PreDestroy, DDPermissionsLoader {
 
     /** logger for this class */
@@ -284,7 +284,7 @@ public class ASURLClassLoader extends URLClassLoader
                     checkManifest(entry.zip, entry.file);
                 }
             } else {
-                _logger.log(Level.FINE, "[ASURLClassLoader] Ignoring duplicate URL: " + url);
+                _logger.log(Level.FINE, "[ASURLClassLoader] Ignoring duplicate URL: {0}", url);
                 // Clean up the unused entry or it could hold open a jar file.
                 if (entry.zip != null) {
                     try {
@@ -1119,20 +1119,14 @@ public class ASURLClassLoader extends URLClassLoader
              *to the directories of interest.
              */
             try {
-                File result = (File) AccessController.doPrivileged(new PrivilegedExceptionAction() {
-                        @Override
-                        public Object run() throws Exception {
-
-                            File targetFile = new File(file, targetPath);
-                            if ( ! targetFile.exists()) {
-                                targetFile = null;
-                            }
-                            return targetFile;
-                        }
-                    });
-
-                return result;
-
+                PrivilegedExceptionAction<File> action = () -> {
+                    File targetFile = new File(file, targetPath);
+                    if (!targetFile.exists()) {
+                        targetFile = null;
+                    }
+                    return targetFile;
+                };
+                return AccessController.doPrivileged(action);
             } catch (PrivilegedActionException pae) {
                 /*
                  *Log any exception and return false.

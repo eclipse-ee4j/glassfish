@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -66,13 +66,8 @@ public class ConnectorClassLoader extends ASURLClassLoader {
 
     public static synchronized ConnectorClassLoader getInstance() {
         if (classLoader == null) {
-            classLoader = AccessController.doPrivileged(new PrivilegedAction<ConnectorClassLoader>() {
-
-                @Override
-                public ConnectorClassLoader run() {
-                    return new ConnectorClassLoader();
-                }
-            });
+            PrivilegedAction<ConnectorClassLoader> action = ConnectorClassLoader::new;
+            classLoader = AccessController.doPrivileged(action);
         }
         return classLoader;
     }
@@ -96,12 +91,8 @@ public class ConnectorClassLoader extends ASURLClassLoader {
         if (classLoader == null) {
             synchronized (ConnectorClassLoader.class) {
                 if (classLoader == null) {
-                    classLoader = AccessController.doPrivileged(new PrivilegedAction<ConnectorClassLoader>() {
-                        @Override
-                        public ConnectorClassLoader run() {
-                            return new ConnectorClassLoader(parent);
-                        }
-                    });
+                    PrivilegedAction<ConnectorClassLoader> action = () -> new ConnectorClassLoader(parent);
+                    classLoader = AccessController.doPrivileged(action);
                 }
             }
         }
@@ -120,13 +111,8 @@ public class ConnectorClassLoader extends ASURLClassLoader {
 
         try {
             File file = new File(moduleDir);
-            ASURLClassLoader cl = AccessController.doPrivileged(new PrivilegedAction<ASURLClassLoader>() {
-
-                @Override
-                public ASURLClassLoader run() {
-                    return new ASURLClassLoader(parent);
-                }
-            });
+            PrivilegedAction<ASURLClassLoader> action = () -> new ASURLClassLoader(parent);
+            ASURLClassLoader cl = AccessController.doPrivileged(action);
 
             cl.appendURL(file.toURI().toURL());
             appendJars(file, cl);

@@ -20,16 +20,19 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
  * This classloader is located between OSGI classloader and system JDK extensions classloader,
  * so it can provide early initialized libraries (before OSGI startup, so even OSGI can use them).
  * <p>
- * Examples
+ * List:
  * <ul>
  * <li>GlassFish Java Util Logging Extension
  * <li>Grizzly NPN API
@@ -37,7 +40,7 @@ import java.util.List;
  *
  * @author David Matejcek
  */
-public class GlassfishBootstrapClassLoader extends GlassfishUrlClassLoader {
+public class GlassfishBootstrapClassLoader extends URLClassLoader {
 
     /**
      * Initializes the classloader.
@@ -50,9 +53,14 @@ public class GlassfishBootstrapClassLoader extends GlassfishUrlClassLoader {
         super(createUrls(glassfishDir), parent);
     }
 
+
+    /**
+     * Returns class name, hash code and list of managed urls.
+     */
     @Override
-    public Class<?> loadClass(final String className) throws ClassNotFoundException {
-        return super.loadClass(className);
+    public String toString() {
+        return getClass().getName() + "@" + Integer.toHexString(hashCode()) + ": "
+            + Arrays.stream(getURLs()).collect(Collectors.toList());
     }
 
 

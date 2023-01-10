@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,6 +21,7 @@ import com.sun.enterprise.container.common.spi.util.InjectionException;
 import com.sun.enterprise.module.bootstrap.BootException;
 import com.sun.enterprise.util.LocalStringManager;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -29,9 +31,9 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.security.auth.callback.CallbackHandler;
 
-import org.glassfish.api.naming.ClientNamingConfigurator;
 import org.glassfish.appclient.client.acc.config.AuthRealm;
 import org.glassfish.appclient.client.acc.config.ClientCredential;
 import org.glassfish.appclient.client.acc.config.MessageSecurityConfig;
@@ -39,6 +41,7 @@ import org.glassfish.appclient.client.acc.config.Property;
 import org.glassfish.appclient.client.acc.config.TargetServer;
 import org.glassfish.appclient.client.acc.config.util.XML;
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
+import org.glassfish.internal.api.ORBLocator;
 import org.xml.sax.SAXException;
 
 /**
@@ -66,7 +69,7 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
 
     private AuthRealm authRealm = null;
 
-    private URLClassLoader classLoader = (URLClassLoader) Thread.currentThread().getContextClassLoader();
+    private final URLClassLoader classLoader = (URLClassLoader) Thread.currentThread().getContextClassLoader();
 
     /**
      * The caller can pre-set the client credentials using the
@@ -74,23 +77,22 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
      * username and realm values in intializing a callback handler if one is
      * needed.
      */
-    private ClientCredential clientCredential = null;
+    private ClientCredential clientCredential;
 
     private boolean sendPassword = true;
 
     private GlassFishORBHelper orbHelper;
 
     /** caller-provided message security configurations */
-    private final List<MessageSecurityConfig> messageSecurityConfigs = new ArrayList<MessageSecurityConfig>();
+    private final List<MessageSecurityConfig> messageSecurityConfigs = new ArrayList<>();
 
-//    private Class<? extends CallbackHandler> callbackHandlerClass = null;
 
     /**
      * optional caller-specified properties governing the ACC's behavior.
      * Correspond to the property elements available in the client-container
      * element from sun-application-client-containerxxx.dtd.
      */
-    private Properties containerProperties = null;
+    private Properties containerProperties;
 
     AppClientContainerBuilder() {
 
@@ -116,11 +118,13 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
         return container;
     }
 
+    @Override
     public AppClientContainer newContainer(final Class mainClass) throws Exception {
         return newContainer(mainClass, null);
 
     }
 
+    @Override
     public AppClientContainer newContainer(final URI clientURI,
             final CallbackHandler callerSpecifiedCallbackHandler,
             final String callerSpecifiedMainClassName,
@@ -131,6 +135,7 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
                 false /* isTextAuth */);
     }
 
+    @Override
     public AppClientContainer newContainer(final URI clientURI,
             final CallbackHandler callerSpecifiedCallbackHandler,
             final String callerSpecifiedMainClassName,
@@ -149,6 +154,7 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
         return container;
     }
 
+    @Override
     public AppClientContainer newContainer(final URI clientURI) throws Exception, UserError {
         return newContainer(clientURI, null, null, null);
     }
@@ -208,9 +214,9 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
          * not override those settings.
          */
         if (targetServers.length == 1) {
-            defineIfNotDefined(GlassFishORBHelper.OMG_ORB_INIT_HOST_PROPERTY,
+            defineIfNotDefined(ORBLocator.OMG_ORB_INIT_HOST_PROPERTY,
                     targetServers[0].getAddress());
-            defineIfNotDefined(GlassFishORBHelper.OMG_ORB_INIT_PORT_PROPERTY,
+            defineIfNotDefined(ORBLocator.OMG_ORB_INIT_PORT_PROPERTY,
                     Integer.toString(targetServers[0].getPort()));
         } else {
             /*
@@ -220,7 +226,7 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
         }
 
         if (isSSLRequired(targetServers, containerProperties)) {
-            orbHelper.setCSIv2Prop(GlassFishORBHelper.ORB_SSL_CLIENT_REQUIRED, "true");
+            orbHelper.setCSIv2Prop(ORBLocator.ORB_SSL_CLIENT_REQUIRED, "true");
         }
         logger.log(Level.CONFIG, "Using endpoint address(es): {0}", sb.toString());
 
@@ -277,69 +283,47 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
     }
 
 
-//    /**
-//     * Returns an AppClientContainer prepared to execute the app client implied
-//     * by the launch info and the app client args.
-//     * @param launchInfo info about the launch (type, name)
-//     * @param appclientArgs appclient command line arguments
-//     * @return
-//     */
-//    AppClientContainer newContainer(final CommandLaunchInfo launchInfo, final AppclientCommandArguments appclientArgs) {
-//        AppClientContainer acc = null;
-////        switch (launchInfo.getClientLaunchType()) {
-////            case JAR:
-////                /*
-////                 * The user will have used local file path syntax, so create a
-////                 * file first and then get its URI.
-////                 */
-////                File f = new File(launchInfo.getClientName());
-////                acc = newContainer(f.toURI());
-////
-////                StandAloneAppClientInfo acInfo = new StandAloneAppClientInfo(
-////                        false /* isJWS */,
-////                        logger,
-////                        f, archivist, mainClassFromCommandLine)
-////        }
-//        return acc;
-//    }
-
+    @Override
     public AppClientContainerBuilder addMessageSecurityConfig(final MessageSecurityConfig msConfig) {
         messageSecurityConfigs.add(msConfig);
         return this;
     }
 
+    @Override
     public List<MessageSecurityConfig> getMessageSecurityConfig() {
         return this.messageSecurityConfigs;
     }
 
+    @Override
     public AppClientContainerBuilder logger(final Logger logger) {
         this.logger = logger;
         return this;
     }
 
+    @Override
     public Logger getLogger() {
         return logger;
     }
 
 
+    @Override
     public AppClientContainerBuilder authRealm(final String className) {
         authRealm = new AuthRealm(className);
         return this;
     }
 
+    @Override
     public AuthRealm getAuthRealm() {
         return authRealm;
     }
 
+    @Override
     public AppClientContainerBuilder clientCredentials(final String user, final char[] password) {
         return clientCredentials(user, password, null);
     }
 
+    @Override
     public AppClientContainerBuilder clientCredentials(final String user, final char[] password, final String realm) {
-//        this.clientCredential = new ClientCredential()
-//        this.user = user;
-//        this.password = password;
-//        this.realmName = realm;
         ClientCredential cc = new ClientCredential(user, new XML.Password(password), realm);
         return clientCredentials(cc);
     }
@@ -349,80 +333,41 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
         return this;
     }
 
+    @Override
     public ClientCredential getClientCredential() {
         return clientCredential;
     }
 
+    @Override
     public AppClientContainerBuilder containerProperties(final Properties props) {
         this.containerProperties = props;
         return this;
     }
 
+    @Override
     public AppClientContainerBuilder containerProperties(final List<Property> props) {
         containerProperties = XML.toProperties(props);
         return this;
     }
 
+    @Override
     public Properties getContainerProperties() {
         return containerProperties;
     }
 
+    @Override
     public AppClientContainerBuilder sendPassword(final boolean sendPassword){
         this.sendPassword = sendPassword;
         return this;
     }
 
+    @Override
     public boolean getSendPassword() {
         return sendPassword;
     }
 
-//    public AppClientContainerBuilder callbackHandler(final Class<? extends CallbackHandler> callbackHandlerClass) {
-//        this.callbackHandlerClass = callbackHandlerClass;
-//        return this;
-//    }
-
-//    public Class<? extends CallbackHandler> getCallbackHandler() {
-//        return callbackHandlerClass;
-//    }
-
+    @Override
     public TargetServer[] getTargetServers() {
         return targetServers;
     }
-
-//    public AppClientContainerBuilder mainClass(Class mainClass) {
-//        this.mainClass = mainClass;
-//        return this;
-//    }
-
-//    public Class getMainClass() {
-//        return mainClass;
-//    }
-//
-//    public AppClientContainerBuilder mainClassName(String mainClassName) {
-//        if (isMainClassFromCaller) {
-//            throw new IllegalStateException();
-//        }
-//        this.mainClassName = mainClassName;
-//        return this;
-//    }
-//
-//    public String getMainClassName() {
-//        return mainClassName;
-//    }
-//
-//    public AppClientContainerBuilder mainClass(final Class mainClass) {
-//        this.mainClass = mainClass;
-//        mainClassName = mainClass.getName();
-//        return this;
-//    }
-//
-//    public Method getMainMethod() {
-//        return mainMethod;
-//    }
-//
-//    private void completeConfig() throws NoSuchMethodException {
-//        mainMethod = initMainMethod();
-//    }
-//
-
 }

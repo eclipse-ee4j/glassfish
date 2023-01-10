@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2023 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
@@ -26,7 +26,6 @@ import java.io.InputStream;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.security.CodeSource;
 import java.security.PermissionCollection;
 import java.security.PrivilegedAction;
@@ -39,6 +38,7 @@ import java.util.function.Consumer;
 
 import org.glassfish.appclient.common.ClassPathUtils;
 import org.glassfish.appclient.common.ClientClassLoaderDelegate;
+import org.glassfish.common.util.GlassfishUrlClassLoader;
 
 import static java.security.AccessController.doPrivileged;
 
@@ -47,7 +47,7 @@ import static java.security.AccessController.doPrivileged;
  *
  * @author tjquinn
  */
-public class ACCClassLoader extends URLClassLoader {
+public class ACCClassLoader extends GlassfishUrlClassLoader {
 
     private static final String AGENT_LOADER_CLASS_NAME = "org.glassfish.appclient.client.acc.agent.ACCAgentClassLoader";
     private static ACCClassLoader instance;

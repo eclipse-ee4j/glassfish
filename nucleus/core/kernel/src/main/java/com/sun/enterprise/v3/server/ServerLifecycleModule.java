@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,13 +22,17 @@ import com.sun.appserv.server.LifecycleEventContext;
 import com.sun.appserv.server.LifecycleListener;
 import com.sun.appserv.server.ServerLifecycleException;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import java.io.File;
 import java.net.URL;
-import java.net.URLClassLoader;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.glassfish.loader.util.ASClassLoaderUtil;
@@ -35,36 +40,29 @@ import org.glassfish.loader.util.ASClassLoaderUtil;
 /**
  * @author Sridatta Viswanath
  */
-
 public final class ServerLifecycleModule {
 
+    private static final Logger _logger = KernelLoggerInfo.getLogger();
+    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ServerLifecycleModule.class);
+
     private LifecycleListener slcl;
-    private String name;
-    private String className;
+    private final String name;
+    private final String className;
     private String classpath;
     private int loadOrder;
-    private boolean isFatal = false;
-    private String statusMsg = "OK";
+    private boolean isFatal;
+    private final String statusMsg = "OK";
 
-    private ServerContext ctx;
-    private LifecycleEventContext leContext;
+    private final ServerContext ctx;
+    private final LifecycleEventContext leContext;
     private ClassLoader urlClassLoader;
-    private Properties props = new Properties();
-
-    private static final Logger _logger = KernelLoggerInfo.getLogger();
-    private static boolean _isTraceEnabled = false;
-
-    private final static String LIFECYCLE_PREFIX = "lifecycle_";
-
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ServerLifecycleModule.class);
+    private final Properties props = new Properties();
 
     ServerLifecycleModule(ServerContext ctx, String name, String className) {
         this.name = name;
         this.className = className;
         this.ctx = ctx;
         this.leContext = new LifecycleEventContextImpl(ctx);
-
-        _isTraceEnabled = _logger.isLoggable(Level.FINE);
     }
 
     void setClasspath(String classpath) {
@@ -108,33 +106,24 @@ public final class ServerLifecycleModule {
     }
 
     LifecycleListener loadServerLifecycle() throws ServerLifecycleException {
-        ClassLoader classLoader = ctx.getLifecycleParentClassLoader();
-
+        final ClassLoader classLoader;
         try {
-            if (this.classpath != null) {
+            if (this.classpath == null) {
+                classLoader = ctx.getLifecycleParentClassLoader();
+            } else {
                 URL[] urls = getURLs();
-
-                if (urls != null) {
-                    StringBuffer sb = new StringBuffer(128);
-                    for(int i=0;i<urls.length;i++) {
-                        sb.append(urls[i].toString());
-                    }
-                    if (_isTraceEnabled)
-                        _logger.fine("Lifecycle module = " + getName() +
-                                        " has classpath URLs = " + sb.toString());
-                }
-
-                this.urlClassLoader = new URLClassLoader(urls, classLoader);
+                _logger.log(Level.FINE, "Lifecycle module = {0} has classpath URLs = {1}", new Object[] {getName(), urls});
+                this.urlClassLoader = new GlassfishUrlClassLoader(urls, ctx.getLifecycleParentClassLoader());
                 classLoader = this.urlClassLoader;
             }
-
-            Class cl = Class.forName(className, true, classLoader);
-            slcl = (LifecycleListener) cl.newInstance();
+            @SuppressWarnings("unchecked")
+            Class<LifecycleListener> clazz = (Class<LifecycleListener>) Class.forName(className, true, classLoader);
+            slcl = clazz.getDeclaredConstructor().newInstance();
         } catch (Exception ee) {
-            _logger.log(Level.SEVERE, KernelLoggerInfo.exceptionLoadingLifecycleModule,
-                    new Object[] {this.name, ee}) ;
+            _logger.log(Level.SEVERE, KernelLoggerInfo.exceptionLoadingLifecycleModule, new Object[] {this.name, ee});
             if (isFatal) {
-                throw new ServerLifecycleException(localStrings.getLocalString("lifecyclemodule.loadExceptionIsFatal", "Treating failure loading the lifecycle module as fatal", this.name));
+                throw new ServerLifecycleException(localStrings.getLocalString("lifecyclemodule.loadExceptionIsFatal",
+                    "Treating failure loading the lifecycle module as fatal", this.name));
             }
         }
 
@@ -147,79 +136,79 @@ public final class ServerLifecycleModule {
         return ASClassLoaderUtil.convertURLListToArray(urlList);
     }
 
-    private void postEvent(int eventType, Object data)
-                                    throws ServerLifecycleException {
+
+    private void postEvent(int eventType, Object data) throws ServerLifecycleException {
         if (slcl == null) {
             if (isFatal) {
-                throw new ServerLifecycleException(localStrings.getLocalString("lifecyclemodule.loadExceptionIsFatal", "Treating failure loading the lifecycle module as fatal", this.name));
+                throw new ServerLifecycleException(localStrings.getLocalString("lifecyclemodule.loadExceptionIsFatal",
+                    "Treating failure loading the lifecycle module as fatal", this.name));
             }
-
             return;
         }
 
-        if (urlClassLoader != null)
+        if (urlClassLoader != null) {
             setClassLoader();
+        }
 
         LifecycleEvent slcEvent= new LifecycleEvent(this, eventType, data, this.leContext);
         try {
             slcl.handleEvent(slcEvent);
         } catch (ServerLifecycleException sle) {
-            _logger.log(Level.WARNING, KernelLoggerInfo.serverLifecycleException,
-                    new Object[] {this.name, sle});
-
-            if (isFatal)
+            _logger.log(Level.WARNING, KernelLoggerInfo.serverLifecycleException, new Object[] {this.name, sle});
+            if (isFatal) {
                 throw sle;
+            }
         } catch (Exception ee) {
-            _logger.log(Level.WARNING, KernelLoggerInfo.lifecycleModuleException,
-                    new Object[] {this.name, ee});
-
+            _logger.log(Level.WARNING, KernelLoggerInfo.lifecycleModuleException, new Object[] {this.name, ee});
             if (isFatal) {
                 throw new ServerLifecycleException(localStrings.getLocalString("lifecyclemodule.event_exceptionIsFatal", "Treating the exception from lifecycle module event handler as fatal"), ee);
             }
         }
     }
 
-    public void onInitialization()
-                                throws ServerLifecycleException {
+
+    public void onInitialization() throws ServerLifecycleException {
         postEvent(LifecycleEvent.INIT_EVENT, props);
     }
 
-    public void onStartup()
-                                    throws ServerLifecycleException {
+
+    public void onStartup() throws ServerLifecycleException {
         postEvent(LifecycleEvent.STARTUP_EVENT, props);
     }
+
 
     public void onReady() throws ServerLifecycleException {
         postEvent(LifecycleEvent.READY_EVENT, props);
     }
 
+
     public void onShutdown() throws ServerLifecycleException {
         postEvent(LifecycleEvent.SHUTDOWN_EVENT, props);
     }
+
 
     public void onTermination() throws ServerLifecycleException {
         postEvent(LifecycleEvent.TERMINATION_EVENT, props);
     }
 
+
     private void setClassLoader() {
-         // set the url class loader as the thread context class loader
-        java.security.AccessController.doPrivileged(
-            new java.security.PrivilegedAction() {
-                public Object run() {
-                    Thread.currentThread().setContextClassLoader(urlClassLoader);
-                    return null;
-                }
-            }
-        );
+        // set the url class loader as the thread context class loader
+        PrivilegedAction<Void> action = () -> {
+            Thread.currentThread().setContextClassLoader(urlClassLoader);
+            return null;
+        };
+        AccessController.doPrivileged(action);
     }
 
     /**
-     * return status of this lifecycle module as a string
+     * @return status of this lifecycle module as a string
      */
     public String getStatus() {
         return statusMsg;
     }
 
+    @Override
     public String toString() {
         return "Server LifecycleListener support";
     }

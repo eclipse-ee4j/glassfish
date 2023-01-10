@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +16,40 @@
  */
 
 package org.glassfish.weld;
+
+import jakarta.enterprise.inject.spi.AnnotatedType;
+import jakarta.enterprise.inject.spi.InjectionTarget;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.cdi.CDILoggerInfo;
+import org.glassfish.common.util.GlassfishUrlClassLoader;
+import org.glassfish.weld.connector.WeldUtils;
+import org.glassfish.weld.connector.WeldUtils.BDAType;
+import org.glassfish.weld.ejb.EjbDescriptorImpl;
+import org.jboss.weld.bootstrap.WeldBootstrap;
+import org.jboss.weld.bootstrap.api.ServiceRegistry;
+import org.jboss.weld.bootstrap.api.helpers.SimpleServiceRegistry;
+import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
+import org.jboss.weld.bootstrap.spi.BeanDiscoveryMode;
+import org.jboss.weld.bootstrap.spi.BeansXml;
+import org.jboss.weld.ejb.spi.EjbDescriptor;
 
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINER;
@@ -46,41 +80,6 @@ import static org.glassfish.weld.connector.WeldUtils.WEB_INF_LIB;
 import static org.glassfish.weld.connector.WeldUtils.getCDIAnnotatedClassNames;
 import static org.glassfish.weld.connector.WeldUtils.hasExtension;
 import static org.glassfish.weld.connector.WeldUtils.isImplicitBeanArchive;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.cdi.CDILoggerInfo;
-import org.glassfish.weld.connector.WeldUtils;
-import org.glassfish.weld.connector.WeldUtils.BDAType;
-import org.glassfish.weld.ejb.EjbDescriptorImpl;
-import org.jboss.weld.bootstrap.WeldBootstrap;
-import org.jboss.weld.bootstrap.api.ServiceRegistry;
-import org.jboss.weld.bootstrap.api.helpers.SimpleServiceRegistry;
-import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
-import org.jboss.weld.bootstrap.spi.BeanDiscoveryMode;
-import org.jboss.weld.bootstrap.spi.BeansXml;
-import org.jboss.weld.ejb.spi.EjbDescriptor;
-
-import jakarta.enterprise.inject.spi.AnnotatedType;
-import jakarta.enterprise.inject.spi.InjectionTarget;
 
 /**
  * The means by which Weld Beans are discovered on the classpath.
@@ -319,9 +318,7 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
         StringBuffer valBuff = new StringBuffer(initVal);
 
         Collection<BeanDeploymentArchive> bdas = getBeanDeploymentArchives();
-        Iterator<BeanDeploymentArchive> iter = bdas.iterator();
-        while (iter.hasNext()) {
-            BeanDeploymentArchive bda = iter.next();
+        for (BeanDeploymentArchive bda : bdas) {
             BDAType embedBDAType = BDAType.UNKNOWN;
             if (bda instanceof BeanDeploymentArchiveImpl) {
                 embedBDAType = ((BeanDeploymentArchiveImpl) bda).getBDAType();
@@ -619,16 +616,15 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
             try {
                 // use a throwaway classloader to load the application's beans.xml
                 final URL beansXmlUrl;
-                try (URLClassLoader throwAwayClassLoader = new URLClassLoader(new URL[] { archive.getURI().toURL() }, null)) {
+                try (GlassfishUrlClassLoader throwAwayClassLoader = new GlassfishUrlClassLoader(
+                    new URL[] {archive.getURI().toURL()}, null)) {
                     beansXmlUrl = throwAwayClassLoader.getResource(entry);
                 }
                 if (beansXmlUrl != null && !beansXmlURLs.contains(beansXmlUrl)) {
                     beansXmlURLs.add(beansXmlUrl);
                 }
             } catch (IOException e) {
-                if (LOG.isLoggable(Level.SEVERE)) {
-                    LOG.log(Level.SEVERE, CDILoggerInfo.SEVERE_ERROR_READING_ARCHIVE, new Object[] { e.getMessage() });
-                }
+                LOG.log(Level.SEVERE, CDILoggerInfo.SEVERE_ERROR_READING_ARCHIVE, e.getMessage());
             }
         }
     }
@@ -638,9 +634,7 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
     }
 
     private void collectRarInfo(ReadableArchive archive) throws IOException, ClassNotFoundException {
-        if (LOG.isLoggable(FINE)) {
-            LOG.log(FINE, CDILoggerInfo.COLLECTING_RAR_INFO, new Object[] { archive.getURI() });
-        }
+        LOG.log(FINE, CDILoggerInfo.COLLECTING_RAR_INFO, archive.getURI());
         Enumeration<String> entries = archive.entries();
         while (entries.hasMoreElements()) {
             String entry = entries.nextElement();

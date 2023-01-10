@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
- * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -90,6 +90,7 @@ import org.apache.naming.resources.Resource;
 import org.apache.naming.resources.ResourceAttributes;
 import org.apache.naming.resources.WebDirContext;
 import org.glassfish.api.deployment.InstrumentableClassLoader;
+import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.PreDestroy;
 import org.glassfish.internal.embedded.LifecycleException;
 import org.glassfish.web.util.ExceptionUtils;
@@ -130,9 +131,9 @@ import org.glassfish.web.util.IntrospectionUtils;
  *
  * @author Remy Maucherat
  * @author Craig R. McClanahan
- * @version $Revision: 1.1.2.1 $ $Date: 2007/08/17 15:46:27 $
+ * @since 2007/08/17 15:46:27 $
  */
-public class WebappClassLoader extends URLClassLoader
+public class WebappClassLoader extends GlassfishUrlClassLoader
     implements Reloader, InstrumentableClassLoader, PreDestroy, DDPermissionsLoader, JarFileResourcesProvider {
 
     /** First try parent classloader, then own resources. */
@@ -176,7 +177,7 @@ public class WebappClassLoader extends URLClassLoader
      * Associated directory context giving access to the resources in this
      * webapp.
      */
-    protected DirContext resources = null;
+    protected DirContext resources;
 
     /**
      * The cache of ResourceEntry for classes and resources we have loaded,
@@ -202,7 +203,7 @@ public class WebappClassLoader extends URLClassLoader
     /**
      * Last time a JAR was accessed.
      */
-    protected long lastJarAccessed = 0L;
+    protected long lastJarAccessed;
 
     /**
      * The list of local repositories, in the order they should be searched
@@ -213,7 +214,7 @@ public class WebappClassLoader extends URLClassLoader
     /**
      * Repositories URLs, used to cache the result of getURLs.
      */
-    protected URL[] repositoryURLs = null;
+    protected URL[] repositoryURLs;
 
     /**
      * Repositories translated as path in the work directory (for WaSP
@@ -242,7 +243,7 @@ public class WebappClassLoader extends URLClassLoader
     /**
      * The path which will be monitored for added Jar files.
      */
-    protected String jarPath = null;
+    protected String jarPath;
 
     /**
      * The list of JARs, in the order they should be searched
@@ -287,27 +288,27 @@ public class WebappClassLoader extends URLClassLoader
     /**
      * Instance of the SecurityManager installed.
      */
-    private SecurityManager securityManager = null;
+    private SecurityManager securityManager;
 
     /**
      * The parent class loader.
      */
-    private ClassLoader parent = null;
+    private ClassLoader parent;
 
     /**
      * The system class loader.
      */
-    private ClassLoader system = null;
+    private ClassLoader system;
 
     /**
      * Has this component been started?
      */
-    protected boolean started = false;
+    protected boolean started;
 
     /**
      * Has external repositories.
      */
-    protected boolean hasExternalRepositories = false;
+    protected boolean hasExternalRepositories;
 
     /**
      * List of byte code pre-processors per webapp class loader.
@@ -324,7 +325,7 @@ public class WebappClassLoader extends URLClassLoader
      */
     private Set<String> overridablePackages = Set.of();
 
-    private volatile boolean resourcesExtracted = false;
+    private volatile boolean resourcesExtracted;
 
     /**
      * Should Tomcat attempt to null out any static or final fields from loaded
@@ -335,7 +336,7 @@ public class WebappClassLoader extends URLClassLoader
      * option set to <code>false</code>. If not specified, the default value of
      * <code>false</code> will be used.
      */
-    private boolean clearReferencesStatic = false;
+    private boolean clearReferencesStatic;
 
     /**
      * Name of associated context used with logging and JMX to associate with
@@ -349,7 +350,7 @@ public class WebappClassLoader extends URLClassLoader
      * Use anti JAR locking code, which does URL rerouting when accessing
      * resources.
      */
-    boolean antiJARLocking = false;
+    boolean antiJARLocking;
 
     // ----------------------------------------------------------- Constructors
 
@@ -435,7 +436,7 @@ public class WebappClassLoader extends URLClassLoader
 
 
     /**
-     * Get associated resources.
+     * @return associated resources.
      */
     public DirContext getResources() {
         return this.resources;
@@ -475,10 +476,10 @@ public class WebappClassLoader extends URLClassLoader
 
 
     /**
-     * Return the "delegate first" flag for this class loader.
+     * @return the "delegate first" flag for this class loader.
      */
     public boolean getDelegate() {
-        return (this.delegate);
+        return this.delegate;
     }
 
 
@@ -533,7 +534,7 @@ public class WebappClassLoader extends URLClassLoader
 
             securityManager.checkSecurityAccess(DDPermissionsLoader.SET_EE_POLICY);
 
-            Permission permission = null;
+            Permission permission;
             if (path.startsWith("jndi:") || path.startsWith("jar:jndi:")) {
                 if (!path.endsWith("/")) {
                     path = path + "/";
@@ -596,7 +597,7 @@ public class WebappClassLoader extends URLClassLoader
     }
 
     /**
-     * Return the JAR path.
+     * @return the JAR path.
      */
     public String getJarPath() {
         return this.jarPath;
@@ -633,7 +634,7 @@ public class WebappClassLoader extends URLClassLoader
 
 
     /**
-     * Return the clearReferencesStatic flag for this Context.
+     * @return the clearReferencesStatic flag for this Context.
      */
     public boolean getClearReferencesStatic() {
         return this.clearReferencesStatic;
@@ -898,7 +899,7 @@ public class WebappClassLoader extends URLClassLoader
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(256);
+        StringBuilder sb = new StringBuilder(4096);
         sb.append(super.toString());
         sb.append("[delegate=").append(delegate);
         sb.append(", context=").append(getContextName());
@@ -1636,6 +1637,7 @@ public class WebappClassLoader extends URLClassLoader
             }
         }
 
+        // FIXME: close is called twice = unclear dependencies and order.
         close();
 
         started = false;
@@ -1691,14 +1693,13 @@ public class WebappClassLoader extends URLClassLoader
 
 
     /**
-     * Used to periodically signal to the classloader to release
-     * JAR resources.
+     * Used to periodically signal to the classloader to release JAR resources.
      */
     public void closeJARs(boolean force) {
         if (jarFiles.length > 0) {
             synchronized (jarFilesLock) {
-                if (force || (System.currentTimeMillis()
-                              > (lastJarAccessed + 90000))) {
+                // FIXME: Voodoo magic
+                if (force || (System.currentTimeMillis() > (lastJarAccessed + 90000))) {
                     for (int i = 0; i < jarFiles.length; i++) {
                         try {
                             if (jarFiles[i] != null) {
@@ -1791,7 +1792,7 @@ public class WebappClassLoader extends URLClassLoader
             Class<?> lpClass =
                 defineClass("org.glassfish.web.loader.JdbcLeakPrevention",
                     classBytes, 0, offset, this.getClass().getProtectionDomain());
-            Object obj = lpClass.newInstance();
+            Object obj = lpClass.getDeclaredConstructor().newInstance();
             @SuppressWarnings("unchecked") // clearJdbcDriverRegistrations() returns List<String>
             List<String> driverNames = (List<String>) obj.getClass().getMethod(
                     "clearJdbcDriverRegistrations").invoke(obj);
@@ -1919,25 +1920,24 @@ public class WebappClassLoader extends URLClassLoader
                 if (Modifier.isStatic(mods) && Modifier.isFinal(mods)) {
                     // Doing something recursively is too risky
                     continue;
-                } else {
-                    Object value = field.get(instance);
-                    if (null != value) {
-                        Class<? extends Object> valueClass = value.getClass();
-                        if (!loadedByThisOrChild(valueClass)) {
-                            if (logger.isLoggable(Level.FINE))  {
-                                logger.log(Level.FINE, "Not setting field " + field.getName() +
-                                        " to null in object of class " +
-                                        instance.getClass().getName() +
-                                        " because the referenced object was of type " +
-                                        valueClass.getName() +
-                                        " which was not loaded by this WebappClassLoader.");
-                            }
-                        } else {
-                            field.set(instance, null);
-                            if (logger.isLoggable(Level.FINE)) {
-                                logger.log(Level.FINE, "Set field " + field.getName()
-                                        + " to null in class " + instance.getClass().getName());
-                            }
+                }
+                Object value = field.get(instance);
+                if (value != null) {
+                    Class<? extends Object> valueClass = value.getClass();
+                    if (!loadedByThisOrChild(valueClass)) {
+                        if (logger.isLoggable(Level.FINE))  {
+                            logger.log(Level.FINE, "Not setting field " + field.getName() +
+                                    " to null in object of class " +
+                                    instance.getClass().getName() +
+                                    " because the referenced object was of type " +
+                                    valueClass.getName() +
+                                    " which was not loaded by this WebappClassLoader.");
+                        }
+                    } else {
+                        field.set(instance, null);
+                        if (logger.isLoggable(Level.FINE)) {
+                            logger.log(Level.FINE, "Set field " + field.getName()
+                                    + " to null in class " + instance.getClass().getName());
                         }
                     }
                 }
@@ -1986,48 +1986,9 @@ public class WebappClassLoader extends URLClassLoader
                     }
                 }
             }
-        } catch (SecurityException e) {
-            if (logger.isLoggable(Level.WARNING)) {
-                logger.log(Level.WARNING,
-                        getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_FAIL,
-                        contextName), e);
-            }
-        } catch (NoSuchFieldException e) {
-            if (logger.isLoggable(Level.WARNING)) {
-                logger.log(Level.WARNING,
-                        getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_FAIL,
-                        contextName), e);
-            }
-        } catch (ClassNotFoundException e) {
-            if (logger.isLoggable(Level.WARNING)) {
-                logger.log(Level.WARNING,
-                        getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_FAIL,
-                        contextName), e);
-            }
-        } catch (IllegalArgumentException e) {
-            if (logger.isLoggable(Level.WARNING)) {
-                logger.log(Level.WARNING,
-                        getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_FAIL,
-                        contextName), e);
-            }
-        } catch (IllegalAccessException e) {
-            if (logger.isLoggable(Level.WARNING)) {
-                logger.log(Level.WARNING,
-                        getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_FAIL,
-                        contextName), e);
-            }
-        } catch (InvocationTargetException e) {
-            if (logger.isLoggable(Level.WARNING)) {
-                logger.log(Level.WARNING,
-                        getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_FAIL,
-                        contextName), e);
-            }
-        } catch (NoSuchMethodException e) {
-            if (logger.isLoggable(Level.WARNING)) {
-                logger.log(Level.WARNING,
-                        getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_FAIL,
-                        contextName), e);
-            }
+        } catch (SecurityException | NoSuchFieldException | ClassNotFoundException | IllegalArgumentException
+            | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            logger.log(Level.WARNING, getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_FAIL, contextName), e);
         }
     }
 
@@ -2067,11 +2028,9 @@ public class WebappClassLoader extends URLClassLoader
                                 try {
                                     args[2] = key.toString();
                                 } catch (Exception e) {
-                                    logger.log(Level.SEVERE, getString(
-                                            LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_BAD_KEY,
-                                            args[1]), e);
-                                    args[2] = getString(
-                                            LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_UNKNOWN);
+                                    logger.log(Level.SEVERE,
+                                        getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_BAD_KEY, args[1]), e);
+                                    args[2] = getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_UNKNOWN);
                                 }
                             }
                             if (value != null) {
@@ -2079,23 +2038,18 @@ public class WebappClassLoader extends URLClassLoader
                                 try {
                                     args[4] = value.toString();
                                 } catch (Exception e) {
-                                    logger.log(Level.SEVERE, getString(
-                                            LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_BAD_VALUE,
-                                            args[3]), e);
-                                    args[4] = getString(
-                                            LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_UNKNOWN);
+                                    logger.log(Level.SEVERE,
+                                        getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_BAD_VALUE, args[3]), e);
+                                    args[4] = getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_UNKNOWN);
                                 }
                             }
                             if (value == null) {
                                 if (logger.isLoggable(Level.FINE)) {
-                                    logger.log(Level.FINE, getString(
-                                            LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_DEBUG,
-                                            args));
+                                    logger.log(Level.FINE,
+                                        getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_DEBUG, args));
                                 }
                             } else {
-                                logger.log(Level.SEVERE, getString(
-                                        LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS,
-                                        args));
+                                logger.log(Level.SEVERE, getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS, args));
                             }
                         }
                     }
@@ -2139,9 +2093,7 @@ public class WebappClassLoader extends URLClassLoader
         }
 
         if (o instanceof Collection<?>) {
-            Iterator<?> iter = ((Collection<?>) o).iterator();
-            while (iter.hasNext()) {
-                Object entry = iter.next();
+            for (Object entry : ((Collection<?>) o)) {
                 if (loadedByThisOrChild(entry)) {
                     return true;
                 }
@@ -2232,35 +2184,9 @@ public class WebappClassLoader extends URLClassLoader
                 }
             }
         } catch (ClassNotFoundException e) {
-            if (logger.isLoggable(Level.INFO)) {
-                logger.log(Level.INFO,
-                        getString(LogFacade.CLEAR_RMI_INFO,
-                        contextName), e);
-            }
-        } catch (SecurityException e) {
-            if (logger.isLoggable(Level.WARNING)) {
-                logger.log(Level.WARNING,
-                        getString(LogFacade.CLEAR_RMI_FAIL,
-                        contextName), e);
-            }
-        } catch (NoSuchFieldException e) {
-            if (logger.isLoggable(Level.WARNING)) {
-                logger.log(Level.WARNING,
-                        getString(LogFacade.CLEAR_RMI_FAIL,
-                        contextName), e);
-            }
-        } catch (IllegalArgumentException e) {
-            if (logger.isLoggable(Level.WARNING)) {
-                logger.log(Level.WARNING,
-                        getString(LogFacade.CLEAR_RMI_FAIL,
-                        contextName), e);
-            }
-        } catch (IllegalAccessException e) {
-            if (logger.isLoggable(Level.WARNING)) {
-                logger.log(Level.WARNING,
-                        getString(LogFacade.CLEAR_RMI_FAIL,
-                        contextName), e);
-            }
+            logger.log(Level.INFO, getString(LogFacade.CLEAR_RMI_INFO, contextName), e);
+        } catch (SecurityException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
+            logger.log(Level.WARNING, getString(LogFacade.CLEAR_RMI_FAIL, contextName), e);
         }
     }
 
@@ -2310,21 +2236,21 @@ public class WebappClassLoader extends URLClassLoader
                 WeakReference<?> loaderRef =
                     (WeakReference<?>) loaderRefField.get(key);
                 //In case of JDK 9, java.logging loading  sun.util.logging.resources.logging resource bundle and
-                // java.logging module is used as the cache key with null class loader.So we are adding a null check
-                if (loaderRef!=null){
-                  ClassLoader loader = (ClassLoader) loaderRef.get();
+                // java.logging module is used as the cache key with null class loader.So we are
+                // adding a null check
+                if (loaderRef != null) {
+                    ClassLoader loader = (ClassLoader) loaderRef.get();
 
-                  while (loader != null && loader != this) {
-                    loader = loader.getParent();
-                  }
+                    while (loader != null && loader != this) {
+                        loader = loader.getParent();
+                    }
 
-                  if (loader != null) {
-                    keysIter.remove();
-                    countRemoved++;
-                  }
+                    if (loader != null) {
+                        keysIter.remove();
+                        countRemoved++;
+                    }
 
                 }
-
             }
 
             if (countRemoved > 0 && logger.isLoggable(Level.FINE)) {
@@ -2395,9 +2321,7 @@ public class WebappClassLoader extends URLClassLoader
      *
      * @return the loaded class, or null if the class isn't found
      */
-    protected ResourceEntry findClassInternal(String name)
-        throws ClassNotFoundException {
-
+    protected ResourceEntry findClassInternal(String name) throws ClassNotFoundException {
         if (!validate(name)) {
             throw new ClassNotFoundException(name);
         }
@@ -2432,24 +2356,18 @@ public class WebappClassLoader extends URLClassLoader
         Package pkg = null;
 
         if (packageName != null) {
+            synchronized (loaderPC) {
+                pkg = getPackage(packageName);
 
-// START OF IASRI 4717252
-          synchronized (loaderPC) {
-// END OF IASRI 4717252
-            pkg = getPackage(packageName);
-
-            // Define the package (if null)
-            if (pkg == null) {
-                if (entry.manifest == null) {
-                    definePackage(packageName, null, null, null, null, null,
-                                  null, null);
-                } else {
-                    definePackage(packageName, entry.manifest, entry.codeBase);
+                // Define the package (if null)
+                if (pkg == null) {
+                    if (entry.manifest == null) {
+                        definePackage(packageName, null, null, null, null, null, null, null);
+                    } else {
+                        definePackage(packageName, entry.manifest, entry.codeBase);
+                    }
                 }
             }
-// START OF IASRI 4717252
-          }
-// END OF IASRI 4717252
         }
 
         if (securityManager != null) {
@@ -2464,12 +2382,10 @@ public class WebappClassLoader extends URLClassLoader
                         || !isPackageSealed(packageName, entry.manifest);
                 }
                 if (!sealCheck) {
-                    throw new SecurityException
-                        ("Sealing violation loading " + name + " : Package "
-                         + packageName + " is sealed.");
+                    throw new SecurityException(
+                        "Sealing violation loading " + name + " : Package " + packageName + " is sealed.");
                 }
             }
-
         }
 
         return entry;
@@ -2927,9 +2843,7 @@ public class WebappClassLoader extends URLClassLoader
     /**
      * Get URL.
      */
-    protected URL getURL(File file)
-        throws MalformedURLException {
-
+    protected URL getURL(File file) throws MalformedURLException {
         File realFile = file;
         try {
             realFile = realFile.getCanonicalFile();
@@ -2944,9 +2858,7 @@ public class WebappClassLoader extends URLClassLoader
     /**
      * Get URL.
      */
-    protected URL getURI(File file)
-        throws MalformedURLException {
-
+    protected URL getURI(File file) throws MalformedURLException {
         try {
             file = file.getCanonicalFile();
         } catch (IOException e) {
@@ -3008,88 +2920,85 @@ public class WebappClassLoader extends URLClassLoader
      */
     @Override
     public ClassLoader copy() {
-         logger.entering("WebModuleListener$InstrumentableWebappClassLoader", "copy");
-         // set getParent() as the parent of the cloned class loader
-         return AccessController.doPrivileged(new PrivilegedAction<URLClassLoader>() {
-             @Override
-             public URLClassLoader run() {
-                 return new URLClassLoader(getURLs(), getParent());
-             }
-         });
-     }
+        logger.entering("WebModuleListener$InstrumentableWebappClassLoader", "copy");
+        // set getParent() as the parent of the cloned class loader
+        PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader(getURLs(), getParent());
+        return AccessController.doPrivileged(action);
+    }
 
-     /**
+
+    /**
      * Add a new ClassFileTransformer to this class loader. This transfomer should be called for
-      * each class loading event.
-      *
-      * @param transformer new class file transformer to do byte code enhancement.
-      */
-     @Override
-     public void addTransformer(final ClassFileTransformer transformer) {
+     * each class loading event.
+     *
+     * @param transformer new class file transformer to do byte code enhancement.
+     */
+    @Override
+    public void addTransformer(final ClassFileTransformer transformer) {
         final WebappClassLoader cl = this;
         addByteCodePreprocessor(new BytecodePreprocessor(){
-                /*
-                 * This class adapts ClassFileTransformer to ByteCodePreprocessor that
-                 * is used inside WebappClassLoader.
-                 */
+            /*
+             * This class adapts ClassFileTransformer to ByteCodePreprocessor that
+             * is used inside WebappClassLoader.
+             */
 
-                @Override
-                public boolean initialize(Hashtable parameters) {
-                    return true;
+            @Override
+            public boolean initialize(Hashtable parameters) {
+                return true;
+            }
+
+            @Override
+            public byte[] preprocess(String resourceName, byte[] classBytes) {
+                try {
+                    // convert java/lang/Object.class to java/lang/Object
+                    String classname = resourceName.substring(0,
+                        resourceName.length() - 6); // ".class" size = 6
+                    byte[] newBytes = transformer.transform(
+                        cl, classname, null, null, classBytes);
+                    // ClassFileTransformer returns null if no transformation
+                    // took place, where as ByteCodePreprocessor is expected
+                    // to return non-null byte array.
+                    return newBytes == null ? classBytes : newBytes;
+                } catch (IllegalClassFormatException e) {
+                    logger.logp(Level.WARNING,
+                        "WebModuleListener$InstrumentableClassLoader$BytecodePreprocessor",
+                        "preprocess", e.getMessage());
+                    throw new RuntimeException(e);
                 }
+            }
+        });
+    }
 
-                @Override
-                public byte[] preprocess(String resourceName, byte[] classBytes) {
-                    try {
-                        // convert java/lang/Object.class to java/lang/Object
-                        String classname = resourceName.substring(0,
-                                resourceName.length() - 6); // ".class" size = 6
-                        byte[] newBytes = transformer.transform(
-                                cl, classname, null, null, classBytes);
-                        // ClassFileTransformer returns null if no transformation
-                        // took place, where as ByteCodePreprocessor is expected
-                        // to return non-null byte array.
-                        return newBytes == null ? classBytes : newBytes;
-                    } catch (IllegalClassFormatException e) {
-                        logger.logp(Level.WARNING,
-                                "WebModuleListener$InstrumentableClassLoader$BytecodePreprocessor",
-                                "preprocess", e.getMessage());
-                        throw new RuntimeException(e);
+    private String getJavaVersion() {
+
+        String version = null;
+
+        SecurityManager sm = System.getSecurityManager();
+        if (sm != null) {
+            version = AccessController.doPrivileged(
+                new PrivilegedAction<String>() {
+                    @Override
+                    public String run() {
+                        return System.getProperty("java.version");
                     }
-                }
-            });
-     }
+                });
+        } else {
+            version = System.getProperty("java.version");
+        }
 
-     private String getJavaVersion() {
-
-         String version = null;
-
-         SecurityManager sm = System.getSecurityManager();
-         if (sm != null) {
-             version = AccessController.doPrivileged(
-                 new PrivilegedAction<String>() {
-                     @Override
-                     public String run() {
-                         return System.getProperty("java.version");
-                     }
-                 });
-         } else {
-             version = System.getProperty("java.version");
-         }
-
-         return version;
-     }
+        return version;
+    }
 
     private void setAccessible(final Field field) {
 
         SecurityManager sm = System.getSecurityManager();
         if (sm != null) {
             AccessController.doPrivileged(new PrivilegedAction<Void>() {
-                    @Override
-                    public Void run() {
-                        field.setAccessible(true);
-                        return null;
-                    }
+                @Override
+                public Void run() {
+                    field.setAccessible(true);
+                    return null;
+                }
             });
         } else {
             field.setAccessible(true);

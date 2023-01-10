@@ -17,13 +17,15 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi;
 
-import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTALL_ROOT_PROP_NAME;
-import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTALL_ROOT_URI_PROP_NAME;
-import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTANCE_ROOT_PROP_NAME;
-import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTANCE_ROOT_URI_PROP_NAME;
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.util.logging.Level.FINEST;
-import static org.glassfish.embeddable.GlassFish.Status.DISPOSED;
+import com.sun.enterprise.glassfish.bootstrap.GlassFishImpl;
+import com.sun.enterprise.glassfish.bootstrap.GlassfishBootstrapClassLoader;
+import com.sun.enterprise.glassfish.bootstrap.MainHelper;
+import com.sun.enterprise.module.ModulesRegistry;
+import com.sun.enterprise.module.bootstrap.BootException;
+import com.sun.enterprise.module.bootstrap.Main;
+import com.sun.enterprise.module.bootstrap.ModuleStartup;
+import com.sun.enterprise.module.bootstrap.StartupContext;
+import com.sun.enterprise.util.FelixPrettyPrinter;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -39,6 +41,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishProperties;
@@ -51,15 +54,13 @@ import org.osgi.framework.BundleException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 
-import com.sun.enterprise.glassfish.bootstrap.GlassFishImpl;
-import com.sun.enterprise.glassfish.bootstrap.GlassfishUrlClassLoader;
-import com.sun.enterprise.glassfish.bootstrap.MainHelper;
-import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.module.bootstrap.BootException;
-import com.sun.enterprise.module.bootstrap.Main;
-import com.sun.enterprise.module.bootstrap.ModuleStartup;
-import com.sun.enterprise.module.bootstrap.StartupContext;
-import com.sun.enterprise.util.FelixPrettyPrinter;
+import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTALL_ROOT_PROP_NAME;
+import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTALL_ROOT_URI_PROP_NAME;
+import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTANCE_ROOT_PROP_NAME;
+import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTANCE_ROOT_URI_PROP_NAME;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.logging.Level.FINEST;
+import static org.glassfish.embeddable.GlassFish.Status.DISPOSED;
 
 /**
  * Implementation of GlassFishRuntime in an OSGi environment.
@@ -272,7 +273,7 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
 
 
     private String toString(final ClassLoader classLoader) {
-        if (classLoader instanceof GlassfishUrlClassLoader) {
+        if (classLoader instanceof GlassfishBootstrapClassLoader || classLoader instanceof GlassfishUrlClassLoader) {
             return classLoader.toString();
         }
 

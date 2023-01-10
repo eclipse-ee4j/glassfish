@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,22 +17,26 @@
 
 package com.sun.enterprise.v3.server;
 
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.DelegatingClassLoader;
-import org.glassfish.internal.api.ClassLoaderHierarchy;
 import jakarta.inject.Inject;
-import org.jvnet.hk2.annotations.Service;
-
 import jakarta.inject.Singleton;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.*;
-import java.io.IOException;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.glassfish.common.util.GlassfishUrlClassLoader;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.ClassLoaderHierarchy;
+import org.glassfish.internal.api.DelegatingClassLoader;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * This class is responsible for constructing class loader that has visibility
@@ -59,15 +64,12 @@ public class AppLibClassLoaderServiceImpl {
     @Inject
     CommonClassLoaderServiceImpl commonCLS;
 
-    private Map<URI, DelegatingClassLoader.ClassFinder> classFinderRegistry =
-            new HashMap<URI, DelegatingClassLoader.ClassFinder>();
+    private final Map<URI, DelegatingClassLoader.ClassFinder> classFinderRegistry = new HashMap<>();
 
     /**
      * @see org.glassfish.internal.api.ClassLoaderHierarchy#getAppLibClassLoader(String, List<URI>)
      */
-    public ClassLoader getAppLibClassLoader(String application, List<URI> libURIs)
-            throws MalformedURLException {
-
+    public ClassLoader getAppLibClassLoader(String application, List<URI> libURIs) throws MalformedURLException {
         ClassLoaderHierarchy clh = habitat.getService(ClassLoaderHierarchy.class);
         DelegatingClassLoader connectorCL = clh.getConnectorClassLoader(application);
 
@@ -78,11 +80,8 @@ public class AppLibClassLoaderServiceImpl {
         }
 
         final ClassLoader commonCL = commonCLS.getCommonClassLoader();
-        DelegatingClassLoader applibCL = AccessController.doPrivileged(new PrivilegedAction<DelegatingClassLoader>() {
-                       public DelegatingClassLoader run() {
-                           return new DelegatingClassLoader(commonCL);
-                       }
-                   });
+        PrivilegedAction<DelegatingClassLoader> action = () -> new DelegatingClassLoader(commonCL);
+        DelegatingClassLoader applibCL = AccessController.doPrivileged(action);
 
         // order of classfinders is important here :
         // connector's classfinders should be added before libraries' classfinders
@@ -121,6 +120,7 @@ public class AppLibClassLoaderServiceImpl {
             throws MalformedURLException {
         final ClassLoader commonCL = commonCLS.getCommonClassLoader();
         DelegatingClassLoader appLibClassFinder = AccessController.doPrivileged(new PrivilegedAction<DelegatingClassLoader>() {
+            @Override
             public DelegatingClassLoader run() {
                 return new AppLibClassFinder(commonCL);
             }
@@ -129,13 +129,14 @@ public class AppLibClassLoaderServiceImpl {
         return (DelegatingClassLoader.ClassFinder)appLibClassFinder;
     }
 
-    private static class URLClassFinder extends URLClassLoader
+    private static class URLClassFinder extends GlassfishUrlClassLoader
             implements DelegatingClassLoader.ClassFinder {
 
-        public URLClassFinder(URL[] urls, ClassLoader parent) {
+        URLClassFinder(URL[] urls, ClassLoader parent) {
             super(urls, parent);
         }
 
+        @Override
         public Class<?> findClass(String name) throws ClassNotFoundException {
             Class<?> c = this.findLoadedClass(name);
             if (c!=null) {
@@ -144,6 +145,7 @@ public class AppLibClassLoaderServiceImpl {
             return super.findClass(name);
         }
 
+        @Override
         public Class<?> findExistingClass(String name) {
             return super.findLoadedClass(name);
         }
@@ -151,24 +153,27 @@ public class AppLibClassLoaderServiceImpl {
 
     private static class AppLibClassFinder extends DelegatingClassLoader implements DelegatingClassLoader.ClassFinder {
 
-        public AppLibClassFinder(ClassLoader parent, List<DelegatingClassLoader.ClassFinder> delegates)
+        AppLibClassFinder(ClassLoader parent, List<DelegatingClassLoader.ClassFinder> delegates)
                 throws IllegalArgumentException {
             super(parent, delegates);
         }
 
-        public AppLibClassFinder(ClassLoader parent) {
+        AppLibClassFinder(ClassLoader parent) {
             super(parent);
         }
 
+        @Override
         public Class<?> findExistingClass(String name) {
             // no action needed as parent is delegating classloader which will never be a defining classloader
             return null;
         }
 
+        @Override
         public URL findResource(String name) {
             return super.findResource(name);
         }
 
+        @Override
         public Enumeration<URL> findResources(String name) throws IOException {
             return super.findResources(name);
         }

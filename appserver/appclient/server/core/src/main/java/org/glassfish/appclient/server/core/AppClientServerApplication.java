@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,24 +18,25 @@
 package org.glassfish.appclient.server.core;
 
 import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.ApplicationClientDescriptor;
+
+import jakarta.inject.Inject;
+
 import java.net.URL;
 import java.net.URLClassLoader;
-import org.glassfish.api.deployment.DeployCommandParameters;
-import com.sun.enterprise.deployment.ApplicationClientDescriptor;
-import com.sun.logging.LogDomains;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.logging.Logger;
-import jakarta.inject.Inject;
+
+import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.deployment.ApplicationContainer;
 import org.glassfish.api.deployment.ApplicationContext;
+import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.appclient.server.core.jws.JavaWebStartInfo;
-
-import org.jvnet.hk2.annotations.Service;
+import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.api.admin.ProcessEnvironment;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Represents an app client module, either stand-alone or nested inside
@@ -52,8 +54,7 @@ import org.glassfish.api.admin.ProcessEnvironment;
  */
 @Service
 @PerLookup
-public class AppClientServerApplication implements
-        ApplicationContainer<ApplicationClientDescriptor> {
+public class AppClientServerApplication implements ApplicationContainer<ApplicationClientDescriptor> {
 
     @Inject
     private ServiceLocator habitat;
@@ -64,8 +65,6 @@ public class AppClientServerApplication implements
 
     private DeploymentContext dc;
 
-    private Logger logger;
-
     private AppClientDeployerHelper helper;
 
     private ApplicationClientDescriptor acDesc;
@@ -73,21 +72,14 @@ public class AppClientServerApplication implements
 
     private String deployedAppName;
 
-    private JavaWebStartInfo jwsInfo = null;
+    private JavaWebStartInfo jwsInfo;
 
-    public void init (final DeploymentContext dc,
-            final AppClientDeployerHelper helper) {
+    public void init(final DeploymentContext dc, final AppClientDeployerHelper helper) {
         this.dc = dc;
         this.helper = helper;
-        this.logger = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER,
-                JavaWebStartInfo.APPCLIENT_SERVER_LOGMESSAGE_RESOURCE);
-
         acDesc = helper.appClientDesc();
-
         appDesc = acDesc.getApplication();
-
         deployedAppName = dc.getCommandParameters(DeployCommandParameters.class).name();
-
     }
 
     public String deployedAppName() {
@@ -169,14 +161,8 @@ public class AppClientServerApplication implements
          * This cannot be null or it prevents the framework from invoking unload
          * on the deployer for this app.
          */
-        return AccessController.doPrivileged(new PrivilegedAction<URLClassLoader>() {
-
-            @Override
-            public URLClassLoader run() {
-                return new URLClassLoader(new URL[0]);
-            }
-
-        });
+        PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader(new URL[0]);
+        return AccessController.doPrivileged(action);
     }
 
     public DeploymentContext dc() {

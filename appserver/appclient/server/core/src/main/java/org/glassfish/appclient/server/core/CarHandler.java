@@ -89,12 +89,8 @@ public class CarHandler extends AbstractArchiveHandler {
 
     @Override
     public ClassLoader getClassLoader(final ClassLoader parent, DeploymentContext context) {
-        ASURLClassLoader cloader = AccessController.doPrivileged(new PrivilegedAction<ASURLClassLoader>() {
-            @Override
-            public ASURLClassLoader run() {
-                return new ASURLClassLoader(parent);
-            }
-        });
+        PrivilegedAction<ASURLClassLoader> action = () -> new ASURLClassLoader(parent);
+        ASURLClassLoader cloader = AccessController.doPrivileged(action);
         try {
             cloader.addURL(context.getSource().getURI().toURL());
             // add libraries referenced from manifest

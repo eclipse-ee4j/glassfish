@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +17,6 @@
 
 package com.sun.enterprise.server.logging;
 
-
 import com.sun.enterprise.module.HK2Module;
 import com.sun.enterprise.module.ModuleChangeListener;
 import com.sun.enterprise.module.ModuleDefinition;
@@ -27,10 +26,10 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.net.URI;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,12 +39,14 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.jvnet.hk2.annotations.Service;
 
 @Service
 @Singleton
 public class LoggerInfoMetadataService implements LoggerInfoMetadata, ModuleChangeListener {
 
+    private static final Logger LOG = System.getLogger(LoggerInfoMetadataService.class.getName());
     private static final String RBNAME = "META-INF/loggerinfo/LoggerInfoMetadata";
     private static final Locale BASE_LOCALE = Locale.ROOT;
 
@@ -165,14 +166,13 @@ public class LoggerInfoMetadataService implements LoggerInfoMetadata, ModuleChan
         }
 
         private void initialize() {
-            ClassLoader nullClassLoader = new NullClassLoader();
             for (HK2Module module : modulesRegistry.getModules()) {
                 ModuleDefinition moduleDef = module.getModuleDefinition();
                 // FIXME: We may optimize this by creating a manifest entry in the
                 // jar file(s) to indicate that the jar contains logger infos. Jar files
                 // need not be opened if they don't contain logger infos.
                 URI uris[] = moduleDef.getLocations();
-                int size = (uris != null ? uris.length : 0);
+                int size = uris == null ? 0 : uris.length;
                 if (size == 0) {
                     continue;
                 }
@@ -181,8 +181,10 @@ public class LoggerInfoMetadataService implements LoggerInfoMetadata, ModuleChan
                     for (int i=0; i < size; i++) {
                         urls[i] = uris[i].toURL();
                     }
-                    ClassLoader loader = new URLClassLoader(urls, nullClassLoader);
-                    ResourceBundle rb = ResourceBundle.getBundle(RBNAME, locale, loader);
+                    ResourceBundle rb;
+                    try (GlassfishUrlClassLoader loader = new GlassfishUrlClassLoader(urls, new NullClassLoader())) {
+                        rb = ResourceBundle.getBundle(RBNAME, locale, loader);
+                    }
                     for (String key : rb.keySet()) {
                         int index = key.lastIndexOf('.');
                         String loggerName = key.substring(0, index);
@@ -195,13 +197,10 @@ public class LoggerInfoMetadataService implements LoggerInfoMetadata, ModuleChan
                             li.setPublished(Boolean.parseBoolean(value));
                         } else if (attribute.equals("subsystem")) {
                             li.setSubsystem(value);
-                        } else {
-                            continue;
                         }
                     }
-                } catch (MalformedURLException mfe) {
-                    //FIXME: log message
-                    mfe.printStackTrace();
+                } catch (IOException e) {
+                    LOG.log(Level.ERROR, "Initialization failed.", e);
                 } catch (MissingResourceException mre) {
                     // Ignore
                 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,7 +27,6 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,6 +38,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.jvnet.hk2.annotations.Service;
@@ -141,16 +141,13 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
             }
         }
         commonClassPath = cp.toString();
-        if (!urls.isEmpty()) {
+        if (urls.isEmpty()) {
+            logger.logp(Level.FINE, "CommonClassLoaderManager",
+                "Skipping creation of CommonClassLoader as there are no libraries available", "urls = {0}", urls);
+        } else {
             // Skip creation of an unnecessary classloader in the hierarchy,
             // when all it would have done was to delegate up.
-            commonClassLoader = new URLClassLoader(
-                urls.toArray(new URL[urls.size()]), APIClassLoader);
-        } else {
-            logger.logp(Level.FINE, "CommonClassLoaderManager",
-                "Skipping creation of CommonClassLoader " +
-                    "as there are no libraries available",
-                    "urls = {0}", new Object[]{urls});
+            commonClassLoader = new GlassfishUrlClassLoader(urls.toArray(URL[]::new), APIClassLoader);
         }
     }
 

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +19,11 @@
 package org.apache.catalina.util;
 
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
  * An internationalization / localization helper class which reduces
@@ -44,12 +49,9 @@ import java.util.*;
  */
 
 public class StringManager {
-    // START SJSAS 6412710
-    private final HashMap<Locale, ResourceBundle> bundles =
-        new HashMap<Locale, ResourceBundle>(5);
-    private String bundleName = null;
-    // END SJSAS 6412710
 
+    private final HashMap<Locale, ResourceBundle> bundles = new HashMap<>(5);
+    private final String bundleName;
 
     /**
      * Creates a new StringManager for a given package. This is a
@@ -61,38 +63,7 @@ public class StringManager {
      */
 
     private StringManager(String packageName) {
-        /* 6412710
-        String bundleName = packageName + ".LocalStrings";
-        */
-        // START SJSAS 6412710
         this.bundleName = packageName + ".LocalStrings";
-        // END SJSAS 6412710
-        /* SJSAS 6412710
-        try {
-        */
-        /* SJSAS 6412710
-        } catch( MissingResourceException ex ) {
-            // Try from the current loader ( that's the case for trusted apps )
-            ClassLoader cl=Thread.currentThread().getContextClassLoader();
-            if( cl != null ) {
-                try {
-                    bundle=ResourceBundle.getBundle(bundleName, Locale.getDefault(), cl);
-                    return;
-                } catch(MissingResourceException ex2) {
-                }
-            }
-            if( cl==null )
-                cl=this.getClass().getClassLoader();
-
-            if (log.isDebugEnabled())
-                log.debug("Can't find resource " + bundleName +
-                    " " + cl);
-            if( cl instanceof URLClassLoader ) {
-                if (log.isDebugEnabled())
-                    log.debug( ((URLClassLoader)cl).getURLs());
-            }
-        }
-        */
     }
 
 
@@ -144,8 +115,9 @@ public class StringManager {
         }
         // END SJSAS 6412710
 
-        if( bundle==null )
+        if( bundle==null ) {
             return key;
+        }
 
         try {
             return bundle.getString(key);
@@ -186,7 +158,9 @@ public class StringManager {
             Object nonNullArgs[] = args;
             for (int i=0; i<args.length; i++) {
                 if (args[i] == null) {
-                    if (nonNullArgs==args) nonNullArgs=(Object[])args.clone();
+                    if (nonNullArgs==args) {
+                        nonNullArgs=args.clone();
+                    }
                     nonNullArgs[i] = "null";
                 }
             }
@@ -343,7 +317,7 @@ public class StringManager {
     // --------------------------------------------------------------
 
     private static Hashtable<String, StringManager> managers =
-            new Hashtable<String, StringManager>();
+            new Hashtable<>();
 
     /**
      * Get the StringManager for a particular package. If a manager for

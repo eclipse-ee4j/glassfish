@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +18,7 @@
 package com.sun.appserv.connectors.internal.api;
 
 import com.sun.enterprise.loader.ASURLClassLoader;
+
 import org.glassfish.internal.api.DelegatingClassLoader;
 
 /**
@@ -26,56 +28,61 @@ import org.glassfish.internal.api.DelegatingClassLoader;
  */
 public class ConnectorClassFinder extends ASURLClassLoader implements DelegatingClassLoader.ClassFinder {
 
-        private final DelegatingClassLoader.ClassFinder librariesClassFinder;
-        private volatile String raName;
+    private final DelegatingClassLoader.ClassFinder librariesClassFinder;
+    private volatile String raName;
 
-    public ConnectorClassFinder(ClassLoader parent, String raName,
-                                              DelegatingClassLoader.ClassFinder finder){
-            super(parent);
-            this.raName = raName;
+    public ConnectorClassFinder(ClassLoader parent, String raName, DelegatingClassLoader.ClassFinder finder) {
+        super(parent);
+        this.raName = raName;
 
-            // There should be better approach to skip libraries Classloader when none specified.
-            // casting to DelegatingClassLoader is not a clean approach
-            DelegatingClassLoader.ClassFinder libcf = null;
-            if(finder!= null && (finder instanceof DelegatingClassLoader)){
-                if(((DelegatingClassLoader)finder).getDelegates().size() > 0){
-                    libcf = finder;
-                }
+        // There should be better approach to skip libraries Classloader when none specified.
+        // casting to DelegatingClassLoader is not a clean approach
+        DelegatingClassLoader.ClassFinder libcf = null;
+        if (finder != null && (finder instanceof DelegatingClassLoader)) {
+            if (((DelegatingClassLoader) finder).getDelegates().size() > 0) {
+                libcf = finder;
             }
-            this.librariesClassFinder = libcf;
         }
-
-    public Class<?> findClass(String name) throws ClassNotFoundException {
-            Class c = null;
-
-            if(librariesClassFinder != null){
-                try{
-                    c = librariesClassFinder.findClass(name);
-                }catch(ClassNotFoundException cnfe){
-                    //ignore
-                }
-                if(c != null){
-                    return c;
-                }
-            }
-            return super.findClass(name);
-        }
-
-        public Class<?> findExistingClass(String name) {
-            if(librariesClassFinder != null){
-                Class claz = librariesClassFinder.findExistingClass(name);
-                if(claz != null){
-                    return claz;
-                }
-            }
-            return super.findLoadedClass(name);
-        }
-
-        public String getResourceAdapterName(){
-            return raName;
-        }
-
-        public void setResourceAdapterName(String raName){
-            this.raName = raName;
-        }
+        this.librariesClassFinder = libcf;
     }
+
+
+    @Override
+    public Class<?> findClass(String name) throws ClassNotFoundException {
+        Class<?> c = null;
+
+        if (librariesClassFinder != null) {
+            try {
+                c = librariesClassFinder.findClass(name);
+            } catch (ClassNotFoundException cnfe) {
+                // ignore
+            }
+            if (c != null) {
+                return c;
+            }
+        }
+        return super.findClass(name);
+    }
+
+
+    @Override
+    public Class<?> findExistingClass(String name) {
+        if (librariesClassFinder != null) {
+            Class<?> claz = librariesClassFinder.findExistingClass(name);
+            if (claz != null) {
+                return claz;
+            }
+        }
+        return super.findLoadedClass(name);
+    }
+
+
+    public String getResourceAdapterName() {
+        return raName;
+    }
+
+
+    public void setResourceAdapterName(String raName) {
+        this.raName = raName;
+    }
+}

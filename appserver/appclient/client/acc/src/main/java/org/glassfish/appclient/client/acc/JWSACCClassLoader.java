@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,15 +18,15 @@
 package org.glassfish.appclient.client.acc;
 
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.security.CodeSource;
 import java.security.PermissionCollection;
 
 import org.glassfish.appclient.common.ClientClassLoaderDelegate;
+import org.glassfish.common.util.GlassfishUrlClassLoader;
 
-public class JWSACCClassLoader extends URLClassLoader {
+public class JWSACCClassLoader extends GlassfishUrlClassLoader {
 
-    private ClientClassLoaderDelegate clientCLDelegate;
+    private final ClientClassLoaderDelegate clientCLDelegate;
 
     public JWSACCClassLoader(URL[] urls, ClassLoader parent) {
         super(urls, parent);
@@ -36,16 +37,16 @@ public class JWSACCClassLoader extends URLClassLoader {
 
     @Override
     protected PermissionCollection getPermissions(CodeSource codesource) {
-
-        if (System.getSecurityManager() == null)
+        if (System.getSecurityManager() == null) {
             return super.getPermissions(codesource);
+        }
 
-        //when security manager is enabled, find the declared permissions
-        if (clientCLDelegate.getCachedPerms(codesource) != null)
+        // when security manager is enabled, find the declared permissions
+        if (clientCLDelegate.getCachedPerms(codesource) != null) {
             return clientCLDelegate.getCachedPerms(codesource);
+        }
 
-        return clientCLDelegate.getPermissions(codesource,
-                super.getPermissions(codesource));
+        return clientCLDelegate.getPermissions(codesource, super.getPermissions(codesource));
     }
 
 }

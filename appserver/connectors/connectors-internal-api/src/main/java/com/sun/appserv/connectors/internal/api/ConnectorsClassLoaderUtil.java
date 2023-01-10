@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,33 +17,32 @@
 
 package com.sun.appserv.connectors.internal.api;
 
-import org.glassfish.internal.api.ClassLoaderHierarchy;
-import org.glassfish.internal.api.DelegatingClassLoader;
-import org.glassfish.api.admin.*;
-import org.glassfish.api.event.Events;
-import org.glassfish.api.event.EventListener;
-import org.glassfish.api.event.EventTypes;
-import org.jvnet.hk2.annotations.Service;
+import com.sun.enterprise.loader.ASURLClassLoader;
+import com.sun.logging.LogDomains;
 
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import java.io.*;
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.security.AccessController;
-import java.security.PrivilegedExceptionAction;
 import java.security.PrivilegedActionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.security.PrivilegedExceptionAction;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.ArrayList;
-
-import com.sun.enterprise.loader.ASURLClassLoader;
-import com.sun.logging.LogDomains;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import jakarta.inject.Inject;
+import org.glassfish.api.admin.ProcessEnvironment;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.event.EventTypes;
+import org.glassfish.api.event.Events;
+import org.glassfish.internal.api.ClassLoaderHierarchy;
+import org.glassfish.internal.api.DelegatingClassLoader;
+import org.jvnet.hk2.annotations.Service;
 
 
 /**
@@ -59,7 +59,7 @@ public class ConnectorsClassLoaderUtil {
 
     //private static List<ConnectorClassFinder> systemRARClassLoaders;
 
-    private Logger _logger = LogDomains.getLogger(ConnectorRuntime.class, LogDomains.RSR_LOGGER);
+    private final Logger _logger = LogDomains.getLogger(ConnectorRuntime.class, LogDomains.RSR_LOGGER);
 
     @Inject
     private ServerEnvironment env;
@@ -94,13 +94,10 @@ public class ConnectorsClassLoaderUtil {
     }
 
     private DelegatingClassLoader.ClassFinder getLibrariesClassLoader(final List<URI> appLibs)
-            throws MalformedURLException, ConnectorRuntimeException {
+            throws ConnectorRuntimeException {
         try {
-            return (DelegatingClassLoader.ClassFinder) AccessController.doPrivileged(new PrivilegedExceptionAction(){
-                public Object run() throws Exception {
-                    return clh.getAppLibClassFinder(appLibs);
-                }
-            });
+            PrivilegedExceptionAction<DelegatingClassLoader.ClassFinder> action = () -> clh.getAppLibClassFinder(appLibs);
+            return AccessController.doPrivileged(action);
         } catch (PrivilegedActionException e) {
             _logger.log(Level.SEVERE, "error.creating.libraries.classloader", e);
             ConnectorRuntimeException cre = new ConnectorRuntimeException(e.getMessage());
@@ -116,21 +113,18 @@ public class ConnectorsClassLoaderUtil {
 
         try{
             final DelegatingClassLoader.ClassFinder librariesCL = getLibrariesClassLoader(appLibs);
-            cl = (ConnectorClassFinder)AccessController.doPrivileged(new PrivilegedExceptionAction() {
-                public Object run() throws Exception {
-                        final ConnectorClassFinder ccf = new ConnectorClassFinder(parent, moduleName, librariesCL);
-                        if (processEnv.getProcessType().isEmbedded()) {
-                            events.register(new EventListener() {
-                                public void event(Event event) {
-                                    if (event.is(EventTypes.PREPARE_SHUTDOWN)) {
-                                        ccf.done();
-                                    }
-                                }
-                            });
+            PrivilegedExceptionAction<ConnectorClassFinder> action = () -> {
+                final ConnectorClassFinder ccf = new ConnectorClassFinder(parent, moduleName, librariesCL);
+                if (processEnv.getProcessType().isEmbedded()) {
+                    events.register(event -> {
+                        if (event.is(EventTypes.PREPARE_SHUTDOWN)) {
+                            ccf.done();
                         }
-                        return ccf;
+                    });
                 }
-            });
+                return ccf;
+            };
+            cl = AccessController.doPrivileged(action);
         } catch (Exception ex) {
             _logger.log(Level.SEVERE, "error.creating.connector.classloader", ex);
             ConnectorRuntimeException cre = new ConnectorRuntimeException(ex.getMessage());
@@ -153,44 +147,36 @@ public class ConnectorsClassLoaderUtil {
         return ConnectorsUtil.extractRar(destination+rarFileName, rarFileName, destination);
     }
 
+
     public Collection<ConnectorClassFinder> getSystemRARClassLoaders() throws ConnectorRuntimeException {
-            //if (systemRARClassLoaders == null) {
-
-            if (processEnv.getProcessType().isEmbedded() && !rarsInitializedInEmbeddedServerMode) {
-                synchronized (ConnectorsClassLoaderUtil.class){
-                    if(!rarsInitializedInEmbeddedServerMode){
-                        String installDir = System.getProperty(ConnectorConstants.INSTALL_ROOT) + File.separator;
-                        for (String jdbcRarName : ConnectorConstants.jdbcSystemRarNames) {
-                            String rarPath = ConnectorsUtil.getSystemModuleLocation(jdbcRarName);
-                            File rarDir = new File(rarPath);
-                            if(!rarDir.exists()){
-                                extractRar(jdbcRarName, installDir);
-                            }
+        if (processEnv.getProcessType().isEmbedded() && !rarsInitializedInEmbeddedServerMode) {
+            synchronized (ConnectorsClassLoaderUtil.class) {
+                if (!rarsInitializedInEmbeddedServerMode) {
+                    String installDir = System.getProperty(ConnectorConstants.INSTALL_ROOT) + File.separator;
+                    for (String jdbcRarName : ConnectorConstants.jdbcSystemRarNames) {
+                        String rarPath = ConnectorsUtil.getSystemModuleLocation(jdbcRarName);
+                        File rarDir = new File(rarPath);
+                        if (!rarDir.exists()) {
+                            extractRar(jdbcRarName, installDir);
                         }
-                        rarsInitializedInEmbeddedServerMode = true;
                     }
+                    rarsInitializedInEmbeddedServerMode = true;
                 }
             }
+        }
 
-            List<ConnectorClassFinder> classLoaders = new ArrayList<ConnectorClassFinder>();
-            for (String rarName : ConnectorsUtil.getSystemRARs()) {
-
-                String location = ConnectorsUtil.getSystemModuleLocation(rarName);
-
-                List<URI> libraries ;
-
-                if (processEnv.getProcessType().isEmbedded()) {
-                    libraries = new ArrayList<URI>();
-                } else {
-                    libraries = ConnectorsUtil.getInstalledLibrariesFromManifest(location, env);
-                }
-
-                ConnectorClassFinder ccf = createRARClassLoader(location, null, rarName, libraries);
-                classLoaders.add(ccf);
+        List<ConnectorClassFinder> classLoaders = new ArrayList<>();
+        for (String rarName : ConnectorsUtil.getSystemRARs()) {
+            String location = ConnectorsUtil.getSystemModuleLocation(rarName);
+            List<URI> libraries;
+            if (processEnv.getProcessType().isEmbedded()) {
+                libraries = new ArrayList<>();
+            } else {
+                libraries = ConnectorsUtil.getInstalledLibrariesFromManifest(location, env);
             }
-        //    systemRARClassLoaders = classLoaders;
-        //}
-        //return systemRARClassLoaders;
+            ConnectorClassFinder ccf = createRARClassLoader(location, null, rarName, libraries);
+            classLoaders.add(ccf);
+        }
         return classLoaders;
     }
 

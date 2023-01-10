@@ -25,6 +25,7 @@
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
         <version>1.0.8</version>
+        <relativePath />
     </parent>
 
     <groupId>org.glassfish.main</groupId>

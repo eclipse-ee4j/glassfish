@@ -35,7 +35,6 @@ import java.lang.System.Logger;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.ref.Reference;
-import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -1598,11 +1597,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         IntrospectionUtils.clear();
 
         // Clear the resource bundle cache
-        // This shouldn't be necessary, the cache uses weak references but
-        // it has caused leaks. Oddly, using the leak detection code in
-        // standard host allows the class loader to be GC'd. This has been seen
-        // on Sun but not IBM JREs. Maybe a bug in Sun's GC impl?
-        clearReferencesResourceBundles();
+        ResourceBundle.clearCache(this);
 
         // Clear the classloader reference in the VM's bean introspector
         java.beans.Introspector.flushCaches();
@@ -2028,85 +2023,6 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
             LOG.log(WARNING, getString(LogFacade.CLEAR_RMI_FAIL, contextName), e);
         }
     }
-
-
-    /**
-     * Clear the {@link ResourceBundle} cache of any bundles loaded by this
-     * class loader or any class loader where this loader is a parent class
-     * loader. Whilst {@link ResourceBundle#clearCache()} could be used there
-     * are complications around the
-     * {@link org.glassfish.wasp.servlet.WaspLoader} that mean a reflection
-     * based approach is more likely to be complete.
-     *
-     * The ResourceBundle is using WeakReferences so it shouldn't be pinning the
-     * class loader in memory. However, it is. Therefore clear ou the
-     * references.
-     */
-    private void clearReferencesResourceBundles() {
-        // Get a reference to the cache
-        try {
-            Field cacheListField =
-                ResourceBundle.class.getDeclaredField("cacheList");
-            cacheListField.setAccessible(true);
-
-            // Java 6 uses ConcurrentMap
-            // Java 5 uses SoftCache extends Abstract Map
-            // So use Map and it *should* work with both
-            Map<?,?> cacheList = (Map<?,?>) cacheListField.get(null);
-
-            // Get the keys (loader references are in the key)
-            Set<?> keys = cacheList.keySet();
-
-            Field loaderRefField = null;
-
-            // Iterate over the keys looking at the loader instances
-            Iterator<?> keysIter = keys.iterator();
-
-            int countRemoved = 0;
-
-            while (keysIter.hasNext()) {
-                Object key = keysIter.next();
-
-                if (loaderRefField == null) {
-                    loaderRefField =
-                        key.getClass().getDeclaredField("loaderRef");
-                    loaderRefField.setAccessible(true);
-                }
-                WeakReference<?> loaderRef =
-                    (WeakReference<?>) loaderRefField.get(key);
-                //In case of JDK 9, java.logging loading  sun.util.logging.resources.logging resource bundle and
-                // java.logging module is used as the cache key with null class loader.So we are
-                // adding a null check
-                if (loaderRef != null) {
-                    ClassLoader loader = (ClassLoader) loaderRef.get();
-
-                    while (loader != null && loader != this) {
-                        loader = loader.getParent();
-                    }
-
-                    if (loader != null) {
-                        keysIter.remove();
-                        countRemoved++;
-                    }
-
-                }
-            }
-
-            if (countRemoved > 0 && LOG.isLoggable(DEBUG)) {
-                LOG.log(DEBUG, getString(LogFacade.CLEAR_REFERENCES_RESOURCE_BUNDLES_COUNT, countRemoved, contextName));
-            }
-        } catch (SecurityException e) {
-            LOG.log(ERROR, getString(LogFacade.CLEAR_REFERENCES_RESOURCE_BUNDLES_FAIL, contextName), e);
-        } catch (NoSuchFieldException e) {
-            LOG.log(DEBUG, getString(LogFacade.CLEAR_REFERENCES_RESOURCE_BUNDLES_FAIL, contextName), e);
-        } catch (IllegalArgumentException e) {
-            LOG.log(ERROR, getString(LogFacade.CLEAR_REFERENCES_RESOURCE_BUNDLES_FAIL, contextName), e);
-        } catch (IllegalAccessException e) {
-            LOG.log(ERROR, getString(LogFacade.CLEAR_REFERENCES_RESOURCE_BUNDLES_FAIL, contextName), e);
-        }
-    }
-
-    // ------------------------------------------------------ Protected Methods
 
 
     /**

@@ -1,5 +1,6 @@
 #!/bin/bash -ex
 #
+# Copyright (c) 2023 Contributors to the Eclipse Foundation. All rights reserved.
 # Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
 #
 # This program and the accompanying materials are made available under the
@@ -82,7 +83,7 @@ copy_test_artifacts() {
   cp ${APS_HOME}/test_results*.* ${WORKSPACE}/results/ || true
   cp `pwd`/*/*logs.zip ${WORKSPACE}/results/ || true
   cp `pwd`/*/*/*logs.zip ${WORKSPACE}/results/ || true
-  tar -cf ${WORKSPACE}/${1}-results.tar.gz ${WORKSPACE}/results
+  tar -caf ${WORKSPACE}/${1}-results.tar.gz ${WORKSPACE}/results
 }
 
 generate_junit_report(){

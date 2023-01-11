@@ -186,18 +186,18 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      * Associated directory context giving access to the resources in this
      * webapp.
      */
-    protected DirContext resources;
+    private DirContext resources;
 
     /**
      * The cache of ResourceEntry for classes and resources we have loaded,
      * keyed by resource name.
      */
-    protected ConcurrentHashMap<String, ResourceEntry> resourceEntries = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, ResourceEntry> resourceEntries = new ConcurrentHashMap<>();
 
     /**
      * The list of not found resources.
      */
-    protected ConcurrentHashMap<String, String> notFoundResources = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, String> notFoundResources = new ConcurrentHashMap<>();
 
     /**
      * Should this class loader delegate to the parent class loader
@@ -212,65 +212,65 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
     /**
      * Last time a JAR was accessed.
      */
-    protected long lastJarAccessed;
+    private long lastJarAccessed;
 
     /**
      * The list of local repositories, in the order they should be searched
      * for locally loaded classes or resources.
      */
-    protected String[] repositories = new String[0];
+    private String[] repositories = new String[0];
 
     /**
      * Repositories URLs, used to cache the result of getURLs.
      */
-    protected URL[] repositoryURLs;
+    private URL[] repositoryURLs;
 
     /**
      * Repositories translated as path in the work directory (for WaSP
      * originally), but which is used to generate fake URLs should getURLs be
      * called.
      */
-    protected File[] files = new File[0];
+    private File[] files = new File[0];
 
     /**
      * The list of JARs, in the order they should be searched
      * for locally loaded classes or resources.
      */
-    protected JarFile[] jarFiles = new JarFile[0];
+    private JarFile[] jarFiles = new JarFile[0];
 
     /**
      * Lock to synchronize closing and opening of jar
      */
-    protected final Object jarFilesLock = new Object();
+    private final Object jarFilesLock = new Object();
 
     /**
      * The list of JARs, in the order they should be searched
      * for locally loaded classes or resources.
      */
-    protected File[] jarRealFiles = new File[0];
+    private File[] jarRealFiles = new File[0];
 
     /**
      * The path which will be monitored for added Jar files.
      */
-    protected String jarPath;
+    private String jarPath;
 
     /**
      * The list of JARs, in the order they should be searched
      * for locally loaded classes or resources.
      */
-    protected List<String> jarNames = new ArrayList<>();
+    private final List<String> jarNames = new ArrayList<>();
 
     /**
      * The list of JARs last modified dates, in the order they should be
      * searched for locally loaded classes or resources.
      */
-    protected long[] lastModifiedDates = new long[0];
+    private long[] lastModifiedDates = new long[0];
 
     /**
      * The list of resources which should be checked when checking for
      * modifications.
      */
-    protected String[] paths = new String[0];
+    private String[] paths = new String[0];
 
     /**
      * A list of read File and Jndi Permission's required if this loader
@@ -284,9 +284,9 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
     /**
      * Path where resources loaded from JARs will be extracted.
      */
-    protected File loaderDir;
+    private File loaderDir;
 
-    protected String canonicalLoaderDir;
+    private String canonicalLoaderDir;
 
     /**
      * The PermissionCollection for each CodeSource for a web
@@ -312,12 +312,12 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
     /**
      * Has this component been started?
      */
-    protected boolean started;
+    private boolean started;
 
     /**
      * Has external repositories.
      */
-    protected boolean hasExternalRepositories;
+    private boolean hasExternalRepositories;
 
     /**
      * List of byte code pre-processors per webapp class loader.
@@ -359,7 +359,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      * Use anti JAR locking code, which does URL rerouting when accessing
      * resources.
      */
-    boolean antiJARLocking;
+    private boolean antiJARLocking;
 
 
     /**
@@ -862,9 +862,6 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         sb.append(']');
         return sb.toString();
     }
-
-
-    // ---------------------------------------------------- ClassLoader Methods
 
 
     /**

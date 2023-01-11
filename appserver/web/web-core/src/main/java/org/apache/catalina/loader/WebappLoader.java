@@ -141,13 +141,13 @@ public class WebappLoader
     /**
      * The Container with which this Loader has been associated.
      */
-    private Container container = null;
+    private Container container;
 
 
     /**
      * The debugging detail level for this component.
      */
-    private int debug = 0;
+    private int debug;
 
 
     /**
@@ -180,13 +180,13 @@ public class WebappLoader
     /**
      * The parent class loader of the class loader we will create.
      */
-    private ClassLoader parentClassLoader = null;
+    private ClassLoader parentClassLoader;
 
 
     /**
      * The reloadable flag for this Loader.
      */
-    private boolean reloadable = false;
+    private boolean reloadable;
 
 
     /**
@@ -203,7 +203,7 @@ public class WebappLoader
     /**
      * Has this component been started?
      */
-    private boolean started = false;
+    private boolean started;
 
 
     /**
@@ -215,7 +215,7 @@ public class WebappLoader
     /**
      * Classpath set in the loader.
      */
-    private String classpath = null;
+    private String classpath;
 
 
     /**
@@ -465,7 +465,7 @@ public class WebappLoader
      * Used to periodically signal to the classloader to release JAR resources.
      */
     public void closeJARs(boolean force) {
-        if (classLoader !=null){
+        if (classLoader != null) {
             classLoader.closeJARs(force);
         }
     }

@@ -35,7 +35,7 @@ public class WebappClassLoaderTest {
         assertAll(
             () -> assertTrue(new URLClassLoader(new URL[0]).isRegisteredAsParallelCapable()),
             () -> assertTrue(new GlassfishUrlClassLoader(new URL[0]).isRegisteredAsParallelCapable()),
-            () -> assertTrue(new WebappClassLoader(new URL[0], null).isRegisteredAsParallelCapable())
+            () -> assertTrue(new WebappClassLoader(null).isRegisteredAsParallelCapable())
         );
     }
 }

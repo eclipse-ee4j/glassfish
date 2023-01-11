@@ -25,6 +25,9 @@ import com.sun.enterprise.security.integration.DDPermissionsLoader;
 import com.sun.enterprise.security.integration.PermsHolder;
 import com.sun.enterprise.util.io.FileUtils;
 
+import jakarta.annotation.PreDestroy;
+
+import java.beans.Introspector;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -56,6 +59,7 @@ import java.sql.DriverManager;
 import java.text.MessageFormat;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -91,7 +95,6 @@ import org.apache.naming.resources.ResourceAttributes;
 import org.apache.naming.resources.WebDirContext;
 import org.glassfish.api.deployment.InstrumentableClassLoader;
 import org.glassfish.common.util.GlassfishUrlClassLoader;
-import org.glassfish.hk2.api.PreDestroy;
 import org.glassfish.web.util.ExceptionUtils;
 import org.glassfish.web.util.IntrospectionUtils;
 
@@ -140,7 +143,7 @@ import static org.glassfish.web.loader.LogFacade.UNSUPPORTED_VERSION;
  * @since 2007/08/17 15:46:27 $
  */
 public class WebappClassLoader extends GlassfishUrlClassLoader
-    implements Reloader, InstrumentableClassLoader, PreDestroy, DDPermissionsLoader, JarFileResourcesProvider {
+    implements Reloader, InstrumentableClassLoader, DDPermissionsLoader, JarFileResourcesProvider {
 
     static {
         registerAsParallelCapable();
@@ -174,18 +177,13 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      */
     private static final Permission ALL_PERMISSION = new AllPermission();
 
-    // ----------------------------------------------------- Instance Variables
-
     /**
      * Use this variable to invoke the security manager when a resource is
      * loaded by this classloader.
      */
     private final boolean packageDefinitionEnabled = Boolean.getBoolean("package.definition");
 
-    /**
-     * Associated directory context giving access to the resources in this
-     * webapp.
-     */
+    /** Associated directory context giving access to the resources in this webapp. */
     private DirContext resources;
 
     /**
@@ -373,16 +371,6 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
 
 
     /**
-     * Construct a new ClassLoader with the given parent ClassLoader
-     * and defined repositories.
-     */
-    public WebappClassLoader(URL[] urls, ClassLoader parent) {
-        super(urls, parent);
-        init();
-    }
-
-
-    /**
      * Sets the given package names that may always be overriden, regardless of whether they belong
      * to a protected namespace
      */
@@ -405,37 +393,18 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
     public void setResources(DirContext resources) {
         this.resources = resources;
 
-        DirContext res = resources;
+        final DirContext dirCtx;
         if (resources instanceof ProxyDirContext) {
-            ProxyDirContext proxyRes = (ProxyDirContext)res;
+            ProxyDirContext proxyRes = (ProxyDirContext) resources;
             contextName = proxyRes.getContextName();
-            res = proxyRes.getDirContext();
+            dirCtx = proxyRes.getDirContext();
+        } else {
+            dirCtx = resources;
         }
 
-        if (res instanceof WebDirContext) {
-            ((WebDirContext)res).setJarFileResourcesProvider(this);
+        if (dirCtx instanceof WebDirContext) {
+            ((WebDirContext) dirCtx).setJarFileResourcesProvider(this);
         }
-    }
-
-
-    /**
-     * Return the context name for this class loader.
-     */
-    public String getContextName() {
-        return this.contextName;
-    }
-
-
-    public ConcurrentHashMap<String, ResourceEntry> getResourceEntries() {
-        return resourceEntries;
-    }
-
-
-    /**
-     * @return the "delegate first" flag for this class loader.
-     */
-    public boolean getDelegate() {
-        return this.delegate;
     }
 
 
@@ -447,14 +416,6 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
     public void setDelegate(boolean delegate) {
         LOG.log(DEBUG, "setDelegate(delegate={0})", delegate);
         this.delegate = delegate;
-    }
-
-
-    /**
-     * @return Returns the antiJARLocking.
-     */
-    public boolean getAntiJARLocking() {
-        return antiJARLocking;
     }
 
 
@@ -477,41 +438,6 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
 
     /**
      * If there is a Java SecurityManager create a read FilePermission
-     * or JndiPermission for the file directory path.
-     *
-     * @param path file directory path
-     */
-    public void addPermission(String path) {
-        if (path == null) {
-            return;
-        }
-
-        if (securityManager != null) {
-
-            securityManager.checkSecurityAccess(DDPermissionsLoader.SET_EE_POLICY);
-
-            Permission permission;
-            if (path.startsWith("jndi:") || path.startsWith("jar:jndi:")) {
-                if (!path.endsWith("/")) {
-                    path = path + "/";
-                }
-                permission = new JndiPermission(path + "*");
-                permissionList.add(permission);
-            } else {
-                if (!path.endsWith(File.separator)) {
-                    permission = new FilePermission(path, "read");
-                    permissionList.add(permission);
-                    path = path + File.separator;
-                }
-                permission = new FilePermission(path + "-", "read");
-                permissionList.add(permission);
-            }
-        }
-    }
-
-
-    /**
-     * If there is a Java SecurityManager create a read FilePermission
      * or JndiPermission for URL.
      *
      * @param url URL for a file or directory on local system
@@ -519,6 +445,33 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
     public void addPermission(URL url) {
         if (url != null) {
             addPermission(url.toString());
+        }
+    }
+
+
+    /**
+     * If there is a Java SecurityManager create a read FilePermission
+     * or JndiPermission for the file directory path.
+     *
+     * @param path file directory path
+     */
+    public void addPermission(final String path) {
+        if (path == null || securityManager == null) {
+            return;
+        }
+        securityManager.checkSecurityAccess(DDPermissionsLoader.SET_EE_POLICY);
+        if (path.startsWith("jndi:") || path.startsWith("jar:jndi:")) {
+            final String jndiPath = path.endsWith("/") ? path : path + "/";
+            permissionList.add(new JndiPermission(jndiPath + "*"));
+        } else {
+            final String filePath;
+            if (path.endsWith(File.separator)) {
+                filePath = path;
+            } else {
+                permissionList.add(new FilePermission(path, "read"));
+                filePath = path + File.separator;
+            }
+            permissionList.add(new FilePermission(filePath + "-", "read"));
         }
     }
 
@@ -552,13 +505,6 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         }
     }
 
-    /**
-     * @return the JAR path.
-     */
-    public String getJarPath() {
-        return this.jarPath;
-    }
-
 
     /**
      * Change the Jar path.
@@ -590,14 +536,6 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
 
 
     /**
-     * @return the clearReferencesStatic flag for this Context.
-     */
-    public boolean getClearReferencesStatic() {
-        return this.clearReferencesStatic;
-    }
-
-
-    /**
      * Set the clearReferencesStatic feature for this Context.
      *
      * @param clearReferencesStatic The new flag value
@@ -607,18 +545,13 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
     }
 
 
-    // ------------------------------------------------------- Reloader Methods
-
-
     /**
      * Add a new repository to the set of places this ClassLoader can look for
      * classes to be loaded.
      *
-     * @param repository Name of a source of classes to be loaded, such as a
-     *  directory pathname, a JAR file pathname, or a ZIP file pathname
-     *
-     * @exception IllegalArgumentException if the specified repository is
-     *  invalid or does not exist
+     * @param repository Name of a source of classes to be loaded, such as a directory pathname,
+     *            a JAR file pathname, or a ZIP file pathname
+     * @throws IllegalArgumentException if the specified repository is invalid or does not exist
      */
     @Override
     public void addRepository(String repository) {
@@ -630,17 +563,13 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
 
         // Add this repository to our underlying class loader
         try {
-            addRepository(new URL(repository));
+            super.addURL(new URL(repository));
+            hasExternalRepositories = true;
         } catch (MalformedURLException e) {
             throw new IllegalArgumentException("Invalid repository: " + repository, e);
         }
-
     }
 
-    public void addRepository(URL url) {
-        super.addURL(url);
-        hasExternalRepositories = true;
-    }
 
     /**
      * Add a new repository to the set of places this ClassLoader can look for
@@ -653,40 +582,24 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      *  invalid or does not exist
      */
     public synchronized void addRepository(String repository, File file) {
-
-        // Note : There should be only one (of course), but I think we should
-        // keep this a bit generic
-
+        LOG.log(DEBUG, "addRepository(repository={0}, file={1})", repository, file);
         if (repository == null) {
             return;
         }
-
-        LOG.log(DEBUG, "addRepository(repository={0}, file={1})", repository, file);
-
-        int i;
-
         // Add this repository to our internal list
-        String[] result = new String[repositories.length + 1];
-        for (i = 0; i < repositories.length; i++) {
-            result[i] = repositories[i];
-        }
-        result[repositories.length] = repository;
-        repositories = result;
+        final String[] newRepos = Arrays.copyOf(repositories, repositories.length + 1);
+        newRepos[repositories.length] = repository;
+        repositories = newRepos;
 
         // Add the file to the list
-        File[] result2 = new File[files.length + 1];
-        for (i = 0; i < files.length; i++) {
-            result2[i] = files[i];
-        }
-        result2[files.length] = file;
-        files = result2;
-
+        final File[] newFiles = Arrays.copyOf(files, files.length + 1);
+        newFiles[files.length] = file;
+        files = newFiles;
     }
 
 
-    public synchronized void addJar(String jar, JarFile jarFile, File file)
-        throws IOException {
-
+    public synchronized void addJar(String jar, JarFile jarFile, File file) throws IOException {
+        LOG.log(DEBUG, "addJar(jar={0}, jarFile={1}, file={2})", jar, jarFile, file);
         if (jar == null) {
             return;
         }
@@ -697,15 +610,9 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
             return;
         }
 
-        LOG.log(DEBUG, "addJar(jar={0}, jarFile={1}, file={2})", jar, jarFile, file);
-
-        // See IT 11417
         super.addURL(getURL(file));
 
-        int i;
-
         if (jarPath != null && jar.startsWith(jarPath)) {
-
             String jarName = jar.substring(jarPath.length());
             while (jarName.startsWith("/")) {
                 jarName = jarName.substring(1);
@@ -714,22 +621,17 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         }
 
         try {
-
             // Register the JAR for tracking
-
-            long lastModified =
-                ((ResourceAttributes) resources.getAttributes(jar))
-                .getLastModified();
-
+            long lastModified = ((ResourceAttributes) resources.getAttributes(jar)).getLastModified();
             String[] result = new String[paths.length + 1];
-            for (i = 0; i < paths.length; i++) {
+            for (int i = 0; i < paths.length; i++) {
                 result[i] = paths[i];
             }
             result[paths.length] = jar;
             paths = result;
 
             long[] result3 = new long[lastModifiedDates.length + 1];
-            for (i = 0; i < lastModifiedDates.length; i++) {
+            for (int i = 0; i < lastModifiedDates.length; i++) {
                 result3[i] = lastModifiedDates[i];
             }
             result3[lastModifiedDates.length] = lastModified;
@@ -740,7 +642,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         }
 
         JarFile[] result2 = new JarFile[jarFiles.length + 1];
-        for (i = 0; i < jarFiles.length; i++) {
+        for (int i = 0; i < jarFiles.length; i++) {
             result2[i] = jarFiles[i];
         }
         result2[jarFiles.length] = jarFile;
@@ -748,7 +650,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
 
         // Add the file to the list
         File[] result4 = new File[jarRealFiles.length + 1];
-        for (i = 0; i < jarRealFiles.length; i++) {
+        for (int i = 0; i < jarRealFiles.length; i++) {
             result4[i] = jarRealFiles[i];
         }
         result4[jarRealFiles.length] = file;
@@ -791,52 +693,84 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
             }
         }
 
-        length = jarNames.size();
-
         // Check if JARs have been added or removed
-        if (getJarPath() != null) {
+        if (this.jarPath == null) {
+            return false;
+        }
 
-            try {
-                NamingEnumeration<Binding> enumeration = resources.listBindings(getJarPath());
-                int i = 0;
-                while (enumeration.hasMoreElements() && i < length) {
-                    NameClassPair ncPair = enumeration.nextElement();
-                    String name = ncPair.getName();
-                    // Ignore non JARs present in the lib folder
-                    if (!name.endsWith(".jar") && !name.endsWith(".zip")) {
-                        continue;
-                    }
-                    if (!name.equals(jarNames.get(i))) {
-                        // Missing JAR
-                        LOG.log(TRACE, "JAR files changed: {0}", name);
-                        return true;
-                    }
-                    i++;
+        try {
+            NamingEnumeration<Binding> bindings = resources.listBindings(this.jarPath);
+            length = jarNames.size();
+            int i = 0;
+            while (bindings.hasMoreElements() && i < length) {
+                NameClassPair ncPair = bindings.nextElement();
+                String name = ncPair.getName();
+                // Ignore non JARs present in the lib folder
+                if (!name.endsWith(".jar") && !name.endsWith(".zip")) {
+                    continue;
                 }
-                if (enumeration.hasMoreElements()) {
-                    while (enumeration.hasMoreElements()) {
-                        NameClassPair ncPair = enumeration.nextElement();
-                        String name = ncPair.getName();
-                        // Additional non-JAR files are allowed
-                        if (name.endsWith(".jar") || name.endsWith(".zip")) {
-                            // There was more JARs
-                            LOG.log(TRACE, "Additional JARs have been added: {0}", name);
-                            return true;
-                        }
-                    }
-                } else if (i < jarNames.size()) {
-                    // There was less JARs
-                    LOG.log(TRACE, "JAR files changed.");
+                if (!name.equals(jarNames.get(i))) {
+                    // Missing JAR
+                    LOG.log(TRACE, "JAR files changed: {0}", name);
                     return true;
                 }
-            } catch (NamingException | ClassCastException e) {
-                LOG.log(ERROR, LogFacade.FAILED_TRACKING_MODIFICATIONS, getJarPath(), e.getMessage());
+                i++;
             }
+            if (bindings.hasMoreElements()) {
+                while (bindings.hasMoreElements()) {
+                    NameClassPair ncPair = bindings.nextElement();
+                    String name = ncPair.getName();
+                    // Additional non-JAR files are allowed
+                    if (name.endsWith(".jar") || name.endsWith(".zip")) {
+                        // There was more JARs
+                        LOG.log(TRACE, "Additional JARs have been added: {0}", name);
+                        return true;
+                    }
+                }
+            } else if (i < jarNames.size()) {
+                // There was less JARs
+                LOG.log(TRACE, "JAR files changed.");
+                return true;
+            }
+        } catch (NamingException | ClassCastException e) {
+            LOG.log(ERROR, LogFacade.FAILED_TRACKING_MODIFICATIONS, this.jarPath, e.getMessage());
         }
 
         // No classes have been modified
         return false;
 
+    }
+
+
+    /**
+     * Add a new ClassFileTransformer to this class loader. This transfomer should be called for
+     * each class loading event.
+     *
+     * @param transformer new class file transformer to do byte code enhancement.
+     */
+    @Override
+    public void addTransformer(final ClassFileTransformer transformer) {
+        final WebappClassLoader cl = this;
+        byteCodePreprocessors.add(new WebappBytecodePreprocessor(transformer, cl));
+    }
+
+
+    /**
+     * Create and return a temporary loader with the same visibility
+     * as this loader. The temporary loader may be used to load
+     * resources or any other application classes for the purposes of
+     * introspecting them for annotations. The persistence provider
+     * should not maintain any references to the temporary loader,
+     * or any objects loaded by it.
+     *
+     * @return A temporary classloader with the same classpath as this loader
+     */
+    @Override
+    public ClassLoader copy() {
+        LOG.log(DEBUG, "copy()");
+        // set getParent() as the parent of the cloned class loader
+        PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader(getURLs(), getParent());
+        return AccessController.doPrivileged(action);
     }
 
 
@@ -848,7 +782,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         StringBuilder sb = new StringBuilder(4096);
         sb.append(super.toString());
         sb.append("[delegate=").append(delegate);
-        sb.append(", context=").append(getContextName());
+        sb.append(", context=").append(contextName);
         if (repositories != null) {
             sb.append(", repositories={");
             for (int i = 0; i < repositories.length; i++) {
@@ -881,7 +815,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
             int i = name.lastIndexOf('.');
             if (i >= 0) {
                 try {
-                    securityManager.checkPackageDefinition(name.substring(0,i));
+                    securityManager.checkPackageDefinition(name.substring(0, i));
                 } catch (Exception se) {
                     throw new ClassNotFoundException(name, se);
                 }
@@ -899,15 +833,12 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
                 synchronized (this) {
                     if (entry.loadedClass == null) {
                         // We use a temporary byte[] so that we don't change
-                        // the content of entry in case bytecode
-                        // preprocessing takes place.
+                        // the content of entry in case bytecode preprocessing takes place.
                         byte[] binaryContent = entry.binaryContent;
                         if (!byteCodePreprocessors.isEmpty()) {
-                            // ByteCodePreprpcessor expects name as
-                            // java/lang/Object.class
-                            String resourceName = name.replace('.', '/') + ".class";
+                            String classFilePath = toClassFilePath(name);
                             for (BytecodePreprocessor preprocessor : byteCodePreprocessors) {
-                                binaryContent = preprocessor.preprocess(resourceName, binaryContent);
+                                binaryContent = preprocessor.preprocess(classFilePath, binaryContent);
                             }
                         }
                         clazz = defineClass(name, binaryContent, 0, binaryContent.length, codeSource);
@@ -931,7 +862,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
                 throw new ClassNotFoundException(name, ace);
             } catch (RuntimeException rex) {
                 throw rex;
-            } catch(Error err) {
+            } catch (Error err) {
                 throw err;
             } catch (Throwable t) {
                 throw new RuntimeException(getString(LogFacade.UNABLE_TO_LOAD_CLASS, name, t.toString()), t);
@@ -1012,7 +943,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
                     resources.lookup(fullPath);
                     // Note : Not getting an exception here means the resource was found
                     try {
-                        result.add(getURI(new File(files[i], name)));
+                        result.add(getURL(new File(files[i], name)));
                     } catch (MalformedURLException e) {
                         // Ignore
                     }
@@ -1126,10 +1057,9 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
     @Override
     public InputStream getResourceAsStream(String name) {
         LOG.log(DEBUG, "getResourceAsStream(name={0})", name);
-        InputStream stream = null;
 
         // (0) Check for a cached copy of this resource
-        stream = findLoadedResource(name);
+        InputStream stream = findLoadedResource(name);
         if (stream != null) {
             LOG.log(TRACE, "Returning stream from cache");
             return stream;
@@ -1400,22 +1330,16 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      */
     @Override
     public synchronized URL[] getURLs() {
-
         if (repositoryURLs != null) {
             return repositoryURLs;
         }
-
         URL[] external = super.getURLs();
-
         int filesLength = files.length;
         int jarFilesLength = jarRealFiles.length;
         int length = filesLength + jarFilesLength + external.length;
-        int i;
-
         try {
-
             ArrayList<URL> urls = new ArrayList<>();
-            for (i = 0; i < length; i++) {
+            for (int i = 0; i < length; i++) {
                 if (i < filesLength) {
                     urls.add(i, getURL(files[i]));
                 } else if (i < filesLength + jarFilesLength) {
@@ -1424,33 +1348,30 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
                     urls.add(i, external[i - filesLength - jarFilesLength]);
                 }
             }
-
             repositoryURLs = removeDuplicate(urls);
-
         } catch (MalformedURLException e) {
             repositoryURLs = new URL[0];
         }
-
         return repositoryURLs;
-
     }
+
 
     private URL[] removeDuplicate(ArrayList<URL> urls) {
         HashSet<URL> h = new HashSet<>(urls);
         urls.clear();
         urls.addAll(h);
-        return urls.toArray(new URL[urls.size()]);
+        return urls.toArray(URL[]::new);
     }
 
 
     private void init() {
         this.parent = getParent();
-        system = this.getClass().getClassLoader();
-        securityManager = System.getSecurityManager();
-        if (securityManager != null) {
+        this.system = this.getClass().getClassLoader();
+        this.securityManager = System.getSecurityManager();
+        if (this.securityManager != null) {
             refreshPolicy();
         }
-        permissionsHolder = new PermsHolder();
+        this.permissionsHolder = new PermsHolder();
     }
 
 
@@ -1465,7 +1386,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         return started;
     }
 
-    @Override
+    @PreDestroy
     public void preDestroy() {
         try {
             close();
@@ -1544,23 +1465,31 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
     }
 
 
+    public File getExtractedResourcePath(String path) {
+        extractResources();
+        File extractedResource = new File(loaderDir, path);
+        return extractedResource.exists() ? extractedResource : null;
+    }
+
+
     /**
      * Used to periodically signal to the classloader to release JAR resources.
      */
     public void closeJARs(boolean force) {
-        if (jarFiles.length > 0) {
-            synchronized (jarFilesLock) {
-                // FIXME: Voodoo magic
-                if (force || (System.currentTimeMillis() > (lastJarAccessed + 90000))) {
-                    for (int i = 0; i < jarFiles.length; i++) {
-                        try {
-                            if (jarFiles[i] != null) {
-                                jarFiles[i].close();
-                                jarFiles[i] = null;
-                            }
-                        } catch (IOException e) {
-                            LOG.log(DEBUG, "Failed to close JAR", e);
+        if (jarFiles.length <= 0) {
+            return;
+        }
+        synchronized (jarFilesLock) {
+            // FIXME: Voodoo magic
+            if (force || (System.currentTimeMillis() - lastJarAccessed > 90000)) {
+                for (int i = 0; i < jarFiles.length; i++) {
+                    try {
+                        if (jarFiles[i] != null) {
+                            jarFiles[i].close();
+                            jarFiles[i] = null;
                         }
+                    } catch (IOException e) {
+                        LOG.log(DEBUG, "Failed to close JAR", e);
                     }
                 }
             }
@@ -1568,10 +1497,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
     }
 
 
-    /**
-     * Clear references.
-     */
-    protected void clearReferences() {
+    private void clearReferences() {
 
         // De-register any remaining JDBC drivers
         clearReferencesJdbc();
@@ -1595,7 +1521,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         ResourceBundle.clearCache(this);
 
         // Clear the classloader reference in the VM's bean introspector
-        java.beans.Introspector.flushCaches();
+        Introspector.flushCaches();
     }
 
 
@@ -1626,22 +1552,22 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
          * This is to prevent the scenario where the initialization of
          * one class would call a previously cleared class in Step 2 below.
          */
-        while(loadedClasses.hasNext()) {
+        while (loadedClasses.hasNext()) {
             ResourceEntry entry = loadedClasses.next();
             Class<?> clazz = null;
-            synchronized(this) {
+            synchronized (this) {
                 clazz = entry.loadedClass;
             }
             if (clazz != null) {
                 try {
                     Field[] fields = clazz.getDeclaredFields();
                     for (Field field : fields) {
-                        if(Modifier.isStatic(field.getModifiers())) {
+                        if (Modifier.isStatic(field.getModifiers())) {
                             field.get(null);
                             break;
                         }
                     }
-                } catch(Throwable t) {
+                } catch (Throwable t) {
                     // Ignore
                 }
             }
@@ -1698,7 +1624,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
     }
 
 
-    protected void nullInstance(Object instance) {
+    private void nullInstance(Object instance) {
         if (instance == null) {
             return;
         }
@@ -1740,7 +1666,6 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
 
     private void checkThreadLocalsForLeaks() {
         Thread[] threads = getThreads();
-
         try {
             // Make the fields in the Thread class that store ThreadLocals accessible
             Field threadLocalsField = Thread.class.getDeclaredField("threadLocals");
@@ -1755,18 +1680,17 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
             expungeStaleEntriesMethod.setAccessible(true);
 
             for (Thread thread : threads) {
-                Object threadLocalMap;
                 if (thread != null) {
                     // Clear the first map
-                    threadLocalMap = threadLocalsField.get(thread);
-                    if (threadLocalMap != null){
+                    Object threadLocalMap = threadLocalsField.get(thread);
+                    if (threadLocalMap != null) {
                         expungeStaleEntriesMethod.invoke(threadLocalMap);
                         checkThreadLocalMapForLeaks(threadLocalMap, tableField);
                     }
 
                     // Clear the second map
-                    threadLocalMap =inheritableThreadLocalsField.get(thread);
-                    if (threadLocalMap != null){
+                    threadLocalMap = inheritableThreadLocalsField.get(thread);
+                    if (threadLocalMap != null) {
                         expungeStaleEntriesMethod.invoke(threadLocalMap);
                         checkThreadLocalMapForLeaks(threadLocalMap, tableField);
                     }
@@ -1784,58 +1708,60 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      * points to the internal table to save re-calculating it on every
      * call to this method.
      */
-    private void checkThreadLocalMapForLeaks(Object map,
-            Field internalTableField) throws IllegalAccessException,
-            NoSuchFieldException {
-        if (map != null) {
-            Object[] table = (Object[]) internalTableField.get(map);
-            if (table != null) {
-                for (Object element : table) {
-                    if (element != null) {
-                        boolean potentialLeak = false;
-                        // Check the key
-                        Object key = ((Reference<?>) element).get();
-                        if (this.equals(key) || loadedByThisOrChild(key)) {
-                            potentialLeak = true;
-                        }
-                        // Check the value
-                        Field valueField =
-                            element.getClass().getDeclaredField("value");
-                        valueField.setAccessible(true);
-                        Object value = valueField.get(element);
-                        if (this.equals(value) || loadedByThisOrChild(value)) {
-                            potentialLeak = true;
-                        }
-                        if (potentialLeak) {
-                            Object[] args = new Object[5];
-                            args[0] = contextName;
-                            if (key != null) {
-                                args[1] = getPrettyClassName(key.getClass());
-                                try {
-                                    args[2] = key.toString();
-                                } catch (Exception e) {
-                                    LOG.log(ERROR, getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_BAD_KEY, args[1]), e);
-                                    args[2] = getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_UNKNOWN);
-                                }
-                            }
-                            if (value != null) {
-                                args[3] = getPrettyClassName(value.getClass());
-                                try {
-                                    args[4] = value.toString();
-                                } catch (Exception e) {
-                                    LOG.log(ERROR,
-                                        getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_BAD_VALUE, args[3]), e);
-                                    args[4] = getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_UNKNOWN);
-                                }
-                            }
-                            if (value == null) {
-                                LOG.log(DEBUG, LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_DEBUG, args);
-                            } else {
-                                LOG.log(ERROR, LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS, args);
-                            }
-                        }
-                    }
+    private void checkThreadLocalMapForLeaks(Object map, Field internalTableField)
+        throws IllegalAccessException, NoSuchFieldException {
+        if (map == null) {
+            return;
+        }
+        Object[] table = (Object[]) internalTableField.get(map);
+        if (table == null) {
+            return;
+        }
+        for (Object element : table) {
+            if (element == null) {
+                continue;
+            }
+            boolean potentialLeak = false;
+            // Check the key
+            Object key = ((Reference<?>) element).get();
+            if (this.equals(key) || loadedByThisOrChild(key)) {
+                potentialLeak = true;
+            }
+            // Check the value
+            Field valueField = element.getClass().getDeclaredField("value");
+            valueField.setAccessible(true);
+            Object value = valueField.get(element);
+            if (this.equals(value) || loadedByThisOrChild(value)) {
+                potentialLeak = true;
+            }
+            if (!potentialLeak) {
+                continue;
+            }
+            Object[] args = new Object[5];
+            args[0] = contextName;
+            if (key != null) {
+                args[1] = getPrettyClassName(key.getClass());
+                try {
+                    args[2] = key.toString();
+                } catch (Exception e) {
+                    LOG.log(ERROR, getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_BAD_KEY, args[1]), e);
+                    args[2] = getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_UNKNOWN);
                 }
+            }
+            if (value != null) {
+                args[3] = getPrettyClassName(value.getClass());
+                try {
+                    args[4] = value.toString();
+                } catch (Exception e) {
+                    LOG.log(ERROR,
+                        getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_BAD_VALUE, args[3]), e);
+                    args[4] = getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_UNKNOWN);
+                }
+            }
+            if (value == null) {
+                LOG.log(DEBUG, LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_DEBUG, args);
+            } else {
+                LOG.log(ERROR, LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS, args);
             }
         }
     }
@@ -1890,7 +1816,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      */
     private Thread[] getThreads() {
         // Get the current thread group
-        ThreadGroup tg = Thread.currentThread( ).getThreadGroup( );
+        ThreadGroup tg = Thread.currentThread().getThreadGroup();
         // Find the root thread group
         while (tg.getParent() != null) {
             tg = tg.getParent();
@@ -1919,14 +1845,12 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
     private void clearReferencesRmiTargets() {
         try {
             // Need access to the ccl field of sun.rmi.transport.Target
-            Class<?> objectTargetClass =
-                Class.forName("sun.rmi.transport.Target");
+            Class<?> objectTargetClass = Class.forName("sun.rmi.transport.Target");
             Field cclField = objectTargetClass.getDeclaredField("ccl");
             cclField.setAccessible(true);
 
             // Clear the objTable map
-            Class<?> objectTableClass =
-                Class.forName("sun.rmi.transport.ObjectTable");
+            Class<?> objectTableClass = Class.forName("sun.rmi.transport.ObjectTable");
             Field objTableField = objectTableClass.getDeclaredField("objTable");
             objTableField.setAccessible(true);
             Object objTable = objTableField.get(null);
@@ -1935,8 +1859,8 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
             }
 
             // Iterate over the values in the table
-            if (objTable instanceof Map<?,?>) {
-                Iterator<?> iter = ((Map<?,?>) objTable).values().iterator();
+            if (objTable instanceof Map<?, ?>) {
+                Iterator<?> iter = ((Map<?, ?>) objTable).values().iterator();
                 while (iter.hasNext()) {
                     Object obj = iter.next();
                     Object cclObject = cclField.get(obj);
@@ -1955,8 +1879,8 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
             }
 
             // Iterate over the values in the table
-            if (implTable instanceof Map<?,?>) {
-                Iterator<?> iter = ((Map<?,?>) implTable).values().iterator();
+            if (implTable instanceof Map<?, ?>) {
+                Iterator<?> iter = ((Map<?, ?>) implTable).values().iterator();
                 while (iter.hasNext()) {
                     Object obj = iter.next();
                     Object cclObject = cclField.get(obj);
@@ -1976,37 +1900,38 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
     /**
      * Used to periodically signal to the classloader to release JAR resources.
      */
-    protected boolean openJARs() {
-        if (started && jarFiles.length > 0) {
-            synchronized (jarFilesLock) {
-                lastJarAccessed = System.currentTimeMillis();
-                if (jarFiles[0] == null) {
-                    for (int i = 0; i < jarFiles.length; i++) {
-                        try {
-                            jarFiles[i] = new JarFile(jarRealFiles[i]);
-                        } catch (IOException e) {
-                            LOG.log(DEBUG, "Failed to open JAR", e);
-                            for (int j = 0; j < i; j++) {
-                                try {
-                                    jarFiles[j].close();
-                                } catch (Throwable t) {
-                                    // Ignore
-                                }
+    private boolean openJARs() {
+        if (!started || jarFiles.length <= 0) {
+            return true;
+        }
+        synchronized (jarFilesLock) {
+            lastJarAccessed = System.currentTimeMillis();
+            if (jarFiles[0] == null) {
+                for (int i = 0; i < jarFiles.length; i++) {
+                    try {
+                        jarFiles[i] = new JarFile(jarRealFiles[i]);
+                    } catch (IOException e) {
+                        LOG.log(DEBUG, "Failed to open JAR", e);
+                        for (int j = 0; j < i; j++) {
+                            try {
+                                jarFiles[j].close();
+                            } catch (Throwable t) {
+                                // Ignore
                             }
-                            return false;
                         }
+                        return false;
                     }
                 }
             }
+            return true;
         }
-        return true;
     }
 
 
     /**
      * Find specified class in local repositories.
      *
-     * @return the loaded class, or null if the class isn't found
+     * @return the loaded class, never null
      */
     private ResourceEntry findClassInternal(String name) throws ClassNotFoundException {
         LOG.log(TRACE, "findClassInternal(name={0})", name);
@@ -2014,11 +1939,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
             throw new ClassNotFoundException(name);
         }
 
-        String tempPath = name.replace('.', '/');
-        String classPath = tempPath + ".class";
-
-        ResourceEntry entry = findResourceInternal(name, classPath);
-
+        final ResourceEntry entry = findResourceInternal(name, toClassFilePath(name));
         if (entry == null) {
             throw new ClassNotFoundException(name);
         }
@@ -2042,7 +1963,6 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         }
 
         Package pkg = null;
-
         if (packageName != null) {
             synchronized (loaderPC) {
                 pkg = getDefinedPackage(packageName);
@@ -2059,15 +1979,13 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         }
 
         if (securityManager != null) {
-
             // Checking sealing
             if (pkg != null) {
-                boolean sealCheck = true;
+                final boolean sealCheck;
                 if (pkg.isSealed()) {
                     sealCheck = pkg.isSealed(entry.codeBase);
                 } else {
-                    sealCheck = (entry.manifest == null)
-                        || !isPackageSealed(packageName, entry.manifest);
+                    sealCheck = entry.manifest == null || !isPackageSealed(packageName, entry.manifest);
                 }
                 if (!sealCheck) {
                     throw new SecurityException(
@@ -2077,7 +1995,6 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         }
 
         return entry;
-
     }
 
     /**
@@ -2087,14 +2004,15 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      * @return the loaded resource, or null if the resource isn't found
      */
     private ResourceEntry findResourceInternal(File file, String path){
-        ResourceEntry entry = new ResourceEntry();
         try {
-            entry.source = getURI(new File(file, path));
-            entry.codeBase = getURL(new File(file, path));
+            File file2 = new File(file, path);
+            ResourceEntry entry = new ResourceEntry();
+            entry.source = getURL(file2);
+            entry.codeBase = getURL(file2);
+            return entry;
         } catch (MalformedURLException e) {
             return null;
         }
-        return entry;
     }
 
 
@@ -2103,13 +2021,13 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      *
      * @return the loaded resource, or null if the resource isn't found
      */
-    protected ResourceEntry findResourceInternal(String name, String path) {
+    private ResourceEntry findResourceInternal(String name, String path) {
         LOG.log(TRACE, "findResourceInternal(name={0}, path={1})", name, path);
         if (!started) {
             throw new IllegalStateException(getString(LogFacade.NOT_STARTED, name));
         }
 
-        if ((name == null) || (path == null)) {
+        if (name == null || path == null) {
             return null;
         }
 
@@ -2122,7 +2040,6 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         }
 
         entry = findResourceInternalFromRepositories(name, path);
-
         if (entry == null) {
             synchronized (jarFiles) {
                 entry = findResourceInternalFromJars(name, path);
@@ -2153,31 +2070,31 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      *
      * @return The requested resource, or null if not found
      */
-    private ResourceEntry findResourceInternalFromRepositories(String name,
-                                                               String path) {
+    private ResourceEntry findResourceInternalFromRepositories(String name, String path) {
         LOG.log(TRACE, "findResourceInternalFromRepositories(name={0}, path={1})", name, path);
 
         if (repositories == null) {
             return null;
         }
 
-        ResourceEntry entry = null;
+        final int repositoriesLength = repositories.length;
         int contentLength = -1;
         InputStream binaryStream = null;
-        int repositoriesLength = repositories.length;
-        Resource resource = null;
-
+        ResourceEntry entry = null;
         for (int i = 0; entry == null && i < repositoriesLength; i++) {
 
             try {
                 String fullPath = repositories[i] + path;
                 Object lookupResult = resources.lookup(fullPath);
+                final Resource resource;
                 if (lookupResult instanceof Resource) {
                     resource = (Resource) lookupResult;
+                } else {
+                    resource = null;
                 }
 
                 // Note : Not getting an exception here means the resource was found
-                File file = files[i];
+                final File file = files[i];
                 if (securityManager == null) {
                     entry = findResourceInternal(file, path);
                 } else {
@@ -2185,13 +2102,11 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
                     entry = AccessController.doPrivileged(dp);
                 }
 
-                ResourceAttributes attributes =
-                    (ResourceAttributes) resources.getAttributes(fullPath);
+                ResourceAttributes attributes = (ResourceAttributes) resources.getAttributes(fullPath);
                 contentLength = (int) attributes.getContentLength();
                 entry.lastModified = attributes.getLastModified();
 
                 if (resource != null) {
-
                     try {
                         binaryStream = resource.streamContent();
                     } catch (IOException e) {
@@ -2203,9 +2118,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
                     synchronized (ALL_PERMISSION) {
 
                         int j;
-
-                        long[] result2 =
-                            new long[lastModifiedDates.length + 1];
+                        long[] result2 = new long[lastModifiedDates.length + 1];
                         for (j = 0; j < lastModifiedDates.length; j++) {
                             result2[j] = lastModifiedDates[j];
                         }
@@ -2239,50 +2152,46 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      *
      * @return The requested resource, or null if not found
      */
-    private ResourceEntry findResourceInternalFromJars(String name,
-                                                       String path) {
+    private ResourceEntry findResourceInternalFromJars(String name, String path) {
         LOG.log(TRACE, "findResourceInternalFromJars(name={0}, path={1})", name, path);
-        ResourceEntry entry = null;
-        JarEntry jarEntry = null;
-        int contentLength = -1;
-        InputStream binaryStream = null;
 
         if (!openJARs()){
             return null;
         }
 
-        int jarFilesLength = jarFiles.length;
-
-        for (int i=0; (entry == null) && (i < jarFilesLength); i++) {
+        final int jarFilesLength = jarFiles.length;
+        ResourceEntry entry = null;
+        InputStream binaryStream = null;
+        int contentLength = -1;
+        JarEntry jarEntry = null;
+        for (int i = 0; entry == null && i < jarFilesLength; i++) {
             jarEntry = jarFiles[i].getJarEntry(path);
+            if (jarEntry == null) {
+                continue;
+            }
+            entry = new ResourceEntry();
+            try {
+                entry.codeBase = getURL(jarRealFiles[i]);
+                String uri = getURL(jarRealFiles[i]).toString();
+                entry.source = new URL("jar:" + uri + "!/" + path);
+                entry.lastModified = jarRealFiles[i].lastModified();
+            } catch (MalformedURLException e) {
+                return null;
+            }
 
-            if (jarEntry != null) {
+            contentLength = (int) jarEntry.getSize();
+            try {
+                entry.manifest = jarFiles[i].getManifest();
+                binaryStream = jarFiles[i].getInputStream(jarEntry);
+            } catch (IOException e) {
+                return null;
+            }
 
-                entry = new ResourceEntry();
-                try {
-                    entry.codeBase = getURL(jarRealFiles[i]);
-                    String jarFakeUrl = getURI(jarRealFiles[i]).toString();
-                    jarFakeUrl = "jar:" + jarFakeUrl + "!/" + path;
-                    entry.source = new URL(jarFakeUrl);
-                    entry.lastModified = jarRealFiles[i].lastModified();
-                } catch (MalformedURLException e) {
-                    return null;
-                }
-
-                contentLength = (int) jarEntry.getSize();
-                try {
-                    entry.manifest = jarFiles[i].getManifest();
-                    binaryStream = jarFiles[i].getInputStream(jarEntry);
-                } catch (IOException e) {
-                    return null;
-                }
-
-                // Extract resources contained in JAR to the workdir
-                if (antiJARLocking && !(path.endsWith(".class"))) {
-                    File resourceFile = new File(loaderDir, jarEntry.getName());
-                    if (!resourceFile.exists()) {
-                        extractResources();
-                    }
+            // Extract resources contained in JAR to the workdir
+            if (antiJARLocking && !path.endsWith(".class")) {
+                File resourceFile = new File(loaderDir, jarEntry.getName());
+                if (!resourceFile.exists()) {
+                    extractResources();
                 }
             }
         }
@@ -2290,30 +2199,27 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         if (entry != null) {
             readEntryData(entry, name, binaryStream, contentLength, jarEntry);
         }
-
         return entry;
     }
+
 
     private synchronized void extractResources() {
         if (!antiJARLocking || resourcesExtracted) {
             return;
         }
-
         for (int i = jarFiles.length - 1; i >= 0; i--) {
             extractResource(jarFiles[i]);
         }
-
         resourcesExtracted = true;
     }
 
+
     private void extractResource(JarFile jarFile) {
         LOG.log(DEBUG, "extractResource(jarFile={0})", jarFile);
-        byte[] buf = new byte[1024];
         Enumeration<JarEntry> entries = jarFile.entries();
         while (entries.hasMoreElements()) {
             JarEntry jarEntry2 = entries.nextElement();
-            if (!(jarEntry2.isDirectory())
-                && (!jarEntry2.getName().endsWith(".class"))) {
+            if (!jarEntry2.isDirectory() && !jarEntry2.getName().endsWith(".class")) {
                 File resourceFile = new File(loaderDir, jarEntry2.getName());
                 try {
                     if (!resourceFile.getCanonicalPath().startsWith(canonicalLoaderDir)) {
@@ -2321,68 +2227,33 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
                     }
                 } catch (IOException ioe) {
                     throw new IllegalArgumentException(
-                        getString(LogFacade.VALIDATION_ERROR_JAR_PATH, jarEntry2.getName(), ioe));
+                        getString(LogFacade.VALIDATION_ERROR_JAR_PATH, jarEntry2.getName()), ioe);
                 }
                 if (!FileUtils.mkdirsMaybe(resourceFile.getParentFile())) {
                     LOG.log(WARNING, LogFacade.UNABLE_TO_CREATE, resourceFile.getParentFile());
                 }
 
-                FileOutputStream os = null;
-                InputStream is = null;
-                try {
-                    is = jarFile.getInputStream(jarEntry2);
-                    os = new FileOutputStream(resourceFile);
-                    while (true) {
-                        int n = is.read(buf);
-                        if (n <= 0) {
-                            break;
-                        }
-                        os.write(buf, 0, n);
-                    }
+                try (InputStream is = jarFile.getInputStream(jarEntry2);
+                    FileOutputStream os = new FileOutputStream(resourceFile)) {
+                    FileUtils.copy(is, os, Long.MAX_VALUE);
                 } catch (IOException e) {
                     // Ignore
-                } finally {
-                    try {
-                        if (is != null) {
-                            is.close();
-                        }
-                    } catch (IOException e) {
-                    }
-                    try {
-                        if (os != null) {
-                            os.close();
-                        }
-                    } catch (IOException e) {
-                    }
                 }
             }
         }
     }
 
-    public File getExtractedResourcePath(String path) {
-        extractResources();
-        File extractedResource = new File(loaderDir, path);
-        return (extractedResource.exists() ? extractedResource : null);
-    }
 
     /**
      * Reads the resource's binary data from the given input stream.
      */
-    private void readEntryData(ResourceEntry entry,
-                               String name,
-                               InputStream binaryStream,
-                               int contentLength,
-                               JarEntry jarEntry) {
-
+    private void readEntryData(ResourceEntry entry, String name, InputStream binaryStream, int contentLength, JarEntry jarEntry) {
         if (binaryStream == null) {
             return;
         }
-
         byte[] binaryContent = new byte[contentLength];
-
         try {
             int pos = 0;
-
             while (true) {
                 int n = binaryStream.read(binaryContent, pos, binaryContent.length - pos);
                 if (n <= 0) {
@@ -2400,14 +2271,10 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
             }
         }
 
-        // START OF IASRI 4709374
-        // Preprocess the loaded byte code if bytecode preprocesser is
-        // enabled
+        // Preprocess the loaded byte code if bytecode preprocesser is enabled
         if (PreprocessorUtil.isPreprocessorEnabled()) {
-            binaryContent =
-                PreprocessorUtil.processClass(name, binaryContent);
+            binaryContent = PreprocessorUtil.processClass(name, binaryContent);
         }
-        // END OF IASRI 4709374
 
         entry.binaryContent = binaryContent;
 
@@ -2422,8 +2289,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
     /**
      * @return true if the specified package name is sealed according to the given manifest.
      */
-    protected boolean isPackageSealed(String name, Manifest man) {
-
+    private boolean isPackageSealed(String name, Manifest man) {
         String path = name.replace('.', '/') + '/';
         Attributes attr = man.getAttributes(path);
         String sealed = null;
@@ -2431,12 +2297,12 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
             sealed = attr.getValue(Name.SEALED);
         }
         if (sealed == null) {
-            if ((attr = man.getMainAttributes()) != null) {
+            attr = man.getMainAttributes();
+            if (attr != null) {
                 sealed = attr.getValue(Name.SEALED);
             }
         }
         return "true".equalsIgnoreCase(sealed);
-
     }
 
 
@@ -2448,8 +2314,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      *
      * @param name Name of the resource to return
      */
-    protected InputStream findLoadedResource(String name) {
-
+    private InputStream findLoadedResource(String name) {
         ResourceEntry entry = resourceEntries.get(name);
         if (entry != null) {
             if (entry.binaryContent != null) {
@@ -2457,7 +2322,6 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
             }
         }
         return null;
-
     }
 
 
@@ -2471,7 +2335,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
     private Class<?> findLoadedClass0(String name) {
         ResourceEntry entry = resourceEntries.get(name);
         if (entry != null) {
-            synchronized(this) {
+            synchronized (this) {
                 return entry.loadedClass;
             }
         }
@@ -2482,8 +2346,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
     /**
      * Refresh the system policy file, to pick up eventual changes.
      */
-    protected void refreshPolicy() {
-
+    private void refreshPolicy() {
         try {
             // The policy file may have been modified to adjust
             // permissions, so we're reloading it when loading or
@@ -2494,7 +2357,6 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
             // Some policy files may restrict this, even for the core,
             // so this exception is ignored
         }
-
     }
 
 
@@ -2508,24 +2370,18 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      * @param name class name
      * @return true if the name is valid
      */
-    protected boolean validate(String name) {
-
+    private boolean validate(String name) {
         if (name == null) {
             return false;
         }
         if (name.startsWith("java.")) {
             return false;
         }
-
         return true;
-
     }
 
 
-    /**
-     * Get URL.
-     */
-    protected URL getURL(File file) throws MalformedURLException {
+    private URL getURL(File file) throws MalformedURLException {
         File realFile = file;
         try {
             realFile = realFile.getCanonicalFile();
@@ -2533,20 +2389,6 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
             // Ignore
         }
         return realFile.toURI().toURL();
-
-    }
-
-
-    /**
-     * Get URL.
-     */
-    protected URL getURI(File file) throws MalformedURLException {
-        try {
-            file = file.getCanonicalFile();
-        } catch (IOException e) {
-            // Ignore
-        }
-        return file.toURI().toURL();
     }
 
 
@@ -2556,8 +2398,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      *
      * @param dir File object representing the directory to be deleted
      */
-    protected static void deleteDir(File dir) {
-
+    private static void deleteDir(File dir) {
         String files[] = dir.list();
         if (files == null) {
             files = new String[0];
@@ -2576,71 +2417,8 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         if (!FileUtils.deleteFileMaybe(dir)) {
             LOG.log(WARNING, LogFacade.UNABLE_TO_DELETE, dir);
         }
-
     }
 
-    public void addByteCodePreprocessor(BytecodePreprocessor preprocessor) {
-        byteCodePreprocessors.add(preprocessor);
-    }
-
-
-    /**
-     * Create and return a temporary loader with the same visibility
-     * as this loader. The temporary loader may be used to load
-     * resources or any other application classes for the purposes of
-     * introspecting them for annotations. The persistence provider
-     * should not maintain any references to the temporary loader,
-     * or any objects loaded by it.
-     *
-     * @return A temporary classloader with the same classpath as this loader
-     */
-    @Override
-    public ClassLoader copy() {
-        LOG.log(DEBUG, "copy()");
-        // set getParent() as the parent of the cloned class loader
-        PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader(getURLs(), getParent());
-        return AccessController.doPrivileged(action);
-    }
-
-
-    /**
-     * Add a new ClassFileTransformer to this class loader. This transfomer should be called for
-     * each class loading event.
-     *
-     * @param transformer new class file transformer to do byte code enhancement.
-     */
-    @Override
-    public void addTransformer(final ClassFileTransformer transformer) {
-        final WebappClassLoader cl = this;
-        addByteCodePreprocessor(new BytecodePreprocessor(){
-            /*
-             * This class adapts ClassFileTransformer to ByteCodePreprocessor that
-             * is used inside WebappClassLoader.
-             */
-
-            @Override
-            public boolean initialize(Hashtable parameters) {
-                return true;
-            }
-
-            @Override
-            public byte[] preprocess(String resourceName, byte[] classBytes) {
-                try {
-                    // convert java/lang/Object.class to java/lang/Object
-                    String classname = resourceName.substring(0,
-                        resourceName.length() - 6); // ".class" size = 6
-                    byte[] newBytes = transformer.transform(
-                        cl, classname, null, null, classBytes);
-                    // ClassFileTransformer returns null if no transformation
-                    // took place, where as ByteCodePreprocessor is expected
-                    // to return non-null byte array.
-                    return newBytes == null ? classBytes : newBytes;
-                } catch (IllegalClassFormatException e) {
-                    throw new IllegalStateException("Could not preprocess " + resourceName, e);
-                }
-            }
-        });
-    }
 
     @Override
     protected Object getClassLoadingLock(String className) {
@@ -2657,6 +2435,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         return AccessController.doPrivileged(action);
     }
 
+
     private void setAccessible(final Field field) {
         SecurityManager sm = System.getSecurityManager();
         if (sm == null) {
@@ -2669,6 +2448,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
             AccessController.doPrivileged(action);
         }
     }
+
 
     /**
      * @return true if the class should be first located by the delegating classloader.
@@ -2695,6 +2475,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         return false;
     }
 
+
     /**
      * @return true if the resource should be first located by the delegating classloader.
      */
@@ -2718,10 +2499,19 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         return false;
     }
 
-    private static String getString(String key, Object... arguments) {
-        String msg = rb.getString(key);
-        return MessageFormat.format(msg, arguments);
+
+    /**
+     * @return ie. java/lang/Object.class
+     */
+    private static String toClassFilePath(String name) {
+        return name.replace('.', '/') + ".class";
     }
+
+
+    private static String getString(String key, Object... arguments) {
+        return MessageFormat.format(rb.getString(key), arguments);
+    }
+
 
     private static String getPackageName(final String className) {
         int pos = className.lastIndexOf('.');
@@ -2730,5 +2520,39 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
             return "";
         }
         return className.substring(0, pos);
+    }
+
+
+    private static class WebappBytecodePreprocessor implements BytecodePreprocessor {
+
+        private final ClassFileTransformer transformer;
+        private final WebappClassLoader classLoader;
+
+        private WebappBytecodePreprocessor(ClassFileTransformer transformer, WebappClassLoader classLoader) {
+            this.transformer = transformer;
+            this.classLoader = classLoader;
+        }
+
+
+        @Override
+        public boolean initialize(Hashtable parameters) {
+            return true;
+        }
+
+
+        @Override
+        public byte[] preprocess(String resourceName, byte[] classBytes) {
+            try {
+                // convert java/lang/Object.class to java/lang/Object (6 chars).
+                String classname = resourceName.substring(0, resourceName.length() - 6);
+                byte[] newBytes = transformer.transform(classLoader, classname, null, null, classBytes);
+                // ClassFileTransformer returns null if no transformation
+                // took place, where as ByteCodePreprocessor is expected
+                // to return non-null byte array.
+                return newBytes == null ? classBytes : newBytes;
+            } catch (IllegalClassFormatException e) {
+                throw new IllegalStateException("Could not preprocess " + resourceName, e);
+            }
+        }
     }
 }

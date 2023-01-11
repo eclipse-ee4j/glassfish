@@ -51,6 +51,8 @@ import java.security.PermissionCollection;
 import java.security.Permissions;
 import java.security.Policy;
 import java.security.PrivilegedAction;
+import java.sql.Driver;
+import java.sql.DriverManager;
 import java.text.MessageFormat;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -1483,15 +1485,12 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         // Clearing references should be done before setting started to
         // false, due to possible side effects.
         // In addition, set this classloader as the Thread's context classloader
-        ClassLoader curCl = null;
+        final ClassLoader originalCl = Thread.currentThread().getContextClassLoader();
         try {
-            curCl = Thread.currentThread().getContextClassLoader();
             Thread.currentThread().setContextClassLoader(this);
             clearReferences();
         } finally {
-            if (curCl != null) {
-                Thread.currentThread().setContextClassLoader(curCl);
-            }
+            Thread.currentThread().setContextClassLoader(originalCl);
         }
 
         // FIXME: close is called twice = unclear dependencies and order.
@@ -1604,12 +1603,17 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
 
 
     private void clearReferencesJdbc() {
+        @SuppressWarnings("resource")
+        final ClassLoader classloader = this;
+        DriverManager.drivers().filter(driver -> driver.getClass().getClassLoader() == classloader)
+            .forEach(this::deregisterDriver);
+    }
+
+
+    private void deregisterDriver(Driver driver) {
         try {
-            List<String> driverNames = new JdbcLeakPrevention().clearJdbcDriverRegistrations(this);
-            String msg = rb.getString(LogFacade.CLEAR_JDBC);
-            for (String name : driverNames) {
-                LOG.log(WARNING, MessageFormat.format(msg, contextName, name));
-            }
+            DriverManager.deregisterDriver(driver);
+            LOG.log(WARNING, LogFacade.CLEAR_JDBC, contextName, driver.getClass().getCanonicalName());
         } catch (Exception e) {
             LOG.log(WARNING, getString(LogFacade.JDBC_REMOVE_FAILED, contextName), e);
         }
@@ -1617,7 +1621,6 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
 
 
     private void clearReferencesStaticFinal() {
-
         Collection<ResourceEntry> values = resourceEntries.values();
         Iterator<ResourceEntry> loadedClasses = values.iterator();
         /*

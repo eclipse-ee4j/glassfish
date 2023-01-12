@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,8 +25,7 @@ import java.util.jar.Manifest;
 /**
  * Resource entry.
  *
- * @author Remy Maucherat
- * @version $Revision: 1.1.2.1 $ $Date: 2007/08/17 15:46:27 $
+ * @author Remy Maucherat 2007
  */
 public class ResourceEntry {
 
@@ -40,38 +40,36 @@ public class ResourceEntry {
     /**
      * Binary content of the resource.
      */
-    public byte[] binaryContent = null;
+    public byte[] binaryContent;
 
 
     /**
      * Loaded class.
      */
-    public volatile Class<?> loadedClass = null;
+    public volatile Class<?> loadedClass;
 
 
     /**
      * URL source from where the object was loaded.
      */
-    public URL source = null;
+    public URL source;
 
 
     /**
      * URL of the codebase from where the object was loaded.
      */
-    public URL codeBase = null;
+    public URL codeBase;
 
 
     /**
      * Manifest (if the resource was loaded from a JAR).
      */
-    public Manifest manifest = null;
+    public Manifest manifest;
 
 
     /**
      * Certificates (if the resource was loaded from a JAR).
      */
-    public Certificate[] certificates = null;
-
-
+    public Certificate[] certificates;
 }
 

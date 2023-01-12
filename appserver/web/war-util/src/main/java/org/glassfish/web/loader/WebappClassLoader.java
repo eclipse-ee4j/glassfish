@@ -141,7 +141,7 @@ import static org.glassfish.web.loader.LogFacade.UNSUPPORTED_VERSION;
  * @author Craig R. McClanahan
  * @since 2007/08/17 15:46:27 $
  */
-public class WebappClassLoader extends GlassfishUrlClassLoader
+public final class WebappClassLoader extends GlassfishUrlClassLoader
     implements Reloader, InstrumentableClassLoader, DDPermissionsLoader, JarFileResourcesProvider {
 
     static {
@@ -289,9 +289,6 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      */
     private final ConcurrentHashMap<String, PermissionCollection> loaderPC = new ConcurrentHashMap<>();
 
-    /** The parent class loader. */
-    private ClassLoader parent;
-
     /** The system class loader. */
     private final ClassLoader system;
 
@@ -344,8 +341,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      */
     public WebappClassLoader(ClassLoader parent) {
         super(new URL[0], parent);
-        this.parent = getParent();
-        this.system = this.getClass().getClassLoader();
+        this.system = WebappClassLoader.class.getClassLoader();
         if (SECURITY_MANAGER != null) {
             refreshPolicy();
         }
@@ -388,6 +384,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      * @param delegate The new "delegate first" flag
      */
     public void setDelegate(boolean delegate) {
+        checkStatus(LifeCycleStatus.NEW);
         LOG.log(DEBUG, "setDelegate(delegate={0})", delegate);
         this.delegate = delegate;
     }
@@ -935,12 +932,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
          * belongs to one of the packages that are part of the Jakarta EE platform
          */
         if (isDelegateFirstResource(name)) {
-            LOG.log(TRACE, "Delegating to parent classloader {0}", parent);
-            ClassLoader loader = parent;
-            if (loader == null) {
-                loader = system;
-            }
-            URL url = loader.getResource(name);
+            URL url = getDelegateClassLoader().getResource(name);
             if (url != null) {
                 LOG.log(TRACE, "Returning {0}", url);
                 return url;
@@ -951,8 +943,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         URL url = findResource(name);
         if (url != null) {
             if (antiJARLocking) {
-                // Locating the repository for special handling in the case
-                // of a JAR
+                // Locating the repository for special handling in the case of a JAR
                 ResourceEntry entry = resourceEntryCache.get(name);
                 try {
                     String repository = entry.codeBase.toString();
@@ -971,11 +962,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
 
         // (3) Delegate to parent unconditionally if not already attempted
         if (!delegate) {
-            ClassLoader loader = parent;
-            if (loader == null) {
-                loader = system;
-            }
-            url = loader.getResource(name);
+            url = getDelegateClassLoader().getResource(name);
             if (url != null) {
                 LOG.log(TRACE, "Returning {0}", url);
                 return url;
@@ -1004,29 +991,21 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         // (0) Check for a cached copy of this resource
         InputStream stream = findLoadedResource(name);
         if (stream != null) {
-            LOG.log(TRACE, "Returning stream from cache");
             return stream;
         }
 
-        /*
-         * (1) Delegate to parent if requested, or if the requested resource
-         * belongs to one of the packages that are part of the Jakarta EE platform
-         */
+        // (1) Delegate to parent if requested, or if the requested resource
+        // belongs to one of the packages that are part of the Jakarta EE platform
         if (isDelegateFirstResource(name)) {
-            ClassLoader loader = parent == null ? system : parent;
-            LOG.log(TRACE, "Delegating to classloader {0}", loader);
-            stream = loader.getResourceAsStream(name);
+            stream = getDelegateClassLoader().getResourceAsStream(name);
             if (stream != null) {
-                LOG.log(TRACE, "Returning stream from parent");
                 return stream;
             }
         }
 
         // (2) Search local repositories
-        LOG.log(TRACE, "Searching local repositories");
         URL url = findResource(name);
         if (url != null) {
-            LOG.log(TRACE, "Returning stream from local");
             stream = findLoadedResource(name);
             try {
                 if (hasExternalRepositories && stream == null) {
@@ -1042,11 +1021,8 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
 
         // (3) Delegate to parent unconditionally
         if (!delegate) {
-            ClassLoader loader = parent == null ? system : parent;
-            LOG.log(TRACE, "Delegating to classloader {0}", loader);
-            stream = loader.getResourceAsStream(name);
+            stream = getDelegateClassLoader().getResourceAsStream(name);
             if (stream != null) {
-                LOG.log(TRACE, "Returning stream from parent");
                 return stream;
             }
         }
@@ -1059,7 +1035,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
 
     @Override
     public Enumeration<URL> getResources(String name) throws IOException {
-        final ClassLoader loader = parent == null ? system : parent;
+        final ClassLoader loader = getDelegateClassLoader();
         final ResourceLocator locator = new ResourceLocator(this, loader, isDelegateFirstResource(name));
         return locator.getResources(name);
     }
@@ -1109,19 +1085,13 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
             // (0) Check our previously loaded local class cache
             Class<?> clazz = findLoadedClass0(name);
             if (clazz != null) {
-                if (resolve) {
-                    resolveClass(clazz);
-                }
-                return clazz;
+                return resolveIfRequired(resolve, clazz);
             }
 
             // (0.1) Check our previously loaded class cache
             clazz = findLoadedClass(name);
             if (clazz != null) {
-                if (resolve) {
-                    resolveClass(clazz);
-                }
-                return clazz;
+                return resolveIfRequired(resolve, clazz);
             }
 
             // (0.5) Permission to access this class when using a SecurityManager
@@ -1138,21 +1108,16 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
                 }
             }
 
-            final ClassLoader delegateLoader = parent == null ? system : parent;
+            final ClassLoader delegateLoader = getDelegateClassLoader();
             boolean delegateLoad = isDelegateFirstClass(name);
 
             // (1) Delegate to our parent if requested
             if (delegateLoad) {
                 // Check delegate first
-                LOG.log(TRACE, "Delegating to parent classloader {0}", delegateLoader);
                 try {
                     clazz = delegateLoader.loadClass(name);
                     if (clazz != null) {
-                        LOG.log(TRACE, "Loading class from delegate");
-                        if (resolve) {
-                            resolveClass(clazz);
-                        }
-                        return clazz;
+                        return resolveIfRequired(resolve, clazz);
                     }
                 } catch (ClassNotFoundException e) {
                     // Ignore
@@ -1160,14 +1125,10 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
             }
 
             // (2) Search local repositories
-            LOG.log(TRACE, "Searching local repositories");
             try {
                 clazz = findClass(name);
                 if (clazz != null) {
-                    if (resolve) {
-                        resolveClass(clazz);
-                    }
-                    return clazz;
+                    return resolveIfRequired(resolve, clazz);
                 }
             } catch (ClassNotFoundException e) {
                 // Ignore
@@ -1175,21 +1136,16 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
 
             // (3) Delegate if class was not found locally
             if (!delegateLoad) {
-                LOG.log(TRACE, "Delegating to classloader {0}", delegateLoader);
                 try {
                     clazz = delegateLoader.loadClass(name);
                     if (clazz != null) {
-                        if (resolve) {
-                            resolveClass(clazz);
-                        }
-                        return clazz;
+                        return resolveIfRequired(resolve, clazz);
                     }
                 } catch (ClassNotFoundException e) {
                     // Ignore
                 }
             }
         }
-
         throw new ClassNotFoundException(name);
     }
 
@@ -1333,7 +1289,6 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         lastModifiedDates = null;
         paths = null;
         hasExternalRepositories = false;
-        parent = null;
 
         permissionList.clear();
         permissionsHolder = null;
@@ -1358,7 +1313,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      * Used to periodically signal to the classloader to release JAR resources.
      */
     public void closeJARs(boolean force) {
-        if (jarFiles.length <= 0) {
+        if (jarFiles.length == 0) {
             return;
         }
         synchronized (jarFilesLock) {
@@ -1376,6 +1331,21 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
                 }
             }
         }
+    }
+
+
+    private ClassLoader getDelegateClassLoader() {
+        ClassLoader parent = getParent();
+        final ClassLoader delegateLoader = parent == null ? system : parent;
+        return delegateLoader;
+    }
+
+
+    private Class<?> resolveIfRequired(boolean resolve, Class<?> clazz) {
+        if (resolve) {
+            resolveClass(clazz);
+        }
+        return clazz;
     }
 
 

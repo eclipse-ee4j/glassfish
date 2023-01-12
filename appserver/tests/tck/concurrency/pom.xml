@@ -42,6 +42,10 @@
         <glassfish.version>${project.version}</glassfish.version>
         <glassfish.root>${project.build.directory}</glassfish.root>
         <glassfish.home>${glassfish.root}/glassfish7</glassfish.home>
+
+        <jcommander.version>1.82</jcommander.version>
+        <sigtest.version>1.7</sigtest.version>
+        <testng.version>7.4.0</testng.version>
     </properties>
 
     <dependencyManagement>
@@ -81,7 +85,7 @@
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>cdi-tck-core-impl</artifactId>
-            <version>4.0.4</version>
+            <version>4.0.7</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -120,14 +124,14 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>7.4.0</version>
+            <version>${testng.version}</version>
         </dependency>
 
         <!--  Signature Test Plugin  -->
         <dependency>
             <groupId>org.netbeans.tools</groupId>
             <artifactId>sigtest-maven-plugin</artifactId>
-            <version>1.6</version>
+            <version>${sigtest.version}</version>
         </dependency>
     </dependencies>
 
@@ -174,7 +178,7 @@
                                 <artifactItem>
                                     <groupId>org.testng</groupId>
                                     <artifactId>testng</artifactId>
-                                    <version>7.4.0</version>
+                                    <version>${testng.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${glassfish.root}/glassfish7/glassfish/lib</outputDirectory>
@@ -182,7 +186,7 @@
                                 <artifactItem>
                                     <groupId>com.beust</groupId>
                                     <artifactId>jcommander</artifactId>
-                                    <version>1.78</version>
+                                    <version>${jcommander.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${glassfish.root}/glassfish7/glassfish/lib</outputDirectory>
@@ -190,7 +194,7 @@
                                 <artifactItem>
                                     <groupId>org.netbeans.tools</groupId>
                                     <artifactId>sigtest-maven-plugin</artifactId>
-                                    <version>1.6</version>
+                                    <version>${sigtest.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${glassfish.root}/glassfish7/glassfish/lib</outputDirectory>

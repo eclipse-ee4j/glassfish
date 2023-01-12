@@ -297,7 +297,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
     private ClassLoader parent;
 
     /** The system class loader. */
-    private ClassLoader system;
+    private final ClassLoader system;
 
     private LifeCycleStatus status = LifeCycleStatus.NEW;
 
@@ -348,7 +348,12 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      */
     public WebappClassLoader(ClassLoader parent) {
         super(new URL[0], parent);
-        init();
+        this.parent = getParent();
+        this.system = this.getClass().getClassLoader();
+        if (SECURITY_MANAGER != null) {
+            refreshPolicy();
+        }
+        this.permissionsHolder = new PermsHolder();
     }
 
 
@@ -362,17 +367,10 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
 
 
     /**
-     * @return associated resources.
-     */
-    public DirContext getResources() {
-        return this.resources;
-    }
-
-
-    /**
      * Set associated resources.
      */
     public void setResources(DirContext resources) {
+        checkStatus(LifeCycleStatus.NEW);
         this.resources = resources;
         final DirContext dirCtx;
         if (resources instanceof ProxyDirContext) {
@@ -716,16 +714,6 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
     }
 
 
-    /**
-     * Create and return a temporary loader with the same visibility
-     * as this loader. The temporary loader may be used to load
-     * resources or any other application classes for the purposes of
-     * introspecting them for annotations. The persistence provider
-     * should not maintain any references to the temporary loader,
-     * or any objects loaded by it.
-     *
-     * @return A temporary classloader with the same classpath as this loader
-     */
     @Override
     public ClassLoader copy() {
         LOG.log(DEBUG, "copy()");
@@ -1285,16 +1273,6 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
             repositoryURLs = new URL[0];
         }
         return repositoryURLs;
-    }
-
-
-    private void init() {
-        this.parent = getParent();
-        this.system = this.getClass().getClassLoader();
-        if (SECURITY_MANAGER != null) {
-            refreshPolicy();
-        }
-        this.permissionsHolder = new PermsHolder();
     }
 
 

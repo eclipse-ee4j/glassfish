@@ -171,16 +171,18 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
     private static final Set<String> DELEGATED_RESOURCE_PATHS = DELEGATED_PACKAGES.stream()
         .map(PACKAGE_TO_PATH).collect(Collectors.toUnmodifiableSet());
 
-    /**
-     * All permission.
-     */
+    /** All permission. */
     private static final Permission ALL_PERMISSION = new AllPermission();
+
+    /** Instance of the SecurityManager installed. */
+    private static final SecurityManager SECURITY_MANAGER = System.getSecurityManager();
 
     /**
      * Use this variable to invoke the security manager when a resource is
      * loaded by this classloader.
      */
-    private final boolean packageDefinitionEnabled = Boolean.getBoolean("package.definition");
+    private static final boolean PACKAGE_DEFINITION_ENABLED = SECURITY_MANAGER != null
+        && Boolean.getBoolean("package.definition");
 
     /** Associated directory context giving access to the resources in this webapp. */
     private DirContext resources;
@@ -290,9 +292,6 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      * application context.
      */
     private final ConcurrentHashMap<String, PermissionCollection> loaderPC = new ConcurrentHashMap<>();
-
-    /** Instance of the SecurityManager installed. */
-    private SecurityManager securityManager;
 
     /** The parent class loader. */
     private ClassLoader parent;
@@ -437,10 +436,10 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      * @param path file directory path
      */
     public void addPermission(final String path) {
-        if (path == null || securityManager == null) {
+        if (path == null || SECURITY_MANAGER == null) {
             return;
         }
-        securityManager.checkSecurityAccess(DDPermissionsLoader.SET_EE_POLICY);
+        SECURITY_MANAGER.checkSecurityAccess(DDPermissionsLoader.SET_EE_POLICY);
         if (path.startsWith("jndi:") || path.startsWith("jar:jndi:")) {
             final String jndiPath = path.endsWith("/") ? path : path + "/";
             permissionList.add(new JndiPermission(jndiPath + "*"));
@@ -463,8 +462,8 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      * @param permission permission to add
      */
     public void addPermission(Permission permission) {
-        if (securityManager != null && permission != null) {
-            securityManager.checkSecurityAccess(DDPermissionsLoader.SET_EE_POLICY);
+        if (SECURITY_MANAGER != null && permission != null) {
+            SECURITY_MANAGER.checkSecurityAccess(DDPermissionsLoader.SET_EE_POLICY);
             permissionList.add(permission);
         }
     }
@@ -472,16 +471,16 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
 
     @Override
     public void addDeclaredPermissions(PermissionCollection declaredPc) throws SecurityException {
-        if (securityManager != null) {
-            securityManager.checkSecurityAccess(DDPermissionsLoader.SET_EE_POLICY);
+        if (SECURITY_MANAGER != null) {
+            SECURITY_MANAGER.checkSecurityAccess(DDPermissionsLoader.SET_EE_POLICY);
             permissionsHolder.setDeclaredPermissions(declaredPc);
         }
     }
 
     @Override
     public void addEEPermissions(PermissionCollection eePc) throws SecurityException {
-        if (securityManager != null) {
-            securityManager.checkSecurityAccess(DDPermissionsLoader.SET_EE_POLICY);
+        if (SECURITY_MANAGER != null) {
+            SECURITY_MANAGER.checkSecurityAccess(DDPermissionsLoader.SET_EE_POLICY);
             permissionsHolder.setEEPermissions(eePc);
         }
     }
@@ -774,11 +773,11 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         LOG.log(DEBUG, "findClass(name={0})", name);
 
         // (1) Permission to define this class when using a SecurityManager
-        if (securityManager != null && packageDefinitionEnabled) {
+        if (PACKAGE_DEFINITION_ENABLED) {
             int i = name.lastIndexOf('.');
             if (i >= 0) {
                 try {
-                    securityManager.checkPackageDefinition(name.substring(0, i));
+                    SECURITY_MANAGER.checkPackageDefinition(name.substring(0, i));
                 } catch (Exception se) {
                     throw new ClassNotFoundException(name, se);
                 }
@@ -1152,11 +1151,11 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
             }
 
             // (0.5) Permission to access this class when using a SecurityManager
-            if (securityManager != null && packageDefinitionEnabled) {
+            if (PACKAGE_DEFINITION_ENABLED) {
                 int i = name.lastIndexOf('.');
                 if (i >= 0) {
                     try {
-                        securityManager.checkPackageAccess(name.substring(0, i));
+                        SECURITY_MANAGER.checkPackageAccess(name.substring(0, i));
                     } catch (SecurityException se) {
                         String error = getString(LogFacade.SECURITY_EXCEPTION, name);
                         LOG.log(INFO, error, se);
@@ -1292,8 +1291,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
     private void init() {
         this.parent = getParent();
         this.system = this.getClass().getClassLoader();
-        this.securityManager = System.getSecurityManager();
-        if (this.securityManager != null) {
+        if (SECURITY_MANAGER != null) {
             refreshPolicy();
         }
         this.permissionsHolder = new PermsHolder();
@@ -1878,7 +1876,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
                 }
             }
 
-            if (securityManager != null) {
+            if (SECURITY_MANAGER != null) {
                 // Checking sealing
                 if (pkg != null) {
                     final boolean sealCheck;
@@ -1995,7 +1993,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
 
                 // Note : Not getting an exception here means the resource was found
                 final File file = files[i];
-                if (securityManager == null) {
+                if (SECURITY_MANAGER == null) {
                     entry = findResourceInternal(file, path);
                 } else {
                     PrivilegedAction<ResourceEntry> dp = () -> findResourceInternal(file, path);

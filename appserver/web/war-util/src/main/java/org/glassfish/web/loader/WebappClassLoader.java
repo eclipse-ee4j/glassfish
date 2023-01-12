@@ -184,19 +184,15 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
     private static final boolean PACKAGE_DEFINITION_ENABLED = SECURITY_MANAGER != null
         && Boolean.getBoolean("package.definition");
 
+    /** The cache of ResourceEntry for classes and resources we have loaded, keyed by resource name. */
+    private final ConcurrentHashMap<String, ResourceEntry> resourceEntryCache = new ConcurrentHashMap<>();
+
+    /** The list of not found resources. */
+    private final Set<String> notFoundResources = ConcurrentHashMap.newKeySet();
+
+
     /** Associated directory context giving access to the resources in this webapp. */
     private DirContext resources;
-
-    /**
-     * The cache of ResourceEntry for classes and resources we have loaded,
-     * keyed by resource name.
-     */
-    private final ConcurrentHashMap<String, ResourceEntry> resourceEntries = new ConcurrentHashMap<>();
-
-    /**
-     * The list of not found resources.
-     */
-    private final ConcurrentHashMap<String, String> notFoundResources = new ConcurrentHashMap<>();
 
     /**
      * Should this class loader delegate to the parent class loader
@@ -557,7 +553,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      * @param repository Name of a source of classes to be loaded, such as a
      *  directory pathname, a JAR file pathname, or a ZIP file pathname
      *
-     * @exception IllegalArgumentException if the specified repository is
+     * @throws IllegalArgumentException if the specified repository is
      *  invalid or does not exist
      */
     public void addRepository(String repository, File file) {
@@ -754,7 +750,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      *
      * @param name Name of the class to be loaded
      *
-     * @exception ClassNotFoundException if the class was not found
+     * @throws ClassNotFoundException if the class was not found
      */
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
@@ -852,7 +848,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         if (".".equals(name)) {
             name = "";
         }
-        ResourceEntry entry = resourceEntries.get(name);
+        ResourceEntry entry = resourceEntryCache.get(name);
         if (entry == null) {
             entry = findResourceInternal(name, name);
         }
@@ -876,7 +872,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      *
      * @param name Name of the resources to be found
      *
-     * @exception IOException if an input/output error occurs
+     * @throws IOException if an input/output error occurs
      */
     @Override
     public Enumeration<URL> findResources(String name) throws IOException {
@@ -933,7 +929,6 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
     @Override
     public URL getResource(String name) {
         LOG.log(DEBUG, "getResource(name={0})", name);
-        URL url = null;
 
         /*
          * (1) Delegate to parent if requested, or if the requested resource
@@ -945,7 +940,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
             if (loader == null) {
                 loader = system;
             }
-            url = loader.getResource(name);
+            URL url = loader.getResource(name);
             if (url != null) {
                 LOG.log(TRACE, "Returning {0}", url);
                 return url;
@@ -953,12 +948,12 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         }
 
         // (2) Search local repositories
-        url = findResource(name);
+        URL url = findResource(name);
         if (url != null) {
             if (antiJARLocking) {
                 // Locating the repository for special handling in the case
                 // of a JAR
-                ResourceEntry entry = resourceEntries.get(name);
+                ResourceEntry entry = resourceEntryCache.get(name);
                 try {
                     String repository = entry.codeBase.toString();
                     if (repository.endsWith(".jar") && !name.endsWith(".class") && !name.endsWith(".jar")) {
@@ -1070,15 +1065,6 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
     }
 
 
-    /**
-     * Load the class with the specified name.  This method searches for
-     * classes in the same manner as <code>loadClass(String, boolean)</code>
-     * with <code>false</code> as the second argument.
-     *
-     * @param name Name of the class to be loaded
-     *
-     * @exception ClassNotFoundException if the class was not found
-     */
     @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
         return loadClass(name, false);
@@ -1108,7 +1094,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      * @param name Name of the class to be loaded
      * @param resolve If <code>true</code> then resolve the class
      *
-     * @exception ClassNotFoundException if the class was not found
+     * @throws ClassNotFoundException if the class was not found
      */
     @Override
     protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
@@ -1335,7 +1321,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         }
 
         notFoundResources.clear();
-        resourceEntries.clear();
+        resourceEntryCache.clear();
         resources = null;
         repositories = null;
         repositoryURLs = null;
@@ -1407,7 +1393,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         // Null out any static or final fields from loaded classes,
         // as a workaround for apparent garbage collection bugs
         if (clearReferencesStatic) {
-            clearReferencesStaticFinal();
+            clearReferencesStaticFinal(resourceEntryCache.values());
         }
 
         // Clear the IntrospectionUtils cache.
@@ -1439,8 +1425,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
     }
 
 
-    private void clearReferencesStaticFinal() {
-        Collection<ResourceEntry> values = resourceEntries.values();
+    private void clearReferencesStaticFinal(Collection<ResourceEntry> values) {
         Iterator<ResourceEntry> loadedClasses = values.iterator();
         /*
          * Step 1: Enumerate all classes loaded by this WebappClassLoader
@@ -1907,11 +1892,11 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
             return null;
         }
 
-        ResourceEntry entry = resourceEntries.get(name);
+        ResourceEntry entry = resourceEntryCache.get(name);
         if (entry != null) {
             return entry;
         }
-        if (notFoundResources.containsKey(name)) {
+        if (notFoundResources.contains(name)) {
             return null;
         }
 
@@ -1923,7 +1908,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         }
 
         if (entry == null) {
-            notFoundResources.put(name, name);
+            notFoundResources.add(name);
             return null;
         }
 
@@ -1931,12 +1916,8 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
         // Ensures that all the threads which may be in a race to load
         // a particular class all end up with the same ResourceEntry
         // instance
-        ResourceEntry entry2 = resourceEntries.putIfAbsent(name, entry);
-        if (entry2 != null) {
-            entry = entry2;
-        }
-
-        return entry;
+        ResourceEntry alreadyPresentEntry = resourceEntryCache.putIfAbsent(name, entry);
+        return alreadyPresentEntry == null ? entry : alreadyPresentEntry;
     }
 
 
@@ -2191,7 +2172,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      * @param name Name of the resource to return
      */
     private InputStream findLoadedResource(String name) {
-        ResourceEntry entry = resourceEntries.get(name);
+        ResourceEntry entry = resourceEntryCache.get(name);
         if (entry != null) {
             if (entry.binaryContent != null) {
                 return new ByteArrayInputStream(entry.binaryContent);
@@ -2209,7 +2190,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      * @param name Name of the resource to return
      */
     private Class<?> findLoadedClass0(String name) {
-        ResourceEntry entry = resourceEntries.get(name);
+        ResourceEntry entry = resourceEntryCache.get(name);
         if (entry != null) {
             return entry.loadedClass;
         }
@@ -2273,12 +2254,12 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
      * @param dir File object representing the directory to be deleted
      */
     private static void deleteDir(File dir) {
-        String files[] = dir.list();
+        String[] files = dir.list();
         if (files == null) {
             files = new String[0];
         }
-        for (String file2 : files) {
-            File file = new File(dir, file2);
+        for (String fileName : files) {
+            File file = new File(dir, fileName);
             if (file.isDirectory()) {
                 deleteDir(file);
             } else {
@@ -2295,8 +2276,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
 
 
     private String getJavaVersion() {
-        SecurityManager sm = System.getSecurityManager();
-        if (sm == null) {
+        if (SECURITY_MANAGER == null) {
             return System.getProperty("java.version");
         }
         PrivilegedAction<String> action = () -> System.getProperty("java.version");
@@ -2305,8 +2285,7 @@ public class WebappClassLoader extends GlassfishUrlClassLoader
 
 
     private void setAccessible(final Field field) {
-        SecurityManager sm = System.getSecurityManager();
-        if (sm == null) {
+        if (SECURITY_MANAGER == null) {
             field.setAccessible(true);
         } else {
             PrivilegedAction<Void> action = () -> {

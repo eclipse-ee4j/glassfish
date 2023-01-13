@@ -21,6 +21,8 @@ package org.glassfish.web.loader;
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LoggerInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
+
+import java.text.MessageFormat;
 import java.util.logging.Logger;
 
 /**
@@ -47,6 +49,10 @@ public class LogFacade {
 
     public static System.Logger getSysLogger(Class<?> clazz) {
         return System.getLogger(clazz.getName(), LOGGER.getResourceBundle());
+    }
+
+    public static String getString(String key, Object... objects) {
+        return MessageFormat.format(LOGGER.getResourceBundle().getString(key), objects);
     }
 
 

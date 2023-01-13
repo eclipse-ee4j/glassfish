@@ -18,9 +18,17 @@
 
 package org.glassfish.web.loader;
 
+import com.sun.appserv.server.util.PreprocessorUtil;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.System.Logger;
 import java.net.URL;
 import java.security.cert.Certificate;
+import java.util.jar.JarEntry;
 import java.util.jar.Manifest;
+
+import static java.lang.System.Logger.Level.WARNING;
 
 /**
  * Resource entry.
@@ -28,6 +36,7 @@ import java.util.jar.Manifest;
  * @author Remy Maucherat 2007
  */
 public class ResourceEntry {
+    private static final Logger LOG = LogFacade.getSysLogger(ResourceEntry.class);
 
 
     /**
@@ -71,5 +80,48 @@ public class ResourceEntry {
      * Certificates (if the resource was loaded from a JAR).
      */
     public Certificate[] certificates;
+
+
+    /**
+     * Reads the resource's binary data from the given input stream.
+     */
+    void readEntryData(String name, InputStream binaryStream, int contentLength, JarEntry jarEntry) {
+        if (binaryStream == null) {
+            return;
+        }
+        byte[] bytes = new byte[contentLength];
+        try {
+            int pos = 0;
+            while (true) {
+                int n = binaryStream.read(bytes, pos, bytes.length - pos);
+                if (n <= 0) {
+                    break;
+                }
+                pos += n;
+            }
+        } catch (Exception e) {
+            LOG.log(WARNING, "Unable to read data for class " + name, e);
+            return;
+        } finally {
+            try {
+                binaryStream.close();
+            } catch(IOException e) {
+                LOG.log(WARNING, "Could not close the stream for " + name, e);
+            }
+        }
+
+        // Preprocess the loaded byte code if bytecode preprocesser is enabled
+        if (PreprocessorUtil.isPreprocessorEnabled()) {
+            binaryContent = PreprocessorUtil.processClass(name, bytes);
+        } else {
+            binaryContent = bytes;
+        }
+
+        // The certificates are only available after the JarEntry
+        // associated input stream has been fully read
+        if (jarEntry != null) {
+            certificates = jarEntry.getCertificates();
+        }
+    }
 }
 

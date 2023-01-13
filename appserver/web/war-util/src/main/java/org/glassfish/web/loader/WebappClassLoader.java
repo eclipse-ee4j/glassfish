@@ -19,7 +19,6 @@
 package org.glassfish.web.loader;
 
 import com.sun.appserv.BytecodePreprocessor;
-import com.sun.appserv.server.util.PreprocessorUtil;
 import com.sun.enterprise.loader.ResourceLocator;
 import com.sun.enterprise.security.integration.DDPermissionsLoader;
 import com.sun.enterprise.security.integration.PermsHolder;
@@ -30,7 +29,6 @@ import jakarta.annotation.PreDestroy;
 import java.beans.Introspector;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FilePermission;
 import java.io.IOException;
 import java.io.InputStream;
@@ -74,7 +72,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Function;
 import java.util.jar.Attributes;
 import java.util.jar.Attributes.Name;
-import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.stream.Collectors;
@@ -208,11 +205,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     private boolean antiJARLocking;
 
     /**
-     * Last time a JAR was accessed.
-     */
-    private long lastJarAccessed;
-
-    /**
      * The list of local repositories, in the order they should be searched
      * for locally loaded classes or resources.
      */
@@ -234,18 +226,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
      * The list of JARs, in the order they should be searched
      * for locally loaded classes or resources.
      */
-    private JarFile[] jarFiles = new JarFile[0];
-
-    /**
-     * Lock to synchronize closing and opening of jar
-     */
-    private final Object jarFilesLock = new Object();
-
-    /**
-     * The list of JARs, in the order they should be searched
-     * for locally loaded classes or resources.
-     */
-    private File[] jarRealFiles = new File[0];
+    private final JarFileManager jarFiles = new JarFileManager();
 
     /**
      * The path which will be monitored for added Jar files.
@@ -312,8 +293,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
      * (i.e., a namespace that may never be overridden by any webapp)
      */
     private Set<String> overridablePackages = Set.of();
-
-    private volatile boolean resourcesExtracted;
 
     /**
      * Should Tomcat attempt to null out any static or final fields from loaded
@@ -608,13 +587,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
             // Ignore
         }
 
-        final JarFile[] newJarFiles = Arrays.copyOf(jarFiles, jarFiles.length + 1);
-        newJarFiles[jarFiles.length] = new JarFile(file);
-        jarFiles = newJarFiles;
-
-        final File[] result4 = Arrays.copyOf(jarRealFiles, jarRealFiles.length + 1);
-        result4[jarRealFiles.length] = file;
-        jarRealFiles = result4;
+        jarFiles.addJarFile(file);
     }
 
 
@@ -627,8 +600,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     @Override
     public void addTransformer(final ClassFileTransformer transformer) {
         checkStatus(LifeCycleStatus.NEW);
-        final WebappClassLoader cl = this;
-        byteCodePreprocessors.add(new WebappBytecodePreprocessor(transformer, cl));
+        byteCodePreprocessors.add(new WebappBytecodePreprocessor(transformer, this));
     }
 
 
@@ -729,10 +701,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
     @Override
     public JarFile[] getJarFiles() {
-        if (!openJARs()) {
-            return null;
-        }
-        return jarFiles;
+        checkStatus(LifeCycleStatus.RUNNING);
+        return jarFiles.getJarFiles();
     }
 
 
@@ -1236,7 +1206,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
             for (File file : files) {
                 urls.add(getURL(file));
             }
-            for (File file : jarRealFiles) {
+            for (File file : jarFiles.getJarRealFiles()) {
                 urls.add(getURL(file));
             }
             for (URL url : super.getURLs()) {
@@ -1289,17 +1259,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
             files[i] = null;
         }
 
-        length = jarFiles.length;
-        for (int i = 0; i < length; i++) {
-            try {
-                if (jarFiles[i] != null) {
-                    jarFiles[i].close();
-                }
-            } catch (IOException e) {
-                // Ignore
-            }
-            jarFiles[i] = null;
-        }
+        jarFiles.closeJarFiles();
 
         notFoundResources.clear();
         resourceEntryCache.clear();
@@ -1307,8 +1267,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         repositories = null;
         repositoryURLs = null;
         files = null;
-        jarFiles = null;
-        jarRealFiles = null;
         jarPath = null;
         jarNames.clear();
         lastModifiedDates = null;
@@ -1328,7 +1286,9 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
 
     public File getExtractedResourcePath(String path) {
-        extractResources();
+        if (antiJARLocking) {
+            jarFiles.extractResources(loaderDir, path);
+        }
         File extractedResource = new File(loaderDir, path);
         return extractedResource.exists() ? extractedResource : null;
     }
@@ -1338,23 +1298,10 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
      * Used to periodically signal to the classloader to release JAR resources.
      */
     public void closeJARs(boolean force) {
-        if (jarFiles.length == 0) {
-            return;
-        }
-        synchronized (jarFilesLock) {
-            // FIXME: Voodoo magic
-            if (force || (System.currentTimeMillis() - lastJarAccessed > 90000)) {
-                for (int i = 0; i < jarFiles.length; i++) {
-                    try {
-                        if (jarFiles[i] != null) {
-                            jarFiles[i].close();
-                            jarFiles[i] = null;
-                        }
-                    } catch (IOException e) {
-                        LOG.log(DEBUG, "Failed to close JAR", e);
-                    }
-                }
-            }
+        if (force) {
+            jarFiles.closeJarFiles();
+        } else {
+            jarFiles.closeJarFilesIfNotUsed();
         }
     }
 
@@ -1760,38 +1707,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
 
     /**
-     * Used to periodically signal to the classloader to release JAR resources.
-     */
-    private boolean openJARs() {
-        if (status != LifeCycleStatus.RUNNING || jarFiles.length == 0) {
-            return true;
-        }
-        synchronized (jarFilesLock) {
-            LOG.log(DEBUG, "openJARs()");
-            lastJarAccessed = System.currentTimeMillis();
-            if (jarFiles[0] == null) {
-                for (int i = 0; i < jarFiles.length; i++) {
-                    try {
-                        jarFiles[i] = new JarFile(jarRealFiles[i]);
-                    } catch (IOException e) {
-                        LOG.log(DEBUG, "Failed to open JAR", e);
-                        for (int j = 0; j < i; j++) {
-                            try {
-                                jarFiles[j].close();
-                            } catch (Throwable t) {
-                                // Ignore
-                            }
-                        }
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-    }
-
-
-    /**
      * Find specified class in local repositories.
      *
      * @return the loaded class, never null
@@ -1897,9 +1812,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
         entry = findResourceInternalFromRepositories(name, path);
         if (entry == null) {
-            synchronized (jarFilesLock) {
-                entry = findResourceInternalFromJars(name, path);
-            }
+            entry = jarFiles.findResource(name, path, loaderDir, antiJARLocking);
         }
 
         if (entry == null) {
@@ -1909,8 +1822,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
         // Add the entry in the local resource repository
         // Ensures that all the threads which may be in a race to load
-        // a particular class all end up with the same ResourceEntry
-        // instance
+        // a particular class all end up with the same ResourceEntry instance
         ResourceEntry alreadyPresentEntry = resourceEntryCache.putIfAbsent(name, entry);
         return alreadyPresentEntry == null ? entry : alreadyPresentEntry;
     }
@@ -1968,17 +1880,15 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
                     // Register the full path for modification checking
                     // Note: Only syncing on a 'constant' object is needed
                     synchronized (ALL_PERMISSION) {
-
-                        int j;
                         long[] result2 = new long[lastModifiedDates.length + 1];
-                        for (j = 0; j < lastModifiedDates.length; j++) {
+                        for (int j = 0; j < lastModifiedDates.length; j++) {
                             result2[j] = lastModifiedDates[j];
                         }
                         result2[lastModifiedDates.length] = entry.lastModified;
                         lastModifiedDates = result2;
 
                         String[] result = new String[paths.length + 1];
-                        for (j = 0; j < paths.length; j++) {
+                        for (int j = 0; j < paths.length; j++) {
                             result[j] = paths[j];
                         }
                         result[paths.length] = fullPath;
@@ -1991,7 +1901,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         }
 
         if (entry != null) {
-            readEntryData(entry, name, binaryStream, contentLength, null);
+            entry.readEntryData(name, binaryStream, contentLength, null);
         }
 
         return entry;
@@ -2000,146 +1910,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
     private ResourceAttributes getResourceAttributes(String fullPath) throws NamingException {
         return (ResourceAttributes) resources.getAttributes(fullPath);
-    }
-
-
-    /**
-     * Attempts to load the requested resource from this classloader's
-     * JAR files.
-     *
-     * @return The requested resource, or null if not found
-     */
-    private ResourceEntry findResourceInternalFromJars(String name, String path) {
-        LOG.log(TRACE, "findResourceInternalFromJars(name={0}, path={1})", name, path);
-
-        if (!openJARs()) {
-            return null;
-        }
-
-        final int jarFilesLength = jarFiles.length;
-        ResourceEntry entry = null;
-        InputStream binaryStream = null;
-        int contentLength = -1;
-        JarEntry jarEntry = null;
-        for (int i = 0; entry == null && i < jarFilesLength; i++) {
-            jarEntry = jarFiles[i].getJarEntry(path);
-            if (jarEntry == null) {
-                continue;
-            }
-            entry = new ResourceEntry();
-            try {
-                entry.codeBase = getURL(jarRealFiles[i]);
-                String uri = getURL(jarRealFiles[i]).toString();
-                entry.source = new URL("jar:" + uri + "!/" + path);
-                entry.lastModified = jarRealFiles[i].lastModified();
-            } catch (MalformedURLException e) {
-                return null;
-            }
-
-            contentLength = (int) jarEntry.getSize();
-            try {
-                entry.manifest = jarFiles[i].getManifest();
-                binaryStream = jarFiles[i].getInputStream(jarEntry);
-            } catch (IOException e) {
-                return null;
-            }
-
-            // Extract resources contained in JAR to the workdir
-            if (antiJARLocking && !path.endsWith(".class")) {
-                File resourceFile = new File(loaderDir, jarEntry.getName());
-                if (!resourceFile.exists()) {
-                    extractResources();
-                }
-            }
-        }
-
-        if (entry != null) {
-            readEntryData(entry, name, binaryStream, contentLength, jarEntry);
-        }
-        return entry;
-    }
-
-
-    private synchronized void extractResources() {
-        if (!antiJARLocking || resourcesExtracted) {
-            return;
-        }
-        for (int i = jarFiles.length - 1; i >= 0; i--) {
-            extractResource(jarFiles[i]);
-        }
-        resourcesExtracted = true;
-    }
-
-
-    private void extractResource(JarFile jarFile) {
-        LOG.log(DEBUG, "extractResource(jarFile={0})", jarFile);
-        Enumeration<JarEntry> entries = jarFile.entries();
-        while (entries.hasMoreElements()) {
-            JarEntry jarEntry2 = entries.nextElement();
-            if (!jarEntry2.isDirectory() && !jarEntry2.getName().endsWith(".class")) {
-                File resourceFile = new File(loaderDir, jarEntry2.getName());
-                try {
-                    if (!resourceFile.getCanonicalPath().startsWith(canonicalLoaderDir)) {
-                        throw new IllegalArgumentException(getString(LogFacade.ILLEGAL_JAR_PATH, jarEntry2.getName()));
-                    }
-                } catch (IOException ioe) {
-                    throw new IllegalArgumentException(
-                        getString(LogFacade.VALIDATION_ERROR_JAR_PATH, jarEntry2.getName()), ioe);
-                }
-                if (!FileUtils.mkdirsMaybe(resourceFile.getParentFile())) {
-                    LOG.log(WARNING, LogFacade.UNABLE_TO_CREATE, resourceFile.getParentFile());
-                }
-
-                try (InputStream is = jarFile.getInputStream(jarEntry2);
-                    FileOutputStream os = new FileOutputStream(resourceFile)) {
-                    FileUtils.copy(is, os, Long.MAX_VALUE);
-                } catch (IOException e) {
-                    // Ignore
-                }
-            }
-        }
-    }
-
-
-    /**
-     * Reads the resource's binary data from the given input stream.
-     */
-    private void readEntryData(ResourceEntry entry, String name, InputStream binaryStream, int contentLength, JarEntry jarEntry) {
-        if (binaryStream == null) {
-            return;
-        }
-        byte[] binaryContent = new byte[contentLength];
-        try {
-            int pos = 0;
-            while (true) {
-                int n = binaryStream.read(binaryContent, pos, binaryContent.length - pos);
-                if (n <= 0) {
-                    break;
-                }
-                pos += n;
-            }
-        } catch (Exception e) {
-            LOG.log(WARNING, getString(LogFacade.READ_CLASS_ERROR, name), e);
-            return;
-        } finally {
-            try {
-                binaryStream.close();
-            } catch(IOException e) {
-            }
-        }
-
-        // Preprocess the loaded byte code if bytecode preprocesser is enabled
-        if (PreprocessorUtil.isPreprocessorEnabled()) {
-            binaryContent = PreprocessorUtil.processClass(name, binaryContent);
-        }
-
-        entry.binaryContent = binaryContent;
-
-        // The certificates are only available after the JarEntry
-        // associated input stream has been fully read
-        if (jarEntry != null) {
-            entry.certificates = jarEntry.getCertificates();
-        }
     }
 
 
@@ -2348,6 +2118,10 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
 
     private void checkStatus(LifeCycleStatus... expected) {
+        // FIXME The CL is used with unfinished configuration, so some methods allow two states.
+        // Final refactored state should probably be some prepared data object unusable as CL,
+        // but which could be set via constructor. The CL would be just usable or closed (it is closeable).
+        // That will need more work and more time.
         for (LifeCycleStatus expectedStatus : expected) {
             if (this.status == expectedStatus) {
                 return;

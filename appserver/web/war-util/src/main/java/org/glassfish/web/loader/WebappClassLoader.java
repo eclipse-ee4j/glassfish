@@ -211,11 +211,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     private String[] repositories = new String[0];
 
     /**
-     * Repositories URLs, used to cache the result of getURLs.
-     */
-    private URL[] repositoryURLs;
-
-    /**
      * Repositories translated as path in the work directory (for WaSP
      * originally), but which is used to generate fake URLs should getURLs be
      * called.
@@ -313,6 +308,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
      */
     private String contextName = "unknown";
 
+    /** Repositories URLs, used to cache the result of getURLs. */
+    private List<URL> repositoryURLs;
 
     /**
      * Construct a new ClassLoader with the given parent ClassLoader,
@@ -1199,7 +1196,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     public synchronized URL[] getURLs() {
         checkStatus(LifeCycleStatus.RUNNING);
         if (repositoryURLs != null) {
-            return repositoryURLs;
+            return repositoryURLs.toArray(URL[]::new);
         }
         try {
             final ArrayList<URL> urls = new ArrayList<>();
@@ -1212,12 +1209,12 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
             for (URL url : super.getURLs()) {
                 urls.add(url);
             }
-            repositoryURLs = urls.stream().distinct().toArray(URL[]::new);
+            repositoryURLs = urls.stream().distinct().collect(Collectors.toList());
         } catch (MalformedURLException e) {
-            LOG.log(WARNING, "getURLs failed, I am returning an empty array.", e);
-            repositoryURLs = new URL[0];
+            LOG.log(WARNING, "getURLs failed, I am using an empty array.", e);
+            repositoryURLs = List.of();
         }
-        return repositoryURLs;
+        return repositoryURLs.toArray(URL[]::new);
     }
 
 

@@ -204,6 +204,9 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
      */
     private boolean delegate = DELEGATE_DEFAULT;
 
+    /** Use anti JAR locking code, which does URL rerouting when accessing resources. */
+    private boolean antiJARLocking;
+
     /**
      * Last time a JAR was accessed.
      */
@@ -331,9 +334,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
      */
     private String contextName = "unknown";
 
-    /** Use anti JAR locking code, which does URL rerouting when accessing resources. */
-    private boolean antiJARLocking;
-
 
     /**
      * Construct a new ClassLoader with the given parent ClassLoader,
@@ -350,10 +350,23 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
 
     /**
+     * Set the "delegate first" flag for this class loader.
+     *
+     * @param delegate The new "delegate first" flag
+     */
+    public void setDelegate(boolean delegate) {
+        checkStatus(LifeCycleStatus.NEW, LifeCycleStatus.RUNNING);
+        LOG.log(DEBUG, "setDelegate(delegate={0})", delegate);
+        this.delegate = delegate;
+    }
+
+
+    /**
      * Sets the given package names that may always be overriden, regardless of whether they belong
      * to a protected namespace
      */
-    public void setOverridablePackages(Set<String> packageNames){
+    public void setOverridablePackages(Set<String> packageNames) {
+        checkStatus(LifeCycleStatus.NEW, LifeCycleStatus.RUNNING);
         overridablePackages = packageNames;
     }
 
@@ -362,7 +375,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
      * Set associated resources.
      */
     public void setResources(DirContext resources) {
-        checkStatus(LifeCycleStatus.NEW);
+        LOG.log(DEBUG, "setResources(resources={0})", resources);
+        checkStatus(LifeCycleStatus.NEW, LifeCycleStatus.RUNNING);
         this.resources = resources;
         final DirContext dirCtx;
         if (resources instanceof ProxyDirContext) {
@@ -379,31 +393,13 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
 
     /**
-     * Set the "delegate first" flag for this class loader.
+     * Sets the anti JAR locking flag, which does URL rerouting when accessing resources.
      *
-     * @param delegate The new "delegate first" flag
+     * @param enable The new "anti JAR locking" flag
      */
-    public void setDelegate(boolean delegate) {
+    public void setAntiJARLocking(boolean enable) {
         checkStatus(LifeCycleStatus.NEW);
-        LOG.log(DEBUG, "setDelegate(delegate={0})", delegate);
-        this.delegate = delegate;
-    }
-
-
-    /**
-     * @param antiJARLocking The antiJARLocking to set.
-     */
-    public void setAntiJARLocking(boolean antiJARLocking) {
-        this.antiJARLocking = antiJARLocking;
-    }
-
-
-    @Override
-    public JarFile[] getJarFiles() {
-        if (!openJARs()) {
-            return null;
-        }
-        return jarFiles;
+        this.antiJARLocking = enable;
     }
 
 
@@ -414,6 +410,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
      * @param url URL for a file or directory on local system
      */
     public void addPermission(URL url) {
+        checkStatus(LifeCycleStatus.NEW, LifeCycleStatus.RUNNING);
         if (url != null) {
             addPermission(url.toString());
         }
@@ -427,6 +424,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
      * @param path file directory path
      */
     public void addPermission(final String path) {
+        checkStatus(LifeCycleStatus.NEW, LifeCycleStatus.RUNNING);
         if (path == null || SECURITY_MANAGER == null) {
             return;
         }
@@ -453,6 +451,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
      * @param permission permission to add
      */
     public void addPermission(Permission permission) {
+        checkStatus(LifeCycleStatus.NEW, LifeCycleStatus.RUNNING);
         if (SECURITY_MANAGER != null && permission != null) {
             SECURITY_MANAGER.checkSecurityAccess(DDPermissionsLoader.SET_EE_POLICY);
             permissionList.add(permission);
@@ -462,6 +461,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
     @Override
     public void addDeclaredPermissions(PermissionCollection declaredPc) throws SecurityException {
+        checkStatus(LifeCycleStatus.NEW, LifeCycleStatus.RUNNING);
         if (SECURITY_MANAGER != null) {
             SECURITY_MANAGER.checkSecurityAccess(DDPermissionsLoader.SET_EE_POLICY);
             permissionsHolder.setDeclaredPermissions(declaredPc);
@@ -470,6 +470,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
     @Override
     public void addEEPermissions(PermissionCollection eePc) throws SecurityException {
+        checkStatus(LifeCycleStatus.NEW, LifeCycleStatus.RUNNING);
         if (SECURITY_MANAGER != null) {
             SECURITY_MANAGER.checkSecurityAccess(DDPermissionsLoader.SET_EE_POLICY);
             permissionsHolder.setEEPermissions(eePc);
@@ -481,6 +482,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
      * Change the Jar path.
      */
     public void setJarPath(String jarPath) {
+        checkStatus(LifeCycleStatus.NEW, LifeCycleStatus.RUNNING);
         this.jarPath = jarPath;
     }
 
@@ -489,6 +491,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
      * Change the work directory.
      */
     public void setWorkDir(File workDir) {
+        checkStatus(LifeCycleStatus.NEW);
         this.loaderDir = new File(workDir, "loader_" + this.hashCode());
         try {
             canonicalLoaderDir = this.loaderDir.getCanonicalPath();
@@ -502,6 +505,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
 
     public void setUseMyFaces(boolean useMyFaces) {
+        checkStatus(LifeCycleStatus.NEW);
         this.useMyFaces = useMyFaces;
     }
 
@@ -512,6 +516,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
      * @param clearReferencesStatic The new flag value
      */
     public void setClearReferencesStatic(boolean clearReferencesStatic) {
+        checkStatus(LifeCycleStatus.NEW);
         this.clearReferencesStatic = clearReferencesStatic;
     }
 
@@ -527,6 +532,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     @Override
     public void addRepository(String repository) {
         LOG.log(DEBUG, "addRepository(repository={0})", repository);
+        checkStatus(LifeCycleStatus.NEW, LifeCycleStatus.RUNNING);
         // Ignore any of the standard repositories, as they are set up using
         // either addJar or addRepository
         if (repository.startsWith("/WEB-INF/lib") || repository.startsWith("/WEB-INF/classes")) {
@@ -555,6 +561,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
      */
     public void addRepository(String repository, File file) {
         LOG.log(DEBUG, "addRepository(repository={0}, file={1})", repository, file);
+        checkStatus(LifeCycleStatus.NEW);
         if (repository == null) {
             return;
         }
@@ -572,6 +579,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
     public void addJar(String filePath, File file) throws IOException {
         LOG.log(DEBUG, "addJar(filePath={0}, file={1})", filePath, file);
+        checkStatus(LifeCycleStatus.NEW);
         if (filePath == null || file == null) {
             return;
         }
@@ -588,7 +596,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
         try {
             // Register the JAR for tracking
-            final long lastModified = ((ResourceAttributes) resources.getAttributes(filePath)).getLastModified();
+            final long lastModified = getResourceAttributes(filePath).getLastModified();
             final String[] newPaths = Arrays.copyOf(paths, paths.length + 1);
             newPaths[paths.length] = filePath;
             paths = newPaths;
@@ -611,11 +619,36 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
 
     /**
+     * Add a new ClassFileTransformer to this class loader. This transfomer should be called for
+     * each class loading event.
+     *
+     * @param transformer new class file transformer to do byte code enhancement.
+     */
+    @Override
+    public void addTransformer(final ClassFileTransformer transformer) {
+        checkStatus(LifeCycleStatus.NEW);
+        final WebappClassLoader cl = this;
+        byteCodePreprocessors.add(new WebappBytecodePreprocessor(transformer, cl));
+    }
+
+
+    /**
+     * Start the class loader.
+     */
+    public void start() {
+        LOG.log(DEBUG, "start()");
+        checkStatus(LifeCycleStatus.NEW);
+        status = LifeCycleStatus.RUNNING;
+    }
+
+
+    /**
      * Have one or more classes or resources been modified so that a reload
      * is appropriate?
      */
     @Override
     public boolean modified() {
+        checkStatus(LifeCycleStatus.RUNNING);
         // Checking for modified loaded resources
         int length = paths.length;
 
@@ -630,7 +663,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         for (int i = 0; i < length; i++) {
             String path = paths[i];
             try {
-                long lastModified = ((ResourceAttributes) resources.getAttributes(path)).getLastModified();
+                long lastModified = getResourceAttributes(path).getLastModified();
                 long oldLastModified = lastModifiedDates[i];
                 if (lastModified != oldLastModified) {
                     if (LOG.isLoggable(DEBUG)) {
@@ -694,16 +727,12 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     }
 
 
-    /**
-     * Add a new ClassFileTransformer to this class loader. This transfomer should be called for
-     * each class loading event.
-     *
-     * @param transformer new class file transformer to do byte code enhancement.
-     */
     @Override
-    public void addTransformer(final ClassFileTransformer transformer) {
-        final WebappClassLoader cl = this;
-        byteCodePreprocessors.add(new WebappBytecodePreprocessor(transformer, cl));
+    public JarFile[] getJarFiles() {
+        if (!openJARs()) {
+            return null;
+        }
+        return jarFiles;
     }
 
 
@@ -725,6 +754,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         sb.append(super.toString());
         sb.append("[delegate=").append(delegate);
         sb.append(", context=").append(contextName);
+        sb.append(", status=").append(status);
         if (repositories != null) {
             sb.append(", repositories={");
             for (int i = 0; i < repositories.length; i++) {
@@ -752,6 +782,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
         LOG.log(DEBUG, "findClass(name={0})", name);
+        checkStatus(LifeCycleStatus.RUNNING);
 
         // (1) Permission to define this class when using a SecurityManager
         if (PACKAGE_DEFINITION_ENABLED) {
@@ -842,6 +873,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     @Override
     public URL findResource(String name) {
         LOG.log(DEBUG, "findResource(name={0})", name);
+        checkStatus(LifeCycleStatus.RUNNING);
         if (".".equals(name)) {
             name = "";
         }
@@ -874,6 +906,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     @Override
     public Enumeration<URL> findResources(String name) throws IOException {
         LOG.log(DEBUG, "findResources(name={0})", name);
+        checkStatus(LifeCycleStatus.RUNNING);
         List<URL> result = new ArrayList<>();
         if (repositories != null) {
             int repositoriesLength = repositories.length;
@@ -926,11 +959,9 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     @Override
     public URL getResource(String name) {
         LOG.log(DEBUG, "getResource(name={0})", name);
-
-        /*
-         * (1) Delegate to parent if requested, or if the requested resource
-         * belongs to one of the packages that are part of the Jakarta EE platform
-         */
+        checkStatus(LifeCycleStatus.RUNNING);
+        // (1) Delegate to parent if requested, or if the requested resource
+        // belongs to one of the packages that are part of the Jakarta EE platform
         if (isDelegateFirstResource(name)) {
             URL url = getDelegateClassLoader().getResource(name);
             if (url != null) {
@@ -987,7 +1018,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     @Override
     public InputStream getResourceAsStream(String name) {
         LOG.log(DEBUG, "getResourceAsStream(name={0})", name);
-
+        checkStatus(LifeCycleStatus.RUNNING);
         // (0) Check for a cached copy of this resource
         InputStream stream = findLoadedResource(name);
         if (stream != null) {
@@ -1035,6 +1066,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
     @Override
     public Enumeration<URL> getResources(String name) throws IOException {
+        checkStatus(LifeCycleStatus.RUNNING);
         final ClassLoader loader = getDelegateClassLoader();
         final ResourceLocator locator = new ResourceLocator(this, loader, isDelegateFirstResource(name));
         return locator.getResources(name);
@@ -1078,7 +1110,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
             return null;
         }
         LOG.log(DEBUG, "loadClass(name={0}, resolve={1})", name, resolve);
-
         checkStatus(LifeCycleStatus.RUNNING);
 
         synchronized (getClassLoadingLock(name)) {
@@ -1163,6 +1194,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     @Override
     protected PermissionCollection getPermissions(CodeSource codeSource) {
         LOG.log(TRACE, "getPermissions(codeSource={0})", codeSource);
+        checkStatus(LifeCycleStatus.RUNNING);
         String codeUrl = codeSource.getLocation().toString();
         PermissionCollection pc = loaderPC.get(codeUrl);
         if (pc != null) {
@@ -1195,6 +1227,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
     @Override
     public synchronized URL[] getURLs() {
+        checkStatus(LifeCycleStatus.RUNNING);
         if (repositoryURLs != null) {
             return repositoryURLs;
         }
@@ -1215,14 +1248,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
             repositoryURLs = new URL[0];
         }
         return repositoryURLs;
-    }
-
-
-    /**
-     * Start the class loader.
-     */
-    public void start() {
-        status = LifeCycleStatus.RUNNING;
     }
 
 
@@ -1929,7 +1954,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
                     entry = AccessController.doPrivileged(dp);
                 }
 
-                ResourceAttributes attributes = (ResourceAttributes) resources.getAttributes(fullPath);
+                ResourceAttributes attributes = getResourceAttributes(fullPath);
                 contentLength = (int) attributes.getContentLength();
                 entry.lastModified = attributes.getLastModified();
 
@@ -1970,6 +1995,11 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         }
 
         return entry;
+    }
+
+
+    private ResourceAttributes getResourceAttributes(String fullPath) throws NamingException {
+        return (ResourceAttributes) resources.getAttributes(fullPath);
     }
 
 
@@ -2317,9 +2347,11 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     }
 
 
-    private void checkStatus(LifeCycleStatus expected) {
-        if (this.status == expected) {
-            return;
+    private void checkStatus(LifeCycleStatus... expected) {
+        for (LifeCycleStatus expectedStatus : expected) {
+            if (this.status == expectedStatus) {
+                return;
+            }
         }
         throw new IllegalStateException("ClassLoader is not ready: " + this);
     }

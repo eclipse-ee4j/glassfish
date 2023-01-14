@@ -148,10 +148,14 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
     /** First try parent classloader, then own resources. */
     public static final boolean DELEGATE_DEFAULT = true;
+
     private static final Logger LOG = LogFacade.getSysLogger(WebappClassLoader.class);
     private static final ResourceBundle rb = LogFacade.getLogger().getResourceBundle();
 
     private static final Function<String, String> PACKAGE_TO_PATH = pkg -> pkg.replace('.', '/');
+
+    /** The path which will be monitored for added Jar files. */
+    private static final String WEB_INF_LIB = "/WEB-INF/lib";
 
     /**
      * Set of package names which are not allowed to be loaded from a webapp
@@ -212,11 +216,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
      * for locally loaded classes or resources.
      */
     private final JarFileManager jarFiles = new JarFileManager();
-
-    /**
-     * The path which will be monitored for added Jar files.
-     */
-    private String jarPath;
 
     /**
      * The list of JARs, in the order they should be searched
@@ -440,11 +439,10 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
 
     /**
-     * Change the Jar path.
+     * @return the Jar path.
      */
-    public void setJarPath(String jarPath) {
-        checkStatus(LifeCycleStatus.NEW, LifeCycleStatus.RUNNING);
-        this.jarPath = jarPath;
+    public String getLibJarPath() {
+        return WEB_INF_LIB;
     }
 
 
@@ -496,7 +494,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         checkStatus(LifeCycleStatus.NEW, LifeCycleStatus.RUNNING);
         // Ignore any of the standard repositories, as they are set up using
         // either addJar or addRepository
-        if (repository.startsWith("/WEB-INF/lib") || repository.startsWith("/WEB-INF/classes")) {
+        if (repository.startsWith(WEB_INF_LIB) || repository.startsWith("/WEB-INF/classes")) {
             return;
         }
 
@@ -534,9 +532,9 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
         super.addURL(getURL(file));
 
-        if (jarPath != null && filePath.startsWith(jarPath)) {
-            String jarName = filePath.substring(jarPath.length());
-            while (jarName.startsWith("/")) {
+        if (filePath.startsWith(WEB_INF_LIB)) {
+            String jarName = filePath.substring(WEB_INF_LIB.length());
+            while (jarName.charAt(0) == '/') {
                 jarName = jarName.substring(1);
             }
             jarNames.add(jarName);
@@ -620,14 +618,9 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
             }
         }
 
-        // Check if JARs have been added or removed
-        if (this.jarPath == null) {
-            return false;
-        }
-
         try {
-            NamingEnumeration<Binding> bindings = jndiResources.listBindings(this.jarPath);
             length = jarNames.size();
+            NamingEnumeration<Binding> bindings = jndiResources.listBindings(WEB_INF_LIB);
             int i = 0;
             while (bindings.hasMoreElements() && i < length) {
                 NameClassPair ncPair = bindings.nextElement();
@@ -660,7 +653,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
                 return true;
             }
         } catch (NamingException | ClassCastException e) {
-            LOG.log(ERROR, LogFacade.FAILED_TRACKING_MODIFICATIONS, this.jarPath, e.getMessage());
+            LOG.log(ERROR, LogFacade.FAILED_TRACKING_MODIFICATIONS, WEB_INF_LIB, e.getMessage());
         }
 
         // No classes have been modified
@@ -1216,7 +1209,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         jndiResources = null;
         repositoryManager.close();
         repositoryURLs = null;
-        jarPath = null;
         jarNames.clear();
         lastModifiedDates = null;
         paths = null;

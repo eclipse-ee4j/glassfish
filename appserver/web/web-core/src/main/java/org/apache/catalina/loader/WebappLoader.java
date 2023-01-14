@@ -982,11 +982,7 @@ public class WebappLoader
         }
 
         // Setting up the JAR repository (/WEB-INF/lib), if it exists
-
-        String libPath = "/WEB-INF/lib";
-
-        classLoader.setJarPath(libPath);
-
+        String libPath = classLoader.getLibJarPath();
         DirContext libDir = null;
         // Looking up directory /WEB-INF/lib in the context
         try {
@@ -994,7 +990,7 @@ public class WebappLoader
             if (object instanceof DirContext) {
                 libDir = (DirContext) object;
             }
-        } catch(NamingException e) {
+        } catch (NamingException e) {
             // Silent catch: it's valid that no /WEB-INF/lib collection
             // exists
         }

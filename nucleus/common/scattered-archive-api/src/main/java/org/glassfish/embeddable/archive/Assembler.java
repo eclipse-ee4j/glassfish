@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation. All rights reserved.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -60,10 +62,17 @@ class Assembler {
         return assembleEAR(archive.name, archive.archives, archive.metadatas);
     }
 
+    static File createArchiveFile(String name, String extension) throws IOException {
+        File tmpDir = Files.createTempDirectory("gftmp").toFile();
+        tmpDir.deleteOnExit();
+        File archiveFile = new File(tmpDir, name + extension);
+        archiveFile.deleteOnExit();
+        return archiveFile;
+    }
+
     private URI assembleEAR(String name, Map<String, File> archives,
                             Map<String, File> metadatas) throws IOException {
-        File ear = new File(System.getProperty("java.io.tmpdir"), name + ".ear");
-        ear.deleteOnExit();
+        File ear = createArchiveFile(name, ".ear");
         JarOutputStream jos = new JarOutputStream(new FileOutputStream(ear));
         for (Map.Entry<String, File> me : metadatas.entrySet()) {
             tranferFile(me.getValue(), jos, me.getKey(), false);
@@ -83,8 +92,7 @@ class Assembler {
 
     URI assembleWAR(String name, File rootDirectory, List<File> classpaths,
                     Map<String, File> metadatas) throws IOException {
-        File archive = new File(System.getProperty("java.io.tmpdir"), name + ".war");
-        archive.deleteOnExit();
+        File archive = createArchiveFile(name, ".war");
 
         JarOutputStream jos = new JarOutputStream(new FileOutputStream(archive));
 
@@ -105,8 +113,7 @@ class Assembler {
 
     URI assembleJAR(String name, File rootDirectory, List<File> classpaths,
                     Map<String, File> metadatas) throws IOException {
-        File archive = new File(System.getProperty("java.io.tmpdir"), name + ".jar");
-        archive.deleteOnExit();
+        File archive = createArchiveFile(name, ".jar");
         JarOutputStream jos = new JarOutputStream(new FileOutputStream(archive));
         transferDir(rootDirectory, jos, "");
         for (Map.Entry<String, File> me : metadatas.entrySet()) {
@@ -125,8 +132,7 @@ class Assembler {
 
     URI assembleRAR(String name, File rootDirectory, List<File> classpaths,
                     Map<String, File> metadatas) throws IOException {
-        File rar = new File(System.getProperty("java.io.tmpdir"), name + ".rar");
-        rar.deleteOnExit();
+        File rar = createArchiveFile(name, ".rar");
         JarOutputStream jos = new JarOutputStream(new FileOutputStream(rar));
         transferDir(rootDirectory, jos, "");
         for (Map.Entry<String, File> me : metadatas.entrySet()) {

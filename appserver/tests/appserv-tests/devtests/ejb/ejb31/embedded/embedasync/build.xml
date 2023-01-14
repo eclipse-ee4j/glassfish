@@ -46,14 +46,15 @@
     <target name="build" depends="compile">
         <mkdir dir="${assemble.dir}"/>
         <mkdir dir="${build.classes.dir}/META-INF"/>
-	<copy file="descriptor/beans.xml" todir="${build.classes.dir}/META-INF"/>
-	<!--
-        <jar jarfile="${assemble.dir}/${appname}-ejb.jar" 
-             basedir="${build.classes.dir}" 
+        <copy file="descriptor/beans.xml" todir="${build.classes.dir}/META-INF"/>
+        <!--
+        <jar jarfile="${assemble.dir}/${appname}-ejb.jar"
+             basedir="${build.classes.dir}"
              update="true"
              includes ="**/*.class">
         </jar>
 -->
+        <copy file="descriptor/ejb-jar.xml" todir="${build.classes.dir}/META-INF"/>
         <antcall target="compile-common">
             <param name="src" value="client"/>
         </antcall>

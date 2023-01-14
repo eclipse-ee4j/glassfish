@@ -25,8 +25,9 @@ import java.io.InputStream;
 import java.lang.System.Logger;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -45,80 +46,35 @@ class JarFileManager {
      * The list of JARs, in the order they should be searched
      * for locally loaded classes or resources.
      */
-    private JarFile[] jarFiles = new JarFile[0];
-    /**
-     * The list of JARs, in the order they should be searched
-     * for locally loaded classes or resources.
-     */
-    private File[] jarRealFiles = new File[0];
+    private final List<JarResource> files = new ArrayList<>();
 
     private volatile boolean resourcesExtracted;
 
     /** Last time a JAR was accessed. */
     private long lastJarAccessed;
 
-    synchronized void addJarFile(File file) throws IOException {
-        jarFiles = new JarFile[jarFiles.length + 1];
-        final File[] result4 = Arrays.copyOf(jarRealFiles, jarRealFiles.length + 1);
-        result4[jarRealFiles.length] = file;
-        jarRealFiles = result4;
+    synchronized void addJarFile(File file) {
+        files.add(new JarResource(file));
     }
 
 
     synchronized JarFile[] getJarFiles() {
-        // TODO: Don't provide private field, but rather a copy
-        return openJARs() ? jarFiles : null;
+        return openJARs() ? files.stream().map(r -> r.jarFile).toArray(JarFile[]::new) : null;
     }
 
 
     synchronized File[] getJarRealFiles() {
-        // TODO: Don't provide private field, but rather a copy
-        return jarRealFiles;
-    }
-
-
-    synchronized void closeJarFiles() {
-        int length = jarFiles.length;
-        for (int i = 0; i < length; i++) {
-            final JarFile jarFile = jarFiles[i];
-            if (jarFile == null) {
-                continue;
-            }
-            jarFiles[i] = null;
-            try {
-                jarFile.close();
-            } catch (IOException e) {
-                LOG.log(WARNING, "Could not close the jarFile " + jarFile, e);
-            }
-        }
-    }
-
-
-    synchronized void closeJarFilesIfNotUsed() {
-        if (jarFiles.length == 0) {
-            return;
-        }
-        if (System.currentTimeMillis() - lastJarAccessed > 90000) {
-            for (int i = 0; i < jarFiles.length; i++) {
-                try {
-                    if (jarFiles[i] != null) {
-                        jarFiles[i].close();
-                        jarFiles[i] = null;
-                    }
-                } catch (IOException e) {
-                    LOG.log(DEBUG, "Failed to close JAR", e);
-                }
-            }
-        }
+        return files.stream().map(r -> r.file).toArray(File[]::new);
     }
 
 
     synchronized void extractResources(File loaderDir, String canonicalLoaderDir) {
+        LOG.log(DEBUG, "extractResources(loaderDir={0}, canonicalLoaderDir={1})", loaderDir, canonicalLoaderDir);
         if (resourcesExtracted) {
             return;
         }
-        for (int i = jarFiles.length - 1; i >= 0; i--) {
-            extractResource(jarFiles[i], loaderDir, canonicalLoaderDir);
+        for (JarResource jarResource : files) {
+            extractResource(jarResource.jarFile, loaderDir, canonicalLoaderDir);
         }
         resourcesExtracted = true;
     }
@@ -136,16 +92,13 @@ class JarFileManager {
         if (!openJARs()) {
             return null;
         }
-        final int jarFilesLength = jarFiles.length;
-        InputStream binaryStream = null;
-        int contentLength = -1;
-        for (int i = 0; i < jarFilesLength; i++) {
-            final JarFile jarFile = jarFiles[i];
+        for (JarResource jarResource : files) {
+            final JarFile jarFile = jarResource.jarFile;
             final JarEntry jarEntry = jarFile.getJarEntry(path);
             if (jarEntry == null) {
                 continue;
             }
-            final File file = jarRealFiles[i];
+            final File file = jarResource.file;
             final ResourceEntry entry = new ResourceEntry();
             entry.codeBase = toURL(file);
             if (entry.codeBase == null) {
@@ -158,7 +111,8 @@ class JarFileManager {
                 return null;
             }
             entry.lastModified = file.lastModified();
-            contentLength = (int) jarEntry.getSize();
+            int contentLength = (int) jarEntry.getSize();
+            InputStream binaryStream;
             try {
                 entry.manifest = jarFile.getManifest();
                 binaryStream = jarFile.getInputStream(jarEntry);
@@ -183,21 +137,44 @@ class JarFileManager {
     }
 
 
+    synchronized void closeJarFiles() {
+        for (JarResource jarResource : files) {
+            if (jarResource.jarFile == null) {
+                continue;
+            }
+            final JarFile toClose = jarResource.jarFile;
+            jarResource.jarFile = null;
+            closeJarFile(toClose);
+        }
+    }
+
+
+    synchronized void closeJarFilesIfNotUsed() {
+        if (System.currentTimeMillis() - lastJarAccessed <= 90_000) {
+            return;
+        }
+        for (JarResource jarResource : files) {
+            if (jarResource.jarFile != null) {
+                final JarFile toClose = jarResource.jarFile;
+                jarResource.jarFile = null;
+                closeJarFile(toClose);
+            }
+        }
+    }
+
+
     /**
      * @return true if open
      */
     private boolean openJARs() {
         LOG.log(DEBUG, "openJARs()");
         lastJarAccessed = System.currentTimeMillis();
-        if (jarFiles.length == 0) {
-            return true;
-        }
-        for (int i = 0; i < jarFiles.length; i++) {
-            if (jarFiles[i] != null) {
+        for (JarResource jarResource : files) {
+            if (jarResource.jarFile != null) {
                 continue;
             }
             try {
-                jarFiles[i] = new JarFile(jarRealFiles[i]);
+                jarResource.jarFile = new JarFile(jarResource.file);
             } catch (IOException e) {
                 LOG.log(DEBUG, "Failed to open JAR", e);
                 closeJarFiles();
@@ -238,12 +215,31 @@ class JarFileManager {
     }
 
 
+    private static void closeJarFile(final JarFile toClose) {
+        try {
+            toClose.close();
+        } catch (IOException e) {
+            LOG.log(WARNING, "Could not close the jarFile " + toClose, e);
+        }
+    }
+
+
     private static URL toURL(File file) {
         try {
             return file.getCanonicalFile().toURI().toURL();
         } catch (IOException e) {
             LOG.log(WARNING, "Could not convert file to URL: " + file, e);
             return null;
+        }
+    }
+
+
+    private static class JarResource {
+        public final File file;
+        public JarFile jarFile;
+
+        JarResource(File file) {
+            this.file = file;
         }
     }
 }

@@ -262,7 +262,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     private boolean hasExternalRepositories;
 
     /** List of byte code pre-processors per webapp class loader. */
-    private final ConcurrentLinkedQueue<BytecodePreprocessor> byteCodePreprocessors = new ConcurrentLinkedQueue<>();
+    private List<BytecodePreprocessor> byteCodePreprocessors = new ArrayList<>();
 
     /** myfaces-api uses jakarta.faces packages */
     private boolean useMyFaces;
@@ -579,6 +579,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     public void start() {
         LOG.log(DEBUG, "start()");
         checkStatus(LifeCycleStatus.NEW);
+        byteCodePreprocessors = Collections.unmodifiableList(byteCodePreprocessors);
         status = LifeCycleStatus.RUNNING;
     }
 

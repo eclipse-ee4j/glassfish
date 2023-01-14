@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,12 +17,7 @@
 
 package org.glassfish.deployment.common;
 
-import static com.sun.enterprise.config.serverbeans.ServerTags.IS_COMPOSITE;
-import static com.sun.enterprise.util.io.FileUtils.whack;
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINEST;
+import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,7 +53,12 @@ import org.glassfish.loader.util.ASClassLoaderUtil;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
 
-import com.sun.enterprise.util.LocalStringManagerImpl;
+import static com.sun.enterprise.config.serverbeans.ServerTags.IS_COMPOSITE;
+import static com.sun.enterprise.util.io.FileUtils.whack;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
 
 /**
  *
@@ -88,14 +88,14 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
     ClassLoader cloader;
     ArchiveHandler archiveHandler;
     Properties props;
-    Map<String, Object> modulesMetaData = new HashMap<String, Object>();
-    List<ClassFileTransformer> transformers = new ArrayList<ClassFileTransformer>();
+    Map<String, Object> modulesMetaData = new HashMap<>();
+    List<ClassFileTransformer> transformers = new ArrayList<>();
     Phase phase = Phase.UNKNOWN;
     ClassLoader sharableTemp;
-    Map<String, Properties> modulePropsMap = new HashMap<String, Properties>();
-    Map<String, Object> transientAppMetaData = new HashMap<String, Object>();
-    Map<String, ArchiveHandler> moduleArchiveHandlers = new HashMap<String, ArchiveHandler>();
-    Map<String, ExtendedDeploymentContext> moduleDeploymentContexts = new HashMap<String, ExtendedDeploymentContext>();
+    Map<String, Properties> modulePropsMap = new HashMap<>();
+    Map<String, Object> transientAppMetaData = new HashMap<>();
+    Map<String, ArchiveHandler> moduleArchiveHandlers = new HashMap<>();
+    Map<String, ExtendedDeploymentContext> moduleDeploymentContexts = new HashMap<>();
     ExtendedDeploymentContext parentContext;
     String moduleUri;
     private String tenant;
@@ -326,7 +326,7 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
 
     @Override
     public Map<String, Object> getTransientAppMetadata() {
-        return new HashMap<String, Object>(transientAppMetaData);
+        return new HashMap<>(transientAppMetaData);
     }
 
     @Override
@@ -394,6 +394,7 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
         String isComposite = getAppProps().getProperty(IS_COMPOSITE);
 
         if (Boolean.valueOf(isComposite) && instrumentableClassLoader instanceof URLClassLoader) {
+            @SuppressWarnings("resource")
             URLClassLoader urlClassLoader = (URLClassLoader) instrumentableClassLoader;
             boolean isAppLevel = (getParentContext() == null);
             if (isAppLevel) {
@@ -403,11 +404,11 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
                 // For modules inside the ear, let's install the transformers with the EarLibClassLoader in
                 // addition to installing them to module classloader
                 ClassLoader libClassLoader = urlClassLoader.getParent().getParent();
-                if (!(libClassLoader instanceof URLClassLoader)) {
+                if (!(libClassLoader instanceof InstrumentableClassLoader)) {
                     // Web module
                     libClassLoader = libClassLoader.getParent();
                 }
-                if (libClassLoader instanceof URLClassLoader) {
+                if (libClassLoader instanceof InstrumentableClassLoader) {
                     InstrumentableClassLoader.class.cast(libClassLoader).addTransformer(transformer);
                 }
 
@@ -429,7 +430,7 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
 
     @Override
     public List<URI> getAppLibs() throws URISyntaxException {
-        List<URI> libURIs = new ArrayList<URI>();
+        List<URI> libURIs = new ArrayList<>();
         if (parameters.libraries() != null) {
             URL[] urls = ASClassLoaderUtil.getDeployParamLibrariesAsURLs(parameters.libraries(), env);
             for (URL url : urls) {

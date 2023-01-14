@@ -58,10 +58,7 @@ class JarFileManager {
     private long lastJarAccessed;
 
     synchronized void addJarFile(File file) throws IOException {
-        final JarFile[] newJarFiles = Arrays.copyOf(jarFiles, jarFiles.length + 1);
-        newJarFiles[jarFiles.length] = new JarFile(file);
-        jarFiles = newJarFiles;
-
+        jarFiles = new JarFile[jarFiles.length + 1];
         final File[] result4 = Arrays.copyOf(jarRealFiles, jarRealFiles.length + 1);
         result4[jarRealFiles.length] = file;
         jarRealFiles = result4;
@@ -177,7 +174,9 @@ class JarFileManager {
                     extractResources(loaderDir, path);
                 }
             }
-            entry.readEntryData(name, binaryStream, contentLength, jarEntry);
+            if (binaryStream != null) {
+                entry.readEntryData(name, binaryStream, contentLength, jarEntry);
+            }
             return entry;
         }
         return null;

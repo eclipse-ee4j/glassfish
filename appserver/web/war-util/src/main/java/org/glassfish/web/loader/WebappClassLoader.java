@@ -91,6 +91,7 @@ import org.apache.naming.resources.ResourceAttributes;
 import org.apache.naming.resources.WebDirContext;
 import org.glassfish.api.deployment.InstrumentableClassLoader;
 import org.glassfish.common.util.GlassfishUrlClassLoader;
+import org.glassfish.web.loader.RepositoryManager.RepositoryResource;
 import org.glassfish.web.util.ExceptionUtils;
 import org.glassfish.web.util.IntrospectionUtils;
 
@@ -189,7 +190,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
 
     /** Associated directory context giving access to the resources in this webapp. */
-    private DirContext resources;
+    private DirContext jndiResources;
 
     /**
      * Should this class loader delegate to the parent class loader
@@ -204,18 +205,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     /** Use anti JAR locking code, which does URL rerouting when accessing resources. */
     private boolean antiJARLocking;
 
-    /**
-     * The list of local repositories, in the order they should be searched
-     * for locally loaded classes or resources.
-     */
-    private String[] repositories = new String[0];
-
-    /**
-     * Repositories translated as path in the work directory (for WaSP
-     * originally), but which is used to generate fake URLs should getURLs be
-     * called.
-     */
-    private File[] files = new File[0];
+    private final RepositoryManager repositoryManager = new RepositoryManager();
 
     /**
      * The list of JARs, in the order they should be searched
@@ -252,20 +242,15 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
      */
     private final ConcurrentLinkedQueue<Permission> permissionList = new ConcurrentLinkedQueue<>();
 
-    //holder for declared and ee permissions
+    /** holder for declared and ee permissions */
     private PermsHolder permissionsHolder;
 
-    /**
-     * Path where resources loaded from JARs will be extracted.
-     */
+    /** Path where resources loaded from JARs will be extracted. */
     private File loaderDir;
 
     private String canonicalLoaderDir;
 
-    /**
-     * The PermissionCollection for each CodeSource for a web
-     * application context.
-     */
+    /** The PermissionCollection for each CodeSource for a web application context. */
     private final ConcurrentHashMap<String, PermissionCollection> loaderPC = new ConcurrentHashMap<>();
 
     /** The system class loader. */
@@ -353,7 +338,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     public void setResources(DirContext resources) {
         LOG.log(DEBUG, "setResources(resources={0})", resources);
         checkStatus(LifeCycleStatus.NEW, LifeCycleStatus.RUNNING);
-        this.resources = resources;
+        this.jndiResources = resources;
         final DirContext dirCtx;
         if (resources instanceof ProxyDirContext) {
             ProxyDirContext proxyRes = (ProxyDirContext) resources;
@@ -530,26 +515,13 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
      * classes to be loaded.
      *
      * @param repository Name of a source of classes to be loaded, such as a
-     *  directory pathname, a JAR file pathname, or a ZIP file pathname
-     *
-     * @throws IllegalArgumentException if the specified repository is
-     *  invalid or does not exist
+     *            directory pathname, a JAR file pathname, or a ZIP file pathname
+     * @param directory
      */
-    public void addRepository(String repository, File file) {
-        LOG.log(DEBUG, "addRepository(repository={0}, file={1})", repository, file);
+    public void addRepository(String repository, File directory) {
+        LOG.log(DEBUG, "addRepository(repository={0}, file={1})", repository, directory);
         checkStatus(LifeCycleStatus.NEW);
-        if (repository == null) {
-            return;
-        }
-        // Add this repository to our internal list
-        final String[] newRepos = Arrays.copyOf(repositories, repositories.length + 1);
-        newRepos[repositories.length] = repository;
-        repositories = newRepos;
-
-        // Add the file to the list
-        final File[] newFiles = Arrays.copyOf(files, files.length + 1);
-        newFiles[files.length] = file;
-        files = newFiles;
+        repositoryManager.addRepository(repository, directory);
     }
 
 
@@ -653,7 +625,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         }
 
         try {
-            NamingEnumeration<Binding> bindings = resources.listBindings(this.jarPath);
+            NamingEnumeration<Binding> bindings = jndiResources.listBindings(this.jarPath);
             length = jarNames.size();
             int i = 0;
             while (bindings.hasMoreElements() && i < length) {
@@ -722,17 +694,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         sb.append("[delegate=").append(delegate);
         sb.append(", context=").append(contextName);
         sb.append(", status=").append(status);
-        if (repositories != null) {
-            sb.append(", repositories={");
-            for (int i = 0; i < repositories.length; i++) {
-                sb.append(repositories[i]);
-                if (i != (repositories.length-1)) {
-                    sb.append(",");
-                }
-            }
-            sb.append('}');
-        }
         sb.append(", notFound.size=").append(notFoundResources.size());
+        sb.append(", repositories=").append(repositoryManager);
         sb.append(']');
         return sb.toString();
     }
@@ -825,7 +788,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         }
 
         // Return the class we have located
-        LOG.log(TRACE, "Returning class {0}", clazz);
+        LOG.log(TRACE, "Returning {0}", clazz);
         return clazz;
     }
 
@@ -874,30 +837,26 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     public Enumeration<URL> findResources(String name) throws IOException {
         LOG.log(DEBUG, "findResources(name={0})", name);
         checkStatus(LifeCycleStatus.RUNNING);
-        List<URL> result = new ArrayList<>();
-        if (repositories != null) {
-            int repositoriesLength = repositories.length;
-            int i;
-            for (i = 0; i < repositoriesLength; i++) {
+        List<URL> foundResources = new ArrayList<>();
+        List<RepositoryResource> resources = repositoryManager.getResources(name);
+        for (RepositoryResource resource : resources) {
+            try {
+                jndiResources.lookup(resource.name);
+                // Note : Not getting an exception here means the resource was found
                 try {
-                    String fullPath = repositories[i] + name;
-                    resources.lookup(fullPath);
-                    // Note : Not getting an exception here means the resource was found
-                    try {
-                        result.add(getURL(new File(files[i], name)));
-                    } catch (MalformedURLException e) {
-                        // Ignore
-                    }
-                } catch (NamingException e) {
+                    foundResources.add(getURL(resource.file));
+                } catch (MalformedURLException e) {
+                    // Ignore
                 }
+            } catch (NamingException e) {
             }
         }
 
         Enumeration<URL> otherResourcePaths = super.findResources(name);
         while (otherResourcePaths.hasMoreElements()) {
-            result.add(otherResourcePaths.nextElement());
+            foundResources.add(otherResourcePaths.nextElement());
         }
-        return Collections.enumeration(result);
+        return Collections.enumeration(foundResources);
     }
 
 
@@ -1200,8 +1159,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         }
         try {
             final ArrayList<URL> urls = new ArrayList<>();
-            for (File file : files) {
-                urls.add(getURL(file));
+            for (File directory : repositoryManager.getDirectories()) {
+                urls.add(getURL(directory));
             }
             for (File file : jarFiles.getJarRealFiles()) {
                 urls.add(getURL(file));
@@ -1250,20 +1209,13 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         } catch (Exception e) {
             // ignore
         }
-
-        int length = files.length;
-        for (int i = 0; i < length; i++) {
-            files[i] = null;
-        }
-
         jarFiles.closeJarFiles();
 
         notFoundResources.clear();
         resourceEntryCache.clear();
-        resources = null;
-        repositories = null;
+        jndiResources = null;
+        repositoryManager.close();
         repositoryURLs = null;
-        files = null;
         jarPath = null;
         jarNames.clear();
         lastModifiedDates = null;
@@ -1766,18 +1718,11 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     }
 
 
-    /**
-     * Find specified resource in local repositories. This block
-     * will execute under an AccessControl.doPrivilege block.
-     *
-     * @return the loaded resource, or null if the resource isn't found
-     */
-    private ResourceEntry findResourceInternal(File file, String path){
+    private ResourceEntry createEntry(File file) {
         try {
-            File file2 = new File(file, path);
             ResourceEntry entry = new ResourceEntry();
-            entry.source = getURL(file2);
-            entry.codeBase = getURL(file2);
+            entry.source = getURL(file);
+            entry.codeBase = entry.source;
             return entry;
         } catch (MalformedURLException e) {
             return null;
@@ -1834,19 +1779,12 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     private ResourceEntry findResourceInternalFromRepositories(String name, String path) {
         LOG.log(TRACE, "findResourceInternalFromRepositories(name={0}, path={1})", name, path);
 
-        if (repositories == null) {
-            return null;
-        }
-
-        final int repositoriesLength = repositories.length;
         int contentLength = -1;
         InputStream binaryStream = null;
         ResourceEntry entry = null;
-        for (int i = 0; entry == null && i < repositoriesLength; i++) {
-
+        for (RepositoryResource repository : repositoryManager.getResources(path)) {
             try {
-                String fullPath = repositories[i] + path;
-                Object lookupResult = resources.lookup(fullPath);
+                final Object lookupResult = jndiResources.lookup(repository.name);
                 final Resource resource;
                 if (lookupResult instanceof Resource) {
                     resource = (Resource) lookupResult;
@@ -1855,58 +1793,50 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
                 }
 
                 // Note : Not getting an exception here means the resource was found
-                final File file = files[i];
                 if (SECURITY_MANAGER == null) {
-                    entry = findResourceInternal(file, path);
+                    entry = createEntry(repository.file);
                 } else {
-                    PrivilegedAction<ResourceEntry> dp = () -> findResourceInternal(file, path);
+                    PrivilegedAction<ResourceEntry> dp = () -> createEntry(repository.file);
                     entry = AccessController.doPrivileged(dp);
                 }
+                if (resource == null || entry == null) {
+                    continue;
+                }
 
-                ResourceAttributes attributes = getResourceAttributes(fullPath);
+                ResourceAttributes attributes = getResourceAttributes(repository.name);
                 contentLength = (int) attributes.getContentLength();
                 entry.lastModified = attributes.getLastModified();
 
-                if (resource != null) {
-                    try {
-                        binaryStream = resource.streamContent();
-                    } catch (IOException e) {
-                        return null;
-                    }
+                try {
+                    binaryStream = resource.streamContent();
+                } catch (IOException e) {
+                    return null;
+                }
 
-                    // Register the full path for modification checking
-                    // Note: Only syncing on a 'constant' object is needed
-                    synchronized (ALL_PERMISSION) {
-                        long[] result2 = new long[lastModifiedDates.length + 1];
-                        for (int j = 0; j < lastModifiedDates.length; j++) {
-                            result2[j] = lastModifiedDates[j];
-                        }
-                        result2[lastModifiedDates.length] = entry.lastModified;
-                        lastModifiedDates = result2;
+                // Register the full path for modification checking
+                // Note: Only syncing on a 'constant' object is needed
+                synchronized (ALL_PERMISSION) {
+                    long[] newLastModifiedDates = Arrays.copyOf(lastModifiedDates, lastModifiedDates.length + 1);
+                    newLastModifiedDates[lastModifiedDates.length] = entry.lastModified;
+                    lastModifiedDates = newLastModifiedDates;
 
-                        String[] result = new String[paths.length + 1];
-                        for (int j = 0; j < paths.length; j++) {
-                            result[j] = paths[j];
-                        }
-                        result[paths.length] = fullPath;
-                        paths = result;
-
-                    }
+                    String[] newPaths = Arrays.copyOf(paths, paths.length + 1);
+                    newPaths[paths.length] = repository.name;
+                    paths = newPaths;
                 }
             } catch (NamingException e) {
             }
         }
 
-        if (entry != null) {
+        if (entry != null && binaryStream != null) {
             entry.readEntryData(name, binaryStream, contentLength, null);
         }
-
         return entry;
     }
 
 
     private ResourceAttributes getResourceAttributes(String fullPath) throws NamingException {
-        return (ResourceAttributes) resources.getAttributes(fullPath);
+        return (ResourceAttributes) jndiResources.getAttributes(fullPath);
     }
 
 

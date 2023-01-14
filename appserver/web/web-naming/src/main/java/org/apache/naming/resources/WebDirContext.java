@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2013-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -18,12 +19,18 @@
 package org.apache.naming.resources;
 
 import java.io.File;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -34,9 +41,9 @@ import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 
 import org.apache.naming.LogFacade;
-import org.apache.naming.NamingEntry;
 import org.apache.naming.NamingContextBindingsEnumeration;
 import org.apache.naming.NamingContextEnumeration;
+import org.apache.naming.NamingEntry;
 
 /**
  * Filesystem Directory Web Context implementation helper class.
@@ -48,6 +55,7 @@ public class WebDirContext extends FileDirContext {
 
     // -------------------------------------------------------------- Constants
 
+    private static final Logger LOG = System.getLogger(WebDirContext.class.getName());
     protected static final String META_INF_RESOURCES = "META-INF/resources/";
 
 
@@ -272,6 +280,7 @@ public class WebDirContext extends FileDirContext {
     // ------------------------------------------------------ Protected Methods
 
     protected JarFileEntry lookupFromJars(String name) {
+        LOG.log(Level.DEBUG, "lookupFromJars(name={0})", name);
         JarFileEntry result = null;
         JarFile[] jarFiles = null;
         if (jarFileResourcesProvider != null) {
@@ -300,7 +309,8 @@ public class WebDirContext extends FileDirContext {
     }
 
     protected List<JarFileEntry> lookupAllFromJars(String name) {
-        List<JarFileEntry> results = new ArrayList<JarFileEntry>();
+        LOG.log(Level.DEBUG, "lookupAllFromJars(name={0})", name);
+        List<JarFileEntry> results = new ArrayList<>();
         JarFile[] jarFiles = null;
         if (jarFileResourcesProvider != null) {
             jarFiles = jarFileResourcesProvider.getJarFiles();
@@ -326,7 +336,7 @@ public class WebDirContext extends FileDirContext {
     }
 
     protected List<NamingEntry> list(JarFileEntry jfeEntry) {
-        List<NamingEntry> entries = new ArrayList<NamingEntry>();
+        List<NamingEntry> entries = new ArrayList<>();
         JarFile jarFile = jfeEntry.jarFile;
         JarEntry jarEntry = jfeEntry.jarEntry;
         if (!jarEntry.isDirectory()) {
@@ -451,6 +461,7 @@ public class WebDirContext extends FileDirContext {
          *
          * @return InputStream
          */
+        @Override
         public InputStream streamContent()
             throws IOException {
             if (binaryContent == null) {
@@ -499,6 +510,7 @@ public class WebDirContext extends FileDirContext {
         /**
          * Is collection.
          */
+        @Override
         public boolean isCollection() {
             if (!accessed) {
                 collection = jarEntry.isDirectory();
@@ -513,9 +525,11 @@ public class WebDirContext extends FileDirContext {
          *
          * @return content length value
          */
+        @Override
         public long getContentLength() {
-            if (contentLength != -1L)
+            if (contentLength != -1L) {
                 return contentLength;
+            }
             contentLength = jarEntry.getSize();
             return contentLength;
         }
@@ -526,9 +540,11 @@ public class WebDirContext extends FileDirContext {
          *
          * @return creation time value
          */
+        @Override
         public long getCreation() {
-            if (creation != -1L)
+            if (creation != -1L) {
                 return creation;
+            }
             creation = getLastModified();
             return creation;
         }
@@ -539,6 +555,7 @@ public class WebDirContext extends FileDirContext {
          *
          * @return Creation date value
          */
+        @Override
         public Date getCreationDate() {
             if (creation == -1L) {
                 creation = jarEntry.getTime();
@@ -552,9 +569,11 @@ public class WebDirContext extends FileDirContext {
          *
          * @return lastModified time value
          */
+        @Override
         public long getLastModified() {
-            if (lastModified != -1L)
+            if (lastModified != -1L) {
                 return lastModified;
+            }
             lastModified = jarEntry.getTime();
             return lastModified;
         }
@@ -565,6 +584,7 @@ public class WebDirContext extends FileDirContext {
          *
          * @return LastModified date value
          */
+        @Override
         public Date getLastModifiedDate() {
             if (lastModified == -1L) {
                 lastModified = jarEntry.getTime();
@@ -578,9 +598,11 @@ public class WebDirContext extends FileDirContext {
          *
          * @return Name value
          */
+        @Override
         public String getName() {
-            if (name == null)
+            if (name == null) {
                 name = jarEntry.getName();
+            }
             return name;
         }
 
@@ -590,6 +612,7 @@ public class WebDirContext extends FileDirContext {
          *
          * @return String resource type
          */
+        @Override
         public String getResourceType() {
             if (!accessed) {
                 collection = jarEntry.isDirectory();
@@ -604,6 +627,7 @@ public class WebDirContext extends FileDirContext {
          *
          * @return String the file's canonical path
          */
+        @Override
         public String getCanonicalPath() {
             return null;
         }

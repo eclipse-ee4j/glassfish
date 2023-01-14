@@ -1209,7 +1209,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         } catch (Exception e) {
             // ignore
         }
-        jarFiles.closeJarFiles();
 
         notFoundResources.clear();
         resourceEntryCache.clear();
@@ -1225,6 +1224,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         permissionList.clear();
         permissionsHolder = null;
         loaderPC.clear();
+        jarFiles.close();
 
         if (loaderDir != null) {
             deleteDir(loaderDir);
@@ -1244,14 +1244,10 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
 
     /**
-     * Used to periodically signal to the classloader to release JAR resources.
+     * Used to signal to the classloader to release JAR resources because of reload.
      */
-    public void closeJARs(boolean force) {
-        if (force) {
-            jarFiles.closeJarFiles();
-        } else {
-            jarFiles.closeJarFilesIfNotUsed();
-        }
+    public void reload() {
+        jarFiles.closeJarFiles();
     }
 
 

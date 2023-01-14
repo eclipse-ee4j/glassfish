@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2023 Contributors to Eclipse Foundation.
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -140,6 +140,7 @@ import org.apache.naming.resources.DirContextURLStreamHandler;
 import org.apache.naming.resources.FileDirContext;
 import org.apache.naming.resources.ProxyDirContext;
 import org.apache.naming.resources.Resource;
+import org.apache.naming.resources.UrlResource;
 import org.apache.naming.resources.WARDirContext;
 import org.apache.naming.resources.WebDirContext;
 import org.glassfish.grizzly.http.server.util.AlternateDocBase;
@@ -187,7 +188,6 @@ import static org.apache.catalina.startup.Constants.WebDtdPublicId_22;
 import static org.apache.catalina.util.RequestUtil.urlDecode;
 import static org.apache.naming.resources.ProxyDirContext.CONTEXT;
 import static org.apache.naming.resources.ProxyDirContext.HOST;
-import org.apache.naming.resources.UrlResource;
 import static org.glassfish.web.loader.ServletContainerInitializerUtil.getInitializerList;
 import static org.glassfish.web.loader.ServletContainerInitializerUtil.getInterestList;
 
@@ -2842,7 +2842,8 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
      */
     @Override
     public ClassLoader getClassLoader() {
-        ClassLoader webappLoader = (getLoader() != null) ? getLoader().getClassLoader() : null;
+        Loader containerLoader = getLoader();
+        ClassLoader webappLoader = containerLoader == null ? null : containerLoader.getClassLoader();
         if (webappLoader == null) {
             return null;
         }
@@ -5238,12 +5239,6 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
             Notification notification = new Notification("j2ee.state.running", this, sequenceNumber++);
             sendNotification(notification);
         }
-
-        // Close all JARs right away to avoid always opening a peak number
-        // of files on startup
-        if (getLoader() instanceof WebappLoader) {
-            ((WebappLoader) getLoader()).closeJARs(true);
-        }
     }
 
     protected Types getTypes() {
@@ -5606,7 +5601,7 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
 
         if (isReload()) {
             if (getLoader() != null) {
-                if (reloadable && (getLoader().modified())) {
+                if (reloadable && getLoader().modified()) {
                     try {
                         Thread.currentThread().setContextClassLoader(standardContextClassLoader);
                         reload();
@@ -5618,7 +5613,7 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
                 }
 
                 if (getLoader() instanceof WebappLoader) {
-                    ((WebappLoader) getLoader()).closeJARs(false);
+                    ((WebappLoader) getLoader()).reload();
                 }
             }
         }

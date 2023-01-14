@@ -18,6 +18,7 @@ package org.glassfish.web.loader;
 
 import com.sun.enterprise.util.io.FileUtils;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,57 +29,84 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.Logger.Level.WARNING;
+import static java.util.concurrent.Executors.newScheduledThreadPool;
 import static org.glassfish.web.loader.LogFacade.getString;
 
 /**
  * @author David Matejcek
  */
-class JarFileManager {
+class JarFileManager implements Closeable {
+
+    private static final int SECONDS_TO_CLOSE_UNUSED_JARS = Integer
+        .getInteger("org.glassfish.web.loader.unusedJars.secondsToClose", 60);
+    private static final int SECONDS_TO_CHECK_UNUSED_JARS = Integer
+        .getInteger("org.glassfish.web.loader.unusedJars.secondsToRunCheck", 10);
+
     private static final Logger LOG = System.getLogger(JarFileManager.class.getName());
 
-    /**
-     * The list of JARs, in the order they should be searched
-     * for locally loaded classes or resources.
-     */
+    /** The list of JARs, in the order they should be searched for locally loaded classes or resources. */
     private final List<JarResource> files = new ArrayList<>();
+
+    private final ScheduledExecutorService scheduler = newScheduledThreadPool(1, new JarFileManagerThreadFactory());
+    private final ReadWriteLock lock = new ReentrantReadWriteLock();
+
+    private volatile long lastJarFileAccess;
+    private ScheduledFuture<?> unusedJarsCheck;
 
     private volatile boolean resourcesExtracted;
 
-    /** Last time a JAR was accessed. */
-    private long lastJarAccessed;
 
-    synchronized void addJarFile(File file) {
-        files.add(new JarResource(file));
-    }
-
-
-    synchronized JarFile[] getJarFiles() {
-        return openJARs() ? files.stream().map(r -> r.jarFile).toArray(JarFile[]::new) : null;
-    }
-
-
-    synchronized File[] getJarRealFiles() {
-        return files.stream().map(r -> r.file).toArray(File[]::new);
-    }
-
-
-    synchronized void extractResources(File loaderDir, String canonicalLoaderDir) {
-        LOG.log(DEBUG, "extractResources(loaderDir={0}, canonicalLoaderDir={1})", loaderDir, canonicalLoaderDir);
-        if (resourcesExtracted) {
-            return;
+    void addJarFile(File file) {
+        Lock writeLock = lock.writeLock();
+        try {
+            writeLock.lock();
+            files.add(new JarResource(file));
+        } finally {
+            writeLock.unlock();
         }
-        for (JarResource jarResource : files) {
-            extractResource(jarResource.jarFile, loaderDir, canonicalLoaderDir);
-        }
-        resourcesExtracted = true;
     }
 
+
+    /**
+     * @return array of {@link JarFile}s. Note that they can be closed at any time. Can be null.
+     */
+    JarFile[] getJarFiles() {
+        if (!isJarsOpen() && !openJARs()) {
+            return null;
+        }
+        Lock readLock = lock.readLock();
+        try {
+            readLock.lock();
+            lastJarFileAccess = System.currentTimeMillis();
+            return files.stream().map(r -> r.jarFile).toArray(JarFile[]::new);
+        } finally {
+            readLock.unlock();
+        }
+    }
+
+
+    File[] getJarRealFiles() {
+        Lock readLock = lock.readLock();
+        try {
+            readLock.lock();
+            return files.stream().map(r -> r.file).toArray(File[]::new);
+        } finally {
+            readLock.unlock();
+        }
+    }
 
 
     /**
@@ -86,114 +114,156 @@ class JarFileManager {
      *
      * @return The requested resource, or null if not found
      */
-    synchronized ResourceEntry findResource(String name, String path, File loaderDir, boolean antiJARLocking) {
+    ResourceEntry findResource(String name, String path, File loaderDir, boolean antiJARLocking) {
         LOG.log(TRACE, "findResource(name={0}, path={1}, loaderDir={2}, antiJARLocking={3})",
             name, path, loaderDir, antiJARLocking);
-        if (!openJARs()) {
+        if (!isJarsOpen() && !openJARs()) {
             return null;
         }
-        for (JarResource jarResource : files) {
-            final JarFile jarFile = jarResource.jarFile;
-            final JarEntry jarEntry = jarFile.getJarEntry(path);
-            if (jarEntry == null) {
-                continue;
-            }
-            final File file = jarResource.file;
-            final ResourceEntry entry = new ResourceEntry();
-            entry.codeBase = toURL(file);
-            if (entry.codeBase == null) {
-                return null;
-            }
-            try {
-                entry.source = new URL("jar:" + entry.codeBase + "!/" + path);
-            } catch (MalformedURLException e) {
-                LOG.log(DEBUG, "Failed to create URL from " + entry.codeBase + " and path " + path, e);
-                return null;
-            }
-            entry.lastModified = file.lastModified();
-            int contentLength = (int) jarEntry.getSize();
-            InputStream binaryStream;
-            try {
-                entry.manifest = jarFile.getManifest();
-                binaryStream = jarFile.getInputStream(jarEntry);
-            } catch (IOException e) {
-                LOG.log(DEBUG, "Failed to get manifest or input stream for " + jarFile.getName(), e);
-                return null;
-            }
-
-            // Extract resources contained in JAR to the workdir
-            if (antiJARLocking && !path.endsWith(".class")) {
-                File resourceFile = new File(loaderDir, jarEntry.getName());
-                if (!resourcesExtracted && !resourceFile.exists()) {
-                    extractResources(loaderDir, path);
+        final Lock readLock = lock.readLock();
+        try {
+            readLock.lock();
+            lastJarFileAccess = System.currentTimeMillis();
+            for (JarResource jarResource : files) {
+                final JarFile jarFile = jarResource.jarFile;
+                final JarEntry jarEntry = jarFile.getJarEntry(path);
+                if (jarEntry == null) {
+                    continue;
                 }
+                final File file = jarResource.file;
+                final ResourceEntry entry = new ResourceEntry();
+                entry.codeBase = toURL(file);
+                if (entry.codeBase == null) {
+                    return null;
+                }
+                try {
+                    entry.source = new URL("jar:" + entry.codeBase + "!/" + path);
+                } catch (MalformedURLException e) {
+                    LOG.log(DEBUG, "Failed to create URL from " + entry.codeBase + " and path " + path, e);
+                    return null;
+                }
+                entry.lastModified = file.lastModified();
+                final int contentLength = (int) jarEntry.getSize();
+                final InputStream binaryStream;
+                try {
+                    entry.manifest = jarFile.getManifest();
+                    binaryStream = jarFile.getInputStream(jarEntry);
+                } catch (IOException e) {
+                    LOG.log(DEBUG, "Failed to get manifest or input stream for " + jarFile.getName(), e);
+                    return null;
+                }
+
+                // Extract resources contained in JAR to the workdir
+                if (antiJARLocking && !path.endsWith(".class")) {
+                    final File resourceFile = new File(loaderDir, jarEntry.getName());
+                    if (!resourcesExtracted && !resourceFile.exists()) {
+                        extractResources(loaderDir, path);
+                    }
+                }
+                if (binaryStream != null) {
+                    entry.readEntryData(name, binaryStream, contentLength, jarEntry);
+                }
+                return entry;
             }
-            if (binaryStream != null) {
-                entry.readEntryData(name, binaryStream, contentLength, jarEntry);
-            }
-            return entry;
+        } finally {
+            readLock.unlock();
         }
         return null;
     }
 
 
-    synchronized void closeJarFiles() {
-        for (JarResource jarResource : files) {
-            if (jarResource.jarFile == null) {
-                continue;
-            }
-            final JarFile toClose = jarResource.jarFile;
-            jarResource.jarFile = null;
-            closeJarFile(toClose);
-        }
-    }
-
-
-    synchronized void closeJarFilesIfNotUsed() {
-        if (System.currentTimeMillis() - lastJarAccessed <= 90_000) {
+    void extractResources(File loaderDir, String canonicalLoaderDir) {
+        LOG.log(DEBUG, "extractResources(loaderDir={0}, canonicalLoaderDir={1})", loaderDir, canonicalLoaderDir);
+        if (resourcesExtracted) {
             return;
         }
-        for (JarResource jarResource : files) {
-            if (jarResource.jarFile != null) {
-                final JarFile toClose = jarResource.jarFile;
-                jarResource.jarFile = null;
-                closeJarFile(toClose);
+        Lock readLock = lock.readLock();
+        try {
+            readLock.lock();
+            for (JarResource jarResource : files) {
+                extractResource(jarResource.jarFile, loaderDir, canonicalLoaderDir);
             }
+        } finally {
+            readLock.unlock();
         }
+        resourcesExtracted = true;
     }
 
 
     /**
-     * @return true if open
+     * Closes jar files. Can be executed multiple times.
      */
-    private boolean openJARs() {
-        LOG.log(DEBUG, "openJARs()");
-        lastJarAccessed = System.currentTimeMillis();
-        for (JarResource jarResource : files) {
-            if (jarResource.jarFile != null) {
-                continue;
-            }
-            try {
-                jarResource.jarFile = new JarFile(jarResource.file);
-            } catch (IOException e) {
-                LOG.log(DEBUG, "Failed to open JAR", e);
-                closeJarFiles();
-                return false;
-            }
+    void closeJarFiles() {
+        LOG.log(DEBUG, "closeJarFiles()");
+        Lock writeLock = lock.writeLock();
+        try {
+            writeLock.lock();
+            lastJarFileAccess = 0L;
+            closeJarFiles(files);
+        } finally {
+            // No need to interrupt, just cancel next executions
+            this.unusedJarsCheck.cancel(false);
+            writeLock.unlock();
         }
-        return true;
     }
 
 
-    private static void extractResource(JarFile jarFile, File loaderDir, String canonicalLoaderDir) {
-        LOG.log(DEBUG, "extractResource(jarFile={0}, loaderDir={1}, canonicalLoaderDir={2})", jarFile, loaderDir, canonicalLoaderDir);
+    @Override
+    public void close() throws IOException {
+        closeJarFiles();
+        scheduler.shutdown();
+    }
+
+
+    /**
+     * @return true if opening succeeded
+     */
+    private boolean openJARs() {
+        LOG.log(DEBUG, "openJARs()");
+        Lock writeLock = lock.writeLock();
+        try {
+            writeLock.lock();
+            if (isJarsOpen()) {
+                return true;
+            }
+            lastJarFileAccess = System.currentTimeMillis();
+            for (JarResource jarResource : files) {
+                if (jarResource.jarFile != null) {
+                    continue;
+                }
+                try {
+                    jarResource.jarFile = new JarFile(jarResource.file);
+                } catch (IOException e) {
+                    LOG.log(DEBUG, "Failed to open JAR", e);
+                    lastJarFileAccess = 0L;
+                    closeJarFiles(files);
+                    return false;
+                }
+            }
+            LOG.log(DEBUG, "JAR files are open. If unused, will be closed after {0} s", SECONDS_TO_CLOSE_UNUSED_JARS);
+            this.unusedJarsCheck = scheduler.scheduleAtFixedRate(this::closeJarFilesIfNotUsed, SECONDS_TO_CHECK_UNUSED_JARS,
+                SECONDS_TO_CHECK_UNUSED_JARS, TimeUnit.SECONDS);
+            return true;
+        } finally {
+            writeLock.unlock();
+        }
+    }
+
+
+    private boolean isJarsOpen() {
+        return lastJarFileAccess > 0L;
+    }
+
+
+    private static void extractResource(JarFile jarFile, File loaderDir, String pathPrefix) {
+        LOG.log(DEBUG, "extractResource(jarFile={0}, loaderDir={1}, pathPrefix={2})", jarFile, loaderDir, pathPrefix);
         Enumeration<JarEntry> jarEntries = jarFile.entries();
         while (jarEntries.hasMoreElements()) {
             JarEntry jarEntry = jarEntries.nextElement();
             if (!jarEntry.isDirectory() && !jarEntry.getName().endsWith(".class")) {
                 File resourceFile = new File(loaderDir, jarEntry.getName());
                 try {
-                    if (!resourceFile.getCanonicalPath().startsWith(canonicalLoaderDir)) {
+                    if (!resourceFile.getCanonicalPath().startsWith(pathPrefix)) {
                         throw new IllegalArgumentException(getString(LogFacade.ILLEGAL_JAR_PATH, jarEntry.getName()));
                     }
                 } catch (IOException ioe) {
@@ -215,11 +285,37 @@ class JarFileManager {
     }
 
 
-    private static void closeJarFile(final JarFile toClose) {
+    private void closeJarFilesIfNotUsed() {
+        if (!isJarsOpen()) {
+            return;
+        }
+        final long unusedFor = (System.currentTimeMillis() - lastJarFileAccess) / 1000L;
+        if (unusedFor <= SECONDS_TO_CLOSE_UNUSED_JARS) {
+            return;
+        }
+        LOG.log(DEBUG, "Closing jar files, because they were not used for {0} s.", unusedFor);
+        closeJarFiles();
+    }
+
+
+    private static void closeJarFiles(List<JarResource> files) {
+        for (JarResource jarResource : files) {
+            if (jarResource.jarFile == null) {
+                continue;
+            }
+            final JarFile toClose = jarResource.jarFile;
+            jarResource.jarFile = null;
+            closeJarFile(toClose);
+        }
+        LOG.log(DEBUG, "JAR files were closed.");
+    }
+
+
+    private static void closeJarFile(final JarFile jarFile) {
         try {
-            toClose.close();
+            jarFile.close();
         } catch (IOException e) {
-            LOG.log(WARNING, "Could not close the jarFile " + toClose, e);
+            LOG.log(WARNING, "Could not close the jarFile " + jarFile, e);
         }
     }
 
@@ -233,13 +329,26 @@ class JarFileManager {
         }
     }
 
-
     private static class JarResource {
-        public final File file;
-        public JarFile jarFile;
+
+        final File file;
+        JarFile jarFile;
 
         JarResource(File file) {
             this.file = file;
         }
     }
+
+    private static class JarFileManagerThreadFactory implements ThreadFactory {
+        private int counter = 1;
+
+        @Override
+        public Thread newThread(Runnable runnable) {
+            Thread thread = new Thread(runnable, "JarFileManager-" + counter++);
+            thread.setDaemon(true);
+            thread.setPriority(Thread.MIN_PRIORITY);
+            return thread;
+        }
+    }
+
 }

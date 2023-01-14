@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,5 +27,9 @@ import java.util.jar.JarFile;
  * @author Shing Wai Chan
  */
 public interface JarFileResourcesProvider {
-    public JarFile[] getJarFiles();
+
+    /**
+     * @return array of {@link JarFile}s. Note that they can be closed at any time and the array can be null.
+     */
+    JarFile[] getJarFiles();
 }

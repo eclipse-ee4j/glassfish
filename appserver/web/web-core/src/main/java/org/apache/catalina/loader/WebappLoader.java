@@ -461,11 +461,11 @@ public class WebappLoader
 
 
     /**
-     * Used to periodically signal to the classloader to release JAR resources.
+     * Used to signal to the classloader to release JAR resources because of reload.
      */
-    public void closeJARs(boolean force) {
+    public void reload() {
         if (classLoader != null) {
-            classLoader.closeJARs(force);
+            classLoader.reload();
         }
     }
 

@@ -55,6 +55,9 @@
              basedir="${build.classes.dir}"
              update="true"
              includes ="**/S*.class">
+            <metainf dir="descriptor">
+                <include name="ejb-jar.xml"/>
+            </metainf>
         </jar>
         <delete dir="${build.classes.dir}/org"/>
     </target>

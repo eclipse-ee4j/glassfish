@@ -54,6 +54,7 @@
              includes ="**/*.class">
         </jar>
 -->
+        <copy file="descriptor/ejb-jar.xml" todir="${build.classes.dir}/META-INF"/>
         <antcall target="compile-common">
             <param name="src" value="client"/>
         </antcall>

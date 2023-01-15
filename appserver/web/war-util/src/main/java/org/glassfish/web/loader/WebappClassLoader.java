@@ -26,7 +26,6 @@ import com.sun.enterprise.util.io.FileUtils;
 
 import jakarta.annotation.PreDestroy;
 
-import java.beans.Introspector;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FilePermission;
@@ -35,10 +34,6 @@ import java.io.InputStream;
 import java.lang.System.Logger;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
-import java.lang.ref.Reference;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -51,18 +46,13 @@ import java.security.PermissionCollection;
 import java.security.Permissions;
 import java.security.Policy;
 import java.security.PrivilegedAction;
-import java.sql.Driver;
-import java.sql.DriverManager;
 import java.text.MessageFormat;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -90,8 +80,6 @@ import org.apache.naming.resources.WebDirContext;
 import org.glassfish.api.deployment.InstrumentableClassLoader;
 import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.web.loader.RepositoryManager.RepositoryResource;
-import org.glassfish.web.util.ExceptionUtils;
-import org.glassfish.web.util.IntrospectionUtils;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.ERROR;
@@ -183,6 +171,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
      */
     private static final boolean PACKAGE_DEFINITION_ENABLED = SECURITY_MANAGER != null
         && Boolean.getBoolean("package.definition");
+
+    private final ReferenceCleaner cleaner;
 
     /** The cache of ResourceEntry for classes and resources we have loaded, keyed by resource name. */
     private final ConcurrentHashMap<String, ResourceEntry> resourceEntryCache = new ConcurrentHashMap<>();
@@ -292,6 +282,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
      */
     public WebappClassLoader(ClassLoader parent) {
         super(new URL[0], parent);
+        this.cleaner = new ReferenceCleaner(this);
         this.system = WebappClassLoader.class.getClassLoader();
         if (SECURITY_MANAGER != null) {
             refreshPolicy();
@@ -471,16 +462,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     }
 
 
-    /**
-     * Add a new repository to the set of places this ClassLoader can look for
-     * classes to be loaded.
-     *
-     * @param repository Name of a source of classes to be loaded, such as a directory pathname,
-     *            a JAR file pathname, or a ZIP file pathname
-     * @throws IllegalArgumentException if the specified repository is invalid or does not exist
-     */
     @Override
-    public void addRepository(String repository) {
+    public void addRepository(String repository) throws IllegalArgumentException {
         LOG.log(DEBUG, "addRepository(repository={0})", repository);
         checkStatus(LifeCycleStatus.NEW, LifeCycleStatus.RUNNING);
         // Ignore any of the standard repositories, as they are set up using
@@ -967,6 +950,15 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
 
     /**
+     * Returns the context name or null
+     */
+    @Override
+    public String getName() {
+        return this.contextName;
+    }
+
+
+    /**
      * Get the Permissions for a CodeSource.  If this instance
      * of WebappClassLoader is for a web application context,
      * add read FilePermission or JndiPermissions for the base
@@ -1134,23 +1126,13 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     public void close() throws IOException {
         LOG.log(INFO, "close(), this:\n{0}", this);
 
-        // Clearing references should be done before setting started to
-        // false, due to possible side effects.
-        // In addition, set this classloader as the Thread's context classloader
-        final ClassLoader originalCl = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader(this);
-            clearReferences();
-        } finally {
-            Thread.currentThread().setContextClassLoader(originalCl);
-        }
-
+        cleaner.clearReferences(clearReferencesStatic ? resourceEntryCache.values() : null);
         status = LifeCycleStatus.CLOSED;
 
         try {
             super.close();
         } catch (Exception e) {
-            // ignore
+            LOG.log(WARNING, "Parent close method failed.", e);
         }
 
         notFoundResources.clear();
@@ -1196,6 +1178,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
     @PreDestroy
     public void preDestroy() {
+        LOG.log(TRACE, "preDestroy()");
         try {
             close();
         } catch (Exception e) {
@@ -1216,383 +1199,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
             resolveClass(clazz);
         }
         return clazz;
-    }
-
-
-    private void clearReferences() {
-        clearReferencesJdbc();
-        checkThreadLocalsForLeaks();
-        clearReferencesRmiTargets();
-
-        // Null out any static or final fields from loaded classes,
-        // as a workaround for apparent garbage collection bugs
-        if (clearReferencesStatic) {
-            clearReferencesStaticFinal(resourceEntryCache.values());
-        }
-
-        IntrospectionUtils.clear();
-        ResourceBundle.clearCache(this);
-        Introspector.flushCaches();
-    }
-
-
-    /** De-register any remaining JDBC drivers */
-    private void clearReferencesJdbc() {
-        LOG.log(TRACE, "clearReferencesJdbc()");
-        @SuppressWarnings("resource")
-        final ClassLoader classloader = this;
-        DriverManager.drivers().filter(driver -> driver.getClass().getClassLoader() == classloader)
-            .forEach(this::deregisterDriver);
-    }
-
-
-    private void deregisterDriver(Driver driver) {
-        try {
-            DriverManager.deregisterDriver(driver);
-            LOG.log(WARNING, LogFacade.CLEAR_JDBC, contextName, driver.getClass().getCanonicalName());
-        } catch (Exception e) {
-            LOG.log(WARNING, getString(LogFacade.JDBC_REMOVE_FAILED, contextName), e);
-        }
-    }
-
-
-    private void clearReferencesStaticFinal(Collection<ResourceEntry> values) {
-        Iterator<ResourceEntry> loadedClasses = values.iterator();
-        /*
-         * Step 1: Enumerate all classes loaded by this WebappClassLoader
-         * and trigger the initialization of any uninitialized ones.
-         * This is to prevent the scenario where the initialization of
-         * one class would call a previously cleared class in Step 2 below.
-         */
-        while (loadedClasses.hasNext()) {
-            final Class<?> clazz = loadedClasses.next().loadedClass;
-            if (clazz == null) {
-                continue;
-            }
-            try {
-                Field[] fields = clazz.getDeclaredFields();
-                for (Field field : fields) {
-                    if (Modifier.isStatic(field.getModifiers())) {
-                        field.get(null);
-                        break;
-                    }
-                }
-            } catch (Exception t) {
-                LOG.log(TRACE, "", t);
-            }
-        }
-
-        /**
-         * Step 2: Clear all loaded classes
-         */
-        loadedClasses = values.iterator();
-        while (loadedClasses.hasNext()) {
-            final Class<?> clazz = loadedClasses.next().loadedClass;
-            if (clazz == null) {
-                continue;
-            }
-            try {
-                Field[] fields = clazz.getDeclaredFields();
-                for (Field field : fields) {
-                    int mods = field.getModifiers();
-                    if (field.getType().isPrimitive() || (field.getName().indexOf("$") != -1)) {
-                        continue;
-                    }
-                    if (Modifier.isStatic(mods)) {
-                        try {
-                            setAccessible(field);
-                            if (Modifier.isFinal(mods)) {
-                                if (!field.getType().getName().startsWith("java.")
-                                    && !field.getType().getName().startsWith("javax.")) {
-                                    nullInstance(field.get(null));
-                                }
-                            } else {
-                                field.set(null, null);
-                                LOG.log(TRACE, "Set field {0} to null in {1}", field.getName(), clazz);
-                            }
-                        } catch (Throwable t) {
-                            ExceptionUtils.handleThrowable(t);
-                            if (LOG.isLoggable(DEBUG)) {
-                                LOG.log(DEBUG, "Could not set field " + field.getName() + " to null in class "
-                                    + clazz.getName(), t);
-                            }
-                        }
-                    }
-                }
-            } catch (Throwable t) {
-                ExceptionUtils.handleThrowable(t);
-                if (LOG.isLoggable(DEBUG))  {
-                    LOG.log(DEBUG, "Could not clean fields for class " + clazz.getName(), t);
-                }
-            }
-        }
-    }
-
-
-    private void nullInstance(Object instance) {
-        if (instance == null) {
-            return;
-        }
-        Field[] fields = instance.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            int mods = field.getModifiers();
-            if (field.getType().isPrimitive() || (field.getName().indexOf("$") != -1)) {
-                continue;
-            }
-            try {
-                setAccessible(field);
-                if (Modifier.isStatic(mods) && Modifier.isFinal(mods)) {
-                    // Doing something recursively is too risky
-                    continue;
-                }
-                Object value = field.get(instance);
-                if (value != null) {
-                    Class<? extends Object> valueClass = value.getClass();
-                    if (loadedByThisOrChild(valueClass)) {
-                        field.set(instance, null);
-                        LOG.log(TRACE, "Set field {0}, to null in {1}", field.getName(), instance.getClass());
-                    } else {
-                        LOG.log(DEBUG,
-                            "Not setting field {0} to null in object of {1} because"
-                                + " the referenced object was of {2} which was not loaded by this WebappClassLoader.",
-                            field.getName(), instance.getClass(), valueClass);
-                    }
-                }
-            } catch (Throwable t) {
-                if (LOG.isLoggable(DEBUG)) {
-                    LOG.log(DEBUG, "Could not set field " + field.getName() + " to null in object instance of "
-                        + instance.getClass(), t);
-                }
-            }
-        }
-    }
-
-    /** Check for leaks triggered by ThreadLocals loaded by this class loader */
-    private void checkThreadLocalsForLeaks() {
-        LOG.log(TRACE, "checkThreadLocalsForLeaks()");
-        try {
-            // Make the fields in the Thread class that store ThreadLocals accessible
-            Field threadLocalsField = Thread.class.getDeclaredField("threadLocals");
-            threadLocalsField.setAccessible(true);
-            Field inheritableThreadLocalsField = Thread.class.getDeclaredField("inheritableThreadLocals");
-            inheritableThreadLocalsField.setAccessible(true);
-            // Make the underlying array of ThreadLoad.ThreadLocalMap.Entry objects accessible
-            Class<?> tlmClass = Class.forName("java.lang.ThreadLocal$ThreadLocalMap");
-            Field tableField = tlmClass.getDeclaredField("table");
-            tableField.setAccessible(true);
-            Method expungeStaleEntriesMethod = tlmClass.getDeclaredMethod("expungeStaleEntries");
-            expungeStaleEntriesMethod.setAccessible(true);
-
-            Thread[] threads = getThreads();
-            for (Thread thread : threads) {
-                if (thread != null) {
-                    // Clear the first map
-                    Object threadLocalMap = threadLocalsField.get(thread);
-                    if (threadLocalMap != null) {
-                        expungeStaleEntriesMethod.invoke(threadLocalMap);
-                        checkThreadLocalMapForLeaks(threadLocalMap, tableField);
-                    }
-
-                    // Clear the second map
-                    threadLocalMap = inheritableThreadLocalsField.get(thread);
-                    if (threadLocalMap != null) {
-                        expungeStaleEntriesMethod.invoke(threadLocalMap);
-                        checkThreadLocalMapForLeaks(threadLocalMap, tableField);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            LOG.log(WARNING, getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_FAIL, contextName), e);
-        }
-    }
-
-
-    /**
-     * Analyzes the given thread local map object. Also pass in the field that
-     * points to the internal table to save re-calculating it on every
-     * call to this method.
-     */
-    private void checkThreadLocalMapForLeaks(Object map, Field internalTableField)
-        throws IllegalAccessException, NoSuchFieldException {
-        if (map == null) {
-            return;
-        }
-        Object[] table = (Object[]) internalTableField.get(map);
-        if (table == null) {
-            return;
-        }
-        for (Object element : table) {
-            if (element == null) {
-                continue;
-            }
-            boolean potentialLeak = false;
-            // Check the key
-            Object key = ((Reference<?>) element).get();
-            if (this.equals(key) || loadedByThisOrChild(key)) {
-                potentialLeak = true;
-            }
-            // Check the value
-            Field valueField = element.getClass().getDeclaredField("value");
-            valueField.setAccessible(true);
-            Object value = valueField.get(element);
-            if (this.equals(value) || loadedByThisOrChild(value)) {
-                potentialLeak = true;
-            }
-            if (!potentialLeak) {
-                continue;
-            }
-            Object[] args = new Object[5];
-            args[0] = contextName;
-            if (key != null) {
-                args[1] = getPrettyClassName(key.getClass());
-                try {
-                    args[2] = key.toString();
-                } catch (Exception e) {
-                    LOG.log(ERROR, getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_BAD_KEY, args[1]), e);
-                    args[2] = getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_UNKNOWN);
-                }
-            }
-            if (value != null) {
-                args[3] = getPrettyClassName(value.getClass());
-                try {
-                    args[4] = value.toString();
-                } catch (Exception e) {
-                    LOG.log(ERROR,
-                        getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_BAD_VALUE, args[3]), e);
-                    args[4] = getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_UNKNOWN);
-                }
-            }
-            if (value == null) {
-                LOG.log(DEBUG, LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_DEBUG, args);
-            } else {
-                LOG.log(ERROR, LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS, args);
-            }
-        }
-    }
-
-    private String getPrettyClassName(Class<?> clazz) {
-        String name = clazz.getCanonicalName();
-        if (name==null){
-            name = clazz.getName();
-        }
-        return name;
-    }
-
-
-    /**
-     * @param o object to test, may be null
-     * @return <code>true</code> if o has been loaded by the current classloader
-     * or one of its descendants.
-     */
-    private boolean loadedByThisOrChild(Object o) {
-        if (o == null) {
-            return false;
-        }
-
-        Class<?> clazz = o instanceof Class ? (Class<?>) o : o.getClass();
-        ClassLoader cl = clazz.getClassLoader();
-        while (cl != null) {
-            if (cl == this) {
-                return true;
-            }
-            cl = cl.getParent();
-        }
-
-        if (o instanceof Collection<?>) {
-            for (Object entry : ((Collection<?>) o)) {
-                if (loadedByThisOrChild(entry)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-
-    /**
-     * Get the set of current threads as an array.
-     */
-    private Thread[] getThreads() {
-        // Get the current thread group
-        ThreadGroup tg = Thread.currentThread().getThreadGroup();
-        // Find the root thread group
-        while (tg.getParent() != null) {
-            tg = tg.getParent();
-        }
-
-        int threadCountGuess = tg.activeCount() + 50;
-        Thread[] threads = new Thread[threadCountGuess];
-        int threadCountActual = tg.enumerate(threads);
-        // Make sure we don't miss any threads
-        while (threadCountActual == threadCountGuess) {
-            threadCountGuess *=2;
-            threads = new Thread[threadCountGuess];
-            // Note tg.enumerate(Thread[]) silently ignores any threads that
-            // can't fit into the array
-            threadCountActual = tg.enumerate(threads);
-        }
-
-        return threads;
-    }
-
-
-    /**
-     * Clear RMI Targets loaded by this class loader.
-     * This depends on the internals of the JVM so it does everything by reflection.
-     */
-    private void clearReferencesRmiTargets() {
-        LOG.log(TRACE, "clearReferencesRmiTargets()");
-        try {
-            // Need access to the ccl field of sun.rmi.transport.Target
-            Class<?> objectTargetClass = Class.forName("sun.rmi.transport.Target");
-            Field cclField = objectTargetClass.getDeclaredField("ccl");
-            cclField.setAccessible(true);
-
-            // Clear the objTable map
-            Class<?> objectTableClass = Class.forName("sun.rmi.transport.ObjectTable");
-            Field objTableField = objectTableClass.getDeclaredField("objTable");
-            objTableField.setAccessible(true);
-            Object objTable = objTableField.get(null);
-            if (objTable == null) {
-                return;
-            }
-
-            // Iterate over the values in the table
-            if (objTable instanceof Map<?, ?>) {
-                Iterator<?> iter = ((Map<?, ?>) objTable).values().iterator();
-                while (iter.hasNext()) {
-                    Object obj = iter.next();
-                    Object cclObject = cclField.get(obj);
-                    if (this == cclObject) {
-                        iter.remove();
-                    }
-                }
-            }
-
-            // Clear the implTable map
-            Field implTableField = objectTableClass.getDeclaredField("implTable");
-            implTableField.setAccessible(true);
-            Object implTable = implTableField.get(null);
-            if (implTable == null) {
-                return;
-            }
-
-            // Iterate over the values in the table
-            if (implTable instanceof Map<?, ?>) {
-                Iterator<?> iter = ((Map<?, ?>) implTable).values().iterator();
-                while (iter.hasNext()) {
-                    Object obj = iter.next();
-                    Object cclObject = cclField.get(obj);
-                    if (this == cclObject) {
-                        iter.remove();
-                    }
-                }
-            }
-        } catch (ClassNotFoundException e) {
-            LOG.log(INFO, getString(LogFacade.CLEAR_RMI_INFO, contextName), e);
-        } catch (SecurityException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
-            LOG.log(WARNING, getString(LogFacade.CLEAR_RMI_FAIL, contextName), e);
-        }
     }
 
 
@@ -1817,6 +1423,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         } catch (AccessControlException e) {
             // Some policy files may restrict this, even for the core,
             // so this exception is ignored
+            LOG.log(TRACE, "The policy refresh failed.", e);
         }
     }
 
@@ -1899,19 +1506,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         }
         PrivilegedAction<String> action = () -> System.getProperty("java.version");
         return AccessController.doPrivileged(action);
-    }
-
-
-    private void setAccessible(final Field field) {
-        if (SECURITY_MANAGER == null) {
-            field.setAccessible(true);
-        } else {
-            PrivilegedAction<Void> action = () -> {
-                field.setAccessible(true);
-                return null;
-            };
-            AccessController.doPrivileged(action);
-        }
     }
 
 
@@ -2045,7 +1639,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         final String path;
         final long timestamp;
 
-        public PathTimestamp(String path, long timestamp) {
+        PathTimestamp(String path, long timestamp) {
             this.path = path;
             this.timestamp = timestamp;
         }

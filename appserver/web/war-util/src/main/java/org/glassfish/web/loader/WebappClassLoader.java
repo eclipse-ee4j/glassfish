@@ -212,16 +212,15 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     private final RepositoryManager repositoryManager = new RepositoryManager();
 
     /**
-     * The list of JARs, in the order they should be searched
-     * for locally loaded classes or resources.
+     * JAR files cache manager. When files are not used, they can be automatically closed.
      */
     private final JarFileManager jarFiles = new JarFileManager();
 
     /**
-     * The list of JARs, in the order they should be searched
-     * for locally loaded classes or resources.
+     * The list of JARs in {@link #WEB_INF_LIB}, in the order they should be searched
+     * for locally loaded classes or resources. This list serves to check if files changed.
      */
-    private final List<String> jarNames = new ArrayList<>();
+    private List<String> jarNames = new ArrayList<>();
 
     /**
      * The list of JARs last modified dates, in the order they should be
@@ -523,14 +522,11 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     }
 
 
-    public void addJar(String filePath, File file) throws IOException {
+    public void addJar(String filePath, File file) {
         LOG.log(DEBUG, "addJar(filePath={0}, file={1})", filePath, file);
         checkStatus(LifeCycleStatus.NEW);
-        if (filePath == null || file == null) {
-            return;
-        }
 
-        super.addURL(getURL(file));
+        super.addURL(toURL(file));
 
         if (filePath.startsWith(WEB_INF_LIB)) {
             String jarName = filePath.substring(WEB_INF_LIB.length());
@@ -551,7 +547,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
             newLastModified[lastModifiedDates.length] = lastModified;
             lastModifiedDates = newLastModified;
         } catch (NamingException e) {
-            // Ignore
+            LOG.log(DEBUG, "Could not get resource attributes from JNDI for " + filePath, e);
         }
 
         jarFiles.addJarFile(file);
@@ -578,6 +574,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         LOG.log(DEBUG, "start()");
         checkStatus(LifeCycleStatus.NEW);
         byteCodePreprocessors = Collections.unmodifiableList(byteCodePreprocessors);
+        jarNames = Collections.unmodifiableList(jarNames);
         status = LifeCycleStatus.RUNNING;
     }
 
@@ -590,16 +587,12 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     public boolean modified() {
         checkStatus(LifeCycleStatus.RUNNING);
         // Checking for modified loaded resources
-        int length = paths.length;
-
+        final int pathsLength = paths.length;
         // A rare race condition can occur in the updates of the two arrays
         // It's totally ok if the latest class added is not checked (it will
         // be checked the next time
-        int length2 = lastModifiedDates.length;
-        if (length > length2) {
-            length = length2;
-        }
-
+        final int lastModifiedDatesLength = lastModifiedDates.length;
+        final int length = pathsLength > lastModifiedDatesLength ? lastModifiedDatesLength : pathsLength;
         for (int i = 0; i < length; i++) {
             String path = paths[i];
             try {
@@ -619,10 +612,10 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         }
 
         try {
-            length = jarNames.size();
+            final int jarNamesLength = jarNames.size();
             NamingEnumeration<Binding> bindings = jndiResources.listBindings(WEB_INF_LIB);
             int i = 0;
-            while (bindings.hasMoreElements() && i < length) {
+            while (bindings.hasMoreElements() && i < jarNamesLength) {
                 NameClassPair ncPair = bindings.nextElement();
                 String name = ncPair.getName();
                 // Ignore non JARs present in the lib folder
@@ -647,7 +640,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
                         return true;
                     }
                 }
-            } else if (i < jarNames.size()) {
+            } else if (i < jarNamesLength) {
                 // There was less JARs
                 LOG.log(TRACE, "JAR files changed.");
                 return true;
@@ -836,13 +829,9 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         for (RepositoryResource resource : resources) {
             try {
                 jndiResources.lookup(resource.name);
-                // Note : Not getting an exception here means the resource was found
-                try {
-                    foundResources.add(getURL(resource.file));
-                } catch (MalformedURLException e) {
-                    // Ignore
-                }
+                foundResources.add(toURL(resource.file));
             } catch (NamingException e) {
+                // ignore, we continue searching
             }
         }
 
@@ -1151,22 +1140,17 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         if (repositoryURLs != null) {
             return repositoryURLs.toArray(URL[]::new);
         }
-        try {
-            final ArrayList<URL> urls = new ArrayList<>();
-            for (File directory : repositoryManager.getDirectories()) {
-                urls.add(getURL(directory));
-            }
-            for (File file : jarFiles.getJarRealFiles()) {
-                urls.add(getURL(file));
-            }
-            for (URL url : super.getURLs()) {
-                urls.add(url);
-            }
-            repositoryURLs = urls.stream().distinct().collect(Collectors.toList());
-        } catch (MalformedURLException e) {
-            LOG.log(WARNING, "getURLs failed, I am using an empty array.", e);
-            repositoryURLs = List.of();
+        final ArrayList<URL> urls = new ArrayList<>();
+        for (File directory : repositoryManager.getDirectories()) {
+            urls.add(toURL(directory));
         }
+        for (File file : jarFiles.getJarRealFiles()) {
+            urls.add(toURL(file));
+        }
+        for (URL url : super.getURLs()) {
+            urls.add(url);
+        }
+        repositoryURLs = urls.stream().distinct().collect(Collectors.toList());
         return repositoryURLs.toArray(URL[]::new);
     }
 
@@ -1209,7 +1193,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         jndiResources = null;
         repositoryManager.close();
         repositoryURLs = null;
-        jarNames.clear();
         lastModifiedDates = null;
         paths = null;
         hasExternalRepositories = false;
@@ -1707,18 +1690,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     }
 
 
-    private ResourceEntry createEntry(File file) {
-        try {
-            ResourceEntry entry = new ResourceEntry();
-            entry.source = getURL(file);
-            entry.codeBase = entry.source;
-            return entry;
-        } catch (MalformedURLException e) {
-            return null;
-        }
-    }
-
-
     /**
      * Attempts to find the specified resource in local repositories.
      *
@@ -1922,14 +1893,26 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     }
 
 
-    private URL getURL(File file) throws MalformedURLException {
-        File realFile = file;
+    private ResourceEntry createEntry(File file) {
+        ResourceEntry entry = new ResourceEntry();
+        entry.source = toURL(file);
+        entry.codeBase = entry.source;
+        return entry;
+    }
+
+
+    private static URL toURL(File file) {
+        File realFile;
         try {
-            realFile = realFile.getCanonicalFile();
+            realFile = file.getCanonicalFile();
         } catch (IOException e) {
-            // Ignore
+            realFile = file;
         }
-        return realFile.toURI().toURL();
+        try {
+            return realFile.toURI().toURL();
+        } catch (MalformedURLException e) {
+            throw new IllegalStateException("Could not convert " + file + " to URL!", e);
+        }
     }
 
 

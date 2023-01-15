@@ -265,7 +265,7 @@ public class WarHandler extends AbstractArchiveHandler {
                     cloader.addJar(file.getPath().substring(baseFileLen), file);
                 }
             } catch (final Exception e) {
-                // Catch and ignore any exception in case the JAR file is empty.
+                LOG.log(Level.FINEST, "Could not add file " + file, e);
             }
         }
     }

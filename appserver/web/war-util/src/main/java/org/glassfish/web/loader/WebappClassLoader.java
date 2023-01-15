@@ -86,7 +86,9 @@ import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.INFO;
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.Logger.Level.WARNING;
+import static org.glassfish.web.loader.LogFacade.UNABLE_TO_LOAD_CLASS;
 import static org.glassfish.web.loader.LogFacade.UNSUPPORTED_VERSION;
+import static org.glassfish.web.loader.LogFacade.getString;
 
 /**
  * Specialized web application class loader.
@@ -165,10 +167,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     /** Instance of the SecurityManager installed. */
     private static final SecurityManager SECURITY_MANAGER = System.getSecurityManager();
 
-    /**
-     * Use this variable to invoke the security manager when a resource is
-     * loaded by this classloader.
-     */
+    /** Use this variable to invoke the security manager when a resource is loaded by this classloader. */
     private static final boolean PACKAGE_DEFINITION_ENABLED = SECURITY_MANAGER != null
         && Boolean.getBoolean("package.definition");
 
@@ -177,7 +176,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     /** The cache of ResourceEntry for classes and resources we have loaded, keyed by resource name. */
     private final ConcurrentHashMap<String, ResourceEntry> resourceEntryCache = new ConcurrentHashMap<>();
 
-    /** The list of not found resources. */
+    /** The list of not found resources to avoid slow repeated searches. */
     private final Set<String> notFoundResources = ConcurrentHashMap.newKeySet();
 
 
@@ -419,7 +418,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
 
     /**
-     * @return the Jar path.
+     * @return {@value #WEB_INF_LIB}
      */
     public String getLibJarPath() {
         return WEB_INF_LIB;
@@ -603,7 +602,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
             } catch (RuntimeException | Error e) {
                 throw e;
             } catch (Throwable t) {
-                throw new RuntimeException(getString(LogFacade.UNABLE_TO_LOAD_CLASS, name, t.toString()), t);
+                throw new RuntimeException(getString(UNABLE_TO_LOAD_CLASS, name, t.toString()), t);
             }
             if (clazz == null && hasExternalRepositories) {
                 try {
@@ -619,11 +618,10 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
             }
         } catch (ClassNotFoundException e) {
             // This is because some callers just swallow the CNFE.
-            LOG.log(TRACE, "Passing on ClassNotFoundException.", e);
+            LOG.log(TRACE, "Rethrowing exception for " + name, e);
             throw e;
         }
 
-        // Return the class we have located
         LOG.log(TRACE, "Returning {0}", clazz);
         return clazz;
     }
@@ -653,7 +651,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         if (url == null && hasExternalRepositories) {
             url = super.findResource(name);
         }
-        LOG.log(TRACE, "Returning {0}", url);
+        LOG.log(TRACE, "Returning {0} for name={1}", url, name);
         return url;
 
     }
@@ -722,7 +720,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         if (isDelegateFirstResource(name)) {
             URL url = getDelegateClassLoader().getResource(name);
             if (url != null) {
-                LOG.log(TRACE, "Returning {0}", url);
+                LOG.log(TRACE, "Returning {0} for name={1}", url, name);
                 return url;
             }
         }
@@ -743,7 +741,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
                     // Ignore
                 }
             }
-            LOG.log(TRACE, "Returning {0}", url);
+            LOG.log(TRACE, "Returning {0} for name={1}", url, name);
             return url;
         }
 
@@ -751,13 +749,13 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         if (!delegate) {
             url = getDelegateClassLoader().getResource(name);
             if (url != null) {
-                LOG.log(TRACE, "Returning {0}", url);
+                LOG.log(TRACE, "Returning {0} for name={1}", url, name);
                 return url;
             }
         }
 
         // (4) Resource was not found
-        LOG.log(TRACE, "Resource not found, returning null");
+        LOG.log(TRACE, "Resource {0} not found, returning null", name);
         return null;
     }
 
@@ -815,7 +813,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         }
 
         // (4) Resource was not found
-        LOG.log(TRACE, "Resource not found, returning null");
+        LOG.log(TRACE, "Resource {0} not found, returning null", name);
         return null;
     }
 
@@ -976,7 +974,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
             pc.add(p);
         }
 
-        //get the declared and EE perms
+        // get the declared and EE perms
         PermissionCollection pc1 = permissionsHolder.getPermissions(codeSource, null);
         if (pc1 != null) {
             Enumeration<Permission> dperms = pc1.elements();
@@ -985,7 +983,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
                 pc.add(p);
             }
         }
-        PermissionCollection tmpPc = loaderPC.putIfAbsent(codeUrl,pc);
+        PermissionCollection tmpPc = loaderPC.putIfAbsent(codeUrl, pc);
         return tmpPc == null ? pc : tmpPc;
     }
 
@@ -1328,7 +1326,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
                         entry.readEntryData(name, binaryStream, contentLength, null);
                     }
                 } catch (IOException e) {
-                    LOG.log(TRACE, "Could not read entry data for " + name, e);
+                    LOG.log(DEBUG, "Could not read entry data for " + name, e);
                     return null;
                 }
                 pathTimestamps.add(new PathTimestamp(repoResource.name, entry.lastModified));
@@ -1561,11 +1559,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
      */
     private static String toClassFilePath(String name) {
         return name.replace('.', '/') + ".class";
-    }
-
-
-    private static String getString(String key, Object... arguments) {
-        return MessageFormat.format(rb.getString(key), arguments);
     }
 
 

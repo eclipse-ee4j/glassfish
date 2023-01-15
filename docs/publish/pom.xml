@@ -40,9 +40,14 @@
         <!-- the directory where the current snapshot is published -->
         <dir.snap>${site.output.dir}/docs/SNAPSHOT</dir.snap>
         <!-- add a new property for each new release -->
-        <dir.510>${site.output.dir}/docs/5.1.0</dir.510>
+        <docs.5x.version>5.1.0</docs.5x.version>
+        <docs.5x.dir>${site.output.dir}/docs/${docs.5x.version}</docs.5x.dir>
+        <docs.6x.version>6.2.5</docs.6x.version>
+        <docs.6x.dir>${site.output.dir}/docs/${docs.6x.version}</docs.6x.dir>
+        <docs.7x.version>7.0.0</docs.7x.version>
+        <docs.7x.dir>${site.output.dir}/docs/${docs.7x.version}</docs.7x.dir>
         <!-- the "latest" version; update when a new release is done -->
-        <docs.version>7.0.0</docs.version>
+        <docs.version>${docs.7x.version}</docs.version>
     </properties>
 
     <!--
@@ -112,10 +117,10 @@
                             </execution>
                             <!--
                                 Get the collection of documentation for the
-                                5.1.0 release.
+                                6.x release.
                             -->
                             <execution>
-                                <id>get-510</id>
+                                <id>get-7x</id>
                                 <phase>generate-sources</phase>
                                 <goals>
                                     <goal>unpack</goal>
@@ -129,9 +134,63 @@
                                         <artifactItem>
                                             <groupId>org.glassfish.docs</groupId>
                                             <artifactId>distribution</artifactId>
-                                            <version>5.1.0</version>
+                                            <version>${docs.7x.version}</version>
                                             <outputDirectory>
-                                                ${dir.510}
+                                                ${docs.7x.dir}
+                                            </outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                            <!--
+                                Get the collection of documentation for the
+                                6.x release.
+                            -->
+                            <execution>
+                                <id>get-6x</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <includeGroupIds>
+                                        org.glassfish.docs
+                                    </includeGroupIds>
+                                    <excludes>META-INF/**</excludes>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.glassfish.docs</groupId>
+                                            <artifactId>distribution</artifactId>
+                                            <version>${docs.6x.version}</version>
+                                            <outputDirectory>
+                                                ${docs.6x.dir}
+                                            </outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                            <!--
+                                Get the collection of documentation for the
+                                5.1.0 release.
+                            -->
+                            <execution>
+                                <id>get-5x</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <includeGroupIds>
+                                        org.glassfish.docs
+                                    </includeGroupIds>
+                                    <excludes>META-INF/**</excludes>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.glassfish.docs</groupId>
+                                            <artifactId>distribution</artifactId>
+                                            <version>${docs.5x.version}</version>
+                                            <outputDirectory>
+                                                ${docs.5x.dir}
                                             </outputDirectory>
                                         </artifactItem>
                                     </artifactItems>
@@ -168,7 +227,7 @@
                                           />
                                         <symlink
                                           link="${site.output.dir}/docs/latest"
-                                          resource="${docs.version}"/>
+                                          resource="${docs.7x.dir}"/>
                                     </target>
                                 </configuration>
                             </execution>

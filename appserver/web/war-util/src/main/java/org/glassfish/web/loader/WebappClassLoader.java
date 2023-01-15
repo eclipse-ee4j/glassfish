@@ -57,7 +57,6 @@ import java.sql.DriverManager;
 import java.text.MessageFormat;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -217,22 +216,16 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     private final JarFileManager jarFiles = new JarFileManager();
 
     /**
+     * The list of JARs last modified dates, in the order they should be
+     * searched for locally loaded classes or resources.
+     */
+    private final ConcurrentLinkedQueue<PathTimestamp> pathTimestamps = new ConcurrentLinkedQueue<>();
+
+    /**
      * The list of JARs in {@link #WEB_INF_LIB}, in the order they should be searched
      * for locally loaded classes or resources. This list serves to check if files changed.
      */
     private List<String> jarNames = new ArrayList<>();
-
-    /**
-     * The list of JARs last modified dates, in the order they should be
-     * searched for locally loaded classes or resources.
-     */
-    private long[] lastModifiedDates = new long[0];
-
-    /**
-     * The list of resources which should be checked when checking for
-     * modifications.
-     */
-    private String[] paths = new String[0];
 
     /**
      * A list of read File and Jndi Permission's required if this loader
@@ -537,15 +530,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         }
 
         try {
-            // Register the JAR for tracking
             final long lastModified = getResourceAttributes(filePath).getLastModified();
-            final String[] newPaths = Arrays.copyOf(paths, paths.length + 1);
-            newPaths[paths.length] = filePath;
-            paths = newPaths;
-
-            final long[] newLastModified = Arrays.copyOf(lastModifiedDates, lastModifiedDates.length + 1);
-            newLastModified[lastModifiedDates.length] = lastModified;
-            lastModifiedDates = newLastModified;
+            pathTimestamps.add(new PathTimestamp(filePath, lastModified));
         } catch (NamingException e) {
             LOG.log(DEBUG, "Could not get resource attributes from JNDI for " + filePath, e);
         }
@@ -587,33 +573,26 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     public boolean modified() {
         checkStatus(LifeCycleStatus.RUNNING);
         // Checking for modified loaded resources
-        final int pathsLength = paths.length;
-        // A rare race condition can occur in the updates of the two arrays
-        // It's totally ok if the latest class added is not checked (it will
-        // be checked the next time
-        final int lastModifiedDatesLength = lastModifiedDates.length;
-        final int length = pathsLength > lastModifiedDatesLength ? lastModifiedDatesLength : pathsLength;
-        for (int i = 0; i < length; i++) {
-            String path = paths[i];
+        for (PathTimestamp pathTimestamp : pathTimestamps) {
             try {
-                long lastModified = getResourceAttributes(path).getLastModified();
-                long oldLastModified = lastModifiedDates[i];
-                if (lastModified != oldLastModified) {
+                long currentLastModified = getResourceAttributes(pathTimestamp.path).getLastModified();
+                long oldLastModified = pathTimestamp.timestamp;
+                if (currentLastModified != oldLastModified) {
                     if (LOG.isLoggable(DEBUG)) {
-                        LOG.log(DEBUG, "Resource {0} was modified at {1}, old time stamp was {2}.", path,
-                            Instant.ofEpochMilli(lastModified), Instant.ofEpochMilli(oldLastModified));
+                        LOG.log(DEBUG, "Resource {0} was modified at {1}, old time stamp was {2}.", pathTimestamp.path,
+                            Instant.ofEpochMilli(currentLastModified), Instant.ofEpochMilli(oldLastModified));
                     }
                     return true;
                 }
             } catch (NamingException e) {
-                LOG.log(ERROR, LogFacade.MISSING_RESOURCE, path);
+                LOG.log(ERROR, LogFacade.MISSING_RESOURCE, pathTimestamp.path);
                 return true;
             }
         }
 
         try {
             final int jarNamesLength = jarNames.size();
-            NamingEnumeration<Binding> bindings = jndiResources.listBindings(WEB_INF_LIB);
+            final NamingEnumeration<Binding> bindings = jndiResources.listBindings(WEB_INF_LIB);
             int i = 0;
             while (bindings.hasMoreElements() && i < jarNamesLength) {
                 NameClassPair ncPair = bindings.nextElement();
@@ -623,7 +602,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
                     continue;
                 }
                 if (!name.equals(jarNames.get(i))) {
-                    // Missing JAR
                     LOG.log(TRACE, "JAR files changed: {0}", name);
                     return true;
                 }
@@ -635,14 +613,12 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
                     String name = ncPair.getName();
                     // Additional non-JAR files are allowed
                     if (name.endsWith(".jar") || name.endsWith(".zip")) {
-                        // There was more JARs
                         LOG.log(TRACE, "Additional JARs have been added: {0}", name);
                         return true;
                     }
                 }
             } else if (i < jarNamesLength) {
-                // There was less JARs
-                LOG.log(TRACE, "JAR files changed.");
+                LOG.log(TRACE, "Some JAR file was removed.");
                 return true;
             }
         } catch (NamingException | ClassCastException e) {
@@ -681,8 +657,9 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         sb.append("[delegate=").append(delegate);
         sb.append(", context=").append(contextName);
         sb.append(", status=").append(status);
-        sb.append(", notFound.size=").append(notFoundResources.size());
         sb.append(", repositories=").append(repositoryManager);
+        sb.append(", notFound.size=").append(notFoundResources.size());
+        sb.append(", pathTimestamps.size=").append(pathTimestamps.size());
         sb.append(']');
         return sb.toString();
     }
@@ -1190,12 +1167,12 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
         notFoundResources.clear();
         resourceEntryCache.clear();
+        pathTimestamps.clear();
+
         jndiResources = null;
-        repositoryManager.close();
         repositoryURLs = null;
-        lastModifiedDates = null;
-        paths = null;
         hasExternalRepositories = false;
+        repositoryManager.close();
 
         permissionList.clear();
         permissionsHolder = null;
@@ -1738,60 +1715,40 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
      */
     private ResourceEntry findResourceInternalFromRepositories(String name, String path) {
         LOG.log(TRACE, "findResourceInternalFromRepositories(name={0}, path={1})", name, path);
-
-        int contentLength = -1;
-        InputStream binaryStream = null;
-        ResourceEntry entry = null;
-        for (RepositoryResource repository : repositoryManager.getResources(path)) {
+        for (RepositoryResource repoResource : repositoryManager.getResources(path)) {
             try {
-                final Object lookupResult = jndiResources.lookup(repository.name);
+                final Object lookupResult = jndiResources.lookup(repoResource.name);
                 final Resource resource;
                 if (lookupResult instanceof Resource) {
                     resource = (Resource) lookupResult;
                 } else {
-                    resource = null;
-                }
-
-                // Note : Not getting an exception here means the resource was found
-                if (SECURITY_MANAGER == null) {
-                    entry = createEntry(repository.file);
-                } else {
-                    PrivilegedAction<ResourceEntry> dp = () -> createEntry(repository.file);
-                    entry = AccessController.doPrivileged(dp);
-                }
-                if (resource == null || entry == null) {
                     continue;
                 }
-
-                ResourceAttributes attributes = getResourceAttributes(repository.name);
-                contentLength = (int) attributes.getContentLength();
+                final ResourceEntry entry;
+                if (SECURITY_MANAGER == null) {
+                    entry = createEntry(repoResource.file);
+                } else {
+                    PrivilegedAction<ResourceEntry> dp = () -> createEntry(repoResource.file);
+                    entry = AccessController.doPrivileged(dp);
+                }
+                final ResourceAttributes attributes = getResourceAttributes(repoResource.name);
                 entry.lastModified = attributes.getLastModified();
-
-                try {
-                    binaryStream = resource.streamContent();
+                final int contentLength = (int) attributes.getContentLength();
+                try (InputStream binaryStream = resource.streamContent()) {
+                    if (binaryStream != null) {
+                        entry.readEntryData(name, binaryStream, contentLength, null);
+                    }
                 } catch (IOException e) {
+                    LOG.log(TRACE, "Could not read entry data for " + name, e);
                     return null;
                 }
-
-                // Register the full path for modification checking
-                // Note: Only syncing on a 'constant' object is needed
-                synchronized (ALL_PERMISSION) {
-                    long[] newLastModifiedDates = Arrays.copyOf(lastModifiedDates, lastModifiedDates.length + 1);
-                    newLastModifiedDates[lastModifiedDates.length] = entry.lastModified;
-                    lastModifiedDates = newLastModifiedDates;
-
-                    String[] newPaths = Arrays.copyOf(paths, paths.length + 1);
-                    newPaths[paths.length] = repository.name;
-                    paths = newPaths;
-                }
+                pathTimestamps.add(new PathTimestamp(repoResource.name, entry.lastModified));
+                return entry;
             } catch (NamingException e) {
+                // not found, search continues.
             }
         }
-
-        if (entry != null && binaryStream != null) {
-            entry.readEntryData(name, binaryStream, contentLength, null);
-        }
-        return entry;
+        return null;
     }
 
 
@@ -2089,5 +2046,16 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
     private enum LifeCycleStatus {
         NEW, RUNNING, CLOSED
+    }
+
+
+    private static class PathTimestamp {
+        final String path;
+        final long timestamp;
+
+        public PathTimestamp(String path, long timestamp) {
+            this.path = path;
+            this.timestamp = timestamp;
+        }
     }
 }

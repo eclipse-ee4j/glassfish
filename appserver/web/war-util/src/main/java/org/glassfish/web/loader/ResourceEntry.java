@@ -83,7 +83,7 @@ public class ResourceEntry {
 
 
     /**
-     * Reads the resource's binary data from the given input stream.
+     * Reads the resource's binary data from the given input stream and closes the stream.
      */
     void readEntryData(String name, InputStream binaryStream, int contentLength, JarEntry jarEntry) {
         byte[] bytes = new byte[contentLength];

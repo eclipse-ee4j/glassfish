@@ -53,7 +53,7 @@ class JarFileManager implements Closeable {
     private static final int SECONDS_TO_CLOSE_UNUSED_JARS = Integer
         .getInteger("org.glassfish.web.loader.unusedJars.secondsToClose", 60);
     private static final int SECONDS_TO_CHECK_UNUSED_JARS = Integer
-        .getInteger("org.glassfish.web.loader.unusedJars.secondsToRunCheck", 10);
+        .getInteger("org.glassfish.web.loader.unusedJars.secondsToRunCheck", 15);
 
     private static final Logger LOG = System.getLogger(JarFileManager.class.getName());
 
@@ -142,14 +142,20 @@ class JarFileManager implements Closeable {
                     LOG.log(DEBUG, "Failed to create URL from " + entry.codeBase + " and path " + path, e);
                     return null;
                 }
-                entry.lastModified = file.lastModified();
-                final int contentLength = (int) jarEntry.getSize();
-                final InputStream binaryStream;
                 try {
                     entry.manifest = jarFile.getManifest();
-                    binaryStream = jarFile.getInputStream(jarEntry);
                 } catch (IOException e) {
-                    LOG.log(DEBUG, "Failed to get manifest or input stream for " + jarFile.getName(), e);
+                    LOG.log(DEBUG, "Failed to get manifest for " + jarFile.getName(), e);
+                    return null;
+                }
+                entry.lastModified = file.lastModified();
+                final int contentLength = (int) jarEntry.getSize();
+                try (InputStream binaryStream = jarFile.getInputStream(jarEntry)) {
+                    if (binaryStream != null) {
+                        entry.readEntryData(name, binaryStream, contentLength, jarEntry);
+                    }
+                } catch (IOException e) {
+                    LOG.log(DEBUG, "Failed to read entry data for " + name, e);
                     return null;
                 }
 
@@ -159,9 +165,6 @@ class JarFileManager implements Closeable {
                     if (!resourcesExtracted && !resourceFile.exists()) {
                         extractResources(loaderDir, path);
                     }
-                }
-                if (binaryStream != null) {
-                    entry.readEntryData(name, binaryStream, contentLength, jarEntry);
                 }
                 return entry;
             }

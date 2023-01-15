@@ -228,8 +228,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     /** Path where resources loaded from JARs will be extracted. */
     private File loaderDir;
 
-    private String canonicalLoaderDir;
-
     /** The PermissionCollection for each CodeSource for a web application context. */
     private final ConcurrentHashMap<String, PermissionCollection> loaderPC = new ConcurrentHashMap<>();
 
@@ -434,14 +432,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     public void setWorkDir(File workDir) {
         checkStatus(LifeCycleStatus.NEW);
         this.loaderDir = new File(workDir, "loader_" + this.hashCode());
-        try {
-            canonicalLoaderDir = this.loaderDir.getCanonicalPath();
-            if (!canonicalLoaderDir.endsWith(File.separator)) {
-                canonicalLoaderDir += File.separator;
-            }
-        } catch (IOException ioe) {
-            canonicalLoaderDir = null;
-        }
     }
 
 

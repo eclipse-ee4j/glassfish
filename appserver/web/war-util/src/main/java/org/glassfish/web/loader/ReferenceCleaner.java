@@ -276,8 +276,9 @@ class ReferenceCleaner {
     }
 
 
-    private void clearReferencesStaticFinal(Collection<ResourceEntry> values) {
-        Iterator<ResourceEntry> loadedClasses = values.iterator();
+    private void clearReferencesStaticFinal(Collection<ResourceEntry> resourceEntries) {
+        LOG.log(TRACE, "clearReferencesStaticFinal(resourceEntries={0})", resourceEntries);
+        Iterator<ResourceEntry> loadedClasses = resourceEntries.iterator();
         // Step 1: Enumerate all classes loaded by this WebappClassLoader
         // and trigger the initialization of any uninitialized ones.
         // This is to prevent the scenario where the initialization of
@@ -301,7 +302,7 @@ class ReferenceCleaner {
         }
 
         // Step 2: Clear all loaded classes
-        loadedClasses = values.iterator();
+        loadedClasses = resourceEntries.iterator();
         while (loadedClasses.hasNext()) {
             final Class<?> clazz = loadedClasses.next().loadedClass;
             if (clazz == null) {

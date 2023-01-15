@@ -34,6 +34,7 @@ import static java.lang.System.Logger.Level.WARNING;
  * Resource entry.
  *
  * @author Remy Maucherat 2007
+ * @author David Matejcek 2023
  */
 public class ResourceEntry {
     private static final Logger LOG = LogFacade.getSysLogger(ResourceEntry.class);
@@ -47,39 +48,69 @@ public class ResourceEntry {
 
 
     /**
-     * Binary content of the resource.
+     * Binary content of the resource. May be null.
      */
     public byte[] binaryContent;
 
 
     /**
-     * Loaded class.
+     * Loaded class. May be null if the entry is not a class or the class was not loaded.
      */
     public volatile Class<?> loadedClass;
 
 
     /**
-     * URL source from where the object was loaded.
+     * {@link URL} of the entry source.
+     * Can be file, or an url linking inside the JAR file ie. <code>jar:file:/x.jar!/hi.jpg</code>
+     * <p>
+     * For classes it is null after the class is loaded.
      */
     public URL source;
 
 
     /**
-     * URL of the codebase from where the object was loaded.
+     * {@link URL} of the entry codebase, ie: <code>file:/x.jar</code>
+     * <p>
+     * For classes it is null after the class is loaded.
      */
     public URL codeBase;
 
 
     /**
      * Manifest (if the resource was loaded from a JAR).
+     * <p>
+     * For classes it is null after the class is loaded.
      */
     public Manifest manifest;
 
 
     /**
      * Certificates (if the resource was loaded from a JAR).
+     * <p>
+     * For classes it is null after the class is loaded.
      */
     public Certificate[] certificates;
+
+
+    /**
+     * Use this constructor if codebase and source are the same.
+     *
+     * @param url resource location
+     */
+    ResourceEntry(URL url) {
+        codeBase = url;
+        source = url;
+    }
+
+
+    /**
+     * @param codeBase
+     * @param source {@link URL} of the entry source
+     */
+    ResourceEntry(URL codeBase, URL source) {
+        this.codeBase = codeBase;
+        this.source = source;
+    }
 
 
     /**
@@ -119,6 +150,15 @@ public class ResourceEntry {
         if (jarEntry != null) {
             certificates = jarEntry.getCertificates();
         }
+    }
+
+
+    /**
+     * Returns loaded class or the source as string.
+     */
+    @Override
+    public String toString() {
+        return loadedClass == null ? source.toExternalForm() : loadedClass.toString();
     }
 }
 

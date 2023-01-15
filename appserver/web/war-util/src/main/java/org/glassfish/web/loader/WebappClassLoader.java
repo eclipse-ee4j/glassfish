@@ -255,13 +255,13 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     private Set<String> overridablePackages = Set.of();
 
     /**
-     * Should Tomcat attempt to null out any static or final fields from loaded
+     * Should we attempt to null out any static final fields from loaded
      * classes when a web application is stopped as a work around for apparent
-     * garbage collection bugs and application coding errors? There have been
-     * some issues reported with log4j when this option is true. Applications
-     * without memory leaks using recent JVMs should operate correctly with this
-     * option set to <code>false</code>. If not specified, the default value of
-     * <code>false</code> will be used.
+     * garbage collection bugs and application coding errors?
+     * <p>There have been some issues reported with log4j when this option is true.
+     * Applications without memory leaks using recent JVMs should operate correctly with this
+     * option set to <code>false</code>.
+     * <p>If not specified, the default value of <code>false</code> will be used.
      */
     private boolean clearReferencesStatic;
 
@@ -548,8 +548,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
 
     /**
-     * Find the specified class in our local repositories, if possible.  If
-     * not found, throw <code>ClassNotFoundException</code>.
+     * Find the specified class in our local repositories, if possible.
+     * If not found, throw {@link ClassNotFoundException}.
      *
      * @param name Name of the class to be loaded
      *
@@ -640,9 +640,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
 
     /**
-     * Find the specified resource in our local repository, and return a
-     * <code>URL</code> referring to it, or <code>null</code> if this resource
-     * cannot be found.
+     * Find the specified resource in our local repository, and return a {@link URL} referring
+     * to it, or <code>null</code> if this resource cannot be found.
      *
      * @param name Name of the resource to be found
      */
@@ -741,13 +740,12 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         // (2) Search local repositories
         URL url = findResource(name);
         if (url != null) {
-            if (antiJARLocking) {
+            if (antiJARLocking && !name.endsWith(".class") && !name.endsWith(".jar")) {
                 // Locating the repository for special handling in the case of a JAR
                 ResourceEntry entry = resourceEntryCache.get(name);
                 try {
                     String repository = entry.codeBase.toString();
-                    if (repository.endsWith(".jar") && !name.endsWith(".class") && !name.endsWith(".jar")) {
-                        // Copy binary content to the work directory if not present
+                    if (repository.endsWith(".jar")) {
                         File resourceFile = new File(loaderDir, name);
                         url = resourceFile.toURI().toURL();
                     }
@@ -1124,6 +1122,9 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
     @Override
     public void close() throws IOException {
+        if (status == LifeCycleStatus.CLOSED) {
+            return;
+        }
         LOG.log(INFO, "close(), this:\n{0}", this);
 
         cleaner.clearReferences(clearReferencesStatic ? resourceEntryCache.values() : null);
@@ -1167,6 +1168,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         sb.append("[delegate=").append(delegate);
         sb.append(", context=").append(contextName);
         sb.append(", status=").append(status);
+        sb.append(", antiJARLocking=").append(antiJARLocking);
         sb.append(", repositories=").append(repositoryManager);
         sb.append(", notFound.size=").append(notFoundResources.size());
         sb.append(", pathTimestamps.size=").append(pathTimestamps.size());
@@ -1306,8 +1308,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
 
     /**
-     * Attempts to load the requested resource from this classloader's
-     * internal repositories.
+     * Attempts to load the requested resource from this classloader's internal repositories.
      *
      * @return The requested resource, or null if not found
      */
@@ -1324,10 +1325,10 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
                 }
                 final ResourceEntry entry;
                 if (SECURITY_MANAGER == null) {
-                    entry = createEntry(repoResource.file);
+                    entry = new ResourceEntry(toURL(repoResource.file));
                 } else {
-                    PrivilegedAction<ResourceEntry> dp = () -> createEntry(repoResource.file);
-                    entry = AccessController.doPrivileged(dp);
+                    PrivilegedAction<ResourceEntry> action = () -> new ResourceEntry(toURL(repoResource.file));
+                    entry = AccessController.doPrivileged(action);
                 }
                 final ResourceAttributes attributes = getResourceAttributes(repoResource.name);
                 entry.lastModified = attributes.getLastModified();
@@ -1446,14 +1447,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
             return false;
         }
         return true;
-    }
-
-
-    private ResourceEntry createEntry(File file) {
-        ResourceEntry entry = new ResourceEntry();
-        entry.source = toURL(file);
-        entry.codeBase = entry.source;
-        return entry;
     }
 
 

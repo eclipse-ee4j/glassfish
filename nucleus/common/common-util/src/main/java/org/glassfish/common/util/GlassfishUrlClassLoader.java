@@ -139,7 +139,8 @@ public class GlassfishUrlClassLoader extends URLClassLoader {
     @Override
     public String toString() {
         final StringBuilder text = new StringBuilder(1024);
-        text.append(getClass().getName()).append('@').append(Integer.toHexString(hashCode())).append("[\n");
+        text.append(getClass().getName()).append('@').append(Integer.toHexString(hashCode()));
+        text.append("[name=").append(getName()).append("], urls=[\n");
         Arrays.stream(getURLs()).forEach(u -> text.append(u).append('\n'));
         text.append(']');
         return text.toString();

@@ -130,32 +130,9 @@ class JarFileManager implements Closeable {
                 if (jarEntry == null) {
                     continue;
                 }
-                final File file = jarResource.file;
-                final ResourceEntry entry = new ResourceEntry();
-                entry.codeBase = toURL(file);
-                if (entry.codeBase == null) {
-                    return null;
-                }
-                try {
-                    entry.source = new URL("jar:" + entry.codeBase + "!/" + path);
-                } catch (MalformedURLException e) {
-                    LOG.log(DEBUG, "Failed to create URL from " + entry.codeBase + " and path " + path, e);
-                    return null;
-                }
-                try {
-                    entry.manifest = jarFile.getManifest();
-                } catch (IOException e) {
-                    LOG.log(DEBUG, "Failed to get manifest for " + jarFile.getName(), e);
-                    return null;
-                }
-                entry.lastModified = file.lastModified();
-                final int contentLength = (int) jarEntry.getSize();
-                try (InputStream binaryStream = jarFile.getInputStream(jarEntry)) {
-                    if (binaryStream != null) {
-                        entry.readEntryData(name, binaryStream, contentLength, jarEntry);
-                    }
-                } catch (IOException e) {
-                    LOG.log(DEBUG, "Failed to read entry data for " + name, e);
+                final ResourceEntry entry = createResourceEntry(name, jarResource.file, jarFile, jarEntry, path);
+                if (entry == null) {
+                    // We have found the entry, but we cannot load it.
                     return null;
                 }
 
@@ -258,6 +235,43 @@ class JarFileManager implements Closeable {
     }
 
 
+    private ResourceEntry createResourceEntry(String name, File file, JarFile jarFile, JarEntry jarEntry,
+        String entryPath) {
+        final URL codeBase;
+        try {
+            codeBase = file.getCanonicalFile().toURI().toURL();
+        } catch (IOException e) {
+            LOG.log(DEBUG, "Invalid file: " + file, e);
+            return null;
+        }
+        final URL source;
+        try {
+            source = new URL("jar:" + codeBase + "!/" + entryPath);
+        } catch (MalformedURLException e) {
+            LOG.log(DEBUG, "Cannot create valid URL of file " + file + " and entry path " + entryPath, e);
+            return null;
+        }
+        final ResourceEntry entry = new ResourceEntry(codeBase, source);
+        try {
+            entry.manifest = jarFile.getManifest();
+        } catch (IOException e) {
+            LOG.log(DEBUG, "Failed to get manifest from " + jarFile.getName(), e);
+            return null;
+        }
+        entry.lastModified = file.lastModified();
+        final int contentLength = (int) jarEntry.getSize();
+        try (InputStream binaryStream = jarFile.getInputStream(jarEntry)) {
+            if (binaryStream != null) {
+                entry.readEntryData(name, binaryStream, contentLength, jarEntry);
+            }
+        } catch (IOException e) {
+            LOG.log(DEBUG, "Failed to read entry data for " + name, e);
+            return null;
+        }
+        return entry;
+    }
+
+
     private static void extractResource(JarFile jarFile, File loaderDir, String pathPrefix) {
         LOG.log(DEBUG, "extractResource(jarFile={0}, loaderDir={1}, pathPrefix={2})", jarFile, loaderDir, pathPrefix);
         Enumeration<JarEntry> jarEntries = jarFile.entries();
@@ -322,15 +336,6 @@ class JarFileManager implements Closeable {
         }
     }
 
-
-    private static URL toURL(File file) {
-        try {
-            return file.getCanonicalFile().toURI().toURL();
-        } catch (IOException e) {
-            LOG.log(WARNING, "Could not convert file to URL: " + file, e);
-            return null;
-        }
-    }
 
     private static class JarResource {
 

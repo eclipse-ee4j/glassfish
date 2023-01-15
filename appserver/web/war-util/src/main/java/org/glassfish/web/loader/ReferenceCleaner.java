@@ -292,6 +292,7 @@ class ReferenceCleaner {
                 Field[] fields = clazz.getDeclaredFields();
                 for (Field field : fields) {
                     if (Modifier.isStatic(field.getModifiers())) {
+                        setAccessible(field);
                         field.get(null);
                         break;
                     }
@@ -312,7 +313,7 @@ class ReferenceCleaner {
                 Field[] fields = clazz.getDeclaredFields();
                 for (Field field : fields) {
                     int mods = field.getModifiers();
-                    if (field.getType().isPrimitive() || (field.getName().indexOf("$") != -1)) {
+                    if (field.isEnumConstant() || field.getType().isPrimitive() || field.getName().indexOf('$') != -1) {
                         continue;
                     }
                     if (Modifier.isStatic(mods)) {
@@ -384,22 +385,17 @@ class ReferenceCleaner {
                 continue;
             }
             try {
-                setAccessible(field);
                 if (Modifier.isStatic(mods) && Modifier.isFinal(mods)) {
                     // Doing something recursively is too risky
                     continue;
                 }
+                setAccessible(field);
                 Object value = field.get(instance);
                 if (value != null) {
                     Class<? extends Object> valueClass = value.getClass();
                     if (isLeaked(valueClass)) {
                         field.set(instance, null);
                         LOG.log(TRACE, "Set field {0}, to null in {1}", field.getName(), instance.getClass());
-                    } else {
-                        LOG.log(TRACE,
-                            "Not setting field {0} to null in object of {1} because"
-                                + " the referenced object was of {2} which was not loaded by {3}.",
-                            field.getName(), instance.getClass(), valueClass, loader);
                     }
                 }
             } catch (Exception t) {

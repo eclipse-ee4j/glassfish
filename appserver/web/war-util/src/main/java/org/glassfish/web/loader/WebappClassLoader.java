@@ -37,7 +37,6 @@ import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.ref.Reference;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
@@ -566,106 +565,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
 
     /**
-     * Have one or more classes or resources been modified so that a reload
-     * is appropriate?
-     */
-    @Override
-    public boolean modified() {
-        checkStatus(LifeCycleStatus.RUNNING);
-        // Checking for modified loaded resources
-        for (PathTimestamp pathTimestamp : pathTimestamps) {
-            try {
-                long currentLastModified = getResourceAttributes(pathTimestamp.path).getLastModified();
-                long oldLastModified = pathTimestamp.timestamp;
-                if (currentLastModified != oldLastModified) {
-                    if (LOG.isLoggable(DEBUG)) {
-                        LOG.log(DEBUG, "Resource {0} was modified at {1}, old time stamp was {2}.", pathTimestamp.path,
-                            Instant.ofEpochMilli(currentLastModified), Instant.ofEpochMilli(oldLastModified));
-                    }
-                    return true;
-                }
-            } catch (NamingException e) {
-                LOG.log(ERROR, LogFacade.MISSING_RESOURCE, pathTimestamp.path);
-                return true;
-            }
-        }
-
-        try {
-            final int jarNamesLength = jarNames.size();
-            final NamingEnumeration<Binding> bindings = jndiResources.listBindings(WEB_INF_LIB);
-            int i = 0;
-            while (bindings.hasMoreElements() && i < jarNamesLength) {
-                NameClassPair ncPair = bindings.nextElement();
-                String name = ncPair.getName();
-                // Ignore non JARs present in the lib folder
-                if (!name.endsWith(".jar") && !name.endsWith(".zip")) {
-                    continue;
-                }
-                if (!name.equals(jarNames.get(i))) {
-                    LOG.log(TRACE, "JAR files changed: {0}", name);
-                    return true;
-                }
-                i++;
-            }
-            if (bindings.hasMoreElements()) {
-                while (bindings.hasMoreElements()) {
-                    NameClassPair ncPair = bindings.nextElement();
-                    String name = ncPair.getName();
-                    // Additional non-JAR files are allowed
-                    if (name.endsWith(".jar") || name.endsWith(".zip")) {
-                        LOG.log(TRACE, "Additional JARs have been added: {0}", name);
-                        return true;
-                    }
-                }
-            } else if (i < jarNamesLength) {
-                LOG.log(TRACE, "Some JAR file was removed.");
-                return true;
-            }
-        } catch (NamingException | ClassCastException e) {
-            LOG.log(ERROR, LogFacade.FAILED_TRACKING_MODIFICATIONS, WEB_INF_LIB, e.getMessage());
-        }
-
-        // No classes have been modified
-        return false;
-
-    }
-
-
-    @Override
-    public JarFile[] getJarFiles() {
-        checkStatus(LifeCycleStatus.RUNNING);
-        return jarFiles.getJarFiles();
-    }
-
-
-    @Override
-    public ClassLoader copy() {
-        LOG.log(DEBUG, "copy()");
-        // set getParent() as the parent of the cloned class loader
-        PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader(getURLs(), getParent());
-        return AccessController.doPrivileged(action);
-    }
-
-
-    /**
-     * Constructs a short description of the classloader.
-     */
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder(4096);
-        sb.append(super.toString());
-        sb.append("[delegate=").append(delegate);
-        sb.append(", context=").append(contextName);
-        sb.append(", status=").append(status);
-        sb.append(", repositories=").append(repositoryManager);
-        sb.append(", notFound.size=").append(notFoundResources.size());
-        sb.append(", pathTimestamps.size=").append(pathTimestamps.size());
-        sb.append(']');
-        return sb.toString();
-    }
-
-
-    /**
      * Find the specified class in our local repositories, if possible.  If
      * not found, throw <code>ClassNotFoundException</code>.
      *
@@ -1132,13 +1031,102 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     }
 
 
-    @PreDestroy
-    public void preDestroy() {
-        try {
-            close();
-        } catch (Exception e) {
-            throw new IllegalStateException("There were issues with closing " + this, e);
+    public File getExtractedResourcePath(String path) {
+        if (antiJARLocking) {
+            jarFiles.extractResources(loaderDir, path);
         }
+        File extractedResource = new File(loaderDir, path);
+        return extractedResource.exists() ? extractedResource : null;
+    }
+
+
+    @Override
+    public JarFile[] getJarFiles() {
+        checkStatus(LifeCycleStatus.RUNNING);
+        return jarFiles.getJarFiles();
+    }
+
+
+    /**
+     * Have one or more classes or resources been modified so that a {@link #reload()} is appropriate?
+     */
+    @Override
+    public boolean modified() {
+        checkStatus(LifeCycleStatus.RUNNING);
+        // Checking for modified loaded resources
+        for (PathTimestamp pathTimestamp : pathTimestamps) {
+            try {
+                long currentLastModified = getResourceAttributes(pathTimestamp.path).getLastModified();
+                long oldLastModified = pathTimestamp.timestamp;
+                if (currentLastModified != oldLastModified) {
+                    if (LOG.isLoggable(DEBUG)) {
+                        LOG.log(DEBUG, "Resource {0} was modified at {1}, old time stamp was {2}.", pathTimestamp.path,
+                            Instant.ofEpochMilli(currentLastModified), Instant.ofEpochMilli(oldLastModified));
+                    }
+                    return true;
+                }
+            } catch (NamingException e) {
+                LOG.log(ERROR, LogFacade.MISSING_RESOURCE, pathTimestamp.path);
+                return true;
+            }
+        }
+
+        try {
+            final int jarNamesLength = jarNames.size();
+            final NamingEnumeration<Binding> bindings = jndiResources.listBindings(WEB_INF_LIB);
+            int i = 0;
+            while (bindings.hasMoreElements() && i < jarNamesLength) {
+                NameClassPair ncPair = bindings.nextElement();
+                String name = ncPair.getName();
+                // Ignore non JARs present in the lib folder
+                if (!name.endsWith(".jar") && !name.endsWith(".zip")) {
+                    continue;
+                }
+                if (!name.equals(jarNames.get(i))) {
+                    LOG.log(TRACE, "JAR files changed: {0}", name);
+                    return true;
+                }
+                i++;
+            }
+            if (bindings.hasMoreElements()) {
+                while (bindings.hasMoreElements()) {
+                    NameClassPair ncPair = bindings.nextElement();
+                    String name = ncPair.getName();
+                    // Additional non-JAR files are allowed
+                    if (name.endsWith(".jar") || name.endsWith(".zip")) {
+                        LOG.log(TRACE, "Additional JARs have been added: {0}", name);
+                        return true;
+                    }
+                }
+            } else if (i < jarNamesLength) {
+                LOG.log(TRACE, "Some JAR file was removed.");
+                return true;
+            }
+        } catch (NamingException | ClassCastException e) {
+            LOG.log(ERROR, LogFacade.FAILED_TRACKING_MODIFICATIONS, WEB_INF_LIB, e.getMessage());
+        }
+
+        // No classes have been modified
+        return false;
+
+    }
+
+
+    /**
+     * Used to signal to the classloader to release JAR resources because of reload.
+     */
+    public void reload() {
+        checkStatus(LifeCycleStatus.RUNNING);
+        jarFiles.closeJarFiles();
+    }
+
+
+    @Override
+    public ClassLoader copy() {
+        LOG.log(DEBUG, "copy()");
+        // set getParent() as the parent of the cloned class loader
+        PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader(getURLs(), getParent());
+        return AccessController.doPrivileged(action);
     }
 
 
@@ -1187,20 +1175,32 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     }
 
 
-    public File getExtractedResourcePath(String path) {
-        if (antiJARLocking) {
-            jarFiles.extractResources(loaderDir, path);
-        }
-        File extractedResource = new File(loaderDir, path);
-        return extractedResource.exists() ? extractedResource : null;
+    /**
+     * Constructs a short description of the classloader.
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(4096);
+        sb.append(super.toString());
+        sb.append("[delegate=").append(delegate);
+        sb.append(", context=").append(contextName);
+        sb.append(", status=").append(status);
+        sb.append(", repositories=").append(repositoryManager);
+        sb.append(", notFound.size=").append(notFoundResources.size());
+        sb.append(", pathTimestamps.size=").append(pathTimestamps.size());
+        sb.append(", resourceEntryCache.size=").append(resourceEntryCache.size());
+        sb.append(']');
+        return sb.toString();
     }
 
 
-    /**
-     * Used to signal to the classloader to release JAR resources because of reload.
-     */
-    public void reload() {
-        jarFiles.closeJarFiles();
+    @PreDestroy
+    public void preDestroy() {
+        try {
+            close();
+        } catch (Exception e) {
+            throw new IllegalStateException("There were issues with closing " + this, e);
+        }
     }
 
 
@@ -1220,14 +1220,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
 
     private void clearReferences() {
-
-        // De-register any remaining JDBC drivers
         clearReferencesJdbc();
-
-        // Check for leaks triggered by ThreadLocals loaded by this class loader
         checkThreadLocalsForLeaks();
-
-        // Clear RMI Targets loaded by this class loader
         clearReferencesRmiTargets();
 
         // Null out any static or final fields from loaded classes,
@@ -1236,18 +1230,15 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
             clearReferencesStaticFinal(resourceEntryCache.values());
         }
 
-        // Clear the IntrospectionUtils cache.
         IntrospectionUtils.clear();
-
-        // Clear the resource bundle cache
         ResourceBundle.clearCache(this);
-
-        // Clear the classloader reference in the VM's bean introspector
         Introspector.flushCaches();
     }
 
 
+    /** De-register any remaining JDBC drivers */
     private void clearReferencesJdbc() {
+        LOG.log(TRACE, "clearReferencesJdbc()");
         @SuppressWarnings("resource")
         final ClassLoader classloader = this;
         DriverManager.drivers().filter(driver -> driver.getClass().getClassLoader() == classloader)
@@ -1286,8 +1277,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
                         break;
                     }
                 }
-            } catch (Throwable t) {
-                // Ignore
+            } catch (Exception t) {
+                LOG.log(TRACE, "", t);
             }
         }
 
@@ -1376,9 +1367,9 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         }
     }
 
-
+    /** Check for leaks triggered by ThreadLocals loaded by this class loader */
     private void checkThreadLocalsForLeaks() {
-        Thread[] threads = getThreads();
+        LOG.log(TRACE, "checkThreadLocalsForLeaks()");
         try {
             // Make the fields in the Thread class that store ThreadLocals accessible
             Field threadLocalsField = Thread.class.getDeclaredField("threadLocals");
@@ -1392,6 +1383,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
             Method expungeStaleEntriesMethod = tlmClass.getDeclaredMethod("expungeStaleEntries");
             expungeStaleEntriesMethod.setAccessible(true);
 
+            Thread[] threads = getThreads();
             for (Thread thread : threads) {
                 if (thread != null) {
                     // Clear the first map
@@ -1409,8 +1401,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
                     }
                 }
             }
-        } catch (SecurityException | NoSuchFieldException | ClassNotFoundException | IllegalArgumentException
-            | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+        } catch (Exception e) {
             LOG.log(WARNING, getString(LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_FAIL, contextName), e);
         }
     }
@@ -1546,10 +1537,11 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
 
     /**
-     * This depends on the internals of the Sun JVM so it does everything by
-     * reflection.
+     * Clear RMI Targets loaded by this class loader.
+     * This depends on the internals of the JVM so it does everything by reflection.
      */
     private void clearReferencesRmiTargets() {
+        LOG.log(TRACE, "clearReferencesRmiTargets()");
         try {
             // Need access to the ccl field of sun.rmi.transport.Target
             Class<?> objectTargetClass = Class.forName("sun.rmi.transport.Target");

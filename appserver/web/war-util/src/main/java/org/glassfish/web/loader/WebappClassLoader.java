@@ -46,7 +46,6 @@ import java.security.PermissionCollection;
 import java.security.Permissions;
 import java.security.Policy;
 import java.security.PrivilegedAction;
-import java.text.MessageFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -239,7 +238,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     private boolean hasExternalRepositories;
 
     /** List of byte code pre-processors per webapp class loader. */
-    private List<BytecodePreprocessor> byteCodePreprocessors = new ArrayList<>();
+    private final ConcurrentLinkedQueue<BytecodePreprocessor> byteCodePreprocessors = new ConcurrentLinkedQueue<>();
 
     /** myfaces-api uses jakarta.faces packages */
     private boolean useMyFaces;
@@ -512,14 +511,14 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
 
     /**
-     * Add a new ClassFileTransformer to this class loader. This transfomer should be called for
-     * each class loading event.
+     * Add a new ClassFileTransformer to this class loader.
+     * This transfomer should be called for each class loading event.
      *
      * @param transformer new class file transformer to do byte code enhancement.
      */
     @Override
     public void addTransformer(final ClassFileTransformer transformer) {
-        checkStatus(LifeCycleStatus.NEW);
+        checkStatus(LifeCycleStatus.NEW, LifeCycleStatus.RUNNING);
         byteCodePreprocessors.add(new WebappBytecodePreprocessor(transformer, this));
     }
 
@@ -530,7 +529,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     public void start() {
         LOG.log(DEBUG, "start()");
         checkStatus(LifeCycleStatus.NEW);
-        byteCodePreprocessors = Collections.unmodifiableList(byteCodePreprocessors);
         jarNames = Collections.unmodifiableList(jarNames);
         status = LifeCycleStatus.RUNNING;
     }
@@ -1550,7 +1548,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
                 return;
             }
         }
-        throw new IllegalStateException("ClassLoader is not ready: " + this);
+        throw new IllegalStateException("ClassLoader is not in expected state: " + this);
     }
 
 

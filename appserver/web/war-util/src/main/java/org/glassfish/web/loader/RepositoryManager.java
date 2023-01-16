@@ -79,8 +79,8 @@ class RepositoryManager implements Closeable {
 
     private static class Repository {
 
-        public String name;
-        public File directory;
+        public final String name;
+        public final File directory;
 
         Repository(String name, File directory) {
             this.name = name;
@@ -96,8 +96,8 @@ class RepositoryManager implements Closeable {
 
     static class RepositoryResource {
 
-        public String name;
-        public File file;
+        public final String name;
+        public final File file;
 
         RepositoryResource(String name, File file) {
             this.name = name;

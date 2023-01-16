@@ -98,8 +98,7 @@ public class ResourceEntry {
      * @param url resource location
      */
     ResourceEntry(URL url) {
-        codeBase = url;
-        source = url;
+        this(url, url);
     }
 
 

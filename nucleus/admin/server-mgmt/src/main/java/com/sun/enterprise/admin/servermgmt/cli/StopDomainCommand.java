@@ -167,9 +167,10 @@ public class StopDomainCommand extends LocalDomainCommand {
     protected void doCommand() throws CommandException {
         // run the remote stop-domain command and throw away the output
         RemoteCLICommand cmd = new RemoteCLICommand(getName(), programOpts, env);
+        File watchedPid = isLocal() ? getServerDirs().getPidFile() : null;
         try {
             cmd.executeAndReturnOutput("stop-domain", "--force", force.toString());
-            waitForDeath();
+            waitForDeath(watchedPid);
         } catch (Exception e) {
             // The domain server may have died so fast we didn't have time to
             // get the (always successful!!) return data.  This is NOT AN ERROR!
@@ -177,7 +178,6 @@ public class StopDomainCommand extends LocalDomainCommand {
             if (kill && isLocal()) {
                 try {
                     File prevPid = getServerDirs().getLastPidFile();
-                    File watchedPid = getServerDirs().getPidFile();
                     ProcessUtils.kill(prevPid, watchedPid, Duration.ofMillis(DEATH_TIMEOUT_MS), !programOpts.isTerse());
                     return;
                 } catch (Exception ex) {
@@ -190,14 +190,21 @@ public class StopDomainCommand extends LocalDomainCommand {
 
     /**
      * Wait for the server to die.
+     *
+     * @param watchedPid
      */
-    private void waitForDeath() throws CommandException {
+    private void waitForDeath(File watchedPid) throws CommandException {
         if (!programOpts.isTerse()) {
             // use stdout because logger always appends a newline
             System.out.print(Strings.get("StopDomain.WaitDASDeath") + " ");
         }
         final Duration timeout = Duration.ofMillis(DEATH_TIMEOUT_MS);
-        final Supplier<Boolean> deathSign = () -> !ProcessUtils.isListening(addr);
+        final Supplier<Boolean> deathSign;
+        if (isLocal()) {
+            deathSign = () -> !ProcessUtils.isListening(addr) && !ProcessUtils.isAlive(watchedPid);
+        } else {
+            deathSign = () -> !ProcessUtils.isListening(addr);
+        }
         final boolean dead = ProcessUtils.waitFor(deathSign, timeout, !programOpts.isTerse());
         if (!dead) {
             throw new CommandException(Strings.get("StopDomain.DASNotDead", timeout.toSeconds()));

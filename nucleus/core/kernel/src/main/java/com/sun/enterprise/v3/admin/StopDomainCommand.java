@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,17 +17,23 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+
 import org.glassfish.api.Async;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
-import jakarta.inject.Inject;
-import org.jvnet.hk2.annotations.Service;
-
+import org.glassfish.api.admin.AccessRequired;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandLock;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * AdminCommand to stop the domain execution which mean shuting down the application
@@ -57,6 +64,7 @@ public class StopDomainCommand extends StopServer implements AdminCommand {
      * All running services are stopped.
      * LookupManager is flushed.
      */
+    @Override
     public void execute(AdminCommandContext context) {
 
         if (!env.isDas()) {

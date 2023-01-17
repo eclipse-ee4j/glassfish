@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,8 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.io.FileUtils;
-import java.io.File;
+import java.util.logging.Level;
+
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.embeddable.GlassFish;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -26,15 +26,17 @@ import org.glassfish.kernel.KernelLoggerInfo;
 
 /**
  * A class to house identical code for stopping instances and DAS
+ *
  * @author Byron Nevins
  */
 public class StopServer {
 
     /**
-     * Shutdown of the server :
-     *
-     * All running services are stopped.
-     * LookupManager is flushed.
+     * Shutdown of the server:
+     * <ol>
+     * <li>All running services are stopped.
+     * <li>LookupManager is flushed.
+     * </ol>
      */
     protected final void doExecute(ServiceLocator habitat, ServerEnvironment env, boolean force) {
         try {
@@ -48,39 +50,17 @@ public class StopServer {
             // show up in the ServiceLocator.
             GlassFish gfKernel = habitat.getService(GlassFish.class);
             while (gfKernel == null) {
-                Thread.sleep(1000);
+                Thread.yield();
                 gfKernel = habitat.getService(GlassFish.class);
             }
             // gfKernel is absolutely positively for-sure not null.
             gfKernel.stop();
+        } catch (Throwable t) {
+            KernelLoggerInfo.getLogger().log(Level.WARNING, "Server kernel stop failed.", t);
         }
-        catch (Throwable t) {
-            // ignore
-        }
-
 
         if (force) {
             System.exit(0);
-        }
-        else {
-            deletePidFile(env);
-        }
-    }
-
-    private final static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(StopServer.class);
-
-    /**
-     * It is **Essential** to delete this file!  Other code will assume the server
-     * is running if it exists.
-     * Any old App is currently (10/10/10) allowed to add a shutdownhook with a System.exit()
-     * which is GUARANTEED to prevent the shutdown hook for deleting the pidfile to run.
-     * So -- we always do it BEFORE trying to exit.
-     */
-    private void deletePidFile(ServerEnvironment env) {
-        File pidFile = new File(env.getConfigDirPath(), "pid");
-
-        if (pidFile.isFile()) {
-            FileUtils.deleteFileNowOrLater(pidFile);
         }
     }
 }

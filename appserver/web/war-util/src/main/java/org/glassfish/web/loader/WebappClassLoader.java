@@ -39,7 +39,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.AccessControlException;
 import java.security.AccessController;
-import java.security.AllPermission;
 import java.security.CodeSource;
 import java.security.Permission;
 import java.security.PermissionCollection;
@@ -52,7 +51,6 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -137,7 +135,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     public static final boolean DELEGATE_DEFAULT = true;
 
     private static final Logger LOG = LogFacade.getSysLogger(WebappClassLoader.class);
-    private static final ResourceBundle rb = LogFacade.getLogger().getResourceBundle();
 
     private static final Function<String, String> PACKAGE_TO_PATH = pkg -> pkg.replace('.', '/');
 
@@ -160,15 +157,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     private static final Set<String> DELEGATED_RESOURCE_PATHS = DELEGATED_PACKAGES.stream()
         .map(PACKAGE_TO_PATH).collect(Collectors.toUnmodifiableSet());
 
-    /** All permission. */
-    private static final Permission ALL_PERMISSION = new AllPermission();
-
     /** Instance of the SecurityManager installed. */
     private static final SecurityManager SECURITY_MANAGER = System.getSecurityManager();
-
-    /** Use this variable to invoke the security manager when a resource is loaded by this classloader. */
-    private static final boolean PACKAGE_DEFINITION_ENABLED = SECURITY_MANAGER != null
-        && System.getProperty("package.definition") != null;
 
     private final ReferenceCleaner cleaner;
 
@@ -213,6 +203,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
      * for locally loaded classes or resources. This list serves to check if files changed.
      */
     private List<String> jarNames = new ArrayList<>();
+
+    private boolean packageDefinitionSecurityEnabled;
 
     /**
      * A list of read File and Jndi Permission's required if this loader
@@ -338,6 +330,20 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     public void setAntiJARLocking(boolean enable) {
         checkStatus(LifeCycleStatus.NEW);
         this.antiJARLocking = enable;
+    }
+
+
+    /**
+     * Enables checks for the package definition permissions.
+     *
+     * @param enable
+     */
+    public void setPackageDefinitionSecurityEnabled(boolean enable) {
+        if (enable && SECURITY_MANAGER == null) {
+            throw new IllegalArgumentException("The Security Manager is disabled.");
+        }
+        LOG.log(DEBUG, "setPackageDefinitionSecurityEnabled(enable={0})", enable);
+        this.packageDefinitionSecurityEnabled = enable;
     }
 
 
@@ -548,7 +554,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         checkStatus(LifeCycleStatus.RUNNING);
 
         // (1) Permission to define this class when using a SecurityManager
-        if (PACKAGE_DEFINITION_ENABLED) {
+        if (packageDefinitionSecurityEnabled) {
             int i = name.lastIndexOf('.');
             if (i >= 0) {
                 try {
@@ -878,7 +884,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
             }
 
             // (0.5) Permission to access this class when using a SecurityManager
-            if (PACKAGE_DEFINITION_ENABLED) {
+            if (packageDefinitionSecurityEnabled) {
                 int i = name.lastIndexOf('.');
                 if (i >= 0) {
                     try {
@@ -1155,6 +1161,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         sb.append(", context=").append(contextName);
         sb.append(", status=").append(status);
         sb.append(", antiJARLocking=").append(antiJARLocking);
+        sb.append(", securityManager=").append(SECURITY_MANAGER != null);
+        sb.append(", packageDefinitionSecurityEnabled=").append(packageDefinitionSecurityEnabled);
         sb.append(", repositories=").append(repositoryManager);
         sb.append(", notFound.size=").append(notFoundResources.size());
         sb.append(", pathTimestamps.size=").append(pathTimestamps.size());

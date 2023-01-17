@@ -64,6 +64,7 @@ import org.apache.catalina.LifecycleListener;
 import org.apache.catalina.Loader;
 import org.apache.catalina.LogFacade;
 import org.apache.catalina.core.StandardContext;
+import org.apache.catalina.security.SecurityUtil;
 import org.apache.catalina.util.LifecycleSupport;
 import org.apache.catalina.util.StringManager;
 import org.apache.naming.resources.DirContextURLStreamHandler;
@@ -806,22 +807,19 @@ public class WebappLoader
         }
 
         try {
-            AccessController.doPrivileged(
-                  new PrivilegedExceptionAction<Object>() {
-                    @Override
-                    public Object run() throws SecurityException {
-                        setPermissions_priv();
-                        return null;
-                    }
-                });
-            } catch (PrivilegedActionException e) {
-                throw (SecurityException ) e.getException();
-            }
+            PrivilegedExceptionAction<Object> action = () -> {
+                setPermissions_priv();
+                return null;
+            };
+            AccessController.doPrivileged(action);
+        } catch (PrivilegedActionException e) {
+            throw (SecurityException) e.getException();
+        }
     }
 
 
     private void setPermissions_priv() {
-
+        classLoader.setPackageDefinitionSecurityEnabled(SecurityUtil.isPackageProtectionEnabled());
 
         // Tell the class loader the root of the context
         ServletContext servletContext =

@@ -129,7 +129,11 @@ pipeline {
   stages {
 
     stage('build') {
-      agent any
+      agent {
+        kubernetes {
+          inheritFrom 'centos-8-6gb'
+        }
+      }
       tools {
         jdk 'temurin-jdk17-latest'
         maven 'apache-maven-latest'
@@ -159,7 +163,11 @@ pipeline {
     }
 
     stage('tests') {
-      agent any
+      agent {
+        kubernetes {
+          inheritFrom 'centos-8-6gb'
+        }
+      }
       tools {
         jdk 'temurin-jdk17-latest'
         maven 'apache-maven-latest'

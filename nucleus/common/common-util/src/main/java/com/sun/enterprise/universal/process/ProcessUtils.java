@@ -90,6 +90,10 @@ public final class ProcessUtils {
     }
 
 
+    /**
+     * @param pidFile
+     * @return true if the pid file exists and the process with the pid inside is alive.
+     */
     public static boolean isAlive(final File pidFile) {
         if (!pidFile.exists()) {
             return false;

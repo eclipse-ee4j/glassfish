@@ -194,13 +194,15 @@ public final class OSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
     private void deleteHK2Cache(Properties properties) throws GlassFishException {
         // This is a HACK - thanks to some weired optimization trick
         // done for GlassFish. HK2 maintains a cache of inhabitants and
-        // that needs  to be recreated when there is a change in modules dir.
+        // that needs to be recreated when there is a change in modules dir.
         final String cacheDir = properties.getProperty(HK2_CACHE_DIR);
         if (cacheDir != null) {
             File inhabitantsCache = new File(cacheDir, INHABITANTS_CACHE);
             if (inhabitantsCache.exists()) {
+                logger.logp(Level.CONFIG, "OSGiGlassFishRuntimeBuilder", "deleteHK2Cache",
+                    "Deleting OSGI inhabitants cache {0} ...", inhabitantsCache);
                 if (!inhabitantsCache.delete()) {
-                    throw new GlassFishException("cannot delete cache:" + inhabitantsCache.getAbsolutePath());
+                    throw new GlassFishException("Cannot delete cache: " + inhabitantsCache.getAbsolutePath());
                 }
             }
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -98,6 +98,16 @@ public class LogFormatDetectorTest {
         assertAll(
             () -> assertFalse(detector.isCompressedFile("xxx.log")),
             () -> assertTrue(detector.isCompressedFile("xxx.gz"))
+        );
+    }
+
+
+    @Test
+    public void isOneLineFormat() {
+        assertAll(
+            () -> assertFalse(detector.isOneLineLFormatLogHeader("22:22:15.796552    INFO thread")),
+            () -> assertTrue(detector.isOneLineLFormatLogHeader("22:22:15.796552    INFO t c m")),
+            () -> assertTrue(detector.isOneLineLFormatLogHeader("22:22:15.796552    INFO t c m xxx xxx x "))
         );
     }
 }

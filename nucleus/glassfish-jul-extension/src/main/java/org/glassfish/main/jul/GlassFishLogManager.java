@@ -486,9 +486,7 @@ public class GlassFishLogManager extends LogManager {
             return super.addLogger(newLogger);
         }
         // CORBA and IMQ stand aside
-        PrivilegedAction<Boolean> action = () -> {
-            return super.addLogger(newLogger);
-        };
+        PrivilegedAction<Boolean> action = () -> super.addLogger(newLogger);
         return AccessController.doPrivileged(action);
     }
 

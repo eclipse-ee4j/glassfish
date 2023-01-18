@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,7 +35,7 @@ final class ODLLogParser implements LogParser {
     private static final int FIXED_FIELD_COUNT = 5;
     private static final Pattern RECORD_START = Pattern.compile("^\\[" + P_TIMESTAMP + "\\].*");
     private static final Pattern FIELD = Pattern.compile("(\\[[^\\[\\]\n]*\\])+");
-    private static final Pattern THREAD_FIELD = Pattern.compile("[ ]*_ThreadID=(.+) _ThreadName=(.+)");
+    private static final Pattern THREAD_FIELD = Pattern.compile("[^_]*_ThreadID=(.+) _ThreadName=(.+)");
 
     @Override
     public void parseLog(BufferedReader reader, LogParserListener listener) throws LogParserException {

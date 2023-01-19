@@ -19,6 +19,7 @@
 package org.glassfish.appclient.client.acc;
 
 import com.sun.enterprise.loader.ResourceLocator;
+import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -68,15 +69,11 @@ public class ACCClassLoader extends GlassfishUrlClassLoader {
         boolean currentCLWasAgentCL = currentClassLoader.getClass().getName().equals(AGENT_LOADER_CLASS_NAME);
         ClassLoader parentForACCCL = currentCLWasAgentCL ? currentClassLoader.getParent() : currentClassLoader;
 
-        instance = doPrivileged(new PrivilegedAction<ACCClassLoader>() {
-
-            @Override
-            public ACCClassLoader run() {
-                URL[] classpath = ClassPathUtils.getJavaClassPathForAppClient();
-                return new ACCClassLoader(classpath, parentForACCCL, shouldTransform);
-            }
-
-        });
+        PrivilegedAction<ACCClassLoader> action = () -> {
+            URL[] classpath = ClassPathUtils.getJavaClassPathForAppClient();
+            return new ACCClassLoader(classpath, parentForACCCL, shouldTransform);
+        };
+        instance = doPrivileged(action);
 
         if (currentCLWasAgentCL) {
             try {
@@ -113,13 +110,11 @@ public class ACCClassLoader extends GlassfishUrlClassLoader {
     public ACCClassLoader(ClassLoader parent, final boolean shouldTransform) {
         super(new URL[0], parent);
         this.shouldTransform = shouldTransform;
-
         clientCLDelegate = new ClientClassLoaderDelegate(this);
     }
 
     public ACCClassLoader(URL[] urls, ClassLoader parent) {
         super(urls, parent);
-
         clientCLDelegate = new ClientClassLoaderDelegate(this);
     }
 
@@ -170,7 +165,6 @@ public class ACCClassLoader extends GlassfishUrlClassLoader {
         String name = sourceClass.getName();
         ProtectionDomain pd = sourceClass.getProtectionDomain();
         byte[] bytecode = readByteCode(name);
-
         for (ClassFileTransformer xf : transformers) {
             try {
                 bytecode = xf.transform(this, name, null, pd, bytecode);
@@ -187,27 +181,15 @@ public class ACCClassLoader extends GlassfishUrlClassLoader {
 
     private byte[] readByteCode(final String className) throws ClassNotFoundException {
         String resourceName = className.replace('.', '/') + ".class";
-        InputStream is = getResourceAsStream(resourceName);
-        if (is == null) {
-            throw new ClassNotFoundException(className);
-        }
-
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            byte[] buffer = new byte[8196];
-            int bytesRead;
-            while ((bytesRead = is.read(buffer)) != -1) {
-                baos.write(buffer, 0, bytesRead);
+        try (InputStream is = getResourceAsStream(resourceName)) {
+            if (is == null) {
+                throw new ClassNotFoundException(className);
             }
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            FileUtils.copy(is, baos, is.available());
             return baos.toByteArray();
         } catch (IOException e) {
             throw new ClassNotFoundException(className, e);
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                throw new ClassNotFoundException(className, e);
-            }
         }
     }
 

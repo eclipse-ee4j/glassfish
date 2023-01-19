@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -557,12 +557,9 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
                     webModuleConfig.setLocation(docroot);
                     webModuleConfig.setDescriptor(webBundleDescriptor);
                     webModuleConfig.setParentLoader(EmbeddedWebContainer.class.getClassLoader());
-                    WebappClassLoader cloader = AccessController.doPrivileged(new PrivilegedAction<WebappClassLoader>() {
-                        @Override
-                        public WebappClassLoader run() {
-                            return new WebappClassLoader(EmbeddedWebContainer.class.getClassLoader());
-                        }
-                    });
+                    PrivilegedAction<WebappClassLoader> action = () -> new WebappClassLoader(
+                        EmbeddedWebContainer.class.getClassLoader());
+                    WebappClassLoader cloader = AccessController.doPrivileged(action);
                     webModuleConfig.setAppClassLoader(cloader);
                 }
             }
@@ -599,13 +596,8 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
             webModuleConfig.setLocation(new File(docroot));
             webModuleConfig.setDescriptor(webBundleDescriptor);
             webModuleConfig.setParentLoader(serverContext.getCommonClassLoader());
-            WebappClassLoader loader = AccessController.doPrivileged(new PrivilegedAction<WebappClassLoader>() {
-                @Override
-                public WebappClassLoader run() {
-                    return new WebappClassLoader(serverContext.getCommonClassLoader());
-                }
-            });
-
+            PrivilegedAction<WebappClassLoader> action = () -> new WebappClassLoader(serverContext.getCommonClassLoader());
+            WebappClassLoader loader = AccessController.doPrivileged(action);
             loader.start();
             webModuleConfig.setAppClassLoader(loader);
 

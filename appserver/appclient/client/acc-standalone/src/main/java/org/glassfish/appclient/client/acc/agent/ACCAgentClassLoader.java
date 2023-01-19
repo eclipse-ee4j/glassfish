@@ -27,20 +27,23 @@ import java.security.PrivilegedAction;
 import java.util.Enumeration;
 
 import org.glassfish.appclient.common.ClassPathUtils;
-import org.glassfish.common.util.GlassfishUrlClassLoader;
 
 import static java.security.AccessController.doPrivileged;
 
 /**
  * Used as the system class loader during app client launch.
  * <p>
- * The main role of this class loader is to find a splash screen image that might be specified in the manifest of the
- * app client. Once the ACC begins working it will create an ACCClassLoader for loading client classes and locating
- * client resources.
+ * The main role of this class loader is to find a splash screen image that might be specified in
+ * the manifest of the app client.
+ * Once the ACC begins working it will create an ACCClassLoader for loading client classes and
+ * locating client resources.
+ * <p>
+ * This class and it's dependencies must not use logging, which could cause recursion in class
+ * loading. So don't extend GlassfishUrlClassLoader. Reproducer: TCK tests use this classloader.
  *
  * @author tjquinn
  */
-public class ACCAgentClassLoader extends GlassfishUrlClassLoader {
+public class ACCAgentClassLoader extends URLClassLoader {
 
     private boolean isActive = true;
 
@@ -54,7 +57,7 @@ public class ACCAgentClassLoader extends GlassfishUrlClassLoader {
 
 
     private static URLClassLoader prepareLoader(ClassLoader parent) {
-        PrivilegedAction<URLClassLoader> action = () -> new GlassfishUrlClassLoader(
+        PrivilegedAction<URLClassLoader> action = () -> new URLClassLoader(
             new URL[] {ClassPathUtils.getGFClientJarURL()}, new ClassLoaderWrapper(parent));
         return doPrivileged(action);
     }

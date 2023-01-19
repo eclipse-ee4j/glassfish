@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -43,7 +43,6 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -129,11 +128,11 @@ public class WarHandler extends AbstractArchiveHandler {
         PrivilegedAction<WebappClassLoader> action = () -> new WebappClassLoader(parent);
         WebappClassLoader cloader = AccessController.doPrivileged(action);
         try {
-            WebDirContext r = new WebDirContext();
+            WebDirContext webDirContext = new WebDirContext();
             File base = new File(context.getSource().getURI());
-            r.setDocBase(base.getAbsolutePath());
+            webDirContext.setDocBase(base.getAbsolutePath());
 
-            cloader.setResources(r);
+            cloader.setResources(webDirContext);
             cloader.addRepository("WEB-INF/classes/", new File(base, "WEB-INF/classes/"));
             if (context.getScratchDir("ejb") != null) {
                 cloader.addRepository(context.getScratchDir("ejb").toURI().toURL().toString().concat("/"));
@@ -263,10 +262,10 @@ public class WarHandler extends AbstractArchiveHandler {
                     // support exploded jar file
                     cloader.addRepository("WEB-INF/lib/" + file.getName() + "/", file);
                 } else {
-                    cloader.addJar(file.getPath().substring(baseFileLen), new JarFile(file), file);
+                    cloader.addJar(file.getPath().substring(baseFileLen), file);
                 }
             } catch (final Exception e) {
-                // Catch and ignore any exception in case the JAR file is empty.
+                LOG.log(Level.FINEST, "Could not add file " + file, e);
             }
         }
     }

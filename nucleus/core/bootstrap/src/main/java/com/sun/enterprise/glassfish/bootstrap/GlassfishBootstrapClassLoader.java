@@ -42,6 +42,10 @@ import java.util.stream.Collectors;
  */
 public class GlassfishBootstrapClassLoader extends URLClassLoader {
 
+    static {
+        registerAsParallelCapable();
+    }
+
     /**
      * Initializes the classloader.
      *

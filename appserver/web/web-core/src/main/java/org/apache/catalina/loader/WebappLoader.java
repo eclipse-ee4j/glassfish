@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
- * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -141,13 +141,13 @@ public class WebappLoader
     /**
      * The Container with which this Loader has been associated.
      */
-    private Container container = null;
+    private Container container;
 
 
     /**
      * The debugging detail level for this component.
      */
-    private int debug = 0;
+    private int debug;
 
 
     /**
@@ -180,13 +180,13 @@ public class WebappLoader
     /**
      * The parent class loader of the class loader we will create.
      */
-    private ClassLoader parentClassLoader = null;
+    private ClassLoader parentClassLoader;
 
 
     /**
      * The reloadable flag for this Loader.
      */
-    private boolean reloadable = false;
+    private boolean reloadable;
 
 
     /**
@@ -203,7 +203,7 @@ public class WebappLoader
     /**
      * Has this component been started?
      */
-    private boolean started = false;
+    private boolean started;
 
 
     /**
@@ -215,7 +215,7 @@ public class WebappLoader
     /**
      * Classpath set in the loader.
      */
-    private String classpath = null;
+    private String classpath;
 
 
     /**
@@ -365,7 +365,6 @@ public class WebappLoader
      */
     @Override
     public void setReloadable(boolean reloadable) {
-
         // Process this property change
         boolean oldReloadable = this.reloadable;
         this.reloadable = reloadable;
@@ -462,11 +461,11 @@ public class WebappLoader
 
 
     /**
-     * Used to periodically signal to the classloader to release JAR resources.
+     * Used to signal to the classloader to release JAR resources because of reload.
      */
-    public void closeJARs(boolean force) {
-        if (classLoader !=null){
-            classLoader.closeJARs(force);
+    public void reload() {
+        if (classLoader != null) {
+            classLoader.reload();
         }
     }
 
@@ -610,11 +609,12 @@ public class WebappLoader
         if (started) {
             throw new LifecycleException(rb.getString(LogFacade.LOADER_ALREADY_STARTED_EXCEPTION));
         }
-        log.log(Level.FINEST, "Starting this Loader");
+        log.log(Level.FINEST, "Starting {0}", this);
         lifecycle.fireLifecycleEvent(START_EVENT, null);
         started = true;
 
-        if (container.getResources() == null) {
+        final DirContext resources = container.getResources();
+        if (resources == null) {
             log.log(Level.INFO, LogFacade.NO_RESOURCE_INFO, container);
             return;
         }
@@ -623,41 +623,31 @@ public class WebappLoader
 
         // Construct a class loader based on our current repositories list
         try {
-
             final ClassLoader cl = createClassLoader();
             if (cl instanceof WebappClassLoader) {
                 classLoader = (WebappClassLoader) cl;
             } else {
-                classLoader = AccessController.doPrivileged(new PrivilegedAction<WebappClassLoader>() {
-                    @Override
-                    public WebappClassLoader run() {
-                        return new WebappClassLoader(cl);
-                    }
-                });
+                PrivilegedAction<WebappClassLoader> action = () -> new WebappClassLoader(cl);
+                classLoader = AccessController.doPrivileged(action);
             }
-            classLoader.setResources(container.getResources());
-            classLoader.setDelegate(this.delegate);
-
+            classLoader.setDelegate(delegate);
+            classLoader.setOverridablePackages(overridablePackages);
+            classLoader.setResources(resources);
             for (String element : repositories) {
                 classLoader.addRepository(element);
             }
-
-            classLoader.setOverridablePackages(overridablePackages);
-
-            // Configure our repositories
             setRepositories();
-            setClassPath();
-
             setPermissions();
+            setClassPath();
+            startNestedClassLoader();
 
             // Binding the Webapp class loader to the directory context
-            DirContextURLStreamHandler.bind(classLoader, this.container.getResources());
+            DirContextURLStreamHandler.bind(classLoader, resources);
 
         } catch (Throwable t) {
             log.log(Level.SEVERE, LogFacade.LIFECYCLE_EXCEPTION, t);
             throw new LifecycleException("start: ", t);
         }
-
     }
 
 
@@ -673,7 +663,7 @@ public class WebappLoader
         if (!started) {
             throw new LifecycleException(rb.getString(LogFacade.LOADER_NOT_STARTED_EXCEPTION));
         }
-        log.log(Level.FINEST, "Stopping this Loader");
+        log.log(Level.FINEST, "Stopping {0}", this);
 
         lifecycle.fireLifecycleEvent(STOP_EVENT, null);
         started = false;
@@ -699,7 +689,7 @@ public class WebappLoader
      */
     public void stopNestedClassLoader() throws LifecycleException {
         try {
-            classLoader.stop();
+            classLoader.close();
         } catch (Exception e) {
             throw new LifecycleException(e);
         }
@@ -746,33 +736,33 @@ public class WebappLoader
      * Create associated classLoader.
      */
     protected ClassLoader createClassLoader() throws Exception {
-
         Class<?> clazz = Class.forName(loaderClass);
-
         if (parentClassLoader == null) {
             parentClassLoader = Thread.currentThread().getContextClassLoader();
         }
-        Class<?>[] argTypes = { ClassLoader.class };
-        Object[] args = { parentClassLoader };
-        Constructor<?> constr = clazz.getConstructor(argTypes);
-        WebappClassLoader classLoader = (WebappClassLoader) constr.newInstance(args);
-        classLoader.setUseMyFaces(useMyFaces);
+        Constructor<?> constr = clazz.getConstructor(ClassLoader.class );
+        WebappClassLoader webAppClassLoader = (WebappClassLoader) constr.newInstance(parentClassLoader);
+        webAppClassLoader.setUseMyFaces(useMyFaces);
+        return webAppClassLoader;
+    }
 
-        /*
-         * Start the WebappClassLoader here as opposed to in the course of
-         * WebappLoader#start, in order to prevent it from being started
-         * twice (during normal deployment, the WebappClassLoader is created
-         * by the deployment backend without calling
-         * WebappLoader#createClassLoader, and will have been started
-         * by the time WebappLoader#start is called)
-         */
+
+    /**
+     * Start the WebappClassLoader here as opposed to in the course of
+     * WebappLoader#start, in order to prevent it from being started
+     * twice (during normal deployment, the WebappClassLoader is created
+     * by the deployment backend without calling
+     * WebappLoader#createClassLoader, and will have been started
+     * by the time WebappLoader#start is called)
+     *
+     * @throws LifecycleException
+     */
+    protected void startNestedClassLoader() throws LifecycleException {
         try {
             classLoader.start();
         } catch (Exception e) {
             throw new LifecycleException(e);
         }
-
-        return classLoader;
     }
 
 
@@ -992,11 +982,7 @@ public class WebappLoader
         }
 
         // Setting up the JAR repository (/WEB-INF/lib), if it exists
-
-        String libPath = "/WEB-INF/lib";
-
-        classLoader.setJarPath(libPath);
-
+        String libPath = classLoader.getLibJarPath();
         DirContext libDir = null;
         // Looking up directory /WEB-INF/lib in the context
         try {
@@ -1004,7 +990,7 @@ public class WebappLoader
             if (object instanceof DirContext) {
                 libDir = (DirContext) object;
             }
-        } catch(NamingException e) {
+        } catch (NamingException e) {
             // Silent catch: it's valid that no /WEB-INF/lib collection
             // exists
         }

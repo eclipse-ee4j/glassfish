@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,37 +18,28 @@
 
 package org.glassfish.web.loader;
 
-
 /**
  * Internal interface that <code>ClassLoader</code> implementations may
  * optionally implement to support the auto-reload functionality of
  * the classloader associated with the context.
  *
- * @author Craig R. McClanahan
- * @version $Revision: 1.1.2.1 $ $Date: 2007/08/17 15:46:27 $
+ * @author Craig R. McClanahan 2007
  */
-
 public interface Reloader {
 
+    /**
+     * Add a new repository to the set of places this ClassLoader can look for classes to be loaded.
+     *
+     * @param repository Name of a source of classes to be loaded, such as a directory pathname,
+     *            a JAR file pathname, or a ZIP file pathname
+     * @throws IllegalArgumentException if the specified repository is invalid or does not exist
+     */
+    void addRepository(String repository);
 
     /**
-     * Add a new repository to the set of places this ClassLoader can look for
-     * classes to be loaded.
+     * Have one or more classes or resources been modified so that a reload is appropriate?
      *
-     * @param repository Name of a source of classes to be loaded, such as a
-     *  directory pathname, a JAR file pathname, or a ZIP file pathname
-     *
-     * @exception IllegalArgumentException if the specified repository is
-     *  invalid or does not exist
+     * @return true if modified.
      */
-    public void addRepository(String repository);
-
-
-    /**
-     * Have one or more classes or resources been modified so that a reload
-     * is appropriate?
-     */
-    public boolean modified();
-
-
+    boolean modified();
 }

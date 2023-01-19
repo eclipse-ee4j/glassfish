@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2023 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +16,7 @@
  */
 
 package com.sun.enterprise.web;
+
 import static com.sun.enterprise.config.serverbeans.ServerTags.DIRECTORY_DEPLOYED;
 import static com.sun.enterprise.deployment.web.UserDataConstraint.CONFIDENTIAL_TRANSPORT;
 import static com.sun.enterprise.deployment.web.UserDataConstraint.NONE_TRANSPORT;
@@ -172,7 +173,6 @@ import jakarta.servlet.http.HttpUpgradeHandler;
 /**
  * Class representing a web module for use by the Application Server.
  */
-
 public class WebModule extends PwcWebModule implements Context {
 
 
@@ -2154,12 +2154,19 @@ class V3WebappLoader extends WebappLoader {
     }
 
     /**
-     * Stops the nested classloader
+     * Does nothing
+     */
+    @Override
+    protected void startNestedClassLoader() throws LifecycleException {
+    }
+
+
+    /**
+     * Does nothing.
+     * The nested (Webapp)ClassLoader is stopped in WebApplication.stop()
      */
     @Override
     public void stopNestedClassLoader() {
-        // Do nothing. The nested (Webapp)ClassLoader is stopped in
-        // WebApplication.stop()
     }
 }
 

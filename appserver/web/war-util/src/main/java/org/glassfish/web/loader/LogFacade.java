@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
- * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,10 +18,12 @@
 
 package org.glassfish.web.loader;
 
-import org.glassfish.logging.annotation.LogMessageInfo;
-import org.glassfish.logging.annotation.LoggerInfo;
-import org.glassfish.logging.annotation.LogMessagesResourceBundle;
+import java.text.MessageFormat;
 import java.util.logging.Logger;
+
+import org.glassfish.logging.annotation.LogMessageInfo;
+import org.glassfish.logging.annotation.LogMessagesResourceBundle;
+import org.glassfish.logging.annotation.LoggerInfo;
 
 /**
  * Provides the logging facilities.
@@ -30,13 +32,12 @@ import java.util.logging.Logger;
  */
 public class LogFacade {
     @LogMessagesResourceBundle
-    private static final String SHARED_LOGMESSAGE_RESOURCE =
-            "org.glassfish.web.loader.LogMessages";
+    private static final String SHARED_LOGMESSAGE_RESOURCE = "org.glassfish.web.loader.LogMessages";
 
-    @LoggerInfo(subsystem="WEB", description="WEB Util Logger", publish=true)
+    @LoggerInfo(subsystem = "WEB", description = "WEB Util Logger", publish = true)
     private static final String WEB_UTIL_LOGGER = "jakarta.enterprise.web.util";
 
-    public static final Logger LOGGER =
+    private static final Logger LOGGER =
             Logger.getLogger(WEB_UTIL_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
 
     private LogFacade() {}
@@ -45,213 +46,182 @@ public class LogFacade {
         return LOGGER;
     }
 
-    private static final String prefix = "AS-WEB-UTIL-";
+    public static System.Logger getSysLogger(Class<?> clazz) {
+        return System.getLogger(clazz.getName(), LOGGER.getResourceBundle());
+    }
+
+    public static String getString(String key, Object... objects) {
+        return MessageFormat.format(LOGGER.getResourceBundle().getString(key), objects);
+    }
+
+
+    private static final String PREFIX = "AS-WEB-UTIL-";
 
     @LogMessageInfo(
             message = "Resource ''{0}'' is missing",
             level = "SEVERE",
             cause = "A naming exception is encountered",
             action = "Check the list of resources")
-    public static final String MISSING_RESOURCE = prefix + "00001";
+    public static final String MISSING_RESOURCE = PREFIX + "00001";
 
     @LogMessageInfo(
             message = "Failed tracking modifications of ''{0}'' : {1}",
             level = "SEVERE",
             cause = "A ClassCastException is encountered",
             action = "Check if the object is an instance of the class")
-    public static final String FAILED_TRACKING_MODIFICATIONS = prefix + "00002";
-
-    @LogMessageInfo(
-            message = "WebappClassLoader.findClassInternal({0}) security exception: {1}",
-            level = "WARNING",
-            cause = "An AccessControlException is encountered",
-            action = "Check if the resource is accessible")
-    public static final String FIND_CLASS_INTERNAL_SECURITY_EXCEPTION = prefix + "00003";
+    public static final String FAILED_TRACKING_MODIFICATIONS = PREFIX + "00002";
 
     @LogMessageInfo(
             message = "Security Violation, attempt to use Restricted Class: {0}",
             level = "INFO")
-    public static final String SECURITY_EXCEPTION = prefix + "00004";
+    public static final String SECURITY_EXCEPTION = PREFIX + "00004";
 
     @LogMessageInfo(
-            message = "Class {0} has unsupported major or minor version numbers, which are greater than those found in the Java Runtime Environment version {1}",
+            message = "Class {0} has unsupported major or minor version numbers, which are greater "
+                + "than those found in the Java Runtime Environment version {1}",
             level = "WARNING")
-    public static final String UNSUPPORTED_VERSION = prefix + "00005";
+    public static final String UNSUPPORTED_VERSION = PREFIX + "00005";
 
     @LogMessageInfo(
             message = "Unable to load class with name [{0}], reason: {1}",
             level = "WARNING")
-    public static final String UNABLE_TO_LOAD_CLASS = prefix + "00006";
+    public static final String UNABLE_TO_LOAD_CLASS = PREFIX + "00006";
 
     @LogMessageInfo(
-            message = "The web application [{0}] registered the JDBC driver [{1}] but failed to unregister it when the web application was stopped. To prevent a memory leak, the JDBC Driver has been forcibly unregistered.",
+            message = "The web application [{0}] registered the JDBC driver [{1}] but failed to unregister it"
+                + " when the web application was stopped. To prevent a memory leak, the JDBC Driver"
+                + " has been forcibly unregistered.",
             level = "WARNING")
-    public static final String CLEAR_JDBC = prefix + "00007";
+    public static final String CLEAR_JDBC = PREFIX + "00007";
 
     @LogMessageInfo(
             message = "JDBC driver de-registration failed for web application [{0}]",
             level = "WARNING")
-    public static final String JDBC_REMOVE_FAILED = prefix + "00008";
-
-    @LogMessageInfo(
-            message = "Exception closing input stream during JDBC driver de-registration for web application [{0}]",
-            level = "WARNING")
-    public static final String JDBC_REMOVE_STREAM_ERROR = prefix + "00009";
-
-    @LogMessageInfo(
-            message = "This web container has not yet been started",
-            level = "WARNING")
-    public static final String NOT_STARTED = prefix + "00010";
+    public static final String JDBC_REMOVE_FAILED = PREFIX + "00008";
 
     @LogMessageInfo(
             message = "Failed to check for ThreadLocal references for web application [{0}]",
             level = "WARNING")
-    public static final String CHECK_THREAD_LOCALS_FOR_LEAKS_FAIL = prefix + "00011";
+    public static final String CHECK_THREAD_LOCALS_FOR_LEAKS_FAIL = PREFIX + "00011";
 
     @LogMessageInfo(
-            message = "Unable to determine string representation of key of type [{0}]",
-            level = "SEVERE",
-            cause = "An Exception occurred",
-            action = "Check the exception for error")
-    public static final String CHECK_THREAD_LOCALS_FOR_LEAKS_BAD_KEY = prefix + "00012";
-
-    @LogMessageInfo(
-            message = "Unknown",
-            level = "INFO")
-    public static final String CHECK_THREAD_LOCALS_FOR_LEAKS_UNKNOWN = prefix + "00013";
-
-    @LogMessageInfo(
-            message = "Unable to determine string representation of value of type [{0}]",
-            level = "SEVERE",
-            cause = "An Exception occurred",
-            action = "Check the exception for error")
-    public static final String CHECK_THREAD_LOCALS_FOR_LEAKS_BAD_VALUE = prefix + "00014";
-
-    @LogMessageInfo(
-            message = "The web application [{0}] created a ThreadLocal with key of type [{1}] (value [{2}]). The ThreadLocal has been correctly set to null and the key will be removed by GC.",
-            level = "FINE")
-    public static final String CHECK_THREAD_LOCALS_FOR_LEAKS_DEBUG = prefix + "00015";
-
-    @LogMessageInfo(
-            message = "The web application [{0}] created a ThreadLocal with key of type [{1}] (value [{2}]) and a value of type [{3}] (value [{4}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.",
+            message = "The web application [{0}] created a ThreadLocal with key of [{1}]"
+                + " but failed to remove it when the web application was stopped."
+                + " Threads are going to be renewed over time to try and avoid a probable memory leak.",
             level = "SEVERE",
             cause = "Failed to remove a ThreadLocal when the web application was stopped",
             action = "Threads are going to be renewed over time to try and avoid a probable memory leak.")
-    public static final String CHECK_THREAD_LOCALS_FOR_LEAKS = prefix + "00016";
+    public static final String CHECK_THREAD_LOCALS_FOR_LEAKS_KEY = PREFIX + "00015";
 
     @LogMessageInfo(
-            message = "Failed to find class sun.rmi.transport.Target to clear context class loader for web application [{0}]. This is expected on non-Sun JVMs.",
-            level = "INFO")
-    public static final String CLEAR_RMI_INFO = prefix + "00017";
-
-    @LogMessageInfo(
-            message = "Failed to clear context class loader referenced from sun.rmi.transport.Target for web application [{0}]",
-            level = "WARNING")
-    public static final String CLEAR_RMI_FAIL = prefix + "00018";
-
-    @LogMessageInfo(
-            message = "Removed [{0}] ResourceBundle references from the cache for web application [{1}]",
-            level = "FINE")
-    public static final String CLEAR_REFERENCES_RESOURCE_BUNDLES_COUNT = prefix + "00019";
-
-    @LogMessageInfo(
-            message = "Failed to clear ResourceBundle references for web application [{0}]",
+            message = "The web application [{0}] created a ThreadLocal with key of [{1}] and a value of [{2}]"
+                + " but failed to remove it when the web application was stopped."
+                + " Threads are going to be renewed over time to try and avoid a probable memory leak.",
             level = "SEVERE",
-            cause = "An Exception occurred",
-            action = "Check the exception for error")
-    public static final String CLEAR_REFERENCES_RESOURCE_BUNDLES_FAIL = prefix + "00020";
+            cause = "Failed to remove a ThreadLocal when the web application was stopped",
+            action = "Threads are going to be renewed over time to try and avoid a probable memory leak.")
+    public static final String CHECK_THREAD_LOCALS_FOR_LEAKS = PREFIX + "00016";
+
+    @LogMessageInfo(
+            message = "Failed to find class sun.rmi.transport.Target to clear context class loader"
+                + " for web application [{0}]. This is expected on non-Sun JVMs.",
+            level = "INFO")
+    public static final String CLEAR_RMI_INFO = PREFIX + "00017";
+
+    @LogMessageInfo(
+            message = "Failed to clear context class loader referenced from sun.rmi.transport."
+                + " Target for web application [{0}]",
+            level = "WARNING")
+    public static final String CLEAR_RMI_FAIL = PREFIX + "00018";
 
     @LogMessageInfo(
             message = "Illegal JAR entry detected with name {0}",
             level = "INFO")
-    public static final String ILLEGAL_JAR_PATH = prefix + "00021";
+    public static final String ILLEGAL_JAR_PATH = PREFIX + "00021";
 
     @LogMessageInfo(
             message = "Unable to validate JAR entry with name {0}",
             level = "INFO")
-    public static final String VALIDATION_ERROR_JAR_PATH = prefix + "00022";
+    public static final String VALIDATION_ERROR_JAR_PATH = PREFIX + "00022";
 
     @LogMessageInfo(
             message = "Unable to create {0}",
             level = "WARNING")
-    public static final String UNABLE_TO_CREATE = prefix + "00023";
+    public static final String UNABLE_TO_CREATE = PREFIX + "00023";
 
     @LogMessageInfo(
             message = "Unable to delete {0}",
             level = "WARNING")
-    public static final String UNABLE_TO_DELETE = prefix + "00024";
-
-    @LogMessageInfo(
-            message = "Unable to read data for class with name [{0}]",
-            level = "WARNING")
-    public static final String READ_CLASS_ERROR = prefix + "00025";
+    public static final String UNABLE_TO_DELETE = PREFIX + "00024";
 
     @LogMessageInfo(
             message = "extra-class-path component [{0}] is not a valid pathname",
             level = "SEVERE",
             cause = "A naming exception is encountered",
             action = "Check the list of resources")
-    public static final String CLASSPATH_ERROR = prefix + "00027";
+    public static final String CLASSPATH_ERROR = PREFIX + "00027";
 
     @LogMessageInfo(
             message = "The clearReferencesStatic is not consistent in context.xml for virtual servers",
             level = "WARNING")
-    public static final String INCONSISTENT_CLEAR_REFERENCE_STATIC = prefix + "00028";
+    public static final String INCONSISTENT_CLEAR_REFERENCE_STATIC = PREFIX + "00028";
 
     @LogMessageInfo(
             message = "class-loader attribute dynamic-reload-interval in sun-web.xml not supported",
             level = "WARNING")
-    public static final String DYNAMIC_RELOAD_INTERVAL = prefix + "00029";
+    public static final String DYNAMIC_RELOAD_INTERVAL = PREFIX + "00029";
 
     @LogMessageInfo(
             message = "Property element in sun-web.xml has null 'name' or 'value'",
             level = "WARNING")
-    public static final String NULL_WEB_PROPERTY = prefix + "00030";
+    public static final String NULL_WEB_PROPERTY = PREFIX + "00030";
 
     @LogMessageInfo(
             message = "Ignoring invalid property [{0}] = [{1}]",
             level = "WARNING")
-    public static final String INVALID_PROPERTY = prefix + "00031";
+    public static final String INVALID_PROPERTY = PREFIX + "00031";
 
     @LogMessageInfo(
             message = "The xml element should be [{0}] rather than [{1}]",
             level = "INFO")
-    public static final String UNEXPECTED_XML_ELEMENT = prefix + "00032";
+    public static final String UNEXPECTED_XML_ELEMENT = PREFIX + "00032";
 
     @LogMessageInfo(
             message = "This is an unexpected end of document",
             level = "WARNING")
-    public static final String UNEXPECTED_END_DOCUMENT = prefix + "00033";
+    public static final String UNEXPECTED_END_DOCUMENT = PREFIX + "00033";
 
     @LogMessageInfo(
             message = "Unexpected type of ClassLoader. Expected: java.net.URLClassLoader, got: {0}",
             level = "WARNING")
-    public static final String WRONG_CLASSLOADER_TYPE = prefix + "00034";
+    public static final String WRONG_CLASSLOADER_TYPE = PREFIX + "00034";
 
     @LogMessageInfo(
             message = "Unable to load class {0}, reason: {1}",
             level = "FINE")
-    public static final String CLASS_LOADING_ERROR = prefix + "00035";
+    public static final String CLASS_LOADING_ERROR = PREFIX + "00035";
 
     @LogMessageInfo(
             message = "Invalid URLClassLoader path component: [{0}] is neither a JAR file nor a directory",
             level = "WARNING")
-    public static final String INVALID_URL_CLASS_LOADER_PATH = prefix + "00036";
+    public static final String INVALID_URL_CLASS_LOADER_PATH = PREFIX + "00036";
 
     @LogMessageInfo(
-            message = "Error trying to scan the classes at {0} for annotations in which a ServletContainerInitializer has expressed interest",
+            message = "Error trying to scan the classes at {0} for annotations in which"
+                + " a ServletContainerInitializer has expressed interest",
             level = "SEVERE",
             cause = "An IOException is encountered",
             action = "Verify if the path is correct")
-    public static final String IO_ERROR = prefix + "00037";
+    public static final String IO_ERROR = PREFIX + "00037";
 
     @LogMessageInfo(
             message = "Ignoring [{0}] during Tag Library Descriptor (TLD) processing",
             level = "WARNING")
-    public static final String TLD_PROVIDER_IGNORE_URL = prefix + "00038";
+    public static final String TLD_PROVIDER_IGNORE_URL = PREFIX + "00038";
 
     @LogMessageInfo(
-            message = "Unable to determine TLD resources for [{0}] tag library, because class loader [{1}] for [{2}] is not an instance of java.net.URLClassLoader",
+            message = "Unable to determine TLD resources for [{0}] tag library, because class loader"
+                + " [{1}] for [{2}] is not an instance of java.net.URLClassLoader",
             level = "WARNING")
-    public static final String UNABLE_TO_DETERMINE_TLD_RESOURCES = prefix + "00039";
+    public static final String UNABLE_TO_DETERMINE_TLD_RESOURCES = PREFIX + "00039";
 }

@@ -28,7 +28,9 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.AccessController;
 import java.security.Principal;
+import java.security.PrivilegedAction;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.security.Security;
@@ -408,7 +410,8 @@ public final class SecurityUtil{
         if (!Globals.IS_SECURITY_ENABLED) {
             return false;
         }
-        String value = Security.getProperty("package.definition");
+        PrivilegedAction<String> action = () -> Security.getProperty("package.definition");
+        String value = AccessController.doPrivileged(action);
         return value != null && !value.isEmpty();
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -132,7 +132,7 @@ public class LogFormatDetector {
      * @return true if the given line is probably a beginning of a {@link OneLineFormatter}'s log record.
      */
     public boolean isOneLineLFormatLogHeader(final String firstLine) {
-        return firstLine.matches(P_TIME + "\\s+[A-Z]{4,13}\\s+[^\\s]+\\s+[^\\s]+\\s+[^\\s]+\\s+.+");
+        return firstLine.matches(P_TIME + "\\s+[A-Z]{4,13}\\s+.+\\s+.+\\s+.+");
     }
 
 

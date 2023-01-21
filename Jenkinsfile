@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2018-2021 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,6 +14,21 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+
+
+def dumpSysInfo() {
+  sh """
+    id || true
+    uname -a || true
+    env | sort || true
+    df -h || true
+    \${JAVA_HOME}/bin/jcmd || true
+    mvn -version || true
+    ant -version || true
+    cat /proc/cpuinfo || true
+    cat /proc/meminfo || true
+  """
+}
 
 def jobs = [
   "verifyPhase",
@@ -54,14 +69,19 @@ def generateMvnPodTemplate(job) {
   return {
     node {
       stage("${job}") {
-          checkout scm
+        checkout scm
+        try {
           timeout(time: 1, unit: 'HOURS') {
+            dumpSysInfo()
             sh """
-              mvn clean install -P staging
+              mvn -B -e clean install -Pstaging
             """
-            junit testResults: '**/*-reports/*.xml', allowEmptyResults: false
           }
+        } finally {
+          archiveArtifacts artifacts: "**/server.log"
+          junit testResults: '**/*-reports/*.xml', allowEmptyResults: false
         }
+      }
     }
   }
 }
@@ -71,14 +91,13 @@ def generateAntPodTemplate(job) {
     node {
       stage("${job}") {
         unstash 'build-bundles'
-        sh """
-          mkdir -p ${WORKSPACE}/appserver/tests
-          tar -xzf ${WORKSPACE}/bundles/appserv_tests.tar.gz -C ${WORKSPACE}/appserver/tests
-        """
         try {
           timeout(time: 1, unit: 'HOURS') {
             withAnt(installation: 'apache-ant-latest') {
+              dumpSysInfo()
               sh """
+                mkdir -p ${WORKSPACE}/appserver/tests
+                tar -xzf ${WORKSPACE}/bundles/appserv_tests.tar.gz -C ${WORKSPACE}/appserver/tests
                 export CLASSPATH=${WORKSPACE}/glassfish7/javadb
                 ${WORKSPACE}/appserver/tests/gftest.sh run_test ${job}
               """
@@ -105,6 +124,7 @@ pipeline {
     PORT_ADMIN=4848
     PORT_HTTP=8080
     PORT_HTTPS=8181
+    MAVEN_OPTS="-Xms1g -Xmx1g -Xss768k -XX:+UseG1GC -XX:+UseStringDeduplication"
   }
 
   options {
@@ -129,27 +149,23 @@ pipeline {
   stages {
 
     stage('build') {
-      agent any
+      agent {
+        kubernetes {
+          label 'basic'
+        }
+      }
       tools {
         jdk 'temurin-jdk17-latest'
         maven 'apache-maven-latest'
       }
       steps {
         checkout scm
+        dumpSysInfo()
         sh '''
-          echo Maven version
-          mvn -v
-
-          echo User
-          id
-
-          echo Uname
-          uname -a
-
           # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
-          mvn clean install -Pfastest,staging -T4C
+          mvn -B -e clean install -Pfastest,staging -T4C
           ./gfbuild.sh archive_bundles
-          mvn clean
+          mvn -B -e clean
           tar -c -C ${WORKSPACE}/appserver/tests common_test.sh gftest.sh appserv-tests quicklook | gzip --fast > ${WORKSPACE}/bundles/appserv_tests.tar.gz
           ls -la ${WORKSPACE}/bundles
         '''
@@ -159,7 +175,11 @@ pipeline {
     }
 
     stage('tests') {
-      agent any
+      agent {
+        kubernetes {
+          label 'basic'
+        }
+      }
       tools {
         jdk 'temurin-jdk17-latest'
         maven 'apache-maven-latest'

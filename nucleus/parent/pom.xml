@@ -107,11 +107,11 @@
 
         <!-- Jakarta Mail -->
         <jakarta.mail-api.version>2.1.1</jakarta.mail-api.version>
-        <angus.mail.version>1.1.0</angus.mail.version>
+        <angus.mail.version>2.0.0</angus.mail.version>
 
         <!-- Jakarta Activation -->
         <activation.version>2.1.1</activation.version>
-        <angus.activation.version>1.1.0</angus.activation.version>
+        <angus.activation.version>2.0.0</angus.activation.version>
 
         <!-- Jakarta Annotations -->
         <jakarta.annotation-api.version>2.1.1</jakarta.annotation-api.version>

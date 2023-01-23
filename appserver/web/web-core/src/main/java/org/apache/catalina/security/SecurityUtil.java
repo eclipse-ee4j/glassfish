@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,28 +18,31 @@
 
 package org.apache.catalina.security;
 
-
-import org.apache.catalina.Globals;
-import org.apache.catalina.LogFacade;
-import org.apache.catalina.util.StringManager;
-
-import javax.security.auth.Subject;
 import jakarta.servlet.Filter;
 import jakarta.servlet.Servlet;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.UnavailableException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.AccessController;
 import java.security.Principal;
+import java.security.PrivilegedAction;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
+import java.security.Security;
 import java.util.HashMap;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
+
+import org.apache.catalina.Globals;
+import org.apache.catalina.LogFacade;
+
 /**
  * This utility class associates a <code>Subject</code> to the current
  * <code>AccessControlContext</code>. When a <code>SecurityManager</code> is
@@ -50,7 +54,6 @@ import java.util.logging.Logger;
  *
  * @author Jean-Francois Arcand
  */
-
 public final class SecurityUtil{
 
     private final static int INIT= 0;
@@ -66,22 +69,14 @@ public final class SecurityUtil{
     /**
      * Cache every object for which we are creating method on it.
      */
-    private static HashMap<Object, Method[]> objectCache =
-        new HashMap<Object, Method[]>();
+    private static HashMap<Object, Method[]> objectCache = new HashMap<>();
 
     private static final Logger log = LogFacade.getLogger();
-    private static final ResourceBundle rb = log.getResourceBundle();
 
-    private static boolean packageDefinitionEnabled = (
-         System.getProperty("package.definition") == null ||
-         System.getProperty("package.definition").equals("")) ? false : true;
-
-    // START SJS WS 7.0 6236329
     /**
      * Do we need to execute all invokation under a Subject.doAs call.
      */
     public static final boolean executeUnderSubjectDoAs = true;
-    // END SJS WS 7.0 6236329
 
 
     /**
@@ -270,7 +265,8 @@ public final class SecurityUtil{
         try{
             Subject subject = null;
             PrivilegedExceptionAction<Void> pea =
-                new PrivilegedExceptionAction<Void>(){
+                new PrivilegedExceptionAction<>(){
+                    @Override
                     public Void run() throws Exception{
                        method.invoke(targetObject, targetArguments);
                        return null;
@@ -319,16 +315,17 @@ public final class SecurityUtil{
                 log.log(Level.FINE, LogFacade.PRIVILEGE_ACTION_EXCEPTION, e);
             }
 
-            if (e instanceof UnavailableException)
+            if (e instanceof UnavailableException) {
                 throw (UnavailableException) e;
-            else if (e instanceof ServletException)
+            } else if (e instanceof ServletException) {
                 throw (ServletException) e;
-            else if (e instanceof IOException)
+            } else if (e instanceof IOException) {
                 throw (IOException) e;
-            else if (e instanceof RuntimeException)
+            } else if (e instanceof RuntimeException) {
                 throw (RuntimeException) e;
-            else
+            } else {
                 throw new ServletException(e.getMessage(), e);
+            }
         }
     }
 
@@ -410,10 +407,12 @@ public final class SecurityUtil{
      * package protection mechanism is enabled.
      */
     public static boolean isPackageProtectionEnabled(){
-        if (packageDefinitionEnabled && Globals.IS_SECURITY_ENABLED) {
-            return true;
+        if (!Globals.IS_SECURITY_ENABLED) {
+            return false;
         }
-        return false;
+        PrivilegedAction<String> action = () -> Security.getProperty("package.definition");
+        String value = AccessController.doPrivileged(action);
+        return value != null && !value.isEmpty();
     }
 
 

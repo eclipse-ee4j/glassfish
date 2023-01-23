@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -17,12 +18,14 @@
 
 package org.apache.catalina.security;
 
-import org.apache.catalina.LogFacade;
-import org.apache.catalina.startup.CatalinaProperties;
-
 import java.security.Security;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.startup.CatalinaProperties;
+
+import static java.util.logging.Level.CONFIG;
 
 /**
  * Util class to protect Catalina against package access and insertion.
@@ -31,7 +34,7 @@ import java.util.logging.Logger;
  * @author Jean-Francois Arcand
  */
 public final class SecurityConfig{
-    private static volatile SecurityConfig singleton = null;
+    private static volatile SecurityConfig singleton;
 
     private static final Logger log = LogFacade.getLogger();
 
@@ -67,10 +70,7 @@ public final class SecurityConfig{
             packageDefinition = CatalinaProperties.getProperty("package.definition");
             packageAccess = CatalinaProperties.getProperty("package.access");
         } catch (java.lang.Exception ex){
-            if (log.isLoggable(Level.FINE)){
-                log.log(Level.FINE, "Unable to load properties using CatalinaProperties",
-                        ex);
-            }
+            log.log(Level.FINE, "Unable to load properties using CatalinaProperties", ex);
         }
     }
 
@@ -93,9 +93,9 @@ public final class SecurityConfig{
     public void setPackageAccess(){
         // If catalina.properties is missing, protect all by default.
         if (packageAccess == null){
-            setSecurityProperty("package.access", PACKAGE_ACCESS);
+            appendSecurityProperty("package.access", PACKAGE_ACCESS);
         } else {
-            setSecurityProperty("package.access", packageAccess);
+            appendSecurityProperty("package.access", packageAccess);
         }
     }
 
@@ -103,37 +103,30 @@ public final class SecurityConfig{
     /**
      * Set the security package.definition value.
      */
-     public void setPackageDefinition(){
+    public void setPackageDefinition(){
         // If catalina.properties is missing, protect all by default.
-         if (packageDefinition == null){
-            setSecurityProperty("package.definition", PACKAGE_DEFINITION);
-         } else {
-            setSecurityProperty("package.definition", packageDefinition);
-         }
-    }
-
-
-    /**
-     * Set the proper security property
-     * @param properties the package.* property.
-     */
-    private final void setSecurityProperty(String properties, String packageList){
-        if (System.getSecurityManager() != null){
-            String definition = Security.getProperty(properties);
-            if( definition != null && definition.length() > 0 ){
-                definition += ",";
-            }
-
-            Security.setProperty(properties,
-                // FIX ME package "javax." was removed to prevent HotSpot
-                // fatal internal errors
-                definition + packageList);
+        if (packageDefinition == null){
+            appendSecurityProperty("package.definition", PACKAGE_DEFINITION);
+        } else {
+            appendSecurityProperty("package.definition", packageDefinition);
         }
     }
 
 
+    /**
+     * Append the proper security property
+     *
+     * @param property the property name
+     */
+    private void appendSecurityProperty(String property, String packages) {
+        if (System.getSecurityManager() == null) {
+            return;
+        }
+        log.log(CONFIG, "appendSecurityProperty(property={0}, packageList={1})", new Object[] {property, packages});
+        String definition = Security.getProperty(property);
+        if (definition != null && !definition.isEmpty()) {
+            definition += ",";
+        }
+        Security.setProperty(property, definition + packages);
+    }
 }
-
-
-
-

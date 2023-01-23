@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -37,6 +37,7 @@ import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.EventListener;
 import java.util.HashMap;
@@ -329,7 +330,7 @@ public final class ApplicationContextFacade
             return doPrivileged("getAttribute", new Object[]{name});
         }
         return context.getAttribute(name);
-     }
+    }
 
 
     @Override
@@ -583,8 +584,7 @@ public final class ApplicationContextFacade
     @SuppressWarnings("unchecked") // doPrivileged() returns the correct type
     public Set<SessionTrackingMode> getEffectiveSessionTrackingModes() {
         if (SecurityUtil.isPackageProtectionEnabled()) {
-            return (Set<SessionTrackingMode>)
-                doPrivileged("getEffectiveSessionTrackingModes", null);
+            return (Set<SessionTrackingMode>) doPrivileged("getEffectiveSessionTrackingModes", null);
         }
         return context.getEffectiveSessionTrackingModes();
     }
@@ -596,8 +596,7 @@ public final class ApplicationContextFacade
     @Override
     public void addListener(String className) {
         if (SecurityUtil.isPackageProtectionEnabled()) {
-            doPrivileged("addListener",
-                    new Object[]{className});
+            doPrivileged("addListener", new Object[] {className});
         } else {
             context.addListener(className);
         }
@@ -610,9 +609,7 @@ public final class ApplicationContextFacade
     @Override
     public <T extends EventListener> void addListener(T t) {
         if (SecurityUtil.isPackageProtectionEnabled()) {
-            doPrivileged("addListener",
-                    new Class[]{EventListener.class},
-                    new Object[]{t.getClass().getName()});
+            doPrivileged("addListener", new Class[] {EventListener.class}, new Object[] {t});
         } else {
             context.addListener(t);
         }
@@ -623,11 +620,9 @@ public final class ApplicationContextFacade
      * Adds a listener of the given class type to this ServletContext.
      */
     @Override
-    public void addListener(Class <? extends EventListener> listenerClass) {
+    public void addListener(Class<? extends EventListener> listenerClass) {
         if (SecurityUtil.isPackageProtectionEnabled()) {
-            doPrivileged("addListener",
-                    new Class[]{Class.class},
-                    new Object[]{listenerClass.getName()});
+            doPrivileged("addListener", new Class[] {Class.class}, new Object[] {listenerClass});
         } else {
             context.addListener(listenerClass);
         }
@@ -656,18 +651,15 @@ public final class ApplicationContextFacade
      * represented by this ServletContext.
      */
     @Override
-    @SuppressWarnings("unchecked") // doPrivileged() returns the correct type
     public JspConfigDescriptor getJspConfigDescriptor() {
         if (SecurityUtil.isPackageProtectionEnabled()) {
-            return (JspConfigDescriptor) doPrivileged("getJspConfigDescriptor",
-                    null);
+            return (JspConfigDescriptor) doPrivileged("getJspConfigDescriptor", null);
         }
         return context.getJspConfigDescriptor();
     }
 
 
     @Override
-    @SuppressWarnings("unchecked") // doPrivileged() returns the correct type
     public ClassLoader getClassLoader() {
         if (SecurityUtil.isPackageProtectionEnabled()) {
             return (ClassLoader) doPrivileged("getClassLoader", null);
@@ -798,21 +790,21 @@ public final class ApplicationContextFacade
      * Use reflection to invoke the requested method. Cache the method object
      * to speed up the process
      * @param methodName The method to call.
-     * @param clazz The list of argument classes for the given method
+     * @param parameterTypes The list of argument classes for the given method
      * @param params The arguments passed to the called method.
      */
     private <T> T doPrivileged(final String methodName,
-                                final Class<?>[] clazz,
+                                final Class<?>[] parameterTypes,
                                 Object[] params){
 
         try{
-            Method method = context.getClass().getMethod(methodName, clazz);
+            Method method = context.getClass().getMethod(methodName, parameterTypes);
             return executeMethod(method,context,params);
         } catch (Exception ex){
             try{
                 handleException(ex, methodName);
             }catch (Throwable t){
-                throw new RuntimeException(t.getMessage());
+                throw new RuntimeException(t.getMessage(), t);
             }
             return null;
         }
@@ -826,8 +818,11 @@ public final class ApplicationContextFacade
      *                   will be invoked
      * @param params The arguments passed to the called method.
      */
-    private <T> T executeMethod(final Method method, final ApplicationContext context, final Object[] params)
+    @SuppressWarnings("unchecked")
+    private static <T> T executeMethod(final Method method, final ApplicationContext context, final Object[] params)
         throws PrivilegedActionException, IllegalAccessException, InvocationTargetException {
+        log.log(Level.FINEST, "executeMethod(method={0}, context, params={1})",
+            new Object[] {method, Arrays.toString(params)});
         if (Globals.IS_SECURITY_ENABLED) {
             PrivilegedExceptionAction<T> action = () -> {
                 return (T) method.invoke(context, params);
@@ -842,9 +837,7 @@ public final class ApplicationContextFacade
      * Throw the real exception.
      * @param ex The current exception
      */
-    private void handleException(Exception ex, String methodName)
-        throws Throwable {
-
+    private static void handleException(Exception ex, String methodName) throws Throwable {
         Throwable realException;
 
         if (log.isLoggable(Level.FINE)) {

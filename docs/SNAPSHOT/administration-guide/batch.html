@@ -1,0 +1,535 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Administering Batch Jobs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Administering Batch Jobs</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="lifecycle-modules.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="part-res-and-svcs-admin.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSADG1077"></a><a id="sthref66"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="administering-batch-jobs">10 Administering Batch Jobs</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter provides procedures for administering batch jobs in the
+GlassFish Server environment by using the <code>asadmin</code> command-line
+utility.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#BABCHGJJ">About Batch Jobs</a></p>
+</li>
+<li>
+<p><a href="#BABIHIGA">Viewing Batch Jobs</a></p>
+</li>
+<li>
+<p><a href="#BABBFFIG">Configuring the Batch Runtime</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Instructions for accomplishing these tasks by using the Administration
+Console are contained in the Administration Console online help.</p>
+</div>
+<div class="paragraph">
+<p><a id="BABCHGJJ"></a><a id="GSADG1078"></a><a id="about-batch-jobs"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_about_batch_jobs">About Batch Jobs</h3>
+<div class="paragraph">
+<p>GlassFish Server provides a batch runtime for the scheduling and
+execution of batch jobs. Batch jobs are typically long-running,
+bulk-oriented tasks that contain a series of steps and can be executed
+without user interaction. Examples include billing, report generation,
+data format conversion, and image processing.</p>
+</div>
+<div class="paragraph">
+<p>Batch applications submit jobs to the batch runtime and provide
+instructions about how and when to execute the steps. The batch runtime
+processes the steps as directed by job XML documents packaged with the
+applications and stores information about jobs in a job repository. In
+GlassFish Server, the job repository is a database</p>
+</div>
+<div class="paragraph">
+<p>For detailed information about batch jobs, batch processing, and the
+batch processing framework, see
+"https://javaee.github.io/tutorial/batch-processing.html[Batch
+Processing]" in The Java EE 8 Tutorial. Also see
+<a href="http://jcp.org/en/jsr/detail?id=352">Java Specification Request 352:
+Batch Applications for the Java Platform</a>
+(<code>http://jcp.org/en/jsr/detail?id=352</code>). The specification defines the
+programming model for batch applications and the runtime for scheduling
+and executing batch jobs.</p>
+</div>
+<div class="paragraph">
+<p><a id="BABIHIGA"></a><a id="GSADG1079"></a><a id="viewing-batch-jobs"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_viewing_batch_jobs">Viewing Batch Jobs</h3>
+<div class="paragraph">
+<p>You can view detailed information about batch jobs, executions, and
+steps. Users who log in to the <code>asadmin</code> utility or to the
+Administration Console as administrator are the only users who can view
+details for all batch jobs submitted by all applications in the
+GlassFish Server environment.</p>
+</div>
+<div class="paragraph">
+<p>The following tasks are used to view information about batch jobs:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#BABIBFDJ">To List Batch Jobs</a></p>
+</li>
+<li>
+<p><a href="#BABFBGJB">To List Batch Job Executions</a></p>
+</li>
+<li>
+<p><a href="#BABGJIDD">To List Batch Job Steps</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="BABIBFDJ"></a><a id="GSADG1080"></a><a id="to-list-batch-jobs"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_list_batch_jobs">To List Batch Jobs</h4>
+<div class="paragraph">
+<p>Use the <code>list-batch-jobs</code> subcommand in remote mode to list batch jobs
+and job details.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List batch jobs by using the <a href="../reference-manual/list-jdbc-resources.html#GSRFM00174"><code>list-batch-jobs</code></a>
+subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG1081"></a><a id="sthref67"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 10-1 Listing Batch Jobs</p>
+</div>
+<div class="paragraph">
+<p>This example lists batch jobs for the default server instance, <code>server</code>.
+Use <code>list-batch-jobs -l</code> to list additional details.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-batch-jobs
+JOBNAME  INSTANCECOUNT
+payroll  9
+bonus    6
+Command list-batch-jobs executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1082" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-batch-jobs</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="BABFBGJB"></a><a id="GSADG1083"></a><a id="to-list-batch-job-executions"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_batch_job_executions">To List Batch Job Executions</h4>
+<div class="paragraph">
+<p>When the batch runtime executes a job, the execution is given a unique
+execution ID. An execution ID is similar to a process ID. A new
+execution is created the first time a job is started and every time the
+existing execution is restarted.</p>
+</div>
+<div class="paragraph">
+<p>Use the <code>list-batch-job-executions</code> subcommand in remote mode to list
+batch job executions and execution details.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List batch job executions by using the
+<a href="../reference-manual/list-jdbc-resources.html#GSRFM00174"><code>list-batch-job-executions</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG1084"></a><a id="sthref68"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 10-2 Listing Batch Job Executions</p>
+</div>
+<div class="paragraph">
+<p>This example lists batch job executions for the default server instance,
+<code>server</code>, and displays specific details. Use
+<code>list-batch-job-executions -l</code> to list additional details.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-batch-job-executions -o=jobname,executionid,batchstatus,exitstatus
+JOBNAME  EXECUTIONID  BATCHSTATUS  EXITSTATUS
+payroll  9            COMPLETED    COMPLETED
+bonus    6            FAILED       FAILED
+Command list-batch-job-executions executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1085" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-batch-job-executions</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="BABGJIDD"></a><a id="GSADG1086"></a><a id="to-list-batch-job-steps"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_batch_job_steps">To List Batch Job Steps</h4>
+<div class="paragraph">
+<p>A batch job consists of one or more steps. A step is an independent and
+sequential phase of a batch job.</p>
+</div>
+<div class="paragraph">
+<p>Use the <code>list-batch-job-steps</code> subcommand in remote mode to list steps
+and step details for a specific batch job execution.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List the execution ID of an execution by using the
+<code>list-batch-job-executions</code> subcommand.</p>
+</li>
+<li>
+<p>List steps for a specific batch job execution by using the
+<a href="../reference-manual/list-jdbc-resources.html#GSRFM00174"><code>list-batch-job-steps</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG1087"></a><a id="sthref69"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 10-3 Listing Batch Job Steps</p>
+</div>
+<div class="paragraph">
+<p>This example lists batch job steps and specific step details for a job
+execution with the execution ID of <code>7</code>. The target is the default server
+instance, <code>server</code>. Use <code>list-batch-job-steps -l</code> to list additional
+details.</p>
+</div>
+<div class="paragraph">
+<p>Some lines of output are omitted from this example for readability.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-batch-job-steps o=stepname,stepid,batchstatus,stepmetrics 7
+STEPNAME   STEPID   BATCHSTATUS   STEPMETRICS
+prepare    7        COMPLETED     METRICNAME          VALUE
+                                  READ_COUNT          8
+                                  WRITE_COUNT         8
+                                  PROCESS_SKIP_COUNT  0
+process    8        COMPLETED     METRICNAME          VALUE
+                                  READ_COUNT          8
+                                  WRITE_COUNT         8
+                                  PROCESS_SKIP_COUNT  0
+...
+Command list-batch-job-steps executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1088" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-batch-job-steps</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="BABBFFIG"></a><a id="GSADG1089"></a><a id="configuring-the-batch-runtime"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuring_the_batch_runtime">Configuring the Batch Runtime</h3>
+<div class="paragraph">
+<p>The batch runtime uses a data source and a managed executor service to
+execute batch jobs. The data source stores information about current and
+past jobs, and the managed executor service provides threads to jobs.
+Batch runtime configuration data is stored in the <code>config</code> element in
+<code>domain.xml</code>.</p>
+</div>
+<div class="paragraph">
+<p>GlassFish Server provides a default data source and managed executor
+service for the execution of batch jobs. For the domain administration
+server (DAS), the default data source is <code>jdbc/__TimerPool</code> and the
+default managed executor service is
+<code>concurrent/__defaultManagedExecutorService</code>. If you create a standalone
+server instance or a standalone cluster, the default data source is
+<code>jdbc/__default</code>. You can configure the batch runtime to use different
+resources.</p>
+</div>
+<div class="paragraph">
+<p>For more information about data sources, see
+<a href="jdbc.html#ablih">Administering Database Connectivity</a>. For more
+information about managed executor services, see
+<a href="concurrent.html#DAFBHEDI">Configuring Managed Executor Services</a>.</p>
+</div>
+<div class="paragraph">
+<p>The following tasks are used to view and configure the batch runtime:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#BABBGHCJ">To List the Batch Runtime Configuration</a></p>
+</li>
+<li>
+<p><a href="#BABFEJAD">To Configure the Batch Runtime</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="BABBGHCJ"></a><a id="GSADG1090"></a><a id="to-list-the-batch-runtime-configuration"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_list_the_batch_runtime_configuration">To List the Batch Runtime Configuration</h4>
+<div class="paragraph">
+<p>Use the <code>list-batch-runtime-configuration</code> subcommand in remote mode to
+display the configuration of the batch runtime.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Display the configuration of the batch runtime by using the
+<a href="../reference-manual/list-jdbc-resources.html#GSRFM00174"><code>list-batch-runtime-configuration</code></a> subcommand.</p>
+</li>
+<li>
+<p>If desired, use the <code>get</code> subcommand to view the attributes of the
+data source and managed executor service resources.<br>
+For example (output omitted):<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asdmin&gt; get resources.jdbc-resource.jdbc/__TimerPool.*
+...
+asdmin&gt; get resources.managed-executor-service.concurrent/__defaultManagedExecutorService.*
+...</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSADG1091"></a><a id="sthref70"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 10-4 Listing the Batch Runtime Configuration</p>
+</div>
+<div class="paragraph">
+<p>This example lists the configuration of the batch runtime for the
+default server instance, <code>server</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-batch-runtime-configuration
+DATASOURCELOOKUPNAME     EXECUTORSERVICELOOKUPNAME
+jdbc/__TimerPool         concurrent/__defaultManagedExecutorService
+Command list-batch-runtime-configuration executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1092" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-batch-runtime-configuration</code> at the command
+line.</p>
+</div>
+<div class="paragraph">
+<p><a id="BABFEJAD"></a><a id="GSADG1093"></a><a id="to-configure-the-batch-runtime"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_configure_the_batch_runtime">To Configure the Batch Runtime</h4>
+<div class="paragraph">
+<p>Use the <code>set-batch-runtime-configuration</code> subcommand in remote mode to
+configure the batch runtime.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Do not change the data source after the first batch job has been
+submitted to the batch runtime for execution. If the data source must be
+changed, stop and restart the domain and then make the change before any
+jobs are started or restarted. However, once the data source has been
+changed, information stored in the previous data source becomes
+inaccessible.</p>
+</div>
+<div class="paragraph">
+<p>The managed executor service can be changed after a batch job has been
+submitted to the batch runtime without affecting execution of the job.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Configure the batch runtime by using the
+<a href="../reference-manual/list-jdbc-resources.html#GSRFM00174"><code>set-batch-runtime-configuration</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG1094"></a><a id="sthref71"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 10-5 Configuring the Batch Runtime</p>
+</div>
+<div class="paragraph">
+<p>This example configures the batch runtime for the default server
+instance, <code>server</code>, to use an existing managed executor service named
+<code>concurrent/Executor1</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; set-batch-runtime-configuration --executorservicelookupname concurrent/Executor1
+Command set-batch-runtime-configuration executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1095" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help set-batch-runtime-configuration</code> at the command
+line.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="lifecycle-modules.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="part-res-and-svcs-admin.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

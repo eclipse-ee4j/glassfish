@@ -1,0 +1,2595 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Extending the asadmin Utility</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Extending the asadmin Utility</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="extending-the-admin-console.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="adding-monitoring-capabilities.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSACG00004"></a><a id="ghmrd"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="extending-the-asadmin-utility">4 Extending the <code>asadmin</code> Utility</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>asadmin</code> utility is a command-line tool for configuring and
+administering Eclipse GlassFish Server. Extending the <code>asadmin</code> utility enables
+you to provide administrative interfaces for an add-on component that
+are consistent with the interfaces of other GlassFish Server components.
+A user can run <code>asadmin</code> subcommands either from a command prompt or
+from a script. For more information about the <code>asadmin</code> utility, see the
+<a href="../reference-manual/asadmin.html#GSRFM00263"><code>asadmin</code>(1M)</a> man page.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ghpuj">About the Administrative Command Infrastructure of
+GlassFish Server</a></p>
+</li>
+<li>
+<p><a href="#ghpwe">Adding an <code>asadmin</code> Subcommand</a></p>
+</li>
+<li>
+<p><a href="#ghpwa">Adding Parameters to an <code>asadmin</code> Subcommand</a></p>
+</li>
+<li>
+<p><a href="#gkygt">Making <code>asadmin</code> Subcommands Cluster-Aware</a></p>
+</li>
+<li>
+<p><a href="#ghptw">Adding Message Text Strings to an <code>asadmin</code> Subcommand</a></p>
+</li>
+<li>
+<p><a href="#ghpvn">Enabling an <code>asadmin</code> Subcommand to Run</a></p>
+</li>
+<li>
+<p><a href="#ghpvq">Setting the Context of an <code>asadmin</code> Subcommand</a></p>
+</li>
+<li>
+<p><a href="#ghpwn">Changing the Brand in the GlassFish Server CLI</a></p>
+</li>
+<li>
+<p><a href="#ghmza">Examples of Extending the <code>asadmin</code> Utility</a></p>
+</li>
+<li>
+<p><a href="#gkzlq">Implementing Create, Delete, and List Commands Using
+Annotations</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghpuj"></a><a id="GSACG00105"></a><a id="about-the-administrative-command-infrastructure-of-glassfish-server"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_about_the_administrative_command_infrastructure_of_glassfish_server">About the Administrative Command Infrastructure of GlassFish Server</h3>
+<div class="paragraph">
+<p>To enable multiple containers to be independently packaged and loaded,
+the administrative command infrastructure of GlassFish Server provides
+the following features:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Location independence. Administration subcommands can be loaded from
+any add-on component that is known to GlassFish Server.</p>
+</li>
+<li>
+<p>Extensibility. Administrative subcommands that are available to
+GlassFish Server are discovered on demand and not obtained from a preset
+list of subcommands.</p>
+</li>
+<li>
+<p>Support for the HK2 architecture. Subcommands can use injection to
+express their dependencies, and extraction to provide results to a user.
+For more information, see <a href="writing-hk2-components.html#ghmna">Writing
+HK2 Components</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghpwe"></a><a id="GSACG00107"></a><a id="adding-an-asadmin-subcommand"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_adding_an_code_asadmin_code_subcommand">Adding an <code>asadmin</code> Subcommand</h3>
+<div class="paragraph">
+<p>An <code>asadmin</code> subcommand identifies the operation or task that a user is
+to perform. Adding an <code>asadmin</code> subcommand enables the user to perform
+these tasks and operations through the <code>asadmin</code> utility.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ghrqj">Representing an <code>asadmin</code> Subcommand as a Java Class</a></p>
+</li>
+<li>
+<p><a href="#ghrpm">Specifying the Name of an <code>asadmin</code> Subcommand</a></p>
+</li>
+<li>
+<p><a href="#ghrng">Ensuring That an <code>AdminCommand</code> Implementation Is
+Stateless</a></p>
+</li>
+<li>
+<p><a href="#ghrqx">Example of Adding an <code>asadmin</code> Subcommand</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghrqj"></a><a id="GSACG00194"></a><a id="representing-an-asadmin-subcommand-as-a-java-class"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_representing_an_code_asadmin_code_subcommand_as_a_java_class">Representing an <code>asadmin</code> Subcommand as a Java Class</h4>
+<div class="paragraph">
+<p>Each <code>asadmin</code> subcommand that you are adding must be represented as a
+Java class. To represent an <code>asadmin</code> subcommand as a Java class, write
+a Java class that implements the <code>org.glassfish.api.admin.AdminCommand</code>
+interface. Write one class for each subcommand that you are adding. Do
+not represent multiple <code>asadmin</code> subcommands in a single class.</p>
+</div>
+<div class="paragraph">
+<p>Annotate the declaration of your implementations of the <code>AdminCommand</code>
+interface with the <code>org.jvnet.hk2.annotations.Service</code> annotation. The
+<code>@Service</code> annotation ensures that the following requirements for your
+implementations are met:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The implementations are eligible for resource injection and resource
+extraction.</p>
+</li>
+<li>
+<p>The implementations are location independent, provided that the
+component that contains them is made known to the GlassFish Server
+runtime.<br>
+For information about how to make a component known to the GlassFish
+Server runtime, see
+<a href="packaging-integrating-delivering.html#ghmne">Integrating an Add-On
+Component With GlassFish Server</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghrpm"></a><a id="GSACG00195"></a><a id="specifying-the-name-of-an-asadmin-subcommand"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_specifying_the_name_of_an_code_asadmin_code_subcommand">Specifying the Name of an <code>asadmin</code> Subcommand</h4>
+<div class="paragraph">
+<p>To specify the name of the subcommand, set the <code>name</code> element of the
+<code>@Service</code> annotation to the name.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>Subcommand names are case-sensitive.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Subcommands that are supplied in GlassFish Server distributions
+typically create, delete, and list objects of a particular type. For
+consistency with the names of subcommands that are supplied in GlassFish
+Server distributions, follow these conventions when specifying the name
+of a subcommand:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>For subcommands that create an object of a particular type, use the
+name <code>create-`object</code>.`</p>
+</li>
+<li>
+<p>For subcommands that delete an object of a particular type, use the
+name <code>delete-`object</code>.`</p>
+</li>
+<li>
+<p>For subcommands that list all objects of a particular type, use the
+name <code>list-`objects</code>.`</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For example, GlassFish Server provides the following subcommands for
+creating, deleting, and listing HTTP listeners:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>create-http-listener</code></p>
+</li>
+<li>
+<p><code>delete-http-listener</code></p>
+</li>
+<li>
+<p><code>list-http-listeners</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You must also ensure that the name of your subcommand is unique. To
+obtain a complete list of the names of all <code>asadmin</code> subcommands that
+are installed, use the <a href="../reference-manual/list-commands.html#GSRFM00154"><code>list-commands</code></a> subcommand. For
+a complete list of <code>asadmin</code> subcommands that are supplied in GlassFish
+Server distributions, see the <a href="../reference-manual/toc.html#GSRFM">Eclipse GlassFish Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghrng"></a><a id="GSACG00196"></a><a id="ensuring-that-an-admincommand-implementation-is-stateless"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_ensuring_that_an_code_admincommand_code_implementation_is_stateless">Ensuring That an <code>AdminCommand</code> Implementation Is Stateless</h4>
+<div class="paragraph">
+<p>To enable multiple clients to run a subcommand simultaneously, ensure
+that the implementation of the <code>AdminCommand</code> interface for the
+subcommand is stateless. To ensure that the implementation of the
+<code>AdminCommand</code> interface is stateless, annotate the declaration of your
+implementation with the <code>org.jvnet.hk2.annotations.Scoped</code> annotation.
+In the <code>@Scoped</code> annotation, set the scope as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>To instantiate the subcommand for each lookup, set the scope to
+<code>PerLookup.class</code>.</p>
+</li>
+<li>
+<p>To instantiate the subcommand only once for each session, set the
+scope to <code>Singleton</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghrqx"></a><a id="GSACG00197"></a><a id="example-of-adding-an-asadmin-subcommand"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_example_of_adding_an_code_asadmin_code_subcommand">Example of Adding an <code>asadmin</code> Subcommand</h4>
+<div class="paragraph">
+<p><a id="GSACG00034"></a><a id="ghrqq"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 4-1 Adding an <code>asadmin</code> Subcommand</p>
+</div>
+<div class="paragraph">
+<p>This example shows the declaration of the class <code>CreateMycontainer</code> that
+represents an <code>asadmin</code> subcommand that is named <code>create-mycontainer</code>.
+The subcommand is instantiated for each lookup.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">package com.example.mycontainer;
+
+import org.glassfish.api.admin.AdminCommand;
+...
+import org.jvnet.hk2.annotations.Service;
+...
+import org.jvnet.hk2.annotations.Scoped;
+import org.jvnet.hk2.component.PerLookup;
+
+/**
+ * Sample subcommand
+ */
+@Service(name="create-mycontainer")
+@Scoped(PerLookup.class)
+public Class CreateMycontainer implements AdminCommand {
+…
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="ghpwa"></a><a id="GSACG00108"></a><a id="adding-parameters-to-an-asadmin-subcommand"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_adding_parameters_to_an_code_asadmin_code_subcommand">Adding Parameters to an <code>asadmin</code> Subcommand</h3>
+<div class="paragraph">
+<p>The parameters of an <code>asadmin</code> subcommand are the options and operands
+of the subcommand.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Options control how the <code>asadmin</code> utility performs a subcommand.</p>
+</li>
+<li>
+<p>Operands are the objects on which a subcommand acts. For example, the
+operand of the <a href="../reference-manual/start-domain.html#GSRFM00235"><code>start-domain</code></a> subcommand is the domain
+that is to be started.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ghpvh">Representing a Parameter of an <code>asadmin</code> Subcommand</a></p>
+</li>
+<li>
+<p><a href="#ghptx">Identifying a Parameter of an <code>asadmin</code> Subcommand</a></p>
+</li>
+<li>
+<p><a href="#ghpxp">Specifying Whether a Parameter Is an Option or an Operand</a></p>
+</li>
+<li>
+<p><a href="#ghpxj">Specifying the Name of an Option</a></p>
+</li>
+<li>
+<p><a href="#ghpxl">Specifying the Acceptable Values of a Parameter</a></p>
+</li>
+<li>
+<p><a href="#ghrgt">Specifying the Default Value of a Parameter</a></p>
+</li>
+<li>
+<p><a href="#ghpuk">Specifying Whether a Parameter Is Required or Optional</a></p>
+</li>
+<li>
+<p><a href="#CDCFAJDG">Specifying Whether a Parameter Can Be Used Multiple
+Times on the Command Line</a></p>
+</li>
+<li>
+<p><a href="#ghpxd">Example of Adding Parameters to an <code>asadmin</code> Subcommand</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghpvh"></a><a id="GSACG00198"></a><a id="representing-a-parameter-of-an-asadmin-subcommand"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_representing_a_parameter_of_an_code_asadmin_code_subcommand">Representing a Parameter of an <code>asadmin</code> Subcommand</h4>
+<div class="paragraph">
+<p>Represent each parameter of a subcommand in your implementation as a
+field or as the property of a JavaBeans specification setter method. Use
+the property of a setter method for the following reasons:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>To provide data encapsulation for the parameter</p>
+</li>
+<li>
+<p>To add code for validating the parameter before the property is set</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghptx"></a><a id="GSACG00199"></a><a id="identifying-a-parameter-of-an-asadmin-subcommand"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_identifying_a_parameter_of_an_code_asadmin_code_subcommand">Identifying a Parameter of an <code>asadmin</code> Subcommand</h4>
+<div class="paragraph">
+<p>Identifying a parameter of an <code>asadmin</code> subcommand enables GlassFish
+Server to perform the following operations at runtime on the parameter:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Validation. The GlassFish Server determines whether all required
+parameters are specified and returns an error if any required parameter
+is omitted.</p>
+</li>
+<li>
+<p>Injection. Before the subcommand runs, the GlassFish Server injects
+each parameter into the required field or method before the subcommand
+is run.</p>
+</li>
+<li>
+<p>Usage message generation. The GlassFish Server uses reflection to
+obtain the list of parameters for a subcommand and to generate the usage
+message from this list.</p>
+</li>
+<li>
+<p>Localized string display. If the subcommand supports
+internationalization and if localized strings are available, the
+GlassFish Server can automatically obtain the localized strings for a
+subcommand and display them to the user.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To identify a parameter of a subcommand, annotate the declaration of the
+item that is associated with the parameter with the
+<code>org.glassfish.api.Param</code> annotation. This item is either the field or
+setter method that is associated with the parameter.</p>
+</div>
+<div class="paragraph">
+<p>To specify the properties of the parameter, use the elements of the
+<code>@Param</code> annotation as explained in the sections that follow.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghpxp"></a><a id="GSACG00200"></a><a id="specifying-whether-a-parameter-is-an-option-or-an-operand"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_specifying_whether_a_parameter_is_an_option_or_an_operand">Specifying Whether a Parameter Is an Option or an Operand</h4>
+<div class="paragraph">
+<p>Whether a parameter is an option or an operand determines how a user
+must specify the parameter when running the subcommand:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If the parameter is an option, the user must specify the option with
+the parameter name.</p>
+</li>
+<li>
+<p>If the parameter is an operand, the user may omit the parameter name.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To specify whether a parameter is an option or an operand, set the
+<code>primary</code> element of the <code>@Param</code> annotation as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If the parameter is an option, set the <code>primary</code> element to <code>false</code>.
+This value is the default.</p>
+</li>
+<li>
+<p>If the parameter is an operand, set the <code>primary</code> element to <code>true</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghpxj"></a><a id="GSACG00201"></a><a id="specifying-the-name-of-an-option"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_specifying_the_name_of_an_option">Specifying the Name of an Option</h4>
+<div class="paragraph">
+<p>The name of an option is the name that a user must type on the command
+line to specify the option when running the subcommand.</p>
+</div>
+<div class="paragraph">
+<p>The name of each option that you add in your implementation of an
+<code>asadmin</code> subcommand can have a long form and a short form. When running
+the subcommand, the user specifies the long form and the short form as
+follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The short form of an option name has a single dash (<code>-</code>) followed by a
+single character.</p>
+</li>
+<li>
+<p>The long form of an option name has two dashes (<code>--</code>) followed by an
+option word.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For example, the short form and the long form of the name of the option
+for specifying terse output are as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Short form: <code>-m</code></p>
+</li>
+<li>
+<p>Long form: <code>--monitor</code></p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>Option names are case-sensitive.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="ghpvy"></a><a id="GSACG00163"></a><a id="specifying-the-long-form-of-an-option-name"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_specifying_the_long_form_of_an_option_name">Specifying the Long Form of an Option Name</h5>
+<div class="paragraph">
+<p>To specify the long form of an option name, set the <code>name</code> element of
+the <code>@Param</code> annotation to a string that specifies the name. If you do
+not set this element, the default name depends on how you represent the
+option.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If you represent the option as a field, the default name is the field
+name.</p>
+</li>
+<li>
+<p>If you represent the option as the property of a JavaBeans
+specification setter method, the default name is the property name from
+the setter method name. For example, if the setter method <code>setPassword</code>
+is associated with an option, the property name and the option name are
+both <code>password</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="sthref5"></a><a id="specifying-the-short-form-of-an-option-name"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_specifying_the_short_form_of_an_option_name">Specifying the Short Form of an Option Name</h5>
+<div id="ghpvi" class="paragraph">
+<p>To specify the short form of an option name, set the <code>shortName</code> element
+of the <code>@Param</code> annotation to a single character that specifies the
+short form of the parameter. The user can specify this character instead
+of the full parameter name, for example <code>-m</code> instead of <code>--monitor</code>. If
+you do not set this element, the option has no short form.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghpxl"></a><a id="GSACG00202"></a><a id="specifying-the-acceptable-values-of-a-parameter"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_specifying_the_acceptable_values_of_a_parameter">Specifying the Acceptable Values of a Parameter</h4>
+<div class="paragraph">
+<p>When a user runs the subcommand, the GlassFish Server validates option
+arguments and operands against the acceptable values that you specify in
+your implementation.</p>
+</div>
+<div class="paragraph">
+<p>To specify the acceptable values of a parameter, set the
+<code>acceptableValues</code> element of the <code>@Param</code> annotation to a string that
+contains a comma-separated list of acceptable values. If you do not set
+this element, any string of characters is acceptable.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghrgt"></a><a id="GSACG00203"></a><a id="specifying-the-default-value-of-a-parameter"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_specifying_the_default_value_of_a_parameter">Specifying the Default Value of a Parameter</h4>
+<div class="paragraph">
+<p>The default value of a parameter is the value that is applied if a user
+omits the parameter when running the subcommand.</p>
+</div>
+<div class="paragraph">
+<p>To specify the default value of a parameter, set the <code>defaultValue</code>
+element of the <code>@Param</code> annotation to a string that contains the default
+value. You can also compute the default value dynamically by extending
+the <code>ParamDefaultCalculator</code> class and setting the <code>defaultCalculator</code>
+element of the <code>@Param</code> annotation to this class. If these elements are
+not set, the parameter has no default value.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghpuk"></a><a id="GSACG00204"></a><a id="specifying-whether-a-parameter-is-required-or-optional"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_specifying_whether_a_parameter_is_required_or_optional">Specifying Whether a Parameter Is Required or Optional</h4>
+<div class="paragraph">
+<p>Whether a parameter is required or optional determines how a subcommand
+responds if a user omits the parameter when running the subcommand:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If the parameter is required, the subcommand returns an error.</p>
+</li>
+<li>
+<p>If the parameter is optional, the subcommand runs successfully.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To specify whether a parameter is optional or required, set the
+<code>optional</code> element of the <code>@Param</code> annotation as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If the parameter is required, set the <code>optional</code> element to <code>false</code>.
+This value is the default.</p>
+</li>
+<li>
+<p>If the parameter is optional, set the <code>optional</code> element to <code>true</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="CDCFAJDG"></a><a id="specifying-whether-a-parameter-can-be-used-multiple-times-on-the-command-line"></a></p>
+</div>
+<div class="paragraph">
+<p>Specifying Whether a Parameter Can Be Used Multiple Times on the Command
+Line
+<sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup>^^</p>
+</div>
+<div class="paragraph">
+<p>By default, each parameter can be used once on the command line. To use
+the parameter multiple times, set the <code>multiple</code> element of the <code>@Param</code>
+annotation to <code>true</code>. The type of the annotated parameter must be an
+array.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghpxd"></a><a id="GSACG00205"></a><a id="example-of-adding-parameters-to-an-asadmin-subcommand"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_example_of_adding_parameters_to_an_code_asadmin_code_subcommand">Example of Adding Parameters to an <code>asadmin</code> Subcommand</h4>
+<div class="paragraph">
+<p><a id="GSACG00035"></a><a id="ghpuh"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 4-2 Adding Parameters to an <code>asadmin</code> Subcommand</p>
+</div>
+<div class="paragraph">
+<p>This example shows the code for adding parameters to an <code>asadmin</code>
+subcommand with the properties as shown in the table.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 17%;">
+<col style="width: 12%;">
+<col style="width: 8%;">
+<col style="width: 5%;">
+<col style="width: 6%;">
+<col style="width: 46%;">
+<col style="width: 6%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Represented As</th>
+<th class="tableblock halign-left valign-top">Acceptable Values</th>
+<th class="tableblock halign-left valign-top">Default Value</th>
+<th class="tableblock halign-left valign-top">Optional or
+Required</th>
+<th class="tableblock halign-left valign-top">Short Name</th>
+<th class="tableblock halign-left valign-top">Option or Operand</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--originator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A field that is named <code>originator</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Any character
+string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None defined</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Required</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Option</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A field that is named <code>mycontainerDescription</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Any
+character string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None defined</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Option</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A field that is named <code>enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code> or <code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Option</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--containername</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A field that is named <code>containername</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Any character
+string</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None defined</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Required</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Operand</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">...
+import org.glassfish.api.Param;
+...
+{
+…
+    @Param
+    String originator;
+
+    @Param(name="description", optional=true)
+    …
+    String mycontainerDescription
+
+    @Param (acceptableValues="true,false", defaultValue="false", optional=true)
+    String enabled
+
+    @Param(primary=true)
+    String containername;
+…
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gkygt"></a><a id="GSACG00109"></a><a id="making-asadmin-subcommands-cluster-aware"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_making_code_asadmin_code_subcommands_cluster_aware">Making <code>asadmin</code> Subcommands Cluster-Aware</h3>
+<div class="paragraph">
+<p>The GlassFish Server <code>asadmin</code> command framework provides support for
+making <code>asadmin</code> subcommands work properly in a clustered environment or
+with standalone server instances. A command that changes a configuration
+is first executed on the domain administration server (DAS) and then
+executed on each of the server instances affected by the change.
+Annotations provided by the framework determine the instances on which
+the command should be replicated and executed. Commands that do not
+change a configuration need not be executed on the DAS at all, but only
+on the necessary instances. The framework provides support for
+collecting the output from the instances and sending a report back to
+the user.</p>
+</div>
+<div class="paragraph">
+<p>Subcommands in a multi-instance environment can accept a <code>--target</code>
+option to specify the cluster or instance on which the command acts.
+From within the command, the <code>Target</code> utility allows the command to
+determine information about where it is running. For some commands, it
+may be desirable to have a main command that runs on the DAS and
+supplemental preprocessing or postprocessing commands that run on the
+instances.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkyjk">Specifying Allowed Targets</a></p>
+</li>
+<li>
+<p><a href="#gkykm">The <code>Target</code> Utility</a></p>
+</li>
+<li>
+<p><a href="#gkyfv">Specifying <code>asadmin</code> Subcommand Execution</a></p>
+</li>
+<li>
+<p><a href="#gkyjs">Subcommand Preprocessing and Postprocessing</a></p>
+</li>
+<li>
+<p><a href="#gkyit">Running a Command from Another Command</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkyjk"></a><a id="GSACG00206"></a><a id="specifying-allowed-targets"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_specifying_allowed_targets">Specifying Allowed Targets</h4>
+<div class="paragraph">
+<p>When you define a <code>--target</code> option by using the <code>@Param</code> annotation in
+the <code>org.glassfish.api</code> package, possible targets are as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>domain</code> — The entire domain</p>
+</li>
+<li>
+<p><code>server</code> — The domain administration server, or DAS</p>
+</li>
+<li>
+<p>cluster — A homogeneous set of server instances that function as a
+unit</p>
+</li>
+<li>
+<p>standalone instance — A server instance that isn&#8217;t part of a cluster</p>
+</li>
+<li>
+<p>clustered instance — A server instance that is part of a cluster</p>
+</li>
+<li>
+<p>config — A configuration for a cluster or standalone server instance</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>These possible targets are represented by the following <code>CommandTarget</code>
+elements of the <code>@TargetType</code> annotation in the
+<code>org.glassfish.config.support</code> package:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>CommandTarget.DOMAIN</code></p>
+</li>
+<li>
+<p><code>CommandTarget.DAS</code></p>
+</li>
+<li>
+<p><code>CommandTarget.CLUSTER</code></p>
+</li>
+<li>
+<p><code>CommandTarget.STANDALONE_SERVER</code></p>
+</li>
+<li>
+<p><code>CommandTarget.CLUSTERED_INSTANCE</code></p>
+</li>
+<li>
+<p><code>CommandTarget.CONFIG</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>By default, the allowed targets are <code>server</code> (the DAS), standalone
+server instances, clusters, and configurations. Not specifying a
+<code>@TargetType</code> annotation is equivalent to specifying the following
+<code>@TargetType</code> annotation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@TargetType(CommandTarget.DAS,CommandTarget.STANDALONE_SERVER,CommandTarget.CLUSTER,CommandTarget.CONFIG)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Subcommands that support other combinations of targets must specify
+<code>@TargetType</code> annotations. For example, the <code>create-http-lb</code> subcommand
+supports only standalone server instance and cluster targets. Its
+<code>@TargetType</code> annotation is as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@TargetType(CommandTarget.STANDALONE_SERVER,CommandTarget.CLUSTER)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Most subcommands do not act on server instances that are part of a
+cluster. This ensures that all server instances in a cluster remain
+synchronized. Thus, the <code>CommandTarget.CLUSTERED_INSTANCE</code> element of
+the <code>@TargetType</code> annotation is rarely used.</p>
+</div>
+<div class="paragraph">
+<p>An example exception is the <code>enable</code> subcommand. To perform a rolling
+upgrade of an application deployed to a cluster, you must be able to
+enable the new application (which automatically disables the old) on one
+clustered instance at a time. The <code>@TargetType</code> annotation for the
+<code>enable</code> subcommand is as follows, all on one line:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@TargetType(CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,
+CommandTarget.CLUSTERED_INSTANCE)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the <code>CommandTarget.CLUSTERED_INSTANCE</code> element is specified.</p>
+</div>
+<div class="paragraph">
+<p>The target name specified in the command line is injected into the
+subcommand implementation if the following annotation is present:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@Param(optional=true,defaultValue=SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+    String target;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gkykm"></a><a id="GSACG00207"></a><a id="the-target-utility"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_the_code_target_code_utility">The <code>Target</code> Utility</h4>
+<div class="paragraph">
+<p>The <code>Target</code> utility is a service, present in the <code>internal-api</code> module,
+<code>org.glassfish.internal.api</code> package, which a command implementation can
+obtain by using the following annotation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@Inject Target targetUtil;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can use this utility to avoid writing boiler plate code for actions
+such as getting the list of server instances for a cluster or checking
+if a server instance is part of a cluster. For example, here is an
+example of using the utility to obtain the configuration for a target
+cluster or server instance:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">Config c = targetUtil.getConfig(target);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>Target</code> utility is packaged in the
+as-install`/modules/internal-api.jar` file. Its methods are documented
+with comments.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkyfv"></a><a id="GSACG00208"></a><a id="specifying-asadmin-subcommand-execution"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_specifying_code_asadmin_code_subcommand_execution">Specifying <code>asadmin</code> Subcommand Execution</h4>
+<div class="paragraph">
+<p>By default, all <code>asadmin</code> subcommands are automatically replicated and
+run on the DAS and all GlassFish Server instances specified in the
+<code>--target</code> option. To run a subcommand only on the DAS, use the
+following <code>@ExecuteOn</code> annotation in the <code>org.glassfish.api.admin</code>
+package:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@ExecuteOn(RuntimeType.DAS)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>stop-domain</code> subcommand and subcommands that list information are
+examples of subcommands that execute only on the DAS.</p>
+</div>
+<div class="paragraph">
+<p>To run a subcommand only on applicable server instances, use the
+following <code>@ExecuteOn</code> annotation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@ExecuteOn(RuntimeType.INSTANCE)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Not specifying an <code>@ExecuteOn</code> annotation is equivalent to specifying
+the following <code>@ExecuteOn</code> annotation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@ExecuteOn(RuntimeType.DAS,RuntimeType.INSTANCE)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In addition to <code>RuntimeType</code>, you can specify the following additional
+elements with the <code>@ExecuteOn</code> annotation:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ifFailure</code> — By default, if errors occur during execution of a
+subcommand on a server instance, command execution is considered to have
+failed and further execution is stopped. However, you can choose to
+ignore the failure or warn the user rather than stopping further command
+execution. Specify the <code>ifFailure</code> element and set it to
+<code>FailurePolicy.Ignore</code> or <code>FailurePolicy.Warn</code>. For example:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>@ExecuteOn(value={RuntimeType.DAS}, ifFailure=FailurePolicy.Warn)</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ifOffline</code> — By default, if a server instance is found to be offline
+during the command replication process, command execution is considered
+to have failed and further execution is stopped. However, you can choose
+to ignore the failure or warn the user rather than stopping further
+command execution. Specify the <code>ifOffline</code> element and set it to
+<code>FailurePolicy.Ignore</code> or <code>FailurePolicy.Warn</code>. For example:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>@ExecuteOn(value={RuntimeType.DAS}, ifOffline=FailurePolicy.Ignore)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gkyjs"></a><a id="GSACG00209"></a><a id="subcommand-preprocessing-and-postprocessing"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_subcommand_preprocessing_and_postprocessing">Subcommand Preprocessing and Postprocessing</h4>
+<div class="paragraph">
+<p>Some <code>asadmin</code> subcommands may require preprocessing or postprocessing.
+For example, after an application is deployed to the DAS, references are
+created in all applicable server instances, which synchronize with the
+DAS. As another example, Message Queue or load balancer settings may
+have to be reconfigured whenever a server instance is added to a
+cluster.</p>
+</div>
+<div class="paragraph">
+<p>For such cases, the command replication framework provides the
+<code>@Supplemental</code> annotation (in the <code>org.glassfish.api.admin</code> package).
+An implementation must use the <code>value</code> element of the <code>@Supplemental</code>
+annotation to express the supplemented command. This value is the name
+of the command as defined by the supplemented command&#8217;s <code>@Service</code>
+annotation (in the <code>org.jvnet.hk2.annotations</code> package).</p>
+</div>
+<div class="paragraph">
+<p>For example, the <code>deploy</code> subcommand requires postprocessing. The
+deployment command implementation looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@Service(name="deploy")
+@ExecuteOn(RuntimeType.DAS)
+public DeployCommand implements AdminCommand {
+//Do Actual Deployment
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A supplemental command that is run after every successful deployment
+looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@Service(name="DeploymentSupplementalCommand")
+@Supplemental("deploy")
+@ExecuteOn(RuntimeType.INSTANCE)
+public DeploymentSupplementalCommand implements AdminCommand {
+//Do logic that happens after deployment has been done
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As another example, a subcommand to create a local server instance might
+look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@Service(name = "create-local-instance")
+@Scoped(PerLookup.class)
+public final class CreateLocalInstanceCommand implements AdminCommand {
+//Do local instance creation
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A supplemental command to change Message Queue or load balancer settings
+after local instance creation might look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@Service(name="CreateLocalInstanceSupplementalCommand")
+@Supplemental("create-local-instance")
+public CreateLocalInstanceSupplementalCommand implements AdminCommand {
+//Change MQ/LB properties here
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A supplemental command implements AdminCommand, thus it can use the
+<code>@Param</code> annotation and expect the corresponding <code>asadmin</code> command
+parameters to be injected at runtime. The parameter values available for
+injection are the same ones provided for the original command with which
+the supplemental command is associated. For example, the
+<code>DeploymentSupplementalCommand</code> has access to the parameter values
+available to the <code>DeployCommand</code> invocation.</p>
+</div>
+<div class="paragraph">
+<p>An <code>asadmin</code> subcommand can be supplemented with multiple supplemental
+commands. In this case, all supplemental commands are run after
+completion of the main command but without any guarantee of the order in
+which they run.</p>
+</div>
+<div class="paragraph">
+<p>To specify that a supplemental command is run before the main command,
+set the <code>on</code> element of the <code>@Supplemental</code> annotation to
+<code>Supplemental.Timing.Before</code>. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@Supplemental(value="mycommand", on=Supplemental.Timing.Before)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Supplemental commands can use the <code>@ExecuteOn</code> annotation as described
+in <a href="#gkyfv">Specifying <code>asadmin</code> Subcommand Execution</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkyit"></a><a id="GSACG00210"></a><a id="running-a-command-from-another-command"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_running_a_command_from_another_command">Running a Command from Another Command</h4>
+<div class="paragraph">
+<p>An <code>asadmin</code> subcommand or supplemental command might need to run
+another subcommand. For example, a subcommand running on the DAS might
+need to run a different subcommand on one or more server instances. Such
+invocations might use the <code>ClusterExecutor</code> class (in the
+<code>org.glassfish.api.admin</code> package), which accepts a <code>ParameterMap</code>, to
+pass parameters and their values to the invoked command.</p>
+</div>
+<div class="paragraph">
+<p>The <code>ParameterMapExtractor</code> utility is a service, present in the
+<code>common-util</code> module, <code>org.glassfish.common.util.admin</code> package, which
+creates a new <code>ParameterMap</code> populated using the parameters and values
+of another <code>AdminCommand</code> that has already been injected.</p>
+</div>
+<div class="paragraph">
+<p>To list parameter names you want excluded from the <code>ParameterMap</code>, pass
+the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">Set&lt;String&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is optional.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghptw"></a><a id="GSACG00110"></a><a id="adding-message-text-strings-to-an-asadmin-subcommand"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_adding_message_text_strings_to_an_code_asadmin_code_subcommand">Adding Message Text Strings to an <code>asadmin</code> Subcommand</h3>
+<div class="paragraph">
+<p>A message text string provides useful information to the user about an
+<code>asadmin</code> subcommand or a parameter.</p>
+</div>
+<div class="paragraph">
+<p>To provide internationalization support for the text string of a
+subcommand or parameter, annotate the declaration of the subcommand or
+parameter with the <code>org.glassfish.api.I18n</code> annotation. The <code>@I18n</code>
+annotation identifies the resource from the resource bundle that is
+associated with your implementation.</p>
+</div>
+<div class="paragraph">
+<p>To add message text strings to an <code>asadmin</code> subcommand, create a plain
+text file that is named <code>LocalStrings.properties</code> to contain the
+strings. Define each string on a separate line of the file as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">key=string</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">key</dt>
+<dd>
+<p>A key that maps the string to a subcommand or a parameter. The format
+to use for key depends on the target to which the key applies and
+whether the target is annotated with the <code>@I18n</code> annotation. See the
+following table.<br></p>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 36%;">
+<col style="width: 64%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Target</th>
+<th class="tableblock halign-left valign-top">Format</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Subcommand or parameter with the <code>@I18n</code> annotation</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">subcommand-name.command.resource-name</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Subcommand without the <code>@I18n</code> annotation</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">subcommand-name.command</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Parameter without the <code>@I18n</code> annotation</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">subcommand-name.command.param-name</code></pre>
+</div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="literalblock">
+<div class="content">
+<pre>  The replaceable parts of these formats are as follows: +
+  subcommand-name;;
+    The name of the subcommand.
+  resource-name;;
+    The name of the resource that is specified in the`@I18n` annotation.
+  param-name;;
+    The name of the parameter.
+string::
+  A string without quotes that contains the text of the message.</pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>To display the message strings to users, you must provide code in your
+implementation of the <code>execute</code> method to display the text. For more
+information about implementing the <code>execute</code> method, see
+<a href="#ghpvn">Enabling an <code>asadmin</code> Subcommand to Run</a>.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="GSACG00036"></a><a id="ghpvm"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 4-3 Adding Message Strings to an <code>asadmin</code> Subcommand</p>
+</div>
+<div class="paragraph">
+<p>This example shows the code for adding message strings to the
+<code>create-mycontainer</code> subcommand as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>create-mycontainer</code> subcommand is associated with the message
+<code>Creates a custom container</code>. No internationalization support is
+provided for this message.</p>
+</li>
+<li>
+<p>The <code>--originator</code> parameter is associated with the message
+<code>The originator of the container</code>. No internationalization support is
+provided for this message.</p>
+</li>
+<li>
+<p>The <code>--description</code> parameter is associated with the message that is
+contained in the resource <code>mydesc</code>, for which internationalization is
+provided. This resource contains the message text
+<code>A description of the container</code>.</p>
+</li>
+<li>
+<p>The <code>--enabled</code> parameter is associated with the message
+<code>Whether the container is enabled or disabled</code>. No internationalization
+support is provided for this message.</p>
+</li>
+<li>
+<p>The <code>--containername</code> parameter is associated with the message
+<code>The container name</code>. No internationalization support is provided for
+this message.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The addition of the parameters <code>originator</code>, <code>description</code>, <code>enabled</code>
+and <code>containername</code> to the subcommand is shown in <a href="#ghpuh">Example
+4-2</a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">package com.example.mycontainer;
+
+import org.glassfish.api.admin.AdminCommand;
+...
+import org.glassfish.api.I18n;
+import org.glassfish.api.Param;
+import org.jvnet.hk2.annotations.Service;
+...
+import org.jvnet.hk2.annotations.Scoped;
+import org.jvnet.hk2.component.PerLookup;
+
+/**
+ * Sample subcommand
+ */
+@Service(name="create-mycontainer")
+@Scoped(PerLookup.class)
+public Class CreateMycontainer implements AdminCommand {
+
+    …
+
+    @Param
+    String originator;
+
+    @Param(name="description", optional=true)
+    @I18n("mydesc")
+    String mycontainerDescription
+
+    @Param (acceptableValues="true,false", defaultValue="false", optional=true)
+    String enabled
+
+    @Param(primary=true)
+    String containername;
+ …
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following message text strings are defined in the file
+<code>LocalStrings.properties</code> for use by the subcommand:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">create-mycontainer.command=Creates a custom container
+create-mycontainer.command.originator=The originator of the container
+create-mycontainer.command.mydesc=A description of the container
+create-mycontainer.command.enabled=Whether the container is enabled or disabled
+create-mycontainer.command.containername=The container name</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="ghpvn"></a><a id="GSACG00111"></a><a id="enabling-an-asadmin-subcommand-to-run"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_enabling_an_code_asadmin_code_subcommand_to_run">Enabling an <code>asadmin</code> Subcommand to Run</h3>
+<div class="paragraph">
+<p>To enable an <code>asadmin</code> subcommand to run, implement the <code>execute</code> method
+in your implementation of the <code>AdminCommand</code> interface. The declaration
+of the <code>execute</code> method in your implementation must be as follows.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">    public void execute(AdminCommandContext context);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Pass each parameter of the subcommand as a property to your
+implementation of the <code>execute</code> method. Set the key of the property to
+the parameter name and set the value of the property to the parameter&#8217;s
+value.</p>
+</div>
+<div class="paragraph">
+<p>In the body of the <code>execute</code> method, provide the code for performing the
+operation that the command was designed to perform. For examples, see
+<a href="#ghrsi">Example 4-6</a> and <a href="#gkbdf">Example 4-7</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghpvq"></a><a id="GSACG00112"></a><a id="setting-the-context-of-an-asadmin-subcommand"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_setting_the_context_of_an_code_asadmin_code_subcommand">Setting the Context of an <code>asadmin</code> Subcommand</h3>
+<div class="paragraph">
+<p>The <code>org.glassfish.api.admin.AdminCommandContext</code> class provides the
+following services to an <code>asadmin</code> subcommand:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Access to the parameters of the subcommand</p>
+</li>
+<li>
+<p>Logging</p>
+</li>
+<li>
+<p>Reporting</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To set the context of an <code>asadmin</code> subcommand, pass an
+<code>AdminCommandContext</code> object to the <code>execute</code> method of your
+implementation.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghpwn"></a><a id="GSACG00113"></a><a id="changing-the-brand-in-the-glassfish-server-cli"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_changing_the_brand_in_the_glassfish_server_cli">Changing the Brand in the GlassFish Server CLI</h3>
+<div class="paragraph">
+<p>The brand in the GlassFish Server command-line interface (CLI) consists
+of the product name and release information that are displayed in the
+following locations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In the string that the <a href="../reference-manual/version.html#GSRFM00261"><code>version</code></a> subcommand displays</p>
+</li>
+<li>
+<p>In each entry in the <code>server.log</code> file</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If you are incorporating GlassFish Server into a new product with an
+external vendor&#8217;s own brand name, change the brand in the GlassFish
+Server CLI.</p>
+</div>
+<div class="paragraph">
+<p>To change the brand in the GlassFish Server CLI, create an OSGi fragment
+bundle that contains a plain text file that is named
+<code>src/main/resources/BrandingVersion.properties</code>.</p>
+</div>
+<div class="paragraph">
+<p>In the <code>BrandingVersion.properties</code> file, define the following
+keyword-value pairs:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">product_name=product-name
+abbrev_product_name=abbrev-product-name
+major_version=major-version
+minor_version=minor-version
+build_id=build-id
+version_prefix=version-prefix
+version_suffix=version-suffix</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Define each keyword-value pair on a separate line of the file. Each
+value is a text string without quotes.</p>
+</div>
+<div class="paragraph">
+<p>The meaning of each keyword-value pair is as follows:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">`product_name=`product-name</dt>
+<dd>
+<p>Specifies the full product name without any release information, for
+example,
+<code>name="ProductNameFullPlain" content="Eclipse GlassFish Server"</code>.</p>
+</dd>
+<dt class="hdlist1">`abbrev_product_name=`abbrev-product-name</dt>
+<dd>
+<p>Specifies an abbreviated form of the product name without any release
+information, for example,
+<code>name="ProductNamePlain" content="GlassFish Server"</code>.</p>
+</dd>
+<dt class="hdlist1">`major_version=`major-version</dt>
+<dd>
+<p>Returns the product major version, for example, <code>6</code></p>
+</dd>
+<dt class="hdlist1">`minor_version=`minor-version</dt>
+<dd>
+<p>Specifies the product minor version, for example, <code>0</code>.</p>
+</dd>
+<dt class="hdlist1">`build_id=`build-id</dt>
+<dd>
+<p>Specifies the build version, for example, <code>build 17</code>.</p>
+</dd>
+<dt class="hdlist1">`version_prefix=`version-prefix</dt>
+<dd>
+<p>Specifies a prefix for the product version, for example, <code>v</code>.</p>
+</dd>
+<dt class="hdlist1">`version_suffix=`version-suffix</dt>
+<dd>
+<p>Specifies a suffix for the product version, for example, <code>Beta</code>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSACG00037"></a><a id="ghrfh"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 4-4 <code>BrandingVersion.properties</code> File for Changing the Brand in
+the GlassFish Server CLI</p>
+</div>
+<div class="paragraph">
+<p>This example shows the content of the <code>BrandingVersion.properties</code> for
+defining the product name and release information of Eclipse GlassFish
+Server 6.0.0, build 17. The abbreviated product name is
+<code>glassfish-server</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">product_name=Eclise GlassFish Server
+abbrev_product_name=glassfish-server
+major_version=6
+minor_version=0.0
+build_id=build 17</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To enable the display of OEM-specific information, the following
+properties might also be required:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">LEGAL_COPYRIGHT                "Copyright 2020"
+LEGAL_COMPANY_NAME             "Eclipse Foundation"
+LEGAL_RIGHTS                   "All rights reserved."
+SIMPLE_COMPANY_NAME            "Eclipse"
+COMPANY_CONTACT_URL            "http://www.glassfish.org"
+PRODUCT_TRADEMARKS             "GlassFish is a trademark of the Eclipse Foundation"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="ghmza"></a><a id="GSACG00114"></a><a id="examples-of-extending-the-asadmin-utility"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_examples_of_extending_the_code_asadmin_code_utility">Examples of Extending the <code>asadmin</code> Utility</h3>
+<div class="paragraph">
+<p><a id="GSACG00038"></a><a id="ghrnt"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 4-5 <code>asadmin</code> Subcommand With Empty <code>execute</code> Method</p>
+</div>
+<div class="paragraph">
+<p>This example shows a class that represents the <code>asadmin</code> subcommand
+<code>create-mycontainer</code>.</p>
+</div>
+<div class="paragraph">
+<p>The usage statement for this subcommand is as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin create-mycontainer --originator any-character-string
+[--description any-character-string]
+[--enabled {true|false}] any-character-string</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This subcommand uses injection to specify that a running domain is
+required.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">package com.example.mycontainer;
+
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.I18n;
+import org.glassfish.api.Param;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.annotations.Inject;
+import org.jvnet.hk2.annotations.Scoped;
+import org.jvnet.hk2.component.PerLookup;
+
+/**
+ * Sample subcommand
+ */
+@Service(name="create-mycontainer")
+@Scoped(PerLookup.class)
+public Class CreateMycontainer implements AdminCommand {
+
+    @Inject
+    Domain domain;
+
+    @Param
+    String originator;
+
+    @Param(name="description", optional=true)
+    @I18n("mydesc")
+    String mycontainerDescription
+
+    @Param (acceptableValues="true,false", defaultValue="false", optional=true)
+    String enabled
+
+    @Param(primary=true)
+    String containername;
+
+    /**
+     * Executes the subcommand with the subcommand parameters passed as Properties
+     * where the keys are the paramter names and the values the parameter values
+     * @param context information
+     */
+    public void execute(AdminCommandContext context) {
+        // domain and originator are not null
+        // mycontainerDescription can be null.
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following message text strings are defined in the file
+<code>LocalStrings.properties</code> for use by the subcommand:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">create-mycontainer.command=Creates a custom container
+create-mycontainer.command.originator=The originator of the container
+create-mycontainer.command.mydesc=A description of the container
+create-mycontainer.command.enabled=Whether the container is enabled or disabled
+create-mycontainer.command.containername=The container name</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSACG00039"></a><a id="ghrsi"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 4-6 <code>asadmin</code> Subcommand for Retrieving and Displaying
+Information</p>
+</div>
+<div class="paragraph">
+<p>This example shows a class that represents the <code>asadmin</code> subcommand
+<code>list-runtime-environment</code>. The subcommand determines the operating
+system or runtime information for GlassFish Server.</p>
+</div>
+<div class="paragraph">
+<p>The usage statement for this subcommand is as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin list-runtime-environment{runtime|os}
+
+package com.example.env.cli;
+
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.I18n;
+import org.glassfish.api.ActionReport.ExitCode;
+import org.glassfish.api.Param;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.annotations.Inject;
+import org.jvnet.hk2.annotations.Scoped;
+import org.jvnet.hk2.component.PerLookup;
+
+import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
+import java.lang.management.RuntimeMXBean;
+
+/**
+ * Demos asadmin CLI extension
+ *
+  */
+@Service(name="list-runtime-environment")
+@Scoped(PerLookup.class)
+public class ListRuntimeEnvironmentCommand implements AdminCommand {
+
+    // this value can be either runtime or os for our demo
+    @Param(primary=true)
+    String inParam;
+
+    public void execute(AdminCommandContext context) {
+
+        ActionReport report = context.getActionReport();
+        report.setActionExitCode(ExitCode.SUCCESS);
+
+        // If the inParam is 'os' then this subcommand returns operating system
+        // info and if the inParam is 'runtime' then it returns runtime info.
+        // Both of the above are based on mxbeans.
+
+        if ("os".equals(inParam)) {
+            OperatingSystemMXBean osmb = ManagementFactory.getOperatingSystemMXBean();
+            report.setMessage("Your machine operating system name = " + osmb.getName());
+        } else if ("runtime".equals(inParam)) {
+            RuntimeMXBean rtmb = ManagementFactory.getRuntimeMXBean();
+            report.setMessage("Your JVM name = " + rtmb.getVmName());
+        } else {
+            report.setActionExitCode(ExitCode.FAILURE);
+            report.setMessage("operand should be either 'os' or 'runtime'");
+        }
+
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSACG00040"></a><a id="gkbdf"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 4-7 <code>asadmin</code> Subcommand for Updating Configuration Data</p>
+</div>
+<div class="paragraph">
+<p>This example shows a class that represents the <code>asadmin</code> subcommand
+<code>configure-greeter-container</code>. The subcommand performs a transaction to
+update configuration data for a container component. For more
+information about such transactions, see
+<a href="adding-configuration-data.html#gjrcz">Creating a Transaction to
+Update Configuration Data</a>.</p>
+</div>
+<div class="paragraph">
+<p>The usage statement for this subcommand is as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin configure-greeter-container --instances instances [--language language] [--style style]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The acceptable values and default value of each option of the subcommand
+are shown in the following table. The table also indicates whether each
+option is optional or required.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Option</th>
+<th class="tableblock halign-left valign-top">Acceptable Values</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+<th class="tableblock halign-left valign-top">Optional or Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--instances</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An integer in the range 1-10</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Required</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--language</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>english</code>, <code>norsk</code>, or <code>francais</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>norsk</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--style</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>formal</code>, <code>casual</code>, or <code>expansive</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>formal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Code for the container component is shown in
+<a href="adding-container-capabilities.html#gkane">Example of Adding Container
+Capabilities</a>.</p>
+</div>
+<div class="paragraph">
+<p>Code that defines the configuration data for the container component is
+shown in <a href="adding-configuration-data.html#gkaal">Examples of Adding
+Configuration Data for a Component</a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">package org.glassfish.examples.extension.greeter.config;
+
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.Param;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.annotations.Inject;
+import org.jvnet.hk2.config.Transactions;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
+
+import java.beans.PropertyVetoException;
+
+@Service(name = "configure-greeter-container")
+public class ConfigureGreeterContainerCommand implements AdminCommand {
+
+    @Param(acceptableValues = "1,2,3,4,5,6,7,8,9,10", defaultValue = "5")
+    String instances;
+    @Param(acceptableValues = "english,norsk,francais", defaultValue = "norsk",
+    optional = true)
+    String language;
+    @Param(acceptableValues = "formal,casual,expansive", defaultValue = "formal",
+    optional = true)
+    String style;
+    @Inject
+    GreeterContainerConfig config;
+
+    public void execute(AdminCommandContext adminCommandContext) {
+        try {
+            ConfigSupport.apply(new SingleConfigCode&lt;GreeterContainerConfig&gt;() {
+
+                public Object run(GreeterContainerConfig greeterContainerConfig)
+                        throws PropertyVetoException, TransactionFailure {
+                    greeterContainerConfig.setNumberOfInstances(instances);
+                    greeterContainerConfig.setLanguage(language);
+                    greeterContainerConfig.setStyle(style);
+                    return null;
+                }
+            }, config);
+        } catch (TransactionFailure e) {
+        }
+
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gkzlq"></a><a id="GSACG00115"></a><a id="implementing-create-delete-and-list-commands-using-annotations"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_implementing_create_delete_and_list_commands_using_annotations">Implementing Create, Delete, and List Commands Using Annotations</h3>
+<div class="paragraph">
+<p>Many <code>asadmin</code> subcommands simply create, delete, or list objects in the
+configuration. Such code is repetitive to write and error prone. To
+simplify the writing of these <code>asadmin</code> commands, GlassFish Server
+supports annotations that can create, delete, and list configuration
+objects from a command invocation. Unless attributes or properties are
+set to non-default values or extra actions are required, no writing of
+code is needed.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkzkc">Command Patterns</a></p>
+</li>
+<li>
+<p><a href="#gkzle">Resolvers</a></p>
+</li>
+<li>
+<p><a href="#gkzoy">The <code>@Create</code> Annotation</a></p>
+</li>
+<li>
+<p><a href="#gkzoo">The <code>@Delete</code> Annotation</a></p>
+</li>
+<li>
+<p><a href="#gkzpl">The <code>@Listing</code> Annotation</a></p>
+</li>
+<li>
+<p><a href="#gkznf">Create Command Decorators</a></p>
+</li>
+<li>
+<p><a href="#gkznx">Delete Command Decorators</a></p>
+</li>
+<li>
+<p><a href="#gkzmu">Specifying Command Execution</a></p>
+</li>
+<li>
+<p><a href="#gkznd">Using Multiple Command Annotations</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkzkc"></a><a id="GSACG00211"></a><a id="command-patterns"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_command_patterns">Command Patterns</h4>
+<div class="paragraph">
+<p>Create command pattern. The most basic create commands are implemented
+in the following pattern:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Retrieve the parent configuration object instance to which the child
+will be added. For example, the parent could be a <code>Clusters</code> object and
+the child a <code>Cluster</code> object.</p>
+</li>
+<li>
+<p>Start a transaction on the parent instance.</p>
+</li>
+<li>
+<p>Create the child configuration object instance.</p>
+</li>
+<li>
+<p>Set the attributes and properties of the newly created child
+instance.</p>
+</li>
+<li>
+<p>Add the child to the parent using one of the following accessor
+methods:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>void setChild(ChildType child)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Used when there can be zero or one children of a single type associated
+with one parent instance.<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">List&lt;ChildType&gt; getChildren()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Used when there can be zero or more children of a single type associated
+with one parent instance.<br>
+You cannot retrieve a set of children of the same type from the same
+parent using two different accessor methods.
+6.  Commit the transaction.</p>
+</div>
+<div class="paragraph">
+<p>A generic create command implementation can do most of these tasks if
+the following information is provided:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A way to resolve the identity of the parent instance.</p>
+</li>
+<li>
+<p>The type of the child instance.</p>
+</li>
+<li>
+<p>A mapping between command options and child attributes.</p>
+</li>
+<li>
+<p>The accessor method for adding the child to the parent.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Delete command pattern. The most basic delete commands are implemented
+in the following pattern:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Retrieve the configuration object instance to be deleted.</p>
+</li>
+<li>
+<p>Start a transaction on the parent instance.</p>
+</li>
+<li>
+<p>Delete the child by removing it from the list or calling
+<code>setXXX(null)</code>.</p>
+</li>
+<li>
+<p>Commit the transaction.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>A generic delete command implementation can do most of these tasks if
+the following information is provided:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A way to resolve the identity of the child instance.</p>
+</li>
+<li>
+<p>The accessor method for deleting the child.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>List command pattern. The most basic list commands simply retrieve all
+configuration object instances of a given type.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkzle"></a><a id="GSACG00212"></a><a id="resolvers"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_resolvers">Resolvers</h4>
+<div class="paragraph">
+<p>A resolver retrieves a configuration object instance of a particular
+type. For a create command, it retrieves the parent of the object to be
+created. For a delete command, it retrieves the object to be deleted. A
+resolver implements the CrudResolver interface:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">package org.glassfish.config.support;
+
+/**
+ * A config resolver is responsible for finding the target object of a specified
+ * type on which a creation command invocation will be processed.
+ *
+ * Implementation of these interfaces can be injected with the command invocation
+ * parameters in order to determine which object should be returned
+ */
+@Contract
+public interface CrudResolver {
+
+    /**
+     * Retrieves the existing configuration object a command invocation is
+     * intented to mutate.
+     * @param context the command invocation context
+     * @param type the type of the expected instance
+     * @return the instance or null if not found
+     */
+    &lt;T extends ConfigBeanProxy&gt; T resolve(AdminCommandContext context, Class&lt;T&gt; type);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Given an <code>AdminCommandContext</code>, plus injection with the <code>asadmin</code>
+command line parameters (or any other HK2 services if necessary), the
+resolver should be able to determine the particular configuration object
+on which to act.</p>
+</div>
+<div class="paragraph">
+<p>The following resolvers are provided in the
+<code>org.glassfish.config.support</code> package:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>TargetBasedResolver</code> — Uses the <code>--target</code> option and the expected
+return type to retrieve the configuration object instance.</p>
+</li>
+<li>
+<p><code>TargetAndNameBasedResolver</code> — Uses the <code>--target</code> option to look up a
+<code>Config</code> object and a name to retrieve one of the <code>Config</code> object&#8217;s
+children.</p>
+</li>
+<li>
+<p><code>TypeAndNameResolver</code> — Uses the requested type and <code>asadmin</code> command
+name operand to find the configuration object instance. This is useful
+for a configuration that uses the <code>@Index</code> annotation, which registers
+instances under names.</p>
+</li>
+<li>
+<p><code>TypeResolver</code> — Uses the requested type to find the configuration
+object instance. This is the default resolver.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkzoy"></a><a id="GSACG00213"></a><a id="the-create-annotation"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_the_code_create_code_annotation">The <code>@Create</code> Annotation</h4>
+<div class="paragraph">
+<p>By placing the <code>org.glassfish.config.support.Create</code> annotation on a
+method, you provide the following information:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>value</code> element of the <code>@Create</code> annotation is the name of the
+<code>asadmin</code> subcommand that creates the configuration object.</p>
+</li>
+<li>
+<p>The method&#8217;s class is the type of the parent.</p>
+</li>
+<li>
+<p>The method&#8217;s return type or parameter type is the type of the child.</p>
+</li>
+<li>
+<p>The method is the accessor method that adds a child of the specified
+type to the parent.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The only additional information needed is the resolver to use.</p>
+</div>
+<div class="paragraph">
+<p>The following example specifies a <code>create-cluster</code> subcommand:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@Configured
+public interface Clusters extends ConfigBeanProxy, Injectable {
+
+     /**
+      * Return the list of clusters currently configured
+      *
+      * @return list of {@link Cluster }
+      */
+    @Element
+    @Create(value="create-cluster")
+    public List&lt;Cluster&gt; getCluster();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Because there is only one instance of the parent type, <code>Clusters</code>, in
+the configuration, this example uses the default resolver to retrieve
+it. Therefore, no resolver needs to be specified.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkzoo"></a><a id="GSACG00214"></a><a id="the-delete-annotation"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_the_code_delete_code_annotation">The <code>@Delete</code> Annotation</h4>
+<div class="paragraph">
+<p>By placing the <code>org.glassfish.config.support.Delete</code> annotation on a
+method, you provide the following information:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>value</code> element of the <code>@Delete</code> annotation is the name of the
+<code>asadmin</code> subcommand that deletes the configuration object.</p>
+</li>
+<li>
+<p>The method&#8217;s class is the type of the parent.</p>
+</li>
+<li>
+<p>The method&#8217;s return type or parameter type is the type of the child.</p>
+</li>
+<li>
+<p>The method is the accessor method that deletes a child of the
+specified type from the parent.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The only additional information needed is the resolver to use.</p>
+</div>
+<div class="paragraph">
+<p>The following example specifies a <code>delete-cluster</code> subcommand:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@Configured
+public interface Clusters extends ConfigBeanProxy, Injectable {
+
+     /**
+      * Return the list of clusters currently configured
+      *
+      * @return list of {@link Cluster }
+      */
+    @Element
+    @Delete(value="delete-cluster", resolver=TypeAndNameResolver.class)
+    public List&lt;Cluster&gt; getCluster();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>TypeAndNameResolver</code> uses the child type and the name operand
+passed through the command line to retrieve the specific cluster
+instance to be deleted.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkzpl"></a><a id="GSACG00215"></a><a id="the-listing-annotation"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_the_code_listing_code_annotation">The <code>@Listing</code> Annotation</h4>
+<div class="paragraph">
+<p>By placing the <code>org.glassfish.config.support.Listing</code> annotation on a
+method, you provide the following information:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>value</code> element of the <code>@Listing</code> annotation is the name of the
+<code>asadmin</code> subcommand that lists the configuration objects.</p>
+</li>
+<li>
+<p>The method&#8217;s class is the type of the parent.</p>
+</li>
+<li>
+<p>The method&#8217;s return type is the type of the children to be listed.</p>
+</li>
+<li>
+<p>The method is always the following accessor method:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>List&lt;ChildType&gt; getChildren()</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The default resolver retrieves all of the children of the specified
+type. Therefore, no resolver needs to be specified for a list command.</p>
+</div>
+<div class="paragraph">
+<p>The following example specifies a <code>list-clusters</code> subcommand:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@Configured
+public interface Clusters extends ConfigBeanProxy, Injectable {
+
+     /**
+      * Return the list of clusters currently configured
+      *
+      * @return list of {@link Cluster }
+      */
+    @Element
+    @Listing(value="list-clusters")
+    public List&lt;Cluster&gt; getCluster();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gkznf"></a><a id="GSACG00216"></a><a id="create-command-decorators"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_create_command_decorators">Create Command Decorators</h4>
+<div class="paragraph">
+<p>Most create commands must do more than create a single configuration
+object instance with default attribute values. For example, most create
+commands allow the user to specify non-default attribute values through
+command options. For another example, the <code>create-cluster</code> subcommand
+creates children of the <code>Cluster</code> object and copies a referenced
+<code>Config</code> object. A creation decorator provides the code necessary to
+perform such additional operations.</p>
+</div>
+<div class="paragraph">
+<p>The interface that a creation decorator must implement is as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@Scoped(PerLookup.class)
+public interface CreationDecorator&lt;T extends ConfigBeanProxy&gt; {
+
+    /**
+     * The element instance has been created and added to the parent, it can be
+     * customized. This method is called within a
+     * {@link org.jvnet.hk2.config.Transaction}
+     * and instance is therefore a writeable view on the configuration component.
+     *
+     * @param context administration command context
+     * @param instance newly created configuration element
+     * @throws TransactionFailure if the transaction should be rollbacked
+     * @throws PropertyVetoException if one of the listener of &lt;T&gt; is throwing
+     * a veto exception
+     */
+    public void decorate(AdminCommandContext context, T instance)
+        throws TransactionFailure, PropertyVetoException;
+
+    /**
+     * Default implementation of a decorator that does nothing.
+     */
+    @Service
+    public class NoDecoration implements CreationDecorator&lt;ConfigBeanProxy&gt; {
+        @Override
+        public void decorate(AdminCommandContext context, ConfigBeanProxy instance)
+            throws TransactionFailure, PropertyVetoException {
+            // do nothing
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The CreationDecorator interface is in the <code>org.glassfish.config.support</code>
+package.</p>
+</div>
+<div class="paragraph">
+<p>A <code>@Create</code> annotation specifies a creation decorator using a
+<code>decorator</code> element. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@Configured
+public interface Clusters extends ConfigBeanProxy, Injectable {
+
+     /**
+      * Return the list of clusters currently configured
+      *
+      * @return list of {@link Cluster }
+      */
+    @Element
+    @Create(value="create-cluster", decorator=Cluster.Decorator.class)
+    public List&lt;Cluster&gt; getCluster();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>@Create</code> annotation is on a method of the parent class. However,
+the referenced creation decorator class is associated with the child
+class. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@Configured
+public interface Cluster extends ConfigBeanProxy, ... {
+
+    ...
+
+    @Service
+    @Scoped(PerLookup.class)
+    class Decorator implements CreationDecorator&lt;Cluster&gt; {
+
+        @Param(name="config", optional=true)
+        String configRef=null;
+
+        @Inject
+        Domain domain;
+
+        @Override
+        public void decorate(AdminCommandContext context, final Cluster instance)
+                throws TransactionFailure, PropertyVetoException {
+
+        ...
+
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The decorator class can optionally be an inner class of the child class.
+You can inject command options using the <code>@Param</code> annotation. You can
+also inject HK2 services or configuration instances.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkznx"></a><a id="GSACG00217"></a><a id="delete-command-decorators"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_delete_command_decorators">Delete Command Decorators</h4>
+<div class="paragraph">
+<p>Some delete commands must do more than delete a single configuration
+object instance. For example, the <code>delete-cluster</code> subcommand deletes
+the referenced <code>Config</code> object if no other <code>Cluster</code> or <code>Instance</code>
+objects reference it. A deletion decorator provides the code necessary
+to perform such additional operations.</p>
+</div>
+<div class="paragraph">
+<p>The interface that a deletion decorator must implement is as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">/**
+ * A decorator for acting upon a configuration element deletion.
+ *
+ * @param &lt;T&gt; the deleted element parent type
+ * @param &lt;U&gt; the deleted element
+ */
+@Scoped(PerLookup.class)
+public interface DeletionDecorator&lt;T extends ConfigBeanProxy,
+    U extends ConfigBeanProxy&gt; {
+
+    /**
+     * notification of a configuration element of type U deletion.
+     *
+     * Note that this notification is called within the boundaries of the
+     * configuration transaction, therefore the parent instance is a
+     * writable copy and further changes to the parent can be made without
+     * enrolling it inside a transaction.
+     *
+     * @param context the command context to lead to the element deletion
+     * @param parent the parent instance the element was removed from
+     * @param child the deleted instance
+     */
+    public void decorate(AdminCommandContext context, T parent, U child);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The DeletionDecorator interface is in the <code>org.glassfish.config.support</code>
+package.</p>
+</div>
+<div class="paragraph">
+<p>A <code>@Delete</code> annotation specifies a deletion decorator using a
+<code>decorator</code> element. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@Configured
+public interface Clusters extends ConfigBeanProxy, Injectable {
+
+     /**
+      * Return the list of clusters currently configured
+      *
+      * @return list of {@link Cluster }
+      */
+    @Element
+    @Delete(value="delete-cluster", resolver= TypeAndNameResolver.class,
+        decorator=Cluster.DeleteDecorator.class)
+    public List&lt;Cluster&gt; getCluster();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>@Delete</code> annotation is on a method of the parent class. However,
+the referenced deletion decorator class is associated with the child
+class. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@Configured
+public interface Cluster extends ConfigBeanProxy, ... {
+
+    ..
+    @Service
+    @Scoped(PerLookup.class)
+    class DeleteDecorator implements DeletionDecorator&lt;Clusters, Cluster&gt; {
+        ....
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The decorator class can optionally be an inner class of the child class.
+You can inject command options using the <code>@Param</code> annotation. You can
+also inject HK2 services or configuration instances.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkzmu"></a><a id="GSACG00218"></a><a id="specifying-command-execution"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_specifying_command_execution">Specifying Command Execution</h4>
+<div class="paragraph">
+<p>Commands specified with the <code>@Create</code>, <code>@Delete</code>, and <code>@Listing</code>
+annotations can use the <code>@ExecuteOn</code> annotation. The <code>@ExecuteOn</code>
+annotation specifies whether the command runs on the DAS, on server
+instances, or both (the default). For more information, see
+<a href="#gkyfv">Specifying <code>asadmin</code> Subcommand Execution</a>.</p>
+</div>
+<div class="paragraph">
+<p>To add an <code>@ExecuteOn</code> annotation to a <code>@Create</code> or <code>@Delete</code>
+annotation, use the <code>cluster</code> element. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@Create(value="create-instance", resolver=TypeResolver.class,
+        decorator=Server.CreateDecorator.class,
+        cluster=@org.glassfish.api.admin.ExecuteOn(value=RuntimeType.DAS))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gkznd"></a><a id="GSACG00219"></a><a id="using-multiple-command-annotations"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_multiple_command_annotations">Using Multiple Command Annotations</h4>
+<div class="paragraph">
+<p>You can specify multiple command annotations on the same method. The
+following example combines create, delete, and list commands for
+clusters:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@Configured
+public interface Clusters extends ConfigBeanProxy, Injectable {
+
+     /**
+      * Return the list of clusters currently configured
+      *
+      * @return list of {@link Cluster }
+      */
+    @Element
+    @Create(value="create-cluster", decorator=Cluster.Decorator.class)
+    @Delete(value="delete-cluster", resolver= TypeAndNameResolver.class,
+        decorator=Cluster.DeleteDecorator.class)
+    @Listing(value="list-clusters")
+    public List&lt;Cluster&gt; getCluster();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can also specify multiple create or delete command annotations for
+the same configuration object type using the <code>@Creates</code> or <code>@Deletes</code>
+annotation (both in the <code>org.glassfish.config.support</code> package). For
+example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@Element
+@Creates(
+   @Create(value="create-something", decorator=CreateSomething.Decorator)
+   @Create(value="create-something-else", decorator=CreateSomethingElse.Decorator)
+   List&lt;Something&gt; getSomethings();
+)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>These commands create configuration object instances of the same type.
+Differences in the decorators and resolvers can produce differences in
+the options each command takes. The <code>@Param</code> annotated attributes of the
+created type define a superset of options for both commands.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="extending-the-admin-console.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="adding-monitoring-capabilities.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2020,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

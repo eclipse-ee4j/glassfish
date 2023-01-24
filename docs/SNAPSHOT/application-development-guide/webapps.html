@@ -1,0 +1,3183 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Developing Web Applications</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Developing Web Applications</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="jpa.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="ejb.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSDVG00009"></a><a id="beafs"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="developing-web-applications">7 Developing Web Applications</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter describes how web applications are supported in the Oracle
+GlassFish Server.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beagj">Using Servlets</a></p>
+</li>
+<li>
+<p><a href="#beagu">Using JavaServer Pages</a></p>
+</li>
+<li>
+<p><a href="#beaha">Creating and Managing Sessions</a></p>
+</li>
+<li>
+<p><a href="#ggrgt">Using Comet</a></p>
+</li>
+<li>
+<p><a href="#beaft">Advanced Web Application Features</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For general information about web applications, see
+"https://javaee.github.io/tutorial/partwebtier.html[The Web Tier]" in
+The Java EE 8 Tutorial.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The Web Profile of the GlassFish Server supports the EJB 3.1 Lite
+specification, which allows enterprise beans within web applications,
+among other features. The full GlassFish Server supports the entire EJB
+3.1 specification. For details, see
+<a href="http://jcp.org/en/jsr/detail?id=318">JSR 318</a>
+(<code>http://jcp.org/en/jsr/detail?id=318</code>).</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="beagj"></a><a id="GSDVG00140"></a><a id="using-servlets"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_using_servlets">Using Servlets</h3>
+<div class="paragraph">
+<p>GlassFish Server supports the Java Servlet Specification version 4.0.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Servlet API version 4.0 is fully backward compatible with versions 3.0,
+2.3, 2.4, and 2.5, so all existing servlets should work without
+modification or recompilation.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>To develop servlets, use the Java Servlet API. For information about
+using the Java Servlet API, see the documentation at
+<code>http://www.oracle.com/technetwork/java/javaee/servlet/index.html</code>.</p>
+</div>
+<div class="paragraph">
+<p>The GlassFish Server provides the <code>wscompile</code> and <code>wsdeploy</code> tools to
+help you implement a web service endpoint as a servlet. For more
+information about these tools, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open
+Source Edition Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p>This section describes how to create effective servlets to control
+application interactions running on a GlassFish Server, including
+standard-based servlets. In addition, this section describes the
+GlassFish Server features to use to augment the standards.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beagm">Caching Servlet Results</a></p>
+</li>
+<li>
+<p><a href="#beagr">About the Servlet Engine</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beagm"></a><a id="GSDVG00397"></a><a id="caching-servlet-results"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_caching_servlet_results">Caching Servlet Results</h4>
+<div class="paragraph">
+<p>The GlassFish Server can cache the results of invoking a servlet, a JSP,
+or any URL pattern to make subsequent invocations of the same servlet,
+JSP, or URL pattern faster. The GlassFish Server caches the request
+results for a specific amount of time. In this way, if another data call
+occurs, the GlassFish Server can return the cached data instead of
+performing the operation again. For example, if your servlet returns a
+stock quote that updates every 5 minutes, you set the cache to expire
+after 300 seconds.</p>
+</div>
+<div class="paragraph">
+<p>Whether to cache results and how to cache them depends on the data
+involved. For example, it makes no sense to cache the results of a quiz
+submission, because the input to the servlet is different each time.
+However, it makes sense to cache a high level report showing demographic
+data taken from quiz results that is updated once an hour.</p>
+</div>
+<div class="paragraph">
+<p>To define how a GlassFish Server web application handles response
+caching, you edit specific fields in the <code>glassfish-web.xml</code> file.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>A servlet that uses caching is not portable.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For Javadoc tool pages relevant to caching servlet results, see the
+<code>com.sun.appserv.web.cache</code> package.</p>
+</div>
+<div class="paragraph">
+<p>For information about JSP caching, see <a href="#beagw">JSP Caching</a>.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beagn">Caching Features</a></p>
+</li>
+<li>
+<p><a href="#beago">Default Cache Configuration</a></p>
+</li>
+<li>
+<p><a href="#beagp">Caching Example</a></p>
+</li>
+<li>
+<p><a href="#beagq">The CacheKeyGenerator Interface</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beagn"></a><a id="GSDVG00251"></a><a id="caching-features"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_caching_features">Caching Features</h5>
+<div class="paragraph">
+<p>The GlassFish Server has the following web application response caching
+capabilities:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Caching is configurable based on the servlet name or the URI.</p>
+</li>
+<li>
+<p>When caching is based on the URI, this includes user specified
+parameters in the query string. For example, a response from
+<code>/garden/catalog?category=roses</code> is different from a response from
+<code>/garden/catalog?category=lilies</code>. These responses are stored under
+different keys in the cache.</p>
+</li>
+<li>
+<p>Cache size, entry timeout, and other caching behaviors are
+configurable.</p>
+</li>
+<li>
+<p>Entry timeout is measured from the time an entry is created or
+refreshed. To override this timeout for an individual cache mapping,
+specify the <code>cache-mapping</code> subelement <code>timeout</code>.</p>
+</li>
+<li>
+<p>To determine caching criteria programmatically, write a class that
+implements the com.sun.appserv.web.cache.CacheHelper interface. For
+example, if only a servlet knows when a back end data source was last
+modified, you can write a helper class to retrieve the last modified
+timestamp from the data source and decide whether to cache the response
+based on that timestamp.</p>
+</li>
+<li>
+<p>To determine cache key generation programmatically, write a class that
+implements the com.sun.appserv.web.cache.CacheKeyGenerator interface.
+See <a href="#beagq">The CacheKeyGenerator Interface</a>.</p>
+</li>
+<li>
+<p>All non-ASCII request parameter values specified in cache key elements
+must be URL encoded. The caching subsystem attempts to match the raw
+parameter values in the request query string.</p>
+</li>
+<li>
+<p>Since newly updated classes impact what gets cached, the web container
+clears the cache during dynamic deployment or reloading of classes.</p>
+</li>
+<li>
+<p>The following <code>HttpServletRequest</code> request attributes are exposed.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>com.sun.appserv.web.cachedServletName</code>, the cached servlet target</p>
+</li>
+<li>
+<p><code>com.sun.appserv.web.cachedURLPattern</code>, the URL pattern being cached</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Results produced by resources that are the target of a
+<code>RequestDispatcher.include()</code> or <code>RequestDispatcher.forward()</code> call are
+cached if caching has been enabled for those resources. For details, see
+"<a href="../application-deployment-guide/dd-elements.html#GSDPG00101">cache-mapping</a>" in GlassFish Server Open Source
+Edition Application Deployment Guide and "<a href="../application-deployment-guide/dd-elements.html#GSDPG00140">dispatcher</a>"
+in GlassFish Server Open Source Edition Application Deployment Guide.
+These are elements in the <code>glassfish-web.xml</code> file.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beago"></a><a id="GSDVG00252"></a><a id="default-cache-configuration"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_default_cache_configuration">Default Cache Configuration</h5>
+<div class="paragraph">
+<p>If you enable caching but do not provide any special configuration for a
+servlet or JSP, the default cache configuration is as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The default cache timeout is 30 seconds.</p>
+</li>
+<li>
+<p>Only the HTTP GET method is eligible for caching.</p>
+</li>
+<li>
+<p>HTTP requests with cookies or sessions automatically disable caching.</p>
+</li>
+<li>
+<p>No special consideration is given to <code>Pragma:</code>, <code>Cache-control:</code>, or
+<code>Vary:</code> headers.</p>
+</li>
+<li>
+<p>The default key consists of the Servlet Path (minus <code>pathInfo</code> and the
+query string).</p>
+</li>
+<li>
+<p>A "least recently used" list is maintained to evict cache entries if
+the maximum cache size is exceeded.</p>
+</li>
+<li>
+<p>Key generation concatenates the servlet path with key field values, if
+any are specified.</p>
+</li>
+<li>
+<p>Results produced by resources that are the target of a
+<code>RequestDispatcher.include()</code> or <code>RequestDispatcher.forward()</code> call are
+never cached.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beagp"></a><a id="GSDVG00253"></a><a id="caching-example"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_caching_example">Caching Example</h5>
+<div class="paragraph">
+<p>Here is an example cache element in the <code>glassfish-web.xml</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;cache max-capacity="8192" timeout="60"&gt;
+&lt;cache-helper name="myHelper" class-name="MyCacheHelper"/&gt;
+&lt;cache-mapping&gt;
+    &lt;servlet-name&gt;myservlet&lt;/servlet-name&gt;
+    &lt;timeout name="timefield"&gt;120&lt;/timeout&gt;
+    &lt;http-method&gt;GET&lt;/http-method&gt;
+    &lt;http-method&gt;POST&lt;/http-method&gt;
+&lt;/cache-mapping&gt;
+&lt;cache-mapping&gt;
+    &lt;url-pattern&gt; /catalog/* &lt;/url-pattern&gt;
+    &lt;!-- cache the best selling category; cache the responses to
+       -- this resource only when the given parameters exist. Cache
+       -- only when the catalog parameter has 'lilies' or 'roses'
+       -- but no other catalog varieties:
+      -- /orchard/catalog?best&amp;category='lilies'
+      -- /orchard/catalog?best&amp;category='roses'
+      -- but not the result of
+       -- /orchard/catalog?best&amp;category='wild'
+    --&gt;
+    &lt;constraint-field name='best' scope='request.parameter'/&gt;
+    &lt;constraint-field name='category' scope='request.parameter'&gt;
+        &lt;value&gt; roses &lt;/value&gt;
+        &lt;value&gt; lilies &lt;/value&gt;
+    &lt;/constraint-field&gt;
+     &lt;!-- Specify that a particular field is of given range but the
+       -- field doesn't need to be present in all the requests --&gt;
+    &lt;constraint-field name='SKUnum' scope='request.parameter'&gt;
+        &lt;value match-expr='in-range'&gt; 1000 - 2000 &lt;/value&gt;
+    &lt;/constraint-field&gt;
+    &lt;!-- cache when the category matches with any value other than
+       -- a specific value --&gt;
+    &lt;constraint-field name="category" scope="request.parameter&gt;
+        &lt;value match-expr="equals" cache-on-match-failure="true"&gt;
+       bogus
+        &lt;/value&gt;
+    &lt;/constraint-field&gt;
+&lt;/cache-mapping&gt;
+&lt;cache-mapping&gt;
+    &lt;servlet-name&gt; InfoServlet &lt;/servlet-name&gt;
+    &lt;cache-helper-ref&gt;myHelper&lt;/cache-helper-ref&gt;
+&lt;/cache-mapping&gt;
+&lt;/cache&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information about the <code>glassfish-web.xml</code> caching settings, see
+"<a href="../application-deployment-guide/dd-elements.html#GSDPG00097">cache</a>" in GlassFish Server Open Source Edition
+Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="beagq"></a><a id="GSDVG00254"></a><a id="the-cachekeygenerator-interface"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_the_cachekeygenerator_interface">The CacheKeyGenerator Interface</h5>
+<div class="paragraph">
+<p>The built-in default CacheHelper implementation allows web applications
+to customize the key generation. An application component (in a servlet
+or JSP) can set up a custom CacheKeyGenerator implementation as an
+attribute in the <code>ServletContext</code>.</p>
+</div>
+<div class="paragraph">
+<p>The name of the context attribute is configurable as the <code>value</code> of the
+<code>cacheKeyGeneratorAttrName</code> property in the <code>default-helper</code> element of
+the <code>glassfish-web.xml</code> deployment descriptor. For more information, see
+"<a href="../application-deployment-guide/dd-elements.html#GSDPG00136">default-helper</a>" in GlassFish Server Open Source
+Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="beagr"></a><a id="GSDVG00398"></a><a id="about-the-servlet-engine"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_about_the_servlet_engine">About the Servlet Engine</h4>
+<div class="paragraph">
+<p>Servlets exist in and are managed by the servlet engine in the GlassFish
+Server. The servlet engine is an internal object that handles all
+servlet meta functions. These functions include instantiation,
+initialization, destruction, access from other components, and
+configuration management.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beags">Instantiating and Removing Servlets</a></p>
+</li>
+<li>
+<p><a href="#beagt">Request Handling</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beags"></a><a id="GSDVG00255"></a><a id="instantiating-and-removing-servlets"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_instantiating_and_removing_servlets">Instantiating and Removing Servlets</h5>
+<div class="paragraph">
+<p>After the servlet engine instantiates the servlet, the servlet engine
+calls the servlet&#8217;s <code>init</code> method to perform any necessary
+initialization. You can override this method to perform an
+initialization function for the servlet&#8217;s life, such as initializing a
+counter.</p>
+</div>
+<div class="paragraph">
+<p>When a servlet is removed from service, the servlet engine calls the
+<code>destroy</code> method in the servlet so that the servlet can perform any
+final tasks and deallocate resources. You can override this method to
+write log messages or clean up any lingering connections that won&#8217;t be
+caught in garbage collection.</p>
+</div>
+<div class="paragraph">
+<p><a id="beagt"></a><a id="GSDVG00256"></a><a id="request-handling"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_request_handling">Request Handling</h5>
+<div class="paragraph">
+<p>When a request is made, the GlassFish Server hands the incoming data to
+the servlet engine. The servlet engine processes the request&#8217;s input
+data, such as form data, cookies, session information, and URL
+name-value pairs, into an <code>HttpServletRequest</code> request object type.</p>
+</div>
+<div class="paragraph">
+<p>The servlet engine also creates an <code>HttpServletResponse</code> response object
+type. The engine then passes both as parameters to the servlet&#8217;s
+<code>service</code> method.</p>
+</div>
+<div class="paragraph">
+<p>In an HTTP servlet, the default <code>service</code> method routes requests to
+another method based on the HTTP transfer method: <code>POST</code>, <code>GET</code>,
+<code>DELETE</code>, <code>HEAD</code>, <code>OPTIONS</code>, <code>PUT</code>, or <code>TRACE</code>. For example, HTTP <code>POST</code>
+requests are sent to the <code>doPost</code> method, HTTP <code>GET</code> requests are sent
+to the <code>doGet</code> method, and so on. This enables the servlet to process
+request data differently, depending on which transfer method is used.
+Since the routing takes place in the service method, you generally do
+not override <code>service</code> in an HTTP servlet. Instead, override <code>doGet</code>,
+<code>doPost</code>, and so on, depending on the request type you expect.</p>
+</div>
+<div class="paragraph">
+<p>To perform the tasks to answer a request, override the <code>service</code> method
+for generic servlets, and the <code>doGet</code> or <code>doPost</code> methods for HTTP
+servlets. Very often, this means accessing EJB components to perform
+business transactions, then collating the information in the request
+object or in a JDBC <code>ResultSet</code> object.</p>
+</div>
+<div class="paragraph">
+<p><a id="beagu"></a><a id="GSDVG00141"></a><a id="using-javaserver-pages"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_javaserver_pages">Using JavaServer Pages</h3>
+<div class="paragraph">
+<p>The GlassFish Server supports the following JSP features:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>JavaServer Pages (JSP) Specification</p>
+</li>
+<li>
+<p>Precompilation of JSP files, which is especially useful for production
+servers</p>
+</li>
+<li>
+<p>JSP tag libraries and standard portable tags</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For information about creating JSP files, see the JavaServer Pages web
+site at <code>http://www.oracle.com/technetwork/java/javaee/jsp/index.html</code>.</p>
+</div>
+<div class="paragraph">
+<p>For information about Java Beans, see the JavaBeans web page at
+<code>http://www.oracle.com/technetwork/java/javase/tech/index-jsp-138795.html</code>.</p>
+</div>
+<div class="paragraph">
+<p>This section describes how to use JavaServer Pages (JSP files) as page
+templates in a GlassFish Server web application.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beagv">JSP Tag Libraries and Standard Portable Tags</a></p>
+</li>
+<li>
+<p><a href="#beagw">JSP Caching</a></p>
+</li>
+<li>
+<p><a href="#beagz">Options for Compiling JSP Files</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beagv"></a><a id="GSDVG00399"></a><a id="jsp-tag-libraries-and-standard-portable-tags"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_jsp_tag_libraries_and_standard_portable_tags">JSP Tag Libraries and Standard Portable Tags</h4>
+<div class="paragraph">
+<p>GlassFish Server supports tag libraries and standard portable tags. For
+more information, see the JavaServer Pages Standard Tag Library (JSTL)
+page at <code>http://www.oracle.com/technetwork/java/index-jsp-135995.html</code>.</p>
+</div>
+<div class="paragraph">
+<p>Web applications don&#8217;t need to bundle copies of the <code>jsf-impl.jar</code> or
+<code>appserv-jstl.jar</code> JSP tag libraries (in as-install`/lib`) to use
+JavaServer Faces technology or JSTL, respectively. These tag libraries
+are automatically available to all web applications.</p>
+</div>
+<div class="paragraph">
+<p>However, the as-install`/lib/jspcachtags.jar` tag library for JSP
+caching is not automatically available to web applications. See
+<a href="#beagw">JSP Caching</a>, next.</p>
+</div>
+<div class="paragraph">
+<p><a id="beagw"></a><a id="GSDVG00400"></a><a id="jsp-caching"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_jsp_caching">JSP Caching</h4>
+<div class="paragraph">
+<p>JSP caching lets you cache tag invocation results within the Java
+engine. Each can be cached using different cache criteria. For example,
+suppose you have invocations to view stock quotes, weather information,
+and so on. The stock quote result can be cached for 10 minutes, the
+weather report result for 30 minutes, and so on.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gaxbq">Enabling JSP Caching</a></p>
+</li>
+<li>
+<p><a href="#gaxcr">Caching Scope</a></p>
+</li>
+<li>
+<p><a href="#beagx">The <code>cache</code> Tag</a></p>
+</li>
+<li>
+<p><a href="#beagy">The <code>flush</code> Tag</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For more information about response caching as it pertains to servlets,
+see <a href="#beagm">Caching Servlet Results</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gaxbq"></a><a id="GSDVG00257"></a><a id="enabling-jsp-caching"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_enabling_jsp_caching">Enabling JSP Caching</h5>
+<div class="paragraph">
+<p>To globally enable JSP caching, set the <code>jspCachingEnabled</code> property to
+<code>true</code>. The default is <code>false</code>. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin set server-config.web-container.property.jspCachingEnabled="true"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information about the <code>asadmin set</code> command, see the
+<a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p>To enable JSP caching for a single web application, follow these steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Extract the <code>META-INF/jspcachtags.tld</code> file from the
+as-install`/modules/web-glue.jar` file.</p>
+</li>
+<li>
+<p>Create a new JAR file (for example, <code>jspcachtags.jar</code>) containing
+just the <code>META-INF/jspcachtags.tld</code> file previously extracted.</p>
+</li>
+<li>
+<p>Bundle this new JAR file in the <code>WEB-INF/lib</code> directory of your web
+application.</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Web applications that use JSP caching without bundling the tag library
+are not portable.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Refer to GlassFish Server tags in JSP files as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;%@ taglib prefix="prefix" uri="http://glassfish.org/taglibs/cache" %&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Subsequently, the cache tags are available as <code>&lt;`prefix</code>:cache&gt;` and
+<code>&lt;`prefix</code>:flush&gt;<code>. For example, if your prefix is `mypfx</code>, the cache
+tags are available as <code>&lt;mypfx:cache&gt;</code> and <code>&lt;mypfx:flush&gt;</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gaxcr"></a><a id="GSDVG00258"></a><a id="caching-scope"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_caching_scope">Caching Scope</h5>
+<div class="paragraph">
+<p>JSP caching is available in three different scopes: <code>request</code>,
+<code>session</code>, and <code>application</code>. The default is <code>application</code>. To use a
+cache in <code>request</code> scope, a web application must specify the
+<code>com.sun.appserv.web.taglibs.cache.CacheRequestListener</code> in its
+<code>web.xml</code> deployment descriptor, as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;listener&gt;
+   &lt;listener-class&gt;
+      com.sun.appserv.web.taglibs.cache.CacheRequestListener
+   &lt;/listener-class&gt;
+&lt;/listener&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Likewise, for a web application to utilize a cache in <code>session</code> scope,
+it must specify the
+<code>com.sun.appserv.web.taglibs.cache.CacheSessionListener</code> in its
+<code>web.xml</code> deployment descriptor, as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;listener&gt;
+   &lt;listener-class&gt;
+      com.sun.appserv.web.taglibs.cache.CacheSessionListener
+   &lt;/listener-class&gt;
+&lt;/listener&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To utilize a cache in <code>application</code> scope, a web application need not
+specify any listener. The
+<code>com.sun.appserv.web.taglibs.cache.CacheContextListener</code> is already
+specified in the <code>jspcachtags.tld</code> file.</p>
+</div>
+<div class="paragraph">
+<p><a id="beagx"></a><a id="GSDVG00259"></a><a id="the-cache-tag"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_the_code_cache_code_tag">The <code>cache</code> Tag</h5>
+<div class="paragraph">
+<p>The cache tag caches the body between the beginning and ending tags
+according to the attributes specified. The first time the tag is
+encountered, the body content is executed and cached. Each subsequent
+time it is run, the cached content is checked to see if it needs to be
+refreshed and if so, it is executed again, and the cached data is
+refreshed. Otherwise, the cached data is served.</p>
+</div>
+<div class="paragraph">
+<p><a id="fvyfx"></a><a id="GSDVG00023"></a><a id="attributes-of-cache"></a></p>
+</div>
+<div class="paragraph">
+<p>Attributes of <code>cache</code></p>
+</div>
+<div class="paragraph">
+<p>The following table describes attributes for the <code>cache</code> tag.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSDVG541"></a><a id="sthref13"></a><a id="fvygg"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 7-1 The <code>cache</code> Attributes</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 16%;">
+<col style="width: 74%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>key</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ServletPath`_`Suffix</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The name used by the container
+to access the cached entry. The cache key is suffixed to the servlet
+path to generate a key to access the cached entry. If no key is
+specified, a number is generated according to the position of the tag in
+the page.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>timeout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>60s</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The time in seconds after which the body
+of the tag is executed and the cache is refreshed. By default, this
+value is interpreted in seconds. To specify a different unit of time,
+add a suffix to the timeout value as follows: <code>s</code> for seconds, <code>m</code> for
+minutes, <code>h</code> for hours, <code>d</code> for days. For example, <code>2h</code> specifies two
+hours.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>nocache</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) If set to <code>true</code>, the body content is
+executed and served as if there were no <code>cache</code> tag. This offers a way
+to programmatically decide whether the cached response is sent or
+whether the body has to be executed, though the response is not cached.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>refresh</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) If set to <code>true</code>, the body content is
+executed and the response is cached again. This lets you
+programmatically refresh the cache immediately regardless of the
+<code>timeout</code> setting.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>scope</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>application</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The scope of the cache. Can be
+<code>request</code>, <code>session</code>, or <code>application</code>. See <a href="#gaxcr">Caching Scope</a>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="fvyeh"></a><a id="GSDVG00024"></a><a id="example-of-cache"></a></p>
+</div>
+<div class="paragraph">
+<p>Example of <code>cache</code></p>
+</div>
+<div class="paragraph">
+<p>The following example represents a cached JSP file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;%@ taglib prefix="mypfx" uri="http://glassfish.org/taglibs/cache" %&gt;
+&lt;%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %&gt;
+&lt;mypfx:cache                 key="${sessionScope.loginId}"
+            nocache="${param.nocache}"
+            refresh="${param.refresh}"
+            timeout="10m"&gt;
+&lt;c:choose&gt;
+    &lt;c:when test="${param.page == 'frontPage'}"&gt;
+        &lt;%-- get headlines from database --%&gt;
+    &lt;/c:when&gt;
+    &lt;c:otherwise&gt;
+        ...
+    &lt;/c:otherwise&gt;
+&lt;/c:choose&gt;
+&lt;/mypfx:cache&gt;
+&lt;mypfx:cache timeout="1h"&gt;
+&lt;h2&gt; Local News &lt;/h2&gt;
+    &lt;%-- get the headline news and cache them --%&gt;
+&lt;/mypfx:cache&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="beagy"></a><a id="GSDVG00260"></a><a id="the-flush-tag"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_the_code_flush_code_tag">The <code>flush</code> Tag</h5>
+<div class="paragraph">
+<p>Forces the cache to be flushed. If a <code>key</code> is specified, only the entry
+with that key is flushed. If no key is specified, the entire cache is
+flushed.</p>
+</div>
+<div class="paragraph">
+<p><a id="fvykp"></a><a id="GSDVG00025"></a><a id="attributes-of-flush"></a></p>
+</div>
+<div class="paragraph">
+<p>Attributes of <code>flush</code></p>
+</div>
+<div class="paragraph">
+<p>The following table describes attributes for the <code>flush</code> tag.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSDVG542"></a><a id="sthref14"></a><a id="fvyep"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 7-2 The <code>flush</code> Attributes</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 11%;">
+<col style="width: 20%;">
+<col style="width: 69%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Attribute</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>key</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ServletPath`_`Suffix</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The name used by the container
+to access the cached entry. The cache key is suffixed to the servlet
+path to generate a key to access the cached entry. If no key is
+specified, a number is generated according to the position of the tag in
+the page.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>scope</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>application</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(optional) The scope of the cache. Can be
+<code>request</code>, <code>session</code>, or <code>application</code>. See <a href="#gaxcr">Caching Scope</a>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="fvyle"></a><a id="GSDVG00026"></a><a id="examples-of-flush"></a></p>
+</div>
+<div class="paragraph">
+<p>Examples of <code>flush</code></p>
+</div>
+<div class="paragraph">
+<p>To flush the entry with <code>key="foobar"</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;mypfx:flush key="foobar"/&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To flush the entire cache:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;c:if test="${empty sessionScope.clearCache}"&gt;
+   &lt;mypfx:flush /&gt;
+&lt;/c:if&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="beagz"></a><a id="GSDVG00401"></a><a id="options-for-compiling-jsp-files"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_options_for_compiling_jsp_files">Options for Compiling JSP Files</h4>
+<div class="paragraph">
+<p>GlassFish Server provides the following ways of compiling JSP source
+files into servlets:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>JSP files are automatically compiled at runtime.</p>
+</li>
+<li>
+<p>The <code>asadmin deploy</code> command has a <code>--precompilejsp</code> option. For
+details, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition
+Reference Manual</a>.</p>
+</li>
+<li>
+<p>The <code>jspc</code> command line tool allows you to precompile JSP files at the
+command line. For details, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open
+Source Edition Reference Manual</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beaha"></a><a id="GSDVG00142"></a><a id="creating-and-managing-sessions"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_creating_and_managing_sessions">Creating and Managing Sessions</h3>
+<div class="paragraph">
+<p>This section describes how to create and manage HTTP sessions that
+allows users and transaction information to persist between
+interactions.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beahb">Configuring Sessions</a></p>
+</li>
+<li>
+<p><a href="#beahf">Session Managers</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beahb"></a><a id="GSDVG00402"></a><a id="configuring-sessions"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_configuring_sessions">Configuring Sessions</h4>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beahc">HTTP Sessions, Cookies, and URL Rewriting</a></p>
+</li>
+<li>
+<p><a href="#beahd">Coordinating Session Access</a></p>
+</li>
+<li>
+<p><a href="#ghmih">Saving Sessions During Redeployment</a></p>
+</li>
+<li>
+<p><a href="#gixeb">Logging Session Attributes</a></p>
+</li>
+<li>
+<p><a href="#beahe">Distributed Sessions and Persistence</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beahc"></a><a id="GSDVG00261"></a><a id="http-sessions-cookies-and-url-rewriting"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_http_sessions_cookies_and_url_rewriting">HTTP Sessions, Cookies, and URL Rewriting</h5>
+<div class="paragraph">
+<p>To configure whether and how HTTP sessions use cookies and URL
+rewriting, edit the <code>session-properties</code> and <code>cookie-properties</code>
+elements in the <code>glassfish-web.xml</code> file for an individual web
+application. For more about the properties you can configure, see
+"<a href="../application-deployment-guide/dd-elements.html#GSDPG00276">session-properties</a>" in GlassFish Server Open Source
+Edition Application Deployment Guide and
+"<a href="../application-deployment-guide/dd-elements.html#GSDPG00130">cookie-properties</a>" in GlassFish Server Open Source
+Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p>For information about configuring default session properties for the
+entire web container, see <a href="#beagc">Using the <code>default-web.xml</code> File</a>
+and the <a href="../ha-administration-guide/toc.html#GSHAG">GlassFish Server Open Source Edition High
+Availability Administration Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beahd"></a><a id="GSDVG00262"></a><a id="coordinating-session-access"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_coordinating_session_access">Coordinating Session Access</h5>
+<div class="paragraph">
+<p>Make sure that multiple threads don&#8217;t simultaneously modify the same
+session object in conflicting ways. If the persistence type is
+<code>replicated</code> (see <a href="#gdshu">The <code>replicated</code> Persistence Type</a>), the
+following message in the log file indicates that this might be
+happening:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">Primary Key Constraint violation while saving session session_id</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is especially likely to occur in web applications that use HTML
+frames where multiple servlets are executing simultaneously on behalf of
+the same client. A good solution is to ensure that one of the servlets
+modifies the session and the others have read-only access.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghmih"></a><a id="GSDVG00263"></a><a id="saving-sessions-during-redeployment"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_saving_sessions_during_redeployment">Saving Sessions During Redeployment</h5>
+<div class="paragraph">
+<p>Whenever a redeployment is done, the sessions at that transit time
+become invalid unless you use the <code>--keepstate=true</code> option of the
+<code>asadmin redeploy</code> command. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin redeploy --keepstate=true --name hello.war</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For details, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition
+Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p>The default for <code>--keepstate</code> is false. This option is supported only on
+the default server instance, named <code>server</code>. It is not supported and
+ignored for any other target.</p>
+</div>
+<div class="paragraph">
+<p>For web applications, this feature is applicable only if in the
+<code>glassfish-web-app.xml</code> file the <code>persistence-type</code> attribute of the
+<code>session-manager</code> element is <code>file</code>.</p>
+</div>
+<div class="paragraph">
+<p>If any active web session fails to be preserved or restored, none of the
+sessions will be available when the redeployment is complete. However,
+the redeployment continues and a warning is logged.</p>
+</div>
+<div class="paragraph">
+<p>The new class loader of the redeployed application is used to
+deserialize any sessions previously saved. The usual restrictions about
+serialization and deserialization apply. For example, any
+application-specific class referenced by a session attribute may evolve
+only in a backward-compatible fashion. For more information about class
+loaders, see <a href="class-loaders.html#beade">Class Loaders</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gixeb"></a><a id="GSDVG00264"></a><a id="logging-session-attributes"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_logging_session_attributes">Logging Session Attributes</h5>
+<div class="paragraph">
+<p>You can write session attribute values to an access log. The access log
+format token <code>%session.`name</code>%` logs one of the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The value of the session attribute with the name name</p>
+</li>
+<li>
+<p>`NULL-SESSION-ATTRIBUTE-`name if the named attribute does not exist in
+the session</p>
+</li>
+<li>
+<p><code>NULL-SESSION</code> if no session exists</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For more information about access logging and format tokens, see online
+help for the Access Log tab of the HTTP Service page in the
+Administration Console.</p>
+</div>
+<div class="paragraph">
+<p><a id="beahe"></a><a id="GSDVG00265"></a><a id="distributed-sessions-and-persistence"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_distributed_sessions_and_persistence">Distributed Sessions and Persistence</h5>
+<div class="paragraph">
+<p>A distributed HTTP session can run in multiple GlassFish Server
+instances, provided the following criteria are met:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Each server instance has the same distributable web application
+deployed to it. The <code>web-app</code> element of the <code>web.xml</code> deployment
+descriptor file must have the <code>distributable</code> subelement specified.</p>
+</li>
+<li>
+<p>The web application uses high-availability session persistence. If a
+non-distributable web application is configured to use high-availability
+session persistence, a warning is written to the server log, and the
+session persistence type reverts to <code>memory</code>. See <a href="#gdshu">The
+<code>replicated</code> Persistence Type</a>.</p>
+</li>
+<li>
+<p>All objects bound into a distributed session must be of the types
+listed in <a href="#fvyem">Table 7-3</a>.</p>
+</li>
+<li>
+<p>The web application must be deployed using the <code>deploy</code> or <code>deploydir</code>
+command with the <code>--availabilityenabled</code> option set to <code>true</code>. See the
+<a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference Manual</a>.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Contrary to the Servlet 5.0 specification, GlassFish Server does not
+throw an <code>IllegalArgumentException</code> if an object type not supported for
+failover is bound into a distributed session.</p>
+</div>
+<div class="paragraph">
+<p>Keep the distributed session size as small as possible. Session size has
+a direct impact on overall system throughput.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In the event of an instance or hardware failure, another server instance
+can take over a distributed session, with the following limitations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If a distributable web application references a Java EE component or
+resource, the reference might be lost. See <a href="#fvyem">Table 7-3</a> for a
+list of the types of references that <code>HTTPSession</code> failover supports.</p>
+</li>
+<li>
+<p>References to open files or network connections are lost.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For information about how to work around these limitations, see the
+<a href="../deployment-planning-guide/toc.html#GSPLG">GlassFish Server Open Source Edition Deployment Planning
+Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p>In the following table, No indicates that failover for the object type
+might not work in all cases and that no failover support is provided.
+However, failover might work in some cases for that object type. For
+example, failover might work because the class implementing that type is
+serializable.</p>
+</div>
+<div class="paragraph">
+<p>For more information about the <code>InitialContext</code>, see
+<a href="jndi.html#beans">Accessing the Naming Context</a>. For more information
+about transaction recovery, see <a href="transaction-service.html#beanm">Using
+the Transaction Service</a>. For more information about Administered
+Objects, see "<a href="../administration-guide/jms.html#GSADG00599">Administering JMS Physical Destinations</a>"
+in GlassFish Server Open Source Edition Administration Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSDVG543"></a><a id="sthref15"></a><a id="fvyem"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 7-3 Object Types Supported for Java EE Web Application Session
+State Failover</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 45%;">
+<col style="width: 55%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Java Object Type</th>
+<th class="tableblock halign-left valign-top">Failover Support</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Colocated or distributed stateless session, stateful session, or entity
+bean reference</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JNDI context</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes, <code>InitialContext</code> and <code>java:comp/env</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UserTransaction</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes, but if the instance that fails is never
+restarted, any prepared global transactions are lost and might not be
+correctly rolled back or committed.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JDBC DataSource</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java Message Service (JMS) ConnectionFactory, Destination</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JavaMail Session</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Connection Factory</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Administered Object</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Web service reference</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Serializable Java types</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Extended persistence context</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="beahf"></a><a id="GSDVG00403"></a><a id="session-managers"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_session_managers">Session Managers</h4>
+<div class="paragraph">
+<p>A session manager automatically creates new session objects whenever a
+new session starts. In some circumstances, clients do not join the
+session, for example, if the session manager uses cookies and the client
+does not accept cookies.</p>
+</div>
+<div class="paragraph">
+<p>GlassFish Server offers these session management options, determined by
+the <code>session-manager</code> element&#8217;s <code>persistence-type</code> attribute in the
+<code>glassfish-web.xml</code> file:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beahg">The <code>memory</code> Persistence Type</a>, the default</p>
+</li>
+<li>
+<p><a href="#beahh">The <code>file</code> Persistence Type</a>, which uses a file to store
+session data</p>
+</li>
+<li>
+<p><a href="#gdshu">The <code>replicated</code> Persistence Type</a>, which uses other
+servers in the cluster for session persistence</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If the session manager configuration contains an error, the error is
+written to the server log and the default (<code>memory</code>) configuration is
+used.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For more information, see "<a href="../application-deployment-guide/dd-elements.html#GSDPG00275">session-manager</a>" in
+GlassFish Server Open Source Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="beahg"></a><a id="GSDVG00266"></a><a id="the-memory-persistence-type"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_the_code_memory_code_persistence_type">The <code>memory</code> Persistence Type</h5>
+<div class="paragraph">
+<p>This persistence type is not designed for a production environment that
+requires session persistence. It provides no session persistence.
+However, you can configure it so that the session state in memory is
+written to the file system prior to server shutdown.</p>
+</div>
+<div class="paragraph">
+<p>To specify the <code>memory</code> persistence type for a specific web application,
+edit the <code>glassfish-web.xml</code> file as in the following example. The
+<code>persistence-type</code> attribute is optional, but must be set to <code>memory</code> if
+included. This overrides the web container availability settings for the
+web application.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;glassfish-web-app&gt;
+...
+
+&lt;session-config&gt;
+    &lt;session-manager persistence-type="memory" /&gt;
+        &lt;manager-properties&gt;
+            &lt;property name="sessionFilename" value="sessionstate" /&gt;
+        &lt;/manager-properties&gt;
+    &lt;/session-manager&gt;
+    ...
+&lt;/session-config&gt;
+...
+&lt;/glassfish-web-app&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The only manager property that the <code>memory</code> persistence type supports is
+<code>sessionFilename</code>, which is listed under
+"<a href="../application-deployment-guide/dd-elements.html#GSDPG00192">manager-properties</a>" in GlassFish Server Open Source
+Edition Application Deployment Guide. The <code>sessionFilename</code> property
+specifies the name of the file where sessions are serialized and
+persisted if the web application or the server is stopped. To disable
+this behavior, specify an empty string as the value of
+<code>sessionFilename</code>. The default value is an empty string.</p>
+</div>
+<div class="paragraph">
+<p>For more information about the <code>glassfish-web.xml</code> file, see the
+<a href="../application-deployment-guide/toc.html#GSDPG">GlassFish Server Open Source Edition Application Deployment
+Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beahh"></a><a id="GSDVG00267"></a><a id="the-file-persistence-type"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_the_code_file_code_persistence_type">The <code>file</code> Persistence Type</h5>
+<div class="paragraph">
+<p>This persistence type provides session persistence to the local file
+system, and allows a single server domain to recover the session state
+after a failure and restart. The session state is persisted in the
+background, and the rate at which this occurs is configurable. The store
+also provides passivation and activation of the session state to help
+control the amount of memory used. This option is not supported in a
+production environment. However, it is useful for a development system
+with a single server instance.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Make sure the <code>delete</code> option is set in the <code>server.policy</code> file, or
+expired file-based sessions might not be deleted properly. For more
+information about <code>server.policy</code>, see <a href="securing-apps.html#beabx">The
+<code>server.policy</code> File</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>To specify the <code>file</code> persistence type for a specific web application,
+edit the <code>glassfish-web.xml</code> file as in the following example. Note that
+<code>persistence-type</code> must be set to <code>file</code>. This overrides the web
+container availability settings for the web application.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;glassfish-web-app&gt;
+...
+&lt;session-config&gt;
+    &lt;session-manager persistence-type="file"&gt;
+        &lt;store-properties&gt;
+            &lt;property name="directory" value="sessiondir" /&gt;
+        &lt;/store-properties&gt;
+    &lt;/session-manager&gt;
+    ...
+&lt;/session-config&gt;
+...
+&lt;/glassfish-web-app&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>file</code> persistence type supports all the manager properties listed
+under "<a href="../application-deployment-guide/dd-elements.html#GSDPG00192">manager-properties</a>" in GlassFish Server Open
+Source Edition Application Deployment Guide except <code>sessionFilename</code>,
+and supports the <code>directory</code> store property listed under
+"<a href="../application-deployment-guide/dd-elements.html#GSDPG00279">store-properties</a>" in GlassFish Server Open Source
+Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p>For more information about the <code>glassfish-web.xml</code> file, see the
+<a href="../application-deployment-guide/toc.html#GSDPG">GlassFish Server Open Source Edition Application Deployment
+Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gdshu"></a><a id="GSDVG00268"></a><a id="the-replicated-persistence-type"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_the_code_replicated_code_persistence_type">The <code>replicated</code> Persistence Type</h5>
+<div class="paragraph">
+<p>The replicated persistence type uses other servers in the cluster for
+session persistence. Clustered server instances replicate session state.
+Each backup instance stores the replicated data in memory. This allows
+sessions to be distributed. For details, see <a href="#beahe">Distributed
+Sessions and Persistence</a>. In addition, you can configure the frequency
+and scope of session persistence. The other servers are also used as the
+passivation and activation store. Use this option in a production
+environment that requires session persistence.</p>
+</div>
+<div class="paragraph">
+<p>To use the replicated persistence type, you must enable availability.
+Select the Availability Service component under the relevant
+configuration in the Administration Console. Check the Availability
+Service box. To enable availability for the web container, select the
+Web Container Availability tab, then check the Availability Service box.
+All instances in an GlassFish Server cluster should have the same
+availability settings to ensure consistent behavior. For details, see
+the <a href="../ha-administration-guide/toc.html#GSHAG">GlassFish Server Open Source Edition High Availability
+Administration Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p>To change settings such as persistence frequency and persistence scope
+for the entire web container, use the Persistence Frequency and
+Persistence Scope drop-down lists on the Web Container Availability tab
+in the Administration Console, or use the <code>asadmin set</code> command. For
+example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin set
+server-config.availability-service.web-container-availability.persistence-frequency=time-based</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information, see the description of the <code>asadmin set</code> command
+in the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference
+Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p>To specify the <code>replicated</code> persistence type for a specific web
+application, edit the <code>glassfish-web.xml</code> file as in the following
+example. Note that <code>persistence-type</code> must be set to <code>replicated</code>. This
+overrides the web container availability settings for the web
+application.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;glassfish-web-app&gt;
+...
+&lt;session-config&gt;
+    &lt;session-manager persistence-type="replicated"&gt;
+        &lt;manager-properties&gt;
+            &lt;property name="persistenceFrequency" value="web-method" /&gt;
+        &lt;/manager-properties&gt;
+        &lt;store-properties&gt;
+            &lt;property name="persistenceScope" value="session" /&gt;
+        &lt;/store-properties&gt;
+    &lt;/session-manager&gt;
+    ...
+&lt;/session-config&gt;
+...
+&lt;/glassfish-web-app&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>replicated</code> persistence type supports all the manager properties
+listed under "<a href="../application-deployment-guide/dd-elements.html#GSDPG00192">manager-properties</a>" in GlassFish Server
+Open Source Edition Application Deployment Guide except
+<code>sessionFilename</code>, and supports the <code>persistenceScope</code> store property
+listed under "<a href="../application-deployment-guide/dd-elements.html#GSDPG00279">store-properties</a>" in GlassFish Server
+Open Source Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p>For more information about the <code>glassfish-web.xml</code> file, see the
+<a href="../application-deployment-guide/toc.html#GSDPG">GlassFish Server Open Source Edition Application Deployment
+Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p>To specify that web sessions for which high availability is enabled are
+first buffered and then replicated using a separate asynchronous thread,
+use the <code>--asyncreplication=true</code> option of the <code>asadmin deploy</code>
+command. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin deploy --availabilityenabled=true --asyncreplication=true --name hello.war</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If <code>--asyncreplication</code> is set to true (the default), performance is
+improved but availability is reduced. If the instance where states are
+buffered but not yet replicated fails, the states are lost. If set to
+false, performance is reduced but availability is guaranteed. States are
+not buffered but immediately transmitted to other instances in the
+cluster.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggrgt"></a><a id="GSDVG00143"></a><a id="using-comet"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_comet">Using Comet</h3>
+<div class="paragraph">
+<p>This section explains the Comet programming technique and how to create
+and deploy a Comet-enabled application with the Oracle GlassFish Server.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ggrgy">Introduction to Comet</a></p>
+</li>
+<li>
+<p><a href="#ghgxk">Grizzly Comet</a></p>
+</li>
+<li>
+<p><a href="#ghgxn">Bayeux Protocol</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ggrgy"></a><a id="GSDVG00404"></a><a id="introduction-to-comet"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_introduction_to_comet">Introduction to Comet</h4>
+<div class="paragraph">
+<p>Comet is a programming technique that allows a web server to send
+updates to clients without requiring the clients to explicitly request
+them.</p>
+</div>
+<div class="paragraph">
+<p>This kind of programming technique is called server push, which means
+that the server pushes data to the client. The opposite style is client
+pull, which means that the client must pull the data from the server,
+usually through a user-initiated event, such as a button click.</p>
+</div>
+<div class="paragraph">
+<p>Web applications that use the Comet technique can deliver updates to
+clients in a more timely manner than those that use the client-pull
+style while avoiding the latency that results from clients frequently
+polling the server.</p>
+</div>
+<div class="paragraph">
+<p>One of the many use cases for Comet is a chat room application. When the
+server receives a message from one of the chat clients, it needs to send
+the message to the other clients without requiring them to ask for it.
+With Comet, the server can deliver messages to the clients as they are
+posted rather than expecting the clients to poll the server for new
+messages.</p>
+</div>
+<div class="paragraph">
+<p>To accomplish this scenario, a Comet application establishes a
+long-lived HTTP connection. This connection is suspended on the server
+side, waiting for an event to happen before resuming. This kind of
+connection remains open, allowing an application that uses the Comet
+technique to send updates to clients when they are available rather than
+expecting clients to reopen the connection to poll the server for
+updates.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggrib"></a><a id="GSDVG00270"></a><a id="the-grizzly-implementation-of-comet"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_the_grizzly_implementation_of_comet">The Grizzly Implementation of Comet</h5>
+<div class="paragraph">
+<p>A limitation of the Comet technique is that you must use it with a web
+server that supports non-blocking connections to avoid poor performance.
+Non-blocking connections are those that do not need to allocate one
+thread for each request. If the web server were to use blocking
+connections then it might end up holding many thousands of threads,
+thereby hindering its scalability.</p>
+</div>
+<div class="paragraph">
+<p>The GlassFish server includes the Grizzly HTTP Engine, which enables
+asynchronous request processing (ARP) by avoiding blocking connections.
+Grizzly&#8217;s ARP implementation accomplishes this by using the Java NIO
+API.</p>
+</div>
+<div class="paragraph">
+<p>With Java NIO, Grizzly enables greater performance and scalability by
+avoiding the limitations experienced by traditional web servers that
+must run a thread for each request. Instead, Grizzly&#8217;s ARP mechanism
+makes efficient use of a thread pool system and also keeps the state of
+requests so that it can keep requests alive without holding a single
+thread for each of them.</p>
+</div>
+<div class="paragraph">
+<p>Grizzly supports two different implementations of Comet:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ghgxk">Grizzly Comet</a> — Based on ARP, this includes a set of APIs
+that you use from a web component to enable Comet functionality in your
+web application. Grizzly Comet is specific to the Oracle GlassFish
+Server.</p>
+</li>
+<li>
+<p><a href="#ghgxn">Bayeux Protocol</a> — Often referred to as <code>Cometd</code>, it
+consists of the JSON-based Bayeux message protocol, a set of Dojo or
+Ajax libraries, and an event handler. The Bayeux protocol uses a
+publish/subscribe model for server/client communication. The Bayeux
+protocol is portable, but it is container dependent if you want to
+invoke it from an Enterprise Java Beans (EJB ) component. The Grizzly
+implementation of <code>Cometd</code> consists of a servlet that you reference from
+your web application.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ggrim"></a><a id="GSDVG00271"></a><a id="client-technologies-to-use-with-comet"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_client_technologies_to_use_with_comet">Client Technologies to Use With Comet</h5>
+<div class="paragraph">
+<p>In addition to creating a web component that uses the Comet APIs, you
+need to enable your client to accept asynchronous updates from the web
+component. To accomplish this, you can use JavaScript, IFrames, or a
+framework, such as <a href="http://dojotoolkit.org">Dojo</a>
+(<code>http://dojotoolkit.org</code>).</p>
+</div>
+<div class="paragraph">
+<p>An IFrame is an HTML element that allows you to include other content in
+an HTML page. As a result, the client can embed updated content in the
+IFrame without having to reload the page.</p>
+</div>
+<div class="paragraph">
+<p>The example in this tutorial employs a combination of JavaScript and
+IFrames to allow the client to accept asynchronous updates. A servlet
+included in the example writes out JavaScript code to one of the
+IFrames. The JavaScript code contains the updated content and invokes a
+function in the page that updates the appropriate elements in the page
+with the new content.</p>
+</div>
+<div class="paragraph">
+<p>The next section explains the two kinds of connections that you can make
+to the server. While you can use any of the client technologies listed
+in this section with either kind of connection, it is more difficult to
+use JavaScript with an HTTP-streaming connection.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggrgo"></a><a id="GSDVG00272"></a><a id="types-of-comet-connections"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_types_of_comet_connections">Types of Comet Connections</h5>
+<div class="paragraph">
+<p>When working with Comet, as implemented in Grizzly, you have two
+different ways to handle client connections to the server:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>HTTP Streaming</p>
+</li>
+<li>
+<p>Long Polling</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ggriu"></a><a id="GSDVG00027"></a><a id="http-streaming"></a></p>
+</div>
+<div class="paragraph">
+<p>HTTP Streaming</p>
+</div>
+<div class="paragraph">
+<p>The HTTP Streaming technique keeps a connection open indefinitely. It
+never closes, even after the server pushes data to the client.</p>
+</div>
+<div class="paragraph">
+<p>In the case of HTTP streaming, the application sends a single request
+and receives responses as they come, reusing the same connection
+forever. This technique significantly reduces the network latency
+because the client and the server don&#8217;t need to open and close the
+connection.</p>
+</div>
+<div class="paragraph">
+<p>The basic life cycle of an application using HTTP-streaming is:</p>
+</div>
+<div class="paragraph">
+<p>request &gt; suspend &gt; data available &gt; write response &gt; data available &gt;
+write response</p>
+</div>
+<div class="paragraph">
+<p>The client makes an initial request and then suspends the request,
+meaning that it waits for a response. Whenever data is available, the
+server writes it to the response.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggrhv"></a><a id="GSDVG00028"></a><a id="long-polling"></a></p>
+</div>
+<div class="paragraph">
+<p>Long Polling</p>
+</div>
+<div class="paragraph">
+<p>The long-polling technique is a combination of server-push and
+client-pull because the client needs to resume the connection after a
+certain amount of time or after the server pushes an update to the
+client.</p>
+</div>
+<div class="paragraph">
+<p>The basic life cycle of an application using long-polling is:</p>
+</div>
+<div class="paragraph">
+<p>request &gt; suspend &gt; data available &gt; write response &gt; resume</p>
+</div>
+<div class="paragraph">
+<p>The client makes an initial request and then suspends the request. When
+an update is available, the server writes it to the response. The
+connection closes, and the client optionally resumes the connection.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggtjb"></a><a id="GSDVG00029"></a><a id="how-to-choose-the-type-of-connection"></a></p>
+</div>
+<div class="paragraph">
+<p>How to Choose the Type of Connection</p>
+</div>
+<div class="paragraph">
+<p>If you anticipate that your web application will need to send frequent
+updates to the client, you should use the HTTP-streaming connection so
+that the client does not have to frequently reestablish a connection. If
+you anticipate less frequent updates, you should use the long-polling
+connection so that the web server does not need to keep a connection
+open when no updates are occurring. One caveat to using the
+HTTP-streaming connection is that if you are streaming through a proxy,
+the proxy can buffer the response from the server. So, be sure to test
+your application if you plan to use HTTP-streaming behind a proxy.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghgxk"></a><a id="GSDVG00405"></a><a id="grizzly-comet"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_grizzly_comet">Grizzly Comet</h4>
+<div class="paragraph">
+<p>For details on using Grizzly Comet including a sample application, refer
+to the Grizzly Comet documentation on GitHub
+(<code>https://javaee.github.io/grizzly/comet.html</code>).</p>
+</div>
+<div class="paragraph">
+<p>Grizzly&#8217;s support for Comet includes a small set of APIs that make it
+easy to add Comet functionality to your web applications. The Grizzly
+Comet APIs that developers use most often are the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>CometContext</code>: A Comet context, which is a shareable space to which
+applications subscribe to receive updates.</p>
+</li>
+<li>
+<p><code>CometEngine</code>: The entry point to any component using Comet.
+Components can be servlets, JavaServer Pages ( JSP), JavaServer Faces
+components, or pure Java classes.</p>
+</li>
+<li>
+<p><code>CometEvent</code>: Contains the state of the <code>CometContext</code> object</p>
+</li>
+<li>
+<p><code>CometHandler</code>: The interface an application implements to be part of
+one or more Comet contexts.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The way a developer would use this API in a web component is to perform
+the following tasks:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Register the context path of the application with the <code>CometContext</code>
+object:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>CometEngine cometEngine =
+    CometEngine.getEngine();
+CometContext cometContext =
+    cometEngine.register(contextPath)</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Register the CometHandler implementation with the <code>CometContext</code>
+object:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>cometContext.addCometHandler(handler)</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Notify one or more CometHandler implementations when an event
+happens:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>cometContext.notify((Object)(handler))</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="ghgxn"></a><a id="GSDVG00406"></a><a id="bayeux-protocol"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_bayeux_protocol">Bayeux Protocol</h4>
+<div class="paragraph">
+<p>The Bayeux protocol, often referred to as <code>Cometd</code>, greatly simplifies
+the use of Comet. No server-side coding is needed for servers such as
+GlassFish Server that support the Bayeux protocol. Just enable Comet and
+the Bayeux protocol, then write and deploy the client.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ghhaw">Enabling Comet</a></p>
+</li>
+<li>
+<p><a href="#ghhap">To Configure the <code>web.xml</code> File</a></p>
+</li>
+<li>
+<p><a href="#ghhtv">To Write, Deploy, and Run the Client</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghhaw"></a><a id="GSDVG00280"></a><a id="enabling-comet"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_enabling_comet">Enabling Comet</h5>
+<div class="paragraph">
+<p>Before running a Comet-enabled application, you need to enable Comet in
+the HTTP listener for your application by setting a special attribute in
+the associated protocol configuration. The following example shows the
+<code>asadmin set</code> command that adds this attribute:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin set server-config.network-config.protocols.protocol.http-1.http.comet-support-enabled="true"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Substitute the name of the protocol for <code>http-1</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghhap"></a><a id="GSDVG00067"></a><a id="to-configure-the-web.xml-file"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_configure_the_code_web_xml_code_file">To Configure the <code>web.xml</code> File</h5>
+<div class="paragraph">
+<p>To enable the Bayeux protocol on the GlassFish Server, you must
+reference the <code>CometdServlet</code> in your web application&#8217;s <code>web.xml</code> file.
+In addition, if your web application includes a servlet, set the
+<code>load-on-startup</code> value for your servlet to <code>0</code> (zero) so that it will
+not load until the client makes a request to it.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Open the <code>web.xml</code> file for your web application in a text editor.</p>
+</li>
+<li>
+<p>Add the following XML code to the <code>web.xml</code> file:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&lt;servlet&gt;
+   &lt;servlet-name&gt;Grizzly Cometd Servlet&lt;/servlet-name&gt;
+   &lt;servlet-class&gt;
+      com.sun.grizzly.cometd.servlet.CometdServlet
+   &lt;/servlet-class&gt;
+   &lt;init-param&gt;
+      &lt;description&gt;
+         expirationDelay is the long delay before a request is
+         resumed. -1 means never.
+      &lt;/description&gt;
+      &lt;param-name&gt;expirationDelay&lt;/param-name&gt;
+      &lt;param-value&gt;-1&lt;/param-value&gt;
+   &lt;/init-param&gt;
+   &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+&lt;/servlet&gt;
+&lt;servlet-mapping&gt;
+   &lt;servlet-name&gt;Grizzly Cometd Servlet&lt;/servlet-name&gt;
+   &lt;url-pattern&gt;/cometd/*&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the <code>load-on-startup</code> value for the <code>CometdServlet</code> is <code>1</code>.
+3.  If your web application includes a servlet, set the
+<code>load-on-startup</code> value to <code>0</code> for your servlet (not the
+<code>CometdServlet</code>) as follows:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;servlet&gt;
+   ...
+   &lt;load-on-startup&gt;0&lt;/load-on-startup&gt;
+&lt;/servlet&gt;</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Save the <code>web.xml</code> file.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="ghhtv"></a><a id="GSDVG00068"></a><a id="to-write-deploy-and-run-the-client"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_write_deploy_and_run_the_client">To Write, Deploy, and Run the Client</h5>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Add script tags to the HTML page. For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&lt;script type="text/javascript" src="chat.js"&gt;&lt;/script&gt;</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In the script, call the needed libraries. For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>dojo.require("dojo.io.cometd");</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In the script, use <code>publish</code> and <code>subscribe</code> methods to send and
+receive messages. For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>cometd.subscribe("/chat/demo", false, room, "_chat");
+cometd.publish("/chat/demo", { user: room._username, chat: text});</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Deploy the web application as you would any other web application.
+For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin deploy cometd-example.war</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Run the application as you would any other web application.<br>
+The context root for the example chat application is <code>/cometd</code> and the
+HTML page is <code>index.html</code>. So the URL might look like this:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>http://localhost:8080/cometd/index.html</pre>
+</div>
+</div>
+<div id="GSDVG544" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>For more information about deployment in the GlassFish Server, see the
+<a href="../application-deployment-guide/toc.html#GSDPG">GlassFish Server Open Source Edition Application Deployment
+Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p>For more information about the Bayeux protocol, see
+<a href="https://docs.cometd.org/current/reference/#_bayeux">Bayeux Protocol</a>
+(<code>https://docs.cometd.org/current/reference/#_bayeux</code>).</p>
+</div>
+<div class="paragraph">
+<p>For more information about the Dojo toolkit, see
+<code>http://dojotoolkit.org/</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beaft"></a><a id="GSDVG00144"></a><a id="advanced-web-application-features"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_advanced_web_application_features">Advanced Web Application Features</h3>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beafu">Internationalization Issues</a></p>
+</li>
+<li>
+<p><a href="#gilyj">Virtual Server Properties</a></p>
+</li>
+<li>
+<p><a href="#beagb">Class Loader Delegation</a></p>
+</li>
+<li>
+<p><a href="#beagc">Using the <code>default-web.xml</code> File</a></p>
+</li>
+<li>
+<p><a href="#beagd">Configuring Logging and Monitoring in the Web Container</a></p>
+</li>
+<li>
+<p><a href="#beage">Configuring Idempotent URL Requests</a></p>
+</li>
+<li>
+<p><a href="#beagi">Header Management</a></p>
+</li>
+<li>
+<p><a href="#geqrh">Configuring Valves and Catalina Listeners</a></p>
+</li>
+<li>
+<p><a href="#geqpl">Alternate Document Roots</a></p>
+</li>
+<li>
+<p><a href="#geurd">Using a context.xml File</a></p>
+</li>
+<li>
+<p><a href="#gezcx">Enabling WebDav</a></p>
+</li>
+<li>
+<p><a href="#ghepd">Using SSI</a></p>
+</li>
+<li>
+<p><a href="#ghepi">Using CGI</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beafu"></a><a id="GSDVG00407"></a><a id="internationalization-issues"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_internationalization_issues">Internationalization Issues</h4>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beafv">The Server&#8217;s Default Locale</a></p>
+</li>
+<li>
+<p><a href="#beafw">Servlet Character Encoding</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beafv"></a><a id="GSDVG00281"></a><a id="the-servers-default-locale"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_the_server_s_default_locale">The Server&#8217;s Default Locale</h5>
+<div class="paragraph">
+<p>To set the default locale of the entire GlassFish Server, which
+determines the locale of the Administration Console, the logs, and so
+on, use the Administration Console. Select the domain component. Then
+type a value in the Locale field. For details, click the Help button in
+the Administration Console.</p>
+</div>
+<div class="paragraph">
+<p><a id="beafw"></a><a id="GSDVG00282"></a><a id="servlet-character-encoding"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_servlet_character_encoding">Servlet Character Encoding</h5>
+<div class="paragraph">
+<p>This section explains how the GlassFish Server determines the character
+encoding for the servlet request and the servlet response. For encodings
+you can use, see
+<code>http://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beafx"></a><a id="GSDVG00031"></a><a id="servlet-request"></a></p>
+</div>
+<div class="paragraph">
+<p>Servlet Request</p>
+</div>
+<div class="paragraph">
+<p>When processing a servlet request, the server uses the following order
+of precedence, first to last, to determine the request character
+encoding:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>getCharacterEncoding</code> method</p>
+</li>
+<li>
+<p>A hidden field in the form, specified by the <code>form-hint-field</code>
+attribute of the <code>parameter-encoding</code> element in the <code>glassfish-web.xml</code>
+file</p>
+</li>
+<li>
+<p>The <code>default-charset</code> attribute of the <code>parameter-encoding</code> element in
+the <code>glassfish-web.xml</code> file</p>
+</li>
+<li>
+<p>The default, which is <code>ISO-8859-1</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For details about the <code>parameter-encoding</code> element, see
+"<a href="../application-deployment-guide/dd-elements.html#GSDPG00218">parameter-encoding</a>" in GlassFish Server Open Source
+Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="beafy"></a><a id="GSDVG00032"></a><a id="servlet-response"></a></p>
+</div>
+<div class="paragraph">
+<p>Servlet Response</p>
+</div>
+<div class="paragraph">
+<p>When processing a servlet response, the server uses the following order
+of precedence, first to last, to determine the response character
+encoding:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>setCharacterEncoding</code> or <code>setContentType</code> method</p>
+</li>
+<li>
+<p>The <code>setLocale</code> method</p>
+</li>
+<li>
+<p>The default, which is <code>ISO-8859-1</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gilyj"></a><a id="GSDVG00408"></a><a id="virtual-server-properties"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_virtual_server_properties">Virtual Server Properties</h4>
+<div class="paragraph">
+<p>You can set virtual server properties in the following ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>You can define virtual server properties using the
+<code>asadmin create-virtual-server</code> command. For example:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin create-virtual-server --hosts localhost --property authRealm=ldap MyVS</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For details and a complete list of virtual server properties, see
+<a href="../reference-manual/create-virtual-server.html#GSRFM00062"><code>create-virtual-server</code>(1)</a>.
+* You can define virtual server properties using the <code>asadmin set</code>
+command. For example:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin set server-config.http-service.virtual-server.MyVS.property.authRealm="ldap"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For details, see <a href="../reference-manual/set.html#GSRFM00226"><code>set</code>(1)</a>.
+* You can define virtual server properties using the Administration
+Console. Select the HTTP Service component under the relevant
+configuration, select Virtual Servers, and select the desired virtual
+server. Select Add Property, enter the property name and value, check
+the enable box, and select Save. For details and a complete list of
+virtual server properties, click the Help button in the Administration
+Console.</p>
+</div>
+<div class="paragraph">
+<p>Some virtual server properties can be set for a specific web
+application. For details, see "<a href="../application-deployment-guide/dd-elements.html#GSDPG00161">glassfish-web-app</a>" in
+GlassFish Server Open Source Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="beagb"></a><a id="GSDVG00409"></a><a id="class-loader-delegation"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_class_loader_delegation">Class Loader Delegation</h4>
+<div class="paragraph">
+<p>The Servlet specification recommends that a web application class loader
+look in the local class loader before delegating to its parent. To make
+the web application class loader follow the delegation model in the
+Servlet specification, set <code>delegate="false"</code> in the <code>class-loader</code>
+element of the <code>glassfish-web.xml</code> file. It&#8217;s safe to do this only for a
+web module that does not interact with any other modules.</p>
+</div>
+<div class="paragraph">
+<p>The default value is <code>delegate="true"</code>, which causes the web application
+class loader to delegate in the same manner as the other class loaders.
+Use <code>delegate="true"</code> for a web application that accesses EJB components
+or that acts as a web service client or endpoint. For details about
+<code>glassfish-web.xml</code>, see the <a href="../application-deployment-guide/toc.html#GSDPG">GlassFish Server Open Source
+Edition Application Deployment Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p>For a number of packages, including <code>java.*</code> and <code>javax.*</code>, symbol
+resolution is always delegated to the parent class loader regardless of
+the <code>delegate</code> setting. This prevents applications from overriding core
+Java runtime classes or changing the API versions of specifications that
+are part of the Java EE platform.</p>
+</div>
+<div class="paragraph">
+<p>For general information about class loaders, see
+<a href="class-loaders.html#beade">Class Loaders</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beagc"></a><a id="GSDVG00410"></a><a id="using-the-default-web.xml-file"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_the_code_default_web_xml_code_file">Using the <code>default-web.xml</code> File</h4>
+<div class="paragraph">
+<p>You can use the <code>default-web.xml</code> file to define features such as
+filters and security constraints that apply to all web applications.</p>
+</div>
+<div class="paragraph">
+<p>For example, directory listings are disabled by default for added
+security. To enable directory listings, in your domain&#8217;s
+<code>default-web.xml</code> file, search for the definition of the servlet whose
+<code>servlet-name</code> is equal to <code>default</code>, and set the value of the
+<code>init-param</code> named <code>listings</code> to <code>true</code>. Then redeploy your web
+application if it has already been deployed, or restart the server.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;init-param&gt;
+   &lt;param-name&gt;listings&lt;/param-name&gt;
+   &lt;param-value&gt;true&lt;/param-value&gt;
+&lt;/init-param&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If <code>listings</code> is set to <code>true</code>, you can also determine how directory
+listings are sorted. Set the value of the <code>init-param</code> named <code>sortedBy</code>
+to <code>NAME</code>, <code>SIZE</code>, or <code>LAST_MODIFIED</code>. Then redeploy your web
+application if it has already been deployed, or restart the server.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;init-param&gt;
+   &lt;param-name&gt;sortedBy&lt;/param-name&gt;
+   &lt;param-value&gt;LAST_MODIFIED&lt;/param-value&gt;
+&lt;/init-param&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>mime-mapping</code> elements in <code>default-web.xml</code> are global and
+inherited by all web applications. You can override these mappings or
+define your own using <code>mime-mapping</code> elements in your web application&#8217;s
+<code>web.xml</code> file. For more information about <code>mime-mapping</code> elements, see
+the Servlet specification.</p>
+</div>
+<div class="paragraph">
+<p>You can use the Administration Console to edit the <code>default-web.xml</code>
+file. For details, click the Help button in the Administration Console.
+As an alternative, you can edit the file directly using the following
+steps.</p>
+</div>
+<div class="paragraph">
+<p><a id="fvymc"></a><a id="GSDVG00069"></a><a id="to-use-the-default-web.xml-file"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_to_use_the_code_default_web_xml_code_file">To Use the <code>default-web.xml</code> File</h5>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Place the JAR file for the filter, security constraint, or other
+feature in the domain-dir`/lib` directory.</p>
+</li>
+<li>
+<p>Edit the domain-dir`/config/default-web.xml` file to refer to the
+JAR file.</p>
+</li>
+<li>
+<p>Restart the server.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="beagd"></a><a id="GSDVG00411"></a><a id="configuring-logging-and-monitoring-in-the-web-container"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuring_logging_and_monitoring_in_the_web_container">Configuring Logging and Monitoring in the Web Container</h4>
+<div class="paragraph">
+<p>For information about configuring logging and monitoring in the web
+container using the Administration Console, click the Help button in the
+Administration Console. Select Logger Settings under the relevant
+configuration, or select the Stand-Alone Instances component, select the
+instance from the table, and select the Monitor tab.</p>
+</div>
+<div class="paragraph">
+<p><a id="beage"></a><a id="GSDVG00412"></a><a id="configuring-idempotent-url-requests"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuring_idempotent_url_requests">Configuring Idempotent URL Requests</h4>
+<div class="paragraph">
+<p>An idempotent request is one that does not cause any change or
+inconsistency in an application when retried. To enhance the
+availability of your applications deployed on an GlassFish Server
+cluster, configure the load balancer to retry failed idempotent HTTP
+requests on all the GlassFish Server instances in a cluster. This option
+can be used for read-only requests, for example, to retry a search
+request.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beagf">Specifying an Idempotent URL</a></p>
+</li>
+<li>
+<p><a href="#beagg">Characteristics of an Idempotent URL</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beagf"></a><a id="GSDVG00283"></a><a id="specifying-an-idempotent-url"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_specifying_an_idempotent_url">Specifying an Idempotent URL</h5>
+<div class="paragraph">
+<p>To configure idempotent URL response, specify the URLs that can be
+safely retried in <code>idempotent-url-pattern</code> elements in the
+<code>glassfish-web.xml</code> file. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;idempotent-url-pattern url-pattern="sun_java/*" no-of-retries="10"/&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For details, see "<a href="../application-deployment-guide/dd-elements.html#GSDPG00164">idempotent-url-pattern</a>" in GlassFish
+Server Open Source Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p>If none of the server instances can successfully serve the request, an
+error page is returned.</p>
+</div>
+<div class="paragraph">
+<p><a id="beagg"></a><a id="GSDVG00284"></a><a id="characteristics-of-an-idempotent-url"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_characteristics_of_an_idempotent_url">Characteristics of an Idempotent URL</h5>
+<div class="paragraph">
+<p>Since all requests for a given session are sent to the same application
+server instance, and if that GlassFish Server instance is unreachable,
+the load balancer returns an error message. Normally, the request is not
+retried on another GlassFish Server instance. However, if the URL
+pattern matches that specified in the <code>glassfish-web.xml</code> file, the
+request is implicitly retried on another GlassFish Server instance in
+the cluster.</p>
+</div>
+<div class="paragraph">
+<p>In HTTP, some methods (such as GET) are idempotent, while other methods
+(such as POST) are not. In effect, retrying an idempotent URL should not
+cause values to change on the server or in the database. The only
+difference should be a change in the response received by the user.</p>
+</div>
+<div class="paragraph">
+<p>Examples of idempotent requests include search engine queries and
+database queries. The underlying principle is that the retry does not
+cause an update or modification of data.</p>
+</div>
+<div class="paragraph">
+<p>A search engine, for example, sends HTTP requests with the same URL
+pattern to the load balancer. Specifying the URL pattern of the search
+request to the load balancer ensures that HTTP requests with the
+specified URL pattern are implicitly retried on another GlassFish Server
+instance.</p>
+</div>
+<div class="paragraph">
+<p>For example, if the request URL sent to the GlassFish Server is of the
+type <code>/search/`something</code>.html`, then the URL pattern can be specified
+as <code>/search/*</code>.</p>
+</div>
+<div class="paragraph">
+<p>Examples of non-idempotent requests include banking transactions and
+online shopping. If you retry such requests, money might be transferred
+twice from your account.</p>
+</div>
+<div class="paragraph">
+<p><a id="beagi"></a><a id="GSDVG00413"></a><a id="header-management"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_header_management">Header Management</h4>
+<div class="paragraph">
+<p>In all Editions of the GlassFish Server, the <code>Enumeration</code> from
+<code>request.getHeaders()</code> contains multiple elements (one element per
+request header) instead of a single, aggregated value.</p>
+</div>
+<div class="paragraph">
+<p>The header names used in <code>HttpServletResponse.add`XXX`Header()</code> and
+<code>HttpServletResponse.set`XXX`Header()</code> are returned as they were
+created.</p>
+</div>
+<div class="paragraph">
+<p><a id="geqrh"></a><a id="GSDVG00414"></a><a id="configuring-valves-and-catalina-listeners"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuring_valves_and_catalina_listeners">Configuring Valves and Catalina Listeners</h4>
+<div class="paragraph">
+<p>You can configure custom valves and Catalina listeners for web modules
+or virtual servers by defining properties. A valve class must implement
+the org.apache.catalina.Valve interface from Tomcat or previous
+GlassFish Server releases, or the org.glassfish.web.valve.GlassFishValve
+interface from the current GlassFish Server release. A listener class
+for a virtual server must implement the
+org.apache.catalina.ContainerListener or
+org.apache.catalina.LifecycleListener interface. A listener class for a
+web module must implement the org.apache.catalina.ContainerListener ,
+org.apache.catalina.LifecycleListener, or
+org.apache.catalina.InstanceListener interface.</p>
+</div>
+<div class="paragraph">
+<p>In the <code>glassfish-web.xml</code> file, valve and listener properties for a web
+module look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;glassfish-web-app ...&gt;
+   ...
+   &lt;property name="valve_1" value="org.glassfish.extension.Valve"/&gt;
+   &lt;property name="listener_1" value="org.glassfish.extension.MyLifecycleListener"/&gt;
+&lt;/glassfish-web-app&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can define these same properties for a virtual server. For more
+information, see <a href="#gilyj">Virtual Server Properties</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="geqpl"></a><a id="GSDVG00415"></a><a id="alternate-document-roots"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_alternate_document_roots">Alternate Document Roots</h4>
+<div class="paragraph">
+<p>An alternate document root (docroot) allows a web application to serve
+requests for certain resources from outside its own docroot, based on
+whether those requests match one (or more) of the URI patterns of the
+web application&#8217;s alternate docroots.</p>
+</div>
+<div class="paragraph">
+<p>To specify an alternate docroot for a web application or a virtual
+server, use the <code>alternatedocroot_n</code> property, where n is a positive
+integer that allows specification of more than one. This property can be
+a subelement of a <code>glassfish-web-app</code> element in the <code>glassfish-web.xml</code>
+file or a virtual server property. For more information about these
+elements, see "<a href="../application-deployment-guide/dd-elements.html#GSDPG00161">glassfish-web-app</a>" in GlassFish Server
+Open Source Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p>A virtual server&#8217;s alternate docroots are considered only if a request
+does not map to any of the web modules deployed on that virtual server.
+A web module&#8217;s alternate docroots are considered only once a request has
+been mapped to that web module.</p>
+</div>
+<div class="paragraph">
+<p>If a request matches an alternate docroot&#8217;s URI pattern, it is mapped to
+the alternate docroot by appending the request URI (minus the web
+application&#8217;s context root) to the alternate docroot&#8217;s physical location
+(directory). If a request matches multiple URI patterns, the alternate
+docroot is determined according to the following precedence order:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Exact match</p>
+</li>
+<li>
+<p>Longest path match</p>
+</li>
+<li>
+<p>Extension match</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For example, the following properties specify three <code>glassfish-web.xml</code>
+docroots. The URI pattern of the first alternate docroot uses an exact
+match, whereas the URI patterns of the second and third alternate
+docroots use extension and longest path prefix matches, respectively.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;property name="alternatedocroot_1" value="from=/my.jpg dir=/srv/images/jpg"/&gt;
+&lt;property name="alternatedocroot_2" value="from=*.jpg dir=/srv/images/jpg"/&gt;
+&lt;property name="alternatedocroot_3" value="from=/jpg/* dir=/src/images"/&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>value</code> of each alternate docroot has two components: The first
+component, <code>from</code>, specifies the alternate docroot&#8217;s URI pattern, and
+the second component, <code>dir</code>, specifies the alternate docroot&#8217;s physical
+location (directory).</p>
+</div>
+<div class="paragraph">
+<p>Suppose the above examples belong to a web application deployed at
+<code>http://company22.com/myapp</code>. The first alternate docroot maps any
+requests with this URL:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">http://company22.com/myapp/my.jpg</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To this resource:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">/svr/images/jpg/my.jpg</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The second alternate docroot maps any requests with a <code>*.jpg</code> suffix,
+such as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">http://company22.com/myapp/*.jpg</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To this physical location:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">/svr/images/jpg</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The third alternate docroot maps any requests whose URI starts with
+<code>/myapp/jpg/</code>, such as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">http://company22.com/myapp/jpg/*</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To the same directory as the second alternate docroot.</p>
+</div>
+<div class="paragraph">
+<p>For example, the second alternate docroot maps this request:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">http://company22.com/myapp/abc/def/my.jpg</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">/srv/images/jpg/abc/def/my.jpg</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The third alternate docroot maps:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">http://company22.com/myapp/jpg/abc/resource</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">/srv/images/jpg/abc/resource</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If a request does not match any of the target web application&#8217;s
+alternate docroots, or if the target web application does not specify
+any alternate docroots, the request is served from the web application&#8217;s
+standard docroot, as usual.</p>
+</div>
+<div class="paragraph">
+<p><a id="geurd"></a><a id="GSDVG00416"></a><a id="using-a-context.xml-file"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_a_context_xml_file">Using a context.xml File</h4>
+<div class="paragraph">
+<p>You can define a <code>context.xml</code> file for all web applications, for web
+applications assigned to a specific virtual server, or for a specific
+web application.</p>
+</div>
+<div class="paragraph">
+<p>To define a global <code>context.xml</code> file, place the file in the
+domain-dir`/config` directory and name it <code>context.xml</code>.</p>
+</div>
+<div class="paragraph">
+<p>Use the <code>contextXmlDefault</code> property to specify the name and the
+location, relative to domain-dir, of the <code>context.xml</code> file for a
+specific virtual server. Specify this property in one of the following
+ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In the Administration Console, open the HTTP Service component under
+the relevant configuration. Open the Virtual Servers component and
+scroll down to the bottom of the page. Enter <code>contextXmlDefault</code> as the
+property name and the path and file name relative to domain-dir as the
+property value.</p>
+</li>
+<li>
+<p>Use the <code>asadmin create-virtual-server</code> command. For example:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin create-virtual-server --property contextXmlDefault=config/vs1ctx.xml vs1</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Use the <code>asadmin set</code> command for an existing virtual server. For
+example:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin set server-config.http-service.virtual-server.vs1.property.contextXmlDefault=config/myctx.xml</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To define a <code>context.xml</code> file for a specific web application, place the
+file in the <code>META-INF</code> directory and name it <code>context.xml</code>.</p>
+</div>
+<div class="paragraph">
+<p>For more information about virtual server properties, see
+<a href="#gilyj">Virtual Server Properties</a>. For more information about the
+<code>context.xml</code> file, see
+<a href="http://tomcat.apache.org/tomcat-5.5-doc/config/context.html">The Context
+Container</a>
+(<code>http://tomcat.apache.org/tomcat-5.5-doc/config/context.html</code>). Context
+parameters, environment entries, and resource definitions in
+<code>context.xml</code> are supported in the GlassFish Server.</p>
+</div>
+<div class="paragraph">
+<p><a id="gezcx"></a><a id="GSDVG00417"></a><a id="enabling-webdav"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_enabling_webdav">Enabling WebDav</h4>
+<div class="paragraph">
+<p>To enable WebDav in the GlassFish Server, you edit the <code>web.xml</code> and
+<code>glassfish-web.xml</code> files as follows.</p>
+</div>
+<div class="paragraph">
+<p>First, enable the WebDav servlet in your <code>web.xml</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;servlet&gt;
+   &lt;servlet-name&gt;webdav&lt;/servlet-name&gt;
+   &lt;servlet-class&gt;org.apache.catalina.servlets.WebdavServlet&lt;/servlet-class&gt;
+   &lt;init-param&gt;
+      &lt;param-name&gt;debug&lt;/param-name&gt;
+      &lt;param-value&gt;0&lt;/param-value&gt;
+   &lt;/init-param&gt;
+   &lt;init-param&gt;
+      &lt;param-name&gt;listings&lt;/param-name&gt;
+      &lt;param-value&gt;true&lt;/param-value&gt;
+   &lt;/init-param&gt;
+   &lt;init-param&gt;
+      &lt;param-name&gt;readonly&lt;/param-name&gt;
+      &lt;param-value&gt;false&lt;/param-value&gt;
+   &lt;/init-param&gt;
+&lt;/servlet&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then define the servlet mapping associated with your WebDav servlet in
+your <code>web.xml</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;servlet-mapping&gt;
+   &lt;servlet-name&gt;webdav&lt;/servlet-name&gt;
+   &lt;url-pattern&gt;/webdav/*&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To protect the WebDav servlet so other users can&#8217;t modify it, add a
+security constraint in your <code>web.xml</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;security-constraint&gt;
+   &lt;web-resource-collection&gt;
+      &lt;web-resource-name&gt;Login Resources&lt;/web-resource-name&gt;
+      &lt;url-pattern&gt;/webdav/*&lt;/url-pattern&gt;
+   &lt;/web-resource-collection&gt;
+   &lt;auth-constraint&gt;
+      &lt;role-name&gt;Admin&lt;/role-name&gt;
+   &lt;/auth-constraint&gt;
+   &lt;user-data-constraint&gt;
+      &lt;transport-guarantee&gt;NONE&lt;/transport-guarantee&gt;
+   &lt;/user-data-constraint&gt;
+   &lt;login-config&gt;
+      &lt;auth-method&gt;BASIC&lt;/auth-method&gt;
+      &lt;realm-name&gt;default&lt;/realm-name&gt;
+   &lt;/login-config&gt;
+   &lt;security-role&gt;
+      &lt;role-name&gt;Admin&lt;/role-name&gt;
+   &lt;/security-role&gt;
+&lt;/security-constraint&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then define a security role mapping in your <code>glassfish-web.xml</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;security-role-mapping&gt;
+   &lt;role-name&gt;Admin&lt;/role-name&gt;
+   &lt;group-name&gt;Admin&lt;/group-name&gt;
+&lt;/security-role-mapping&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you are using the <code>file</code> realm, create a user and password. For
+example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin create-file-user --groups Admin --authrealmname default admin</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Enable the security manager as described in
+<a href="securing-apps.html#gbyah">Enabling and Disabling the Security
+Manager</a>.</p>
+</div>
+<div class="paragraph">
+<p>You can now use any WebDav client by connecting to the WebDav servlet
+URL, which has this format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">http://host:port/context-root/webdav/file</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">http://localhost:80/glassfish-webdav/webdav/index.html</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can add the WebDav servlet to your <code>default-web.xml</code> file to enable
+it for all applications, but you can&#8217;t set up a security role mapping to
+protect it.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghepd"></a><a id="GSDVG00418"></a><a id="using-ssi"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_ssi">Using SSI</h4>
+<div class="paragraph">
+<p>To enable SSI (server-side includes) processing for a specific web
+module, add the <code>SSIServlet</code> to your <code>web.xml</code> file as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;web-app&gt;
+   &lt;servlet&gt;
+      &lt;servlet-name&gt;ssi&lt;/servlet-name&gt;
+      &lt;servlet-class&gt;org.apache.catalina.ssi.SSIServlet&lt;/servlet-class&gt;
+   &lt;/servlet&gt;
+   ...
+   &lt;servlet-mapping&gt;
+      &lt;servlet-name&gt;ssi&lt;/servlet-name&gt;
+      &lt;url-pattern&gt;*.shtml&lt;/url-pattern&gt;
+   &lt;/servlet-mapping&gt;
+   ...
+   &lt;mime-mapping&gt;
+      &lt;extension&gt;shtml&lt;/extension&gt;
+      &lt;mime-type&gt;text/html&lt;/mime-type&gt;
+   &lt;/mime-mapping&gt;
+&lt;/web-app&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To enable SSI processing for all web modules, un-comment the
+corresponding sections in the <code>default-web.xml</code> file.</p>
+</div>
+<div class="paragraph">
+<p>If the <code>mime-mapping</code> is not specified in <code>web.xml</code>, GlassFish Server
+attempts to determine the MIME type from <code>default-web.xml</code> or the
+operating system default.</p>
+</div>
+<div class="paragraph">
+<p>You can configure the following <code>init-param</code> values for the
+<code>SSIServlet</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSDVG545"></a><a id="sthref16"></a><a id="gheoy"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 7-4 <code>SSIServlet</code> <code>init-param</code> Values</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 28%;">
+<col style="width: 11%;">
+<col style="width: 20%;">
+<col style="width: 41%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">init-param</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">buffered</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies whether the output should be
+buffered.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">debug</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0</code> (for no debugging)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the debugging level.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">expires</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Long</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Expires</code> header in HTTP response not set</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies
+the expiration time in seconds.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">inputEncoding</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">operating system encoding</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies encoding
+for the SSI input if there is no URL content encoding specified.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">isVirtualWebappRelative</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code> (relative to the given SSI
+file)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies whether the virtual path of the <code>#include</code> directive is
+relative to the <code>content-root</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">outputEncoding</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UTF-8</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies encoding for the SSI output.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For more information about SSI, see
+<code>http://httpd.apache.org/docs/2.2/mod/mod_include.html</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghepi"></a><a id="GSDVG00419"></a><a id="using-cgi"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_cgi">Using CGI</h4>
+<div class="paragraph">
+<p>To enable CGI (common gateway interface) processing for a specific web
+module, add the <code>CGIServlet</code> to your <code>web.xml</code> file as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;web-app&gt;
+   &lt;servlet&gt;
+      &lt;servlet-name&gt;cgi&lt;/servlet-name&gt;
+      &lt;servlet-class&gt;org.apache.catalina.servlets.CGIServlet&lt;/servlet-class&gt;
+   &lt;/servlet&gt;
+   ...
+   &lt;servlet-mapping&gt;
+      &lt;servlet-name&gt;cgi&lt;/servlet-name&gt;
+      &lt;url-pattern&gt;/cgi-bin/*&lt;/url-pattern&gt;
+   &lt;/servlet-mapping&gt;
+&lt;/web-app&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To enable CGI processing for all web modules, un-comment the
+corresponding sections in the <code>default-web.xml</code> file.</p>
+</div>
+<div class="paragraph">
+<p>Package the CGI program under the <code>cgiPathPrefix</code>. The default
+<code>cgiPathPrefix</code> is <code>WEB-INF/cgi</code>. For security, it is highly recommended
+that the contents and binaries of CGI programs be prohibited from direct
+viewing or download. For information about hiding directory listings,
+see <a href="#beagc">Using the <code>default-web.xml</code> File</a>.</p>
+</div>
+<div class="paragraph">
+<p>Invoke the CGI program using a URL of the following format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">http://host:8080/context-root/cgi-bin/cgi-name</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">http://localhost:8080/mycontext/cgi-bin/hello</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can configure the following <code>init-param</code> values for the
+<code>CGIServlet</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSDVG546"></a><a id="sthref17"></a><a id="ghern"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 7-5 <code>CGIServlet</code> <code>init-param</code> Values</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 11%;">
+<col style="width: 27%;">
+<col style="width: 37%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">init-param</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cgiPathPrefix</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>WEB-INF/cgi</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the subdirectory
+containing the CGI programs.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">debug</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0</code> (for no debugging)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the debugging level.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">executable</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>perl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the executable for running the
+CGI script.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">parameterEncoding</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>System.getProperty`</code>("file.encoding",`
+<code>"UTF-8")</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the parameter&#8217;s encoding.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">passShellEnvironment</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies whether to pass
+shell environment properties to the CGI program.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>To work with a native executable, do the following:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Set the value of the <code>init-param</code> named executable to an empty
+<code>String</code> in the <code>web.xml</code> file.</p>
+</li>
+<li>
+<p>Make sure the executable has its executable bits set correctly.</p>
+</li>
+<li>
+<p>Use directory deployment to deploy the web module. Do not deploy it
+as a WAR file, because the executable bit information is lost during the
+process of <code>jar</code> and <code>unjar</code>. For more information about directory
+deployment, see the <a href="../application-deployment-guide/toc.html#GSDPG">GlassFish Server Open Source Edition
+Application Deployment Guide</a>.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="jpa.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="ejb.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

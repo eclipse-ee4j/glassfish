@@ -1,0 +1,1126 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Administering Web Applications</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Administering Web Applications</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="threadpools.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="logging.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSADG00009"></a><a id="gbbjk"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="administering-web-applications">6 Administering Web Applications</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter explains how to administer web applications in the
+GlassFish Server Open Source Edition 5.0 environment.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beagk">Invoking a Servlet by Alternate Means</a></p>
+</li>
+<li>
+<p><a href="#gixud">Changing Log Output for a Servlet</a></p>
+</li>
+<li>
+<p><a href="#beagc">Defining Global Features for Web Applications</a></p>
+</li>
+<li>
+<p><a href="#gixrb">Redirecting a URL</a></p>
+</li>
+<li>
+<p><a href="#gfaad">Administering <code>mod_jk</code></a></p>
+</li>
+<li>
+<p><a href="#CIHJDAJD">Administering <code>mod_proxy_ajp</code></a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Instructions for accomplishing some of these tasks by using the
+Administration Console are contained in the Administration Console
+online help.</p>
+</div>
+<div class="paragraph">
+<p><a id="beagk"></a><a id="GSADG00548"></a><a id="invoking-a-servlet-by-alternate-means"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_invoking_a_servlet_by_alternate_means">Invoking a Servlet by Alternate Means</h3>
+<div class="paragraph">
+<p>You can call a servlet deployed to GlassFish Server by using a URL in a
+browser or embedded as a link in an HTML or JSP file. The format of a
+servlet invocation URL is as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">http://server:port/context-root/servlet-mapping?name=value</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following table describes each URL section.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG857"></a><a id="sthref20"></a><a id="fvyhk"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 6-1 URL Fields for Servlets Within an Application</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 21%;">
+<col style="width: 79%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">URL element</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">server`:`port</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>The IP address (or host name) and optional port number.</p>
+</div>
+<div class="paragraph">
+<p>To access the default web module for a virtual server, specify only this
+URL section. You do not need to specify the context-root or servlet-name
+unless you also wish to specify name-value parameters.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">context-root</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>For an application, the context root is defined in the <code>context-root</code>
+element of the <code>application.xml</code>, <code>sun-application.xml</code>, or
+<code>sun-web.xml</code> file. For an individually deployed web module, the context
+root is specified during deployment.</p>
+</div>
+<div class="paragraph">
+<p>For both applications and individually deployed web modules, the default
+context root is the name of the WAR file minus the <code>.war</code> suffix.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">servlet-mapping</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>servlet-mapping</code> as configured in the <code>web.xml</code>
+file.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>?`name</code>=<code>value</code>&#8230;&#8203;`</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional request parameters.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="GSADG00166"></a><a id="giyhf"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 6-1 Invoking a Servlet With a URL</p>
+</div>
+<div class="paragraph">
+<p>In this example, <code>localhost</code> is the host name, <code>MortPages</code> is the
+context root, and <code>calcMortgage</code> is the servlet mapping.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">http://localhost:8080/MortPages/calcMortgage?rate=8.0&amp;per=360&amp;bal=180000</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00167"></a><a id="giyib"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 6-2 Invoking a Servlet From Within a JSP File</p>
+</div>
+<div class="paragraph">
+<p>To invoke a servlet from within a JSP file, you can use a relative path.
+For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;jsp:forward page="TestServlet"/&gt;&lt;jsp:include page="TestServlet"/&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gixud"></a><a id="GSADG00549"></a><a id="changing-log-output-for-a-servlet"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_changing_log_output_for_a_servlet">Changing Log Output for a Servlet</h3>
+<div class="paragraph">
+<p><code>ServletContext.log</code> messages are sent to the server log. By default,
+the <code>System.out</code> and <code>System.err</code> output of servlets are sent to the
+server log. During startup, server log messages are echoed to the
+<code>System.err</code> output. Also by default, there is no Windows-only console
+for the <code>System.err</code> output.</p>
+</div>
+<div class="paragraph">
+<p>You can change these defaults using the Administration Console Write to
+System Log box. If this box is checked, <code>System.out</code> output is sent to
+the server log. If it is unchecked, <code>System.out</code> output is sent to the
+system default location only.</p>
+</div>
+<div class="paragraph">
+<p><a id="beagc"></a><a id="GSADG00550"></a><a id="defining-global-features-for-web-applications"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_defining_global_features_for_web_applications">Defining Global Features for Web Applications</h3>
+<div class="paragraph">
+<p>You can use the <code>default-web.xml</code> file to define features such as
+filters and security constraints that apply to all web applications.</p>
+</div>
+<div class="paragraph">
+<p>For example, directory listings are disabled by default for added
+security. To enable directory listings in your domain&#8217;s
+<code>default-web.xml</code> file, search for the definition of the servlet whose
+<code>servlet-name</code> is equal to <code>default</code>, and set the value of the
+<code>init-param</code> named <code>listings</code> to <code>true</code>. Then restart the server.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;init-param&gt;
+   &lt;param-name&gt;listings&lt;/param-name&gt;
+   &lt;param-value&gt;true&lt;/param-value&gt;
+&lt;/init-param&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If <code>listings</code> is set to <code>true</code>, you can also determine how directory
+listings are sorted. Set the value of the <code>init-param</code> named <code>sortedBy</code>
+to <code>NAME</code>, <code>SIZE</code>, or <code>LAST_MODIFIED</code>. Then restart the server.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;init-param&gt;
+   &lt;param-name&gt;sortedBy&lt;/param-name&gt;
+   &lt;param-value&gt;LAST_MODIFIED&lt;/param-value&gt;
+&lt;/init-param&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>mime-mapping</code> elements in <code>default-web.xml</code> are global and
+inherited by all web applications. You can override these mappings or
+define your own using <code>mime-mapping</code> elements in your web application&#8217;s
+<code>web.xml</code> file. For more information about <code>mime-mapping</code> elements, see
+the Servlet specification.</p>
+</div>
+<div class="paragraph">
+<p>You can use the Administration Console to edit the <code>default-web.xml</code>
+file, or edit the file directly using the following steps.</p>
+</div>
+<div class="paragraph">
+<p><a id="fvymc"></a><a id="GSADG00370"></a><a id="to-use-the-default-web.xml-file"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_use_the_code_default_web_xml_code_file">To Use the <code>default-web.xml</code> File</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Place the JAR file for the filter, security constraint, or other
+feature in the domain-dir`/lib` directory.</p>
+</li>
+<li>
+<p>Edit the domain-dir`/config/default-web.xml` file to refer to the
+JAR file.</p>
+</li>
+<li>
+<p>To apply your changes, restart GlassFish Server.<br>
+See <a href="domains.html#ginqj">To Restart a Domain</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="gixrb"></a><a id="GSADG00551"></a><a id="redirecting-a-url"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_redirecting_a_url">Redirecting a URL</h3>
+<div class="paragraph">
+<p>You can specify that a request for an old URL be treated as a request
+for a new URL. This is called redirecting a URL.</p>
+</div>
+<div class="paragraph">
+<p>To specify a redirected URL for a virtual server, use the <code>redirect_n</code>
+property, where n is a positive integer that allows specification of
+more than one. Each of these <code>redirect_n</code> properties is inherited by all
+web applications deployed on the virtual server.</p>
+</div>
+<div class="paragraph">
+<p>The value of each <code>redirect_n</code> property has two components which can be
+specified in any order:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The first component, <code>from</code>, specifies the prefix of the requested URI
+to match.</p>
+</li>
+<li>
+<p>The second component, <code>url-prefix</code>, specifies the new URL prefix to
+return to the client. The from prefix is replaced by this URL prefix.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00168"></a><a id="giyis"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 6-3 Redirecting a URL</p>
+</div>
+<div class="paragraph">
+<p>This example redirects <code>from</code> <code>dummy</code> to <code>etude</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;property name="redirect_1" value="from=/dummy url-prefix=http://etude"/&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gfaad"></a><a id="GSADG00552"></a><a id="administering-mod_jk"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_administering_code_mod_jk_code">Administering <code>mod_jk</code></h3>
+<div class="paragraph">
+<p>The Apache Tomcat Connector <code>mod_jk</code> can be used to connect the web
+container with web servers such as Apache HTTP Server. By using
+<code>mod_jk</code>, which comes with GlassFish Server, you can front GlassFish
+Server with Apache HTTP Server.</p>
+</div>
+<div class="paragraph">
+<p>You can also use <code>mod_jk</code> directly at the JSP/servlet engine for load
+balancing. For more information about configuring <code>mod_jk</code> and Apache
+HTTP Server for load balancing with GlassFish Server 5.0 refer to
+"<a href="../ha-administration-guide/http-load-balancing.html#GSHAG00009">Configuring HTTP Load Balancing</a>" in GlassFish Server
+Open Source Edition High Availability Administration Guide.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gixqw">To Enable <code>mod_jk</code></a></p>
+</li>
+<li>
+<p><a href="#gixpx">To Load Balance Using <code>mod_jk</code> and GlassFish Server</a></p>
+</li>
+<li>
+<p><a href="#gjpat">To Enable SSL Between the <code>mod_jk</code> Load Balancer and the
+Browser</a></p>
+</li>
+<li>
+<p><a href="#gjpan">To Enable SSL Between the <code>mod_jk</code> Load Balancer and
+GlassFish Server</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gixqw"></a><a id="GSADG00371"></a><a id="to-enable-mod_jk"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_enable_code_mod_jk_code">To Enable <code>mod_jk</code></h4>
+<div class="paragraph">
+<p>You can front GlassFish Server with Apache HTTP Server by enabling the
+<code>mod_jk</code> protocol for one of GlassFish Server&#8217;s network listeners, as
+described in this procedure. A typical use for <code>mod_jk</code> would be to have
+Apache HTTP Server handle requests for static resources, while having
+requests for dynamic resources, such as servlets and JavaServer Pages
+(JSPs), forwarded to, and handled by the GlassFish Server back-end
+instance.</p>
+</div>
+<div class="paragraph">
+<p>When you use the <code>jk-enabled</code> attribute of the network listener, you do
+not need to copy any additional JAR files into the <code>/lib</code> directory. You
+can also create JK connectors under different virtual servers by using
+the network listener attribute <code>jk-enabled</code>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install Apache HTTP Server and <code>mod_jk</code>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>For information on installing Apache HTTP Server, see
+<code>http://httpd.apache.org/docs/2.2/install.html</code>.</p>
+</li>
+<li>
+<p>For information on installing <code>mod_jk</code>, see
+<code>http://tomcat.apache.org/connectors-doc/webserver_howto/apache.html</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Configure the following files:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>apache2/conf/httpd.conf</code>, the main Apache configuration file</p>
+</li>
+<li>
+<p><code>apache2/conf/workers.properties</code><br>
+<a href="#gixrq">Example 6-4</a> and <a href="#gixqt">Example 6-5</a> provide examples
+of configuring these two files.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Start Apache HTTP Server (<code>httpd</code>).</p>
+</li>
+<li>
+<p>Start GlassFish Server with at least one web application deployed.<br>
+In order for the <code>mod_jk</code>-enabled network listener to start listening
+for requests, the web container must be started. Normally, this is
+achieved by deploying a web application.</p>
+</li>
+<li>
+<p>Create a jk-enabled network listener by using the
+<a href="../reference-manual/create-network-listener.html#GSRFM00046"><code>create-network-listener</code></a> subcommand.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; create-network-listener --protocol http-listener-1 \
+--listenerport 8009 --jkenabled true jk-connector</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>If you are using the <code>glassfish-jk.properties</code> file to use
+non-default values of attributes described at
+<code>http://tomcat.apache.org/tomcat-5.5-doc/config/ajp.html</code>), set the
+<code>jk-configuration-file</code> property of the network listener to the
+fully-qualified file name of the <code>glassfish-jk.properties</code> file.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; set server-config.network-config.network-listeners.network-listener.\
+jk-connector.jk-configuration-file=domain-dir/config/glassfish-jk.properties</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>If you expect to need more than five threads for the listener,
+increase the maximum threads in the <code>http-thread-pool</code> pool:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; set configs.config.server-config.thread-pools.thread-pool.\
+http-thread-pool.max-thread-pool-size=value</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>To apply your changes, restart GlassFish Server.<br>
+See <a href="domains.html#ginqj">To Restart a Domain</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00169"></a><a id="gixrq"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 6-4 <code>httpd.conf</code> File for <code>mod_jk</code></p>
+</div>
+<div class="paragraph">
+<p>This example shows an <code>httpd.conf</code> file that is set for <code>mod_jk</code>. In
+this example, <code>mod_jk</code> used as a simple pass-through.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">LoadModule jk_module /usr/lib/httpd/modules/mod_jk.so
+JkWorkersFile /etc/httpd/conf/worker.properties
+# Where to put jk logs
+JkLogFile /var/log/httpd/mod_jk.log
+# Set the jk log level [debug/error/info]
+JkLogLevel debug
+# Select the log format
+JkLogStampFormat "[%a %b %d %H:%M:%S %Y] "
+# JkOptions indicate to send SSL KEY SIZE,
+JkOptions +ForwardKeySize +ForwardURICompat -ForwardDirectories
+# JkRequestLogFormat set the request format
+JkRequestLogFormat "%w %V %T"
+# Send all jsp requests to GlassFish
+JkMount /*.jsp worker1
+# Send all glassfish-test requests to GlassFish
+JkMount /glassfish-test/* worker1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00170"></a><a id="gixqt"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 6-5 <code>workers.properties</code> File for <code>mod_jk</code></p>
+</div>
+<div class="paragraph">
+<p>This example shows a <code>workers.properties</code> that is set for <code>mod_jk</code>. This
+<code>workers.properties</code> file is referenced in the second line of
+<a href="#gixrq">Example 6-4</a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn"># Define 1 real worker using ajp13
+worker.list=worker1
+# Set properties for worker1 (ajp13)
+worker.worker1.type=ajp13
+worker.worker1.host=localhost
+worker.worker1.port=8009</code></pre>
+</div>
+</div>
+<div id="GSADG858" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>For more information on Apache, see <code>http://httpd.apache.org/</code>.</p>
+</div>
+<div class="paragraph">
+<p>For more information on Apache Tomcat Connector, see
+<code>http://tomcat.apache.org/connectors-doc/index.html</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gixpx"></a><a id="GSADG00372"></a><a id="to-load-balance-using-mod_jk-and-glassfish-server"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_load_balance_using_code_mod_jk_code_and_glassfish_server">To Load Balance Using <code>mod_jk</code> and GlassFish Server</h4>
+<div class="paragraph">
+<p>Load balancing is the process of dividing the amount of work that a
+computer has to do between two or more computers so that more work gets
+done in the same amount of time. Load balancing can be configured with
+or without security.</p>
+</div>
+<div class="paragraph">
+<p>In order to support stickiness, the Apache <code>mod_jk</code> load balancer relies
+on a <code>jvmRoute</code> system property that is included in any <code>JSESSIONID</code>
+received by the load balancer. This means that every GlassFish Server
+instance that is front-ended by the Apache load balancer must be
+configured with a unique <code>jvmRoute</code> system property.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>On each of the instances, perform the steps in <a href="#gixqw">To Enable
+<code>mod_jk</code></a>.<br>
+If your instances run on the same machine, you must choose different JK
+ports. The ports must match <code>worker.worker*.port</code> in your
+<code>workers.properties</code> file. See the properties file in
+<a href="#gixqt">Example 6-5</a>.</p>
+</li>
+<li>
+<p>On each of the instances, create the <code>jvmRoute</code> system property of
+GlassFish Server by using the <a href="../reference-manual/create-jvm-options.html#GSRFM00042"><code>create-jvm-options</code></a>
+subcommand.<br>
+Use the following format:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; create-jvm-options "-DjvmRoute=/instance-worker-name"/</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>where instance-worker-name is the name of the worker that you defined to
+represent the instance in the <code>workers.properties</code> file.
+3.  To apply your changes, restart Apache HTTP Server and GlassFish
+Server.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00171"></a><a id="gjjzu"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 6-6 <code>httpd.conf</code> File for Load Balancing</p>
+</div>
+<div class="paragraph">
+<p>This example shows an <code>httpd.conf</code> file that is set for load balancing.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">LoadModule jk_module /usr/lib/httpd/modules/mod_jk.so
+JkWorkersFile /etc/httpd/conf/worker.properties
+# Where to put jk logs
+JkLogFile /var/log/httpd/mod_jk.log
+# Set the jk log level [debug/error/info]
+JkLogLevel debug
+# Select the log format
+JkLogStampFormat "[%a %b %d %H:%M:%S %Y] "
+# JkOptions indicate to send SSL KEY SIZE,
+JkOptions +ForwardKeySize +ForwardURICompat -ForwardDirectories
+# JkRequestLogFormat set the request format
+JkRequestLogFormat "%w %V %T"
+# Send all jsp requests to GlassFish
+JkMount /*.jsp worker1
+# Send all glassfish-test requests to GlassFish
+JkMount /glassfish-test/* loadbalancer</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00172"></a><a id="gjjzf"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 6-7 <code>workers.properties</code> File for Load Balancing</p>
+</div>
+<div class="paragraph">
+<p>This example shows a <code>workers.properties</code> or <code>glassfish-jk.properties</code>
+file that is set for load balancing. The <code>worker.worker*.port</code> should
+match with JK ports you created.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">worker.list=worker1,worker2,loadbalancer
+worker.worker1.type=ajp13
+worker.worker1.host=localhost
+worker.worker1.port=8009
+worker.worker1.lbfactor=1
+worker.worker1.socket_keepalive=1
+worker.worker1.socket_timeout=300
+worker.worker2.type=ajp13
+worker.worker2.host=localhost
+worker.worker2.port=8010
+worker.worker2.lbfactor=1
+worker.worker2.socket_keepalive=1
+worker.worker2.socket_timeout=300
+worker.loadbalancer.type=lb
+worker.loadbalancer.balance_workers=worker1,worker2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gjpat"></a><a id="GSADG00373"></a><a id="to-enable-ssl-between-the-mod_jk-load-balancer-and-the-browser"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_enable_ssl_between_the_code_mod_jk_code_load_balancer_and_the_browser">To Enable SSL Between the <code>mod_jk</code> Load Balancer and the Browser</h4>
+<div class="paragraph">
+<p>To activate security for <code>mod_jk</code> on GlassFish Server, you must first
+generate a Secure Socket Layer (SSL) self-signed certificate on the
+Apache HTTP Server with the <code>mod_ssl</code> module. The tasks include
+generating a private key, a Certificate Signing Request (CSR), a
+self-signed certificate, and configuring SSL-enabled virtual hosts.</p>
+</div>
+<div id="GSADG859" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>The <code>mod_jk</code> connector must be enabled.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Generate the private key as follows:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>openssl genrsa -des3 -rand file1:file2:file3:file4:file5 -out server.key 1024</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>where <code>file1:file2:</code> and so on represents the random compressed files.
+2.  Remove the pass-phrase from the key as follows:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">openssl rsa -in server.key -out server.pem</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Generate the CSR is as follows:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>openssl req -new -key server.pem -out server.csr</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Enter the information you are prompted for.
+4.  Generate a temporary certificate as follows:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">openssl x509 -req -days 60 -in server.csr -signkey server.pem -out server.crt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This temporary certificate is good for 60 days.
+5.  Create the <code>http-ssl.conf</code> file under the <code>/etc/apache2/conf.d</code>
+directory.
+6.  In the <code>http-ssl.conf</code> file, add one of the following redirects:
+* Redirect a web application, for example, <code>JkMount /hello/* worker1</code>.
+* Redirect all requests, for example, <code>JkMount /* worker1</code>.<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn"># Send all jsp requests to GlassFish
+JkMount /*.jsp worker1
+# Send all glassfish-test requests to GlassFish
+JkMount /glassfish-test/* loadbalancer</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00173"></a><a id="gjpnc"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 6-8 <code>http-ssl.conf</code> File for <code>mod_jk</code> Security</p>
+</div>
+<div class="paragraph">
+<p>A basic SSL-enabled virtual host will appear in the <code>http-ssl.conf</code>
+file. In this example, all requests are redirected.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">Listen 443
+&lt;VirtualHost _default_:443&gt;
+SSLEngine on
+SSLCipherSuite ALL:!ADH:!EXP56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP:+eNULL
+SSLCertificateFile "/etc/apache2/2.2/server.crt"
+SSLCertificateKeyFile "/etc/apache2/2.2/server.pem"
+JkMount /* worker1
+&lt;/VirtualHost&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gjpan"></a><a id="GSADG00374"></a><a id="to-enable-ssl-between-the-mod_jk-load-balancer-and-glassfish-server"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_enable_ssl_between_the_code_mod_jk_code_load_balancer_and_glassfish_server">To Enable SSL Between the <code>mod_jk</code> Load Balancer and GlassFish Server</h4>
+<div class="paragraph">
+<p>This procedure does not enable SSL transfer between <code>mod_jk</code> and
+GlassFish Server. It enables <code>mod_jk</code> to forward SSL-encrypted
+information from the browser to GlassFish Server.</p>
+</div>
+<div id="GSADG860" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>The self-signed certificate must be configured.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Perform the steps in <a href="#gixqw">To Enable <code>mod_jk</code></a>.</p>
+</li>
+<li>
+<p>Start another GlassFish Server with at least one web application
+deployed.<br>
+In order for the <code>mod_jk</code>-enabled network listener to start listening
+for requests, the web container must be started. Normally, this is
+achieved by deploying a web application.</p>
+</li>
+<li>
+<p>Follow instructions from <a href="http_https.html#ggnbj">To Configure an
+HTTP Listener for SSL</a> on the <code>mod_jk</code> connector.<br>
+Use the following format:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; create-ssl --type http-listener --certname sampleCert new-listener</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Add the following directives in the <code>httpd.conf</code> file under the
+<code>/etc/apache2/conf.d</code> directory:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre># Should mod_jk send SSL information (default is On)
+JkExtractSSL On
+# What is the indicator for SSL (default is HTTPS)
+JkHTTPSIndicator HTTPS
+# What is the indicator for SSL session (default is SSL_SESSION_ID)
+JkSESSIONIndicator SSL_SESSION_ID
+# What is the indicator for client SSL cipher suit (default is SSL_CIPHER )
+JkCIPHERIndicator SSL_CIPHER
+# What is the indicator for the client SSL certificated? (default is SSL_CLIENT_CERT )
+JkCERTSIndicator SSL_CLIENT_CERT</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>To apply your changes, restart Apache HTTP Server and GlassFish
+Server.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="CIHJDAJD"></a><a id="GSADG861"></a><a id="administering-mod_proxy_ajp"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_administering_code_mod_proxy_ajp_code">Administering <code>mod_proxy_ajp</code></h3>
+<div class="paragraph">
+<p>The Apache Connector <code>mod_proxy_ajp</code> can be used to connect the web
+container with Apache HTTP Server. By using <code>mod_proxy_ajp</code>, you can
+front GlassFish Server with Apache HTTP Server.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG862"></a><a id="sthref21"></a></p>
+</div>
+<div class="sect3">
+<h4 id="to-enable-mod_proxy_ajp">To Enable <code>mod_proxy_ajp</code></h4>
+<div class="paragraph">
+<p>You can front GlassFish Server with Apache HTTP Server and its
+<code>mod_proxy_ajp</code> connector by enabling the AJP protocol for one of
+GlassFish Server&#8217;s network listeners, as described in this procedure. A
+typical use for <code>mod_proxy_ajp</code> would be to have Apache HTTP Server
+handle requests for static resources, while having requests for dynamic
+resources, such as servlets and JavaServer Pages (JSPs), forwarded to,
+and handled by the GlassFish Server back-end instance.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install Apache HTTP Server.<br>
+For information on installing Apache HTTP Server, see
+<code>http://httpd.apache.org/docs/2.2/install.html</code>.</p>
+</li>
+<li>
+<p>Configure <code>apache2/conf/httpd.conf</code>, the main Apache configuration
+file.<br>
+For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>LoadModule proxy_module /usr/lib/httpd/modules/mod_proxy.so
+LoadModule proxy_ajp_module /usr/lib/httpd/modules/mod_proxy_ajp.so
+
+Listen 1979
+NameVirtualHost *:1979
+&lt;VirtualHost *:1979&gt;
+   ServerName localhost
+   ErrorLog /var/log/apache2/ajp.error.log
+   CustomLog /var/log/apache2/ajp.log combined
+
+   &lt;Proxy *&gt;
+     AddDefaultCharset Off
+     Order deny,allow
+     Allow from all
+   &lt;/Proxy&gt;
+
+   ProxyPass / ajp://localhost:8009/
+   ProxyPassReverse / ajp://localhost:8009/
+&lt;/VirtualHost&gt;</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Start Apache HTTP Server (<code>httpd</code>).</p>
+</li>
+<li>
+<p>Create a jk-enabled network listener by using the
+<code>create-network-listener</code> subcommand.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; create-network-listener --protocol http-listener-1 \
+--listenerport 8009 --jkenabled true jk-connector</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>If you expect to need more than five threads for the listener,
+increase the maximum threads in the <code>http-thread-pool</code> pool:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; set configs.config.server-config.thread-pools.thread-pool.\
+http-thread-pool.max-thread-pool-size=value</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>To apply your changes, restart GlassFish Server.<br>
+See <a href="domains.html#ginqj">To Restart a Domain</a>.</p>
+</li>
+</ol>
+</div>
+<div id="GSADG863" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>For more information on Apache, see <code>http://httpd.apache.org/</code>.</p>
+</div>
+<div class="paragraph">
+<p>For more information on the Apache <code>mod_proxy_ajp</code> Connector, see
+<code>http://httpd.apache.org/docs/2.1/mod/mod_proxy.html</code> and
+<code>http://httpd.apache.org/docs/2.1/mod/mod_proxy_ajp.html</code>.</p>
+</div>
+<div class="paragraph">
+<p>For more information on the AJP protocol, see
+<code>http://tomcat.apache.org/connectors-doc/ajp/ajpv13a.html</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG1049"></a><a id="sthref22"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="to-load-balance-using-mod_proxy_ajp-and-glassfish-server">To Load Balance Using <code>mod_proxy_ajp</code> and GlassFish Server</h4>
+<div class="paragraph">
+<p>Load balancing is the process of dividing the amount of work that a
+computer has to do between two or more computers so that more work gets
+done in the same amount of time. In the GlassFish Server context, load
+balancing is most frequently used to distribute work among the instances
+in a GlassFish Server cluster.</p>
+</div>
+<div class="paragraph">
+<p>To configure load balancing using <code>mod_proxy_ajp</code>, you must use the
+<code>mod_proxy_balancer</code> Apache module in addition to <code>mod_proxy_ajp</code>.</p>
+</div>
+<div class="paragraph">
+<p>In order to support stickiness, the <code>mod_proxy_balancer</code> load balancer
+relies on a <code>jvmRoute</code> system property that is included in any
+<code>JSESSIONID</code> received by the load balancer. Consequently, every
+GlassFish Server instance that is front-ended by the Apache load
+balancer must be configured with a unique <code>jvmRoute</code> system property.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install Apache HTTP Server.<br>
+For information on installing Apache HTTP Server, see
+<code>http://httpd.apache.org/docs/2.2/install.html</code>.</p>
+</li>
+<li>
+<p><a id="BABIFEEC"></a><br>
+Configure <code>apache2/conf/httpd.conf</code>, the main Apache configuration file.<br>
+For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>LoadModule proxy_module /usr/lib/httpd/modules/mod_proxy.so
+LoadModule proxy_ajp_module /usr/lib/httpd/modules/mod_proxy_ajp.so
+LoadModule proxy_balancer_module /usr/lib/httpd/modules/mod_proxy_balancer.so
+
+# Forward proxy needs to be turned off
+ProxyRequests Off
+# Keep the original Host Header
+ProxyPreserveHost On
+
+   &lt;Proxy *&gt;
+      Order deny,allow
+      Deny from all
+      Allow from localhost
+   &lt;/Proxy&gt;
+
+# Each BalancerMember corresponds to an instance in the GlassFish Server
+# cluster. The port specified for each instance must match the ajp port
+# specified for that instance.
+&lt;Proxy balancer://localhost&gt;
+    BalancerMember ajp://localhost:8009
+    BalancerMember ajp://localhost:8010
+    BalancerMember ajp://localhost:8011
+&lt;/Proxy&gt;</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Start Apache HTTP Server (<code>httpd</code>).</p>
+</li>
+<li>
+<p>In GlassFish Server, use the <code>create-network-listener</code> subcommand to
+create a jk-enabled network listener targeted to the cluster.<br>
+For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; create-network-listener --jkenabled true --target cluster1 \
+--protocol http-listener-1 --listenerport ${AJP_PORT} jk-listener</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this example, <code>cluster1</code> is the name of the cluster and <code>jk-listener</code>
+is the name of the new listener.
+5.  If you expect to need more than five threads for the listener,
+increase the maximum threads in the <code>http-thread-pool</code> pool:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; set configs.config.cluster1-config.thread-pools.thread-pool.\
+http-thread-pool.max-thread-pool-size=value</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Use the <code>create-jvm-options</code> subcommand to create the <code>jvmRoute</code>
+property targeted to the cluster.<br>
+For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; create-jvm-options --target cluster1 \
+"-DjvmRoute=\${AJP_INSTANCE_NAME}"</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Use the <code>create-system-properties</code> subcommand to define the
+<code>AJP_PORT</code> and <code>AJP_INSTANCE_NAME</code> properties for each of the instances
+in the cluster, making sure to match the port values you used in
+Step <a href="#BABIFEEC">2</a> when specifying the load balancer members.<br>
+For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; create-system-properties --target instance1 AJP_PORT=8009
+asadmin&gt; create-system-properties --target instance1 \
+AJP_INSTANCE_NAME=instance1
+asadmin&gt; create-system-properties --target instance2 AJP_PORT=8010
+asadmin&gt; create-system-properties --target instance2 \
+AJP_INSTANCE_NAME=instance2
+asadmin&gt; create-system-properties --target instance3 AJP_PORT=8011
+asadmin&gt; create-system-properties --target instance3 \
+AJP_INSTANCE_NAME=instance3</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this example, <code>instance1</code>, <code>instance2</code> and <code>instance3</code> are the names
+of the GlassFish Server instances in the cluster.
+8.  To apply your changes, restart GlassFish Server.<br>
+See <a href="domains.html#ginqj">To Restart a Domain</a>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="threadpools.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="logging.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

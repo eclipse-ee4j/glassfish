@@ -1,0 +1,2664 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Deploying Applications</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Deploying Applications</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="overview.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="asadmin-deployment-subcommands.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSDPG00004"></a><a id="beact"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploying-applications">2 Deploying Applications</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter provides procedures and guidelines for deploying
+applications and modules in the GlassFish Server Open Source
+Editionenvironment by using the <code>asadmin</code> command-line utility.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gilfm">Deploying Applications and Modules</a></p>
+</li>
+<li>
+<p><a href="#gjiwk">Modifying the Configuration of a Web Application or
+Module</a></p>
+</li>
+<li>
+<p><a href="#beaej">Web Module Deployment Guidelines</a></p>
+</li>
+<li>
+<p><a href="#beaek">EJB Module Deployment Guidelines</a></p>
+</li>
+<li>
+<p><a href="#gilxc">Deploying a Connector Module</a></p>
+</li>
+<li>
+<p><a href="#beaem">Assembling and Deploying an Application Client Module</a></p>
+</li>
+<li>
+<p><a href="#beael">Lifecycle Module Deployment Guidelines</a></p>
+</li>
+<li>
+<p><a href="#gbiye">Web Service Deployment Guidelines</a></p>
+</li>
+<li>
+<p><a href="#gkkmb">OSGi Bundle Deployment Guidelines</a></p>
+</li>
+<li>
+<p><a href="#gkoif">Transparent JDBC Connection Pool Reconfiguration</a></p>
+</li>
+<li>
+<p><a href="#giydj">Application-Scoped Resources</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Instructions for accomplishing these tasks by using the Administration
+Console are contained in the Administration Console online help.</p>
+</div>
+<div class="paragraph">
+<p><a id="gilfm"></a><a id="GSDPG00065"></a><a id="deploying-applications-and-modules"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_deploying_applications_and_modules">Deploying Applications and Modules</h3>
+<div class="paragraph">
+<p>Application deployment is a dynamic process, which means that deployed
+applications and modules become available without requiring you to
+restart the server instance. Dynamic deployment can be useful in
+production environments to bring new applications and modules online
+easily. If you do restart the server, all deployed components are still
+deployed and available.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gijmq">To Deploy an Application or Module</a></p>
+</li>
+<li>
+<p><a href="#gijrc">To Change Targets for a Deployed Application or Module</a></p>
+</li>
+<li>
+<p><a href="#giulr">To List Deployed Applications or Modules</a></p>
+</li>
+<li>
+<p><a href="#gijmb">To Redeploy an Application or Module</a></p>
+</li>
+<li>
+<p><a href="#fvyje">To Disable an Application or Module</a></p>
+</li>
+<li>
+<p><a href="#gijjy">To Enable an Application or Module</a></p>
+</li>
+<li>
+<p><a href="#gijkl">To Undeploy an Application or Module</a></p>
+</li>
+<li>
+<p><a href="#fwakh">To Reload Changes to Applications or Modules Dynamically</a></p>
+</li>
+<li>
+<p><a href="#fvxze">To Deploy an Application or Module Automatically</a></p>
+</li>
+<li>
+<p><a href="#gijyb">To Deploy an Application or Module by Using a Deployment
+Plan</a></p>
+</li>
+<li>
+<p><a href="#gilcn">To Deploy an Application or Module in a Directory Format</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Instructions for accomplishing these tasks by using the Administration
+Console are contained in the Administration Console online help.</p>
+</div>
+<div class="paragraph">
+<p><a id="gijmq"></a><a id="GSDPG00033"></a><a id="to-deploy-an-application-or-module"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_deploy_an_application_or_module">To Deploy an Application or Module</h4>
+<div class="paragraph">
+<p>Use the <code>deploy</code> subcommand in remote mode to deploy an assembled
+application or module to GlassFish Server. If an error occurs during
+deployment, the application or module is not deployed. If a module
+within an application contains an error, the entire application is not
+deployed. These failures prevent a partial deployment that could leave
+the server in an inconsistent state.</p>
+</div>
+<div class="paragraph">
+<p>By default, the deployment target is the default server instance,
+<code>server</code>. To deploy only to the default server instance, specify no
+target. If you deploy the application or module only to the domain
+target, it exists in the domain central repository, but no server
+instances or clusters can reference the component unless you add
+references.</p>
+</div>
+<div class="paragraph">
+<p>You can also deploy a component to a specific stand-alone server
+instance or cluster. When you deploy to server instances or clusters,
+the application or module exists in the domain&#8217;s central repository and
+is referenced by any clusters or server instances that you deployed to.
+For a cluster, the preselected deployment target is <code>server</code>.</p>
+</div>
+<div class="paragraph">
+<p>If the component is already deployed or already exists, you can
+forcefully redeploy if you set the <code>--force</code> option of the <code>deploy</code>
+subcommand to true. The <code>redeploy</code> subcommand also accomplishes this.
+See <a href="#gikiw">Example 2-10</a>. You can see the enabled or disabled
+status of an application or module by using the
+<a href="../reference-manual/show-component-status.html#GSRFM00232"><code>show-component-status</code></a> subcommand.</p>
+</div>
+<div class="paragraph">
+<p>For information about how the application or module name is derived, see
+<a href="overview.html#gihzk">Naming Standards</a>.</p>
+</div>
+<div class="paragraph">
+<p>Use the <code>--altdd</code> or <code>--runtimealtdd</code> options of the <code>deploy</code> (and
+<code>redeploy</code>) subcommand to deploy an application or module using a
+top-level alternate deployment descriptor. The <code>--altdd</code> option
+specifies a top-level alternate Java EE standard deployment descriptor.
+The <code>--runtimealtdd</code> option specifies a top-level alternate GlassFish
+Server runtime deployment descriptor. See <a href="#CHDFHDGD">Example 2-3</a>.
+For more information about deployment descriptors associated with
+GlassFish Server, see <a href="overview.html#gihzc">Deployment Descriptors and
+Annotations</a>.</p>
+</div>
+<div class="paragraph">
+<p>You can also specify the deployment order of an application by using the
+<code>--deploymentorder</code> option of the <code>deploy</code> (and <code>redeploy</code>) subcommand.
+This is useful for applications that must be loaded in a certain order
+at server startup. Applications with lower deployment order numbers are
+loaded first. See <a href="#CHDJFAIJ">Example 2-4</a>. If a deployment order is
+not specified at the time an application is deployed, the default
+deployment order of 100 is assigned. If two applications have the same
+deployment order, the application that was deployed first is loaded
+first at server startup.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote commands require a running server.</p>
+</li>
+<li>
+<p>List deployed applications by using the
+<a href="../reference-manual/list-applications.html#GSRFM00148"><code>list-applications</code></a> subcommand.</p>
+</li>
+<li>
+<p>Deploy the application or module by using the
+<a href="../reference-manual/deploy.html#GSRFM00114"><code>deploy</code></a> subcommand.<br>
+Information about the options and properties of the subcommand is
+included in this help page.</p>
+</li>
+<li>
+<p>If needed, fix issues and rerun the <code>deploy</code> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG00008"></a><a id="gijlo"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-1 Deploying an Enterprise Application</p>
+</div>
+<div class="paragraph">
+<p>This example deploys <code>newApp.ear</code> to the default server, <code>server</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; deploy Cart.ear
+Application deployed successfully with name Cart.
+Command deploy executed successfully</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG00009"></a><a id="gilcq"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-2 Deploying a Connector Module</p>
+</div>
+<div class="paragraph">
+<p>This example deploys a connector module that is packaged in an RAR file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; deploy jdbcra.rar
+Application deployed successfully with name jdbcra.
+Command deploy executed successfully</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG809"></a><a id="CHDFHDGD"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-3 Using an Alternate Java EE Standard Deployment Descriptor</p>
+</div>
+<div class="paragraph">
+<p>This example deploys an application using an alternate Java EE standard
+deployment descriptor file that resides outside of an application
+archive. Specify an absolute path or a relative path to the alternate
+deployment descriptor file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; deploy --altdd path_to_alternate_descriptor cart.ear
+Application deployed successfully with name cart.
+Command deploy executed successfully</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG810"></a><a id="CHDJFAIJ"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-4 Specifying the Deployment Order of an Application</p>
+</div>
+<div class="paragraph">
+<p>This example specifies the deployment order of two applications. The
+<code>cart</code> application is loaded before the <code>horse</code> application at server
+startup.</p>
+</div>
+<div class="paragraph">
+<p>Some lines of output are omitted from this example for readability.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; deploy --deploymentorder 102 --name cart cart.war
+...
+asadmin&gt; deploy --deploymentorder 110 --name horse horse.war
+...</code></pre>
+</div>
+</div>
+<div id="GSDPG811" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help deploy</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gijrc"></a><a id="GSDPG00034"></a><a id="to-change-targets-for-a-deployed-application-or-module"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_change_targets_for_a_deployed_application_or_module">To Change Targets for a Deployed Application or Module</h4>
+<div class="paragraph">
+<p>After deployment, the deployed application or module exists in the
+central repository and can be referenced by the server instances or
+clusters that you deployed to as targets. The
+<code>asadmin create-application-ref</code> and <code>asadmin delete-application-ref</code>
+subcommands enable you to add or delete targets for a deployed
+component. Because the application or module itself is stored in the
+central repository, adding or deleting targets adds or deletes the same
+version of the component on different targets.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote commands require a running server.</p>
+</li>
+<li>
+<p>Add and remove targets by using the
+<a href="../reference-manual/create-application-ref.html#GSRFM00013"><code>create-application-ref</code></a> and
+<a href="../reference-manual/delete-application-ref.html#GSRFM00064"><code>delete-application-ref</code></a> subcommands.</p>
+</li>
+</ol>
+</div>
+<div id="GSDPG812" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing`asadmin help create-application-ref` or
+<code>asadmin help delete-application-ref</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="giulr"></a><a id="GSDPG00035"></a><a id="to-list-deployed-applications-or-modules"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_deployed_applications_or_modules">To List Deployed Applications or Modules</h4>
+<div class="paragraph">
+<p>There are a number of commands that can be used to list deployed
+applications or modules and their subcomponents. Use the commands in
+this section in remote mode.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote commands require a running server.</p>
+</li>
+<li>
+<p>List the desired applications by using the
+<a href="../reference-manual/list-applications.html#GSRFM00148"><code>list-applications</code></a> subcommand or the
+<a href="../reference-manual/list-sub-components.html#GSRFM00201"><code>list-sub-components</code></a> subcommand.<br>
+Information about these commands is included in these help pages.</p>
+</li>
+<li>
+<p>Show the status of a deployed component by using the
+<a href="../reference-manual/show-component-status.html#GSRFM00232"><code>show-component-status</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG00010"></a><a id="giumj"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-5 Listing Applications</p>
+</div>
+<div class="paragraph">
+<p>The <code>list-applications</code> subcommand lists all deployed Java EE
+applications or modules. If the <code>--type</code> option is not specified, all
+components are listed. This example lists deployed applications.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-applications --type web
+hellojsp &lt;web&gt;
+Command list-applications executed successfully</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG00011"></a><a id="giuot"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-6 Listing Subcomponents</p>
+</div>
+<div class="paragraph">
+<p>The <code>list-sub-components</code> subcommand lists EJBs or servlets in a
+deployed module or in a module of the deployed application. If a module
+is not identified, all modules are listed. The <code>--appname</code> option
+functions only when the given module is standalone. To display a
+specific module in an application, you must specify the module name and
+the <code>--appname</code> option. This example gets the subcomponents of module
+<code>mejb.jar</code> within application <code>MEjbApp</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-sub-components --appname MEjbApp mejb.jar
+MEJBBean &lt;StatelessSessionBean&gt;
+Command list-sub-components executed successfully</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG00012"></a><a id="giunl"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-7 Showing Status of a Deployed Component</p>
+</div>
+<div class="paragraph">
+<p>The <code>show-component-status</code> subcommand gets the status (enabled or
+disabled) of the deployed component. This example gets the status of the
+<code>MEjbApp</code> component.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin show-component-status MEjbApp
+Status of MEjbApp is enabled
+Command show-component-status executed successfully</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gijmb"></a><a id="GSDPG00036"></a><a id="to-redeploy-an-application-or-module"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_redeploy_an_application_or_module">To Redeploy an Application or Module</h4>
+<div class="paragraph">
+<p>Use the <code>redeploy</code> subcommand in remote mode to overwrite a
+previously-deployed application or module. You can also accomplish this
+task by using the <code>--force</code> option of the <code>deploy</code> subcommand. Whenever
+a redeployment is done, the HTTP and SFSB sessions in transit at that
+time, and the EJB timers, become invalid unless you use the
+<code>--keepstate=true</code> option of the <code>redeploy</code> subcommand.</p>
+</div>
+<div id="GSDPG813" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>You must remove a preconfigured resource before it can be updated.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote commands require a running server.</p>
+</li>
+<li>
+<p>Redeploy an application or module by using the
+<a href="../reference-manual/redeploy.html#GSRFM00217"><code>redeploy</code></a> subcommand or the
+<a href="../reference-manual/deploy.html#GSRFM00114"><code>deploy</code></a> subcommand with the <code>--force</code> option.<br>
+Information about the options and properties of these commands is
+included in these help pages.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG00013"></a><a id="gijzm"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-8 Retaining HTTP Session State During Redeployment</p>
+</div>
+<div class="paragraph">
+<p>This example redeploys the <code>hello</code> web application. In a production
+environment, you usually want to retain sessions. If you use the
+<code>--keepstate</code> option, active sessions of the application are retained
+and restored when redeployment is complete.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; redeploy --name hello --keepstate=true hello.war
+Application deployed successfully with name hello.
+Command redeploy executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Keep State is a checkbox option when you redeploy using the
+Administration Console. For instructions, see the Administration Console
+online help.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG00014"></a><a id="gijkr"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-9 Redeploying a Web Application That Was Deployed From a
+Directory</p>
+</div>
+<div class="paragraph">
+<p>This example redeploys the <code>hello</code> web application, which was originally
+deployed from the <code>hellodir</code> directory.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt;redeploy --name hellodir
+Application deployed successfully with name hellodir.
+Command redeploy executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG00015"></a><a id="gikiw"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-10 Redeploying an Application by Using <code>asadmin deploy</code>
+<code>--force</code></p>
+</div>
+<div class="paragraph">
+<p>The <code>--force</code> option is set to <code>false</code> by default. This example
+redeploys <code>newApp.ear</code> even if has been deployed or already exists.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; deploy --force=true newApp.ear
+Application deployed successfully with name newApp.
+Command deploy executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSDPG814" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help redeploy</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="fvyje"></a><a id="GSDPG00037"></a><a id="to-disable-an-application-or-module"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_disable_an_application_or_module">To Disable an Application or Module</h4>
+<div class="paragraph">
+<p>Use the <code>disable</code> subcommand in remote mode to immediately deactivate a
+deployed application or module without removing it from the server.
+Disabling a component makes the component inaccessible to clients.
+However, the component is not overwritten or uninstalled, and can be
+enabled by using the <code>asadmin enable</code> subcommand.</p>
+</div>
+<div class="paragraph">
+<p>An application or module is enabled by default.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote commands require a running server.</p>
+</li>
+<li>
+<p>Obtain the exact name of the application or module that you are
+disabling.<br>
+To list deployed applications or modules, use the
+<a href="../reference-manual/list-applications.html#GSRFM00148"><code>list-applications</code></a> subcommand. If you do not specify
+a type, all deployed applications and modules are listed. For example,
+valid types can be <code>web</code>, <code>ejb</code>, <code>connector</code>, <code>application</code>, and
+<code>webservice</code>.<br>
+To see the status of deployed components, use the
+<a href="../reference-manual/show-component-status.html#GSRFM00232"><code>show-component-status</code></a> subcommand.</p>
+</li>
+<li>
+<p>Deactivate the application or module by using the
+<a href="../reference-manual/disable.html#GSRFM00116"><code>disable</code></a> subcommand.<br>
+Information about the options and properties of the subcommand is
+included in this help page.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG00016"></a><a id="gijkp"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-11 Listing Deployed Web Applications</p>
+</div>
+<div class="paragraph">
+<p>This example lists all deployed web applications.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-applications --type web
+hellojsp &lt;web&gt;
+Command list-applications executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG00017"></a><a id="gikvy"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-12 Disabling a Web Application</p>
+</div>
+<div class="paragraph">
+<p>This example disables the <code>hellojsp</code> application.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; disable hellojsp
+Command disable executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSDPG815" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help disable</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gijjy"></a><a id="GSDPG00038"></a><a id="to-enable-an-application-or-module"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_enable_an_application_or_module">To Enable an Application or Module</h4>
+<div class="paragraph">
+<p>An enabled application or module is runnable and can be accessed by
+clients if it has been deployed to an accessible server instance or
+cluster. An application or module is enabled by default. Use the
+<code>enable</code> subcommand in remote mode to enable an application or module
+that has been disabled.</p>
+</div>
+<div class="paragraph">
+<p>An application or module that is deployed to more than one target can be
+enabled on one target and disabled on another. If a component is
+referenced by a target, it is not available to users unless it is
+enabled on that target.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote commands require a running server.</p>
+</li>
+<li>
+<p>Enable the application or module by using the
+<a href="../reference-manual/enable.html#GSRFM00124"><code>enable</code></a> subcommand.<br>
+If the component has not been deployed, an error message is displayed.
+If the component is already enabled, it is re-enabled. To see the status
+of deployed components, use the
+<a href="../reference-manual/show-component-status.html#GSRFM00232"><code>show-component-status</code></a> subcommand.<br>
+Information about the options and properties of the subcommand is
+included in this help page.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG00018"></a><a id="gijxl"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-13 Enabling an Application</p>
+</div>
+<div class="paragraph">
+<p>This example enables the <code>sampleApp</code> application.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; enable sampleApp
+Command enable executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSDPG816" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help enable</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gijkl"></a><a id="GSDPG00039"></a><a id="to-undeploy-an-application-or-module"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_undeploy_an_application_or_module">To Undeploy an Application or Module</h4>
+<div class="paragraph">
+<p>Use the <code>undeploy</code> subcommand in remote mode to uninstall a deployed
+application or module and remove it from the repository. To reinstate
+the component, you must deploy the component again using the <code>deploy</code>
+subcommand.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote commands require a running server.</p>
+</li>
+<li>
+<p>Obtain the exact name of the application or module you are
+undeploying.<br>
+To list deployed applications or modules, use the
+<a href="../reference-manual/list-applications.html#GSRFM00148"><code>list-applications</code></a> subcommand. If you do not specify
+a type, all deployed applications and modules are listed. For example,
+valid types can be <code>web</code>, <code>ejb</code>, <code>connector</code>, <code>application</code>, and
+<code>webservice</code>.<br>
+To see the status of deployed components, use the
+<a href="../reference-manual/show-component-status.html#GSRFM00232"><code>show-component-status</code></a> subcommand.</p>
+</li>
+<li>
+<p>Undeploy the application or module by using the
+<a href="../reference-manual/undeploy.html#GSRFM00244"><code>undeploy</code></a> subcommand.<br>
+Information about the options and properties of the subcommand is
+included in this help page.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG00019"></a><a id="gikag"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-14 Listing Deployed Applications or Modules</p>
+</div>
+<div class="paragraph">
+<p>This example lists all applications of type <code>web</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-applications --type web
+hellojsp &lt;web&gt;
+Command list-applications executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG00020"></a><a id="gikun"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-15 Undeploying an Application</p>
+</div>
+<div class="paragraph">
+<p>This example uninstalls the <code>hellojsp</code> application.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; undeploy hellojsp
+hellojsp &lt;web&gt;
+Command undeploy executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSDPG817" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help undeploy</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="fwakh"></a><a id="GSDPG00040"></a><a id="to-reload-changes-to-applications-or-modules-dynamically"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_reload_changes_to_applications_or_modules_dynamically">To Reload Changes to Applications or Modules Dynamically</h4>
+<div class="paragraph">
+<p>Dynamic reloading enables you to change the code or deployment
+descriptors of an application or module without needing to perform an
+explicit redeployment. Instead, you can copy the changed class files or
+descriptors into the deployment directory for the application or module.
+The server checks for changes periodically and automatically redeploys
+the changes if the timestamp of the <code>.reload</code> file in the root directory
+for the application or module has changed.</p>
+</div>
+<div class="paragraph">
+<p>Dynamic reloading is enabled by default, and is available only on the
+default server instance.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Go to the root directory of the deployed application or module.<br>
+For an application:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>domain-dir/applications/app-name</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For an individually deployed module:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">domain-dir/applications/module-name</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"></dt>
+</dl>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Deployment directories might change between GlassFish Server releases.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create or update the timestamp of the <code>.reload</code> file to load the
+changes.<br>
+For UNIX: <code>touch .reload</code><br>
+For Windows: <code>echo&gt; .reload</code><br>
+If the <code>.reload</code> file doesn&#8217;t exist, the <code>touch</code> or <code>echo</code> command
+creates it.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="fvxze"></a><a id="GSDPG00041"></a><a id="to-deploy-an-application-or-module-automatically"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_deploy_an_application_or_module_automatically">To Deploy an Application or Module Automatically</h4>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This task is best suited for use in a development environment.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Automatic deployment involves copying an archive file into a special
+autodeploy directory where the archive is automatically deployed by
+GlassFish Server at predefined intervals. This method is useful in a
+development environment because it allows new code to be tested quickly.
+Automatic deployment is enabled by default, and is available only on the
+default server instance.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Use the <a href="../reference-manual/set.html#GSRFM00226"><code>set</code></a> subcommand to adjust the
+autodeployment interval.<br>
+This sets the interval at which applications and modules are checked for
+code changes and dynamically reloaded. The default is <code>2</code>.</p>
+</li>
+<li>
+<p>Use the <a href="../reference-manual/set.html#GSRFM00226"><code>set</code></a> subcommand to enable JSP
+precompilation.</p>
+</li>
+<li>
+<p>Copy your archive file to the autodeploy directory.<br>
+The default location is domain-dir`/autodeploy`. The application will be
+deployed at the next interval.<br>
+To undeploy an automatically deployed application or module, remove its
+archive file from the autodeploy directory.<br></p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Deployment directories might change between GlassFish Server releases.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG00021"></a><a id="giqrk"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-16 Setting the Autodeployment Interval</p>
+</div>
+<div class="paragraph">
+<p>This example sets the autodeployment inverval to 3 seconds (default is
+2).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; set server.admin-service.das-config.autodeploy-polling-interval-in-seconds=3
+Command set executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG00022"></a><a id="giqtm"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-17 Setting JSP Precompilation</p>
+</div>
+<div class="paragraph">
+<p>This example enables JSP precompilation (default is false).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt;
+set server.admin-service.das-config.autodeploy-jsp-precompilation-enabled=true
+Command set executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSDPG819" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin set --help</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gijyb"></a><a id="GSDPG00042"></a><a id="to-deploy-an-application-or-module-by-using-a-deployment-plan"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_deploy_an_application_or_module_by_using_a_deployment_plan">To Deploy an Application or Module by Using a Deployment Plan</h4>
+<div class="paragraph">
+<p>In the deployment plan for an EAR file, the <code>glassfish-application.xml</code>
+file is located at the root. The deployment descriptor for each module
+is stored according to this syntax: module-name.gf-dd-name, where the
+gf-dd-name depends on the module type. If a module named <code>MyModule</code>
+contains a CMP mappings file, the file is named
+<code>MyModule.sun-cmp-mappings.xml</code>. A <code>.dbschema</code> file is stored at the
+root level. Each <code>/</code> (forward slash) is replaced by a <code>#</code> (pound sign).</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote commands require a running server.</p>
+</li>
+<li>
+<p>Deploy the application or module by using the
+<a href="../reference-manual/deploy.html#GSRFM00114"><code>deploy</code></a> subcommand with the <code>--deploymentplan</code>
+option.<br></p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Deployment directories might change between GlassFish Server releases.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG00023"></a><a id="gijvy"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-18 Deploying by Using a Deployment Plan</p>
+</div>
+<div class="paragraph">
+<p>This example deploys the application in the <code>myrostapp.ear</code> file
+according to the plan specified by the <code>mydeployplan.jar</code> file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt;deploy --deploymentplan mydeployplan.jar myrostapp.ear
+Application deployed successfully with name myrostapp.
+Command deploy executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG00024"></a><a id="gijyn"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-19 Deployment Plan Structure for an Enterprise Application</p>
+</div>
+<div class="paragraph">
+<p>This listing shows the structure of the deployment plan JAR file for an
+EAR file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">$ jar -tvf mydeployplan.jar
+420 Thu Mar 13 15:37:48 PST 2003 glassfish-application.xml
+370 Thu Mar 13 15:37:48 PST 2003 RosterClient.war.glassfish-web.xml
+418 Thu Mar 13 15:37:48 PST 2003 roster-ac.jar.glassfish-application-client.xml
+1281 Thu Mar 13 15:37:48 PST 2003 roster-ejb.jar.glassfish-ejb-jar.xml
+2317 Thu Mar 13 15:37:48 PST 2003 team-ejb.jar.glassfish-ejb-jar.xml
+3432 Thu Mar 13 15:37:48 PST 2003 team-ejb.jar.sun-cmp-mappings.xml
+84805 Thu Mar 13 15:37:48 PST 2003 team-ejb.jar.RosterSchema.dbschema</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG00025"></a><a id="gijwk"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-20 Deployment Plan Structure for an EJB Module</p>
+</div>
+<div class="paragraph">
+<p>In the deployment plan for an EJB module, the deployment descriptor that
+is specific to GlassFish Server is at the root level. If a standalone
+EJB module contains a CMP bean, the deployment plan includes the
+<code>sun-cmp-mappings.xml</code> and <code>.dbschema</code> files at the root level. In the
+following listing, the deployment plan describes a CMP bean:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">$ jar r -tvf myotherplan.jar
+3603 Thu Mar 13 15:24:20 PST 2003 glassfish-ejb-jar.xml
+3432 Thu Mar 13 15:24:20 PST 2003 sun-cmp-mappings.xml
+84805 Thu Mar 13 15:24:20 PST 2003 RosterSchema.dbschema</code></pre>
+</div>
+</div>
+<div id="GSDPG820" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>The deployment plan is part of the implementation of JSR 88. For more
+information about JSR 88, see <a href="overview.html#giiel">JSR 88 Naming</a> and
+the JSR 88 page at <code>http://jcp.org/en/jsr/detail?id=88</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gilcn"></a><a id="GSDPG00043"></a><a id="to-deploy-an-application-or-module-in-a-directory-format"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_deploy_an_application_or_module_in_a_directory_format">To Deploy an Application or Module in a Directory Format</h4>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This task is best suited for use in a development environment.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>An expanded directory, also known as an exploded directory, contains an
+unassembled (unpackaged) application or module. To deploy a directory
+format instead of an archive, file, use the <code>asadmin deploy</code> subcommand
+in remote mode and specify a path to a directory instead of to an
+archive file. The contents of the directory must be the same as the
+contents of a corresponding archive file, with one exception. An
+application archive file contains archive files for its modules, for
+example <code>myUI.war</code> and <code>myEJB.jar</code>. The expanded application directory
+contains expanded directories for the modules, for example <code>myUI_war</code>
+and <code>myEJB_jar</code>, instead. .</p>
+</div>
+<div class="paragraph">
+<p>You can change deployment descriptor files directly in the expanded
+directory.</p>
+</div>
+<div class="paragraph">
+<p>If your environment is configured to use dynamic reloading, you can also
+dynamically reload applications or modules that are deployed from the
+directory. For instructions, see <a href="#fwakh">To Reload Changes to
+Applications or Modules Dynamically</a>.</p>
+</div>
+<div class="paragraph">
+<p>Unlike archive file deployment, directory deployment does not copy the
+directory contents to the remote hosts. This means that for deployment
+to a cluster, the directory path may exist for both the DAS and the
+remote server instances but may not actually correspond to the same
+physical location. If any target server instance cannot see the deployed
+directory, or finds that it contains different files from those detected
+by the DAS, deployment fails.</p>
+</div>
+<div class="paragraph">
+<p>Integrated development environments (IDEs) typically use directory
+deployment, so you do not need to deal directly with the expanded
+format.</p>
+</div>
+<div id="GSDPG821" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>On each cluster or stand-alone server instance to which the application
+or module is deployed, the directory must be accessible and must contain
+the same files as found by the DAS.</p>
+</div>
+<div class="paragraph">
+<p>On Windows, if you are deploying a directory on a mapped drive, you must
+be running GlassFish Server as the same user to which the mapped drive
+is assigned. This enables GlassFish Server to access the directory.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote commands require a running server.</p>
+</li>
+<li>
+<p>Verify that the expanded directory contents match the archive file.<br>
+For information about the required directory contents, see the
+appropriate specifications.</p>
+</li>
+<li>
+<p>Deploy the directory by using the <a href="../reference-manual/deploy.html#GSRFM00114"><code>deploy</code></a>
+subcommand and specifying the path to the expanded directory.<br></p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Deployment directories might change between GlassFish Server releases.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG00026"></a><a id="gilaz"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-21 Deploying an Application From a Directory</p>
+</div>
+<div class="paragraph">
+<p>This example deploys the expanded directory <code>/apps/MyApp</code> for the
+<code>hello</code> application.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; deploy --name hello /apps/MyApp
+Application deployed successfully with name hello.
+Command deploy executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSDPG822" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help deploy</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gjiwk"></a><a id="GSDPG00066"></a><a id="modifying-the-configuration-of-a-web-application-or-module"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_modifying_the_configuration_of_a_web_application_or_module">Modifying the Configuration of a Web Application or Module</h3>
+<div class="paragraph">
+<p>You can modify the configuration of a web application or a module by
+modifying the deployment descriptors and then repackaging and
+redeploying the application.</p>
+</div>
+<div class="paragraph">
+<p>The instructions in this section enable you to change the configuration
+of a deployed application without the need to modify the application&#8217;s
+deployment descriptors and repackage and redeploy the application. If
+the application or module entry is unset, its value reverts to the
+value, if any, that is set in the application&#8217;s deployment descriptor.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#giyce">To Set a Web Context Parameter</a></p>
+</li>
+<li>
+<p><a href="#giycy">To Unset a Web Context Parameter</a></p>
+</li>
+<li>
+<p><a href="#giybo">To List Web Context Parameters</a></p>
+</li>
+<li>
+<p><a href="#giyhc">To Set a Web Environment Entry</a></p>
+</li>
+<li>
+<p><a href="#giyjr">To Unset a Web Environment Entry</a></p>
+</li>
+<li>
+<p><a href="#giyip">To List Web Environment Entries</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="giyce"></a><a id="GSDPG00044"></a><a id="to-set-a-web-context-parameter"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_set_a_web_context_parameter">To Set a Web Context Parameter</h4>
+<div class="paragraph">
+<p>Use the <code>set-web-context-param</code> subcommand in remote mode to change the
+configuration of a deployed application without the need to modify the
+application&#8217;s deployment descriptors and repackage and redeploy the
+application. By using this subcommand, you are either adding a new
+parameter that did not appear in the original web module&#8217;s descriptor,
+or overriding the descriptor&#8217;s setting of the parameter.</p>
+</div>
+<div class="paragraph">
+<p>If the <code>--ignoreDescriptorItem</code> option is set to <code>true</code>, then the server
+ignores any setting for that context parameter in the descriptor, which
+means you do not need to specify an overriding value on the
+<code>set-web-context-param</code> subcommand. The server behaves as if the
+descriptor had never contained a setting for that context parameter.</p>
+</div>
+<div class="paragraph">
+<p>This subcommand sets a servlet context-initialization parameter of one
+of the following items:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A deployed web application</p>
+</li>
+<li>
+<p>A web module in a deployed Java Platform, Enterprise Edition (Java EE)
+application</p>
+</li>
+</ul>
+</div>
+<div id="GSDPG823" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>The application must already be deployed. Otherwise, an error occurs.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote commands require a running server.</p>
+</li>
+<li>
+<p>Set a servlet context-initialization parameter by using the
+<a href="../reference-manual/set-web-context-param.html#GSRFM00230"><code>set-web-context-param</code></a> subcommand.<br>
+Information about the options for the subcommand is included in this
+help page.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG00027"></a><a id="gjivx"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-22 Setting a Servlet Context-Initialization Parameter for a
+Web Application</p>
+</div>
+<div class="paragraph">
+<p>This example sets the servlet context-initialization parameter
+javax.faces.STATE_SAVING_METHOD of the web application <code>basic-ezcomp</code> to
+client.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; set-web-context-param --name=javax.faces.STATE_SAVING_METHOD
+--description="The location where the application?s state is preserved"
+--value=client basic-ezcomp
+Command set-web-context-param executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSDPG824" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help set-web-context-param</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="giycy"></a><a id="GSDPG00045"></a><a id="to-unset-a-web-context-parameter"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_unset_a_web_context_parameter">To Unset a Web Context Parameter</h4>
+<div class="paragraph">
+<p>Use the <code>unset-web-context-param</code> subcommand in remote mode to unset an
+environment entry for a deployed web application or module that has been
+set by using the <code>set-web-env-entry</code> subcommand. There is no need to
+modify the application&#8217;s deployment descriptors and repackage and
+redeploy the application.</p>
+</div>
+<div class="paragraph">
+<p>This subcommand unsets an environment entry for one of the following
+items:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A deployed web application</p>
+</li>
+<li>
+<p>A web module in a deployed Java Platform, Enterprise Edition (Java EE)
+application</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>When an entry is unset, its value reverts to the value, if any, that is
+set in the application&#8217;s deployment descriptor. This subcommand cannot
+be used to change the value of an environment entry that is set in an
+application&#8217;s deployment descriptor. Instead, use the
+<a href="../reference-manual/set-web-context-param.html#GSRFM00230"><code>set-web-context-param</code></a> subcommand for this purpose.</p>
+</div>
+<div id="GSDPG825" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>The application must already be deployed, and the entry must have
+previously been set by using the <code>set-web-env-entry</code> subcommand.
+Otherwise, an error occurs.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote commands require a running server.</p>
+</li>
+<li>
+<p>Unset an environment entry by using the
+<a href="../reference-manual/unset-web-context-param.html#GSRFM00248"><code>unset-web-context-param</code></a> subcommand.<br>
+Information about the options for the subcommand is included in this
+help page.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG00028"></a><a id="gjivv"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-23 Unsetting a Servlet Context-Initialization Parameter for a
+Web Application</p>
+</div>
+<div class="paragraph">
+<p>This example unsets the servlet context-initialization parameter
+javax.faces.STATE_SAVING_METHOD of the web application <code>basic-ezcomp</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; unset-web-context-param
+--name=javax.faces.STATE_SAVING_METHOD basic-ezcomp
+Command unset-web-context-param executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSDPG826" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help unset-web-context-param</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="giybo"></a><a id="GSDPG00046"></a><a id="to-list-web-context-parameters"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_web_context_parameters">To List Web Context Parameters</h4>
+<div class="paragraph">
+<p>Use the <code>list-web-context-param</code> subcommand in remote mode to list the
+parameters that have previously been set by using the
+<a href="../reference-manual/set-web-context-param.html#GSRFM00230"><code>set-web-context-param</code></a> subcommand. The subcommand
+does not list parameters that are set only in the application&#8217;s
+deployment descriptor. For each parameter, the following information is
+displayed:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The name of the parameter</p>
+</li>
+<li>
+<p>The value to which the parameter is set</p>
+</li>
+<li>
+<p>The value of the <code>--ignoreDescriptorItem</code> option of the
+<code>set-web-context-param</code> subcommand that was specified when the parameter
+was set</p>
+</li>
+<li>
+<p>The description of the parameter or <code>null</code> if no description was
+specified when the parameter was set</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote commands require a running server.</p>
+</li>
+<li>
+<p>List servlet context-initialization parameters by using the
+<a href="../reference-manual/list-web-context-param.html#GSRFM00208"><code>list-web-context-param</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG00029"></a><a id="gjixd"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-24 Listing Servlet Context-Initialization Parameters for a Web
+Application</p>
+</div>
+<div class="paragraph">
+<p>This example lists all servlet context-initialization parameters of the
+web application <code>basic-ezcomp</code> that have been set by using the
+<code>set-web-context-param</code> subcommand. Because no description was specified
+when the javax.faces.PROJECT_STAGE parameter was set, null is displayed
+instead of a description for this parameter.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-web-context-param basic-ezcomp
+javax.faces.STATE_SAVING_METHOD = client ignoreDescriptorItem=false
+//The location where the application's state is preserved
+javax.faces.PROJECT_STAGE = null ignoreDescriptorItem=true //null
+Command list-web-context-param executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSDPG827" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-web-context-param</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="giyhc"></a><a id="GSDPG00047"></a><a id="to-set-a-web-environment-entry"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_set_a_web_environment_entry">To Set a Web Environment Entry</h4>
+<div class="paragraph">
+<p>An application uses the values of environment entries to customize its
+behavior or presentation. Use the <code>set-web-env-entry</code> subcommand in
+remote mode to change the configuration of a deployed application
+without the need to modify the application&#8217;s deployment descriptors and
+repackage and redeploy the application. By using this subcommand, you
+are either adding a new parameter that did not appear in the original
+web module&#8217;s descriptor, or overriding the descriptor&#8217;s setting of the
+parameter.</p>
+</div>
+<div class="paragraph">
+<p>If you the <code>--ignoreDescriptorItem</code> option is set to <code>true</code>, then the
+server ignores any setting for that environment entry in the descriptor,
+which means you do not need to specify an overriding value on the
+<code>set-web-env-entry</code> subcommand. The server behaves as if the descriptor
+had never contained a setting for that environment entry.</p>
+</div>
+<div class="paragraph">
+<p>This subcommand sets an environment entry for one of the following
+items:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A deployed web application</p>
+</li>
+<li>
+<p>A web module in a deployed Java Platform, Enterprise Edition (Java EE)
+application</p>
+</li>
+</ul>
+</div>
+<div id="GSDPG828" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>The application must already be deployed. Otherwise, an error occurs.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote commands require a running server.</p>
+</li>
+<li>
+<p>Set an environment entry for a deployed web application or module by
+using the <a href="../reference-manual/set-web-env-entry.html#GSRFM00231"><code>set-web-env-entry</code></a> subcommand.<br>
+Information about the options for the subcommand is included in this
+help page.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG00030"></a><a id="gjiwe"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-25 Setting an Environment Entry for a Web Application</p>
+</div>
+<div class="paragraph">
+<p>This example sets the environment entry <code>Hello User</code> of the application
+hello to <code>techscribe</code>. The Java type of this entry is
+<code>java.lang.String</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; set-web-env-entry --name="Hello User"
+--type=java.lang.String --value=techscribe
+--description="User authentication for Hello appplication" hello
+Command set-web-env-entry executed successfully</code></pre>
+</div>
+</div>
+<div id="GSDPG829" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help set-web-env-entry</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="giyjr"></a><a id="GSDPG00048"></a><a id="to-unset-a-web-environment-entry"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_unset_a_web_environment_entry">To Unset a Web Environment Entry</h4>
+<div class="paragraph">
+<p>Use the <code>unset-web-env-entry</code> subcommand in remote mode to unset an
+environment entry for a deployed web application or module.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote commands require a running server.</p>
+</li>
+<li>
+<p>Unset a web environment entry by using the
+<a href="../reference-manual/unset-web-env-entry.html#GSRFM00249"><code>unset-web-env-entry</code></a> subcommand.<br>
+Information about the options for the subcommand is included in this
+help page.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG00031"></a><a id="gjivj"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-26 Unsetting an Environment Entry for a Web Application</p>
+</div>
+<div class="paragraph">
+<p>This example unsets the environment entry <code>Hello User</code> of the web
+application <code>hello</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; unset-web-env-entry --name="Hello User" hello
+Command unset-web-env-entry executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSDPG830" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help unset-web-env-entry</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="giyip"></a><a id="GSDPG00049"></a><a id="to-list-web-environment-entries"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_web_environment_entries">To List Web Environment Entries</h4>
+<div class="paragraph">
+<p>Use the <code>list-web-env-entry</code> subcommand to list environment entries for
+a deployed web application or module. For each entry, the following
+information is displayed:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The name of the entry</p>
+</li>
+<li>
+<p>The Java type of the entry</p>
+</li>
+<li>
+<p>The value to which the entry is set</p>
+</li>
+<li>
+<p>The description of the entry or null if no description was specified
+when the entry was set</p>
+</li>
+<li>
+<p>The value of the <code>--ignoreDescriptorItem</code> option of the
+<code>set-web-env-entry</code> subcommand that was specified when the entry was set</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote commands require a running server.</p>
+</li>
+<li>
+<p>List the environment entries by using
+theo<a href="GSRFM00209"><code>list-web-env-entry</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG00032"></a><a id="gjiws"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-27 Listing Environment Entries for a Web Application</p>
+</div>
+<div class="paragraph">
+<p>This example lists all environment entries that have been set for the
+web application <code>hello</code> by using the <code>set-web-env-entry</code> subcommand.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-web-env-entry hello
+Hello User (java.lang.String) = techscribe ignoreDescriptorItem=false
+//User authentication for Hello appplication
+Hello Port (java.lang.Integer) = null ignoreDescriptorItem=true //null
+Command list-web-env-entry executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSDPG831" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-web-env-entry</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="beaej"></a><a id="GSDPG00067"></a><a id="web-module-deployment-guidelines"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_web_module_deployment_guidelines">Web Module Deployment Guidelines</h3>
+<div class="paragraph">
+<p>The following guidelines apply to deploying a web module in GlassFish
+Server:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Context Root. When you deploy a web module, if you do not specify a
+context root, the default is the name of the WAR file without the <code>.war</code>
+extension. The web module context root must be unique within the server
+instance.<br>
+The domain administration server (DAS) in GlassFish Server versions
+2.1.1 and later supports the deployment of multiple web applications
+using the same web context root as long as those applications are
+deployed to different GlassFish Server stand-alone instances. Deploying
+multiple applications using the same context root within a single
+instance produces an error.</p>
+</li>
+<li>
+<p>Data Source. If a web application accesses a <code>DataSource</code> that is not
+specified in a <code>resource-ref</code> in <code>glassfish-web.xml</code>, or there is no
+<code>glassfish-web.xml</code> file, the <code>resource-ref-name</code> defined in <code>web.xml</code>
+is used. A warning message is logged, recording the JNDI name that was
+used to look up the resource.</p>
+</li>
+<li>
+<p>Virtual Servers. If you deploy a web application and do not specify
+any assigned virtual servers, the web application is assigned to all
+currently-defined virtual servers with the exception of the virtual
+server with ID <code>__asadmin</code>, which is reserved for administrative
+purposes. If you then create additional virtual servers and want to
+assign existing web applications to them, you must redeploy the web
+applications.</p>
+</li>
+<li>
+<p>HTTP Sessions. If a web application is undeployed, all its HTTP
+sessions will be invalidated and removed, unless the application is
+being undeployed as part of a redeployment and the <code>--keepstate</code>
+deployment option was set to true. This option is not supported and
+ignored in a clustered environment. See <a href="#gijzm">Example 2-8</a>.<br>
+For information about HTTP session persistence, see the
+<a href="../ha-administration-guide/toc.html#GSHAG">GlassFish Server Open Source Edition High Availability
+Administration Guide</a>.</p>
+</li>
+<li>
+<p>Load Balancing. See the <a href="../ha-administration-guide/toc.html#GSHAG">GlassFish Server Open Source
+Edition High Availability Administration Guide</a> for information about
+load balancing.</p>
+</li>
+<li>
+<p>JSP Precompilation. You can precompile JSP files during deployment by
+checking the appropriate box in the Administration Console, or by using
+the <code>--precompilejsp</code> option of the <code>deploy</code> subcommand.<br>
+You can keep the generated source for JSP files by adding the
+<code>keepgenerated</code> flag to the <code>jsp-config</code> element in <code>glassfish-web.xml</code>.
+For example:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&lt;glassfish-web-app&gt;
+   ...
+   &lt;jsp-config&gt;
+      &lt;property name=keepgenerated value=true /&gt;
+   &lt;/jsp-config&gt;
+&lt;/glassfish-web-app&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you include this property when you deploy the WAR file, the generated
+source is kept in domain-dir`/generated/jsp/<code>app-name</code>/<code>module-name for
+an application, or domain-dir</code>/generated/jsp/<code>module-name for an
+individually-deployed web module. +
+For more information about JSP precompilation, see
+link:dd-elements.html#beatx[`jsp-config</code>].
+* Web Context Parameters. You can set web context parameters after
+deployment. See the following sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#giyce">To Set a Web Context Parameter</a></p>
+</li>
+<li>
+<p><a href="#giycy">To Unset a Web Context Parameter</a></p>
+</li>
+<li>
+<p><a href="#giybo">To List Web Context Parameters</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Web Environment Entries. You can set web environment entries after
+deployment. See the following sections:</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="#giyhc">To Set a Web Environment Entry</a></p>
+</li>
+<li>
+<p><a href="#giyjr">To Unset a Web Environment Entry</a></p>
+</li>
+<li>
+<p><a href="#giyip">To List Web Environment Entries</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beaek"></a><a id="GSDPG00068"></a><a id="ejb-module-deployment-guidelines"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ejb_module_deployment_guidelines">EJB Module Deployment Guidelines</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The GlassFish Server Web Profile supports the EJB 3.1 Lite
+specification, which allows enterprise beans within web applications,
+among other features. The GlassFish Server Full Platform Profile
+supports the entire EJB 3.1 specification. For details, see
+<a href="http://jcp.org/en/jsr/detail?id=318">JSR 318</a></p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The following guidelines apply to deploying an EJB module in GlassFish
+Server:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>JNDI Name. — If no JNDI name for the EJB JAR module is specified in
+the <code>jndi-name</code> element immediately under the <code>ejb</code> element in
+<code>glassfish-ejb-jar.xml</code>, or there is no <code>glassfish-ejb-jar.xml</code> file, a
+default, non-clashing JNDI name is derived. A warning message is logged,
+recording the JNDI name used to look up the EJB JAR module.<br>
+Because the EJB 3.1 specification defines portable EJB JNDI names, there
+is less need for GlassFish Server specific JNDI names. By default,
+GlassFish Server specific default JNDI names are applied automatically
+for backward compatibility. To disable GlassFish Server specific JNDI
+names for an EJB module, set the value of the
+<code>&lt;disable-nonportable-jndi-names&gt;</code> element in the
+<code>glassfish-ejb-jar.xml</code> file to <code>true</code>. The default is <code>false</code>.</p>
+</li>
+<li>
+<p>Stateful Session Bean and Timer State. — Use the <code>--keepstate</code> option
+of the <a href="../reference-manual/redeploy.html#GSRFM00217"><code>redeploy</code></a> subcommand or the <code>&lt;keepstate&gt;</code>
+element in the <code>glassfish-ejb-jar.xml</code> file to retain stateful session
+bean instances and persistently created EJB timers across redeployments.
+The <code>--keepstate</code> option of the <code>redeploy</code> subcommand takes precedence.
+The default for both is <code>false</code>. This option is not supported and
+ignored in a clustered environment.<br>
+Some changes to an application between redeployments can prevent this
+feature from working properly. For example, do not change the set of
+instance variables in the SFSB bean class. Other examples would be
+changes to EJB names, or adding or removing EJBs to or from an
+application.</p>
+</li>
+<li>
+<p>EJB Singletons. — EJB Singletons are created for each server instance
+in a cluster, and not once per cluster.</p>
+</li>
+<li>
+<p>Stubs and Ties. — Use the <a href="../reference-manual/get-client-stubs.html#GSRFM00140"><code>get-client-stubs</code></a>
+subcommand in remote mode to retrieve stubs and ties.</p>
+</li>
+<li>
+<p>Compatibility of JAR Visibility Requirements. — Use the
+<code>compatibility</code> element of the <code>glassfish-application.xml</code> or
+<code>glassfish-ejb-jar.xml</code> file to specify the GlassFish Server release
+with which to be backward compatible in terms of JAR visibility
+requirements for applications. The current allowed value is <code>v2</code>, which
+refers to GlassFish Server version 2 or GlassFish Server version 9.1 or
+9.1.1. Starting in Java EE 6, the Java EE specification imposes stricter
+requirements than Java EE 5 did on which JAR files can be visible to
+various modules within an EAR file. Setting this element to <code>v2</code> removes
+these Java EE 6 and later restrictions.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gilxc"></a><a id="GSDPG00069"></a><a id="deploying-a-connector-module"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deploying_a_connector_module">Deploying a Connector Module</h3>
+<div class="paragraph">
+<p>Deploying a stand-alone connector module allows multiple deployed Java
+EE applications to share the connector module. A resource adapter
+configuration is automatically created for the connector module.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#fvynl">To Deploy and Configure a Stand-Alone Connector Module</a></p>
+</li>
+<li>
+<p><a href="#bealp">Redeploying a Stand-Alone Connector Module</a></p>
+</li>
+<li>
+<p><a href="#bealq">Deploying and Configuring an Embedded Resource Adapter</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="fvynl"></a><a id="GSDPG00050"></a><a id="to-deploy-and-configure-a-stand-alone-connector-module"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_deploy_and_configure_a_stand_alone_connector_module">To Deploy and Configure a Stand-Alone Connector Module</h4>
+<div class="paragraph">
+<p>As an alternative to Step <a href="#gkojp">3</a> through Step <a href="#gkohy">6</a>,
+you can define application-scoped resources in the
+<code>glassfish-resources.xml</code> deployment descriptor. For more information,
+see <a href="#giydj">Application-Scoped Resources</a>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote commands require a running server.</p>
+</li>
+<li>
+<p>Deploy the connector module by using the <a href="../reference-manual/deploy.html#GSRFM00114"><code>deploy</code></a>
+subcommand.</p>
+</li>
+<li>
+<p><a id="gkojp"></a><br>
+Configure connector connection pools for the deployed connector module.<br>
+Use the <code>create-connector-connection-pool</code> subcommand. For procedures,
+see "<a href="../administration-guide/connectors.html#GSADG00431">To Create a Connector Connection Pool</a>" in
+GlassFish Server Open Source Edition Administration Guide.</p>
+</li>
+<li>
+<p>Configure connector resources for the connector connection pools.<br>
+Use the <code>create-resource-adapter-config</code> subcommand. For procedures, see
+"<a href="../administration-guide/connectors.html#GSADG00440">To Create Configuration Information for a Resource
+Adapter</a>" in GlassFish Server Open Source Edition Administration Guide.
+If needed, you can override the default configuration properties of a
+resource adapter.<br>
+This step associates a connector resource with a JNDI name.</p>
+</li>
+<li>
+<p>Configure a resource adapter.<br>
+Use the <code>create-resource-adapter-config</code> subcommand. For procedures, see
+"<a href="../administration-guide/connectors.html#GSADG00440">To Create Configuration Information for a Resource
+Adapter</a>" in GlassFish Server Open Source Edition Administration Guide.
+If needed, you can override the default configuration properties of a
+resource adapter.</p>
+</li>
+<li>
+<p><a id="gkohy"></a><br>
+If needed, create an administered object for an inbound resource
+adapter.<br>
+Use the <code>create-admin-object</code> subcommand. For procedures, see
+"<a href="../administration-guide/connectors.html#GSADG00452">To Create an Administered Object</a>" in GlassFish Server
+Open Source Edition Administration Guide.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="bealp"></a><a id="GSDPG00332"></a><a id="redeploying-a-stand-alone-connector-module"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_redeploying_a_stand_alone_connector_module">Redeploying a Stand-Alone Connector Module</h4>
+<div class="paragraph">
+<p>Redeployment of a connector module maintains all connector connection
+pools, connector resources, and administered objects defined for the
+previously deployed connector module. You do not need to reconfigure any
+of these resources.</p>
+</div>
+<div class="paragraph">
+<p>However, you should redeploy any dependent modules. A dependent module
+uses or refers to a connector resource of the redeployed connector
+module. Redeployment of a connector module results in the shared class
+loader reloading the new classes. Other modules that refer to the old
+resource adapter classes must be redeployed to gain access to the new
+classes. For more information about class loaders, see
+"<a href="../application-development-guide/class-loaders.html#GSDVG00003">Class Loaders</a>" in GlassFish Server Open Source
+Edition Application Development Guide.</p>
+</div>
+<div class="paragraph">
+<p>During connector module redeployment, the server log provides a warning
+indicating that all dependent applications should be redeployed. Client
+applications or application components using the connector module&#8217;s
+resources may throw class cast exceptions if dependent applications are
+not redeployed after connector module redeployment.</p>
+</div>
+<div class="paragraph">
+<p>To disable automatic redeployment, set the <code>--force</code> option to <code>false</code>.
+In this case, if the connector module has already been deployed,
+GlassFish Server provides an error message.</p>
+</div>
+<div class="paragraph">
+<p><a id="bealq"></a><a id="GSDPG00333"></a><a id="deploying-and-configuring-an-embedded-resource-adapter"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_deploying_and_configuring_an_embedded_resource_adapter">Deploying and Configuring an Embedded Resource Adapter</h4>
+<div class="paragraph">
+<p>A connector module can be deployed as a Java EE component in a Java EE
+application. Such connectors are only visible to components residing in
+the same Java EE application. Deploy this application as you would any
+other Java EE application.</p>
+</div>
+<div class="paragraph">
+<p>You can create new connector connection pools and connector resources
+for a connector module embedded within a Java EE application by
+prefixing the connector name with app-name`#<code>. For example, if an
+application `appX.ear</code> has <code>jdbcra.rar</code> embedded within it, the
+connector connection pools and connector resources refer to the
+connector module as <code>appX#jdbcra</code>.</p>
+</div>
+<div class="paragraph">
+<p>An embedded connector module cannot be undeployed using the name
+app-name`#`connector-name. To undeploy the connector module, you must
+undeploy the application in which it is embedded.</p>
+</div>
+<div class="paragraph">
+<p>The association between the physical JNDI name for the connector module
+in GlassFish Server and the logical JNDI name used in the application
+component is specified in the GlassFish Server-specific XML descriptor
+<code>glassfish-ejb-jar.xml</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beaem"></a><a id="GSDPG00070"></a><a id="assembling-and-deploying-an-application-client-module"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_assembling_and_deploying_an_application_client_module">Assembling and Deploying an Application Client Module</h3>
+<div class="paragraph">
+<p>Deployment is necessary for application clients that communicate with
+EJB components or that use Java Web Start launch support. Java Web Start
+is supported for application clients and for applications that contain
+application clients. By default, Java Web Start is enabled in
+application clients and in GlassFish Server.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The Application Client Container is supported only in the GlassFish
+Server Full Platform Profile, not in the Web Profile.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#fvyal">To Assemble and Deploy an Application Client</a></p>
+</li>
+<li>
+<p><a href="#fwahd">To Prepare Another Machine for Running an Application
+Client</a></p>
+</li>
+<li>
+<p><a href="#gavpv">To Undeploy an Application Client</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="fvyal"></a><a id="GSDPG00051"></a><a id="to-assemble-and-deploy-an-application-client"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_assemble_and_deploy_an_application_client">To Assemble and Deploy an Application Client</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Assemble the necessary client components.<br>
+The client JAR file is created.</p>
+</li>
+<li>
+<p>Assemble the EJB components that are to be accessed by the client.<br>
+The EJB JAR file is created.</p>
+</li>
+<li>
+<p>Assemble the client and EJB JAR files together in an EAR.<br>
+An EAR file contains all the components of the application.</p>
+</li>
+<li>
+<p>Deploy the application.<br>
+Instructions are contained in <a href="#gijmq">To Deploy an Application or
+Module</a>.</p>
+</li>
+<li>
+<p>If you are using the <code>appclient</code> script to run the application
+client, retrieve the client files.<br>
+The client artifacts contain the ties and necessary classes for the
+application client. In this release of GlassFish Server, the client
+artifacts include multiple files. You can use either the
+<code>get-client-stubs</code> subcommand or the <code>--retrieve</code> option of the <code>deploy</code>
+subcommand, but you do not need to use both.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Use the <a href="../reference-manual/deploy.html#GSRFM00114"><code>deploy</code></a> subcommand with the <code>--retrieve</code>
+option to retrieve the client files as part of deploying the
+application.</p>
+</li>
+<li>
+<p>Use the <a href="../reference-manual/get-client-stubs.html#GSRFM00140"><code>get-client-stubs</code></a> subcommand to retrieve
+client files for a previously-deployed application.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Test the client on the GlassFish Server machine in one of the
+following ways:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If Java Web Start is enabled for the application client, use the
+Launch link on the Application Client Modules.</p>
+</li>
+<li>
+<p>Run an application client by using the <code>appclient</code> script.<br>
+The <code>appclient</code> script is located in the as-install`/bin` directory.<br>
+If you are using the default server instance, the only required option
+is <code>-client</code>, which points to the client JAR file. For example:<br></p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>appclient -client converterClient.jar</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The -xml parameter, which specifies the location of the <code>sun-acc.xml</code>
+file, is also required if you are not using the default instance.</p>
+</div>
+<div id="GSDPG832" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>For more detailed information about the <code>appclient</code> script, see
+<a href="../reference-manual/appclient.html#GSRFM00262"><code>appclient</code>(1M)</a>.</p>
+</div>
+<div class="paragraph">
+<p>For more detailed information about creating application clients, see
+"<a href="../application-development-guide/java-clients.html#GSDVG00012">Developing Java Clients</a>" in GlassFish Server Open
+Source Edition Application Development Guide. This chapter includes
+information on the following topics:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Accessing EJB components and JMS resources from application clients</p>
+</li>
+<li>
+<p>Connecting to a remote EJB module through a firewall</p>
+</li>
+<li>
+<p>Using Java Web Start and creating a custom JNLP file</p>
+</li>
+<li>
+<p>Using libraries with application clients</p>
+</li>
+<li>
+<p>Specifying a splash screen, login retries, and other customizations</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="fwahd"></a><a id="GSDPG00052"></a><a id="to-prepare-another-machine-for-running-an-application-client"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_prepare_another_machine_for_running_an_application_client">To Prepare Another Machine for Running an Application Client</h4>
+<div class="paragraph">
+<p>If Java Web Start is enabled, the default URL format for an application
+is <code>http://`host:port</code>/`context-root. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">http://localhost:80/myapp</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The default URL format for a standalone application client module is
+<code>http://`host:port</code>/`module-id. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">http://localhost:80/myclient</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To set a different URL for an application client, set the <code>context-root</code>
+subelement of the <a href="dd-elements.html#gauax"><code>java-web-start-access</code></a>
+element in the <code>glassfish-application-client.xml</code> file.</p>
+</div>
+<div class="paragraph">
+<p>If the context-root or module-id is not specified during deployment, the
+name of the EAR or JAR file without the <code>.ear</code> or <code>.jar</code> extension is
+used. For an application, the relative path to the application client
+JAR file is also included. If the application or module is not in EAR or
+JAR file format, a context-root or module-id is generated. Regardless of
+how the context-root or module-id is determined, it is written to the
+server log. For details about naming, see <a href="overview.html#gihzk">Naming
+Standards</a>.</p>
+</div>
+<div id="GSDPG833" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>This task applies if you want to use the <code>appclient</code> script to run the
+application client on a system other than where the server runs.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create the application client package JAR file.<br>
+Use the <code>package-appclient</code> script in the as-install`/bin` directory.
+This JAR file is created in the as-install`/lib/appclient` directory.</p>
+</li>
+<li>
+<p>Copy the application client package JAR file to the client machine.</p>
+</li>
+<li>
+<p>Extract the contents of the JAR file.<br>
+For example: <code>jar xf</code> filename`.jar`</p>
+</li>
+<li>
+<p>Configure the <code>sun-acc.xml</code> file.<br>
+If you used the <code>package-appclient</code> script, this file is located in the
+<code>appclient/appserv/lib/appclient</code> directory by default.</p>
+</li>
+<li>
+<p>Configure the <code>asenv.conf</code> (<code>asenv.bat</code> on Windows) file.<br>
+This file is located in <code>appclient/appserv/bin</code> by default if you used
+the <code>package-appclient</code> script.</p>
+</li>
+<li>
+<p>Copy the client JAR file to the client machine.<br>
+You are now ready to run the client.</p>
+</li>
+</ol>
+</div>
+<div id="GSDPG834" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>For more detailed information about Java Web Start and the
+<code>package-appclient</code> script, see <a href="../reference-manual/appclient.html#GSRFM00262"><code>appclient</code>(1M)</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gavpv"></a><a id="GSDPG00334"></a><a id="to-undeploy-an-application-client"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_undeploy_an_application_client">To Undeploy an Application Client</h4>
+<div class="paragraph">
+<p>After application clients are downloaded, they remain on the client
+until they are manually removed. Use the Java Web Start control panel to
+discard downloaded application clients that used Java Web Start.</p>
+</div>
+<div class="paragraph">
+<p>If you undeploy an application client, you can no longer use Java Web
+Start, or any other mechanism, to download that application client
+because it might be in an inconsistent state. If you try to launch an
+application client that was previously downloaded (even though the
+server side of the application client is no longer present), the results
+are unpredictable unless the application client has been written to
+tolerate such situations.</p>
+</div>
+<div class="paragraph">
+<p>You can write your application client so that it detects failures in
+contacting server-side components, but continues running. In this case,
+Java Web Start can run an undeployed application client while the client
+is cached locally. For example, your application client can be written
+to detect and then recover from <code>javax.naming.NamingException</code> when
+locating a resource, or from <code>java.rmi.RemoteException</code> when referring
+to a previously-located resource that becomes inaccessible.</p>
+</div>
+<div class="paragraph">
+<p><a id="beael"></a><a id="GSDPG00071"></a><a id="lifecycle-module-deployment-guidelines"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_lifecycle_module_deployment_guidelines">Lifecycle Module Deployment Guidelines</h3>
+<div class="paragraph">
+<p>A lifecycle module, also called a lifecycle listener module, provides a
+means of running long or short Java-based tasks within the GlassFish
+Server environment, such as instantiation of singletons or RMI servers.
+Lifecycle modules are automatically initiated at server startup and are
+notified at various phases of the server life cycle. All lifecycle
+module interfaces are in the as-install`/modules/glassfish-api.jar`
+file.</p>
+</div>
+<div class="paragraph">
+<p>For general information about lifecycle modules, see
+"<a href="../application-development-guide/lifecycle-listeners.html#GSDVG00014">Developing Lifecycle Listeners</a>" in GlassFish Server
+Open Source Edition Application Development Guide.</p>
+</div>
+<div class="paragraph">
+<p>You can deploy a lifecycle module using the <code>create-lifecycle-module</code>
+subcommand. Do not use <code>asadmin deploy</code> or related commands.</p>
+</div>
+<div class="paragraph">
+<p>You do not need to specify a classpath for the lifecycle module if you
+place it in the domain-dir`/lib` or domain-dir`/lib/classes` directory
+for the Domain Administration Server (DAS). Do not place it in the <code>lib</code>
+directory for a particular server instance, or it will be deleted when
+that instance synchronizes with the GlassFish Server.</p>
+</div>
+<div class="paragraph">
+<p>After you deploy a lifecycle module, you must restart the server. During
+server initialization, the server instantiates the module and registers
+it as a lifecycle event listener.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If the <code>--failurefatal</code> option of <code>create-lifecycle-module</code> is set to
+<code>true</code> (the default is <code>false</code>), lifecycle module failure prevents
+server initialization or startup, but not shutdown or termination.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="gbiye"></a><a id="GSDPG00072"></a><a id="web-service-deployment-guidelines"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_web_service_deployment_guidelines">Web Service Deployment Guidelines</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you installed the Web Profile, web services are not supported unless
+the optional Metro Web Services Stack add-on component is downloaded.
+Without the Metro add-on component, a servlet or EJB component cannot be
+a web service endpoint, and the <code>glassfish-web.xml</code> and
+<code>glassfish-ejb-jar.xml</code> elements related to web services are ignored.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The following guidelines apply when deploying a web service in GlassFish
+Server:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Web Service Endpoint. Deploy a web service endpoint to GlassFish
+Server as you would any servlet or stateless session bean. If the
+deployed application or module has a web service endpoint, the endpoint
+is detected automatically during deployment. The GlassFish Server
+-specific deployment descriptor files, <code>glassfish-web.xml</code> and
+<code>glassfish-ejb-jar.xml</code>, provide optional web service enhancements in
+their <a href="dd-elements.html#beayv"><code>webservice-endpoint</code></a> and
+<a href="dd-elements.html#beayt"><code>webservice-description</code></a> elements.</p>
+</li>
+<li>
+<p>Web Service Management. Web service management is fully supported in
+the Administration Console. After the application or module is deployed,
+click the Web Service component. The table in the right frame lists
+deployed web service endpoints.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For more information about web services, see
+"<a href="../application-development-guide/webservices.html#GSDVG00007">Developing Web Services</a>" in GlassFish Server Open
+Source Edition Application Development Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkkmb"></a><a id="GSDPG00073"></a><a id="osgi-bundle-deployment-guidelines"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_osgi_bundle_deployment_guidelines">OSGi Bundle Deployment Guidelines</h3>
+<div class="paragraph">
+<p>To deploy an OSGi bundle using the Administration Console, select Other
+from the Type drop-down list and check the OSGI Type checkbox.</p>
+</div>
+<div class="paragraph">
+<p>To deploy an OSGi bundle using the <code>asadmin deploy</code> command, set the
+<code>--type</code> option to the value <code>osgi</code>. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; deploy --type=osgi MyBundle.jar</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To automatically deploy an OSGi bundle, copy the bundle archive to the
+domain-dir`/autodeploy/bundles` directory.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>For components packaged as OSGi bundles (<code>--type=osgi</code>), the <code>deploy</code>
+subcommand accepts properties arguments to wrap a WAR file as a WAB (Web
+Application Bundle) at the time of deployment. The subcommand looks for
+a key named <code>UriScheme</code> and, if present, uses the key as a URL stream
+handler to decorate the input stream. Other properties are used in the
+decoration process. For example, the GlassFish Server OSGi web container
+registers a URL stream handler named <code>webbundle</code>, which is used to wrap
+a plain WAR file as a WAB.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="gkoif"></a><a id="GSDPG00074"></a><a id="transparent-jdbc-connection-pool-reconfiguration"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_transparent_jdbc_connection_pool_reconfiguration">Transparent JDBC Connection Pool Reconfiguration</h3>
+<div class="paragraph">
+<p>In this GlassFish Server release, reconfiguration of a JDBC connection
+pool due to attribute or property changes can be transparent to the
+applications or modules that use the pool, even if pool reconfiguration
+results in pool recreation. You do not need to redeploy the application
+or module.</p>
+</div>
+<div class="paragraph">
+<p>To enable transparent pool reconfiguration, set the
+<code>dynamic-reconfiguration-wait-timeout-in-seconds</code> property. This
+property specifies the timeout for dynamic reconfiguration of the pool.
+In-progress connection requests must complete before this timeout
+expires or they must be retried. New connection requests wait for this
+timeout to expire before acquiring connections to the reconfigured pool.
+If this property exists and has a positive value, it is enabled.</p>
+</div>
+<div class="paragraph">
+<p>You can set this property in the <code>glassfish-resources.xml</code> file. For
+more information, see the property descriptions under
+<a href="dd-elements.html#giyil"><code>jdbc-connection-pool</code></a>.</p>
+</div>
+<div class="paragraph">
+<p>For JDBC connection pools that are not application-scoped, use the <code>set</code>
+subcommand to set this property. For example, to configure <code>mypool</code> on
+<code>myserver</code>, type the following all on one line:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; set myserver.resources.jdbc-connection-pool.mypool.property.
+dynamic-reconfiguration-wait-timeout-in-seconds=30</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="giydj"></a><a id="GSDPG00075"></a><a id="application-scoped-resources"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_application_scoped_resources">Application-Scoped Resources</h3>
+<div class="paragraph">
+<p>You can define an application-scoped JDBC resource or other resource for
+an enterprise application, web module, EJB module, connector module, or
+application client module. This allows single-step deployment for
+resource-dependent modules and applications. An application-scoped
+resource has the following characteristics:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>It is available only to the module or application that defines it.</p>
+</li>
+<li>
+<p>It cannot be referenced or looked up by other modules or applications.</p>
+</li>
+<li>
+<p>It is created during deployment, destroyed during undeployment, and
+recreated during redeployment.</p>
+</li>
+<li>
+<p>It is free from unexpected resource starvation or delay in acquiring
+connections because no other application or module competes for accesses
+to it.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following resource types can be application-scoped:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>JDBC connection pools</p>
+</li>
+<li>
+<p>JDBC resources</p>
+</li>
+<li>
+<p>Connector connection pools</p>
+</li>
+<li>
+<p>Connector resources</p>
+</li>
+<li>
+<p>Resource adapters</p>
+</li>
+<li>
+<p>External JNDI resources</p>
+</li>
+<li>
+<p>Custom resources</p>
+</li>
+<li>
+<p>Admin object resources</p>
+</li>
+<li>
+<p>JavaMail resources</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Deployment Descriptor. An application-scoped resource is defined in the
+<code>glassfish-resources.xml</code> deployment descriptor file. This file is
+placed in the <code>META-INF</code> directory of the module or application archive.
+For web applications or modules, this file is placed in the <code>WEB-INF</code>
+directory. If any submodule archives of an enterprise application
+archive have their own <code>glassfish-resources.xml</code> files, the resource
+definitions are scoped to those modules only. For more information about
+the <code>glassfish-resources.xml</code> file, see
+<a href="dd-files.html#giida">GlassFish Server Deployment Descriptor Files</a>
+and <a href="dd-elements.html#beaqi">Elements of the GlassFish Server
+Deployment Descriptors</a>.</p>
+</div>
+<div class="paragraph">
+<p>Naming. Application-scoped resource JNDI names begin with <code>java:app</code> or
+<code>java:module</code>. If one of these prefixes is not specified in the JNDI
+name, it is added. For example, application-scoped databases have JNDI
+names in the following format: `java:app/jdbc/`DataSourceName or
+`java:module/jdbc/`DataSourceName. This is in accordance with the naming
+scopes introduced in the Java EE 6 Specification.</p>
+</div>
+<div class="paragraph">
+<p>Errors. Application-scoped resource definitions with same resource name,
+resource type, attributes, and properties are duplicates. These generate
+<code>WARNING</code> level log messages and deployment continues. Definitions with
+the same resource name and type but different attributes or properties
+are conflicts and cause deployment failure. When an application or
+module tries to look up a scoped resource that does not belong to it, a
+naming exception is thrown.</p>
+</div>
+<div class="paragraph">
+<p>Redeployment. When an application or module is undeployed, its scoped
+resources are deleted. During redeployment, resources are destroyed and
+recreated based on changes in the <code>glassfish-resources.xml</code> file. To
+preserve old resource definitions during redeployment, use the
+<code>preserveAppScopedResources</code> property of the <code>redeploy</code> (or <code>deploy</code>
+<code>--force=true</code>) subcommand. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; redeploy --property preserveAppScopedResources=true MyApp.ear
+
+asadmin&gt; deploy --force=true --property preserveAppScopedResources=true MyApp.ear</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information, see <a href="../reference-manual/redeploy.html#GSRFM00217"><code>redeploy</code>(1)</a> and
+<a href="../reference-manual/deploy.html#GSRFM00114"><code>deploy</code>(1)</a>.</p>
+</div>
+<div class="paragraph">
+<p>Listing. Use the <code>--resources</code> option of the <code>list-applications</code>
+subcommand to list application-scoped resources. Use the
+<code>--subcomponents</code> option in addition to list scoped resources for
+enterprise application modules or for module subcomponents. To list
+scoped resources for subcomponents only, use the <code>--resources</code> option of
+the <code>list-subcomponents</code> subcommand</p>
+</div>
+<div class="paragraph">
+<p>For more information, see <a href="../reference-manual/list-applications.html#GSRFM00148"><code>list-applications</code>(1)</a> and
+<a href="../reference-manual/list-sub-components.html#GSRFM00201"><code>list-sub-components</code>(1)</a>.</p>
+</div>
+<div class="paragraph">
+<p>Restrictions. Use of application-scoped resources is subject to the
+following restrictions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>resource-adapter-config</code> and <code>connector-work-security-map</code> — These
+can only be specified in the <code>glassfish-resources.xml</code> file of the
+corresponding connector module. In an enterprise application, the
+<code>resource-adapter-config</code> or <code>connector-work-security-map</code> for an
+embedded connector module must be specified in the
+<code>glassfish-resources.xml</code> file of the connector module. You cannot
+specify a <code>resource-adapter-config</code> or <code>connector-work-security-map</code> in
+an application for a connector module that is not part of the
+application.</p>
+</li>
+<li>
+<p>Resource to connection pool cross references — A module-level
+<code>jdbc-resource</code> cannot reference an application-level
+<code>jdbc-connection-pool</code>. Likewise, a module-level <code>connector-resource</code>
+cannot reference an application-level <code>connector-connection-pool</code>.</p>
+</li>
+<li>
+<p>Global resources — Defining <code>java:global</code> JNDI names is not supported.</p>
+</li>
+<li>
+<p>Cross definitions — Defining <code>java:app</code> JNDI names at the module level
+is not supported.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="overview.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="asadmin-deployment-subcommands.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

@@ -1,0 +1,717 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Overview of Eclipse GlassFish Server Troubleshooting</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Overview of Eclipse GlassFish Server Troubleshooting</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="preface.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="specific-issues.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSTSG00002"></a><a id="abgap"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="overview-of-glassfish-server-open-source-edition-troubleshooting">1 Overview of Eclipse GlassFish Server Troubleshooting</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter describes some of the tools, methods, and resources
+available for troubleshooting Eclipse GlassFish Server.
+Guidelines for evaluating and investigating a problem are provided.</p>
+</div>
+<div class="paragraph">
+<p>This chapter contains the following sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abgar">Identifying the Problem</a></p>
+</li>
+<li>
+<p><a href="#ghuvy">Troubleshooting Tools</a></p>
+</li>
+<li>
+<p><a href="#ghuyv">Where to Go for More Information</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abgar"></a><a id="GSTSG00039"></a><a id="identifying-the-problem"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_identifying_the_problem">Identifying the Problem</h3>
+<div class="paragraph">
+<p>Application servers are typically deployed in complex operating
+environments and involve many technologies, products, and tools.
+Understanding and diagnosing problems in enterprise software with many
+components performing many tasks can be a challenge. This section
+describes how to get started , and contains the following topics:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ghvay">First Steps</a></p>
+</li>
+<li>
+<p><a href="#ghuvf">Gathering Information</a></p>
+</li>
+<li>
+<p><a href="#abgax">Examining Log Files</a></p>
+</li>
+<li>
+<p><a href="#ghuvd">Monitoring the System</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghvay"></a><a id="GSTSG00171"></a><a id="first-steps"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_first_steps">First Steps</h4>
+<div class="paragraph">
+<p>Sometimes the most obvious solutions are overlooked. As you begin your
+investigation, try the following steps first.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghyku"></a><a id="GSTSG00077"></a><a id="verify-system-requirements-and-configuration"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_verify_system_requirements_and_configuration">Verify System Requirements and Configuration</h5>
+<div class="paragraph">
+<p>Ensure that your system meets the requirements listed in
+"<a href="../release-notes/release-notes.html#GSRLN00131">Hardware and Software Requirements</a>" in GlassFish
+Server Open Source Edition Release Notes. Problems are likely to arise
+if you attempt to install on a platform that is not supported or on a
+system that in some other way does not meet release requirements. Also
+see "<a href="../release-notes/release-notes.html#GSRLN00253">Known Issues</a>" in GlassFish Server Open Source
+Edition Release Notes for known issues related to installation.</p>
+</div>
+<div class="paragraph">
+<p>Eclipse GlassFish Server requires JDK release 6. The minimum
+(and certified) version of the JDK that is required for GlassFish Server
+Open Source Edition depends on the operating system:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>For supported operating systems except Mac OS, the minimum required
+version is 1.6.0_17.</p>
+</li>
+<li>
+<p>For the Mac OS X operating system, the minimum required version is
+1.6.0_15.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If necessary, download and install the required JDK software.</p>
+</div>
+<div class="paragraph">
+<p>On Solaris, Linux, and Windows systems, JDK software is available from
+the
+<a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Java
+SE downloads page</a>
+(<code>http://www.oracle.com/technetwork/java/javase/downloads/index.html</code>).</p>
+</div>
+<div class="paragraph">
+<p>For Mac OS X systems, Eclipse GlassFish Server uses the JDK
+that is part of the Macintosh operating system. If necessary, obtain the
+required JDK version from the <a href="http://support.apple.com/downloads/">Mac OS
+X Updates site</a> (<code>http://support.apple.com/downloads/</code>).</p>
+</div>
+<div class="paragraph">
+<p>Also ensure that the <code>JAVA_HOME</code> environment variable on your system
+points to the JDK installation directory and not the Java Runtime
+Environment (JRE) software.</p>
+</div>
+<div class="paragraph">
+<p>Set <code>JAVA_HOME</code> and <code>$JAVA_HOME/bin</code> in the <code>PATH</code> to point to the
+supported JDK version.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghyml"></a><a id="GSTSG00078"></a><a id="review-known-issues"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_review_known_issues">Review Known Issues</h5>
+<div class="paragraph">
+<p>Your problem might be related to a known issue for the release. Refer to
+the <a href="../release-notes/toc.html#GSRLN">Eclipse GlassFish Server Release Notes</a> for
+the latest information regarding known issues and possible workarounds.
+Also search the GlassFish Issue Tracker at
+<code>http://java.net/jira/browse/GLASSFISH</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghykl"></a><a id="GSTSG00079"></a><a id="search-the-product-documentation"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_search_the_product_documentation">Search the Product Documentation</h5>
+<div class="paragraph">
+<p>Eclipse GlassFish Server includes complete product
+documentation. Search the documentation to see if your problem is
+addressed. See <a href="preface.html#ghpbz">GlassFish Server Documentation
+Set</a> for the books in the documentation set and a description of their
+contents. Also see the Administration Console online help for detailed
+information about performing administrative tasks using the graphical
+interface.</p>
+</div>
+<div class="paragraph">
+<p>The following books will be especially helpful for troubleshooting:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../release-notes/toc.html#GSRLN">Eclipse GlassFish Server Release Notes</a>, which
+provides the latest information regarding known issues and possible
+workarounds.</p>
+</li>
+<li>
+<p><a href="../error-messages-reference/toc.html#GSEMR">Eclipse GlassFish Server Error Message
+Reference</a>, which lists error messages you might encounter when using
+GlassFish Server.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Use the product documentation to learn more about GlassFish Server Open
+Source Edition. The more you know about the product the easier it might
+be to figure out why something isn&#8217;t working.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghymp"></a><a id="GSTSG00080"></a><a id="search-the-glassfish-mailing-lists-and-forums"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_search_the_glassfish_mailing_lists_and_forums">Search the GlassFish Mailing Lists and Forums</h5>
+<div class="paragraph">
+<p>Lists and forums are extremely helpful resources, and are accessed as
+follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>GlassFish mailing lists (start with <a href="mailto:users@glassfish.java.net">users@glassfish.java.net</a> and
+search the archives): <code>http://java.net/projects/glassfish/lists/</code></p>
+</li>
+<li>
+<p>GlassFish user forum: <code>http://www.java.net/forums/glassfish/glassfish</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghuvf"></a><a id="GSTSG00172"></a><a id="gathering-information"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_gathering_information">Gathering Information</h4>
+<div class="paragraph">
+<p>Troubleshooting and analysis require information. The more information
+you have the easier it is to classify a problem and search for its
+solution. Detailed information will also be necessary should you need to
+contact others for support, either through a community mailing list or
+through more formal Sun support channels.</p>
+</div>
+<div class="paragraph">
+<p>As you continue your investigation, consider the following questions.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghvar"></a><a id="GSTSG00081"></a><a id="when-does-the-problem-occur"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_when_does_the_problem_occur">When Does the Problem Occur?</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>What do the logs show? What kind of error message are you getting? For
+more information about logs, see <a href="#abgax">Examining Log Files</a>. Logs
+are a good place to start your troubleshooting.</p>
+</li>
+<li>
+<p>What are you trying to do when the problem occurs and how are you
+doing it? What is the sequence of events?</p>
+</li>
+<li>
+<p>Does the problem occur every time you perform the same type of
+operation, or does it seem random? Can you reproduce the issue?</p>
+</li>
+<li>
+<p>Have other events or problems occurred that could possibly be related,
+such as web sessions closing early, exceptions being thrown in your own
+application logic, components not being correctly deployed or
+undeployed?</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghvbb"></a><a id="GSTSG00082"></a><a id="what-is-your-environment"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_what_is_your_environment">What Is Your Environment?</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>What version of Eclipse GlassFish Server are you using?
+What operating system and version? What JDK version? Many problems are
+caused simply because system requirements for the release are not met.
+Refer to the <a href="../release-notes/toc.html#GSRLN">Eclipse GlassFish Server Release
+Notes</a> for the latest information regarding system requirements, and
+make sure your system meets those requirements.</p>
+</li>
+<li>
+<p>What resources does your system have, such as memory, disk, and swap
+space? If system memory is an issue, look for ways to optimize your
+configuration and consider taking other actions such as adding memory or
+decreasing system load.</p>
+</li>
+<li>
+<p>Have any patches been applied? If so, what are the product and
+operating system patch numbers?</p>
+</li>
+<li>
+<p>What other products and technologies are installed and being used in
+the installation?</p>
+</li>
+<li>
+<p>How many application servers, web servers, and directory servers are
+installed? What are the products and versions?</p>
+</li>
+<li>
+<p>How is the web server connected to GlassFish Server Open Source
+Edition? On the same system?</p>
+</li>
+<li>
+<p>How is Eclipse GlassFish Server connected to the directory
+server?</p>
+</li>
+<li>
+<p>What JDBC driver is being used to access the database?</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghvce"></a><a id="GSTSG00083"></a><a id="what-is-your-system-configuration"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_what_is_your_system_configuration">What Is Your System Configuration?</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>What are your settings?</p>
+</li>
+<li>
+<p>On which port is Eclipse GlassFish Server configured — the
+default or something else?</p>
+</li>
+<li>
+<p>What defaults were changed during installation and what are the
+values?</p>
+</li>
+<li>
+<p>What other settings were changed from the defaults and what are their
+values?</p>
+</li>
+<li>
+<p>What are the parameters related to JVM heap, stack, and garbage
+collection set to?</p>
+</li>
+<li>
+<p>What are the JVM options?</p>
+</li>
+<li>
+<p>What is the permgen size? <code>OutOfMemoryError:PermGen space</code> errors are
+common and indicate that you need to increase the permanent generation
+space available.</p>
+</li>
+<li>
+<p>Is SSL enabled?</p>
+</li>
+<li>
+<p>What are your network settings (proxy, firewall, and so on)? What
+happens if you disable your firewall and attempt the task?</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghvcr"></a><a id="GSTSG00084"></a><a id="what-is-different"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_what_is_different">What Is Different?</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>What is different that could have provoked the problem or triggered
+the event? Was something new added or changed? Have any new applications
+been deployed? If changes have been made recently, consider backing them
+out and seeing what happens — does the problem still occur?</p>
+</li>
+<li>
+<p>Was the feature or functionality working correctly at one time? If so,
+what changed or happened between then and now?</p>
+</li>
+<li>
+<p>Is this working on another system? If so, what is different about that
+environment?</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abgax"></a><a id="GSTSG00173"></a><a id="examining-log-files"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_examining_log_files">Examining Log Files</h4>
+<div class="paragraph">
+<p>Logging is one of your most important troubleshooting tools. It is the
+process by which Eclipse GlassFish Server captures data
+about events that occur during server operation, such as configuration
+errors, security failures, or server malfunction. This data is recorded
+in log files, and is usually your first source of information when
+Enterprise Server problems occur. The primary purpose of log files is to
+provide troubleshooting information. Analyzing the log files can help
+determine the health of the server and identify problem areas.</p>
+</div>
+<div class="paragraph">
+<p>By default, log information for each GlassFish Server Open Source
+Edition server instance is captured in a <code>server.log</code> file. That is,
+each instance, including the domain administration server (DAS), has an
+individual log file. By default, the log file for the DAS is located in
+domain-dir`/logs`, and the log file for each instance is located in
+instance-dir`/logs`.</p>
+</div>
+<div class="paragraph">
+<p>In addition, for domains that use clustering, GlassFish Server Open
+Source Edition captures log information for each cluster instance in a
+<code>cluster.log</code> file. By default, the <code>cluster.log</code> file is also located
+in instance-dir`/logs`.</p>
+</div>
+<div class="paragraph">
+<p>Oracle recommends using the Administration Console to view logging
+information. However, you can open a log file in a text editor and
+search for the module or message in which you are interested. GlassFish
+Server Open Source Edition also lets you collect log files into a ZIP
+file, which provides a convenient means to collect and view the log
+files for an instance or a domain even when it is not running.</p>
+</div>
+<div class="paragraph">
+<p>You configure the Logging Service by setting attributes in the
+<code>logging.properties</code> file. Each server, configuration, instance, and
+cluster in the Eclipse GlassFish Server domain has an
+individual <code>logging.properties</code> file. The root directory in which these
+<code>logging.properties</code> files are located is the same directory as for the
+<code>domain.xml</code> file, typically domain-dir/<code>config</code>. The default target
+when configuring logging attributes is the DAS. However, you can
+optionally target a specific server, instance, or cluster. You can also
+target a configuration that is shared by one or more instances or
+clusters. The Logging Service can also be configured using the
+Administration Console.</p>
+</div>
+<div class="paragraph">
+<p>Log levels such as <code>SEVERE</code>, <code>WARNING</code>, <code>INFO</code>, <code>CONFIG</code>, and others can
+be set to provide different types and amounts of information. The
+default setting is <code>INFO</code>. Each Eclipse GlassFish Server
+module has its own logger, and each logger has its own namespace. Log
+levels can be set globally for all loggers, or individually for
+module-specific loggers.</p>
+</div>
+<div class="paragraph">
+<p>For information about using the Administration Console log viewer and
+logging functions, see the Administration Console online help. For
+information about using the command line for logging functions, see
+"<a href="../administration-guide/logging.html#GSADG00010">Administering the Logging Service</a>" in GlassFish
+Server Open Source Edition Administration Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghuvd"></a><a id="GSTSG00174"></a><a id="monitoring-the-system"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_monitoring_the_system">Monitoring the System</h4>
+<div class="paragraph">
+<p>Monitoring is another helpful tool. It is the process of reviewing the
+statistics of a system to improve performance or solve problems. By
+monitoring the state of various components and services deployed in
+Eclipse GlassFish Server you can identify performance
+bottlenecks, predict failures, perform root cause analysis, and ensure
+that everything is functioning as expected. For more information about
+monitoring, including JConsole information, see
+"<a href="../administration-guide/monitoring.html#GSADG00011">Administering the Monitoring Service</a>" in GlassFish
+Server Open Source Edition Administration Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghuvy"></a><a id="GSTSG00040"></a><a id="troubleshooting-tools"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_troubleshooting_tools">Troubleshooting Tools</h3>
+<div class="paragraph">
+<p>Several tools are available that can be used to collect information for
+troubleshooting purposes. This section provides basic information about
+some of them, and includes the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ghvcm">Operating System Utilities</a></p>
+</li>
+<li>
+<p><a href="#ghvbo">Stack Traces and Thread Dumps</a></p>
+</li>
+<li>
+<p><a href="#ghyjq">VisualVM</a></p>
+</li>
+<li>
+<p><a href="#gjjjl">JVM Command-Line Tools</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghvcm"></a><a id="GSTSG00175"></a><a id="operating-system-utilities"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_operating_system_utilities">Operating System Utilities</h4>
+<div class="paragraph">
+<p>Operating system utilities, such as <code>pkginfo</code> and <code>showrev</code> on Solaris
+and <code>rpm</code> on Linux, are helpful in gathering system information.</p>
+</div>
+<div class="paragraph">
+<p>The <code>ps -ef</code> command provides helpful information about processes that
+are running, including their process identification numbers (PIDs).</p>
+</div>
+<div class="paragraph">
+<p><a id="ghvbo"></a><a id="GSTSG00176"></a><a id="stack-traces-and-thread-dumps"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_stack_traces_and_thread_dumps">Stack Traces and Thread Dumps</h4>
+<div class="paragraph">
+<p>A stack trace is a user-friendly snapshot of the threads and monitors in
+a Virtual Machine for the Java platform (Java Virtual Machine or JVM
+machine). A thread dump shows what every thread in a JVM is doing at a
+given time and is useful in debugging. When the application server
+freezes, hangs, or becomes sluggish for no apparent reason, you should
+generate and analyze a thread dump.</p>
+</div>
+<div class="paragraph">
+<p>This section explains how to obtain a thread dump for GlassFish Server
+Open Source Edition. More information about analyzing the information
+contained in a thread dump can be found in
+"http://java.sun.com/developer/technicalArticles/Programming/Stacktrace[An
+Introduction to Java Stack Traces]"
+(<code>http://java.sun.com/developer/technicalArticles/Programming/Stacktrace</code>).</p>
+</div>
+<div class="paragraph">
+<p><a id="ghykr"></a><a id="GSTSG00023"></a><a id="to-obtain-a-server-thread-dump"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_to_obtain_a_server_thread_dump">To Obtain a Server Thread Dump</h5>
+<div class="paragraph">
+<p>Type the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin generate-jvm-report --type=thread</code></pre>
+</div>
+</div>
+<div id="sthref3" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p><a href="../reference-manual/generate-jvm-report.html#GSRFM00138"><code>generate-jvm-report</code>(1)</a></p>
+</div>
+<div class="paragraph">
+<p><a id="ghyjq"></a><a id="GSTSG00177"></a><a id="visualvm"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_visualvm">VisualVM</h4>
+<div class="paragraph">
+<p>VisualVM is a Java troubleshooting tool that uses various technologies
+such as <code>jvmstat</code>, JMX, and Attach API to access monitored applications.
+VisualVM is a tool for visualizing data sources and by default
+visualizes the following types: applications, hosts, snapshots, core
+dumps, heap dumps, and thread dumps. These data sources are visualized
+in VisualVM so that they can be monitored for the purposes of analysis,
+management, and troubleshooting. VisualVM is commonly used to detect
+memory leaks.</p>
+</div>
+<div class="paragraph">
+<p>VisualVM has a GlassFish plugin that enhances monitoring of hosted
+applications by adding specialized overview, a tab for monitoring the
+HTTP Service, and the ability to visually select and monitor any of the
+deployed web applications. You can experiment with VisualVM
+troubleshooting capabilities, but note that various features depend on
+the Java versions used in the client and server. Depending on your
+configuration, you might only get parts of the VisualVM features. For
+more information about VisualVM, see <code>http://visualvm.java.net</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gjjjl"></a><a id="GSTSG00178"></a><a id="jvm-command-line-tools"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_jvm_command_line_tools">JVM Command-Line Tools</h4>
+<div class="paragraph">
+<p>JVM command-line tools can be used to provide valuable information about
+hung Java processes or Java core dumps. These tools include the
+following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>jstack</code>: Prints Java stack traces of Java threads for a given Java
+process or core file or a remote debug server.</p>
+</li>
+<li>
+<p><code>jinfo</code>: Prints Java configuration information for a given Java
+process or core file or a remote debug server.</p>
+</li>
+<li>
+<p><code>jmap</code>: Prints shared object memory maps or heap memory details for a
+given process or core file or a remote debug server.</p>
+</li>
+<li>
+<p><code>jsadebugd</code>: Attaches to a Java process or core file and acts as a
+debug server. Remote clients such as <code>jstack</code>, <code>jmap</code>, and <code>jinfo</code> can
+attach to the server using Java Remote Invocation Method (RMI).</p>
+</li>
+<li>
+<p><code>jhat</code>: Enables Java heap dumps to be browsed using a web browser.</p>
+</li>
+<li>
+<p><code>jstat</code>: Displays performance statistics for an instrumented HotSpot
+JVM.</p>
+</li>
+<li>
+<p><code>jps</code>: Lists the instrumented HotSpot JVMs on the target system</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghuyv"></a><a id="GSTSG00041"></a><a id="where-to-go-for-more-information"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_where_to_go_for_more_information">Where to Go for More Information</h3>
+<div class="paragraph">
+<p>These resources were mentioned throughout this chapter and are provided
+again here for easy reference.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Release Notes: <a href="../release-notes/toc.html#GSRLN">Eclipse GlassFish Server
+Release Notes</a></p>
+</li>
+<li>
+<p>Error messages: <a href="../error-messages-reference/toc.html#GSEMR">Eclipse GlassFish Server Error
+Message Reference</a></p>
+</li>
+<li>
+<p>Mailing lists and forums: See <a href="#ghymp">Search the GlassFish Mailing
+Lists and Forums</a> for details about accessing lists and forums.</p>
+</li>
+<li>
+<p>GlassFish community site: <code>http://glassfish.java.net/</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="preface.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="specific-issues.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

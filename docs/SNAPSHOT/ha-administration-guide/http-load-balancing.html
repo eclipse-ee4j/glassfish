@@ -1,0 +1,562 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Configuring HTTP Load Balancing</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Configuring HTTP Load Balancing</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="named-configurations.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="rolling-upgrade.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSHAG00009"></a><a id="abdgs"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-http-load-balancing">7 Configuring HTTP Load Balancing</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter describes how to configure HTTP load balancing on GlassFish
+Server 4.0.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abdgx">Setting Up HTTP Load Balancing</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For information on other types of load balancing, see
+<a href="jms.html#abdbk">Configuring Java Message Service High Availability</a>
+and <a href="rmi-iiop.html#fxxqs">RMI-IIOP Load Balancing and Failover</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="abdgx"></a><a id="GSHAG00202"></a><a id="setting-up-http-load-balancing"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_setting_up_http_load_balancing">Setting Up HTTP Load Balancing</h3>
+<div class="paragraph">
+<p>This section describes how to set up load balancing for GlassFish
+Server.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abdgy">Prerequisites for Setting Up HTTP Load Balancing</a></p>
+</li>
+<li>
+<p><a href="#gksdt">Configuring GlassFish Server with Apache HTTP Server and
+<code>mod_jk</code></a></p>
+</li>
+<li>
+<p><a href="#CHDCCGDC">Configuring GlassFish Server with Apache HTTP Server
+and <code>mod_proxy_ajp</code></a></p>
+</li>
+<li>
+<p><a href="#abdgz">HTTP Load Balancer Deployments</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abdgy"></a><a id="GSHAG00281"></a><a id="prerequisites-for-setting-up-http-load-balancing"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_prerequisites_for_setting_up_http_load_balancing">Prerequisites for Setting Up HTTP Load Balancing</h4>
+<div class="paragraph">
+<p>Before configuring your load balancer, you must:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Install a supported web server and configure it. If using the <code>mod_jk</code>
+or <code>mod_proxy_ajp</code> modules, the only supported web server is Apache HTTP
+Server 2.2.x.</p>
+</li>
+<li>
+<p>Configure the <code>mod_jk</code> connector module, as described in
+<a href="#gksdt">Configuring GlassFish Server with Apache HTTP Server and
+<code>mod_jk</code></a>, or configure the <code>mod_proxy_ajp</code> connector module, as
+described in <a href="#CHDCCGDC">Configuring GlassFish Server with Apache
+HTTP Server and <code>mod_proxy_ajp</code></a>.</p>
+</li>
+<li>
+<p>Create GlassFish Server clusters or server instances to participate in
+load balancing.</p>
+</li>
+<li>
+<p>Deploy applications to these clusters or instances.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gksdt"></a><a id="GSHAG00282"></a><a id="configuring-glassfish-server-with-apache-http-server-and-mod_jk"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuring_glassfish_server_with_apache_http_server_and_code_mod_jk_code">Configuring GlassFish Server with Apache HTTP Server and <code>mod_jk</code></h4>
+<div class="paragraph">
+<p>GlassFish Server4.0 can be configured for load balancing with Apache
+HTTP Server as a front end by enabling the Apache <code>mod_jk</code> connector
+module. To enable the <code>mod_jk</code> module in GlassFish Server, set the
+GlassFish Server <code>jk-enabled</code> <code>network-listener</code> attribute. You can also
+create <code>jk-connectors</code> under different virtual-servers using the
+<code>jk-enabled</code> <code>network-listener</code> attribute.</p>
+</div>
+<div class="paragraph">
+<p><a id="gksde"></a><a id="GSHAG00143"></a><a id="to-configure-the-mod_jk-connector-module"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_to_configure_the_code_mod_jk_code_connector_module">To Configure the <code>mod_jk</code> Connector Module</h5>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install <a href="http://httpd.apache.org/docs/2.2/install.html">Apache HTTP
+Server</a> (<code>http://httpd.apache.org/docs/2.2/install.html</code>) and
+<a href="http://tomcat.apache.org/connectors-doc/webserver_howto/apache.html">mod_jk</a>
+(<code>http://tomcat.apache.org/connectors-doc/webserver_howto/apache.html</code>).</p>
+</li>
+<li>
+<p>Configure <code>workers.properties</code> and <code>httpd.conf</code>.<br>
+For example:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>apache2/config/workers.properties</code><br></p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre># Define 1 real worker using ajp13
+worker.list=worker1
+# Set properties for worker1 (ajp13)
+worker.worker1.type=ajp13
+worker.worker1.host=localhost
+worker.worker1.port=8009</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>apache2/conf/httpd.conf</code><br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>LoadModule jk_module /Users/Amy/apache2/modules/mod_jk-1.2.25-httpd-2.2.4.so
+JkWorkersFile /Users/Amy/apache2/conf/worker.properties
+# Where to put jk logs
+JkLogFile /Users/Amy/apache2/logs/mod_jk.log
+# Set the jk log level [debug/error/info]
+JkLogLevel debug
+# Select the log format
+JkLogStampFormat "[%a %b %d %H:%M:%S %Y] "
+# JkOptions indicate to send SSL KEY SIZE,
+JkOptions +ForwardKeySize +ForwardURICompat -ForwardDirectories
+# JkRequestLogFormat set the request format
+JkRequestLogFormat "%w %V %T"
+# Send everything for context /examples to worker named worker1 (ajp13)
+JkMount /examples/* worker1</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Start Apache HTTP Server.</p>
+</li>
+<li>
+<p>Create a jk-enabled network listener by using the
+<a href="../reference-manual/create-network-listener.html#GSRFM00046"><code>create-network-listener</code></a> subcommand.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; create-network-listener --protocol http-listener-1 \
+--listenerport 8009 --jkenabled true jk-connector</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>If you are using the <code>glassfish-jk.properties</code> file, set the
+<code>jk-configuration-file</code> property of the network listener to the
+fully-qualified file name of the <code>glassfish-jk.properties</code> file.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; set server-config.network-config.network-listeners.network-listener.\
+jk-connector.jk-configuration-file=domain-dir/config/glassfish-jk.properties</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>If you expect to need more than five threads for the listener,
+increase the maximum threads in the <code>http-thread-pool</code> pool:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; set configs.config.server-config.thread-pools.thread-pool.\
+http-thread-pool.max-thread-pool-size=value</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Restart GlassFish Server.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00065"></a><a id="gktpu"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 7-1 <code>httpd.conf</code> File for Load Balancing</p>
+</div>
+<div class="paragraph">
+<p>This example shows an <code>httpd.conf</code> file that is set for load balancing.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">LoadModule jk_module /usr/lib/httpd/modules/mod_jk.so
+JkWorkersFile /etc/httpd/conf/worker.properties
+# Where to put jk logs
+JkLogFile /var/log/httpd/mod_jk.log
+# Set the jk log level [debug/error/info]
+JkLogLevel debug
+# Select the log format
+JkLogStampFormat "[%a %b %d %H:%M:%S %Y] "
+# JkOptions indicate to send SSL KEY SIZE,
+JkOptions +ForwardKeySize +ForwardURICompat -ForwardDirectories
+# JkRequestLogFormat set the request format
+JkRequestLogFormat "%w %V %T"
+# Send all jsp requests to GlassFish
+JkMount /*.jsp worker1
+# Send all glassfish-test requests to GlassFish
+JkMount /glassfish-test/* loadbalancer</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00066"></a><a id="gktpe"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 7-2 <code>workers.properties</code> File for Load Balancing</p>
+</div>
+<div class="paragraph">
+<p>This example shows a <code>workers.properties</code> or <code>glassfish-jk.properties</code>
+file that is set for load balancing. The <code>worker.worker*.port</code> should
+match with JK ports you created.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">worker.list=worker1,worker2,loadbalancer
+worker.worker1.type=ajp13
+worker.worker1.host=localhost
+worker.worker1.port=8009
+worker.worker1.lbfactor=1
+worker.worker1.socket_keepalive=1
+worker.worker1.socket_timeout=300
+worker.worker2.type=ajp13
+worker.worker2.host=localhost
+worker.worker2.port=8010
+worker.worker2.lbfactor=1
+worker.worker2.socket_keepalive=1
+worker.worker2.socket_timeout=300
+worker.loadbalancer.type=lb
+worker.loadbalancer.balance_workers=worker1,worker2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="CHDCCGDC"></a><a id="GSHAG494"></a><a id="configuring-glassfish-server-with-apache-http-server-and-mod_proxy_ajp"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuring_glassfish_server_with_apache_http_server_and_code_mod_proxy_ajp_code">Configuring GlassFish Server with Apache HTTP Server and <code>mod_proxy_ajp</code></h4>
+<div class="paragraph">
+<p>GlassFish Server4.0 can be configured for load balancing with Apache
+HTTP Server as a front end by enabling the Apache <code>mod_proxy_ajp</code>
+connector module. To enable the <code>mod_proxy_ajp</code> module in GlassFish
+Server, set the GlassFish Server <code>jk-enabled</code> <code>network-listener</code>
+attribute. You can also create <code>jk-connectors</code> under different
+virtual-servers using the <code>jk-enabled</code> <code>network-listener</code> attribute.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG495"></a><a id="sthref22"></a></p>
+</div>
+<div class="sect4">
+<h5 id="to-configure-the-mod_proxy_ajp-connector-module">To Configure the <code>mod_proxy_ajp</code> Connector Module</h5>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install <a href="http://httpd.apache.org/docs/2.2/install.html">Apache HTTP
+Server</a> (<code>http://httpd.apache.org/docs/2.2/install.html</code>).</p>
+</li>
+<li>
+<p>Configure <code>httpd.conf</code>.<br>
+For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>LoadModule proxy_module /usr/lib/httpd/modules/mod_proxy.so
+LoadModule proxy_ajp_module /usr/lib/httpd/modules/mod_proxy_ajp.so
+
+Listen 1979
+NameVirtualHost *:1979
+&lt;VirtualHost *:1979&gt;
+   ServerName localhost
+   ErrorLog /var/log/apache2/ajp.error.log
+   CustomLog /var/log/apache2/ajp.log combined
+
+   &lt;Proxy *&gt;
+     AddDefaultCharset Off
+     Order deny,allow
+     Allow from all
+   &lt;/Proxy&gt;
+
+   ProxyPass / ajp://localhost:8009/
+   ProxyPassReverse / ajp://localhost:8009/
+&lt;/VirtualHost&gt;</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Start Apache HTTP Server.</p>
+</li>
+<li>
+<p>Create a jk-enabled network listener by using the
+<code>create-network-listener</code> subcommand.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; create-network-listener --protocol http-listener-1 \
+--listenerport 8009 --jkenabled true jk-connector</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>If you expect to need more than five threads for the listener,
+increase the maximum threads in the <code>http-thread-pool</code> pool:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; set configs.config.server-config.thread-pools.thread-pool.\
+http-thread-pool.max-thread-pool-size=value</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Restart GlassFish Server.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="abdgz"></a><a id="GSHAG00284"></a><a id="http-load-balancer-deployments"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_http_load_balancer_deployments">HTTP Load Balancer Deployments</h4>
+<div class="paragraph">
+<p>You can configure your load balancer in different ways, depending on
+your goals and environment, as described in the following sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abdha">Using Clustered Server Instances</a></p>
+</li>
+<li>
+<p><a href="#abdhc">Using Multiple Standalone Instances</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abdha"></a><a id="GSHAG00232"></a><a id="using-clustered-server-instances"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_using_clustered_server_instances">Using Clustered Server Instances</h5>
+<div class="paragraph">
+<p>The most common way to deploy the load balancer is with a cluster or
+clusters of server instances. By default all the instances in a cluster
+have the same configuration and the same applications deployed to them.
+The load balancer distributes the workload between the server instances
+and requests fail over from an unhealthy instance to a healthy one. If
+you&#8217;ve configured HTTP session persistence, session information persists
+when the request is failed over.</p>
+</div>
+<div class="paragraph">
+<p>If you have multiple clusters, requests can be load balanced across
+clusters but are only failed over between the instances in a single
+cluster. Use multiple clusters in a load balancer to easily enable
+rolling upgrades of applications. For more information, see
+<a href="rolling-upgrade.html#abdik">Upgrading Applications Without Loss of
+Availability</a>.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>Requests cannot be load balanced across clusters and standalone
+instances.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="abdhc"></a><a id="GSHAG00233"></a><a id="using-multiple-standalone-instances"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_using_multiple_standalone_instances">Using Multiple Standalone Instances</h5>
+<div class="paragraph">
+<p>It is also possible to configure your load balancer to use multiple
+standalone instances, and load balance and failover requests between
+them. However, in this configuration, you must manually ensure that the
+standalone instances have homogenous environments and the same
+applications deployed to them. Because clusters automatically maintain a
+homogenous environment, for most situations it is better and easier to
+use clusters.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Tip:</p>
+</div>
+<div class="paragraph">
+<p>Load balancing across multiple standalone instances only provides
+failover for requests, and any associated HTTP session data will not be
+failed over. This is another reason why using a cluster, which can
+provide session failover, is a more desirable load balancing
+configuration.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="named-configurations.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="rolling-upgrade.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

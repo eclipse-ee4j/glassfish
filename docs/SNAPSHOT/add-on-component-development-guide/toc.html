@@ -1,0 +1,672 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Eclipse GlassFish Server Add-On Component Development Guide, Release 5.1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Eclipse GlassFish Server Add-On Component Development Guide, Release 5.1</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+
+		<td align="left">
+		<a href="title.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div class="sect1">
+<h2 id="contents">Contents</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="title.html#eclipse-glassfish-server">Eclipse GlassFish Server</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="__a_href_preface_html_preface_preface_a"><a href="preface.html#preface">Preface</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="preface.html#GSACG00079">GlassFish Server Documentation Set</a></p>
+</li>
+<li>
+<p><a href="preface.html#GSACG00080">Related Documentation</a></p>
+</li>
+<li>
+<p><a href="preface.html#GSACG00081">Typographic Conventions</a></p>
+</li>
+<li>
+<p><a href="preface.html#GSACG00082">Symbol Conventions</a></p>
+</li>
+<li>
+<p><a href="preface.html#GSACG00083">Default Paths and File Names</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="introduction-to-the-development-environment-for-eclipse-glassfish-add-on-components"><a href="introduction.html#GSACG00001">1 Introduction to the Development Environment for Eclipse GlassFish Add-On Components</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="introduction.html#GSACG00087">GlassFish Server Modular Architecture and Add-On Components</a></p>
+</li>
+<li>
+<p><a href="introduction.html#GSACG00088">OSGi Alliance Module Management Subsystem</a></p>
+</li>
+<li>
+<p><a href="introduction.html#GSACG00089">Hundred-Kilobyte Kernel</a></p>
+</li>
+<li>
+<p><a href="introduction.html#GSACG00090">Overview of the Development Process for an Add-On Component</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="introduction.html#GSACG00173">Writing HK2 Components</a></p>
+</li>
+<li>
+<p><a href="introduction.html#GSACG00174">Extending the Administration Console</a></p>
+</li>
+<li>
+<p><a href="introduction.html#GSACG00175">Extending the <code>asadmin</code> Utility</a></p>
+</li>
+<li>
+<p><a href="introduction.html#GSACG00176">Adding Monitoring Capabilities</a></p>
+</li>
+<li>
+<p><a href="introduction.html#GSACG00177">Adding Configuration Data for a Component</a></p>
+</li>
+<li>
+<p><a href="introduction.html#GSACG00178">Adding Container Capabilities</a></p>
+</li>
+<li>
+<p><a href="introduction.html#GSACG00179">Creating a Session Persistence Module</a></p>
+</li>
+<li>
+<p><a href="introduction.html#GSACG00180">Packaging and Delivering an Add-On Component</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="writing-hk2-components"><a href="writing-hk2-components.html#GSACG00002">2 Writing HK2 Components</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="writing-hk2-components.html#GSACG00091">HK2 Component Model</a></p>
+</li>
+<li>
+<p><a href="writing-hk2-components.html#GSACG00092">Services in the HK2 Component Model</a></p>
+</li>
+<li>
+<p><a href="writing-hk2-components.html#GSACG00093">HK2 Runtime</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="writing-hk2-components.html#GSACG00181">Scopes of Services</a></p>
+</li>
+<li>
+<p><a href="writing-hk2-components.html#GSACG00182">Instantiation of Components in HK2</a></p>
+</li>
+<li>
+<p><a href="writing-hk2-components.html#GSACG00183">HK2 Lifecycle Interfaces</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="writing-hk2-components.html#GSACG00094">Inversion of Control</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="writing-hk2-components.html#GSACG00184">Injecting HK2 Components</a></p>
+</li>
+<li>
+<p><a href="writing-hk2-components.html#GSACG00186">Instantiation Cascading in HK2</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="writing-hk2-components.html#GSACG00095">Identifying a Class as an Add-On Component</a></p>
+</li>
+<li>
+<p><a href="writing-hk2-components.html#GSACG00096">Using the Apache Maven Build System to Develop HK2 Components</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="extending-the-administration-console"><a href="extending-the-admin-console.html#GSACG00003">3 Extending the Administration Console</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="extending-the-admin-console.html#GSACG00097">Administration Console Architecture</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="extending-the-admin-console.html#GSACG00187">Implementing a Console Provider</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="extending-the-admin-console.html#GSACG00098">About Administration Console Templates</a></p>
+</li>
+<li>
+<p><a href="extending-the-admin-console.html#GSACG00099">About Integration Points</a></p>
+</li>
+<li>
+<p><a href="extending-the-admin-console.html#GSACG00100">Specifying the ID of an Add-On Component</a></p>
+</li>
+<li>
+<p><a href="extending-the-admin-console.html#GSACG00101">Adding Functionality to the Administration Console</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="extending-the-admin-console.html#GSACG00188">Adding a Node to the Navigation Tree</a></p>
+</li>
+<li>
+<p><a href="extending-the-admin-console.html#GSACG00189">Adding Tabs to a Page</a></p>
+</li>
+<li>
+<p><a href="extending-the-admin-console.html#GSACG00190">Adding a Task to the Common Tasks Page</a></p>
+</li>
+<li>
+<p><a href="extending-the-admin-console.html#GSACG00191">Adding a Task Group to the Common Tasks Page</a></p>
+</li>
+<li>
+<p><a href="extending-the-admin-console.html#GSACG00192">Adding Content to a Page</a></p>
+</li>
+<li>
+<p><a href="extending-the-admin-console.html#GSACG00193">Adding a Page to the Administration Console</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="extending-the-admin-console.html#GSACG00102">Adding Internationalization Support</a></p>
+</li>
+<li>
+<p><a href="extending-the-admin-console.html#GSACG00103">Changing the Theme or Brand of the Administration Console</a></p>
+</li>
+<li>
+<p><a href="extending-the-admin-console.html#GSACG00104">Creating an Integration Point Type</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="extending-the-admin-console.html#sthref4">To Create an Integration Point Type</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="extending-the-asadmin-utility"><a href="extending-asadmin.html#GSACG00004">4 Extending the <code>asadmin</code> Utility</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="extending-asadmin.html#GSACG00105">About the Administrative Command Infrastructure of GlassFish Server</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00107">Adding an <code>asadmin</code> Subcommand</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="extending-asadmin.html#GSACG00194">Representing an <code>asadmin</code> Subcommand as a Java Class</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00195">Specifying the Name of an <code>asadmin</code> Subcommand</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00196">Ensuring That an <code>AdminCommand</code> Implementation Is Stateless</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00197">Example of Adding an <code>asadmin</code> Subcommand</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00108">Adding Parameters to an <code>asadmin</code> Subcommand</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="extending-asadmin.html#GSACG00198">Representing a Parameter of an <code>asadmin</code> Subcommand</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00199">Identifying a Parameter of an <code>asadmin</code> Subcommand</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00200">Specifying Whether a Parameter Is an Option or an Operand</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00201">Specifying the Name of an Option</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00202">Specifying the Acceptable Values of a Parameter</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00203">Specifying the Default Value of a Parameter</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00204">Specifying Whether a Parameter Is Required or Optional</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00205">Example of Adding Parameters to an <code>asadmin</code> Subcommand</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00109">Making <code>asadmin</code> Subcommands Cluster-Aware</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="extending-asadmin.html#GSACG00206">Specifying Allowed Targets</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00207">The <code>Target</code> Utility</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00208">Specifying <code>asadmin</code> Subcommand Execution</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00209">Subcommand Preprocessing and Postprocessing</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00210">Running a Command from Another Command</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00110">Adding Message Text Strings to an <code>asadmin</code> Subcommand</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00111">Enabling an <code>asadmin</code> Subcommand to Run</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00112">Setting the Context of an <code>asadmin</code> Subcommand</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00113">Changing the Brand in the GlassFish Server CLI</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00114">Examples of Extending the <code>asadmin</code> Utility</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00115">Implementing Create, Delete, and List Commands Using Annotations</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="extending-asadmin.html#GSACG00211">Command Patterns</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00212">Resolvers</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00213">The <code>@Create</code> Annotation</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00214">The <code>@Delete</code> Annotation</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00215">The <code>@Listing</code> Annotation</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00216">Create Command Decorators</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00217">Delete Command Decorators</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00218">Specifying Command Execution</a></p>
+</li>
+<li>
+<p><a href="extending-asadmin.html#GSACG00219">Using Multiple Command Annotations</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="adding-monitoring-capabilities"><a href="adding-monitoring-capabilities.html#GSACG00005">5 Adding Monitoring Capabilities</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="adding-monitoring-capabilities.html#GSACG00116">Defining Statistics That Are to Be Monitored</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="adding-monitoring-capabilities.html#GSACG00220">Defining an Event Provider</a></p>
+</li>
+<li>
+<p><a href="adding-monitoring-capabilities.html#GSACG00221">Sending an Event</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="adding-monitoring-capabilities.html#GSACG00117">Updating the Monitorable Object Tree</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="adding-monitoring-capabilities.html#GSACG00222">Creating Event Listeners</a></p>
+</li>
+<li>
+<p><a href="adding-monitoring-capabilities.html#GSACG00223">Representing a Component&#8217;s Statistics in an Event Listener Class</a></p>
+</li>
+<li>
+<p><a href="adding-monitoring-capabilities.html#GSACG00224">Subscribing to Events From Event Provider Classes</a></p>
+</li>
+<li>
+<p><a href="adding-monitoring-capabilities.html#GSACG00225">Listening for Events From Classes That Are Not Event Providers</a></p>
+</li>
+<li>
+<p><a href="adding-monitoring-capabilities.html#GSACG00226">Registering an Event Listener</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="adding-monitoring-capabilities.html#GSACG00118">Dotted Names and REST URLs for an Add-On Component&#8217;s Statistics</a></p>
+</li>
+<li>
+<p><a href="adding-monitoring-capabilities.html#GSACG00119">Adding a Type to the <code>monitor</code> Command</a></p>
+</li>
+<li>
+<p><a href="adding-monitoring-capabilities.html#GSACG00120">Example of Adding Monitoring Capabilities</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="adding-configuration-data-for-a-component"><a href="adding-configuration-data.html#GSACG00006">6 Adding Configuration Data for a Component</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="adding-configuration-data.html#GSACG00121">How GlassFish Server Stores Configuration Data</a></p>
+</li>
+<li>
+<p><a href="adding-configuration-data.html#GSACG00122">Defining an Element</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="adding-configuration-data.html#GSACG00074">To Define an Element</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="adding-configuration-data.html#GSACG00123">Defining an Attribute of an Element</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="adding-configuration-data.html#GSACG00227">Representing an Attribute of an Element</a></p>
+</li>
+<li>
+<p><a href="adding-configuration-data.html#GSACG00228">Specifying the Data Type of an Attribute</a></p>
+</li>
+<li>
+<p><a href="adding-configuration-data.html#GSACG00229">Identifying an Attribute of an Element</a></p>
+</li>
+<li>
+<p><a href="adding-configuration-data.html#GSACG00230">Specifying the Name of an Attribute</a></p>
+</li>
+<li>
+<p><a href="adding-configuration-data.html#GSACG00231">Specifying the Default Value of an Attribute</a></p>
+</li>
+<li>
+<p><a href="adding-configuration-data.html#GSACG00232">Specifying Whether an Attribute Is Required or Optional</a></p>
+</li>
+<li>
+<p><a href="adding-configuration-data.html#GSACG00233">Example of Defining an Attribute of an Element</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="adding-configuration-data.html#GSACG00124">Defining a Subelement</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="adding-configuration-data.html#GSACG00075">To Define a Subelement</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="adding-configuration-data.html#GSACG00125">Validating Configuration Data</a></p>
+</li>
+<li>
+<p><a href="adding-configuration-data.html#GSACG00126">Initializing a Component&#8217;s Configuration Data</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="adding-configuration-data.html#GSACG00076">To Define a Component&#8217;s Initial Configuration Data</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="adding-configuration-data.html#GSACG00127">Creating a Transaction to Update Configuration Data</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="adding-configuration-data.html#GSACG00078">To Create a Transaction to Update Configuration Data</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="adding-configuration-data.html#GSACG00128">Dotted Names and REST URLs of Configuration Attributes</a></p>
+</li>
+<li>
+<p><a href="adding-configuration-data.html#GSACG00131">Examples of Adding Configuration Data for a Component</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="adding-container-capabilities"><a href="adding-container-capabilities.html#GSACG00007">7 Adding Container Capabilities</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="adding-container-capabilities.html#GSACG00132">Creating a <code>Container</code> Implementation</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="adding-container-capabilities.html#GSACG00234">Marking the Class With the <code>@Service</code> Annotation</a></p>
+</li>
+<li>
+<p><a href="adding-container-capabilities.html#GSACG00235">Implementing the <code>Container</code> Interface</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="adding-container-capabilities.html#GSACG00133">Adding an Archive Type</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="adding-container-capabilities.html#GSACG00236">Implementing the <code>ArchiveHandler</code> Interface</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="adding-container-capabilities.html#GSACG00134">Creating Connector Modules</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="adding-container-capabilities.html#GSACG00237">Associating File Types With Containers by Using the <code>Sniffer</code> Interface</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="adding-container-capabilities.html#GSACG00135">Example of Adding Container Capabilities</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="adding-container-capabilities.html#GSACG00238">Container Component Code</a></p>
+</li>
+<li>
+<p><a href="adding-container-capabilities.html#GSACG00239">Web Client Code</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="creating-a-session-persistence-module"><a href="session-persistence-modules.html#GSACG00008">8 Creating a Session Persistence Module</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="session-persistence-modules.html#GSACG00141">Implementing the <code>PersistenceStrategyBuilder</code> Interface</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="packaging-integrating-and-delivering-an-add-on-component"><a href="packaging-integrating-delivering.html#GSACG00009">9 Packaging, Integrating, and Delivering an Add-On Component</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="packaging-integrating-delivering.html#GSACG00142">Packaging an Add-On Component</a></p>
+</li>
+<li>
+<p><a href="packaging-integrating-delivering.html#GSACG00143">Integrating an Add-On Component With GlassFish Server</a></p>
+</li>
+<li>
+<p><a href="packaging-integrating-delivering.html#GSACG00144">Delivering an Add-On Component Through Update Tool</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="integration-point-reference.html#GSACG00010">A Integration Point Reference</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="integration-point-reference.html#GSACG00145">Integration Point Attributes</a></p>
+</li>
+<li>
+<p><a href="integration-point-reference.html#GSACG00146"><code>org.glassfish.admingui:navNode</code> Integration Point</a></p>
+</li>
+<li>
+<p><a href="integration-point-reference.html#GSACG00147"><code>org.glassfish.admingui:rightPanel</code> Integration Point</a></p>
+</li>
+<li>
+<p><a href="integration-point-reference.html#GSACG00148"><code>org.glassfish.admingui:rightPanelTitle</code> Integration Point</a></p>
+</li>
+<li>
+<p><a href="integration-point-reference.html#GSACG00149"><code>org.glassfish.admingui:serverInstTab</code> Integration Point</a></p>
+</li>
+<li>
+<p><a href="integration-point-reference.html#GSACG00150"><code>org.glassfish.admingui:commonTask</code> Integration Point</a></p>
+</li>
+<li>
+<p><a href="integration-point-reference.html#GSACG00151"><code>org.glassfish.admingui:configuration</code> Integration Point</a></p>
+</li>
+<li>
+<p><a href="integration-point-reference.html#GSACG00152"><code>org.glassfish.admingui:resources</code> Integration Point</a></p>
+</li>
+<li>
+<p><a href="integration-point-reference.html#GSACG00153"><code>org.glassfish.admingui:customtheme</code> Integration Point</a></p>
+</li>
+<li>
+<p><a href="integration-point-reference.html#GSACG00154"><code>org.glassfish.admingui:masthead</code> Integration Point</a></p>
+</li>
+<li>
+<p><a href="integration-point-reference.html#GSACG00155"><code>org.glassfish.admingui:loginimage</code> Integration Point</a></p>
+</li>
+<li>
+<p><a href="integration-point-reference.html#GSACG00156"><code>org.glassfish.admingui:loginform</code> Integration Point</a></p>
+</li>
+<li>
+<p><a href="integration-point-reference.html#GSACG00157"><code>org.glassfish.admingui:versioninfo</code> Integration Point</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+
+		<td align="left">
+		<a href="title.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2020,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

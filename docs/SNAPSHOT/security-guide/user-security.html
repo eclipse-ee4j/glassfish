@@ -1,0 +1,1297 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Administering User Security</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Administering User Security</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="system-security.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="message-security.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSSCG00036"></a><a id="ggnqj"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="administering-user-security">2 Administering User Security</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter provides instructions for administering user security in
+the Oracle GlassFish Server environment by using the <code>asadmin</code>
+command-line utility. GlassFish Server enforces its authentication and
+authorization policies upon realms, users, and groups. This chapter
+assumes that you are familiar with security features such as
+authentication, authorization, and certificates. If you are not, see
+<a href="system-security.html#ablnk">Administering System Security</a>.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ggkuk">Administering Authentication Realms</a></p>
+</li>
+<li>
+<p><a href="#ggnxq">Administering File Users</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Instructions for accomplishing these tasks by using the Administration
+Console are contained in the Administration Console online help.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>JSR-375 defines the concept of an Identity Store, and an SPI interface
+for writing providers that can authenticate users against Identity
+Stores. It also provides two built-in providers. This mechanism is
+conceptually similar to Authentication Realms, but can be configured and
+managed by applications. See
+<a href="https://javaee.github.io/tutorial/security-intro005a.html#working-with-identity-stores">Working
+with Identity Stores</a> in The Java EE Tutorial for more information about
+Identity Stores.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="ggkuk"></a><a id="GSSCG00151"></a><a id="administering-authentication-realms"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_administering_authentication_realms">Administering Authentication Realms</h3>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkbiy">Overview of Authentication Realms</a></p>
+</li>
+<li>
+<p><a href="#ggnca">To Create an Authentication Realm</a></p>
+</li>
+<li>
+<p><a href="#ggngh">To List Authentication Realms</a></p>
+</li>
+<li>
+<p><a href="#giwlt">To Update an Authentication Realm</a></p>
+</li>
+<li>
+<p><a href="#ggngf">To Delete an Authentication Realm</a></p>
+</li>
+<li>
+<p><a href="#ggmww">To Configure a JDBC or Digest Authentication Realm</a></p>
+</li>
+<li>
+<p><a href="#gkbeo">To Configure LDAP Authentication with OID</a></p>
+</li>
+<li>
+<p><a href="#gksgi">To Configure LDAP Authentication with OVD</a></p>
+</li>
+<li>
+<p><a href="#gkbjp">To Enable LDAP Authentication on the GlassFish Server DAS</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkbiy"></a><a id="GSSCG00217"></a><a id="overview-of-authentication-realms"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_overview_of_authentication_realms">Overview of Authentication Realms</h4>
+<div class="paragraph">
+<p>An authentication realm, also called a security policy domain or
+security domain, is a scope over which the GlassFish Server defines and
+enforces a common security policy. GlassFish Server is preconfigured
+with the file, certificate, and administration realms. In addition, you
+can set up LDAP, JDBC, digest, Oracle Solaris, or custom realms. An
+application can specify which realm to use in its deployment descriptor.
+If the application does not specify a realm, GlassFish Server uses its
+default realm (<code>file</code>).</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">File realm</dt>
+<dd>
+<p>GlassFish Server stores user credentials locally in a file named
+<code>keyfile</code>. The file realm is the initial default realm.</p>
+</dd>
+<dt class="hdlist1">Administration realm</dt>
+<dd>
+<p>The administration realm is also a file realm and stores administrator
+user credentials locally in a file named <code>admin-keyfile</code>.</p>
+</dd>
+<dt class="hdlist1">Certificate realm</dt>
+<dd>
+<p>GlassFish Server stores user credentials in a certificate database.
+When using the certificate realm, the server uses certificates with
+the HTTPS protocol to authenticate web clients.</p>
+</dd>
+<dt class="hdlist1">LDAP realm</dt>
+<dd>
+<p>GlassFish Server can get user credentials from a Lightweight Directory
+Access Protocol (LDAP) server such as Oracle Virtual Directory (OVD)
+(<code>http://www.oracle.com/technetwork/middleware/id-mgmt/overview/index.html</code>),
+Oracle Internet Directory (OID)
+(<code>http://www.oracle.com/technetwork/indexes/products/index.html</code>), and
+Oracle Directory Server Enterprise Edition
+(<code>http://www.oracle.com/us/products/middleware/identity-management/oracle-directory-services/index.html</code>).
+LDAP is a protocol for enabling anyone to locate organizations,
+individuals, and other resources such as files and devices in a
+network, whether on the public Internet or on a corporate intranet.<br>
+See <a href="#gkbeo">To Configure LDAP Authentication with OID</a> for
+instructions on configuring GlassFish Server to work with an OVD/OID
+LDAP provider.<br></p>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>By default, GlassFish Server performs LDAP group search. If you have
+not created any groups in LDAP, the search fails.</p>
+</div>
+<div class="paragraph">
+<p>To disable LDAP group search in LDAP user name search, set the
+<code>com.oracle.enterprise.security.auth.realm.ldap.DISABLEGROUP_SEARCH</code>
+Java system property to <code>true</code> in the required GlassFish Server
+instance or cluster configurations:</p>
+</div>
+<div class="paragraph">
+<p><code>asadmin&gt;</code> <code>create-jvm-options --target=`target<br>
+`-Dcom.oracle.enterprise.security.auth.realm.ldap.DISABLEGROUP_SEARCH=true</code></p>
+</div>
+<div class="paragraph">
+<p>where target is the GlassFish Server instance or cluster for which you
+are disabling LDAP group search. For more information about the
+<code>create-jvm-options</code> subcommand, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server
+Open Source Edition Reference Manual</a>.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">JDBC realm</dt>
+<dd>
+<p>GlassFish Server gets user credentials from a database. The server
+uses the database information and the enabled JDBC realm option in the
+configuration file.</p>
+</dd>
+<dt class="hdlist1">Digest realm</dt>
+<dd>
+<p>Digest Authentication authenticates a user based on a user name and a
+password. However, the authentication is performed by transmitting the
+password in an encrypted form.</p>
+</dd>
+<dt class="hdlist1">Oracle Solaris realm</dt>
+<dd>
+<p>GlassFish Server gets user credentials from the Oracle Solaris
+operating system. This realm is supported on the Oracle Solaris 9 and
+Oracle Solaris 10 operating systems. Consult your Oracle Solaris
+documentation for information about managing users and groups in the
+Oracle Solaris realm.</p>
+</dd>
+<dt class="hdlist1">PAM realm</dt>
+<dd>
+<p>A Pluggable Authentication Module (PAM) realm allows applications
+deployed on GlassFish Server to authenticate users against a native
+Unix (Solaris/Linux/Mac OS) users list. PAM realms use the class name
+<code>com.sun.enterprise.security.auth.realm.pam.PamRealm</code> and the JAAS
+Context <code>pamRealm</code>.<br>
+This realm is supported on all Unix Operating Systems, including the
+Oracle Solaris 9 and Oracle Solaris 10 operating systems</p>
+</dd>
+<dt class="hdlist1">Custom realm</dt>
+<dd>
+<p>You can create other repositories for user credentials, such as a
+relational database or third-party components. For more information
+about custom realms, see the Administration Console online help. For
+instructions on creating a custom realm, see
+"<a href="../application-development-guide/securing-apps.html#GSDVG00367">Creating a Custom Realm</a>" in GlassFish Server Open
+Source Edition Application Development Guide.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>The GlassFish Server authentication service can govern users in multiple
+realms.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggnca"></a><a id="GSSCG00110"></a><a id="to-create-an-authentication-realm"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_create_an_authentication_realm">To Create an Authentication Realm</h4>
+<div class="paragraph">
+<p>Use the <code>create-auth-realm</code> subcommand in remote mode to create an
+authentication realm.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Create a realm by using the <a href="../reference-manual/create-auth-realm.html#GSRFM00015"><code>create-auth-realm</code></a>
+subcommand.<br>
+Information about properties for this subcommand is included in this
+help page.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00079"></a><a id="ggpjx"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-1 Creating a Realm</p>
+</div>
+<div class="paragraph">
+<p>This example creates a realm named <code>db</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-auth-realm --classname com.iplanet.ias.security.
+auth.realm.DB.Database --property defaultuser=admin:Password=admin db
+Command create-auth-realm executed successfully.</code></pre>
+</div>
+</div>
+<div id="sthref21" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-auth-realm</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p>For information on creating a custom realm, see
+"<a href="../application-development-guide/securing-apps.html#GSDVG00367">Creating a Custom Realm</a>" in GlassFish Server Open
+Source Edition Application Development Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggngh"></a><a id="GSSCG00111"></a><a id="to-list-authentication-realms"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_authentication_realms">To List Authentication Realms</h4>
+<div class="paragraph">
+<p>Use the <code>list-auth-realms</code> subcommand in remote mode to list the
+existing authentication realms.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List realms by using the <a href="../reference-manual/list-auth-realms.html#GSRFM00150"><code>list-auth-realms</code></a>
+subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00080"></a><a id="ggpkw"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-2 Listing Realms</p>
+</div>
+<div class="paragraph">
+<p>This example lists the authentication realms on <code>localhost</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-auth-realms
+db
+certificate
+file
+admin-realm
+Command list-auth-realms executed successfully.</code></pre>
+</div>
+</div>
+<div id="sthref22" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-auth-realms</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="giwlt"></a><a id="GSSCG00112"></a><a id="to-update-an-authentication-realm"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_update_an_authentication_realm">To Update an Authentication Realm</h4>
+<div class="paragraph">
+<p>Use the <code>set</code> subcommand to modify an existing authentication realm.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>A custom realm does not require server restart.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>List realms by using the <a href="../reference-manual/list-auth-realms.html#GSRFM00150"><code>list-auth-realms</code></a>
+subcommand.</p>
+</li>
+<li>
+<p>Modify the values for the specified thread pool by using the
+<a href="../reference-manual/set.html#GSRFM00226"><code>set</code></a> subcommand.<br>
+The thread pool is identified by its dotted name.</p>
+</li>
+<li>
+<p>To apply your changes, restart GlassFish Server.<br>
+See "<a href="../administration-guide/domains.html#GSADG00337">To Restart a Domain</a>" in GlassFish Server Open
+Source Edition Administration Guide.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="ggngf"></a><a id="GSSCG00113"></a><a id="to-delete-an-authentication-realm"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_delete_an_authentication_realm">To Delete an Authentication Realm</h4>
+<div class="paragraph">
+<p>Use the <code>delete-auth-realm</code> subcommand in remote mode to delete an
+existing authentication realm.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List realms by using the <a href="../reference-manual/list-auth-realms.html#GSRFM00150"><code>list-auth-realms</code></a>
+subcommand.</p>
+</li>
+<li>
+<p>If necessary, notify users that the realm is being deleted.</p>
+</li>
+<li>
+<p>Delete the realm by using the <a href="../reference-manual/delete-auth-realm.html#GSRFM00066"><code>delete-auth-realm</code></a>
+subcommand.</p>
+</li>
+<li>
+<p>To apply your changes, restart GlassFish Server. See
+"<a href="../administration-guide/domains.html#GSADG00337">To Restart a Domain</a>" in GlassFish Server Open Source
+Edition Administration Guide.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00081"></a><a id="ggpjf"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-3 Deleting a Realm</p>
+</div>
+<div class="paragraph">
+<p>This example deletes an authentication realm named <code>db</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-auth-realm db
+Command delete-auth-realm executed successfully.</code></pre>
+</div>
+</div>
+<div id="sthref23" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help delete-auth-realm</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggmww"></a><a id="GSSCG00114"></a><a id="to-configure-a-jdbc-or-digest-authentication-realm"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_configure_a_jdbc_or_digest_authentication_realm">To Configure a JDBC or Digest Authentication Realm</h4>
+<div class="paragraph">
+<p>GlassFish Server enables you to specify a user&#8217;s credentials (user name
+and password) in the JDBC realm instead of in the connection pool. Using
+the <code>jdbc</code> type realm instead of the connection pool prevents other
+applications from browsing the database tables for user credentials.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>By default, storage of passwords as clear text is not supported in the
+JDBC realm. Under normal circumstances, passwords should not be stored
+as clear text.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a id="ggmxh"></a><br>
+Create the database tables in which to store user credentials for the
+realm.<br>
+How you create the database tables depends on the database that you are
+using.</p>
+</li>
+<li>
+<p>Add user credentials to the database tables that you created.<br>
+How you add user credentials to the database tables depends on the
+database that you are using.</p>
+</li>
+<li>
+<p>Create a JDBC connection pool for the database.<br>
+See "<a href="../administration-guide/jdbc.html#GSADG00420">To Create a JDBC Connection Pool</a>" in GlassFish
+Server Open Source Edition Administration Guide.</p>
+</li>
+<li>
+<p>Create a JDBC resource for the database.<br>
+"<a href="../administration-guide/jdbc.html#GSADG00426">To Create a JDBC Resource</a>" in GlassFish Server Open
+Source Edition Administration Guide.</p>
+</li>
+<li>
+<p><a id="ggmvo"></a><br>
+Create a realm.<br>
+For instructions, see <a href="#ggnca">To Create an Authentication Realm</a>.<br></p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The JAAS context should be <code>jdbcDigestRealm</code> for digest authentication
+or <code>jdbcRealm</code> for other authentication types.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a id="ggmtc"></a><br>
+Modify the deployment descriptor to specify the <code>jdbc</code> realm.<br>
+Modify the deployment descriptor that is associated with your
+application.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>For an enterprise application in an Enterprise Archive (EAR) file,
+modify the <code>sun-application.xml</code> file.</p>
+</li>
+<li>
+<p>For a web application in a Web Application Archive (WAR) file, modify
+the <code>web.xml</code> file.</p>
+</li>
+<li>
+<p>For an enterprise bean in an EJB JAR file, modify the
+<code>sun-ejb-jar.xml</code> file.<br>
+For more information about how to specify a realm, see
+"<a href="../application-development-guide/securing-apps.html#GSDVG00365">How to Configure a Realm</a>" in GlassFish Server Open
+Source Edition Application Development Guide.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Assign security roles to users in the realm.<br>
+To assign a security role to a user, add a <code>security-role-mapping</code>
+element to the deployment descriptor that you modified.</p>
+</li>
+<li>
+<p>Verify that the database is running.<br>
+If needed, see "<a href="../administration-guide/jdbc.html#GSADG00417">To Start the Database</a>" in GlassFish
+Server Open Source Edition Administration Guide.</p>
+</li>
+<li>
+<p>To apply the authentication, restart the server.<br>
+See "<a href="../administration-guide/domains.html#GSADG00337">To Restart a Domain</a>" in GlassFish Server Open
+Source Edition Administration Guide.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00082"></a><a id="ghysu"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-4 Assigning a Security Role</p>
+</div>
+<div class="paragraph">
+<p>This example shows a <code>security-role-mapping</code> element that assigns the
+security role <code>Employee</code> to user <code>Calvin</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;security-role-mapping&gt;
+    &lt;role-name&gt;Employee&lt;/role-name&gt;
+    &lt;principal-name&gt;Calvin&lt;/principal-name&gt;
+  &lt;/security-role-mapping&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gkbeo"></a><a id="GSSCG00115"></a><a id="to-configure-ldap-authentication-with-oid"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_configure_ldap_authentication_with_oid">To Configure LDAP Authentication with OID</h4>
+<div class="paragraph">
+<p>This procedure explains how to configure GlassFish Server to use LDAP
+authentication with Oracle Internet Directory.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install Oracle Enterprise Manager 11g and the latest Enterprise
+Manager patches, if they are not installed already.<br>
+Instructions for installing Oracle Enterprise Manager are provided in
+the Oracle Enterprise Manager
+(<code>http://docs.oracle.com/cd/E11857_01/index.html</code>) documentation set.</p>
+</li>
+<li>
+<p>Install the Oracle Identity Management Suite (IDM) 11g and Patch Set
+2 or later, if they are not installed already.<br>
+Instructions for installing the Oracle Identity Management suite are
+provided in Oracle Fusion Middleware Installation Guide for Oracle
+Identity Management
+(<code>http://docs.oracle.com/cd/E12839_01/install.1111/e12002/toc.html</code>).</p>
+</li>
+<li>
+<p>Configure SSL for Oracle Internet Directory (OID), if it is not
+configured already. Configure the OID instance in the server
+authentication mode and with the protocol version set to SSLv3<br>
+Instructions for configuring SSL for OID are provided in the SSL chapter
+of Oracle Internet Directory Administrator&#8217;s Guide
+(<code>http://docs.oracle.com/cd/B14099_19/idmanage.1012/b14082/ssl.html</code>).</p>
+</li>
+<li>
+<p>Using Oracle Wallet Manager, export an SSL self-signed certificate
+you want to use with GlassFish Server.<br>
+Instructions for using Oracle Wallet Manager to create and export SSL
+certificates are provided in the "Configure Oracle Internet Directory
+for SSL"
+(<code>http://docs.oracle.com/cd/B14099_19/idmanage.1012/b14082/ssl.html#CHDCADIJ</code>)
+section of the SSL chapter in Oracle Internet Directory Administrator&#8217;s
+Guide
+(<code>http://docs.oracle.com/cd/B14099_19/idmanage.1012/b14082/ssl.html</code>).</p>
+</li>
+<li>
+<p>On the GlassFish Server side, use the <code>keytool</code> command import the
+certificate you exported with Oracle Wallet Manager.<br>
+The <code>keytool</code> command is available in the <code>$JAVA_HOME/bin</code> directory.
+Use the following syntax:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>keytool -importcert -alias "alias-name" -keystore domain-dir/config/cacerts.jks
+-file cert-name</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">where the variables are defined as follows</dt>
+<dd>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">alias-name</dt>
+<dd>
+<p>Name of an alias to use for the certificate</p>
+</dd>
+<dt class="hdlist1">domain-dir</dt>
+<dd>
+<p>Name of the domain for which the certificate is used</p>
+</dd>
+<dt class="hdlist1">cert-name</dt>
+<dd>
+<p>  Path to the certificate that you exported with Oracle Wallet Manager.<br>
+For example, to import a certificate named <code>oi.cer</code> for a GlassFish
+Server domain in <code>/glassfishv3/glassfish/domains/domain1</code>, using an
+alias called "OID self-signed certificate," you would use the following
+command:<br></p>
+</dd>
+</dl>
+</div>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">keytool -importcert -alias "OID self signed certificate" -keystore \
+/glassfishv3/glassfish/domains/domain1/config/cacerts.jks -file oid.cer</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Restart the GlassFish Server domain.<br>
+See "<a href="../administration-guide/domains.html#GSADG00337">To Restart a Domain</a>" in GlassFish Server Open
+Source Edition Administration Guide.</p>
+</li>
+<li>
+<p>Use the Oracle Enterprise Manager <code>ldapmodify</code> command to enable
+Anonymous Bind for OID.<br>
+For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>ldapmodify -D cn=orcladmin -q -p portNum -h hostname -f ldifFile</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this example, the LDIF file might contain the following:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">dn: cn=oid1,cn=osdldapd,cn=subconfigsubentry
+changetype: modify
+replace: orclAnonymousBindsFlag
+orclAnonymousBindsFlag: 1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To disable all anonymous binds, you would use a similar LDIF file with
+the last line changed to:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">orclAnonymousBindsFlag: 0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See "Managing Anonymous Binds"
+(<code>http://docs.oracle.com/cd/E14571_01/oid.1111/e10029/authentication.html#CACJEJDA</code>)
+in Oracle Fusion Middleware Administrator&#8217;s Guide for Oracle Internet
+Directory
+(<code>http://docs.oracle.com/cd/E14571_01/oid.1111/e10029/toc.html</code>) for
+complete instructions on the <code>ldapmodify</code> command.</p>
+</div>
+<div class="paragraph">
+<p><a id="gksgi"></a><a id="GSSCG00116"></a><a id="to-configure-ldap-authentication-with-ovd"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_configure_ldap_authentication_with_ovd">To Configure LDAP Authentication with OVD</h4>
+<div class="paragraph">
+<p>This procedure explains how to configure GlassFish Server to use LDAP
+authentication with Oracle Virtual Directory.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create the OVD adapter, as described in the "Creating and
+Configuring Oracle Virtual Directory Adapters"
+(<code>http://docs.oracle.com/cd/E12839_01/oid.1111/e10046/basic_adapters.html#BABCBGJA</code>)
+chapter of Administrator&#8217;s Guide for Oracle Virtual Directory
+(<code>http://docs.oracle.com/cd/E12839_01/oid.1111/e10046/toc.html</code>).</p>
+</li>
+<li>
+<p>Configure SSL for Oracle Virtual Directory (OVD), if it is not
+configured already. For instructions on configuring SSL for OVD, see the
+section "Enable SSL for Oracle Virtual Directory Using Fusion Middleware
+Control" in SSL Configuration in Oracle Fusion Middleware
+(<code>http://docs.oracle.com/cd/E12839_01/core.1111/e10105/sslconfig.html#ASADM1800</code>).<br>
+Also, configure the SSL for the OVD listener in server authentication
+mode.</p>
+</li>
+<li>
+<p>Export the certificate from JKS keystore you want to use with
+GlassFish Server. See "Exporting a Keystore Using Fusion Middleware
+Control"
+(<code>http://docs.oracle.com/cd/E16764_01/core.1111/e10105/wallets.html#CIHECAIB</code>)
+for information.</p>
+</li>
+<li>
+<p>On the GlassFish Server side, use the <code>keytool</code> command to import
+the certificate you exported from the JKS keystore.<br>
+The <code>keytool</code> command is available in the <code>$JAVA_HOME/bin</code> directory.
+Use the following syntax:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>keytool -importcert -alias "alias-name" -keystore domain-dir/config/cacerts.jks
+-file cert-name</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">where the variables are defined as follows</dt>
+<dd>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">alias-name</dt>
+<dd>
+<p>Name of an alias to use for the certificate</p>
+</dd>
+<dt class="hdlist1">domain-dir</dt>
+<dd>
+<p>Name of the domain for which the certificate is used</p>
+</dd>
+<dt class="hdlist1">cert-name</dt>
+<dd>
+<p>  Path to the certificate that you exported from the keystore.<br>
+For example, to import a certificate named <code>ovd.cer</code> for a GlassFish
+Server domain in <code>/glassfishv3/glassfish/domains/domain1</code>, using an
+alias called "OVD self-signed certificate," you would use the following
+command:<br></p>
+</dd>
+</dl>
+</div>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">keytool -importcert -alias "OVD self signed certificate" -keystore \
+/glassfishv3/glassfish/domains/domain1/config/cacerts.jks -file ovd.cer</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Restart the GlassFish Server domain.<br>
+See "<a href="../administration-guide/domains.html#GSADG00337">To Restart a Domain</a>" in GlassFish Server Open
+Source Edition Administration Guide.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="gkbjp"></a><a id="GSSCG00117"></a><a id="to-enable-ldap-authentication-on-the-glassfish-server-das"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_enable_ldap_authentication_on_the_glassfish_server_das">To Enable LDAP Authentication on the GlassFish Server DAS</h4>
+<div class="paragraph">
+<p>This procedure explains how to enable LDAP authentication for logins to
+the GlassFish Server Domain Administration Server (DAS). Logging in to
+the DAS is typically only performed by GlassFish Server administrators
+who want to use the GlassFish Server Administration Console or <code>asadmin</code>
+command. See <a href="#gkbeo">To Configure LDAP Authentication with OID</a> for
+instructions on enabling general LDAP authentication for GlassFish
+Server.</p>
+</div>
+<div id="sthref24" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Ensure that you have followed the configuration instructions in
+<a href="#gkbeo">To Configure LDAP Authentication with OID</a></p>
+</div>
+<div class="paragraph">
+<p>Use the <code>asadmin configure-ldap-for-admin</code> subcommand to enable user
+authentication to the GlassFish Server DAS.</p>
+</div>
+<div class="paragraph">
+<p>Use the following syntax:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin configure-ldap-for-admin --basedn "dn-list" --url [ldap|ldaps]://ldap-url
+--ldap-group group-name</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>where the variables are defined as follows:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">dn-list</dt>
+<dd>
+<p>basedn parameters</p>
+</dd>
+<dt class="hdlist1">ldap-url</dt>
+<dd>
+<p>URL and port number for the LDAP server; can use standard (<code>ldap</code>) or
+secure (<code>ldaps</code>) protocol</p>
+</dd>
+<dt class="hdlist1">group-name</dt>
+<dd>
+<p>LDAP group name for allowed users, as defined on the LDAP server.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin configure-ldap-for-admin --basedn "dc=red,dc=iplanet,dc=com" \
+--url ldap://interopoel54-1:3060 --ldap-group sqestaticgroup
+
+asadmin configure-ldap-for-admin --basedn "dc=red,dc=iplanet,dc=com" \
+--url ldaps://interopoel54-1:7501 --ldap-group sqestaticgroup</code></pre>
+</div>
+</div>
+<div id="sthref25" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>See <a href="../reference-manual/configure-ldap-for-admin.html#GSRFM00010"><code>configure-ldap-for-admin</code></a> for more information
+about the <code>configure-ldap-for-admin subcommand</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggnxq"></a><a id="GSSCG00152"></a><a id="administering-file-users"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_administering_file_users">Administering File Users</h3>
+<div class="paragraph">
+<p>A user is an individual (or application program) identity that is
+defined in GlassFish Server. A user who has been authenticated is
+sometimes called a principal.</p>
+</div>
+<div class="paragraph">
+<p>As the administrator, you are responsible for integrating users into the
+GlassFish Server environment so that their credentials are securely
+established and they are provided with access to the applications and
+services that they are entitled to use.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ggocf">To Create a File User</a></p>
+</li>
+<li>
+<p><a href="#ggoab">To List File Users</a></p>
+</li>
+<li>
+<p><a href="#ghlgs">To List File Groups</a></p>
+</li>
+<li>
+<p><a href="#ggoaw">To Update a File User</a></p>
+</li>
+<li>
+<p><a href="#ggoah">To Delete a File User</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ggocf"></a><a id="GSSCG00118"></a><a id="to-create-a-file-user"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_create_a_file_user">To Create a File User</h4>
+<div class="paragraph">
+<p>Use the <code>create-file-user</code> subcommand in remote mode to create a new
+user by adding a new entry to the <code>keyfile</code>. The entry includes the user
+name, password, and any groups for the user. Multiple groups can be
+specified by separating the groups with colons (:).</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If secure administration is enabled as described in
+<a href="administrative-security.html#gkomz">Running Secure Admin</a>, you cannot
+create an administrative user with a blank password.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Creating a new <code>file</code> realm user is a dynamic event and does not require
+server restart.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>If the user will belong to a particular group, see the current
+groups by using the <a href="../reference-manual/list-file-groups.html#GSRFM00164"><code>list-file-groups</code></a> subcommand.</p>
+</li>
+<li>
+<p>Create a file user by using the <a href="../reference-manual/create-file-user.html#GSRFM00024"><code>create-file-user</code></a>
+subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00083"></a><a id="ggpkq"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-5 Creating a User</p>
+</div>
+<div class="paragraph">
+<p>This example create user <code>Jennifer</code> on the default realm <code>file</code> (no
+groups are specified).</p>
+</div>
+<div class="paragraph">
+<p>The <code>asadmin</code> <code>--passwordfile</code> option specifies the name of a file that
+contains the password entries in a specific format. The entry for a
+password must have the <code>AS_ADMIN_</code> prefix followed by the password name
+in uppercase letters, an equals sign, and the password. See
+<a href="../reference-manual/asadmin.html#GSRFM00263"><code>asadmin</code>(1M)</a> for more information.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-file-user --user admin
+--passwordfile=c:\tmp\asadminpassword.txt Jennifer
+Command create-file-user executed successfully.</code></pre>
+</div>
+</div>
+<div id="sthref26" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-file-user</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggoab"></a><a id="GSSCG00119"></a><a id="to-list-file-users"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_file_users">To List File Users</h4>
+<div class="paragraph">
+<p>Use the <code>list-file-users</code> subcommand in remote mode to list the users
+that are in the <code>keyfile</code>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List users by using the <a href="../reference-manual/list-file-users.html#GSRFM00165"><code>list-file-users</code></a>
+subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00084"></a><a id="ggpgf"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-6 Listing File Users</p>
+</div>
+<div class="paragraph">
+<p>This example lists file users on the default <code>file</code> realm file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-file-users
+Jennifer
+Command list-file-users executed successfully.</code></pre>
+</div>
+</div>
+<div id="sthref27" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-file-users</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghlgs"></a><a id="GSSCG00120"></a><a id="to-list-file-groups"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_file_groups">To List File Groups</h4>
+<div class="paragraph">
+<p>A group is a category of users classified by common traits, such as job
+title or customer profile. For example, users of an e-commerce
+application might belong to the <code>customer</code> group, and the big spenders
+might also belong to the <code>preferred</code> group. Categorizing users into
+groups makes it easier to control the access of large numbers of users.
+A group is defined for an entire server and realm. A user can be
+associated with multiple groups of users.</p>
+</div>
+<div class="paragraph">
+<p>A group is different from a role in that a role defines a function in an
+application, while a group is a set of users who are related in some
+way. For example, in the personnel application there might be groups
+such as <code>full-time</code>, <code>part-time</code>, and <code>on-leave</code>. Users in these groups
+are all employees (the <code>employee</code> role). In addition, each user has its
+own designation that defines an additional level of employment.</p>
+</div>
+<div class="paragraph">
+<p>Use the <code>list-file-groups</code> subcommand in remote mode to list groups for
+a file user, or all file groups if the <code>--name</code> option is not specified.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List file groups by using the <a href="../reference-manual/list-file-groups.html#GSRFM00164"><code>list-file-groups</code></a>
+subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00085"></a><a id="ghlgb"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-7 Listing Groups for a User</p>
+</div>
+<div class="paragraph">
+<p>This example lists the groups for user <code>joesmith</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-file-groups --name joesmith
+staff
+manager
+Command list-file-groups executed successfully</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="ggoaw"></a><a id="GSSCG00121"></a><a id="to-update-a-file-user"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_update_a_file_user">To Update a File User</h4>
+<div class="paragraph">
+<p>Use the <code>update-file-user</code> subcommand in remote mode to modify the
+information in the <code>keyfile</code> for a specified user.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If secure administration is enabled as described in
+<a href="administrative-security.html#gkomz">Running Secure Admin</a>, you cannot
+update an administrative user to have a blank password.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Update the user information by using the
+<a href="../reference-manual/update-file-user.html#GSRFM00254"><code>update-file-user</code></a> subcommand.</p>
+</li>
+<li>
+<p>To apply your changes, restart GlassFish Server.<br>
+See "<a href="../administration-guide/domains.html#GSADG00337">To Restart a Domain</a>" in GlassFish Server Open
+Source Edition Administration Guide.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00086"></a><a id="ggpgh"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-8 Updating a User</p>
+</div>
+<div class="paragraph">
+<p>The following subcommand updates the groups for user <code>Jennifer</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; update-file-user --passwordfile c:\tmp\asadminpassword.txt --groups
+staff:manager:engineer Jennifer
+Command update-file-user executed successfully.</code></pre>
+</div>
+</div>
+<div id="sthref28" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help update-file-user</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggoah"></a><a id="GSSCG00122"></a><a id="to-delete-a-file-user"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_delete_a_file_user">To Delete a File User</h4>
+<div class="paragraph">
+<p>Use the <code>delete-file-user</code> subcommand in remote mode to remove a user
+entry from the <code>keyfile</code> by specifying the user name. You cannot delete
+yourself, that is, the user you are logged in as cannot be deleted
+during your session.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List users by using the <a href="../reference-manual/list-file-users.html#GSRFM00165"><code>list-file-users</code></a>
+subcommand.</p>
+</li>
+<li>
+<p>Delete the user by using the <a href="../reference-manual/delete-file-user.html#GSRFM00076"><code>delete-file-user</code></a>
+subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSSCG00087"></a><a id="ggpib"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 2-9 Deleting a User</p>
+</div>
+<div class="paragraph">
+<p>This example deletes user <code>Jennifer</code> from the default <code>file</code> realm.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-file-user Jennifer
+Command delete-file-user executed successfully.</code></pre>
+</div>
+</div>
+<div id="sthref29" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help delete-file-user</code> at the command line.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="system-security.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="message-security.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

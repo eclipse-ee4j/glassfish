@@ -1,0 +1,875 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Configuring Java Message Service High Availability</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Configuring Java Message Service High Availability</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="session-persistence-and-failover.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="rmi-iiop.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSHAG00012"></a><a id="abdbk"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-java-message-service-high-availability">10 Configuring Java Message Service High Availability</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter describes how to configure the high availability features
+of the Java Message Service (JMS). It covers how to configure Message
+Queue broker clusters and how to use them to provide connection failover
+and load balancing, as described in the following topics:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abdbx">Using Message Queue Broker Clusters With GlassFish Server</a></p>
+</li>
+<li>
+<p><a href="#abdbv">Connection Failover</a></p>
+</li>
+<li>
+<p><a href="#abdbw">Load-Balanced Delivery to MDBs</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abdbx"></a><a id="GSHAG00212"></a><a id="using-message-queue-broker-clusters-with-glassfish-server"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_using_message_queue_broker_clusters_with_glassfish_server">Using Message Queue Broker Clusters With GlassFish Server</h3>
+<div class="paragraph">
+<p>This section describes how the JMS service uses Message Queue broker
+clusters to support high-availability JMS messaging in GlassFish Server
+clusters. It describes the different cluster and broker types that are
+supported and how to configure them.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gktgs">About Message Queue Broker Clusters</a></p>
+</li>
+<li>
+<p><a href="#gktft">Configuring GlassFish Clusters to Use Message Queue Broker
+Clusters</a></p>
+</li>
+<li>
+<p><a href="#gktge">To Configure a GlassFish Cluster to Use an Embedded or
+Local Conventional Broker Cluster With Master Broker</a></p>
+</li>
+<li>
+<p><a href="#gktfr">To Configure a GlassFish Cluster to Use an Embedded or
+Local Conventional Broker Cluster of Peer Brokers</a></p>
+</li>
+<li>
+<p><a href="#gkthc">To Change the Master Broker in an Embedded or Local Broker
+Cluster</a></p>
+</li>
+<li>
+<p><a href="#gktgj">To Migrate Between Types of Embedded or Local Conventional
+Broker Clusters</a></p>
+</li>
+<li>
+<p><a href="#gktfl">To Configure a GlassFish Cluster to Use a Local Enhanced
+Broker Cluster</a></p>
+</li>
+<li>
+<p><a href="#abdby">To Configure a GlassFish Cluster to Use a Remote Broker
+Cluster</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gktgs"></a><a id="GSHAG00311"></a><a id="about-message-queue-broker-clusters"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_about_message_queue_broker_clusters">About Message Queue Broker Clusters</h4>
+<div class="paragraph">
+<p>The following discussion provides a brief overview of Message Queue
+broker clusters. For complete information, see "<a href="../../openmq/mq-tech-over/broker-clusters.html#GMTOV00028">Broker
+Clusters</a>" in Open Message Queue Technical Overview.</p>
+</div>
+<div class="paragraph">
+<p>Message Queue supports two clustering models both of which provide a
+scalable message service, but with each providing a different level of
+message service availability:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Conventional broker clusters. A conventional broker cluster provides
+for service availability. When a broker fails, clients connected to the
+failed broker reconnect to another broker in the cluster. However,
+messages and state information stored in the failed broker cannot be
+recovered until the failed broker is brought back online. The broker
+failure can therefore result in a significant delay and in JMS message
+order semantics not being preserved.<br>
+Message Queue supports two types of conventional cluster, based on where
+the cluster configuration change record is stored:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Conventional cluster with master broker. In a conventional cluster
+with a master broker, one of the brokers, designated as the master
+broker, stores and maintains the cluster configuration change record.
+The other brokers in the cluster must communicate with the master broker
+to keep abreast of changes to the cluster configuration. This is the
+simplest broker cluster to configure, and is the type of broker cluster
+that GlassFish Server uses by default to support GlassFish clusters.</p>
+</li>
+<li>
+<p>Conventional cluster of peer brokers. In a conventional cluster of
+peer brokers, the cluster configuration change record is stored in a
+JDBC data store accessible to all the brokers. Thus, brokers can access
+cluster configuration information whether any other brokers in the
+cluster are running or not.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Enhanced broker clusters. An enhanced broker cluster provides for data
+availability in addition to service availability. When a broker fails,
+another broker takes over the pending work of the failed broker. The
+failover broker has access to the failed broker&#8217;s messages and state
+information. Clients connected to the failed broker reconnect to the
+failover broker. In an enhanced cluster, as compared to a conventional
+cluster, messages owned by the failed broker are delivered by the
+failover broker as soon as it takes over, and JMS message order
+semantics are preserved.<br>
+By its very nature, an enhanced broker cluster is a cluster of peer
+brokers.</p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>Despite the message service availability offered by both conventional
+and enhanced broker clusters, they do not provide a guarantee against
+failure and the possibility that certain failures, for example in the
+middle of a transaction, could require that some operations be repeated.
+It is the responsibility of the messaging application (both producers
+and consumers) to respond to JMS exceptions appropriately. For
+information about the kinds of exceptions that can occur and how to
+respond to them, see "<a href="../../openmq/mq-dev-guide-java/client-design-and-features.html#GMJVG00229">Handling Exceptions When Failover
+Occurs</a>" in Open Message Queue Developer&#8217;s Guide for Java Clients.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gktft"></a><a id="GSHAG00312"></a><a id="configuring-glassfish-clusters-to-use-message-queue-broker-clusters"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuring_glassfish_clusters_to_use_message_queue_broker_clusters">Configuring GlassFish Clusters to Use Message Queue Broker Clusters</h4>
+<div class="paragraph">
+<p>When a GlassFish Server cluster is created, the JMS service
+automatically configures a Message Queue conventional broker cluster
+with master broker for the cluster, provided that the JMS host type in
+the GlassFish Server cluster&#8217;s configuration is Embedded or Local. The
+JMS service configures one Message Queue broker for each instance in the
+GlassFish Server cluster, and designates as master broker the broker
+associated with the first instance created in the cluster. In the case
+of Local JMS hosts, the JMS service configures each broker to run on the
+same host as the instance with which it is associated. In the case of
+Embedded JMS hosts, the each broker inherently runs on the same host as
+the instance with which it is associated because it runs in the same JVM
+as the instance.</p>
+</div>
+<div class="paragraph">
+<p>The JMS service manages the lifecycle of Embedded and Local JMS hosts,
+and this management extends to the management of Message Queue broker
+clusters as Embedded and Local JMS hosts. For a GlassFish cluster whose
+configuration specifies Embedded or Local JMS host type, the JMS
+service:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Creates and manages one Message Queue broker for each instance in the
+GlassFish cluster, using this broker as the primary JMS host for the
+instance.</p>
+</li>
+<li>
+<p>Maintains the JMS host list for each instance in the GlassFish cluster
+such that its primary JMS host appears first in its JMS host list.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The JMS service supports the following types of Message Queue broker
+clusters with GlassFish Server clusters, based on the JMS host type:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Embedded</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Conventional broker cluster with master broker (default)</p>
+</li>
+<li>
+<p>Conventional broker cluster of peer brokers</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Local</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Conventional broker cluster with master broker (default)</p>
+</li>
+<li>
+<p>Conventional broker cluster of peer brokers</p>
+</li>
+<li>
+<p>Enhanced broker cluster</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Remote</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Conventional broker cluster with master broker; brokers can differ
+in number from GlassFish instances and can be located on other hosts</p>
+</li>
+<li>
+<p>Conventional broker cluster of peer brokers; brokers can differ in
+number from GlassFish instances and can be located on other hosts</p>
+</li>
+<li>
+<p>Enhanced broker cluster; brokers can differ in number from GlassFish
+instances and can be located on other hosts</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>The following topics provide instructions for configuring broker
+clusters in all these contexts.</p>
+</div>
+<div class="paragraph">
+<p><a id="gktge"></a><a id="GSHAG00155"></a><a id="to-configure-a-glassfish-cluster-to-use-an-embedded-or-local-conventional-broker-cluster-with-master-broker"></a></p>
+</div>
+<div class="paragraph">
+<p>To Configure a GlassFish Cluster to Use an Embedded or Local
+Conventional Broker Cluster With Master Broker
+<sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup>^^</p>
+</div>
+<div class="paragraph">
+<p>Use the <code>configure-jms-cluster</code> subcommand in remote <code>asadmin</code> mode to
+configure a conventional broker cluster with master broker to service a
+GlassFish Server cluster that uses either Embedded or Local JMS hosts.</p>
+</div>
+<div class="paragraph">
+<p>Note that this configuration, with Embedded brokers, is the default for
+GlassFish Server clusters.</p>
+</div>
+<div id="GSHAG431" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Perform the following steps after you have created the GlassFish Server
+cluster, but before you have added instances to the cluster or started
+the cluster.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Caution:</p>
+</div>
+<div class="paragraph">
+<p>Before using this procedure to reconfigure an existing cluster, you must
+follow the special procedures to migrate to another type of broker
+cluster, as described in <a href="#gktgj">To Migrate Between Types of
+Embedded or Local Conventional Broker Clusters</a>. Failing to perform
+these special procedures could lead to data loss or corruption and even
+render your setup unusable, depending on the JMS operations performed on
+the existing cluster.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote <code>asadmin</code> subcommands require a running server.</p>
+</li>
+<li>
+<p>Configure the GlassFish Server cluster to use a Message Queue
+conventional broker cluster with master broker by using the
+<a href="../reference-manual/configure-jms-cluster.html#GSRFM00008"><code>configure-jms-cluster</code></a> subcommand:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&gt; asadmin configure-jms-cluster --clustertype=conventional
+--configstoretype=masterbroker glassfish-cluster-name</pre>
+</div>
+</div>
+<div id="GSHAG432" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help configure-jms-cluster</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gktfr"></a><a id="GSHAG00156"></a><a id="to-configure-a-glassfish-cluster-to-use-an-embedded-or-local-conventional-broker-cluster-of-peer-brokers"></a></p>
+</div>
+<div class="paragraph">
+<p>To Configure a GlassFish Cluster to Use an Embedded or Local
+Conventional Broker Cluster of Peer Brokers
+<sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup>^^</p>
+</div>
+<div class="paragraph">
+<p>Use the <code>configure-jms-cluster</code> subcommand in remote <code>asadmin</code> mode to
+configure a conventional broker cluster of peer brokers to service a
+GlassFish Server cluster that uses Embedded or Local JMS hosts.</p>
+</div>
+<div id="GSHAG433" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Perform the following steps after you have created the GlassFish Server
+cluster, but before you have added instances to the cluster or started
+the cluster.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Caution:</p>
+</div>
+<div class="paragraph">
+<p>Before using this procedure to reconfigure an existing cluster, you must
+follow the special procedures to migrate to another type of broker
+cluster, as described in <a href="#gktgj">To Migrate Between Types of
+Embedded or Local Conventional Broker Clusters</a>. Failing to perform
+these special procedures could lead to data loss or corruption and even
+render your setup unusable, depending on the JMS operations performed on
+the existing cluster.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote <code>asadmin</code> subcommands require a running server.</p>
+</li>
+<li>
+<p>Create a password file with the entry <code>AS_ADMIN_JMSDBPASSWORD</code>
+specifying the password of the database user.<br>
+For information about password file entries, see the
+<a href="../reference-manual/asadmin.html#GSRFM00263"><code>asadmin</code>(1M)</a> help page.</p>
+</li>
+<li>
+<p>Place a copy of, or a link to, the database&#8217;s JDBC driver <code>.jar</code>
+file in the appropriate directory, depending on the JMS host type, on
+each host where a GlassFish Server cluster instance is to run:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Embedded: as-install-parent`/glassfish/lib/install/applications/jmsra`</p>
+</li>
+<li>
+<p>Local: as-install-parent`/mq/lib/ext`</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Configure the GlassFish Server cluster to use a Message Queue
+conventional broker cluster with master broker by using the
+<a href="../reference-manual/configure-jms-cluster.html#GSRFM00008"><code>configure-jms-cluster</code></a> subcommand:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&gt; asadmin --passwordfile password-file configure-jms-cluster --clustertype=conventional
+--configstoretype=shareddb --dbvendor database-vendor-name --dbuser database-user-name
+--dburl database-url --property list-of-database-specific-properties glassfish-cluster-name</pre>
+</div>
+</div>
+<div id="GSHAG434" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help configure-jms-cluster</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkthc"></a><a id="GSHAG00157"></a><a id="to-change-the-master-broker-in-an-embedded-or-local-broker-cluster"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_change_the_master_broker_in_an_embedded_or_local_broker_cluster">To Change the Master Broker in an Embedded or Local Broker Cluster</h4>
+<div class="paragraph">
+<p>Use the <code>change-master-broker</code> subcommand in remote <code>asadmin</code> mode to
+change the master broker to a different broker in a conventional broker
+cluster with master broker serving a GlassFish Server cluster that uses
+Embedded or Local JMS hosts.</p>
+</div>
+<div class="paragraph">
+<p>Follow this procedure, for example, before you remove from a GlassFish
+cluster the instance associated with the current master broker.</p>
+</div>
+<div id="GSHAG435" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Although not an absolute requirement, you should make sure all GlassFish
+instances and Message Queue brokers in the cluster are running before
+using the <code>change-master-broker</code> command in order to avoid later
+internal configuration synchronization of any unavailable instance or
+broker.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote <code>asadmin</code> subcommands require a running server.</p>
+</li>
+<li>
+<p>Change the master broker by using the
+<a href="../reference-manual/change-master-broker.html#GSRFM00005"><code>change-master-broker</code></a> subcommand:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&gt; asadmin change-master-broker glassfish-clustered-instance-name</pre>
+</div>
+</div>
+<div id="GSHAG436" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help change-master-broker</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gktgj"></a><a id="GSHAG00158"></a><a id="to-migrate-between-types-of-embedded-or-local-conventional-broker-clusters"></a></p>
+</div>
+<div class="paragraph">
+<p>To Migrate Between Types of Embedded or Local Conventional Broker
+Clusters
+<sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup>^^</p>
+</div>
+<div class="paragraph">
+<p>If the need arises to convert from a conventional broker cluster with
+master broker to a conventional broker cluster of peer brokers, or the
+reverse, follow the instructions in "<a href="../../openmq/mq-admin-guide/broker-clusters.html#GMADG00563">Managing
+Conventional Clusters</a>" in Open Message Queue Administration Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="gktfl"></a><a id="GSHAG00159"></a><a id="to-configure-a-glassfish-cluster-to-use-a-local-enhanced-broker-cluster"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_configure_a_glassfish_cluster_to_use_a_local_enhanced_broker_cluster">To Configure a GlassFish Cluster to Use a Local Enhanced Broker Cluster</h4>
+<div class="paragraph">
+<p>Use the <code>configure-jms-cluster</code> subcommand in remote <code>asadmin</code> mode to
+configure an enhanced broker cluster to service a GlassFish Server
+cluster that uses Local JMS hosts.</p>
+</div>
+<div id="GSHAG437" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Perform the following steps after you have created the GlassFish Server
+cluster, but before you have added instances to the cluster or started
+the cluster.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Caution:</p>
+</div>
+<div class="paragraph">
+<p>Before using this procedure to reconfigure an existing cluster, you must
+follow the special procedures to migrate from a conventional broker
+cluster to an enhanced broker cluster, as described in
+"<a href="../../openmq/mq-admin-guide/broker-clusters.html#GMADG00565">Converting a Conventional Cluster to an Enhanced
+Cluster</a>" in Open Message Queue Administration Guide. Failing to perform
+these special procedures could lead to data loss or corruption and even
+render your setup unusable, depending on the JMS operations performed on
+the existing cluster.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote <code>asadmin</code> subcommands require a running server.</p>
+</li>
+<li>
+<p>Create a password file with the entry <code>AS_ADMIN_JMSDBPASSWORD</code>
+specifying the password of the database user.<br>
+For information about password file entries, see the
+<a href="../reference-manual/asadmin.html#GSRFM00263"><code>asadmin</code>(1M)</a> help page.</p>
+</li>
+<li>
+<p>Place a copy of, or a link to, the database&#8217;s JDBC driver <code>.jar</code>
+file in the as-install-parent`/mq/lib/ext` directory on each host where
+a GlassFish Server cluster instance is to run.</p>
+</li>
+<li>
+<p>Configure the GlassFish Server cluster to use a Message Queue
+enhanced broker cluster by using the
+<a href="../reference-manual/configure-jms-cluster.html#GSRFM00008"><code>configure-jms-cluster</code></a> subcommand:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&gt; asadmin --passwordfile password-file configure-jms-cluster --clustertype=enhanced
+--configstoretype=shareddb --messagestoretype=jdbc
+--dbvendor database-vendor-name --dbuser database-user-name --dburl database-url
+--property list-of-database-specific-properties glassfish-cluster-name</pre>
+</div>
+</div>
+<div id="GSHAG438" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help configure-jms-cluster</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="abdby"></a><a id="GSHAG00160"></a><a id="to-configure-a-glassfish-cluster-to-use-a-remote-broker-cluster"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_configure_a_glassfish_cluster_to_use_a_remote_broker_cluster">To Configure a GlassFish Cluster to Use a Remote Broker Cluster</h4>
+<div id="GSHAG439" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Perform the following steps after you have:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Used Message Queue to create a broker cluster.</p>
+</li>
+<li>
+<p>Created the GlassFish Server cluster, but not yet created instances
+for the cluster.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+The remote subcommands used in this procedure require a running server.</p>
+</li>
+<li>
+<p>Delete the <code>default_JMS_host</code> JMS host by using the
+<a href="../reference-manual/delete-jms-host.html#GSRFM00091"><code>delete-jms-host</code></a> subcommand:<br></p>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&gt; asadmin delete-jms-host --target glassfish-cluster-name default_JMS_host</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a JMS host for each broker in the broker cluster by using the
+<a href="../reference-manual/create-jms-host.html#GSRFM00039"><code>create-jms-host</code></a> subcommand.<br>
+For each broker, use an <code>asadmin create-jms-host</code> of the form:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&gt; asadmin create-jms-host --target glassfish-cluster-name --mqhost broker-host
+--mqport broker-port --mquser mq-user --mqpassword mq-user-password
+jms-host-name-for-broker</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Start the brokers in the cluster by using the Message Queue
+<code>imqbrokerd</code> command, as described in "<a href="../../openmq/mq-admin-guide/broker-clusters.html#GMADG00254">Managing Broker
+Clusters</a>" in Open Message Queue Administration Guide.</p>
+</li>
+<li>
+<p>Create instances in the GlassFish Server cluster, as described in
+<a href="instances.html#gkqch">To Create an Instance Centrally</a> and
+<a href="instances.html#gkqbl">To Create an Instance Locally</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="abdbv"></a><a id="GSHAG00213"></a><a id="connection-failover"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_connection_failover">Connection Failover</h3>
+<div class="paragraph">
+<p>The use of Message Queue broker clusters provides JMS connection
+failover, including several options that control how connection failures
+are handled.</p>
+</div>
+<div class="paragraph">
+<p>Use the Administration Console&#8217;s Java Message Service page to configure
+these options. To display this page, click the configuration for the
+GlassFish cluster or instance in the navigation pane, and then click the
+Java Message Service link on the Configuration page.</p>
+</div>
+<div class="paragraph">
+<p>The way in which connection failover operates depends on whether the
+broker cluster is configured to be conventional or enhanced:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In a conventional cluster, when a broker fails, clients may reconnect
+to any other broker in the cluster. The Reconnect field specifies
+whether reconnection should take place, and the Address List Behavior
+and Address List Iterations fields specify how the client chooses what
+broker to fail over to.</p>
+</li>
+<li>
+<p>In an enhanced cluster, when a broker fails, another broker
+automatically takes over its messages and clients. Clients automatically
+fail over to the appropriate broker. The Reconnect, Address List
+Behavior and Address List Iterations fields are ignored.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For more information on connection failover, including how failover on
+conventional clusters differs from failover on enhanced clusters, see
+"<a href="../../openmq/mq-admin-guide/administered-objects.html#GMADG00087">Automatic Reconnection</a>" in Open Message Queue
+Administration Guide.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Reconnect</dt>
+<dd>
+<p>Applies only to conventional clusters. Enables reconnection and
+connection failover. When disabled, the Java Message Service does not
+attempt to reconnect if a connection fails.</p>
+</dd>
+<dt class="hdlist1">Reconnect Interval</dt>
+<dd>
+<p>Specifies the number of seconds between reconnection attempts. If it
+is too short, this time interval does not give a broker time to
+recover. If it is too long, the wait time might represent an
+unacceptable delay. The default value is 5 seconds.</p>
+</dd>
+<dt class="hdlist1">Reconnect Attempts</dt>
+<dd>
+<p>Specifies the number of attempts to connect (or reconnect) to a
+particular JMS host before trying another host in the JMS host list.
+The host list is also known as the Address List. Hosts are chosen from
+the address list either in order or randomly, depending on the setting
+of Address List Behavior.</p>
+</dd>
+<dt class="hdlist1">Address List Behavior</dt>
+<dd>
+<p>For conventional clusters, this field specifies how the Java Message
+Service selects which JMS host in the JMS hosts list to initially
+connect to, and if the broker fails, how the Java Message Service
+selects which JMS host in the JMS hosts list to fail over to.<br>
+For enhanced clusters, this field specifies how the Java Message
+Service selects which JMS host in the JMS hosts list to initially
+connect to.<br>
+When performing initial connection or, for conventional clusters only,
+when performing failover, then if this attribute is set to Priority,
+the Java Message Service tries to connect to the first JMS host
+specified in the JMS hosts list and uses another one only if the first
+one is not available. If this attribute is set to Random, the Java
+Message Service selects the JMS host randomly from the JMS hosts list.
+If that host is not available, another one is chosen randomly.<br>
+The default for Embedded and Local JMS host types is Priority, and the
+default for the Remote JMS host type is Random.<br>
+For Embedded and Local JMS host types, the Java Message Service
+ensures that the Message Queue broker servicing a clustered instance
+appears first in that instance&#8217;s JMS host list.<br>
+Thus, having Priority as the default Address List Behavior ensures
+that an application deployed to a clustered instance will always try
+to create its initial connection to that instance&#8217;s co-located broker.<br>
+If there are many clients attempting a connection using the same
+connection factory, use the Random setting to prevent them from all
+attempting to create their initial connection to the same JMS host.</p>
+</dd>
+<dt class="hdlist1">Address List Iterations</dt>
+<dd>
+<p>For conventional clusters, this field specifies the number of times
+the Java Message Service iterates through the JMS hosts list in an
+effort to establish its initial connection. If the broker fails, this
+field specifies the number of times the Java Message Service iterates
+through the JMS hosts list in an effort to fail over to another
+broker.<br>
+For enhanced clusters, this field specifies the number of times the
+Java Message Service iterates through the JMS hosts list in an effort
+to establish its initial connection. If the broker fails, this field
+is not used when performing reconnection.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>You can override these settings using JMS connection factory settings.
+For details, see "<a href="../administration-guide/jms.html#GSADG00598">Administering JMS Connection
+Factories and Destinations</a>" in GlassFish Server Open Source Edition
+Administration Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="abdbw"></a><a id="GSHAG00214"></a><a id="load-balanced-delivery-to-mdbs"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_load_balanced_delivery_to_mdbs">Load-Balanced Delivery to MDBs</h3>
+<div class="paragraph">
+<p>When a message-driven bean (MDB) application is deployed to a GlassFish
+cluster, incoming messages are delivered randomly to MDBs without regard
+to the cluster instances in which they are running.</p>
+</div>
+<div class="paragraph">
+<p>If the MDB is configured to receive messages from a durable or
+non-durable subscription on a topic, then only one MDB instance across
+the whole GlassFish cluster will receive each message.</p>
+</div>
+<div class="paragraph">
+<p>For more information about these features, see "<a href="../../openmq/mq-admin-guide/jmsra-properties.html#GMADG00300">About
+Shared Topic Subscriptions for Clustered Containers</a>" in Open Message
+Queue Administration Guide.</p>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="session-persistence-and-failover.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="rmi-iiop.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

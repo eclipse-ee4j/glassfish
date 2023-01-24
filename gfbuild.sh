@@ -67,7 +67,7 @@ archive_bundles(){
 }
 
 dev_build(){
-  mvn -U clean install -Pstaging,fastest -T2C ${MVN_EXTRA}
+  mvn -U clean install -Pstaging,fastest ${MVN_EXTRA}
 }
 
 build_re_dev(){

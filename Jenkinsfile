@@ -147,7 +147,7 @@ pipeline {
           uname -a
 
           # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
-          mvn clean install -Pfastest,staging -T4C
+          mvn clean install -Pfastest,staging
           ./gfbuild.sh archive_bundles
           mvn clean
           tar -c -C ${WORKSPACE}/appserver/tests common_test.sh gftest.sh appserv-tests quicklook | gzip --fast > ${WORKSPACE}/bundles/appserv_tests.tar.gz

@@ -95,13 +95,13 @@
 
 
     <target name="compile-tests" description="compile the test ng example">
-        <echo message="compiling test client to ${test.class.output}" />
+        <echo level="info" message="compiling test client to ${test.class.output}" />
 
         <fileset dir="${basedir}/src/test" id="java.source.id">
             <include name="**/*.java" />
         </fileset>
         <property name="source.file.list" refid="java.source.id" />
-        <echo message="Listing of source files: ${source.file.list}" />
+        <echo level="info" message="Listing of source files: ${source.file.list}" />
 
         <mkdir dir="${test.class.output}" />
         <javac debug="true" source="1.8" target="1.8" classpathref="class.path" srcdir="${basedir}/src/test" sourcepath="" destdir="${test.class.output}">
@@ -129,7 +129,7 @@
     </target>
 
     <target name="archive-type">
-        <echo message="archive-type is ${archive.type}" />
+        <echo level="info" message="archive-type is ${archive.type}" />
         <condition property="archive.war">
             <equals arg1="war" arg2="${archive.type}" />
         </condition>
@@ -159,7 +159,7 @@
 
 
     <target name="build-war" depends="archive-type" if="archive.war">
-        <echo message="Now creating a war file ${dist.dir}/${app.file.ext}" />
+        <echo level="info" message="Now creating a war file ${dist.dir}/${app.file.ext}" />
         <delete dir="${class.output}" />
         <delete dir="${dist.dir}" />
         <delete file="${app.file.ext}" />
@@ -198,14 +198,14 @@
     </target>
 
     <target name="build-jar" depends="archive-type" if="archive.jar">
-        <echo message="Now creating a jar file ${dist.dir}/${app.file.ext}" />
+        <echo level="info" message="Now creating a jar file ${dist.dir}/${app.file.ext}" />
         <delete dir="${class.output}" />
         <delete dir="${dist.dir}" />
         <mkdir dir="${class.output}" />
         <mkdir dir="${dist.dir}" />
-        <echo message="Now compiling" />
+        <echo level="info" message="Now compiling" />
         <javac debug="true" source="1.8" target="1.8" classpathref="class.path" srcdir="src/java" destdir="${class.output}" />
-        <echo message="Now creating a war file ${dist.dir}/${app.file.ext}" />
+        <echo level="info" message="Now creating a war file ${dist.dir}/${app.file.ext}" />
         <jar destfile="${dist.dir}/${app.file.ext}" update="true" basedir="${class.output}" />
     </target>
 
@@ -216,7 +216,7 @@
         <mkdir dir="${class.output}" />
         <mkdir dir="${dist.dir}" />
         <javac debug="true" source="1.8" target="1.8" classpathref="class.path" srcdir="src/java" failonerror="false" destdir="${class.output}" />
-        <echo message="war.classes ============== : ${war.classes}" />
+        <echo level="info" message="war.classes ============== : ${war.classes}" />
         <war destfile="${dist.dir}/${app.file}Web.war" webxml="metadata/web.xml">
             <fileset dir="web/html" />
             <fileset dir="web/jsp" />
@@ -234,7 +234,7 @@
         <ear destfile="${dist.dir}/${app.file.ext}" appxml="metadata/application.xml">
             <fileset dir="${dist.dir}" includes="*.jar,*.war" />
         </ear>
-        <echo message="Packaged Archive at ${dist.dir}/${app.file.ext}" />
+        <echo level="info" message="Packaged Archive at ${dist.dir}/${app.file.ext}" />
     </target>
 
     <target name="build-appclient-ear" depends="archive-type" if="archive.appclient_ear">
@@ -256,7 +256,7 @@
         <ear destfile="${dist.dir}/${app.file}App.ear" appxml="metadata/application.xml">
             <fileset dir="${dist.dir}" includes="*.jar,*.war" />
         </ear>
-        <echo message="Packaged Archive at ${dist.dir}/${app.file}App.ear" />
+        <echo level="info" message="Packaged Archive at ${dist.dir}/${app.file}App.ear" />
     </target>
 
     <target name="checkTestNGXML">
@@ -285,7 +285,7 @@
     </target>
 
     <target name="runtest-impl-xml" depends="setOSConditions,asenv-unix,asenv-windows,checkTestNGXML" if="testng.xml.present">
-        <echo message="=============Starting TestNG test at ${test.class.output} from testng.xml  ============" />
+        <echo level="info" message="=============Starting TestNG test at ${test.class.output} from testng.xml  ============" />
 
         <mkdir dir="${result.output}" />
         <testng outputdir="${result.output}" suitename="${testsuite.name}" testname="${testng.test.name}" classpathref="run.testng.classpath">
@@ -366,7 +366,7 @@
     </target>
 
     <target name="runwsittest-impl-xml" depends="checkTestNGXML" if="testng.xml.present">
-        <echo message="=============Starting TestNG test at ${test.class.output} from testng.xml  ============" />
+        <echo level="info" message="=============Starting TestNG test at ${test.class.output} from testng.xml  ============" />
         <mkdir dir="${result.output}" />
         <testng outputdir="${result.output}" suitename="${testsuite.name}" testname="${testng.test.name}" classpathref="wsit.classpath" classpath="${build.classes.home}:${basedir}/etc">
             <xmlfileset dir="." includes="testng.xml" />

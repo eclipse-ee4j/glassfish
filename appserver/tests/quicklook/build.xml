@@ -98,12 +98,12 @@
     <target name="all_wd">
         <record name="${basedir}/allrun.output" action="start" />
 
-        <echo>+-----------------------------+</echo>
-        <echo>|                             |</echo>
-        <echo>|        R u n n i n g        |</echo>
-        <echo>|            all_wd           |</echo>
-        <echo>|          Web Profile        |</echo>
-        <echo>+-----------------------------+</echo>
+        <echo level="info">+-----------------------------+</echo>
+        <echo level="info">|                             |</echo>
+        <echo level="info">|        R u n n i n g        |</echo>
+        <echo level="info">|            all_wd           |</echo>
+        <echo level="info">|          Web Profile        |</echo>
+        <echo level="info">+-----------------------------+</echo>
 
         <property name="env.security_manager" value="OFF" />
         <antcall target="verify-xml" />
@@ -129,12 +129,12 @@
     <target name="all_wd_security">
         <record name="${basedir}/allrun.output" action="start" />
 
-        <echo>+-----------------------------+</echo>
-        <echo>|                             |</echo>
-        <echo>|        R u n n i n g        |</echo>
-        <echo>|       all_wd_security       |</echo>
-        <echo>|         Web Profile         |</echo>
-        <echo>+-----------------------------+</echo>
+        <echo level="info">+-----------------------------+</echo>
+        <echo level="info">|                             |</echo>
+        <echo level="info">|        R u n n i n g        |</echo>
+        <echo level="info">|       all_wd_security       |</echo>
+        <echo level="info">|         Web Profile         |</echo>
+        <echo level="info">+-----------------------------+</echo>
 
         <antcall target="add-quicklook-policy-grants" />
         <property name="env.security_manager" value="ON" />
@@ -163,12 +163,12 @@
         <record name="${basedir}/allrun.output" action="start" />
 
 
-        <echo>+-----------------------------+</echo>
-        <echo>|                             |</echo>
-        <echo>|        R u n n i n g        |</echo>
-        <echo>|             all             |</echo>
-        <echo>|                             |</echo>
-        <echo>+-----------------------------+</echo>
+        <echo level="info">+-----------------------------+</echo>
+        <echo level="info">|                             |</echo>
+        <echo level="info">|        R u n n i n g        |</echo>
+        <echo level="info">|             all             |</echo>
+        <echo level="info">|                             |</echo>
+        <echo level="info">+-----------------------------+</echo>
 
         <property name="env.security_manager" value="OFF" />
         <antcall target="verify-xml" />
@@ -198,12 +198,12 @@
         <record name="${basedir}/allrun.output" action="start" />
 
 
-        <echo>+-----------------------------+</echo>
-        <echo>|                             |</echo>
-        <echo>|        R u n n i n g        |</echo>
-        <echo>|            all_ri           |</echo>
-        <echo>|                             |</echo>
-        <echo>+-----------------------------+</echo>
+        <echo level="info">+-----------------------------+</echo>
+        <echo level="info">|                             |</echo>
+        <echo level="info">|        R u n n i n g        |</echo>
+        <echo level="info">|            all_ri           |</echo>
+        <echo level="info">|                             |</echo>
+        <echo level="info">+-----------------------------+</echo>
 
         <property name="env.security_manager" value="OFF" />
         <antcall target="verify-xml" />
@@ -233,12 +233,12 @@
         <record name="${basedir}/allrun.output" action="start" />
 
 
-        <echo>+-----------------------------+</echo>
-        <echo>|                             |</echo>
-        <echo>|        R u n n i n g        |</echo>
-        <echo>|       all_gd_security       |</echo>
-        <echo>|         Full Profile        |</echo>
-        <echo>+-----------------------------+</echo>
+        <echo level="info">+-----------------------------+</echo>
+        <echo level="info">|                             |</echo>
+        <echo level="info">|        R u n n i n g        |</echo>
+        <echo level="info">|       all_gd_security       |</echo>
+        <echo level="info">|         Full Profile        |</echo>
+        <echo level="info">+-----------------------------+</echo>
 
 
         <antcall target="add-quicklook-policy-grants" />
@@ -273,12 +273,12 @@
     <target name="dev_debug" depends="clean">
         <record name="${basedir}/allrun.output" action="start" />
 
-        <echo>+-----------------------------+</echo>
-        <echo>|                             |</echo>
-        <echo>|        R u n n i n g        |</echo>
-        <echo>|           dev_debug         |</echo>
-        <echo>|         Full Profile        |</echo>
-        <echo>+-----------------------------+</echo>
+        <echo level="info">+-----------------------------+</echo>
+        <echo level="info">|                             |</echo>
+        <echo level="info">|        R u n n i n g        |</echo>
+        <echo level="info">|           dev_debug         |</echo>
+        <echo level="info">|         Full Profile        |</echo>
+        <echo level="info">+-----------------------------+</echo>
 
         <antcall target="verify-xml" />
         <antcall target="start-derby" />
@@ -318,12 +318,12 @@
 
     <target name="start-server-hk2" depends="setOSConditions">
 
-        <echo>+-----------------------------+</echo>
-        <echo>|                             |</echo>
-        <echo>| S T A R T I N G   GLASSFISH |</echo>
-        <echo>|       in HK2 mode           |</echo>
-        <echo>|                             |</echo>
-        <echo>+-----------------------------+</echo>
+        <echo level="info">+-----------------------------+</echo>
+        <echo level="info">|                             |</echo>
+        <echo level="info">| S T A R T I N G   GLASSFISH |</echo>
+        <echo level="info">|       in HK2 mode           |</echo>
+        <echo level="info">|                             |</echo>
+        <echo level="info">+-----------------------------+</echo>
 
         <antcall target="start-server-hk2-unix" />
         <antcall target="start-server-hk2-windows" />
@@ -347,12 +347,12 @@
 
     <target name="start-server-felix" depends="setOSConditions">
 
-        <echo>+-----------------------------+</echo>
-        <echo>|                             |</echo>
-        <echo>| S T A R T I N G   GLASSFISH |</echo>
-        <echo>|       in Felix mode         |</echo>
-        <echo>|                             |</echo>
-        <echo>+-----------------------------+</echo>
+        <echo level="info">+-----------------------------+</echo>
+        <echo level="info">|                             |</echo>
+        <echo level="info">| S T A R T I N G   GLASSFISH |</echo>
+        <echo level="info">|       in Felix mode         |</echo>
+        <echo level="info">|                             |</echo>
+        <echo level="info">+-----------------------------+</echo>
 
         <antcall target="start-server-felix-unix" />
         <antcall target="start-server-felix-windows" />
@@ -383,7 +383,7 @@
 
     <target name="build-deploy">
         <record name="${basedir}/build.output" action="start" />
-        <echo message="ANT PROJECT ${ant.project.name}" />
+        <echo level="info" message="ANT PROJECT ${ant.project.name}" />
 
         <run-quicklook-test path="amx" target="build" />
         <run-quicklook-test path="admin" target="build" />
@@ -412,7 +412,7 @@
     </target>
 
     <target name="build-deploy-gd">
-        <echo message="Glassfish Full Profile Build Deploy" />
+        <echo level="info" message="Glassfish Full Profile Build Deploy" />
         <run-quicklook-test path="ejb/remoteview" target="build-deploy" />
         <run-quicklook-test path="ejb/singleton" target="build-deploy" />
         <run-quicklook-test path="ejb/cmp" target="build-deploy" />
@@ -432,16 +432,16 @@
     <target name="runtest" depends="initprops,setOSConditions,asenv-unix,asenv-windows">
         <record name="${basedir}/runtestng.output" action="start" />
 
-        <echo message="${line.separator}${line.separator}" />
-        <echo message="=============================================================================" />
-        <echo message="=                                                                           =" />
-        <echo message="=         S t a r t i n g   TestNG   f u n c t i o n a l    t e s t s       =" />
-        <echo message="=                                                                           =" />
-        <echo message="= TEST FILE = ${testng.xml}                                                 =" />
-        <echo message="= BASEDIR   = ${basedir}                                                    =" />
-        <echo message="=                                                                           =" />
-        <echo message="=============================================================================" />
-        <echo message="${line.separator}${line.separator}" />
+        <echo level="info" message="${line.separator}${line.separator}" />
+        <echo level="info" message="=============================================================================" />
+        <echo level="info" message="=                                                                           =" />
+        <echo level="info" message="=         S t a r t i n g   TestNG   f u n c t i o n a l    t e s t s       =" />
+        <echo level="info" message="=                                                                           =" />
+        <echo level="info" message="= TEST FILE = ${testng.xml}                                                 =" />
+        <echo level="info" message="= BASEDIR   = ${basedir}                                                    =" />
+        <echo level="info" message="=                                                                           =" />
+        <echo level="info" message="=============================================================================" />
+        <echo level="info" message="${line.separator}${line.separator}" />
 
         <property name="hasTestNGXML" value="true" />
         <loadfile property="tests" srcfile="${testng.xml}">
@@ -452,12 +452,12 @@
             </filterchain>
         </loadfile>
         
-        <echo message="${line.separator}${line.separator}" />
-        <echo message="=============================================================================" />
-        <echo message="=  R u n n i n g   t h e   f o l l o w i n g    t e s t s:                  =" />
-        <echo message="= From TEST FILE = ${testng.xml}                                                 =" />
-        <echo message="${tests}" />
-        <echo message="=============================================================================" />
+        <echo level="info" message="${line.separator}${line.separator}" />
+        <echo level="info" message="=============================================================================" />
+        <echo level="info" message="=  R u n n i n g   t h e   f o l l o w i n g    t e s t s:                  =" />
+        <echo level="info" message="= From TEST FILE = ${testng.xml}                                                 =" />
+        <echo level="info" message="${tests}" />
+        <echo level="info" message="=============================================================================" />
 
         <mkdir dir="${test.report}" />
         <testng outputdir="${test.report}" classpathref="run.testng.classpath">
@@ -547,7 +547,7 @@
 
     <!-- Generate the TestNG report -->
     <target name="report" depends="initprops">
-        <echo message="Generating report at ${test.report}" />
+        <echo level="info" message="Generating report at ${test.report}" />
         <mkdir dir="${test.report}" />
         <junitreport todir="${test.report}">
             <fileset dir=".">
@@ -555,7 +555,7 @@
             </fileset>
             <report format="noframes" todir="${test.report}" />
         </junitreport>
-        <echo message="Test Report available at ${test.report}/index.html" />
+        <echo level="info" message="Test Report available at ${test.report}/index.html" />
     </target>
 
     <!-- Fail the build unless the expected number of tests has passed -->
@@ -569,7 +569,7 @@
         <if>
             <isset property="expected.passed.test.count" />
             <then>
-                <echo>perform the assertion</echo>
+                <echo level="info">perform the assertion</echo>
                 <sequential>
                     <property name="test.report.dir" value="${basedir}/test-output" />
                     <loadfile property="report.summary" srcFile="${test.report.dir}/index.html" />
@@ -601,11 +601,11 @@
             </filterchain>
         </loadfile>
 
-        <echo message="              JaxwsFromWsdl Tests" />
-        <echo message="${testng1_output}" />
-        <echo message="              Jsr109tester Tests" />
-        <echo message="${testng2_output}" />
-        <echo message="${testng_output}" />
+        <echo level="info" message="              JaxwsFromWsdl Tests" />
+        <echo level="info" message="${testng1_output}" />
+        <echo level="info" message="              Jsr109tester Tests" />
+        <echo level="info" message="${testng2_output}" />
+        <echo level="info" message="${testng_output}" />
     </target>
 
     <!-- created new target for web-distribution summary as it is different from glassfish distribution summary-->
@@ -615,7 +615,7 @@
                 <tailfilter lines="6" />
             </filterchain>
         </loadfile>
-        <echo message="${testng_output}" />
+        <echo level="info" message="${testng_output}" />
     </target>
 
     <!-- added few messages in order to show testng summary of wsit related tests along with final summary as wsit tests are ran seperately as a workaround for GLASSFISH-21672 -->
@@ -759,7 +759,7 @@
     </target>
 
     <target name="stop-server" depends="setOSConditions">
-        <echo message="stopping server" />
+        <echo level="info" message="stopping server" />
         <antcall target="stop-server-unix" />
         <antcall target="stop-server-windows" />
     </target>
@@ -779,7 +779,7 @@
     </target>
 
     <target name="verify-xml" depends="setOSConditions">
-        <echo message="Verify Domain.xml" />
+        <echo level="info" message="Verify Domain.xml" />
         <antcall target="verify-xml-unix" />
         <antcall target="verify-xml-windows" />
     </target>
@@ -830,12 +830,12 @@
             <sequential if:true="${do-run-test}">
                 <local name="absolute.path" />
                 <property name="absolute.path" location="@{path}" />
-                <echo message="${line.separator}" />
-                <echo message=" *************************" />
-                <echo message=" * @{target} @{path} " />
-                <echo message=" * Path: ${absolute.path} " />
-                <echo message=" *************************" />
-                <echo message="${line.separator}" />
+                <echo level="info" message="${line.separator}" />
+                <echo level="info" message=" *************************" />
+                <echo level="info" message=" * @{target} @{path} " />
+                <echo level="info" message=" * Path: ${absolute.path} " />
+                <echo level="info" message=" *************************" />
+                <echo level="info" message="${line.separator}" />
                 <ant dir="@{path}" target="@{target}"/>
             </sequential>
         </sequential>

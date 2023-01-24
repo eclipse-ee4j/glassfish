@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -87,6 +87,9 @@ public class FelixPrettyPrinter {
                         // Now extracting this:
                         // "(&(osgi.wiring.package=org.glassfish.grizzly)(version>=2.4.0)(!(version>=3.0.0)))"
                         index2 = message.indexOf(" ", index);
+                        if (index2 == -1) {
+                            index2 = message.indexOf(")))", index) + ")))".length();
+                        }
 
                         String packageAndVersion = message.substring(index, index2);
 
@@ -158,4 +161,9 @@ public class FelixPrettyPrinter {
         }
         messageBuilder.append(message.trim()).append("\n");
     }
+
+    public static void main(String[] args) {
+        System.out.println(prettyPrintExceptionMessage(" Unable to resolve org.glassfish.main.webservices.connector [218](R 218.0): missing requirement [org.glassfish.main.webservices.connector [218](R 218.0)] osgi.wiring.package; (&(osgi.wiring.package=org.glassfish.web.deployment.descriptor)(version>=7.0.0)(!(version>=8.0.0))) [caused by: Unable to resolve org.glassfish.main.web.glue [124](R 124.0): missing requirement [org.glassfish.main.web.glue [124](R 124.0)] osgi.wiring.bundle; (osgi.wiring.bundle=org.glassfish.main.web.ha) [caused by: Unable to resolve org.glassfish.main.web.ha [200](R 200.0): missing requirement [org.glassfish.main.web.ha [200](R 200.0)] osgi.wiring.package; (&(osgi.wiring.package=com.sun.web.security)(version>=7.0.0)(!(version>=8.0.0))) [caused by: Unable to resolve org.glassfish.main.security.websecurity [227](R 227.0): missing requirement [org.glassfish.main.security.websecurity [227](R 227.0)] osgi.wiring.package; (&(osgi.wiring.package=com.sun.logging.enterprise.system.container.web)(version>=7.0.0)(!(version>=8.0.0))) [caused by: Unable to resolve org.glassfish.main.web.war-util [140](R 140.0): missing requirement [org.glassfish.main.web.war-util [140](R 140.0)] osgi.wiring.package; (osgi.wiring.package=org.jboss.weld.interceptor.proxy) [caused by: Unable to resolve org.jboss.weld.osgi-bundle [51](R 51.0): missing requirement [org.jboss.weld.osgi-bundle [51](R 51.0)] osgi.wiring.package; (&(osgi.wiring.package=org.jboss.classfilewriter.code)(version>=1.2.0)(!(version>=2.0.0))) [caused by: Unable to resolve jboss-classfilewriter [242](R 242.0): missing requirement [jboss-classfilewriter [242](R 242.0)] osgi.ee; (osgi.ee=UNKNOWN)]]]]]] Unresolved requirements: [[org.glassfish.main.webservices.connector [218](R 218.0)] osgi.wiring.package; (&(osgi.wiring.package=org.glassfish.web.deployment.descriptor)(version>=7.0.0)(!(version>=8.0.0)))]"));
+    }
+
 }

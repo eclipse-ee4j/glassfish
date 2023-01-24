@@ -1,0 +1,686 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Class Loaders</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Class Loaders</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="setting-up-dev-env.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="debugging-apps.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSDVG00003"></a><a id="beade"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="class-loaders">2 Class Loaders</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Understanding Oracle GlassFish Server class loaders can help you
+determine where to place supporting JAR and resource files for your
+modules and applications.</p>
+</div>
+<div class="paragraph">
+<p>In a JVM implementation, the class loaders dynamically load a specific
+Java class file needed for resolving a dependency. For example, when an
+instance of <code>java.util.Enumeration</code> needs to be created, one of the
+class loaders loads the relevant class into the environment.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beadf">The Class Loader Hierarchy</a></p>
+</li>
+<li>
+<p><a href="#gfqpi">Delegation</a></p>
+</li>
+<li>
+<p><a href="#beadk">Using the Java Optional Package Mechanism</a></p>
+</li>
+<li>
+<p><a href="#beadg">Class Loader Universes</a></p>
+</li>
+<li>
+<p><a href="#gatej">Application-Specific Class Loading</a></p>
+</li>
+<li>
+<p><a href="#beadh">Circumventing Class Loader Isolation</a></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The Web Profile of the GlassFish Server supports the EJB 3.1 Lite
+specification, which allows enterprise beans within web applications,
+among other features. The full GlassFish Server supports the entire EJB
+3.1 specification. For details, see
+<a href="http://jcp.org/en/jsr/detail?id=318">JSR 318</a>
+(<code>http://jcp.org/en/jsr/detail?id=318</code>).</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For information about class loader debugging, see
+<a href="debugging-apps.html#gkpdk">Class Loader Debugging</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beadf"></a><a id="GSDVG00094"></a><a id="the-class-loader-hierarchy"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_the_class_loader_hierarchy">The Class Loader Hierarchy</h3>
+<div class="paragraph">
+<p>Class loaders in the GlassFish Server runtime follow a delegation
+hierarchy that is illustrated in the following figure and fully
+described in <a href="#fvxzq">Table 2-1</a>.</p>
+</div>
+<div class="paragraph">
+<p>The following table describes the class loaders in the GlassFish Server.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSDVG531"></a><a id="sthref4"></a><a id="fvxzq"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 2-1 Oracle GlassFish Server Class Loaders</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Class Loader</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bootstrap</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Bootstrap class loader loads the basic runtime classes
+provided by the JVM software.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Extension</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Extension class loader loads classes from JAR files
+present in the system extensions directory, domain-dir`/lib/ext`. It is
+parent to the Public API class loader. See <a href="#beadk">Using the Java
+Optional Package Mechanism</a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Public API</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Public API class loader makes available all classes
+specifically exported by the GlassFish Server runtime for use by
+deployed applications. This includes, but is not limited to, Java EE
+APIs and other Oracle APIs. It is parent to the Common class loader.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Common</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Common class loader loads JAR files in the as-install`/lib`
+directory, followed by JAR files in the domain-dir`/lib` directory.
+Using domain-dir`/lib` is recommended whenever possible, and required
+for custom login modules and realms. It is parent to the Connector class
+loader. See <a href="#beadj">Using the Common Class Loader</a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Connector</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Connector class loader is a single class loader instance
+that loads individually deployed connector modules, which are shared
+across all applications. It is parent to the Applib class loader and the
+LifeCycleModule class loader.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LifeCycleModule</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The LifeCycleModule class loader is created once per
+lifecycle module. Each lifecycle module&#8217;s classpath is used to construct
+its own class loader. For more information on lifecycle modules, see
+<a href="lifecycle-listeners.html#beamc">Developing Lifecycle Listeners</a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Applib</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>The Applib class loader loads the library classes, specified during
+deployment, for a specific enabled module or Java EE application; see
+<a href="#gatej">Application-Specific Class Loading</a>. One instance of this
+class loader is present in each class loader universe; see
+<a href="#beadg">Class Loader Universes</a>. It is parent to the Archive class
+loader.</p>
+</div>
+<div class="paragraph">
+<p>When multiple deployed applications use the same library, they share the
+same instance of the library. One library cannot reference classes from
+another library.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Archive</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Archive class loader loads classes from the WAR, EAR, and
+JAR files or directories (for directory deployment) of applications or
+modules deployed to the GlassFish Server. This class loader also loads
+any application-specific classes generated by the GlassFish Server
+runtime, such as stub classes or servlets generated by JSP pages.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>In previous GlassFish Server versions, the JVM options provided
+<code>classpath-prefix</code> and <code>classpath-suffix</code> attributes that made it
+possible to add JAR files or directories either in front of, or after
+the application server&#8217;s system <code>classpath</code>. These options are not
+present in GlassFish Server 6.0.</p>
+</div>
+<div class="paragraph">
+<p>The <code>classpath-prefix</code> was typically used to substitute another package
+for one of the GlassFish Server packages, for example if a newer one was
+available. This same result can be achieved on a per-application basis with the
+<code>--libraries</code> option for the <code>deploy</code> subcommand. For more information,
+see the <a href="../reference-manual/deploy.html#GSRFM00114"><code>deploy</code>(1)</a> help page.
+The Java Optional Package Mechanism does what <code>classpath-suffix</code> used to do. For more
+information, see <a href="#beadk">Using the Java Optional Package Mechanism</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gfqpi"></a><a id="GSDVG00095"></a><a id="delegation"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_delegation">Delegation</h3>
+<div class="paragraph">
+<p>Note that the class loader hierarchy is not a Java inheritance
+hierarchy, but a delegation hierarchy. In the delegation design, a class
+loader delegates class loading to its parent before attempting to load a
+class itself. If the parent class loader cannot load a class, the class
+loader attempts to load the class itself. In effect, a class loader is
+responsible for loading only the classes not available to the parent.
+Classes loaded by a class loader higher in the hierarchy cannot refer to
+classes available lower in the hierarchy.</p>
+</div>
+<div class="paragraph">
+<p>The Java Servlet specification recommends that a web module&#8217;s class
+loader look in the local class loader before delegating to its parent.
+You can make this class loader follow the delegation inversion model in
+the Servlet specification by setting <code>delegate="false"</code> in the
+<code>class-loader</code> element of the <code>glassfish-web.xml</code> file. It is safe to do
+this only for a web module that does not interact with any other
+modules. For details, see "<a href="../application-deployment-guide/dd-elements.html#GSDPG00110">class-loader</a>" in GlassFish
+Server Open Source Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p>The default value is <code>delegate="true"</code>, which causes a web module&#8217;s
+class loader to delegate in the same manner as the other class loaders.
+You must use <code>delegate="true"</code> for a web application that accesses EJB
+components or that acts as a web service client or endpoint. For details
+about <code>glassfish-web.xml</code>, see the <a href="../application-deployment-guide/toc.html#GSDPG">GlassFish Server Open
+Source Edition Application Deployment Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p>For a number of packages, including <code>java.*</code> and <code>javax.*</code>, symbol
+resolution is always delegated to the parent class loader regardless of
+the <code>delegate</code> setting. This prevents applications from overriding core
+Java runtime classes or changing the API versions of specifications that
+are part of the Java EE platform.</p>
+</div>
+<div class="paragraph">
+<p><a id="beadk"></a><a id="GSDVG00096"></a><a id="using-the-java-optional-package-mechanism"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_the_java_optional_package_mechanism">Using the Java Optional Package Mechanism</h3>
+<div class="paragraph">
+<p>Optional packages are packages of Java classes and associated native
+code that application developers can use to extend the functionality of
+the core platform.</p>
+</div>
+<div class="paragraph">
+<p>To use the Java optional package mechanism, copy the JAR files into the
+domain-dir`/lib/ext` directory, or use the <code>asadmin add-library</code> command
+with the <code>--type ext</code> option, then restart the server. For more
+information about the <code>asadmin add-library</code> command, see the GlassFish
+Server Open Source Edition Reference Manual.</p>
+</div>
+<div class="paragraph">
+<p>For more information, see
+<a href="http://docs.oracle.com/javase/8/docs/technotes/guides/extensions/extensions.html">Optional
+Packages - An Overview</a>
+(<code>http://docs.oracle.com/javase/8/docs/technotes/guides/extensions/extensions.html</code>)
+and
+<a href="http://download.oracle.com/javase/tutorial/ext/basics/load.html">Understanding
+Extension Class Loading</a>
+(<code>http://docs.oracle.com/javase/tutorial/ext/basics/load.html</code>).</p>
+</div>
+<div class="paragraph">
+<p><a id="gchif"></a><a id="GSDVG00097"></a><a id="using-the-endorsed-standards-override-mechanism"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_the_endorsed_standards_override_mechanism">Using the Endorsed Standards Override Mechanism</h3>
+<div class="paragraph">
+<p>Endorsed standards handle changes to classes and APIs that are bundled
+in the JDK but are subject to change by external bodies.</p>
+</div>
+<div class="paragraph">
+<p>To use the endorsed standards override mechanism, copy the JAR files
+into the domain-dir`/lib/endorsed` directory, then restart the server.</p>
+</div>
+<div class="paragraph">
+<p>For more information and the list of packages that can be overridden,
+see
+<a href="http://docs.oracle.com/javase/8/docs/technotes/guides/standards/">Endorsed
+Standards Override Mechanism</a>
+(<code>http://docs.oracle.com/javase/8/docs/technotes/guides/standards/</code>).</p>
+</div>
+<div class="paragraph">
+<p><a id="beadg"></a><a id="GSDVG00098"></a><a id="class-loader-universes"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_class_loader_universes">Class Loader Universes</h3>
+<div class="paragraph">
+<p>Access to components within applications and modules installed on the
+server occurs within the context of isolated class loader universes,
+each of which has its own Applib and Archive class loaders.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Application Universe - Each Java EE application has its own class
+loader universe, which loads the classes in all the modules in the
+application.</p>
+</li>
+<li>
+<p>Individually Deployed Module Universe - Each individually deployed EJB
+JAR or web WAR has its own class loader universe, which loads the
+classes in the module.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A resource such as a file that is accessed by a servlet, JSP, or EJB
+component must be in one of the following locations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A directory pointed to by the Libraries field or <code>--libraries</code> option
+used during deployment</p>
+</li>
+<li>
+<p>A directory pointed to by the <code>library-directory</code> element in the
+<code>application.xml</code> deployment descriptor</p>
+</li>
+<li>
+<p>A directory pointed to by the application or module&#8217;s classpath; for
+example, a web module&#8217;s classpath includes these directories:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>module-name/WEB-INF/classes
+module-name/WEB-INF/lib</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gatej"></a><a id="GSDVG00099"></a><a id="application-specific-class-loading"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_application_specific_class_loading">Application-Specific Class Loading</h3>
+<div class="paragraph">
+<p>You can specify module- or application-specific library classes in one
+of the following ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Use the Administration Console. Open the Applications component, then
+go to the page for the type of application or module. Select the Deploy
+button. Type the comma-separated paths in the Libraries field. For
+details, click the Help button in the Administration Console.</p>
+</li>
+<li>
+<p>Use the <code>asadmin deploy</code> command with the <code>--libraries</code> option and
+specify comma-separated paths. For details, see the
+<a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference Manual</a>.</p>
+</li>
+<li>
+<p>Use the <code>asadmin add-library</code> command with the <code>--type app</code> option,
+then restart the server. For details, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish
+Server Open Source Edition Reference Manual</a>.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>None of these alternatives apply to application clients. For more
+information, see <a href="java-clients.html#gjpjt">Using Libraries with
+Application Clients</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>You can update a library JAR file using dynamic reloading or by
+restarting (disabling and re-enabling) a module or application. To add
+or remove library JAR files, you can redeploy the module or application.</p>
+</div>
+<div class="paragraph">
+<p>Application libraries are included in the Applib class loader. Paths to
+libraries can be relative or absolute. A relative path is relative to
+domain-dir`/lib/applibs`. If the path is absolute, the path must be
+accessible to the domain administration server (DAS). The GlassFish
+Server automatically synchronizes these libraries to all remote cluster
+instances when the cluster is restarted. However, libraries specified by
+absolute paths are not guaranteed to be synchronized.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You can use application-specific class loading to specify a different
+XML parser than the default GlassFish Server XML parser.</p>
+</div>
+<div class="paragraph">
+<p>You can also use application-specific class loading to access different
+versions of a library from different applications.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If multiple applications or modules refer to the same libraries, classes
+in those libraries are automatically shared. This can reduce the memory
+footprint and allow sharing of static information. However, applications
+or modules using application-specific libraries are not portable. Other
+ways to make libraries available are described in
+<a href="#beadh">Circumventing Class Loader Isolation</a>.</p>
+</div>
+<div class="paragraph">
+<p>One library cannot reference classes from another library.</p>
+</div>
+<div class="paragraph">
+<p>For general information about deployment, including dynamic reloading,
+see the <a href="../application-deployment-guide/toc.html#GSDPG">GlassFish Server Open Source Edition Application
+Deployment Guide</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you see an access control error message when you try to use a
+library, you may need to grant permission to the library in the
+<code>server.policy</code> file. For more information, see
+<a href="securing-apps.html#beabz">Changing Permissions for an Application</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="beadh"></a><a id="GSDVG00100"></a><a id="circumventing-class-loader-isolation"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_circumventing_class_loader_isolation">Circumventing Class Loader Isolation</h3>
+<div class="paragraph">
+<p>Since each application or individually deployed module class loader
+universe is isolated, an application or module cannot load classes from
+another application or module. This prevents two similarly named classes
+in different applications or modules from interfering with each other.</p>
+</div>
+<div class="paragraph">
+<p>To circumvent this limitation for libraries, utility classes, or
+individually deployed modules accessed by more than one application, you
+can include the relevant path to the required classes in one of these
+ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beadj">Using the Common Class Loader</a></p>
+</li>
+<li>
+<p><a href="#gcrnt">Sharing Libraries Across a Cluster</a></p>
+</li>
+<li>
+<p><a href="#beadl">Packaging the Client JAR for One Application in Another
+Application</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beadj"></a><a id="GSDVG00342"></a><a id="using-the-common-class-loader"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_using_the_common_class_loader">Using the Common Class Loader</h4>
+<div class="paragraph">
+<p>To use the Common class loader, copy the JAR files into the
+domain-dir`/lib` or as-install`/lib` directory, or use the
+<code>asadmin add-library</code> command with the <code>--type common</code> option, then
+restart the server. For more information about the <code>asadmin add-library</code>
+command, see the GlassFish Server Open Source Edition Reference Manual.</p>
+</div>
+<div class="paragraph">
+<p>Using the Common class loader makes an application or module accessible
+to all applications or modules deployed on servers that share the same
+configuration. However, this accessibility does not extend to
+application clients. For more information, see
+<a href="java-clients.html#gjpjt">Using Libraries with Application Clients</a>.</p>
+</div>
+<div class="paragraph">
+<p>For example, using the Common class loader is the recommended way of
+adding JDBC drivers to the GlassFish Server. For a list of the JDBC
+drivers currently supported by the GlassFish Server, see the
+<a href="../release-notes/toc.html#GSRLN">GlassFish Server Open Source Edition Release Notes</a>. For
+configurations of supported and other drivers, see
+"<a href="../administration-guide/jdbc.html#GSADG00579">Configuration Specifics for JDBC Drivers</a>" in
+GlassFish Server Open Source Edition Administration Guide.</p>
+</div>
+<div class="paragraph">
+<p>To activate custom login modules and realms, place the JAR files in the
+domain-dir`/lib` directory, then restart the server.</p>
+</div>
+<div class="paragraph">
+<p><a id="gcrnt"></a><a id="GSDVG00343"></a><a id="sharing-libraries-across-a-cluster"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_sharing_libraries_across_a_cluster">Sharing Libraries Across a Cluster</h4>
+<div class="paragraph">
+<p>To share libraries across a specific cluster, copy the JAR files to the
+domain-dir`/config/<code>cluster-config-name</code>/lib` directory.</p>
+</div>
+<div class="paragraph">
+<p><a id="beadl"></a><a id="GSDVG00344"></a><a id="packaging-the-client-jar-for-one-application-in-another-application"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_packaging_the_client_jar_for_one_application_in_another_application">Packaging the Client JAR for One Application in Another Application</h4>
+<div class="paragraph">
+<p>By packaging the client JAR for one application in a second application,
+you allow an EJB or web component in the second application to call an
+EJB component in the first (dependent) application, without making
+either of them accessible to any other application or module.</p>
+</div>
+<div class="paragraph">
+<p>As an alternative for a production environment, you can have the Common
+class loader load the client JAR of the dependent application as
+described in <a href="#beadj">Using the Common Class Loader</a>. Restart the
+server to make the dependent application accessible to all applications
+or modules deployed on servers that share the same configuration.</p>
+</div>
+<div class="paragraph">
+<p><a id="fvyab"></a><a id="GSDVG00048"></a><a id="to-package-the-client-jar-for-one-application-in-another-application"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_package_the_client_jar_for_one_application_in_another_application">To Package the Client JAR for One Application in Another Application</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Deploy the dependent application.</p>
+</li>
+<li>
+<p>Add the dependent application&#8217;s client JAR file to the calling
+application.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>For a calling EJB component, add the client JAR file at the same level
+as the EJB component. Then add a <code>Class-Path</code> entry to the <code>MANIFEST.MF</code>
+file of the calling EJB component. The <code>Class-Path</code> entry has this
+syntax:<br></p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Class-Path: filepath1.jar filepath2.jar ...</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Each filepath is relative to the directory or JAR file containing the
+<code>MANIFEST.MF</code> file. For details, see the Java EE specification.
+* For a calling web component, add the client JAR file under the
+<code>WEB-INF/lib</code> directory.
+3.  If you need to package the client JAR with both the EJB and web
+components, set <code>delegate="true"</code> in the <code>class-loader</code> element of the
+<code>glassfish-web.xml</code> file.<br>
+This changes the Web class loader so that it follows the standard class
+loader delegation model and delegates to its parent before attempting to
+load a class itself.<br>
+For most applications, packaging the client JAR file with the calling
+EJB component is sufficient. You do not need to package the client JAR
+file with both the EJB and web components unless the web component is
+directly calling the EJB component in the dependent application.
+4.  Deploy the calling application.<br>
+The calling EJB or web component must specify in its
+<code>glassfish-ejb-jar.xml</code> or <code>glassfish-web.xml</code> file the JNDI name of the
+EJB component in the dependent application. Using an <code>ejb-link</code> mapping
+does not work when the EJB component being called resides in another
+application.<br>
+You do not need to restart the server.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="setting-up-dev-env.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="debugging-apps.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

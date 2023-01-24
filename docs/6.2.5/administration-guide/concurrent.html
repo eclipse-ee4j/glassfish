@@ -1,0 +1,1356 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Administering Concurrent Resources</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Administering Concurrent Resources</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="http_https.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="orb.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSADG1108"></a><a id="sthref73"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="administering-concurrent-resources">14 Administering Concurrent Resources</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter provides procedures for administering concurrent resources
+in the GlassFish Server environment by using the <code>asadmin</code> command-line
+utility.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#DAFGCCDI">About Concurrent Resources</a></p>
+</li>
+<li>
+<p><a href="#DAFFGDCD">Default Concurrent Resources</a></p>
+</li>
+<li>
+<p><a href="#DAFFCEEA">Configuring Context Services</a></p>
+</li>
+<li>
+<p><a href="#DAFBAAIJ">Configuring Managed Thread Factories</a></p>
+</li>
+<li>
+<p><a href="#DAFBHEDI">Configuring Managed Executor Services</a></p>
+</li>
+<li>
+<p><a href="#DAFHJHCF">Configuring Managed Scheduled Executor Services</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Instructions for accomplishing these tasks by using the Administration
+Console are contained in the Administration Console online help.</p>
+</div>
+<div class="paragraph">
+<p><a id="DAFGCCDI"></a><a id="GSADG1109"></a><a id="about-concurrent-resources"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_about_concurrent_resources">About Concurrent Resources</h3>
+<div class="paragraph">
+<p>Concurrent resources are managed objects that provide concurrency
+capabilities to Java EE applications. In GlassFish Server, you configure
+concurrent resources and make them available for use by application
+components such as servlets and EJBs. Concurrent resources are accessed
+through JNDI lookup or resource injection.</p>
+</div>
+<div class="paragraph">
+<p>Concurrent resources are resources of the following types:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Context services. See <a href="#DAFFCEEA">Configuring Context Services</a>.</p>
+</li>
+<li>
+<p>Managed thread factories. See <a href="#DAFBAAIJ">Configuring Managed
+Thread Factories</a>.</p>
+</li>
+<li>
+<p>Managed executor services. See <a href="#DAFBHEDI">Configuring Managed
+Executor Services</a>.</p>
+</li>
+<li>
+<p>Managed scheduled executor services. See <a href="#DAFHJHCF">Configuring
+Managed Scheduled Executor Services</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For detailed information about concurrent resources, see
+"https://javaee.github.io/tutorial/concurrency-utilities.html[Concurrency
+Utilities]" in The Java EE 8 Tutorial. Also see
+<a href="http://jcp.org/en/jsr/detail?id=236">Java Specification Request 236:
+Concurrency Utilities for Java EE</a>
+(<code>http://jcp.org/en/jsr/detail?id=236</code>).</p>
+</div>
+<div class="paragraph">
+<p><a id="DAFFGDCD"></a><a id="GSADG1110"></a><a id="default-concurrent-resources"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_default_concurrent_resources">Default Concurrent Resources</h3>
+<div class="paragraph">
+<p>When you create a concurrent resource, you specify a unique JNDI name
+for the resource. Applications use this name to access the resource.</p>
+</div>
+<div class="paragraph">
+<p>The Java EE standard specifies that certain default resources be made
+available to applications, and defines specific JNDI names for these
+default resources. GlassFish Server makes these names available through
+the use of logical JNDI names, which map Java EE standard JNDI names to
+specific GlassFish Server resources. For concurrent resources, the
+mappings are as follows:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">java:comp/DefaultContextService</dt>
+<dd>
+<p>This Java EE standard name is mapped to the
+<code>concurrent/__defaultContextService</code> resource.</p>
+</dd>
+<dt class="hdlist1">java:comp/DefaultManagedThreadFactory</dt>
+<dd>
+<p>This Java EE standard name is mapped to the
+<code>concurrent/__defaultManagedThreadFactory</code> resource.</p>
+</dd>
+<dt class="hdlist1">java:comp/DefaultManagedExecutorService</dt>
+<dd>
+<p>This Java EE standard name is mapped to the
+<code>concurrent/__defaultManagedExecutorService</code> resource.</p>
+</dd>
+<dt class="hdlist1">java:comp/DefaultManagedScheduledExecutorService</dt>
+<dd>
+<p>This Java EE standard name is mapped to the
+<code>concurrent/__defaultManagedScheduledExecutorService</code> resource.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="DAFFCEEA"></a><a id="GSADG1111"></a><a id="configuring-context-services"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuring_context_services">Configuring Context Services</h3>
+<div class="paragraph">
+<p>Context services are used to create dynamic proxy objects that capture
+the context of a container and enable applications to run within that
+context at a later time. The context of the container is propagated to
+the thread executing the task.</p>
+</div>
+<div class="paragraph">
+<p>The following tasks are used to administer context service resources:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#DAFJACDI">To Create a Context Service</a></p>
+</li>
+<li>
+<p><a href="#DAFDCFCB">To List Context Services</a></p>
+</li>
+<li>
+<p><a href="#DAFBFICB">To Update a Context Service</a></p>
+</li>
+<li>
+<p><a href="#DAFGGGEC">To Delete a Context Service</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="DAFJACDI"></a><a id="GSADG1112"></a><a id="to-create-a-context-service"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_create_a_context_service">To Create a Context Service</h4>
+<div class="paragraph">
+<p>Use the <code>create-context-service</code> subcommand in remote mode to create a
+context service resource.</p>
+</div>
+<div class="paragraph">
+<p>Because all JNDI names are in the <code>java:comp/env</code> subcontext, when
+specifying the JNDI name of a context service, use only the
+<code>concurrent/`name format. For example, `concurrent/Context1</code>.</p>
+</div>
+<div class="paragraph">
+<p>For more information about the default context service resource included
+with GlassFish Server, see <a href="#DAFFGDCD">Default Concurrent Resources</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Creating a context service resource is a dynamic event and typically
+does not require server restart. Applications can use a resource as soon
+as it is created. However, if an application tried to use a resource
+before it was created, and that resource is created later, the
+application or the server must be restarted. Otherwise, the application
+will not be able to locate the resource.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Create a context service by using the
+<a href="../reference-manual/create-jdbc-resource.html#GSRFM00037"><code>create-context-service</code></a> subcommand.</p>
+</li>
+<li>
+<p>If necessary, notify users that the new resource has been created.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG1113"></a><a id="sthref74"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 14-1 Creating a Context Service</p>
+</div>
+<div class="paragraph">
+<p>This example creates a context service resource named
+<code>concurrent/Context1</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-context-service concurrent/Context1
+Context service concurrent/Context1 created successfully.
+Command create-context-service executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1114" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-context-service</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="DAFDCFCB"></a><a id="GSADG1115"></a><a id="to-list-context-services"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_context_services">To List Context Services</h4>
+<div class="paragraph">
+<p>Use the <code>list-context-services</code> subcommand in remote mode to list the
+existing context service resources.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List context service resources by using the
+<a href="../reference-manual/list-jdbc-resources.html#GSRFM00174"><code>list-context-services</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG1116"></a><a id="sthref75"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 14-2 Listing Context Services</p>
+</div>
+<div class="paragraph">
+<p>This example lists context service resources on the default server
+instance, <code>server</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-context-services
+concurrent/__defaultContextService
+concurrent/Context1
+concurrent/Context2
+Command list-context-services executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1117" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-context-services</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="DAFBFICB"></a><a id="GSADG1118"></a><a id="to-update-a-context-service"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_update_a_context_service">To Update a Context Service</h4>
+<div class="paragraph">
+<p>You can change all of the settings for an existing context service
+resource except its JNDI name. Use the <code>get</code> and <code>set</code> subcommands to
+view and change the values of the context service attributes.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>When a resource is updated, the existing resource is shut down and
+recreated. If an application used the resource prior to the update, the
+application or the server must be restarted.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List the context service resources by using the
+<a href="../reference-manual/list-jdbc-connection-pools.html#GSRFM00173"><code>list-context-services</code></a> subcommand.</p>
+</li>
+<li>
+<p>View the attributes of a specific context service by using the <code>get</code>
+subcommand.<br>
+For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asdmin&gt; get resources.context-service.concurrent/Context1.*</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Set an attribute of the context service by using the <code>set</code>
+subcommand.<br>
+For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asdmin&gt; set resources.context-service.concurrent/Context1.deployment-order=120</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="DAFGGGEC"></a><a id="GSADG1119"></a><a id="to-delete-a-context-service"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_delete_a_context_service">To Delete a Context Service</h4>
+<div class="paragraph">
+<p>Use the <code>delete-context-service</code> subcommand in remote mode to delete an
+existing context service. Deleting a context service is a dynamic event
+and does not require server restart.</p>
+</div>
+<div class="paragraph">
+<p>Before deleting a context service resource, all associations to the
+resource must be removed.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List the context service resources by using the
+<a href="../reference-manual/list-jdbc-connection-pools.html#GSRFM00173"><code>list-context-services</code></a> subcommand.</p>
+</li>
+<li>
+<p>If necessary, notify users that the context service is being
+deleted.</p>
+</li>
+<li>
+<p>Delete the context service by using the
+<a href="../reference-manual/delete-jdbc-connection-pool.html#GSRFM00088"><code>delete-context-service</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG1120"></a><a id="sthref76"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 14-3 Deleting a Context Service</p>
+</div>
+<div class="paragraph">
+<p>This example deletes the context service resource named
+<code>concurrent/Context1</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-context-service concurrent/Context1
+Context service concurrent/Context1 deleted successfully.
+Command delete-context-service executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1121" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help delete-context-service</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="DAFBAAIJ"></a><a id="GSADG1122"></a><a id="configuring-managed-thread-factories"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuring_managed_thread_factories">Configuring Managed Thread Factories</h3>
+<div class="paragraph">
+<p>Managed thread factories are used by applications to create managed
+threads on demand. The threads are started and managed by the container.
+The context of the container is propagated to the thread executing the
+task.</p>
+</div>
+<div class="paragraph">
+<p>The following tasks are used to administer managed thread factory
+resources:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#DAFGFAEI">To Create a Managed Thread Factory</a></p>
+</li>
+<li>
+<p><a href="#DAFDGEGE">To List Managed Thread Factories</a></p>
+</li>
+<li>
+<p><a href="#DAFDIJIH">To Update a Managed Thread Factory</a></p>
+</li>
+<li>
+<p><a href="#DAFCEDEI">To Delete a Managed Thread Factory</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="DAFGFAEI"></a><a id="GSADG1123"></a><a id="to-create-a-managed-thread-factory"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_create_a_managed_thread_factory">To Create a Managed Thread Factory</h4>
+<div class="paragraph">
+<p>Use the <code>create-managed-thread-factory</code> subcommand in remote mode to
+create a managed thread factory resource.</p>
+</div>
+<div class="paragraph">
+<p>Because all JNDI names are in the <code>java:comp/env</code> subcontext, when
+specifying the JNDI name of a managed thread factory, use only the
+<code>concurrent/`name format. For example, `concurrent/Factory1</code>.</p>
+</div>
+<div class="paragraph">
+<p>For more information about the default managed thread factory resource
+included with GlassFish Server, see <a href="#DAFFGDCD">Default Concurrent
+Resources</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Creating a managed thread factory resource is a dynamic event and
+typically does not require server restart. Applications can use a
+resource as soon as it is created. However, if an application tried to
+use a resource before it was created, and that resource is created
+later, the application or the server must be restarted. Otherwise, the
+application will not be able to locate the resource.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Create a managed thread factory by using the
+<a href="../reference-manual/create-jdbc-resource.html#GSRFM00037"><code>create-managed-thread-factory</code></a> subcommand.</p>
+</li>
+<li>
+<p>If necessary, notify users that the new resource has been created.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG1124"></a><a id="sthref77"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 14-4 Creating a Managed Thread Factory</p>
+</div>
+<div class="paragraph">
+<p>This example creates a managed thread factory resource named
+<code>concurrent/Factory1</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-managed-thread-factory concurrent/Factory1
+Managed thread factory concurrent/Factory1 created successfully.
+Command create-managed-thread-factory executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1125" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-managed-thread-factory</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="DAFDGEGE"></a><a id="GSADG1126"></a><a id="to-list-managed-thread-factories"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_managed_thread_factories">To List Managed Thread Factories</h4>
+<div class="paragraph">
+<p>Use the <code>list-managed-thread-factories</code> subcommand in remote mode to
+list the existing managed thread factory resources.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List managed thread factory resources by using the
+<a href="../reference-manual/list-jdbc-resources.html#GSRFM00174"><code>list-managed-thread-factories</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG1127"></a><a id="sthref78"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 14-5 Listing Managed Thread Factories</p>
+</div>
+<div class="paragraph">
+<p>This example lists managed thread factory resources on the default
+server instance, <code>server</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-managed-thread-factories
+concurrent/__defaultManagedThreadFactory
+concurrent/Factory1
+concurrent/Factory2
+Command list-managed-thread-factories executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1128" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-managed-thread-factories</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="DAFDIJIH"></a><a id="GSADG1129"></a><a id="to-update-a-managed-thread-factory"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_update_a_managed_thread_factory">To Update a Managed Thread Factory</h4>
+<div class="paragraph">
+<p>You can change all of the settings for an existing managed thread
+factory resource except its JNDI name. Use the <code>get</code> and <code>set</code>
+subcommands to view and change the values of the managed thread factory
+attributes.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>When a resource is updated, the existing resource is shut down and
+recreated. If applications used the resource prior to the update, the
+application or the server must be restarted.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List the managed thread factory resources by using the
+<a href="../reference-manual/list-jdbc-connection-pools.html#GSRFM00173"><code>list-managed-thread-factories</code></a> subcommand.</p>
+</li>
+<li>
+<p>View the attributes of a managed thread factory by using the <code>get</code>
+subcommand.<br>
+For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asdmin&gt; get resources.managed-thread-factory.concurrent/Factory1.*</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Set an attribute of the managed thread factory by using the <code>set</code>
+subcommand.<br>
+For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asdmin&gt; set resources.managed-thread-factory.concurrent/Factory1.deployment-order=120</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="DAFCEDEI"></a><a id="GSADG1130"></a><a id="to-delete-a-managed-thread-factory"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_delete_a_managed_thread_factory">To Delete a Managed Thread Factory</h4>
+<div class="paragraph">
+<p>Use the <code>delete-managed-thread-factory</code> subcommand in remote mode to
+delete an existing managed thread factory. Deleting a managed thread
+factory is a dynamic event and does not require server restart.</p>
+</div>
+<div class="paragraph">
+<p>Before deleting a managed thread factory resource, all associations to
+the resource must be removed.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List the managed thread factory resources by using the
+<a href="../reference-manual/list-jdbc-connection-pools.html#GSRFM00173"><code>list-managed-thread-factories</code></a> subcommand.</p>
+</li>
+<li>
+<p>If necessary, notify users that the managed thread factory is being
+deleted.</p>
+</li>
+<li>
+<p>Delete the managed thread factory by using the
+<a href="../reference-manual/delete-jdbc-connection-pool.html#GSRFM00088"><code>delete-managed-thread-factory</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG1131"></a><a id="sthref79"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 14-6 Deleting a Managed Thread Factory</p>
+</div>
+<div class="paragraph">
+<p>This example deletes the managed thread factory resource named
+<code>concurrent/Factory1</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-managed-thread-factory concurrent/Factory1
+Managed thread factory concurrent/Factory1 deleted successfully.
+Command delete-managed-thread-factory executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1132" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help delete-managed-thread-factory</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="DAFBHEDI"></a><a id="GSADG1133"></a><a id="configuring-managed-executor-services"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuring_managed_executor_services">Configuring Managed Executor Services</h3>
+<div class="paragraph">
+<p>Managed executor services are used by applications to execute submitted
+tasks asynchronously. Tasks are executed on threads that are started and
+managed by the container. The context of the container is propagated to
+the thread executing the task.</p>
+</div>
+<div class="paragraph">
+<p>The following tasks are used to administer managed executor service
+resources:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#DAFJIEGA">To Create a Managed Executor Service</a></p>
+</li>
+<li>
+<p><a href="#DAFIJDAE">To List Managed Executor Services</a></p>
+</li>
+<li>
+<p><a href="#DAFICEJF">To Update a Managed Executor Service</a></p>
+</li>
+<li>
+<p><a href="#DAFDAGAD">To Delete a Managed Executor Service</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="DAFJIEGA"></a><a id="GSADG1134"></a><a id="to-create-a-managed-executor-service"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_create_a_managed_executor_service">To Create a Managed Executor Service</h4>
+<div class="paragraph">
+<p>Use the <code>create-managed-executor-service</code> subcommand in remote mode to
+create a managed executor service resource.</p>
+</div>
+<div class="paragraph">
+<p>Because all JNDI names are in the <code>java:comp/env</code> subcontext, when
+specifying the JNDI name of a managed executor service, use only the
+<code>concurrent/`name format. For example, `concurrent/Executor1</code>.</p>
+</div>
+<div class="paragraph">
+<p>For more information about the default managed executor service resource
+included with GlassFish Server, see <a href="#DAFFGDCD">Default Concurrent
+Resources</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Creating a managed executor service resource is a dynamic event and
+typically does not require server restart. Applications can use a
+resource as soon as it is created. However, if an application tried to
+use a resource before it was created, and that resource is created
+later, the application or the server must be restarted. Otherwise, the
+application will not be able to locate the resource.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Create a managed executor service by using the
+<a href="../reference-manual/create-jdbc-resource.html#GSRFM00037"><code>create-managed-executor-service</code></a> subcommand.</p>
+</li>
+<li>
+<p>If necessary, notify users that the new resource has been created.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG1135"></a><a id="sthref80"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 14-7 Creating a Managed Executor Service</p>
+</div>
+<div class="paragraph">
+<p>This example creates a managed executor service resource named
+<code>concurrent/Executor1</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-managed-executor-service concurrent/Executor1
+Managed executor service concurrent/Executor1 created successfully.
+Command create-managed-executor-service executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1136" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-managed-executor-service</code> at the command
+line.</p>
+</div>
+<div class="paragraph">
+<p><a id="DAFIJDAE"></a><a id="GSADG1137"></a><a id="to-list-managed-executor-services"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_managed_executor_services">To List Managed Executor Services</h4>
+<div class="paragraph">
+<p>Use the <code>list-managed-executor-services</code> subcommand in remote mode to
+list the existing managed executor service resources.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List managed executor service resources by using the
+<a href="../reference-manual/list-jdbc-resources.html#GSRFM00174"><code>list-managed-executor-services</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG1138"></a><a id="sthref81"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 14-8 Listing Managed Executor Services</p>
+</div>
+<div class="paragraph">
+<p>This example lists managed executor service resources on the default
+server instance, <code>server</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-managed-executor-services
+concurrent/__defaultManagedExecutorService
+concurrent/Executor1
+concurrent/Executor2
+Command list-managed-executor-services executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1139" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-managed-executor-services</code> at the command
+line.</p>
+</div>
+<div class="paragraph">
+<p><a id="DAFICEJF"></a><a id="GSADG1140"></a><a id="to-update-a-managed-executor-service"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_update_a_managed_executor_service">To Update a Managed Executor Service</h4>
+<div class="paragraph">
+<p>You can change all of the settings for an existing managed executor
+service resource except its JNDI name. Use the <code>get</code> and <code>set</code>
+subcommands to view and change the values of the managed executor
+service attributes.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>When a resource is updated, the existing resource is shut down and
+recreated. If applications used the resource prior to the update, the
+application or the server must be restarted.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List the managed executor service resources by using the
+<a href="../reference-manual/list-jdbc-connection-pools.html#GSRFM00173"><code>list-managed-executor-services</code></a> subcommand.</p>
+</li>
+<li>
+<p>View the attributes of a managed executor service by using the <code>get</code>
+subcommand.<br>
+For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asdmin&gt; get resources.managed-executor-service.concurrent/Executor1.*</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Set an attribute of the managed executor service by using the <code>set</code>
+subcommand.<br>
+For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asdmin&gt; set resources.managed-executor-service.concurrent/Executor1.deployment-order=120</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="DAFDAGAD"></a><a id="GSADG1141"></a><a id="to-delete-a-managed-executor-service"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_delete_a_managed_executor_service">To Delete a Managed Executor Service</h4>
+<div class="paragraph">
+<p>Use the <code>delete-managed-executor-service</code> subcommand in remote mode to
+delete an existing managed executor service. Deleting a managed executor
+service is a dynamic event and does not require server restart.</p>
+</div>
+<div class="paragraph">
+<p>Before deleting a managed executor service resource, all associations to
+the resource must be removed.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List the managed executor service resources by using the
+<a href="../reference-manual/list-jdbc-connection-pools.html#GSRFM00173"><code>list-managed-executor-services</code></a> subcommand.</p>
+</li>
+<li>
+<p>If necessary, notify users that the managed executor service is
+being deleted.</p>
+</li>
+<li>
+<p>Delete the managed executor service by using the
+<a href="../reference-manual/delete-jdbc-connection-pool.html#GSRFM00088"><code>delete-managed-executor-service</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG1142"></a><a id="sthref82"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 14-9 Deleting a Managed Executor Service</p>
+</div>
+<div class="paragraph">
+<p>This example deletes the managed executor service resource named
+<code>concurrent/Executor1</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-managed-executor-service concurrent/Executor1
+Managed executor service concurrent/Executor1 deleted successfully.
+Command delete-managed-executor-service executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1143" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help delete-managed-executor-service</code> at the command
+line.</p>
+</div>
+<div class="paragraph">
+<p><a id="DAFHJHCF"></a><a id="GSADG1144"></a><a id="configuring-managed-scheduled-executor-services"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuring_managed_scheduled_executor_services">Configuring Managed Scheduled Executor Services</h3>
+<div class="paragraph">
+<p>Managed scheduled executor services are used by applications to execute
+submitted tasks asynchronously at specific times. Tasks are executed on
+threads that are started and managed by the container. The context of
+the container is propagated to the thread executing the task.</p>
+</div>
+<div class="paragraph">
+<p>The following tasks are used to administer managed scheduled executor
+service resources:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#DAFFGDGG">To Create a Managed Scheduled Executor Service</a></p>
+</li>
+<li>
+<p><a href="#DAFJBADD">To List Managed Scheduled Executor Services</a></p>
+</li>
+<li>
+<p><a href="#DAFGEBEI">To Update a Managed Scheduled Executor Service</a></p>
+</li>
+<li>
+<p><a href="#DAFEBEGC">To Delete a Managed Scheduled Executor Service</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="DAFFGDGG"></a><a id="GSADG1145"></a><a id="to-create-a-managed-scheduled-executor-service"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_create_a_managed_scheduled_executor_service">To Create a Managed Scheduled Executor Service</h4>
+<div class="paragraph">
+<p>Use the <code>create-managed-scheduled-executor-service</code> subcommand in remote
+mode to create a managed scheduled executor service resource.</p>
+</div>
+<div class="paragraph">
+<p>Because all JNDI names are in the <code>java:comp/env</code> subcontext, when
+specifying the JNDI name of a managed scheduled executor service, use
+only the <code>concurrent/`name format. For example,
+`concurrent/ScheduledExecutor1</code>.</p>
+</div>
+<div class="paragraph">
+<p>For more information about the default managed scheduled executor
+service resource included with GlassFish Server, see
+<a href="#DAFFGDCD">Default Concurrent Resources</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Creating a managed scheduled executor service resource is a dynamic
+event and typically does not require server restart. Applications can
+use a resource as soon as it is created. However, if an application
+tried to use a resource before it was created, and that resource is
+created later, the application or the server must be restarted.
+Otherwise, the application will not be able to locate the resource.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Create a managed scheduled executor service by using the
+<a href="../reference-manual/create-jdbc-resource.html#GSRFM00037"><code>create-managed-scheduled-executor-service</code></a>
+subcommand.</p>
+</li>
+<li>
+<p>If necessary, notify users that the new resource has been created.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG1146"></a><a id="sthref83"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 14-10 Creating a Managed Scheduled Executor Service</p>
+</div>
+<div class="paragraph">
+<p>This example creates a managed scheduled executor service resource named
+<code>concurrent/ScheduledExecutor1</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-managed-scheduled-executor-service concurrent/ScheduledExecutor1
+Managed scheduled executor service concurrent/ScheduledExecutor1 created successfully.
+Command create-managed-scheduled-executor-service executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1147" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-managed-scheduled-executor-service</code> at the
+command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="DAFJBADD"></a><a id="GSADG1148"></a><a id="to-list-managed-scheduled-executor-services"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_managed_scheduled_executor_services">To List Managed Scheduled Executor Services</h4>
+<div class="paragraph">
+<p>Use the <code>list-managed-scheduled-executor-services</code> subcommand in remote
+mode to list the existing managed scheduled executor service resources.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List managed scheduled executor service resources by using the
+<a href="../reference-manual/list-jdbc-resources.html#GSRFM00174"><code>list-managed-scheduled-executor-services</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG1149"></a><a id="sthref84"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 14-11 Listing Managed Scheduled Executor Services</p>
+</div>
+<div class="paragraph">
+<p>This example lists managed scheduled executor service resources on the
+default server instance, <code>server</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-managed-scheduled-executor-services
+concurrent/__defaultManagedScheduledExecutorService
+concurrent/ScheduledExecutor1
+concurrent/ScheduledExecutor2
+Command list-managed-scheduled-executor-services executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1150" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-managed-scheduled-executor-services</code> at the
+command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="DAFGEBEI"></a><a id="GSADG1151"></a><a id="to-update-a-managed-scheduled-executor-service"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_update_a_managed_scheduled_executor_service">To Update a Managed Scheduled Executor Service</h4>
+<div class="paragraph">
+<p>You can change all of the settings for an existing managed scheduled
+executor service resource except its JNDI name. Use the <code>get</code> and <code>set</code>
+subcommands to view and change the values of the managed scheduled
+executor service attributes.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>When a resource is updated, the existing resource is shut down and
+recreated. If applications used the resource prior to the update, the
+application or the server must be restarted.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List the managed scheduled executor service resources by using the
+<a href="../reference-manual/list-jdbc-connection-pools.html#GSRFM00173"><code>list-managed-scheduled-executor-services</code></a> subcommand.</p>
+</li>
+<li>
+<p>View the attributes of a managed scheduled executor service by using
+the <code>get</code> subcommand.<br>
+For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asdmin&gt; get resources.managed-scheduled-executor-service.concurrent/ScheduledExecutor1.*</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Set an attribute of the managed scheduled executor service by using
+the <code>set</code> subcommand.<br>
+For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asdmin&gt; set resources.managed-scheduled-executor-service.concurrent/ScheduledExecutor1.deployment-order=120</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="DAFEBEGC"></a><a id="GSADG1152"></a><a id="to-delete-a-managed-scheduled-executor-service"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_delete_a_managed_scheduled_executor_service">To Delete a Managed Scheduled Executor Service</h4>
+<div class="paragraph">
+<p>Use the <code>delete-managed-scheduled-executor-service</code> subcommand in remote
+mode to delete an existing managed scheduled executor service. Deleting
+a managed scheduled executor service is a dynamic event and does not
+require server restart.</p>
+</div>
+<div class="paragraph">
+<p>Before deleting a managed scheduled executor service resource, all
+associations to the resource must be removed.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List the managed scheduled executor service resources by using the
+<a href="../reference-manual/list-jdbc-connection-pools.html#GSRFM00173"><code>list-managed-scheduled-executor-service</code></a> subcommand.</p>
+</li>
+<li>
+<p>If necessary, notify users that the managed scheduled executor
+service is being deleted.</p>
+</li>
+<li>
+<p>Delete the managed scheduled executor service by using the
+<a href="../reference-manual/delete-jdbc-connection-pool.html#GSRFM00088"><code>delete-managed-scheduled-executor-service</code></a>
+subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG1153"></a><a id="sthref85"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 14-12 Deleting a Managed Scheduled Executor Service</p>
+</div>
+<div class="paragraph">
+<p>This example deletes the managed scheduled executor service resource
+named <code>concurrent/ScheduledExecutor1</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-managed-scheduled-executor-service concurrent/ScheduledExecutor1
+Managed scheduled executor service concurrent/ScheduledExecutor1 deleted successfully.
+Command delete-managed-scheduled-executor-service executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1154" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help delete-managed-scheduled-executor-service</code> at the
+command line.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="http_https.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="orb.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

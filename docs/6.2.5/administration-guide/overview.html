@@ -1,0 +1,1780 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Overview of GlassFish Server Administration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Overview of GlassFish Server Administration</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="preface.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="part-runtime-admin.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSADG00004"></a><a id="ablaq"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="overview-of-glassfish-server-administration">1 Overview of GlassFish Server Administration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>GlassFish Server Open Source Edition provides a server for developing
+and deploying Java Platform Enterprise Edition (Java EE) applications
+and web Java Web Services.</p>
+</div>
+<div class="paragraph">
+<p>As an administrator ofGlassFish Server, your main responsibilities are
+to establish a secure GlassFish Server environment and to oversee the
+services, resources, and users that participate in that environment.
+Your key tasks include configuring resources and services, managing
+GlassFish Server at runtime, and fixing problems that are associated
+with the server. You might also be involved in installing software,
+integrating add-on components, and deploying applications.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#giubb">Default Settings and Locations</a></p>
+</li>
+<li>
+<p><a href="#ghrcy">Configuration Tasks</a></p>
+</li>
+<li>
+<p><a href="#ggjxp">Administration Tools</a></p>
+</li>
+<li>
+<p><a href="#giudo">Instructions for Administering GlassFish Server</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="giubb"></a><a id="GSADG00526"></a><a id="default-settings-and-locations"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_default_settings_and_locations">Default Settings and Locations</h3>
+<div class="paragraph">
+<p>After installation, you might need to perform some immediate
+configuration tasks to make your installation function as intended. If
+configuration defaults have been accepted, some features are enabled and
+some not. For an overview of initial configuration tasks for GlassFish
+Server services and resources, see <a href="#gitwr">Initial Configuration
+Tasks</a>.</p>
+</div>
+<div class="paragraph">
+<p>In addition, you might want to reset default passwords, change names or
+locations of files, and so on. The following tables list the default
+administration values.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>For the zip bundle of GlassFish Server 5.0, the default administrator
+login is <code>admin</code>, with no password, which means that no login is
+required.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="GSADG793"></a><a id="sthref3"></a><a id="giuad"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 1-1 Default Administration Values</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 43%;">
+<col style="width: 57.0%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Item</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Domain Name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>domain1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Master Password</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>changeit</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Administration User</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>admin</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Administration Server Port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4848</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTTP Port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8080</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTTPS Port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8181</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pure JMX Clients Port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8686</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Message Queue Port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7676</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IIOP Port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3700</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IIOP/SSL Port</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3820</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IIOP/SSL Port With Mutual Authentication</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3920</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="GSADG794"></a><a id="sthref4"></a><a id="gjhfv"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 1-2 Default Locations</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 43%;">
+<col style="width: 57.0%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Item</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Command-line Utility (<code>asadmin</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">as-install`/bin`</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configuration Files</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-dir`/config`</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Log Files</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-dir`/logs`</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Upgrade Tool (<code>asupgrade</code> Command)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">as-install`/bin`</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For information about replaceable items and default paths and files, see
+<a href="preface.html#ghpfg">Default Paths and File Names</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghrcy"></a><a id="GSADG00527"></a><a id="configuration-tasks"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuration_tasks">Configuration Tasks</h3>
+<div class="paragraph">
+<p>Some configuration tasks must be performed directly after installation
+for your GlassFish Server environment to work as intended. For example,
+if you are using a database with GlassFish Server, you need to set up
+database connectivity right away.</p>
+</div>
+<div class="paragraph">
+<p>Some configuration situations are ongoing and will require you to make
+changes many times during the life of your installation. You can use
+either the Administration Console or the <code>asadmin</code> utility to modify the
+configuration. Changes are automatically applied to the appropriate
+configuration file.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gitwr">Initial Configuration Tasks</a></p>
+</li>
+<li>
+<p><a href="#giusb">How Dotted Names Work for Configuration</a></p>
+</li>
+<li>
+<p><a href="#gjjrl">Configuration Files</a></p>
+</li>
+<li>
+<p><a href="#gitzw">Impact of Configuration Changes</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gitwr"></a><a id="GSADG00694"></a><a id="initial-configuration-tasks"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_initial_configuration_tasks">Initial Configuration Tasks</h4>
+<div class="paragraph">
+<p>This section maps the common configuration tasks to the command-line
+procedures in this guide. In some situations, the resource or service is
+automatically enabled and your configuration tasks involve adjusting or
+changing the default settings to suit your specific needs.</p>
+</div>
+<div class="paragraph">
+<p>The following resources and services frequently require configuration
+immediately after installation:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">System Properties</dt>
+<dd>
+<p>See <a href="general-administration.html#ghcjc">Administering System
+Properties</a>.</p>
+</dd>
+<dt class="hdlist1">Domains</dt>
+<dd>
+<p>The initial <code>domain1</code> is created during installation. Additional
+configuration tasks might include such tasks as configuring additional
+domains or setting up automatic restart. See
+<a href="domains.html#ggnop">Administering Domains</a>.</p>
+</dd>
+<dt class="hdlist1">JVM</dt>
+<dd>
+<p>The initial tasks for configuring the JVM include creating JVM options
+and profilers. See <a href="jvm.html#ablwj">Administering the Virtual
+Machine for the Java Platform</a>.</p>
+</dd>
+<dt class="hdlist1">Logging</dt>
+<dd>
+<p>By default, logging is enabled, so basic logging works without
+additional configuration. However, you might want to change log
+levels, property values, or the location of log files. See
+<a href="logging.html#abluj">Administering the Logging Service</a>.</p>
+</dd>
+<dt class="hdlist1">Monitoring</dt>
+<dd>
+<p>By default, the monitoring service is enabled. However, monitoring for
+the individual modules is not enabled, so your first monitoring task
+is to enable monitoring for the modules that you want to monitor. See
+<a href="monitoring.html#ablur">Administering the Monitoring Service</a>.</p>
+</dd>
+<dt class="hdlist1">Life Cycle Modules</dt>
+<dd>
+<p>See <a href="lifecycle-modules.html#giury">Administering Life Cycle
+Modules</a>.</p>
+</dd>
+<dt class="hdlist1">Security</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>System Security. Initial configuration tasks might include setting
+up passwords, audit modules, and certificates. See
+"<a href="../security-guide/system-security.html#GSSCG00035">Administering System Security</a>" in GlassFish Server
+Open Source Edition Security Guide.</p>
+</li>
+<li>
+<p>User Security. Initial configuration tasks might include creating
+authentication realms and file users. See
+"<a href="../security-guide/user-security.html#GSSCG00036">Administering User Security</a>" in GlassFish Server
+Open Source Edition Security Guide.</p>
+</li>
+<li>
+<p>Message Security. Initial configuration tasks might include
+configuring a Java Cryptography Extension (JCE) provider, enabling
+default and non-default security providers, and configuring message
+protection policies. See "<a href="../security-guide/message-security.html#GSSCG00037">Administering Message
+Security</a>" in GlassFish Server Open Source Edition Security Guide.</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Database Connectivity</dt>
+<dd>
+<p>The initial tasks involved in configuring GlassFish Server to connect
+to the Apache Derby database include creating a Java Database
+Connectivity (JDBC) connection pool, creating a JDBC resource, and
+integrating a JDBC driver. See <a href="jdbc.html#ablih">Administering
+Database Connectivity</a>.</p>
+</dd>
+<dt class="hdlist1">EIS Connectivity</dt>
+<dd>
+<p>The initial tasks involved in configuring GlassFish Server to connect
+to an enterprise information system (EIS) include creating a connector
+connection pool, creating a connector resource, editing a resource
+adapter configuration, creating a connector security map, creating a
+connector work security map, and creating an administered object (if
+needed). See <a href="connectors.html#abllp">Administering EIS
+Connectivity</a>.</p>
+</dd>
+<dt class="hdlist1">Internet Connectivity</dt>
+<dd>
+<p>The initial tasks involved in making deployed web applications
+accessible by internet clients include creating HTTP network listeners
+and virtual servers, and configuring the HTTP listeners for SSL (if
+needed). See <a href="http_https.html#ablsw">Administering Internet
+Connectivity</a>.</p>
+</dd>
+<dt class="hdlist1">Object Request Broker (ORB)</dt>
+<dd>
+<p>An initial configuration task might involve creating an IIOP listener.
+See <a href="orb.html#abltr">Administering the Object Request Broker (ORB)</a>.</p>
+</dd>
+<dt class="hdlist1">JavaMail Service</dt>
+<dd>
+<p>An initial configuration task might involve creating a JavaMail
+resource. See <a href="javamail.html#ablkr">Administering the JavaMail
+Service</a>.</p>
+</dd>
+<dt class="hdlist1">Java Message Service (JMS)</dt>
+<dd>
+<p>Initial configuration tasks might include creating a physical
+destination, creating connection factories or destination resources,
+creating a JMS host (if the default JMS host is not adequate),
+adjusting connection pool settings (if needed), and configuring
+resource adapters for JMS. See <a href="jms.html#abljw">Administering the
+Java Message Service (JMS)</a>.</p>
+</dd>
+<dt class="hdlist1">JNDI Service</dt>
+<dd>
+<p>An initial configuration task might involve creating a JNDI resource.
+See <a href="jndi.html#ablky">Administering the Java Naming and Directory
+Interface (JNDI) Service</a>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Information and instructions for accomplishing the tasks by using the
+Administration Console are contained in the Administration Console
+online help.</p>
+</div>
+<div class="paragraph">
+<p><a id="giusb"></a><a id="GSADG00695"></a><a id="how-dotted-names-work-for-configuration"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_how_dotted_names_work_for_configuration">How Dotted Names Work for Configuration</h4>
+<div class="paragraph">
+<p>After the initial configuration is working, you will continue to manage
+ongoing configuration for the life of your GlassFish Server
+installation. You might need to adjust resources to improve
+productivity, or issues might arise that require settings to be modified
+or defaults to be reset. In some situations, an <code>asadmin</code> subcommand is
+provided for updating, such as the <code>update-connector-work-security-map</code>
+subcommand. However, most updating is done by using the <code>list</code>, <code>get</code>,
+and <code>set</code> subcommands with dotted names. For detailed information about
+dotted names, see the <a href="../reference-manual/dotted-names.html#GSRFM00268"><code>dotted-names</code>(5ASC)</a> help page.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Dotted names also apply to monitoring, but the method is different. For
+information on using dotted names for monitoring, see
+<a href="monitoring.html#ghbaz">How the Monitoring Tree Structure Works</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The general process for working with configuration changes on the
+command line is as follows:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>List the modules for the component of interest.<br>
+The following single mode example uses the | (pipe) character and the
+<code>grep</code> command to narrow the search:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin list "*" | grep http | grep listener</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Information similar to the following is returned:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">configs.config.server-config.network-config.network-listeners.network-listener.http-listener-1
+configs.config.server-config.network-config.network-listeners.network-listener.http-listener-2
+configs.config.server-config.network-config.protocols.protocol.admin-listener.http
+configs.config.server-config.network-config.protocols.protocol.admin-listener.http.file-cache
+configs.config.server-config.network-config.protocols.protocol.http-listener-1
+configs.config.server-config.network-config.protocols.protocol.http-listener-1.http
+configs.config.server-config.network-config.protocols.protocol.http-listener-1.http.file-cache
+configs.config.server-config.network-config.protocols.protocol.http-listener-2
+configs.config.server-config.network-config.protocols.protocol.http-listener-2.http
+configs.config.server-config.network-config.protocols.protocol.http-listener-2.http.file-cache
+configs.config.server-config.network-config.protocols.protocol.http-listener-2.ssl</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Get the attributes that apply to the module you are interested in.<br>
+The following multimode example gets the attributes and values for
+<code>http-listener-1</code>:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; get server-config.network-config.network-listeners.network-listener.http-listener-1.*</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Information similar to the following is returned:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.http-service.http-listener.http-listener-1.acceptor-threads = 1
+server.http-service.http-listener.http-listener-1.address = 0.0.0.0
+server.http-service.http-listener.http-listener-1.blocking-enabled = false
+server.http-service.http-listener.http-listener-1.default-virtual-server = server
+server.http-service.http-listener.http-listener-1.enabled = true
+server.http-service.http-listener.http-listener-1.external-port =
+server.http-service.http-listener.http-listener-1.family = inet
+server.http-service.http-listener.http-listener-1.id = http-listener-1
+server.http-service.http-listener.http-listener-1.port = 8080
+server.http-service.http-listener.http-listener-1.redirect-port =
+server.http-service.http-listener.http-listener-1.security-enabled = false
+server.http-service.http-listener.http-listener-1.server-name =
+server.http-service.http-listener.http-listener-1.xpowered-by = true</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Modify an attribute by using the <code>set</code> subcommand.<br>
+This example sets the <code>security-enabled</code> attribute of <code>http-listener-1</code>
+to true:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; set server.http-service.http-listener.http-listener-1.security-enabled = true</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gjjrl"></a><a id="GSADG00696"></a><a id="configuration-files"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuration_files">Configuration Files</h4>
+<div class="paragraph">
+<p>The bulk of the configuration information about GlassFish Server
+resources, applications, and instances is stored in the <code>domain.xml</code>
+configuration file. This file is the central repository for a given
+administrative domain and contains an XML representation of the
+GlassFish Server domain model. The default location for the <code>domain.xml</code>
+file is domain-dir`/config`.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>GlassFish Server maintains a backup of the <code>domain.xml</code> file that is
+named <code>domain.xml.bak</code>. The purpose of this file is solely to enable
+GlassFish Server to start a domain if the <code>domain.xml</code> file cannot be
+read. Do not modify or delete the <code>domain.xml.bak</code> file and do not use
+this file for any other purpose.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <code>logging.properties</code> file is used to configure logging levels for
+individual modules. The default <code>logging.properties</code> file is located in
+the same directory as the <code>domain.xml</code> file. For further information on
+the <code>logging.properties</code> file, see <a href="logging.html#gkkit">Logging
+Properties</a>.</p>
+</div>
+<div class="paragraph">
+<p>The <code>asenv.conf</code> file is located in the as-install`/config` directory.
+Its purpose is to store the GlassFish Server environment variables, such
+as the installation location of the database, Message Queue, and so on.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Changes are automatically applied to the appropriate configuration file.
+Do not edit the configuration files directly. Manual editing is prone to
+error and can have unexpected results.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="gitzw"></a><a id="GSADG00697"></a><a id="impact-of-configuration-changes"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_impact_of_configuration_changes">Impact of Configuration Changes</h4>
+<div class="paragraph">
+<p>Some configuration changes require that you restart the DAS or GlassFish
+Server instances for the changes to take effect. Other changes are
+applied dynamically without requiring that the DAS or instances be
+restarted. The procedures in this guide indicate when a restart is
+required. GlassFish Server enables you to determine whether the DAS or
+an instance must be restarted to apply configuration changes.</p>
+</div>
+<div class="paragraph">
+<p>Some changes to resources or connection pools affect the applications
+that use the resources or connection pools. These changes do not require
+restart. However, any applications that use the resources or connection
+pools must be disabled and re-enabled or redeployed for the change to
+take effect.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkvaj">To Determine Whether the DAS or an Instance Requires
+Restart</a></p>
+</li>
+<li>
+<p><a href="#ghciy">Configuration Changes That Require Restart</a></p>
+</li>
+<li>
+<p><a href="#ghclm">Dynamic Configuration Changes</a></p>
+</li>
+<li>
+<p><a href="#gkvas">Changes That Affect Applications</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkvaj"></a><a id="GSADG00300"></a><a id="to-determine-whether-the-das-or-an-instance-requires-restart"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_to_determine_whether_the_das_or_an_instance_requires_restart">To Determine Whether the DAS or an Instance Requires Restart</h5>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+To obtain information about the DAS or an instance, a running server is
+required.</p>
+</li>
+<li>
+<p>Do one of the following:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>To determine if the DAS requires restart, list the domains in your
+GlassFish Server installation.<br>
+Use the <a href="../reference-manual/list-domains.html#GSRFM00163"><code>list-domains</code></a> subcommand for this purpose.<br></p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; list-domains [--domaindir domain-root-dir]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The domain-root-dir is the directory that contains the directories in
+which individual domains' configuration is stored. The default is
+as-install`/domains`, where as-install is the base installation
+directory of the GlassFish Server software.<br>
+If the DAS requires restart, a statement that restart is required is
+displayed.
+* To determine if an instance requires restart, list information about
+the instance.<br>
+Use the <a href="../reference-manual/list-instances.html#GSRFM00170"><code>list-instances</code></a> subcommand for this purpose.<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-instances instance-name</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The instance-name is the name of the instance for which you are listing
+information.<br>
+If the instance requires restart, one of the following pieces of
+information is displayed: a statement that restart is required, or a
+list of configuration changes that are not yet applied to the instance.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00093"></a><a id="gkvay"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 1-1 Determining if the DAS Requires Restart</p>
+</div>
+<div class="paragraph">
+<p>This example determines that the DAS for the domain <code>domain1</code> requires
+restart to apply configuration changes.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-domains
+domain1 running, restart required to apply configuration changes
+Command list-domains executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00094"></a><a id="gkvba"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 1-2 Determining if an Instance Requires Restart</p>
+</div>
+<div class="paragraph">
+<p>This example determines that the instance <code>pmd-i1</code> requires restart to
+apply configuration changes.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-instances pmd-i1
+pmd-i1   running;  requires restart
+Command list-instances executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG795" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../reference-manual/list-domains.html#GSRFM00163"><code>list-domains</code>(1)</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/list-instances.html#GSRFM00170"><code>list-instances</code>(1)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommands by
+typing the following commands at the command line.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>asadmin help list-domains</code></p>
+</li>
+<li>
+<p><code>asadmin help list-instances</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghciy"></a><a id="GSADG00628"></a><a id="configuration-changes-that-require-restart"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_configuration_changes_that_require_restart">Configuration Changes That Require Restart</h5>
+<div class="paragraph">
+<p>The following configuration changes require restart for the changes to
+take effect:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Changing JVM options</p>
+</li>
+<li>
+<p>Changing port numbers<br></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Changes to some port numbers, for example HTTP listener ports, do not
+require restart.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Changing log handler elements</p>
+</li>
+<li>
+<p>Configuring certificates</p>
+</li>
+<li>
+<p>Managing HTTP, JMS, IIOP, JNDI services</p>
+</li>
+<li>
+<p>Enabling or disabling secure administration as explained in
+"<a href="../security-guide/administrative-security.html#GSSCG00165">Running Secure Admin</a>" in GlassFish Server Open Source
+Edition Security Guide</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghclm"></a><a id="GSADG00629"></a><a id="dynamic-configuration-changes"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_dynamic_configuration_changes">Dynamic Configuration Changes</h5>
+<div class="paragraph">
+<p>With dynamic configuration, changes take effect while the DAS or
+instance is running. The following configuration changes do not require
+restart:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Adding or deleting add-on components</p>
+</li>
+<li>
+<p>Adding or removing JDBC, JMS, and connector resources and pools
+(Exception: Some connection pool properties affect applications.)</p>
+</li>
+<li>
+<p>Changing a system property that is not referenced by a JVM option or a
+port</p>
+</li>
+<li>
+<p>Adding file realm users</p>
+</li>
+<li>
+<p>Changing logging levels</p>
+</li>
+<li>
+<p>Enabling and disabling monitoring</p>
+</li>
+<li>
+<p>Changing monitoring levels for modules</p>
+</li>
+<li>
+<p>Enabling and disabling resources and applications</p>
+</li>
+<li>
+<p>Deploying, undeploying, and redeploying applications</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkvas"></a><a id="GSADG00630"></a><a id="changes-that-affect-applications"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_changes_that_affect_applications">Changes That Affect Applications</h5>
+<div class="paragraph">
+<p>Some changes to resources or connection pools affect the applications
+that use the resources or connection pools. These changes do not require
+restart. However, any applications that use the resources or connection
+pools must be disabled and re-enabled or redeployed for the change to
+take effect.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you do not know which applications use the changed resources or
+connection pools, you can apply these changes by restarting the clusters
+orGlassFish Server instances to which applications are deployed.
+However, to minimize the disruption to the services that your
+applications provide, avoid restarting clusters or instances to apply
+these changes if possible.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The following changes affect applications:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Creating or deleting resources (Exception: Changes to some JDBC, JMS,
+or connector resources do not affect applications.)</p>
+</li>
+<li>
+<p>Modifying the following JDBC connection pool properties:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>datasource-classname</code></p>
+</li>
+<li>
+<p><code>associate-with-thread</code></p>
+</li>
+<li>
+<p><code>lazy-connection-association</code></p>
+</li>
+<li>
+<p><code>lazy-connection-enlistment</code></p>
+</li>
+<li>
+<p>JDBC driver vendor-specific properties</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Modifying the following connector connection pool properties:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>resource-adapter-name</code></p>
+</li>
+<li>
+<p><code>connection-definition-name</code></p>
+</li>
+<li>
+<p><code>transaction-support</code></p>
+</li>
+<li>
+<p><code>associate-with-thread</code></p>
+</li>
+<li>
+<p><code>lazy-connection-association</code></p>
+</li>
+<li>
+<p><code>lazy-connection-enlistment</code></p>
+</li>
+<li>
+<p>Vendor-specific properties</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ggjxp"></a><a id="GSADG00528"></a><a id="administration-tools"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_administration_tools">Administration Tools</h3>
+<div class="paragraph">
+<p>For the most part, you can perform the same tasks by using either the
+graphical Administration Console or the <code>asadmin</code> command-line utility,
+however, there are exceptions.</p>
+</div>
+<div class="paragraph">
+<p>The following GlassFish Server administration tools are described here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ablav">Administration Console</a></p>
+</li>
+<li>
+<p><a href="#gcocs"><code>asadmin</code> Utility</a></p>
+</li>
+<li>
+<p><a href="#gjjok">REST Interfaces</a></p>
+</li>
+<li>
+<p><a href="#gjjxt">OSGi Module Management Subsystem</a></p>
+</li>
+<li>
+<p><a href="#ghcjl"><code>keytool</code> Utility</a></p>
+</li>
+<li>
+<p><a href="#ghrfm">Java Monitoring and Management Console (JConsole)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ablav"></a><a id="GSADG00698"></a><a id="administration-console"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_administration_console">Administration Console</h4>
+<div class="paragraph">
+<p>The Administration Console is a browser-based utility that features an
+easy-to-navigate graphical interface that includes extensive online help
+for the administrative tasks.</p>
+</div>
+<div class="paragraph">
+<p>To use the Administration Console, the domain administration server
+(DAS) must be running. Each domain has its own DAS, which has a unique
+port number. When GlassFish Server was installed, you chose a port
+number for the DAS, or used the default port of 4848. You also specified
+a user name and password if you did not accept the default login
+(<code>admin</code> with no password).</p>
+</div>
+<div class="paragraph">
+<p>When specifying the URL for the Administration Console, use the port
+number for the domain to be administered. The format for starting the
+Administration Console in a web browser is <code>http://`hostname</code>:`port. For
+example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">http://kindness.example.com:4848</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the Administration Console is running on the host where GlassFish
+Server was installed, specify <code>localhost</code> for the host name. For
+example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">http://localhost:4848</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the Administration Console is run on a host different from the host
+where GlassFish Server was installed, a secure connection (<code>https</code>
+instead of <code>http</code>) is used. Some browsers do not display pages on secure
+connections by default and must be configured to permit secure protocols
+(SSL and TLS).</p>
+</div>
+<div class="paragraph">
+<p>For Microsoft Windows, an alternate way to start the GlassFish Server
+Administration Console is by using the Start menu.</p>
+</div>
+<div class="paragraph">
+<p>You can display the help material for a page in the Administration
+Console by clicking the Help button on the page. The initial help page
+describes the functions and fields of the page itself. Associated task
+instructions can be accessed on additional pages by clicking a link in
+the See Also list.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you try to use the Administration Console from a system through a
+proxy server on another system back to the original system, while using
+the system&#8217;s full host name (instead of <code>localhost</code> or <code>127.0.0.1</code>) you
+are denied access because the request is treated as a remote request,
+which requires that the secure administration feature (secure admin) be
+enabled.</p>
+</div>
+<div class="paragraph">
+<p>To avoid this situation, do one of the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Do not use a proxy server.</p>
+</li>
+<li>
+<p>Use <code>localhost</code> or <code>127.0.0.1</code> as the host name.</p>
+</li>
+<li>
+<p>Enable secure admin so that what GlassFish Server interprets as a
+remote request is accepted as such.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To enable secure admin, see "o<a href="GSSCG00039">Managing Administrative
+Security</a>" in GlassFish Server Open Source Edition Security Guide.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="gcocs"></a><a id="GSADG00699"></a><a id="asadmin-utility"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__code_asadmin_code_utility"><code>asadmin</code> Utility</h4>
+<div class="paragraph">
+<p>The <code>asadmin</code> utility is a command-line tool that runs subcommands for
+identifying the operation or task that you want to perform. You can run
+<code>asadmin</code> subcommands either from a command prompt or from a script.
+Running <code>asadmin</code> subcommands from a script is helpful for automating
+repetitive tasks. Basic information about how the <code>asadmin</code> utility
+works can be found in the <a href="../reference-manual/asadmin.html#GSRFM00263"><code>asadmin</code>(1M)</a> help page. For
+instructions on using the <code>asadmin</code> utility, see
+<a href="general-administration.html#giobi">Using the <code>asadmin</code> Utility</a>.</p>
+</div>
+<div class="paragraph">
+<p>To issue an <code>asadmin</code> subcommand in the standard command shell (single
+mode), go to the as-install`/bin` directory and type the <code>asadmin</code>
+command followed by a subcommand. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin list-jdbc-resources</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can invoke multiple command mode (multimode) by typing <code>asadmin</code> at
+the command prompt, after which the <code>asadmin&gt;</code> prompt is presented. The
+<code>asadmin</code> utility continues to accept subcommands until you exit
+multimode and return to the standard command shell. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-jdbc-resources</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can display a help page for any <code>asadmin</code> subcommand by typing
+<code>help</code> before the subcommand name. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; help restart-domain</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin help restart-domain</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A collection of the <code>asadmin</code> help pages is available in HTML and PDF
+format in the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference
+Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gjjok"></a><a id="GSADG00700"></a><a id="rest-interfaces"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_rest_interfaces">REST Interfaces</h4>
+<div class="paragraph">
+<p>GlassFish Server provides representational state transfer (REST)
+interfaces to enable you to access monitoring and configuration data for
+GlassFish Server, including data that is provided by newly installed
+add-on components. For more information, see
+<a href="general-administration.html#gjipx">Using REST Interfaces to
+Administer GlassFish Server</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gjjxt"></a><a id="GSADG00702"></a><a id="osgi-module-management-subsystem"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_osgi_module_management_subsystem">OSGi Module Management Subsystem</h4>
+<div class="paragraph">
+<p>The OSGi module management subsystem that is provided with GlassFish
+Server is the <a href="http://felix.apache.org/">Apache Felix OSGi framework</a> . To
+administer this framework, use the either of the following tools:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://felix.apache.org/documentation/subprojects/apache-felix-remote-shell.html">Apache
+Felix Gogo</a> remote shell. This shell is provided with GlassFish Server.
+The shell uses the Felix Gogo shell service to interact with the OSGi
+module management subsystem.</p>
+</li>
+<li>
+<p>GlassFish OSGi Administration Console. This console is distributed as
+an add-on component for GlassFish Server or as a set of files from the
+Maven GlassFish repository. In both distributions, the GlassFish OSGi
+Web Console is provided as an extension to the Administration Console
+and as a standalone web application. The GlassFish OSGi Administration
+Console is a customized version of the
+<a href="http://felix.apache.org/documentation/subprojects/apache-felix-web-console.html">Apache
+Felix Web Console</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>These tools enable you to perform administrative tasks on OSGi bundles
+such as:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Browsing installed OSGi bundles</p>
+</li>
+<li>
+<p>Viewing the headers of installed OSGi bundles</p>
+</li>
+<li>
+<p>Installing OSGi bundles</p>
+</li>
+<li>
+<p>Controlling the life cycle of installed bundles</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="glhdz"></a><a id="GSADG00302"></a><a id="to-enable-the-apache-felix-gogo-remote-shell"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_to_enable_the_apache_felix_gogo_remote_shell">To Enable the Apache Felix Gogo Remote Shell</h5>
+<div class="paragraph">
+<p>By default, the Apache Felix Gogo remote shell in GlassFish Server is
+disabled. Before using the shell to administer OSGi bundles in GlassFish
+Server, you must enable the shell.</p>
+</div>
+<div class="paragraph">
+<p>Enabling the Apache Felix Gogo remote shell in GlassFish Server involves
+changing the value of the property <code>glassfish.osgi.start.level.final</code>.
+This property controls whether the OSGi start level service enables the
+shell when the DAS or a GlassFish Server instance is started.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.</p>
+</li>
+<li>
+<p><a id="CEGDBDBH"></a><br>
+Change the value of the <code>glassfish.osgi.start.level.final</code> property from
+2 to 3.<br>
+If the domain includes clustered or standalone instances on remote
+hosts, perform this step on each remote host.<br>
+You can change this value either by creating a Java system property or
+by editing a file.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>To change this value by creating a Java system property, create the
+Java system property <code>glassfish.osgi.start.level.final</code> with a value of</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>+</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; create-jvm-options --target target -Dglassfish.osgi.start.level.final=3</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">target</dt>
+<dd>
+<p>The target for which you are creating the property.<br>
+For the DAS, the target is <code>server</code>.<br>
+For a clustered or standalone instance, the target is the name of the
+instance.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>To change this value by editing a file, edit the plain-text file
+as-install`/config/osgi.properties` to change the value of the
+<code>glassfish.osgi.start.level.final</code> property from 2 to 3.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Restart the DAS.<br>
+For instructions, see <a href="domains.html#ginqj">To Restart a Domain</a>.</p>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="CJAGIGII"></a><a id="GSADG1050"></a><a id="to-run-apache-felix-gogo-remote-shell-commands"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_run_apache_felix_gogo_remote_shell_commands">To Run Apache Felix Gogo Remote Shell Commands</h5>
+<div class="paragraph">
+<p>The Apache Felix Gogo remote shell is integrated with the GlassFish
+Server <code>asadmin</code> command line utility. You can use the <code>asadmin</code>
+subcommands <code>osgi</code> and <code>osgi-shell</code> to access the remote shell and run
+OSGi shell commands.</p>
+</div>
+<div id="GSADG1051" class="paragraph">
+<p>To Run Remote Shell Commands Using the <code>osgi</code> Subcommand</p>
+</div>
+<div class="paragraph">
+<p>The <code>osgi</code> subcommand delegates the command line to the Apache Felix
+Gogo remote shell for the execution of OSGi shell commands. Commands are
+executed by the remote shell and results are returned by the <code>asadmin</code>
+utility. The <code>osgi</code> subcommand is supported in remote mode only.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote commands require a running server.</p>
+</li>
+<li>
+<p>Access the remote shell by using the <a href="../reference-manual/redeploy.html#GSRFM00217"><code>osgi</code></a>
+subcommand.<br>
+For the full syntax and options for this subcommand, see <code>osgi</code>(1).</p>
+</li>
+</ol>
+</div>
+<div id="GSADG1052" class="paragraph">
+<p>To Run Remote Shell Commands Using the <code>osgi-shell</code> Subcommand</p>
+</div>
+<div class="paragraph">
+<p>The <code>osgi-shell</code> subcommand provides interactive access to the Apache
+Felix Gogo remote shell for the execution of OSGi shell commands. OSGi
+shell commands are executed on the server and results are printed on the
+client. You can run multiple commands from a file or run commands
+interactively. The <code>osgi-shell</code> subcommand is supported in local mode
+only. Unlike other local subcommands, however, the DAS and the server
+instance whose shell is being accessed must be running.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.</p>
+</li>
+<li>
+<p>Access the remote shell by using the <a href="../reference-manual/redeploy.html#GSRFM00217"><code>osgi-shell</code></a>
+subcommand.<br>
+For the full syntax and options for this subcommand, see
+<code>osgi-shell</code>(1).</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG1053"></a><a id="sthref5"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 1-3 Listing Apache Felix Gogo Remote Shell Commands</p>
+</div>
+<div class="paragraph">
+<p>This example lists Apache Felix Gogo remote shell commands. Some lines
+of output are omitted from this example for readability.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; osgi help
+felix:bundlelevel
+felix:cd
+felix:frameworklevel
+gogo:cat
+gogo:each
+gogo:echo
+...
+asadmin&gt; osgi-shell
+Use "exit" to exit and "help" for online help.
+gogo$ help
+felix:bundlelevel
+felix:cd
+felix:frameworklevel
+gogo:cat
+gogo:each
+gogo:echo</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSADG1054"></a><a id="sthref6"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 1-4 Running a Remote Shell Command</p>
+</div>
+<div class="paragraph">
+<p>This example runs the Felix Remote Shell Command <code>lb</code> without any
+arguments to list all installed OSGi bundles. Some lines of output are
+omitted from this example for readability.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; osgi lb
+START LEVEL 2
+ID|State      |Level|Name
+ 0|Active     |    0|System Bundle
+ 1|Active     |    1|Metro Web Services API OSGi Bundle
+ 2|Active     |    1|jakarta.annotation API
+Command osgi executed successfully.
+...
+asadmin&gt; osgi-shell
+Use "exit" to exit and "help" for online help.
+gogo$ lb
+START LEVEL 2
+ID|State      |Level|Name
+ 0|Active     |    0|System Bundle
+ 1|Active     |    1|Metro Web Services API OSGi Bundle
+ 2|Active     |    1|jakarta.annotation API
+gogo$</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00097"></a><a id="gjkrh"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 1-5 Determining the Services That an OSGi Bundle Provides</p>
+</div>
+<div class="paragraph">
+<p>This example runs the Felix Remote Shell Command <code>inspect</code> with the
+<code>service</code> option and the <code>capability</code> option to determine the services
+that OSGi bundle 251 provides. Some lines of output are omitted from
+this example for readability.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; osgi inspect service capability 251
+GlassFish EJB Container for OSGi Enabled EJB Applications (251) provides services:
+---------------------------------------------------------------------------
+objectClass = org.glassfish.osgijavaeebase.Extender
+service.id = 68
+-----
+objectClass = org.glassfish.osgijavaeebase.OSGiDeployer
+service.id = 69
+service.ranking = -2147483648
+Command osgi executed successfully.
+...
+asadmin&gt; osgi -shell
+Use "exit" to exit and "help" for online help.
+gogo$ inspect service capability 251
+GlassFish EJB Container for OSGi Enabled EJB Applications (251) provides services:
+---------------------------------------------------------------------------
+objectClass = org.glassfish.osgijavaeebase.Extender
+service.id = 68
+...
+gogo$</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gkwvx"></a><a id="GSADG00303"></a><a id="to-download-and-install-the-glassfish-osgi-web-console"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_download_and_install_the_glassfish_osgi_web_console">To Download and Install the GlassFish OSGi Web Console</h5>
+<div class="paragraph">
+<p>The GlassFish OSGi Web Console is distributed as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>As an add-on component for GlassFish Server</p>
+</li>
+<li>
+<p>As a set of files from the <a href="https://maven.java.net">GlassFish Maven
+repository</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In both distributions, the GlassFish OSGi Web Console is provided as an
+extension to the Administration Console and as a standalone web
+application.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Perform one of the following sets of steps, depending on how you are
+obtaining the GlassFish OSGi Web Console.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If you are obtaining the console as an add-on component, install the
+GlassFish OSGi Admin Console component.</p>
+</li>
+<li>
+<p>If you are obtaining the console from the Maven repository, download
+and unzip the required files.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Download the following files to the parent of the <code>glassfish3</code>
+directory of your GlassFish Server installation.<br>
+<a href="http://maven.glassfish.org/content/groups/glassfish/org/glassfish/packager/glassfish-osgi-http/3.1.2/glassfish-osgi-http-3.1.2.zip"><code>glassfish-osgi-http-3.1.2.zip</code></a><br>
+<a href="http://maven.glassfish.org/content/groups/glassfish/org/glassfish/packager/glassfish-osgi-gui/3.1.2/glassfish-osgi-gui-3.1.2.zip"><code>glassfish-osgi-gui-3.1.2.zip</code></a></p>
+</li>
+<li>
+<p>Unzip the files that you downloaded.<br>
+The contents of the files are added to the
+as-install`/modules/autostart` directory of your GlassFish Server
+installation.</p>
+</li>
+<li>
+<p>Restart the DAS.<br>
+For instructions, see <a href="domains.html#ginqj">To Restart a Domain</a>.</p>
+</li>
+</ol>
+</div>
+<div id="GSADG797" class="paragraph">
+<p>Next Steps</p>
+</div>
+<div class="paragraph">
+<p>After downloading and installing the GlassFish OSGi Web Console, you can
+access the console as explained in the following sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#BABIDJHF">To Access the GlassFish OSGi Web Console Through the
+GlassFish Server Administration Console</a></p>
+</li>
+<li>
+<p><a href="#BABDJHAF">To Access the GlassFish OSGi Web Console as a
+Standalone Web Application</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="BABIDJHF"></a><a id="GSADG798"></a><a id="to-access-the-glassfish-osgi-web-console-through-the-glassfish-server-administration-console"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_access_the_glassfish_osgi_web_console_through_the_glassfish_server_administration_console">To Access the GlassFish OSGi Web Console Through the GlassFish Server Administration Console</h5>
+<div class="paragraph">
+<p>A tab for the GlassFish OSGi Web Console is provided for the DAS and for
+every GlassFish Server instance in a domain.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS and the instance for which you want to access
+the GlassFish OSGi Web Console are running.</p>
+</li>
+<li>
+<p>Start the GlassFish Server Administration Console.<br>
+For instructions, see <a href="#ablav">Administration Console</a>.</p>
+</li>
+<li>
+<p>Open the Administration Console page for the DAS or instance for
+which you are accessing the GlassFish OSGi Web Console.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>For the DAS, in the navigation tree, select the server (Admin Server)
+node.</p>
+</li>
+<li>
+<p>For a standalone instance, perform these steps:</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>In the navigation tree, expand the Standalone Instances node.</p>
+</li>
+<li>
+<p>Under the Standalone Instances node, select the instance.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>For a clustered instance, perform these steps:</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>In the navigation tree, expand the Clusters node.</p>
+</li>
+<li>
+<p>Under the Clusters node, select the cluster that contains the
+instance.<br>
+The General Information page for the cluster opens.</p>
+</li>
+<li>
+<p>In the General Information page for the cluster, click the Instances
+tab.<br>
+The Clustered Server Instances page for the cluster opens.</p>
+</li>
+<li>
+<p>In the Server Instances table on the Clustered Server Instances
+page, select the instance.</p>
+</li>
+<li>
+<p>On the Administration Console page for the DAS or instance, click
+the OSGi Console tab.<br>
+You are prompted for the user name and password of the administrative
+user of the GlassFish OSGi Web Console.</p>
+</li>
+<li>
+<p>In response to the prompt, provide the user name and password of the
+administrative user of the GlassFish OSGi Web Console.<br>
+The user name and password of this user are both preset to <code>admin</code>.<br>
+The GlassFish OSGi Web Console page opens.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="BABDJHAF"></a><a id="GSADG799"></a><a id="to-access-the-glassfish-osgi-web-console-as-a-standalone-web-application"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_access_the_glassfish_osgi_web_console_as_a_standalone_web_application">To Access the GlassFish OSGi Web Console as a Standalone Web Application</h5>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS or the instance for which you want to access the
+GlassFish OSGi Web Console is running.</p>
+</li>
+<li>
+<p>In a web browser, open the following location:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>http://host:http-port/osgi/system/console/</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">host</dt>
+<dd>
+<p>The host where the DAS or instance is running.</p>
+</dd>
+<dt class="hdlist1">http-port</dt>
+<dd>
+<p>  The port on which GlassFish Server listens for HTTP requests. The
+  default is 8080.<br>
+For example, if the DAS is running on the local host and GlassFish
+Server listens for HTTP requests on the default port, open the following
+location:<br></p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">http://localhost:8080/osgi/system/console/</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>When prompted, provide the user name and password of the
+administrative user of the GlassFish OSGi Web Console.<br>
+The user name and password of this user are both preset to <code>admin</code>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="ghcjl"></a><a id="GSADG00703"></a><a id="keytool-utility"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__code_keytool_code_utility"><code>keytool</code> Utility</h4>
+<div class="paragraph">
+<p>The <code>keytool</code> utility is used to set up and work with Java Security
+Socket Extension (JSSE) digital certificates. See
+"<a href="../security-guide/system-security.html#GSSCG00147">Administering JSSE Certificates</a>" in GlassFish Server
+Open Source Edition Security Guide for instructions on using <code>keytool</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghrfm"></a><a id="GSADG00704"></a><a id="java-monitoring-and-management-console-jconsole"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_java_monitoring_and_management_console_jconsole">Java Monitoring and Management Console (JConsole)</h4>
+<div class="paragraph">
+<p>Java SE provides tools to connect to an MBean server and view the MBeans
+that are registered with the server. JConsole is one such popular JMX
+Connector Client and is available as part of the standard Java SE
+distribution. For instructions on implementing JConsole in the GlassFish
+Server environment, see <a href="monitoring.html#giwqm">Configuring JConsole
+to View GlassFish Server Monitoring Data</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="giudo"></a><a id="GSADG00529"></a><a id="instructions-for-administering-glassfish-server"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_instructions_for_administering_glassfish_server">Instructions for Administering GlassFish Server</h3>
+<div class="paragraph">
+<p>Information and instructions on performing most of the administration
+tasks from the command line are provided in this document and in the
+<code>asadmin</code> utility help pages. For instructions on accessing <code>asadmin</code>
+online help, see <a href="general-administration.html#givlw">To Display Help
+Information for the <code>asadmin</code> Utility or a Subcommand</a>.</p>
+</div>
+<div class="paragraph">
+<p>Information and instructions for accomplishing the tasks by using the
+Administration Console are contained in the Administration Console
+online help.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Instructions written for the GlassFish Server tools use standard UNIX
+forward slashes (/) for directory path separators in commands and file
+names. If you are running GlassFish Server on a Microsoft Windows
+system, use backslashes (\) instead. For example:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>UNIX: as-install`/bin/asadmin`</p>
+</li>
+<li>
+<p>Windows: as-install`\bin\asadmin`</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The following additional documents address specific administration
+areas:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Verifying and deploying applications<br>
+<a href="../application-deployment-guide/toc.html#GSDPG">GlassFish Server Open Source Edition Application Deployment
+Guide</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="preface.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="part-runtime-admin.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

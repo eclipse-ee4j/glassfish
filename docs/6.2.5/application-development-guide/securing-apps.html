@@ -1,0 +1,3531 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Securing Applications</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Securing Applications</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="part-apps-and-app-comps.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="webservices.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSDVG00006"></a><a id="beabg"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="securing-applications">4 Securing Applications</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter describes how to write secure Java EE applications, which
+contain components that perform user authentication and access
+authorization for the business logic of Java EE components.</p>
+</div>
+<div class="paragraph">
+<p>For information about administrative security for the Oracle GlassFish
+Server, see the <a href="../security-guide/toc.html#GSSCG">GlassFish Server Open Source Edition
+Security Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p>For general information about Java EE security, see
+<a href="https://javaee.github.io/tutorial/partsecurity.html">Security</a> in The
+Java EE 8 Tutorial.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beabh">Security Goals</a></p>
+</li>
+<li>
+<p><a href="#beabi">GlassFish Server Specific Security Features</a></p>
+</li>
+<li>
+<p><a href="#beabj">Container Security</a></p>
+</li>
+<li>
+<p><a href="#beacr">Roles, Principals, and Principal to Role Mapping</a></p>
+</li>
+<li>
+<p><a href="#beabo">Realm Configuration</a></p>
+</li>
+<li>
+<p><a href="#BACDEIHB">Java EE Security API Support</a></p>
+</li>
+<li>
+<p><a href="#beabt">JACC Support</a></p>
+</li>
+<li>
+<p><a href="#beabu">Pluggable Audit Module Support</a></p>
+</li>
+<li>
+<p><a href="#beabx">The <code>server.policy</code> File</a></p>
+</li>
+<li>
+<p><a href="#beaca">Configuring Message Security for Web Services</a></p>
+</li>
+<li>
+<p><a href="#beacm">Programmatic Login Using the ProgrammaticLogin Class</a></p>
+</li>
+<li>
+<p><a href="#beacq">User Authentication for Single Sign-on</a></p>
+</li>
+<li>
+<p><a href="#gizel">Adding Authentication Mechanisms to the Servlet Container</a></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The Web Profile of the GlassFish Server supports the EJB 3.1 Lite
+specification, which allows enterprise beans within web applications,
+among other features. The full GlassFish Server supports the entire EJB
+3.1 specification. For details, see
+<a href="http://jcp.org/en/jsr/detail?id=318">JSR 318</a>
+(<code>http://jcp.org/en/jsr/detail?id=318</code>).</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="beabh"></a><a id="GSDVG00114"></a><a id="security-goals"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_security_goals">Security Goals</h3>
+<div class="paragraph">
+<p>In an enterprise computing environment, there are many security risks.
+The goal of the GlassFish Server is to provide highly secure,
+interoperable, and distributed component computing based on the Java EE
+security model. Security goals include:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Full compliance with the Java EE security model. This includes EJB and
+servlet role-based authorization.</p>
+</li>
+<li>
+<p>Support for single sign-on across all GlassFish Server applications
+within a single security domain.</p>
+</li>
+<li>
+<p>Support for web services message security.</p>
+</li>
+<li>
+<p>Security support for application clients.</p>
+</li>
+<li>
+<p>Support for several underlying authentication realms, such as simple
+file and Lightweight Directory Access Protocol (LDAP). Certificate
+authentication is also supported for Secure Socket Layer (SSL) client
+authentication. For Solaris, OS platform authentication is supported in
+addition to these.</p>
+</li>
+<li>
+<p>Support for declarative security through GlassFish Server specific
+XML-based role mapping.</p>
+</li>
+<li>
+<p>Support for Java Authorization Contract for Containers (JACC)
+pluggable authorization as included in the Java EE specification and
+defined by <a href="http://www.jcp.org/en/jsr/detail?id=115">Java Specification
+Request (JSR) 115</a> (<code>http://www.jcp.org/en/jsr/detail?id=115</code>).</p>
+</li>
+<li>
+<p>Support for Java Authentication Service Provider Interface for
+Containers as included in the Java EE specification and defined by
+<a href="http://www.jcp.org/en/jsr/detail?id=196">JSR 196</a>
+(<code>http://www.jcp.org/en/jsr/detail?id=196</code>).</p>
+</li>
+<li>
+<p>Support for Web Services Interoperability Technologies (WSIT) as
+described in
+<a href="https://javaee.github.io/metro/doc/user-guide/index.html">Metro Users
+Guide</a> (<code>https://javaee.github.io/metro/doc/user-guide/index.html</code>).</p>
+</li>
+<li>
+<p>Support for the Java EE Security API as included in the Java EE
+specification and defined by <a href="https://jcp.org/en/jsr/detail?id=375">JSR
+375</a> (<code>https://jcp.org/en/jsr/detail?id=375</code>)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beabi"></a><a id="GSDVG00115"></a><a id="glassfish-server-specific-security-features"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_glassfish_server_specific_security_features">GlassFish Server Specific Security Features</h3>
+<div class="paragraph">
+<p>The GlassFish Server supports the Java EE security model, as well as the
+following features which are specific to the GlassFish Server:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Message security; see <a href="#beaca">Configuring Message Security for Web
+Services</a></p>
+</li>
+<li>
+<p>Single sign-on across all GlassFish Server applications within a
+single security domain; see <a href="#beacq">User Authentication for Single
+Sign-on</a></p>
+</li>
+<li>
+<p>Programmatic login; see <a href="#beacm">Programmatic Login Using the
+ProgrammaticLogin Class</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beabj"></a><a id="GSDVG00116"></a><a id="container-security"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_container_security">Container Security</h3>
+<div class="paragraph">
+<p>The component containers are responsible for providing Java EE
+application security. The container provides two security forms:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beabl">Declarative Security</a></p>
+</li>
+<li>
+<p><a href="#beabk">Programmatic Security</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Annotations (also called metadata) enable a declarative style of
+programming, and so encompass both the declarative and programmatic
+security concepts. Users can specify information about security within a
+class file using annotations. When the application is deployed, this
+information can either be used by or overridden by the application or
+module deployment descriptor.</p>
+</div>
+<div class="paragraph">
+<p><a id="beabl"></a><a id="GSDVG00362"></a><a id="declarative-security"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_declarative_security">Declarative Security</h4>
+<div class="paragraph">
+<p>Declarative security means that the security mechanism for an
+application is declared and handled externally to the application.
+Deployment descriptors describe the Java EE application&#8217;s security
+structure, including security roles, access control, and authentication
+requirements.</p>
+</div>
+<div class="paragraph">
+<p>The GlassFish Server supports the deployment descriptors specified by
+Java EE and has additional security elements included in its own
+deployment descriptors. Declarative security is the application
+deployer&#8217;s responsibility. For more information about GlassFish Server
+deployment descriptors, see the <a href="../application-deployment-guide/toc.html#GSDPG">GlassFish Server Open Source
+Edition Application Deployment Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p>There are two levels of declarative security, as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beabm">Application Level Security</a></p>
+</li>
+<li>
+<p><a href="#beabn">Component Level Security</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beabm"></a><a id="GSDVG00239"></a><a id="application-level-security"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_application_level_security">Application Level Security</h5>
+<div class="paragraph">
+<p>For an application, roles used by any application must be defined in
+<code>@DeclareRoles</code> annotations in the code or <code>role-name</code> elements in the
+application deployment descriptor (<code>application.xml</code>). Those role names
+are scoped to the EJB XML deployment descriptors (<code>ejb-jar.xml</code> and
+<code>glassfish-ejb-jar.xml</code> files) and to the servlet XML deployment
+descriptors (<code>web.xml</code> and <code>glassfish-web.xml</code> files). For an
+individually deployed web or EJB module, you define roles using
+<code>@DeclareRoles</code> annotations or <code>role-name</code> elements in the Java EE
+deployment descriptor files <code>web.xml</code> or <code>ejb-jar.xml</code>.</p>
+</div>
+<div class="paragraph">
+<p>To map roles to principals and groups, define matching
+<code>security-role-mapping</code> elements in the <code>glassfish-application.xml</code>,
+<code>glassfish-ejb-jar.xml</code>, or <code>glassfish-web.xml</code> file for each
+<code>role-name</code> used by the application. By default, group principal names
+are mapped to roles of the same name. Accordingly, the Default Principal
+To Role Mapping setting is enabled by default on the Security page of
+the GlassFish Server Administration Console. This default role mapping
+definition is in effect if you do not define your own mapping in the
+deployment descriptor for your application as described in this section.
+For more information, see <a href="#beacr">Roles, Principals, and Principal
+to Role Mapping</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beabn"></a><a id="GSDVG00240"></a><a id="component-level-security"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_component_level_security">Component Level Security</h5>
+<div class="paragraph">
+<p>Component level security encompasses web components and EJB components.</p>
+</div>
+<div class="paragraph">
+<p>A secure web container authenticates users and authorizes access to a
+servlet or JSP by using the security policy laid out in the servlet XML
+deployment descriptors (<code>web.xml</code> and <code>glassfish-web.xml</code> files).</p>
+</div>
+<div class="paragraph">
+<p>The EJB container is responsible for authorizing access to a bean method
+by using the security policy laid out in the EJB XML deployment
+descriptors (<code>ejb-jar.xml</code> and <code>glassfish-ejb-jar.xml</code> files).</p>
+</div>
+<div class="paragraph">
+<p><a id="beabk"></a><a id="GSDVG00363"></a><a id="programmatic-security"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_programmatic_security">Programmatic Security</h4>
+<div class="paragraph">
+<p>Programmatic security involves an EJB component or servlet using method
+calls to the security API, as specified by the Java EE security model,
+to make business logic decisions based on the caller or remote user&#8217;s
+security role. Programmatic security should only be used when
+declarative security alone is insufficient to meet the application&#8217;s
+security model.</p>
+</div>
+<div class="paragraph">
+<p>The API for programmatic security consists of methods of the Java EE
+Security API <code>SecurityContext</code> interface, and methods of the EJB
+<code>EJBContext</code> interface and the servlet <code>HttpServletRequest</code> interface.
+The GlassFish Server supports these interfaces as specified in the Java
+EE specification.</p>
+</div>
+<div class="paragraph">
+<p>There is also a proprietary Glassfish API for programmatic login. See
+<a href="#beacm">Programmatic Login Using the ProgrammaticLogin Class</a>.</p>
+</div>
+<div class="paragraph">
+<p>For more information about programmatic security, see
+<a href="https://javaee.github.io/tutorial/security-intro003.html#using-programmatic-security">Using
+Programmatic Security</a> in the The Java EE Tutorial.</p>
+</div>
+<div class="paragraph">
+<p><a id="beacr"></a><a id="GSDVG00117"></a><a id="roles-principals-and-principal-to-role-mapping"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_roles_principals_and_principal_to_role_mapping">Roles, Principals, and Principal to Role Mapping</h3>
+<div class="paragraph">
+<p>By default, any groups that an authenticated user belongs to will be
+mapped to roles with the same names. Therefore, the Default Principal To
+Role Mapping setting is enabled by default on the Security page of the
+GlassFish Administration Console. To change the default mapping you can
+clear this setting. For applications, you define roles in
+<code>@DeclareRoles</code> annotations or the Java EE deployment descriptor file
+<code>application.xml</code>. You define the corresponding role mappings in the
+GlassFish Server deployment descriptor file <code>glassfish-application.xml</code>.
+For individually deployed web or EJB modules, you define roles in
+<code>@DeclareRoles</code> annotations or the Java EE deployment descriptor files
+<code>web.xml</code> or <code>ejb-jar.xml</code>. You define the corresponding role mappings
+in the GlassFish Server deployment descriptor files <code>glassfish-web.xml</code>
+or <code>glassfish-ejb-jar.xml</code>.</p>
+</div>
+<div class="paragraph">
+<p>For more information regarding Java EE deployment descriptors, see the
+Java EE Specification. For more information regarding GlassFish Server
+deployment descriptors, see "<a href="../application-deployment-guide/dd-elements.html#GSDPG00007">Elements of the GlassFish
+Server Deployment Descriptors</a>" in GlassFish Server Open Source Edition
+Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p>Each <code>security-role-mapping</code> element in the <code>glassfish-application.xml</code>,
+<code>glassfish-web.xml</code>, or <code>glassfish-ejb-jar.xml</code> file maps a role name
+permitted by the application or module to principals and groups. For
+example, a <code>glassfish-web.xml</code> file for an individually deployed web
+module might contain the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;glassfish-web-app&gt;
+    &lt;security-role-mapping&gt;
+        &lt;role-name&gt;manager&lt;/role-name&gt;
+        &lt;principal-name&gt;jgarcia&lt;/principal-name&gt;
+        &lt;principal-name&gt;mwebster&lt;/principal-name&gt;
+        &lt;group-name&gt;team-leads&lt;/group-name&gt;
+    &lt;/security-role-mapping&gt;
+    &lt;security-role-mapping&gt;
+        &lt;role-name&gt;administrator&lt;/role-name&gt;
+        &lt;principal-name&gt;dsmith&lt;/principal-name&gt;
+    &lt;/security-role-mapping&gt;
+&lt;/glassfish-web-app&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A role can be mapped to either specific principals or to groups (or
+both). The principal or group names used must be valid principals or
+groups in the realm for the application or module. Note that the
+<code>role-name</code> in this example must match the <code>@DeclareRoles</code> annotations
+or the <code>role-name</code> in the <code>security-role</code> element of the corresponding
+<code>web.xml</code> file.</p>
+</div>
+<div class="paragraph">
+<p>You can also specify a custom principal implementation class. This
+provides more flexibility in how principals can be assigned to roles. A
+user&#8217;s JAAS login module now can authenticate its custom principal, and
+the authenticated custom principal can further participate in the
+GlassFish Server authorization process. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;security-role-mapping&gt;
+    &lt;role-name&gt;administrator&lt;/role-name&gt;
+    &lt;principal-name class-name="CustomPrincipalImplClass"&gt;
+        dsmith
+    &lt;/principal-name&gt;
+&lt;/security-role-mapping&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can specify a default principal and a default principal to role
+mapping, each of which applies to the entire GlassFish Server instance.
+The default principal to role mapping maps group principals to the same
+named roles. Web modules that omit the <code>run-as</code> element in <code>web.xml</code> use
+the default principal. Applications and modules that omit the
+<code>security-role-mapping</code> element use the default principal to role
+mapping. These defaults are part of the Security Service, which you can
+access in the following ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In the Administration Console, select the Security component under the
+relevant configuration. For details, click the Help button in the
+Administration Console.</p>
+</li>
+<li>
+<p>Use the <code>asadmin set</code> command. For details, see the
+<a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference Manual</a>. For
+example, you can set the default principal as follows.<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin set server-config.security-service.default-principal=dsmith
+asadmin set server-config.security-service.default-principal-password=secret</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can set the default principal to role mapping as follows.<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin set server-config.security-service.activate-default-principal-to-role-mapping=true
+asadmin set server-config.security-service.mapped-principal-class=CustomPrincipalImplClass</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Default principal to role mapping is enabled by default. To disable it,
+set the default principal to role mapping property to false.</p>
+</div>
+<div class="paragraph">
+<p><a id="beabo"></a><a id="GSDVG00118"></a><a id="realm-configuration"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_realm_configuration">Realm Configuration</h3>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beabp">Supported Realms</a></p>
+</li>
+<li>
+<p><a href="#beabq">How to Configure a Realm</a></p>
+</li>
+<li>
+<p><a href="#beabr">How to Set a Realm for an Application or Module</a></p>
+</li>
+<li>
+<p><a href="#beabs">Creating a Custom Realm</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beabp"></a><a id="GSDVG00364"></a><a id="supported-realms"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_supported_realms">Supported Realms</h4>
+<div class="paragraph">
+<p>The following realms are supported in the current release of the
+GlassFish Server:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>file</code> - Stores user information in a file. This is the default realm
+when you first install the GlassFish Server.</p>
+</li>
+<li>
+<p><code>ldap</code> - Stores user information in an LDAP directory.</p>
+</li>
+<li>
+<p><code>jdbc</code> - Stores user information in a database.<br>
+In the JDBC realm, the server gets user credentials from a database. The
+GlassFish Server uses the database information and the enabled JDBC
+realm option in the configuration file. For digest authentication, a
+JDBC realm should be created with <code>jdbcDigestRealm</code> as the JAAS context.</p>
+</li>
+<li>
+<p><code>certificate</code> - Sets up the user identity in the GlassFish Server
+security context, and populates it with user data obtained from
+cryptographically verified client certificates.</p>
+</li>
+<li>
+<p><code>solaris</code> - Allows authentication using Solaris <code>username+password</code>
+data. This realm is only supported on the Solaris operating system,
+version 9 and above.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For information about configuring realms, see <a href="#beabq">How to
+Configure a Realm</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beabq"></a><a id="GSDVG00365"></a><a id="how-to-configure-a-realm"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_how_to_configure_a_realm">How to Configure a Realm</h4>
+<div class="paragraph">
+<p>You can configure a realm in one of these ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In the Administration Console, open the Security component under the
+relevant configuration and go to the Realms page. For details, click the
+Help button in the Administration Console.</p>
+</li>
+<li>
+<p>Use the <code>asadmin create-auth-realm</code> command to configure realms on
+local servers. For details, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open
+Source Edition Reference Manual</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beabr"></a><a id="GSDVG00366"></a><a id="how-to-set-a-realm-for-an-application-or-module"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_how_to_set_a_realm_for_an_application_or_module">How to Set a Realm for an Application or Module</h4>
+<div class="paragraph">
+<p>The following deployment descriptor elements have optional <code>realm</code> or
+<code>realm-name</code> data subelements or attributes that override the domain&#8217;s
+default realm:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>glassfish-application</code> element in <code>glassfish-application.xml</code></p>
+</li>
+<li>
+<p><code>web-app</code> element in <code>web.xml</code></p>
+</li>
+<li>
+<p><code>as-context</code> element in <code>glassfish-ejb-jar.xml</code></p>
+</li>
+<li>
+<p><code>client-container</code> element in <code>sun-acc.xml</code></p>
+</li>
+<li>
+<p><code>client-credential</code> element in <code>sun-acc.xml</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If modules within an application specify realms, these are ignored. If
+present, the realm defined in <code>glassfish-application.xml</code> is used,
+otherwise the domain&#8217;s default realm is used.</p>
+</div>
+<div class="paragraph">
+<p>For example, a realm is specified in <code>glassfish-application.xml</code> as
+follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;glassfish-application&gt;
+    ...
+    &lt;realm&gt;ldap&lt;/realm&gt;
+&lt;/glassfish-application&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information about the deployment descriptor files and elements,
+see "<a href="../application-deployment-guide/dd-elements.html#GSDPG00007">Elements of the GlassFish Server Deployment
+Descriptors</a>" in GlassFish Server Open Source Edition Application
+Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="beabs"></a><a id="GSDVG00367"></a><a id="creating-a-custom-realm"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_creating_a_custom_realm">Creating a Custom Realm</h4>
+<div class="paragraph">
+<p>You can create a custom realm by providing a custom Java Authentication
+and Authorization Service (JAAS) login module class and a custom realm
+class. Note that client-side JAAS login modules are not suitable for use
+with the GlassFish Server.</p>
+</div>
+<div class="paragraph">
+<p>To activate the custom login modules and realms, place the JAR files in
+the domain-dir`/lib` directory or the class files in the
+domain-dir`/lib/classes` directory. For more information about class
+loading in the GlassFish Server, see <a href="class-loaders.html#beade">Class
+Loaders</a>.</p>
+</div>
+<div class="paragraph">
+<p>JAAS is a set of APIs that enable services to authenticate and enforce
+access controls upon users. JAAS provides a pluggable and extensible
+framework for programmatic user authentication and authorization. JAAS
+is a core API and an underlying technology for Java EE security
+mechanisms. For more information about JAAS, refer to the JAAS
+specification for Java SDK, available at
+<code>http://www.oracle.com/technetwork/java/javase/tech/index-jsp-136007.html</code>.</p>
+</div>
+<div class="paragraph">
+<p>For general information about realms and login modules, see the section
+about working with realms, users, groups, and roles in
+"https://javaee.github.io/tutorial/security-intro.html[Introduction to
+Security in the Java EE Platform]" in The Java EE 8 Tutorial.</p>
+</div>
+<div class="paragraph">
+<p>For Javadoc tool pages relevant to custom realms, see the
+<code>com.sun.appserv.security</code> package.</p>
+</div>
+<div class="paragraph">
+<p>Custom login modules must extend the
+<code>com.sun.appserv.security.AppservPasswordLoginModule</code> class. This class
+implements javax.security.auth.spi.LoginModule. Custom login modules
+must not implement LoginModule directly.</p>
+</div>
+<div class="paragraph">
+<p>Custom login modules must provide an implementation for one abstract
+method defined in <code>AppservPasswordLoginModule</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">abstract protected void authenticateUser() throws LoginException</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method performs the actual authentication. The custom login module
+must not implement any of the other methods, such as <code>login</code>, <code>logout</code>,
+<code>abort</code>, <code>commit</code>, or <code>initialize</code>. Default implementations are provided
+in <code>AppservPasswordLoginModule</code> which hook into the GlassFish Server
+infrastructure.</p>
+</div>
+<div class="paragraph">
+<p>The custom login module can access the following protected object
+fields, which it inherits from <code>AppservPasswordLoginModule</code>. These
+contain the user name and password of the user to be authenticated:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">protected String _username;
+protected String _password;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>authenticateUser</code> method must end with the following sequence:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">String[] grpList;
+// populate grpList with the set of groups to which
+// _username belongs in this realm, if any
+commitUserAuthentication(grpList);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Custom realms must extend the <code>com.sun.appserv.security.AppservRealm</code>
+class and implement the following methods:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">public void init(Properties props) throws BadRealmException,
+    NoSuchRealmException</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method is invoked during server startup when the realm is initially
+loaded. The <code>props</code> argument contains the properties defined for this
+realm. The realm can do any initialization it needs in this method. If
+the method returns without throwing an exception, the GlassFish Server
+assumes that the realm is ready to service authentication requests. If
+an exception is thrown, the realm is disabled.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">public String getAuthType()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method returns a descriptive string representing the type of
+authentication done by this realm.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">public abstract Enumeration getGroupNames(String username) throws
+    InvalidOperationException, NoSuchUserException</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method returns an <code>Enumeration</code> (of <code>String</code> objects) enumerating
+the groups (if any) to which the given <code>username</code> belongs in this realm.</p>
+</div>
+<div class="paragraph">
+<p>Custom realms that manage users must implement the following additional
+methods:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">public abstract boolean supportsUserManagement();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method returns <code>true</code> if the realm supports user management.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">public abstract Enumeration getGroupNames() throws BadRealmException;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method returns an <code>Enumeration</code> of all group names.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">public abstract Enumeration getUserNames() throws BadRealmException;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method returns an <code>Enumeration</code> of all user names.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">public abstract void refresh() throws BadRealmException;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method refreshes the realm data so that new users and groups are
+visible.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">public abstract void persist() throws BadRealmException;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method persists the realm data to permanent storage.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">public abstract User getUser(String name) throws NoSuchUserException,
+BadRealmException;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method returns the information recorded about a particular named
+user.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">public abstract void addUser(String name, String password, String[] groupList) throws
+BadRealmException, IASSecurityException;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method adds a new user, who cannot already exist.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">public abstract void removeUser(String name) throws NoSuchUserException,
+BadRealmException;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method removes a user, who must exist.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">public abstract void updateUser(String name, String newName, String password,
+String[] groups) throws NoSuchUserException, BadRealmException, IASSecurityException;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method updates data for a user, who must exist.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The array passed to the <code>commitUseAuthentication</code> method should be newly
+created and otherwise unreferenced. This is because the group name array
+elements are set to null after authentication as part of cleanup. So the
+second time your custom realm executes it returns an array with null
+elements.</p>
+</div>
+<div class="paragraph">
+<p>Ideally, your custom realm should not return member variables from the
+<code>authenticate</code> method. It should return local variables as the default
+<code>JDBCRealm</code> does. Your custom realm can create a local <code>String</code> array in
+its <code>authenticate</code> method, copy the values from the member variables,
+and return the <code>String</code> array. Or it can use <code>clone</code> on the member
+variables.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="BACDEIHB"></a><a id="GSDVG563"></a><a id="java-ee-security-api-support"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_java_ee_security_api_support">Java EE Security API Support</h3>
+<div class="paragraph">
+<p>JSR-375 defines several authentication-related plugin SPIs, such as,
+<code>HttpAuthenticationMechanism</code> interface, the <code>IdentityStore</code> and
+<code>IdentityStoreHandler</code> interfaces:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>HttpAuthenticationMechanism</code>: An interface for modules that
+authenticate callers to a web application. An application can supply its
+own <code>HttpAuthenticationMechanism</code>, or use one of the default
+implementations provided by the container.</p>
+</li>
+<li>
+<p><code>IdentityStore</code>: This interface defines methods for validating a
+caller&#8217;s credentials (such as user name and password) and returning
+group membership information. An application can provide its own
+IdentityStore, or use the built in LDAP or Database store.</p>
+</li>
+<li>
+<p><code>RememberMeIdentityStore</code>: This interface is a variation on the
+<code>IdentityStore</code> interface, intended to address cases where an
+authenticated user&#8217;s identity should be remembered for an extended
+period of time, so that the caller can return to the application
+periodically without needing to present primary authentication
+credentials each time.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In addition to these authentication plugin SPIs, the Java EE Security
+API specification defines the <code>SecurityContext</code> API for use by
+application code to query and interact with the current security
+context. The <code>SecurityContext</code> interface defines methods that allow an
+application to access security information about a caller, authenticate
+a caller, and authorize a caller. These methods include
+<code>getCallerPrincipal()</code>, <code>getPrincipalsByType()</code>, <code>isCallerInRole()</code>,
+<code>authenticate()</code>, and <code>hasAccessToWebResource()</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beabt"></a><a id="GSDVG00119"></a><a id="jacc-support"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jacc_support">JACC Support</h3>
+<div class="paragraph">
+<p>JACC (Java Authorization Contract for Containers) is part of the Java EE
+specification and defined by <a href="http://www.jcp.org/en/jsr/detail?id=115">JSR
+115</a> (<code>http://www.jcp.org/en/jsr/detail?id=115</code>). JACC defines an
+interface for pluggable authorization providers. Specifically, JACC is
+used to plug in the Java policy provider used by the container to
+perform Java EE caller access decisions. The Java policy provider
+performs Java policy decisions during application execution. This
+provides third parties with a mechanism to develop and plug in modules
+that are responsible for answering authorization decisions during Java
+EE application execution. The interfaces and rules used for developing
+JACC providers are defined in the JACC 1.0 specification.</p>
+</div>
+<div class="paragraph">
+<p>The GlassFish Server provides a simple file-based JACC-compliant
+authorization engine as a default JACC provider, named <code>default</code>. An
+alternate provider named <code>simple</code> is also provided. To configure an
+alternate provider using the Administration Console, open the Security
+component under the relevant configuration, and select the JACC
+Providers component. For details, click the Help button in the
+Administration Console.</p>
+</div>
+<div class="paragraph">
+<p><a id="beabu"></a><a id="GSDVG00120"></a><a id="pluggable-audit-module-support"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_pluggable_audit_module_support">Pluggable Audit Module Support</h3>
+<div class="paragraph">
+<p>Audit modules collect and store information on incoming requests
+(servlets, EJB components) and outgoing responses. You can create a
+custom audit module.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beabv">Configuring an Audit Module</a></p>
+</li>
+<li>
+<p><a href="#beabw">The <code>AuditModule</code> Class</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beabv"></a><a id="GSDVG00368"></a><a id="configuring-an-audit-module"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_configuring_an_audit_module">Configuring an Audit Module</h4>
+<div class="paragraph">
+<p>To configure an audit module, you can perform one of the following
+tasks:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>To specify an audit module using the Administration Console, open the
+Security component under the relevant configuration, and select the
+Audit Modules component. For details, click the Help button in the
+Administration Console.</p>
+</li>
+<li>
+<p>You can use the <code>asadmin create-audit-module</code> command to configure an
+audit module. For details, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open
+Source Edition Reference Manual</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beabw"></a><a id="GSDVG00369"></a><a id="the-auditmodule-class"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_the_code_auditmodule_code_class">The <code>AuditModule</code> Class</h4>
+<div class="paragraph">
+<p>You can create a custom audit module by implementing a class that
+extends <code>com.sun.enterprise.security.audit.AuditModule</code>.</p>
+</div>
+<div class="paragraph">
+<p>For Javadoc tool pages relevant to audit modules, see the
+<code>com.sun.enterprise.security.audit</code> package.</p>
+</div>
+<div class="paragraph">
+<p>The <code>AuditModule</code> class provides default "no-op" implementations for
+each of the following methods, which your custom class can override.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">public void init(Properties props)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The preceding method is invoked during server startup when the audit
+module is initially loaded. The <code>props</code> argument contains the properties
+defined for this module. The module can do any initialization it needs
+in this method. If the method returns without throwing an exception, the
+GlassFish Server assumes the module realm is ready to service audit
+requests. If an exception is thrown, the module is disabled.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">public void authentication(String user, String realm, boolean success)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method is invoked when an authentication request has been processed
+by a realm for the given user. The <code>success</code> flag indicates whether the
+authorization was granted or denied.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">public void webInvocation(String user, HttpServletRequest req, String type, boolean success)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method is invoked when a web container call has been processed by
+authorization. The <code>success</code> flag indicates whether the authorization
+was granted or denied. The <code>req</code> object is the standard
+<code>HttpServletRequest</code> object for this request. The <code>type</code> string is one
+of <code>hasUserDataPermission</code> or <code>hasResourcePermission</code> (see
+<a href="http://www.jcp.org/en/jsr/detail?id=115">JSR 115</a>
+(<code>http://www.jcp.org/en/jsr/detail?id=115</code>)).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">public void ejbInvocation(String user, String ejb, String method, boolean success)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method is invoked when an EJB container call has been processed by
+authorization. The <code>success</code> flag indicates whether the authorization
+was granted or denied. The <code>ejb</code> and <code>method</code> strings describe the EJB
+component and its method that is being invoked.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">public void webServiceInvocation(String uri, String endpoint, boolean success)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method is invoked during validation of a web service request in
+which the endpoint is a servlet. The <code>uri</code> is the URL representation of
+the web service endpoint. The <code>endpoint</code> is the name of the endpoint
+representation. The <code>success</code> flag indicates whether the authorization
+was granted or denied.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">public void ejbAsWebServiceInvocation(String endpoint, boolean success)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method is invoked during validation of a web service request in
+which the endpoint is a stateless session bean. The <code>endpoint</code> is the
+name of the endpoint representation. The <code>success</code> flag indicates
+whether the authorization was granted or denied.</p>
+</div>
+<div class="paragraph">
+<p><a id="beabx"></a><a id="GSDVG00121"></a><a id="the-server.policy-file"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_code_server_policy_code_file">The <code>server.policy</code> File</h3>
+<div class="paragraph">
+<p>Each GlassFish Server domain has its own global J2SE policy file,
+located in domain-dir`/config`. The file is named <code>server.policy</code>.</p>
+</div>
+<div class="paragraph">
+<p>The GlassFish Server is a Java EE compliant application server. As such,
+it follows the requirements of the Java EE specification, including the
+presence of the security manager (the Java component that enforces the
+policy) and a limited permission set for Java EE application code.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beaby">Default Permissions</a></p>
+</li>
+<li>
+<p><a href="#gilzz">System Properties</a></p>
+</li>
+<li>
+<p><a href="#beabz">Changing Permissions for an Application</a></p>
+</li>
+<li>
+<p><a href="#gbyah">Enabling and Disabling the Security Manager</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beaby"></a><a id="GSDVG00370"></a><a id="default-permissions"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_default_permissions">Default Permissions</h4>
+<div class="paragraph">
+<p>Internal server code is granted all permissions. These are covered by
+the <code>AllPermission</code> grant blocks to various parts of the server
+infrastructure code. Do not modify these entries.</p>
+</div>
+<div class="paragraph">
+<p>Application permissions are granted in the default grant block. These
+permissions apply to all code not part of the internal server code
+listed previously. The GlassFish Server does not distinguish between EJB
+and web module permissions. All code is granted the minimal set of web
+component permissions (which is a superset of the EJB minimal set). Do
+not modify these entries.</p>
+</div>
+<div class="paragraph">
+<p>A few permissions above the minimal set are also granted in the default
+<code>server.policy</code> file. These are necessary due to various internal
+dependencies of the server implementation. Java EE application
+developers must not rely on these additional permissions. In some cases,
+deleting these permissions might be appropriate. For example, one
+additional permission is granted specifically for using connectors. If
+connectors are not used in a particular domain, you should remove this
+permission, because it is not otherwise necessary.</p>
+</div>
+<div class="paragraph">
+<p><a id="gilzz"></a><a id="GSDVG00371"></a><a id="system-properties"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_system_properties">System Properties</h4>
+<div class="paragraph">
+<p>The following predefined system properties, also called variables, are
+available for use in the <code>server.policy</code> file. The system property most
+frequently used in <code>server.policy</code> is <code>${com.sun.aas.instanceRoot}</code>. For
+more information about system properties, see the
+<code>asadmin create-system-properties</code> command in the <a href="../reference-manual/toc.html#GSRFM">GlassFish
+Server Open Source Edition Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSDVG533"></a><a id="sthref5"></a><a id="sthref6"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 4-1 Predefined System Properties</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 28.9999%;">
+<col style="width: 17%;">
+<col style="width: 54.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.installRoot</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">depends on operating system</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the
+directory where the GlassFish Server is installed.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.instanceRoot</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">depends on operating system</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the
+top level directory for a server instance.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.hostName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the name of the host (machine).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.javaRoot</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">depends on operating system</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the
+installation directory for the Java runtime.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.imqLib</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">depends on operating system</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the
+library directory for the Open Message Queue software.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.configName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>server-config</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the name of the
+configuration used by a server instance.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.instanceName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>server1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the name of the server
+instance. This property is not used in the default configuration, but
+can be used to customize configuration.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.clusterName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cluster1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the name of the
+cluster. This property is only set on clustered server instances. This
+property is not used in the default configuration, but can be used to
+customize configuration.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sun.aas.domainName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>domain1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the name of the domain.
+This property is not used in the default configuration, but can be used
+to customize configuration.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="beabz"></a><a id="GSDVG00372"></a><a id="changing-permissions-for-an-application"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_changing_permissions_for_an_application">Changing Permissions for an Application</h4>
+<div class="paragraph">
+<p>The default policy for each domain limits the permissions of Java EE
+deployed applications to the minimal set of permissions required for
+these applications to operate correctly. Do not add extra permissions to
+the default set (the grant block with no codebase, which applies to all
+code). Instead, add a new grant block with a codebase specific to the
+applications requiring the extra permissions, and only add the minimally
+necessary permissions in that block.</p>
+</div>
+<div class="paragraph">
+<p>If you develop multiple applications that require more than this default
+set of permissions, you can add the custom permissions that your
+applications need. The <code>com.sun.aas.instanceRoot</code> variable refers to the
+domain-dir. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">grant codeBase "file:${com.sun.aas.instanceRoot}/applications/-" {
+...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can add permissions to stub code with the following grant block:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">grant codeBase "file:${com.sun.aas.instanceRoot}/generated/-" {
+...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In general, you should add extra permissions only to the applications or
+modules that require them, not to all applications deployed to a domain.
+For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">grant codeBase "file:${com.sun.aas.instanceRoot}/applications/MyApp/-" {
+...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For a module:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">grant codeBase "file:${com.sun.aas.instanceRoot}/applications/MyModule/-" {
+...
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Deployment directories may change between GlassFish Server releases.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>An alternative way to add permissions to a specific application or
+module is to edit the <code>granted.policy</code> file for that application or
+module. The <code>granted.policy</code> file is located in the
+domain-dir`/generated/policy/`app-or-module-name directory. In this
+case, you add permissions to the default grant block. Do not delete
+permissions from this file.</p>
+</div>
+<div class="paragraph">
+<p>When the GlassFish Server policy subsystem determines that a permission
+should not be granted, it logs a <code>server.policy</code> message specifying the
+permission that was not granted and the protection domains, with
+indicated code source and principals that failed the protection check.
+For example, here is the first part of a typical message:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">[#|2005-12-17T16:16:32.671-0200|INFO|sun-appserver-pe9.1|
+javax.enterprise.system.core.security|_ThreadID=14;_ThreadName=Thread-31;|
+JACC Policy Provider: PolicyWrapper.implies, context(null)-
+permission((java.util.PropertyPermission java.security.manager write))
+domain that failed(ProtectionDomain
+(file:/E:/glassfish/domains/domain1/applications/cejug-clfds/ ... )
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Granting the following permission eliminates the message:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">grant codeBase "file:${com.sun.aas.instanceRoot}/applications/cejug-clfds/-" {
+    permission java.util.PropertyPermission "java.security.manager", "write";
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Do not add <code>java.security.AllPermission</code> to the <code>server.policy</code> file for
+application code. Doing so completely defeats the purpose of the
+security manager, yet you still get the performance overhead associated
+with it.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>As noted in the Java EE specification, an application should provide
+documentation of the additional permissions it needs. If an application
+requires extra permissions but does not document the set it needs,
+contact the application author for details.</p>
+</div>
+<div class="paragraph">
+<p>As a last resort, you can iteratively determine the permission set an
+application needs by observing <code>AccessControlException</code> occurrences in
+the server log.</p>
+</div>
+<div class="paragraph">
+<p>If this is not sufficient, you can add the
+<code>-Djava.security.debug=failure</code> JVM option to the domain. Use the
+following <code>asadmin create-jvm-options</code> command, then restart the server:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin create-jvm-options -Djava.security.debug=failure</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information about the <code>asadmin create-jvm-options</code> command, see
+the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p>You can use the J2SE standard <code>policytool</code> or any text editor to edit
+the <code>server.policy</code> file. For more information, see
+<code>http://docs.oracle.com/javase/tutorial/security/tour2/index.html</code>.</p>
+</div>
+<div class="paragraph">
+<p>For detailed information about policy file syntax, see
+<code>http://docs.oracle.com/javase/8/docs/technotes/guides/security/PolicyFiles.html</code>.</p>
+</div>
+<div class="paragraph">
+<p>For information about using system properties in the <code>server.policy</code>
+file, see
+<code>http://docs.oracle.com/javase/8/docs/technotes/guides/security/PolicyFiles.html</code>.</p>
+</div>
+<div class="paragraph">
+<p>For detailed information about the permissions you can set in the
+<code>server.policy</code> file, see
+<code>http://docs.oracle.com/javase/8/docs/technotes/guides/security/permissions.html</code>.</p>
+</div>
+<div class="paragraph">
+<p>The Javadoc for the <code>Permission</code> class is at
+<code>http://docs.oracle.com/javase/8/docs/api/java/security/Permission.html</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gbyah"></a><a id="GSDVG00373"></a><a id="enabling-and-disabling-the-security-manager"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_enabling_and_disabling_the_security_manager">Enabling and Disabling the Security Manager</h4>
+<div class="paragraph">
+<p>The security manager is disabled by default.</p>
+</div>
+<div class="paragraph">
+<p>In a production environment, you may be able to safely disable the
+security manager if all of the following are true:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Performance is critical</p>
+</li>
+<li>
+<p>Deployment to the production server is carefully controlled</p>
+</li>
+<li>
+<p>Only trusted applications are deployed</p>
+</li>
+<li>
+<p>Applications don&#8217;t need policy enforcement</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Disabling the security manager may improve performance significantly for
+some types of applications.</p>
+</div>
+<div class="paragraph">
+<p>To enable the security manager, do one of the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>To use the Administration Console, open the Security component under
+the relevant configuration, and check the Security Manager Enabled box.
+Then restart the server. For details, click the Help button in the
+Administration Console.</p>
+</li>
+<li>
+<p>Use the following <code>asadmin create-jvm-options</code> command, then restart
+the server:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin create-jvm-options -Djava.security.manager</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To disable the security manager, uncheck the Security Manager Enabled
+box or use the corresponding <code>asadmin delete-jvm-options</code> command. For
+more information about <code>create-jvm-options</code> and <code>delete-jvm-options</code>,
+see the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference
+Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p>If the security manager is enabled and you are using the Java
+Persistence API by calling <code>Persistence.createEMF()</code>, the EclipseLink
+persistence provider requires that you set the
+<code>eclipselink.security.usedoprivileged</code> JVM option to <code>true</code> as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin create-jvm-options -Declipselink.security.usedoprivileged=true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the security manager is enabled and you are using the Java
+Persistence API by injecting or looking up an entity manager or entity
+manager factory, the EJB container sets this JVM option for you.</p>
+</div>
+<div class="paragraph">
+<p>You must grant additional permissions to CDI-enabled Java EE
+applications that are deployed in a GlassFish Server 5.0 domain or
+cluster for which security manager is enabled. These additional
+permissions are not required when security manager is disabled.</p>
+</div>
+<div class="paragraph">
+<p>To deploy CDI-enabled Java EE applications in a GlassFish Server 5.0
+domain or cluster for which security manager is enabled, add the
+following permissions to the applications:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">grant codeBase "file:${com.sun.aas.instanceRoot}/applications/[ApplicationName]" {
+ permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For example, for a CDI application named <code>foo.war</code>, add the following
+permissions to the <code>server.policy</code> file, restart the domain or cluster,
+and then deploy and use the application.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">grant codeBase "file:${com.sun.aas.instanceRoot}/applications/foo" {
+ permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information about modifying application permissions, see
+<a href="#beabz">Changing Permissions for an Application</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beaca"></a><a id="GSDVG00122"></a><a id="configuring-message-security-for-web-services"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuring_message_security_for_web_services">Configuring Message Security for Web Services</h3>
+<div class="paragraph">
+<p>In message security, security information is applied at the message
+layer and travels along with the web services message. Web Services
+Security (WSS) is the use of XML Encryption and XML Digital Signatures
+to secure messages. WSS profiles the use of various security tokens
+including X.509 certificates, Security Assertion Markup Language (SAML)
+assertions, and username/password tokens to achieve this.</p>
+</div>
+<div class="paragraph">
+<p>Message layer security differs from transport layer security in that it
+can be used to decouple message protection from message transport so
+that messages remain protected after transmission, regardless of how
+many hops they travel.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Message security (JSR 196) is supported only in the full GlassFish
+Server, not in the Web Profile.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>In this release of the GlassFish Server, message layer annotations are
+not supported.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For more information about web services, see
+<a href="webservices.html#gaszn">Developing Web Services</a>.</p>
+</div>
+<div class="paragraph">
+<p>For more information about message security, see the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>"https://javaee.github.io/tutorial/security-intro.html[Introduction to
+Security in the Java EE Platform]" in The Java EE 8 Tutorial</p>
+</li>
+<li>
+<p><a href="../security-guide/toc.html#GSSCG">GlassFish Server Open Source Edition Security Guide</a></p>
+</li>
+<li>
+<p><a href="http://www.jcp.org/en/jsr/detail?id=196">JSR 196</a>
+(<code>http://www.jcp.org/en/jsr/detail?id=196</code>), Java Authentication Service
+Provider Interface for Containers</p>
+</li>
+<li>
+<p>The Liberty Alliance Project specifications at
+<code>http://www.projectliberty.org/resources/specifications.php/?f=resources/specifications.php</code></p>
+</li>
+<li>
+<p>The Oasis Web Services Security (WSS) specification at
+<code>http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0.pdf</code></p>
+</li>
+<li>
+<p>The Web Services Interoperability Organization (WS-I) Basic Security
+Profile (BSP) specification at
+<code>http://www.ws-i.org/Profiles/BasicSecurityProfile-1.0.html</code></p>
+</li>
+<li>
+<p>The XML and Web Services Security page at <code>http://xwss.java.net/</code></p>
+</li>
+<li>
+<p>The WSIT page at <code>http://wsit.java.net/</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gbjxw">Message Security Providers</a></p>
+</li>
+<li>
+<p><a href="#beacb">Message Security Responsibilities</a></p>
+</li>
+<li>
+<p><a href="#beacf">Application-Specific Message Protection</a></p>
+</li>
+<li>
+<p><a href="#beaci">Understanding and Running the Sample Application</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gbjxw"></a><a id="GSDVG00374"></a><a id="message-security-providers"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_message_security_providers">Message Security Providers</h4>
+<div class="paragraph">
+<p>When you first install the GlassFish Server, the providers
+<code>XWS_ClientProvider</code> and <code>XWS_ServerProvider</code> are configured but
+disabled. You can enable them in one of the following ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>To enable the message security providers using the Administration
+Console, open the Security component under the relevant configuration,
+select the Message Security component, and select SOAP. Then select
+<code>XWS_ServerProvider</code> from the Default Provider list and
+<code>XWS_ClientProvider</code> from the Default Client Provider list. For details,
+click the Help button in the Administration Console.</p>
+</li>
+<li>
+<p>You can enable the message security providers using the following
+commands.<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin set
+server-config.security-service.message-security-config.SOAP.default_provider=XWS_ServerProvider
+asadmin set
+server-config.security-service.message-security-config.SOAP.default_client_provider=XWS_ClientProvider</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information about the <code>asadmin set</code> command, see the
+<a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p>The example described in <a href="#beaci">Understanding and Running the
+Sample Application</a> uses the <code>ClientProvider</code> and <code>ServerProvider</code>
+providers, which are enabled when the Ant targets are run. You don&#8217;t
+need to enable these on the GlassFish Server prior to running the
+example.</p>
+</div>
+<div class="paragraph">
+<p>If you install the OpenSSO, you have these additional provider choices:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>AMClientProvider</code> and <code>AMServerProvider</code> - These providers secure web
+services and Simple Object Access Protocol (SOAP) messages using either
+WS-I BSP or Liberty ID-WSF tokens. These providers are used
+automatically if they are configured as the default providers. If you
+wish to override any provider settings, you can configure these
+providers in <code>message-security-binding</code> elements in the
+<code>glassfish-web.xml</code>, <code>glassfish-ejb-jar.xml</code>, and
+<code>glassfish-application-client.xml</code> deployment descriptor files.</p>
+</li>
+<li>
+<p><code>AMHttpProvider</code> - This provider handles the initial end user
+authentication for securing web services using Liberty ID-WSF tokens and
+redirects requests to the OpenSSO for single sign-on. To use this
+provider, specify it in the <code>httpservlet-security-provider</code> attribute of
+the <code>glassfish-web-app</code> element in the <code>glassfish-web.xml</code> file.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Liberty specifications can be viewed at
+<code>http://www.projectliberty.org/resources/specifications.php/?f=resources/specifications.php</code>.
+The WS-I BSP specification can be viewed at
+<code>http://www.ws-i.org/Profiles/BasicSecurityProfile-1.0.html</code>.</p>
+</div>
+<div class="paragraph">
+<p>For more information about the GlassFish Server deployment descriptor
+files, see the <a href="../application-deployment-guide/toc.html#GSDPG">GlassFish Server Open Source Edition
+Application Deployment Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p>For information about configuring these providers in the GlassFish
+Server, see the <a href="../security-guide/toc.html#GSSCG">GlassFish Server Open Source Edition
+Security Guide</a>. For additional information about overriding provider
+settings, see <a href="#beacf">Application-Specific Message Protection</a>.</p>
+</div>
+<div class="paragraph">
+<p>You can create new message security providers in one of the following
+ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>To create a message security provider using the Administration
+Console, open the Security component under the relevant configuration,
+and select the Message Security component. For details, click the Help
+button in the Administration Console.</p>
+</li>
+<li>
+<p>You can use the <code>asadmin create-message-security-provider</code> command to
+create a message security provider. For details, see the
+<a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference Manual</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In addition, you can set a few optional provider properties using the
+<code>asadmin set</code> command. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin set server-config.security-service.message-security-config.provider-config.property.debug=true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following table describes these message security provider
+properties.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSDVG534"></a><a id="sthref7"></a><a id="sthref8"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 4-2 Message Security Provider Properties</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 24%;">
+<col style="width: 46%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>security.config</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-dir`/``config/``wss-server-``config-1.0.xml`</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Specifies the location of the message security configuration file. To
+point to a configuration file in the domain-dir`/config` directory, use
+the system property <code>${com.sun.aas.instanceRoot}/``config/</code>, for
+example:</p>
+</div>
+<div class="paragraph">
+<p><code>${com.sun.aas.instanceRoot}/config/``wss-server-config-1.0.xml</code></p>
+</div>
+<div class="paragraph">
+<p>See <a href="#gilzz">System Properties</a>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>debug</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, enables dumping of server provider debug
+messages to the server log.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dynamic.username.password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, signals the provider
+runtime to collect the user name and password from the <code>CallbackHandler</code>
+for each request. If <code>false</code>, the user name and password for
+<code>wsse:UsernameToken(s)</code> is collected once, during module initialization.
+This property is only applicable for a <code>ClientAuthModule</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>encryption.key.alias</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>s1as</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the encryption key used by
+the provider. The key is identified by its <code>keystore</code> alias.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>signature.key.alias</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>s1as</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the signature key used by the
+provider. The key is identified by its <code>keystore</code> alias.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="beacb"></a><a id="GSDVG00375"></a><a id="message-security-responsibilities"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_message_security_responsibilities">Message Security Responsibilities</h4>
+<div class="paragraph">
+<p>In the GlassFish Server, the system administrator and application
+deployer roles are expected to take primary responsibility for
+configuring message security. In some situations, the application
+developer may also contribute, although in the typical case either of
+the other roles may secure an existing application without changing its
+implementation and without involving the developer.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beacc">Application Developer Responsibilities</a></p>
+</li>
+<li>
+<p><a href="#beacd">Application Deployer Responsibilities</a></p>
+</li>
+<li>
+<p><a href="#beace">System Administrator Responsibilities</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beacc"></a><a id="GSDVG00241"></a><a id="application-developer-responsibilities"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_application_developer_responsibilities">Application Developer Responsibilities</h5>
+<div class="paragraph">
+<p>The application developer can turn on message security, but is not
+responsible for doing so. Message security can be set up by the system
+administrator so that all web services are secured, or set up by the
+application deployer when the provider or protection policy bound to the
+application must be different from that bound to the container.</p>
+</div>
+<div class="paragraph">
+<p>The application developer is responsible for the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Determining if an application-specific message protection policy is
+required by the application. If so, ensuring that the required policy is
+specified at application assembly which may be accomplished by
+communicating with the application deployer.</p>
+</li>
+<li>
+<p>Determining if message security is necessary at the GlassFish Server
+level. If so, ensuring that this need is communicated to the system
+administrator, or taking care of implementing message security at the
+GlassFish Server level.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beacd"></a><a id="GSDVG00242"></a><a id="application-deployer-responsibilities"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_application_deployer_responsibilities">Application Deployer Responsibilities</h5>
+<div class="paragraph">
+<p>The application deployer is responsible for the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Specifying (at application assembly) any required application-specific
+message protection policies if such policies have not already been
+specified by upstream roles (the developer or assembler)</p>
+</li>
+<li>
+<p>Modifying GlassFish Server deployment descriptors to specify
+application-specific message protection policies information
+(message-security-binding elements) to web service endpoint and service
+references</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>These security tasks are discussed in <a href="#beacf">Application-Specific
+Message Protection</a>. A sample application using message security is
+discussed in <a href="#beaci">Understanding and Running the Sample
+Application</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beace"></a><a id="GSDVG00243"></a><a id="system-administrator-responsibilities"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_system_administrator_responsibilities">System Administrator Responsibilities</h5>
+<div class="paragraph">
+<p>The system administrator is responsible for the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Configuring message security providers on the GlassFish Server.</p>
+</li>
+<li>
+<p>Managing user databases.</p>
+</li>
+<li>
+<p>Managing keystore and truststore files.</p>
+</li>
+<li>
+<p>Installing the sample. This is only done if the <code>xms</code> sample
+application is used to demonstrate the use of message layer web services
+security.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A system administrator uses the Administration Console to manage server
+security settings and uses a command line tool to manage certificate
+databases. Certificates and private keys are stored in key stores and
+are managed with <code>keytool</code>. If Network Security Services (NSS) is
+installed, certificates and private keys are stored in an NSS database,
+where they are managed using <code>certutil</code>. System administrator tasks are
+discussed in the <a href="../security-guide/toc.html#GSSCG">GlassFish Server Open Source Edition
+Security Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beacf"></a><a id="GSDVG00376"></a><a id="application-specific-message-protection"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_application_specific_message_protection">Application-Specific Message Protection</h4>
+<div class="paragraph">
+<p>When the GlassFish Server provided configuration is insufficient for
+your security needs, and you want to override the default protection,
+you can apply application-specific message security to a web service.</p>
+</div>
+<div class="paragraph">
+<p>Application-specific security is implemented by adding the message
+security binding to the web service endpoint, whether it is an EJB or
+servlet web service endpoint. Modify GlassFish Server XML files to add
+the message binding information.</p>
+</div>
+<div class="paragraph">
+<p>Message security can also be specified using a WSIT security policy in
+the WSDL file. For details, see the WSIT page at
+<code>http://wsit.java.net/</code>.</p>
+</div>
+<div class="paragraph">
+<p>For more information about message security providers, see
+<a href="#gbjxw">Message Security Providers</a>.</p>
+</div>
+<div class="paragraph">
+<p>For more details on message security binding for EJB web services,
+servlet web services, and clients, see the XML file descriptions in
+"<a href="../application-deployment-guide/dd-elements.html#GSDPG00007">Elements of the GlassFish Server Deployment
+Descriptors</a>" in GlassFish Server Open Source Edition Application
+Deployment Guide.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>For <code>glassfish-ejb-jar.xml</code>, see "<a href="../application-deployment-guide/dd-files.html#GSDPG00079">The
+glassfish-ejb-jar.xml File</a>" in GlassFish Server Open Source Edition
+Application Deployment Guide.</p>
+</li>
+<li>
+<p>For <code>glassfish-web.xml</code>, see "<a href="../application-deployment-guide/dd-files.html#GSDPG00078">The glassfish-web.xml
+File</a>" in GlassFish Server Open Source Edition Application Deployment
+Guide.</p>
+</li>
+<li>
+<p>For <code>glassfish-application-client.xml</code>, see "<a href="../application-deployment-guide/dd-files.html#GSDPG00081">The
+glassfish-application-client.xml file</a>" in GlassFish Server Open Source
+Edition Application Deployment Guide.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beacg">Using a Signature to Enable Message Protection for All
+Methods</a></p>
+</li>
+<li>
+<p><a href="#beach">Configuring Message Protection for a Specific Method Based
+on Digital Signatures</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beacg"></a><a id="GSDVG00244"></a><a id="using-a-signature-to-enable-message-protection-for-all-methods"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_using_a_signature_to_enable_message_protection_for_all_methods">Using a Signature to Enable Message Protection for All Methods</h5>
+<div class="paragraph">
+<p>To enable message protection for all methods using digital signature,
+update the <code>message-security-binding</code> element for the EJB web service
+endpoint in the application&#8217;s <code>glassfish-ejb-jar.xml</code> file. In this
+file, add <code>request-protection</code> and <code>response-protection</code> elements, which
+are analogous to the <code>request-policy</code> and <code>response-policy</code> elements
+discussed in the <a href="../security-guide/toc.html#GSSCG">GlassFish Server Open Source Edition
+Security Guide</a>. To apply the same protection mechanisms for all
+methods, leave the method-name element blank. <a href="#beach">Configuring
+Message Protection for a Specific Method Based on Digital Signatures</a>
+discusses listing specific methods or using wildcard characters.</p>
+</div>
+<div class="paragraph">
+<p>This section uses the sample application discussed in
+<a href="#beaci">Understanding and Running the Sample Application</a> to apply
+application-level message security to show only the differences
+necessary for protecting web services using various mechanisms.</p>
+</div>
+<div class="paragraph">
+<p><a id="fvyag"></a><a id="GSDVG00052"></a><a id="to-enable-message-protection-for-all-methods-using-digital-signature"></a></p>
+</div>
+<div class="paragraph">
+<p>To Enable Message Protection for All Methods Using Digital Signature</p>
+</div>
+<div class="paragraph">
+<p>Follow this procedure.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In a text editor, open the application&#8217;s <code>glassfish-ejb-jar.xml</code>
+file.<br>
+For the <code>xms</code> example, this file is located in the directory
+app-dir`/xms-ejb/src/conf`, where app-dir is defined in <a href="#beacj">To
+Set Up the Sample Application</a>.</p>
+</li>
+<li>
+<p>Modify the <code>glassfish-ejb-jar.xml</code> file by adding the
+<code>message-security-binding</code> element as shown:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&lt;glassfish-ejb-jar&gt;
+  &lt;enterprise-beans&gt;
+    &lt;unique-id&gt;1&lt;/unique-id&gt;
+    &lt;ejb&gt;
+      &lt;ejb-name&gt;HelloWorld&lt;/ejb-name&gt;
+      &lt;jndi-name&gt;HelloWorld&lt;/jndi-name&gt;
+      &lt;webservice-endpoint&gt;
+        &lt;port-component-name&gt;HelloIF&lt;/port-component-name&gt;
+        &lt;endpoint-address-uri&gt;service/HelloWorld&lt;/endpoint-address-uri&gt;
+        &lt;message-security-binding auth-layer="SOAP"&gt;
+          &lt;message-security&gt;
+            &lt;request-protection auth-source="content" /&gt;
+            &lt;response-protection auth-source="content"/&gt;
+          &lt;/message-security&gt;
+        &lt;/message-security-binding&gt;
+      &lt;/webservice-endpoint&gt;
+    &lt;/ejb&gt;
+  &lt;/enterprise-beans&gt;
+&lt;/glassfish-ejb-jar&gt;</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Compile, deploy, and run the application as described in
+<a href="#beack">To Run the Sample Application</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="beach"></a><a id="GSDVG00245"></a><a id="configuring-message-protection-for-a-specific-method-based-on-digital-signatures"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_configuring_message_protection_for_a_specific_method_based_on_digital_signatures">Configuring Message Protection for a Specific Method Based on Digital Signatures</h5>
+<div class="paragraph">
+<p>To enable message protection for a specific method, or for a set of
+methods that can be identified using a wildcard value, follow these
+steps. As in the example discussed in <a href="#beacg">Using a Signature to
+Enable Message Protection for All Methods</a>, to enable message protection
+for a specific method, update the <code>message-security-binding</code> element for
+the EJB web service endpoint in the application&#8217;s
+<code>glassfish-ejb-jar.xml</code> file. To this file, add <code>request-protection</code> and
+<code>response-protection</code> elements, which are analogous to the
+<code>request-policy</code> and <code>response-policy</code> elements discussed in the
+<a href="../security-guide/toc.html#GSSCG">GlassFish Server Open Source Edition Security Guide</a>. The
+administration guide includes a table listing the set and order of
+security operations for different request and response policy
+configurations.</p>
+</div>
+<div class="paragraph">
+<p>This section uses the sample application discussed in
+<a href="#beaci">Understanding and Running the Sample Application</a> to apply
+application-level message security to show only the differences
+necessary for protecting web services using various mechanisms.</p>
+</div>
+<div class="paragraph">
+<p><a id="fvybb"></a><a id="GSDVG00053"></a><a id="to-enable-message-protection-for-a-particular-method-or-set-of-methods-using-digital-signature"></a></p>
+</div>
+<div class="paragraph">
+<p>To Enable Message Protection for a Particular Method or Set of Methods
+Using Digital Signature</p>
+</div>
+<div class="paragraph">
+<p>Follow this procedure.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In a text editor, open the application&#8217;s <code>glassfish-ejb-jar.xml</code>
+file.<br>
+For the <code>xms</code> example, this file is located in the directory
+app-dir`/xms-ejb/src/conf`, where app-dir is defined in <a href="#beacj">To
+Set Up the Sample Application</a>.</p>
+</li>
+<li>
+<p>Modify the <code>glassfish-ejb-jar.xml</code> file by adding the
+<code>message-security-binding</code> element as shown:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&lt;glassfish-ejb-jar&gt;
+  &lt;enterprise-beans&gt;
+  &lt;unique-id&gt;1&lt;/unique-id&gt;
+    &lt;ejb&gt;
+      &lt;ejb-name&gt;HelloWorld&lt;/ejb-name&gt;
+      &lt;jndi-name&gt;HelloWorld&lt;/jndi-name&gt;
+      &lt;webservice-endpoint&gt;
+        &lt;port-component-name&gt;HelloIF&lt;/port-component-name&gt;
+        &lt;endpoint-address-uri&gt;service/HelloWorld&lt;/endpoint-address-uri&gt;
+        &lt;message-security-binding auth-layer="SOAP"&gt;
+          &lt;message-security&gt;
+            &lt;message&gt;
+              &lt;java-method&gt;
+                &lt;method-name&gt;ejbCreate&lt;/method-name&gt;
+              &lt;/java-method&gt;
+            &lt;/message&gt;
+            &lt;message&gt;
+              &lt;java-method&gt;
+                &lt;method-name&gt;sayHello&lt;/method-name&gt;
+              &lt;/java-method&gt;
+            &lt;/message&gt;
+            &lt;request-protection auth-source="content" /&gt;
+            &lt;response-protection auth-source="content"/&gt;
+          &lt;/message-security&gt;
+        &lt;/message-security-binding&gt;
+      &lt;/webservice-endpoint&gt;
+    &lt;/ejb&gt;
+  &lt;/enterprise-beans&gt;
+&lt;/glassfish-ejb-jar&gt;</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Compile, deploy, and run the application as described in
+<a href="#beack">To Run the Sample Application</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="beaci"></a><a id="GSDVG00377"></a><a id="understanding-and-running-the-sample-application"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_understanding_and_running_the_sample_application">Understanding and Running the Sample Application</h4>
+<div class="paragraph">
+<p>This section discusses the WSS sample application. This sample
+application is installed on your system only if you installed the J2EE
+1.4 samples. If you have not installed these samples, see <a href="#beacj">To
+Set Up the Sample Application</a>.</p>
+</div>
+<div class="paragraph">
+<p>The objective of this sample application is to demonstrate how a web
+service can be secured with WSS. The web service in the <code>xms</code> example is
+a simple web service implemented using a Java EE EJB endpoint and a web
+service endpoint implemented using a servlet. In this example, a service
+endpoint interface is defined with one operation, <code>sayHello</code>, which
+takes a string then sends a response with <code>Hello</code> prefixed to the given
+string. You can view the WSDL file for the service endpoint interface at
+app-dir`/xms-ejb/src/``conf/HelloWorld.wsdl`, where app-dir is defined
+in <a href="#beacj">To Set Up the Sample Application</a>.</p>
+</div>
+<div class="paragraph">
+<p>In this application, the client looks up the service using the JNDI name
+<code>java:comp/env/service/HelloWorld</code> and gets the port information using a
+static stub to invoke the operation using a given name. For the name
+Duke, the client gets the response <code>Hello Duke!</code></p>
+</div>
+<div class="paragraph">
+<p>This example shows how to use message security for web services at the
+GlassFish Server level. For information about using message security at
+the application level, see <a href="#beacf">Application-Specific Message
+Protection</a>. The WSS message security mechanisms implement message-level
+authentication (for example, XML digital signature and encryption) of
+SOAP web services invocations using the X.509 and username/password
+profiles of the OASIS WS-Security standard, which can be viewed from the
+following URL:
+<code>http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0.pdf</code>.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beacj">To Set Up the Sample Application</a></p>
+</li>
+<li>
+<p><a href="#beack">To Run the Sample Application</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beacj"></a><a id="GSDVG00054"></a><a id="to-set-up-the-sample-application"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_to_set_up_the_sample_application">To Set Up the Sample Application</h5>
+<div id="GSDVG535" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>To have access to this sample application, you must have previously
+installed the J2EE 1.4 samples. If the samples are not installed, follow
+the steps in the following section.</p>
+</div>
+<div class="paragraph">
+<p>After you follow these steps, the sample application is located in the
+directory
+as-install`/j2ee14-samples/samples/webservices/security/ejb/apps/xms/`
+or in a directory of your choice. For easy reference throughout the rest
+of this section, this directory is referred to as simply app-dir.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Go to the
+<a href="http://www.oracle.com/technetwork/java/javaee/download-141771.html">J2EE
+1.4 download URL</a>
+(<code>http://www.oracle.com/technetwork/java/javaee/download-141771.html</code>)
+in your browser.</p>
+</li>
+<li>
+<p>Click on the Download button for the Samples Bundle.</p>
+</li>
+<li>
+<p>Click on Accept License Agreement.</p>
+</li>
+<li>
+<p>Click on the J2EE SDK Samples link.</p>
+</li>
+<li>
+<p>Choose a location for the <code>j2eesdk-1_4_03-samples.zip</code> file.<br>
+Saving the file to as-install is recommended.</p>
+</li>
+<li>
+<p>Unzip the file.<br>
+Unzipping to the as-install`/j2ee14-samples` directory is recommended.
+For example, you can use the following command.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>unzip j2eesdk-1_4_03-samples.zip -d j2ee14-samples</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="beack"></a><a id="GSDVG00055"></a><a id="to-run-the-sample-application"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_run_the_sample_application">To Run the Sample Application</h5>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Make sure that the GlassFish Server is running.<br>
+Message security providers are set up when the Ant targets are run, so
+you do not need to configure these on the GlassFish Server prior to
+running this example.</p>
+</li>
+<li>
+<p>If you are not running HTTP on the default port of 8080, change the
+WSDL file for the example to reflect the change, and change the
+<code>common.properties</code> file to reflect the change as well.<br>
+The WSDL file for this example is located at
+app-dir`/xms-ejb/``src/conf/HelloWorld.wsdl`. The port number is in the
+following section:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&lt;service name="HelloWorld"&gt;
+  &lt;port name="HelloIFPort" binding="tns:HelloIFBinding"&gt;
+    &lt;soap:address location="http://localhost:8080/service/HelloWorld"/&gt;
+  &lt;/port&gt;
+&lt;/service&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Verify that the properties in the as-install`/samples/common.properties`
+file are set properly for your installation and environment. If you need
+a more detailed description of this file, refer to the "Configuration"
+section for the web services security applications at
+as-install`/j2ee14-samples/samples/webservices/security/docs/common.html#Logging`.
+3.  Change to the app-dir directory.
+4.  Run the following Ant targets to compile, deploy, and run the
+example application:
+1.  To compile samples:<br>
+<code>ant</code>
+2.  To deploy samples:<br>
+<code>ant deploy</code>
+3.  To run samples:<br>
+<code>ant run</code><br>
+If the sample has compiled and deployed properly, you see the following
+response on your screen after the application has run:<br>
+<code>run:[echo] Running the xms program:[exec] Established message level security : Hello Duke!</code>
+5.  To undeploy the sample, run the following Ant target:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">ant undeploy</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All of the web services security examples use the same web service name
+(<code>HelloWorld</code>) and web service ports. These examples show only the
+differences necessary for protecting web services using various
+mechanisms. Make sure to undeploy an application when you have completed
+running it. If you do not, you receive an <code>Already in Use</code> error and
+deployment failures when you try to deploy another web services example
+application.</p>
+</div>
+<div class="paragraph">
+<p><a id="beacm"></a><a id="GSDVG00123"></a><a id="programmatic-login-using-the-programmaticlogin-class"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_programmatic_login_using_the_programmaticlogin_class">Programmatic Login Using the ProgrammaticLogin Class</h3>
+<div class="paragraph">
+<p>Programmatic login allows a deployed Java EE application or module to
+invoke a login method. If the login is successful, a <code>SecurityContext</code>
+is established as if the client had authenticated using any of the
+conventional Java EE mechanisms. Programmatic login is supported for
+servlet and EJB components on the server side, and for stand-alone or
+application clients on the client side. Programmatic login is useful for
+an application having special needs that cannot be accommodated by any
+of the Java EE standard authentication mechanisms.</p>
+</div>
+<div class="paragraph">
+<p>This section describes a proprietary GlassFish mechanism, but see also
+the standard security APIs in the Java EE tutorial.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The <code>com.sun.appserv.security.ProgrammaticLogin</code> class in GlassFish
+Server is not a Java EE API; therefore, it is not portable to other
+application servers.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beacn">Programmatic Login Precautions</a></p>
+</li>
+<li>
+<p><a href="#beaco">Granting Programmatic Login Permission</a></p>
+</li>
+<li>
+<p><a href="#beacp">The <code>ProgrammaticLogin</code> Class</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beacn"></a><a id="GSDVG00378"></a><a id="programmatic-login-precautions"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_programmatic_login_precautions">Programmatic Login Precautions</h4>
+<div class="paragraph">
+<p>The GlassFish Server is not involved in how the login information
+(<code>user</code>, <code>password</code>) is obtained by the deployed application.
+Programmatic login places the burden on the application developer with
+respect to assuring that the resulting system meets security
+requirements. If the application code reads the authentication
+information across the network, the application determines whether to
+trust the user.</p>
+</div>
+<div class="paragraph">
+<p>Programmatic login allows the application developer to bypass the
+GlassFish Server-supported authentication mechanisms and feed
+authentication data directly to the security service. While flexible,
+this capability should not be used without some understanding of
+security issues.</p>
+</div>
+<div class="paragraph">
+<p>Since this mechanism bypasses the container-managed authentication
+process and sequence, the application developer must be very careful in
+making sure that authentication is established before accessing any
+restricted resources or methods. It is also the application developer&#8217;s
+responsibility to verify the status of the login attempt and to alter
+the behavior of the application accordingly.</p>
+</div>
+<div class="paragraph">
+<p>The programmatic login state does not necessarily persist in sessions or
+participate in single sign-on.</p>
+</div>
+<div class="paragraph">
+<p>Lazy authentication is not supported for programmatic login. If an
+access check is reached and the deployed application has not properly
+authenticated using the programmatic login method, access is denied
+immediately and the application might fail if not coded to account for
+this occurrence. One way to account for this occurrence is to catch the
+access control or security exception, perform a programmatic login, and
+repeat the request.</p>
+</div>
+<div class="paragraph">
+<p><a id="beaco"></a><a id="GSDVG00379"></a><a id="granting-programmatic-login-permission"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_granting_programmatic_login_permission">Granting Programmatic Login Permission</h4>
+<div class="paragraph">
+<p>The <code>ProgrammaticLoginPermission</code> permission is required to invoke the
+programmatic login mechanism for an application if the security manager
+is enabled. For information about the security manager, see
+<a href="#beabx">The <code>server.policy</code> File</a>. This permission is not granted by
+default to deployed applications because this is not a standard Java EE
+mechanism.</p>
+</div>
+<div class="paragraph">
+<p>To grant the required permission to the application, add the following
+to the domain-dir`/config/server.policy` file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">grant codeBase "file:jar-file-path" {
+     permission com.sun.appserv.security.ProgrammaticLoginPermission
+     "login";
+ };</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The jar-file-path is the path to the application&#8217;s JAR file.</p>
+</div>
+<div class="paragraph">
+<p><a id="beacp"></a><a id="GSDVG00380"></a><a id="the-programmaticlogin-class"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_the_code_programmaticlogin_code_class">The <code>ProgrammaticLogin</code> Class</h4>
+<div class="paragraph">
+<p>The <code>com.sun.appserv.security.ProgrammaticLogin</code> class enables a user to
+perform login programmatically.</p>
+</div>
+<div class="paragraph">
+<p>For Javadoc tool pages relevant to programmatic login, see the
+<code>com.sun.appserv.security</code> package.</p>
+</div>
+<div class="paragraph">
+<p>The <code>ProgrammaticLogin</code> class has four <code>login</code> methods, two for servlets
+or JSP files and two for EJB components.</p>
+</div>
+<div class="paragraph">
+<p>The login methods for servlets or JSP files have the following
+signatures:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">public java.lang.Boolean login(String user, String password,
+    javax.servlet.http.HttpServletRequest request,
+    javax.servlet.http.HttpServletResponse response)
+
+public java.lang.Boolean login(String user, String password,
+    String realm, javax.servlet.http.HttpServletRequest request,
+    javax.servlet.http.HttpServletResponse response, boolean errors)
+    throws java.lang.Exception</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The login methods for EJB components have the following signatures:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">public java.lang.Boolean login(String user, String password)
+
+public java.lang.Boolean login(String user, String password,
+    String realm, boolean errors) throws java.lang.Exception</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All of these <code>login</code> methods accomplish the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Perform the authentication</p>
+</li>
+<li>
+<p>Return <code>true</code> if login succeeded, <code>false</code> if login failed</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The login occurs on the realm specified unless it is null, in which case
+the domain&#8217;s default realm is used. The methods with no realm parameter
+use the domain&#8217;s default realm.</p>
+</div>
+<div class="paragraph">
+<p>If the errors flag is set to <code>true</code>, any exceptions encountered during
+the login are propagated to the caller. If set to <code>false</code>, exceptions
+are thrown.</p>
+</div>
+<div class="paragraph">
+<p>On the client side, realm and errors parameters are ignored and the
+actual login does not occur until a resource requiring a login is
+accessed. A <code>java.rmi.AccessException</code> with <code>COBRA NO_PERMISSION</code> occurs
+if the actual login fails.</p>
+</div>
+<div class="paragraph">
+<p>The logout methods for servlets or JSP files have the following
+signatures:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">public java.lang.Boolean logout(HttpServletRequest request,
+    HttpServletResponse response)
+
+public java.lang.Boolean logout(HttpServletRequest request,
+    HttpServletResponse response, boolean errors)
+    throws java.lang.Exception</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The logout methods for EJB components have the following signatures:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">public java.lang.Boolean logout()
+
+public java.lang.Boolean logout(boolean errors)
+    throws java.lang.Exception</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All of these <code>logout</code> methods return <code>true</code> if logout succeeded, <code>false</code>
+if logout failed.</p>
+</div>
+<div class="paragraph">
+<p>If the errors flag is set to <code>true</code>, any exceptions encountered during
+the logout are propagated to the caller. If set to <code>false</code>, exceptions
+are thrown.</p>
+</div>
+<div class="paragraph">
+<p><a id="beacq"></a><a id="GSDVG00124"></a><a id="user-authentication-for-single-sign-on"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_user_authentication_for_single_sign_on">User Authentication for Single Sign-on</h3>
+<div class="paragraph">
+<p>The single sign-on feature of the GlassFish Server allows multiple web
+applications deployed to the same virtual server to share the user
+authentication state. With single sign-on enabled, users who log in to
+one web application become implicitly logged into other web applications
+on the same virtual server that require the same authentication
+information. Otherwise, users would have to log in separately to each
+web application whose protected resources they tried to access.</p>
+</div>
+<div class="paragraph">
+<p>A sample application using the single sign-on scenario could be a
+consolidated airline booking service that searches all airlines and
+provides links to different airline web sites. After the user signs on
+to the consolidated booking service, the user information can be used by
+each individual airline site without requiring another sign-on.</p>
+</div>
+<div class="paragraph">
+<p>Single sign-on operates according to the following rules:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Single sign-on applies to web applications configured for the same
+realm and virtual server. The realm is defined by the <code>realm-name</code>
+element in the <code>web.xml</code> file. For information about virtual servers,
+see "<a href="../administration-guide/http_https.html#GSADG00017">Administering Internet Connectivity</a>" in GlassFish
+Server Open Source Edition Administration Guide.</p>
+</li>
+<li>
+<p>As long as users access only unprotected resources in any of the web
+applications on a virtual server, they are not challenged to
+authenticate themselves.</p>
+</li>
+<li>
+<p>As soon as a user accesses a protected resource in any web application
+associated with a virtual server, the user is challenged to authenticate
+himself or herself, using the login method defined for the web
+application currently being accessed.</p>
+</li>
+<li>
+<p>After authentication, the roles associated with this user are used for
+access control decisions across all associated web applications, without
+challenging the user to authenticate to each application individually.</p>
+</li>
+<li>
+<p>When the user logs out of one web application (for example, by
+invalidating the corresponding session), the user&#8217;s sessions in all web
+applications are invalidated. Any subsequent attempt to access a
+protected resource in any application requires the user to authenticate
+again.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The single sign-on feature utilizes HTTP cookies to transmit a token
+that associates each request with the saved user identity, so it can
+only be used in client environments that support cookies.</p>
+</div>
+<div class="paragraph">
+<p>To configure single sign-on, set the following virtual server
+properties:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>sso-enabled</code> - If <code>false</code>, single sign-on is disabled for this
+virtual server, and users must authenticate separately to every
+application on the virtual server. The default is <code>false</code>.</p>
+</li>
+<li>
+<p><code>sso-max-inactive-seconds</code> - Specifies the time after which a user&#8217;s
+single sign-on record becomes eligible for purging if no client activity
+is received. Since single sign-on applies across several applications on
+the same virtual server, access to any of the applications keeps the
+single sign-on record active. The default value is 5 minutes (<code>300</code>
+seconds). Higher values provide longer single sign-on persistence for
+the users at the expense of more memory use on the server.</p>
+</li>
+<li>
+<p><code>sso-reap-interval-seconds</code> - Specifies the interval between purges of
+expired single sign-on records. The default value is <code>60</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Here are example <code>asadmin set</code> commands with default values:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin set server-config.http-service.virtual-server.vsrv1.property.sso-enabled="true"
+asadmin set server-config.http-service.virtual-server.vsrv1.property.sso-max-inactive-seconds="300"
+asadmin set server-config.http-service.virtual-server.vsrv1.property.sso-reap-interval-seconds="60"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information about the <code>asadmin set</code> command, see the
+<a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gizel"></a><a id="GSDVG00125"></a><a id="adding-authentication-mechanisms-to-the-servlet-container"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_adding_authentication_mechanisms_to_the_servlet_container">Adding Authentication Mechanisms to the Servlet Container</h3>
+<div class="paragraph">
+<p>You can use JSR 196 in the web tier to facilitate the injection of
+pluggable authentication modules within the servlet constraint
+processing engine. The GlassFish Server includes implementations of a
+number of HTTP layer authentication mechanisms such as basic, form, and
+digest authentication. You can add alternative implementations of the
+included mechanisms or implementations of new mechanisms such as HTTP
+Negotiate/SPNEGO, OpenID, or CAS.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#BACCFGBF">The GlassFish Server and JSR-375</a></p>
+</li>
+<li>
+<p><a href="#gizfz">The GlassFish Server and JSR 196</a></p>
+</li>
+<li>
+<p><a href="#gizdx">Writing a Server Authentication Module</a></p>
+</li>
+<li>
+<p><a href="#gizeb">Sample Server Authentication Module</a></p>
+</li>
+<li>
+<p><a href="#gizfa">Compiling and Installing a Server Authentication Module</a></p>
+</li>
+<li>
+<p><a href="#gizfe">Configuring a Server Authentication Module</a></p>
+</li>
+<li>
+<p><a href="#gizfm">Binding a Server Authentication Module to Your
+Application</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="BACCFGBF"></a><a id="GSDVG564"></a><a id="the-glassfish-server-and-jsr-375"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_the_glassfish_server_and_jsr_375">The GlassFish Server and JSR-375</h4>
+<div class="paragraph">
+<p>The Glassfish Server implements JSR-375 to provide built-in support for
+BASIC, FORM and Custom FORM authentication mechanisms. JSR-375 also
+defines plug-in interfaces for authentication and identity stores, that
+is, the <code>HttpAuthenticationMechanism</code> interface and the <code>IdentityStore</code>
+interface, respectively. Though <code>HttpAuthenticationMechanism</code>
+implementations can authenticate users in any manner they choose, the
+<code>IdentityStore</code> interface provides a convenient mechanism. A significant
+advantage of using <code>HttpAuthenticationMechanism</code> and <code>IdentityStore</code>
+over the declarative mechanisms defined by the Servlet specification is
+that it allows an application to control the identity stores that it
+authenticates against, in a standard, portable way. You can use the
+built-in implementations of these APIs, or define custom
+implementations.</p>
+</div>
+<div class="paragraph">
+<p>Java EE Security API defines several annotations, with names that end
+with Definition, which when used makes the corresponding built-in
+mechanism available as a CDI bean. Java EE Security API also supports
+the use of Expression Language 3.0 in these annotations to allow dynamic
+configuration.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSDVG565"></a><a id="sthref9"></a></p>
+</div>
+<div class="sect4">
+<h5 id="built-in-authentication-mechanisms">Built-in Authentication Mechanisms</h5>
+<div class="paragraph">
+<p>An application packages its own <code>HttpAuthenticationMechanism</code> by
+including in a bean archive that is a part of the application.
+Alternatively, it may select and configure one of the container&#8217;s
+built-in mechanisms using the corresponding annotation, as listed below:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>BasicAuthenticationMechanismDefintion</code>—implements BASIC
+authentication that conforms to the behavior of the servlet container
+when BASIC &lt;auth-method&gt; is declared in web.xml.</p>
+</li>
+<li>
+<p><code>CustomFormAuthenticationMechanismDefinition</code>—implements FORM
+authentication that conforms to the behavior of the servlet container
+when the FORM &lt;auth-method&gt; is declared in web.xml.</p>
+</li>
+<li>
+<p><code>FormAuthenticationMechanismDefinition</code>—implements a modified version
+of FORM authentication in which custom handling replaces the POST to
+j_security_check.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In GlassFish Server, all built-in authentication mechanisms need to be
+authenticated using an identity store. The <code>IdentityStore</code> interface,
+included in the Java EE Security API, defines an SPI for interacting
+with identity stores, which are directories or databases containing user
+account information. The <code>IdentityStore</code> interface has four methods:
+<code>validate(Credential)</code>, <code>getCallerGroups(CredentialValidationResult)</code>,
+<code>validationTypes()</code> and <code>priority()</code>.Developers can provide their own
+implementation of this interface, or use one of the built-in Identity
+Stores. The <code>RememberMeIdentityStore</code> interface, which is a variation on
+the IdentityStore interface, can be used when an application wants to
+"remember" a user&#8217;s authenticated session for an extended period, so
+that the caller can return to the application periodically without
+needing to present primary authentication credentials each time.</p>
+</div>
+<div class="paragraph">
+<p>There are two built-in implementations of <code>IdentityStore</code>: an LDAP
+identity store, and a Database identity store. The following snippet
+shows the usage of <code>DatabaseIdentityStoreDefinition</code>, which makes
+<code>DatabaseIdentityStore</code> available as CDI bean.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@DatabaseIdentityStoreDefinition(
+    callerQuery = "#{'select password from caller where name = ?'}",
+    groupsQuery = "select group_name from caller_groups where caller_name = ?",
+    hashAlgorithm = Pbkdf2PasswordHash.class,
+    priorityExpression = "#{100}",
+    hashAlgorithmParameters = {
+        "Pbkdf2PasswordHash.Iterations=3072",
+        "${applicationConfig.dyna}"
+    }
+)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Since Java EE Security API provides support for Expression Langauge 3.0,
+regular expressions can be used to set value of annotation attributes.</p>
+</div>
+<div class="paragraph">
+<p>The GlassFish Server provides out of the box implementation of
+<code>Pbkdf2PasswordHash</code> that supports PBKDF2 password hashing. It is
+suggested that you use <code>Pbkdf2PasswordHash</code> for generating and
+validating passwords, unless there are specific requirements which
+cannot be met any other way.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSDVG566"></a><a id="sthref10"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="custom-authentication-mechanism">Custom Authentication Mechanism</h5>
+<div class="paragraph">
+<p>An application provider can choose to provide its own custom
+authentication mechanism, apart from built-in authentication mechanism.</p>
+</div>
+<div class="paragraph">
+<p>A custom authentication mechanism implements the
+<code>HttpAuthenticationMechanism</code> interface, introduced in Java EE Security
+API. This interface defines the following three methods.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">AuthenticationStatus validateRequest(HttpServletRequest request,
+                                     HttpServletResponse response,
+                                     HttpMessageContext httpMessageContext
+                                    ) throws AuthenticationException;
+
+AuthenticationStatus secureResponse(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    HttpMessageContext httpMessageContext
+                                    ) throws AuthenticationException;
+
+void cleanSubject(HttpServletRequest request,
+                  HttpServletResponse response,
+                  HttpMessageContext   httpMessageContext);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>HttpAuthenticationMechanism</code> returns <code>AuthenticationStatus</code> to indicate
+the status of authentication request. Internally, it gets translated to
+corresponding JASPIC <code>AuthStatus</code> as shown below:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>AuthenticationStatus.NOT_DONE</code> to <code>AuthStatus.SUCCESS</code></p>
+</li>
+<li>
+<p><code>AuthenticationStatus.SEND_CONTINUE</code> to <code>AuthStatus.SEND_CONTINUE</code></p>
+</li>
+<li>
+<p><code>AuthenticationStatus.SUCCESS</code> to <code>AuthStatus.SUCCESS</code></p>
+</li>
+<li>
+<p><code>AuthenticationStatus.SEND_FAILURE</code> to <code>AuthStatus.SEND_FAILURE</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Each method of the <code>HttpAuthenticationMechanism</code> interface performs the
+same function as the corresponding <code>ServerAuth</code> methods. Unlike JASPIC,
+<code>HttpAuthenticationMechanism</code> is specified for the servlet container
+only. Only the <code>validateRequest()</code> must be implemented, for other two
+methods, default behaviors are specified.</p>
+</div>
+<div class="paragraph">
+<p><code>validateRequest</code> allows a caller to authenticate. The request gets
+inspected inside <code>validateRequest</code> to read credential or any other
+information, or it can write to standard response with status of the
+authentication request or redirect the caller to an OAuth provider. Once
+the credential is validated, the result of the validation is
+communicated to the container using the <code>HttpMessageContext</code> parameter.</p>
+</div>
+<div id="GSDVG567" class="paragraph">
+<p>Sample Http Authentication Mechanism</p>
+</div>
+<div class="paragraph">
+<p>The class <code>MyAuthenticationMechanism.java</code> is a sample
+<code>HttpAuthenticationMechanism</code> implementation. Note that only
+<code>validateRequest</code> method has been implemented, since Java EE Security
+API provides default implementation of other two methods. An application
+provider may choose to override the default implementation depending on
+the requirement.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.security.enterprise.AuthenticationException;
+import javax.security.enterprise.AuthenticationStatus;
+import javax.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism;
+import javax.security.enterprise.authentication.mechanism.http.HttpMessageContext;
+import javax.security.enterprise.credential.UsernamePasswordCredential;
+import javax.security.enterprise.identitystore.CredentialValidationResult;
+import javax.security.enterprise.identitystore.IdentityStoreHandler;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import static javax.security.enterprise.identitystore.CredentialValidationResult.Status.VALID;
+
+@RequestScoped
+public class MyAuthenticationMechanism implements HttpAuthenticationMechanism {
+
+    @Inject
+    private IdentityStoreHandler identityStoreHandler;
+
+    @Override
+    public AuthenticationStatus validateRequest(HttpServletRequest request, HttpServletResponse response, HttpMessageContext httpMessageContext) throws AuthenticationException {
+
+          // Get the (caller) name and password from the request
+        // NOTE: This is for the smallest possible example only. In practice
+        // putting the password in a request query parameter is highly
+        // insecure and is discouraged.
+        String name = request.getParameter("name");
+        String password = request.getParameter("password");
+
+        if (name != null &amp;&amp; password != null) {
+
+            // Delegate the {credentials in -&gt; identity data out} function to
+            // the Identity Store
+            CredentialValidationResult result = identityStoreHandler.validate(
+                new UsernamePasswordCredential(name, password));
+
+            if (result.getStatus() == VALID) {
+                // Communicate the details of the authenticated user to the
+                // container.
+                response.addHeader("Authentication Mechanism", "MyAuthenticationMechanism");
+                return httpMessageContext.notifyContainerAboutLogin(
+                    result.getCallerPrincipal(), result.getCallerGroups());
+            } else {
+                return httpMessageContext.responseUnauthorized();
+            }
+        }
+
+        return httpMessageContext.doNothing();
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gizfz"></a><a id="GSDVG00381"></a><a id="the-glassfish-server-and-jsr-196"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_the_glassfish_server_and_jsr_196">The GlassFish Server and JSR 196</h4>
+<div class="paragraph">
+<p>The GlassFish Server implements the Servlet Container Profile of JSR
+196, Java Authentication Service Provider Interface for Containers. JSR
+196 defines a standard service provider interface (SPI) that extends the
+concepts of the Java Authentication and Authorization Service (JAAS) to
+enable pluggability of message authentication modules in message
+processing runtimes. The JSR 196 standard defines profiles that
+establish contracts for the use of the SPI in specific contexts. The
+Servlet Container Profile of JSR 196 defines the use of the SPI by a
+Servlet container such that:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The resulting container can be configured with new authentication
+mechanisms.</p>
+</li>
+<li>
+<p>The container employs the configured mechanisms in its enforcement of
+the declarative servlet security model (declared in a <code>web.xml</code> file
+using <code>security-constraint</code> elements).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The JSR 196 specification defines a simple message processing model
+composed of four interaction points:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>secureRequest</code> on the client</p>
+</li>
+<li>
+<p><code>validateRequest</code> on the server</p>
+</li>
+<li>
+<p><code>secureResponse</code> on the server</p>
+</li>
+<li>
+<p><code>validateResponse</code> on the client</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>A message processing runtime uses the SPI at these interaction points to
+delegate the corresponding message security processing to authentication
+providers, also called authentication modules, integrated into the
+runtime by way of the SPI.</p>
+</div>
+<div class="paragraph">
+<p>A compatible server-side message processing runtime, such as the
+GlassFish Server servlet container, supports the <code>validateRequest</code> and
+<code>secureResponse</code> interaction points of the message processing model. The
+servlet container uses the SPI at these interaction points to delegate
+the corresponding message security processing to a server authentication
+module (SAM), integrated by the SPI into the container.</p>
+</div>
+<div class="paragraph">
+<p><a id="gizdx"></a><a id="GSDVG00382"></a><a id="writing-a-server-authentication-module"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_writing_a_server_authentication_module">Writing a Server Authentication Module</h4>
+<div class="paragraph">
+<p>A key step in adding an authentication mechanism to a compatible
+server-side message processing runtime such as the GlassFish Server
+servlet container is acquiring a SAM that implements the desired
+authentication mechanism. One way to do that is to write the SAM
+yourself.</p>
+</div>
+<div class="paragraph">
+<p>A SAM implements the javax.security.auth.message.module.ServerAuthModule
+interface as defined by JSR 196. A SAM is invoked indirectly by the
+message processing runtime at the <code>validateRequest</code> and <code>secureResponse</code>
+interaction points. A SAM must implement the five methods of the
+ServerAuthModule interface:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>getSupportedMessageTypes</code> — An array of <code>Class</code> objects where each
+element defines a message type supported by the SAM. For a SAM to be
+compatible with the Servlet Container Profile, the returned array must
+include the <code>HttpServletRequest.class</code> and <code>HttpServletResponse.class</code>
+objects.</p>
+</li>
+<li>
+<p><code>initialize(MessagePolicy requestPolicy, MessagePolicy responsePolicy, CallbackHandler Map options)</code>
+— The container calls this method to provide the SAM with configuration
+values and with a <code>CallbackHandler</code>. The configuration values are
+returned in the policy arguments and in the options <code>Map</code>. The SAM uses
+<code>CallbackHandler</code> to access services, such as password validation,
+provided by the container.</p>
+</li>
+<li>
+<p><code>AuthStatus validateRequest(MessageInfo messageInfo, Subject clientSubject, Subject serviceSubject)</code>
+— The container calls this method to process each received
+<code>HttpServletRequest</code>. The request and its associated
+<code>HttpServletResponse</code> are passed by the container to the SAM in the
+<code>messageInfo</code> argument. The SAM processes the request and may establish
+the response to be returned by the container. The SAM uses the provided
+<code>Subject</code> arguments to convey its authentication results. The SAM
+returns different status values to control the container&#8217;s invocation
+processing. The status values and the circumstances under which they are
+returned are as follows:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>AuthStatus.SUCCESS</code> is returned when the application request message
+is successfully validated. The container responds to this status value
+by using the returned client <code>Subject</code> to invoke the target of the
+request. When this value is returned, the SAM (provided a custom
+<code>AuthConfigProvider</code> is not being used) must use its <code>CallbackHandler</code>
+to handle a <code>CallerPrincipalCallback</code> using the <code>clientSubject</code> as an
+argument to the callback.</p>
+</li>
+<li>
+<p><code>AuthStatus.SEND_CONTINUE</code> indicates that message validation is
+incomplete and that the SAM has established a preliminary response as
+the response message in <code>messageInfo</code>. The container responds to this
+status value by sending the response to the client.</p>
+</li>
+<li>
+<p><code>AuthStatus.SEND_FAILURE</code> indicates that message validation failed
+and that the SAM has established an appropriate failure response message
+in <code>messageInfo</code>. The container responds to this status value by sending
+the response to the client.</p>
+</li>
+<li>
+<p><code>AuthStatus.SEND_SUCCESS</code> is not typically returned. This status
+value indicates the end of a multi-message security dialog originating
+after the service interaction and during the processing of the
+application response. The container responds to this status value by
+sending the response to the client.<br>
+The <code>validateRequest</code> method may also throw an <code>AuthException</code> to
+indicate that the message processing by the SAM failed without
+establishing a failure response message in <code>messageInfo</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>secureResponse(MessageInfo messageInfo, Subject serviceSubject)</code> —
+The container calls this method before sending a response, resulting
+from an application invocation, to the client. The response is passed to
+the SAM in the <code>messageInfo</code> argument. In most cases, this method should
+just return the <code>SEND_SUCCESS</code> status.</p>
+</li>
+<li>
+<p><code>cleanSubject(MessageInfo messageInfo, Subject subject)</code> — This method
+removes the mechanism-specific principals, credentials, or both from the
+subject. This method is not currently called by the container. A
+legitimate implementation could remove all the principals from the
+argument subject.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>See the Servlet Container Profile section in the JSR 196 specification
+for additional background and details.</p>
+</div>
+<div class="paragraph">
+<p><a id="gizeb"></a><a id="GSDVG00383"></a><a id="sample-server-authentication-module"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_sample_server_authentication_module">Sample Server Authentication Module</h4>
+<div class="paragraph">
+<p>The class <code>MySam.java</code> is a sample SAM implementation. Notice that the
+sample implements the five methods of the ServerAuthModule interface.
+This SAM implements an approximation of HTTP basic authentication.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">package tip.sam;
+
+   import java.io.IOException;
+   import java.util.Map;
+   import javax.security.auth.Subject;
+   import javax.security.auth.callback.Callback;
+   import javax.security.auth.callback.CallbackHandler;
+   import javax.security.auth.callback.UnsupportedCallbackException;
+   import javax.security.auth.message.AuthException;
+   import javax.security.auth.message.AuthStatus;
+   import javax.security.auth.message.MessageInfo;
+   import javax.security.auth.message.MessagePolicy;
+   import javax.security.auth.message.callback.CallerPrincipalCallback;
+   import javax.security.auth.message.callback.GroupPrincipalCallback;
+   import javax.security.auth.message.callback.PasswordValidationCallback;
+   import javax.security.auth.message.module.ServerAuthModule;
+   import javax.servlet.http.HttpServletRequest;
+   import javax.servlet.http.HttpServletResponse;
+   import org.apache.catalina.util.Base64;
+
+   public class MySam implements ServerAuthModule {
+
+      protected static final Class[]
+        supportedMessageTypes = new Class[]{
+          HttpServletRequest.class,
+          HttpServletResponse.class
+      };
+
+      private MessagePolicy requestPolicy;
+      private MessagePolicy responsePolicy;
+      private CallbackHandler handler;
+      private Map options;
+      private String realmName = null;
+      private String defaultGroup[] = null;
+      privte static final String REALM_PROPERTY_NAME =
+          "realm.name";
+      private static final String GROUP_PROPERTY_NAME =
+          "group.name";
+      private static final String BASIC = "Basic";
+      static final String AUTHORIZATION_HEADER =
+          "authorization";
+      static final String AUTHENTICATION_HEADER =
+          "WWW-Authenticate";
+
+      public void initialize(MessagePolicy reqPolicy,
+              MessagePolicy resPolicy,
+              CallbackHandler cBH, Map opts)
+              throws AuthException {
+          requestPolicy = reqPolicy;
+          responsePolicy = resPolicy;
+          handler = cBH;
+          options = opts;
+          if (options != null) {
+              realmName = (String)
+                  options.get(REALM_PROPERTY_NAME);
+              if (options.containsKey(GROUP_PROPERTY_NAME)) {
+                  defaultGroup = new String[]{(String)
+                      options.get(GROUP_PROPERTY_NAME)};
+              }
+          }
+      }
+
+      public Class[] getSupportedMessageTypes() {
+          return supportedMessageTypes;
+      }
+
+      public AuthStatus validateRequest(
+              MessageInfo msgInfo, Subject client,
+              Subject server) throws AuthException {
+          try {
+
+              String username =
+                  processAuthorizationToken(msgInfo, client);
+              if (username ==
+                  null &amp;&amp; requestPolicy.isMandatory()) {
+                  return sendAuthenticateChallenge(msgInfo);
+              }
+
+             setAuthenticationResult(
+                 username, client, msgInfo);
+             return AuthStatus.SUCCESS;
+
+          } catch (Exception e) {
+              AuthException ae = new AuthException();
+              ae.initCause(e);
+              throw ae;
+          }
+      }
+
+      private String processAuthorizationToken(
+              MessageInfo msgInfo, Subject s)
+              throws AuthException {
+
+          HttpServletRequest request =
+                  (HttpServletRequest)
+                  msgInfo.getRequestMessage();
+
+          String token =
+                  request.getHeader(AUTHORIZATION_HEADER);
+
+          if (token != null &amp;&amp; token.startsWith(BASIC + " ")) {
+
+              token = token.substring(6).trim();
+
+              // Decode and parse the authorization token
+              String decoded =
+                  new String(Base64.decode(token.getBytes()));
+
+              int colon = decoded.indexOf(':');
+              if (colon &lt;= 0 || colon == decoded.length() - 1) {
+                  return (null);
+              }
+
+              String username = decoded.substring(0, colon);
+
+             // use the callback to ask the container to
+             // validate the password
+            PasswordValidationCallback pVC =
+                    new PasswordValidationCallback(s, username,
+                    decoded.substring(colon + 1).toCharArray());
+            try {
+                handler.handle(new Callback[]{pVC});
+                pVC.clearPassword();
+            } catch (Exception e) {
+                AuthException ae = new AuthException();
+                ae.initCause(e);
+                throw ae;
+            }
+
+            if (pVC.getResult()) {
+                return username;
+            }
+      }
+      return null;
+   }
+
+   private AuthStatus sendAuthenticateChallenge(
+           MessageInfo msgInfo) {
+
+       String realm = realmName;
+         // if the realm property is set use it,
+         // otherwise use the name of the server
+         // as the realm name.
+         if (realm == null) {
+
+          HttpServletRequest request =
+                  (HttpServletRequest)
+                  msgInfo.getRequestMessage();
+
+          realm = request.getServerName();
+        }
+
+       HttpServletResponse response =
+               (HttpServletResponse)
+               msgInfo.getResponseMessage();
+
+       String header = BASIC + " realm=\"" + realm + "\"";
+       response.setHeader(AUTHENTICATION_HEADER, header);
+       response.setStatus(
+               HttpServletResponse.SC_UNAUTHORIZED);
+       return AuthStatus.SEND_CONTINUE;
+   }
+
+   public AuthStatus secureResponse(
+           MessageInfo msgInfo, Subject service)
+           throws AuthException {
+       return AuthStatus.SEND_SUCCESS;
+   }
+
+   public void cleanSubject(MessageInfo msgInfo,
+           Subject subject)
+           throws AuthException {
+      if (subject != null) {
+          subject.getPrincipals().clear();
+      }
+   }
+
+   private static final String AUTH_TYPE_INFO_KEY =
+           "javax.servlet.http.authType";
+
+   // distinguish the caller principal
+   // and assign default groups
+   private void setAuthenticationResult(String name,
+           Subject s, MessageInfo m)
+           throws IOException,
+           UnsupportedCallbackException {
+       handler.handle(new Callback[]{
+           new CallerPrincipalCallback(s, name)
+       });
+       if (name != null) {
+         // add the default group if the property is set
+           if (defaultGroup != null) {
+               handler.handle(new Callback[]{
+                   new GroupPrincipalCallback(s, defaultGroup)
+               });
+           }
+           m.getMap().put(AUTH_TYPE_INFO_KEY, ""MySAM");
+       }
+   }
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the <code>initialize</code> method looks for the <code>group.name</code> and
+<code>realm.name</code> properties. The <code>group.name</code> property configures the
+default group assigned as a result of any successful authentication. The
+<code>realm.name</code> property defines the realm value sent back to the browser
+in the <code>WWW-Authenticate</code> challenge.</p>
+</div>
+<div class="paragraph">
+<p><a id="gizfa"></a><a id="GSDVG00384"></a><a id="compiling-and-installing-a-server-authentication-module"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_compiling_and_installing_a_server_authentication_module">Compiling and Installing a Server Authentication Module</h4>
+<div class="paragraph">
+<p>Before you can use the sample SAM, you need to compile, install, and
+configure it. Then you can bind it to an application.</p>
+</div>
+<div class="paragraph">
+<p>To compile the SAM, include the SPI in your classpath. When the
+GlassFish Server is installed, the JAR file containing the SPI,
+<code>jmac-api.jar</code>, is installed in the as-install`/lib` directory. After
+you compile the SAM, install it by copying a JAR file containing the
+compiled SAM to the as-install`/lib` directory.</p>
+</div>
+<div class="paragraph">
+<p><a id="gizfe"></a><a id="GSDVG00385"></a><a id="configuring-a-server-authentication-module"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuring_a_server_authentication_module">Configuring a Server Authentication Module</h4>
+<div class="paragraph">
+<p>You can configure a SAM in one of these ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In the Administration Console, open the Security component under the
+relevant configuration and go to the Message Security page. Set the
+following options:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Authentication Layer — <code>HttpServlet</code></p>
+</li>
+<li>
+<p>Provider Type — <code>server</code> or <code>client-server</code></p>
+</li>
+<li>
+<p>Provider ID — Specify a unique name for the SAM, for example <code>MySAM</code></p>
+</li>
+<li>
+<p>Class Name — Specify the fully qualified class name, for example
+<code>tip.sam.MySam</code></p>
+</li>
+<li>
+<p>Additional Property — Name: <code>group-name</code> Value: <code>user</code></p>
+</li>
+<li>
+<p>Additional Property — Name: <code>realm-name</code> Value: <code>Sam</code><br>
+For details, click the Help button in the Administration Console.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Use the <code>asadmin create-message-security-provider</code> command to
+configure a SAM. Set the following options:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>--layer HttpServlet</code></p>
+</li>
+<li>
+<p><code>--providertype server</code> or <code>--providertype client-server</code></p>
+</li>
+<li>
+<p><code>--classname tip.sam.MySam</code></p>
+</li>
+<li>
+<p><code>--property group-name=user:realm-name=Sam</code></p>
+</li>
+<li>
+<p>Provider name operand — Specify a unique name for the SAM, for
+example <code>MySAM</code><br>
+For details, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition
+Reference Manual</a>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gizfm"></a><a id="GSDVG00386"></a><a id="binding-a-server-authentication-module-to-your-application"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_binding_a_server_authentication_module_to_your_application">Binding a Server Authentication Module to Your Application</h4>
+<div class="paragraph">
+<p>After you install and configure the SAM, you can bind it for use by the
+container on behalf of one or more of your applications. You have two
+options in how you bind the SAM, depending on whether you are willing to
+repackage and redeploy your application:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If you are willing to repackage and redeploy, you can bind the SAM
+using the <code>glassfish-web.xml</code> file. Set the value of the
+<code>httpservlet-security-provider</code> attribute of the <code>glassfish-web-app</code>
+element to the SAM&#8217;s configured provider ID, for example, <code>MySAM</code>. For
+more information about the <code>glassfish-web.xml</code> file, see the
+<a href="../application-deployment-guide/toc.html#GSDPG">GlassFish Server Open Source Edition Application Deployment
+Guide</a>. This option leverages the native <code>AuthConfigProvider</code>
+implementation that ships with the GlassFish Server.</p>
+</li>
+<li>
+<p>Another approach is to develop your own <code>AuthConfigProvider</code> and
+register it with the GlassFish Server <code>AuthConfigFactory</code> for use on
+behalf of your applications. For example, a simple <code>AuthConfigProvider</code>
+can obtain, through its initialization properties, the classname of a
+SAM to configure on behalf of the applications for which the provider is
+registered. You can find a description of the functionality of an
+<code>AuthConfigProvider</code> and of the registration facilities provided by an
+<code>AuthConfigFactory</code> in the JSR 196 specification.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="part-apps-and-app-comps.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="webservices.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

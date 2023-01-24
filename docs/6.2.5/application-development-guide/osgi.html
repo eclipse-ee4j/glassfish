@@ -1,0 +1,823 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Developing OSGi-enabled Java EE Applications</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Developing OSGi-enabled Java EE Applications</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="lifecycle-listeners.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="part-services-and-apis.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSDVG00015"></a><a id="gkpch"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="developing-osgi-enabled-java-ee-applications">13 Developing OSGi-enabled Java EE Applications</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter describes the features and interfaces that GlassFish Server
+provides to develop OSGi-enabled enterprise applications. This chapter
+includes the following sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkpay">Overview of OSGi Application and GlassFish Server</a></p>
+</li>
+<li>
+<p><a href="#gkqff">Developing OSGi Application Bundles for GlassFish Server</a></p>
+</li>
+<li>
+<p><a href="#gkveh">Deploying OSGi Bundles in GlassFish Server</a></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Many of the features and interfaces presented in this chapter are
+demonstrated in samples and video clips available from the OSGi section
+of the GlassFish Server wiki. See
+<code>http://wikis.sun.com/display/GlassFish/Osgi</code> for more information.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="gkpay"></a><a id="GSDVG00173"></a><a id="overview-of-osgi-application-and-glassfish-server"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_overview_of_osgi_application_and_glassfish_server">Overview of OSGi Application and GlassFish Server</h3>
+<div class="paragraph">
+<p>GlassFish Server is fully-compliant with Java EE 8, so it provides the
+latest Java EE APIs and frameworks. It is built using OSGi technology,
+and includes as its OSGi module management subsystem the
+<a href="http://felix.apache.org">Apache Felix OSGi framework</a>
+(<code>http://felix.apache.org</code>), which is a fully-compliant implementation
+of the OSGi Service Platform R4 Version 4.3 specification. GlassFish
+Server supports deployment of OSGi-based applications using this
+framework. OSGi applications can make use of core as well as enterprise
+OSGi features. GlassFish Server makes available many of its Java EE
+platform services, such as the transaction service, HTTP service, JDBC
+Service and JMS, as OSGi services. It also enables use of Java EE
+programming model in OSGi applications, so enterprise Java application
+developers can continue to leverage their existing skills in OSGi-based
+applications. See <a href="#glhek">Benefits of Using OSGi in Enterprise Java
+Applications</a> for more information.</p>
+</div>
+<div class="paragraph">
+<p>OSGi applications are deployed as one or more OSGi bundles, and the
+GlassFish Server deployment and administration infrastructure enables
+you to deploy and manage your OSGi bundles. This chapter classifies OSGi
+bundles into two categories based on the features they use:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Plain OSGi Application Bundles - bundles that do not contain any Java
+EE components. See <a href="#gkupd">Developing Plain OSGi Bundles</a>.</p>
+</li>
+<li>
+<p>Hybrid Application Bundles - bundles that are an OSGi bundle as wells
+as a Java EE module. At runtime, such modules have both an OSGi bundle
+context and a Java EE context. GlassFish Server supports the following
+hybrid application bundles:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Web Application Bundles (or WABs) , see <a href="#gkunr">Developing Web
+Application Bundles</a>.</p>
+</li>
+<li>
+<p>EJB Application Bundles, see <a href="#gkunh">Developing EJB Application
+Bundles</a>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="glhek"></a><a id="GSDVG00488"></a><a id="benefits-of-using-osgi-in-enterprise-java-applications"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_benefits_of_using_osgi_in_enterprise_java_applications">Benefits of Using OSGi in Enterprise Java Applications</h4>
+<div class="paragraph">
+<p>Enterprise applications typically need transactional, secured access to
+data stores, messaging systems and other such enterprise information
+systems, and have to cater to a wide variety of clients such as web
+browsers and desktop applications, and so on. Java EE makes development
+of such applications easier with a rich set of APIs and frameworks. It
+also provides a scalable, reliable and easy to administer runtime to
+host such applications.</p>
+</div>
+<div class="paragraph">
+<p>The OSGi platform complements these features with modularity. It enables
+applications to be separated into smaller, reusable modules with a well
+defined and robust dependency specification. A module explicitly
+specifies its capabilities and requirements. This explicit dependency
+specification encourages developers to visualize dependencies among
+their modules and help them make their modules highly cohesive and less
+coupled. The OSGi module system is dynamic: it allows modules to be
+added and removed at runtime. OSGi has very good support for versioning:
+it supports package versioning as well module versioning. In fact, it
+allows multiple versions of the same package to coexist in the same
+runtime, thus allowing greater flexibility to deployers. The service
+layer of the OSGi platform encourages a more service-oriented approach
+to build a system. The service-oriented approach and dynamic module
+system used together allow a system to be more agile during development
+as well as in production. It makes them better suited to run in an
+Platform-as-a-Service (PaaS) environment.</p>
+</div>
+<div class="paragraph">
+<p>With GlassFish Server, you do not have to chose one of the two
+platforms. A hybrid approach like OSGi enabling your Java EE
+applications allows new capabilities to applications hitherto
+unavailable to applications built using just one of the two platforms.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkqff"></a><a id="GSDVG00174"></a><a id="developing-osgi-application-bundles-for-glassfish-server"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_developing_osgi_application_bundles_for_glassfish_server">Developing OSGi Application Bundles for GlassFish Server</h3>
+<div class="paragraph">
+<p>GlassFish Server enables interaction between OSGi components and Java EE
+components. OSGi services managed by the OSGi framework can invoke Java
+EE components managed by the Java EE container and vice versa. For
+example, developers can declaratively export EJBs as OSGi services
+without having to write any OSGi code. This allows any plain OSGi
+component, which is running without the Java EE context, to discover the
+EJB and invoke it. Similarly, Java EE components can locate OSGi
+services provided by plain OSGi bundles and use them as well. GlassFish
+Server extends the Java EE Context and Dependency Injection (CDI)
+framework to make it easier for Java EE components to consume dynamic
+OSGi services in a type-safe manner.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkupd">Developing Plain OSGi Bundles</a></p>
+</li>
+<li>
+<p><a href="#gkunr">Developing Web Application Bundles</a></p>
+</li>
+<li>
+<p><a href="#gkunh">Developing EJB Application Bundles</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkupd"></a><a id="GSDVG00489"></a><a id="developing-plain-osgi-bundles"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_developing_plain_osgi_bundles">Developing Plain OSGi Bundles</h4>
+<div class="paragraph">
+<p>Java EE components (like an EJB or Servlet) can look up Java EE platform
+services using JNDI names in the associated Java EE naming context. Such
+code can rely on the Java EE container to inject the required services
+as well. Unfortunately, neither of them works when the code runs outside
+a Java EE context. An example of such code is the <code>BundleActivator</code> of
+an OSGi bundle. For such code to access Java EE platform services,
+GlassFish Server makes key services and resources of the underlying Java
+EE platform available as OSGi services. Thus, an OSGi bundle deployed in
+GlassFish Server can access these services using OSGi Service look-up
+APIs or by using a white board pattern. The following Java EE services
+are available as OSGi services:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkunk">HTTP Service</a></p>
+</li>
+<li>
+<p><a href="#gkunn">Transaction Service</a></p>
+</li>
+<li>
+<p><a href="#gkuof">JDBC Data Source Service</a></p>
+</li>
+<li>
+<p><a href="#gkuoq">JMS Resource Service</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkunk"></a><a id="GSDVG00319"></a><a id="http-service"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_http_service">HTTP Service</h5>
+<div class="paragraph">
+<p>The GlassFish Server web container is made available as a service for
+OSGi users who do not use OSGi Web Application Bundles (WABs). This
+service is made available using the standard OSGi/HTTP service
+specification, which is a light API that predates the concept of a web
+application as we know it today. This simple API allows users to
+register servlets and static resources dynamically and draw a boundary
+around them in the form of a <code>HttpContext</code>. This simple API can be used
+to build feature-rich web application, such as the Felix Web Console for
+example.</p>
+</div>
+<div class="paragraph">
+<p>The GlassFish Server web container has one or more virtual servers. A
+virtual server has one or more web application deployed in it. Each web
+application has a distinct context path. Each virtual server has a set
+of HTTP listeners. Each HTTP listener listens on a particular port. When
+multiple virtual servers are present, one of them is treated as the
+default virtual server. Every virtual server comes configured with a
+default web application. The default web application is used to serve
+static content from the <code>docroot</code> of GlassFish Server. This default web
+application uses <code>/</code> as the context path. A web application contains
+static and dynamic resources. Each virtual server is mapped to an
+<code>org.osgi.services.http.HttpService</code> instance. When there are multiple
+virtual servers present, there will be multiple occurrences of
+<code>HttpService</code> registered in the service registry. In order to
+distinguish one service from another, each service is registered with a
+service property named <code>VirtualServer</code>, whose value is the name of the
+virtual server. The service corresponding to default virtual server has
+the highest ranking, so when looking up a service of type <code>HttpService</code>
+without any additional criteria returns the <code>HttpService</code> corresponding
+to the default virtual server. In a typical GlassFish Server
+installation, the default virtual server is configured to listen on port
+8080 for the HTTP protocol and port 8181 for the HTTPS protocol.</p>
+</div>
+<div class="paragraph">
+<p>The context path <code>/</code> is reserved for the default web application. Every
+resource and servlet registered using the <code>registerResource()</code> and
+<code>registerServlet()</code> methods of <code>HttpService</code> are made available under a
+special context path named <code>/osgi</code> in the virtual server. The <code>/osgi</code>
+context path can be changed to some other value by setting an
+appropriate value in the OSGi configuration property or in a system
+property called <code>org.glassfish.osgihttp.ContextPath</code>.</p>
+</div>
+<div class="paragraph">
+<p>For example, HelloWorldServlet will be available at
+<code>http://localhost:8080/osgi/helloworld</code> when the following code is
+executed:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">HttpService httpService = getHttpService(); // Obtain HttpService
+httpService.registerServlet(httpService.registerServlet("/helloworld",
+new HelloWorldServlet(), null, ctx);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gkunn"></a><a id="GSDVG00320"></a><a id="transaction-service"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_transaction_service">Transaction Service</h5>
+<div class="paragraph">
+<p>The Java Transaction API (JTA) defines three interfaces to interact with
+the transaction management system: <code>UserTransaction</code>,
+<code>TransactionManager</code>, and <code>TransactionSynchronizationRegistry</code>. They all
+belong to the javax.transaction package. <code>TransactionManager`and
+`TransactionSynchronizationRegistry</code> are intended for system level code,
+such as a persistence provider. Whereas, <code>UserTransaction</code> is the entity
+that you should use to control transactions. All the objects of the
+underlying JTA layer are made available in the OSGi service registry
+using the following service interfaces:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>javax.transaction.UserTransaction</code></p>
+</li>
+<li>
+<p><code>javax.transaction.TransactionManager</code></p>
+</li>
+<li>
+<p><code>javax.transaction.TransactionSynchronisationRegistry</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>There is no additional service property associated with them. Although
+<code>UserTransaction</code> appears to be a singleton, in reality any call to it
+gets rerouted to the actual transaction associated with the calling
+thread. Code that runs in the context of a Java EE component typically
+gets a handle on <code>UserTransaction</code> by doing a JNDI lookup in the
+component naming context or by using injection, as shown here:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">(UserTransaction)(new InitialContext().lookup("java:comp/UserTransaction"));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@Resource UserTransaction utx;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When certain code (such as an OSGi Bundle Activator), which does not
+have a Java EE component context, wants to get hold of
+<code>UserTransaction</code>, or any of the other JTA artifacts, then they can look
+it up in the service registry. Here is an example of such code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">BundleContext context;
+ServiceReference txRef =
+    context.getServiceReference(UserTransaction.class.getName());
+UserTransaction utx = (UserTransaction);
+context.getService(txRef);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gkuof"></a><a id="GSDVG00321"></a><a id="jdbc-data-source-service"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_jdbc_data_source_service">JDBC Data Source Service</h5>
+<div class="paragraph">
+<p>Any JDBC data source created in GlassFish Server is automatically made
+available as an OSGi Service; therefore, OSGi bundles can track
+availability of JDBC data sources using the <code>ServiceTracking</code> facility
+of the OSGi platform. The life of the OSGi service matches that of the
+underlying data source created in GlassFish Server. For instructions on
+administering JDBC resources in GlassFish Server, see the
+<a href="../administration-guide/toc.html#GSADG">GlassFish Server Open Source Edition Administration Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p>GlassFish Server registers each JDBC data source as an OSGi service with
+<code>objectClass = "javax.sql.DataSource"</code> and a service property called
+<code>jndi-name</code>, which is set to the JNDI name of the data source. Here is a
+code sample that looks up a data source service:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">  @Inject
+  @OSGiService(true,
+         "(jndi-name=jdbc/MyDS)")
+  private DataSource ds;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gkuoq"></a><a id="GSDVG00322"></a><a id="jms-resource-service"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_jms_resource_service">JMS Resource Service</h5>
+<div class="paragraph">
+<p>Like JDBC data sources, JMS administered objects, such as destinations
+and connection factories, are also automatically made available as OSGi
+services. Their service mappings are as follows.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 12%;">
+<col style="width: 39%;">
+<col style="width: 12%;">
+<col style="width: 37%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">JMS Object</th>
+<th class="tableblock halign-left valign-top">Service Interface</th>
+<th class="tableblock halign-left valign-top">Service Properties</th>
+<th class="tableblock halign-left valign-top">Comments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JMS Queue destination</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jakarta.jms.Queue</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jndi-name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jndi-name</code> is
+set to the JNDI name of the queue</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JMS Topic destination</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jakarta.jms.Topic</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jndi-name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jndi-name</code> is
+set to the JNDI name of the topic</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JMS connection factory</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jakarta.jms.QueueConnectionFactory</code> or
+<code>jakarta.jms.TopicConnectionFactory</code> or <code>jakarta.jms.ConnectionFactory</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jndi-name</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>jndi-name</code> is set to the JNDI name of the topic.</p>
+</div>
+<div class="paragraph">
+<p>The actual service interface depends on which type of connection factory
+was created.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gkunr"></a><a id="GSDVG00490"></a><a id="developing-web-application-bundles"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_developing_web_application_bundles">Developing Web Application Bundles</h4>
+<div class="paragraph">
+<p>When a web application is packaged and deployed as an OSGi bundle, it is
+called a Web Application Bundle (WAB). WAB support is based on the OSGi
+Web Application specification , which is part of the OSGi Service
+Platform, Enterprise Specification, Release 4, Version 4.3. A WAB is
+packaged as an OSGi bundle, so all the OSGi packaging rules apply to WAB
+packaging. When a WAB is not packaged like a WAR, the OSGi Web Container
+of GlassFish Server maps the WAB to the hierarchical structure of web
+application using the following rules:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The root of the WAB corresponds to the <code>docroot</code> of the web
+application.</p>
+</li>
+<li>
+<p>Every JAR in the Bundle-ClassPath of the WAB is treated like a JAR in
+<code>WEB-INF/lib/.</code></p>
+</li>
+<li>
+<p>Every directory except "." in Bundle-ClassPath of the WAB is treated
+like <code>WEB-INF/classes/.</code></p>
+</li>
+<li>
+<p>Bundle-ClassPath entry of type "." is treated as if the entire WAB is
+a JAR in <code>WEB-INF/lib/.</code></p>
+</li>
+<li>
+<p>Bundle-ClassPath includes the Bundle-ClassPath entries of any attached
+fragment bundles.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The simplest way to avoid knowing these mapping rules is to avoid the
+problem in the first place. Moreover, there are many packaging tools and
+development time tools that understand WAR structure. Therefore, we
+strongly recommend that you package the WAB exactly like a WAR, with
+only additional OSGi metadata.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkvau"></a><a id="GSDVG00323"></a><a id="required-wab-metadata"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_required_wab_metadata">Required WAB Metadata</h5>
+<div class="paragraph">
+<p>In addition to the standard OSGi metadata, the main attributes of
+<code>META-INF/MANIFEST.MF</code> of the WAB must have an additional attribute
+called <code>Web-ContextPath</code>. The <code>Web-ContextPath</code> attribute specifies the
+value of the context path of the web application. Since the root of a
+WAB is mapped to the <code>docroot</code> of the web application, it should not be
+used in the <code>Bundle-ClassPath</code>. Moreover, <code>WEB-INF/classes/</code> should be
+specified ahead of <code>WEB-INF/lib/</code> in the <code>Bundle-ClassPath</code> in order to
+be compliant with the search order used for traditional WAR files.</p>
+</div>
+<div class="paragraph">
+<p>Assuming the WAB is structured as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">  foo.war/
+       index.html
+       foo.jsp
+       WEB-INF/classes/
+                      foo/BarServlet.class
+       WEB-INF/lib/lib1.jar
+       WEB-INF/lib/lib2.jar</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then the OSGi metadata for the WAB as specified in
+<code>META-INF/MANIFEST.MF</code> of the WAB would appear as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">  MANIFEST.MF:Manifest-Version: 1.0
+  Bundle-ManifestVersion: 2
+  Bundle-SymbolicName: com.acme.foo
+  Bundle-Version: 1.0
+  Bundle-Name: Foo Web Application Bundle Version 1.0
+  Import-Package: javax.servlet; javax.servlet.http, version=[3.0, 4.0, 5.0)
+  Bundle-ClassPath: WEB-INF/classes, WEB-INF/lib/lib1.jar, WEB-INF/lib/lib2.jar
+  Web-ContextPath: /foo</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gkvat"></a><a id="GSDVG00324"></a><a id="how-wabs-consume-osgi-services"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_how_wabs_consume_osgi_services">How WABs Consume OSGi Services</h5>
+<div class="paragraph">
+<p>Since a WAB has a valid <code>Bundle-Context</code>, it can consume OSGi services.
+Although you are free to use any OSGi API to locate OSGi services,
+GlassFish Server makes it easy for WAB users to use OSGi services by
+virtue of extending the Context and Dependency Injection (CDI)
+framework. Here&#8217;s an example of the injection of an OSGi Service into a
+Servlet:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">  @WebServlet
+  public class MyServlet extends HttpServlet {
+    @Inject @OSGiService(dynamic=true)
+    FooService fooService;
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To learn more about this feature, refer to <a href="#gkvbi">OSGi CDI
+Extension for WABs</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkvbi"></a><a id="GSDVG00325"></a><a id="osgi-cdi-extension-for-wabs"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_osgi_cdi_extension_for_wabs">OSGi CDI Extension for WABs</h5>
+<div class="paragraph">
+<p>GlassFish Server includes a CDI extension that enables web applications,
+such as servlets, that are part of WABs to express a type-safe
+dependency on an OSGi service using CDI APIs. An OSGi service can be
+provided by any OSGi bundle without any knowledge of Java EE/CDI, and
+they are allowed to be injected transparently in a type-safe manner into
+a web application.</p>
+</div>
+<div class="paragraph">
+<p>A custom CDI Qualifier, <code>@org.glassfish.osgicdi.OSGiService</code>, is used by
+the component to represent dependency on an OSGi service. The qualifier
+has additional metadata to customize the service discovery and injection
+behavior. The following <code>@OsgiService</code> attributes are currently
+available:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>serviceCriteria</code> — An LDAP filter query used for service selection in
+the OSGi service registry.</p>
+</li>
+<li>
+<p><code>waitTimeout</code> — Waits the specified duration for a service that
+matches the criteria specified to appear in the OSGi service registry.</p>
+</li>
+<li>
+<p><code>dynamic</code> — Dynamically obtain a service reference (true/false).<br>
+Since OSGi services are dynamic, they may not match the life cycle of
+the application component that has injected a reference to the service.
+Through this attribute, you could indicate that a service reference can
+be obtained dynamically or not. For stateless or idempotent services, a
+dynamic reference to a service implementation would be useful. The
+container then injects a proxy to the service and dynamically switches
+to an available implementation when the current service reference is
+invalid.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="GSDVG00044"></a><a id="gkvbk"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 13-1 Example of a WAB Using CDI</p>
+</div>
+<div class="paragraph">
+<p>In this example, Bundle B0 defines a service contract called
+<code>com.acme.Foo</code> and exports the <code>com.acme</code> package for use by other
+bundles. Bundle B1 in turn provides a service implementation, FooImpl,
+of the <code>com.acme.Foo</code> interface. It then registers the service FooImpl
+service with the OSGi service registry with <code>com.acme.Foo</code> as the
+service interface.</p>
+</div>
+<div class="paragraph">
+<p>Bundle B2 is a hybrid application bundle that imports the <code>com.acme</code>
+package. It has a component called BarServlet that expresses a
+dependency to <code>com.acme.Foo</code> by adding a field/setter method and
+qualifies that injection point with <code>@OsgiService</code>. For instance,
+BarServlet could look like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">  @Servlet
+  public void BarServlet extends HttpServlet{
+      @Inject @OSGiService(dynamic=true)
+      private com.acme.Foo f;
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gkunh"></a><a id="GSDVG00491"></a><a id="developing-ejb-application-bundles"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_developing_ejb_application_bundles">Developing EJB Application Bundles</h4>
+<div class="paragraph">
+<p>Another type of hybrid application bundle is the EJB Application Bundle.
+When an EJB Jar is packaged with additional OSGi metadata and deployed
+as an OSGi bundle it is called an EJB Application Bundle. GlassFish
+Serversupports only packaging the OSGi bundle as a simple JAR file with
+required OSGi metadata, just as you would package an <code>ejb-jar</code> file.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkvck"></a><a id="GSDVG00326"></a><a id="required-ejb-metadata"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_required_ejb_metadata">Required EJB Metadata</h5>
+<div class="paragraph">
+<p>An EJB Application Bundle must have a manifest metadata called
+Export-EJB in order to be considered as an EJB Bundle. For syntax of
+Export-EJB header, please refer to the Publishing EJB as OSGi Service
+section. Here&#8217;s an example of an EJB Application Bundle with its
+metadata:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">  myEjb.jar/
+           com/acme/Foo
+           com/acme/impl/FooEJB
+           META-INF/MANIFEST.MF
+  MANIFEST.MF:
+  Manifest-Version: 1.0
+  Bundle-ManifestVersion: 2
+  Bundle-SymbolicName: com.acme.foo EJB bundle
+  Bundle-Version: 1.0.0.BETA
+  Bundle-Name: com.acme.foo EJB bundle version 1.0.0.BETA
+  Export-EJB: ALL
+  Export-Package: com.acme; version=1.0
+  Import-Package: javax.ejb; version=[3.0, 4.0), com.acme; version=[1.0, 1.1)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gkvcj"></a><a id="GSDVG00327"></a><a id="how-ejb-bundles-consume-osgi-services"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_how_ejb_bundles_consume_osgi_services">How EJB Bundles Consume OSGi Services</h5>
+<div class="paragraph">
+<p>Since an EJB has a valid Bundle-Context, it can consume OSGi services.
+Although you are free to use any OSGi API to locate OSGi services,
+GlassFish Server makes it easy to use OSGi services by virtue of
+extending the Context and Dependency Injection (CDI) framework. Here&#8217;s
+an example of injection of an OSGi Service into a servlet:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">  @Stateless
+  public class MyEJB {
+    @Inject @OSGiService(dynamic=true)
+    Foo foo;
+    ...
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To learn more about this feature, refer to <a href="#gkvbj">Using the OSGi
+CDI Extension With EJB Bundles</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkvbj"></a><a id="GSDVG00328"></a><a id="using-the-osgi-cdi-extension-with-ejb-bundles"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_using_the_osgi_cdi_extension_with_ejb_bundles">Using the OSGi CDI Extension With EJB Bundles</h5>
+<div class="paragraph">
+<p>GlassFish Server includes a CDI extension that enables EJB application
+bundles to express a type-safe dependency on an OSGi Service using CDI
+APIs. An OSGi service can be provided by any OSGi bundle without any
+knowledge of Java EE/CDI, and they are allowed to be injected
+transparently in a type-safe manner into an EJB bundle.</p>
+</div>
+<div class="paragraph">
+<p>A custom CDI Qualifier, <code>@org.glassfish.osgicdi.OSGiService</code>, is used by
+the component to represent dependency on an OSGi service. The qualifier
+has additional metadata to customize the service discovery and injection
+behavior. The following <code>@OsgiService</code> attributes are currently
+available:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>dynamic</code> — Dynamically obtain a service reference (true/false).</p>
+</li>
+<li>
+<p><code>waitTimeout</code> — Waits for specified duration for a service to appear
+in the OSGi service registry.</p>
+</li>
+<li>
+<p><code>serviceCriteria</code> — An LDAP filter query used for service selection.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkveh"></a><a id="GSDVG00175"></a><a id="deploying-osgi-bundles-in-glassfish-server"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deploying_osgi_bundles_in_glassfish_server">Deploying OSGi Bundles in GlassFish Server</h3>
+<div class="paragraph">
+<p>For instruction on deploying OSGi bundle, see "<a href="../application-deployment-guide/deploying-applications.html#GSDPG00073">OSGi
+Bundle Deployment Guidelines</a>" in GlassFish Server Open Source Edition
+Application Deployment Guide.</p>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="lifecycle-listeners.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="part-services-and-apis.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

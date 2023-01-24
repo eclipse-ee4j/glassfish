@@ -1,0 +1,917 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Administering the Java Naming and Directory Interface (JNDI) Service</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Administering the Java Naming and Directory Interface (JNDI) Service</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="jms.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="transactions.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSADG00021"></a><a id="ablky"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="administering-the-java-naming-and-directory-interface-jndi-service">18 Administering the Java Naming and Directory Interface (JNDI) Service</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Java Naming and Directory Interface (JNDI) API is used for accessing
+different kinds of naming and directory services. Java EE components
+locate objects by invoking the JNDI lookup method.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ggjue">About JNDI</a></p>
+</li>
+<li>
+<p><a href="#gglpq">Administering JNDI Resources</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Instructions for accomplishing the tasks in this chapter by using the
+Administration Console are contained in the Administration Console
+online help.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggjue"></a><a id="GSADG00603"></a><a id="about-jndi"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_about_jndi">About JNDI</h3>
+<div class="paragraph">
+<p>By making calls to the JNDI API, applications locate resources and other
+program objects. A resource is a program object that provides
+connections to systems, such as database servers and messaging systems.
+A JDBC resource is sometimes referred to as a data source. Each resource
+object is identified by a unique, people-friendly name, called the JNDI
+name. A resource object and its JNDI name are bound together by the
+naming and directory service, which is included with the GlassFish
+Server.</p>
+</div>
+<div class="paragraph">
+<p>When a new name-object binding is entered into the JNDI, a new resource
+is created.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abllb">Java EE Naming Environment</a></p>
+</li>
+<li>
+<p><a href="#gglpg">How the Naming Environment and the Container Work
+Together</a></p>
+</li>
+<li>
+<p><a href="#abllc">Naming References and Binding Information</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abllb"></a><a id="GSADG00780"></a><a id="java-ee-naming-environment"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_java_ee_naming_environment">Java EE Naming Environment</h4>
+<div class="paragraph">
+<p>JNDI names are bound to their objects by the naming and directory
+service that is provided by a Java EE server. Because Java EE components
+access this service through the JNDI API, the object usually uses its
+JNDI name. For example, the JNDI name of the Apache Derby database is
+<code>jdbc/_default</code>. At startup, the GlassFish Server reads information from
+the configuration file and automatically adds JNDI database names to the
+name space, one of which is <code>jdbc/_default</code>.</p>
+</div>
+<div class="paragraph">
+<p>Java EE application clients, enterprise beans, and web components must
+have access to a JNDI naming environment.</p>
+</div>
+<div class="paragraph">
+<p>The application component&#8217;s naming environment is the mechanism that
+allows customization of the application component&#8217;s business logic
+during deployment or assembly. This environment allows you to customize
+the application component without needing to access or change the source
+code off the component. A Java EE container implements the provides the
+environment to the application component instance as a JNDI naming
+context.</p>
+</div>
+<div class="paragraph">
+<p><a id="gglpg"></a><a id="GSADG00781"></a><a id="how-the-naming-environment-and-the-container-work-together"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_how_the_naming_environment_and_the_container_work_together">How the Naming Environment and the Container Work Together</h4>
+<div class="paragraph">
+<p>The application component&#8217;s environment is used as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The application component&#8217;s business methods access the environment
+using the JNDI interfaces. In the deployment descriptor, the application
+component provider declares all the environment entries that the
+application component expects to be provided in its environment at
+runtime.</p>
+</li>
+<li>
+<p>The container provides an implementation of the JNDI naming context
+that stores the application component environment. The container also
+provides the tools that allow the deployer to create and manage the
+environment of each application component.</p>
+</li>
+<li>
+<p>A deployer uses the tools provided by the container to initialize the
+environment entries that are declared in the application component&#8217;s
+deployment descriptor. The deployer sets and modifies the values of the
+environment entries.</p>
+</li>
+<li>
+<p>The container makes the JNDI context available to the application
+component instances at runtime. These instances use the JNDI interfaces
+to obtain the values of the environment entries.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Each application component defines its own set of environment entries.
+All instances of an application component within the same container
+share the same environment entries. Application component instances are
+not allowed to modify the environment at runtime.</p>
+</div>
+<div class="paragraph">
+<p><a id="abllc"></a><a id="GSADG00782"></a><a id="naming-references-and-binding-information"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_naming_references_and_binding_information">Naming References and Binding Information</h4>
+<div class="paragraph">
+<p>A resource reference is an element in a deployment descriptor that
+identifies the component&#8217;s coded name for the resource. For example,
+<code>jdbc/SavingsAccountDB</code>. More specifically, the coded name references a
+connection factory for the resource.</p>
+</div>
+<div class="paragraph">
+<p>The JNDI name of a resource and the resource reference name are not the
+same. This approach to naming requires that you map the two names before
+deployment, but it also decouples components from resources. Because of
+this decoupling, if at a later time the component needs to access a
+different resource, the name does not need to change. This flexibility
+makes it easier for you to assemble Java EE applications from
+preexisting components.</p>
+</div>
+<div class="paragraph">
+<p>The following table lists JNDI lookups and their associated resource
+references for the Java EE resources used by the GlassFish Server.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG1029"></a><a id="sthref87"></a><a id="fxizy"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 18-1 JNDI Lookup Names and Their Associated References</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 38%;">
+<col style="width: 62%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">JNDI Lookup Name</th>
+<th class="tableblock halign-left valign-top">Associated Resource Reference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java:comp/env</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application environment entries</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java:comp/env/jdbc</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JDBC DataSource resource manager connection
+factories</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java:comp/env/ejb</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">EJB References</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java:comp/UserTransaction</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UserTransaction references</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java:comp/env/mail</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JavaMail Session Connection Factories</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java:comp/env/url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URL Connection Factories</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java:comp/env/jms</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JMS Connection Factories and Destinations</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java:comp/ORB</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ORB instance shared across application components</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gglpq"></a><a id="GSADG00604"></a><a id="administering-jndi-resources"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_administering_jndi_resources">Administering JNDI Resources</h3>
+<div class="paragraph">
+<p>Within GlassFish Server, you can configure your environment for custom
+and external JNDI resources. A custom resource accesses a local JNDI
+repository; an external resource accesses an external JNDI repository.
+Both types of resources need user-specified factory class elements, JNDI
+name attributes, and so on.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ablle">Administering Custom JNDI Resources</a></p>
+</li>
+<li>
+<p><a href="#gitxz">Administering External JNDI Resources</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ablle"></a><a id="GSADG00783"></a><a id="administering-custom-jndi-resources"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_administering_custom_jndi_resources">Administering Custom JNDI Resources</h4>
+<div class="paragraph">
+<p>A custom resource specifies a custom server-wide resource object factory
+that implements the <code>javax.naming.spi.ObjectFactory</code> interface.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#giowe">To Create a Custom JNDI Resource</a></p>
+</li>
+<li>
+<p><a href="#gioxb">To List Custom JNDI Resources</a></p>
+</li>
+<li>
+<p><a href="#giwlk">To Update a Custom JNDI Resource</a></p>
+</li>
+<li>
+<p><a href="#gioxl">To Delete a Custom JNDI Resource</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="giowe"></a><a id="GSADG00503"></a><a id="to-create-a-custom-jndi-resource"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_to_create_a_custom_jndi_resource">To Create a Custom JNDI Resource</h5>
+<div class="paragraph">
+<p>Use the <code>create-custom-resource</code> subcommand in remote mode to create a
+custom resource.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Create a custom resource by using the
+<a href="../reference-manual/create-custom-resource.html#GSRFM00022"><code>create-custom-resource</code></a> subcommand.<br>
+Information on properties for the subcommand is contained in this help
+page.</p>
+</li>
+<li>
+<p>Restart GlassFish Server.<br>
+See <a href="domains.html#ginqj">To Restart a Domain</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00284"></a><a id="gioyi"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 18-1 Creating a Custom Resource</p>
+</div>
+<div class="paragraph">
+<p>This example creates a custom resource named <code>sample-custom-resource</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-custom-resource --restype topic --factoryclass com.imq.topic
+sample_custom_resource
+Command create-custom-resource executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1030" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-custom-resource</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gioxb"></a><a id="GSADG00504"></a><a id="to-list-custom-jndi-resources"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_list_custom_jndi_resources">To List Custom JNDI Resources</h5>
+<div class="paragraph">
+<p>Use the <code>list-custom-resources</code> subcommand in remote mode to list the
+existing custom resources.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List the custom resources by using the
+<a href="../reference-manual/list-custom-resources.html#GSRFM00162"><code>list-custom-resources</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00285"></a><a id="gioyr"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 18-2 Listing Custom Resources</p>
+</div>
+<div class="paragraph">
+<p>This example lists the existing custom resources.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-custom-resources
+sample_custom_resource01
+sample_custom_resource02
+Command list-custom-resources executed successfully</code></pre>
+</div>
+</div>
+<div id="GSADG1031" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-custom-resources</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="giwlk"></a><a id="GSADG00505"></a><a id="to-update-a-custom-jndi-resource"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_update_a_custom_jndi_resource">To Update a Custom JNDI Resource</h5>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>List the custom resources by using the
+<a href="../reference-manual/list-custom-resources.html#GSRFM00162"><code>list-custom-resources</code></a> subcommand.</p>
+</li>
+<li>
+<p>Use the <a href="../reference-manual/set.html#GSRFM00226"><code>set</code></a> subcommand to modify a custom JNDI
+resource.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00286"></a><a id="giwkg"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 18-3 Updating a Custom JNDI Resource</p>
+</div>
+<div class="paragraph">
+<p>This example modifies a custom resource.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; set server.resources.custom-resource.custom
+/my-custom-resource.property.value=2010server.resources.custom-resource.custom
+/my-custom-resource.property.value=2010</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gioxl"></a><a id="GSADG00506"></a><a id="to-delete-a-custom-jndi-resource"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_delete_a_custom_jndi_resource">To Delete a Custom JNDI Resource</h5>
+<div class="paragraph">
+<p>Use the <code>delete-custom-resource</code> subcommand in remote mode to delete a
+custom resource.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List the custom resources by using the
+<a href="../reference-manual/list-custom-resources.html#GSRFM00162"><code>list-custom-resources</code></a> subcommand.</p>
+</li>
+<li>
+<p>Delete a custom resource by using the
+<a href="../reference-manual/delete-custom-resource.html#GSRFM00074"><code>delete-custom-resource</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00287"></a><a id="gioxh"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 18-4 Deleting a Custom Resource</p>
+</div>
+<div class="paragraph">
+<p>This example deletes a custom resource named <code>sample-custom-resource</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-custom-resource sample_custom_resource
+Command delete-custom-resource executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1032" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help delete-custom-resource</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gitxz"></a><a id="GSADG00784"></a><a id="administering-external-jndi-resources"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_administering_external_jndi_resources">Administering External JNDI Resources</h4>
+<div class="paragraph">
+<p>Applications running on GlassFish Server often require access to
+resources stored in an external JNDI repository. For example, generic
+Java objects might be stored in an LDAP server according to the Java
+schema. External JNDI resource elements let you configure such external
+resource repositories.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gitxn">To Register an External JNDI Resource</a></p>
+</li>
+<li>
+<p><a href="#gitvj">To List External JNDI Resources</a></p>
+</li>
+<li>
+<p><a href="#gitwc">To List External JNDI Entries</a></p>
+</li>
+<li>
+<p><a href="#giwnr">To Update an External JNDI Resource</a></p>
+</li>
+<li>
+<p><a href="#gitvt">To Delete an External JNDI Resource</a></p>
+</li>
+<li>
+<p><a href="#abllk">Example of Using an External JNDI Resource</a></p>
+</li>
+<li>
+<p><a href="#gknaf">To Disable GlassFish Server v2 Vendor-Specific JNDI Names</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gitxn"></a><a id="GSADG00507"></a><a id="to-register-an-external-jndi-resource"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_to_register_an_external_jndi_resource">To Register an External JNDI Resource</h5>
+<div class="paragraph">
+<p>Use the <code>create-jndi-resource</code> subcommand in remote mode to register an
+external JNDI resource.</p>
+</div>
+<div id="GSADG1033" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>The external JNDI factory must implement the
+<code>javax.naming.spi.InitialContextFactory</code> interface.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Register an external JNDI resource by using the
+<a href="../reference-manual/create-jndi-resource.html#GSRFM00041"><code>create-jndi-resource</code></a> subcommand.<br>
+Information on properties for the subcommand is contained in this help
+page.</p>
+</li>
+<li>
+<p>Restart GlassFish Server.<br>
+See <a href="domains.html#ginqj">To Restart a Domain</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00288"></a><a id="giwcx"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 18-5 Registering an External JNDI Resource</p>
+</div>
+<div class="paragraph">
+<p>In This example <code>sample_jndi_resource</code> is registered.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-jndi-resource --jndilookupname sample_jndi
+--restype queue --factoryclass sampleClass --description "this is a sample jndi
+resource" sample_jndi_resource
+Command create-jndi-resource executed successfully</code></pre>
+</div>
+</div>
+<div id="GSADG1034" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-jndi-resource</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gitvj"></a><a id="GSADG00508"></a><a id="to-list-external-jndi-resources"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_list_external_jndi_resources">To List External JNDI Resources</h5>
+<div class="paragraph">
+<p>Use the <code>list-jndi-resources</code> subcommand in remote mode to list all
+existing JNDI resources.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List the existing JNDI resources by using
+theo<a href="GSRFM00179"><code>list-jndi-resources</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00289"></a><a id="giwbe"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 18-6 Listing JNDI Resources</p>
+</div>
+<div class="paragraph">
+<p>This example lists the JNDI resources.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-jndi-resources
+jndi_resource1
+jndi_resource2
+jndi_resource3
+Command list-jndi-resources executed successfully</code></pre>
+</div>
+</div>
+<div id="GSADG1035" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-jndi-resources</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gitwc"></a><a id="GSADG00509"></a><a id="to-list-external-jndi-entries"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_list_external_jndi_entries">To List External JNDI Entries</h5>
+<div class="paragraph">
+<p>Use the <code>list-jndi-entries</code> subcommand in remote mode to browse and list
+the entries in the JNDI tree. You can either list all entries, or you
+can specify the JNDI context or subcontext to list specific entries.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List the JNDI entries for a configuration by using the
+<a href="../reference-manual/list-jndi-entries.html#GSRFM00178"><code>list-jndi-entries</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00290"></a><a id="giwal"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 18-7 Listing JNDI Entries</p>
+</div>
+<div class="paragraph">
+<p>This example lists all the JNDI entries for the naming service.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-jndi-entries
+jndi_entry03
+jndi_entry72
+jndi_entry76
+Command list-jndi-resources executed successfully</code></pre>
+</div>
+</div>
+<div id="GSADG1036" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-jndi-entries</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="giwnr"></a><a id="GSADG00510"></a><a id="to-update-an-external-jndi-resource"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_update_an_external_jndi_resource">To Update an External JNDI Resource</h5>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>List the existing JNDI resources by using
+theo<a href="GSRFM00179"><code>list-jndi-resources</code></a> subcommand.</p>
+</li>
+<li>
+<p>Use the <a href="../reference-manual/set.html#GSRFM00226"><code>set</code></a> subcommand to modify an external
+JNDI resource.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00291"></a><a id="giwoa"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 18-8 Updating an External JNDI Resource</p>
+</div>
+<div class="paragraph">
+<p>This example modifies an external resource.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; set server.resources.external-jndi-resource.my-jndi-resource.
+jndi-lookup-name=bar server.resources.external-jndi-resource.my-jndi-resource.jndi-lookup-name=bar</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gitvt"></a><a id="GSADG00511"></a><a id="to-delete-an-external-jndi-resource"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_delete_an_external_jndi_resource">To Delete an External JNDI Resource</h5>
+<div class="paragraph">
+<p>Use the <code>delete-jndi-resource</code> subcommand in remote mode to remove a
+JNDI resource.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Remove an external JNDI entry by using the
+<a href="../reference-manual/delete-jndi-resource.html#GSRFM00093"><code>delete-jndi-resource</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00292"></a><a id="giwby"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 18-9 Deleting an External JNDI Resource</p>
+</div>
+<div class="paragraph">
+<p>This example deletes an external JNDI resource:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-jndi-resource jndi_resource2
+Command delete-jndi-resource executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1037" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help delete-jndi-resource</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="abllk"></a><a id="GSADG00688"></a><a id="example-of-using-an-external-jndi-resource"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_example_of_using_an_external_jndi_resource">Example of Using an External JNDI Resource</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;resources&gt;
+ &lt;!-- external-jndi-resource element specifies how to access Java EE resources
+ -- stored in an external JNDI repository. This example
+ -- illustrates how to access a java object stored in LDAP.
+ -- factory-class element specifies the JNDI InitialContext factory that
+ -- needs to be used to access the resource factory. property element
+ -- corresponds to the environment applicable to the external JNDI context
+ -- and jndi-lookup-name refers to the JNDI name to lookup to fetch the
+ -- designated (in this case the java) object.
+ --&gt;
+  &lt;external-jndi-resource jndi-name="test/myBean"
+      jndi-lookup-name="cn=myBean"
+      res-type="test.myBean"
+      factory-class="com.sun.jndi.ldap.LdapCtxFactory"&gt;
+    &lt;property name="PROVIDER-URL" value="ldap://ldapserver:389/o=myObjects" /&gt;
+    &lt;property name="SECURITY_AUTHENTICATION" value="simple" /&gt;
+    &lt;property name="SECURITY_PRINCIPAL", value="cn=joeSmith, o=Engineering" /&gt;
+    &lt;property name="SECURITY_CREDENTIALS" value="changeit" /&gt;
+  &lt;/external-jndi-resource&gt;
+&lt;/resources&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gknaf"></a><a id="GSADG00512"></a><a id="to-disable-glassfish-server-v2-vendor-specific-jndi-names"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_disable_glassfish_server_v2_vendor_specific_jndi_names">To Disable GlassFish Server v2 Vendor-Specific JNDI Names</h5>
+<div class="paragraph">
+<p>The EJB 3.1 specification supported by GlassFish Server 5.0 defines
+portable EJB JNDI names. Because of this, there is less need to continue
+to use older vendor-specific JNDI names.</p>
+</div>
+<div class="paragraph">
+<p>By default, GlassFish Server v2-specific JNDI names are applied
+automatically by GlassFish Server 5.0 for backward compatibility.
+However, this can lead to some ease-of-use issues. For example,
+deploying two different applications containing a Remote EJB component
+that exposes the same remote interface causes a conflict between the
+default JNDI names.</p>
+</div>
+<div class="paragraph">
+<p>The default handling of v2-specific JNDI names in GlassFish Server 5.0
+can be managed with the <code>asadmin</code> command or with the
+<code>disable-nonportable-jndi-names</code> boolean property for the
+<code>ejb-container</code> element in <code>glassfish-ejb-jar.xml</code>.</p>
+</div>
+<div class="paragraph">
+<p>Use the <code>asadmin</code> command or directly modify the <code>glassfish-ejb-jar.xml</code>
+file to set the <code>disable-nonportable-jndi-names</code> property.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Using the <code>asadmin</code> command:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; set server.ejb-container.property.disable-nonportable-jndi-names="true"</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Directly modifying the <code>glassfish-ejb-jar.xml</code> file.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Add the <code>disable-nonportable-jndi-names</code> property to the
+<code>ejb-container</code> element in <code>glassfish-ejb-jar.xml</code>.</p>
+</li>
+<li>
+<p>Set the value of the <code>disable-nonportable-jndi-names</code> boolean, as
+desired.<br>
+<code>false</code> - Enables the automatic use of GlassFish Server v2-specific JNDI
+names. This is the default setting.<br>
+<code>true</code> - Disables the automatic use of v2-specific JNDI names. In all
+cases, 5.0-compatible JNDI names will be used.</p>
+</li>
+<li>
+<p>Save the <code>glassfish-ejb-jar.xml</code> file and restart the GlassFish
+Server domain.<br>
+This setting applies to all EJBs deployed to the server.</p>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="jms.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="transactions.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

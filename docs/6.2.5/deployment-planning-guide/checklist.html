@@ -1,0 +1,400 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Checklist for Deployment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Checklist for Deployment</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="planning.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSPLG00003"></a><a id="abfeq"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="checklist-for-deployment">3 Checklist for Deployment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This appendix provides a checklist to get started on evaluation and
+production with the GlassFish Server.</p>
+</div>
+<div class="paragraph">
+<p><a id="sthref7"></a><a id="checklist"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_checklist">Checklist</h3>
+<div class="paragraph">
+<p><a id="sthref8"></a><a id="sthref9"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 3-1 Checklist</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 23%;">
+<col style="width: 77%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Component/Feature</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Determine the following requirements for the application to be deployed.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Required/acceptable response time.</p>
+</li>
+<li>
+<p>Peak load characteristics.</p>
+</li>
+<li>
+<p>Necessary persistence scope and frequency.</p>
+</li>
+<li>
+<p>Session timeout in <code>web.xml</code>.</p>
+</li>
+<li>
+<p>Failover and availability requirements.<br>
+For more information see the <a href="../performance-tuning-guide/toc.html#GSPTG">GlassFish Server Open Source
+Edition Performance Tuning Guide</a>.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Hardware</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<ul>
+<li>
+<p>Have necessary amounts of hard disk space and memory installed.</p>
+</li>
+<li>
+<p>Use the sizing exercise to identify the requirements for deployment.<br>
+For more information see the <a href="../release-notes/toc.html#GSRLN">GlassFish Server Open Source
+Edition Release Notes</a></p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Operating System</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<ul>
+<li>
+<p>Ensure that the product is installed on a supported platform.</p>
+</li>
+<li>
+<p>Ensure that the patch levels are up-to-date and accurate.<br>
+For more information see the <a href="../release-notes/toc.html#GSRLN">GlassFish Server Open Source
+Edition Release Notes</a></p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Network Infrastructure</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<ul>
+<li>
+<p>Identify single points of failures and address them.</p>
+</li>
+<li>
+<p>Make sure that the NICs and other network components are correctly
+configured.</p>
+</li>
+<li>
+<p>Run <code>ttcp</code> benchmark test to determine if the throughput meets the
+requirements/expected result.</p>
+</li>
+<li>
+<p>Setup <code>ssh</code> based your preference.<br>
+For more information see the <a href="../installation-guide/toc.html#GSING">GlassFish Server Open Source
+Edition Installation Guide</a>.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Back-ends and other external data sources</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Check with the domain expert
+or vendor to ensure that these data sources are configured
+appropriately.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">System Changes/Configuration</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<ul>
+<li>
+<p>Make sure that changes to <code>/etc/system</code> and its equivalent on Linux
+are completed before running any performance/stress tests.</p>
+</li>
+<li>
+<p>Make sure the changes to the TCP/IP settings are complete.</p>
+</li>
+<li>
+<p>By default, the system comes with lots of services pre-configured. Not
+all of them are required to be running. Turn off services that are not
+needed to conserve system resources.</p>
+</li>
+<li>
+<p>On Solaris, use <code>Setoolkit</code> to determine the behavior of the system.
+Resolve any flags that show up.<br>
+For more information see the <a href="../performance-tuning-guide/toc.html#GSPTG">GlassFish Server Open Source
+Edition Performance Tuning Guide</a>.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Installation</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<ul>
+<li>
+<p>Ensure that these servers are not installed on NFS mounted volumes.</p>
+</li>
+<li>
+<p>Check for enough disk space and RAM when installing GlassFish Server.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GlassFish Server Configuration</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<ul>
+<li>
+<p>Logging: Enable access log rotation.</p>
+</li>
+<li>
+<p>Choose the right logging level. WARNING is usually appropriate.</p>
+</li>
+<li>
+<p>Configure Java EE containers using the Administration Console.</p>
+</li>
+<li>
+<p>Configure HTTP listeners using the Administration Console.</p>
+</li>
+<li>
+<p>Configure ORB threadpool using the Administration Console.</p>
+</li>
+<li>
+<p>If using Type2 drivers or calls involving native code, ensure that
+mtmalloc.so is specified in the LD_LIBRARY_PATH.</p>
+</li>
+<li>
+<p>Ensure that the appropriate persistence scope and frequency are used
+and they are not overridden underneath in the individual Web/EJB
+modules.</p>
+</li>
+<li>
+<p>Ensure that only critical methods in the SFSB are checkpointed.<br>
+For more information on tuning, see the <a href="../performance-tuning-guide/toc.html#GSPTG">GlassFish Server
+Open Source Edition Performance Tuning Guide</a>.<br>
+For more information on configuration, see the <a href="../administration-guide/toc.html#GSADG">GlassFish
+Server Open Source Edition Administration Guide</a>.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Load balancer Configuration</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<ul>
+<li>
+<p>Make sure the Web Server is installed.</p>
+</li>
+<li>
+<p>Make sure the load balancer plug-in into the Web Server is installed.</p>
+</li>
+<li>
+<p>Make sure patch checks is disabled.</p>
+</li>
+<li>
+<p>Lower the value of the <code>KeepAliveQuery</code> parameter. The lower the
+value, the lower the latency is on lightly loaded systems. The higher
+the value, the higher the throughput is on highly loaded systems.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java Virtual Machine Configuration</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<ul>
+<li>
+<p>Initially set the minimum and maximum heap sizes to be the same, and
+at least one GB for each instance.</p>
+</li>
+<li>
+<p>See
+<a href="http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html">Java
+Hotspot VM Options</a>
+(<code><a href="http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html" class="bare">http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html</a></code>)
+for more information.</p>
+</li>
+<li>
+<p>When running multiple instances of GlassFish Server, consider creating
+a processor set and bind GlassFish Server to it. This helps in cases
+where the CMS collector is used to sweep the old generation.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configuring time-outs in the load balancer</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<ul>
+<li>
+<p>Response-time-out-in-seconds - How long the load balancer waits before
+declaring a GlassFish Server instance unhealthy. Set this value based on
+the response time of the application. If set too high, the Web Server
+and load balancer plug-in wait a long time before marking a GlassFish
+Server instance as unhealthy. If set too low and GlassFish Server&#8217;s
+response time crosses this threshold, the instance will be incorrectly
+marked as unhealthy.</p>
+</li>
+<li>
+<p>Interval-in-seconds - Time in seconds after which unhealthy instances
+are checked to find out if they have returned to a healthy state. Too
+low a value generates extra traffic from the load balancer plug-in to
+GlassFish Server instances and too high a value delays the routing of
+requests to the instance that has turned healthy.</p>
+</li>
+<li>
+<p>Timeout-in-seconds - Duration for a response to be obtained for a
+health check request. Adjust this value based on the traffic among the
+systems in the cluster to ensure that the health check succeeds.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configuring time-outs in GlassFish Server</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<ul>
+<li>
+<p>Max-wait-time-millis - Wait time to get a connection from the pool
+before throwing an exception. Default is 6 s. Consider changing this
+value for highly loaded systems where the size of the data being
+persisted is greater than 50 KB.</p>
+</li>
+<li>
+<p>Cache-idle-timeout-in-seconds - Time an EJB is allowed to be idle in
+the cache before it gets passivated. Applies only to entity beans and
+stateful session beans.</p>
+</li>
+<li>
+<p>Removal-timeout-in-seconds - Time that an EJB remains passivated (idle
+in the backup store). Default value is 60 minutes. Adjust this value
+based on the need for SFSB failover.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tune VM Garbage Collection (GC)</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Garbage collection pauses of four seconds or more can cause intermittent
+problems in persisting session state. To avoid this problem, tune the VM
+heap. In cases where even a single failure to persist data is
+unacceptable or when the system is not fully loaded, use the CMS
+collector or the throughput collector.</p>
+</div>
+<div class="paragraph">
+<p>These can be enabled by adding:</p>
+</div>
+<div class="paragraph">
+<p><code>&lt;jvm-options&gt;-XX:+UseConcMarkSweepGC&lt;/jvm-options&gt;</code></p>
+</div>
+<div class="paragraph">
+<p>This option may decrease throughput.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="planning.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

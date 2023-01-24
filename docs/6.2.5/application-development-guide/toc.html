@@ -1,0 +1,1346 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Eclipse GlassFish Server Application Development Guide, Release 5.1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Eclipse GlassFish Server Application Development Guide, Release 5.1</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+
+		<td align="left">
+		<a href="title.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div class="sect1">
+<h2 id="contents">Contents</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="title.html#eclipse-glassfish-server">Eclipse GlassFish Server</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="__a_href_preface_html_gsdvg528_preface_a"><a href="preface.html#GSDVG528">Preface</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="preface.html#GSDVG00082">GlassFish Server Documentation Set</a></p>
+</li>
+<li>
+<p><a href="preface.html#GSDVG00083">Related Documentation</a></p>
+</li>
+<li>
+<p><a href="preface.html#GSDVG00084">Typographic Conventions</a></p>
+</li>
+<li>
+<p><a href="preface.html#GSDVG00085">Symbol Conventions</a></p>
+</li>
+<li>
+<p><a href="preface.html#GSDVG00086">Default Paths and File Names</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="part-i"><a href="part-tasks-and-tools.html#GSDVG00045">Part I +</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="part-tasks-and-tools.html#development-tasks-and-tools">Development Tasks and Tools</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="setting-up-a-development-environment"><a href="setting-up-dev-env.html#GSDVG00002">1 Setting Up a Development Environment</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="setting-up-dev-env.html#GSDVG00090">Installing and Preparing the Server for Development</a></p>
+</li>
+<li>
+<p><a href="setting-up-dev-env.html#GSDVG00091">High Availability Features</a></p>
+</li>
+<li>
+<p><a href="setting-up-dev-env.html#GSDVG00092">Development Tools</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="setting-up-dev-env.html#GSDVG00333">The <code>asadmin</code> Command</a></p>
+</li>
+<li>
+<p><a href="setting-up-dev-env.html#GSDVG00334">The Administration Console</a></p>
+</li>
+<li>
+<p><a href="setting-up-dev-env.html#GSDVG00337">The Migration Tool</a></p>
+</li>
+<li>
+<p><a href="setting-up-dev-env.html#GSDVG00338">The NetBeans IDE</a></p>
+</li>
+<li>
+<p><a href="setting-up-dev-env.html#GSDVG00340">Debugging Tools</a></p>
+</li>
+<li>
+<p><a href="setting-up-dev-env.html#GSDVG00341">Profiling Tools</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="setting-up-dev-env.html#GSDVG00093">Sample Applications</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="class-loaders"><a href="class-loaders.html#GSDVG00003">2 Class Loaders</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="class-loaders.html#GSDVG00094">The Class Loader Hierarchy</a></p>
+</li>
+<li>
+<p><a href="class-loaders.html#GSDVG00095">Delegation</a></p>
+</li>
+<li>
+<p><a href="class-loaders.html#GSDVG00096">Using the Java Optional Package Mechanism</a></p>
+</li>
+<li>
+<p><a href="class-loaders.html#GSDVG00097">Using the Endorsed Standards Override Mechanism</a></p>
+</li>
+<li>
+<p><a href="class-loaders.html#GSDVG00098">Class Loader Universes</a></p>
+</li>
+<li>
+<p><a href="class-loaders.html#GSDVG00099">Application-Specific Class Loading</a></p>
+</li>
+<li>
+<p><a href="class-loaders.html#GSDVG00100">Circumventing Class Loader Isolation</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="class-loaders.html#GSDVG00342">Using the Common Class Loader</a></p>
+</li>
+<li>
+<p><a href="class-loaders.html#GSDVG00343">Sharing Libraries Across a Cluster</a></p>
+</li>
+<li>
+<p><a href="class-loaders.html#GSDVG00344">Packaging the Client JAR for One Application in Another Application</a></p>
+</li>
+<li>
+<p><a href="class-loaders.html#GSDVG00048">To Package the Client JAR for One Application in Another Application</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="debugging-applications"><a href="debugging-apps.html#GSDVG00004">3 Debugging Applications</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="debugging-apps.html#GSDVG00101">Enabling Debugging</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="debugging-apps.html#GSDVG00049">To Set the Server to Automatically Start Up in Debug Mode</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="debugging-apps.html#GSDVG00102">JPDA Options</a></p>
+</li>
+<li>
+<p><a href="debugging-apps.html#GSDVG00103">Generating a Stack Trace for Debugging</a></p>
+</li>
+<li>
+<p><a href="debugging-apps.html#GSDVG00104">Application Client Debugging</a></p>
+</li>
+<li>
+<p><a href="debugging-apps.html#GSDVG00105">Open Message Queue Debugging</a></p>
+</li>
+<li>
+<p><a href="debugging-apps.html#GSDVG00106">Enabling Verbose Mode</a></p>
+</li>
+<li>
+<p><a href="debugging-apps.html#GSDVG00107">Class Loader Debugging</a></p>
+</li>
+<li>
+<p><a href="debugging-apps.html#GSDVG00108">GlassFish Server Logging</a></p>
+</li>
+<li>
+<p><a href="debugging-apps.html#GSDVG00109">Profiling Tools</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="debugging-apps.html#GSDVG00345">The NetBeans Profiler</a></p>
+</li>
+<li>
+<p><a href="debugging-apps.html#GSDVG00346">The HPROF Profiler</a></p>
+</li>
+<li>
+<p><a href="debugging-apps.html#GSDVG00347">The JProbe Profiler</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="part-ii"><a href="part-apps-and-app-comps.html#GSDVG00046">Part II +</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="part-apps-and-app-comps.html#developing-applications-and-application-components">Developing Applications and Application Components</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="securing-applications"><a href="securing-apps.html#GSDVG00006">4 Securing Applications</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="securing-apps.html#GSDVG00114">Security Goals</a></p>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00115">GlassFish Server Specific Security Features</a></p>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00116">Container Security</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="securing-apps.html#GSDVG00362">Declarative Security</a></p>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00363">Programmatic Security</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00117">Roles, Principals, and Principal to Role Mapping</a></p>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00118">Realm Configuration</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="securing-apps.html#GSDVG00364">Supported Realms</a></p>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00365">How to Configure a Realm</a></p>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00366">How to Set a Realm for an Application or Module</a></p>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00367">Creating a Custom Realm</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG563">Java EE Security API Support</a></p>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00119">JACC Support</a></p>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00120">Pluggable Audit Module Support</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="securing-apps.html#GSDVG00368">Configuring an Audit Module</a></p>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00369">The <code>AuditModule</code> Class</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00121">The <code>server.policy</code> File</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="securing-apps.html#GSDVG00370">Default Permissions</a></p>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00371">System Properties</a></p>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00372">Changing Permissions for an Application</a></p>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00373">Enabling and Disabling the Security Manager</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00122">Configuring Message Security for Web Services</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="securing-apps.html#GSDVG00374">Message Security Providers</a></p>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00375">Message Security Responsibilities</a></p>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00376">Application-Specific Message Protection</a></p>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00377">Understanding and Running the Sample Application</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00123">Programmatic Login Using the ProgrammaticLogin Class</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="securing-apps.html#GSDVG00378">Programmatic Login Precautions</a></p>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00379">Granting Programmatic Login Permission</a></p>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00380">The <code>ProgrammaticLogin</code> Class</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00124">User Authentication for Single Sign-on</a></p>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00125">Adding Authentication Mechanisms to the Servlet Container</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="securing-apps.html#GSDVG564">The GlassFish Server and JSR-375</a></p>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00381">The GlassFish Server and JSR 196</a></p>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00382">Writing a Server Authentication Module</a></p>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00383">Sample Server Authentication Module</a></p>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00384">Compiling and Installing a Server Authentication Module</a></p>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00385">Configuring a Server Authentication Module</a></p>
+</li>
+<li>
+<p><a href="securing-apps.html#GSDVG00386">Binding a Server Authentication Module to Your Application</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="developing-web-services"><a href="webservices.html#GSDVG00007">5 Developing Web Services</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="webservices.html#GSDVG00126">Creating Portable Web Service Artifacts</a></p>
+</li>
+<li>
+<p><a href="webservices.html#GSDVG00127">Deploying a Web Service</a></p>
+</li>
+<li>
+<p><a href="webservices.html#GSDVG00128">The Web Service URI, WSDL File, and Test Page</a></p>
+</li>
+<li>
+<p><a href="webservices.html#GSDVG536">The Databinding Provider</a></p>
+</li>
+<li>
+<p><a href="webservices.html#GSDVG00129">GlassFish Java EE Service Engine</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="webservices.html#GSDVG00387">Using the <code>jbi.xml</code> File</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="configuring-the-java-persistence-provider"><a href="jpa.html#GSDVG00008">6 Configuring the Java Persistence Provider</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="jpa.html#GSDVG537">Overview of Oracle TopLink</a></p>
+</li>
+<li>
+<p><a href="jpa.html#GSDVG538">Using Oracle TopLink in GlassFish Server</a></p>
+</li>
+<li>
+<p><a href="jpa.html#GSDVG00130">Specifying the Database for an Application</a></p>
+</li>
+<li>
+<p><a href="jpa.html#GSDVG00138">Specifying the Persistence Provider for an Application</a></p>
+</li>
+<li>
+<p><a href="jpa.html#GSDVG00135">Primary Key Generation Defaults</a></p>
+</li>
+<li>
+<p><a href="jpa.html#GSDVG00136">Automatic Schema Generation</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="jpa.html#GSDVG00388">Annotations</a></p>
+</li>
+<li>
+<p><a href="jpa.html#GSDVG00389">Generation Options</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="jpa.html#GSDVG00139">Restrictions and Optimizations</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="jpa.html#GSDVG00390">Oracle Database Enhancements</a></p>
+</li>
+<li>
+<p><a href="jpa.html#GSDVG00391">Extended Persistence Context</a></p>
+</li>
+<li>
+<p><a href="jpa.html#GSDVG00392">Using @OrderBy with a Shared Session Cache</a></p>
+</li>
+<li>
+<p><a href="jpa.html#GSDVG00393">Using BLOB or CLOB Types with the Inet Oraxo JDBC Driver</a></p>
+</li>
+<li>
+<p><a href="jpa.html#GSDVG00394">Database Case Sensitivity</a></p>
+</li>
+<li>
+<p><a href="jpa.html#GSDVG00395">Sybase Finder Limitation</a></p>
+</li>
+<li>
+<p><a href="jpa.html#GSDVG00396">MySQL Database Restrictions</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="developing-web-applications"><a href="webapps.html#GSDVG00009">7 Developing Web Applications</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="webapps.html#GSDVG00140">Using Servlets</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="webapps.html#GSDVG00397">Caching Servlet Results</a></p>
+</li>
+<li>
+<p><a href="webapps.html#GSDVG00398">About the Servlet Engine</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="webapps.html#GSDVG00141">Using JavaServer Pages</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="webapps.html#GSDVG00399">JSP Tag Libraries and Standard Portable Tags</a></p>
+</li>
+<li>
+<p><a href="webapps.html#GSDVG00400">JSP Caching</a></p>
+</li>
+<li>
+<p><a href="webapps.html#GSDVG00401">Options for Compiling JSP Files</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="webapps.html#GSDVG00142">Creating and Managing Sessions</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="webapps.html#GSDVG00402">Configuring Sessions</a></p>
+</li>
+<li>
+<p><a href="webapps.html#GSDVG00403">Session Managers</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="webapps.html#GSDVG00143">Using Comet</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="webapps.html#GSDVG00404">Introduction to Comet</a></p>
+</li>
+<li>
+<p><a href="webapps.html#GSDVG00405">Grizzly Comet</a></p>
+</li>
+<li>
+<p><a href="webapps.html#GSDVG00406">Bayeux Protocol</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="webapps.html#GSDVG00144">Advanced Web Application Features</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="webapps.html#GSDVG00407">Internationalization Issues</a></p>
+</li>
+<li>
+<p><a href="webapps.html#GSDVG00408">Virtual Server Properties</a></p>
+</li>
+<li>
+<p><a href="webapps.html#GSDVG00409">Class Loader Delegation</a></p>
+</li>
+<li>
+<p><a href="webapps.html#GSDVG00410">Using the <code>default-web.xml</code> File</a></p>
+</li>
+<li>
+<p><a href="webapps.html#GSDVG00411">Configuring Logging and Monitoring in the Web Container</a></p>
+</li>
+<li>
+<p><a href="webapps.html#GSDVG00412">Configuring Idempotent URL Requests</a></p>
+</li>
+<li>
+<p><a href="webapps.html#GSDVG00413">Header Management</a></p>
+</li>
+<li>
+<p><a href="webapps.html#GSDVG00414">Configuring Valves and Catalina Listeners</a></p>
+</li>
+<li>
+<p><a href="webapps.html#GSDVG00415">Alternate Document Roots</a></p>
+</li>
+<li>
+<p><a href="webapps.html#GSDVG00416">Using a context.xml File</a></p>
+</li>
+<li>
+<p><a href="webapps.html#GSDVG00417">Enabling WebDav</a></p>
+</li>
+<li>
+<p><a href="webapps.html#GSDVG00418">Using SSI</a></p>
+</li>
+<li>
+<p><a href="webapps.html#GSDVG00419">Using CGI</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="using-enterprise-javabeans-technology"><a href="ejb.html#GSDVG00010">8 Using Enterprise JavaBeans Technology</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="ejb.html#GSDVG00145">Value Added Features</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="ejb.html#GSDVG00420">Read-Only Beans</a></p>
+</li>
+<li>
+<p><a href="ejb.html#GSDVG00421">The <code>pass-by-reference</code> Element</a></p>
+</li>
+<li>
+<p><a href="ejb.html#GSDVG00422">Pooling and Caching</a></p>
+</li>
+<li>
+<p><a href="ejb.html#GSDVG00423">Priority Based Scheduling of Remote Bean Invocations</a></p>
+</li>
+<li>
+<p><a href="ejb.html#GSDVG00424">Immediate Flushing</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="ejb.html#GSDVG00146">EJB Timer Service</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="ejb.html#GSDVG00070">To Deploy an EJB Timer to a Cluster</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="ejb.html#GSDVG00147">Using Session Beans</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="ejb.html#GSDVG00425">About the Session Bean Containers</a></p>
+</li>
+<li>
+<p><a href="ejb.html#GSDVG00426">Stateful Session Bean Failover</a></p>
+</li>
+<li>
+<p><a href="ejb.html#GSDVG00427">Session Bean Restrictions and Optimizations</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="ejb.html#GSDVG00148">Using Read-Only Beans</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="ejb.html#GSDVG00428">Read-Only Bean Characteristics and Life Cycle</a></p>
+</li>
+<li>
+<p><a href="ejb.html#GSDVG00429">Read-Only Bean Good Practices</a></p>
+</li>
+<li>
+<p><a href="ejb.html#GSDVG00430">Refreshing Read-Only Beans</a></p>
+</li>
+<li>
+<p><a href="ejb.html#GSDVG00431">Deploying Read-Only Beans</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="ejb.html#GSDVG00149">Using Message-Driven Beans</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="ejb.html#GSDVG00432">Message-Driven Bean Configuration</a></p>
+</li>
+<li>
+<p><a href="ejb.html#GSDVG00433">Message-Driven Bean Restrictions and Optimizations</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="using-container-managed-persistence"><a href="container_managed-persistence.html#GSDVG00011">9 Using Container-Managed Persistence</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00150">GlassFish Server Support for CMP</a></p>
+</li>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00151">CMP Mapping</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00434">Mapping Capabilities</a></p>
+</li>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00435">The Mapping Deployment Descriptor File</a></p>
+</li>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00436">Mapping Considerations</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00152">Automatic Schema Generation for CMP</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00437">Supported Data Types for CMP</a></p>
+</li>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00438">Generation Options for CMP</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00153">Schema Capture</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00439">Automatic Database Schema Capture</a></p>
+</li>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00440">Using the <code>capture-schema</code> Utility</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00154">Configuring the CMP Resource</a></p>
+</li>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00155">Performance-Related Features</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00441">Version Column Consistency Checking</a></p>
+</li>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00442">Relationship Prefetching</a></p>
+</li>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00443">Read-Only Beans</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00156">Default Fetch Group Flags</a></p>
+</li>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00157">Configuring Queries for 1.1 Finders</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00444">About JDOQL Queries</a></p>
+</li>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00445">Query Filter Expression</a></p>
+</li>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00446">Query Parameters</a></p>
+</li>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00447">Query Variables</a></p>
+</li>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00448">JDOQL Examples</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00158">CMP Restrictions and Optimizations</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00449">Disabling ORDER BY Validation</a></p>
+</li>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00450">Setting the Heap Size on DB2</a></p>
+</li>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00451">Eager Loading of Field State</a></p>
+</li>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00452">Restrictions on Remote Interfaces</a></p>
+</li>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00453">PostgreSQL Case Insensitivity</a></p>
+</li>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00454">No Support for <code>lock-when-loaded</code> on Sybase</a></p>
+</li>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00455">Sybase Finder Limitation</a></p>
+</li>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00456">Date and Time Fields</a></p>
+</li>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00457">Set <code>RECURSIVE_TRIGGERS</code> to <code>false</code> on MSSQL</a></p>
+</li>
+<li>
+<p><a href="container_managed-persistence.html#GSDVG00458">MySQL Database Restrictions</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="developing-java-clients"><a href="java-clients.html#GSDVG00012">10 Developing Java Clients</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="java-clients.html#GSDVG00159">Introducing the Application Client Container</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="java-clients.html#GSDVG00459">ACC Security</a></p>
+</li>
+<li>
+<p><a href="java-clients.html#GSDVG00460">ACC Naming</a></p>
+</li>
+<li>
+<p><a href="java-clients.html#GSDVG00461">Application Client Annotation</a></p>
+</li>
+<li>
+<p><a href="java-clients.html#GSDVG00462">Java Web Start</a></p>
+</li>
+<li>
+<p><a href="java-clients.html#GSDVG00463">Application Client JAR File</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="java-clients.html#GSDVG00160">Developing Clients Using the ACC</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="java-clients.html#GSDVG00072">To Access an EJB Component From an Application Client</a></p>
+</li>
+<li>
+<p><a href="java-clients.html#GSDVG00073">To Access a JMS Resource From an Application Client</a></p>
+</li>
+<li>
+<p><a href="java-clients.html#GSDVG00464">Using Java Web Start</a></p>
+</li>
+<li>
+<p><a href="java-clients.html#GSDVG00465">Using the Embeddable ACC</a></p>
+</li>
+<li>
+<p><a href="java-clients.html#GSDVG00466">Running an Application Client Using the <code>appclient</code> Script</a></p>
+</li>
+<li>
+<p><a href="java-clients.html#GSDVG00467">Using the <code>package-appclient</code> Script</a></p>
+</li>
+<li>
+<p><a href="java-clients.html#GSDVG00468">The <code>client.policy</code> File</a></p>
+</li>
+<li>
+<p><a href="java-clients.html#GSDVG00469">Using RMI/IIOP Over SSL</a></p>
+</li>
+<li>
+<p><a href="java-clients.html#GSDVG00470">Connecting to a Remote EJB Module Through a Firewall</a></p>
+</li>
+<li>
+<p><a href="java-clients.html#GSDVG00471">Specifying a Splash Screen</a></p>
+</li>
+<li>
+<p><a href="java-clients.html#GSDVG00472">Setting Login Retries</a></p>
+</li>
+<li>
+<p><a href="java-clients.html#GSDVG00473">Using Libraries with Application Clients</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="java-clients.html#GSDVG00161">Developing Clients Without the ACC</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="java-clients.html#GSDVG00074">To access an EJB component from a stand-alone client</a></p>
+</li>
+<li>
+<p><a href="java-clients.html#GSDVG00075">To access an EJB component from a server-side module</a></p>
+</li>
+<li>
+<p><a href="java-clients.html#GSDVG00076">To access a JMS resource from a stand-alone client</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="developing-connectors"><a href="connectors.html#GSDVG00013">11 Developing Connectors</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="connectors.html#GSDVG00162">Connector Support in the GlassFish Server</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="connectors.html#GSDVG00474">Connector Architecture for JMS and JDBC</a></p>
+</li>
+<li>
+<p><a href="connectors.html#GSDVG00475">Connector Configuration</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="connectors.html#GSDVG00163">Advanced Connector Configuration Options</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="connectors.html#GSDVG00476">Thread Associations</a></p>
+</li>
+<li>
+<p><a href="connectors.html#GSDVG00477">Security Maps</a></p>
+</li>
+<li>
+<p><a href="connectors.html#GSDVG00478">Work Security Maps</a></p>
+</li>
+<li>
+<p><a href="connectors.html#GSDVG00479">Overriding Configuration Properties</a></p>
+</li>
+<li>
+<p><a href="connectors.html#GSDVG00480">Testing a Connector Connection Pool</a></p>
+</li>
+<li>
+<p><a href="connectors.html#GSDVG00481">Flushing a Connector Connection Pool</a></p>
+</li>
+<li>
+<p><a href="connectors.html#GSDVG00482">Handling Invalid Connections</a></p>
+</li>
+<li>
+<p><a href="connectors.html#GSDVG00483">Setting the Shutdown Timeout</a></p>
+</li>
+<li>
+<p><a href="connectors.html#GSDVG00484">Specifying the Class Loading Policy</a></p>
+</li>
+<li>
+<p><a href="connectors.html#GSDVG00485">Using Last Agent Optimization of Transactions</a></p>
+</li>
+<li>
+<p><a href="connectors.html#GSDVG00486">Disabling Pooling for a Connection</a></p>
+</li>
+<li>
+<p><a href="connectors.html#GSDVG00487">Using Application-Scoped Connectors</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="connectors.html#GSDVG00164">Inbound Communication Support</a></p>
+</li>
+<li>
+<p><a href="connectors.html#GSDVG00165">Outbound Communication Support</a></p>
+</li>
+<li>
+<p><a href="connectors.html#GSDVG00166">Configuring a Message Driven Bean to Use a Resource Adapter</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="developing-lifecycle-listeners"><a href="lifecycle-listeners.html#GSDVG00014">12 Developing Lifecycle Listeners</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="lifecycle-listeners.html#GSDVG00167">Server Life Cycle Events</a></p>
+</li>
+<li>
+<p><a href="lifecycle-listeners.html#GSDVG00168">The LifecycleListener Interface</a></p>
+</li>
+<li>
+<p><a href="lifecycle-listeners.html#GSDVG00169">The <code>LifecycleEvent</code> Class</a></p>
+</li>
+<li>
+<p><a href="lifecycle-listeners.html#GSDVG00170">The Server Lifecycle Event Context</a></p>
+</li>
+<li>
+<p><a href="lifecycle-listeners.html#GSDVG00171">Deploying a Lifecycle Module</a></p>
+</li>
+<li>
+<p><a href="lifecycle-listeners.html#GSDVG00172">Considerations for Lifecycle Modules</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="developing-osgi-enabled-java-ee-applications"><a href="osgi.html#GSDVG00015">13 Developing OSGi-enabled Java EE Applications</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="osgi.html#GSDVG00173">Overview of OSGi Application and GlassFish Server</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="osgi.html#GSDVG00488">Benefits of Using OSGi in Enterprise Java Applications</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="osgi.html#GSDVG00174">Developing OSGi Application Bundles for GlassFish Server</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="osgi.html#GSDVG00489">Developing Plain OSGi Bundles</a></p>
+</li>
+<li>
+<p><a href="osgi.html#GSDVG00490">Developing Web Application Bundles</a></p>
+</li>
+<li>
+<p><a href="osgi.html#GSDVG00491">Developing EJB Application Bundles</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="osgi.html#GSDVG00175">Deploying OSGi Bundles in GlassFish Server</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="part-iii"><a href="part-services-and-apis.html#GSDVG00047">Part III +</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="part-services-and-apis.html#using-services-and-apis">Using Services and APIs</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="using-the-jdbc-api-for-database-access"><a href="jdbc.html#GSDVG00017">14 Using the JDBC API for Database Access</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="jdbc.html#GSDVG00182">Statements</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="jdbc.html#GSDVG00495">Using an Initialization Statement</a></p>
+</li>
+<li>
+<p><a href="jdbc.html#GSDVG00496">Setting a Statement Timeout</a></p>
+</li>
+<li>
+<p><a href="jdbc.html#GSDVG00497">Statement Leak Detection and Leaked Statement Reclamation</a></p>
+</li>
+<li>
+<p><a href="jdbc.html#GSDVG00498">Statement Caching</a></p>
+</li>
+<li>
+<p><a href="jdbc.html#GSDVG00499">Statement Tracing</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="jdbc.html#GSDVG00183">Connections</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="jdbc.html#GSDVG00500">Transparent Pool Reconfiguration</a></p>
+</li>
+<li>
+<p><a href="jdbc.html#GSDVG00501">Disabling Pooling</a></p>
+</li>
+<li>
+<p><a href="jdbc.html#GSDVG00502">Associating Connections with Threads</a></p>
+</li>
+<li>
+<p><a href="jdbc.html#GSDVG00503">Custom Connection Validation</a></p>
+</li>
+<li>
+<p><a href="jdbc.html#GSDVG00504">Sharing Connections</a></p>
+</li>
+<li>
+<p><a href="jdbc.html#GSDVG00505">Marking Bad Connections</a></p>
+</li>
+<li>
+<p><a href="jdbc.html#GSDVG00506">Handling Invalid Connections</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="jdbc.html#GSDVG00184">Connection Wrapping</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="jdbc.html#GSDVG00507">Wrapping Connections</a></p>
+</li>
+<li>
+<p><a href="jdbc.html#GSDVG00508">Obtaining a Physical Connection From a Wrapped Connection</a></p>
+</li>
+<li>
+<p><a href="jdbc.html#GSDVG00509">Using the <code>Connection.unwrap()</code> Method</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="jdbc.html#GSDVG00185">Allowing Non-Component Callers</a></p>
+</li>
+<li>
+<p><a href="jdbc.html#GSDVG00186">Using Application-Scoped Resources</a></p>
+</li>
+<li>
+<p><a href="jdbc.html#GSDVG00187">Restrictions and Optimizations</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="jdbc.html#GSDVG00510">Disabling Stored Procedure Creation on Sybase</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="using-the-transaction-service"><a href="transaction-service.html#GSDVG00018">15 Using the Transaction Service</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="transaction-service.html#GSDVG00188">Handling Transactions with Databases</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="transaction-service.html#GSDVG00511">Using JDBC Transaction Isolation Levels</a></p>
+</li>
+<li>
+<p><a href="transaction-service.html#GSDVG00512">Using Non-Transactional Connections</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="transaction-service.html#GSDVG00189">Handling Transactions with Enterprise Beans</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="transaction-service.html#GSDVG00513">Flat Transactions</a></p>
+</li>
+<li>
+<p><a href="transaction-service.html#GSDVG00514">Global and Local Transactions</a></p>
+</li>
+<li>
+<p><a href="transaction-service.html#GSDVG00515">Commit Options</a></p>
+</li>
+<li>
+<p><a href="transaction-service.html#GSDVG00516">Bean-Level Container-Managed Transaction Timeouts</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="transaction-service.html#GSDVG00190">Handling Transactions with the Java Message Service</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="transaction-service.html#GSDVG00517">Transactions and Non-Persistent Messages</a></p>
+</li>
+<li>
+<p><a href="transaction-service.html#GSDVG00518">Using the ConfigurableTransactionSupport Interface</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="transaction-service.html#GSDVG00191">The Transaction Manager, the Transaction Synchronization Registry, and <code>UserTransaction</code></a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="using-the-java-naming-and-directory-interface"><a href="jndi.html#GSDVG00019">16 Using the Java Naming and Directory Interface</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="jndi.html#GSDVG00192">Accessing the Naming Context</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="jndi.html#GSDVG560">Portable Global JNDI Names</a></p>
+</li>
+<li>
+<p><a href="jndi.html#GSDVG00519">GlassFish Server V2 Vendor-Specific Global JNDI Names</a></p>
+</li>
+<li>
+<p><a href="jndi.html#GSDVG00526">Disabling GlassFish Server V2 JNDI Names</a></p>
+</li>
+<li>
+<p><a href="jndi.html#GSDVG00520">Accessing EJB Components Using the <code>CosNaming</code> Naming Context</a></p>
+</li>
+<li>
+<p><a href="jndi.html#GSDVG00521">Accessing EJB Components in a Remote GlassFish Server</a></p>
+</li>
+<li>
+<p><a href="jndi.html#GSDVG00522">Naming Environment for Lifecycle Modules</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="jndi.html#GSDVG00193">Configuring Resources</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="jndi.html#GSDVG00523">External JNDI Resources</a></p>
+</li>
+<li>
+<p><a href="jndi.html#GSDVG00524">Custom Resources</a></p>
+</li>
+<li>
+<p><a href="jndi.html#GSDVG00525">Built-in Factories for Custom Resources</a></p>
+</li>
+<li>
+<p><a href="jndi.html#GSDVG00527">Using Application-Scoped Resources</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="jndi.html#GSDVG00194">Using a Custom <code>jndi.properties</code> File</a></p>
+</li>
+<li>
+<p><a href="jndi.html#GSDVG00195">Mapping References</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="using-the-java-message-service"><a href="jms.html#GSDVG00020">17 Using the Java Message Service</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="jms.html#GSDVG00196">Using Application-Scoped JMS Resources</a></p>
+</li>
+<li>
+<p><a href="jms.html#GSDVG00197">Load-Balanced Message Inflow</a></p>
+</li>
+<li>
+<p><a href="jms.html#GSDVG00198">Authentication With <code>ConnectionFactory</code></a></p>
+</li>
+<li>
+<p><a href="jms.html#GSDVG00199">Delivering SOAP Messages Using the JMS API</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="jms.html#GSDVG00077">To Send SOAP Messages Using the JMS API</a></p>
+</li>
+<li>
+<p><a href="jms.html#GSDVG00078">To Receive SOAP Messages Using the JMS API</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="using-the-jakarta-mail-api"><a href="mail.html#GSDVG00021">18 Using the Jakarta Mail API</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="mail.html#GSDVG00200">Introducing Jakarta Mail</a></p>
+</li>
+<li>
+<p><a href="mail.html#GSDVG00201">Creating a Jakarta Mail Session</a></p>
+</li>
+<li>
+<p><a href="mail.html#GSDVG00202">Jakarta Mail Session Properties</a></p>
+</li>
+<li>
+<p><a href="mail.html#GSDVG00203">Looking Up a Jakarta Mail Session</a></p>
+</li>
+<li>
+<p><a href="mail.html#GSDVG00204">Sending and Reading Messages Using Jakarta Mail</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="mail.html#GSDVG00079">To Send a Message Using Jakarta Mail</a></p>
+</li>
+<li>
+<p><a href="mail.html#GSDVG00080">To Read a Message Using Jakarta Mail</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="mail.html#GSDVG00205">Using Application-Scoped Jakarta Mail Resources</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+
+		<td align="left">
+		<a href="title.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

@@ -1,0 +1,1284 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Administering Transactions</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Administering Transactions</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="jndi.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="part-appendixes.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSADG00022"></a><a id="ablsn"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="administering-transactions">19 Administering Transactions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter discusses how to manage the transaction service for the
+GlassFish Server Open Source Edition environment by using the <code>asadmin</code>
+command-line utility. Instructions for manually recovering transactions
+are also included.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ablso">About Transactions</a></p>
+</li>
+<li>
+<p><a href="#beanp">Configuring the Transaction Service</a></p>
+</li>
+<li>
+<p><a href="#giubd">Managing the Transaction Service for Rollbacks</a></p>
+</li>
+<li>
+<p><a href="#gjjpy">Recovering Transactions</a></p>
+</li>
+<li>
+<p><a href="#beanq">Transaction Logging</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Instructions for accomplishing the tasks in this chapter by using the
+Administration Console are contained in the Administration Console
+online help.</p>
+</div>
+<div class="paragraph">
+<p>For more information about the Java Transaction API (JTA) and Java
+Transaction Service (JTS), see the following sites:
+<code>http://www.oracle.com/technetwork/java/javaee/tech/jta-138684.html</code> and
+<code>http://www.oracle.com/technetwork/java/javaee/tech/jts-140022.html</code>.</p>
+</div>
+<div class="paragraph">
+<p>You might also want to read
+"https://javaee.github.io/tutorial/transactions.html[Transactions]" in
+The Java EE 8 Tutorial.</p>
+</div>
+<div class="paragraph">
+<p><a id="ablso"></a><a id="GSADG00605"></a><a id="about-transactions"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_about_transactions">About Transactions</h3>
+<div class="paragraph">
+<p>A transaction is a series of discreet actions in an application that
+must all complete successfully. By enclosing one or more actions in an
+indivisible unit of work, a transaction ensures data integrity and
+consistency. If all actions do not complete, the changes are rolled
+back.</p>
+</div>
+<div class="paragraph">
+<p>For example, to transfer funds from a checking account to a savings
+account, the following steps typically occur:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Check to see if the checking account has enough money to cover the
+transfer.</p>
+</li>
+<li>
+<p>Debit the amount from the checking account.</p>
+</li>
+<li>
+<p>Credit the amount to the savings account.</p>
+</li>
+<li>
+<p>Record the transfer to the checking account log.</p>
+</li>
+<li>
+<p>Record the transfer to the savings account log.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>These steps together are considered a single transaction.</p>
+</div>
+<div class="paragraph">
+<p>If all the steps complete successfully, the transaction is committed .
+If any step fails, all changes from the preceding steps are rolled back,
+and the checking account and savings account are returned to the states
+they were in before the transaction started. This type of event is
+called a rollback. A normal transaction ends in either a committed state
+or a rolled back state.</p>
+</div>
+<div class="paragraph">
+<p>The following elements contribute to reliable transaction processing by
+implementing various APIs and functionalities:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Transaction Manager. Provides the services and management functions
+required to support transaction demarcation, transactional resource
+management, synchronization, and transaction context propagation.</p>
+</li>
+<li>
+<p>GlassFish Server. Provides the infrastructure required to support the
+application runtime environment that includes transaction state
+management.</p>
+</li>
+<li>
+<p>Resource Manager. Through a resource adapter, the resource manager
+provides the application access to resources. The resource manager
+participates in distributed transactions by implementing a transaction
+resource interface used by the transaction manager to communicate
+transaction association, transaction completion, and recovery work. An
+example of such a resource manager is a relational database server.</p>
+</li>
+<li>
+<p>Resource Adapter. A system-level software library is used by GlassFish
+Server or a client to connect to a resource manager. A resource adapter
+is typically specific to a resource manager. The resource adapter is
+available as a library and is used within the address space of the
+client using it. An example of such a resource adapter is a Java
+Database Connectivity (JDBC) driver. For information on supported JDBC
+drivers, see <a href="jdbc.html#beamw">Configuration Specifics for JDBC
+Drivers</a>.</p>
+</li>
+<li>
+<p>Transactional User Application. In the GlassFish Server environment,
+the transactional user application uses Java Naming and Directory
+Interface (JNDI) to look up transactional data sources and, optionally,
+the user transaction). The application might use declarative transaction
+attribute settings for enterprise beans, or explicit programmatic
+transaction demarcation. For more information, see "<a href="../application-development-guide/transaction-service.html#GSDVG00191">The
+Transaction Manager, the Transaction Synchronization Registry, and
+UserTransaction</a>" in GlassFish Server Open Source Edition Application
+Development Guide.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beann">Transaction Resource Managers</a></p>
+</li>
+<li>
+<p><a href="#beano">Transaction Scope</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beann"></a><a id="GSADG00785"></a><a id="transaction-resource-managers"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_transaction_resource_managers">Transaction Resource Managers</h4>
+<div class="paragraph">
+<p>There are three types of transaction resource managers:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Databases - Use of transactions prevents databases from being left in
+inconsistent states due to incomplete updates. For information about
+JDBC transaction isolation levels, see "<a href="../application-development-guide/transaction-service.html#GSDVG00511">Using JDBC
+Transaction Isolation Levels</a>" in GlassFish Server Open Source Edition
+Application Development Guide.<br>
+The GlassFish Server supports a variety of JDBC XA drivers. For a list
+of the JDBC drivers currently supported by the GlassFish Server, see the
+<a href="../release-notes/toc.html#GSRLN">GlassFish Server Open Source Edition Release Notes</a>. For
+configurations of supported and other drivers, see
+<a href="jdbc.html#beamw">Configuration Specifics for JDBC Drivers</a>.</p>
+</li>
+<li>
+<p>Java Message Service (JMS) Providers - Use of transactions ensures
+that messages are reliably delivered. The GlassFish Server is integrated
+with Open Message Queue, a fully capable JMS provider. For more
+information about transactions and the JMS API, see
+<a href="jms.html#abljw">Administering the Java Message Service (JMS)</a>.</p>
+</li>
+<li>
+<p>J2EE Connector Architecture (CA) components - Use of transactions
+prevents legacy EIS systems from being left in inconsistent states due
+to incomplete updates. For more information about connectors, see
+<a href="connectors.html#abllp">Administering EIS Connectivity</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beano"></a><a id="GSADG00786"></a><a id="transaction-scope"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_transaction_scope">Transaction Scope</h4>
+<div class="paragraph">
+<p>A local transaction involves only one non-XA resource and requires that
+all participating application components execute within one process.
+Local transaction optimization is specific to the resource manager and
+is transparent to the Java EE application.</p>
+</div>
+<div class="paragraph">
+<p>In the GlassFish Server, a JDBC resource is non-XA if it meets either of
+the following criteria:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In the JDBC connection pool configuration, the DataSource class does
+not implement the javax.sql.XADataSource interface.</p>
+</li>
+<li>
+<p>The Resource Type setting is not set to javax.sql.XADataSource .</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A transaction remains local if the following conditions remain true:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>One and only one non-XA resource is used. If any additional non-XA
+resource is used, the transaction is aborted, because the transaction
+manager must use XA protocol to commit two or more resources.</p>
+</li>
+<li>
+<p>No transaction importing or exporting occurs.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Transactions that involve multiple resources or multiple participant
+processes are distributed or global transactions. A global transaction
+can involve one non-XA resource if last agent optimization is enabled.
+Otherwise, all resources must be XA. The <code>use-last-agent-optimization</code>
+property is set to <code>true</code> by default. For details about how to set this
+property, see <a href="#beanp">Configuring the Transaction Service</a>.</p>
+</div>
+<div class="paragraph">
+<p>If only one XA resource is used in a transaction, one-phase commit
+occurs, otherwise the transaction is coordinated with a two-phase commit
+protocol.</p>
+</div>
+<div class="paragraph">
+<p>A two-phase commit protocol between the transaction manager and all the
+resources enlisted for a transaction ensures that either all the
+resource managers commit the transaction or they all abort. When the
+application requests the commitment of a transaction, the transaction
+manager issues a <code>PREPARE_TO_COMMIT</code> request to all the resource
+managers involved. Each of these resources can in turn send a reply
+indicating whether it is ready for commit (<code>PREPARED</code>) or not (<code>NO</code>).
+Only when all the resource managers are ready for a commit does the
+transaction manager issue a commit request (<code>COMMIT</code>) to all the
+resource managers. Otherwise, the transaction manager issues a rollback
+request (<code>ABORT</code>) and the transaction is rolled back.</p>
+</div>
+<div class="paragraph">
+<p><a id="beanp"></a><a id="GSADG00606"></a><a id="configuring-the-transaction-service"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuring_the_transaction_service">Configuring the Transaction Service</h3>
+<div class="paragraph">
+<p>You can configure the transaction service in the GlassFish Server in the
+following ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>To configure the transaction service using the Administration Console,
+open the Transaction Service component under the relevant configuration.
+For details, click the Help button in the Administration Console.</p>
+</li>
+<li>
+<p>To configure the transaction service, use the <a href="../reference-manual/set.html#GSRFM00226"><code>set</code></a>
+subcommand to set the following attributes.<br>
+The following examples show the <code>server-config</code> configuration, but
+values for any configuration can be set. For example, if you create a
+cluster named <code>cluster1</code> and a configuration named <code>cluster1-config</code> is
+automatically created for it, you can use <code>cluster1-config</code> in the <code>set</code>
+subcommand to get the transaction service settings for that cluster.<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>server-config.transaction-service.automatic-recovery = false
+server-config.transaction-service.heuristic-decision = rollback
+server-config.transaction-service.keypoint-interval = 2048
+server-config.transaction-service.retry-timeout-in-seconds = 600
+server-config.transaction-service.timeout-in-seconds = 0
+server-config.transaction-service.tx-log-dir = domain-dir/logs</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can also set these properties:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server-config.transaction-service.property.oracle-xa-recovery-workaround = true
+server-config.transaction-service.property.sybase-xa-recovery-workaround = false
+server-config.transaction-service.property.disable-distributed-transaction-logging = false
+server-config.transaction-service.property.xaresource-txn-timeout = 0
+server-config.transaction-service.property.pending-txn-cleanup-interval = -1
+server-config.transaction-service.property.use-last-agent-optimization = true
+server-config.transaction-service.property.delegated-recovery = false
+server-config.transaction-service.property.wait-time-before-recovery-insec = 60
+server-config.transaction-service.property.purge-cancelled-transactions-after = 0
+server-config.transaction-service.property.commit-one-phase-during-recovery = false
+server-config.transaction-service.property.add-wait-point-during-recovery = 0
+server-config.transaction-service.property.db-logging-resource = jdbc/TxnDS
+server-config.transaction-service.property.xa-servername = myserver</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Default property values are shown where they exist. For
+<code>db-logging-resource</code> and <code>xa-servername</code>, typical values are shown.
+Values that are not self-explanatory are as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>xaresource-txn-timeout</code> default of <code>0</code> means there is no
+timeout. The units are seconds.</p>
+</li>
+<li>
+<p>The <code>pending-txn-cleanup-interval</code> default of <code>-1</code> means the periodic
+recovery thread doesn&#8217;t run. The units are seconds.</p>
+</li>
+<li>
+<p>The <code>purge-cancelled-transactions-after</code> default of <code>0</code> means
+cancelled transactions are not purged. The units are the number of
+cancellations in between purging attempts.</p>
+</li>
+<li>
+<p>The <code>add-wait-point-during-recovery</code> property does not have a default
+value. If this property is unset, recovery does not wait. The units are
+seconds.</p>
+</li>
+<li>
+<p>The <code>db-logging-resource</code> property does not have a default value. It
+is unset by default. However, if you set <code>db-logging-resource</code> to an
+empty value, the value used is <code>jdbc/TxnDS</code>.</p>
+</li>
+<li>
+<p>The <code>xa-servername</code> property does not have a default value. Use this
+property to override server names that can cause errors.<br>
+You can use the <a href="../reference-manual/get.html#GSRFM00139"><code>get</code></a> subcommand to list all the
+transaction service attributes and the properties that have been set.
+For details, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition
+Reference Manual</a>.<br>
+Changing <code>keypoint-interval</code>, <code>retry-timeout-in-seconds</code>, or
+<code>timeout-in-seconds</code> does not require a server restart. Changing other
+attributes or properties requires a server restart.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>You can also set the following system properties:<br></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>ALLOW_MULTIPLE_ENLISTS_DELISTS=false
+JTA_RESOURCE_TABLE_MAX_ENTRIES=8192
+JTA_RESOURCE_TABLE_DEFAULT_LOAD_FACTOR=0.75f</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>JTA_RESOURCE_TABLE_DEFAULT_LOAD_FACTOR</code> default is the default
+<code>Map</code> resizing value.</p>
+</div>
+<div class="paragraph">
+<p><a id="giubd"></a><a id="GSADG00607"></a><a id="managing-the-transaction-service-for-rollbacks"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_managing_the_transaction_service_for_rollbacks">Managing the Transaction Service for Rollbacks</h3>
+<div class="paragraph">
+<p>You can roll back a single transaction by using the <code>asadmin</code>
+subcommands described in this section. To do so, the transaction service
+must be stopped (and later restarted), allowing you to see the active
+transactions and correctly identify the one that needs to be rolled
+back.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#giufn">To Stop the Transaction Service</a></p>
+</li>
+<li>
+<p><a href="#giugk">To Roll Back a Transaction</a></p>
+</li>
+<li>
+<p><a href="#giuet">To Restart the Transaction Service</a></p>
+</li>
+<li>
+<p><a href="#gkrbo">Determining Local Transaction Completion at Shutdown</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="giufn"></a><a id="GSADG00513"></a><a id="to-stop-the-transaction-service"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_stop_the_transaction_service">To Stop the Transaction Service</h4>
+<div class="paragraph">
+<p>Use the <code>freeze-transaction-service</code> subcommand in remote mode to stop
+the transaction service. When the transaction service is stopped, all
+in-flight transactions are immediately suspended. You must stop the
+transaction service before rolling back any in-flight transactions.</p>
+</div>
+<div class="paragraph">
+<p>Running this subcommand on a stopped transaction subsystem has no
+effect. The transaction service remains suspended until you restart it
+by using the <code>unfreeze-transaction-service</code> subcommand.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Stop the transaction service by using the
+<a href="../reference-manual/freeze-transaction-service.html#GSRFM00137"><code>freeze-transaction-service</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00293"></a><a id="giufq"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 19-1 Stopping the Transaction Service</p>
+</div>
+<div class="paragraph">
+<p>This example stops the transaction service.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; freeze-transaction-service --target instance1
+Command freeze-transaction-service executed successfully</code></pre>
+</div>
+</div>
+<div id="GSADG1038" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help freeze-transaction-service</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="giugk"></a><a id="GSADG00514"></a><a id="to-roll-back-a-transaction"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_roll_back_a_transaction">To Roll Back a Transaction</h4>
+<div class="paragraph">
+<p>In some situations, you might want to roll back a particular
+transaction. Before you can roll back a transaction, you must first stop
+the transaction service so that transaction operations are suspended.
+Use the <code>rollback-transaction</code> subcommand in remote mode to roll back a
+specific transaction.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Enable monitoring using the <code>set</code> subcommand. For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; set cluster1-config.monitoring-service.module-monitoring-levels.transaction-service=HIGH</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Use the <code>freeze-transaction-service</code> subcommand to halt in-process
+transactions. See <a href="#giufn">To Stop the Transaction Service</a>.</p>
+</li>
+<li>
+<p>Identify the ID of the transaction you want to roll back.<br>
+To see a list of IDs of active transactions, use the <code>get</code> subcommand
+with the <code>--monitor</code> option to get the monitoring data for the
+<code>activeids</code> statistic. See <a href="monitoring.html#ablvl">Transaction Service
+Statistics</a>. For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; get --monitor instance1.server.transaction-service.activeids-current</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Roll back the transaction by using the
+<a href="../reference-manual/rollback-transaction.html#GSRFM00223"><code>rollback-transaction</code></a> subcommand.<br>
+The transaction is not rolled back at the time of this command&#8217;s
+execution, but only marked for rollback. The transaction is rolled back
+when it is completed.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00294"></a><a id="giufy"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 19-2 Rolling Back a Transaction</p>
+</div>
+<div class="paragraph">
+<p>This example rolls back the transaction with transaction ID
+<code>0000000000000001_00</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; rollback-transaction --target instance1 0000000000000001_00
+Command rollback-transaction executed successfully</code></pre>
+</div>
+</div>
+<div id="GSADG1039" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help rollback-transaction</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="giuet"></a><a id="GSADG00515"></a><a id="to-restart-the-transaction-service"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_restart_the_transaction_service">To Restart the Transaction Service</h4>
+<div class="paragraph">
+<p>Use the <code>unfreeze-transaction-service</code> subcommand in remote mote to
+resume all the suspended in-flight transactions. Run this subcommand to
+restart the transaction service after it has been frozen.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Restart the suspended transaction service by using the
+<a href="../reference-manual/unfreeze-transaction-service.html#GSRFM00245"><code>unfreeze-transaction-service</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00295"></a><a id="giuef"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 19-3 Restarting the Transaction Service</p>
+</div>
+<div class="paragraph">
+<p>This example restarts the transaction service after it has been frozen.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; unfreeze-transaction-service --target instance1
+Command unfreeze-transaction-service executed successfully</code></pre>
+</div>
+</div>
+<div id="GSADG1040" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help unfreeze-transaction-service</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkrbo"></a><a id="GSADG00787"></a><a id="determining-local-transaction-completion-at-shutdown"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_determining_local_transaction_completion_at_shutdown">Determining Local Transaction Completion at Shutdown</h4>
+<div class="paragraph">
+<p>When you shut down a GlassFish Server instance, all database connections
+are closed. When an Oracle JDBC driver-based database connection is
+closed in the middle of a non-XA transaction, all pending changes are
+committed. Other databases usually roll back pending changes when a
+connection is closed without being explicitly committed. To determine
+the exact behavior for your database, refer to the documentation from
+your JDBC driver vendor.</p>
+</div>
+<div class="paragraph">
+<p>To explicitly specify whether GlassFish Server commits or rolls back
+non-XA transactions at server shutdown, set the
+<code>com.sun.enterprise.in-progress-local-transaction.completion-mode</code> JVM
+option to either <code>commit</code> or <code>rollback</code> using the
+<a href="../reference-manual/create-jvm-options.html#GSRFM00042"><code>create-jvm-options</code></a> subcommand. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-jvm-options -Dcom.sun.enterprise.in-progress-local-transaction.completion-mode=rollback</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gjjpy"></a><a id="GSADG00608"></a><a id="recovering-transactions"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_recovering_transactions">Recovering Transactions</h3>
+<div class="paragraph">
+<p>There are some situations where the commit or rollback operations might
+be interrupted, typically because the server crashed or a resource
+manager crashed. Crash situations can leave some transactions stranded
+between steps. GlassFish Server is designed to recover from these
+failures. If the failed transaction spans multiple servers, the server
+that started the transaction can contact the other servers to get the
+outcome of the transaction. If the other servers are unreachable, the
+transaction uses heuristic decision information to determine the
+outcome.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkoen">Automatic Transaction Recovery</a></p>
+</li>
+<li>
+<p><a href="#giuhe">To Manually Recover Transactions</a></p>
+</li>
+<li>
+<p><a href="#gaxim">Distributed Transaction Recovery</a></p>
+</li>
+<li>
+<p><a href="#gaxig">Recovery Workarounds and Limitations</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkoen"></a><a id="GSADG00788"></a><a id="automatic-transaction-recovery"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_automatic_transaction_recovery">Automatic Transaction Recovery</h4>
+<div class="paragraph">
+<p>GlassFish Server can perform automatic recovery in these ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Pending transactions are completed upon server startup if
+<code>automatic-recovery</code> is set to <code>true</code>.</p>
+</li>
+<li>
+<p>Periodic automatic recovery is performed by a background thread if the
+<code>pending-txn-cleanup-interval</code> property is set to a positive value.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Changing these settings requires a server restart. For more information
+about how to change these settings, see <a href="#beanp">Configuring the
+Transaction Service</a>.</p>
+</div>
+<div class="paragraph">
+<p>If commit fails during recovery, a message is written to the server log.</p>
+</div>
+<div class="paragraph">
+<p><a id="giuhe"></a><a id="GSADG00516"></a><a id="to-manually-recover-transactions"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_manually_recover_transactions">To Manually Recover Transactions</h4>
+<div class="paragraph">
+<p>Use the <code>recover-transactions</code> subcommand in remote mode to manually
+recover transactions that were pending when a resource or a server
+instance failed.</p>
+</div>
+<div class="paragraph">
+<p>For a standalone server, do not use manual transaction recovery to
+recover transactions after a server failure. For a standalone server,
+manual transaction recovery can recover transactions only when a
+resource fails, but the server is still running. If a standalone server
+fails, only the full startup recovery process can recover transactions
+that were pending when the server failed.</p>
+</div>
+<div class="paragraph">
+<p>For an installation of multiple server instances, you can use manual
+transaction recovery from a surviving server instance to recover
+transactions after a server failure. For manual transaction recovery to
+work properly, transaction logs must be stored on a shared file system
+that is accessible to all server instances. See <a href="#beanq">Transaction
+Logging</a>.</p>
+</div>
+<div class="paragraph">
+<p>When you execute <code>recover-transactions</code> in non-delegated mode, you can
+recover transactions that didn&#8217;t complete two-phase commit because of a
+resource crash. To use manual transaction recovery in this way, the
+following conditions must be met:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>recover-transactions</code> command should be executed after the
+resource is restarted.</p>
+</li>
+<li>
+<p>Connection validation should be enabled so the connection pool is
+refreshed when the resource is accessed after the recovery. For more
+information, see "<a href="../performance-tuning-guide/tuning-glassfish.html#GSPTG00030">Connection Validation Settings</a>" in
+GlassFish Server Open Source Edition Performance Tuning Guide.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If commit fails during recovery, a message is written to the server log.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>A JMS resource crash is handled the same way as any other resource.</p>
+</div>
+<div class="paragraph">
+<p>You can list in-doubt Open Message Queue transactions using the
+<code>imqcmd list txn</code> subcommand. For more information, see
+"o<a href="GMADG00241">Managing Transactions</a>" in Open Message Queue
+Administration Guide.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Manually recover transactions by using the
+<a href="../reference-manual/recover-transactions.html#GSRFM00216"><code>recover-transactions</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00296"></a><a id="giugn"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 19-4 Manually Recovering Transactions</p>
+</div>
+<div class="paragraph">
+<p>This example performs manual recovery of transactions on <code>instance1</code>,
+saving them to <code>instance2</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin recover-transactions --target instance2 instance1
+Transaction recovered.</code></pre>
+</div>
+</div>
+<div id="GSADG1041" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help recover-transactions</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gaxim"></a><a id="GSADG00789"></a><a id="distributed-transaction-recovery"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_distributed_transaction_recovery">Distributed Transaction Recovery</h4>
+<div class="paragraph">
+<p>To enable cluster-wide automatic recovery, you must first facilitate
+storing of transaction logs in a shared file system. See
+<a href="#beanq">Transaction Logging</a>.</p>
+</div>
+<div class="paragraph">
+<p>Next, you must set the transaction service&#8217;s <code>delegated-recovery</code>
+property to <code>true</code> (the default is <code>false</code>). For information about
+setting <code>tx-log-dir</code> and <code>delegated-recovery</code>, see
+<a href="#beanp">Configuring the Transaction Service</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gaxig"></a><a id="GSADG00790"></a><a id="recovery-workarounds-and-limitations"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_recovery_workarounds_and_limitations">Recovery Workarounds and Limitations</h4>
+<div class="paragraph">
+<p>The GlassFish Server provides workarounds for some known issues with
+transaction recovery implementations.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>These workarounds do not imply support for any particular JDBC driver.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="gknau"></a><a id="GSADG00689"></a><a id="general-recovery-limitations"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_general_recovery_limitations">General Recovery Limitations</h5>
+<div class="paragraph">
+<p>The following general limitations apply to transaction recovery:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Recovery succeeds if there are no exceptions during the process. This
+is independent of the number of transactions that need to be recovered.</p>
+</li>
+<li>
+<p>Only transactions that did not complete the two-phase commit can be
+recovered (one of the XA resources failed or GlassFish Server crashed
+after resources were prepared).</p>
+</li>
+<li>
+<p>Manual transaction recovery cannot recover transactions after a server
+crash on a standalone server instance. Manual operations are intended
+for cases when a resource dies unexpectedly while the server is running.
+In case of a server crash, only startup recovery can recover in-doubt
+transactions.</p>
+</li>
+<li>
+<p>It is not possible to list transaction IDs for in-doubt transactions.</p>
+</li>
+<li>
+<p>Delegated transaction recovery (by a different server instance in a
+cluster) is not possible if the failed instance used an <code>EMBEDDED</code>
+Message Queue broker, or if it used a <code>LOCAL</code> or <code>REMOTE</code> Message Queue
+broker and the broker also failed. In this case, only automatic recovery
+on server instance restart is possible. This is because for conventional
+Message Queue clustering, state information in a failed broker is not
+available until the broker restarts.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gknee"></a><a id="GSADG00690"></a><a id="oracle-setup-for-transaction-recovery"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_oracle_setup_for_transaction_recovery">Oracle Setup for Transaction Recovery</h5>
+<div class="paragraph">
+<p>You must configure the following <code>grant</code> statements in your Oracle
+database to set up transaction recovery:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">grant select on SYS.DBA_PENDING_TRANSACTIONS to user;
+grant execute on SYS.DBMS_SYSTEM to user;
+grant select on SYS.PENDING_TRANS$ to user;
+grant select on SYS.DBA_2PC_NEIGHBORS to user;
+grant execute on SYS.DBMS_XA to user;
+grant select on SYS.DBA_2PC_PENDING to user;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The user is the database administrator. On some versions of the Oracle
+driver the last <code>grant execute</code> fails. You can ignore this.</p>
+</div>
+<div class="paragraph">
+<p><a id="gjiep"></a><a id="GSADG00691"></a><a id="oracle-thin-driver"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_oracle_thin_driver">Oracle Thin Driver</h5>
+<div class="paragraph">
+<p>In the Oracle thin driver, the <code>XAResource.recover</code> method repeatedly
+returns the same set of in-doubt Xids regardless of the input flag.
+According to the XA specifications, the Transaction Manager initially
+calls this method with TMSTARTSCAN and then with TMNOFLAGS repeatedly
+until no Xids are returned. The <code>XAResource.commit</code> method also has some
+issues.</p>
+</div>
+<div class="paragraph">
+<p>To disable the GlassFish Server workaround, set the
+<code>oracle-xa-recovery-workaround</code> property value to <code>false</code>. For details
+about how to set this property, see <a href="#beanp">Configuring the
+Transaction Service</a>. This workaround is used unless explicitly
+disabled.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkneq"></a><a id="GSADG00692"></a><a id="delegated-recovery-after-server-crash-doesnt-work-on-mysql"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_delegated_recovery_after_server_crash_doesn_t_work_on_mysql">Delegated Recovery After Server Crash Doesn&#8217;t Work on MySQL</h5>
+<div class="paragraph">
+<p>The MySQL database supports XA transaction recovery only when the
+database crashes. When a GlassFish Server instance crashes, MySQL rolls
+back prepared transactions.</p>
+</div>
+<div class="paragraph">
+<p><a id="glclh"></a><a id="GSADG00693"></a><a id="call-to-xateminator.recover-during-resourceadapter.start-hangs-if-automatic-recovery-is-enabled"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_call_to_code_xateminator_recover_code_during_code_resourceadapter_start_code_hangs_if_automatic_recovery_is_enabled">Call to <code>XATeminator.recover()</code> During <code>ResourceAdapter.start()</code> Hangs If Automatic Recovery Is Enabled</h5>
+<div class="paragraph">
+<p>Calls to <code>XATerminator.recover()</code> from the <code>ResourceAdapter.start()</code>
+method never return because GlassFish Server deadlocks. This only occurs
+when automatic recovery is enabled.</p>
+</div>
+<div class="paragraph">
+<p>It is not advisable to do transactional activities, such as starting a
+transaction or calling <code>XATerminator.recover()</code>, during
+<code>ResourceAdapter.start()</code>. For more information, see
+<code>http://markmail.org/message/ogc7qndhaywfkdrp#query:+page:1+mid:kyyzpcexusbnv7ri+state:results</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beanq"></a><a id="GSADG00609"></a><a id="transaction-logging"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_transaction_logging">Transaction Logging</h3>
+<div class="paragraph">
+<p>The transaction service writes transactional activity into transaction
+logs so that transactions can be recovered. You can control transaction
+logging in these ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Set the location of the transaction log files in one of these ways:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Set the GlassFish Server&#8217;s <code>log-root</code> setting to a shared file system
+base directory and set the transaction service&#8217;s <code>tx-log-dir</code> attribute
+to a relative path.</p>
+</li>
+<li>
+<p>Set <code>tx-log-dir</code> to an absolute path to a shared file system
+directory, in which case <code>log-root</code> is ignored for transaction logs.</p>
+</li>
+<li>
+<p>Set a system property called <code>TX-LOG-DIR</code> to a shared file system
+directory. For example:<br></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; create-system-properties --target server TX-LOG-DIR=/inst1/logs</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For information about setting <code>log-root</code> and other general logging
+settings, see <a href="logging.html#abluj">Administering the Logging Service</a>.
+* Turn off transaction logging by setting the
+<code>disable-distributed-transaction-logging</code> property to <code>true</code> and the
+<code>automatic-recovery</code> attribute to <code>false</code>. Do this only if performance
+is more important than transaction recovery.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>All instances in a cluster must be owned by the same user (<code>uid</code>), and
+read/write permissions for that user must be set on the transaction log
+directories.</p>
+</div>
+<div class="paragraph">
+<p>Transaction logs should be stored in a high-availability network file
+system (NFS) to avoid a single point of failure.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="gcmam"></a><a id="GSADG00517"></a><a id="to-store-transaction-logs-in-a-database"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_store_transaction_logs_in_a_database">To Store Transaction Logs in a Database</h4>
+<div class="paragraph">
+<p>For multi-core machines, logging transactions to a database may be more
+efficient. Transaction logging is designed to work with any
+JDBC-compliant database. For databases with which transaction logging
+has been tested, see the GlassFish Server Open Source Edition Release
+Notes.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a id="CIHDBIJI"></a><br>
+Create a JDBC connection Pool. To use non-transactional connections to
+insert log records, you can either set the
+<code>non-transactional-connections</code> attribute to <code>true</code> in this step, or you
+can perform step <a href="#CIHGIHJC">5</a> later.</p>
+</li>
+<li>
+<p>Create a JDBC resource that uses the connection pool and note the
+JNDI name of the JDBC resource.</p>
+</li>
+<li>
+<p>Automatic table creation for the transaction logs is done by
+default. However, if you would prefer to create the table manually, name
+it <code>txn_log_table</code> with the following schema:<br></p>
+</li>
+</ol>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Column Name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JDBC Type</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LOCALTID</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>VARCHAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>INSTANCENAME</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>VARCHAR</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SERVERNAME</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>VARCHAR(n)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GTRID</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>VARBINARY</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The size of the <code>SERVERNAME</code> column should be at least the length of the
+GlassFish Server host name plus 10 characters.<br>
+The size of the <code>GTRID</code> column should be at least 64 bytes.
+4.  Add the <code>db-logging-resource</code> property to the transaction service.
+For example:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin set server-config.transaction-service.property.db-logging-resource="jdbc/TxnDS"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The property&#8217;s value should be the JNDI name of the JDBC resource
+configured previously.
+5.  <a id="CIHGIHJC"></a><br>
+If you didn&#8217;t set the <code>non-transactional-connections</code> attribute to
+<code>true</code> in step <a href="#CIHDBIJI">1</a> and you want to use non-transactional
+connections to insert log records, use the following
+<code>asadmin create-jvm-options</code> command to reference an existing
+transactional resource but use non-transactional connections for the
+<code>INSERT</code> statements:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin create-jvm-options -Dcom.sun.jts.dblogging.use.nontx.connection.for.add=true</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>To disable file synchronization, use the following
+<code>asadmin create-jvm-options</code> command:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin create-jvm-options -Dcom.sun.appserv.transaction.nofdsync</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Restart the server.</p>
+</li>
+</ol>
+</div>
+<div id="GSADG1042" class="paragraph">
+<p>Next Steps</p>
+</div>
+<div class="paragraph">
+<p>To define the SQL used by the transaction manager when it is storing its
+transaction logs in the database, use the following flags:</p>
+</div>
+<div class="paragraph">
+<p><code>-Dcom.sun.jts.dblogging.insertquery=sql</code> statement</p>
+</div>
+<div class="paragraph">
+<p><code>-Dcom.sun.jts.dblogging.deletequery=sql</code> statement</p>
+</div>
+<div class="paragraph">
+<p><code>-Dcom.sun.jts.dblogging.selectquery=sql</code> statement</p>
+</div>
+<div class="paragraph">
+<p><code>-Dcom.sun.jts.dblogging.selectservernamequery=sql</code> statement</p>
+</div>
+<div class="paragraph">
+<p>The default statements are as follows:</p>
+</div>
+<div class="paragraph">
+<p><code>-Dcom.sun.jts.dblogging.insertquery=insert into txn_log_table values ( ?, ?, ?, ? )</code></p>
+</div>
+<div class="paragraph">
+<p><code>-Dcom.sun.jts.dblogging.deletequery=delete from txn_log_table where localtid = ? and servername = ?</code></p>
+</div>
+<div class="paragraph">
+<p><code>-Dcom.sun.jts.dblogging.selectquery=select * from txn_log_table where servername = ?</code></p>
+</div>
+<div class="paragraph">
+<p><code>-Dcom.sun.jts.dblogging.selectservernamequery=select distinct servername from txn_log_table where instancename = ?</code></p>
+</div>
+<div class="paragraph">
+<p>To set one of these flags using the <code>asadmin create-jvm-options</code>
+command, you must quote the statement. For example:</p>
+</div>
+<div class="paragraph">
+<p><code>create-jvm-options '-Dcom.sun.jts.dblogging.deletequery=delete from txn_log_table where gtrid = ?'</code></p>
+</div>
+<div class="paragraph">
+<p>You can also set JVM options in the Administration Console. Select the
+JVM Settings component under the relevant configuration. These flags and
+their statements must also be quoted in the Administration Console. For
+example:</p>
+</div>
+<div class="paragraph">
+<p><code>'-Dcom.sun.jts.dblogging.deletequery=delete from txn_log_table where gtrid = ?'</code></p>
+</div>
+<div id="GSADG1043" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>For information about JDBC connection pools and resources, see
+<a href="jdbc.html#ablih">Administering Database Connectivity</a>. For more
+information about the <code>asadmin set</code> and <code>asadmin create-jvm-options</code>
+commands, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition
+Reference Manual</a>. For databases with which transaction logging has been
+tested, see the GlassFish Server Open Source Edition Release Notes.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="jndi.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="part-appendixes.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

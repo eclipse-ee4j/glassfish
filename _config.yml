@@ -1,5 +1,3 @@
-github: [metadata]
-
 remote_theme: eclipsefdn/jekyll-theme-eclipsefdn
 
 title: [Eclipse GlassFish]
@@ -12,7 +10,7 @@ links:
   mailinglist: https://accounts.eclipse.org/mailing-list/glassfish-dev
   #javadocs:
   docs: documentation
-  #faq:
+  faq: faq
   hide_issuetracker: false #set explicitly to 'true' if you don't want to have the issue tracker link displayed
 
 include:

@@ -227,7 +227,7 @@
                                           />
                                         <symlink
                                           link="${site.output.dir}/docs/latest"
-                                          resource="${docs.7x.dir}"/>
+                                          resource="${docs.version}"/>
                                     </target>
                                 </configuration>
                             </execution>

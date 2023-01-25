@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2022 Contributors to Eclipse Foundation.
+    Copyright (c) 2021, 2023 Contributors to Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -95,9 +95,9 @@
         <jakarta.interceptor-api.version>2.1.0</jakarta.interceptor-api.version>
 
         <!-- Jakarta Security + Authentication/Authorization -->
-        <soteria.version>3.0.1</soteria.version>
+        <soteria.version>3.0.2</soteria.version>
         <exousia.version>2.1.0</exousia.version>
-        <nimbus.version>9.28</nimbus.version>
+        <nimbus.version>9.29</nimbus.version>
         <jcip.version>1.0.2</jcip.version>
 
         <!-- Jakarta Messaging -->

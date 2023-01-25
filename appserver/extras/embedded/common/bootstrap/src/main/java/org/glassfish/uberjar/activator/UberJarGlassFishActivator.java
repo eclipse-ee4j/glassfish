@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,14 @@
 
 package org.glassfish.uberjar.activator;
 
+import com.sun.enterprise.glassfish.bootstrap.Constants;
+import com.sun.enterprise.glassfish.bootstrap.Constants.Platform;
+
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.Properties;
+import java.util.logging.Logger;
+
 import org.glassfish.embeddable.BootstrapProperties;
 import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishProperties;
@@ -23,11 +32,6 @@ import org.glassfish.embeddable.GlassFishRuntime;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.launch.Framework;
-
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.Properties;
-import java.util.logging.Logger;
 
 /**
  * This is an activator to allow just dropping the uber jar
@@ -46,6 +50,7 @@ public class UberJarGlassFishActivator implements BundleActivator {
             "org.glassfish.embedded.osgimain.autostartBundles";
 
 
+    @Override
     public void start(BundleContext bundleContext) throws Exception {
         privilegedStart(bundleContext);
 
@@ -86,10 +91,11 @@ public class UberJarGlassFishActivator implements BundleActivator {
 
     private void privilegedStart(final BundleContext bundleContext) throws Exception {
         AccessController.doPrivileged(new PrivilegedAction<Void>() {
+            @Override
             public Void run() {
                 try {
                     Properties props = new Properties();
-                    props.setProperty(BootstrapProperties.PLATFORM_PROPERTY_KEY, BootstrapProperties.Platform.Felix.toString());
+                    props.setProperty(Constants.PLATFORM_PROPERTY_KEY, Platform.Felix.name());
 
                     logger.info("ThreadContextClassLoader = " + Thread.currentThread().getContextClassLoader() +
                             ", classloader = " + getClass().getClassLoader());
@@ -128,6 +134,7 @@ public class UberJarGlassFishActivator implements BundleActivator {
         });
     }
 
+    @Override
     public void stop(BundleContext bundleContext) throws Exception {
         logger.info("EmbeddedGlassFishActivator is stopped");
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,15 +21,31 @@ import java.util.Properties;
 
 /**
  * Encapsulates the set of properties required to create a new GlassFish instance.
- * <p/>
- * <p/>Eg.., GlassFishRuntime.bootstrap(new BootstrapProperties()).newGlassFish(<b>new GlassFishProperties()</b>);
+ *
+ * <pre>
+ * ...
+ * GlassFishRuntime runtime = GlassFishRuntime.bootstrap(new BootstrapProperties());
+ * GlassFish glassfish = runtime.newGlassFish(glassFishProperties);
+ * ...
+ * </pre>
  *
  * @author bhavanishankar@dev.java.net
  * @author Prasad.Subramanian@Sun.COM
  */
 public class GlassFishProperties {
 
-    private Properties gfProperties;
+    /** Key for specifying which instance root (aka domain dir) GlassFish should run with. */
+    public static final String INSTANCE_ROOT_PROP_NAME = "com.sun.aas.instanceRoot";
+    /** Key for specifying which configuration file (domain.xml) GlassFish should run with. */
+    public static final String CONFIG_FILE_URI_PROP_NAME = "org.glassfish.embeddable.configFileURI";
+    /**
+     * Key for specifying whether the specified configuration file (domain.xml) or config/domain.xml
+     * at the user specified instanceRoot should be operated by GlassFish in read only mode or not.
+     */
+    public static final String CONFIG_FILE_READ_ONLY = "org.glassfish.embeddable.configFileReadOnly";
+    private static final String NETWORK_LISTENER_KEY = "embedded-glassfish-config.server.network-config.network-listeners.network-listener.%s";
+
+    private final Properties gfProperties;
 
     /**
      * Create GlassFishProperties with default properties.
@@ -37,16 +54,17 @@ public class GlassFishProperties {
         gfProperties = new Properties();
     }
 
+
     /**
      * Create GlassFishProperties with custom properties.
-     * This method does not take a copy of the passed in properties object; instead it just maintains a reference to
-     * it, so all semantics of "pass-by-reference" applies.
+     * This method does not take a copy of the passed in properties object; instead it just
+     * maintains a reference to it, so all semantics of "pass-by-reference" applies.
      * <p/>
-     * <p/>Custom properties can include values for all or some of the keys
+     * Custom properties can include values for all or some of the keys
      * defined as constants in this class. Eg., a value for com.sun.aas.instanceRoot
      * can be included in the custom properties.
      * <p/>
-     * <p/>Custom properties can also include additional properties which are required
+     * Custom properties can also include additional properties which are required
      * for the plugged in {@link GlassFishRuntime} (if any)
      *
      * @param props Properties object which will back this GlassFishProperties object.
@@ -55,10 +73,11 @@ public class GlassFishProperties {
         gfProperties = props;
     }
 
+
     /**
      * Get the underlying Properties object which backs this GlassFishProperties.
      * <p/>
-     * <p/> If getProperties().setProperty(key,value) is called, then it will
+     * If getProperties().setProperty(key,value) is called, then it will
      * add a property to this GlassFishProperties.
      *
      * @return The Properties object that is backing this GlassFishProperties.
@@ -78,23 +97,23 @@ public class GlassFishProperties {
         gfProperties.setProperty(key, value);
     }
 
+
     /**
      * Optionally set the instance root (aka domain dir) using which the
      * GlassFish should run.
      * <p/>
-     * <p/> Make sure to specify a valid GlassFish instance directory
+     * Make sure to specify a valid GlassFish instance directory
      * (eg., GF_INSTALL_DIR/domains/domain1).
      * <p/>
-     * <p/> By default, the config/domain.xml at the specified instance root is operated in
+     * By default, the config/domain.xml at the specified instance root is operated in
      * read only mode. To writeback changes to it, call
      * {@link #setConfigFileReadOnly(boolean)} by passing 'false'
      * <p/>
-     * <p/>If the instance root is not specified, then a small sized temporary
+     * If the instance root is not specified, then a small sized temporary
      * instance directory is created in the current directory. The temporary
      * instance directory will get deleted when the glassfish.dispose() is called.
      *
      * @param instanceRoot Location of the instance root.
-     * @return This object after setting the instance root.
      */
     public void setInstanceRoot(String instanceRoot) {
         gfProperties.setProperty(INSTANCE_ROOT_PROP_NAME, instanceRoot);
@@ -122,7 +141,6 @@ public class GlassFishProperties {
         gfProperties.setProperty(CONFIG_FILE_URI_PROP_NAME, configFileURI);
     }
 
-
     /**
      * Get the configurationFileURI set using {@link #setConfigFileURI(String)}
      *
@@ -140,8 +158,7 @@ public class GlassFishProperties {
      *         specified instance root remains unchanged when the glassfish runs, false otherwise.
      */
     public boolean isConfigFileReadOnly() {
-        return Boolean.valueOf(gfProperties.getProperty(
-                CONFIG_FILE_READ_ONLY, "true"));
+        return Boolean.parseBoolean(gfProperties.getProperty(CONFIG_FILE_READ_ONLY, "true"));
     }
 
     /**
@@ -153,8 +170,7 @@ public class GlassFishProperties {
      * @param readOnly false to writeback any changes.
      */
     public void setConfigFileReadOnly(boolean readOnly) {
-        gfProperties.setProperty(CONFIG_FILE_READ_ONLY,
-                Boolean.toString(readOnly));
+        gfProperties.setProperty(CONFIG_FILE_READ_ONLY, Boolean.toString(readOnly));
     }
 
     /**
@@ -180,14 +196,12 @@ public class GlassFishProperties {
      * <p/>
      * will point to server.network-config.network-listeners.network-listener.joe. Hence the
      * GlassFish server will use "joe" network listener with its port set to 8080.
-     *
      * <p/>
      * If there is no such network-listener by name "joe" in the supplied domain.xml,
      * then the server will throw an exception and fail to start.
      *
      * @param networkListener Name of the network listener.
      * @param port            Port number
-     * @return This object after setting the port.
      */
     public void setPort(String networkListener, int port) {
         if (networkListener != null) {
@@ -221,19 +235,4 @@ public class GlassFishProperties {
         }
         return port;
     }
-
-    // PRIVATE constants.
-    // Key for specifying which instance root (aka domain dir) GlassFish should run with.
-    private final static String INSTANCE_ROOT_PROP_NAME =
-            "com.sun.aas.instanceRoot";
-    // Key for specifying which configuration file (domain.xml) GlassFish should run with.
-    private static final String CONFIG_FILE_URI_PROP_NAME =
-            "org.glassfish.embeddable.configFileURI";
-    // Key for specifying whether the specified configuration file (domain.xml) or config/domain.xml
-    // at the user specified instanceRoot should be operated by GlassFish in read only mode or not.
-    private static final String CONFIG_FILE_READ_ONLY =
-            "org.glassfish.embeddable.configFileReadOnly";
-    private static final String NETWORK_LISTENER_KEY =
-            "embedded-glassfish-config.server.network-config.network-listeners.network-listener.%s";
-
 }

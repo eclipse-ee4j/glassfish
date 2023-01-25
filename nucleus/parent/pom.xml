@@ -158,7 +158,7 @@
 
         <easymock.version>4.3</easymock.version>
         <jmockit.version>1.49</jmockit.version>
-        <junit.version>5.9.1</junit.version>
+        <junit.version>5.9.2</junit.version>
         <jmh.version>1.36</jmh.version>
         <osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
 
@@ -568,7 +568,7 @@
             <dependency>
                 <groupId>org.jline</groupId>
                 <artifactId>jline</artifactId>
-                <version>3.21.0</version>
+                <version>3.22.0</version>
             </dependency>
 
             <!--3rd party dependencies -->
@@ -731,7 +731,7 @@
             <dependency>
                 <groupId>org.apache.ant</groupId>
                 <artifactId>ant-launcher</artifactId>
-                <version>1.10.12</version>
+                <version>1.10.13</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.external</groupId>
@@ -941,7 +941,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>10.4</version>
+                            <version>10.6.0</version>
                         </dependency>
                     </dependencies>
                     <executions>

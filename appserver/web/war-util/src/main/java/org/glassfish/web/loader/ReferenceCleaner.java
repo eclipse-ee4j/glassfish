@@ -47,7 +47,7 @@ import static org.glassfish.web.loader.LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_K
 import static org.glassfish.web.loader.LogFacade.getString;
 
 class ReferenceCleaner {
-    private static final Logger LOG = System.getLogger(ReferenceCleaner.class.getName());
+    private static final Logger LOG = LogFacade.getSysLogger(ReferenceCleaner.class);
 
     private final WebappClassLoader loader;
 

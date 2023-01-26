@@ -5212,12 +5212,14 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
             loadOnStartup(findChildren());
         } catch (Throwable t) {
             log.log(SEVERE, STARTUP_CONTEXT_FAILED_EXCEPTION, getName());
+            LifecycleException exception = new LifecycleException(t);
             try {
                 stop();
             } catch (Throwable tt) {
+                exception.addSuppressed(tt);
                 log.log(SEVERE, LogFacade.CLEANUP_FAILED_EXCEPTION, tt);
             }
-            throw new LifecycleException(t);
+            throw exception;
         } finally {
             // Unbinding thread
             unbindThread(oldCCL);

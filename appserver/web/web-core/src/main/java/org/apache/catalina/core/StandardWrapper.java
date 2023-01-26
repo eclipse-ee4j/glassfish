@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
- * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,7 +28,6 @@ import jakarta.servlet.UnavailableException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-// END GlassFish 1343
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -114,7 +113,7 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
      * servlet is available. If this value equals Long.MAX_VALUE, the unavailability of this servlet is considered
      * permanent.
      */
-    private long available = 0L;
+    private long available;
 
     /**
      * The broadcaster that sends j2ee notifications.
@@ -130,7 +129,7 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
     /**
      * The debugging detail level for this component.
      */
-    private int debug = 0;
+    private int debug;
 
     /**
      * The facade associated with this wrapper.
@@ -191,7 +190,7 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
     /**
      * The notification sequence number.
      */
-    private long sequenceNumber = 0;
+    private long sequenceNumber;
 
     /**
      * The fully qualified servlet class name for this servlet.
@@ -206,12 +205,12 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
     /**
      * Does this servlet implement the SingleThreadModel interface?
      */
-    private volatile boolean singleThreadModel = false;
+    private volatile boolean singleThreadModel;
 
     /**
      * Are we unloading our servlet instance at the moment?
      */
-    private boolean unloading = false;
+    private boolean unloading;
 
     /**
      * Maximum number of STM instances.
@@ -221,7 +220,7 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
     /**
      * Number of instances currently loaded for a STM servlet.
      */
-    private int nInstances = 0;
+    private int nInstances;
 
     /**
      * Stack containing the STM instances. TODO: remove
@@ -241,8 +240,8 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
 
     // To support jmx attributes
     private final StandardWrapperValve swValve;
-    private long loadTime = 0;
-    private int classLoadTime = 0;
+    private long loadTime;
+    private int classLoadTime;
 
     private String description;
 
@@ -1179,96 +1178,89 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
         }
 
         // If this "servlet" is really a JSP file, get the right class.
-        String actualClass = servletClassName;
-        if ((actualClass == null) && (jspFile != null)) {
-            Wrapper jspWrapper = (Wrapper) ((Context) getParent()).findChild(Constants.JSP_SERVLET_NAME);
-            if (jspWrapper != null) {
-                actualClass = jspWrapper.getServletClassName();
-                // Merge init parameters
-                String paramNames[] = jspWrapper.findInitParameters();
-                for (String paramName : paramNames) {
-                    if (parameters.get(paramName) == null) {
-                        parameters.put(paramName, jspWrapper.findInitParameter(paramName));
-                    }
-                }
-            }
-        }
-
+        final String actualClassName = resolveServletClassNameAndParameters();
         // Complain if no servlet class has been specified
-        if (actualClass == null) {
+        if (actualClassName == null) {
             unavailable(null);
             String msg = format(rb.getString(LogFacade.NO_SERVLET_BE_SPECIFIED_EXCEPTION), getName());
             throw new ServletException(msg);
         }
 
         // Acquire an instance of the class loader to be used
-        Loader loader = getLoader();
-        if (loader == null) {
+        Loader currentLoader = getLoader();
+        if (currentLoader == null) {
             unavailable(null);
             String msg = format(rb.getString(LogFacade.CANNOT_FIND_LOADER_EXCEPTION), getName());
             throw new ServletException(msg);
         }
 
-        ClassLoader classLoader = loader.getClassLoader();
 
         // Special case class loader for a container provided servlet
-        //
-        if (isContainerProvidedServlet(actualClass) && !((Context) getParent()).getPrivileged()) {
+        final ClassLoader classLoader;
+        if (isContainerProvidedServlet(actualClassName) && !((Context) getParent()).getPrivileged()) {
             // If it is a priviledged context - using its own
             // class loader will work, since it's a child of the container
             // loader
             classLoader = this.getClass().getClassLoader();
+        } else {
+            classLoader = currentLoader.getClassLoader();
         }
 
         // Load the specified servlet class from the appropriate class loader
-        Class clazz = null;
+        Class<?> clazz = null;
         try {
             if (SecurityUtil.isPackageProtectionEnabled()) {
-                final ClassLoader fclassLoader = classLoader;
-                final String factualClass = actualClass;
                 try {
-                    clazz = AccessController.doPrivileged(new PrivilegedExceptionAction<Class>() {
-                        @Override
-                        public Class run() throws Exception {
-                            if (fclassLoader != null) {
-                                return fclassLoader.loadClass(factualClass);
-                            }
-
-                            return Class.forName(factualClass);
+                    PrivilegedExceptionAction<Class<?>> action = () -> {
+                        if (classLoader == null) {
+                            return Class.forName(actualClassName);
                         }
-                    });
+                        return classLoader.loadClass(actualClassName);
+                    };
+                    clazz = AccessController.doPrivileged(action);
                 } catch (PrivilegedActionException pax) {
                     Exception ex = pax.getException();
                     if (ex instanceof ClassNotFoundException) {
                         throw (ClassNotFoundException) ex;
                     }
 
-                    getServletContext().log(format(
-                            rb.getString(ERROR_LOADING_INFO),
-                            new Object[] { fclassLoader, factualClass }), ex);
+                    getServletContext()
+                        .log(format(rb.getString(ERROR_LOADING_INFO), new Object[] {classLoader, actualClassName}), ex);
                 }
             } else {
-                if (classLoader != null) {
-                    clazz = classLoader.loadClass(actualClass);
-                } else {
-                    clazz = Class.forName(actualClass);
-                }
+                clazz = classLoader == null ? Class.forName(actualClassName) : classLoader.loadClass(actualClassName);
             }
         } catch (ClassNotFoundException e) {
             unavailable(null);
             String msgErrorLoadingInfo = format(rb.getString(ERROR_LOADING_INFO),
-                    new Object[] { classLoader, actualClass });
+                new Object[] {classLoader, actualClassName});
             getServletContext().log(msgErrorLoadingInfo, e);
-            String msg = format(rb.getString(CANNOT_FIND_SERVLET_CLASS_EXCEPTION), actualClass);
+            String msg = format(rb.getString(CANNOT_FIND_SERVLET_CLASS_EXCEPTION), actualClassName);
             throw new ServletException(msg, e);
         }
 
         if (clazz == null) {
             unavailable(null);
-            throw new ServletException(format(rb.getString(CANNOT_FIND_SERVLET_CLASS_EXCEPTION), actualClass));
+            throw new ServletException(format(rb.getString(CANNOT_FIND_SERVLET_CLASS_EXCEPTION), actualClassName));
         }
 
         servletClass = castToServletClass(clazz);
+    }
+
+    private String resolveServletClassNameAndParameters() {
+        if (servletClassName != null || jspFile == null) {
+            return servletClassName;
+        }
+        Wrapper jspWrapper = (Wrapper) ((Context) getParent()).findChild(Constants.JSP_SERVLET_NAME);
+        if (jspWrapper == null) {
+            return servletClassName;
+        }
+        // Merge init parameters
+        String[] paramNames = jspWrapper.findInitParameters();
+        for (String paramName : paramNames) {
+            parameters.computeIfAbsent(paramName, jspWrapper::findInitParameter);
+        }
+        return jspWrapper.getServletClassName();
     }
 
     @SuppressWarnings("unchecked")

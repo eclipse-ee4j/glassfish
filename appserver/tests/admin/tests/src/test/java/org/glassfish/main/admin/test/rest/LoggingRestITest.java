@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -48,17 +48,17 @@ public class LoggingRestITest {
             connection.setRequestProperty("Accept", MediaType.APPLICATION_JSON);
             connection.setDoOutput(true);
             assertEquals(200, connection.getResponseCode());
+            StringWriter buffer = new StringWriter();
             try (InputStreamReader reader = new InputStreamReader(connection.getInputStream())) {
-                StringWriter buffer = new StringWriter();
                 reader.transferTo(buffer);
-                JSONObject json = new JSONObject(buffer.toString());
-                JSONArray array = json.getJSONArray("InstanceLogFileNames");
-                // Depends on the order of tests, there may be rolled file too.
-                assertAll(
-                    () -> assertThat("InstanceLogFileNames", array.length(), greaterThanOrEqualTo(1)),
-                    () -> assertThat(array.get(0).toString(), startsWith("server.log"))
-                );
             }
+            JSONObject json = new JSONObject(buffer.toString());
+            JSONArray array = json.getJSONArray("InstanceLogFileNames");
+            // Depends on the order of tests, there may be rolled file too.
+            assertAll(
+                () -> assertThat("InstanceLogFileNames", array.length(), greaterThanOrEqualTo(1)),
+                () -> assertThat(array.get(0).toString(), startsWith("server.log"))
+            );
         } finally {
             connection.disconnect();
         }
@@ -71,13 +71,13 @@ public class LoggingRestITest {
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Accept", MediaType.APPLICATION_JSON);
             assertEquals(200, connection.getResponseCode());
+            StringWriter buffer = new StringWriter();
             try (InputStreamReader reader = new InputStreamReader(connection.getInputStream())) {
-                StringWriter buffer = new StringWriter();
                 reader.transferTo(buffer);
-                JSONObject json = new JSONObject(buffer.toString());
-                JSONArray array = json.getJSONArray("records");
-                assertThat(array.length(), greaterThan(15));
             }
+            JSONObject json = new JSONObject(buffer.toString());
+            JSONArray array = json.getJSONArray("records");
+            assertThat(array.length(), greaterThan(15));
         } finally {
             connection.disconnect();
         }

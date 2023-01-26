@@ -264,13 +264,9 @@ public final class SecurityUtil{
 
         try{
             Subject subject = null;
-            PrivilegedExceptionAction<Void> pea =
-                new PrivilegedExceptionAction<>(){
-                    @Override
-                    public Void run() throws Exception{
-                       method.invoke(targetObject, targetArguments);
-                       return null;
-                    }
+            PrivilegedExceptionAction<Void> pea = () -> {
+                method.invoke(targetObject, targetArguments);
+                return null;
             };
 
             // The first argument is always the request object
@@ -305,15 +301,12 @@ public final class SecurityUtil{
         } catch( PrivilegedActionException pe) {
             Throwable e;
             if (pe.getException() instanceof InvocationTargetException) {
-                e = ((InvocationTargetException)pe.getException())
-                                .getTargetException();
+                e = ((InvocationTargetException) pe.getException()).getTargetException();
             } else {
                 e = pe;
             }
 
-            if (log.isLoggable(Level.FINE)){
-                log.log(Level.FINE, LogFacade.PRIVILEGE_ACTION_EXCEPTION, e);
-            }
+            log.log(Level.FINE, LogFacade.PRIVILEGE_ACTION_EXCEPTION, e);
 
             if (e instanceof UnavailableException) {
                 throw (UnavailableException) e;
@@ -416,7 +409,6 @@ public final class SecurityUtil{
     }
 
 
-    // START OF SJS WS 7.0 6236329
     /**
      * Return true if a <code>SecurityManager</code> is used and is
      * <code>isDoAsRequired</code> is required.
@@ -427,6 +419,4 @@ public final class SecurityUtil{
         }
         return false;
     }
-    // END OF SJS WS 7.0 6236329
-
 }

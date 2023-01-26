@@ -30,6 +30,7 @@
             </unpackOptions>
             <includes>
                 <include>*:*:jar:*</include>
+                <include>*:*:glassfish-jar:*</include>
             </includes>
         </dependencySet>
     </dependencySets>

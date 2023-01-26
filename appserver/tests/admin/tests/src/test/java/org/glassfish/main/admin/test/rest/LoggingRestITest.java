@@ -48,12 +48,7 @@ public class LoggingRestITest {
             connection.setRequestProperty("Accept", MediaType.APPLICATION_JSON);
             connection.setDoOutput(true);
             assertEquals(200, connection.getResponseCode());
-            StringWriter buffer = new StringWriter();
-            try (InputStreamReader reader = new InputStreamReader(connection.getInputStream())) {
-                reader.transferTo(buffer);
-            }
-            JSONObject json = new JSONObject(buffer.toString());
-            JSONArray array = json.getJSONArray("InstanceLogFileNames");
+            JSONArray array = getJsonArrayFrom(connection, "InstanceLogFileNames");
             // Depends on the order of tests, there may be rolled file too.
             assertAll(
                 () -> assertThat("InstanceLogFileNames", array.length(), greaterThanOrEqualTo(1)),
@@ -71,15 +66,26 @@ public class LoggingRestITest {
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Accept", MediaType.APPLICATION_JSON);
             assertEquals(200, connection.getResponseCode());
-            StringWriter buffer = new StringWriter();
-            try (InputStreamReader reader = new InputStreamReader(connection.getInputStream())) {
-                reader.transferTo(buffer);
-            }
-            JSONObject json = new JSONObject(buffer.toString());
-            JSONArray array = json.getJSONArray("records");
+            JSONArray array = getJsonArrayFrom(connection, "records");
             assertThat(array.length(), greaterThan(15));
         } finally {
             connection.disconnect();
         }
+    }
+
+    static String readIntoStringFrom(HttpURLConnection connection) throws Exception {
+        StringWriter buffer = new StringWriter();
+        try (InputStreamReader reader = new InputStreamReader(connection.getInputStream())) {
+            reader.transferTo(buffer);
+        }
+        return buffer.toString();
+    }
+
+    static JSONObject readJsonObjectFrom(HttpURLConnection connection) throws Exception {
+        return new JSONObject(readIntoStringFrom(connection));
+    }
+
+    static JSONArray getJsonArrayFrom(HttpURLConnection connection, String name) throws Exception {
+        return readJsonObjectFrom(connection).getJSONArray(name);
     }
 }

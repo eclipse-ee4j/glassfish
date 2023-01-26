@@ -41,8 +41,7 @@ import java.util.EventListener;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.catalina.Globals;
-import org.apache.catalina.security.SecurityUtil;
+import static org.apache.catalina.Globals.IS_SECURITY_ENABLED;
 
 /**
  * Facade object which masks the internal <code>ApplicationContext</code>
@@ -72,7 +71,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public String getContextPath() {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<String> action = context::getContextPath;
             return AccessController.doPrivileged(action);
         }
@@ -83,7 +82,7 @@ public final class ApplicationContextFacade implements ServletContext {
     @Override
     public ServletContext getContext(String uripath) {
         final ServletContext theContext;
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<ServletContext> action = () -> context.getContext(uripath);
             theContext = AccessController.doPrivileged(action);
         } else {
@@ -130,7 +129,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public String getMimeType(String file) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<String> action = () -> context.getMimeType(file);
             return AccessController.doPrivileged(action);
         }
@@ -140,7 +139,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public Set<String> getResourcePaths(String path) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<Set<String>> action = () -> context.getResourcePaths(path);
             return AccessController.doPrivileged(action);
         }
@@ -150,7 +149,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public URL getResource(String path) throws MalformedURLException {
-        if (Globals.IS_SECURITY_ENABLED) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedExceptionAction<URL> action = () -> context.getResource(path);
             try {
                 return AccessController.doPrivileged(action);
@@ -164,7 +163,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public InputStream getResourceAsStream(String path) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<InputStream> action = () -> context.getResourceAsStream(path);
             return AccessController.doPrivileged(action);
         }
@@ -174,7 +173,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public RequestDispatcher getRequestDispatcher(final String path) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<RequestDispatcher> action = () -> context.getRequestDispatcher(path);
             return AccessController.doPrivileged(action);
         }
@@ -184,7 +183,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public RequestDispatcher getNamedDispatcher(String name) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<RequestDispatcher> action = () -> context.getNamedDispatcher(name);
             return AccessController.doPrivileged(action);
         }
@@ -193,7 +192,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public void log(String msg) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<Void> action = () -> {
                 context.log(msg);
                 return null;
@@ -206,7 +205,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public void log(String message, Throwable throwable) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<Void> action = () -> {
                 context.log(message, throwable);
                 return null;
@@ -220,7 +219,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public String getRealPath(String path) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<String> action = () -> context.getRealPath(path);
             return AccessController.doPrivileged(action);
         }
@@ -230,7 +229,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public String getServerInfo() {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<String> action = context::getServerInfo;
             return AccessController.doPrivileged(action);
         }
@@ -240,7 +239,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public String getInitParameter(String name) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<String> action = () -> context.getInitParameter(name);
             return AccessController.doPrivileged(action);
         }
@@ -250,7 +249,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public Enumeration<String> getInitParameterNames() {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<Enumeration<String>> action = context::getInitParameterNames;
             return AccessController.doPrivileged(action);
         }
@@ -265,7 +264,7 @@ public final class ApplicationContextFacade implements ServletContext {
      */
     @Override
     public boolean setInitParameter(String name, String value) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<Void> action = () -> {
                 context.setInitParameter(name, value);
                 return null;
@@ -278,7 +277,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public Object getAttribute(String name) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<Object> action = () -> context.getAttribute(name);
             return AccessController.doPrivileged(action);
         }
@@ -288,7 +287,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public Enumeration<String> getAttributeNames() {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<Enumeration<String>> action = context::getAttributeNames;
             return AccessController.doPrivileged(action);
         }
@@ -298,7 +297,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public void setAttribute(String name, Object object) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<Void> action = () -> {
                 context.setAttribute(name, object);
                 return null;
@@ -312,7 +311,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public void removeAttribute(String name) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<Void> action = () -> {
                 context.removeAttribute(name);
                 return null;
@@ -326,7 +325,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public String getServletContextName() {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<String> action = context::getServletContextName;
             return AccessController.doPrivileged(action);
         }
@@ -336,7 +335,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public ServletRegistration.Dynamic addServlet(String servletName, String className) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<ServletRegistration.Dynamic> action = () -> context.addServlet(servletName, className);
             return AccessController.doPrivileged(action);
         }
@@ -346,7 +345,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public ServletRegistration.Dynamic addServlet(String servletName, Servlet servlet) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<ServletRegistration.Dynamic> action = () -> context.addServlet(servletName, servlet);
             return AccessController.doPrivileged(action);
         }
@@ -356,7 +355,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public ServletRegistration.Dynamic addServlet(String servletName, Class<? extends Servlet> servletClass) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<ServletRegistration.Dynamic> action = () -> context.addServlet(servletName, servletClass);
             return AccessController.doPrivileged(action);
         }
@@ -366,7 +365,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public ServletRegistration.Dynamic addJspFile(String servletName, String jspFile) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<ServletRegistration.Dynamic> action = () -> context.addJspFile(servletName, jspFile);
             return AccessController.doPrivileged(action);
         }
@@ -381,7 +380,7 @@ public final class ApplicationContextFacade implements ServletContext {
      */
     @Override
     public <T extends Servlet> T createServlet(Class<T> clazz) throws ServletException {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedExceptionAction<T> action = () -> context.createServlet(clazz);
             try {
                 return AccessController.doPrivileged(action);
@@ -399,7 +398,7 @@ public final class ApplicationContextFacade implements ServletContext {
      */
     @Override
     public ServletRegistration getServletRegistration(String servletName) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<ServletRegistration> action = () -> context.getServletRegistration(servletName);
             return AccessController.doPrivileged(action);
         }
@@ -413,7 +412,7 @@ public final class ApplicationContextFacade implements ServletContext {
      */
     @Override
     public Map<String, ? extends ServletRegistration> getServletRegistrations() {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<Map<String, ? extends ServletRegistration>> action = context::getServletRegistrations;
             return AccessController.doPrivileged(action);
         }
@@ -426,7 +425,7 @@ public final class ApplicationContextFacade implements ServletContext {
      */
     @Override
     public FilterRegistration.Dynamic addFilter(String filterName, String className) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<FilterRegistration.Dynamic> action = () -> context.addFilter(filterName, className);
             return AccessController.doPrivileged(action);
         }
@@ -440,7 +439,7 @@ public final class ApplicationContextFacade implements ServletContext {
      */
     @Override
     public FilterRegistration.Dynamic addFilter(String filterName, Filter filter) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<FilterRegistration.Dynamic> action = () -> context.addFilter(filterName, filter);
             return AccessController.doPrivileged(action);
         }
@@ -454,7 +453,7 @@ public final class ApplicationContextFacade implements ServletContext {
      */
     @Override
     public FilterRegistration.Dynamic addFilter(String filterName, Class<? extends Filter> filterClass) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<FilterRegistration.Dynamic> action = () -> context.addFilter(filterName, filterClass);
             return AccessController.doPrivileged(action);
         }
@@ -469,7 +468,7 @@ public final class ApplicationContextFacade implements ServletContext {
      */
     @Override
     public <T extends Filter> T createFilter(Class<T> clazz) throws ServletException {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedExceptionAction<T> action = () -> context.createFilter(clazz);
             try {
                 return AccessController.doPrivileged(action);
@@ -487,7 +486,7 @@ public final class ApplicationContextFacade implements ServletContext {
      */
     @Override
     public FilterRegistration getFilterRegistration(String filterName) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<FilterRegistration> action = () -> context.getFilterRegistration(filterName);
             return AccessController.doPrivileged(action);
         }
@@ -501,7 +500,7 @@ public final class ApplicationContextFacade implements ServletContext {
      */
     @Override
     public Map<String, ? extends FilterRegistration> getFilterRegistrations() {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<Map<String, ? extends FilterRegistration>> action = context::getFilterRegistrations;
             return AccessController.doPrivileged(action);
         }
@@ -516,7 +515,7 @@ public final class ApplicationContextFacade implements ServletContext {
      */
     @Override
     public SessionCookieConfig getSessionCookieConfig() {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<SessionCookieConfig> action = context::getSessionCookieConfig;
             return AccessController.doPrivileged(action);
         }
@@ -530,7 +529,7 @@ public final class ApplicationContextFacade implements ServletContext {
      */
     @Override
     public void setSessionTrackingModes(Set<SessionTrackingMode> sessionTrackingModes) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<Void> action = () -> {
                 context.setSessionTrackingModes(sessionTrackingModes);
                 return null;
@@ -551,7 +550,7 @@ public final class ApplicationContextFacade implements ServletContext {
      */
     @Override
     public Set<SessionTrackingMode> getDefaultSessionTrackingModes() {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<Set<SessionTrackingMode>> action = context::getDefaultSessionTrackingModes;
             return AccessController.doPrivileged(action);
         }
@@ -568,7 +567,7 @@ public final class ApplicationContextFacade implements ServletContext {
      */
     @Override
     public Set<SessionTrackingMode> getEffectiveSessionTrackingModes() {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<Set<SessionTrackingMode>> action = context::getEffectiveSessionTrackingModes;
             return AccessController.doPrivileged(action);
         }
@@ -581,7 +580,7 @@ public final class ApplicationContextFacade implements ServletContext {
      */
     @Override
     public void addListener(String className) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<Void> action = () -> {
                 context.addListener(className);
                 return null;
@@ -598,7 +597,7 @@ public final class ApplicationContextFacade implements ServletContext {
      */
     @Override
     public <T extends EventListener> void addListener(T listener) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<Void> action = () -> {
                 context.addListener(listener);
                 return null;
@@ -615,7 +614,7 @@ public final class ApplicationContextFacade implements ServletContext {
      */
     @Override
     public void addListener(Class<? extends EventListener> listenerClass) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<Void> action = () -> {
                 context.addListener(listenerClass);
                 return null;
@@ -634,7 +633,7 @@ public final class ApplicationContextFacade implements ServletContext {
      */
     @Override
     public <T extends EventListener> T createListener(Class<T> clazz) throws ServletException {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedExceptionAction<T> action = () -> context.createListener(clazz);
             try {
                 return AccessController.doPrivileged(action);
@@ -654,7 +653,7 @@ public final class ApplicationContextFacade implements ServletContext {
      */
     @Override
     public JspConfigDescriptor getJspConfigDescriptor() {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<JspConfigDescriptor> action = context::getJspConfigDescriptor;
             return AccessController.doPrivileged(action);
         }
@@ -664,7 +663,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public ClassLoader getClassLoader() {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<ClassLoader> action = context::getClassLoader;
             return AccessController.doPrivileged(action);
         }
@@ -674,7 +673,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public void declareRoles(String... roleNames) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<Void> action = () -> {
                 context.declareRoles(roleNames);
                 return null;
@@ -687,7 +686,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public String getVirtualServerName() {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<String> action = context::getVirtualServerName;
             return AccessController.doPrivileged(action);
         }
@@ -696,7 +695,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public int getSessionTimeout() {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<Integer> action = context::getSessionTimeout;
             return AccessController.doPrivileged(action);
         }
@@ -705,7 +704,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public void setSessionTimeout(int sessionTimeout) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<Void> action = () -> {
                 context.setSessionTimeout(sessionTimeout);
                 return null;
@@ -718,7 +717,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public String getRequestCharacterEncoding() {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<String> action = context::getRequestCharacterEncoding;
             return AccessController.doPrivileged(action);
         }
@@ -727,7 +726,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public void setRequestCharacterEncoding(String encoding) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<Void> action = () -> {
                 context.setRequestCharacterEncoding(encoding);
                 return null;
@@ -740,7 +739,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public String getResponseCharacterEncoding() {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<String> action = context::getResponseCharacterEncoding;
             return AccessController.doPrivileged(action);
         }
@@ -749,7 +748,7 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public void setResponseCharacterEncoding(String encoding) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
+        if (IS_SECURITY_ENABLED) {
             PrivilegedAction<Void> action = () -> {
                 context.setResponseCharacterEncoding(encoding);
                 return null;

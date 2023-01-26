@@ -1440,6 +1440,11 @@
             <artifactId>exousia</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+            <optional>true</optional>
+        </dependency>
 
         <dependency>
             <groupId>jakarta.validation</groupId>

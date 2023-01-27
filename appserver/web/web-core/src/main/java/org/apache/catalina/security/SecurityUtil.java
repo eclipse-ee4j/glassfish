@@ -262,41 +262,33 @@ public final class SecurityUtil{
                                 Principal principal)
         throws java.lang.Exception{
 
-        try{
-            Subject subject = null;
-            PrivilegedExceptionAction<Void> pea = () -> {
-                method.invoke(targetObject, targetArguments);
-                return null;
-            };
-
+        try {
             // The first argument is always the request object
-            if (targetArguments != null
-                    && targetArguments[0] instanceof HttpServletRequest){
-                HttpServletRequest request =
-                    (HttpServletRequest)targetArguments[0];
-
+            Subject subject = null;
+            if (targetArguments != null && targetArguments[0] instanceof HttpServletRequest) {
+                HttpServletRequest request = (HttpServletRequest) targetArguments[0];
                 boolean hasSubject = false;
                 HttpSession session = request.getSession(false);
-                if (session != null){
-                    subject =
-                        (Subject)session.getAttribute(Globals.SUBJECT_ATTR);
+                if (session != null) {
+                    subject = (Subject) session.getAttribute(Globals.SUBJECT_ATTR);
                     hasSubject = (subject != null);
                 }
-
-                if (subject == null){
+                if (subject == null) {
                     subject = new Subject();
-
-                    if (principal != null){
+                    if (principal != null) {
                         subject.getPrincipals().add(principal);
                     }
                 }
-
                 if (session != null && !hasSubject) {
                     session.setAttribute(Globals.SUBJECT_ATTR, subject);
                 }
-
             }
 
+            PrivilegedExceptionAction<Void> pea = () -> {
+                method.setAccessible(true);
+                method.invoke(targetObject, targetArguments);
+                return null;
+            };
             Subject.doAsPrivileged(subject, pea, null);
         } catch( PrivilegedActionException pe) {
             Throwable e;

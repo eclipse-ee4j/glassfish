@@ -1,7 +1,7 @@
 
 # Eclipse GlassFish Documentation and User Guides
 
-## <a name="current">Current Release - 7.0.0</a>
+## <a name="current">Current Release - ${glassfish.version.latest}</a>
 
 * [Add On Component Development Guide](latest/add-on-component-development-guide.html)
   ([pdf](latest/add-on-component-development-guide.pdf))
@@ -36,7 +36,7 @@
 * [Upgrade Guide](latest/upgrade-guide.html)
   ([pdf](latest/upgrade-guide.pdf))
 
-## <a name="development">Development Version</a>
+## <a name="development">Development Version - ${project.version}</a>
 
 * [Add On Component Development Guide](SNAPSHOT/add-on-component-development-guide.html)
   ([pdf](SNAPSHOT/add-on-component-development-guide.pdf))
@@ -71,37 +71,37 @@
 * [Upgrade Guide](SNAPSHOT/upgrade-guide.html)
   ([pdf](SNAPSHOT/upgrade-guide.pdf))
 
-## <a name="5.1.0">5.1.0 Release</a>
+## <a name="${glassfish.version.5x}">${glassfish.version.5x} Release</a>
 
-* [Add On Component Development Guide](5.1.0/add-on-component-development-guide/toc.html)
-  ([pdf](5.1.0/add-on-component-development-guide.pdf))
-* [Administration Guide](5.1.0/administration-guide/toc.html)
-  ([pdf](5.1.0/administration-guide.pdf))
-* [Application Deployment Guide](5.1.0/application-deployment-guide/toc.html)
-  ([pdf](5.1.0/application-deployment-guide.pdf))
-* [Application Development Guide](5.1.0/application-development-guide/toc.html)
-  ([pdf](5.1.0/application-development-guide.pdf))
-* [Deployment Planning Guide](5.1.0/deployment-planning-guide/toc.html)
-  ([pdf](5.1.0/deployment-planning-guide.pdf))
-* [Embedded Server Guide](5.1.0/embedded-server-guide/toc.html)
-  ([pdf](5.1.0/embedded-server-guide.pdf))
-* [Error Messages Reference](5.1.0/error-messages-reference/toc.html)
-  ([pdf](5.1.0/error-messages-reference.pdf))
-* [High Availability Administration Guide](5.1.0/ha-administration-guide/toc.html)
-  ([pdf](5.1.0/ha-administration-guide.pdf))
-* [Installation Guide](5.1.0/installation-guide/toc.html)
-  ([pdf](5.1.0/installation-guide.pdf))
-* [Performance Tuning Guide](5.1.0/performance-tuning-guide/toc.html)
-  ([pdf](5.1.0/performance-tuning-guide.pdf))
-* [Quick Start Guide](5.1.0/quick-start-guide/toc.html)
-  ([pdf](5.1.0/quick-start-guide.pdf))
-* [Reference Manual](5.1.0/reference-manual/toc.html)
-  ([pdf](5.1.0/reference-manual.pdf))
-* [Release Notes](5.1.0/release-notes/toc.html)
-  ([pdf](5.1.0/release-notes.pdf))
-* [Security Guide](5.1.0/security-guide/toc.html)
-  ([pdf](5.1.0/security-guide.pdf))
-* [Troubleshooting Guide](5.1.0/troubleshooting-guide/toc.html)
-  ([pdf](5.1.0/troubleshooting-guide.pdf))
-* [Upgrade Guide](5.1.0/upgrade-guide/toc.html)
-  ([pdf](5.1.0/upgrade-guide.pdf))
+* [Add On Component Development Guide](${glassfish.version.5x}/add-on-component-development-guide/toc.html)
+  ([pdf](${glassfish.version.5x}/add-on-component-development-guide.pdf))
+* [Administration Guide](${glassfish.version.5x}/administration-guide/toc.html)
+  ([pdf](${glassfish.version.5x}/administration-guide.pdf))
+* [Application Deployment Guide](${glassfish.version.5x}/application-deployment-guide/toc.html)
+  ([pdf](${glassfish.version.5x}/application-deployment-guide.pdf))
+* [Application Development Guide](${glassfish.version.5x}/application-development-guide/toc.html)
+  ([pdf](${glassfish.version.5x}/application-development-guide.pdf))
+* [Deployment Planning Guide](${glassfish.version.5x}/deployment-planning-guide/toc.html)
+  ([pdf](${glassfish.version.5x}/deployment-planning-guide.pdf))
+* [Embedded Server Guide](${glassfish.version.5x}/embedded-server-guide/toc.html)
+  ([pdf](${glassfish.version.5x}/embedded-server-guide.pdf))
+* [Error Messages Reference](${glassfish.version.5x}/error-messages-reference/toc.html)
+  ([pdf](${glassfish.version.5x}/error-messages-reference.pdf))
+* [High Availability Administration Guide](${glassfish.version.5x}/ha-administration-guide/toc.html)
+  ([pdf](${glassfish.version.5x}/ha-administration-guide.pdf))
+* [Installation Guide](${glassfish.version.5x}/installation-guide/toc.html)
+  ([pdf](${glassfish.version.5x}/installation-guide.pdf))
+* [Performance Tuning Guide](${glassfish.version.5x}/performance-tuning-guide/toc.html)
+  ([pdf](${glassfish.version.5x}/performance-tuning-guide.pdf))
+* [Quick Start Guide](${glassfish.version.5x}/quick-start-guide/toc.html)
+  ([pdf](${glassfish.version.5x}/quick-start-guide.pdf))
+* [Reference Manual](${glassfish.version.5x}/reference-manual/toc.html)
+  ([pdf](${glassfish.version.5x}/reference-manual.pdf))
+* [Release Notes](${glassfish.version.5x}/release-notes/toc.html)
+  ([pdf](${glassfish.version.5x}/release-notes.pdf))
+* [Security Guide](${glassfish.version.5x}/security-guide/toc.html)
+  ([pdf](${glassfish.version.5x}/security-guide.pdf))
+* [Troubleshooting Guide](${glassfish.version.5x}/troubleshooting-guide/toc.html)
+  ([pdf](${glassfish.version.5x}/troubleshooting-guide.pdf))
+* [Upgrade Guide](${glassfish.version.5x}/upgrade-guide/toc.html)
+  ([pdf](${glassfish.version.5x}/upgrade-guide.pdf))

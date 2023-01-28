@@ -40,14 +40,10 @@
         <!-- the directory where the current snapshot is published -->
         <dir.snap>${site.output.dir}/docs/SNAPSHOT</dir.snap>
         <!-- add a new property for each new release -->
-        <docs.5x.version>5.1.0</docs.5x.version>
-        <docs.5x.dir>${site.output.dir}/docs/${docs.5x.version}</docs.5x.dir>
-        <docs.6x.version>6.2.5</docs.6x.version>
-        <docs.6x.dir>${site.output.dir}/docs/${docs.6x.version}</docs.6x.dir>
-        <docs.7x.version>7.0.0</docs.7x.version>
-        <docs.7x.dir>${site.output.dir}/docs/${docs.7x.version}</docs.7x.dir>
+        <docs.5x.dir>${site.output.dir}/docs/${glassfish.version.5x}</docs.5x.dir>
+        <docs.6x.dir>${site.output.dir}/docs/${glassfish.version.6x}</docs.6x.dir>
+        <docs.7x.dir>${site.output.dir}/docs/${glassfish.version.7x}</docs.7x.dir>
         <!-- the "latest" version; update when a new release is done -->
-        <docs.version>${docs.7x.version}</docs.version>
     </properties>
 
     <!--
@@ -134,7 +130,7 @@
                                         <artifactItem>
                                             <groupId>org.glassfish.docs</groupId>
                                             <artifactId>distribution</artifactId>
-                                            <version>${docs.7x.version}</version>
+                                            <version>${glassfish.version.7x}</version>
                                             <outputDirectory>
                                                 ${docs.7x.dir}
                                             </outputDirectory>
@@ -161,7 +157,7 @@
                                         <artifactItem>
                                             <groupId>org.glassfish.docs</groupId>
                                             <artifactId>distribution</artifactId>
-                                            <version>${docs.6x.version}</version>
+                                            <version>${glassfish.version.6x}</version>
                                             <outputDirectory>
                                                 ${docs.6x.dir}
                                             </outputDirectory>
@@ -188,7 +184,7 @@
                                         <artifactItem>
                                             <groupId>org.glassfish.docs</groupId>
                                             <artifactId>distribution</artifactId>
-                                            <version>${docs.5x.version}</version>
+                                            <version>${glassfish.version.5x}</version>
                                             <outputDirectory>
                                                 ${docs.5x.dir}
                                             </outputDirectory>
@@ -200,7 +196,7 @@
                                 Add additional execution blocks here as
                                 new releases are made, using the above
                                 as a template.  Don't forget to update
-                                the docs.version property.
+                                the glassfish.version.latest property.
                             -->
                         </executions>
                     </plugin>
@@ -227,7 +223,7 @@
                                           />
                                         <symlink
                                           link="${site.output.dir}/docs/latest"
-                                          resource="${docs.version}"/>
+                                          resource="${glassfish.version.latest}"/>
                                     </target>
                                 </configuration>
                             </execution>

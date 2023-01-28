@@ -16,7 +16,7 @@
 
 ## Eclipse GlassFish Documentation and User Guides
 
-* [Current release](docs#current)
+* [Current release (7.0.0)](docs#current)
 * [Development version](docs#development)
 * [5.1.0 release](docs#5.1.0)
 

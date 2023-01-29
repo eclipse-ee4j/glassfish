@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +17,23 @@
 
 package com.sun.enterprise.web;
 
-import static java.text.MessageFormat.format;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterRegistration;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextAttributeListener;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRegistration;
+import jakarta.servlet.ServletRequestAttributeListener;
+import jakarta.servlet.ServletRequestListener;
+import jakarta.servlet.SessionCookieConfig;
+import jakarta.servlet.SessionTrackingMode;
+import jakarta.servlet.descriptor.JspConfigDescriptor;
+import jakarta.servlet.http.HttpSessionAttributeListener;
+import jakarta.servlet.http.HttpSessionIdListener;
+import jakarta.servlet.http.HttpSessionListener;
 
 import java.io.File;
 import java.io.InputStream;
@@ -40,23 +56,7 @@ import org.apache.catalina.deploy.FilterMap;
 import org.glassfish.embeddable.web.config.SecurityConfig;
 import org.glassfish.web.LogFacade;
 
-import jakarta.servlet.Filter;
-import jakarta.servlet.FilterRegistration;
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.Servlet;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletContextAttributeListener;
-import jakarta.servlet.ServletContextListener;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRegistration;
-import jakarta.servlet.ServletRequestAttributeListener;
-import jakarta.servlet.ServletRequestListener;
-import jakarta.servlet.SessionCookieConfig;
-import jakarta.servlet.SessionTrackingMode;
-import jakarta.servlet.descriptor.JspConfigDescriptor;
-import jakarta.servlet.http.HttpSessionAttributeListener;
-import jakarta.servlet.http.HttpSessionIdListener;
-import jakarta.servlet.http.HttpSessionListener;
+import static java.text.MessageFormat.format;
 
 /**
  * Facade object which masks the internal <code>Context</code> object from the web application.
@@ -75,15 +75,15 @@ public class ContextFacade extends WebModule {
      * Wrapped web module.
      */
     private WebModule context;
-    private File docRoot;
-    private String contextRoot;
-    private ClassLoader classLoader;
+    private final File docRoot;
+    private final String contextRoot;
+    private final ClassLoader classLoader;
 
-    private Map<String, String> filters = new HashMap<String, String>();
-    private Map<String, String> servletNameFilterMappings = new HashMap<>();
-    private Map<String, String> urlPatternFilterMappings = new HashMap<>();
-    private Map<String, String> servlets = new HashMap<>();
-    private Map<String, String[]> servletMappings = new HashMap<>();
+    private final Map<String, String> filters = new HashMap<>();
+    private final Map<String, String> servletNameFilterMappings = new HashMap<>();
+    private final Map<String, String> urlPatternFilterMappings = new HashMap<>();
+    private final Map<String, String> servlets = new HashMap<>();
+    private final Map<String, String[]> servletMappings = new HashMap<>();
 
     protected List<String> listenerNames = new ArrayList<>();
 
@@ -365,7 +365,7 @@ public class ContextFacade extends WebModule {
 
     public FilterRegistration.Dynamic addFilterFacade(String filterName, String className) {
         DynamicFilterRegistrationImpl regis = (DynamicFilterRegistrationImpl) filterRegistrationMap.get(filterName);
-        FilterDef filterDef = null;
+        final FilterDef filterDef;
         if (regis == null) {
             filterDef = new FilterDef();
         } else {

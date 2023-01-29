@@ -720,7 +720,7 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
      */
     private List<String> orderedLibs;
 
-    /** <jsp-config> related info aggregated from web.xml and web-fragment.xml */
+    /** The <code>jsp-config</code> element related info aggregated from web.xml and web-fragment.xml */
     private JspConfigDescriptor jspConfigDesc;
 
     /**

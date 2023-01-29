@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
- * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -61,16 +61,33 @@ import org.apache.catalina.util.ServerInfo;
  * a web application's execution environment.  An instance of this class is
  * associated with each instance of <code>StandardContext</code>.
  *
- * @author Craig R. McClanahan
- * @author Remy Maucherat
- * @version $Revision: 1.15.2.1 $ $Date: 2008/04/17 18:37:06 $
+ * @author Craig R. McClanahan 2008
+ * @author Remy Maucherat 2008
  */
 public class ApplicationContext implements ServletContext {
 
-    // ----------------------------------------------------------- Constructors
-
     private static final Logger log = LogFacade.getLogger();
     private static final ResourceBundle rb = log.getResourceBundle();
+
+    /** The context attributes for this context. */
+    private final Map<String, Object> attributes = new ConcurrentHashMap<>();
+
+    /** List of read only attributes for this context. */
+    private final HashMap<String, String> readOnlyAttributes = new HashMap<>();
+
+    /** Lock for synchronizing attributes and readOnlyAttributes */
+    private final Object attributesLock = new Object();
+
+    /** The Context instance with which we are associated. */
+    private final StandardContext context;
+
+    /** The facade around this object. */
+    private final ServletContext facade = new ApplicationContextFacade(this);
+
+    /** The merged context initialization parameters for this Context. */
+    private final ConcurrentMap<String, String> parameters = new ConcurrentHashMap<>();
+
+    private boolean isRestricted;
 
 
     /**
@@ -81,324 +98,163 @@ public class ApplicationContext implements ServletContext {
      */
     public ApplicationContext(StandardContext context) {
         this.context = context;
-
-        setAttribute("com.sun.faces.useMyFaces",
-                     Boolean.valueOf(context.isUseMyFaces()));
-    }
-
-    public StandardContext getStandardContext() {
-        return context;
+        setAttribute("com.sun.faces.useMyFaces", context.isUseMyFaces());
     }
 
 
-    // ----------------------------------------------------- Instance Variables
-
     /**
-     * The context attributes for this context.
+     * @return the facade associated with this ApplicationContext.
      */
-    private final Map<String, Object> attributes = new ConcurrentHashMap<>();
+    protected ServletContext getFacade() {
+        return this.facade;
+    }
+
 
     /**
-     * List of read only attributes for this context.
-     */
-    private final HashMap<String, String> readOnlyAttributes = new HashMap<>();
-
-    /**
-     * Lock for synchronizing attributes and readOnlyAttributes
-     */
-    private final Object attributesLock = new Object();
-
-    /**
-     * The Context instance with which we are associated.
-     */
-    private final StandardContext context;
-
-    /**
-     * The facade around this object.
-     */
-    private final ServletContext facade = new ApplicationContextFacade(this);
-
-    /**
-     * The merged context initialization parameters for this Context.
-     */
-    private final ConcurrentMap<String, String> parameters = new ConcurrentHashMap<>();
-
-    private boolean isRestricted;
-
-
-    // --------------------------------------------------------- Public Methods
-
-    /**
-     * Return the resources object that is mapped to a specified path.
-     * The path must begin with a "/" and is interpreted as relative to the
-     * current context root.
+     * @return the resources object that is mapped to a specified path.
+     *         The path must begin with a "/" and is interpreted as relative
+     *         to the current context root.
      */
     public DirContext getResources() {
         return context.getResources();
     }
 
 
-    // ------------------------------------------------- ServletContext Methods
-
-    /**
-     * Return the value of the specified context attribute, if any;
-     * otherwise return <code>null</code>.
-     *
-     * @param name Name of the context attribute to return
-     */
     @Override
     public Object getAttribute(String name) {
         return attributes.get(name);
     }
 
-    /**
-     * Return an enumeration of the names of the context attributes
-     * associated with this context.
-     */
+
     @Override
     public Enumeration<String> getAttributeNames() {
         return new Enumerator<>(attributes.keySet(), true);
     }
 
-    /**
-     * Returns the context path of the web application.
-     *
-     * <p>The context path is the portion of the request URI that is used
-     * to select the context of the request. The context path always comes
-     * first in a request URI. The path starts with a "/" character but does
-     * not end with a "/" character. For servlets in the default (root)
-     * context, this method returns "".
-     *
-     * <p>It is possible that a servlet container may match a context by
-     * more than one context path. In such cases the
-     * {@link jakarta.servlet.http.HttpServletRequest#getContextPath()}
-     * will return the actual context path used by the request and it may
-     * differ from the path returned by this method.
-     * The context path returned by this method should be considered as the
-     * prime or preferred context path of the application.
-     *
-     * @see jakarta.servlet.http.HttpServletRequest#getContextPath()
-     */
+
     @Override
     public String getContextPath() {
         return context.getPath();
     }
 
-    /**
-     * Return a <code>ServletContext</code> object that corresponds to a
-     * specified URI on the server.  This method allows servlets to gain
-     * access to the context for various parts of the server, and as needed
-     * obtain <code>RequestDispatcher</code> objects or resources from the
-     * context.  The given path must be absolute (beginning with a "/"),
-     * and is interpreted based on our virtual host's document root.
-     *
-     * @param uri Absolute URI of a resource on the server
-     */
+
     @Override
     public ServletContext getContext(String uri) {
         return context.getContext(uri);
     }
 
-    /**
-     * Return the value of the specified initialization parameter, or
-     * <code>null</code> if this parameter does not exist.
-     *
-     * @param name Name of the initialization parameter to retrieve
-     */
+
     @Override
     public String getInitParameter(final String name) {
         return parameters.get(name);
     }
 
-    /**
-     * Return the names of the context's initialization parameters, or an
-     * empty enumeration if the context has no initialization parameters.
-     */
+
     @Override
     public Enumeration<String> getInitParameterNames() {
         return new Enumerator<>(parameters.keySet());
     }
 
-    /**
-     * @return true if the context initialization parameter with the given
-     * name and value was set successfully on this ServletContext, and false
-     * if it was not set because this ServletContext already contains a
-     * context initialization parameter with a matching name
-     */
+
     @Override
     public boolean setInitParameter(String name, String value) {
         if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
+            throw new UnsupportedOperationException(rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
         }
-
         return parameters.putIfAbsent(name, value) == null;
     }
 
-    /**
-     * Return the major version of the Java Servlet API that we implement.
-     */
+
     @Override
     public int getMajorVersion() {
         return Constants.MAJOR_VERSION;
     }
 
-    /**
-     * Return the minor version of the Java Servlet API that we implement.
-     */
+
     @Override
     public int getMinorVersion() {
         return Constants.MINOR_VERSION;
     }
 
-    /**
-     * Gets the major version of the Servlet specification that the
-     * application represented by this ServletContext is based on.
-     */
+
     @Override
     public int getEffectiveMajorVersion() {
         return context.getEffectiveMajorVersion();
     }
 
-    /**
-     * Gets the minor version of the Servlet specification that the
-     * application represented by this ServletContext is based on.
-     */
+
     @Override
     public int getEffectiveMinorVersion() {
         return context.getEffectiveMinorVersion();
     }
 
-    /**
-     * Return the MIME type of the specified file, or <code>null</code> if
-     * the MIME type cannot be determined.
-     *
-     * @param file Filename for which to identify a MIME type
-     */
+
     @Override
     public String getMimeType(String file) {
         return context.getMimeType(file);
     }
 
-    /**
-     * Return a <code>RequestDispatcher</code> object that acts as a
-     * wrapper for the named servlet.
-     *
-     * @param name Name of the servlet for which a dispatcher is requested
-     */
+
     @Override
     public RequestDispatcher getNamedDispatcher(String name) {
         return context.getNamedDispatcher(name);
     }
 
-    /**
-     * @param path The virtual path to be translated
-     *
-     * @return the real path corresponding to the given virtual path, or
-     * <code>null</code> if the container was unable to perform the
-     * translation
-     */
+
     @Override
     public String getRealPath(String path) {
         return context.getRealPath(path);
     }
 
-    /**
-     * Return a <code>RequestDispatcher</code> instance that acts as a
-     * wrapper for the resource at the given path.  The path must begin
-     * with a "/" or be empty, and is interpreted as relative to the current
-     * context root.
-     *
-     * @param path The path to the desired resource.
-     */
+
     @Override
     public RequestDispatcher getRequestDispatcher(String path) {
         return context.getRequestDispatcher(path);
     }
 
-    /**
-     * Return the URL to the resource that is mapped to a specified path.
-     * The path must begin with a "/" and is interpreted as relative to the
-     * current context root.
-     *
-     * @param path The path to the desired resource
-     *
-     * @exception MalformedURLException if the path is not given
-     *  in the correct form
-     */
+
     @Override
-    public URL getResource(String path)
-        throws MalformedURLException {
+    public URL getResource(String path) throws MalformedURLException {
         return context.getResource(path);
     }
 
-    /**
-     * Return the requested resource as an <code>InputStream</code>.  The
-     * path must be specified according to the rules described under
-     * <code>getResource</code>.  If no such resource can be identified,
-     * return <code>null</code>.
-     *
-     * @param path The path to the desired resource.
-     */
+
     @Override
     public InputStream getResourceAsStream(String path) {
         return context.getResourceAsStream(path);
     }
 
-    /**
-     * Return a Set containing the resource paths of resources member of the
-     * specified collection. Each path will be a String starting with
-     * a "/" character. The returned set is immutable.
-     *
-     * @param path Collection path
-     */
+
     @Override
     public Set<String> getResourcePaths(String path) {
         return context.getResourcePaths(path);
     }
 
-    /**
-     * Return the name and version of the servlet container.
-     */
+
     @Override
     public String getServerInfo() {
-        return (ServerInfo.getServerInfo());
+        return ServerInfo.getServerInfo();
     }
 
-    /**
-     * Return the display name of this web application.
-     */
+
     @Override
     public String getServletContextName() {
-        return (context.getDisplayName());
+        return context.getDisplayName();
     }
 
-    /**
-     * Writes the specified message to a servlet log file.
-     *
-     * @param message Message to be written
-     */
+
     @Override
     public void log(String message) {
         context.log(message);
     }
 
-    /**
-     * Writes the specified message and exception to a servlet log file.
-     *
-     * @param message Message to be written
-     * @param throwable Exception to be reported
-     */
+
     @Override
     public void log(String message, Throwable throwable) {
         context.log(message, throwable);
     }
 
-    /**
-     * Remove the context attribute with the specified name, if any.
-     *
-     * @param name Name of the context attribute to be removed
-     */
+
     @Override
     public void removeAttribute(String name) {
         Object value = null;
@@ -428,17 +284,11 @@ public class ApplicationContext implements ServletContext {
             }
             ServletContextAttributeListener listener = (ServletContextAttributeListener) eventListener;
             try {
-                context.fireContainerEvent(
-                    ContainerEvent.BEFORE_CONTEXT_ATTRIBUTE_REMOVED,
-                    listener);
+                context.fireContainerEvent(ContainerEvent.BEFORE_CONTEXT_ATTRIBUTE_REMOVED, listener);
                 listener.attributeRemoved(event);
-                context.fireContainerEvent(
-                    ContainerEvent.AFTER_CONTEXT_ATTRIBUTE_REMOVED,
-                    listener);
+                context.fireContainerEvent(ContainerEvent.AFTER_CONTEXT_ATTRIBUTE_REMOVED, listener);
             } catch (Throwable t) {
-                context.fireContainerEvent(
-                    ContainerEvent.AFTER_CONTEXT_ATTRIBUTE_REMOVED,
-                    listener);
+                context.fireContainerEvent(ContainerEvent.AFTER_CONTEXT_ATTRIBUTE_REMOVED, listener);
                 // FIXME - should we do anything besides log these?
                 log.log(Level.WARNING, LogFacade.ATTRIBUTES_EVENT_LISTENER_EXCEPTION, t);
             }
@@ -446,20 +296,12 @@ public class ApplicationContext implements ServletContext {
 
     }
 
-    /**
-     * Bind the specified value with the specified context attribute name,
-     * replacing any existing value for that name.
-     *
-     * @param name Attribute name to be bound
-     * @param value New attribute value to be bound
-     */
+
     @Override
     public void setAttribute(String name, Object value) {
-
         // Name cannot be null
         if (name == null) {
-            throw new NullPointerException
-                    (rb.getString(LogFacade.NULL_NAME_EXCEPTION));
+            throw new NullPointerException(rb.getString(LogFacade.NULL_NAME_EXCEPTION));
         }
 
         // Null value is the same as removeAttribute()
@@ -484,62 +326,43 @@ public class ApplicationContext implements ServletContext {
             attributes.put(name, value);
         }
 
-        if (name.equals(Globals.CLASS_PATH_ATTR) ||
-                name.equals(Globals.JSP_TLD_URI_TO_LOCATION_MAP)) {
+        if (name.equals(Globals.CLASS_PATH_ATTR) || name.equals(Globals.JSP_TLD_URI_TO_LOCATION_MAP)) {
             setAttributeReadOnly(name);
         }
 
         // Notify interested application event listeners
-        List<EventListener> listeners =
-            context.getApplicationEventListeners();
+        List<EventListener> listeners = context.getApplicationEventListeners();
         if (listeners.isEmpty()) {
             return;
         }
 
         ServletContextAttributeEvent event = null;
         if (replaced) {
-            event =
-                new ServletContextAttributeEvent(context.getServletContext(),
-                                                 name, oldValue);
+            event = new ServletContextAttributeEvent(context.getServletContext(), name, oldValue);
         } else {
-            event =
-                new ServletContextAttributeEvent(context.getServletContext(),
-                                                 name, value);
+            event = new ServletContextAttributeEvent(context.getServletContext(), name, value);
         }
 
         for (EventListener eventListener : listeners) {
             if (!(eventListener instanceof ServletContextAttributeListener)) {
                 continue;
-        }
-            ServletContextAttributeListener listener =
-                (ServletContextAttributeListener) eventListener;
+            }
+            ServletContextAttributeListener listener = (ServletContextAttributeListener) eventListener;
             try {
                 if (replaced) {
-                    context.fireContainerEvent(
-                        ContainerEvent.BEFORE_CONTEXT_ATTRIBUTE_REPLACED,
-                        listener);
+                    context.fireContainerEvent(ContainerEvent.BEFORE_CONTEXT_ATTRIBUTE_REPLACED, listener);
                     listener.attributeReplaced(event);
-                    context.fireContainerEvent(
-                        ContainerEvent.AFTER_CONTEXT_ATTRIBUTE_REPLACED,
-                        listener);
+                    context.fireContainerEvent(ContainerEvent.AFTER_CONTEXT_ATTRIBUTE_REPLACED, listener);
                 } else {
-                    context.fireContainerEvent(
-                        ContainerEvent.BEFORE_CONTEXT_ATTRIBUTE_ADDED,
-                        listener);
+                    context.fireContainerEvent(ContainerEvent.BEFORE_CONTEXT_ATTRIBUTE_ADDED, listener);
                     listener.attributeAdded(event);
-                    context.fireContainerEvent(
-                        ContainerEvent.AFTER_CONTEXT_ATTRIBUTE_ADDED,
-                        listener);
+                    context.fireContainerEvent(ContainerEvent.AFTER_CONTEXT_ATTRIBUTE_ADDED, listener);
                 }
             } catch (Throwable t) {
                 if (replaced) {
-                    context.fireContainerEvent(
-                        ContainerEvent.AFTER_CONTEXT_ATTRIBUTE_REPLACED,
-                        listener);
+                    context.fireContainerEvent(ContainerEvent.AFTER_CONTEXT_ATTRIBUTE_REPLACED, listener);
                 } else {
-                    context.fireContainerEvent(
-                        ContainerEvent.AFTER_CONTEXT_ATTRIBUTE_ADDED,
-                        listener);
+                    context.fireContainerEvent(ContainerEvent.AFTER_CONTEXT_ATTRIBUTE_ADDED, listener);
                 }
                 // FIXME - should we do anything besides log these?
                 log.log(Level.WARNING, LogFacade.ATTRIBUTES_EVENT_LISTENER_EXCEPTION, t);
@@ -547,363 +370,261 @@ public class ApplicationContext implements ServletContext {
         }
     }
 
-    /*
-     * Adds the servlet with the given name and class name to this
-     * servlet context.
-     */
+
     @Override
-    public ServletRegistration.Dynamic addServlet(
-            String servletName, String className) {
+    public ServletRegistration.Dynamic addServlet(String servletName, String className) {
         if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
+            throw new UnsupportedOperationException(rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
         }
         return context.addServlet(servletName, className);
     }
 
-    /*
-     * Registers the given servlet instance with this ServletContext
-     * under the given <tt>servletName</tt>.
-     */
+
     @Override
-    public ServletRegistration.Dynamic addServlet(
-            String servletName, Servlet servlet) {
+    public ServletRegistration.Dynamic addServlet(String servletName, Servlet servlet) {
         if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
+            throw new UnsupportedOperationException(rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
         }
         return context.addServlet(servletName, servlet);
     }
 
-    /*
-     * Adds the servlet with the given name and class type to this
-     * servlet context.
-     */
+
     @Override
-    public ServletRegistration.Dynamic addServlet(String servletName,
-            Class <? extends Servlet> servletClass) {
+    public ServletRegistration.Dynamic addServlet(String servletName, Class<? extends Servlet> servletClass) {
         if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
+            throw new UnsupportedOperationException(rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
         }
         return context.addServlet(servletName, servletClass);
     }
 
-    /*
-     * Adds the servlet with the given name and jsp file to this
-     * servlet context.
-    */
+
     @Override
-    public ServletRegistration.Dynamic addJspFile(
-            String servletName, String jspFile) {
+    public ServletRegistration.Dynamic addJspFile(String servletName, String jspFile) {
         if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
+            throw new UnsupportedOperationException(rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
         }
         return context.addJspFile(servletName, jspFile);
     }
 
-    /**
-     * Instantiates the given Servlet class and performs any required
-     * resource injection into the new Servlet instance before returning
-     * it.
-     */
+
     @Override
-    public <T extends Servlet> T createServlet(Class<T> clazz)
-            throws ServletException {
+    public <T extends Servlet> T createServlet(Class<T> clazz) throws ServletException {
         if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
+            throw new UnsupportedOperationException(rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
         }
         return context.createServlet(clazz);
     }
 
-    /**
-     * Gets the ServletRegistration corresponding to the servlet with the
-     * given <tt>servletName</tt>.
-     */
+
     @Override
     public ServletRegistration getServletRegistration(String servletName) {
         if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
+            throw new UnsupportedOperationException(rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
         }
         return context.getServletRegistration(servletName);
     }
 
-    /**
-     * Gets a Map of the ServletRegistration objects corresponding to all
-     * currently registered servlets.
-     */
+
     @Override
     public Map<String, ? extends ServletRegistration> getServletRegistrations() {
         if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
+            throw new UnsupportedOperationException(rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
         }
         return context.getServletRegistrations();
     }
 
-    /**
-     * Adds the filter with the given name and class name to this servlet
-     * context.
-     */
+
     @Override
-    public FilterRegistration.Dynamic addFilter(
-            String filterName, String className) {
+    public FilterRegistration.Dynamic addFilter(String filterName, String className) {
         if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
+            throw new UnsupportedOperationException(rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
         }
         return context.addFilter(filterName, className);
     }
 
-    /*
-     * Registers the given filter instance with this ServletContext
-     * under the given <tt>filterName</tt>.
-     */
+
     @Override
-    public FilterRegistration.Dynamic addFilter(
-            String filterName, Filter filter) {
+    public FilterRegistration.Dynamic addFilter(String filterName, Filter filter) {
         if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
+            throw new UnsupportedOperationException(rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
         }
         return context.addFilter(filterName, filter);
     }
 
-    /**
-     * Adds the filter with the given name and class type to this servlet
-     * context.
-     */
+
     @Override
-    public FilterRegistration.Dynamic addFilter(String filterName,
-            Class <? extends Filter> filterClass) {
+    public FilterRegistration.Dynamic addFilter(String filterName, Class<? extends Filter> filterClass) {
         if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
+            throw new UnsupportedOperationException(rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
         }
         return context.addFilter(filterName, filterClass);
     }
 
-    /**
-     * Instantiates the given Filter class and performs any required
-     * resource injection into the new Filter instance before returning
-     * it.
-     */
+
     @Override
-    public <T extends Filter> T createFilter(Class<T> clazz)
-            throws ServletException {
+    public <T extends Filter> T createFilter(Class<T> clazz) throws ServletException {
         if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
+            throw new UnsupportedOperationException(rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
         }
         return context.createFilter(clazz);
     }
 
-    /**
-     * Gets the FilterRegistration corresponding to the filter with the
-     * given <tt>filterName</tt>.
-     */
+
     @Override
     public FilterRegistration getFilterRegistration(String filterName) {
         if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
+            throw new UnsupportedOperationException(rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
         }
         return context.getFilterRegistration(filterName);
     }
 
-    /**
-     * Gets a Map of the FilterRegistration objects corresponding to all
-     * currently registered filters.
-     */
+
     @Override
     public Map<String, ? extends FilterRegistration> getFilterRegistrations() {
         if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
+            throw new UnsupportedOperationException(rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
         }
         return context.getFilterRegistrations();
     }
 
-    /**
-     * Gets the <tt>SessionCookieConfig</tt> object through which various
-     * properties of the session tracking cookies created on behalf of this
-     * <tt>ServletContext</tt> may be configured.
-     */
+
     @Override
     public SessionCookieConfig getSessionCookieConfig() {
         if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
+            throw new UnsupportedOperationException(rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
         }
         return context.getSessionCookieConfig();
     }
 
-    /**
-     * Sets the session tracking modes that are to become effective for this
-     * <tt>ServletContext</tt>.
-     */
+
     @Override
-    public void setSessionTrackingModes(
-            Set<SessionTrackingMode> sessionTrackingModes) {
+    public void setSessionTrackingModes(Set<SessionTrackingMode> sessionTrackingModes) {
         if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
+            throw new UnsupportedOperationException(rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
         }
         context.setSessionTrackingModes(sessionTrackingModes);
     }
 
-    /**
-     * Gets the session tracking modes that are supported by default for this
-     * <tt>ServletContext</tt>.
-     *
-     * @return set of the session tracking modes supported by default for
-     * this <tt>ServletContext</tt>
-     */
+
     @Override
     public Set<SessionTrackingMode> getDefaultSessionTrackingModes() {
         return context.getDefaultSessionTrackingModes();
     }
 
-    /**
-     * Gets the session tracking modes that are in effect for this
-     * <tt>ServletContext</tt>.
-     *
-     * @return set of the session tracking modes in effect for this
-     * <tt>ServletContext</tt>
-     */
+
     @Override
     public Set<SessionTrackingMode> getEffectiveSessionTrackingModes() {
         return context.getEffectiveSessionTrackingModes();
     }
 
-    /**
-     * Adds the listener with the given class name to this ServletContext.
-     */
+
     @Override
     public void addListener(String className) {
         if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
+            throw new UnsupportedOperationException(rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
         }
         context.addListener(className);
     }
 
-    /**
-     * Adds the given listener to this ServletContext.
-     */
+
     @Override
     public <T extends EventListener> void addListener(T t) {
         if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
+            throw new UnsupportedOperationException(rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
         }
         context.addListener(t);
     }
 
-    /**
-     * Adds a listener of the given class type to this ServletContext.
-     */
+
     @Override
-    public void addListener(Class <? extends EventListener> listenerClass) {
+    public void addListener(Class<? extends EventListener> listenerClass) {
         if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
+            throw new UnsupportedOperationException(rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
         }
         context.addListener(listenerClass);
     }
 
-    /**
-     * Instantiates the given EventListener class and performs any
-     * required resource injection into the new EventListener instance
-     * before returning it.
-     */
+
     @Override
-    public <T extends EventListener> T createListener(Class<T> clazz)
-            throws ServletException {
+    public <T extends EventListener> T createListener(Class<T> clazz) throws ServletException {
         if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
+            throw new UnsupportedOperationException(rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
         }
         return context.createListener(clazz);
     }
 
-    /**
-     * Gets the <code>&lt;jsp-config&gt;</code> related configuration
-     * that was aggregated from the <code>web.xml</code> and
-     * <code>web-fragment.xml</code> descriptor files of the web application
-     * represented by this ServletContext.
-     */
+
     @Override
     public JspConfigDescriptor getJspConfigDescriptor() {
         return context.getJspConfigDescriptor();
     }
+
 
     @Override
     public ClassLoader getClassLoader() {
         return context.getClassLoader();
     }
 
+
     @Override
     public void declareRoles(String... roleNames) {
         if (isRestricted) {
-            throw new UnsupportedOperationException(
-                rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
+            throw new UnsupportedOperationException(rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
         }
         context.declareRoles(roleNames);
     }
+
 
     @Override
     public String getVirtualServerName() {
         return context.getVirtualServerName();
     }
 
+
     @Override
     public int getSessionTimeout() {
         return context.getSessionTimeout();
     }
 
+
     @Override
     public void setSessionTimeout(int sessionTimeout) {
         if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
+            throw new UnsupportedOperationException(rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
         }
         context.setSessionTimeout(sessionTimeout);
     }
+
 
     @Override
     public String getRequestCharacterEncoding() {
         return context.getRequestCharacterEncoding();
     }
 
+
     @Override
     public void setRequestCharacterEncoding(String encoding) {
         if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
+            throw new UnsupportedOperationException(rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
         }
         context.setRequestCharacterEncoding(encoding);
     }
+
 
     @Override
     public String getResponseCharacterEncoding() {
         return context.getResponseCharacterEncoding();
     }
 
+
     @Override
     public void setResponseCharacterEncoding(String encoding) {
         if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
+            throw new UnsupportedOperationException(rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
         }
         context.setResponseCharacterEncoding(encoding);
     }
 
-
-    // -------------------------------------------------------- Package Methods
 
     /**
      * Clear all application-created attributes.
@@ -923,12 +644,6 @@ public class ApplicationContext implements ServletContext {
         }
     }
 
-    /**
-     * Return the facade associated with this ApplicationContext.
-     */
-    protected ServletContext getFacade() {
-        return this.facade;
-    }
 
     /**
      * Set an attribute as read only.
@@ -940,6 +655,7 @@ public class ApplicationContext implements ServletContext {
             }
         }
     }
+
 
     void setRestricted(boolean isRestricted) {
         this.isRestricted = isRestricted;

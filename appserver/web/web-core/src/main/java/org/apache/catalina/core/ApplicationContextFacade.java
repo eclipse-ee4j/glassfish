@@ -53,9 +53,7 @@ import static org.apache.catalina.Globals.IS_SECURITY_ENABLED;
  */
 public final class ApplicationContextFacade implements ServletContext {
 
-    /**
-     * Wrapped application context.
-     */
+    /** Wrapped application context. */
     private final ApplicationContext context;
 
     /**
@@ -107,20 +105,12 @@ public final class ApplicationContextFacade implements ServletContext {
     }
 
 
-    /**
-     * Gets the major version of the Servlet specification that the
-     * application represented by this ServletContext is based on.
-     */
     @Override
     public int getEffectiveMajorVersion() {
         return context.getEffectiveMajorVersion();
     }
 
 
-    /**
-     * Gets the minor version of the Servlet specification that the
-     * application represented by this ServletContext is based on.
-     */
     @Override
     public int getEffectiveMinorVersion() {
         return context.getEffectiveMinorVersion();
@@ -256,12 +246,7 @@ public final class ApplicationContextFacade implements ServletContext {
         return context.getInitParameterNames();
     }
 
-    /**
-     * @return true if the context initialization parameter with the given
-     * name and value was set successfully on this ServletContext, and false
-     * if it was not set because this ServletContext already contains a
-     * context initialization parameter with a matching name
-     */
+
     @Override
     public boolean setInitParameter(String name, String value) {
         if (IS_SECURITY_ENABLED) {
@@ -373,11 +358,6 @@ public final class ApplicationContextFacade implements ServletContext {
     }
 
 
-    /**
-     * Instantiates the given Servlet class and performs any required
-     * resource injection into the new Servlet instance before returning
-     * it.
-     */
     @Override
     public <T extends Servlet> T createServlet(Class<T> clazz) throws ServletException {
         if (IS_SECURITY_ENABLED) {
@@ -392,10 +372,6 @@ public final class ApplicationContextFacade implements ServletContext {
     }
 
 
-    /**
-     * Gets the ServletRegistration corresponding to the servlet with the
-     * given <tt>servletName</tt>.
-     */
     @Override
     public ServletRegistration getServletRegistration(String servletName) {
         if (IS_SECURITY_ENABLED) {
@@ -406,10 +382,6 @@ public final class ApplicationContextFacade implements ServletContext {
     }
 
 
-    /**
-     * Gets a Map of the ServletRegistration objects corresponding to all
-     * currently registered servlets.
-     */
     @Override
     public Map<String, ? extends ServletRegistration> getServletRegistrations() {
         if (IS_SECURITY_ENABLED) {
@@ -420,9 +392,6 @@ public final class ApplicationContextFacade implements ServletContext {
     }
 
 
-    /**
-     * Adds the filter with the given name and class name to this servlet context.
-     */
     @Override
     public FilterRegistration.Dynamic addFilter(String filterName, String className) {
         if (IS_SECURITY_ENABLED) {
@@ -433,10 +402,6 @@ public final class ApplicationContextFacade implements ServletContext {
     }
 
 
-    /**
-     * Registers the given filter instance with this ServletContext
-     * under the given <tt>filterName</tt>.
-     */
     @Override
     public FilterRegistration.Dynamic addFilter(String filterName, Filter filter) {
         if (IS_SECURITY_ENABLED) {
@@ -447,10 +412,6 @@ public final class ApplicationContextFacade implements ServletContext {
     }
 
 
-    /**
-     * Adds the filter with the given name and class type to this servlet
-     * context.
-     */
     @Override
     public FilterRegistration.Dynamic addFilter(String filterName, Class<? extends Filter> filterClass) {
         if (IS_SECURITY_ENABLED) {
@@ -461,11 +422,6 @@ public final class ApplicationContextFacade implements ServletContext {
     }
 
 
-    /**
-     * Instantiates the given Filter class and performs any required
-     * resource injection into the new Filter instance before returning
-     * it.
-     */
     @Override
     public <T extends Filter> T createFilter(Class<T> clazz) throws ServletException {
         if (IS_SECURITY_ENABLED) {
@@ -480,10 +436,6 @@ public final class ApplicationContextFacade implements ServletContext {
     }
 
 
-    /**
-     * Gets the FilterRegistration corresponding to the filter with the
-     * given <tt>filterName</tt>.
-     */
     @Override
     public FilterRegistration getFilterRegistration(String filterName) {
         if (IS_SECURITY_ENABLED) {
@@ -494,10 +446,6 @@ public final class ApplicationContextFacade implements ServletContext {
     }
 
 
-    /**
-     * Gets a Map of the FilterRegistration objects corresponding to all
-     * currently registered filters.
-     */
     @Override
     public Map<String, ? extends FilterRegistration> getFilterRegistrations() {
         if (IS_SECURITY_ENABLED) {
@@ -508,11 +456,6 @@ public final class ApplicationContextFacade implements ServletContext {
     }
 
 
-    /**
-     * Gets the <tt>SessionCookieConfig</tt> object through which various
-     * properties of the session tracking cookies created on behalf of this
-     * <tt>ServletContext</tt> may be configured.
-     */
     @Override
     public SessionCookieConfig getSessionCookieConfig() {
         if (IS_SECURITY_ENABLED) {
@@ -523,10 +466,6 @@ public final class ApplicationContextFacade implements ServletContext {
     }
 
 
-    /**
-     * Sets the session tracking modes that are to become effective for this
-     * <tt>ServletContext</tt>.
-     */
     @Override
     public void setSessionTrackingModes(Set<SessionTrackingMode> sessionTrackingModes) {
         if (IS_SECURITY_ENABLED) {
@@ -541,13 +480,6 @@ public final class ApplicationContextFacade implements ServletContext {
     }
 
 
-    /**
-     * Gets the session tracking modes that are supported by default for this
-     * <tt>ServletContext</tt>.
-     *
-     * @return set of the session tracking modes supported by default for
-     * this <tt>ServletContext</tt>
-     */
     @Override
     public Set<SessionTrackingMode> getDefaultSessionTrackingModes() {
         if (IS_SECURITY_ENABLED) {
@@ -558,13 +490,6 @@ public final class ApplicationContextFacade implements ServletContext {
     }
 
 
-    /**
-     * Gets the session tracking modes that are in effect for this
-     * <tt>ServletContext</tt>.
-     *
-     * @return set of the session tracking modes in effect for this
-     * <tt>ServletContext</tt>
-     */
     @Override
     public Set<SessionTrackingMode> getEffectiveSessionTrackingModes() {
         if (IS_SECURITY_ENABLED) {
@@ -575,9 +500,6 @@ public final class ApplicationContextFacade implements ServletContext {
     }
 
 
-    /**
-     * Adds the listener with the given class name to this ServletContext.
-     */
     @Override
     public void addListener(String className) {
         if (IS_SECURITY_ENABLED) {
@@ -592,9 +514,6 @@ public final class ApplicationContextFacade implements ServletContext {
     }
 
 
-    /**
-     * Adds the given listener to this ServletContext.
-     */
     @Override
     public <T extends EventListener> void addListener(T listener) {
         if (IS_SECURITY_ENABLED) {
@@ -609,9 +528,6 @@ public final class ApplicationContextFacade implements ServletContext {
     }
 
 
-    /**
-     * Adds a listener of the given class type to this ServletContext.
-     */
     @Override
     public void addListener(Class<? extends EventListener> listenerClass) {
         if (IS_SECURITY_ENABLED) {
@@ -626,11 +542,6 @@ public final class ApplicationContextFacade implements ServletContext {
     }
 
 
-    /**
-     * Instantiates the given EventListener class and performs any
-     * required resource injection into the new EventListener instance
-     * before returning it.
-     */
     @Override
     public <T extends EventListener> T createListener(Class<T> clazz) throws ServletException {
         if (IS_SECURITY_ENABLED) {
@@ -645,12 +556,6 @@ public final class ApplicationContextFacade implements ServletContext {
     }
 
 
-    /**
-     * Gets the <code>&lt;jsp-config&gt;</code> related configuration
-     * that was aggregated from the <code>web.xml</code> and
-     * <code>web-fragment.xml</code> descriptor files of the web application
-     * represented by this ServletContext.
-     */
     @Override
     public JspConfigDescriptor getJspConfigDescriptor() {
         if (IS_SECURITY_ENABLED) {

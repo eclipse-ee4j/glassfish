@@ -6,17 +6,17 @@ Eclipse GlassFish 7.0.0 is a final release, containing final [Jakarta EE 10](htt
 
 Download GlassFish Server:
 
-* [Eclipse GlassFish 7.0.0, Jakarta EE Platform, 10](https://download.eclipse.org/ee4j/glassfish/glassfish-7.0.0.zip)
-* [Eclipse GlassFish 7.0.0, Jakarta EE Web Profile, 10](https://download.eclipse.org/ee4j/glassfish/web-7.0.0.zip)
+* [Eclipse GlassFish ${glassfish.version.7x}, Jakarta EE Platform, 10](https://download.eclipse.org/ee4j/glassfish/glassfish-${glassfish.version.7x}.zip)
+* [Eclipse GlassFish ${glassfish.version.7x}, Jakarta EE Web Profile, 10](https://download.eclipse.org/ee4j/glassfish/web-${glassfish.version.7x}.zip)
 
 Download GlassFish Embedded:
 
-* [Eclipse GlassFish Embedded 7.0.0, Jakarta EE Platform, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-all/7.0.0/jar)
-* [Eclipse GlassFish Embedded 7.0.0, Jakarta EE Web Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-web/7.0.0/jar)
+* [Eclipse GlassFish Embedded ${glassfish.version.7x}, Jakarta EE Platform, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-all/${glassfish.version.7x}/jar)
+* [Eclipse GlassFish Embedded ${glassfish.version.7x}, Jakarta EE Web Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-web/${glassfish.version.7x}/jar)
 
 More details:
 
-* [Eclipse GlassFish 7.0.0 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.0)
+* [Eclipse GlassFish ${glassfish.version.7x} Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/${glassfish.version.7x})
 * [Jakarte EE Platform Specification Project](https://eclipse-ee4j.github.io/jakartaee-platform/) for more info about Jakarta EE 10
 
 ### All Eclipse GlassFish 7.x Downloads
@@ -37,8 +37,8 @@ GlassFish 6.2.5 updates and reenables a lot of tests that were disabled in previ
 
 For more details on Jakarta EE 9.1, please see the [Jakarte EE Platform Specification Project](https://eclipse-ee4j.github.io/jakartaee-platform/).
 
-* [Eclipse GlassFish 6.2.5, Jakarta EE Platform, 9.1](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-6.2.5.zip)
-* [Eclipse GlassFish 6.2.5, Jakarta EE Web Profile, 9.1](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-6.2.5.zip)
+* [Eclipse GlassFish ${glassfish.version.6x}, Jakarta EE Platform, 9.1](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-${glassfish.version.6x}.zip)
+* [Eclipse GlassFish ${glassfish.version.6x}, Jakarta EE Web Profile, 9.1](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-${glassfish.version.6x}.zip)
 
 ### All Eclipse GlassFish 6.x Downloads
 
@@ -50,8 +50,8 @@ Download all GlassFish 6.x releases at the [Eclipse GlassFish 6.x Downloads](dow
 
 The latest stable releases of Eclipse GlassFish 5.1. This version is compatible with Jakarta EE 8 Specification.
 
-* [Eclipse GlassFish 5.1.0 - Jakarta EE Platform, 8](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip)
-* [Eclipse GlassFish 5.1.0 - Jakarta EE Web Profile, 8](https://www.eclipse.org/downloads/download.php?file=/glassfish/web-5.1.0.zip)
+* [Eclipse GlassFish ${glassfish.version.5x} - Jakarta EE Platform, 8](https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-${glassfish.version.5x}.zip)
+* [Eclipse GlassFish ${glassfish.version.5x} - Jakarta EE Web Profile, 8](https://www.eclipse.org/downloads/download.php?file=/glassfish/web-${glassfish.version.5x}.zip)
 
 
 ----

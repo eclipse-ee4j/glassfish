@@ -16,9 +16,9 @@
 
 ## Eclipse GlassFish Documentation and User Guides
 
-* [Current release](docs#current)
-* [Development version](docs#development)
-* [5.1.0 release](docs#5.1.0)
+* [Current release (${glassfish.version.latest})](docs#current)
+* [Development version (${project.version})](docs#development)
+* [${glassfish.version.5x} release](docs#${glassfish.version.5x})
 
 ## Eclipse Open MQ Documentation
 

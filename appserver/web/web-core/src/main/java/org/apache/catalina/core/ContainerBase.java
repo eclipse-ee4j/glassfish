@@ -1252,13 +1252,13 @@ public abstract class ContainerBase
         }
 
         // Stop our child containers, if any
-        Container children[] = findChildren();
-        for (int i = 0; i < children.length; i++) {
-            if (children[i] instanceof Lifecycle) {
+        Container[] children = findChildren();
+        for (Container child : children) {
+            if (child instanceof Lifecycle) {
                 try {
-                    ((Lifecycle) children[i]).stop();
+                    ((Lifecycle) child).stop();
                 } catch (Throwable t) {
-                    String msg = MessageFormat.format(rb.getString(LogFacade.ERROR_STOPPING_CONTAINER), children[i]);
+                    String msg = MessageFormat.format(rb.getString(LogFacade.ERROR_STOPPING_CONTAINER), child);
                     log.log(Level.SEVERE, msg, t);
                 }
             }
@@ -1266,8 +1266,8 @@ public abstract class ContainerBase
 
         // Remove children - so next start can work
         children = findChildren();
-        for (int i = 0; i < children.length; i++) {
-            removeChild(children[i]);
+        for (Container child : children) {
+            removeChild(child);
         }
 
         // Stop our subordinate components, if any
@@ -1499,8 +1499,8 @@ public abstract class ContainerBase
         }
 
         ContainerEvent event = new ContainerEvent(this, type, data);
-        for (int i = 0; i < list.length; i++) {
-            list[i].containerEvent(event);
+        for (ContainerListener listener : list) {
+            listener.containerEvent(event);
         }
     }
 
@@ -1511,17 +1511,17 @@ public abstract class ContainerBase
     protected void startChildren() {
 
         Container children[] = findChildren();
-        for (int i = 0; i < children.length; i++) {
-            if (children[i] instanceof Lifecycle) {
+        for (Container child : children) {
+            if (child instanceof Lifecycle) {
                 try {
-                    ((Lifecycle) children[i]).start();
+                    ((Lifecycle) child).start();
                 } catch (Throwable t) {
-                    String msg = MessageFormat.format(rb.getString(LogFacade.CONTAINER_NOT_STARTED_EXCEPTION), children[i]);
+                    String msg = MessageFormat.format(rb.getString(LogFacade.CONTAINER_NOT_STARTED_EXCEPTION), child);
                     log.log(Level.SEVERE, msg, t);
-                    if (children[i] instanceof Context) {
-                        ((Context) children[i]).setAvailable(false);
-                    } else if (children[i] instanceof Wrapper) {
-                        ((Wrapper) children[i]).setAvailable(Long.MAX_VALUE);
+                    if (child instanceof Context) {
+                        ((Context) child).setAvailable(false);
+                    } else if (child instanceof Wrapper) {
+                        ((Wrapper) child).setAvailable(Long.MAX_VALUE);
                     }
                 }
             }
@@ -1761,9 +1761,9 @@ public abstract class ContainerBase
                 Thread.currentThread().setContextClassLoader(cl);
             }
             Container[] children = container.findChildren();
-            for (int i = 0; i < children.length; i++) {
-                if (children[i].getBackgroundProcessorDelay() <= 0) {
-                    processChildren(children[i], cl);
+            for (Container child : children) {
+                if (child.getBackgroundProcessorDelay() <= 0) {
+                    processChildren(child, cl);
                 }
             }
         }

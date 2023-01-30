@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -44,6 +44,7 @@ import jakarta.ws.rs.core.PathSegment;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.HttpHeaders;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.glassfish.admin.rest.Constants;
 import org.glassfish.admin.rest.RestLogging;
@@ -470,7 +471,9 @@ public class Util {
     public static File saveTemporaryFile(String fileName, InputStream fileStream) {
         File file;
         try {
-            file = Files.createTempDirectory("gf_uploads").resolve(fileName).toFile();
+            Path uploadDir = Files.createTempDirectory("gf_uploads");
+            uploadDir.toFile().deleteOnExit();
+            file = uploadDir.resolve(fileName).toFile();
         } catch (IOException e) {
             throw new IllegalStateException("Could not create a temp file for " + fileName, e);
         }

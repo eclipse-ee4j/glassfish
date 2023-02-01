@@ -9,6 +9,15 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
+## January 30, 2023 -- Eclipse GlassFish 7.0.1 Available
+
+We are pleased to announce the release of Eclipse GlassFish 7.0.1. 
+
+The main features of this release are an overhaul of some of the class loader mechanics (speeding up various operations), and making shutdown monitoring more reliable. A new docker image has been added as well (it will be officially published on docker hub later).
+Furthermore in this release a number of components have been updated to their latest version, and the code can now be build with JDK 20ea.
+
+Eclipse GlassFish 7.0.1 compiles and runs with JDK 11 to JDK 19 releases. MicroProfile support requires JDK 17 or higher. JDK 20ea30 has been succesfully used to compile and run GlassFish as well, but is not yet officially supported.
+
 ## December 14, 2022 - The final version of Eclipse GlassFish 7 released
 
 After huge effort by the Eclipse GlassFish team and a lot of fellow contributors, Eclipse GlassFish 7.0.0 is finally released.

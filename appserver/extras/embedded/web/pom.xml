@@ -979,14 +979,11 @@
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
+        
+        <!-- Jakarta Pages and Jakarta Pages Standard Tags -->
         <dependency>
             <groupId>jakarta.servlet.jsp</groupId>
             <artifactId>jakarta.servlet.jsp-api</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.wasp</groupId>
-            <artifactId>wasp</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -995,8 +992,8 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.web</groupId>
-            <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+            <groupId>org.glassfish.wasp</groupId>
+            <artifactId>wasp</artifactId>
             <optional>true</optional>
         </dependency>
         

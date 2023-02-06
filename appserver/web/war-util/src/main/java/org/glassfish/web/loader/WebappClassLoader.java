@@ -18,13 +18,14 @@
 
 package org.glassfish.web.loader;
 
-import com.sun.appserv.BytecodePreprocessor;
-import com.sun.enterprise.loader.ResourceLocator;
-import com.sun.enterprise.security.integration.DDPermissionsLoader;
-import com.sun.enterprise.security.integration.PermsHolder;
-import com.sun.enterprise.util.io.FileUtils;
-
-import jakarta.annotation.PreDestroy;
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.System.Logger.Level.WARNING;
+import static org.glassfish.web.loader.LogFacade.UNABLE_TO_LOAD_CLASS;
+import static org.glassfish.web.loader.LogFacade.UNSUPPORTED_VERSION;
+import static org.glassfish.web.loader.LogFacade.getString;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -78,14 +79,13 @@ import org.glassfish.api.deployment.InstrumentableClassLoader;
 import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.web.loader.RepositoryManager.RepositoryResource;
 
-import static java.lang.System.Logger.Level.DEBUG;
-import static java.lang.System.Logger.Level.ERROR;
-import static java.lang.System.Logger.Level.INFO;
-import static java.lang.System.Logger.Level.TRACE;
-import static java.lang.System.Logger.Level.WARNING;
-import static org.glassfish.web.loader.LogFacade.UNABLE_TO_LOAD_CLASS;
-import static org.glassfish.web.loader.LogFacade.UNSUPPORTED_VERSION;
-import static org.glassfish.web.loader.LogFacade.getString;
+import com.sun.appserv.BytecodePreprocessor;
+import com.sun.enterprise.loader.ResourceLocator;
+import com.sun.enterprise.security.integration.DDPermissionsLoader;
+import com.sun.enterprise.security.integration.PermsHolder;
+import com.sun.enterprise.util.io.FileUtils;
+
+import jakarta.annotation.PreDestroy;
 
 /**
  * Specialized web application class loader.
@@ -151,7 +151,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         "sun",                                       // Sun classes (JRE internals)
         "org.xml.sax",                               // SAX 1 & 2 (JRE, jrt-fs.jar)
         "org.w3c.dom",                               // DOM 1 & 2 (JRE, jrt-fs.jar)
-        "org.apache.taglibs.standard",               // jakarta.servlet.jsp.jstl.jar
+        "org.glassfish.wasp.standard",               // wasp.jar
         "com.sun.faces"                              // jakarta.faces.jar
     );
     private static final Set<String> DELEGATED_RESOURCE_PATHS = DELEGATED_PACKAGES.stream()

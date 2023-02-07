@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,18 +17,23 @@
 
 package org.glassfish.faces.integration;
 
+import static com.sun.enterprise.util.Utility.isEmpty;
+import static com.sun.enterprise.util.net.JarURIPattern.getJarEntries;
+import static java.text.MessageFormat.format;
+import static java.util.Collections.unmodifiableMap;
+import static java.util.logging.Level.WARNING;
+import static java.util.regex.Pattern.compile;
+import static org.glassfish.web.loader.LogFacade.TLD_PROVIDER_IGNORE_URL;
+import static org.glassfish.web.loader.LogFacade.UNABLE_TO_DETERMINE_TLD_RESOURCES;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.text.MessageFormat;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
@@ -39,7 +44,6 @@ import org.jvnet.hk2.annotations.Service;
 
 import com.sun.enterprise.module.HK2Module;
 import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.util.net.JarURIPattern;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -50,7 +54,6 @@ import jakarta.inject.Singleton;
  * @author Shing Wai Chan
  * @author Sahoo
  */
-
 @Service(name = "jsfTld")
 @Singleton
 public class GlassFishTldProvider implements TldProvider, PostConstruct {
@@ -88,17 +91,15 @@ public class GlassFishTldProvider implements TldProvider, PostConstruct {
     public synchronized Map<URI, List<String>> getTldListenerMap() {
         if (tldListenerMap == null) {
             tldListenerMap = new HashMap<URI, List<String>>();
-            Set<Map.Entry<URI, List<String>>> entrySet = tldMap.entrySet();
-            for (Map.Entry<URI, List<String>> entry : entrySet) {
-                /*
-                 * In the case of JSF, the only TLD that declares any listener is META-INF/jsf_core.tld
-                 */
+            for (Map.Entry<URI, List<String>> entry : tldMap.entrySet()) {
+                // In the case of Faces, the only TLD that declares any listener is META-INF/jsf_core.tld
                 if (entry.getValue().contains("META-INF/jsf_core.tld")) {
                     tldListenerMap.put(entry.getKey(), entry.getValue());
                     break;
                 }
             }
-            tldListenerMap = Collections.unmodifiableMap(tldListenerMap);
+
+            tldListenerMap = unmodifiableMap(tldListenerMap);
         }
 
         return tldListenerMap;
@@ -106,7 +107,6 @@ public class GlassFishTldProvider implements TldProvider, PostConstruct {
 
     @Override
     public void postConstruct() {
-
         Class<?> jsfImplClass = null;
         try {
             jsfImplClass = getClass().getClassLoader().loadClass("com.sun.faces.spi.InjectionProvider");
@@ -114,39 +114,38 @@ public class GlassFishTldProvider implements TldProvider, PostConstruct {
         }
 
         URI[] uris = null;
-        HK2Module m = null;
+        HK2Module hk2Module = null;
         if (jsfImplClass != null) {
-            m = registry.find(jsfImplClass);
+            hk2Module = registry.find(jsfImplClass);
         }
-        if (m != null) {
-            uris = m.getModuleDefinition().getLocations();
+
+        if (hk2Module != null) {
+            uris = hk2Module.getModuleDefinition().getLocations();
         } else {
             ClassLoader classLoader = getClass().getClassLoader();
             if (classLoader instanceof URLClassLoader) {
                 URL[] urls = ((URLClassLoader) classLoader).getURLs();
-                if (urls != null && urls.length > 0) {
+                if (!isEmpty(urls)) {
                     uris = new URI[urls.length];
                     for (int i = 0; i < urls.length; i++) {
                         try {
                             uris[i] = urls[i].toURI();
                         } catch (URISyntaxException e) {
-                            String msg = rb.getString(LogFacade.TLD_PROVIDER_IGNORE_URL);
-                            msg = MessageFormat.format(msg, urls[i]);
-                            logger.log(Level.WARNING, msg, e);
+                            logger.log(WARNING, format(rb.getString(TLD_PROVIDER_IGNORE_URL), urls[i]), e);
                         }
                     }
                 }
             } else {
-                logger.log(Level.WARNING, LogFacade.UNABLE_TO_DETERMINE_TLD_RESOURCES,
+                logger.log(WARNING, UNABLE_TO_DETERMINE_TLD_RESOURCES,
                         new Object[] { "JSF", classLoader, GlassFishTldProvider.class.getName() });
             }
         }
 
-        if (uris != null && uris.length > 0) {
-            Pattern pattern = Pattern.compile("META-INF/.*\\.tld");
+        if (!isEmpty(uris)) {
+            Pattern pattern = compile("META-INF/.*\\.tld");
             for (URI uri : uris) {
-                List<String> entries = JarURIPattern.getJarEntries(uri, pattern);
-                if (entries != null && entries.size() > 0) {
+                List<String> entries = getJarEntries(uri, pattern);
+                if (!isEmpty(entries)) {
                     tldMap.put(uri, entries);
                 }
             }

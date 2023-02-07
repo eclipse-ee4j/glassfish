@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -186,7 +186,7 @@
                                 <tck-setting key="impl.deploy.timeout.multiplier" value="30"/>
                                 
                                 <tck-setting key="jspservlet.classes" value="${webServerHome}/modules/jakarta.servlet-api.jar${pathsep}${webServerHome}/modules/wasp.jar${pathsep}${webServerHome}/modules/jakarta.servlet.jsp-api.jar"/>
-                                <tck-setting key="jstl.classes" value="${webServerHome}/modules/jakarta.servlet.jsp.jstl.jar"/>
+                                <tck-setting key="jstl.classes" value="${webServerHome}/modules/wasp.jar"/>
                                 <tck-setting key="el.classes" value="${webServerHome}/modules/jakarta.el.jar${pathsep}${webServerHome}/modules/jakarta.el-api.jar"/>
 								
                           

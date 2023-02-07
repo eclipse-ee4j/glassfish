@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2004, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * Copyright (c) 1999 The Apache Software Foundation.  All rights
@@ -54,7 +55,7 @@
 
 package demo.taglib;
 
-import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
+import org.glassfish.wasp.standard.lang.support.ExpressionEvaluatorManager;
 
 import jakarta.servlet.jsp.JspException;
 import jakarta.servlet.jsp.JspTagException;

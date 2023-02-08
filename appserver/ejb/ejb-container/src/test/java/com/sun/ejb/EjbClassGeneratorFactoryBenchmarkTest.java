@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021-2023 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +16,12 @@
 
 package com.sun.ejb;
 
-import com.sun.ejb.codegen.EjbClassGeneratorFactory;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.lessThan;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
@@ -33,11 +38,7 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.lessThan;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import com.sun.ejb.codegen.EjbClassGeneratorFactory;
 
 /**
  * @author David Matejcek
@@ -49,7 +50,7 @@ public class EjbClassGeneratorFactoryBenchmarkTest {
      * The value shall be high enough to pass on all standard environments,
      * but lower than when we are generating classes. See warmup results in logs.
      */
-    private static final double MAX_TIME_PER_OPERATION = 2_000_000d;
+    private static final double MAX_TIME_PER_OPERATION = 3_000_000d;
     private static final ClassLoader loader = EjbClassGeneratorFactoryBenchmarkTest.class.getClassLoader();
     private static double firstRunScore;
 

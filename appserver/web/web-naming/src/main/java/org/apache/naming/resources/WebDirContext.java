@@ -397,6 +397,12 @@ public class WebDirContext extends FileDirContext {
         }
     }
 
+
+    @Override
+    public String toString() {
+        return super.toString() + "[" + docBase + "]";
+    }
+
     // ----------------------------------------------- FileResource Inner Class
 
 

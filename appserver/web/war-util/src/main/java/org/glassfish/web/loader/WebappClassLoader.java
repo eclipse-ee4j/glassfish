@@ -18,14 +18,13 @@
 
 package org.glassfish.web.loader;
 
-import static java.lang.System.Logger.Level.DEBUG;
-import static java.lang.System.Logger.Level.ERROR;
-import static java.lang.System.Logger.Level.INFO;
-import static java.lang.System.Logger.Level.TRACE;
-import static java.lang.System.Logger.Level.WARNING;
-import static org.glassfish.web.loader.LogFacade.UNABLE_TO_LOAD_CLASS;
-import static org.glassfish.web.loader.LogFacade.UNSUPPORTED_VERSION;
-import static org.glassfish.web.loader.LogFacade.getString;
+import com.sun.appserv.BytecodePreprocessor;
+import com.sun.enterprise.loader.ResourceLocator;
+import com.sun.enterprise.security.integration.DDPermissionsLoader;
+import com.sun.enterprise.security.integration.PermsHolder;
+import com.sun.enterprise.util.io.FileUtils;
+
+import jakarta.annotation.PreDestroy;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -79,13 +78,14 @@ import org.glassfish.api.deployment.InstrumentableClassLoader;
 import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.web.loader.RepositoryManager.RepositoryResource;
 
-import com.sun.appserv.BytecodePreprocessor;
-import com.sun.enterprise.loader.ResourceLocator;
-import com.sun.enterprise.security.integration.DDPermissionsLoader;
-import com.sun.enterprise.security.integration.PermsHolder;
-import com.sun.enterprise.util.io.FileUtils;
-
-import jakarta.annotation.PreDestroy;
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.System.Logger.Level.WARNING;
+import static org.glassfish.web.loader.LogFacade.UNABLE_TO_LOAD_CLASS;
+import static org.glassfish.web.loader.LogFacade.UNSUPPORTED_VERSION;
+import static org.glassfish.web.loader.LogFacade.getString;
 
 /**
  * Specialized web application class loader.
@@ -480,8 +480,9 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
      * Add a new repository to the set of places this ClassLoader can look for
      * classes to be loaded.
      *
-     * @param repository Name of a source of classes to be loaded, such as a
-     *            directory pathname, a JAR file pathname, or a ZIP file pathname
+     * @param repository Name of a source of classes to be loaded, such as a directory pathname,
+     *            a JAR file pathname, or a ZIP file pathname, relative to the
+     *            {@link #setResources(DirContext)}
      * @param directory
      */
     public void addRepository(String repository, File directory) {
@@ -674,6 +675,9 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     public Enumeration<URL> findResources(String name) throws IOException {
         LOG.log(DEBUG, "findResources(name={0})", name);
         checkStatus(LifeCycleStatus.RUNNING);
+        if (jndiResources == null) {
+            return super.findResources(name);
+        }
         List<URL> foundResources = new ArrayList<>();
         List<RepositoryResource> resources = repositoryManager.getResources(name);
         for (RepositoryResource resource : resources) {
@@ -1035,6 +1039,9 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     @Override
     public boolean modified() {
         checkStatus(LifeCycleStatus.RUNNING);
+        if (jndiResources == null) {
+            return false;
+        }
         // Checking for modified loaded resources
         for (PathTimestamp pathTimestamp : pathTimestamps) {
             try {
@@ -1308,40 +1315,56 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
      */
     private ResourceEntry findResourceInternalFromRepositories(String name, String path) {
         LOG.log(TRACE, "findResourceInternalFromRepositories(name={0}, path={1})", name, path);
+        if (jndiResources == null) {
+            return null;
+        }
         for (RepositoryResource repoResource : repositoryManager.getResources(path)) {
             try {
                 final Object lookupResult = jndiResources.lookup(repoResource.name);
-                final Resource resource;
                 if (lookupResult instanceof Resource) {
-                    resource = (Resource) lookupResult;
+                    return toResourceEntry(name, repoResource, (Resource) lookupResult);
+                } else if (lookupResult instanceof WebDirContext) {
+                    ResourceAttributes attributes = getResourceAttributes(repoResource.name);
+                    return toResourceEntry(name, repoResource, attributes);
                 } else {
                     continue;
                 }
-                final ResourceEntry entry;
-                if (SECURITY_MANAGER == null) {
-                    entry = new ResourceEntry(toURL(repoResource.file));
-                } else {
-                    PrivilegedAction<ResourceEntry> action = () -> new ResourceEntry(toURL(repoResource.file));
-                    entry = AccessController.doPrivileged(action);
-                }
-                final ResourceAttributes attributes = getResourceAttributes(repoResource.name);
-                entry.lastModified = attributes.getLastModified();
-                final int contentLength = (int) attributes.getContentLength();
-                try (InputStream binaryStream = resource.streamContent()) {
-                    if (binaryStream != null) {
-                        entry.readEntryData(name, binaryStream, contentLength, null);
-                    }
-                } catch (IOException e) {
-                    LOG.log(DEBUG, "Could not read entry data for " + name, e);
-                    return null;
-                }
-                pathTimestamps.add(new PathTimestamp(repoResource.name, entry.lastModified));
-                return entry;
             } catch (NamingException e) {
                 // not found, search continues.
             }
         }
         return null;
+    }
+
+
+    private ResourceEntry toResourceEntry(String name, RepositoryResource repoResource, Resource resource)
+        throws NamingException {
+        final ResourceAttributes attributes = getResourceAttributes(repoResource.name);
+        final ResourceEntry entry = toResourceEntry(name, repoResource, attributes);
+        final int contentLength = (int) attributes.getContentLength();
+        try (InputStream binaryStream = resource.streamContent()) {
+            if (binaryStream != null) {
+                entry.readEntryData(name, binaryStream, contentLength, null);
+            }
+        } catch (IOException e) {
+            LOG.log(DEBUG, "Could not read entry data for " + name, e);
+            return null;
+        }
+        return entry;
+    }
+
+
+    private ResourceEntry toResourceEntry(String name, RepositoryResource repoResource, ResourceAttributes attributes) {
+        final ResourceEntry entry;
+        if (SECURITY_MANAGER == null) {
+            entry = new ResourceEntry(toURL(repoResource.file));
+        } else {
+            PrivilegedAction<ResourceEntry> action = () -> new ResourceEntry(toURL(repoResource.file));
+            entry = AccessController.doPrivileged(action);
+        }
+        entry.lastModified = attributes.getLastModified();
+        pathTimestamps.add(new PathTimestamp(repoResource.name, entry.lastModified));
+        return entry;
     }
 
 

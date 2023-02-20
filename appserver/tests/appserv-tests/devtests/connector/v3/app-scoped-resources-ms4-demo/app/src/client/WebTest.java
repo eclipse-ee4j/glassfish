@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation. All rights reserved.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -42,13 +43,12 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-private static void goGet(String host, int port,
-                              String result, String contextPath) {
+    private static void goGet(String host, int port, String result, String contextPath) {
 
-        try{
+        try {
             long time = System.currentTimeMillis();
             Socket s = new Socket(host, port);
-            s.setSoTimeout(2000000);
+            s.setSoTimeout(4000000);
             OutputStream os = s.getOutputStream();
 
             contextPath += "?url=" + contextPath;
@@ -72,9 +72,9 @@ private static void goGet(String host, int port,
                 if (index != -1) {
                     count++;
                     index = line.indexOf(":");
-                    String status = line.substring(index+1);
+                    String status = line.substring(index + 1);
 
-                    if (status.equalsIgnoreCase("PASS")){
+                    if (status.equalsIgnoreCase("PASS")) {
                         stat.addStatus(TEST_NAME + " test-" + count, stat.PASS);
                     } else {
                         stat.addStatus(TEST_NAME + " test-" + count, stat.FAIL);
@@ -82,15 +82,15 @@ private static void goGet(String host, int port,
                 }
 
                 int pos = line.indexOf("END_OF_EXECUTION");
-                if(pos != -1){
+                if (pos != -1) {
                     bis.close();
                     is.close();
                     break;
                 }
             }
-        } catch( Exception ex){
-           ex.printStackTrace();
-           stat.addStatus(TEST_NAME, stat.FAIL);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            stat.addStatus(TEST_NAME, stat.FAIL);
         }
-   }
+    }
 }

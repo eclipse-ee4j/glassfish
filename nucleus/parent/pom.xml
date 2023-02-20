@@ -156,7 +156,7 @@
 
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
 
-        <easymock.version>4.3</easymock.version>
+        <easymock.version>5.1.0</easymock.version>
         <jmockit.version>1.49</jmockit.version>
         <junit.version>5.9.2</junit.version>
         <jmh.version>1.36</jmh.version>
@@ -869,11 +869,11 @@
                            <exclude>**/*ITest.java</exclude>
                            <exclude>**/*IT.java</exclude>
                         </excludes>
-                        <systemProperties>
+                        <systemPropertyVariables>
                             <java.util.logging.manager>${test.logManager}</java.util.logging.manager>
                             <java.util.logging.config.useDefaults>true</java.util.logging.config.useDefaults>
                             <java.util.logging.config.defaultLevel>${test.logLevel}</java.util.logging.config.defaultLevel>
-                        </systemProperties>
+                        </systemPropertyVariables>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -886,17 +886,16 @@
                         <argLine>${failsafe.argLine}</argLine>
                         <trimStackTrace>false</trimStackTrace>
                         <useSystemClassLoader>true</useSystemClassLoader>
-                        <verbose>true</verbose>
                         <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>
                         <includes>
                            <include>**/*ITest.java</include>
                            <include>**/*IT.java</include>
                         </includes>
-                        <systemProperties>
+                        <systemPropertyVariables>
                             <java.util.logging.manager>${test.logManager}</java.util.logging.manager>
                             <java.util.logging.config.useDefaults>true</java.util.logging.config.useDefaults>
                             <java.util.logging.config.defaultLevel>${test.logLevel}</java.util.logging.config.defaultLevel>
-                        </systemProperties>
+                        </systemPropertyVariables>
                     </configuration>
                     <executions>
                         <execution>
@@ -941,7 +940,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>10.6.0</version>
+                            <version>10.7.0</version>
                         </dependency>
                     </dependencies>
                     <executions>

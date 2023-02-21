@@ -55,6 +55,8 @@ import java.util.logging.Level;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Arrays;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.nio.channels.SelectableChannel;
 import org.glassfish.enterprise.iiop.util.ThreadPoolStats;
 import org.glassfish.enterprise.iiop.util.ThreadPoolStatsImpl;
@@ -75,8 +77,6 @@ public class PEORBConfigurator implements ORBConfigurator {
     private static ORB theORB;
     private static ThreadPoolManager threadpoolMgr = null;
     private static boolean txServiceInitialized = false;
-
-    private Acceptor lazyAcceptor = null;
 
     static {
         // TODO tsIdent = new TSIdentificationImpl();
@@ -234,59 +234,55 @@ public class PEORBConfigurator implements ORBConfigurator {
         }
     }
 
-    private void createORBListeners( IIOPUtils iiopUtils,
-        IiopListener[] iiopListenerBeans, org.omg.CORBA.ORB orb ) {
+    private void createORBListeners(IIOPUtils iiopUtils,
+            IiopListener[] iiopListenerBeans, org.omg.CORBA.ORB orb) {
 
-        if (iiopListenerBeans != null) {
-            int lazyCount = 0 ;
-            for (IiopListener ilb : iiopListenerBeans) {
-                boolean securityEnabled = Boolean.valueOf( ilb.getSecurityEnabled() ) ;
+        if (iiopListenerBeans == null) {
+            return;
+        }
 
-                boolean isLazy = Boolean.valueOf( ilb.getLazyInit() ) ;
-                if( isLazy ) {
-                    lazyCount++;
-                }
+        var lazyListeners = Stream.of(iiopListenerBeans)
+                .filter(ilb -> Boolean.valueOf(ilb.getLazyInit())).collect(Collectors.toList());
 
-                if (lazyCount > 1) {
-                    throw new IllegalStateException( "Invalid iiop-listener "
-                        + ilb.getId()
-                        + ". Only one iiop-listener can be configured "
-                        + "with lazy-init=true");
-                }
+        if (lazyListeners.size() > 1) {
+            throw new IllegalStateException(
+                    "Only one iiop-listener can be configured with lazy-init=true. "
+                            + lazyListeners.stream().map(ilb -> ilb.getId()).collect(Collectors.toList()));
+        }
 
-                int port = Integer.parseInt( ilb.getPort() ) ;
-                String host = handleAddrAny( ilb.getAddress() ) ;
+        var lazySslListeners = lazyListeners.stream()
+                .filter(ilb -> Boolean.valueOf(ilb.getSecurityEnabled()) && ilb.getSsl() != null)
+                .collect(Collectors.toList());
 
-                if (!securityEnabled || ilb.getSsl() == null) {
-                    if (Boolean.parseBoolean(ilb.getEnabled())) {
-                        Acceptor acceptor = addAcceptor( orb, isLazy, host,
-                                IIOP_CLEAR_TEXT_CONNECTION, port ) ;
-                        if( isLazy ) {
-                            lazyAcceptor = acceptor;
-                        }
-                    }
-                } else {
-                    if (isLazy) {
-                        throw new IllegalStateException( "Invalid iiop-listener "
-                            + ilb.getId()
-                            + ". Lazy-init not supported for SSL iiop-listeners");
-                    }
+        if (lazySslListeners.size() > 0) {
+            throw new IllegalStateException(
+                    "Lazy-init not supported for SSL iiop-listeners. "
+                            + lazySslListeners.stream().map(ilb -> ilb.getId()).collect(Collectors.toList()));
+        }
 
-                    if (Boolean.parseBoolean(ilb.getEnabled())) {
-                        Ssl sslBean = ilb.getSsl() ;
-                        assert sslBean != null ;
-
-                        boolean clientAuth = Boolean.valueOf(
-                            sslBean.getClientAuthEnabled() ) ;
-                        String type = clientAuth ? SSL_MUTUALAUTH : SSL ;
-                        addAcceptor( orb, isLazy, host, type, port ) ;
-                    }
-                }
+        for (IiopListener ilb : iiopListenerBeans) {
+            if (!Boolean.parseBoolean(ilb.getEnabled())) {
+                continue;
             }
 
-            if( (lazyCount == 1) && (lazyAcceptor != null) ) {
-                getHelper().setSelectableChannelDelegate(new AcceptorDelegateImpl(
-                    lazyAcceptor));
+            boolean isLazy = Boolean.valueOf(ilb.getLazyInit());
+            int port = Integer.parseInt(ilb.getPort());
+            String host = handleAddrAny(ilb.getAddress());
+
+            boolean isSslListener = Boolean.valueOf(ilb.getSecurityEnabled()) && ilb.getSsl() != null;
+            if (isSslListener) {
+                Ssl sslBean = ilb.getSsl();
+                boolean clientAuth = Boolean.valueOf(
+                        sslBean.getClientAuthEnabled());
+                String type = clientAuth ? SSL_MUTUALAUTH : SSL;
+                addAcceptor(orb, isLazy, host, type, port);
+            } else {
+                Acceptor acceptor = addAcceptor(orb, isLazy, host,
+                        IIOP_CLEAR_TEXT_CONNECTION, port);
+                if (isLazy) {
+                    getHelper().setSelectableChannelDelegate(new AcceptorDelegateImpl(
+                            acceptor));
+                }
             }
         }
     }

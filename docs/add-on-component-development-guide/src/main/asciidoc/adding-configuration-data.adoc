@@ -647,7 +647,7 @@ import org.jvnet.hk2.config.TransactionFailure;
 === Dotted Names and REST URLs of Configuration Attributes
 
 The {productName} administrative subcommands link:reference-manual/get.html#get[`get`],
-link:reference-manual/list.html#list[`list`], and olink:GSRFM00226[`set`] locate a
+link:reference-manual/list.html#list[`list`], and link:GSRFM00226[`set`] locate a
 configuration attribute through the dotted name of the attribute. The
 dotted name of an attribute of a configuration element is as follows:
 

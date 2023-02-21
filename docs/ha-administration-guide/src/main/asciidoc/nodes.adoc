@@ -310,7 +310,7 @@ following sections.
 ----
 asadmin> list-nodes-dcom --long=true
 ----
-3. Run the olink:GSRFM00100[`delete-node-dcom`] subcommand.
+3. Run the link:GSRFM00100[`delete-node-dcom`] subcommand.
 +
 [source]
 ----
@@ -612,7 +612,7 @@ following sections.
 ----
 asadmin> list-nodes-ssh --long=true
 ----
-3. Run the olink:GSRFM00100[`delete-node-ssh`] subcommand.
+3. Run the link:GSRFM00100[`delete-node-ssh`] subcommand.
 +
 [source]
 ----
@@ -837,7 +837,7 @@ Instance Locally].
 ----
 asadmin> list-nodes-config --long=true
 ----
-3. Run the olink:GSRFM00099[`delete-node-config`] subcommand.
+3. Run the link:GSRFM00099[`delete-node-config`] subcommand.
 +
 [source]
 ----

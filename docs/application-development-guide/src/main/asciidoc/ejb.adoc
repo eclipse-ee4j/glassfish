@@ -1192,7 +1192,7 @@ select the Monitor tab.
 ====
 Running monitoring when it is not needed might impact performance, so
 you might choose to turn monitoring off when it is not in use. For
-details, see "olink:GSADG00011[Administering the Monitoring Service]" in
+details, see "link:GSADG00011[Administering the Monitoring Service]" in
 {productName} Administration Guide.
 ====
 

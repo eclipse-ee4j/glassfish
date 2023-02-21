@@ -348,7 +348,7 @@ existing JNDI resources.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the existing JNDI resources by using
-theolink:GSRFM00179[`list-jndi-resources`] subcommand.
+the link:GSRFM00179[`list-jndi-resources`] subcommand.
 
 [[giwbe]]
 Example 18-6 Listing JNDI Resources
@@ -405,7 +405,7 @@ typing `asadmin help list-jndi-entries` at the command line.
 ===== To Update an External JNDI Resource
 
 1. List the existing JNDI resources by using
-theolink:GSRFM00179[`list-jndi-resources`] subcommand.
+the link:GSRFM00179[`list-jndi-resources`] subcommand.
 2. Use the link:reference-manual/set.html#set[`set`] subcommand to modify an external
 JNDI resource.
 

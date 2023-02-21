@@ -28,7 +28,7 @@ from the Update Tool. Without the Metro add-on component, a servlet or
 EJB component cannot be a web service endpoint, and the
 `glassfish-web.xml` and `glassfish-ejb-jar.xml` elements related to web
 services are ignored. For information about the Update Tool, see
-"olink:GSADG00701[Update Tool]" in {productName}
+"link:GSADG00701[Update Tool]" in {productName}
 Administration Guide.
 
 In addition, the as-install``/modules/webservices-osgi.jar`` and

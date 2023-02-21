@@ -617,7 +617,7 @@ To specify the `addresslist` property (in the format
 `asadmin create-jms-resource` command, escape the : by using `\\`. For
 example, `host1\\:mqport,host2\\:mqport,host3\\:mpqport`. For more
 information about using escape characters, see the
-olink:asadmin[`asadmin`(1M)] help page.
+link:asadmin[`asadmin`(1M)] help page.
 ====
 
 

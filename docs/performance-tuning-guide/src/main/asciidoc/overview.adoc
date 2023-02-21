@@ -522,7 +522,7 @@ http://java.sun.com/developer/technicalArticles/ebeans/sevenrules/[Seven
 Rules for Optimizing Entity Beans]
 (`http://java.sun.com/developer/technicalArticles/ebeans/sevenrules/`)
 * For details on profiling,
-see "link:application-development-guide/setting-up-dev-env.html#profiling-tools[
+see "xref:application-development-guide.adoc#profiling-tools[
 Profiling Tools]" in {productName} Application Development Guide.
 * To view a demonstration video showing how to use the {productName} Performance Tuner,
 see the http://www.youtube.com/watch?v=FavsE2pzAjc[

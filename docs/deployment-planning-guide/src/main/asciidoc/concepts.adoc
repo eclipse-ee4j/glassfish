@@ -414,7 +414,7 @@ Checking an SFSB's state for changes that need to be saved is called
 checkpointing. When enabled, checkpointing generally occurs after any
 transaction involving the SFSB is completed, even if the transaction
 rolls back. For more information on developing stateful session beans,
-see "link:application-development-guide/ejb.html#using-session-beans[Using Session Beans]" in {productName} Application Development Guide. For more information on
+see "xref:application-development-guide.adoc#using-session-beans[Using Session Beans]" in {productName} Application Development Guide. For more information on
 enabling SFSB failover, see "link:ha-administration-guide/session-persistence-and-failover.html#stateful-session-bean-failover[Stateful Session Bean
 Failover]" in {productName} High Availability
 Administration Guide.

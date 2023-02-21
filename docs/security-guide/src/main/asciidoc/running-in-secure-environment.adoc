@@ -517,7 +517,7 @@ classes that run within a JVM. In many cases, where the threat model
 does not include malicious code being run in the JVM, the Java security
 manager is unnecessary. However, when third parties use {productName}
 and untrusted classes are being run, the Java security manager may be
-useful. See "link:application-development-guide/securing-apps.html#enabling-and-disabling-the-security-manager[Enabling and Disabling the Security
+useful. See "xref:application-development-guide.adoc#enabling-and-disabling-the-security-manager[Enabling and Disabling the Security
 Manager]" in {productName} Application
 Development Guide.
 

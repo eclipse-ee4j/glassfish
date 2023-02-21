@@ -1393,7 +1393,7 @@ MW_HOME``/server/lib``.
 * It is also possible to deploy the Thin T3 client in a less global
 manner, so that it is specific to an individual application. For
 information on how to do this, see
-"link:application-development-guide/class-loaders.html#application-specific-class-loading[Application-Specific Class Loading]" in {productName} Application Development Guide.
+"xref:application-development-guide.adoc#application-specific-class-loading[Application-Specific Class Loading]" in {productName} Application Development Guide.
 
 [[configure-weblogic-jms-resources-for-integration]]
 

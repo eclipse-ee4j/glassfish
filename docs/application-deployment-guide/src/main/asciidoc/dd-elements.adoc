@@ -313,7 +313,7 @@ JAAS is available on the ACC. Defines the optional configuration for a
 JAAS authentication realm. Authentication realms require
 provider-specific properties, which vary depending on what a particular
 implementation needs. For more information about how to define realms,
-see "link:application-development-guide/securing-apps.html#realm-configuration[Realm Configuration]" in {productName} Application Development Guide.
+see "xref:application-development-guide.adoc#realm-configuration[Realm Configuration]" in {productName} Application Development Guide.
 
 [[superelements-8]]
 
@@ -378,7 +378,7 @@ Here is an example of the default file realm:
 Which properties an `auth-realm` element uses depends on the value of
 the `auth-realm` element's `name` attribute. The file realm uses `file`
 and `jaas-context` properties. Other realms use different properties.
-See "link:application-development-guide/securing-apps.html#realm-configuration[Realm Configuration]" in {productName} Application Development Guide.
+See "xref:application-development-guide.adoc#realm-configuration[Realm Configuration]" in {productName} Application Development Guide.
 
 [[backend-principal]]
 
@@ -1578,7 +1578,7 @@ xref:#fetched-with[`fetched-with`]
 === `cmp-resource`
 
 Specifies the database to be used for storing CMP beans. For more
-information about this element, see "link:application-development-guide/container_managed-persistence.html#configuring-the-cmp-resource[Configuring the
+information about this element, see "xref:application-development-guide.adoc#configuring-the-cmp-resource[Configuring the
 CMP Resource]" in {productName} Application
 Development Guide.
 
@@ -2573,7 +2573,7 @@ the database. If `false` (the default if this element is not present),
 does not create tables.
 
 This element can be overridden during deployment. See
-"link:application-development-guide/container_managed-persistence.html#generation-options-for-cmp[Generation Options for CMP]" in {productName} Application Development Guide.
+"xref:application-development-guide.adoc#generation-options-for-cmp[Generation Options for CMP]" in {productName} Application Development Guide.
 
 [[superelements-46]]
 
@@ -2680,7 +2680,7 @@ read. If the connection cannot be established, or if the value is not
 recognized, SQL-92 compliance is presumed.
 
 This element can be overridden during deployment. See
-"link:application-development-guide/container_managed-persistence.html#generation-options-for-cmp[Generation Options for CMP]" in {productName} Application Development Guide.
+"xref:application-development-guide.adoc#generation-options-for-cmp[Generation Options for CMP]" in {productName} Application Development Guide.
 
 [[superelements-48]]
 
@@ -2793,7 +2793,7 @@ engine looks in the `ServletContext` for an attribute with a name equal
 to the value specified for this property to determine whether a
 customized CacheKeyGenerator implementation is used. An application can
 provide a customized key generator rather than using the `default`
-helper. See "link:application-development-guide/webapps.html#the-cachekeygenerator-interface[The CacheKeyGenerator Interface]" in
+helper. See "xref:application-development-guide.adoc#the-cachekeygenerator-interface[The CacheKeyGenerator Interface]" in
 {productName} Application Development Guide.
 |===
 
@@ -2932,7 +2932,7 @@ undeployed. If `true`, drops tables from the database. If `false` (the
 default if this element is not present), does not drop tables.
 
 This element can be overridden during deployment. See
-"link:application-development-guide/container_managed-persistence.html#generation-options-for-cmp[Generation Options for CMP]" in {productName} Application Development Guide.
+"xref:application-development-guide.adoc#generation-options-for-cmp[Generation Options for CMP]" in {productName} Application Development Guide.
 
 [[superelements-56]]
 
@@ -3747,7 +3747,7 @@ subelement. The default subelement is as follows:
 Managed fields are multiple CMP or CMR fields that are mapped to the
 same column. A managed field can have any `fetched-with` subelement
 except `<default/>`. For additional information, see
-"link:application-development-guide/container_managed-persistence.html#managed-fields[Managed Fields]" in {productName} Application Development Guide.
+"xref:application-development-guide.adoc#managed-fields[Managed Fields]" in {productName} Application Development Guide.
 
 [[superelements-68]]
 
@@ -5567,7 +5567,7 @@ from which the message-driven bean consumes JMS messages. This
 information is alternatively specified within the
 xref:#activation-config[`activation-config`] subelement of the
 xref:#mdb-resource-adapter[`mdb-resource-adapter`] element. For more information about
-JMS resources, see "link:application-development-guide/jms.html#using-the-java-message-service[Using the Java Message Service]" in
+JMS resources, see "xref:application-development-guide.adoc#using-the-java-message-service[Using the Java Message Service]" in
 {productName} Application Development Guide.
 
 [[superelements-92]]
@@ -5627,7 +5627,7 @@ the JAR from the path in the JAR:
 ----
 
 For information about the allowed contents of a custom JNLP file, see
-"link:application-development-guide/java-clients.html#developing-java-clients[Developing Java Clients]" in {productName} Application Development Guide.
+"xref:application-development-guide.adoc#developing-java-clients[Developing Java Clients]" in {productName} Application Development Guide.
 
 [[superelements-93]]
 
@@ -8238,7 +8238,7 @@ Specifies the name of the realm used to process all authentication
 requests associated with this application. If this element is not
 specified or does not match the name of a configured realm, the default
 realm is used. For more information about realms, see
-"link:application-development-guide/securing-apps.html#realm-configuration[Realm Configuration]" in {productName} Application Development Guide.
+"xref:application-development-guide.adoc#realm-configuration[Realm Configuration]" in {productName} Application Development Guide.
 
 [[superelements-155]]
 
@@ -9109,7 +9109,7 @@ element is empty, the database schema file is automatically generated at
 deployment time. Otherwise, the `schema` element names a `.dbschema`
 file with a pathname relative to the directory containing the
 `sun-cmp-mappings.xml` file, but without the `.dbschema` extension. See
-"link:application-development-guide/container_managed-persistence.html#automatic-database-schema-capture[Automatic Database Schema Capture]" in {productName} Application Development Guide.
+"xref:application-development-guide.adoc#automatic-database-schema-capture[Automatic Database Schema Capture]" in {productName} Application Development Guide.
 
 [[superelements-176]]
 
@@ -9186,7 +9186,7 @@ Table C-131 `schema-generator-properties` Properties
 |Property |Default |Description
 |`use-unique-table-names` |`false` |Specifies that generated table names
 are unique within each {productName} domain. This property can be
-overridden during deployment. See "link:application-development-guide/container_managed-persistence.html#generation-options-for-cmp[Generation Options
+overridden during deployment. See "xref:application-development-guide.adoc#generation-options-for-cmp[Generation Options
 for CMP]" in {productName} Application
 Development Guide.
 
@@ -9407,7 +9407,7 @@ Table C-136 `security-map` Attributes
 === `security-role-mapping`
 
 Maps roles to users or groups in the currently active realm. See
-"link:application-development-guide/securing-apps.html#realm-configuration[Realm Configuration]" in {productName} Application Development Guide.
+"xref:application-development-guide.adoc#realm-configuration[Realm Configuration]" in {productName} Application Development Guide.
 
 The role mapping element maps a role, as specified in the EJB JAR
 `role-name` entries, to a environment-specific user or group. If it maps
@@ -10278,7 +10278,7 @@ xref:#sun-cmp-mapping[`sun-cmp-mapping`]
 === `table-name`
 
 Specifies the name of a database table. The table must be present in the
-database schema file. See "link:application-development-guide/container_managed-persistence.html#automatic-database-schema-capture[Automatic Database Schema
+database schema file. See "xref:application-development-guide.adoc#automatic-database-schema-capture[Automatic Database Schema
 Capture]" in {productName} Application
 Development Guide.
 

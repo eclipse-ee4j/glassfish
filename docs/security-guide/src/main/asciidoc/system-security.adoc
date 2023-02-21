@@ -25,7 +25,7 @@ Administration Console are contained in the Administration Console
 online help.
 
 Information on application security is contained in
-"link:application-development-guide/securing-apps.html#securing-applications[Securing Applications]"
+"xref:application-development-guide.adoc#securing-applications[Securing Applications]"
 in {productName} Application Development Guide.
 
 [[about-system-security-in-glassfish-server]]

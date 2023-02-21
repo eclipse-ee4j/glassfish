@@ -161,7 +161,7 @@ The default value is `true`.
   `contextXmlDefault`;;
     Specifies the location, relative to domain-dir, of the `context.xml`
     file for this virtual server, if one is used. For more information
-    about the `context.xml` file, see "link:application-development-guide/webapps.html#GSDVG00416[Using a
+    about the `context.xml` file, see "xref:application-development-guide.adoc#GSDVG00416[Using a
     context.xml File]" in {productName}
     Application Development Guide and The Context Container
     (`http://tomcat.apache.org/tomcat-5.5-doc/config/context.html`).

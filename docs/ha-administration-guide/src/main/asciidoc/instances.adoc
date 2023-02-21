@@ -1335,7 +1335,7 @@ out of date in the cache.
   domain. Typically, these directories contain common JDBC drivers and
   other utility libraries that are shared by all applications in the domain. +
   The contents of these directories are loaded by the common class
-  loader. For more information, see "link:application-development-guide/class-loaders.html#using-the-common-class-loader[
+  loader. For more information, see "xref:application-development-guide.adoc#using-the-common-class-loader[
   Using the Common Class Loader]" in {productName} Application
   Development Guide.
   The class loader loads the contents of these directories in the following order:

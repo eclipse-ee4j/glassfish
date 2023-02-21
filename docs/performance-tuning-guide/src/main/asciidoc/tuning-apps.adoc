@@ -282,7 +282,7 @@ the server `CLASSPATH`. Put application-related classes into JAR files.
 the HTTP server is tuned in general. For more information, see
 xref:tuning-glassfish.adoc#http-service-settings[HTTP Service Settings].
 * Cache servlet results when possible. For more information, see
-"link:application-development-guide/webapps.html#developing-web-applications[Developing Web Applications]" in {productName} Application Development Guide.
+"xref:application-development-guide.adoc#developing-web-applications[Developing Web Applications]" in {productName} Application Development Guide.
 * If an application does not contain any EJB components, deploy the
 application as a WAR file, not an EAR file.
 
@@ -324,7 +324,7 @@ with the `server.policy` file. If you are sure that no malicious code
 will be run on the server and you do not use authentication within your
 application, then you can disable the security manager.
 
-See "link:application-development-guide/securing-apps.html#enabling-and-disabling-the-security-manager[Enabling and Disabling the Security Manager]" in
+See "xref:application-development-guide.adoc#enabling-and-disabling-the-security-manager[Enabling and Disabling the Security Manager]" in
 {productName} Application Development Guide for
 instructions on enabling or disabling the security manager. If using the
 {productName} Administration Console, navigate to the
@@ -710,7 +710,7 @@ or a single EJB component. When specified at the application level, all
 beans in the application use pass-by-reference semantics when passing
 arguments to their remote interfaces. When specified at the bean level,
 all calls to the remote interface of the bean use pass-by-reference
-semantics. See "link:application-development-guide/ejb.html#value-added-features[Value Added Features]" in {productName} Application Development Guide for more
+semantics. See "xref:application-development-guide.adoc#value-added-features[Value Added Features]" in {productName} Application Development Guide for more
 details about the pass-by-reference flag.
 
 To specify that an EJB component will use pass by reference semantics,

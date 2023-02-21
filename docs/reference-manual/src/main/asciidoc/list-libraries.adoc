@@ -56,7 +56,7 @@ asadmin-options::
 --
 +
 For more information about these directories, see
-  "link:application-development-guide/class-loaders.html#class-loaders[Class Loaders]" in {productName} Application Development Guide.
+  "xref:application-development-guide.adoc#class-loaders[Class Loaders]" in {productName} Application Development Guide.
 
 === Examples
 
@@ -91,6 +91,6 @@ xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 xref:add-library.adoc#add-library[`add-library`(1)],
 xref:remove-library.adoc#remove-library[`remove-library`(1)]
 
-"link:application-development-guide/class-loaders.html#class-loaders[Class Loaders]" in {productName} Application Development Guide
+"xref:application-development-guide.adoc#class-loaders[Class Loaders]" in {productName} Application Development Guide
 
 

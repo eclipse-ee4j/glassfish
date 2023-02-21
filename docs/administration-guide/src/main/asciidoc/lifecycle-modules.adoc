@@ -47,7 +47,7 @@ the containers.
 subsystems, and the server runtime environment.
 
 These events are defined in the `LifecycleEvent` class. For information
-on creating life cycle modules, see "link:application-development-guide/lifecycle-listeners.html#developing-lifecycle-listeners[Developing
+on creating life cycle modules, see "xref:application-development-guide.adoc#developing-lifecycle-listeners[Developing
 Lifecycle Listeners]" in {productName}
 Application Development Guide.
 

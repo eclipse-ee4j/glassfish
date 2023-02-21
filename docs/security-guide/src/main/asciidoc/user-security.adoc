@@ -138,7 +138,7 @@ Custom realm::
   relational database or third-party components. For more information
   about custom realms, see the Administration Console online help. For
   instructions on creating a custom realm, see
-  "link:application-development-guide/securing-apps.html#creating-a-custom-realm[
+  "xref:application-development-guide.adoc#creating-a-custom-realm[
   Creating a Custom Realm]" in
   {productName} Application Development Guide.
 
@@ -174,7 +174,7 @@ You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-auth-realm` at the command line.
 
 For information on creating a custom realm, see
-"link:application-development-guide/securing-apps.html#creating-a-custom-realm[Creating a Custom Realm]" in {productName} Application Development Guide.
+"xref:application-development-guide.adoc#creating-a-custom-realm[Creating a Custom Realm]" in {productName} Application Development Guide.
 
 [[to-list-authentication-realms]]
 
@@ -316,7 +316,7 @@ Modify the deployment descriptor that is associated with your application.
 
 +
 For more information about how to specify a realm, see
-"link:application-development-guide/securing-apps.html#how-to-configure-a-realm[
+"xref:application-development-guide.adoc#how-to-configure-a-realm[
 How to Configure a Realm]" in {productName} Application Development Guide.
 
 7. Assign security roles to users in the realm. +

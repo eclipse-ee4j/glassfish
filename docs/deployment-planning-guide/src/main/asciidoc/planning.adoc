@@ -880,7 +880,7 @@ the Message Queue broker cluster.
 For more information about configuring connection factories, see
 "link:administration-guide/jms.html#administering-jms-connection-factories-and-destinations[Administering JMS Connection Factories and
 Destinations]" in {productName} Administration
-Guide. For more information about MDBs, see "link:application-development-guide/ejb.html#using-message-driven-beans[Using
+Guide. For more information about MDBs, see "xref:application-development-guide.adoc#using-message-driven-beans[Using
 Message-Driven Beans]" in {productName}
 Application Development Guide.
 

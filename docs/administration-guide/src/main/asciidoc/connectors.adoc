@@ -54,7 +54,7 @@ is a Jakarta EE component that enables applications to interact with EIS
 software. A connector module is used by {productName} to implement
 Java Message Service (JMS). Like other Jakarta EE modules, a connector
 module is installed when it is deployed. For instructions on creating a
-connector module, see "link:application-development-guide/connectors.html#developing-connectors[Developing Connectors]" in
+connector module, see "xref:application-development-guide.adoc#developing-connectors[Developing Connectors]" in
 {productName} Application Development Guide.
 * Connector Connection Pool. A connector connection pool is a group of
 reusable connections for a particular EIS. A connector connection pool

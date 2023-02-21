@@ -43,20 +43,20 @@ and available for use. For related information, see
 
 ==== How Do I Debug Applications?
 
-See "link:application-development-guide/debugging-apps.html#debugging-applications[Debugging Applications]" in {productName} Application Development Guide.
+See "xref:application-development-guide.adoc#debugging-applications[Debugging Applications]" in {productName} Application Development Guide.
 
 [[how-do-i-change-application-permissions]]
 
 ==== How Do I Change Application Permissions?
 
-See "link:application-development-guide/securing-apps.html#changing-permissions-for-an-application[Changing Permissions for an Application]" in
+See "xref:application-development-guide.adoc#changing-permissions-for-an-application[Changing Permissions for an Application]" in
 {productName} Application Development Guide.
 
 [[what-are-the-restrictions-and-optimizations-for-session-beans]]
 
 ==== What Are the Restrictions and Optimizations for Session Beans?
 
-See "link:application-development-guide/ejb.html#session-bean-restrictions-and-optimizations[Session Bean Restrictions and Optimizations]" in
+See "xref:application-development-guide.adoc#session-bean-restrictions-and-optimizations[Session Bean Restrictions and Optimizations]" in
 {productName} Application Development Guide.
 
 [[eclipse-faqs]]
@@ -114,7 +114,7 @@ See "link:add-on-component-development-guide/extending-the-admin-console.html#ex
 
 ==== What Are the Restrictions and Optimizations for the Java Persistence API?
 
-See "link:application-development-guide/jpa.html#restrictions-and-optimizations[Restrictions and Optimizations]" in {productName} Application Development Guide.
+See "xref:application-development-guide.adoc#restrictions-and-optimizations[Restrictions and Optimizations]" in {productName} Application Development Guide.
 
 [[update-tool-faqs]]
 

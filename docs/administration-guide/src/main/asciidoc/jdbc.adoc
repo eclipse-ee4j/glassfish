@@ -1059,12 +1059,12 @@ To integrate the JDBC driver into a {productName} domain, copy the
 JAR files into the domain-dir``/lib`` directory, then restart the server.
 This makes classes accessible to all applications or modules deployed on
 servers that share the same configuration. For more information about
-{productName} class loaders, see "link:application-development-guide/class-loaders.html#class-loaders[Class Loaders]" in
+{productName} class loaders, see "xref:application-development-guide.adoc#class-loaders[Class Loaders]" in
 {productName} Application Development Guide.
 
 If you are using an Oracle database with EclipseLink extensions, copy
 the JAR files into the domain-dir``/lib/ext`` directory, then restart the
-server. For details, see "link:application-development-guide/jpa.html#oracle-database-enhancements[Oracle Database
+server. For details, see "xref:application-development-guide.adoc#oracle-database-enhancements[Oracle Database
 Enhancements]" in {productName} Application
 Development Guide.
 

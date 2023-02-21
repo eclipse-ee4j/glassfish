@@ -286,7 +286,7 @@ Remote Type::
   JMS service uses the information defined by the default JMS host to
   communicate with an MQ broker or broker cluster that has been
   configured and started using Message Queue tools, as described in the
-  link:../openmq/mq-admin-guide.html#GMADG[Open Message Queue Administration Guide]. Ongoing
+  xref:{mq-admin-guide-url}[Open Message Queue Administration Guide]. Ongoing
   administration and tuning of the broker or broker cluster are also
   performed using Message Queue tools.
 
@@ -807,7 +807,7 @@ physical destination.
 Because a physical destination is actually a Message Queue object rather
 than a server object, you use Message Queue broker commands to update
 properties. For information on Message Queue properties, see the
-link:../openmq/mq-admin-guide.html#GMADG[Open Message Queue Administration Guide].
+xref:{mq-admin-guide-url}[Open Message Queue Administration Guide].
 
 1. Ensure that the server is running.
 +

@@ -41,6 +41,9 @@
         <productName>Eclipse GlassFish</productName>
         <pdf.fileName>${project.artifactId}.pdf</pdf.fileName>
         <pdf.toclevels>3</pdf.toclevels>
+        <pdf.rel.file.prefix>https://glassfish.org/docs/latest/</pdf.rel.file.prefix>
+        <html.rel.file.prefix></html.rel.file.prefix>
+        <mq.docs.url>https://javaee.github.io/openmq/Documentation.html</mq.docs.url>
         <bookDirectory>${project.build.directory}/book</bookDirectory>
     </properties>
 
@@ -120,6 +123,13 @@
                             <outputDirectory>${project.build.directory}/html</outputDirectory>
                             <outputFile>${project.artifactId}.html</outputFile>
                             <attributes>
+                                <relfileprefix>${html.rel.file.prefix}</relfileprefix>
+                                <mq-release-notes-url>${mq.docs.url}</mq-release-notes-url>
+                                <mq-tech-over-url>${mq.docs.url}</mq-tech-over-url>
+                                <mq-admin-guide-url>${mq.docs.url}</mq-admin-guide-url>
+                                <mq-dev-guide-jmx-url>${mq.docs.url}</mq-dev-guide-jmx-url>
+                                <mq-dev-guide-java-url>${mq.docs.url}</mq-dev-guide-java-url>
+                                <mq-dev-guide-c-url>${mq.docs.url}</mq-dev-guide-c-url>
                                 <linkcss>true</linkcss>
                                 <toc>left</toc>
                                 <toclevels>3</toclevels>
@@ -140,6 +150,13 @@
                             <outputDirectory>${project.build.directory}/pdf</outputDirectory>
                             <outputFile>${pdf.fileName}</outputFile>
                             <attributes>
+                                <relfileprefix>${pdf.rel.file.prefix}</relfileprefix>
+                                <mq-release-notes-url>${mq.docs.url}</mq-release-notes-url>
+                                <mq-tech-over-url>${mq.docs.url}</mq-tech-over-url>
+                                <mq-admin-guide-url>${mq.docs.url}</mq-admin-guide-url>
+                                <mq-dev-guide-jmx-url>${mq.docs.url}</mq-dev-guide-jmx-url>
+                                <mq-dev-guide-java-url>${mq.docs.url}</mq-dev-guide-java-url>
+                                <mq-dev-guide-c-url>${mq.docs.url}</mq-dev-guide-c-url>
                                  <!-- TODO - sharing themes and other files should be done as a dependency -->
                                 <pdf-stylesdir>${project.basedir}/../parent/src/theme</pdf-stylesdir>
                                 <pdf-style>glassfish</pdf-style>

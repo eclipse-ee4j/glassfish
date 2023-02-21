@@ -2087,7 +2087,7 @@ All but the last four properties in the following table are
 `connector-connection-pool` properties of `jmsra`, the resource adapter
 used to communicate with the Open Message Queue software. For a complete
 list of the available properties (called administered object attributes
-in the Message Queue software), see the link:../openmq/mq-admin-guide.html#GMADG[Open Message Queue
+in the Message Queue software), see the xref:{mq-admin-guide-url}[Open Message Queue
 Administration Guide].
 
 Changes to `connector-connection-pool` properties require a server

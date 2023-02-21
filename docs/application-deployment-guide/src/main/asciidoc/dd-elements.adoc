@@ -8781,7 +8781,7 @@ connection factories.
 When `resource-ref` specifies a JMS connection factory for the Open
 Message Queue, the `default-resource-principal` (name/password) must
 exist in the Message Queue user repository. Refer to the Security
-Management chapter in the link:GMADG[Open Message Queue Administration
+Management chapter in the xref:{mq-admin-guide-url}[Open Message Queue Administration
 Guide] for information on how to manage the Message Queue user
 repository.
 ====

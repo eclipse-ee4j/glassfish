@@ -1299,7 +1299,7 @@ Each `POST` method and `DELETE` method that a REST resource supports has
 an equivalent `asadmin` subcommand. The parameters of a `POST` method or
 a `DELETE` method correspond to the options of the method's equivalent
 `asadmin` subcommand. For information about the options of `asadmin`
-subcommand, see the link:GSRFM[{productName}
+subcommand, see the xref:reference-manual.adoc[{productName}
 Reference Manual].
 ====
 

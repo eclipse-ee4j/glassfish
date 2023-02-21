@@ -242,7 +242,7 @@ them by using the following command for each instance:
 asadmin> start-instance instance-name
 ----
 
-4. Use one of the following `asadmin` link:GSRFM00226[`set`]
+4. Use one of the following `asadmin` xref:reference-manual.adoc#set[`set`]
 subcommands to enable availability for a specific cluster, or for a
 specific Web, EJB, or JMS container.
 * For a cluster as a whole

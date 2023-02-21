@@ -357,7 +357,7 @@ deploying applications that will use the timer.
 Do not use the `jdbc/\__TimerPool` resource for timers in clustered
 {productName} environments.
 You must instead use a custom JDBC resource or the `jdbc/__default` resource.
-See "link:GSADG00747[Enabling the jdbc/__default Resource in a Clustered Environment]"
+See "xref:administration-guide.adoc#etjdbcdefault-cluster[Enabling the jdbc/__default Resource in a Clustered Environment]"
 in {productName} Administration Guide.
 ====
 
@@ -1192,7 +1192,7 @@ select the Monitor tab.
 ====
 Running monitoring when it is not needed might impact performance, so
 you might choose to turn monitoring off when it is not in use. For
-details, see "link:GSADG00011[Administering the Monitoring Service]" in
+details, see "xref:administration-guide.adoc#administering-the-monitoring-service[Administering the Monitoring Service]" in
 {productName} Administration Guide.
 ====
 

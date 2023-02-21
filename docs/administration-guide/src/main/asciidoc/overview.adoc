@@ -603,7 +603,7 @@ To avoid this situation, do one of the following:
 * Enable secure admin so that what {productName} interprets as a
 remote request is accepted as such.
 
-To enable secure admin, see "link:GSSCG00039[Managing Administrative
+To enable secure admin, see "xref:security-guide.adoc#managing-administrative-security[Managing Administrative
 Security]" in {productName} Security Guide.
 ====
 

@@ -159,7 +159,7 @@ applications.application.sampleLCMmodule.property.classpath=/build/lcm.jar
 applications.application.sampleLCMmodule.property.is-failure-fatal=false
 applications.application.sampleLCMmodule.property.isLifecycle=true
 ----
-2. Update a life cycle module by using the link:GSRFM00226[`set`]
+2. Update a life cycle module by using the xref:reference-manual.adoc#set[`set`]
 subcommand.
 3. Restart the server for your changes to take effect.
 +

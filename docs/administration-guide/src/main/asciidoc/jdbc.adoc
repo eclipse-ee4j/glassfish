@@ -459,7 +459,7 @@ for the pool, and restores the pool to its steady pool size.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Reset a connection pool by using
-the link:GSRFM00135[`flush-connection-pool`] subcommand.
+the xref:reference-manual.adoc#flush-connection-pool[`flush-connection-pool`] subcommand.
 
 [[gjirk]]
 Example 11-6 Resetting (Flushing) a Connection Pool

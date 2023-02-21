@@ -46,6 +46,9 @@ class RepositoryManager implements Closeable {
         LOG.log(DEBUG, "addRepository(repository={0}, file={1})", repository, directory);
         Objects.requireNonNull(repository);
         Objects.requireNonNull(directory);
+        if (!repository.endsWith("/")) {
+            throw new IllegalArgumentException("The repository must end with the '/' character!");
+        }
         repositories.add(new Repository(repository, directory));
     }
 

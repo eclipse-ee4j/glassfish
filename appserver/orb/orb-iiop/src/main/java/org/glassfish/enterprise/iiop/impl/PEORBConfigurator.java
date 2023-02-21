@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -257,10 +258,12 @@ public class PEORBConfigurator implements ORBConfigurator {
                 String host = handleAddrAny( ilb.getAddress() ) ;
 
                 if (!securityEnabled || ilb.getSsl() == null) {
-                    Acceptor acceptor = addAcceptor( orb, isLazy, host,
-                            IIOP_CLEAR_TEXT_CONNECTION, port ) ;
-                    if( isLazy ) {
-                        lazyAcceptor = acceptor;
+                    if (Boolean.parseBoolean(ilb.getEnabled())) {
+                        Acceptor acceptor = addAcceptor( orb, isLazy, host,
+                                IIOP_CLEAR_TEXT_CONNECTION, port ) ;
+                        if( isLazy ) {
+                            lazyAcceptor = acceptor;
+                        }
                     }
                 } else {
                     if (isLazy) {
@@ -269,17 +272,19 @@ public class PEORBConfigurator implements ORBConfigurator {
                             + ". Lazy-init not supported for SSL iiop-listeners");
                     }
 
-                    Ssl sslBean = ilb.getSsl() ;
-                    assert sslBean != null ;
+                    if (Boolean.parseBoolean(ilb.getEnabled())) {
+                        Ssl sslBean = ilb.getSsl() ;
+                        assert sslBean != null ;
 
-                    boolean clientAuth = Boolean.valueOf(
-                        sslBean.getClientAuthEnabled() ) ;
-                    String type = clientAuth ? SSL_MUTUALAUTH : SSL ;
-                    addAcceptor( orb, isLazy, host, type, port ) ;
+                        boolean clientAuth = Boolean.valueOf(
+                            sslBean.getClientAuthEnabled() ) ;
+                        String type = clientAuth ? SSL_MUTUALAUTH : SSL ;
+                        addAcceptor( orb, isLazy, host, type, port ) ;
+                    }
                 }
             }
 
-            if( lazyCount == 1 ) {
+            if( (lazyCount == 1) && (lazyAcceptor != null) ) {
                 getHelper().setSelectableChannelDelegate(new AcceptorDelegateImpl(
                     lazyAcceptor));
             }

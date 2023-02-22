@@ -115,7 +115,7 @@ of the following ways:
 
 * Specify the `--statementleaktimeout` option in the
 `create-jdbc-connection-pool` subcommand. For more information, see
-link:reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
+xref:reference-manual.adoc#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
 * Specify the `statement-leak-timeout-in-seconds` option in the `set`
 subcommand. For example:
 +
@@ -138,7 +138,7 @@ pool to a `true` value in one of the following ways:
 
 * Specify the `--statementleakreclaim=true` option in the
 `create-jdbc-connection-pool` subcommand. For more information, see
-link:reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
+xref:reference-manual.adoc#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
 * Specify the `statement-leak-reclaim` option in the `set` subcommand.
 For example:
 +
@@ -251,7 +251,7 @@ page in the Administration Console. For more information, click the Help
 button in the Administration Console.
 * Specify them using the `--property` option in the
 `create-jdbc-connection-pool` subcommand. For more information, see
-link:reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
+xref:reference-manual.adoc#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
 * Set them using the `set` subcommand. For example:
 +
 [source]
@@ -299,7 +299,7 @@ in the Administration Console. For more information, click the Help
 button in the Administration Console.
 * Specify it using the `--property` option in the
 `create-jdbc-connection-pool` subcommand. For more information, see
-link:reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
+xref:reference-manual.adoc#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
 * Set it using the `set` subcommand. For example:
 +
 [source]

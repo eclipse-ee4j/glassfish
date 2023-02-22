@@ -145,7 +145,7 @@ interface to which GMS binds.
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for configuring the
-instance, see the link:reference-manual/create-instance.html#create-instance[`create-instance`(1)] help page.
+instance, see the xref:reference-manual.adoc#create-instance[`create-instance`(1)] help page.
 ====
 * If you are creating a standalone instance, do not specify a cluster.
 +
@@ -234,7 +234,7 @@ See Also
 * xref:nodes.adoc#to-create-a-dcom-node[To Create a `DCOM` Node]
 * xref:nodes.adoc#to-create-an-ssh-node[To Create an `SSH` Node]
 * xref:#to-create-an-instance-locally[To Create an Instance Locally]
-* link:reference-manual/create-instance.html#create-instance[`create-instance`(1)]
+* xref:reference-manual.adoc#create-instance[`create-instance`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-instance` at the command line.
@@ -259,7 +259,7 @@ about existing instances in a domain.
 1. Ensure that the DAS is running.
 +
 Remote subcommands require a running server.
-2. Run the link:reference-manual/list-instances.html#list-instances[`list-instances`] subcommand.
+2. Run the xref:reference-manual.adoc#list-instances[`list-instances`] subcommand.
 +
 [source]
 ----
@@ -306,7 +306,7 @@ Command list-instances executed successfully.
 
 See Also
 
-link:reference-manual/list-instances.html#list-instances[`list-instances`(1)]
+xref:reference-manual.adoc#list-instances[`list-instances`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-instances` at the command line.
@@ -324,7 +324,7 @@ Use the `delete-instance` subcommand in remote mode to delete a
 If you are using a Java Message Service (JMS) cluster with a master
 broker, do not delete the instance that is associated with the master
 broker. If this instance must be deleted, use the
-link:reference-manual/change-master-broker.html#change-master-broker[`change-master-broker`] subcommand to assign the master
+xref:reference-manual.adoc#change-master-broker[`change-master-broker`] subcommand to assign the master
 broker to a different instance.
 ====
 
@@ -353,7 +353,7 @@ asadmin> list-instances instance-name
 ----
 instance-name::
   The name of the instance that you are deleting.
-3. Run the link:reference-manual/delete-instance.html#delete-instance[`delete-instance`] subcommand.
+3. Run the xref:reference-manual.adoc#delete-instance[`delete-instance`] subcommand.
 +
 [source]
 ----
@@ -383,9 +383,9 @@ See Also
 
 * xref:#to-stop-an-individual-instance-centrally[To Stop an Individual Instance Centrally]
 * xref:#to-stop-an-individual-instance-locally[To Stop an Individual Instance Locally]
-* link:reference-manual/change-master-broker.html#change-master-broker[`change-master-broker`(1)]
-* link:reference-manual/delete-instance.html#delete-instance[`delete-instance`(1)]
-* link:reference-manual/list-instances.html#list-instances[`list-instances`(1)]
+* xref:reference-manual.adoc#change-master-broker[`change-master-broker`(1)]
+* xref:reference-manual.adoc#delete-instance[`delete-instance`(1)]
+* xref:reference-manual.adoc#list-instances[`list-instances`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
@@ -417,7 +417,7 @@ each instance locally as explained in xref:#to-start-an-individual-instance-loca
 Instance Locally].
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
-2. Run the link:reference-manual/start-cluster.html#start-cluster[`start-cluster`] subcommand.
+2. Run the xref:reference-manual.adoc#start-cluster[`start-cluster`] subcommand.
 +
 [source]
 ----
@@ -440,7 +440,7 @@ Command start-cluster executed successfully.
 See Also
 
 * xref:#to-start-an-individual-instance-locally[To Start an Individual Instance Locally]
-* link:reference-manual/start-cluster.html#start-cluster[`start-cluster`(1)]
+* xref:reference-manual.adoc#start-cluster[`start-cluster`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help start-cluster` at the command line.
@@ -461,7 +461,7 @@ Use the `stop-cluster` subcommand in remote mode to stop a cluster.
 Stopping a cluster stops all running instances in the cluster.
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
-2. Run the link:reference-manual/stop-cluster.html#stop-cluster[`stop-cluster`] subcommand.
+2. Run the xref:reference-manual.adoc#stop-cluster[`stop-cluster`] subcommand.
 +
 [source]
 ----
@@ -483,7 +483,7 @@ Command stop-cluster executed successfully.
 
 See Also
 
-link:reference-manual/stop-cluster.html#stop-cluster[`stop-cluster`(1)]
+xref:reference-manual.adoc#stop-cluster[`stop-cluster`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help stop-cluster` at the command line.
@@ -529,7 +529,7 @@ asadmin> start-instance instance-name
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for controlling the
-behavior of the instance, see the link:reference-manual/start-instance.html#start-instance[`start-instance`(1)]
+behavior of the instance, see the xref:reference-manual.adoc#start-instance[`start-instance`(1)]
 help page.
 ====
 
@@ -560,7 +560,7 @@ Command start-instance executed successfully.
 
 See Also
 
-link:reference-manual/start-instance.html#start-instance[`start-instance`(1)]
+xref:reference-manual.adoc#start-instance[`start-instance`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help start-instance` at the command line.
@@ -585,7 +585,7 @@ and waits for all outstanding requests to be completed.
 1. Ensure that the DAS is running.
 +
 Remote subcommands require a running server.
-2. Run the link:reference-manual/stop-instance.html#stop-instance[`stop-instance`] subcommand.
+2. Run the xref:reference-manual.adoc#stop-instance[`stop-instance`] subcommand.
 
 [[gkqpy]]
 Example 5-8 Stopping an Individual Instance Centrally
@@ -601,7 +601,7 @@ Command stop-instance executed successfully.
 
 See Also
 
-link:reference-manual/stop-instance.html#stop-instance[`stop-instance`(1)]
+xref:reference-manual.adoc#stop-instance[`stop-instance`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help stop-instance` at the command line.
@@ -631,7 +631,7 @@ instance as explained in xref:#to-resynchronize-an-instance-and-the-das-online[T
 the DAS Online].
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
-2. Run the link:reference-manual/restart-instance.html#restart-instance[`restart-instance`] subcommand.
+2. Run the xref:reference-manual.adoc#restart-instance[`restart-instance`] subcommand.
 +
 [source]
 ----
@@ -656,7 +656,7 @@ See Also
 
 * xref:#to-stop-an-individual-instance-centrally[To Stop an Individual Instance Centrally]
 * xref:#to-start-an-individual-instance-centrally[To Start an Individual Instance Centrally]
-* link:reference-manual/restart-instance.html#restart-instance[`restart-instance`(1)]
+* xref:reference-manual.adoc#restart-instance[`restart-instance`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help restart-instance` at the command line.
@@ -760,7 +760,7 @@ instance is to reside.
 ====
 Only the options that are required to complete this task are provided in this step.
 For information about all the options for configuring the instance, see the
-link:reference-manual/create-local-instance.html#create-local-instance[`create-local-instance`(1)] help page.
+xref:reference-manual.adoc#create-local-instance[`create-local-instance`(1)] help page.
 ====
 * If you are creating a standalone instance, do not specify a cluster.
 +
@@ -930,7 +930,7 @@ See Also
 * xref:nodes.adoc#to-create-a-dcom-node[To Create a `DCOM` Node]
 * xref:nodes.adoc#to-create-an-ssh-node[To Create an `SSH` Node]
 * xref:nodes.adoc#to-create-a-config-node[To Create a `CONFIG` Node]
-* link:reference-manual/create-local-instance.html#create-local-instance[`create-local-instance`(1)]
+* xref:reference-manual.adoc#create-local-instance[`create-local-instance`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-local-instance` at the command line.
@@ -957,7 +957,7 @@ Use the `delete-local-instance` subcommand in remote mode to delete a
 If you are using a Java Message Service (JMS) cluster with a master
 broker, do not delete the instance that is associated with the master
 broker. If this instance must be deleted, use the
-link:reference-manual/change-master-broker.html#change-master-broker[`change-master-broker`] subcommand to assign the master
+xref:reference-manual.adoc#change-master-broker[`change-master-broker`] subcommand to assign the master
 broker to a different instance.
 ====
 
@@ -991,7 +991,7 @@ admin-port::
   requests, you may omit this option.
 instance-name::
   The name of the instance that you are deleting.
-4. Run the link:reference-manual/delete-local-instance.html#delete-local-instance[`delete-local-instance`] subcommand.
+4. Run the xref:reference-manual.adoc#delete-local-instance[`delete-local-instance`] subcommand.
 +
 [source]
 ----
@@ -1030,9 +1030,9 @@ See Also
 
 * xref:#to-stop-an-individual-instance-centrally[To Stop an Individual Instance Centrally]
 * xref:#to-stop-an-individual-instance-locally[To Stop an Individual Instance Locally]
-* link:reference-manual/change-master-broker.html#change-master-broker[`change-master-broker`(1)]
-* link:reference-manual/delete-local-instance.html#delete-local-instance[`delete-local-instance`(1)]
-* link:reference-manual/list-instances.html#list-instances[`list-instances`(1)]
+* xref:reference-manual.adoc#change-master-broker[`change-master-broker`(1)]
+* xref:reference-manual.adoc#delete-local-instance[`delete-local-instance`(1)]
+* xref:reference-manual.adoc#list-instances[`list-instances`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
@@ -1060,7 +1060,7 @@ $ asadmin start-local-instance [--node node-name]instance-name
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for controlling the
 behavior of the instance, see the
-link:reference-manual/start-local-instance.html#start-local-instance[`start-local-instance`(1)] help page.
+xref:reference-manual.adoc#start-local-instance[`start-local-instance`(1)] help page.
 ====
 
 node-name::
@@ -1089,7 +1089,7 @@ Command start-local-instance executed successfully.
 
 See Also
 
-link:reference-manual/start-local-instance.html#start-local-instance[`start-local-instance`(1)]
+xref:reference-manual.adoc#start-local-instance[`start-local-instance`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help start-local-instance` at the command line.
@@ -1113,7 +1113,7 @@ and waits for all outstanding requests to be completed.
 
 1. Log in to the host that is represented by the node where the
 instance resides.
-2. Run the link:reference-manual/stop-local-instance.html#stop-local-instance[`stop-local-instance`] subcommand.
+2. Run the xref:reference-manual.adoc#stop-local-instance[`stop-local-instance`] subcommand.
 +
 [source]
 ----
@@ -1141,7 +1141,7 @@ Command stop-local-instance executed successfully.
 
 See Also
 
-link:reference-manual/stop-local-instance.html#stop-local-instance[`stop-local-instance`(1)]
+xref:reference-manual.adoc#stop-local-instance[`stop-local-instance`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help stop-local-instance` at the command line.
@@ -1198,7 +1198,7 @@ Command restart-local-instance executed successfully.
 
 See Also
 
-link:reference-manual/restart-local-instance.html#restart-local-instance[`restart-local-instance`(1)]
+xref:reference-manual.adoc#restart-local-instance[`restart-local-instance`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help restart-local-instance` at the command line.
@@ -1306,7 +1306,7 @@ out of date in the cache.
   instances in a domain use the same document root directory. To enable
   instances to use a different document root directory, a virtual server
   must be created in which the `docroot` property is set. For more
-  information, see the link:reference-manual/create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)]
+  information, see the xref:reference-manual.adoc#create-virtual-server[`create-virtual-server`(1)]
   help page. +
   The `docroot` directory might be very large. Therefore, by default,
   only a change to a file or a subdirectory in the top level of the
@@ -1415,7 +1415,7 @@ asadmin> start-instance [--sync full] instance-name
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for controlling the
-behavior of the instance, see the link:reference-manual/start-instance.html#start-instance[`start-instance`(1)]
+behavior of the instance, see the xref:reference-manual.adoc#start-instance[`start-instance`(1)]
 help page.
 ====
 
@@ -1438,7 +1438,7 @@ $ asadmin start-local-instance [--node node-name] [--sync full] instance-name
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for controlling the
 behavior of the instance, see the
-link:reference-manual/start-local-instance.html#start-local-instance[`start-local-instance`(1)] help page.
+xref:reference-manual.adoc#start-local-instance[`start-local-instance`(1)] help page.
 ====
 
 node-name::
@@ -1484,9 +1484,9 @@ Command start-local-instance executed successfully.
 
 See Also
 
-* link:reference-manual/list-instances.html#list-instances[`list-instances`(1)]
-* link:reference-manual/start-instance.html#start-instance[`start-instance`(1)]
-* link:reference-manual/start-local-instance.html#start-local-instance[`start-local-instance`(1)]
+* xref:reference-manual.adoc#list-instances[`list-instances`(1)]
+* xref:reference-manual.adoc#start-instance[`start-instance`(1)]
+* xref:reference-manual.adoc#start-local-instance[`start-local-instance`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line.
@@ -1548,7 +1548,7 @@ For other types of library file, the full path is required.
 
 See Also
 
-link:reference-manual/deploy.html#deploy[`deploy`(1)]
+xref:reference-manual.adoc#deploy[`deploy`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the command `asadmin help deploy` at the command line.
@@ -1621,8 +1621,8 @@ Command create-jvm-options executed successfully.
 
 See Also
 
-* link:reference-manual/create-jvm-options.html#create-jvm-options[`create-jvm-options`(1)]
-* link:reference-manual/delete-jvm-options.html#delete-jvm-options[`delete-jvm-options`(1)]
+* xref:reference-manual.adoc#create-jvm-options[`create-jvm-options`(1)]
+* xref:reference-manual.adoc#delete-jvm-options[`delete-jvm-options`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line.
@@ -1755,7 +1755,7 @@ Export the configuration data that you are resynchronizing to an archive file.
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for exporting the
 configuration data, see the
-link:reference-manual/export-sync-bundle.html#export-sync-bundle[`export-sync-bundle`(1)]
+xref:reference-manual.adoc#export-sync-bundle[`export-sync-bundle`(1)]
 help page.
 ====
 +
@@ -1817,7 +1817,7 @@ Step xref:#gktio[2].
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for importing the
-configuration data, see the link:reference-manual/import-sync-bundle.html#import-sync-bundle[`import-sync-bundle`(1)]
+configuration data, see the xref:reference-manual.adoc#import-sync-bundle[`import-sync-bundle`(1)]
 help page.
 ====
 +
@@ -1855,8 +1855,8 @@ Command import-sync-bundle executed successfully.
 
 See Also
 
-* link:reference-manual/export-sync-bundle.html#export-sync-bundle[`export-sync-bundle`(1)]
-* link:reference-manual/import-sync-bundle.html#import-sync-bundle[`import-sync-bundle`(1)]
+* xref:reference-manual.adoc#export-sync-bundle[`export-sync-bundle`(1)]
+* xref:reference-manual.adoc#import-sync-bundle[`import-sync-bundle`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line.
@@ -1991,7 +1991,7 @@ asadmin> migrate-timers --target soccer football
 
 See Also
 
-link:reference-manual/list-timers.html#list-timers[`list-timers`(1)],
-link:reference-manual/migrate-timers.html#migrate-timers[`migrate-timers`(1)],
-link:reference-manual/list-instances.html#list-instances[`list-instances`(1)],
-link:reference-manual/stop-instance.html#stop-instance[`stop-instance`(1)]
+xref:reference-manual.adoc#list-timers[`list-timers`(1)],
+xref:reference-manual.adoc#migrate-timers[`migrate-timers`(1)],
+xref:reference-manual.adoc#list-instances[`list-instances`(1)],
+xref:reference-manual.adoc#stop-instance[`stop-instance`(1)]

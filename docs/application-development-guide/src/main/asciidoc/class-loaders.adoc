@@ -118,7 +118,7 @@ The `classpath-prefix` was typically used to substitute another package
 for one of the {productName} packages, for example if a newer one was
 available. This same result can be achieved on a per-application basis with the
 `--libraries` option for the `deploy` subcommand. For more information,
-see the link:reference-manual/deploy.html#deploy[`deploy`(1)] help page.
+see the xref:reference-manual.adoc#deploy[`deploy`(1)] help page.
 The Java Optional Package Mechanism does what `classpath-suffix` used to do. For more
 information, see xref:#using-the-java-optional-package-mechanism[Using the Java Optional Package Mechanism].
 

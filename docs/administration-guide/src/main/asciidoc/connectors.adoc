@@ -152,7 +152,7 @@ installed.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create the connector connection pool by using the
-link:reference-manual/create-connector-connection-pool.html#create-connector-connection-pool[`create-connector-connection-pool`] subcommand.
+xref:reference-manual.adoc#create-connector-connection-pool[`create-connector-connection-pool`] subcommand.
 +
 Information about properties for the subcommand is included in this help
 page.
@@ -198,7 +198,7 @@ list the pools that have been created.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the connector connection pools by using the
-link:reference-manual/list-connector-connection-pools.html#list-connector-connection-pools[`list-connector-connection-pools`] subcommand.
+xref:reference-manual.adoc#list-connector-connection-pools[`list-connector-connection-pools`] subcommand.
 
 [[giody]]
 Example 12-2 Listing Connector Connection Pools
@@ -230,8 +230,8 @@ instructions.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Connect to or reset a connector connection pool by using the
-link:reference-manual/flush-connection-pool.html#flush-connection-pool[`flush-connection-pool`] subcommand or the
-link:reference-manual/ping-connection-pool.html#ping-connection-pool[`ping-connection-pool`] subcommand.
+xref:reference-manual.adoc#flush-connection-pool[`flush-connection-pool`] subcommand or the
+xref:reference-manual.adoc#ping-connection-pool[`ping-connection-pool`] subcommand.
 
 [[to-update-a-connector-connection-pool]]
 
@@ -241,16 +241,16 @@ Use the `get` and `set` subcommands to view and change the values of the
 connector connection pool properties.
 
 1. List the connector connection pools by using the
-link:reference-manual/list-connector-connection-pools.html#list-connector-connection-pools[`list-connector-connection-pools`] subcommand.
+xref:reference-manual.adoc#list-connector-connection-pools[`list-connector-connection-pools`] subcommand.
 2. View the properties of the connector connection pool by using the
-link:reference-manual/get.html#get[`get`] subcommand. For example:
+xref:reference-manual.adoc#get[`get`] subcommand. For example:
 +
 [source]
 ----
 asadmin> get domain.resources.connector-connection-pool.conectionpoolname.*
 ----
 3. Set the property of the connector connection pool by using the
-link:reference-manual/set.html#set[`set`] subcommand.
+xref:reference-manual.adoc#set[`set`] subcommand.
 For example:
 +
 [source]
@@ -271,10 +271,10 @@ remove a connector connection pool.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the connector connection pools by using the
-link:reference-manual/list-connector-connection-pools.html#list-connector-connection-pools[`list-connector-connection-pools`] subcommand.
+xref:reference-manual.adoc#list-connector-connection-pools[`list-connector-connection-pools`] subcommand.
 3. If necessary, notify users that the connector connection pool is being deleted.
 4. Delete the connector connection pool by using the
-link:reference-manual/delete-connector-connection-pool.html#delete-connector-connection-pool[`delete-connector-connection-pool`] subcommand.
+xref:reference-manual.adoc#delete-connector-connection-pool[`delete-connector-connection-pool`] subcommand.
 
 [[giohd]]
 Example 12-3 Deleting a Connector Connection Pool
@@ -328,7 +328,7 @@ Connection Pool].
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create the connector resource by using the
-link:reference-manual/create-connector-resource.html#create-connector-resource[`create-connector-resource`] subcommand.
+xref:reference-manual.adoc#create-connector-resource[`create-connector-resource`] subcommand.
 +
 Information about properties for the subcommand is included in this help
 page.
@@ -366,7 +366,7 @@ connector resources that have been created.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the connector connection pools by using the
-link:reference-manual/list-connector-resources.html#list-connector-resources[`list-connector-resources`] subcommand.
+xref:reference-manual.adoc#list-connector-resources[`list-connector-resources`] subcommand.
 
 [[gioia]]
 Example 12-5 Listing Connector Resources
@@ -393,9 +393,9 @@ Use the `get` and `set` subcommands to view and change the values of the
 connector resource properties.
 
 1. List the connector connection pools by using the
-link:reference-manual/list-connector-resources.html#list-connector-resources[`list-connector-resources`] subcommand.
+xref:reference-manual.adoc#list-connector-resources[`list-connector-resources`] subcommand.
 2. View the properties of the connector resource by using the
-link:reference-manual/get.html#get[`get`] subcommand.
+xref:reference-manual.adoc#get[`get`] subcommand.
 For example
 +
 [source]
@@ -403,7 +403,7 @@ For example
 asadmin> get domain.resources.connector-resource.jms/qConnFactory
 ----
 3. Set the property of the connector resource by using the
-link:reference-manual/set.html#set[`set`] subcommand.
+xref:reference-manual.adoc#set[`set`] subcommand.
 For example:
 +
 [source]
@@ -427,10 +427,10 @@ Before deleting a resource, all associations with the resource must be removed.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the connector connection pools by using the
-link:reference-manual/list-connector-resources.html#list-connector-resources[`list-connector-resources`] subcommand.
+xref:reference-manual.adoc#list-connector-resources[`list-connector-resources`] subcommand.
 3. If necessary, notify users that the connector resource is being deleted.
 4. Delete the connector resource by using the
-link:reference-manual/delete-connector-resource.html#delete-connector-resource[`delete-connector-resource`] subcommand.
+xref:reference-manual.adoc#delete-connector-resource[`delete-connector-resource`] subcommand.
 
 [[giokh]]
 Example 12-6 Deleting a Connector Resource
@@ -474,7 +474,7 @@ adapter is restarted with the new configuration.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create configuration information by using the
-link:reference-manual/create-resource-adapter-config.html#create-resource-adapter-config[`create-resource-adapter-config`] subcommand.
+xref:reference-manual.adoc#create-resource-adapter-config[`create-resource-adapter-config`] subcommand.
 +
 Information about properties for the subcommand is included in this help
 page.
@@ -508,7 +508,7 @@ module).
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the configurations for a resource adapter by using the
-link:reference-manual/list-resource-adapter-configs.html#list-resource-adapter-configs[`list-resource-adapter-configs`] subcommand.
+xref:reference-manual.adoc#list-resource-adapter-configs[`list-resource-adapter-configs`] subcommand.
 
 [[gioof]]
 Example 12-8 Listing Configurations for a Resource Adapter
@@ -536,9 +536,9 @@ Use the `get` and `set` subcommands to view and change the values of the
 resource adapter configuration properties.
 
 1. List the configurations for a resource adapter by using the
-link:reference-manual/list-resource-adapter-configs.html#list-resource-adapter-configs[`list-resource-adapter-configs`] subcommand.
+xref:reference-manual.adoc#list-resource-adapter-configs[`list-resource-adapter-configs`] subcommand.
 2. View the properties of the connector resource by using the
-link:reference-manual/get.html#get[`get`] subcommand.
+xref:reference-manual.adoc#get[`get`] subcommand.
 For example:
 +
 [source]
@@ -546,7 +546,7 @@ For example:
 asadmin>get domain.resources.resource-adapter-config.ra1.*
 ----
 3. Set the property of the connector resource by using the
-link:reference-manual/set.html#set[`set`] subcommand.
+xref:reference-manual.adoc#set[`set`] subcommand.
 For example:
 +
 [source]
@@ -565,9 +565,9 @@ configuration file (`domain.xml`) for a specified resource adapter
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the configurations for a resource adapter by using the
-link:reference-manual/list-resource-adapter-configs.html#list-resource-adapter-configs[`list-resource-adapter-configs`] subcommand.
+xref:reference-manual.adoc#list-resource-adapter-configs[`list-resource-adapter-configs`] subcommand.
 3. Delete the configuration for a resource adapter by using the
-link:reference-manual/delete-resource-adapter-config.html#delete-resource-adapter-config[`delete-resource-adapter-config`] subcommand.
+xref:reference-manual.adoc#delete-resource-adapter-config[`delete-resource-adapter-config`] subcommand.
 
 [[giorj]]
 Example 12-9 Deleting a Resource Adapter Configuration
@@ -629,7 +629,7 @@ Connection Pool].
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create a connector security map by using the
-link:reference-manual/create-connector-security-map.html#create-connector-security-map[`create-connector-security-map`] subcommand.
+xref:reference-manual.adoc#create-connector-security-map[`create-connector-security-map`] subcommand.
 +
 Information about the options for the subcommand is included in this
 help page.
@@ -665,9 +665,9 @@ comprehensive listing that shows the principals of the map.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List existing connector connection pools by using the
-link:reference-manual/list-connector-connection-pools.html#list-connector-connection-pools[`list-connector-connection-pools`] subcommand.
+xref:reference-manual.adoc#list-connector-connection-pools[`list-connector-connection-pools`] subcommand.
 3. List the security maps for a specific connector connection pool by
-using the link:reference-manual/list-connector-security-maps.html#list-connector-security-maps[`list-connector-security-maps`] subcommand.
+using the xref:reference-manual.adoc#list-connector-security-maps[`list-connector-security-maps`] subcommand.
 
 [[giuwj]]
 Example 12-11 Listing All Connector Security Maps for a Connector
@@ -723,9 +723,9 @@ pool.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List existing connector security maps by using the
-link:reference-manual/list-connector-security-maps.html#list-connector-security-maps[`list-connector-security-maps`] subcommand.
+xref:reference-manual.adoc#list-connector-security-maps[`list-connector-security-maps`] subcommand.
 3. Modify a security map for a specific connector connection pool by
-using the link:reference-manual/update-connector-security-map.html#update-connector-security-map[`update-connector-security-map`] subcommand.
+using the xref:reference-manual.adoc#update-connector-security-map[`update-connector-security-map`] subcommand.
 4. If needed, restart the server.
 +
 Some properties require server restart. See
@@ -754,9 +754,9 @@ delete a security map for the specified connector connection pool.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List existing connector connection pools by using the
-link:reference-manual/list-connector-connection-pools.html#list-connector-connection-pools[`list-connector-connection-pools`] subcommand.
+xref:reference-manual.adoc#list-connector-connection-pools[`list-connector-connection-pools`] subcommand.
 3. Delete a security map for a specific connector connection pool by
-using the link:reference-manual/delete-connector-security-map.html#delete-connector-security-map[`delete-connector-security-map`] subcommand.
+using the xref:reference-manual.adoc#delete-connector-security-map[`delete-connector-security-map`] subcommand.
 +
 Information about options for this subcommand is included in this help
 page.
@@ -814,7 +814,7 @@ Connector Connection Pool].
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create the connector work security map by using the
-link:reference-manual/create-connector-work-security-m.html#create-connector-work-security-map[`create-connector-work-security-map`] subcommand.
+xref:reference-manual.adoc#create-connector-work-security-map[`create-connector-work-security-map`] subcommand.
 +
 Information about properties for the subcommand is included in this help
 page.
@@ -858,7 +858,7 @@ list the work security maps that belong to a specific connector module.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the connector work security maps by using the
-link:reference-manual/list-connector-work-security-map.html#list-connector-work-security-maps[`list-connector-work-security-maps`] subcommand.
+xref:reference-manual.adoc#list-connector-work-security-maps[`list-connector-work-security-maps`] subcommand.
 
 [[gionj]]
 Example 12-17 Listing the Connector Work Security Maps
@@ -890,11 +890,11 @@ modify a work security map that belongs to a specific resource adapter
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the connector work security maps by using the
-link:reference-manual/list-connector-work-security-map.html#list-connector-work-security-maps[`list-connector-work-security-maps`] subcommand.
+xref:reference-manual.adoc#list-connector-work-security-maps[`list-connector-work-security-maps`] subcommand.
 3. If necessary, notify users that the connector work security map is
 being modified.
 4. Update a connector work security map by using the
-link:reference-manual/update-connector-work-security-m.html#update-connector-work-security-map[`update-connector-work-security-map`] subcommand.
+xref:reference-manual.adoc#update-connector-work-security-map[`update-connector-work-security-map`] subcommand.
 
 [[gioll]]
 Example 12-18 Updating a Connector Work Security Map
@@ -924,9 +924,9 @@ module (resource adapter).
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the connector work security maps by using the
-link:reference-manual/list-connector-work-security-map.html#list-connector-work-security-maps[`list-connector-work-security-maps`] subcommand.
+xref:reference-manual.adoc#list-connector-work-security-maps[`list-connector-work-security-maps`] subcommand.
 3. Delete a connector work security map by using the
-link:reference-manual/delete-connector-work-security-m.html#delete-connector-work-security-map[`delete-connector-work-security-map`] subcommand.
+xref:reference-manual.adoc#delete-connector-work-security-map[`delete-connector-work-security-map`] subcommand.
 
 [[giolk]]
 Example 12-19 Deleting a Connector Work Security Map
@@ -977,7 +977,7 @@ The resource adapter must be deployed before running this subcommand
 (`jmsrar.rar`).
 
 1. Create an administered object by using the
-link:reference-manual/create-admin-object.html#create-admin-object[`create-admin-object`] subcommand.
+xref:reference-manual.adoc#create-admin-object[`create-admin-object`] subcommand.
 +
 Information about properties for the subcommand is included in this help
 page.
@@ -1016,7 +1016,7 @@ existing administered objects.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the administered objects by using the
-link:reference-manual/list-admin-objects.html#list-admin-objects[`list-admin-objects`] subcommand.
+xref:reference-manual.adoc#list-admin-objects[`list-admin-objects`] subcommand.
 
 [[giokg]]
 Example 12-21 Listing Administered Objects
@@ -1043,9 +1043,9 @@ Use the `get` and `set` subcommands to view and change the values of the
 administered objects properties.
 
 1. List the administered objects by using the
-link:reference-manual/list-admin-objects.html#list-admin-objects[`list-admin-objects`] subcommand.
+xref:reference-manual.adoc#list-admin-objects[`list-admin-objects`] subcommand.
 2. View the properties of the administered object by using the
-link:reference-manual/get.html#get[`get`] subcommand.
+xref:reference-manual.adoc#get[`get`] subcommand.
 For example:
 +
 [source]
@@ -1053,7 +1053,7 @@ For example:
 asadmin> get domain.resources.admin-object-resource.jms/samplequeue.*
 ----
 3. Set the property of the administered object by using the
-link:reference-manual/set.html#set[`set`] subcommand.
+xref:reference-manual.adoc#set[`set`] subcommand.
 For example:
 +
 [source]
@@ -1071,10 +1071,10 @@ If your server needs to be restarted, see xref:domains.adoc#to-restart-a-domain[
 Use the `delete-admin-object` subcommand to delete an administered objects.
 
 1. List the administered objects by using the
-link:reference-manual/list-admin-objects.html#list-admin-objects[`list-admin-objects`] subcommand.
+xref:reference-manual.adoc#list-admin-objects[`list-admin-objects`] subcommand.
 2. If necessary, notify users that the administered object is being deleted.
 3. Delete an administered object by using the
-link:reference-manual/delete-admin-object.html#delete-admin-object[`delete-admin-object`] subcommand.
+xref:reference-manual.adoc#delete-admin-object[`delete-admin-object`] subcommand.
 
 [[giolc]]
 Example 12-22 Deleting an Administered Object

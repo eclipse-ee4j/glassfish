@@ -113,7 +113,7 @@ the following conditions must be met:
 * The DAS host and all hosts for the instances must be on the same subnet.
 * UDP multicast must be enabled for the network.
 To test whether multicast is enabled, use the
-link:reference-manual/validate-multicast.html#validate-multicast[`validate-multicast`(1)]
+xref:reference-manual.adoc#validate-multicast[`validate-multicast`(1)]
 subcommand.
 
 If GMS should use TCP without multicast, you must configure GMS to
@@ -211,7 +211,7 @@ Configuration Settings].
 
 ==== Dotted Names for GMS Settings
 
-Below are sample link:reference-manual/get.html#get[`get`] subcommands to get all the GMS
+Below are sample xref:reference-manual.adoc#get[`get`] subcommands to get all the GMS
 configuration settings (attributes associated with the referenced
 `mycfg` configuration) and GMS cluster settings (attributes and
 properties associated with a cluster named `mycluster`).
@@ -255,7 +255,7 @@ Settings After Cluster Creation].
 You can preconfigure GMS with values different than the defaults without
 requiring a restart of the DAS and the cluster.
 
-1. Create a configuration using the link:reference-manual/copy-config.html#copy-config[`copy-config`]
+1. Create a configuration using the xref:reference-manual.adoc#copy-config[`copy-config`]
 subcommand.
 +
 For example:
@@ -331,7 +331,7 @@ restart as explained here.
 1. Ensure that the DAS and cluster are running.
 +
 Remote subcommands require a running server.
-2. Use the link:reference-manual/get.html#get[`get`] subcommand to determine the settings
+2. Use the xref:reference-manual.adoc#get[`get`] subcommand to determine the settings
 to change.
 +
 For example:
@@ -347,7 +347,7 @@ configs.config.mycfg.group-management-service.group-discovery-timeout-in-millis=
 ----
 For a complete list of the dotted names for these settings, see
 xref:#dotted-names-for-gms-settings[Dotted Names for GMS Settings].
-3. Use the link:reference-manual/set.html#set[`set`] subcommand to change the settings.
+3. Use the xref:reference-manual.adoc#set[`set`] subcommand to change the settings.
 +
 For example:
 +
@@ -400,7 +400,7 @@ cluster is properly operating; that is, all members of the cluster are
 running and visible to DAS.
 
 If multicast is not enabled for the network, all instances could be
-running (as shown by the link:reference-manual/list-instances.html#list-instances[`list-instances`] subcommand),
+running (as shown by the xref:reference-manual.adoc#list-instances[`list-instances`] subcommand),
 yet isolated from each other. The `get-health` subcommand does not show
 the instances if they are running but cannot discover each other due to
 multicast not being configured properly. See xref:#to-validate-that-multicast-transport-is-available-for-a-cluster[To Validate
@@ -410,7 +410,7 @@ That Multicast Transport Is Available for a Cluster].
 +
 Remote subcommands require a running server.
 2. Check whether server instances in a cluster are running by using the
-link:reference-manual/get-health.html#get-health[`get-health`] subcommand.
+xref:reference-manual.adoc#get-health[`get-health`] subcommand.
 
 [[clusters-example-4-1]]
 Example 4-1 Checking the Health of Instances in a Cluster
@@ -480,7 +480,7 @@ received between the machines.
 
 
 Check whether multicast transport is available for a cluster by using
-the link:reference-manual/validate-multicast.html#validate-multicast[`validate-multicast`] subcommand.
+the xref:reference-manual.adoc#validate-multicast[`validate-multicast`] subcommand.
 
 [[clusters-example-4-2]]
 Example 4-2 Validating That Multicast Transport Is Available for a
@@ -589,7 +589,7 @@ locate a {productName} instance or the DAS in the cluster.
 2. Create a system property to represent the port number of the port on
 which the DAS listens for messages from GMS for the cluster.
 +
-Use the link:reference-manual/create-system-properties.html#create-system-properties[`create-system-properties`] subcommand for this
+Use the xref:reference-manual.adoc#create-system-properties[`create-system-properties`] subcommand for this
 purpose.
 +
 [source]
@@ -737,7 +737,7 @@ Command create-local-instance executed successfully.
 
 See Also
 
-* link:reference-manual/create-system-properties.html#create-system-properties[`create-system-properties`(1)]
+* xref:reference-manual.adoc#create-system-properties[`create-system-properties`(1)]
 * xref:#to-create-a-cluster[To Create a Cluster]
 * xref:instances.adoc#to-create-an-instance-centrally[To Create an Instance Centrally]
 * xref:instances.adoc#to-create-an-instance-locally[To Create an Instance Locally]
@@ -1017,7 +1017,7 @@ Run the `create-cluster` subcommand.
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for configuring the
-cluster, see the link:reference-manual/create-cluster.html#create-cluster[`create-cluster`(1)] help page.
+cluster, see the xref:reference-manual.adoc#create-cluster[`create-cluster`(1)] help page.
 ====
 * If multicast transport is available, run the `create-cluster`
 subcommand as follows:
@@ -1139,8 +1139,8 @@ See Also
 * xref:named-configurations.adoc#to-create-a-named-configuration[To Create a Named Configuration]
 * xref:#to-preconfigure-nondefault-gms-configuration-settings[To Preconfigure Nondefault GMS Configuration Settings]
 * xref:jms.adoc#using-message-queue-broker-clusters-with-glassfish-server[Using Message Queue Broker Clusters With {productName}]
-* link:reference-manual/create-cluster.html#create-cluster[`create-cluster`(1)]
-* link:reference-manual/create-system-properties.html#create-system-properties[`create-system-properties`(1)]
+* xref:reference-manual.adoc#create-cluster[`create-cluster`(1)]
+* xref:reference-manual.adoc#create-system-properties[`create-system-properties`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
@@ -1158,7 +1158,7 @@ about existing clusters in a domain.
 1. Ensure that the DAS is running.
 +
 Remote subcommands require a running server.
-2. Run the link:reference-manual/list-clusters.html#list-clusters[`list-clusters`] subcommand.
+2. Run the xref:reference-manual.adoc#list-clusters[`list-clusters`] subcommand.
 +
 [source]
 ----
@@ -1193,7 +1193,7 @@ Command list-clusters executed successfully.
 
 See Also
 
-link:reference-manual/list-clusters.html#list-clusters[`list-clusters`(1)]
+xref:reference-manual.adoc#list-clusters[`list-clusters`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-clusters` at the command line.
@@ -1242,7 +1242,7 @@ asadmin> list-instances cluster-name
 ----
 cluster-name::
   The name of the cluster that you are deleting.
-4. Run the link:reference-manual/delete-cluster.html#delete-cluster[`delete-cluster`] subcommand.
+4. Run the xref:reference-manual.adoc#delete-cluster[`delete-cluster`] subcommand.
 +
 [source]
 ----
@@ -1274,9 +1274,9 @@ See Also
 * xref:instances.adoc#to-stop-a-cluster[To Stop a Cluster]
 * xref:instances.adoc#to-delete-an-instance-centrally[To Delete an Instance Centrally]
 * xref:instances.adoc#to-delete-an-instance-locally[To Delete an Instance Locally]
-* link:reference-manual/delete-cluster.html#delete-cluster[`delete-cluster`(1)]
-* link:reference-manual/list-clusters.html#list-clusters[`list-clusters`(1)]
-* link:reference-manual/list-instances.html#list-instances[`list-instances`(1)]
+* xref:reference-manual.adoc#delete-cluster[`delete-cluster`(1)]
+* xref:reference-manual.adoc#list-clusters[`list-clusters`(1)]
+* xref:reference-manual.adoc#list-instances[`list-instances`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:

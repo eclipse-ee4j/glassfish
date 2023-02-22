@@ -1105,7 +1105,7 @@ This subcommand will not work unless the domain is stopped.
 See "xref:administration-guide.adoc#to-stop-a-domain[To Stop a Domain]"
 in {productName} Administration Guide.
 2. Change the master password for the domain by using the
-link:reference-manual/change-master-password.html#change-master-password[`change-master-password`] subcommand.
+xref:reference-manual.adoc#change-master-password[`change-master-password`] subcommand.
 +
 You are prompted for the old and new passwords. All dependent items are re-encrypted.
 3. Start the domain.
@@ -1125,7 +1125,7 @@ asadmin> change-master-password domain44ps
 ----
 
 If you have already logged into the domain using the
-link:reference-manual/login.html#login[`login`] subcommand, you are prompted for the new
+xref:reference-manual.adoc#login[`login`] subcommand, you are prompted for the new
 master password:
 
 [source]
@@ -1293,7 +1293,7 @@ change an administration password to a blank value.
 Encrypting the admin password is strongly encouraged.
 
 1. Change the admin password by using the
-link:reference-manual/change-admin-password.html#change-admin-password[`change-admin-password`] subcommand.
+xref:reference-manual.adoc#change-admin-password[`change-admin-password`] subcommand.
 2. Enter the old and new admin passwords when prompted.
 3. Restart {productName}. +
 See "xref:administration-guide.adoc#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
@@ -1351,7 +1351,7 @@ deleted after it has served its purpose.
 ====
 
 For a list of the types of passwords that can be specified, see the
-link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] help page.
+xref:reference-manual.adoc#asadmin[`asadmin`(1M)] help page.
 
 [source]
 ----
@@ -1419,7 +1419,7 @@ both a secure interactive form, in which users are prompted for all
 information, and a more script-friendly form, in which the password is
 propagated on the command line.
 
-You can also use the link:reference-manual/set.html#set[`set`] subcommand to remove and
+You can also use the xref:reference-manual.adoc#set[`set`] subcommand to remove and
 replace the password in the configuration file. For example:
 
 [source]
@@ -1432,18 +1432,18 @@ admin-password='${ALIAS=jms-password}'
 2. Go to the directory where the configuration file resides. +
 By default, the configuration file is located in domain-dir``/config``.
 3. Create the password alias by using the
-link:reference-manual/create-password-alias.html#create-password-alias[`create-password-alias`] subcommand.
+xref:reference-manual.adoc#create-password-alias[`create-password-alias`] subcommand.
 4. Type the password for the alias when prompted.
 5. Add the alias to a password file. +
 For example, assume the use of a password file such as `passwords.txt`.
 Assume further that you want to add an alias for the
 `AS_ADMIN_USERPASSWORD` entry that is read by the
-link:reference-manual/create-file-user.html#create-file-user[`create-file-user`] subcommand.
+xref:reference-manual.adoc#create-file-user[`create-file-user`] subcommand.
 You would add the following line to the password file:
 `AS_ADMIN_USERPASSWORD=${ALIAS=user-password-alias}`, where
 user-password-alias is the new password alias.
 6. To continue the example of the previous step, you would then run the
-link:reference-manual/create-file-user.html#create-file-user[`create-file-user`] subcommand. +
+xref:reference-manual.adoc#create-file-user[`create-file-user`] subcommand. +
 You could use this method to create several users (user1, user2, and so forth),
 all with the same password. +
 `asadmin>` `--passwordfile``passwords.txt create-file-user` user1
@@ -1481,7 +1481,7 @@ existing the password aliases.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List password aliases by using the
-link:reference-manual/list-password-aliases.html#list-password-aliases[`list-password-aliases`] subcommand.
+xref:reference-manual.adoc#list-password-aliases[`list-password-aliases`] subcommand.
 
 [[ginsk]]
 Example 1-5 Listing Password Aliases
@@ -1509,9 +1509,9 @@ existing password alias.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List all aliases by using the
-link:reference-manual/list-password-aliases.html#list-password-aliases[`list-password-aliases`] subcommand.
+xref:reference-manual.adoc#list-password-aliases[`list-password-aliases`] subcommand.
 3. Delete a password alias by using the
-link:reference-manual/list-password-aliases.html#list-password-aliases[`list-password-aliases`] subcommand.
+xref:reference-manual.adoc#list-password-aliases[`list-password-aliases`] subcommand.
 
 [[ginul]]
 Example 1-6 Deleting a Password Alias
@@ -1541,7 +1541,7 @@ the password is propagated on the command line.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Update an alias by using the
-link:reference-manual/update-password-alias.html#update-password-alias[`update-password-alias`] subcommand.
+xref:reference-manual.adoc#update-password-alias[`update-password-alias`] subcommand.
 3. Type the password when prompted.
 
 [[giodl]]
@@ -1588,7 +1588,7 @@ capabilities.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create an audit module by using the
-link:reference-manual/create-audit-module.html#create-audit-module[`create-audit-module`] subcommand.
+xref:reference-manual.adoc#create-audit-module[`create-audit-module`] subcommand.
 +
 Information about properties for this subcommand is included in this
 help page.
@@ -1624,7 +1624,7 @@ modules on one of the following targets:
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the audit modules by using the
-link:reference-manual/list-audit-modules.html#list-audit-modules[`list-audit-modules`] subcommand.
+xref:reference-manual.adoc#list-audit-modules[`list-audit-modules`] subcommand.
 
 [[ghjmy]]
 Example 1-9 Listing Audit Modules
@@ -1653,9 +1653,9 @@ existing audit module.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the audit modules by using the
-link:reference-manual/list-audit-modules.html#list-audit-modules[`list-audit-modules`] subcommand.
+xref:reference-manual.adoc#list-audit-modules[`list-audit-modules`] subcommand.
 3. Delete an audit module by using the
-link:reference-manual/delete-audit-module.html#delete-audit-module[`delete-audit-module`] subcommand.
+xref:reference-manual.adoc#delete-audit-module[`delete-audit-module`] subcommand.
 
 [[ghjhm]]
 Example 1-10 Deleting an Audit Module

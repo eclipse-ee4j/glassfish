@@ -85,7 +85,7 @@ IIOP listener.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create an IIOP listener by using the
-link:reference-manual/create-iiop-listener.html#create-iiop-listener[`create-iiop-listener`] subcommand.
+xref:reference-manual.adoc#create-iiop-listener[`create-iiop-listener`] subcommand.
 +
 Information about the properties for the subcommand is included in this
 help page.
@@ -119,7 +119,7 @@ existing IIOP listeners.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the IIOP listeners by using the
-link:reference-manual/list-iiop-listeners.html#list-iiop-listeners[`list-iiop-listeners`] subcommand.
+xref:reference-manual.adoc#list-iiop-listeners[`list-iiop-listeners`] subcommand.
 
 [[gipcm]]
 Example 15-2 Listing IIOP Listeners
@@ -146,9 +146,9 @@ typing `asadmin help list-iiop-listeners` at the command line.
 ==== To Update an IIOP Listener
 
 1. List the IIOP listeners by using the
-link:reference-manual/list-iiop-listeners.html#list-iiop-listeners[`list-iiop-listeners`] subcommand.
+xref:reference-manual.adoc#list-iiop-listeners[`list-iiop-listeners`] subcommand.
 2. Modify the values for the specified IIOP listener by using the
-link:reference-manual/set.html#set[`set`] subcommand.
+xref:reference-manual.adoc#set[`set`] subcommand.
 +
 The listener is identified by its dotted name.
 
@@ -173,9 +173,9 @@ IIOP listener.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the IIOP listeners by using the
-link:reference-manual/list-iiop-listeners.html#list-iiop-listeners[`list-iiop-listeners`] subcommand.
+xref:reference-manual.adoc#list-iiop-listeners[`list-iiop-listeners`] subcommand.
 3. Delete an IIOP listener by using the
-link:reference-manual/delete-iiop-listener.html#delete-iiop-listener[`delete-iiop-listener`] subcommand.
+xref:reference-manual.adoc#delete-iiop-listener[`delete-iiop-listener`] subcommand.
 4. To apply your changes, restart {productName}.
 +
 See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].

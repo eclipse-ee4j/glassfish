@@ -530,7 +530,7 @@ Specify the `java.io.File` class instance you created previously as the
 first method parameter. +
 For information about optional parameters you can set, see the
 descriptions of the
-link:reference-manual/deploy.html#deploy[`deploy`(1)] subcommand parameters.
+xref:reference-manual.adoc#deploy[`deploy`(1)] subcommand parameters.
 Simply quote each parameter in the method, for example `"--force=true"`.
 
 [[gioph]]
@@ -588,7 +588,7 @@ is deployed.
 
 For information about optional parameters you can set, see the
 descriptions of the
-link:reference-manual/deploy.html#deploy[`deploy`(1)] command parameters.
+xref:reference-manual.adoc#deploy[`deploy`(1)] command parameters.
 Simply quote each parameter in the method, for example
 `"--cascade=true"`.
 
@@ -882,7 +882,7 @@ import org.glassfish.embeddable.*;
 Running `asadmin` Commands Using the {productName} Embedded Server
 ==== API
 
-Running link:reference-manual/asadmin.html#asadmin[`asadmin`] commands from an application enables
+Running xref:reference-manual.adoc#asadmin[`asadmin`] commands from an application enables
 the application to configure the embedded {productName} to suit the
 application's requirements. For example, an application can run the
 required `asadmin` commands to create a JDBC technology connection to a
@@ -1852,7 +1852,7 @@ following ways:
 * Creating a custom logging configuration file
 
 Both these ways use logger names. For a list of logger names, use the
-link:reference-manual/list-log-levels.html#list-log-levels[`list-log-levels`] subcommand.
+xref:reference-manual.adoc#list-log-levels[`list-log-levels`] subcommand.
 
 [[gkrhh]]
 Example 1-15 Using the {productName} Embedded Server API

@@ -435,7 +435,7 @@ levels may produce a large log file.
 
 By default, {productName} logging messages are recorded in the server
 log, and you can set the file rotation limit, as described in
-link:reference-manual/rotate-log.html#rotate-log[`rotate-log`(1)]
+xref:reference-manual.adoc#rotate-log[`rotate-log`(1)]
 
 |Ensure that you have correctly assigned users to the correct groups.
 |Make sure you have assigned the desired set of users to the right

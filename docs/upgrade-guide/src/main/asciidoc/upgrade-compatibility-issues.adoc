@@ -530,14 +530,14 @@ listener.http-1.listenerport=4321
 ==== Changes to `asadmin` Subcommands
 
 To accommodate the move of HTTP Service into the new Network Service
-configuration, link:reference-manual/asadmin.html#asadmin[`asadmin`] subcommands are changed as
+configuration, xref:reference-manual.adoc#asadmin[`asadmin`] subcommands are changed as
 follows:
 
-* The link:reference-manual/create-ssl.html#create-ssl[`create-ssl`] subcommand has a new `--type`
+* The xref:reference-manual.adoc#create-ssl[`create-ssl`] subcommand has a new `--type`
 parameter value, `network-listener`.
-* The link:reference-manual/create-virtual-server.html#create-virtual-server[`create-virtual-server`] SUBcommand has a new
+* The xref:reference-manual.adoc#create-virtual-server[`create-virtual-server`] SUBcommand has a new
 parameter, `--networklisteners`.
-* The link:reference-manual/create-http-listener.html#create-http-listener[`create-http-listener`] subcommand adds a
+* The xref:reference-manual.adoc#create-http-listener[`create-http-listener`] subcommand adds a
 `network-listener` element to the domain configuration. The syntax and
 options of this commands are unchanged.
 

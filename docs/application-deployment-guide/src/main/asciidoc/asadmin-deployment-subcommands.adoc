@@ -16,28 +16,28 @@ see "xref:administration-guide.adoc#asadmin-subcommands[Subcommands for the `asa
 {productName} Administration Guide or see the
 xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
-link:reference-manual/add-library.html#add-library[`add-library`]::
+xref:reference-manual.adoc#add-library[`add-library`]::
   Adds one or more library JAR files to {productName}. You can
   specify whether the libraries are added to the Common class loader
   directory, the Java optional package directory, or the
   application-specific class loader directory.
-link:reference-manual/create-application-ref.html#create-application-ref[`create-application-ref`]::
+xref:reference-manual.adoc#create-application-ref[`create-application-ref`]::
   Creates a reference from a cluster or an unclustered server instance
   to a previously deployed Jakarta EE application or module. This
   effectively results in the application element being deployed and made
   available on the targeted instance or cluster.
-link:reference-manual/create-lifecycle-module.html#create-lifecycle-module[`create-lifecycle-module`]::
+xref:reference-manual.adoc#create-lifecycle-module[`create-lifecycle-module`]::
   Creates a lifecycle module. A lifecycle module provides a means of
   running a short or long duration Java-based task at a specific stage
   in the server life cycle.
-link:reference-manual/delete-application-ref.html#delete-application-ref[`delete-application-ref`]::
+xref:reference-manual.adoc#delete-application-ref[`delete-application-ref`]::
   Removes a reference from a cluster or an unclustered server instance
   to a previously deployed Jakarta EE application or module. This
   effectively results in the application element being undeployed on the
   targeted instance or cluster.
-link:reference-manual/delete-lifecycle-module.html#delete-lifecycle-module[`delete-lifecycle-module`]::
+xref:reference-manual.adoc#delete-lifecycle-module[`delete-lifecycle-module`]::
   Deletes a lifecycle module.
-link:reference-manual/deploy.html#deploy[`deploy`]::
+xref:reference-manual.adoc#deploy[`deploy`]::
   Deploys an enterprise application, web application, EJB module,
   connector module, or application client module. If the component is
   already deployed or already exists, you can forcefully redeploy if you
@@ -45,47 +45,47 @@ link:reference-manual/deploy.html#deploy[`deploy`]::
   Supported in remote mode only. For usage instructions, see
   xref:deploying-applications.adoc#to-deploy-an-application-or-module[To Deploy an Application or
   Module].
-link:reference-manual/deploydir.html#deploydir[`deploydir`]::
+xref:reference-manual.adoc#deploydir[`deploydir`]::
   This subcommand is deprecated. Use the `deploy` subcommand instead.
-link:reference-manual/disable.html#disable[`disable`]::
+xref:reference-manual.adoc#disable[`disable`]::
   Immediately deactivates the named application or module. If the
   component has not been deployed, an error message is returned.
   Supported in remote mode only. For usage instructions,
   seexref:deploying-applications.adoc#to-disable-an-application-or-module[To Disable an Application or
   Module].
-link:reference-manual/enable.html#enable[`enable`]::
+xref:reference-manual.adoc#enable[`enable`]::
   Enables the specified application or module. If the component has not
   been deployed, an error message is returned. If the component is
   already enabled, then it is re-enabled. Supported in remote mode only.
   For usage instructions, see xref:deploying-applications.adoc#to-enable-an-application-or-module[To
   Enable an Application or Module].
-link:reference-manual/get-client-stubs.html#get-client-stubs[`get-client-stubs`]::
+xref:reference-manual.adoc#get-client-stubs[`get-client-stubs`]::
   Gets the client stubs JAR file for an application client module or an
   application containing the application client module, from the server
   machine to the local directory. For usage instructions, see
   xref:deploying-applications.adoc#ejb-module-deployment-guidelines[EJB Module Deployment
   Guidelines].
-link:reference-manual/list-applications.html#list-applications[`list-applications`]::
+xref:reference-manual.adoc#list-applications[`list-applications`]::
   Lists deployed Jakarta EE applications and modules. Optionally lists
   subcomponents and scoped resources. If the `--type` option is not
   specified, all applications and modules are listed. Supported in
   remote mode only. For usage instructions, see
   xref:deploying-applications.adoc#to-list-deployed-applications-or-modules[To List Deployed Applications or
   Modules].
-link:reference-manual/list-application-refs.html#list-application-refs[`list-application-refs`]::
+xref:reference-manual.adoc#list-application-refs[`list-application-refs`]::
   Lists Jakarta EE applications and modules deployed on the specified
   target server instance or cluster.
-link:reference-manual/list-libraries.html#list-libraries[`list-libraries`]::
+xref:reference-manual.adoc#list-libraries[`list-libraries`]::
   Lists library JAR files that have been added to {productName}. You
   can specify whether to list libraries in the Common class loader
   directory, the Java optional package directory, or the
   application-specific class loader directory.
-link:reference-manual/list-lifecycle-modules.html#list-lifecycle-modules[`list-lifecycle-modules`]::
+xref:reference-manual.adoc#list-lifecycle-modules[`list-lifecycle-modules`]::
   Lists lifecycle modules.
-link:reference-manual/list-components.html#list-components[`list-components`]::
+xref:reference-manual.adoc#list-components[`list-components`]::
   This subcommand is deprecated. Use the `list-applications` subcommand
   instead.
-link:reference-manual/list-sub-components.html#list-sub-components[`list-sub-components`]::
+xref:reference-manual.adoc#list-sub-components[`list-sub-components`]::
   Lists EJBs or servlets in a deployed module or in a module of the
   deployed application. If a module is not identified, all modules are
   listed. To display a specific module in an application, you must
@@ -93,51 +93,51 @@ link:reference-manual/list-sub-components.html#list-sub-components[`list-sub-com
   remote mode only. For usage instructions, see
   xref:deploying-applications.adoc#to-list-deployed-applications-or-modules[To List Deployed Applications or
   Modules].
-link:reference-manual/list-web-context-param.html#list-web-context-param[`list-web-context-param`]::
+xref:reference-manual.adoc#list-web-context-param[`list-web-context-param`]::
   Lists servlet context-initialization parameters of a deployed web
   application or module. Supported in remote mode only. For usage
   instructions, see xref:deploying-applications.adoc#to-list-web-context-parameters[To List Web
   Context Parameters].
-link:reference-manual/list-web-env-entry.html#list-web-env-entry[`list-web-env-entry`]::
+xref:reference-manual.adoc#list-web-env-entry[`list-web-env-entry`]::
   Lists environment entries for a deployed web application or module.
   Supported in remote mode only. For usage instructions, see
   xref:deploying-applications.adoc#to-list-web-environment-entries[To List Web Environment
   Entries].
-link:reference-manual/redeploy.html#redeploy[`redeploy`]::
+xref:reference-manual.adoc#redeploy[`redeploy`]::
   Overwrites an application or module that is already deployed.
   Supported in remote mode only. For usage instructions, see
   xref:deploying-applications.adoc#to-redeploy-an-application-or-module[To Redeploy an Application or
   Module].
-link:reference-manual/remove-library.html#remove-library[`remove-library`]::
+xref:reference-manual.adoc#remove-library[`remove-library`]::
   Removes one or more library JAR files from {productName}. You can
   specify whether the libraries are removed from the Common class loader
   directory, the Java optional package directory, or the
   application-specific class loader directory.
-link:reference-manual/set-web-context-param.html#set-web-context-param[`set-web-context-param`]::
+xref:reference-manual.adoc#set-web-context-param[`set-web-context-param`]::
   Sets a servlet context-initialization parameter of a deployed web
   application or module. Supported in remote mode only. For usage
   instructions, see xref:deploying-applications.adoc#to-set-a-web-context-parameter[To Set a Web
   Context Parameter].
-link:reference-manual/set-web-env-entry.html#set-web-env-entry[`set-web-env-entry`]::
+xref:reference-manual.adoc#set-web-env-entry[`set-web-env-entry`]::
   Sets an environment entry for a deployed web application or module.
   Supported in remote mode only. For usage instructions, see
   xref:deploying-applications.adoc#to-set-a-web-environment-entry[To Set a Web Environment Entry].
-link:reference-manual/show-component-status.html#show-component-status[`show-component-status`]::
+xref:reference-manual.adoc#show-component-status[`show-component-status`]::
   Shows the status of a deployed component. The possible statuses
   include `enabled` or `disabled`. Supported in remote mode only. For
   usage instructions, see xref:deploying-applications.adoc#to-list-deployed-applications-or-modules[To List
   Deployed Applications or Modules].
-link:reference-manual/undeploy.html#undeploy[`undeploy`]::
+xref:reference-manual.adoc#undeploy[`undeploy`]::
   Uninstalls the specified deployed application or module. Supported in
   remote mode only. For usage instructions, see
   xref:deploying-applications.adoc#to-undeploy-an-application-or-module[To Undeploy an Application or
   Module].
-link:reference-manual/unset-web-context-param.html#unset-web-context-param[`unset-web-context-param`]::
+xref:reference-manual.adoc#unset-web-context-param[`unset-web-context-param`]::
   Unsets a servlet context-initialization parameter of a deployed web
   application or module. Supported in remote mode only. For usage
   instructions, see xref:deploying-applications.adoc#to-unset-a-web-context-parameter[To Unset a Web
   Context Parameter].
-link:reference-manual/unset-web-env-entry.html#unset-web-env-entry[`unset-web-env-entry`]::
+xref:reference-manual.adoc#unset-web-env-entry[`unset-web-env-entry`]::
   Unsets an environment entry for a deployed web application or module.
   Supported in remote mode only. For usage instructions, see
   xref:deploying-applications.adoc#to-unset-a-web-environment-entry[To Unset a Web Environment

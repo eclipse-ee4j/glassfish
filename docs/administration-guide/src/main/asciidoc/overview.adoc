@@ -216,7 +216,7 @@ or defaults to be reset. In some situations, an `asadmin` subcommand is
 provided for updating, such as the `update-connector-work-security-map`
 subcommand. However, most updating is done by using the `list`, `get`,
 and `set` subcommands with dotted names. For detailed information about
-dotted names, see the link:reference-manual/dotted-names.html#dotted-names[`dotted-names`(5ASC)] help page.
+dotted names, see the xref:reference-manual.adoc#dotted-names[`dotted-names`(5ASC)] help page.
 
 
 [NOTE]
@@ -362,7 +362,7 @@ To obtain information about the DAS or an instance, a running server is required
 
 2. Do one of the following:
 * To determine if the DAS requires restart, list the domains in your {productName} installation.
-Use the link:reference-manual/list-domains.html#list-domains[`list-domains`] subcommand for this purpose.
+Use the xref:reference-manual.adoc#list-domains[`list-domains`] subcommand for this purpose.
 +
 [source]
 ----
@@ -376,7 +376,7 @@ directory of the {productName} software.
 If the DAS requires restart, a statement that restart is required is displayed.
 
 * To determine if an instance requires restart, list information about the instance.
-Use the link:reference-manual/list-instances.html#list-instances[`list-instances`] subcommand for this purpose.
+Use the xref:reference-manual.adoc#list-instances[`list-instances`] subcommand for this purpose.
 +
 [source]
 ----
@@ -416,8 +416,8 @@ Command list-instances executed successfully.
 
 See Also
 
-* link:reference-manual/list-domains.html#list-domains[`list-domains`(1)]
-* link:reference-manual/list-instances.html#list-instances[`list-instances`(1)]
+* xref:reference-manual.adoc#list-domains[`list-domains`(1)]
+* xref:reference-manual.adoc#list-instances[`list-instances`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line.
@@ -617,7 +617,7 @@ identifying the operation or task that you want to perform. You can run
 `asadmin` subcommands either from a command prompt or from a script.
 Running `asadmin` subcommands from a script is helpful for automating
 repetitive tasks. Basic information about how the `asadmin` utility
-works can be found in the link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] help page. For
+works can be found in the xref:reference-manual.adoc#asadmin[`asadmin`(1M)] help page. For
 instructions on using the `asadmin` utility, see
 xref:general-administration.adoc#using-the-asadmin-utility[Using the `asadmin` Utility].
 
@@ -757,7 +757,7 @@ utility. The `osgi` subcommand is supported in remote mode only.
 
 1. Ensure that the server is running.
 Remote commands require a running server.
-2. Access the remote shell by using the link:reference-manual/redeploy.html#redeploy[`osgi`]
+2. Access the remote shell by using the xref:reference-manual.adoc#redeploy[`osgi`]
 subcommand. For the full syntax and options for this subcommand, see `osgi`(1).
 
 [[GSADG1052]]
@@ -773,7 +773,7 @@ Unlike other local subcommands, however, the DAS and the server
 instance whose shell is being accessed must be running.
 
 1. Ensure that the server is running.
-2. Access the remote shell by using the link:reference-manual/redeploy.html#redeploy[`osgi-shell`]
+2. Access the remote shell by using the xref:reference-manual.adoc#redeploy[`osgi-shell`]
 subcommand. For the full syntax and options for this subcommand, see `osgi-shell`(1).
 
 [[GSADG1053]]

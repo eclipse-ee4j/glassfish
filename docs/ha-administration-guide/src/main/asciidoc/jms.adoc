@@ -195,7 +195,7 @@ Remote `asadmin` subcommands require a running server.
 
 2. Configure the {productName} cluster to use a Message Queue
 conventional broker cluster with master broker by using the
-link:reference-manual/configure-jms-cluster.html#configure-jms-cluster[`configure-jms-cluster`]
+xref:reference-manual.adoc#configure-jms-cluster[`configure-jms-cluster`]
 subcommand:
 +
 [source]
@@ -242,7 +242,7 @@ Remote `asadmin` subcommands require a running server.
 2. Create a password file with the entry `AS_ADMIN_JMSDBPASSWORD`
 specifying the password of the database user. +
 For information about password file entries, see the
-link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] help page.
+xref:reference-manual.adoc#asadmin[`asadmin`(1M)] help page.
 
 3. Place a copy of, or a link to, the database's JDBC driver `.jar`
 file in the appropriate directory, depending on the JMS host type, on
@@ -252,7 +252,7 @@ each host where a {productName} cluster instance is to run:
 
 4. Configure the {productName} cluster to use a Message Queue
 conventional broker cluster with master broker by using the
-link:reference-manual/configure-jms-cluster.html#configure-jms-cluster[`configure-jms-cluster`]
+xref:reference-manual.adoc#configure-jms-cluster[`configure-jms-cluster`]
 subcommand:
 +
 [source]
@@ -291,7 +291,7 @@ broker.
 Remote `asadmin` subcommands require a running server.
 
 2. Change the master broker by using the
-link:reference-manual/change-master-broker.html#change-master-broker[`change-master-broker`]
+xref:reference-manual.adoc#change-master-broker[`change-master-broker`]
 subcommand:
 +
 [source]
@@ -345,7 +345,7 @@ Remote `asadmin` subcommands require a running server.
 2. Create a password file with the entry `AS_ADMIN_JMSDBPASSWORD`
 specifying the password of the database user. +
 For information about password file entries, see the
-link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] help page.
+xref:reference-manual.adoc#asadmin[`asadmin`(1M)] help page.
 
 3. Place a copy of, or a link to, the database's JDBC driver `.jar`
 file in the as-install-parent``/mq/lib/ext`` directory on each host where
@@ -353,7 +353,7 @@ a {productName} cluster instance is to run.
 
 4. Configure the {productName} cluster to use a Message Queue
 enhanced broker cluster by using the
-link:reference-manual/configure-jms-cluster.html#configure-jms-cluster[`configure-jms-cluster`]
+xref:reference-manual.adoc#configure-jms-cluster[`configure-jms-cluster`]
 subcommand:
 +
 [source]
@@ -385,7 +385,7 @@ for the cluster.
 The remote subcommands used in this procedure require a running server.
 
 2. Delete the `default_JMS_host` JMS host by using the
-link:reference-manual/delete-jms-host.html#delete-jms-host[`delete-jms-host`] subcommand:
+xref:reference-manual.adoc#delete-jms-host[`delete-jms-host`] subcommand:
 +
 [source]
 ----
@@ -393,7 +393,7 @@ link:reference-manual/delete-jms-host.html#delete-jms-host[`delete-jms-host`] su
 ----
 
 3. Create a JMS host for each broker in the broker cluster by using the
-link:reference-manual/create-jms-host.html#create-jms-host[`create-jms-host`] subcommand. +
+xref:reference-manual.adoc#create-jms-host[`create-jms-host`] subcommand. +
 For each broker, use an `asadmin create-jms-host` of the form:
 +
 [source]

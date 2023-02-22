@@ -112,7 +112,7 @@ Password Authentication for the Windows User].
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for configuring the
-node, see the link:reference-manual/create-node-dcom.html#create-node-dcom[`create-node-dcom`(1)] help page.
+node, see the xref:reference-manual.adoc#create-node-dcom[`create-node-dcom`(1)] help page.
 ====
 +
 [source]
@@ -151,8 +151,8 @@ Command create-node-dcom executed successfully.
 
 See Also
 
-* link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)]
-* link:reference-manual/create-node-dcom.html#create-node-dcom[`create-node-dcom`(1)]
+* xref:reference-manual.adoc#asadmin[`asadmin`(1M)]
+* xref:reference-manual.adoc#create-node-dcom[`create-node-dcom`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-node-dcom` at the command line.
@@ -178,13 +178,13 @@ information about existing `DCOM` nodes in a domain.
 [NOTE]
 ====
 To obtain information about all existing nodes in a domain, use the
-link:reference-manual/list-nodes.html#list-nodes[`list-nodes`] subcommand.
+xref:reference-manual.adoc#list-nodes[`list-nodes`] subcommand.
 ====
 
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
 
-2. Run the link:reference-manual/list-nodes-dcom.html#list-nodes-dcom[`list-nodes-dcom`] subcommand.
+2. Run the xref:reference-manual.adoc#list-nodes-dcom[`list-nodes-dcom`] subcommand.
 +
 [source]
 ----
@@ -225,8 +225,8 @@ Command list-nodes-dcom executed successfully.
 
 See Also
 
-* link:reference-manual/list-nodes.html#list-nodes[`list-nodes`(1)]
-* link:reference-manual/list-nodes-dcom.html#list-nodes-dcom[`list-nodes-dcom`(1)]
+* xref:reference-manual.adoc#list-nodes[`list-nodes`(1)]
+* xref:reference-manual.adoc#list-nodes-dcom[`list-nodes-dcom`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
@@ -254,7 +254,7 @@ on the host that the node represents.
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for testing the node,
-see the link:reference-manual/ping-node-dcom.html#ping-node-dcom[`ping-node-dcom`(1)] help page.
+see the xref:reference-manual.adoc#ping-node-dcom[`ping-node-dcom`(1)] help page.
 ====
 +
 [source]
@@ -278,7 +278,7 @@ Command ping-node-dcom executed successfully.
 
 See Also
 
-link:reference-manual/ping-node-dcom.html#ping-node-dcom[`ping-node-dcom`(1)]
+xref:reference-manual.adoc#ping-node-dcom[`ping-node-dcom`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help ping-node-dcom` at the command line.
@@ -341,8 +341,8 @@ See Also
 
 * xref:instances.adoc#to-delete-an-instance-centrally[To Delete an Instance Centrally]
 * xref:instances.adoc#to-delete-an-instance-locally[To Delete an Instance Locally]
-* link:reference-manual/delete-node-dcom.html#delete-node-dcom[`delete-node-dcom`(1)]
-* link:reference-manual/list-nodes-dcom.html#list-nodes-dcom[`list-nodes-dcom`(1)]
+* xref:reference-manual.adoc#delete-node-dcom[`delete-node-dcom`(1)]
+* xref:reference-manual.adoc#list-nodes-dcom[`list-nodes-dcom`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
@@ -399,11 +399,11 @@ user cannot use SSH to log in to the host, the validation fails.
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for configuring the
-node, see the link:reference-manual/create-node-ssh.html#create-node-ssh[`create-node-ssh`(1)] help page.
+node, see the xref:reference-manual.adoc#create-node-ssh[`create-node-ssh`(1)] help page.
 
 If you are using password authentication for the SSH user, you must
 specify a password file through the `--passwordfile` option of the
-link:reference-manual/asadmin.html#asadmin[`asadmin`] utility. For more information about SSH user
+xref:reference-manual.adoc#asadmin[`asadmin`] utility. For more information about SSH user
 authentication, see xref:ssh-setup.adoc#setting-up-ssh-user-authentication[Setting Up SSH User
 Authentication].
 ====
@@ -455,7 +455,7 @@ causing this error.
 
 See Also
 
-link:reference-manual/create-node-ssh.html#create-node-ssh[`create-node-ssh`(1)]
+xref:reference-manual.adoc#create-node-ssh[`create-node-ssh`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-node-ssh` at the command line.
@@ -481,13 +481,13 @@ about existing `SSH` nodes in a domain.
 [NOTE]
 ====
 To obtain information about all existing nodes in a domain, use the
-link:reference-manual/list-nodes.html#list-nodes[`list-nodes`] subcommand.
+xref:reference-manual.adoc#list-nodes[`list-nodes`] subcommand.
 ====
 
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
 
-2. Run the link:reference-manual/list-nodes-ssh.html#list-nodes-ssh[`list-nodes-ssh`] subcommand.
+2. Run the xref:reference-manual.adoc#list-nodes-ssh[`list-nodes-ssh`] subcommand.
 +
 [source]
 ----
@@ -526,8 +526,8 @@ Command list-nodes-ssh executed successfully.
 
 See Also
 
-* link:reference-manual/list-nodes.html#list-nodes[`list-nodes`(1)]
-* link:reference-manual/list-nodes-ssh.html#list-nodes-ssh[`list-nodes-ssh`(1)]
+* xref:reference-manual.adoc#list-nodes[`list-nodes`(1)]
+* xref:reference-manual.adoc#list-nodes-ssh[`list-nodes-ssh`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
@@ -555,7 +555,7 @@ on the host that the node represents.
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for testing the node,
-see the link:reference-manual/ping-node-ssh.html#ping-node-ssh[`ping-node-ssh`(1)] help page.
+see the xref:reference-manual.adoc#ping-node-ssh[`ping-node-ssh`(1)] help page.
 ====
 +
 [source]
@@ -579,7 +579,7 @@ Command ping-node-ssh executed successfully.
 
 See Also
 
-link:reference-manual/ping-node-ssh.html#ping-node-ssh[`ping-node-ssh`(1)]
+xref:reference-manual.adoc#ping-node-ssh[`ping-node-ssh`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help ping-node-ssh` at the command line.
@@ -642,8 +642,8 @@ See Also
 
 * xref:instances.adoc#to-delete-an-instance-centrally[To Delete an Instance Centrally]
 * xref:instances.adoc#to-delete-an-instance-locally[To Delete an Instance Locally]
-* link:reference-manual/delete-node-ssh.html#delete-node-ssh[`delete-node-ssh`(1)]
-* link:reference-manual/list-nodes-ssh.html#list-nodes-ssh[`list-nodes-ssh`(1)]
+* xref:reference-manual.adoc#delete-node-ssh[`delete-node-ssh`(1)]
+* xref:reference-manual.adoc#list-nodes-ssh[`list-nodes-ssh`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
@@ -693,7 +693,7 @@ information, see xref:instances.adoc#to-create-an-instance-locally[To Create an 
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for configuring the
-node, see the link:reference-manual/create-node-config.html#create-node-config[`create-node-config`(1)] help page.
+node, see the xref:reference-manual.adoc#create-node-config[`create-node-config`(1)] help page.
 ====
 +
 [source]
@@ -730,7 +730,7 @@ Command create-node-config executed successfully.
 
 See Also
 
-link:reference-manual/create-node-config.html#create-node-config[`create-node-config`(1)]
+xref:reference-manual.adoc#create-node-config[`create-node-config`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-node-config` at the command line.
@@ -753,14 +753,14 @@ information about existing `CONFIG` nodes in a domain.
 [NOTE]
 ====
 To obtain information about all existing nodes in a domain, use the
-link:reference-manual/list-nodes.html#list-nodes[`list-nodes`] subcommand.
+xref:reference-manual.adoc#list-nodes[`list-nodes`] subcommand.
 ====
 
 
 1. Ensure that the DAS is running.
 +
 Remote subcommands require a running server.
-2. Run the link:reference-manual/list-nodes-config.html#list-nodes-config[`list-nodes-config`] subcommand.
+2. Run the xref:reference-manual.adoc#list-nodes-config[`list-nodes-config`] subcommand.
 +
 [source]
 ----
@@ -802,8 +802,8 @@ Command list-nodes-config executed successfully.
 
 See Also
 
-* link:reference-manual/list-nodes.html#list-nodes[`list-nodes`(1)]
-* link:reference-manual/list-nodes-config.html#list-nodes-config[`list-nodes-config`(1)]
+* xref:reference-manual.adoc#list-nodes[`list-nodes`(1)]
+* xref:reference-manual.adoc#list-nodes-config[`list-nodes-config`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
@@ -867,8 +867,8 @@ Command delete-node-config executed successfully.
 See Also
 
 * xref:instances.adoc#to-delete-an-instance-locally[To Delete an Instance Locally]
-* link:reference-manual/delete-node-config.html#delete-node-config[`delete-node-config`(1)]
-* link:reference-manual/list-nodes-config.html#list-nodes-config[`list-nodes-config`(1)]
+* xref:reference-manual.adoc#delete-node-config[`delete-node-config`(1)]
+* xref:reference-manual.adoc#list-nodes-config[`list-nodes-config`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
@@ -917,7 +917,7 @@ asadmin> update-node-dcom options node-name
 options::
   Options of the `update-node-dcom` subcommand for changing the node's
   configuration data. For information about these options, see the
-  link:reference-manual/update-node-ssh.html#update-node-dcom[`update-node-dcom`(1)] help page.
+  xref:reference-manual.adoc#update-node-dcom[`update-node-dcom`(1)] help page.
 node-name::
   The name of the `DCOM` node to update.
 
@@ -934,7 +934,7 @@ Command update-node-dcom executed successfully.
 
 See Also
 
-link:reference-manual/update-node-ssh.html#update-node-dcom[`update-node-dcom`(1)]
+xref:reference-manual.adoc#update-node-dcom[`update-node-dcom`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help update-node-dcom` at the command line.
@@ -967,7 +967,7 @@ asadmin> update-node-ssh options node-name
 options::
   Options of the `update-node-ssh` subcommand for changing the node's
   configuration data. For information about these options, see the
-  link:reference-manual/update-node-ssh001.html#update-node-ssh[`update-node-ssh`(1)] help page.
+  xref:reference-manual.adoc#update-node-ssh[`update-node-ssh`(1)] help page.
 node-name::
   The name of the `SSH` node to update.
 
@@ -985,7 +985,7 @@ Command update-node-ssh executed successfully.
 
 See Also
 
-link:reference-manual/update-node-ssh001.html#update-node-ssh[`update-node-ssh`(1)]
+xref:reference-manual.adoc#update-node-ssh[`update-node-ssh`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help update-node-ssh` at the command line.
@@ -1016,7 +1016,7 @@ asadmin> uupdate-node-config options node-name
 options::
   Options of the `update-node-config` subcommand for changing the node's
   configuration data. For information about these options, see the
-  link:reference-manual/update-node-config.html#update-node-config[`update-node-config`(1)] help page.
+  xref:reference-manual.adoc#update-node-config[`update-node-config`(1)] help page.
 node-name::
   The name of the `CONFIG` node to update.
 
@@ -1034,7 +1034,7 @@ Command update-node-config executed successfully.
 
 See Also
 
-link:reference-manual/update-node-config.html#update-node-config[`update-node-config`(1)]
+xref:reference-manual.adoc#update-node-config[`update-node-config`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help update-node-config` at the command line.
@@ -1104,7 +1104,7 @@ asadmin> update-node-dcom [options] config-or-ssh-node-name
 options::
   Options of the `update-node-dcom` subcommand for changing the node's
   configuration data. For information about these options, see the
-  link:reference-manual/update-node-ssh.html#update-node-dcom[`update-node-dcom`(1)] help page.
+  xref:reference-manual.adoc#update-node-dcom[`update-node-dcom`(1)] help page.
 config-or-ssh-node-name::
   The name of the `CONFIG` node or the `SSH` node to change.
 
@@ -1118,7 +1118,7 @@ asadmin> update-node-ssh [options] config-or-dcom-node-name
 options::
   Options of the `update-node-ssh` subcommand for changing the node's
   configuration data. For information about these options, see the
-  link:reference-manual/update-node-ssh001.html#update-node-ssh[`update-node-ssh`(1)] help page.
+  xref:reference-manual.adoc#update-node-ssh[`update-node-ssh`(1)] help page.
 config-or-dcom-node-name::
   The name of the `CONFIG` node or the `DCOM` node to change.
 
@@ -1132,7 +1132,7 @@ asadmin> update-node-config [options] dcom-or-ssh-node-name
 options::
   Options of the `update-node-config` subcommand for changing the node's
   configuration data. For information about these options, see the
-  link:reference-manual/update-node-config.html#update-node-config[`update-node-config`(1)] help page.
+  xref:reference-manual.adoc#update-node-config[`update-node-config`(1)] help page.
 dcom-or-ssh-node-name::
   The name of the `DCOM` node or the `SSH` node to change.
 
@@ -1149,9 +1149,9 @@ Command update-node-ssh executed successfully.
 
 See Also
 
-* link:reference-manual/update-node-config.html#update-node-config[`update-node-config`(1)]
-* link:reference-manual/update-node-ssh.html#update-node-dcom[`update-node-dcom`(1)]
-* link:reference-manual/update-node-ssh001.html#update-node-ssh[`update-node-ssh`(1)]
+* xref:reference-manual.adoc#update-node-config[`update-node-config`(1)]
+* xref:reference-manual.adoc#update-node-dcom[`update-node-dcom`(1)]
+* xref:reference-manual.adoc#update-node-ssh[`update-node-ssh`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing the following commands at the command line.

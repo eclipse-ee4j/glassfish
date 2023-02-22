@@ -527,7 +527,7 @@ Monitor tab. Refer to the Administration Console online help for
 instructions on each of these procedures.
 
 Alternatively, to list EJB statistics, use the `asadmin list`
-subcommand. For more information, see link:reference-manual/list.html#list[`list`(1)].
+subcommand. For more information, see xref:reference-manual.adoc#list[`list`(1)].
 
 For statistics on stateful session bean passivations, use this command:
 

@@ -2556,7 +2556,7 @@ the request that initiated the session.
 
 To set the `Secure` attribute of a `JSESSIONIDSSO` cookie, use the
 `ssoCookieSecure` `virtual-server` property. For details, see
-link:reference-manual/create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)].
+xref:reference-manual.adoc#create-virtual-server[`create-virtual-server`(1)].
 
 |`cookieHttpOnly` |none |Specifies that the cookie is marked HTTP only.
 Allowed values are `true` or `false`.
@@ -4485,7 +4485,7 @@ If `true`, resources in this web application that are symbolic links are
 served. You can also define this property for a virtual server. Web
 applications on the virtual server that do not define this property use
 the virtual server's value. For details, see
-link:reference-manual/create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)].
+xref:reference-manual.adoc#create-virtual-server[`create-virtual-server`(1)].
 
 Caution: Setting this property to `true` on Windows systems exposes JSP source code.
 
@@ -4535,7 +4535,7 @@ location (directory). Spaces are allowed in the `dir` component.
 
 You can set this property for all the web applications on a specific
 virtual server. For details, see
-link:reference-manual/create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)].
+xref:reference-manual.adoc#create-virtual-server[`create-virtual-server`(1)].
 
 |`valve_n`
 |none
@@ -4557,7 +4557,7 @@ org.glassfish.web.valve.GlassFishValve interface from the current
 
 You can set this property for all the web applications on a specific
 virtual server. For details, see
-link:reference-manual/create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)].
+xref:reference-manual.adoc#create-virtual-server[`create-virtual-server`(1)].
 
 |`listener_n`
 |none
@@ -4577,7 +4577,7 @@ org.apache.catalina.InstanceListener interface. For example:
 
 You can set this property for all the web applications on a specific
 virtual server. For details, see
-link:reference-manual/create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)].
+xref:reference-manual.adoc#create-virtual-server[`create-virtual-server`(1)].
 
 |`crossContextAllowed`
 |`true`
@@ -4604,7 +4604,7 @@ file downloads using SSL work properly in Internet Explorer.
 
 You can set this property for all the web applications on a specific
 virtual server. For details, see
-link:reference-manual/create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)].
+xref:reference-manual.adoc#create-virtual-server[`create-virtual-server`(1)].
 
 |`singleThreadedServletPoolSize`
 |`5`
@@ -5839,7 +5839,7 @@ header is added by the generated servlet.
 
 If set to `true`, retains web sessions, stateful session bean instances,
 and persistently created EJB timers across redeployments. The
-`--keepstate` option of the link:reference-manual/redeploy.html#redeploy[`redeploy`] subcommand
+`--keepstate` option of the xref:reference-manual.adoc#redeploy[`redeploy`] subcommand
 takes precedence. The default for both is `false`.
 
 Some changes to an application between redeployments prevent this
@@ -10638,7 +10638,7 @@ none - contains data
 
 Specifies a custom valve for this web application. You can define a
 valve for all the web applications on a specific virtual server. For
-details, see link:reference-manual/create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)].
+details, see xref:reference-manual.adoc#create-virtual-server[`create-virtual-server`(1)].
 
 [[superelements-210]]
 

@@ -1462,7 +1462,7 @@ You can set virtual server properties in the following ways:
 asadmin create-virtual-server --hosts localhost --property authRealm=ldap MyVS
 ----
 For details and a complete list of virtual server properties, see
-link:reference-manual/create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)].
+xref:reference-manual.adoc#create-virtual-server[`create-virtual-server`(1)].
 * You can define virtual server properties using the `asadmin set`
 command. For example:
 +
@@ -1470,7 +1470,7 @@ command. For example:
 ----
 asadmin set server-config.http-service.virtual-server.MyVS.property.authRealm="ldap"
 ----
-For details, see link:reference-manual/set.html#set[`set`(1)].
+For details, see xref:reference-manual.adoc#set[`set`(1)].
 * You can define virtual server properties using the Administration
 Console. Select the HTTP Service component under the relevant
 configuration, select Virtual Servers, and select the desired virtual

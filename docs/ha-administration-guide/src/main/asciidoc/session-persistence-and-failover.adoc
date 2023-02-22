@@ -90,8 +90,8 @@ session persistence, the server writes an error to the log file.
 
 * The web application must be deployed using the `deploy` or `deploydir`
 subcommand with the `--availabilityenabled` option set to `true`. For
-more information on these subcommands, see link:reference-manual/deploy.html#deploy[`deploy`(1)]
-and link:reference-manual/deploydir.html#deploydir[`deploydir`(1)].
+more information on these subcommands, see xref:reference-manual.adoc#deploy[`deploy`(1)]
+and xref:reference-manual.adoc#deploydir[`deploydir`(1)].
 
 [[restrictions]]
 
@@ -579,8 +579,8 @@ module during deployment:
 Availability Enabled checkbox.
 * If you are deploying using use the `asadmin deploy` or
 `asadmin deploydir` commands, set the `--availabilityenabled` option to
-`true`. For more information, see link:reference-manual/deploy.html#deploy[`deploy`(1)] and
-link:reference-manual/deploydir.html#deploydir[`deploydir`(1)].
+`true`. For more information, see xref:reference-manual.adoc#deploy[`deploy`(1)] and
+xref:reference-manual.adoc#deploydir[`deploydir`(1)].
 
 [[configuring-availability-for-an-individual-bean]]
 

@@ -246,7 +246,7 @@ In order for the `mod_jk`-enabled network listener to start listening
 for requests, the web container must be started. Normally, this is
 achieved by deploying a web application.
 5. Create a jk-enabled network listener by using the
-link:reference-manual/create-network-listener.html#create-network-listener[`create-network-listener`] subcommand.
+xref:reference-manual.adoc#create-network-listener[`create-network-listener`] subcommand.
 +
 [source]
 ----
@@ -349,7 +349,7 @@ ports. The ports must match `worker.worker*.port` in your
 `workers.properties` file. See the properties file in
 xref:gixqt[Example 6-5].
 2. On each of the instances, create the `jvmRoute` system property of
-{productName} by using the link:reference-manual/create-jvm-options.html#create-jvm-options[`create-jvm-options`]
+{productName} by using the xref:reference-manual.adoc#create-jvm-options[`create-jvm-options`]
 subcommand.
 +
 Use the following format:

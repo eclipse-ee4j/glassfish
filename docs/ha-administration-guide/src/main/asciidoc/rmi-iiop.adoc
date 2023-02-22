@@ -178,7 +178,7 @@ on which the DAS is running. In such cases, these steps are unnecessary.
 
 2. Run `package-appclient`. +
 This utility produces an `appclient.jar` file. For more information on
-`package-appclient`, see link:reference-manual/package-appclient.html#package-appclient[`package-appclient`(1M)].
+`package-appclient`, see xref:reference-manual.adoc#package-appclient[`package-appclient`(1M)].
 
 3. Copy the `appclient.jar` file to the machine where you want your
 client and extract it.
@@ -189,7 +189,7 @@ correct directory values on that machine.
 The file is at appclient-install-dir `/config/`.
 +
 For a list of the path variables to update, see
-link:reference-manual/package-appclient.html#package-appclient[`package-appclient`(1M)].
+xref:reference-manual.adoc#package-appclient[`package-appclient`(1M)].
 
 5. If required, make the `appclient` script executable.
 +

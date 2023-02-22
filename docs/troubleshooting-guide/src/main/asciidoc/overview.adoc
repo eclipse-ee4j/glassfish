@@ -321,7 +321,7 @@ asadmin generate-jvm-report --type=thread
 
 See Also
 
-link:reference-manual/generate-jvm-report.html#generate-jvm-report[`generate-jvm-report`(1)]
+xref:reference-manual.adoc#generate-jvm-report[`generate-jvm-report`(1)]
 
 [[visualvm]]
 

@@ -118,7 +118,7 @@ will not be able to locate the resource.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create a context service by using the
-link:reference-manual/create-jdbc-resource.html#create-jdbc-resource[`create-context-service`] subcommand.
+xref:reference-manual.adoc#create-jdbc-resource[`create-context-service`] subcommand.
 3. If necessary, notify users that the new resource has been created.
 
 [[sthref74]]
@@ -148,7 +148,7 @@ existing context service resources.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List context service resources by using the
-link:reference-manual/list-jdbc-resources.html#list-jdbc-resources[`list-context-services`] subcommand.
+xref:reference-manual.adoc#list-jdbc-resources[`list-context-services`] subcommand.
 
 [[sthref75]]
 Example 14-2 Listing Context Services
@@ -189,7 +189,7 @@ application or the server must be restarted.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the context service resources by using the
-link:reference-manual/list-jdbc-connection-pools.html#list-jdbc-connection-pools[`list-context-services`] subcommand.
+xref:reference-manual.adoc#list-jdbc-connection-pools[`list-context-services`] subcommand.
 3. View the attributes of a specific context service by using the `get` subcommand.
 For example:
 +
@@ -218,10 +218,10 @@ resource must be removed.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the context service resources by using the
-link:reference-manual/list-jdbc-connection-pools.html#list-jdbc-connection-pools[`list-context-services`] subcommand.
+xref:reference-manual.adoc#list-jdbc-connection-pools[`list-context-services`] subcommand.
 3. If necessary, notify users that the context service is being deleted.
 4. Delete the context service by using the
-link:reference-manual/delete-jdbc-connection-pool.html#delete-jdbc-connection-pool[`delete-context-service`] subcommand.
+xref:reference-manual.adoc#delete-jdbc-connection-pool[`delete-context-service`] subcommand.
 
 [[sthref76]]
 Example 14-3 Deleting a Context Service
@@ -284,7 +284,7 @@ application will not be able to locate the resource.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create a managed thread factory by using the
-link:reference-manual/create-jdbc-resource.html#create-jdbc-resource[`create-managed-thread-factory`] subcommand.
+xref:reference-manual.adoc#create-jdbc-resource[`create-managed-thread-factory`] subcommand.
 3. If necessary, notify users that the new resource has been created.
 
 [[sthref77]]
@@ -314,7 +314,7 @@ list the existing managed thread factory resources.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List managed thread factory resources by using the
-link:reference-manual/list-jdbc-resources.html#list-jdbc-resources[`list-managed-thread-factories`] subcommand.
+xref:reference-manual.adoc#list-jdbc-resources[`list-managed-thread-factories`] subcommand.
 
 [[sthref78]]
 Example 14-5 Listing Managed Thread Factories
@@ -356,7 +356,7 @@ application or the server must be restarted.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the managed thread factory resources by using the
-link:reference-manual/list-jdbc-connection-pools.html#list-jdbc-connection-pools[`list-managed-thread-factories`] subcommand.
+xref:reference-manual.adoc#list-jdbc-connection-pools[`list-managed-thread-factories`] subcommand.
 3. View the attributes of a managed thread factory by using the `get` subcommand.
 For example:
 +
@@ -385,10 +385,10 @@ the resource must be removed.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the managed thread factory resources by using the
-link:reference-manual/list-jdbc-connection-pools.html#list-jdbc-connection-pools[`list-managed-thread-factories`] subcommand.
+xref:reference-manual.adoc#list-jdbc-connection-pools[`list-managed-thread-factories`] subcommand.
 3. If necessary, notify users that the managed thread factory is being deleted.
 4. Delete the managed thread factory by using the
-link:reference-manual/delete-jdbc-connection-pool.html#delete-jdbc-connection-pool[`delete-managed-thread-factory`] subcommand.
+xref:reference-manual.adoc#delete-jdbc-connection-pool[`delete-managed-thread-factory`] subcommand.
 
 [[sthref79]]
 Example 14-6 Deleting a Managed Thread Factory
@@ -453,7 +453,7 @@ application will not be able to locate the resource.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create a managed executor service by using the
-link:reference-manual/create-jdbc-resource.html#create-jdbc-resource[`create-managed-executor-service`] subcommand.
+xref:reference-manual.adoc#create-jdbc-resource[`create-managed-executor-service`] subcommand.
 3. If necessary, notify users that the new resource has been created.
 
 [[sthref80]]
@@ -484,7 +484,7 @@ list the existing managed executor service resources.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List managed executor service resources by using the
-link:reference-manual/list-jdbc-resources.html#list-jdbc-resources[`list-managed-executor-services`] subcommand.
+xref:reference-manual.adoc#list-jdbc-resources[`list-managed-executor-services`] subcommand.
 
 [[sthref81]]
 Example 14-8 Listing Managed Executor Services
@@ -527,7 +527,7 @@ application or the server must be restarted.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the managed executor service resources by using the
-link:reference-manual/list-jdbc-connection-pools.html#list-jdbc-connection-pools[`list-managed-executor-services`] subcommand.
+xref:reference-manual.adoc#list-jdbc-connection-pools[`list-managed-executor-services`] subcommand.
 3. View the attributes of a managed executor service by using the `get` subcommand.
 For example:
 +
@@ -556,10 +556,10 @@ the resource must be removed.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the managed executor service resources by using the
-link:reference-manual/list-jdbc-connection-pools.html#list-jdbc-connection-pools[`list-managed-executor-services`] subcommand.
+xref:reference-manual.adoc#list-jdbc-connection-pools[`list-managed-executor-services`] subcommand.
 3. If necessary, notify users that the managed executor service is being deleted.
 4. Delete the managed executor service by using the
-link:reference-manual/delete-jdbc-connection-pool.html#delete-jdbc-connection-pool[`delete-managed-executor-service`] subcommand.
+xref:reference-manual.adoc#delete-jdbc-connection-pool[`delete-managed-executor-service`] subcommand.
 
 [[sthref82]]
 Example 14-9 Deleting a Managed Executor Service
@@ -627,7 +627,7 @@ Otherwise, the application will not be able to locate the resource.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create a managed scheduled executor service by using the
-link:reference-manual/create-jdbc-resource.html#create-jdbc-resource[`create-managed-scheduled-executor-service`] subcommand.
+xref:reference-manual.adoc#create-jdbc-resource[`create-managed-scheduled-executor-service`] subcommand.
 3. If necessary, notify users that the new resource has been created.
 
 [[sthref83]]
@@ -658,7 +658,7 @@ mode to list the existing managed scheduled executor service resources.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List managed scheduled executor service resources by using the
-link:reference-manual/list-jdbc-resources.html#list-jdbc-resources[`list-managed-scheduled-executor-services`] subcommand.
+xref:reference-manual.adoc#list-jdbc-resources[`list-managed-scheduled-executor-services`] subcommand.
 
 [[sthref84]]
 Example 14-11 Listing Managed Scheduled Executor Services
@@ -700,7 +700,7 @@ application or the server must be restarted.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the managed scheduled executor service resources by using the
-link:reference-manual/list-jdbc-connection-pools.html#list-jdbc-connection-pools[`list-managed-scheduled-executor-services`] subcommand.
+xref:reference-manual.adoc#list-jdbc-connection-pools[`list-managed-scheduled-executor-services`] subcommand.
 3. View the attributes of a managed scheduled executor service by using the `get` subcommand.
 For example:
 +
@@ -730,10 +730,10 @@ associations to the resource must be removed.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the managed scheduled executor service resources by using the
-link:reference-manual/list-jdbc-connection-pools.html#list-jdbc-connection-pools[`list-managed-scheduled-executor-service`] subcommand.
+xref:reference-manual.adoc#list-jdbc-connection-pools[`list-managed-scheduled-executor-service`] subcommand.
 3. If necessary, notify users that the managed scheduled executor service is being deleted.
 4. Delete the managed scheduled executor service by using the
-link:reference-manual/delete-jdbc-connection-pool.html#delete-jdbc-connection-pool[`delete-managed-scheduled-executor-service`] subcommand.
+xref:reference-manual.adoc#delete-jdbc-connection-pool[`delete-managed-scheduled-executor-service`] subcommand.
 
 [[sthref85]]
 Example 14-12 Deleting a Managed Scheduled Executor Service

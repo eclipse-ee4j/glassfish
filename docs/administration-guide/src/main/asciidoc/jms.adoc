@@ -262,7 +262,7 @@ Embedded Type::
   broker when the first JMS operation is requested instead of
   immediately when the GlassFish instance is started. If necessary, you
   can force startup of the broker by using the
-  link:reference-manual/jms-ping.html#jms-ping[`jms-ping`] command. +
+  xref:reference-manual.adoc#jms-ping[`jms-ping`] command. +
   Additionally, if the GlassFish instance is a standalone instance (not
   a clustered instance), JMS operations use a Message Queue feature
   called direct mode to bypass the networking stack, leading to
@@ -349,7 +349,7 @@ remote `asadmin` mode to create an additional JMS host.
 1. Ensure that the server is running.
 +
 Remote `asadmin` subcommands require a running server.
-2. Create the JMS host by using the link:reference-manual/create-jms-host.html#create-jms-host[`create-jms-host`]
+2. Create the JMS host by using the xref:reference-manual.adoc#create-jms-host[`create-jms-host`]
 subcommand:
 +
 [source]
@@ -368,7 +368,7 @@ asadmin> create-jms-host --mqhost hostName --mqport portNumber
   The password of the administrative user of the Message Queue broker.
 `--target`::
   The {productName} object for which the JMS host is being created.
-  For details, see link:reference-manual/create-jms-host.html#create-jms-host[`create-jms-host`(1)].
+  For details, see xref:reference-manual.adoc#create-jms-host[`create-jms-host`(1)].
 `--property`::
   A list of one or more Message Queue broker properties to configure the
   broker. The list is colon-separated (`:`) and has the form:
@@ -424,7 +424,7 @@ existing JMS hosts.
 1. Ensure that the server is running.
 +
 Remote `asadmin` subcommands require a running server.
-2. List the JMS hosts by using the link:reference-manual/list-jms-hosts.html#list-jms-hosts[`list-jms-hosts`]
+2. List the JMS hosts by using the xref:reference-manual.adoc#list-jms-hosts[`list-jms-hosts`]
 subcommand.
 
 [[gipdw]]
@@ -450,7 +450,7 @@ JMS host.
 1. Ensure that the server is running.
 +
 Remote `asadmin` subcommands require a running server.
-2. Use the link:reference-manual/get.html#get[`get`] subcommand to list the current
+2. Use the xref:reference-manual.adoc#get[`get`] subcommand to list the current
 attribute values of the desired JMS host:
 +
 [source]
@@ -458,8 +458,8 @@ attribute values of the desired JMS host:
 asadmin> get configs.config.config-name.jms-service.jms-host.jms-host-name.*
 ----
 For information about JMS host attributes, see
-link:reference-manual/create-jms-host.html#create-jms-host[`create-jms-host`(1)].
-3. Use the link:reference-manual/set.html#set[`set`] subcommand to modify a JMS host
+xref:reference-manual.adoc#create-jms-host[`create-jms-host`(1)].
+3. Use the xref:reference-manual.adoc#set[`set`] subcommand to modify a JMS host
 attribute:
 +
 [source]
@@ -516,9 +516,9 @@ JMS service will not be able to start until you create a new JMS host.
 1. Ensure that the server is running.
 +
 Remote `asadmin` subcommands require a running server.
-2. List the JMS hosts by using the link:reference-manual/list-jms-hosts.html#list-jms-hosts[`list-jms-hosts`]
+2. List the JMS hosts by using the xref:reference-manual.adoc#list-jms-hosts[`list-jms-hosts`]
 subcommand.
-3. Delete a JMS host by using the link:reference-manual/delete-jms-host.html#delete-jms-host[`delete-jms-host`]
+3. Delete a JMS host by using the xref:reference-manual.adoc#delete-jms-host[`delete-jms-host`]
 subcommand.
 
 [[gipbj]]
@@ -633,7 +633,7 @@ Object].
 +
 Remote `asadmin` subcommands require a running server.
 2. Create a JMS resource by using the
-link:reference-manual/create-jms-resource.html#create-jms-resource[`create-jms-resource`] command.
+xref:reference-manual.adoc#create-jms-resource[`create-jms-resource`] command.
 +
 Information about the properties for the subcommand is included in this
 help page.
@@ -691,7 +691,7 @@ the existing connection factory and destination resources.
 +
 Remote `asadmin` subcommands require a running server.
 2. List the existing JMS resources by using the
-link:reference-manual/list-jms-resources.html#list-jms-resources[`list-jms-resources`] subcommand.
+xref:reference-manual.adoc#list-jms-resources[`list-jms-resources`] subcommand.
 
 [[giovz]]
 Example 17-7 Listing All JMS Resources
@@ -743,9 +743,9 @@ before running this subcommand.
 +
 Remote `asadmin` subcommands require a running server.
 2. List the existing JMS resources by using the
-link:reference-manual/list-jms-resources.html#list-jms-resources[`list-jms-resources`] subcommand.
+xref:reference-manual.adoc#list-jms-resources[`list-jms-resources`] subcommand.
 3. Delete the JMS resource by using the
-link:reference-manual/delete-jms-resource.html#delete-jms-resource[`delete-jms-resource`] subcommand.
+xref:reference-manual.adoc#delete-jms-resource[`delete-jms-resource`] subcommand.
 
 [[giovi]]
 Example 17-9 Deleting a JMS Resource
@@ -813,7 +813,7 @@ xref:{mq-admin-guide-url}[Open Message Queue Administration Guide].
 +
 Remote `asadmin` subcommands require a running server.
 2. Create a JMS physical destination by using the
-link:reference-manual/create-jmsdest.html#create-jmsdest[`create-jmsdest`] subcommand.
+xref:reference-manual.adoc#create-jmsdest[`create-jmsdest`] subcommand.
 +
 Information about the properties for the subcommand is included in this
 help page.
@@ -852,7 +852,7 @@ existing JMS physical destinations.
 +
 Remote `asadmin` subcommands require a running server.
 2. List the existing JMS physical destinations by using the
-link:reference-manual/list-jmsdest.html#list-jmsdest[`list-jmsdest`] subcommand.
+xref:reference-manual.adoc#list-jmsdest[`list-jmsdest`] subcommand.
 
 [[gioxo]]
 Example 17-11 Listing JMS Physical Destinations
@@ -885,7 +885,7 @@ service configuration.
 +
 Remote `asadmin` subcommands require a running server.
 2. Purge messages from the a JMS physical destination by using the
-link:reference-manual/flush-jmsdest.html#flush-jmsdest[`flush-jmsdest`] subcommand.
+xref:reference-manual.adoc#flush-jmsdest[`flush-jmsdest`] subcommand.
 3. If needed, restart the server.
 +
 Some properties require server restart. See
@@ -920,9 +920,9 @@ the specified JMS physical destination.
 +
 Remote `asadmin` subcommands require a running server.
 2. List the existing JMS physical destinations by using the
-link:reference-manual/list-jmsdest.html#list-jmsdest[`list-jmsdest`] subcommand.
+xref:reference-manual.adoc#list-jmsdest[`list-jmsdest`] subcommand.
 3. Delete the physical resource by using the
-link:reference-manual/delete-jmsdest.html#delete-jmsdest[`delete-jmsdest`] subcommand.
+xref:reference-manual.adoc#delete-jmsdest[`delete-jmsdest`] subcommand.
 
 [[gioxx]]
 Example 17-13 Deleting a Physical Destination
@@ -995,7 +995,7 @@ Virtual Directory (OVD) User Respository::
 
 If you encounter problems, consider the following:
 
-* Use the link:reference-manual/jms-ping.html#jms-ping[`jms-ping`] subcommand to confirm that the
+* Use the xref:reference-manual.adoc#jms-ping[`jms-ping`] subcommand to confirm that the
 Message Queue broker is running.
 * View the {productName} log file. For `server`, the Domain
 Administrations Server (DAS), the log is available at

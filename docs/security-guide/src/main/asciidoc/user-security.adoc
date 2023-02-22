@@ -153,7 +153,7 @@ authentication realm.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create a realm by using the
-link:reference-manual/create-auth-realm.html#create-auth-realm[`create-auth-realm`] subcommand. +
+xref:reference-manual.adoc#create-auth-realm[`create-auth-realm`] subcommand. +
 Information about properties for this subcommand is included in this help page.
 
 [[ggpjx]]
@@ -184,7 +184,7 @@ Use the `list-auth-realms` subcommand in remote mode to list the
 existing authentication realms.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. List realms by using the link:reference-manual/list-auth-realms.html#list-auth-realms[`list-auth-realms`]
+2. List realms by using the xref:reference-manual.adoc#list-auth-realms[`list-auth-realms`]
 subcommand.
 
 [[ggpkw]]
@@ -220,10 +220,10 @@ A custom realm does not require server restart.
 ====
 
 
-1. List realms by using the link:reference-manual/list-auth-realms.html#list-auth-realms[`list-auth-realms`]
+1. List realms by using the xref:reference-manual.adoc#list-auth-realms[`list-auth-realms`]
 subcommand.
 2. Modify the values for the specified thread pool by using the
-link:reference-manual/set.html#set[`set`] subcommand.
+xref:reference-manual.adoc#set[`set`] subcommand.
 +
 The thread pool is identified by its dotted name.
 3. To apply your changes, restart {productName}.
@@ -239,10 +239,10 @@ existing authentication realm.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List realms by using the
-link:reference-manual/list-auth-realms.html#list-auth-realms[`list-auth-realms`] subcommand.
+xref:reference-manual.adoc#list-auth-realms[`list-auth-realms`] subcommand.
 3. If necessary, notify users that the realm is being deleted.
 4. Delete the realm by using the
-link:reference-manual/delete-auth-realm.html#delete-auth-realm[`delete-auth-realm`] subcommand.
+xref:reference-manual.adoc#delete-auth-realm[`delete-auth-realm`] subcommand.
 5. To apply your changes, restart {productName}. See
 "xref:administration-guide.adoc#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
 
@@ -551,7 +551,7 @@ asadmin configure-ldap-for-admin --basedn "dc=red,dc=iplanet,dc=com" \
 
 See Also
 
-See link:reference-manual/configure-ldap-for-admin.html#configure-ldap-for-admin[`configure-ldap-for-admin`] for more information
+See xref:reference-manual.adoc#configure-ldap-for-admin[`configure-ldap-for-admin`] for more information
 about the `configure-ldap-for-admin subcommand`.
 
 [[administering-file-users]]
@@ -597,9 +597,9 @@ server restart.
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. If the user will belong to a particular group, see the current
 groups by using the
-link:reference-manual/list-file-groups.html#list-file-groups[`list-file-groups`] subcommand.
+xref:reference-manual.adoc#list-file-groups[`list-file-groups`] subcommand.
 3. Create a file user by using the
-link:reference-manual/create-file-user.html#create-file-user[`create-file-user`] subcommand.
+xref:reference-manual.adoc#create-file-user[`create-file-user`] subcommand.
 
 [[ggpkq]]
 Example 2-5 Creating a User
@@ -610,7 +610,7 @@ The `asadmin` `--passwordfile` option specifies the name of a file that
 contains the password entries in a specific format. The entry for a
 password must have the `AS_ADMIN_` prefix followed by the password name
 in uppercase letters, an equals sign, and the password. See
-link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] for more information.
+xref:reference-manual.adoc#asadmin[`asadmin`(1M)] for more information.
 
 [source]
 ----
@@ -632,7 +632,7 @@ Use the `list-file-users` subcommand in remote mode to list the users
 that are in the `keyfile`.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. List users by using the link:reference-manual/list-file-users.html#list-file-users[`list-file-users`]
+2. List users by using the xref:reference-manual.adoc#list-file-users[`list-file-users`]
 subcommand.
 
 [[ggpgf]]
@@ -676,7 +676,7 @@ a file user, or all file groups if the `--name` option is not specified.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List file groups by using the
-link:reference-manual/list-file-groups.html#list-file-groups[`list-file-groups`] subcommand.
+xref:reference-manual.adoc#list-file-groups[`list-file-groups`] subcommand.
 
 [[ghlgb]]
 Example 2-7 Listing Groups for a User
@@ -707,7 +707,7 @@ update an administrative user to have a blank password.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Update the user information by using the
-link:reference-manual/update-file-user.html#update-file-user[`update-file-user`] subcommand.
+xref:reference-manual.adoc#update-file-user[`update-file-user`] subcommand.
 3. To apply your changes, restart {productName}. +
 See "xref:administration-guide.adoc#to-restart-a-domain[To Restart a Domain]"
 in {productName} Administration Guide.
@@ -740,9 +740,9 @@ during your session.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List users by using the
-link:reference-manual/list-file-users.html#list-file-users[`list-file-users`] subcommand.
+xref:reference-manual.adoc#list-file-users[`list-file-users`] subcommand.
 3. Delete the user by using the
-link:reference-manual/delete-file-user.html#delete-file-user[`delete-file-user`] subcommand.
+xref:reference-manual.adoc#delete-file-user[`delete-file-user`] subcommand.
 
 [[ggpib]]
 Example 2-9 Deleting a User

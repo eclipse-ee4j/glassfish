@@ -388,7 +388,7 @@ The application displays a customized response, giving you a personal
 See Also
 
 For more information about the `deploy` subcommand, see
-link:reference-manual/deploy.html#deploy[`deploy`(1)].
+xref:reference-manual.adoc#deploy[`deploy`(1)].
 
 For more information about deploying applications from the command line,
 see the xref:application-deployment-guide.adoc#GSDPG[{productName} Application
@@ -430,7 +430,7 @@ as-install/bin/asadmin undeploy hello
 See Also
 
 For more information about the `undeploy` subcommand, see
-link:reference-manual/undeploy.html#undeploy[`undeploy`(1)].
+xref:reference-manual.adoc#undeploy[`undeploy`(1)].
 
 [[deploying-and-undeploying-applications-by-using-the-administration-console]]
 

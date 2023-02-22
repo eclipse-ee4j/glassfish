@@ -1417,8 +1417,8 @@ directories and, if necessary, change the type of the node.
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for changing the node's
-configuration data, see the link:reference-manual/update-node-ssh001.html#update-node-ssh[`update-node-ssh`(1)] help
-page or the link:reference-manual/update-node-config.html#update-node-config[`update-node-config`(1)] help page.
+configuration data, see the xref:reference-manual.adoc#update-node-ssh[`update-node-ssh`(1)] help
+page or the xref:reference-manual.adoc#update-node-config[`update-node-config`(1)] help page.
 ====
 
 [source]
@@ -1477,8 +1477,8 @@ Setting Up SSH for Centralized Administration]" in
 {productName} High Availability Administration Guide
 * "xref:ha-administration-guide.adoc#administering-glassfish-server-nodes[Administering {productName} Nodes]"
 in {productName} High Availability Administration Guide
-* link:reference-manual/update-node-config.html#update-node-config[`update-node-config`(1)]
-* link:reference-manual/update-node-ssh001.html#update-node-ssh[`update-node-ssh`(1)]
+* xref:reference-manual.adoc#update-node-config[`update-node-config`(1)]
+* xref:reference-manual.adoc#update-node-ssh[`update-node-ssh`(1)]
 
 [[to-re-create-a-cluster]]
 

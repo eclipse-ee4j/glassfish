@@ -75,7 +75,7 @@ the {productName} threads into different thread pools.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create a new thread pool by using the
-link:reference-manual/create-threadpool.html#create-threadpool[`create-threadpool`] subcommand.
+xref:reference-manual.adoc#create-threadpool[`create-threadpool`] subcommand.
 +
 Information about options for the subcommand is included in this help
 page.
@@ -116,7 +116,7 @@ existing thread pools.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the existing thread pools by using the
-link:reference-manual/list-threadpools.html#list-threadpools[`list-threadpools`] subcommand.
+xref:reference-manual.adoc#list-threadpools[`list-threadpools`] subcommand.
 
 [[giugs]]
 Example 5-2 Listing Thread Pools
@@ -143,9 +143,9 @@ Use the `set` subcommand to update the values for a specified thread
 pool.
 
 1. List the existing thread pools by using the
-link:reference-manual/list-threadpools.html#list-threadpools[`list-threadpools`] subcommand.
+xref:reference-manual.adoc#list-threadpools[`list-threadpools`] subcommand.
 2. Modify the values for a thread pool by using the
-link:reference-manual/set.html#set[`set`] subcommand.
+xref:reference-manual.adoc#set[`set`] subcommand.
 +
 The thread pool is identified by its dotted name.
 3. To apply your changes, restart {productName}.
@@ -184,9 +184,9 @@ referenced by a network listener.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the existing thread pools by using the
-link:reference-manual/list-threadpools.html#list-threadpools[`list-threadpools`] subcommand.
+xref:reference-manual.adoc#list-threadpools[`list-threadpools`] subcommand.
 3. Delete the specified thread pool by using the
-link:reference-manual/delete-threadpool.html#delete-threadpool[`delete-threadpool`] subcommand.
+xref:reference-manual.adoc#delete-threadpool[`delete-threadpool`] subcommand.
 4. To apply your changes, restart {productName}.
 +
 See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].

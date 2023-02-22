@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -126,14 +126,14 @@ public class GlassFishLogManagerLifeCycleTest {
         assertEquals(GlassFishLoggingStatus.CONFIGURING, MANAGER.getLoggingStatus(),
             "status after startReconfigurationAndBlock test");
 
-        doLog(Level.FINE, "Log before reconfiguration");
-        doLog(Level.FINEST, "This log should be dropped, logger's level is FINE");
+        doLog(Level.FINE, "Log before reconfiguration", 0);
+        doLog(Level.FINEST, "This log should be dropped, logger's level is FINE", 0);
         process = runAsync(() -> MANAGER.reconfigure(originalCfg, ACTION_RECONFIG, ACTION_FLUSH));
         Thread.sleep(10L);
         assertAll(
             () -> assertEquals(GlassFishLoggingStatus.CONFIGURING, MANAGER.getLoggingStatus()),
             () -> assertNull(COLLECTOR.pop(), "COLLECTOR should be empty after reconfiguration started"));
-        doLog(Level.INFO, "Log after reconfiguration started");
+        doLog(Level.INFO, "Log after reconfiguration started", 0);
         assertNull(COLLECTOR.pop(), "COLLECTOR should be empty after reconfiguration started even if we log again");
     }
 
@@ -154,7 +154,7 @@ public class GlassFishLogManagerLifeCycleTest {
             () -> assertNull(COLLECTOR.pop(), "COLLECTOR should be empty after reconfiguration finished")
         );
 
-        doLog(Level.SEVERE, "Log while flushing is still executed");
+        doLog(Level.SEVERE, "Log while flushing is still executed", 5);
         assertNull(COLLECTOR.pop(), "COLLECTOR should be empty after reconfiguration finished even if we log again");
     }
 
@@ -170,7 +170,7 @@ public class GlassFishLogManagerLifeCycleTest {
     @Timeout(10)
     public void finishFlushing() throws Exception {
         ACTION_FLUSH.unblock();
-        doLog(Level.INFO, "Log after flushing finished");
+        doLog(Level.INFO, "Log after flushing finished", 5);
         final List<GlassFishLogRecord> logRecords = COLLECTOR.getAll();
         assertAll(
             () -> assertEquals(GlassFishLoggingStatus.FULL_SERVICE, MANAGER.getLoggingStatus(),
@@ -205,8 +205,8 @@ public class GlassFishLogManagerLifeCycleTest {
         setResolveLevelWithIncompleteConfiguration(false);
         assertEquals(GlassFishLoggingStatus.CONFIGURING, MANAGER.getLoggingStatus(), "after reconfigureToBlockingHandler");
 
-        doLog(Level.FINEST, "message0");
-        doLog(Level.INFO, "message1");
+        doLog(Level.FINEST, "message0", 1);
+        doLog(Level.INFO, "message1", 2);
         MANAGER.reconfigure(originalCfg, () -> LOG.setLevel(Level.FINEST), null);
         assertFalse(isResolveLevelWithIncompleteConfiguration(), "isResolveLevelWithIncompleteConfiguration");
 
@@ -238,8 +238,8 @@ public class GlassFishLogManagerLifeCycleTest {
         setResolveLevelWithIncompleteConfiguration(true);
         assertEquals(GlassFishLoggingStatus.CONFIGURING, MANAGER.getLoggingStatus(), "after reconfigureToBlockingHandler");
 
-        doLog(Level.FINEST, "message0");
-        doLog(Level.INFO, "message1");
+        doLog(Level.FINEST, "message0", 1);
+        doLog(Level.INFO, "message1", 2);
         MANAGER.reconfigure(originalCfg, () -> LOG.setLevel(Level.FINEST), null);
         assertTrue(isResolveLevelWithIncompleteConfiguration(), "isResolveLevelWithIncompleteConfiguration");
 
@@ -269,9 +269,11 @@ public class GlassFishLogManagerLifeCycleTest {
      *
      * @throws Exception
      */
-    private void doLog(final Level level, final String message) throws Exception {
+    private void doLog(final Level level, final String message, final int sleepMillis) throws Exception {
         new Thread(() -> LOG.log(level, message)).start();
-        Thread.sleep(10L);
+        if (sleepMillis > 0) {
+            Thread.sleep(sleepMillis);
+        }
     }
 
     private static final class BlockingAction implements Action {

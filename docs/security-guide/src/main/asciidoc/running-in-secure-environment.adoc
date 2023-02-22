@@ -137,7 +137,7 @@ of the full Java platform, and is designed for developers who do not
 require the full set of Jakarta EE APIs.
 
 For the list of APIs in each profile, see
-"link:release-notes/release-notes.html#java-ee-standards-support[
+"xref:release-notes.adoc#java-ee-standards-support[
 Jakarta EE Standards Support]"
 in {productName} Release Notes.
 

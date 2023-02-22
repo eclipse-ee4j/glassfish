@@ -47,11 +47,11 @@ investigation, try the following steps first.
 ===== Verify System Requirements and Configuration
 
 Ensure that your system meets the requirements listed in
-"link:release-notes/release-notes.html#hardware-and-software-requirements[Hardware and Software Requirements]"
+"xref:release-notes.adoc#hardware-and-software-requirements[Hardware and Software Requirements]"
 in {productName} Release Notes.
 Problems are likely to arise if you attempt to install on a platform that
 is not supported or on a system that in some other way does not meet release requirements.
-Also see "link:release-notes/release-notes.html#GSRLN00253[Known Issues]"
+Also see "xref:release-notes.adoc#GSRLN00253[Known Issues]"
 in {productName} Release Notes for known issues related to installation.
 
 {productName} requires JDK release 11 or newer.

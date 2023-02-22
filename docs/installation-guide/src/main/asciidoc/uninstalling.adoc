@@ -39,7 +39,7 @@ Use the `ps -ef` command and terminate the processes using the `kill` command.
 +
 Use the Task Manager and terminate the processes.
 
-Also see "link:release-notes/release-notes.html#GSRLN00253[Known Issues]"
+Also see "xref:release-notes.adoc#GSRLN00253[Known Issues]"
 in {productName} Release Notes for known issues related to uninstallation.
 
 1. Save any files in the installation directory that you may want to keep.

@@ -179,7 +179,7 @@ running the DAS.
 
 The environment of the SSH user on any remote host to which the user
 will connect must meet the requirements that are stated in
-"link:release-notes/release-notes.html#paths-and-environment-settings-for-the-jdk-software[Paths and Environment Settings for the JDK Software]"
+"xref:release-notes.adoc#paths-and-environment-settings-for-the-jdk-software[Paths and Environment Settings for the JDK Software]"
 in {productName} Release Notes.
 
 The SSH user's environment on a host is set by the environment set-up

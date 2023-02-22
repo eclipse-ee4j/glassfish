@@ -152,14 +152,14 @@ Life Cycle Modules::
 Security::
   * System Security. Initial configuration tasks might include setting
   up passwords, audit modules, and certificates. See
-  "link:security-guide/system-security.html#administering-system-security[Administering System Security]" in {productName} Security Guide.
+  "xref:security-guide.adoc#administering-system-security[Administering System Security]" in {productName} Security Guide.
   * User Security. Initial configuration tasks might include creating
   authentication realms and file users. See
-  "link:security-guide/user-security.html#administering-user-security[Administering User Security]" in {productName} Security Guide.
+  "xref:security-guide.adoc#administering-user-security[Administering User Security]" in {productName} Security Guide.
   * Message Security. Initial configuration tasks might include
   configuring a Java Cryptography Extension (JCE) provider, enabling
   default and non-default security providers, and configuring message
-  protection policies. See "link:security-guide/message-security.html#administering-message-security[Administering Message
+  protection policies. See "xref:security-guide.adoc#administering-message-security[Administering Message
   Security]" in {productName} Security Guide.
 Database Connectivity::
   The initial tasks involved in configuring {productName} to connect
@@ -446,7 +446,7 @@ require restart.
 * Configuring certificates
 * Managing HTTP, JMS, IIOP, JNDI services
 * Enabling or disabling secure administration as explained in
-"link:security-guide/administrative-security.html#running-secure-admin[Running Secure Admin]" in {productName} Security Guide
+"xref:security-guide.adoc#running-secure-admin[Running Secure Admin]" in {productName} Security Guide
 
 [[dynamic-configuration-changes]]
 
@@ -980,7 +980,7 @@ The user name and password of this user are both preset to `admin`.
 
 The `keytool` utility is used to set up and work with Java Security
 Socket Extension (JSSE) digital certificates. See
-"link:security-guide/system-security.html#administering-jsse-certificates[Administering JSSE Certificates]"
+"xref:security-guide.adoc#administering-jsse-certificates[Administering JSSE Certificates]"
 in {productName} Security Guide for instructions on using `keytool`.
 
 [[java-monitoring-and-management-console-jconsole]]

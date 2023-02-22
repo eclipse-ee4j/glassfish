@@ -1854,8 +1854,8 @@ tasks:
 For information about how to perform these tasks from the command line,
 see the following documentation:
 
-* "link:security-guide/user-security.html#to-create-an-authentication-realm[To Create an Authentication Realm]" in {productName} Security Guide
-* "link:security-guide/user-security.html#to-create-a-file-user[To Create a File User]" in {productName} Security Guide
+* "xref:security-guide.adoc#to-create-an-authentication-realm[To Create an Authentication Realm]" in {productName} Security Guide
+* "xref:security-guide.adoc#to-create-a-file-user[To Create a File User]" in {productName} Security Guide
 * xref:http_https.adoc#to-configure-an-http-listener-for-ssl[To Configure an HTTP Listener for SSL]
 
 For information about how to perform these tasks by using the

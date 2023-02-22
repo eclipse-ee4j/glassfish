@@ -180,7 +180,7 @@ already use a directory server may find it advantageous to leverage
 investment in Solaris security infrastructure.
 
 For more information on security realms, see
-"link:security-guide/user-security.html#administering-authentication-realms[Administering Authentication Realms]" in {productName} Security Guide.
+"xref:security-guide.adoc#administering-authentication-realms[Administering Authentication Realms]" in {productName} Security Guide.
 
 The type of authentication mechanism chosen may require additional
 hardware for the deployment. Typically a directory server executes on a
@@ -249,7 +249,7 @@ system, given the security requirements?
 choices?
 
 For information on how to encrypt the communication between web servers
-and {productName}, see "link:security-guide/message-security.html#administering-message-security[Administering Message
+and {productName}, see "xref:security-guide.adoc#administering-message-security[Administering Message
 Security]" in {productName} Security Guide.
 
 [[high-availability-clustering-load-balancing-and-failover]]

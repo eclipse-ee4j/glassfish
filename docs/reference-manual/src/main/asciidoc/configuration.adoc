@@ -51,6 +51,6 @@ xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 xref:dotted-names.adoc#dotted-names[`dotted-names`(5ASC)]
 
-"link:administration-guide/overview.html#configuration-tasks[Configuration Tasks]" in {productName} Administration Guide
+"xref:administration-guide.adoc#configuration-tasks[Configuration Tasks]" in {productName} Administration Guide
 
 

@@ -139,7 +139,7 @@ is not started automatically when you start {productName}, so if you
 have applications that require a database, you need to start Apache
 Derby database manually by using the local `start-database` subcommand.
 
-Start the database by using the link:reference-manual/start-database.html#start-database[`start-database`]
+Start the database by using the xref:reference-manual.adoc#start-database[`start-database`]
 subcommand.
 
 When the database server starts, or a client connects to it
@@ -176,7 +176,7 @@ database on a specified port. A single host can have multiple database
 server processes running on different ports.
 
 1. If necessary, notify users that the database is being stopped.
-2. Stop the database by using the link:reference-manual/stop-database.html#stop-database[`stop-database`]
+2. Stop the database by using the xref:reference-manual.adoc#stop-database[`stop-database`]
 subcommand.
 
 [[ggorc]]
@@ -285,7 +285,7 @@ from the pool. When an application closes a connection, the connection
 is returned to the pool. JDBC connection pools can be globally
 accessible or be scoped to an enterprise application, web module, EJB
 module, connector module or application client module, as described in
-"link:application-deployment-guide/deploying-applications.html#application-scoped-resources[Application-Scoped Resources]" in {productName} Application Deployment Guide.
+"xref:application-deployment-guide.adoc#application-scoped-resources[Application-Scoped Resources]" in {productName} Application Deployment Guide.
 
 A JDBC resource is created by specifying the connection pool with which
 the resource is associated. Multiple JDBC resources can specify a single
@@ -342,7 +342,7 @@ see <<Setting Up the Database>>.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create the JDBC connection pool by using the
-link:reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`] subcommand.
+xref:reference-manual.adoc#create-jdbc-connection-pool[`create-jdbc-connection-pool`] subcommand.
 3. If needed, restart the server.
 +
 Some parameters require server restart. See
@@ -379,7 +379,7 @@ all existing JDBC connection pools.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the JDBC connection pools by using the
-link:reference-manual/list-jdbc-connection-pools.html#list-jdbc-connection-pools[`list-jdbc-connection-pools`] subcommand.
+xref:reference-manual.adoc#list-jdbc-connection-pools[`list-jdbc-connection-pools`] subcommand.
 
 [[ggpcf]]
 Example 11-4 Listing JDBC Connection Pools
@@ -420,7 +420,7 @@ created with authentication, and the server or database must be running.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Ping a connection pool by using the
-link:reference-manual/ping-connection-pool.html#ping-connection-pool[`ping-connection-pool`] subcommand.
+xref:reference-manual.adoc#ping-connection-pool[`ping-connection-pool`] subcommand.
 
 [[ggpcs]]
 Example 11-5 Contacting a Connection Pool
@@ -459,7 +459,7 @@ for the pool, and restores the pool to its steady pool size.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Reset a connection pool by using
-theolink:GSRFM00135[`flush-connection-pool`] subcommand.
+the xref:reference-manual.adoc#flush-connection-pool[`flush-connection-pool`] subcommand.
 
 [[gjirk]]
 Example 11-6 Resetting (Flushing) a Connection Pool
@@ -487,7 +487,7 @@ Use the `get` and `set` subcommands to view and change the values of the
 JDBC connection pool properties.
 
 1. List the JDBC connection pools by using the
-link:reference-manual/list-jdbc-connection-pools.html#list-jdbc-connection-pools[`list-jdbc-connection-pools`] subcommand.
+xref:reference-manual.adoc#list-jdbc-connection-pools[`list-jdbc-connection-pools`] subcommand.
 2. View the attributes of the JDBC connection pool by using the get
 subcommand.
 +
@@ -532,11 +532,11 @@ must be removed.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the JDBC connection pools by using the
-link:reference-manual/list-jdbc-connection-pools.html#list-jdbc-connection-pools[`list-jdbc-connection-pools`] subcommand.
+xref:reference-manual.adoc#list-jdbc-connection-pools[`list-jdbc-connection-pools`] subcommand.
 3. If necessary, notify users that the JDBC connection pool is being
 deleted.
 4. Delete the connection pool by using the
-link:reference-manual/delete-jdbc-connection-pool.html#delete-jdbc-connection-pool[`delete-jdbc-connection-pool`] subcommand.
+xref:reference-manual.adoc#delete-jdbc-connection-pool[`delete-jdbc-connection-pool`] subcommand.
 
 [[ggpis]]
 Example 11-7 Deleting a JDBC Connection Pool
@@ -594,7 +594,7 @@ in the Administration Console. For more information, click the Help
 button in the Administration Console.
 * Specify it using the `--property` option in the
 `create-jdbc-connection-pool` subcommand. For more information, see
-link:reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
+xref:reference-manual.adoc#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
 * Set it using the `set` subcommand. For example:
 +
 [source]
@@ -623,7 +623,7 @@ Attributes page in the Administration Console. For more information,
 click the Help button in the Administration Console.
 * Specify the `--initsql` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-link:reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
+xref:reference-manual.adoc#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
 * Specify the `init-sql` option in the `asadmin set` command. For
 example:
 +
@@ -652,7 +652,7 @@ Attributes page in the Administration Console. For more information,
 click the Help button in the Administration Console.
 * Specify the `--statementtimeout` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-link:reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
+xref:reference-manual.adoc#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
 
 [[statement-leak-detection-and-leaked-statement-reclamation]]
 
@@ -670,7 +670,7 @@ of the following ways:
 
 * Specify the `--statementleaktimeout` option in the
 `create-jdbc-connection-pool` subcommand. For more information, see
-link:reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
+xref:reference-manual.adoc#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
 * Specify the `statement-leak-timeout-in-seconds` option in the `set`
 subcommand. For example:
 +
@@ -692,7 +692,7 @@ pool to a `true` value in one of the following ways:
 
 * Specify the `--statementleakreclaim=true` option in the
 `create-jdbc-connection-pool` subcommand. For more information, see
-link:reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
+xref:reference-manual.adoc#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
 * Specify the `statement-leak-reclaim` option in the `set` subcommand.
 For example:
 +
@@ -720,7 +720,7 @@ Advanced Attributes page in the Administration Console. For more
 information, click the Help button in the Administration Console.
 * Specify the `--statementcachesize` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-link:reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
+xref:reference-manual.adoc#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
 * Specify the `statement-cache-size` option in the `asadmin set`
 command. For example:
 +
@@ -749,7 +749,7 @@ Advanced Attributes page in the Administration Console. For more
 information, click the Help button in the Administration Console.
 * Specify the `--sqltracelisteners` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-link:reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
+xref:reference-manual.adoc#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
 * Specify the `sql-trace-listeners` option in the `asadmin set` command.
 For example:
 +
@@ -803,7 +803,7 @@ page in the Administration Console. For more information, click the Help
 button in the Administration Console.
 * Specify them using the `--property` option in the
 `create-jdbc-connection-pool` subcommand. For more information, see
-link:reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
+xref:reference-manual.adoc#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
 * Set them using the `set` subcommand. For example:
 +
 [source]
@@ -821,7 +821,7 @@ resource for each database that is accessed by the applications deployed
 in a domain. Multiple JDBC resources can be specified for a database.
 JDBC resources can be globally accessible or be scoped to an enterprise
 application, web module, EJB module, connector module or application
-client module, as described in "link:application-deployment-guide/deploying-applications.html#application-scoped-resources[Application-Scoped
+client module, as described in "xref:application-deployment-guide.adoc#application-scoped-resources[Application-Scoped
 Resources]" in {productName} Application
 Deployment Guide.
 
@@ -867,7 +867,7 @@ pool. For instructions, see xref:#to-create-a-jdbc-connection-pool[To Create a J
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create a JDBC resource by using the
-link:reference-manual/create-jdbc-resource.html#create-jdbc-resource[`create-jdbc-resource`] subcommand.
+xref:reference-manual.adoc#create-jdbc-resource[`create-jdbc-resource`] subcommand.
 +
 Information about properties for the subcommand is included in this help page.
 3. If necessary, notify users that the new resource has been created.
@@ -897,7 +897,7 @@ existing JDBC resources.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List JDBC resources by using the
-link:reference-manual/list-jdbc-resources.html#list-jdbc-resources[`list-jdbc-resources`] subcommand.
+xref:reference-manual.adoc#list-jdbc-resources[`list-jdbc-resources`] subcommand.
 
 [[ggpgi]]
 Example 11-9 Listing JDBC Resources
@@ -927,9 +927,9 @@ You can enable or disable a JDBC resource by using the `set` subcommand.
 The JDBC resource is identified by its dotted name.
 
 1. List JDBC resources by using the
-link:reference-manual/list-jdbc-resources.html#list-jdbc-resources[`list-jdbc-resources`] subcommand.
+xref:reference-manual.adoc#list-jdbc-resources[`list-jdbc-resources`] subcommand.
 2. Modify the values for the specified JDBC resource by using the
-link:reference-manual/set.html#set[`set`] subcommand.
+xref:reference-manual.adoc#set[`set`] subcommand.
 +
 For example:
 
@@ -958,10 +958,10 @@ must be removed.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List JDBC resources by using the
-link:reference-manual/list-jdbc-resources.html#list-jdbc-resources[`list-jdbc-resources`] subcommand.
+xref:reference-manual.adoc#list-jdbc-resources[`list-jdbc-resources`] subcommand.
 3. If necessary, notify users that the JDBC resource is being deleted.
 4. Delete a JDBC resource by using the
-link:reference-manual/delete-jdbc-resource.html#delete-jdbc-resource[`delete-jdbc-resource`] subcommand.
+xref:reference-manual.adoc#delete-jdbc-resource[`delete-jdbc-resource`] subcommand.
 
 [[ggpga]]
 Example 11-11 Deleting a JDBC Resource
@@ -1059,12 +1059,12 @@ To integrate the JDBC driver into a {productName} domain, copy the
 JAR files into the domain-dir``/lib`` directory, then restart the server.
 This makes classes accessible to all applications or modules deployed on
 servers that share the same configuration. For more information about
-{productName} class loaders, see "link:application-development-guide/class-loaders.html#class-loaders[Class Loaders]" in
+{productName} class loaders, see "xref:application-development-guide.adoc#class-loaders[Class Loaders]" in
 {productName} Application Development Guide.
 
 If you are using an Oracle database with EclipseLink extensions, copy
 the JAR files into the domain-dir``/lib/ext`` directory, then restart the
-server. For details, see "link:application-development-guide/jpa.html#oracle-database-enhancements[Oracle Database
+server. For details, see "xref:application-development-guide.adoc#oracle-database-enhancements[Oracle Database
 Enhancements]" in {productName} Application
 Development Guide.
 

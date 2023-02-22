@@ -1387,7 +1387,7 @@ must also change the type of the node to `SSH` to enable the node for
 remote communication.
 
 For more information about {productName} nodes, see
-"link:ha-administration-guide/nodes.html#administering-glassfish-server-nodes[Administering {productName} Nodes]" in {productName} High Availability Administration Guide.
+"xref:ha-administration-guide.adoc#administering-glassfish-server-nodes[Administering {productName} Nodes]" in {productName} High Availability Administration Guide.
 
 Before You Begin
 
@@ -1399,7 +1399,7 @@ information, see xref:#performing-a-side-by-side-upgrade-with-upgrade-tool[Perfo
 * If you are changing the type of the node to `SSH`, ensure that SSH is
 configured on the host where the DAS is running and on the host that the
 node represents. For more information, see
-"link:ha-administration-guide/ssh-setup.html#enabling-centralized-administration-of-glassfish-server-instances[
+"xref:ha-administration-guide.adoc#enabling-centralized-administration-of-glassfish-server-instances[
 Setting Up SSH for Centralized Administration]" in
 {productName} High Availability Administration Guide.
 
@@ -1417,8 +1417,8 @@ directories and, if necessary, change the type of the node.
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for changing the node's
-configuration data, see the link:reference-manual/update-node-ssh001.html#update-node-ssh[`update-node-ssh`(1)] help
-page or the link:reference-manual/update-node-config.html#update-node-config[`update-node-config`(1)] help page.
+configuration data, see the xref:reference-manual.adoc#update-node-ssh[`update-node-ssh`(1)] help
+page or the xref:reference-manual.adoc#update-node-config[`update-node-config`(1)] help page.
 ====
 
 [source]
@@ -1472,13 +1472,13 @@ xref:#to-re-create-a-cluster[To Re-Create a Cluster].
 
 See Also
 
-* "link:ha-administration-guide/ssh-setup.html#enabling-centralized-administration-of-glassfish-server-instances[
+* "xref:ha-administration-guide.adoc#enabling-centralized-administration-of-glassfish-server-instances[
 Setting Up SSH for Centralized Administration]" in
 {productName} High Availability Administration Guide
-* "link:ha-administration-guide/nodes.html#administering-glassfish-server-nodes[Administering {productName} Nodes]"
+* "xref:ha-administration-guide.adoc#administering-glassfish-server-nodes[Administering {productName} Nodes]"
 in {productName} High Availability Administration Guide
-* link:reference-manual/update-node-config.html#update-node-config[`update-node-config`(1)]
-* link:reference-manual/update-node-ssh001.html#update-node-ssh[`update-node-ssh`(1)]
+* xref:reference-manual.adoc#update-node-config[`update-node-config`(1)]
+* xref:reference-manual.adoc#update-node-ssh[`update-node-ssh`(1)]
 
 [[to-re-create-a-cluster]]
 
@@ -1532,7 +1532,7 @@ The specific commands to use depend on your configuration.
 
 * If remote hosts cannot contact the DAS, export and import the
 instances' configuration data, as explained in
-"link:ha-administration-guide/instances.html#to-resynchronize-an-instance-and-the-das-offline[
+"xref:ha-administration-guide.adoc#to-resynchronize-an-instance-and-the-das-offline[
 To Resynchronize an Instance and the DAS Offline]"
 in {productName} High Availability Administration Guide.
 
@@ -1540,11 +1540,11 @@ in {productName} High Availability Administration Guide.
 and resynchronize the instance with the DAS, as explained in the
 following sections:
 
-** "link:ha-administration-guide/instances.html#to-create-an-instance-locally[
+** "xref:ha-administration-guide.adoc#to-create-an-instance-locally[
 To Create an Instance Locally]"
 in {productName} High Availability Administration Guide
 
-** "link:ha-administration-guide/instances.html#to-resynchronize-an-instance-and-the-das-online[
+** "xref:ha-administration-guide.adoc#to-resynchronize-an-instance-and-the-das-online[
 To Resynchronize an Instance and the DAS Online]"
 in {productName} High Availability Administration Guide +
 Note that the node name matches that used for the node agent in the 2.x

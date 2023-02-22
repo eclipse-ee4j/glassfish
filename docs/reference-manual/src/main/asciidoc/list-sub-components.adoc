@@ -56,7 +56,7 @@ asadmin-options::
   identifier must begin with a letter or number. It can contain
   alphanumeric characters plus underscore (`_`), dash (`-`), and period
   (`.`) characters. For more information about module and application
-  versions, see "link:application-deployment-guide/overview.html#module-and-application-versions[
+  versions, see "xref:application-deployment-guide.adoc#module-and-application-versions[
   Module and Application Versions]" in
   {productName} Application Deployment Guide.
 `--resources`::
@@ -71,7 +71,7 @@ modulename::
   identifier must begin with a letter or number. It can contain
   alphanumeric characters plus underscore (`_`), dash (`-`), and period
   (`.`) characters. For more information about module and application
-  versions, see "link:application-deployment-guide/overview.html#module-and-application-versions[Module and Application Versions]" in
+  versions, see "xref:application-deployment-guide.adoc#module-and-application-versions[Module and Application Versions]" in
   {productName} Application Deployment Guide.
 
 === Examples

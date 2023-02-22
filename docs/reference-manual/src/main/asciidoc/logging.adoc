@@ -50,6 +50,6 @@ xref:set-log-levels.adoc#set-log-levels[`set-log-levels`(1)]
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-"link:administration-guide/logging.html#administering-the-logging-service[Administering the Logging Service]" in {productName} Administration Guide
+"xref:administration-guide.adoc#administering-the-logging-service[Administering the Logging Service]" in {productName} Administration Guide
 
 

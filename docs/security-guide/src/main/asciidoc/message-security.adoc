@@ -199,7 +199,7 @@ situation where message protection policies are defined, the request and
 response message protection policies of the client must be equivalent t)
 the request and response message protection policies of the server. For
 more information about defining application-specific message protection
-policies, see "link:application-development-guide/securing-apps.html#securing-applications[Securing Applications]" in {productName} Application Development Guide.
+policies, see "xref:application-development-guide.adoc#securing-applications[Securing Applications]" in {productName} Application Development Guide.
 
 [[application-specific-web-services-security]]
 
@@ -215,7 +215,7 @@ that they apply to a specific port or method of the corresponding
 endpoint or referenced service.
 
 For information about defining application-specific message protection
-policies, see "link:application-development-guide/securing-apps.html#securing-applications[Securing Applications]" in {productName} Application Development Guide.
+policies, see "xref:application-development-guide.adoc#securing-applications[Securing Applications]" in {productName} Application Development Guide.
 
 [[message-security-administration]]
 
@@ -351,7 +351,7 @@ application as described in xref:#application-specific-web-services-security[App
 Services Security] application.
 
 For information about compiling, packaging, and running the `xms` sample
-application, "link:application-development-guide/securing-apps.html#securing-applications[
+application, "xref:application-development-guide.adoc#securing-applications[
 Securing Applications]" in
 {productName} Application Development Guide.
 
@@ -383,7 +383,7 @@ security, you also need to enable providers to be used by clients of the
 web services deployed in {productName}.
 
 1. Specify the default server provider by using the
-link:reference-manual/set.html#set[`set`] subcommand.
+xref:reference-manual.adoc#set[`set`] subcommand.
 +
 Use the following syntax:
 +
@@ -396,7 +396,7 @@ default_provider=ServerProvider
 2. To apply your changes to applications that are already running,
 restart {productName}.
 +
-See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
+See "xref:administration-guide.adoc#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
 
 [[to-enable-a-default-client-provider]]
 
@@ -409,7 +409,7 @@ that any services invoked from endpoints deployed in {productName}
 are compatibly configured for message layer security.
 
 1. Specify the default client provider by using the
-link:reference-manual/set.html#set[`set`] subcommand.
+xref:reference-manual.adoc#set[`set`] subcommand.
 +
 Use the following syntax:
 +
@@ -422,7 +422,7 @@ default_client_provider=ClientProvider
 2. To apply your changes to applications that are already running,
 restart {productName}.
 +
-See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
+See "xref:administration-guide.adoc#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
 
 [[configuring-message-protection-policies]]
 
@@ -520,12 +520,12 @@ by changing provider type, implementation class, and provider-specific
 configuration properties. To understand the results of different
 combinations, see xref:#fxjcu[Table 3-1].
 
-Use the link:reference-manual/set.html#set[`set`] subcommand to set the response policy,
+Use the xref:reference-manual.adoc#set[`set`] subcommand to set the response policy,
 then replace the word `request` in the following commands with the word
 `response`.
 
 1. Add a request policy to the client and set the authentication source
-by using the link:reference-manual/set.html#set[`set`] subcommand.
+by using the xref:reference-manual.adoc#set[`set`] subcommand.
 +
 For example:
 +
@@ -656,16 +656,16 @@ created under it.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create the message security provider by using the
-link:reference-manual/create-message-security-provider.html#create-message-security-provider[`create-message-security-provider`] subcommand.
+xref:reference-manual.adoc#create-message-security-provider[`create-message-security-provider`] subcommand.
 +
 Information about properties for this subcommand is included in the help
 page.
 3. If needed, restart the server.
 +
 Some properties require server restart. See
-"link:administration-guide/overview.html#configuration-changes-that-require-restart[Configuration Changes That Require Restart]" in
+"xref:administration-guide.adoc#configuration-changes-that-require-restart[Configuration Changes That Require Restart]" in
 {productName} Administration Guide. If your
-server needs to be restarted, see "link:administration-guide/domains.html#to-restart-a-domain[To Restart a
+server needs to be restarted, see "xref:administration-guide.adoc#to-restart-a-domain[To Restart a
 Domain]" in {productName} Administration Guide.
 
 [[giosd]]
@@ -696,7 +696,7 @@ list the message providers for the security layer.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the message security providers by using the
-link:reference-manual/list-message-security-providers.html#list-message-security-providers[`list-message-security-providers`] subcommand.
+xref:reference-manual.adoc#list-message-security-providers[`list-message-security-providers`] subcommand.
 
 [[gioui]]
 Example 3-3 Listing Message Security Providers
@@ -725,9 +725,9 @@ line.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the message security providers by using the
-link:reference-manual/list-message-security-providers.html#list-message-security-providers[`list-message-security-providers`] subcommand.
+xref:reference-manual.adoc#list-message-security-providers[`list-message-security-providers`] subcommand.
 3. Modify the values for the specified message security provider by
-using the link:reference-manual/set.html#set[`set`] subcommand.
+using the xref:reference-manual.adoc#set[`set`] subcommand.
 +
 The message security provider is identified by its dotted name.
 
@@ -740,9 +740,9 @@ remove a message security provider.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the message security providers by using the
-link:reference-manual/list-message-security-providers.html#list-message-security-providers[`list-message-security-providers`] subcommand.
+xref:reference-manual.adoc#list-message-security-providers[`list-message-security-providers`] subcommand.
 3. Delete the message security provider by using the
-link:reference-manual/delete-message-security-provider.html#delete-message-security-provider[`delete-message-security-provider`] subcommand.
+xref:reference-manual.adoc#delete-message-security-provider[`delete-message-security-provider`] subcommand.
 
 [[gioug]]
 Example 3-4 Deleting a Message Security Provider
@@ -773,7 +773,7 @@ subcommand.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create the message security provider by using the
-link:reference-manual/create-message-security-provider.html#create-message-security-provider[`create-message-security-provider`] subcommand.
+xref:reference-manual.adoc#create-message-security-provider[`create-message-security-provider`] subcommand.
 +
 Information about properties for this subcommand is included in the help page.
 3. Bind the message security provider for use with your application.
@@ -787,9 +787,9 @@ httpservlet-security-provider="MySAM".
 4. If needed, restart the server.
 +
 Some properties require server restart. See
-"link:administration-guide/overview.html#configuration-changes-that-require-restart[Configuration Changes That Require Restart]" in
+"xref:administration-guide.adoc#configuration-changes-that-require-restart[Configuration Changes That Require Restart]" in
 {productName} Administration Guide. If your
-server needs to be restarted, see "link:administration-guide/domains.html#to-restart-a-domain[To Restart a
+server needs to be restarted, see "xref:administration-guide.adoc#to-restart-a-domain[To Restart a
 Domain]" in {productName} Administration Guide.
 
 [[gkxqz]]
@@ -859,7 +859,7 @@ For additional information about message security, see the following documentati
 
 * https://eclipse-ee4j.github.io/jakartaee-tutorial/#security-2[
 Introduction to Security in the Jakarta EE Platform] in The Jakarta EE Tutorial
-* "link:application-development-guide/securing-apps.html#securing-applications[Securing Applications]"
+* "xref:application-development-guide.adoc#securing-applications[Securing Applications]"
 in {productName} Application Development Guide
 
 

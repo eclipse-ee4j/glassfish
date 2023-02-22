@@ -47,11 +47,11 @@ investigation, try the following steps first.
 ===== Verify System Requirements and Configuration
 
 Ensure that your system meets the requirements listed in
-"link:release-notes/release-notes.html#hardware-and-software-requirements[Hardware and Software Requirements]"
+"xref:release-notes.adoc#hardware-and-software-requirements[Hardware and Software Requirements]"
 in {productName} Release Notes.
 Problems are likely to arise if you attempt to install on a platform that
 is not supported or on a system that in some other way does not meet release requirements.
-Also see "link:release-notes/release-notes.html#GSRLN00253[Known Issues]"
+Also see "xref:release-notes.adoc#GSRLN00253[Known Issues]"
 in {productName} Release Notes for known issues related to installation.
 
 {productName} requires JDK release 11 or newer.
@@ -253,7 +253,7 @@ module-specific loggers.
 For information about using the Administration Console log viewer and
 logging functions, see the Administration Console online help. For
 information about using the command line for logging functions, see
-"link:administration-guide/logging.html#administering-the-logging-service[Administering the Logging Service]" in {productName} Administration Guide.
+"xref:administration-guide.adoc#administering-the-logging-service[Administering the Logging Service]" in {productName} Administration Guide.
 
 [[monitoring-the-system]]
 
@@ -266,7 +266,7 @@ monitoring the state of various components and services deployed in
 bottlenecks, predict failures, perform root cause analysis, and ensure
 that everything is functioning as expected. For more information about
 monitoring, including JConsole information, see
-"link:administration-guide/monitoring.html#administering-the-monitoring-service[Administering the Monitoring Service]" in {productName} Administration Guide.
+"xref:administration-guide.adoc#administering-the-monitoring-service[Administering the Monitoring Service]" in {productName} Administration Guide.
 
 [[troubleshooting-tools]]
 
@@ -321,7 +321,7 @@ asadmin generate-jvm-report --type=thread
 
 See Also
 
-link:reference-manual/generate-jvm-report.html#generate-jvm-report[`generate-jvm-report`(1)]
+xref:reference-manual.adoc#generate-jvm-report[`generate-jvm-report`(1)]
 
 [[visualvm]]
 

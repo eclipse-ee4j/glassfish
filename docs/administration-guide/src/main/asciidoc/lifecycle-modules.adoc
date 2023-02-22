@@ -47,7 +47,7 @@ the containers.
 subsystems, and the server runtime environment.
 
 These events are defined in the `LifecycleEvent` class. For information
-on creating life cycle modules, see "link:application-development-guide/lifecycle-listeners.html#developing-lifecycle-listeners[Developing
+on creating life cycle modules, see "xref:application-development-guide.adoc#developing-lifecycle-listeners[Developing
 Lifecycle Listeners]" in {productName}
 Application Development Guide.
 
@@ -80,7 +80,7 @@ life cycle module.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create a new life cycle modules by using the
-link:reference-manual/create-lifecycle-module.html#create-lifecycle-module[`create-lifecycle-module`] subcommand.
+xref:reference-manual.adoc#create-lifecycle-module[`create-lifecycle-module`] subcommand.
 +
 Information about options and properties for the subcommand are included
 in this help page.
@@ -116,7 +116,7 @@ existing life cycle modules.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List life cycle modules by using the
-link:reference-manual/list-lifecycle-modules.html#list-lifecycle-modules[`list-lifecycle-modules`] subcommand.
+xref:reference-manual.adoc#list-lifecycle-modules[`list-lifecycle-modules`] subcommand.
 
 [[giuyr]]
 Example 9-2 Listing Life Cycle Modules
@@ -142,7 +142,7 @@ typing `asadmin help list-lifecycle-modules` at the command line.
 Use the `set` subcommand to update an existing life cycle module.
 
 1. List the properties that can be updated for a life cycle module by
-using the link:reference-manual/get.html#get[`get`] subcommand.
+using the xref:reference-manual.adoc#get[`get`] subcommand.
 +
 For example (single mode):
 +
@@ -159,7 +159,7 @@ applications.application.sampleLCMmodule.property.classpath=/build/lcm.jar
 applications.application.sampleLCMmodule.property.is-failure-fatal=false
 applications.application.sampleLCMmodule.property.isLifecycle=true
 ----
-2. Update a life cycle module by using the olink:GSRFM00226[`set`]
+2. Update a life cycle module by using the xref:reference-manual.adoc#set[`set`]
 subcommand.
 3. Restart the server for your changes to take effect.
 +
@@ -192,9 +192,9 @@ life cycle module.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the current life cycle modules by using the
-link:reference-manual/list-lifecycle-modules.html#list-lifecycle-modules[`list-lifecycle-modules`] subcommand.
+xref:reference-manual.adoc#list-lifecycle-modules[`list-lifecycle-modules`] subcommand.
 3. Delete a life cycle module by using the
-link:reference-manual/delete-lifecycle-module.html#delete-lifecycle-module[`delete-lifecycle-module`] subcommand.
+xref:reference-manual.adoc#delete-lifecycle-module[`delete-lifecycle-module`] subcommand.
 
 [[giuyi]]
 Example 9-4 Deleting a Life Cycle Module

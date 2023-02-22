@@ -147,7 +147,7 @@ on Linux Systems].
 1. Ensure that no {productName} clusters are running.
 +
 If necessary, stop any running clusters as explained in
-"link:ha-administration-guide/instances.html#to-stop-a-cluster[To Stop a Cluster]"
+"xref:ha-administration-guide.adoc#to-stop-a-cluster[To Stop a Cluster]"
 in {productName} High Availability Administration Guide.
 
 2. Determine the absolute number of lost UDP packets when no clusters
@@ -164,7 +164,7 @@ system. For example:
 3. Start all the clusters that are configured for your installation of
 {productName}.
 +
-Start each cluster as explained in "link:ha-administration-guide/instances.html#to-start-a-cluster[To Start a
+Start each cluster as explained in "xref:ha-administration-guide.adoc#to-start-a-cluster[To Start a
 Cluster]" in {productName} High Availability
 Administration Guide.
 

@@ -24,7 +24,7 @@ The following topics are addressed here:
 Registry, and `UserTransaction`]
 
 For more information about the Java Transaction API (JTA) and Java
-Transaction Service (JTS), see "link:administration-guide/transactions.html#administering-transactions[Administering
+Transaction Service (JTS), see "xref:administration-guide.adoc#administering-transactions[Administering
 Transactions]" in {productName} Administration
 Guide and the following sites:
 `http://www.oracle.com/technetwork/java/javaee/jta/index.html` and
@@ -98,7 +98,7 @@ Note that you cannot call `setTransactionIsolation` during a
 transaction.
 
 You can set the default transaction isolation level for a JDBC
-connection pool. For details, see "link:administration-guide/jdbc.html#to-create-a-jdbc-connection-pool[To Create a JDBC
+connection pool. For details, see "xref:administration-guide.adoc#to-create-a-jdbc-connection-pool[To Create a JDBC
 Connection Pool]" in {productName} Administration
 Guide.
 

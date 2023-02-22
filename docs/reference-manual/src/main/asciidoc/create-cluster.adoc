@@ -176,7 +176,7 @@ asadmin-options::
     for messages from GMS. The system property
     ``GMS_LISTENER_PORT-``clustername must be set for the instance. For
     information about how to set this system property for an instance,
-    see "link:ha-administration-guide/clusters.html#discovering-a-cluster-when-multicast-transport-is-unavailable[Discovering a Cluster When Multicast Transport
+    see "xref:ha-administration-guide.adoc#discovering-a-cluster-when-multicast-transport-is-unavailable[Discovering a Cluster When Multicast Transport
     Is Unavailable]" in {productName} High
     Availability Administration Guide.
 
@@ -414,7 +414,7 @@ This example assumes that the port on which each instance listens for
 GMS messages is set independently for the instance through the
 `GMS_LISTENER_PORT-tcpcluster` system property. For information about
 how to set the port on which an instance listens for GMS messages, see
-"link:ha-administration-guide/clusters.html#discovering-a-cluster-when-multicast-transport-is-unavailable[Discovering a Cluster When Multicast Transport Is
+"xref:ha-administration-guide.adoc#discovering-a-cluster-when-multicast-transport-is-unavailable[Discovering a Cluster When Multicast Transport Is
 Unavailable]" in {productName} High Availability
 Administration Guide.
 
@@ -492,7 +492,7 @@ xref:start-cluster.adoc#start-cluster[`start-cluster`(1)],
 xref:stop-cluster.adoc#stop-cluster[`stop-cluster`(1)],
 xref:validate-multicast.adoc#validate-multicast[`validate-multicast`(1)]
 
-"link:ha-administration-guide/clusters.html#discovering-a-cluster-when-multicast-transport-is-unavailable[Discovering a Cluster When Multicast Transport Is
+"xref:ha-administration-guide.adoc#discovering-a-cluster-when-multicast-transport-is-unavailable[Discovering a Cluster When Multicast Transport Is
 Unavailable]" in {productName} High Availability
 Administration Guide
 

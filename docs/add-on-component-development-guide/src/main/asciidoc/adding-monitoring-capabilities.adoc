@@ -414,12 +414,12 @@ To enable system administrators to access statistics for all components
 in the same way, you must provide statistics for an add-on component by
 updating the monitorable object tree. Statistics for the add-on
 component are then available through the {productName} administrative
-commands link:reference-manual/get.html#get[`get`], olink:GSRFM00145[`list`], and
-link:reference-manual/set.html#set[`set`]. These commands locate an object in the tree
+commands xref:reference-manual.adoc#get[`get`], xref:reference-manual.adoc#list[`list`], and
+xref:reference-manual.adoc#set[`set`]. These commands locate an object in the tree
 through the object's dotted name.
 
 For more information about the tree structure of monitorable objects,
-see "link:administration-guide/monitoring.html#how-the-monitoring-tree-structure-works[How the Monitoring Tree Structure Works]" in
+see "xref:administration-guide.adoc#how-the-monitoring-tree-structure-works[How the Monitoring Tree Structure Works]" in
 {productName} Administration Guide.
 
 To make an add-on component a monitorable object, you must add the
@@ -802,8 +802,8 @@ public class TransactionManagerImpl {
 
 === Dotted Names and REST URLs for an Add-On Component's Statistics
 
-The {productName} administrative subcommands link:reference-manual/get.html#get[`get`],
-link:reference-manual/list.html#list[`list`], and olink:GSRFM00226[`set`] locate a statistic
+The {productName} administrative subcommands xref:reference-manual.adoc#get[`get`],
+xref:reference-manual.adoc#list[`list`], and xref:reference-manual.adoc#set[`set`] locate a statistic
 through the dotted name of the statistic. The dotted name of a statistic
 for an add-on component is determined from the registration of the event
 listener that defines the statistic as follows:

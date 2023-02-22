@@ -90,8 +90,8 @@ session persistence, the server writes an error to the log file.
 
 * The web application must be deployed using the `deploy` or `deploydir`
 subcommand with the `--availabilityenabled` option set to `true`. For
-more information on these subcommands, see link:reference-manual/deploy.html#deploy[`deploy`(1)]
-and link:reference-manual/deploydir.html#deploydir[`deploydir`(1)].
+more information on these subcommands, see xref:reference-manual.adoc#deploy[`deploy`(1)]
+and xref:reference-manual.adoc#deploydir[`deploydir`(1)].
 
 [[restrictions]]
 
@@ -242,7 +242,7 @@ them by using the following command for each instance:
 asadmin> start-instance instance-name
 ----
 
-4. Use one of the following `asadmin` olink:GSRFM00226[`set`]
+4. Use one of the following `asadmin` xref:reference-manual.adoc#set[`set`]
 subcommands to enable availability for a specific cluster, or for a
 specific Web, EJB, or JMS container.
 * For a cluster as a whole
@@ -294,7 +294,7 @@ For more information, see xref:#configuring-availability-for-an-individual-bean[
 
 7. Make each web module distributable if you want it to be highly available.
 +
-For more information, see "link:application-deployment-guide/deploying-applications.html#web-module-deployment-guidelines[Web Module Deployment
+For more information, see "xref:application-deployment-guide.adoc#web-module-deployment-guidelines[Web Module Deployment
 Guidelines]" in {productName} Application Deployment Guide.
 
 8. Enable availability for individual applications, web modules, or EJB
@@ -579,8 +579,8 @@ module during deployment:
 Availability Enabled checkbox.
 * If you are deploying using use the `asadmin deploy` or
 `asadmin deploydir` commands, set the `--availabilityenabled` option to
-`true`. For more information, see link:reference-manual/deploy.html#deploy[`deploy`(1)] and
-link:reference-manual/deploydir.html#deploydir[`deploydir`(1)].
+`true`. For more information, see xref:reference-manual.adoc#deploy[`deploy`(1)] and
+xref:reference-manual.adoc#deploydir[`deploydir`(1)].
 
 [[configuring-availability-for-an-individual-bean]]
 

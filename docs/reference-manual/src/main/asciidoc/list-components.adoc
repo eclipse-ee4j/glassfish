@@ -39,7 +39,7 @@ types are listed in the Options section in this help page.
 If multiple versions of a module or application are deployed, this
 subcommand lists all versions. To list which version is enabled, set the
 `--long` option to `true`. For more information about module and
-application versions, see "link:application-deployment-guide/overview.html#module-and-application-versions[Module and Application
+application versions, see "xref:application-deployment-guide.adoc#module-and-application-versions[Module and Application
 Versions]" in {productName} Application
 Deployment Guide.
 

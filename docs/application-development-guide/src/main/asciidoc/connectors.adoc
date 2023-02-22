@@ -462,7 +462,7 @@ You can define an application-scoped connector or other resource for an
 enterprise application, web module, EJB module, connector module, or
 application client module by supplying a `glassfish-resources.xml`
 deployment descriptor file. For details, see
-"link:application-deployment-guide/deploying-applications.html#application-scoped-resources[Application-Scoped Resources]" in {productName} Application Deployment Guide.
+"xref:application-deployment-guide.adoc#application-scoped-resources[Application-Scoped Resources]" in {productName} Application Deployment Guide.
 
 [[inbound-communication-support]]
 

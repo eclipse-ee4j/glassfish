@@ -61,7 +61,7 @@ component-name::
   alphanumeric characters plus underscore (`_`), dash (`-`), and period
   (`.`) characters. To list multiple versions, you can use an asterisk
   (`*`) as a wildcard character. For more information about module and
-  application versions, see "link:application-deployment-guide/overview.html#module-and-application-versions[Module and Application
+  application versions, see "xref:application-deployment-guide.adoc#module-and-application-versions[Module and Application
   Versions]" in {productName} Application
   Deployment Guide.
 

@@ -175,7 +175,7 @@ custom resource.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create a custom resource by using the
-link:reference-manual/create-custom-resource.html#create-custom-resource[`create-custom-resource`] subcommand.
+xref:reference-manual.adoc#create-custom-resource[`create-custom-resource`] subcommand.
 +
 Information on properties for the subcommand is contained in this help
 page.
@@ -209,7 +209,7 @@ existing custom resources.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the custom resources by using the
-link:reference-manual/list-custom-resources.html#list-custom-resources[`list-custom-resources`] subcommand.
+xref:reference-manual.adoc#list-custom-resources[`list-custom-resources`] subcommand.
 
 [[gioyr]]
 Example 18-2 Listing Custom Resources
@@ -234,8 +234,8 @@ typing `asadmin help list-custom-resources` at the command line.
 ===== To Update a Custom JNDI Resource
 
 1. List the custom resources by using the
-link:reference-manual/list-custom-resources.html#list-custom-resources[`list-custom-resources`] subcommand.
-2. Use the link:reference-manual/set.html#set[`set`] subcommand to modify a custom JNDI
+xref:reference-manual.adoc#list-custom-resources[`list-custom-resources`] subcommand.
+2. Use the xref:reference-manual.adoc#set[`set`] subcommand to modify a custom JNDI
 resource.
 
 [[giwkg]]
@@ -259,9 +259,9 @@ custom resource.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the custom resources by using the
-link:reference-manual/list-custom-resources.html#list-custom-resources[`list-custom-resources`] subcommand.
+xref:reference-manual.adoc#list-custom-resources[`list-custom-resources`] subcommand.
 3. Delete a custom resource by using the
-link:reference-manual/delete-custom-resource.html#delete-custom-resource[`delete-custom-resource`] subcommand.
+xref:reference-manual.adoc#delete-custom-resource[`delete-custom-resource`] subcommand.
 
 [[gioxh]]
 Example 18-4 Deleting a Custom Resource
@@ -313,7 +313,7 @@ The external JNDI factory must implement the
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Register an external JNDI resource by using the
-link:reference-manual/create-jndi-resource.html#create-jndi-resource[`create-jndi-resource`] subcommand.
+xref:reference-manual.adoc#create-jndi-resource[`create-jndi-resource`] subcommand.
 +
 Information on properties for the subcommand is contained in this help
 page.
@@ -348,7 +348,7 @@ existing JNDI resources.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the existing JNDI resources by using
-theolink:GSRFM00179[`list-jndi-resources`] subcommand.
+the xref:reference-manual.adoc#list-jndi-resources[`list-jndi-resources`] subcommand.
 
 [[giwbe]]
 Example 18-6 Listing JNDI Resources
@@ -379,7 +379,7 @@ can specify the JNDI context or subcontext to list specific entries.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the JNDI entries for a configuration by using the
-link:reference-manual/list-jndi-entries.html#list-jndi-entries[`list-jndi-entries`] subcommand.
+xref:reference-manual.adoc#list-jndi-entries[`list-jndi-entries`] subcommand.
 
 [[giwal]]
 Example 18-7 Listing JNDI Entries
@@ -405,8 +405,8 @@ typing `asadmin help list-jndi-entries` at the command line.
 ===== To Update an External JNDI Resource
 
 1. List the existing JNDI resources by using
-theolink:GSRFM00179[`list-jndi-resources`] subcommand.
-2. Use the link:reference-manual/set.html#set[`set`] subcommand to modify an external
+the xref:reference-manual.adoc#list-jndi-resources[`list-jndi-resources`] subcommand.
+2. Use the xref:reference-manual.adoc#set[`set`] subcommand to modify an external
 JNDI resource.
 
 [[giwoa]]
@@ -429,7 +429,7 @@ JNDI resource.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Remove an external JNDI entry by using the
-link:reference-manual/delete-jndi-resource.html#delete-jndi-resource[`delete-jndi-resource`] subcommand.
+xref:reference-manual.adoc#delete-jndi-resource[`delete-jndi-resource`] subcommand.
 
 [[giwby]]
 Example 18-9 Deleting an External JNDI Resource

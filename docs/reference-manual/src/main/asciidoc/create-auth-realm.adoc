@@ -91,7 +91,7 @@ asadmin-options::
     authentication. To use a JAAS `LoginModule`, you must first create
     an implementation of the javax.security.auth.spi.LoginModule
     interface, and then plug the module into a `jaas-context`. For more
-    information, see "link:security-guide/system-security.html#custom-authentication-of-client-certificate-in-ssl-mutual-authentication[Custom Authentication of Client
+    information, see "xref:security-guide.adoc#custom-authentication-of-client-certificate-in-ssl-mutual-authentication[Custom Authentication of Client
     Certificate in SSL Mutual Authentication]" in {productName} Security Guide.
 
   * You can specify the following properties for `JDBCRealm`:

@@ -58,7 +58,7 @@ attribute-name::
   currently defined attributes.
 attribute-value::
   The value to apply to the specified attribute. +
-  Refer to "link:administration-guide/logging.html#administering-the-logging-service[Administering the Logging Service]" in
+  Refer to "xref:administration-guide.adoc#administering-the-logging-service[Administering the Logging Service]" in
   {productName} Administration Guide for complete explanations of supported attribute values.
   Use xref:list-log-attributes.adoc#list-log-attributes[`list-log-attributes`(1)] to get
   current set of attributes.
@@ -98,6 +98,6 @@ xref:list-log-levels.adoc#list-log-levels[`list-log-levels`(1)],
 xref:rotate-log.adoc#rotate-log[`rotate-log`(1)],
 xref:set-log-levels.adoc#set-log-levels[`set-log-levels`(1)]
 
-"link:administration-guide/adoc.html#administering-the-logging-service[Administering the Logging Service]" in {productName} Administration Guide
+"xref:administration-guide.adoc#administering-the-logging-service[Administering the Logging Service]" in {productName} Administration Guide
 
 

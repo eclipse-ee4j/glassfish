@@ -166,7 +166,7 @@ For more information, see the following sections:
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for configuring the
-named configuration, see the link:reference-manual/copy-config.html#copy-config[`copy-config`(1)]
+named configuration, see the xref:reference-manual.adoc#copy-config[`copy-config`(1)]
 help page.
 ====
 +
@@ -200,7 +200,7 @@ See Also
 * xref:clusters.adoc#to-create-a-cluster[To Create a Cluster]
 * xref:instances.adoc#to-create-an-instance-centrally[To Create an Instance Centrally]
 * xref:instances.adoc#to-create-an-instance-locally[To Create an Instance Locally]
-* link:reference-manual/copy-config.html#copy-config[`copy-config`(1)]
+* xref:reference-manual.adoc#copy-config[`copy-config`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help copy-config` at the command line.
@@ -213,7 +213,7 @@ Use the `list-configs` subcommand in remote mode to list existing named
 configurations in a domain.
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
-2. Run the link:reference-manual/list-configs.html#list-configs[`list-configs`] subcommand.
+2. Run the xref:reference-manual.adoc#list-configs[`list-configs`] subcommand.
 +
 [source]
 ----
@@ -237,7 +237,7 @@ Command list-configs executed successfully.
 
 See Also
 
-link:reference-manual/list-configs.html#list-configs[`list-configs`(1)]
+xref:reference-manual.adoc#list-configs[`list-configs`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-configs` at the command line.
@@ -291,8 +291,8 @@ Command list-instances executed successfully.
 
 See Also
 
-* link:reference-manual/list-clusters.html#list-clusters[`list-clusters`(1)]
-* link:reference-manual/list-instances.html#list-instances[`list-instances`(1)]
+* xref:reference-manual.adoc#list-clusters[`list-clusters`(1)]
+* xref:reference-manual.adoc#list-instances[`list-instances`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
@@ -350,7 +350,7 @@ asadmin> list-instances config-name
 config-name::
   The name of the configuration that you are deleting.
 
-4. Run the link:reference-manual/delete-config.html#delete-config[`delete-config`] subcommand.
+4. Run the xref:reference-manual.adoc#delete-config[`delete-config`] subcommand.
 +
 [source]
 ----
@@ -383,9 +383,9 @@ See Also
 * xref:instances.adoc#to-delete-an-instance-centrally[To Delete an Instance Centrally]
 * xref:instances.adoc#to-delete-an-instance-locally[To Delete an Instance Locally]
 * xref:clusters.adoc#to-delete-a-cluster[To Delete a Cluster]
-* link:reference-manual/delete-config.html#delete-config[`delete-config`(1)]
-* link:reference-manual/list-clusters.html#list-clusters[`list-clusters`(1)]
-* link:reference-manual/list-instances.html#list-instances[`list-instances`(1)]
+* xref:reference-manual.adoc#delete-config[`delete-config`(1)]
+* xref:reference-manual.adoc#list-clusters[`list-clusters`(1)]
+* xref:reference-manual.adoc#list-instances[`list-instances`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
@@ -423,8 +423,8 @@ the instance.
 
 You can create additional system properties for a configuration either
 by specifying the `--systemproperties` option of the
-link:reference-manual/copy-config.html#copy-config[`copy-config`] subcommand or by using the
-link:reference-manual/create-system-properties.html#create-system-properties[`create-system-properties`] subcommand. To reference a
+xref:reference-manual.adoc#copy-config[`copy-config`] subcommand or by using the
+xref:reference-manual.adoc#create-system-properties[`create-system-properties`] subcommand. To reference a
 system property from the configuration, use the `${`prop-name`}`
 notation, where prop-name is the name of the system property.
 
@@ -559,8 +559,8 @@ Command set executed successfully.
 
 See Also
 
-* link:reference-manual/get.html#get[`get`(1)]
-* link:reference-manual/set.html#set[`set`(1)]
+* xref:reference-manual.adoc#get[`get`(1)]
+* xref:reference-manual.adoc#set[`set`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
@@ -647,8 +647,8 @@ Command set executed successfully.
 
 See Also
 
-* link:reference-manual/get.html#get[`get`(1)]
-* link:reference-manual/set.html#set[`set`(1)]
+* xref:reference-manual.adoc#get[`get`(1)]
+* xref:reference-manual.adoc#set[`set`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:

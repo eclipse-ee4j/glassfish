@@ -15,7 +15,7 @@ you to provide administrative interfaces for an add-on component that
 are consistent with the interfaces of other {productName} components.
 A user can run `asadmin` subcommands either from a command prompt or
 from a script. For more information about the `asadmin` utility, see the
-link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] man page.
+xref:reference-manual.adoc#asadmin[`asadmin`(1M)] man page.
 
 The following topics are addressed here:
 
@@ -120,7 +120,7 @@ creating, deleting, and listing HTTP listeners:
 You must also ensure that the name of your subcommand is unique.
 To obtain a complete list of the names of all `asadmin` subcommands that
 are installed, use the
-link:reference-manual/list-commands.html#list-commands[`list-commands`] subcommand.
+xref:reference-manual.adoc#list-commands[`list-commands`] subcommand.
 For a complete list of `asadmin` subcommands that are supplied in
 {productName} distributions, see the
 xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
@@ -180,7 +180,7 @@ of the subcommand.
 
 * Options control how the `asadmin` utility performs a subcommand.
 * Operands are the objects on which a subcommand acts. For example, the
-operand of the link:reference-manual/start-domain.html#start-domain[`start-domain`] subcommand is the domain
+operand of the xref:reference-manual.adoc#start-domain[`start-domain`] subcommand is the domain
 that is to be started.
 
 The following topics are addressed here:
@@ -905,7 +905,7 @@ The brand in the {productName} command-line interface (CLI) consists
 of the product name and release information that are displayed in the
 following locations:
 
-* In the string that the link:reference-manual/version.html#version[`version`] subcommand displays
+* In the string that the xref:reference-manual.adoc#version[`version`] subcommand displays
 * In each entry in the `server.log` file
 
 If you are incorporating {productName} into a new product with an

@@ -163,7 +163,7 @@ load balancing is also supported.
 This procedure provides an overview of the steps necessary to enable
 RMI-IIOP load balancing and failover with the application client
 container (ACC). For additional information on the ACC, see
-"link:application-development-guide/java-clients.html#developing-clients-using-the-acc[Developing Clients Using the ACC]" in {productName} Application Development Guide.
+"xref:application-development-guide.adoc#developing-clients-using-the-acc[Developing Clients Using the ACC]" in {productName} Application Development Guide.
 
 Before You Begin
 
@@ -178,7 +178,7 @@ on which the DAS is running. In such cases, these steps are unnecessary.
 
 2. Run `package-appclient`. +
 This utility produces an `appclient.jar` file. For more information on
-`package-appclient`, see link:reference-manual/package-appclient.html#package-appclient[`package-appclient`(1M)].
+`package-appclient`, see xref:reference-manual.adoc#package-appclient[`package-appclient`(1M)].
 
 3. Copy the `appclient.jar` file to the machine where you want your
 client and extract it.
@@ -189,7 +189,7 @@ correct directory values on that machine.
 The file is at appclient-install-dir `/config/`.
 +
 For a list of the path variables to update, see
-link:reference-manual/package-appclient.html#package-appclient[`package-appclient`(1M)].
+xref:reference-manual.adoc#package-appclient[`package-appclient`(1M)].
 
 5. If required, make the `appclient` script executable.
 +
@@ -244,7 +244,7 @@ case one of the endpoints has failed.
 The `target-server` element specifies one or more IIOP endpoints used
 for load balancing. The `address` attribute is an IPv4 address or host
 name, and the `port` attribute specifies the port number. See
-"link:application-deployment-guide/dd-elements.html#client-container[client-container]" in {productName} Application Deployment Guide.
+"xref:application-deployment-guide.adoc#client-container[client-container]" in {productName} Application Deployment Guide.
 +
 As an alternative to using `target-server` elements, you can use the
 `endpoints` property as follows:
@@ -395,9 +395,9 @@ In this example, an EJB named `TheGreeter` is used.
 For instructions on developing and assembling an EJB for deployment to
 {productName}, refer to the following documentation:
 
-* "link:application-development-guide/ejb.html#using-enterprise-javabeans-technology[Using Enterprise JavaBeans Technology]" in {productName} Application Development Guide
-* "link:application-deployment-guide/deploying-applications.html#ejb-module-deployment-guidelines[EJB Module Deployment Guidelines]" in {productName} Application Deployment Guide
-* "link:application-deployment-guide/deploying-applications.html#assembling-and-deploying-an-application-client-module[Assembling and Deploying an Application Client
+* "xref:application-development-guide.adoc#using-enterprise-javabeans-technology[Using Enterprise JavaBeans Technology]" in {productName} Application Development Guide
+* "xref:application-deployment-guide.adoc#ejb-module-deployment-guidelines[EJB Module Deployment Guidelines]" in {productName} Application Deployment Guide
+* "xref:application-deployment-guide.adoc#assembling-and-deploying-an-application-client-module[Assembling and Deploying an Application Client
 Module]" in {productName} Application Deployment Guide
 
 2. Set the `per-request-load-balancing` property to `true` in the
@@ -405,7 +405,7 @@ Module]" in {productName} Application Deployment Guide
 +
 For more information about the `glassfish-ejb-jar.xml` deployment
 descriptor file, refer to
-"link:application-deployment-guide/dd-files.html#GSDPG00079[The glassfish-ejb-jar.xml File]"
+"xref:application-deployment-guide.adoc#GSDPG00079[The glassfish-ejb-jar.xml File]"
 in {productName} Application Deployment Guide
 +
 For example, the `glassfish-ejb-jar.xml` file for a sample EJB named
@@ -430,8 +430,8 @@ If the EJB was previously deployed, it must be redployed.
 +
 For instructions on deploying EJBs, refer to the following documentation:
 
-* "link:application-deployment-guide/deploying-applications.html#to-deploy-an-application-or-module[To Deploy an Application or Module]" in {productName} Application Deployment Guide
-* "link:application-deployment-guide/deploying-applications.html#to-redeploy-an-application-or-module[To Redeploy an Application or Module]" in {productName} Application Deployment Guide
+* "xref:application-deployment-guide.adoc#to-deploy-an-application-or-module[To Deploy an Application or Module]" in {productName} Application Deployment Guide
+* "xref:application-deployment-guide.adoc#to-redeploy-an-application-or-module[To Redeploy an Application or Module]" in {productName} Application Deployment Guide
 
 4. Verify the PRLB configuration by looking for the following `FINE`
 message in the CORBA log file:

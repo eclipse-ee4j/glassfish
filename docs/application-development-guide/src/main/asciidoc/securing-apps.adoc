@@ -223,7 +223,7 @@ or `glassfish-ejb-jar.xml`.
 
 For more information regarding Jakarta EE deployment descriptors, see the
 Jakarta EE Specification. For more information regarding {productName}
-deployment descriptors, see "link:application-deployment-guide/dd-elements.html#c-elements-of-the-glassfish-server-deployment-descriptors[Elements of the {productName} Deployment Descriptors]" in {productName}
+deployment descriptors, see "xref:application-deployment-guide.adoc#c-elements-of-the-glassfish-server-deployment-descriptors[Elements of the {productName} Deployment Descriptors]" in {productName}
 Application Deployment Guide.
 
 Each `security-role-mapping` element in the `glassfish-application.xml`,
@@ -381,7 +381,7 @@ follows:
 ----
 
 For more information about the deployment descriptor files and elements,
-see "link:application-deployment-guide/dd-elements.html#c-elements-of-the-glassfish-server-deployment-descriptors[Elements of the {productName} Deployment
+see "xref:application-deployment-guide.adoc#c-elements-of-the-glassfish-server-deployment-descriptors[Elements of the {productName} Deployment
 Descriptors]" in {productName} Application
 Deployment Guide.
 
@@ -1335,17 +1335,17 @@ xref:#message-security-providers[Message Security Providers].
 
 For more details on message security binding for EJB web services,
 servlet web services, and clients, see the XML file descriptions in
-"link:application-deployment-guide/dd-elements.html#c-elements-of-the-glassfish-server-deployment-descriptors[Elements of the {productName} Deployment
+"xref:application-deployment-guide.adoc#c-elements-of-the-glassfish-server-deployment-descriptors[Elements of the {productName} Deployment
 Descriptors]" in {productName} Application
 Deployment Guide.
 
-* For `glassfish-ejb-jar.xml`, see "link:application-deployment-guide/dd-files.html#GSDPG00079[The
+* For `glassfish-ejb-jar.xml`, see "xref:application-deployment-guide.adoc#GSDPG00079[The
 glassfish-ejb-jar.xml File]" in {productName}
 Application Deployment Guide.
-* For `glassfish-web.xml`, see "link:application-deployment-guide/dd-files.html#GSDPG00078[The glassfish-web.xml
+* For `glassfish-web.xml`, see "xref:application-deployment-guide.adoc#GSDPG00078[The glassfish-web.xml
 File]" in {productName} Application Deployment
 Guide.
-* For `glassfish-application-client.xml`, see "link:application-deployment-guide/dd-files.html#GSDPG00081[The
+* For `glassfish-application-client.xml`, see "xref:application-deployment-guide.adoc#GSDPG00081[The
 glassfish-application-client.xml file]" in {productName} Application Deployment Guide.
 
 The following topics are addressed here:
@@ -1823,7 +1823,7 @@ Single sign-on operates according to the following rules:
 * Single sign-on applies to web applications configured for the same
 realm and virtual server. The realm is defined by the `realm-name`
 element in the `web.xml` file. For information about virtual servers,
-see "link:administration-guide/http_https.html#administering-internet-connectivity[Administering Internet Connectivity]" in {productName} Administration Guide.
+see "xref:administration-guide.adoc#administering-internet-connectivity[Administering Internet Connectivity]" in {productName} Administration Guide.
 * As long as users access only unprotected resources in any of the web
 applications on a virtual server, they are not challenged to
 authenticate themselves.

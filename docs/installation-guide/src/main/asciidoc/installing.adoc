@@ -27,12 +27,12 @@ The following topics are addressed here:
 === Installation Requirements
 
 Before installing {productName} 7, ensure that
-your system meets the requirements listed in "link:release-notes/release-notes.html#hardware-and-software-requirements[Hardware
+your system meets the requirements listed in "xref:release-notes.adoc#hardware-and-software-requirements[Hardware
 and Software Requirements]" in {productName}
 Release Notes. If necessary, download and install the required JDK
 software. Problems are likely to arise if you attempt to install on a
 platform that is not supported or on a system that in some other way
-does not meet release requirements. Also see "link:release-notes/release-notes.html#GSRLN00253[Known
+does not meet release requirements. Also see "xref:release-notes.adoc#GSRLN00253[Known
 Issues]" in {productName} Release Notes for known
 issues related to installation.
 
@@ -806,10 +806,10 @@ after installation.
 Before You Begin
 
 Ensure that your system meets the requirements listed in
-"link:release-notes/release-notes.html#hardware-and-software-requirements[Hardware and Software Requirements]"
+"xref:release-notes.adoc#hardware-and-software-requirements[Hardware and Software Requirements]"
 in {productName} Release Notes.
 
-Also see "link:release-notes/release-notes.html#GSRLN00253[Known Issues]" in {productName} Release Notes for known issues related to installation.
+Also see "xref:release-notes.adoc#GSRLN00253[Known Issues]" in {productName} Release Notes for known issues related to installation.
 
 1. Download the desired {productName} 7 ZIP file. +
 See xref:#glassfish-server-download-locations[{productName} Download Locations] for a list of

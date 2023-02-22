@@ -115,7 +115,7 @@ TopLink with WebLogic Server]" in Oracle Fusion Middleware Solution
 Guide for Oracle TopLink. For more detailed explanations of these steps,
 see the links in the steps.
 
-1. Set up the datasource. See "link:administration-guide/jdbc.html#administering-database-connectivity[
+1. Set up the datasource. See "xref:administration-guide.adoc#administering-database-connectivity[
 Administering Database Connectivity]"
 in {productName} Administration Guide.
 2. Create the application. For guidance in writing your application,
@@ -135,7 +135,7 @@ Manager].
 Application Deployment Guide.
 6. Run the application. See "Application Client Launch" and "To Launch
 an Application" in Administration Console online help.
-7. Monitor the application. See "link:administration-guide/monitoring.html#administering-the-monitoring-service[
+7. Monitor the application. See "xref:administration-guide.adoc#administering-the-monitoring-service[
 Administering the Monitoring Service]"
 in {productName} Administration Guide.
 
@@ -241,7 +241,7 @@ value="jdbc:derby://localhost:1527/testdb;retrieveMessagesFromServerOnGetMessage
 
 For a list of the JDBC drivers currently supported by the {productName}, see the xref:release-notes.adoc#GSRLN[{productName} Release
 Notes]. For configurations of supported and other drivers, see
-"link:administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
+"xref:administration-guide.adoc#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.
 
 [[specifying-the-persistence-provider-for-an-application]]

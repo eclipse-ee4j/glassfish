@@ -71,7 +71,7 @@ your system and enterprise.
 
 |xref:administration-guide.adoc#GSADG[Administration Guide]
 |Explains how to configure, monitor, and manage {productName} subsystems and components
-from the command line by using the link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] utility.
+from the command line by using the xref:reference-manual.adoc#asadmin[`asadmin`(1M)] utility.
 Instructions for performing these tasks from the Administration Console are provided
 in the Administration Console online help.
 
@@ -116,26 +116,26 @@ scalability through failover and load balancing.
 |Provides reference information in man page format for {productName} administration commands, utility
 commands, and related concepts.
 
-|link:../openmq/mq-release-notes.html#GMRLN[Message Queue Release Notes]
+|xref:{mq-release-notes-url}[Message Queue Release Notes]
 |Describes new features, compatibility issues, and existing bugs for Open Message Queue.
 
-|link:../openmq/mq-tech-over.html#GMTOV[Message Queue Technical Overview]
+|xref:{mq-tech-over-url}[Message Queue Technical Overview]
 |Provides an introduction to the technology, concepts, architecture, capabilities, and features of
 the Message Queue messaging service.
 
-|link:../openmq/mq-admin-guide.html#GMADG[Message Queue Administration Guide]
+|xref:{mq-admin-guide-url}[Message Queue Administration Guide]
 |Explains how to set up and manage a Message Queue messaging system.
 
-|link:../openmq/mq-dev-guide-jmx.html#GMJMG[Message Queue Developer's Guide for JMX Clients]
+|xref:{mq-dev-guide-jmx-url}[Message Queue Developer's Guide for JMX Clients]
 |Describes the application programming interface in Message Queue for
 programmatically configuring and monitoring Message Queue resources in
 conformance with the Java Management Extensions (JMX).
 
-|link:../openmq/mq-dev-guide-java.html#GMJVG[Message Queue Developer's Guide for Java Clients]
+|xref:{mq-dev-guide-java-url}[Message Queue Developer's Guide for Java Clients]
 |Provides information about concepts and procedures for developing Java messaging
 applications (Java clients) that work with {productName}.
 
-|link:../openmq/mq-dev-guide-c.html#GMCCG[Message Queue Developer's Guide for C Clients]
+|xref:{mq-dev-guide-c-url}[Message Queue Developer's Guide for C Clients]
 |Provides programming and reference information for developers working with
 Message Queue who want to use the C language binding to the Message
 Queue messaging service to send, receive, and process Message Queue messages.

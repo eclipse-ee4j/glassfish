@@ -169,7 +169,7 @@ you to provide administrative interfaces for an add-on component that
 are consistent with the interfaces of other {productName} components.
 A user can run `asadmin` subcommands either from a command prompt or
 from a script. For more information about the `asadmin` utility, see the
-link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] man page.
+xref:reference-manual.adoc#asadmin[`asadmin`(1M)] man page.
 
 For more information, see xref:extending-asadmin.adoc#extending-the-asadmin-utility[Extending the
 `asadmin` Utility].
@@ -233,7 +233,7 @@ session manager extensible because you can implement a new persistence
 type without having to modify the web container code.
 
 For information about other high-availability, session persistence
-solutions, see "link:ha-administration-guide/session-persistence-and-failover.html#configuring-high-availability-session-persistence-and-failover[Configuring High Availability Session
+solutions, see "xref:ha-administration-guide.adoc#configuring-high-availability-session-persistence-and-failover[Configuring High Availability Session
 Persistence and Failover]" in {productName} High
 Availability Administration Guide.
 

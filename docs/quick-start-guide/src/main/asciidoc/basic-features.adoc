@@ -168,7 +168,7 @@ When you install {productName}, a default domain named `domain1` is
 created. The following procedures describe how to start and stop
 `domain1` when it is the only domain. For information about starting and
 stopping a domain when there are multiple domains, see
-"link:administration-guide/domains.html#administering-domains[Administering Domains]" in {productName} Administration Guide.
+"xref:administration-guide.adoc#administering-domains[Administering Domains]" in {productName} Administration Guide.
 
 [[to-start-the-default-domain]]
 
@@ -388,7 +388,7 @@ The application displays a customized response, giving you a personal
 See Also
 
 For more information about the `deploy` subcommand, see
-link:reference-manual/deploy.html#deploy[`deploy`(1)].
+xref:reference-manual.adoc#deploy[`deploy`(1)].
 
 For more information about deploying applications from the command line,
 see the xref:application-deployment-guide.adoc#GSDPG[{productName} Application
@@ -430,7 +430,7 @@ as-install/bin/asadmin undeploy hello
 See Also
 
 For more information about the `undeploy` subcommand, see
-link:reference-manual/undeploy.html#undeploy[`undeploy`(1)].
+xref:reference-manual.adoc#undeploy[`undeploy`(1)].
 
 [[deploying-and-undeploying-applications-by-using-the-administration-console]]
 
@@ -653,10 +653,10 @@ that defines the host where the instance resides.
 
 For more information, see the following documentation:
 
-* "link:ha-administration-guide/nodes.html#administering-glassfish-server-nodes[Administering {productName} Nodes]" in {productName} High Availability Administration Guide
-* "link:ha-administration-guide/clusters.html#administering-glassfish-server-clusters[Administering {productName} Clusters]" in
+* "xref:ha-administration-guide.adoc#administering-glassfish-server-nodes[Administering {productName} Nodes]" in {productName} High Availability Administration Guide
+* "xref:ha-administration-guide.adoc#administering-glassfish-server-clusters[Administering {productName} Clusters]" in
 {productName} High Availability Administration Guide
-* "link:ha-administration-guide/instances.html#administering-glassfish-server-instances[Administering {productName} Instances]" in
+* "xref:ha-administration-guide.adoc#administering-glassfish-server-instances[Administering {productName} Instances]" in
 {productName} High Availability Administration Guide
 
 [[session-persistence-and-failover]]
@@ -669,7 +669,7 @@ state enables the session to continue without loss of information.
 {productName} supports in-memory session replication on other servers
 in the cluster for maintaining HTTP session and stateful session bean data.
 
-For more information, see "link:ha-administration-guide/session-persistence-and-failover.html#configuring-high-availability-session-persistence-and-failover[Configuring High
+For more information, see "xref:ha-administration-guide.adoc#configuring-high-availability-session-persistence-and-failover[Configuring High
 Availability Session Persistence and Failover]" in {productName} High Availability Administration Guide.
 
 [[load-balancing-for-clustered-configurations]]
@@ -694,10 +694,10 @@ on the needs of your enterprise. For complete information about
 configuring load balancing in {productName}, see the following
 documentation:
 
-* "link:ha-administration-guide/http-load-balancing.html#configuring-http-load-balancing[
+* "xref:ha-administration-guide.adoc#configuring-http-load-balancing[
 Configuring HTTP Load Balancing]" in
 {productName} High Availability Administration Guide
-* "link:ha-administration-guide/rmi-iiop.html#rmi-iiop-load-balancing-and-failover[
+* "xref:ha-administration-guide.adoc#rmi-iiop-load-balancing-and-failover[
 RMI-IIOP Load Balancing and Failover]" in
 {productName} High Availability Administration Guide
 

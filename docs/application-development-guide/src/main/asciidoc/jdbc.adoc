@@ -115,7 +115,7 @@ of the following ways:
 
 * Specify the `--statementleaktimeout` option in the
 `create-jdbc-connection-pool` subcommand. For more information, see
-link:reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
+xref:reference-manual.adoc#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
 * Specify the `statement-leak-timeout-in-seconds` option in the `set`
 subcommand. For example:
 +
@@ -138,7 +138,7 @@ pool to a `true` value in one of the following ways:
 
 * Specify the `--statementleakreclaim=true` option in the
 `create-jdbc-connection-pool` subcommand. For more information, see
-link:reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
+xref:reference-manual.adoc#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
 * Specify the `statement-leak-reclaim` option in the `set` subcommand.
 For example:
 +
@@ -251,7 +251,7 @@ page in the Administration Console. For more information, click the Help
 button in the Administration Console.
 * Specify them using the `--property` option in the
 `create-jdbc-connection-pool` subcommand. For more information, see
-link:reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
+xref:reference-manual.adoc#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
 * Set them using the `set` subcommand. For example:
 +
 [source]
@@ -299,7 +299,7 @@ in the Administration Console. For more information, click the Help
 button in the Administration Console.
 * Specify it using the `--property` option in the
 `create-jdbc-connection-pool` subcommand. For more information, see
-link:reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
+xref:reference-manual.adoc#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
 * Set it using the `set` subcommand. For example:
 +
 [source]
@@ -460,7 +460,7 @@ reference. To turn off connection sharing, set `res-sharing-scope` to
 `Unshareable`.
 
 For general information about connections and JDBC URLs, see
-"link:administration-guide/jdbc.html#administering-database-connectivity[Administering Database Connectivity]" in {productName} Administration Guide.
+"xref:administration-guide.adoc#administering-database-connectivity[Administering Database Connectivity]" in {productName} Administration Guide.
 
 [[marking-bad-connections]]
 
@@ -665,7 +665,7 @@ You can define an application-scoped database or other resource for an
 enterprise application, web module, EJB module, connector module, or
 application client module by supplying a `glassfish-resources.xml`
 deployment descriptor file. For details, see
-"link:application-deployment-guide/deploying-applications.html#application-scoped-resources[Application-Scoped Resources]" in {productName} Application Deployment Guide.
+"xref:application-deployment-guide.adoc#application-scoped-resources[Application-Scoped Resources]" in {productName} Application Deployment Guide.
 
 === Restrictions and Optimizations
 

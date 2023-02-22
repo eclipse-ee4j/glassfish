@@ -109,7 +109,7 @@ and to reference configurable parameters set at the time of deployment.
 
 Annotation is supported for the main class and the optional callback
 handler class in application clients. For more information, see
-"link:application-deployment-guide/overview.html#deployment-descriptors-and-annotations[Deployment Descriptors and Annotations]" in {productName} Application Deployment Guide.
+"xref:application-deployment-guide.adoc#deployment-descriptors-and-annotations[Deployment Descriptors and Annotations]" in {productName} Application Deployment Guide.
 
 [[java-web-start]]
 
@@ -176,7 +176,7 @@ corbaname:host1:port1,host2:port2,.../NameService#ejb/jndi-name
 `application-client.xml` file. Define the corresponding `ejb-ref`
 elements in the `glassfish-application-client.xml` file. +
 For more information on the `glassfish-application-client.xml` file, see
-"link:application-deployment-guide/dd-files.html#GSDPG00081[The glassfish-application-client.xml file]" in
+"xref:application-deployment-guide.adoc#GSDPG00081[The glassfish-application-client.xml file]" in
 {productName} Application Deployment Guide.
 For a general explanation of how to map JNDI names using reference elements,
 see xref:jndi.adoc#mapping-references[Mapping References].
@@ -196,7 +196,7 @@ xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 deployment descriptor.
 * `glassfish-application-client.xml` - (optional) {productName}
 specific client deployment descriptor. For information on the
-`glassfish-application-client.xml` file, see "link:application-deployment-guide/dd-files.html#GSDPG00081[The
+`glassfish-application-client.xml` file, see "xref:application-deployment-guide.adoc#GSDPG00081[The
 glassfish-application-client.xml file]" in {productName} Application Deployment Guide.
 * The `MANIFEST.MF` file. This file contains a reference to the `main`
 class, which states the complete package prefix and class name of the
@@ -217,7 +217,7 @@ the following changes to the `sun-acc.xml` file or the `appclient`
 script. This step is not needed for Java Web Start.
 * Define the `target-server` element's `address` and `port` attributes
 to reference the remote server machine and its ORB port. See
-"link:application-deployment-guide/dd-elements.html#target-server[target-server]" in {productName} Application Deployment Guide.
+"xref:application-deployment-guide.adoc#target-server[target-server]" in {productName} Application Deployment Guide.
 * Use the `-targetserver` option of the appclient script to reference
 the remote server machine and its ORB port. For more information, see
 xref:#running-an-application-client-using-the-appclient-script[Running an Application Client Using the `appclient` Script].
@@ -243,7 +243,7 @@ case one of the endpoints has failed. +
 The `target-server` elements in the `sun-acc.xml` file specify one or
 more IIOP endpoints used for load balancing. The `address` attribute is
 an IPv4 address or host name, and the `port` attribute specifies the
-port number. See "link:application-deployment-guide/dd-elements.html#client-container[client-container]" in {productName} Application Deployment Guide. +
+port number. See "xref:application-deployment-guide.adoc#client-container[client-container]" in {productName} Application Deployment Guide. +
 The `--targetserver` option of the appclient script specifies one or
 more IIOP endpoints used for load balancing. For more information, see
 xref:#running-an-application-client-using-the-appclient-script[Running an Application Client Using the `appclient` Script].
@@ -256,7 +256,7 @@ Next Steps
 xref:#using-java-web-start[Using Java Web Start] or xref:#running-an-application-client-using-the-appclient-script[Running an Application
 Client Using the `appclient` Script].
 * For more information about RMI-IIOP load balancing and failover, see
-"link:ha-administration-guide/rmi-iiop.html#rmi-iiop-load-balancing-and-failover[RMI-IIOP Load Balancing and Failover]" in {productName} High Availability Administration Guide.
+"xref:ha-administration-guide.adoc#rmi-iiop-load-balancing-and-failover[RMI-IIOP Load Balancing and Failover]" in {productName} High Availability Administration Guide.
 
 [[to-access-a-jms-resource-from-an-application-client]]
 
@@ -270,7 +270,7 @@ Java Message Service Examples]" in The Jakarta EE Tutorial.
 2. Next, configure a JMS resource on the {productName}.
 +
 For information on configuring JMS resources, see
-"link:administration-guide/jms.html#administering-jms-connection-factories-and-destinations[Administering JMS Connection Factories and
+"xref:administration-guide.adoc#administering-jms-connection-factories-and-destinations[Administering JMS Connection Factories and
 Destinations]" in {productName} Administration
 Guide.
 3. Define the `@Resource` or `@Resources` annotations or the
@@ -279,7 +279,7 @@ corresponding `resource-ref` elements in the
 `glassfish-application-client.xml` file.
 +
 For more information on the `glassfish-application-client.xml` file, see
-"link:application-deployment-guide/dd-files.html#GSDPG00081[The glassfish-application-client.xml file]" in
+"xref:application-deployment-guide.adoc#GSDPG00081[The glassfish-application-client.xml file]" in
 {productName} Application Deployment Guide. For a
 general explanation of how to map JNDI names using reference elements,
 see xref:jndi.adoc#mapping-references[Mapping References].
@@ -289,7 +289,7 @@ see xref:jndi.adoc#mapping-references[Mapping References].
 deployment descriptor.
 * `glassfish-application-client.xml` - (optional) {productName}
 specific client deployment descriptor. For information on the
-`glassfish-application-client.xml` file, see "link:application-deployment-guide/dd-files.html#GSDPG00081[The
+`glassfish-application-client.xml` file, see "xref:application-deployment-guide.adoc#GSDPG00081[The
 glassfish-application-client.xml file]" in {productName} Application Deployment Guide.
 * The `MANIFEST.MF` file. This file contains a reference to the `main`
 class, which states the complete package prefix and class name of the
@@ -435,7 +435,7 @@ is generated.
 
 Regardless of how the context-root or id is determined, it is written to
 the server log when you deploy the application. For details about
-naming, see "link:application-deployment-guide/overview.html#naming-standards[Naming Standards]" in {productName} Application Deployment Guide.
+naming, see "xref:application-deployment-guide.adoc#naming-standards[Naming Standards]" in {productName} Application Deployment Guide.
 
 To set a different URL for an application client, use the `context-root`
 subelement of the `java-web-start-access` element in the
@@ -576,7 +576,7 @@ trusted certificate by importing the trusted certificate into the
 keystore is located at domain-dir`/config/keystore.jks`.
 +
 For more information about importing a trusted certificate into the
-domain keystore, see "link:security-guide/system-security.html#administering-jsse-certificates[Administering JSSE Certificates]"
+domain keystore, see "xref:security-guide.adoc#administering-jsse-certificates[Administering JSSE Certificates]"
 in {productName} Security Guide.
 
 4. Delete any signed JARs already generated by {productName}:
@@ -616,7 +616,7 @@ the {productName} certificate information.
 To sign this JAR file with a different certificate, first add the
 certificate to the domain keystore. You can use a certificate from a
 trusted authority, which avoids the Java Web Start prompt. To add a
-certificate to the domain keystore, see "link:security-guide/system-security.html#administering-jsse-certificates[Administering
+certificate to the domain keystore, see "xref:security-guide.adoc#administering-jsse-certificates[Administering
 JSSE Certificates]" in {productName} Security
 Guide.
 
@@ -1445,7 +1445,7 @@ For more information about naming and lookups, see
 xref:jndi.adoc#accessing-the-naming-context[Accessing the Naming Context].
 3. Deploy the EJB component to be accessed.
 +
-For more information on deployment, see "link:application-deployment-guide/overview.html#about-deployment-tools[About
+For more information on deployment, see "xref:application-deployment-guide.adoc#about-deployment-tools[About
 Deployment Tools]" in {productName} Application
 Deployment Guide.
 4. Copy the as-install``/lib/gf-client.jar`` file to the client machine
@@ -1570,7 +1570,7 @@ For more information about naming and lookups, see
 xref:jndi.adoc#accessing-the-naming-context[Accessing the Naming Context].
 3. Deploy the EJB component to be accessed.
 +
-For more information on deployment, see "link:application-deployment-guide/overview.html#about-deployment-tools[About
+For more information on deployment, see "xref:application-deployment-guide.adoc#about-deployment-tools[About
 Deployment Tools]" in {productName} Application
 Deployment Guide.
 4. To access EJB components that are residing in a remote system, set
@@ -1586,7 +1586,7 @@ Here ORBhost is the Application Server hostname and ORBport is the ORB
 port number (default is `3700` for the default server instance, named `server`).
 5. Deploy the module.
 +
-For more information on deployment, see "link:application-deployment-guide/overview.html#about-deployment-tools[About
+For more information on deployment, see "xref:application-deployment-guide.adoc#about-deployment-tools[About
 Deployment Tools]" in {productName} Application
 Deployment Guide.
 
@@ -1602,7 +1602,7 @@ Java Message Service Examples] in The Jakarta EE Tutorial.
 2. Configure a JMS resource on {productName}.
 +
 For information on configuring JMS resources, see
-"link:administration-guide/jms.html#administering-jms-connection-factories-and-destinations[
+"xref:administration-guide.adoc#administering-jms-connection-factories-and-destinations[
 Administering JMS Connection Factories and Destinations]"
 in {productName} Administration Guide.
 3. Copy the following JAR files to the client machine and include them

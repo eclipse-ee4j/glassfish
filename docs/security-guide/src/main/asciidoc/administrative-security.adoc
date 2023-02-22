@@ -455,7 +455,7 @@ option to check incoming requests that use SSL/TLS cert authentication.
 Conversely, instances use the alias associated with the `--adminalias`
 option to check incoming requests with certificate authentication.
 
-The link:reference-manual/enable-secure-admin-principal.html#enable-secure-admin-principal[
+The xref:reference-manual.adoc#enable-secure-admin-principal[
 `enable-secure-admin-principal`] subcommand
 provides an alternate approach. `enable-secure-admin-principal`
 instructs {productName} to accept admin requests when accompanied by
@@ -599,7 +599,7 @@ O=Oracle Corporation,L=Santa Clara,ST=California,C=US"
 Command enable-secure-admin-principal executed successfully.
 ----
 
-You can use the link:reference-manual/disable-secure-admin-principal.html#disable-secure-admin-principal[`disable-secure-admin-principal`]
+You can use the xref:reference-manual.adoc#disable-secure-admin-principal[`disable-secure-admin-principal`]
 subcommand to disable a specific certificate for authenticating and
 authorizing access in secure admin. You must specify either the DN or
 the `--alias` option of the `disable-secure-admin-principal` subcommand.
@@ -607,7 +607,7 @@ To disable multiple certificates for authenticating and authorizing
 access in secure admin, run the `disable-secure-admin-principal`
 subcommand multiple times.
 
-You can use the link:reference-manual/list-secure-admin-principals.html#list-secure-admin-principals[`list-secure-admin-principals`]
+You can use the xref:reference-manual.adoc#list-secure-admin-principals[`list-secure-admin-principals`]
 subcommand to list the certificates for which {productName} accepts
 admin requests from clients.
 
@@ -759,7 +759,7 @@ authenticating and authorizing the DAS and instances in administration traffic.
 
 As an alternative to this certificate-based authentication and
 authorization, you can instead use the
-link:reference-manual/enable-secure-admin-internal-user.html#enable-secure-admin-internal-user[
+xref:reference-manual.adoc#enable-secure-admin-internal-user[
 `enable-secure-admin-internal-user`] subcommand to
 instruct all servers in the domain to authenticate to each other, and to
 authorize admin operations submitted to each other, using an existing
@@ -773,7 +773,7 @@ regardless of how they authenticate to each other.
 ====
 
 You might want to use the
-link:reference-manual/enable-secure-admin-internal-user.html#enable-secure-admin-internal-user[
+xref:reference-manual.adoc#enable-secure-admin-internal-user[
 `enable-secure-admin-internal-user`] subcommand if your
 use case favors the use of a user name and password combination over the
 use of SSL certificates and aliases.
@@ -830,14 +830,14 @@ password pair for internal admin communication and for admin user login.
 That is, create at least one admin account specifically for internal
 admin communication.
 
-You can use the link:reference-manual/disable-secure-admin-internal-user.html#disable-secure-admin-internal-user[`disable-secure-admin-internal-user`]
+You can use the xref:reference-manual.adoc#disable-secure-admin-internal-user[`disable-secure-admin-internal-user`]
 subcommand to disable secure admin from using the user name (instead of
 SSL certificates) to authenticate the DAS and instances with each other
 and to authorize admin operations. To disable multiple user names for
 authenticating and authorizing access in secure admin, run the
 `disable-secure-admin-internal-user` subcommand multiple times.
 
-You can use the link:reference-manual/list-secure-admin-internal-users.html#list-secure-admin-internal-users[`list-secure-admin-internal-users`]
+You can use the xref:reference-manual.adoc#list-secure-admin-internal-users[`list-secure-admin-internal-users`]
 subcommand to list the user names for which {productName}
 authenticate the DAS and instances with each other and authorizes admin
 operations.

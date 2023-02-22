@@ -60,7 +60,7 @@ If startup was successful, the expected message is similar to that on
 the console, and appears at the end of the log file.
 
 For more information about starting a domain, see
-"link:administration-guide/domains.html#starting-and-stopping-a-domain[
+"xref:administration-guide.adoc#starting-and-stopping-a-domain[
 Starting and Stopping a Domain]"
 in {productName} Administration Guide.
 To easily determine if a domain is running, use the `asadmin list-domains` command.
@@ -209,7 +209,7 @@ accessible, check the following:
 Port?]
 
 For more information about the Administration Console, see
-"link:administration-guide/overview.html#administration-console[Administration Console]" in {productName} Administration Guide.
+"xref:administration-guide.adoc#administration-console[Administration Console]" in {productName} Administration Guide.
 
 [[is-the-application-server-running]]
 
@@ -308,7 +308,7 @@ applications are deployed.
 clicking the Applications node.
 
 For more information about deploying applications, see
-"link:application-deployment-guide/deploying-applications.html#deploying-applications[Deploying Applications]" in {productName} Application Deployment Guide. Also see the Administration
+"xref:application-deployment-guide.adoc#deploying-applications[Deploying Applications]" in {productName} Application Deployment Guide. Also see the Administration
 Console online help.
 
 [[administrator-user-name-or-password-not-known]]
@@ -496,7 +496,7 @@ asadmin generate-jvm-report --type=thread
 
 See Also
 
-link:reference-manual/generate-jvm-report.html#generate-jvm-report[`generate-jvm-report`(1)]
+xref:reference-manual.adoc#generate-jvm-report[`generate-jvm-report`(1)]
 
 [[issues-related-to-applications]]
 
@@ -720,7 +720,7 @@ It is safe to remove uninstallation and installation log files after you
 have examined them.
 
 For information related to uninstallation, see
-"link:installation-guide/uninstalling.html#uninstalling-glassfish[Uninstalling GlassFish]"
+"xref:installation-guide.adoc#uninstalling-glassfish[Uninstalling GlassFish]"
 in {productName} Installation Guide.
 
 [[issues-related-to-security]]

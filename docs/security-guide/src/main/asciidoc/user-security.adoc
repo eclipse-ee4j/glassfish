@@ -138,7 +138,7 @@ Custom realm::
   relational database or third-party components. For more information
   about custom realms, see the Administration Console online help. For
   instructions on creating a custom realm, see
-  "link:application-development-guide/securing-apps.html#creating-a-custom-realm[
+  "xref:application-development-guide.adoc#creating-a-custom-realm[
   Creating a Custom Realm]" in
   {productName} Application Development Guide.
 
@@ -153,7 +153,7 @@ authentication realm.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create a realm by using the
-link:reference-manual/create-auth-realm.html#create-auth-realm[`create-auth-realm`] subcommand. +
+xref:reference-manual.adoc#create-auth-realm[`create-auth-realm`] subcommand. +
 Information about properties for this subcommand is included in this help page.
 
 [[ggpjx]]
@@ -174,7 +174,7 @@ You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-auth-realm` at the command line.
 
 For information on creating a custom realm, see
-"link:application-development-guide/securing-apps.html#creating-a-custom-realm[Creating a Custom Realm]" in {productName} Application Development Guide.
+"xref:application-development-guide.adoc#creating-a-custom-realm[Creating a Custom Realm]" in {productName} Application Development Guide.
 
 [[to-list-authentication-realms]]
 
@@ -184,7 +184,7 @@ Use the `list-auth-realms` subcommand in remote mode to list the
 existing authentication realms.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. List realms by using the link:reference-manual/list-auth-realms.html#list-auth-realms[`list-auth-realms`]
+2. List realms by using the xref:reference-manual.adoc#list-auth-realms[`list-auth-realms`]
 subcommand.
 
 [[ggpkw]]
@@ -220,15 +220,15 @@ A custom realm does not require server restart.
 ====
 
 
-1. List realms by using the link:reference-manual/list-auth-realms.html#list-auth-realms[`list-auth-realms`]
+1. List realms by using the xref:reference-manual.adoc#list-auth-realms[`list-auth-realms`]
 subcommand.
 2. Modify the values for the specified thread pool by using the
-link:reference-manual/set.html#set[`set`] subcommand.
+xref:reference-manual.adoc#set[`set`] subcommand.
 +
 The thread pool is identified by its dotted name.
 3. To apply your changes, restart {productName}.
 +
-See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
+See "xref:administration-guide.adoc#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
 
 [[to-delete-an-authentication-realm]]
 
@@ -239,12 +239,12 @@ existing authentication realm.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List realms by using the
-link:reference-manual/list-auth-realms.html#list-auth-realms[`list-auth-realms`] subcommand.
+xref:reference-manual.adoc#list-auth-realms[`list-auth-realms`] subcommand.
 3. If necessary, notify users that the realm is being deleted.
 4. Delete the realm by using the
-link:reference-manual/delete-auth-realm.html#delete-auth-realm[`delete-auth-realm`] subcommand.
+xref:reference-manual.adoc#delete-auth-realm[`delete-auth-realm`] subcommand.
 5. To apply your changes, restart {productName}. See
-"link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
+"xref:administration-guide.adoc#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
 
 [[ggpjf]]
 Example 2-3 Deleting a Realm
@@ -289,11 +289,11 @@ How you add user credentials to the database tables depends on the
 database that you are using.
 
 3. Create a JDBC connection pool for the database. +
-See "link:administration-guide/jdbc.html#to-create-a-jdbc-connection-pool[
+See "xref:administration-guide.adoc#to-create-a-jdbc-connection-pool[
 To Create a JDBC Connection Pool]" in {productName} Administration Guide.
 
 4. Create a JDBC resource for the database. +
-"link:administration-guide/jdbc.html#to-create-a-jdbc-resource[
+"xref:administration-guide.adoc#to-create-a-jdbc-resource[
 To Create a JDBC Resource]" in {productName} Administration Guide.
 
 5. [[ggmvo]]
@@ -316,7 +316,7 @@ Modify the deployment descriptor that is associated with your application.
 
 +
 For more information about how to specify a realm, see
-"link:application-development-guide/securing-apps.html#how-to-configure-a-realm[
+"xref:application-development-guide.adoc#how-to-configure-a-realm[
 How to Configure a Realm]" in {productName} Application Development Guide.
 
 7. Assign security roles to users in the realm. +
@@ -324,11 +324,11 @@ To assign a security role to a user, add a `security-role-mapping`
 element to the deployment descriptor that you modified.
 
 8. Verify that the database is running. +
-If needed, see "link:administration-guide/jdbc.html#to-start-the-database[To Start the Database]"
+If needed, see "xref:administration-guide.adoc#to-start-the-database[To Start the Database]"
 in {productName} Administration Guide.
 
 9. To apply the authentication, restart the server. +
-See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]"
+See "xref:administration-guide.adoc#to-restart-a-domain[To Restart a Domain]"
 in {productName} Administration Guide.
 
 [[ghysu]]
@@ -411,7 +411,7 @@ keytool -importcert -alias "OID self signed certificate" -keystore \
 /glassfish7/glassfish/domains/domain1/config/cacerts.jks -file oid.cer
 ----
 6. Restart the {productName} domain. +
-See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]"
+See "xref:administration-guide.adoc#to-restart-a-domain[To Restart a Domain]"
 in {productName} Administration Guide.
 7. Use the Oracle Enterprise Manager `ldapmodify` command to enable
 Anonymous Bind for OID. +
@@ -500,7 +500,7 @@ keytool -importcert -alias "OVD self signed certificate" -keystore \
 /glassfish7/glassfish/domains/domain1/config/cacerts.jks -file ovd.cer
 ----
 5. Restart the {productName} domain. +
-See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]"
+See "xref:administration-guide.adoc#to-restart-a-domain[To Restart a Domain]"
 in {productName} Administration Guide.
 
 [[to-enable-ldap-authentication-on-the-glassfish-server-das]]
@@ -551,7 +551,7 @@ asadmin configure-ldap-for-admin --basedn "dc=red,dc=iplanet,dc=com" \
 
 See Also
 
-See link:reference-manual/configure-ldap-for-admin.html#configure-ldap-for-admin[`configure-ldap-for-admin`] for more information
+See xref:reference-manual.adoc#configure-ldap-for-admin[`configure-ldap-for-admin`] for more information
 about the `configure-ldap-for-admin subcommand`.
 
 [[administering-file-users]]
@@ -597,9 +597,9 @@ server restart.
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. If the user will belong to a particular group, see the current
 groups by using the
-link:reference-manual/list-file-groups.html#list-file-groups[`list-file-groups`] subcommand.
+xref:reference-manual.adoc#list-file-groups[`list-file-groups`] subcommand.
 3. Create a file user by using the
-link:reference-manual/create-file-user.html#create-file-user[`create-file-user`] subcommand.
+xref:reference-manual.adoc#create-file-user[`create-file-user`] subcommand.
 
 [[ggpkq]]
 Example 2-5 Creating a User
@@ -610,7 +610,7 @@ The `asadmin` `--passwordfile` option specifies the name of a file that
 contains the password entries in a specific format. The entry for a
 password must have the `AS_ADMIN_` prefix followed by the password name
 in uppercase letters, an equals sign, and the password. See
-link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] for more information.
+xref:reference-manual.adoc#asadmin[`asadmin`(1M)] for more information.
 
 [source]
 ----
@@ -632,7 +632,7 @@ Use the `list-file-users` subcommand in remote mode to list the users
 that are in the `keyfile`.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. List users by using the link:reference-manual/list-file-users.html#list-file-users[`list-file-users`]
+2. List users by using the xref:reference-manual.adoc#list-file-users[`list-file-users`]
 subcommand.
 
 [[ggpgf]]
@@ -676,7 +676,7 @@ a file user, or all file groups if the `--name` option is not specified.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List file groups by using the
-link:reference-manual/list-file-groups.html#list-file-groups[`list-file-groups`] subcommand.
+xref:reference-manual.adoc#list-file-groups[`list-file-groups`] subcommand.
 
 [[ghlgb]]
 Example 2-7 Listing Groups for a User
@@ -707,9 +707,9 @@ update an administrative user to have a blank password.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Update the user information by using the
-link:reference-manual/update-file-user.html#update-file-user[`update-file-user`] subcommand.
+xref:reference-manual.adoc#update-file-user[`update-file-user`] subcommand.
 3. To apply your changes, restart {productName}. +
-See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]"
+See "xref:administration-guide.adoc#to-restart-a-domain[To Restart a Domain]"
 in {productName} Administration Guide.
 
 [[ggpgh]]
@@ -740,9 +740,9 @@ during your session.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List users by using the
-link:reference-manual/list-file-users.html#list-file-users[`list-file-users`] subcommand.
+xref:reference-manual.adoc#list-file-users[`list-file-users`] subcommand.
 3. Delete the user by using the
-link:reference-manual/delete-file-user.html#delete-file-user[`delete-file-user`] subcommand.
+xref:reference-manual.adoc#delete-file-user[`delete-file-user`] subcommand.
 
 [[ggpib]]
 Example 2-9 Deleting a User

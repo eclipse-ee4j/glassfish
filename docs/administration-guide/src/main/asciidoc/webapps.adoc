@@ -200,7 +200,7 @@ container with web servers such as Apache HTTP Server. By using
 You can also use `mod_jk` directly at the JSP/servlet engine for load
 balancing. For more information about configuring `mod_jk` and Apache
 HTTP Server for load balancing with {productName} 7 refer to
-"link:ha-administration-guide/http-load-balancing.html#configuring-http-load-balancing[Configuring HTTP Load Balancing]" in {productName} High Availability Administration Guide.
+"xref:ha-administration-guide.adoc#configuring-http-load-balancing[Configuring HTTP Load Balancing]" in {productName} High Availability Administration Guide.
 
 The following topics are addressed here:
 

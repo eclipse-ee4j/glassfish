@@ -571,7 +571,7 @@ read-only
 6. BMP beans
 
 For more information about configuring high availability session
-persistence, see "link:ha-administration-guide/session-persistence-and-failover.html#configuring-high-availability-session-persistence-and-failover[Configuring High Availability Session
+persistence, see "xref:ha-administration-guide.adoc#configuring-high-availability-session-persistence-and-failover[Configuring High Availability Session
 Persistence and Failover]" in {productName} High
 Availability Administration Guide. To configure EJB beans using the
 {productName} Administration Console, navigate to the
@@ -1029,7 +1029,7 @@ This section provides tips for tuning various specific types of EJB components:
 These components can all be configured in the {productName}
 Administration Console from the Configurations>configuration-name>EJB
 Container node. Alternatively, you can perform these configurations by
-following the instructions in "link:ha-administration-guide/rmi-iiop.html#rmi-iiop-load-balancing-and-failover[
+following the instructions in "xref:ha-administration-guide.adoc#rmi-iiop-load-balancing-and-failover[
 RMI-IIOP Load Balancing and Failover]"
 in {productName} High Availability Administration Guide.
 

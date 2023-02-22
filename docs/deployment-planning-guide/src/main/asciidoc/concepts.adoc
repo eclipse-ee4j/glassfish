@@ -368,7 +368,7 @@ balancer configuration file to your web server `config` directory. An
 administrator can create a script to automate this entire process.
 
 For more details and complete configuration instructions, see
-"link:ha-administration-guide/http-load-balancing.html#configuring-http-load-balancing[Configuring HTTP Load Balancing]" in {productName} High Availability Administration Guide.
+"xref:ha-administration-guide.adoc#configuring-http-load-balancing[Configuring HTTP Load Balancing]" in {productName} High Availability Administration Guide.
 
 [[session-persistence]]
 
@@ -415,7 +415,7 @@ checkpointing. When enabled, checkpointing generally occurs after any
 transaction involving the SFSB is completed, even if the transaction
 rolls back. For more information on developing stateful session beans,
 see "xref:application-development-guide.adoc#using-session-beans[Using Session Beans]" in {productName} Application Development Guide. For more information on
-enabling SFSB failover, see "link:ha-administration-guide/session-persistence-and-failover.html#stateful-session-bean-failover[Stateful Session Bean
+enabling SFSB failover, see "xref:ha-administration-guide.adoc#stateful-session-bean-failover[Stateful Session Bean
 Failover]" in {productName} High Availability
 Administration Guide.
 
@@ -424,7 +424,7 @@ session persistence configuration settings also affect the session
 information in each request.
 
 For more information on configuring session persistence, see
-"link:ha-administration-guide/session-persistence-and-failover.html#configuring-high-availability-session-persistence-and-failover[Configuring High Availability Session Persistence and
+"xref:ha-administration-guide.adoc#configuring-high-availability-session-persistence-and-failover[Configuring High Availability Session Persistence and
 Failover]" in {productName} High Availability
 Administration Guide.
 
@@ -531,7 +531,7 @@ iPlanet Web Server 7.0.9 Installation and Migration Guide
 
 4. If you plan to administer your clusters centrally, set up secure
 shell (SSH) for centralized administration. +
-For more information, see "link:ha-administration-guide/ssh-setup.html#enabling-centralized-administration-of-glassfish-server-instances[
+For more information, see "xref:ha-administration-guide.adoc#enabling-centralized-administration-of-glassfish-server-instances[
 Setting Up SSH for Centralized Administration]" in {productName}
 High Availability Administration Guide.
 
@@ -539,10 +539,10 @@ High Availability Administration Guide.
 virtual servers as required. +
 For more information, see the following documentation:
 * "xref:administration-guide.adoc#administering-domains[Administering Domains]" in {productName} Administration Guide
-* "link:ha-administration-guide/nodes.html#administering-glassfish-server-nodes[Administering {productName} Nodes]" in {productName} High Availability Administration Guide
-* "link:ha-administration-guide/clusters.html#administering-glassfish-server-clusters[Administering {productName} Clusters]" in
+* "xref:ha-administration-guide.adoc#administering-glassfish-server-nodes[Administering {productName} Nodes]" in {productName} High Availability Administration Guide
+* "xref:ha-administration-guide.adoc#administering-glassfish-server-clusters[Administering {productName} Clusters]" in
 {productName} High Availability Administration Guide
-* "link:ha-administration-guide/instances.html#administering-glassfish-server-instances[Administering {productName} Instances]" in
+* "xref:ha-administration-guide.adoc#administering-glassfish-server-instances[Administering {productName} Instances]" in
 {productName} High Availability Administration Guide
 * "xref:administration-guide.adoc#administering-virtual-servers[Administering Virtual Servers]" in {productName} Administration Guide
 
@@ -551,14 +551,14 @@ For more information, see "xref:administration-guide.adoc#administering-mod_jk[A
 {productName} Administration Guide.
 
 7. Configure the web container and EJB container for replicated session persistence. +
-For more information, see "link:ha-administration-guide/session-persistence-and-failover.html#configuring-high-availability-session-persistence-and-failover[Configuring High
+For more information, see "xref:ha-administration-guide.adoc#configuring-high-availability-session-persistence-and-failover[Configuring High
 Availability Session Persistence and Failover]" in {productName} High Availability Administration Guide.
 
 8. If you are using messaging extensively, configure Java Message
 Service (JMS) clusters for failover . +
 For more information, see the following documentation:
 * xref:planning.adoc#planning-message-queue-broker-deployment[Planning Message Queue Broker Deployment]
-* "link:ha-administration-guide/jms.html#configuring-java-message-service-high-availability[Configuring Java Message Service High Availability]"
+* "xref:ha-administration-guide.adoc#configuring-java-message-service-high-availability[Configuring Java Message Service High Availability]"
 in {productName} High Availability Administration
 Guide
 * xref:{mq-admin-guide-url}[Open Message Queue Administration Guide]

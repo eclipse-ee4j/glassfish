@@ -301,7 +301,7 @@ in {productName} Administration Guide.
 
 For information about the `asadmin list-timers` and
 `asadmin migrate-timers` subcommands, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual]. For information about
-migrating EJB timers, see "link:ha-administration-guide/instances.html#migrating-ejb-timers[Migrating EJB Timers]" in
+migrating EJB timers, see "xref:ha-administration-guide.adoc#migrating-ejb-timers[Migrating EJB Timers]" in
 {productName} High Availability Administration
 Guide.
 

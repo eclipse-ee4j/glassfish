@@ -17,7 +17,7 @@ session manager extensible because you can implement a new persistence
 type without having to modify the web container code.
 
 For information about other high-availability, session persistence
-solutions, see "link:ha-administration-guide/session-persistence-and-failover.html#configuring-high-availability-session-persistence-and-failover[Configuring High Availability Session
+solutions, see "xref:ha-administration-guide.adoc#configuring-high-availability-session-persistence-and-failover[Configuring High Availability Session
 Persistence and Failover]" in {productName} High
 Availability Administration Guide.
 

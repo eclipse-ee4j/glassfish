@@ -256,7 +256,7 @@ Next Steps
 xref:#using-java-web-start[Using Java Web Start] or xref:#running-an-application-client-using-the-appclient-script[Running an Application
 Client Using the `appclient` Script].
 * For more information about RMI-IIOP load balancing and failover, see
-"link:ha-administration-guide/rmi-iiop.html#rmi-iiop-load-balancing-and-failover[RMI-IIOP Load Balancing and Failover]" in {productName} High Availability Administration Guide.
+"xref:ha-administration-guide.adoc#rmi-iiop-load-balancing-and-failover[RMI-IIOP Load Balancing and Failover]" in {productName} High Availability Administration Guide.
 
 [[to-access-a-jms-resource-from-an-application-client]]
 

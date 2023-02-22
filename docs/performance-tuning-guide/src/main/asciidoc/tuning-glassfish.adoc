@@ -1225,7 +1225,7 @@ Container on the server.
 For complete instructions on configuring ORB settings, refer to
 "xref:administration-guide.adoc#administering-the-object-request-broker-orb[Administering the Object Request Broker (ORB)]" in
 {productName} Administration Guide. Also refer to
-"link:ha-administration-guide/rmi-iiop.html#rmi-iiop-load-balancing-and-failover[RMI-IIOP Load Balancing and Failover]" in {productName} High Availability Administration Guide. You
+"xref:ha-administration-guide.adoc#rmi-iiop-load-balancing-and-failover[RMI-IIOP Load Balancing and Failover]" in {productName} High Availability Administration Guide. You
 can also configure most ORB settings through the {productName}
 Administration Console by navigating to the
 Configurations>configuration-name> ORB node and then following the
@@ -1514,10 +1514,10 @@ Command set executed successfully.
 Load Balancing
 
 For information on how to configure HTTP load balancing, see
-"link:ha-administration-guide/http-load-balancing.html#configuring-http-load-balancing[Configuring HTTP Load Balancing]" in {productName} High Availability Administration Guide.
+"xref:ha-administration-guide.adoc#configuring-http-load-balancing[Configuring HTTP Load Balancing]" in {productName} High Availability Administration Guide.
 
 For information on how to configure RMI/IIOP for multiple application
-server instances in a cluster, "link:ha-administration-guide/rmi-iiop.html#rmi-iiop-load-balancing-and-failover[RMI-IIOP Load Balancing
+server instances in a cluster, "xref:ha-administration-guide.adoc#rmi-iiop-load-balancing-and-failover[RMI-IIOP Load Balancing
 and Failover]" in {productName} High Availability
 Administration Guide.
 
@@ -1897,5 +1897,5 @@ Performance Tuning Guide. For complete information about configuring
 load balancing in {productName}, refer to the following
 documentation:
 
-* "link:ha-administration-guide/http-load-balancing.html#configuring-http-load-balancing[Configuring HTTP Load Balancing]" in {productName} High Availability Administration Guide
-* "link:ha-administration-guide/rmi-iiop.html#rmi-iiop-load-balancing-and-failover[RMI-IIOP Load Balancing and Failover]" in {productName} High Availability Administration Guide
+* "xref:ha-administration-guide.adoc#configuring-http-load-balancing[Configuring HTTP Load Balancing]" in {productName} High Availability Administration Guide
+* "xref:ha-administration-guide.adoc#rmi-iiop-load-balancing-and-failover[RMI-IIOP Load Balancing and Failover]" in {productName} High Availability Administration Guide

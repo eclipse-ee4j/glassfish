@@ -110,7 +110,7 @@ hosts. Additionally, both GlassFish clusters and standalone instances
 can use Message Queue broker clusters as Remote type JMS hosts.
 
 For information about how the JMS service supports GlassFish clusters
-and Message Queue broker clusters, see "link:ha-administration-guide/jms.html#configuring-java-message-service-high-availability[Configuring
+and Message Queue broker clusters, see "xref:ha-administration-guide.adoc#configuring-java-message-service-high-availability[Configuring
 Java Message Service High Availability]" in {productName} High Availability Administration Guide.
 
 [[updating-the-jms-service-configuration]]
@@ -243,7 +243,7 @@ The following topics are addressed here:
 * <<To Delete a JMS Host>>
 
 For information about administering JMS hosts that are servicing
-GlassFish clusters, see "link:ha-administration-guide/jms.html#configuring-glassfish-clusters-to-use-message-queue-broker-clusters[Configuring GlassFish Clusters
+GlassFish clusters, see "xref:ha-administration-guide.adoc#configuring-glassfish-clusters-to-use-message-queue-broker-clusters[Configuring GlassFish Clusters
 to Use Message Queue Broker Clusters]" in {productName} High Availability Administration Guide.
 
 [[about-jms-host-types]]
@@ -592,7 +592,7 @@ The following topics are addressed here:
 The subcommands in this section can be used to administer both the
 connection factory resources and the destination resources. For
 information on JMS service support of connection pooling and failover,
-see "link:ha-administration-guide/jms.html#connection-failover[Connection Failover]" in {productName} High Availability Administration Guide. For instructions
+see "xref:ha-administration-guide.adoc#connection-failover[Connection Failover]" in {productName} High Availability Administration Guide. For instructions
 on administering physical destinations, see xref:#administering-jms-physical-destinations[Administering
 JMS Physical Destinations].
 

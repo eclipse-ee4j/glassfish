@@ -285,7 +285,7 @@ machine. A multi-homed machine has two IP addresses belonging to
 different networks, an external IP and an internal IP. The objective is
 to expose only the external IP to user requests. The internal IP is used
 only by the cluster instances for internal communication. For details,
-see "link:ha-administration-guide/clusters.html#using-the-multi-homing-feature-with-gms[Using the Multi-Homing Feature With GMS]" in
+see "xref:ha-administration-guide.adoc#using-the-multi-homing-feature-with-gms[Using the Multi-Homing Feature With GMS]" in
 {productName} High Availability Administration
 Guide.
 
@@ -678,7 +678,7 @@ brokers in a cluster.
 A shared database of cluster change records can be configured as an
 alternative to using a master broker. For more information, see
 "link:../openmq/mq-admin-guide/broker-clusters.html#GMADG00041[Configuring and Managing Broker Clusters]" in Open
-Message Queue Administration Guide and "link:ha-administration-guide/jms.html#using-message-queue-broker-clusters-with-glassfish-server[Using Message
+Message Queue Administration Guide and "xref:ha-administration-guide.adoc#using-message-queue-broker-clusters-with-glassfish-server[Using Message
 Queue Broker Clusters With {productName}]" in {productName} High Availability Administration Guide.
 
 [[configuring-glassfish-server-to-use-message-queue-brokers]]

@@ -720,7 +720,7 @@ your system and enterprise.</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="administration-guide.html#GSADG">Administration Guide</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to configure, monitor, and manage Eclipse GlassFish subsystems and components
-from the command line by using the <a href="reference-manual/asadmin.html#asadmin"><code>asadmin</code>(1M)</a> utility.
+from the command line by using the <a href="reference-manual.html#asadmin"><code>asadmin</code>(1M)</a> utility.
 Instructions for performing these tasks from the Administration Console are provided
 in the Administration Console online help.</p></td>
 </tr>
@@ -776,31 +776,31 @@ scalability through failover and load balancing.</p></td>
 commands, and related concepts.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../openmq/mq-release-notes.html#GMRLN">Message Queue Release Notes</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://javaee.github.io/openmq/Documentation.html">Message Queue Release Notes</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Describes new features, compatibility issues, and existing bugs for Open Message Queue.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../openmq/mq-tech-over.html#GMTOV">Message Queue Technical Overview</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://javaee.github.io/openmq/Documentation.html">Message Queue Technical Overview</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Provides an introduction to the technology, concepts, architecture, capabilities, and features of
 the Message Queue messaging service.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../openmq/mq-admin-guide.html#GMADG">Message Queue Administration Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://javaee.github.io/openmq/Documentation.html">Message Queue Administration Guide</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to set up and manage a Message Queue messaging system.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../openmq/mq-dev-guide-jmx.html#GMJMG">Message Queue Developer&#8217;s Guide for JMX Clients</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://javaee.github.io/openmq/Documentation.html">Message Queue Developer&#8217;s Guide for JMX Clients</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Describes the application programming interface in Message Queue for
 programmatically configuring and monitoring Message Queue resources in
 conformance with the Java Management Extensions (JMX).</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../openmq/mq-dev-guide-java.html#GMJVG">Message Queue Developer&#8217;s Guide for Java Clients</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://javaee.github.io/openmq/Documentation.html">Message Queue Developer&#8217;s Guide for Java Clients</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Provides information about concepts and procedures for developing Java messaging
 applications (Java clients) that work with Eclipse GlassFish.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../openmq/mq-dev-guide-c.html#GMCCG">Message Queue Developer&#8217;s Guide for C Clients</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://javaee.github.io/openmq/Documentation.html">Message Queue Developer&#8217;s Guide for C Clients</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Provides programming and reference information for developers working with
 Message Queue who want to use the C language binding to the Message
 Queue messaging service to send, receive, and process Message Queue messages.</p></td>
@@ -1174,7 +1174,7 @@ proper class loaders. For more information, see
 </li>
 <li>
 <p>Configure the Virtual Machine for the Java platform (JVM software).
-For more information, see "<a href="administration-guide/jvm.html#administering-the-virtual-machine-for-the-java-platform">
+For more information, see "<a href="administration-guide.html#administering-the-virtual-machine-for-the-java-platform">
 Administering the Virtual Machine for the Java Platform</a>"
 in Eclipse GlassFish Administration Guide.</p>
 </li>
@@ -1523,7 +1523,7 @@ present in Eclipse GlassFish 6.0.</p>
 for one of the Eclipse GlassFish packages, for example if a newer one was
 available. This same result can be achieved on a per-application basis with the
 <code>--libraries</code> option for the <code>deploy</code> subcommand. For more information,
-see the <a href="reference-manual/deploy.html#deploy"><code>deploy</code>(1)</a> help page.
+see the <a href="reference-manual.html#deploy"><code>deploy</code>(1)</a> help page.
 The Java Optional Package Mechanism does what <code>classpath-suffix</code> used to do. For more
 information, see <a href="#using-the-java-optional-package-mechanism">Using the Java Optional Package Mechanism</a>.</p>
 </div>
@@ -1547,7 +1547,7 @@ You can make this class loader follow the delegation inversion model in
 the Servlet specification by setting <code>delegate="false"</code> in the
 <code>class-loader</code> element of the <code>glassfish-web.xml</code> file. It is safe to do
 this only for a web module that does not interact with any other
-modules. For details, see "<a href="application-deployment-guide/dd-elements.html#class-loader">class-loader</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+modules. For details, see "<a href="application-deployment-guide.html#class-loader">class-loader</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 <div class="paragraph">
 <p>The default value is <code>delegate="true"</code>, which causes a web module&#8217;s
@@ -1811,7 +1811,7 @@ adding JDBC drivers to the Eclipse GlassFish. For a list of the JDBC
 drivers currently supported by the Eclipse GlassFish, see the
 <a href="release-notes.html#GSRLN">Eclipse GlassFish Release Notes</a>. For
 configurations of supported and other drivers, see
-"<a href="administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers">Configuration Specifics for JDBC Drivers</a>" in
+"<a href="administration-guide.html#configuration-specifics-for-jdbc-drivers">Configuration Specifics for JDBC Drivers</a>" in
 Eclipse GlassFish Administration Guide.</p>
 </div>
 <div class="paragraph">
@@ -2121,7 +2121,7 @@ information about the <code>appclient</code> script, see the <a href="reference-
 debugging Java Message Service (JMS) applications, including
 message-driven bean applications. You can adjust the logger&#8217;s verbosity,
 and you can send the logger output to the broker&#8217;s console using the
-broker&#8217;s <code>-tty</code> option. For more information, see the <a href="../openmq/mq-admin-guide.html#GMADG">Open
+broker&#8217;s <code>-tty</code> option. For more information, see the <a href="https://javaee.github.io/openmq/Documentation.html">Open
 Message Queue Administration Guide</a>.</p>
 </div>
 <div class="admonitionblock note">
@@ -2822,7 +2822,7 @@ or <code>glassfish-ejb-jar.xml</code>.</p>
 <div class="paragraph">
 <p>For more information regarding Jakarta EE deployment descriptors, see the
 Jakarta EE Specification. For more information regarding Eclipse GlassFish
-deployment descriptors, see "<a href="application-deployment-guide/dd-elements.html#c-elements-of-the-glassfish-server-deployment-descriptors">Elements of the Eclipse GlassFish Deployment Descriptors</a>" in Eclipse GlassFish
+deployment descriptors, see "<a href="application-deployment-guide.html#c-elements-of-the-glassfish-server-deployment-descriptors">Elements of the Eclipse GlassFish Deployment Descriptors</a>" in Eclipse GlassFish
 Application Deployment Guide.</p>
 </div>
 <div class="paragraph">
@@ -3043,7 +3043,7 @@ follows:</p>
 </div>
 <div class="paragraph">
 <p>For more information about the deployment descriptor files and elements,
-see "<a href="application-deployment-guide/dd-elements.html#c-elements-of-the-glassfish-server-deployment-descriptors">Elements of the Eclipse GlassFish Deployment
+see "<a href="application-deployment-guide.html#c-elements-of-the-glassfish-server-deployment-descriptors">Elements of the Eclipse GlassFish Deployment
 Descriptors</a>" in Eclipse GlassFish Application
 Deployment Guide.</p>
 </div>
@@ -4315,24 +4315,24 @@ the WSDL file. For details, see the WSIT page at
 <div class="paragraph">
 <p>For more details on message security binding for EJB web services,
 servlet web services, and clients, see the XML file descriptions in
-"<a href="application-deployment-guide/dd-elements.html#c-elements-of-the-glassfish-server-deployment-descriptors">Elements of the Eclipse GlassFish Deployment
+"<a href="application-deployment-guide.html#c-elements-of-the-glassfish-server-deployment-descriptors">Elements of the Eclipse GlassFish Deployment
 Descriptors</a>" in Eclipse GlassFish Application
 Deployment Guide.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>For <code>glassfish-ejb-jar.xml</code>, see "<a href="application-deployment-guide/dd-files.html#GSDPG00079">The
+<p>For <code>glassfish-ejb-jar.xml</code>, see "<a href="application-deployment-guide.html#GSDPG00079">The
 glassfish-ejb-jar.xml File</a>" in Eclipse GlassFish
 Application Deployment Guide.</p>
 </li>
 <li>
-<p>For <code>glassfish-web.xml</code>, see "<a href="application-deployment-guide/dd-files.html#GSDPG00078">The glassfish-web.xml
+<p>For <code>glassfish-web.xml</code>, see "<a href="application-deployment-guide.html#GSDPG00078">The glassfish-web.xml
 File</a>" in Eclipse GlassFish Application Deployment
 Guide.</p>
 </li>
 <li>
-<p>For <code>glassfish-application-client.xml</code>, see "<a href="application-deployment-guide/dd-files.html#GSDPG00081">The
+<p>For <code>glassfish-application-client.xml</code>, see "<a href="application-deployment-guide.html#GSDPG00081">The
 glassfish-application-client.xml file</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </li>
 </ul>
@@ -4941,7 +4941,7 @@ each individual airline site without requiring another sign-on.</p>
 <p>Single sign-on applies to web applications configured for the same
 realm and virtual server. The realm is defined by the <code>realm-name</code>
 element in the <code>web.xml</code> file. For information about virtual servers,
-see "<a href="administration-guide/http_https.html#administering-internet-connectivity">Administering Internet Connectivity</a>" in Eclipse GlassFish Administration Guide.</p>
+see "<a href="administration-guide.html#administering-internet-connectivity">Administering Internet Connectivity</a>" in Eclipse GlassFish Administration Guide.</p>
 </li>
 <li>
 <p>As long as users access only unprotected resources in any of the web
@@ -5826,9 +5826,7 @@ the optional Metro Web Services Stack add-on component is downloaded
 from the Update Tool. Without the Metro add-on component, a servlet or
 EJB component cannot be a web service endpoint, and the
 <code>glassfish-web.xml</code> and <code>glassfish-ejb-jar.xml</code> elements related to web
-services are ignored. For information about the Update Tool, see
-"o<a href="GSADG00701">Update Tool</a>" in Eclipse GlassFish
-Administration Guide.</p>
+services are ignored.</p>
 </div>
 <div class="paragraph">
 <p>In addition, the as-install<code>/modules/webservices-osgi.jar</code> and
@@ -6160,7 +6158,7 @@ reverse.</p>
 the <code>asadmin deploy</code> command, see the <a href="reference-manual.html#GSRFM">
 Eclipse GlassFish Reference Manual</a>.
 For more information about autodeployment, see
-"<a href="application-deployment-guide/deploying-applications.html#to-deploy-an-application-or-module-automatically">
+"<a href="application-deployment-guide.html#to-deploy-an-application-or-module-automatically">
 To Deploy an Application or Module Automatically</a>"
 in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
@@ -6378,7 +6376,7 @@ see the links in the steps.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Set up the datasource. See "<a href="administration-guide/jdbc.html#administering-database-connectivity">
+<p>Set up the datasource. See "<a href="administration-guide.html#administering-database-connectivity">
 Administering Database Connectivity</a>"
 in Eclipse GlassFish Administration Guide.</p>
 </li>
@@ -6411,7 +6409,7 @@ Application Deployment Guide.</p>
 an Application" in Administration Console online help.</p>
 </li>
 <li>
-<p>Monitor the application. See "<a href="administration-guide/monitoring.html#administering-the-monitoring-service">
+<p>Monitor the application. See "<a href="administration-guide.html#administering-the-monitoring-service">
 Administering the Monitoring Service</a>"
 in Eclipse GlassFish Administration Guide.</p>
 </li>
@@ -6525,7 +6523,7 @@ database. For example:</p>
 <div class="paragraph">
 <p>For a list of the JDBC drivers currently supported by the Eclipse GlassFish, see the <a href="release-notes.html#GSRLN">Eclipse GlassFish Release
 Notes</a>. For configurations of supported and other drivers, see
-"<a href="administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers">Configuration Specifics for JDBC Drivers</a>" in
+"<a href="administration-guide.html#configuration-specifics-for-jdbc-drivers">Configuration Specifics for JDBC Drivers</a>" in
 Eclipse GlassFish Administration Guide.</p>
 </div>
 </div>
@@ -7468,7 +7466,7 @@ clears the cache during dynamic deployment or reloading of classes.</p>
 <p>Results produced by resources that are the target of a
 <code>RequestDispatcher.include()</code> or <code>RequestDispatcher.forward()</code> call are
 cached if caching has been enabled for those resources. For details, see
-"<a href="application-deployment-guide/dd-elements.html#cache-mapping">cache-mapping</a>" in Eclipse GlassFish Application Deployment Guide and "<a href="../application-deployment-guide/dd-elements.html#dispatcher">dispatcher</a>"
+"<a href="application-deployment-guide.html#cache-mapping">cache-mapping</a>" in Eclipse GlassFish Application Deployment Guide and "<a href="../application-deployment-guide/dd-elements.html#dispatcher">dispatcher</a>"
 in Eclipse GlassFish Application Deployment Guide.
 These are elements in the <code>glassfish-web.xml</code> file.</p>
 </li>
@@ -7569,7 +7567,7 @@ never cached.</p>
 </div>
 <div class="paragraph">
 <p>For more information about the <code>glassfish-web.xml</code> caching settings, see
-"<a href="application-deployment-guide/dd-elements.html#cache">cache</a>" in Eclipse GlassFish
+"<a href="application-deployment-guide.html#cache">cache</a>" in Eclipse GlassFish
 Application Deployment Guide.</p>
 </div>
 </div>
@@ -7585,7 +7583,7 @@ attribute in the <code>ServletContext</code>.</p>
 <p>The name of the context attribute is configurable as the <code>value</code> of the
 <code>cacheKeyGeneratorAttrName</code> property in the <code>default-helper</code> element of
 the <code>glassfish-web.xml</code> deployment descriptor. For more information, see
-"<a href="application-deployment-guide/dd-elements.html#default-helper">default-helper</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+"<a href="application-deployment-guide.html#default-helper">default-helper</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 </div>
 </div>
@@ -8113,8 +8111,8 @@ interactions.</p>
 rewriting, edit the <code>session-properties</code> and <code>cookie-properties</code>
 elements in the <code>glassfish-web.xml</code> file for an individual web
 application. For more about the properties you can configure, see
-"<a href="application-deployment-guide/dd-elements.html#session-properties">session-properties</a>" in Eclipse GlassFish Application Deployment Guide and
-"<a href="application-deployment-guide/dd-elements.html#cookie-properties">cookie-properties</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+"<a href="application-deployment-guide.html#session-properties">session-properties</a>" in Eclipse GlassFish Application Deployment Guide and
+"<a href="application-deployment-guide.html#cookie-properties">cookie-properties</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 <div class="paragraph">
 <p>For information about configuring default session properties for the
@@ -8293,7 +8291,7 @@ serializable.</p>
 <a href="#accessing-the-naming-context">Accessing the Naming Context</a>. For more information
 about transaction recovery, see <a href="#using-the-transaction-service">Using
 the Transaction Service</a>. For more information about Administered
-Objects, see "<a href="administration-guide/jms.html#administering-jms-physical-destinations">Administering JMS Physical Destinations</a>"
+Objects, see "<a href="administration-guide.html#administering-jms-physical-destinations">Administering JMS Physical Destinations</a>"
 in Eclipse GlassFish Administration Guide.</p>
 </div>
 <div id="fvyem" class="paragraph">
@@ -8407,7 +8405,7 @@ used.</p>
 </table>
 </div>
 <div class="paragraph">
-<p>For more information, see "<a href="application-deployment-guide/dd-elements.html#session-manager">session-manager</a>" in
+<p>For more information, see "<a href="application-deployment-guide.html#session-manager">session-manager</a>" in
 Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 <div class="sect4">
@@ -8445,7 +8443,7 @@ web application.</p>
 <div class="paragraph">
 <p>The only manager property that the <code>memory</code> persistence type supports is
 <code>sessionFilename</code>, which is listed under
-"<a href="application-deployment-guide/dd-elements.html#manager-properties">manager-properties</a>" in Eclipse GlassFish Application Deployment Guide. The <code>sessionFilename</code> property
+"<a href="application-deployment-guide.html#manager-properties">manager-properties</a>" in Eclipse GlassFish Application Deployment Guide. The <code>sessionFilename</code> property
 specifies the name of the file where sessions are serialized and
 persisted if the web application or the server is stopped. To disable
 this behavior, specify an empty string as the value of
@@ -8510,9 +8508,9 @@ container availability settings for the web application.</p>
 </div>
 <div class="paragraph">
 <p>The <code>file</code> persistence type supports all the manager properties listed
-under "<a href="application-deployment-guide/dd-elements.html#manager-properties">manager-properties</a>" in Eclipse GlassFish Application Deployment Guide except <code>sessionFilename</code>,
+under "<a href="application-deployment-guide.html#manager-properties">manager-properties</a>" in Eclipse GlassFish Application Deployment Guide except <code>sessionFilename</code>,
 and supports the <code>directory</code> store property listed under
-"<a href="application-deployment-guide/dd-elements.html#store-properties">store-properties</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+"<a href="application-deployment-guide.html#store-properties">store-properties</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 <div class="paragraph">
 <p>For more information about the <code>glassfish-web.xml</code> file, see the
@@ -8589,9 +8587,9 @@ application.</p>
 </div>
 <div class="paragraph">
 <p>The <code>replicated</code> persistence type supports all the manager properties
-listed under "<a href="application-deployment-guide/dd-elements.html#manager-properties">manager-properties</a>" in Eclipse GlassFish Application Deployment Guide except
+listed under "<a href="application-deployment-guide.html#manager-properties">manager-properties</a>" in Eclipse GlassFish Application Deployment Guide except
 <code>sessionFilename</code>, and supports the <code>persistenceScope</code> store property
-listed under "<a href="application-deployment-guide/dd-elements.html#store-properties">store-properties</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+listed under "<a href="application-deployment-guide.html#store-properties">store-properties</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 <div class="paragraph">
 <p>For more information about the <code>glassfish-web.xml</code> file, see the
@@ -9189,7 +9187,7 @@ the <code>glassfish-web.xml</code> file</p>
 </div>
 <div class="paragraph">
 <p>For details about the <code>parameter-encoding</code> element, see
-"<a href="application-deployment-guide/dd-elements.html#parameter-encoding">parameter-encoding</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+"<a href="application-deployment-guide.html#parameter-encoding">parameter-encoding</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 <div id="servlet-response" class="paragraph">
 <p>Servlet Response</p>
@@ -9231,7 +9229,7 @@ encoding:</p>
 </div>
 <div class="paragraph">
 <p>For details and a complete list of virtual server properties, see
-<a href="reference-manual/create-virtual-server.html#create-virtual-server"><code>create-virtual-server</code>(1)</a>.</p>
+<a href="reference-manual.html#create-virtual-server"><code>create-virtual-server</code>(1)</a>.</p>
 </div>
 </li>
 <li>
@@ -9243,7 +9241,7 @@ command. For example:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>For details, see <a href="reference-manual/set.html#set"><code>set</code>(1)</a>.</p>
+<p>For details, see <a href="reference-manual.html#set"><code>set</code>(1)</a>.</p>
 </div>
 </li>
 <li>
@@ -9259,7 +9257,7 @@ Console.</p>
 </div>
 <div class="paragraph">
 <p>Some virtual server properties can be set for a specific web
-application. For details, see "<a href="application-deployment-guide/dd-elements.html#glassfish-web-app">glassfish-web-app</a>" in
+application. For details, see "<a href="application-deployment-guide.html#glassfish-web-app">glassfish-web-app</a>" in
 Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 </div>
@@ -9410,7 +9408,7 @@ safely retried in <code>idempotent-url-pattern</code> elements in the
 </div>
 </div>
 <div class="paragraph">
-<p>For details, see "<a href="application-deployment-guide/dd-elements.html#idempotent-url-pattern">idempotent-url-pattern</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+<p>For details, see "<a href="application-deployment-guide.html#idempotent-url-pattern">idempotent-url-pattern</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 <div class="paragraph">
 <p>If none of the server instances can successfully serve the request, an
@@ -9518,7 +9516,7 @@ server, use the <code>alternatedocroot_n</code> property, where n is a positive
 integer that allows specification of more than one. This property can be
 a subelement of a <code>glassfish-web-app</code> element in the <code>glassfish-web.xml</code>
 file or a virtual server property. For more information about these
-elements, see "<a href="application-deployment-guide/dd-elements.html#glassfish-web-app">glassfish-web-app</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+elements, see "<a href="application-deployment-guide.html#glassfish-web-app">glassfish-web-app</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 <div class="paragraph">
 <p>A virtual server&#8217;s alternate docroots are considered only if a request
@@ -10224,7 +10222,7 @@ usage guidelines, see <a href="#using-read-only-beans">Using Read-Only Beans</a>
 allows you to specify the parameter passing semantics for colocated
 remote EJB invocations. This is an opportunity to improve performance.
 However, use of this feature results in non-portable applications. See
-"<a href="application-deployment-guide/dd-elements.html#pass-by-reference">pass-by-reference</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+"<a href="application-deployment-guide.html#pass-by-reference">pass-by-reference</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 </div>
 <div class="sect3">
@@ -10261,7 +10259,7 @@ EJB container or the <code>glassfish-ejb-jar.xml</code> file.</p>
 </div>
 <div class="paragraph">
 <p>Pooling and caching parameters for the <code>glassfish-ejb-jar.xml</code> file are
-described in "<a href="application-deployment-guide/dd-elements.html#bean-cache">bean-cache</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+described in "<a href="application-deployment-guide.html#bean-cache">bean-cache</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 <div class="sect4">
 <h5 id="pooling-parameters"><a class="anchor" href="#pooling-parameters"></a>Pooling Parameters</h5>
@@ -10342,7 +10340,7 @@ execution, use the <code>flush-at-end-of-method</code> element in the
 <code>glassfish-ejb-jar.xml</code> file. Only non-finder methods in an entity bean
 can be flush-enabled. (For an EJB 2.1 bean, these methods must be in the
 Local, Local Home, Remote, or Remote Home interface.) See
-"<a href="application-deployment-guide/dd-elements.html#flush-at-end-of-method">flush-at-end-of-method</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+"<a href="application-deployment-guide.html#flush-at-end-of-method">flush-at-end-of-method</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 <div class="paragraph">
 <p>Upon completion of the method, the EJB container updates the database.
@@ -10382,7 +10380,7 @@ preconfigured to use an embedded version of the Apache Derby database.</p>
 information in any database supported by the Eclipse GlassFish for
 persistence. For a list of the JDBC drivers currently supported by the
 Eclipse GlassFish, see the <a href="release-notes.html#GSRLN">Eclipse GlassFish Release Notes</a>. For configurations of supported and other
-drivers, see "<a href="administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers">Configuration Specifics for JDBC
+drivers, see "<a href="administration-guide.html#configuration-specifics-for-jdbc-drivers">Configuration Specifics for JDBC
 Drivers</a>" in Eclipse GlassFish Administration Guide.</p>
 </div>
 <div class="paragraph">
@@ -10451,7 +10449,7 @@ Eclipse GlassFish environments.
 You must instead use a custom JDBC resource or the <code>jdbc/__default</code> resource.
 See the instructions below, in <a href="#to-deploy-an-ejb-timer-to-a-cluster">To Deploy an EJB Timer to a Cluster</a>.
 Also refer to
-"<a href="administration-guide/jdbc.html#etjdbcdefault-cluster">Enabling the jdbc/__default Resource in a Clustered Environment</a>"
+"<a href="administration-guide.html#etjdbcdefault-cluster">Enabling the jdbc/__default Resource in a Clustered Environment</a>"
 in Eclipse GlassFish Administration Guide.</p>
 </div>
 </td>
@@ -10464,7 +10462,7 @@ in Eclipse GlassFish Administration Guide.</p>
 <div class="paragraph">
 <p>For information about the <code>asadmin list-timers</code> and
 <code>asadmin migrate-timers</code> subcommands, see the <a href="reference-manual.html#GSRFM">Eclipse GlassFish Reference Manual</a>. For information about
-migrating EJB timers, see "<a href="ha-administration-guide/instances.html#migrating-ejb-timers">Migrating EJB Timers</a>" in
+migrating EJB timers, see "<a href="ha-administration-guide.html#migrating-ejb-timers">Migrating EJB Timers</a>" in
 Eclipse GlassFish High Availability Administration
 Guide.</p>
 </div>
@@ -10533,7 +10531,7 @@ deploying applications that will use the timer.</p>
 <p>Do not use the <code>jdbc/__TimerPool</code> resource for timers in clustered
 Eclipse GlassFish environments.
 You must instead use a custom JDBC resource or the <code>jdbc/__default</code> resource.
-See "<a href="GSADG00747">Enabling the jdbc/__default Resource in a Clustered Environment</a>"
+See "<a href="administration-guide.html#etjdbcdefault-cluster">Enabling the jdbc/__default Resource in a Clustered Environment</a>"
 in Eclipse GlassFish Administration Guide.</p>
 </div>
 </td>
@@ -10672,7 +10670,7 @@ The Eclipse GlassFish specific deployment descriptor file,
 </div>
 <div class="paragraph">
 <p>For more information about <code>glassfish-ejb-jar.xml</code>, see
-"<a href="application-deployment-guide/dd-files.html#GSDPG00079">The glassfish-ejb-jar.xml File</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+"<a href="application-deployment-guide.html#GSDPG00079">The glassfish-ejb-jar.xml File</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 <div class="paragraph">
 <p>The Eclipse GlassFish provides the <code>wscompile</code> and <code>wsdeploy</code> tools to
@@ -10724,7 +10722,7 @@ container using the configuration APIs.</p>
 </div>
 <div class="paragraph">
 <p>For more information about <code>glassfish-ejb-jar.xml</code>, see
-"<a href="application-deployment-guide/dd-files.html#GSDPG00079">The glassfish-ejb-jar.xml File</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+"<a href="application-deployment-guide.html#GSDPG00079">The glassfish-ejb-jar.xml File</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 <div class="paragraph">
 <p>The passivated beans are stored on the file system. The Session Store
@@ -10864,7 +10862,7 @@ correctly rolled back or committed.</p></td>
 <a href="#accessing-the-naming-context">Accessing the Naming Context</a>. For more information
 about transaction recovery, see <a href="#using-the-transaction-service">Using
 the Transaction Service</a>. For more information about Administered
-Objects, see "<a href="administration-guide/jms.html#administering-jms-physical-destinations">Administering JMS Physical Destinations</a>"
+Objects, see "<a href="administration-guide.html#administering-jms-physical-destinations">Administering JMS Physical Destinations</a>"
 in Eclipse GlassFish Administration Guide.</p>
 </div>
 <div class="admonitionblock note">
@@ -11116,7 +11114,7 @@ the <code>ejb</code> element in <code>glassfish-ejb-jar.xml</code>.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>For details, see "<a href="application-deployment-guide/dd-elements.html#checkpoint-at-end-of-method">checkpoint-at-end-of-method</a>" in
+<p>For details, see "<a href="application-deployment-guide.html#checkpoint-at-end-of-method">checkpoint-at-end-of-method</a>" in
 Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 <div class="paragraph">
@@ -11537,7 +11535,7 @@ concurrent access to the same read-only bean). The default is <code>false</code>
 </div>
 <div class="paragraph">
 <p>For further information on these elements, refer to
-"<a href="application-deployment-guide/dd-files.html#GSDPG00079">The glassfish-ejb-jar.xml File</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+"<a href="application-deployment-guide.html#GSDPG00079">The glassfish-ejb-jar.xml File</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 </div>
 </div>
@@ -11631,7 +11629,7 @@ element):</p>
 </div>
 <div class="paragraph">
 <p>For more information about <code>glassfish-ejb-jar.xml</code>, see
-"<a href="application-deployment-guide/dd-files.html#GSDPG00079">The glassfish-ejb-jar.xml File</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+"<a href="application-deployment-guide.html#GSDPG00079">The glassfish-ejb-jar.xml File</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 </div>
 <div class="sect4">
@@ -11686,7 +11684,7 @@ select the Monitor tab.</p>
 <div class="paragraph">
 <p>Running monitoring when it is not needed might impact performance, so
 you might choose to turn monitoring off when it is not in use. For
-details, see "o<a href="GSADG00011">Administering the Monitoring Service</a>" in
+details, see "<a href="administration-guide.html#administering-the-monitoring-service">Administering the Monitoring Service</a>" in
 Eclipse GlassFish Administration Guide.</p>
 </div>
 </td>
@@ -11737,7 +11735,7 @@ situations where the message incoming rate is much higher than
 <code>max-pool-size</code> can handle.</p>
 </div>
 <div class="paragraph">
-<p>Refer to "<a href="administration-guide/monitoring.html#administering-the-monitoring-service">Administering the Monitoring Service</a>" in
+<p>Refer to "<a href="administration-guide.html#administering-the-monitoring-service">Administering the Monitoring Service</a>" in
 Eclipse GlassFish Administration Guide for
 information on how to get message-driven bean pool statistics.</p>
 </div>
@@ -12030,12 +12028,12 @@ Specification, v2.1.</p>
 <li>
 <p><code>glassfish-ejb-jar.xml</code> - The Eclipse GlassFish standard file for
 assembling enterprise beans. For a detailed description, see
-"<a href="application-deployment-guide/dd-files.html#GSDPG00079">The glassfish-ejb-jar.xml File</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+"<a href="application-deployment-guide.html#GSDPG00079">The glassfish-ejb-jar.xml File</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </li>
 <li>
 <p><code>sun-cmp-mappings.xml</code> - The mapping deployment descriptor file, which
 describes the mapping of CMP beans to tables in a database. For a
-detailed description, see "<a href="application-deployment-guide/dd-files.html#GSDPG00080">The sun-cmp-mappings.xml
+detailed description, see "<a href="application-deployment-guide.html#GSDPG00080">The sun-cmp-mappings.xml
 File</a>" in Eclipse GlassFish Application Deployment
 Guide.</p>
 </li>
@@ -12184,7 +12182,7 @@ synchronized with the database.</p>
 <code>fetched-with</code> subelement is <code>&lt;default/&gt;</code>, the
 <code>-DAllowManagedFieldsInDefaultFetchGroup</code> flag must be set to <code>true</code>.
 See <a href="#default-fetch-group-flags">Default Fetch Group Flags</a> and
-"<a href="application-deployment-guide/dd-elements.html#fetched-with">fetched-with</a>" in Eclipse GlassFish
+"<a href="application-deployment-guide.html#fetched-with">fetched-with</a>" in Eclipse GlassFish
 Application Deployment Guide.</p>
 </div>
 </div>
@@ -12217,7 +12215,7 @@ property value to <code>true</code>.</p>
 <div class="paragraph">
 <p>For a list of the JDBC drivers currently supported by the Eclipse GlassFish, see the <a href="release-notes.html#GSRLN">Eclipse GlassFish Release
 Notes</a>. For configurations of supported and other drivers, see
-"<a href="administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers">Configuration Specifics for JDBC Drivers</a>" in
+"<a href="administration-guide.html#configuration-specifics-for-jdbc-drivers">Configuration Specifics for JDBC Drivers</a>" in
 Eclipse GlassFish Administration Guide.</p>
 </div>
 <div class="paragraph">
@@ -12262,7 +12260,7 @@ property value to <code>true</code>.</p>
 <div class="paragraph">
 <p>For a list of the JDBC drivers currently supported by the Eclipse GlassFish, see the <a href="release-notes.html#GSRLN">Eclipse GlassFish Release
 Notes</a>. For configurations of supported and other drivers, see
-"<a href="administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers">Configuration Specifics for JDBC Drivers</a>" in
+"<a href="administration-guide.html#configuration-specifics-for-jdbc-drivers">Configuration Specifics for JDBC Drivers</a>" in
 Eclipse GlassFish Administration Guide.</p>
 </div>
 <div class="paragraph">
@@ -12522,7 +12520,7 @@ vendor-specific types when automatic mapping is used. For a list of the
 JDBC drivers currently supported by the Eclipse GlassFish, see the
 <a href="release-notes.html#GSRLN">Eclipse GlassFish Release Notes</a>. For
 configurations of supported and other drivers, see
-"<a href="administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers">Configuration Specifics for JDBC Drivers</a>" in
+"<a href="administration-guide.html#configuration-specifics-for-jdbc-drivers">Configuration Specifics for JDBC Drivers</a>" in
 Eclipse GlassFish Administration Guide.</p>
 </div>
 <div id="fvymp" class="paragraph">
@@ -12722,7 +12720,7 @@ administrator to create the schema and add the required triggers. See
 <p>The following optional data subelements of the <code>cmp-resource</code> element in
 the <code>glassfish-ejb-jar.xml</code> file control the automatic creation of
 database tables at deployment. For more information about the
-<code>cmp-resource</code> element, see "<a href="application-deployment-guide/dd-elements.html#cmp-resource">cmp-resource</a>" in
+<code>cmp-resource</code> element, see "<a href="application-deployment-guide.html#cmp-resource">cmp-resource</a>" in
 Eclipse GlassFish Application Deployment Guide and
 <a href="#configuring-the-cmp-resource">Configuring the CMP Resource</a>.</p>
 </div>
@@ -12744,7 +12742,7 @@ Eclipse GlassFish Application Deployment Guide and
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="application-deployment-guide/dd-elements.html#create-tables-at-deploy"><code>create-tables-at-deploy</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="application-deployment-guide.html#create-tables-at-deploy"><code>create-tables-at-deploy</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, causes
 database tables to be created for beans that are automatically mapped by
@@ -12752,7 +12750,7 @@ the EJB container. No unique constraints are created. If <code>false</code>, doe
 not create tables.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="application-deployment-guide/dd-elements.html#drop-tables-at-undeploy"><code>drop-tables-at-undeploy</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="application-deployment-guide.html#drop-tables-at-undeploy"><code>drop-tables-at-undeploy</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, causes
 database tables that were automatically created when the bean(s) were
@@ -12760,7 +12758,7 @@ last deployed to be dropped when the bean(s) are undeployed. If <code>false</cod
 does not drop tables.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="application-deployment-guide/dd-elements.html#database-vendor-name"><code>database-vendor-name</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="application-deployment-guide.html#database-vendor-name"><code>database-vendor-name</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Specifies the name of the database vendor for which tables are created.
@@ -12777,7 +12775,7 @@ SQL-92 compliance is presumed.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="application-deployment-guide/dd-elements.html#schema-generator-properties"><code>schema-generator-properties</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="application-deployment-guide.html#schema-generator-properties"><code>schema-generator-properties</code></a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Specifies field-specific column attributes in <code>property</code> subelements.
@@ -12799,7 +12797,7 @@ each Eclipse GlassFish domain. The default is <code>false</code>.</p>
 </div>
 <div class="paragraph">
 <p>For further information and an example, see
-"<a href="application-deployment-guide/dd-elements.html#schema-generator-properties">schema-generator-properties</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+"<a href="application-deployment-guide.html#schema-generator-properties">schema-generator-properties</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -13034,7 +13032,7 @@ privileges are granted to the user by the database administrator.</p>
 resource in the <code>jndi-name</code> subelement of the <code>cmp-resource</code> element in
 the <code>glassfish-ejb-jar.xml</code> file. Set <code>PersistenceManagerFactory</code>
 properties as properties of the <code>cmp-resource</code> element in the
-<code>glassfish-ejb-jar.xml</code> file. See "<a href="application-deployment-guide/dd-elements.html#cmp-resource">cmp-resource</a>" in
+<code>glassfish-ejb-jar.xml</code> file. See "<a href="application-deployment-guide.html#cmp-resource">cmp-resource</a>" in
 Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 <div class="paragraph">
@@ -13045,7 +13043,7 @@ information on creating a new JDBC resource.</p>
 <div class="paragraph">
 <p>For a list of the JDBC drivers currently supported by the Eclipse GlassFish, see the <a href="release-notes.html#GSRLN">Eclipse GlassFish Release
 Notes</a>. For configurations of supported and other drivers, see
-"<a href="administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers">Configuration Specifics for JDBC Drivers</a>" in
+"<a href="administration-guide.html#configuration-specifics-for-jdbc-drivers">Configuration Specifics for JDBC Drivers</a>" in
 Eclipse GlassFish Administration Guide.</p>
 </div>
 <div class="paragraph">
@@ -13129,7 +13127,7 @@ specified row.</p>
 <p>Specify the version column.<br>
 This is specified in the <code>check-version-of-accessed-instances</code>
 subelement of the <code>consistency</code> element in the <code>sun-cmp-mappings.xml</code>
-file. See "<a href="application-deployment-guide/dd-elements.html#consistency">consistency</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+file. See "<a href="application-deployment-guide.html#consistency">consistency</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </li>
 <li>
 <p>Map the CMP bean to an existing schema.</p>
@@ -13159,12 +13157,12 @@ file. By default, these CMR fields are prefetched whenever
 <code>findByPrimaryKey</code> or a custom finder is executed for the entity, or
 when the entity is navigated to from a relationship. (Recursive
 prefetching is not supported, because it does not usually enhance
-performance.) See "<a href="application-deployment-guide/dd-elements.html#fetched-with">fetched-with</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+performance.) See "<a href="application-deployment-guide.html#fetched-with">fetched-with</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 <div class="paragraph">
 <p>To disable prefetching for specific custom finders, use the
 <code>prefetch-disabled</code> element in the <code>glassfish-ejb-jar.xml</code> file. See
-"<a href="application-deployment-guide/dd-elements.html#prefetch-disabled">prefetch-disabled</a>"
+"<a href="application-deployment-guide.html#prefetch-disabled">prefetch-disabled</a>"
 in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 <div class="paragraph">
@@ -13257,7 +13255,7 @@ column in the database table, for example, an instance field and a CMR.
 By default this flag is set to <code>false</code>.</p>
 </div>
 <div class="paragraph">
-<p>For additional information, see "<a href="application-deployment-guide/dd-elements.html#level">level</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+<p>For additional information, see "<a href="application-deployment-guide.html#level">level</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 <div class="paragraph">
 <p>Setting <code>-DAllowMediatedWriteInDefaultFetchGroup</code> specifies how updated
@@ -13706,7 +13704,7 @@ require access to only parts of the state.</p>
 </div>
 <div class="paragraph">
 <p>Use the <code>fetched-with</code> element in <code>sun-cmp-mappings.xml</code> for fields that
-are used infrequently. See "<a href="application-deployment-guide/dd-elements.html#fetched-with">fetched-with</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+are used infrequently. See "<a href="application-deployment-guide.html#fetched-with">fetched-with</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 </div>
 <div class="sect3">
@@ -13771,7 +13769,7 @@ implemented by placing update locks on the data corresponding to a bean
 when the data is loaded from the database. There is no suitable
 mechanism available on Sybase databases to implement this feature.
 Therefore, the <code>lock-when-loaded</code> consistency level is not supported on
-Sybase databases. See "<a href="application-deployment-guide/dd-elements.html#consistency">consistency</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+Sybase databases. See "<a href="application-deployment-guide.html#consistency">consistency</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 </div>
 <div class="sect3">
@@ -14186,7 +14184,7 @@ and to reference configurable parameters set at the time of deployment.</p>
 <div class="paragraph">
 <p>Annotation is supported for the main class and the optional callback
 handler class in application clients. For more information, see
-"<a href="application-deployment-guide/overview.html#deployment-descriptors-and-annotations">Deployment Descriptors and Annotations</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+"<a href="application-deployment-guide.html#deployment-descriptors-and-annotations">Deployment Descriptors and Annotations</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 </div>
 <div class="sect3">
@@ -14284,7 +14282,7 @@ must be included in the lookup, as follows:</p>
 <code>application-client.xml</code> file. Define the corresponding <code>ejb-ref</code>
 elements in the <code>glassfish-application-client.xml</code> file.<br>
 For more information on the <code>glassfish-application-client.xml</code> file, see
-"<a href="application-deployment-guide/dd-files.html#GSDPG00081">The glassfish-application-client.xml file</a>" in
+"<a href="application-deployment-guide.html#GSDPG00081">The glassfish-application-client.xml file</a>" in
 Eclipse GlassFish Application Deployment Guide.
 For a general explanation of how to map JNDI names using reference elements,
 see <a href="#mapping-references">Mapping References</a>.</p>
@@ -14313,7 +14311,7 @@ deployment descriptor.</p>
 <li>
 <p><code>glassfish-application-client.xml</code> - (optional) Eclipse GlassFish
 specific client deployment descriptor. For information on the
-<code>glassfish-application-client.xml</code> file, see "<a href="application-deployment-guide/dd-files.html#GSDPG00081">The
+<code>glassfish-application-client.xml</code> file, see "<a href="application-deployment-guide.html#GSDPG00081">The
 glassfish-application-client.xml file</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </li>
 <li>
@@ -14344,7 +14342,7 @@ script. This step is not needed for Java Web Start.</p>
 <li>
 <p>Define the <code>target-server</code> element&#8217;s <code>address</code> and <code>port</code> attributes
 to reference the remote server machine and its ORB port. See
-"<a href="application-deployment-guide/dd-elements.html#target-server">target-server</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+"<a href="application-deployment-guide.html#target-server">target-server</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </li>
 <li>
 <p>Use the <code>-targetserver</code> option of the appclient script to reference
@@ -14379,7 +14377,7 @@ case one of the endpoints has failed.<br>
 The <code>target-server</code> elements in the <code>sun-acc.xml</code> file specify one or
 more IIOP endpoints used for load balancing. The <code>address</code> attribute is
 an IPv4 address or host name, and the <code>port</code> attribute specifies the
-port number. See "<a href="application-deployment-guide/dd-elements.html#client-container">client-container</a>" in Eclipse GlassFish Application Deployment Guide.<br>
+port number. See "<a href="application-deployment-guide.html#client-container">client-container</a>" in Eclipse GlassFish Application Deployment Guide.<br>
 The <code>--targetserver</code> option of the appclient script specifies one or
 more IIOP endpoints used for load balancing. For more information, see
 <a href="#running-an-application-client-using-the-appclient-script">Running an Application Client Using the <code>appclient</code> Script</a>.</p>
@@ -14398,7 +14396,7 @@ Client Using the <code>appclient</code> Script</a>.</p>
 </li>
 <li>
 <p>For more information about RMI-IIOP load balancing and failover, see
-"<a href="ha-administration-guide/rmi-iiop.html#rmi-iiop-load-balancing-and-failover">RMI-IIOP Load Balancing and Failover</a>" in Eclipse GlassFish High Availability Administration Guide.</p>
+"<a href="ha-administration-guide.html#rmi-iiop-load-balancing-and-failover">RMI-IIOP Load Balancing and Failover</a>" in Eclipse GlassFish High Availability Administration Guide.</p>
 </li>
 </ul>
 </div>
@@ -14419,7 +14417,7 @@ Java Message Service Examples</a>" in The Jakarta EE Tutorial.</p>
 <p>Next, configure a JMS resource on the Eclipse GlassFish.</p>
 <div class="paragraph">
 <p>For information on configuring JMS resources, see
-"<a href="administration-guide/jms.html#administering-jms-connection-factories-and-destinations">Administering JMS Connection Factories and
+"<a href="administration-guide.html#administering-jms-connection-factories-and-destinations">Administering JMS Connection Factories and
 Destinations</a>" in Eclipse GlassFish Administration
 Guide.</p>
 </div>
@@ -14431,7 +14429,7 @@ corresponding <code>resource-ref</code> elements in the
 <code>glassfish-application-client.xml</code> file.</p>
 <div class="paragraph">
 <p>For more information on the <code>glassfish-application-client.xml</code> file, see
-"<a href="application-deployment-guide/dd-files.html#GSDPG00081">The glassfish-application-client.xml file</a>" in
+"<a href="application-deployment-guide.html#GSDPG00081">The glassfish-application-client.xml file</a>" in
 Eclipse GlassFish Application Deployment Guide. For a
 general explanation of how to map JNDI names using reference elements,
 see <a href="#mapping-references">Mapping References</a>.</p>
@@ -14451,7 +14449,7 @@ deployment descriptor.</p>
 <li>
 <p><code>glassfish-application-client.xml</code> - (optional) Eclipse GlassFish
 specific client deployment descriptor. For information on the
-<code>glassfish-application-client.xml</code> file, see "<a href="application-deployment-guide/dd-files.html#GSDPG00081">The
+<code>glassfish-application-client.xml</code> file, see "<a href="application-deployment-guide.html#GSDPG00081">The
 glassfish-application-client.xml file</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </li>
 <li>
@@ -14657,7 +14655,7 @@ is generated.</p>
 <div class="paragraph">
 <p>Regardless of how the context-root or id is determined, it is written to
 the server log when you deploy the application. For details about
-naming, see "<a href="application-deployment-guide/overview.html#naming-standards">Naming Standards</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+naming, see "<a href="application-deployment-guide.html#naming-standards">Naming Standards</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 <div class="paragraph">
 <p>To set a different URL for an application client, use the <code>context-root</code>
@@ -14832,7 +14830,7 @@ Eclipse GlassFish keystore using the <code>s1as</code> alias. By default, the
 keystore is located at domain-dir`/config/keystore.jks`.</p>
 <div class="paragraph">
 <p>For more information about importing a trusted certificate into the
-domain keystore, see "<a href="security-guide/system-security.html#administering-jsse-certificates">Administering JSSE Certificates</a>"
+domain keystore, see "<a href="security-guide.html#administering-jsse-certificates">Administering JSSE Certificates</a>"
 in Eclipse GlassFish Security Guide.</p>
 </div>
 </li>
@@ -14890,7 +14888,7 @@ the Eclipse GlassFish certificate information.</p>
 <p>To sign this JAR file with a different certificate, first add the
 certificate to the domain keystore. You can use a certificate from a
 trusted authority, which avoids the Java Web Start prompt. To add a
-certificate to the domain keystore, see "<a href="security-guide/system-security.html#administering-jsse-certificates">Administering
+certificate to the domain keystore, see "<a href="security-guide.html#administering-jsse-certificates">Administering
 JSSE Certificates</a>" in Eclipse GlassFish Security
 Guide.</p>
 </div>
@@ -15885,7 +15883,7 @@ must be included in the lookup, as follows:</p>
 <li>
 <p>Deploy the EJB component to be accessed.</p>
 <div class="paragraph">
-<p>For more information on deployment, see "<a href="application-deployment-guide/overview.html#about-deployment-tools">About
+<p>For more information on deployment, see "<a href="application-deployment-guide.html#about-deployment-tools">About
 Deployment Tools</a>" in Eclipse GlassFish Application
 Deployment Guide.</p>
 </div>
@@ -16055,7 +16053,7 @@ must be included in the lookup, as follows:</p>
 <li>
 <p>Deploy the EJB component to be accessed.</p>
 <div class="paragraph">
-<p>For more information on deployment, see "<a href="application-deployment-guide/overview.html#about-deployment-tools">About
+<p>For more information on deployment, see "<a href="application-deployment-guide.html#about-deployment-tools">About
 Deployment Tools</a>" in Eclipse GlassFish Application
 Deployment Guide.</p>
 </div>
@@ -16078,7 +16076,7 @@ port number (default is <code>3700</code> for the default server instance, named
 <li>
 <p>Deploy the module.</p>
 <div class="paragraph">
-<p>For more information on deployment, see "<a href="application-deployment-guide/overview.html#about-deployment-tools">About
+<p>For more information on deployment, see "<a href="application-deployment-guide.html#about-deployment-tools">About
 Deployment Tools</a>" in Eclipse GlassFish Application
 Deployment Guide.</p>
 </div>
@@ -16102,7 +16100,7 @@ Java Message Service Examples</a> in The Jakarta EE Tutorial.</p>
 <p>Configure a JMS resource on Eclipse GlassFish.</p>
 <div class="paragraph">
 <p>For information on configuring JMS resources, see
-"<a href="administration-guide/jms.html#administering-jms-connection-factories-and-destinations">
+"<a href="administration-guide.html#administering-jms-connection-factories-and-destinations">
 Administering JMS Connection Factories and Destinations</a>"
 in Eclipse GlassFish Administration Guide.</p>
 </div>
@@ -16786,7 +16784,7 @@ Reference Manual</a>.</p>
 enterprise application, web module, EJB module, connector module, or
 application client module by supplying a <code>glassfish-resources.xml</code>
 deployment descriptor file. For details, see
-"<a href="application-deployment-guide/deploying-applications.html#application-scoped-resources">Application-Scoped Resources</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+"<a href="application-deployment-guide.html#application-scoped-resources">Application-Scoped Resources</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 </div>
 </div>
@@ -17883,7 +17881,7 @@ in the OSGi service registry.</p>
 <h3 id="deploying-osgi-bundles-in-glassfish-server"><a class="anchor" href="#deploying-osgi-bundles-in-glassfish-server"></a>Deploying OSGi Bundles in Eclipse GlassFish</h3>
 <div class="paragraph">
 <p>For instruction on deploying OSGi bundle, see
-"<a href="application-deployment-guide/deploying-applications.html#osgi-bundle-deployment-guidelines">
+"<a href="application-deployment-guide.html#osgi-bundle-deployment-guidelines">
 OSGi Bundle Deployment Guidelines</a>"
 in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
@@ -18070,7 +18068,7 @@ of the following ways:</p>
 <li>
 <p>Specify the <code>--statementleaktimeout</code> option in the
 <code>create-jdbc-connection-pool</code> subcommand. For more information, see
-<a href="reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-pool"><code>create-jdbc-connection-pool</code>(1)</a>.</p>
+<a href="reference-manual.html#create-jdbc-connection-pool"><code>create-jdbc-connection-pool</code>(1)</a>.</p>
 </li>
 <li>
 <p>Specify the <code>statement-leak-timeout-in-seconds</code> option in the <code>set</code>
@@ -18109,7 +18107,7 @@ pool to a <code>true</code> value in one of the following ways:</p>
 <li>
 <p>Specify the <code>--statementleakreclaim=true</code> option in the
 <code>create-jdbc-connection-pool</code> subcommand. For more information, see
-<a href="reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-pool"><code>create-jdbc-connection-pool</code>(1)</a>.</p>
+<a href="reference-manual.html#create-jdbc-connection-pool"><code>create-jdbc-connection-pool</code>(1)</a>.</p>
 </li>
 <li>
 <p>Specify the <code>statement-leak-reclaim</code> option in the <code>set</code> subcommand.
@@ -18267,7 +18265,7 @@ button in the Administration Console.</p>
 <li>
 <p>Specify them using the <code>--property</code> option in the
 <code>create-jdbc-connection-pool</code> subcommand. For more information, see
-<a href="reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-pool"><code>create-jdbc-connection-pool</code>(1)</a>.</p>
+<a href="reference-manual.html#create-jdbc-connection-pool"><code>create-jdbc-connection-pool</code>(1)</a>.</p>
 </li>
 <li>
 <p>Set them using the <code>set</code> subcommand. For example:</p>
@@ -18342,7 +18340,7 @@ button in the Administration Console.</p>
 <li>
 <p>Specify it using the <code>--property</code> option in the
 <code>create-jdbc-connection-pool</code> subcommand. For more information, see
-<a href="reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-pool"><code>create-jdbc-connection-pool</code>(1)</a>.</p>
+<a href="reference-manual.html#create-jdbc-connection-pool"><code>create-jdbc-connection-pool</code>(1)</a>.</p>
 </li>
 <li>
 <p>Set it using the <code>set</code> subcommand. For example:</p>
@@ -18562,7 +18560,7 @@ reference. To turn off connection sharing, set <code>res-sharing-scope</code> to
 </div>
 <div class="paragraph">
 <p>For general information about connections and JDBC URLs, see
-"<a href="administration-guide/jdbc.html#administering-database-connectivity">Administering Database Connectivity</a>" in Eclipse GlassFish Administration Guide.</p>
+"<a href="administration-guide.html#administering-database-connectivity">Administering Database Connectivity</a>" in Eclipse GlassFish Administration Guide.</p>
 </div>
 </div>
 <div class="sect3">
@@ -18814,7 +18812,7 @@ Transaction Synchronization Registry, and <code>UserTransaction</code></a>.</p>
 enterprise application, web module, EJB module, connector module, or
 application client module by supplying a <code>glassfish-resources.xml</code>
 deployment descriptor file. For details, see
-"<a href="application-deployment-guide/deploying-applications.html#application-scoped-resources">Application-Scoped Resources</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+"<a href="application-deployment-guide.html#application-scoped-resources">Application-Scoped Resources</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 </div>
 <div class="sect2">
@@ -18868,7 +18866,7 @@ Registry, and <code>UserTransaction</code></a></p>
 </div>
 <div class="paragraph">
 <p>For more information about the Java Transaction API (JTA) and Java
-Transaction Service (JTS), see "<a href="administration-guide/transactions.html#administering-transactions">Administering
+Transaction Service (JTS), see "<a href="administration-guide.html#administering-transactions">Administering
 Transactions</a>" in Eclipse GlassFish Administration
 Guide and the following sites:
 <code><a href="http://www.oracle.com/technetwork/java/javaee/jta/index.html" class="bare">http://www.oracle.com/technetwork/java/javaee/jta/index.html</a></code> and
@@ -18983,7 +18981,7 @@ transaction.</p>
 </div>
 <div class="paragraph">
 <p>You can set the default transaction isolation level for a JDBC
-connection pool. For details, see "<a href="administration-guide/jdbc.html#to-create-a-jdbc-connection-pool">To Create a JDBC
+connection pool. For details, see "<a href="administration-guide.html#to-create-a-jdbc-connection-pool">To Create a JDBC
 Connection Pool</a>" in Eclipse GlassFish Administration
 Guide.</p>
 </div>
@@ -20030,7 +20028,7 @@ the value of the entire URL.</p>
 enterprise application, web module, EJB module, connector module, or
 application client module by supplying a <code>glassfish-resources.xml</code>
 deployment descriptor file. For details, see
-"<a href="application-deployment-guide/deploying-applications.html#application-scoped-resources">Application-Scoped Resources</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+"<a href="application-deployment-guide.html#application-scoped-resources">Application-Scoped Resources</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 <div class="paragraph">
 <p><a id="GSDVG00194"></a><a id="using-a-custom-jndi.properties-file"></a></p>
@@ -20089,7 +20087,7 @@ is packaged in the <code>pkging.ear</code> application.</p>
 <code>glassfish-application-client.xml</code>, <code>glassfish-ejb-jar.xml</code>, and
 <code>glassfish-application.xml</code> deployment descriptor files. For more
 information about how these elements behave in each of the deployment
-descriptor files, see "<a href="application-deployment-guide/dd-elements.html#c-elements-of-the-glassfish-server-deployment-descriptors">Elements of the Eclipse GlassFish
+descriptor files, see "<a href="application-deployment-guide.html#c-elements-of-the-glassfish-server-deployment-descriptors">Elements of the Eclipse GlassFish
 Deployment Descriptors</a>" in Eclipse GlassFish
 Application Deployment Guide.</p>
 </div>
@@ -20161,7 +20159,7 @@ in The Jakarta EE Tutorial.</p>
 </div>
 <div class="paragraph">
 <p>For detailed information about JMS concepts and JMS support in the
-Eclipse GlassFish, see "<a href="administration-guide/jms.html#administering-the-java-message-service-jms">Administering the Java Message
+Eclipse GlassFish, see "<a href="administration-guide.html#administering-the-java-message-service-jms">Administering the Java Message
 Service (JMS)</a>" in Eclipse GlassFish Administration
 Guide.</p>
 </div>
@@ -20191,7 +20189,7 @@ Guide.</p>
 enterprise application, web module, EJB module, connector module, or
 application client module by supplying a <code>glassfish-resources.xml</code>
 deployment descriptor file. For details, see
-"<a href="application-deployment-guide/deploying-applications.html#application-scoped-resources">Application-Scoped Resources</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+"<a href="application-deployment-guide.html#application-scoped-resources">Application-Scoped Resources</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 </div>
 <div class="sect2">
@@ -20202,7 +20200,7 @@ adapter in the <code>glassfish-ejb-jar.xml</code> file for a message-driven bean
 using <code>activation-config-property</code> elements. Whenever a message-driven
 bean (<code>EndPointFactory</code>) is deployed, the connector runtime engine finds
 these properties and configures them accordingly in the resource
-adapter. See "<a href="application-deployment-guide/dd-elements.html#activation-config-property">activation-config-property</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+adapter. See "<a href="application-deployment-guide.html#activation-config-property">activation-config-property</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 <div class="paragraph">
 <p>The Eclipse GlassFish transparently enables messages to be delivered in
@@ -20507,7 +20505,7 @@ message data and to handle commands intended to interact with that data.</p>
 </div>
 <div class="paragraph">
 <p>For more information, see
-"<a href="administration-guide/mail.html#administering-the-javamail-service">Administering the Jakarta Mail Service</a>"
+"<a href="administration-guide.html#administering-the-javamail-service">Administering the Jakarta Mail Service</a>"
 in Eclipse GlassFish Administration Guide
 and the Jakarta Mail specification at
 <code><a href="https://jakarta.ee/specifications/mail" class="bare">https://jakarta.ee/specifications/mail</a></code>.</p>
@@ -20755,7 +20753,7 @@ messages on the server) into an array.</p>
 enterprise application, web module, EJB module, connector module, or
 application client module by supplying a <code>glassfish-resources.xml</code>
 deployment descriptor file. For details, see
-"<a href="application-deployment-guide/deploying-applications.html#application-scoped-resources">Application-Scoped Resources</a>" in Eclipse GlassFish Application Deployment Guide.</p>
+"<a href="application-deployment-guide.html#application-scoped-resources">Application-Scoped Resources</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 </div>
 </div>
@@ -20763,7 +20761,7 @@ deployment descriptor file. For details, see
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-02-22 12:32:24 UTC
+Last updated 2023-02-22 17:18:03 UTC
 </div>
 </div>
 </body>

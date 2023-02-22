@@ -284,7 +284,7 @@ your system and enterprise.</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="administration-guide.html#GSADG">Administration Guide</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to configure, monitor, and manage Eclipse GlassFish subsystems and components
-from the command line by using the <a href="reference-manual/asadmin.html#asadmin"><code>asadmin</code>(1M)</a> utility.
+from the command line by using the <a href="reference-manual.html#asadmin"><code>asadmin</code>(1M)</a> utility.
 Instructions for performing these tasks from the Administration Console are provided
 in the Administration Console online help.</p></td>
 </tr>
@@ -340,31 +340,31 @@ scalability through failover and load balancing.</p></td>
 commands, and related concepts.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../openmq/mq-release-notes.html#GMRLN">Message Queue Release Notes</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://javaee.github.io/openmq/Documentation.html">Message Queue Release Notes</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Describes new features, compatibility issues, and existing bugs for Open Message Queue.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../openmq/mq-tech-over.html#GMTOV">Message Queue Technical Overview</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://javaee.github.io/openmq/Documentation.html">Message Queue Technical Overview</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Provides an introduction to the technology, concepts, architecture, capabilities, and features of
 the Message Queue messaging service.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../openmq/mq-admin-guide.html#GMADG">Message Queue Administration Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://javaee.github.io/openmq/Documentation.html">Message Queue Administration Guide</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to set up and manage a Message Queue messaging system.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../openmq/mq-dev-guide-jmx.html#GMJMG">Message Queue Developer&#8217;s Guide for JMX Clients</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://javaee.github.io/openmq/Documentation.html">Message Queue Developer&#8217;s Guide for JMX Clients</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Describes the application programming interface in Message Queue for
 programmatically configuring and monitoring Message Queue resources in
 conformance with the Java Management Extensions (JMX).</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../openmq/mq-dev-guide-java.html#GMJVG">Message Queue Developer&#8217;s Guide for Java Clients</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://javaee.github.io/openmq/Documentation.html">Message Queue Developer&#8217;s Guide for Java Clients</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Provides information about concepts and procedures for developing Java messaging
 applications (Java clients) that work with Eclipse GlassFish.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../openmq/mq-dev-guide-c.html#GMCCG">Message Queue Developer&#8217;s Guide for C Clients</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://javaee.github.io/openmq/Documentation.html">Message Queue Developer&#8217;s Guide for C Clients</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Provides programming and reference information for developers working with
 Message Queue who want to use the C language binding to the Message
 Queue messaging service to send, receive, and process Message Queue messages.</p></td>
@@ -889,7 +889,7 @@ Agent Configurations</a> for more information.</p>
 <p>Instead of HADB, Eclipse GlassFish 7 supports high availability
 clustering by means of in-memory session state replication and
 ActiveCache for GlassFish.
-See "<a href="ha-administration-guide/overview.html#high-availability-in-glassfish-server">
+See "<a href="ha-administration-guide.html#high-availability-in-glassfish-server">
 High Availability in Eclipse GlassFish</a>" in
 Eclipse GlassFish High Availability Administration Guide
 for more information.</p>
@@ -1362,21 +1362,21 @@ listener.http-1.listenerport=4321</code></pre>
 <h4 id="changes-to-asadmin-subcommands"><a class="anchor" href="#changes-to-asadmin-subcommands"></a>Changes to <code>asadmin</code> Subcommands</h4>
 <div class="paragraph">
 <p>To accommodate the move of HTTP Service into the new Network Service
-configuration, <a href="reference-manual/asadmin.html#asadmin"><code>asadmin</code></a> subcommands are changed as
+configuration, <a href="reference-manual.html#asadmin"><code>asadmin</code></a> subcommands are changed as
 follows:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>The <a href="reference-manual/create-ssl.html#create-ssl"><code>create-ssl</code></a> subcommand has a new <code>--type</code>
+<p>The <a href="reference-manual.html#create-ssl"><code>create-ssl</code></a> subcommand has a new <code>--type</code>
 parameter value, <code>network-listener</code>.</p>
 </li>
 <li>
-<p>The <a href="reference-manual/create-virtual-server.html#create-virtual-server"><code>create-virtual-server</code></a> SUBcommand has a new
+<p>The <a href="reference-manual.html#create-virtual-server"><code>create-virtual-server</code></a> SUBcommand has a new
 parameter, <code>--networklisteners</code>.</p>
 </li>
 <li>
-<p>The <a href="reference-manual/create-http-listener.html#create-http-listener"><code>create-http-listener</code></a> subcommand adds a
+<p>The <a href="reference-manual.html#create-http-listener"><code>create-http-listener</code></a> subcommand adds a
 <code>network-listener</code> element to the domain configuration. The syntax and
 options of this commands are unchanged.</p>
 </li>
@@ -4597,7 +4597,7 @@ remote communication.</p>
 </div>
 <div class="paragraph">
 <p>For more information about Eclipse GlassFish nodes, see
-"<a href="ha-administration-guide/nodes.html#administering-glassfish-server-nodes">Administering Eclipse GlassFish Nodes</a>" in Eclipse GlassFish High Availability Administration Guide.</p>
+"<a href="ha-administration-guide.html#administering-glassfish-server-nodes">Administering Eclipse GlassFish Nodes</a>" in Eclipse GlassFish High Availability Administration Guide.</p>
 </div>
 <div class="paragraph">
 <p>Before You Begin</p>
@@ -4615,7 +4615,7 @@ information, see <a href="#performing-a-side-by-side-upgrade-with-upgrade-tool">
 <p>If you are changing the type of the node to <code>SSH</code>, ensure that SSH is
 configured on the host where the DAS is running and on the host that the
 node represents. For more information, see
-"<a href="ha-administration-guide/ssh-setup.html#enabling-centralized-administration-of-glassfish-server-instances">
+"<a href="ha-administration-guide.html#enabling-centralized-administration-of-glassfish-server-instances">
 Setting Up SSH for Centralized Administration</a>" in
 Eclipse GlassFish High Availability Administration Guide.</p>
 </li>
@@ -4643,8 +4643,8 @@ directories and, if necessary, change the type of the node.</p>
 <div class="paragraph">
 <p>Only the options that are required to complete this task are provided in
 this step. For information about all the options for changing the node&#8217;s
-configuration data, see the <a href="reference-manual/update-node-ssh001.html#update-node-ssh"><code>update-node-ssh</code>(1)</a> help
-page or the <a href="reference-manual/update-node-config.html#update-node-config"><code>update-node-config</code>(1)</a> help page.</p>
+configuration data, see the <a href="reference-manual.html#update-node-ssh"><code>update-node-ssh</code>(1)</a> help
+page or the <a href="reference-manual.html#update-node-config"><code>update-node-config</code>(1)</a> help page.</p>
 </div>
 </td>
 </tr>
@@ -4734,19 +4734,19 @@ in the new Eclipse GlassFish 7 installation in as explained in
 <div class="ulist">
 <ul>
 <li>
-<p>"<a href="ha-administration-guide/ssh-setup.html#enabling-centralized-administration-of-glassfish-server-instances">
+<p>"<a href="ha-administration-guide.html#enabling-centralized-administration-of-glassfish-server-instances">
 Setting Up SSH for Centralized Administration</a>" in
 Eclipse GlassFish High Availability Administration Guide</p>
 </li>
 <li>
-<p>"<a href="ha-administration-guide/nodes.html#administering-glassfish-server-nodes">Administering Eclipse GlassFish Nodes</a>"
+<p>"<a href="ha-administration-guide.html#administering-glassfish-server-nodes">Administering Eclipse GlassFish Nodes</a>"
 in Eclipse GlassFish High Availability Administration Guide</p>
 </li>
 <li>
-<p><a href="reference-manual/update-node-config.html#update-node-config"><code>update-node-config</code>(1)</a></p>
+<p><a href="reference-manual.html#update-node-config"><code>update-node-config</code>(1)</a></p>
 </li>
 <li>
-<p><a href="reference-manual/update-node-ssh001.html#update-node-ssh"><code>update-node-ssh</code>(1)</a></p>
+<p><a href="reference-manual.html#update-node-ssh"><code>update-node-ssh</code>(1)</a></p>
 </li>
 </ul>
 </div>
@@ -4824,7 +4824,7 @@ The specific commands to use depend on your configuration.</p>
 <li>
 <p>If remote hosts cannot contact the DAS, export and import the
 instances' configuration data, as explained in
-"<a href="ha-administration-guide/instances.html#to-resynchronize-an-instance-and-the-das-offline">
+"<a href="ha-administration-guide.html#to-resynchronize-an-instance-and-the-das-offline">
 To Resynchronize an Instance and the DAS Offline</a>"
 in Eclipse GlassFish High Availability Administration Guide.</p>
 </li>
@@ -4835,12 +4835,12 @@ following sections:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>"<a href="ha-administration-guide/instances.html#to-create-an-instance-locally">
+<p>"<a href="ha-administration-guide.html#to-create-an-instance-locally">
 To Create an Instance Locally</a>"
 in Eclipse GlassFish High Availability Administration Guide</p>
 </li>
 <li>
-<p>"<a href="ha-administration-guide/instances.html#to-resynchronize-an-instance-and-the-das-online">
+<p>"<a href="ha-administration-guide.html#to-resynchronize-an-instance-and-the-das-online">
 To Resynchronize an Instance and the DAS Online</a>"
 in Eclipse GlassFish High Availability Administration Guide<br>
 Note that the node name matches that used for the node agent in the 2.x
@@ -5038,7 +5038,7 @@ Rename the target <code>domain1</code> directory, if one exists, before proceedi
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-02-22 12:43:20 UTC
+Last updated 2023-02-22 17:24:16 UTC
 </div>
 </div>
 </body>

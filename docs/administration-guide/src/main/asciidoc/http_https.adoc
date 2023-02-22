@@ -791,7 +791,7 @@ asadmin> set server-config.http-service.virtual-server.MyVS.property.sso-enabled
 ----
 
 Some virtual server properties can be set for a specific web
-application. For details, see "link:application-deployment-guide/dd-elements.html#glassfish-web-app[glassfish-web-app]" in
+application. For details, see "xref:application-deployment-guide.adoc#glassfish-web-app[glassfish-web-app]" in
 {productName} Application Deployment Guide.
 
 The following topics are addressed here:

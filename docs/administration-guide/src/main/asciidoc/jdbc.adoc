@@ -285,7 +285,7 @@ from the pool. When an application closes a connection, the connection
 is returned to the pool. JDBC connection pools can be globally
 accessible or be scoped to an enterprise application, web module, EJB
 module, connector module or application client module, as described in
-"link:application-deployment-guide/deploying-applications.html#application-scoped-resources[Application-Scoped Resources]" in {productName} Application Deployment Guide.
+"xref:application-deployment-guide.adoc#application-scoped-resources[Application-Scoped Resources]" in {productName} Application Deployment Guide.
 
 A JDBC resource is created by specifying the connection pool with which
 the resource is associated. Multiple JDBC resources can specify a single
@@ -821,7 +821,7 @@ resource for each database that is accessed by the applications deployed
 in a domain. Multiple JDBC resources can be specified for a database.
 JDBC resources can be globally accessible or be scoped to an enterprise
 application, web module, EJB module, connector module or application
-client module, as described in "link:application-deployment-guide/deploying-applications.html#application-scoped-resources[Application-Scoped
+client module, as described in "xref:application-deployment-guide.adoc#application-scoped-resources[Application-Scoped
 Resources]" in {productName} Application
 Deployment Guide.
 

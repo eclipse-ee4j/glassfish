@@ -541,7 +541,7 @@ in the OSGi service registry.
 === Deploying OSGi Bundles in {productName}
 
 For instruction on deploying OSGi bundle, see
-"link:application-deployment-guide/deploying-applications.html#osgi-bundle-deployment-guidelines[
+"xref:application-deployment-guide.adoc#osgi-bundle-deployment-guidelines[
 OSGi Bundle Deployment Guidelines]"
 in {productName} Application Deployment Guide.
 

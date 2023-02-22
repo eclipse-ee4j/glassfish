@@ -98,7 +98,7 @@ performance impact.
 To enable or disable auto-deployment from the {productName}
 Administration Console, navigate to the Domain node and then click the
 Applications Configuration tab. Refer to the Administration Console for
-further instructions. Alternatively, refer to "link:application-deployment-guide/deploying-applications.html#to-deploy-an-application-or-module-automatically[To
+further instructions. Alternatively, refer to "xref:application-deployment-guide.adoc#to-deploy-an-application-or-module-automatically[To
 Deploy an Application or Module Automatically]" in {productName} Application Deployment Guide for instructions on enabling
 or disabling auto-deployment.
 

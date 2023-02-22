@@ -157,7 +157,7 @@ The default value is `true`.
     on this virtual server file downloads using SSL work properly in
     Internet Explorer. +
     You can set this property for a specific web application. For
-    details, see "link:application-deployment-guide/dd-elements.html#glassfish-web-app[glassfish-web-app]" in {productName} Application Deployment Guide.
+    details, see "xref:application-deployment-guide.adoc#glassfish-web-app[glassfish-web-app]" in {productName} Application Deployment Guide.
   `contextXmlDefault`;;
     Specifies the location, relative to domain-dir, of the `context.xml`
     file for this virtual server, if one is used. For more information
@@ -208,7 +208,7 @@ The `value` of each alternate docroot has two components: The first
     physical location (directory). Spaces are allowed in the `dir`
     component. +
     You can set this property for a specific web application. For
-    details, see "link:application-deployment-guide/dd-elements.html#glassfish-web-app[glassfish-web-app]" in {productName} Application Deployment Guide.
+    details, see "xref:application-deployment-guide.adoc#glassfish-web-app[glassfish-web-app]" in {productName} Application Deployment Guide.
   `send-error_n`;;
     Specifies custom error page mappings for the virtual server, which
     are inherited by all web applications deployed on the virtual
@@ -278,7 +278,7 @@ For example:
 ----
 +
 You can set this property for a specific web application. For
-    details, see "link:application-deployment-guide/dd-elements.html#glassfish-web-app[glassfish-web-app]" in {productName} Application Deployment Guide.
+    details, see "xref:application-deployment-guide.adoc#glassfish-web-app[glassfish-web-app]" in {productName} Application Deployment Guide.
   ``listener_n``;;
     Specifies a fully qualified class name of a custom Catalina
     listener, where n is a positive integer that allows specification of
@@ -293,7 +293,7 @@ You can set this property for a specific web application. For
 ----
 +
 You can set this property for a specific web application. For
-    details, see "link:application-deployment-guide/dd-elements.html#glassfish-web-app[glassfish-web-app]" in {productName} Application Deployment Guide.
+    details, see "xref:application-deployment-guide.adoc#glassfish-web-app[glassfish-web-app]" in {productName} Application Deployment Guide.
   `docroot`;;
     Absolute path to root document directory for server. Deprecated.
     Replaced with a `virtual-server` attribute, `docroot`, that is

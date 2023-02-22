@@ -505,7 +505,7 @@ An archive file contains the resources, deployment descriptor, and
 classes of an application. The content of the file must be organized in
 the directory structure that the Jakarta EE specifications define for the
 type of archive that the file contains. For more information, see
-"link:application-deployment-guide/deploying-applications.html#deploying-applications[Deploying Applications]" in {productName} Application Deployment Guide.
+"xref:application-deployment-guide.adoc#deploying-applications[Deploying Applications]" in {productName} Application Deployment Guide.
 
 Deploying an application from a directory enables you to deploy an
 application without the need to package the application in an archive
@@ -513,7 +513,7 @@ file. The contents of the directory must match the contents of the
 expanded Jakarta EE archive file as laid out by the {productName}. The
 directory must be accessible to the machine on which the deploying
 application runs. For more information about the requirements for
-deploying an application from a directory, see "link:application-deployment-guide/deploying-applications.html#to-deploy-an-application-or-module-in-a-directory-format[To
+deploying an application from a directory, see "xref:application-deployment-guide.adoc#to-deploy-an-application-or-module-in-a-directory-format[To
 Deploy an Application or Module in a Directory Format]" in {productName} Application Deployment Guide.
 
 If some of the resources needed by an application are not under the
@@ -1377,7 +1377,7 @@ In order of precedence:
 * The `application-name` or `module-name` in the deployment descriptor.
 * The name of the archive file without the extension or the directory name.
 
-For more information, see "link:application-deployment-guide/overview.html#naming-standards[Naming Standards]" in
+For more information, see "xref:application-deployment-guide.adoc#naming-standards[Naming Standards]" in
 {productName} Application Deployment Guide.
 
  |(optional) The name of the application.
@@ -1491,7 +1491,7 @@ In order of precedence:
 * The name of the archive file without the extension or the directory
 name.
 
-For more information, see "link:application-deployment-guide/overview.html#naming-standards[Naming Standards]" in
+For more information, see "xref:application-deployment-guide.adoc#naming-standards[Naming Standards]" in
 {productName} Application Deployment Guide.
 
  |(optional) The name of the application.

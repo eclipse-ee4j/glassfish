@@ -105,7 +105,7 @@ The `pass-by-reference` element in the `glassfish-ejb-jar.xml` file
 allows you to specify the parameter passing semantics for colocated
 remote EJB invocations. This is an opportunity to improve performance.
 However, use of this feature results in non-portable applications. See
-"link:application-deployment-guide/dd-elements.html#pass-by-reference[pass-by-reference]" in {productName} Application Deployment Guide.
+"xref:application-deployment-guide.adoc#pass-by-reference[pass-by-reference]" in {productName} Application Deployment Guide.
 
 [[pooling-and-caching]]
 
@@ -138,7 +138,7 @@ each cache can be controlled using the cache-related properties in the
 EJB container or the `glassfish-ejb-jar.xml` file.
 
 Pooling and caching parameters for the `glassfish-ejb-jar.xml` file are
-described in "link:application-deployment-guide/dd-elements.html#bean-cache[bean-cache]" in {productName} Application Deployment Guide.
+described in "xref:application-deployment-guide.adoc#bean-cache[bean-cache]" in {productName} Application Deployment Guide.
 
 [[pooling-parameters]]
 
@@ -215,7 +215,7 @@ execution, use the `flush-at-end-of-method` element in the
 `glassfish-ejb-jar.xml` file. Only non-finder methods in an entity bean
 can be flush-enabled. (For an EJB 2.1 bean, these methods must be in the
 Local, Local Home, Remote, or Remote Home interface.) See
-"link:application-deployment-guide/dd-elements.html#flush-at-end-of-method[flush-at-end-of-method]" in {productName} Application Deployment Guide.
+"xref:application-deployment-guide.adoc#flush-at-end-of-method[flush-at-end-of-method]" in {productName} Application Deployment Guide.
 
 Upon completion of the method, the EJB container updates the database.
 Any exception thrown by the underlying data store is wrapped as follows:
@@ -453,7 +453,7 @@ The {productName} specific deployment descriptor file,
 * `pool-idle-timeout-in-seconds`
 
 For more information about `glassfish-ejb-jar.xml`, see
-"link:application-deployment-guide/dd-files.html#GSDPG00079[The glassfish-ejb-jar.xml File]" in {productName} Application Deployment Guide.
+"xref:application-deployment-guide.adoc#GSDPG00079[The glassfish-ejb-jar.xml File]" in {productName} Application Deployment Guide.
 
 The {productName} provides the `wscompile` and `wsdeploy` tools to
 help you implement a web service endpoint as a stateless session bean.
@@ -488,7 +488,7 @@ directory in which the file is created is obtained from the EJB
 container using the configuration APIs.
 
 For more information about `glassfish-ejb-jar.xml`, see
-"link:application-deployment-guide/dd-files.html#GSDPG00079[The glassfish-ejb-jar.xml File]" in {productName} Application Deployment Guide.
+"xref:application-deployment-guide.adoc#GSDPG00079[The glassfish-ejb-jar.xml File]" in {productName} Application Deployment Guide.
 
 The passivated beans are stored on the file system. The Session Store
 Location setting in the EJB container allows the administrator to
@@ -795,7 +795,7 @@ For example:
 </glassfish-ejb-jar>
 ----
 
-For details, see "link:application-deployment-guide/dd-elements.html#checkpoint-at-end-of-method[checkpoint-at-end-of-method]" in
+For details, see "xref:application-deployment-guide.adoc#checkpoint-at-end-of-method[checkpoint-at-end-of-method]" in
 {productName} Application Deployment Guide.
 
 The non-transactional methods in the `checkpoint-at-end-of-method`
@@ -1091,7 +1091,7 @@ either `true` (to allow concurrent accesses) or `false` (to serialize
 concurrent access to the same read-only bean). The default is `false`.
 
 For further information on these elements, refer to
-"link:application-deployment-guide/dd-files.html#GSDPG00079[The glassfish-ejb-jar.xml File]" in {productName} Application Deployment Guide.
+"xref:application-deployment-guide.adoc#GSDPG00079[The glassfish-ejb-jar.xml File]" in {productName} Application Deployment Guide.
 
 [[using-message-driven-beans]]
 
@@ -1154,7 +1154,7 @@ element):
 * `pool-idle-timeout-in-seconds`
 
 For more information about `glassfish-ejb-jar.xml`, see
-"link:application-deployment-guide/dd-files.html#GSDPG00079[The glassfish-ejb-jar.xml File]" in {productName} Application Deployment Guide.
+"xref:application-deployment-guide.adoc#GSDPG00079[The glassfish-ejb-jar.xml File]" in {productName} Application Deployment Guide.
 
 [[domain-level-settings]]
 

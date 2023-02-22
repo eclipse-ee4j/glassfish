@@ -1083,7 +1083,7 @@ libraries must be made available to any {productName} JVMs.
 2. Deploy GenericJMSRA the same way you would deploy a connector
 module.
 +
-See "link:application-deployment-guide/deploying-applications.html#deploying-a-connector-module[Deploying a Connector Module]" in {productName} Application Deployment Guide.
+See "xref:application-deployment-guide.adoc#deploying-a-connector-module[Deploying a Connector Module]" in {productName} Application Deployment Guide.
 3. Configure the resource adapter's properties.
 +
 See <<GenericJMSRA Configuration Properties>>.

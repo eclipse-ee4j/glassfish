@@ -141,7 +141,7 @@ You can make this class loader follow the delegation inversion model in
 the Servlet specification by setting `delegate="false"` in the
 `class-loader` element of the `glassfish-web.xml` file. It is safe to do
 this only for a web module that does not interact with any other
-modules. For details, see "link:application-deployment-guide/dd-elements.html#class-loader[class-loader]" in {productName} Application Deployment Guide.
+modules. For details, see "xref:application-deployment-guide.adoc#class-loader[class-loader]" in {productName} Application Deployment Guide.
 
 The default value is `delegate="true"`, which causes a web module's
 class loader to delegate in the same manner as the other class loaders.

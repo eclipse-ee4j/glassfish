@@ -116,10 +116,10 @@ beans. For a detailed description, see the Enterprise JavaBeans
 Specification, v2.1.
 * `glassfish-ejb-jar.xml` - The {productName} standard file for
 assembling enterprise beans. For a detailed description, see
-"link:application-deployment-guide/dd-files.html#GSDPG00079[The glassfish-ejb-jar.xml File]" in {productName} Application Deployment Guide.
+"xref:application-deployment-guide.adoc#GSDPG00079[The glassfish-ejb-jar.xml File]" in {productName} Application Deployment Guide.
 * `sun-cmp-mappings.xml` - The mapping deployment descriptor file, which
 describes the mapping of CMP beans to tables in a database. For a
-detailed description, see "link:application-deployment-guide/dd-files.html#GSDPG00080[The sun-cmp-mappings.xml
+detailed description, see "xref:application-deployment-guide.adoc#GSDPG00080[The sun-cmp-mappings.xml
 File]" in {productName} Application Deployment
 Guide.
 
@@ -234,7 +234,7 @@ A managed field can have any `fetched-with` subelement. If the
 `fetched-with` subelement is `<default/>`, the
 `-DAllowManagedFieldsInDefaultFetchGroup` flag must be set to `true`.
 See <<Default Fetch Group Flags>> and
-"link:application-deployment-guide/dd-elements.html#fetched-with[fetched-with]" in {productName}
+"xref:application-deployment-guide.adoc#fetched-with[fetched-with]" in {productName}
 Application Deployment Guide.
 
 [[blob-support]]
@@ -507,7 +507,7 @@ administrator to create the schema and add the required triggers. See
 The following optional data subelements of the `cmp-resource` element in
 the `glassfish-ejb-jar.xml` file control the automatic creation of
 database tables at deployment. For more information about the
-`cmp-resource` element, see "link:application-deployment-guide/dd-elements.html#cmp-resource[cmp-resource]" in
+`cmp-resource` element, see "xref:application-deployment-guide.adoc#cmp-resource[cmp-resource]" in
 {productName} Application Deployment Guide and
 <<Configuring the CMP Resource>>.
 
@@ -518,17 +518,17 @@ Table 9-3 The `glassfish-ejb-jar.xml` Generation Elements
 [width="172%",cols="20%,46%,34%",options="header",]
 |===
 |Element |Default |Description
-|link:application-deployment-guide/dd-elements.html#create-tables-at-deploy[`create-tables-at-deploy`] |`false` |If `true`, causes
+|xref:application-deployment-guide.adoc#create-tables-at-deploy[`create-tables-at-deploy`] |`false` |If `true`, causes
 database tables to be created for beans that are automatically mapped by
 the EJB container. No unique constraints are created. If `false`, does
 not create tables.
 
-|link:application-deployment-guide/dd-elements.html#drop-tables-at-undeploy[`drop-tables-at-undeploy`] |`false` |If `true`, causes
+|xref:application-deployment-guide.adoc#drop-tables-at-undeploy[`drop-tables-at-undeploy`] |`false` |If `true`, causes
 database tables that were automatically created when the bean(s) were
 last deployed to be dropped when the bean(s) are undeployed. If `false`,
 does not drop tables.
 
-|link:application-deployment-guide/dd-elements.html#database-vendor-name[`database-vendor-name`] |none a|
+|xref:application-deployment-guide.adoc#database-vendor-name[`database-vendor-name`] |none a|
 Specifies the name of the database vendor for which tables are created.
 Allowed values are `javadb`, `db2`, `mssql`, `mysql`, `oracle`,
 `postgresql`, `pointbase`, `derby` (also for CloudScape), and `sybase`,
@@ -540,7 +540,7 @@ by the `jndi-name` subelement of the `cmp-resource` element in the
 the connection cannot be established, or if the value is not recognized,
 SQL-92 compliance is presumed.
 
-|link:application-deployment-guide/dd-elements.html#schema-generator-properties[`schema-generator-properties`] |none a|
+|xref:application-deployment-guide.adoc#schema-generator-properties[`schema-generator-properties`] |none a|
 Specifies field-specific column attributes in `property` subelements.
 Each property name is of the following format:
 
@@ -555,7 +555,7 @@ this property specifies that generated table names are unique within
 each {productName} domain. The default is `false`.
 
 For further information and an example, see
-"link:application-deployment-guide/dd-elements.html#schema-generator-properties[schema-generator-properties]" in {productName} Application Deployment Guide.
+"xref:application-deployment-guide.adoc#schema-generator-properties[schema-generator-properties]" in {productName} Application Deployment Guide.
 
 |===
 
@@ -714,7 +714,7 @@ An EJB module that contains CMP beans requires the JNDI name of a JDBC
 resource in the `jndi-name` subelement of the `cmp-resource` element in
 the `glassfish-ejb-jar.xml` file. Set `PersistenceManagerFactory`
 properties as properties of the `cmp-resource` element in the
-`glassfish-ejb-jar.xml` file. See "link:application-deployment-guide/dd-elements.html#cmp-resource[cmp-resource]" in
+`glassfish-ejb-jar.xml` file. See "xref:application-deployment-guide.adoc#cmp-resource[cmp-resource]" in
 {productName} Application Deployment Guide.
 
 In the Administration Console, open the Resources component, then select
@@ -781,7 +781,7 @@ specified row.
 4. Specify the version column. +
 This is specified in the `check-version-of-accessed-instances`
 subelement of the `consistency` element in the `sun-cmp-mappings.xml`
-file. See "link:application-deployment-guide/dd-elements.html#consistency[consistency]" in {productName} Application Deployment Guide.
+file. See "xref:application-deployment-guide.adoc#consistency[consistency]" in {productName} Application Deployment Guide.
 5. Map the CMP bean to an existing schema.
 +
 Automatic schema generation is not supported for beans with version
@@ -804,11 +804,11 @@ file. By default, these CMR fields are prefetched whenever
 `findByPrimaryKey` or a custom finder is executed for the entity, or
 when the entity is navigated to from a relationship. (Recursive
 prefetching is not supported, because it does not usually enhance
-performance.) See "link:application-deployment-guide/dd-elements.html#fetched-with[fetched-with]" in {productName} Application Deployment Guide.
+performance.) See "xref:application-deployment-guide.adoc#fetched-with[fetched-with]" in {productName} Application Deployment Guide.
 
 To disable prefetching for specific custom finders, use the
 `prefetch-disabled` element in the `glassfish-ejb-jar.xml` file. See
-"link:application-deployment-guide/dd-elements.html#prefetch-disabled[prefetch-disabled]"
+"xref:application-deployment-guide.adoc#prefetch-disabled[prefetch-disabled]"
 in {productName} Application Deployment Guide.
 
 Multilevel relationship prefetching is supported for CMP 2.1 entity
@@ -873,7 +873,7 @@ is loaded into memory. These could be multiple fields mapped to the same
 column in the database table, for example, an instance field and a CMR.
 By default this flag is set to `false`.
 
-For additional information, see "link:application-deployment-guide/dd-elements.html#level[level]" in {productName} Application Deployment Guide.
+For additional information, see "xref:application-deployment-guide.adoc#level[level]" in {productName} Application Deployment Guide.
 
 Setting `-DAllowMediatedWriteInDefaultFetchGroup` specifies how updated
 CMP fields are written back to the database. If the flag is `false`, all
@@ -1207,7 +1207,7 @@ optimal for entity objects with large state if most business methods
 require access to only parts of the state.
 
 Use the `fetched-with` element in `sun-cmp-mappings.xml` for fields that
-are used infrequently. See "link:application-deployment-guide/dd-elements.html#fetched-with[fetched-with]" in {productName} Application Deployment Guide.
+are used infrequently. See "xref:application-deployment-guide.adoc#fetched-with[fetched-with]" in {productName} Application Deployment Guide.
 
 [[restrictions-on-remote-interfaces]]
 
@@ -1254,7 +1254,7 @@ implemented by placing update locks on the data corresponding to a bean
 when the data is loaded from the database. There is no suitable
 mechanism available on Sybase databases to implement this feature.
 Therefore, the `lock-when-loaded` consistency level is not supported on
-Sybase databases. See "link:application-deployment-guide/dd-elements.html#consistency[consistency]" in {productName} Application Deployment Guide.
+Sybase databases. See "xref:application-deployment-guide.adoc#consistency[consistency]" in {productName} Application Deployment Guide.
 
 ==== Sybase Finder Limitation
 

@@ -294,7 +294,7 @@ For more information, see xref:#configuring-availability-for-an-individual-bean[
 
 7. Make each web module distributable if you want it to be highly available.
 +
-For more information, see "link:application-deployment-guide/deploying-applications.html#web-module-deployment-guidelines[Web Module Deployment
+For more information, see "xref:application-deployment-guide.adoc#web-module-deployment-guidelines[Web Module Deployment
 Guidelines]" in {productName} Application Deployment Guide.
 
 8. Enable availability for individual applications, web modules, or EJB

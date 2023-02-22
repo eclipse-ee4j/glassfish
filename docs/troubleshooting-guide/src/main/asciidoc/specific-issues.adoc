@@ -308,7 +308,7 @@ applications are deployed.
 clicking the Applications node.
 
 For more information about deploying applications, see
-"link:application-deployment-guide/deploying-applications.html#deploying-applications[Deploying Applications]" in {productName} Application Deployment Guide. Also see the Administration
+"xref:application-deployment-guide.adoc#deploying-applications[Deploying Applications]" in {productName} Application Deployment Guide. Also see the Administration
 Console online help.
 
 [[administrator-user-name-or-password-not-known]]

@@ -27,9 +27,7 @@ the optional Metro Web Services Stack add-on component is downloaded
 from the Update Tool. Without the Metro add-on component, a servlet or
 EJB component cannot be a web service endpoint, and the
 `glassfish-web.xml` and `glassfish-ejb-jar.xml` elements related to web
-services are ignored. For information about the Update Tool, see
-"link:GSADG00701[Update Tool]" in {productName}
-Administration Guide.
+services are ignored.
 
 In addition, the as-install``/modules/webservices-osgi.jar`` and
 as-install``/modules/webservices-api-osgi.jar`` files must be in
@@ -293,7 +291,7 @@ To deploy a Jakarta EE application or module as a JBI service unit, use the
 the `asadmin deploy` command, see the xref:reference-manual.adoc#GSRFM[
 {productName} Reference Manual].
 For more information about autodeployment, see
-"link:application-deployment-guide/deploying-applications.html#to-deploy-an-application-or-module-automatically[
+"xref:application-deployment-guide.adoc#to-deploy-an-application-or-module-automatically[
 To Deploy an Application or Module Automatically]"
 in {productName} Application Deployment Guide.
 

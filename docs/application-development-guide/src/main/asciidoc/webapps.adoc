@@ -150,7 +150,7 @@ clears the cache during dynamic deployment or reloading of classes.
 * Results produced by resources that are the target of a
 `RequestDispatcher.include()` or `RequestDispatcher.forward()` call are
 cached if caching has been enabled for those resources. For details, see
-"link:application-deployment-guide/dd-elements.html#cache-mapping[cache-mapping]" in {productName} Application Deployment Guide and "link:../application-deployment-guide/dd-elements.html#dispatcher[dispatcher]"
+"xref:application-deployment-guide.adoc#cache-mapping[cache-mapping]" in {productName} Application Deployment Guide and "link:../application-deployment-guide/dd-elements.html#dispatcher[dispatcher]"
 in {productName} Application Deployment Guide.
 These are elements in the `glassfish-web.xml` file.
 
@@ -229,7 +229,7 @@ Here is an example cache element in the `glassfish-web.xml` file:
 ----
 
 For more information about the `glassfish-web.xml` caching settings, see
-"link:application-deployment-guide/dd-elements.html#cache[cache]" in {productName}
+"xref:application-deployment-guide.adoc#cache[cache]" in {productName}
 Application Deployment Guide.
 
 [[the-cachekeygenerator-interface]]
@@ -244,7 +244,7 @@ attribute in the `ServletContext`.
 The name of the context attribute is configurable as the `value` of the
 `cacheKeyGeneratorAttrName` property in the `default-helper` element of
 the `glassfish-web.xml` deployment descriptor. For more information, see
-"link:application-deployment-guide/dd-elements.html#default-helper[default-helper]" in {productName} Application Deployment Guide.
+"xref:application-deployment-guide.adoc#default-helper[default-helper]" in {productName} Application Deployment Guide.
 
 [[about-the-servlet-engine]]
 
@@ -629,8 +629,8 @@ To configure whether and how HTTP sessions use cookies and URL
 rewriting, edit the `session-properties` and `cookie-properties`
 elements in the `glassfish-web.xml` file for an individual web
 application. For more about the properties you can configure, see
-"link:application-deployment-guide/dd-elements.html#session-properties[session-properties]" in {productName} Application Deployment Guide and
-"link:application-deployment-guide/dd-elements.html#cookie-properties[cookie-properties]" in {productName} Application Deployment Guide.
+"xref:application-deployment-guide.adoc#session-properties[session-properties]" in {productName} Application Deployment Guide and
+"xref:application-deployment-guide.adoc#cookie-properties[cookie-properties]" in {productName} Application Deployment Guide.
 
 For information about configuring default session properties for the
 entire web container, see xref:#GSDVG00410[Using the `default-web.xml` File]
@@ -827,7 +827,7 @@ used.
 ====
 
 
-For more information, see "link:application-deployment-guide/dd-elements.html#session-manager[session-manager]" in
+For more information, see "xref:application-deployment-guide.adoc#session-manager[session-manager]" in
 {productName} Application Deployment Guide.
 
 [[the-memory-persistence-type]]
@@ -864,7 +864,7 @@ web application.
 
 The only manager property that the `memory` persistence type supports is
 `sessionFilename`, which is listed under
-"link:application-deployment-guide/dd-elements.html#manager-properties[manager-properties]" in {productName} Application Deployment Guide. The `sessionFilename` property
+"xref:application-deployment-guide.adoc#manager-properties[manager-properties]" in {productName} Application Deployment Guide. The `sessionFilename` property
 specifies the name of the file where sessions are serialized and
 persisted if the web application or the server is stopped. To disable
 this behavior, specify an empty string as the value of
@@ -919,9 +919,9 @@ container availability settings for the web application.
 ----
 
 The `file` persistence type supports all the manager properties listed
-under "link:application-deployment-guide/dd-elements.html#manager-properties[manager-properties]" in {productName} Application Deployment Guide except `sessionFilename`,
+under "xref:application-deployment-guide.adoc#manager-properties[manager-properties]" in {productName} Application Deployment Guide except `sessionFilename`,
 and supports the `directory` store property listed under
-"link:application-deployment-guide/dd-elements.html#store-properties[store-properties]" in {productName} Application Deployment Guide.
+"xref:application-deployment-guide.adoc#store-properties[store-properties]" in {productName} Application Deployment Guide.
 
 For more information about the `glassfish-web.xml` file, see the
 xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
@@ -992,9 +992,9 @@ application.
 ----
 
 The `replicated` persistence type supports all the manager properties
-listed under "link:application-deployment-guide/dd-elements.html#manager-properties[manager-properties]" in {productName} Application Deployment Guide except
+listed under "xref:application-deployment-guide.adoc#manager-properties[manager-properties]" in {productName} Application Deployment Guide except
 `sessionFilename`, and supports the `persistenceScope` store property
-listed under "link:application-deployment-guide/dd-elements.html#store-properties[store-properties]" in {productName} Application Deployment Guide.
+listed under "xref:application-deployment-guide.adoc#store-properties[store-properties]" in {productName} Application Deployment Guide.
 
 For more information about the `glassfish-web.xml` file, see the
 xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
@@ -1434,7 +1434,7 @@ the `glassfish-web.xml` file
 * The default, which is `ISO-8859-1`
 
 For details about the `parameter-encoding` element, see
-"link:application-deployment-guide/dd-elements.html#parameter-encoding[parameter-encoding]" in {productName} Application Deployment Guide.
+"xref:application-deployment-guide.adoc#parameter-encoding[parameter-encoding]" in {productName} Application Deployment Guide.
 
 [[servlet-response]]
 
@@ -1480,7 +1480,7 @@ virtual server properties, click the Help button in the Administration
 Console.
 
 Some virtual server properties can be set for a specific web
-application. For details, see "link:application-deployment-guide/dd-elements.html#glassfish-web-app[glassfish-web-app]" in
+application. For details, see "xref:application-deployment-guide.adoc#glassfish-web-app[glassfish-web-app]" in
 {productName} Application Deployment Guide.
 
 [[class-loader-delegation]]
@@ -1605,7 +1605,7 @@ safely retried in `idempotent-url-pattern` elements in the
 <idempotent-url-pattern url-pattern="sun_java/*" no-of-retries="10"/>
 ----
 
-For details, see "link:application-deployment-guide/dd-elements.html#idempotent-url-pattern[idempotent-url-pattern]" in {productName} Application Deployment Guide.
+For details, see "xref:application-deployment-guide.adoc#idempotent-url-pattern[idempotent-url-pattern]" in {productName} Application Deployment Guide.
 
 If none of the server instances can successfully serve the request, an
 error page is returned.
@@ -1702,7 +1702,7 @@ server, use the `alternatedocroot_n` property, where n is a positive
 integer that allows specification of more than one. This property can be
 a subelement of a `glassfish-web-app` element in the `glassfish-web.xml`
 file or a virtual server property. For more information about these
-elements, see "link:application-deployment-guide/dd-elements.html#glassfish-web-app[glassfish-web-app]" in {productName} Application Deployment Guide.
+elements, see "xref:application-deployment-guide.adoc#glassfish-web-app[glassfish-web-app]" in {productName} Application Deployment Guide.
 
 A virtual server's alternate docroots are considered only if a request
 does not map to any of the web modules deployed on that virtual server.

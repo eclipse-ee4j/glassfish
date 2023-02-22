@@ -95,7 +95,7 @@ which container developers implement. The {productName} framework
 then invokes the container's implementation of the SPI to detect,
 deploy, and manage applications of the new type.
 
-For more information, see "link:add-on-component-development-guide/adding-container-capabilities.html#adding-container-capabilities[Adding Container
+For more information, see "xref:add-on-component-development-guide.adoc#adding-container-capabilities[Adding Container
 Capabilities]" in {productName} Add-On Component
 Development Guide.
 
@@ -103,7 +103,7 @@ Development Guide.
 
 ==== How Do I Extend the Administration Console?
 
-See "link:add-on-component-development-guide/extending-the-admin-console.html#extending-the-administration-console[Extending the Administration Console]" in
+See "xref:add-on-component-development-guide.adoc#extending-the-administration-console[Extending the Administration Console]" in
 {productName} Add-On Component Development Guide.
 
 [[java-persistence-faqs]]

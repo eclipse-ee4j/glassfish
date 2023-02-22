@@ -1823,7 +1823,7 @@ Single sign-on operates according to the following rules:
 * Single sign-on applies to web applications configured for the same
 realm and virtual server. The realm is defined by the `realm-name`
 element in the `web.xml` file. For information about virtual servers,
-see "link:administration-guide/http_https.html#administering-internet-connectivity[Administering Internet Connectivity]" in {productName} Administration Guide.
+see "xref:administration-guide.adoc#administering-internet-connectivity[Administering Internet Connectivity]" in {productName} Administration Guide.
 * As long as users access only unprotected resources in any of the web
 applications on a virtual server, they are not challenged to
 authenticate themselves.

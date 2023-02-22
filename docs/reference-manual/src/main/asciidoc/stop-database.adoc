@@ -91,6 +91,6 @@ xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 xref:start-database.adoc#start-database[`start-database`(1)]
 
-"link:administration-guide/jdbc.html#administering-database-connectivity[Administering Database Connectivity]" in {productName} Administration Guide
+"xref:administration-guide.adoc#administering-database-connectivity[Administering Database Connectivity]" in {productName} Administration Guide
 
 

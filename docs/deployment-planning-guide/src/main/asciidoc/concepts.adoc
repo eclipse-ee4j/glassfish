@@ -261,7 +261,7 @@ configuration and applications. With the standard backup and restore
 procedures, you can quickly restore working configurations. If the DAS
 host fails, you must create a new DAS installation to restore the
 previous domain configuration. For instructions, see
-"link:administration-guide/domains.html#administering-domains[Administering Domains]" in {productName} Administration Guide.
+"xref:administration-guide.adoc#administering-domains[Administering Domains]" in {productName} Administration Guide.
 
 [[clusters]]
 
@@ -538,16 +538,16 @@ High Availability Administration Guide.
 5. Configure domains, nodes, clusters, {productName} instances, and
 virtual servers as required. +
 For more information, see the following documentation:
-* "link:administration-guide/domains.html#administering-domains[Administering Domains]" in {productName} Administration Guide
+* "xref:administration-guide.adoc#administering-domains[Administering Domains]" in {productName} Administration Guide
 * "link:ha-administration-guide/nodes.html#administering-glassfish-server-nodes[Administering {productName} Nodes]" in {productName} High Availability Administration Guide
 * "link:ha-administration-guide/clusters.html#administering-glassfish-server-clusters[Administering {productName} Clusters]" in
 {productName} High Availability Administration Guide
 * "link:ha-administration-guide/instances.html#administering-glassfish-server-instances[Administering {productName} Instances]" in
 {productName} High Availability Administration Guide
-* "link:administration-guide/http_https.html#administering-virtual-servers[Administering Virtual Servers]" in {productName} Administration Guide
+* "xref:administration-guide.adoc#administering-virtual-servers[Administering Virtual Servers]" in {productName} Administration Guide
 
 6. Configure your load balancer. +
-For more information, see "link:administration-guide/webapps.html#administering-mod_jk[Administering mod_jk]" in
+For more information, see "xref:administration-guide.adoc#administering-mod_jk[Administering mod_jk]" in
 {productName} Administration Guide.
 
 7. Configure the web container and EJB container for replicated session persistence. +

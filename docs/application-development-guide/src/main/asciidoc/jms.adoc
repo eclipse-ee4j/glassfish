@@ -27,7 +27,7 @@ https://eclipse-ee4j.github.io/jakartaee-tutorial/#messaging[Messaging]
 in The Jakarta EE Tutorial.
 
 For detailed information about JMS concepts and JMS support in the
-{productName}, see "link:administration-guide/jms.html#administering-the-java-message-service-jms[Administering the Java Message
+{productName}, see "xref:administration-guide.adoc#administering-the-java-message-service-jms[Administering the Java Message
 Service (JMS)]" in {productName} Administration
 Guide.
 

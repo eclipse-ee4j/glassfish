@@ -419,7 +419,7 @@ link:reference-manual/set.html#set[`set`]. These commands locate an object in th
 through the object's dotted name.
 
 For more information about the tree structure of monitorable objects,
-see "link:administration-guide/monitoring.html#how-the-monitoring-tree-structure-works[How the Monitoring Tree Structure Works]" in
+see "xref:administration-guide.adoc#how-the-monitoring-tree-structure-works[How the Monitoring Tree Structure Works]" in
 {productName} Administration Guide.
 
 To make an add-on component a monitorable object, you must add the

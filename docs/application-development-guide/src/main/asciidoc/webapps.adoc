@@ -762,7 +762,7 @@ For more information about the `InitialContext`, see
 xref:jndi.adoc#accessing-the-naming-context[Accessing the Naming Context]. For more information
 about transaction recovery, see xref:transaction-service.adoc#using-the-transaction-service[Using
 the Transaction Service]. For more information about Administered
-Objects, see "link:administration-guide/jms.html#administering-jms-physical-destinations[Administering JMS Physical Destinations]"
+Objects, see "xref:administration-guide.adoc#administering-jms-physical-destinations[Administering JMS Physical Destinations]"
 in {productName} Administration Guide.
 
 [[fvyem]]

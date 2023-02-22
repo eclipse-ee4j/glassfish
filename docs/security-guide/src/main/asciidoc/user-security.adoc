@@ -228,7 +228,7 @@ link:reference-manual/set.html#set[`set`] subcommand.
 The thread pool is identified by its dotted name.
 3. To apply your changes, restart {productName}.
 +
-See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
+See "xref:administration-guide.adoc#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
 
 [[to-delete-an-authentication-realm]]
 
@@ -244,7 +244,7 @@ link:reference-manual/list-auth-realms.html#list-auth-realms[`list-auth-realms`]
 4. Delete the realm by using the
 link:reference-manual/delete-auth-realm.html#delete-auth-realm[`delete-auth-realm`] subcommand.
 5. To apply your changes, restart {productName}. See
-"link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
+"xref:administration-guide.adoc#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
 
 [[ggpjf]]
 Example 2-3 Deleting a Realm
@@ -289,11 +289,11 @@ How you add user credentials to the database tables depends on the
 database that you are using.
 
 3. Create a JDBC connection pool for the database. +
-See "link:administration-guide/jdbc.html#to-create-a-jdbc-connection-pool[
+See "xref:administration-guide.adoc#to-create-a-jdbc-connection-pool[
 To Create a JDBC Connection Pool]" in {productName} Administration Guide.
 
 4. Create a JDBC resource for the database. +
-"link:administration-guide/jdbc.html#to-create-a-jdbc-resource[
+"xref:administration-guide.adoc#to-create-a-jdbc-resource[
 To Create a JDBC Resource]" in {productName} Administration Guide.
 
 5. [[ggmvo]]
@@ -324,11 +324,11 @@ To assign a security role to a user, add a `security-role-mapping`
 element to the deployment descriptor that you modified.
 
 8. Verify that the database is running. +
-If needed, see "link:administration-guide/jdbc.html#to-start-the-database[To Start the Database]"
+If needed, see "xref:administration-guide.adoc#to-start-the-database[To Start the Database]"
 in {productName} Administration Guide.
 
 9. To apply the authentication, restart the server. +
-See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]"
+See "xref:administration-guide.adoc#to-restart-a-domain[To Restart a Domain]"
 in {productName} Administration Guide.
 
 [[ghysu]]
@@ -411,7 +411,7 @@ keytool -importcert -alias "OID self signed certificate" -keystore \
 /glassfish7/glassfish/domains/domain1/config/cacerts.jks -file oid.cer
 ----
 6. Restart the {productName} domain. +
-See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]"
+See "xref:administration-guide.adoc#to-restart-a-domain[To Restart a Domain]"
 in {productName} Administration Guide.
 7. Use the Oracle Enterprise Manager `ldapmodify` command to enable
 Anonymous Bind for OID. +
@@ -500,7 +500,7 @@ keytool -importcert -alias "OVD self signed certificate" -keystore \
 /glassfish7/glassfish/domains/domain1/config/cacerts.jks -file ovd.cer
 ----
 5. Restart the {productName} domain. +
-See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]"
+See "xref:administration-guide.adoc#to-restart-a-domain[To Restart a Domain]"
 in {productName} Administration Guide.
 
 [[to-enable-ldap-authentication-on-the-glassfish-server-das]]
@@ -709,7 +709,7 @@ update an administrative user to have a blank password.
 2. Update the user information by using the
 link:reference-manual/update-file-user.html#update-file-user[`update-file-user`] subcommand.
 3. To apply your changes, restart {productName}. +
-See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]"
+See "xref:administration-guide.adoc#to-restart-a-domain[To Restart a Domain]"
 in {productName} Administration Guide.
 
 [[ggpgh]]

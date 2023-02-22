@@ -1842,7 +1842,7 @@ directory before running the `mvn clean verify` command.
 To change log levels in Embedded {productName}, you can follow the
 steps in this section or you can use the Embedded Server API as shown in
 xref:#gjlfm[Example 1-11]. For more information about {productName}
-logging, see "link:administration-guide/logging.html#administering-the-logging-service[Administering the Logging Service]" in
+logging, see "xref:administration-guide.adoc#administering-the-logging-service[Administering the Logging Service]" in
 {productName} Administration Guide.
 
 You can change log levels in Embedded {productName} in either of the

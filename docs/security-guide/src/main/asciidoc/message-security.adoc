@@ -396,7 +396,7 @@ default_provider=ServerProvider
 2. To apply your changes to applications that are already running,
 restart {productName}.
 +
-See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
+See "xref:administration-guide.adoc#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
 
 [[to-enable-a-default-client-provider]]
 
@@ -422,7 +422,7 @@ default_client_provider=ClientProvider
 2. To apply your changes to applications that are already running,
 restart {productName}.
 +
-See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
+See "xref:administration-guide.adoc#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
 
 [[configuring-message-protection-policies]]
 
@@ -663,9 +663,9 @@ page.
 3. If needed, restart the server.
 +
 Some properties require server restart. See
-"link:administration-guide/overview.html#configuration-changes-that-require-restart[Configuration Changes That Require Restart]" in
+"xref:administration-guide.adoc#configuration-changes-that-require-restart[Configuration Changes That Require Restart]" in
 {productName} Administration Guide. If your
-server needs to be restarted, see "link:administration-guide/domains.html#to-restart-a-domain[To Restart a
+server needs to be restarted, see "xref:administration-guide.adoc#to-restart-a-domain[To Restart a
 Domain]" in {productName} Administration Guide.
 
 [[giosd]]
@@ -787,9 +787,9 @@ httpservlet-security-provider="MySAM".
 4. If needed, restart the server.
 +
 Some properties require server restart. See
-"link:administration-guide/overview.html#configuration-changes-that-require-restart[Configuration Changes That Require Restart]" in
+"xref:administration-guide.adoc#configuration-changes-that-require-restart[Configuration Changes That Require Restart]" in
 {productName} Administration Guide. If your
-server needs to be restarted, see "link:administration-guide/domains.html#to-restart-a-domain[To Restart a
+server needs to be restarted, see "xref:administration-guide.adoc#to-restart-a-domain[To Restart a
 Domain]" in {productName} Administration Guide.
 
 [[gkxqz]]

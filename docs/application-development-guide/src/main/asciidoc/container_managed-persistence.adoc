@@ -263,7 +263,7 @@ property value to `true`.
 
 For a list of the JDBC drivers currently supported by the {productName}, see the xref:release-notes.adoc#GSRLN[{productName} Release
 Notes]. For configurations of supported and other drivers, see
-"link:administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
+"xref:administration-guide.adoc#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.
 
 For automatic mapping, you might need to change the default BLOB column
@@ -304,7 +304,7 @@ property value to `true`.
 
 For a list of the JDBC drivers currently supported by the {productName}, see the xref:release-notes.adoc#GSRLN[{productName} Release
 Notes]. For configurations of supported and other drivers, see
-"link:administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
+"xref:administration-guide.adoc#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.
 
 For automatic mapping, you might need to change the default CLOB column
@@ -428,7 +428,7 @@ vendor-specific types when automatic mapping is used. For a list of the
 JDBC drivers currently supported by the {productName}, see the
 xref:release-notes.adoc#GSRLN[{productName} Release Notes]. For
 configurations of supported and other drivers, see
-"link:administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
+"xref:administration-guide.adoc#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.
 
 [[fvymp]]
@@ -723,7 +723,7 @@ information on creating a new JDBC resource.
 
 For a list of the JDBC drivers currently supported by the {productName}, see the xref:release-notes.adoc#GSRLN[{productName} Release
 Notes]. For configurations of supported and other drivers, see
-"link:administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
+"xref:administration-guide.adoc#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.
 
 For example, if the JDBC resource has the JNDI name `jdbc/MyDatabase`,

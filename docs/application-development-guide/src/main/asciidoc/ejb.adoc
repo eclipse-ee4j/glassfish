@@ -242,7 +242,7 @@ The EJB Timer Service configuration can store persistent timer
 information in any database supported by the {productName} for
 persistence. For a list of the JDBC drivers currently supported by the
 {productName}, see the xref:release-notes.adoc#GSRLN[{productName} Release Notes]. For configurations of supported and other
-drivers, see "link:administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC
+drivers, see "xref:administration-guide.adoc#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC
 Drivers]" in {productName} Administration Guide.
 
 The timer service is automatically enabled when you deploy an
@@ -294,7 +294,7 @@ Do not use the `jdbc/\__TimerPool` resource for timers in clustered
 You must instead use a custom JDBC resource or the `jdbc/__default` resource.
 See the instructions below, in xref:#to-deploy-an-ejb-timer-to-a-cluster[To Deploy an EJB Timer to a Cluster].
 Also refer to
-"link:administration-guide/jdbc.html#etjdbcdefault-cluster[Enabling the jdbc/__default Resource in a Clustered Environment]"
+"xref:administration-guide.adoc#etjdbcdefault-cluster[Enabling the jdbc/__default Resource in a Clustered Environment]"
 in {productName} Administration Guide.
 ====
 
@@ -596,7 +596,7 @@ For more information about the `InitialContext`, see
 xref:jndi.adoc#accessing-the-naming-context[Accessing the Naming Context]. For more information
 about transaction recovery, see xref:transaction-service.adoc#using-the-transaction-service[Using
 the Transaction Service]. For more information about Administered
-Objects, see "link:administration-guide/jms.html#administering-jms-physical-destinations[Administering JMS Physical Destinations]"
+Objects, see "xref:administration-guide.adoc#administering-jms-physical-destinations[Administering JMS Physical Destinations]"
 in {productName} Administration Guide.
 
 
@@ -1231,7 +1231,7 @@ Message Queue flow control related properties for connection factory in
 situations where the message incoming rate is much higher than
 `max-pool-size` can handle.
 
-Refer to "link:administration-guide/monitoring.html#administering-the-monitoring-service[Administering the Monitoring Service]" in
+Refer to "xref:administration-guide.adoc#administering-the-monitoring-service[Administering the Monitoring Service]" in
 {productName} Administration Guide for
 information on how to get message-driven bean pool statistics.
 

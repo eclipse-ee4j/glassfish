@@ -253,7 +253,7 @@ module-specific loggers.
 For information about using the Administration Console log viewer and
 logging functions, see the Administration Console online help. For
 information about using the command line for logging functions, see
-"link:administration-guide/logging.html#administering-the-logging-service[Administering the Logging Service]" in {productName} Administration Guide.
+"xref:administration-guide.adoc#administering-the-logging-service[Administering the Logging Service]" in {productName} Administration Guide.
 
 [[monitoring-the-system]]
 
@@ -266,7 +266,7 @@ monitoring the state of various components and services deployed in
 bottlenecks, predict failures, perform root cause analysis, and ensure
 that everything is functioning as expected. For more information about
 monitoring, including JConsole information, see
-"link:administration-guide/monitoring.html#administering-the-monitoring-service[Administering the Monitoring Service]" in {productName} Administration Guide.
+"xref:administration-guide.adoc#administering-the-monitoring-service[Administering the Monitoring Service]" in {productName} Administration Guide.
 
 [[troubleshooting-tools]]
 

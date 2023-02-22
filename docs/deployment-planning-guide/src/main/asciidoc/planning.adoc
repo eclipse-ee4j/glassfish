@@ -765,7 +765,7 @@ parameters using Message Queue tools. The Start Arguments attribute is ignored.
 In the Administration Console, you can set JMS properties using the Java
 Message Service node for a particular configuration. You can set
 properties such as Reconnect Interval and Reconnect Attempts. For more
-information, see "link:administration-guide/jms.html#administering-the-java-message-service-jms[Administering the Java Message
+information, see "xref:administration-guide.adoc#administering-the-java-message-service-jms[Administering the Java Message
 Service (JMS)]" in {productName} Administration
 Guide.
 
@@ -878,7 +878,7 @@ so, use the `AddressList` property of a JMS connection factory or the
 the Message Queue broker cluster.
 
 For more information about configuring connection factories, see
-"link:administration-guide/jms.html#administering-jms-connection-factories-and-destinations[Administering JMS Connection Factories and
+"xref:administration-guide.adoc#administering-jms-connection-factories-and-destinations[Administering JMS Connection Factories and
 Destinations]" in {productName} Administration
 Guide. For more information about MDBs, see "xref:application-development-guide.adoc#using-message-driven-beans[Using
 Message-Driven Beans]" in {productName}

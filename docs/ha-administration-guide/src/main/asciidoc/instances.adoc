@@ -1225,7 +1225,7 @@ The configuration data in these locations must be synchronized. The
 cache is synchronized in the following circumstances:
 
 * Whenever an `asadmin` subcommand is run. For more information, see
-"link:administration-guide/overview.html#impact-of-configuration-changes[Impact of Configuration Changes]" in {productName} Administration Guide.
+"xref:administration-guide.adoc#impact-of-configuration-changes[Impact of Configuration Changes]" in {productName} Administration Guide.
 * When a user uses the administration tools to start or restart an instance.
 
 [[default-synchronization-for-files-and-directories]]
@@ -1915,7 +1915,7 @@ This enables automatic timer migration for failed server instances in
 the cluster.
 
 For instructions on enabling delegated transaction recovery, see
-"link:administration-guide/transactions.html#administering-transactions[Administering Transactions]" in {productName} Administration Guide.
+"xref:administration-guide.adoc#administering-transactions[Administering Transactions]" in {productName} Administration Guide.
 
 [[to-migrate-ejb-timers-manually]]
 

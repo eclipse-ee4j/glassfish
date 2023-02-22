@@ -497,7 +497,7 @@ Address List Iterations::
   is not used when performing reconnection.
 
 You can override these settings using JMS connection factory settings.
-For details, see "link:administration-guide/jms.html#administering-jms-connection-factories-and-destinations[Administering JMS Connection
+For details, see "xref:administration-guide.adoc#administering-jms-connection-factories-and-destinations[Administering JMS Connection
 Factories and Destinations]" in {productName}
 Administration Guide.
 

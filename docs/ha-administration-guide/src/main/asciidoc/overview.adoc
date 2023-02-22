@@ -294,7 +294,7 @@ Use any of the following methods to recover the DAS:
 
 * Back up the domain periodically, so you have periodic snapshots. After
 a hardware failure, re-create the DAS on a new host, as described in
-"link:administration-guide/domains.html#re-creating-the-domain-administration-server-das[Re-Creating the Domain Administration Server (DAS)]"
+"xref:administration-guide.adoc#re-creating-the-domain-administration-server-das[Re-Creating the Domain Administration Server (DAS)]"
 in {productName} Administration Guide.
 * Put the domain installation and configuration on a shared and robust
 file system (NFS for example). If the primary DAS host fails, a second

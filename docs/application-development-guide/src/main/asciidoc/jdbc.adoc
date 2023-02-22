@@ -460,7 +460,7 @@ reference. To turn off connection sharing, set `res-sharing-scope` to
 `Unshareable`.
 
 For general information about connections and JDBC URLs, see
-"link:administration-guide/jdbc.html#administering-database-connectivity[Administering Database Connectivity]" in {productName} Administration Guide.
+"xref:administration-guide.adoc#administering-database-connectivity[Administering Database Connectivity]" in {productName} Administration Guide.
 
 [[marking-bad-connections]]
 

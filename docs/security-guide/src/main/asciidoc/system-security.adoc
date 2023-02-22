@@ -829,7 +829,7 @@ To use SSL, {productName} must have a certificate for each external
 interface or IP address that accepts secure connections. The HTTPS
 service of most web servers will not run unless a certificate has been
 installed. For instructions on applying SSL to HTTP listeners, see
-"link:administration-guide/http_https.html#to-configure-an-http-listener-for-ssl[
+"xref:administration-guide.adoc#to-configure-an-http-listener-for-ssl[
 To Configure an HTTP Listener for SSL]" in {productName} Administration Guide.
 
 [[ciphers]]
@@ -1025,14 +1025,14 @@ Administration Console::
   certificates, users, groups, and realms, and performing other
   system-wide security tasks. For a general introduction to the
   Administration Console, see
-  "link:administration-guide/overview.html#administration-console[Administration Console]"
+  "xref:administration-guide.adoc#administration-console[Administration Console]"
   in {productName} Administration Guide.
 The `asadmin` utility::
   The `asadmin` command-line utility performs many of the same tasks as
   the Administration Console. You might be able to do some things with
   the `asadmin` utility that you cannot do with the Administration
   Console. For a general introduction to `asadmin`, see
-  "link:administration-guide/overview.html#asadmin-utility[asadmin Utility]"
+  "xref:administration-guide.adoc#asadmin-utility[asadmin Utility]"
   in {productName} Administration Guide.
 The `keytool` utility::
   The `keytool` Java Platform, Standard Edition (Java SE) command-line
@@ -1102,7 +1102,7 @@ This subcommand will not work unless the domain is stopped.
 
 1. Stop the domain whose password you are changing.
 +
-See "link:administration-guide/domains.html#to-stop-a-domain[To Stop a Domain]"
+See "xref:administration-guide.adoc#to-stop-a-domain[To Stop a Domain]"
 in {productName} Administration Guide.
 2. Change the master password for the domain by using the
 link:reference-manual/change-master-password.html#change-master-password[`change-master-password`] subcommand.
@@ -1110,7 +1110,7 @@ link:reference-manual/change-master-password.html#change-master-password[`change
 You are prompted for the old and new passwords. All dependent items are re-encrypted.
 3. Start the domain.
 +
-See "link:administration-guide/domains.html#to-start-a-domain[To Start a Domain]" in {productName} Administration Guide.
+See "xref:administration-guide.adoc#to-start-a-domain[To Start a Domain]" in {productName} Administration Guide.
 
 [[givil]]
 Example 1-2 Changing the Master Password
@@ -1296,7 +1296,7 @@ Encrypting the admin password is strongly encouraged.
 link:reference-manual/change-admin-password.html#change-admin-password[`change-admin-password`] subcommand.
 2. Enter the old and new admin passwords when prompted.
 3. Restart {productName}. +
-See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
+See "xref:administration-guide.adoc#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
 
 [[ghlac]]
 Example 1-3 Changing the Admin Password
@@ -1757,7 +1757,7 @@ Certificate was added to keystore
 [Saving cacerts.jks]
 ----
 7. To apply your changes, restart {productName}. See
-"link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
+"xref:administration-guide.adoc#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
 
 [[ghlii]]
 Example 1-11 Creating a Self-Signed Certificate in a JKS Keystore by
@@ -1925,7 +1925,7 @@ Valid from: Sun Nov 11 05:30:00 GMT+05:30 2007 until: Mon Nov
 ----
 8. To apply your changes, restart {productName}.
 +
-See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
+See "xref:administration-guide.adoc#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
 
 [[ghlhu]]
 Example 1-15 Importing an RFC/Text-Formatted Certificate Into a JKS

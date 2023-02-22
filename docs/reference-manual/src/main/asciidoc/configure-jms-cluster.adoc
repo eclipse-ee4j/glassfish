@@ -36,7 +36,7 @@ providing JMS services to a {productName} cluster.
 
 This subcommand should be used before the {productName} cluster is
 started for the first time. Otherwise, follow the instructions in
-"link:administration-guide/jms.html#administering-the-java-message-service-jms[Administering the Java Message Service (JMS)]" in
+"xref:administration-guide.adoc#administering-the-java-message-service-jms[Administering the Java Message Service (JMS)]" in
 {productName} Administration Guide.
 
 This subcommand is supported in remote mode only. Remote `asadmin`

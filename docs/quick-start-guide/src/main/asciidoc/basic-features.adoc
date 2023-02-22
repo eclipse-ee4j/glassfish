@@ -168,7 +168,7 @@ When you install {productName}, a default domain named `domain1` is
 created. The following procedures describe how to start and stop
 `domain1` when it is the only domain. For information about starting and
 stopping a domain when there are multiple domains, see
-"link:administration-guide/domains.html#administering-domains[Administering Domains]" in {productName} Administration Guide.
+"xref:administration-guide.adoc#administering-domains[Administering Domains]" in {productName} Administration Guide.
 
 [[to-start-the-default-domain]]
 

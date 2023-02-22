@@ -33,7 +33,7 @@ This chapter contains the following:
 
 Use `asadmin` `list-commands` to determine which commands are supported
 and available for use. For related information, see
-"link:administration-guide/asadmin-subcommands.html#asadmin-subcommands[Subcommands for the asadmin Utility]" in {productName} Administration Guide.
+"xref:administration-guide.adoc#asadmin-subcommands[Subcommands for the asadmin Utility]" in {productName} Administration Guide.
 
 [[application-faqs]]
 

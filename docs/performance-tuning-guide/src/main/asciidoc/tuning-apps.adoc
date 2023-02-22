@@ -514,10 +514,10 @@ asadmin get -m serverInstance.application.appName.ejb-module.moduleName
 ----
 
 For more information about administering the monitoring service in
-general, see "link:administration-guide/monitoring.html#administering-the-monitoring-service[Administering the Monitoring Service]" in
+general, see "xref:administration-guide.adoc#administering-the-monitoring-service[Administering the Monitoring Service]" in
 {productName} Administration Guide. For
 information about viewing comprehensive EJB monitoring statistics, see
-"link:administration-guide/monitoring.html#ejb-statistics[EJB Statistics]" in {productName} Administration Guide.
+"xref:administration-guide.adoc#ejb-statistics[EJB Statistics]" in {productName} Administration Guide.
 
 To configure EJB monitoring using the {productName} Administration
 Console, navigate to the Configurations>configuration-name>Monitoring
@@ -973,7 +973,7 @@ Using the {productName} Administration Console, navigate to the
 Configurations>configuration-name>Thread Pools node.
 Refer to the Administration Console online help for more information.
 Alternatively, you can follow the instructions in
-"link:administration-guide/threadpools.html#administering-thread-pools[
+"xref:administration-guide.adoc#administering-thread-pools[
 Administering Thread Pools]" in {productName} Administration Guide.
 +
 Configure the threadpools as follows:
@@ -1318,7 +1318,7 @@ carefully analyzing the database table usage patterns.
 To set the database transaction isolation level using the {productName} Administration Console, navigate to the Resources>JDBC>JDBC
 Connection Pools>pool-name node. Refer to the Administration Console
 online help for complete instructions. Alternatively, follow the
-instructions in "link:administration-guide/jdbc.html#administering-database-connectivity[Administering Database Connectivity]"
+instructions in "xref:administration-guide.adoc#administering-database-connectivity[Administering Database Connectivity]"
 in {productName} Administration Guide. For more
 information on tuning JDBC connection pools, see
 xref:tuning-glassfish.adoc#jdbc-connection-pool-settings[JDBC Connection Pool Settings].

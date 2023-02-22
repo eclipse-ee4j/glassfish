@@ -151,6 +151,6 @@ xref:rotate-log.adoc#rotate-log[`rotate-log`(1)],
 xref:set-log-attributes.adoc#set-log-attributes[`set-log-attributes`(1)],
 xref:set-log-levels.adoc#set-log-levels[`set-log-levels`(1)]
 
-"link:administration-guide/logging.html#administering-the-logging-service[Administering the Logging Service]" in {productName} Administration Guide
+"xref:administration-guide.adoc#administering-the-logging-service[Administering the Logging Service]" in {productName} Administration Guide
 
 

@@ -60,7 +60,7 @@ If startup was successful, the expected message is similar to that on
 the console, and appears at the end of the log file.
 
 For more information about starting a domain, see
-"link:administration-guide/domains.html#starting-and-stopping-a-domain[
+"xref:administration-guide.adoc#starting-and-stopping-a-domain[
 Starting and Stopping a Domain]"
 in {productName} Administration Guide.
 To easily determine if a domain is running, use the `asadmin list-domains` command.
@@ -209,7 +209,7 @@ accessible, check the following:
 Port?]
 
 For more information about the Administration Console, see
-"link:administration-guide/overview.html#administration-console[Administration Console]" in {productName} Administration Guide.
+"xref:administration-guide.adoc#administration-console[Administration Console]" in {productName} Administration Guide.
 
 [[is-the-application-server-running]]
 

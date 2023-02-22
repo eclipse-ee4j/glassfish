@@ -152,7 +152,7 @@ xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 xref:stop-database.adoc#stop-database[`stop-database`(1)]
 
-"link:administration-guide/jdbc.html#administering-database-connectivity[Administering Database Connectivity]" in {productName} Administration Guide
+"xref:administration-guide.adoc#administering-database-connectivity[Administering Database Connectivity]" in {productName} Administration Guide
 
 For more information about the Java application launcher, see the
 reference page for the operating system that you are using:

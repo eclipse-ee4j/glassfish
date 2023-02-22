@@ -58,7 +58,7 @@ xref:class-loaders.adoc#using-the-common-class-loader[Using the Common Class Loa
 * Set up debugging. For more information, see
 xref:debugging-apps.adoc#debugging-applications[Debugging Applications].
 * Configure the Virtual Machine for the Java platform (JVM software).
-For more information, see "link:administration-guide/jvm.html#administering-the-virtual-machine-for-the-java-platform[
+For more information, see "xref:administration-guide.adoc#administering-the-virtual-machine-for-the-java-platform[
 Administering the Virtual Machine for the Java Platform]"
 in {productName} Administration Guide.
 

@@ -335,7 +335,7 @@ adding JDBC drivers to the {productName}. For a list of the JDBC
 drivers currently supported by the {productName}, see the
 xref:release-notes.adoc#GSRLN[{productName} Release Notes]. For
 configurations of supported and other drivers, see
-"link:administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
+"xref:administration-guide.adoc#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.
 
 To activate custom login modules and realms, place the JAR files in the

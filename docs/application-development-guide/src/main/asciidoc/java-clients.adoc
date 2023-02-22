@@ -270,7 +270,7 @@ Java Message Service Examples]" in The Jakarta EE Tutorial.
 2. Next, configure a JMS resource on the {productName}.
 +
 For information on configuring JMS resources, see
-"link:administration-guide/jms.html#administering-jms-connection-factories-and-destinations[Administering JMS Connection Factories and
+"xref:administration-guide.adoc#administering-jms-connection-factories-and-destinations[Administering JMS Connection Factories and
 Destinations]" in {productName} Administration
 Guide.
 3. Define the `@Resource` or `@Resources` annotations or the
@@ -1602,7 +1602,7 @@ Java Message Service Examples] in The Jakarta EE Tutorial.
 2. Configure a JMS resource on {productName}.
 +
 For information on configuring JMS resources, see
-"link:administration-guide/jms.html#administering-jms-connection-factories-and-destinations[
+"xref:administration-guide.adoc#administering-jms-connection-factories-and-destinations[
 Administering JMS Connection Factories and Destinations]"
 in {productName} Administration Guide.
 3. Copy the following JAR files to the client machine and include them

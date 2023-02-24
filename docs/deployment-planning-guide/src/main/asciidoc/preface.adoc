@@ -116,26 +116,26 @@ scalability through failover and load balancing.
 |Provides reference information in man page format for {productName} administration commands, utility
 commands, and related concepts.
 
-|xref:{mq-release-notes-url}[Message Queue Release Notes]
+|link:{mq-release-notes-url}[Message Queue Release Notes]
 |Describes new features, compatibility issues, and existing bugs for Open Message Queue.
 
-|xref:{mq-tech-over-url}[Message Queue Technical Overview]
+|link:{mq-tech-over-url}[Message Queue Technical Overview]
 |Provides an introduction to the technology, concepts, architecture, capabilities, and features of
 the Message Queue messaging service.
 
-|xref:{mq-admin-guide-url}[Message Queue Administration Guide]
+|link:{mq-admin-guide-url}[Message Queue Administration Guide]
 |Explains how to set up and manage a Message Queue messaging system.
 
-|xref:{mq-dev-guide-jmx-url}[Message Queue Developer's Guide for JMX Clients]
+|link:{mq-dev-guide-jmx-url}[Message Queue Developer's Guide for JMX Clients]
 |Describes the application programming interface in Message Queue for
 programmatically configuring and monitoring Message Queue resources in
 conformance with the Java Management Extensions (JMX).
 
-|xref:{mq-dev-guide-java-url}[Message Queue Developer's Guide for Java Clients]
+|link:{mq-dev-guide-java-url}[Message Queue Developer's Guide for Java Clients]
 |Provides information about concepts and procedures for developing Java messaging
 applications (Java clients) that work with {productName}.
 
-|xref:{mq-dev-guide-c-url}[Message Queue Developer's Guide for C Clients]
+|link:{mq-dev-guide-c-url}[Message Queue Developer's Guide for C Clients]
 |Provides programming and reference information for developers working with
 Message Queue who want to use the C language binding to the Message
 Queue messaging service to send, receive, and process Message Queue messages.

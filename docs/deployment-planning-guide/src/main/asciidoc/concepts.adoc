@@ -495,7 +495,7 @@ Administration Console and `asadmin` command-line utility.
 
 For advanced tasks, including administering a Message Queue cluster, use
 the tools provided in the as-install``/mq/bin`` directory. For details
-about administering Message Queue, see the xref:{mq-admin-guide-url}[Open Message
+about administering Message Queue, see the link:{mq-admin-guide-url}[Open Message
 Queue Administration Guide].
 
 For information on deploying JMS applications and Message Queue
@@ -561,7 +561,7 @@ For more information, see the following documentation:
 * "xref:ha-administration-guide.adoc#configuring-java-message-service-high-availability[Configuring Java Message Service High Availability]"
 in {productName} High Availability Administration
 Guide
-* xref:{mq-admin-guide-url}[Open Message Queue Administration Guide]
+* link:{mq-admin-guide-url}[Open Message Queue Administration Guide]
 
 9. Deploy applications and configure them for high availability and session failover. +
 For more information, see the xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide].

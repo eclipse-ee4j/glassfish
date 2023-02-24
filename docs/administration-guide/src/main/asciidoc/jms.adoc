@@ -100,7 +100,7 @@ JMS Physical Destinations::
 Just as {productName} supports clusters of instances to provide high
 availability, Message Queue supports clusters of brokers to provide
 service availability or service and data availability, depending on the
-type of broker cluster, as described in "link:../openmq/mq-tech-over/broker-clusters.html#GMTOV00028[Broker
+type of broker cluster, as described in "link:{mq-tech-over-url}/broker-clusters.html#GMTOV00028[Broker
 Clusters]" in Open Message Queue Technical Overview.
 
 The JMS service takes advantage of this Message Queue capability and
@@ -142,7 +142,7 @@ The attributes you can set are:
   A list of arguments the JMS service passes to Embedded and Local type
   JMS hosts on startup. Permissible arguments are the options supported
   by the Message Queue `imqbrokerd` command, as described in
-  "link:../openmq/mq-admin-guide/command-line-reference.html#GMADG00280[Broker Utility]" in Open Message Queue
+  "link:{mq-admin-guide-url}/command-line-reference.html#GMADG00280[Broker Utility]" in Open Message Queue
   Administration Guide.
 `default-jms-host`::
   The name of the default JMS host.
@@ -181,7 +181,7 @@ The attributes you can set are:
 `mq-service`::
   The Message Queue address scheme name and connection service name to
   use for the AddressList if a non-default scheme or service is to be
-  used. See "link:../openmq/mq-admin-guide/administered-object-attributes.html#GMADG00622[Connection Handling]" in Open Message
+  used. See "link:{mq-admin-guide-url}/administered-object-attributes.html#GMADG00622[Connection Handling]" in Open Message
   Queue Administration Guide for syntax information.
 
 
@@ -286,7 +286,7 @@ Remote Type::
   JMS service uses the information defined by the default JMS host to
   communicate with an MQ broker or broker cluster that has been
   configured and started using Message Queue tools, as described in the
-  xref:{mq-admin-guide-url}[Open Message Queue Administration Guide]. Ongoing
+  link:{mq-admin-guide-url}[Open Message Queue Administration Guide]. Ongoing
   administration and tuning of the broker or broker cluster are also
   performed using Message Queue tools.
 
@@ -807,7 +807,7 @@ physical destination.
 Because a physical destination is actually a Message Queue object rather
 than a server object, you use Message Queue broker commands to update
 properties. For information on Message Queue properties, see the
-xref:{mq-admin-guide-url}[Open Message Queue Administration Guide].
+link:{mq-admin-guide-url}[Open Message Queue Administration Guide].
 
 1. Ensure that the server is running.
 +

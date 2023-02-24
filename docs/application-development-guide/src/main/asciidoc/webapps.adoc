@@ -150,7 +150,7 @@ clears the cache during dynamic deployment or reloading of classes.
 * Results produced by resources that are the target of a
 `RequestDispatcher.include()` or `RequestDispatcher.forward()` call are
 cached if caching has been enabled for those resources. For details, see
-"xref:application-deployment-guide.adoc#cache-mapping[cache-mapping]" in {productName} Application Deployment Guide and "link:../application-deployment-guide/dd-elements.html#dispatcher[dispatcher]"
+"xref:application-deployment-guide.adoc#cache-mapping[cache-mapping]" in {productName} Application Deployment Guide and "xref:../application-deployment-guide.adoc#dispatcher[dispatcher]"
 in {productName} Application Deployment Guide.
 These are elements in the `glassfish-web.xml` file.
 

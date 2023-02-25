@@ -66,7 +66,7 @@ represent exactly what can be monitored for that object. All child
 objects are addressed using the dot (.) character as a separator. These
 constructed names are referred to as dotted names. Detailed information
 on dotted names is available in the
-link:reference-manual/dotted-names.html#dotted-names[`dotted-names`(5ASC)] help page.
+xref:reference-manual.adoc#dotted-names[`dotted-names`(5ASC)] help page.
 
 The following command lists the monitorable child objects of the
 instance `server`:
@@ -496,7 +496,7 @@ Use the `enable-monitoring` subcommand to enable the monitoring service
 itself, or to enable monitoring for individual modules. Monitoring is
 immediately activated, without restarting {productName}.
 
-You can also use the link:reference-manual/set.html#set[`set`] subcommand to enable
+You can also use the xref:reference-manual.adoc#set[`set`] subcommand to enable
 monitoring for a module. Using the `set` command is not a dynamic
 procedure, so you need to restart {productName} for your changes to
 take effect.
@@ -517,7 +517,7 @@ configs.config.server-config.monitoring-service.module-monitoring-levels.web-con
        configs.config.server-config.monitoring-service.module-monitoring-levels.http-service=OFF
            configs.config.server-config.monitoring-service.module-monitoring-levels.jvm=HIGH
 ----
-2. Enable monitoring by using the olink:GSRFM00128[`enable-monitoring`]
+2. Enable monitoring by using the xref:reference-manual.adoc#enable-monitoring[`enable-monitoring`]
 subcommand.
 +
 Server restart is not required.
@@ -572,7 +572,7 @@ Use the `disable-monitoring` subcommand to disable the monitoring
 service itself, or to disable monitoring for individual modules.
 Monitoring is immediately stopped, without restarting {productName}.
 
-You can also use the link:reference-manual/set.html#set[`set`] subcommand to disable
+You can also use the xref:reference-manual.adoc#set[`set`] subcommand to disable
 monitoring for a module. Using the `set` command is not a dynamic
 procedure, so you need to restart {productName} for your changes to
 take effect.
@@ -594,7 +594,7 @@ configs.config.server-config.monitoring-service.module-monitoring-levels.web-con
               configs.config.server-config.monitoring-service.module-monitoring-levels.jvm=HIGH
 ----
 2. Disable monitoring for a service or module by using the
-link:reference-manual/disable-monitoring.html#disable-monitoring[`disable-monitoring`] subcommand.
+xref:reference-manual.adoc#disable-monitoring[`disable-monitoring`] subcommand.
 +
 Server restart is not required.
 
@@ -670,7 +670,7 @@ display data on the object. See <<To Enable Monitoring>>.
 1. Determine which type of monitorable object you want to monitor.
 +
 Your choices for 5.0 are `jvm`, `httplistener`, and `webmodule`.
-2. Request the monitoring data by using the link:reference-manual/monitor.html#monitor[`monitor`]
+2. Request the monitoring data by using the xref:reference-manual.adoc#monitor[`monitor`]
 subcommand.
 
 [[ghljw]]
@@ -870,7 +870,7 @@ attributes and values corresponding to connection pool attributes.
 
 
 For detailed information on dotted names, see the
-link:reference-manual/dotted-names.html#dotted-names[`dotted-names`(5ASC)] help page.
+xref:reference-manual.adoc#dotted-names[`dotted-names`(5ASC)] help page.
 
 [[to-view-comprehensive-monitoring-data]]
 
@@ -889,7 +889,7 @@ display information about the object. See xref:#to-enable-monitoring[To Enable
 Monitoring] if needed.
 
 1. List the objects that are enabled for monitoring by using the
-link:reference-manual/list.html#list[`list`] subcommand.
+xref:reference-manual.adoc#list[`list`] subcommand.
 +
 For example, the following subcommand lists all components and services
 that have monitoring enabled for instance `server`.
@@ -906,7 +906,7 @@ server.http-service
 server.thread-pools
 ----
 2. Get data for a monitored component or service by using the
-link:reference-manual/get.html#get[`get`] subcommand.
+xref:reference-manual.adoc#get[`get`] subcommand.
 
 [[ghlre]]
 Example 8-8 Viewing Attributes for a Specific Type

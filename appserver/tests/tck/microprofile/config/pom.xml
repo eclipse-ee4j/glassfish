@@ -74,11 +74,11 @@
                         <customer_name>Bob</customer_name>
                     </environmentVariables>
 
-                    <systemProperties>
+                    <systemPropertyVariables>
                         <mp.tck.prop.dummy>dummy</mp.tck.prop.dummy>
                         <customer.hobby>Tennis</customer.hobby>
                         <config_ordinal>120</config_ordinal>
-                    </systemProperties>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>

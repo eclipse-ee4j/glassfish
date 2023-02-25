@@ -16,13 +16,13 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <concurrency.tck-3-0.version>3.0.2</concurrency.tck-3-0.version>
-        
+
         <glassfish.version>${project.version}</glassfish.version>
         <glassfish.root>${project.build.directory}</glassfish.root>
         <glassfish.home>${glassfish.root}/glassfish7</glassfish.home>
         <suiteXmlFile>suite.xml</suiteXmlFile>
     </properties>
-    
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -34,20 +34,20 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    
+
     <dependencies>
         <!-- Jakarta EE APIs -->
         <dependency>
             <groupId>jakarta.enterprise.concurrent</groupId>
             <artifactId>jakarta.enterprise.concurrent-api</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
-    
-    
+
+
         <!--  The TCK  -->
         <dependency>
             <groupId>jakarta.enterprise.concurrent</groupId>
@@ -55,13 +55,13 @@
             <version>${concurrency.tck-3-0.version}</version>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>jakarta.ejb</groupId>
             <artifactId>jakarta.ejb-api</artifactId>
             <scope>test</scope>
         </dependency>
-    
+
         <!-- Utility classes for TestNG and Arquillian, used in suite.xml -->
         <dependency>
             <groupId>jakarta.enterprise</groupId>
@@ -91,7 +91,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-                  
+
         <!--
             The Arquillian connector that starts GlassFish and deploys archives to it.
         -->
@@ -100,14 +100,14 @@
             <artifactId>arquillian-glassfish-server-managed</artifactId>
             <version>1.2</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>7.4.0</version>
         </dependency>
     </dependencies>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -191,22 +191,22 @@
                         </property>
                     </properties>
                     <forkMode>once</forkMode>
-                    
+
                     <!-- System Properties -->
                     <systemPropertyVariables>
                         <glassfish.home>${glassfish.root}/glassfish7</glassfish.home>
                         <glassfish.enableDerby>true</glassfish.enableDerby>
                         <glassfish.maxHeapSize>2048m</glassfish.maxHeapSize>
-                        
+
                         <!-- Remove comments for logging to file. Following logging with e.g. tail -f ConcurrentTCK00.log -->
                         <!--
                         <java.util.logging.config.file>${project.build.directory}/test-classes/logging.properties</java.util.logging.config.file>
-                        
+
                         -->
                         <glassfish.systemProperties>
                             jimage.dir=${project.build.directory}/jimage
                         </glassfish.systemProperties>
-                        
+
                         <glassfish.postBootCommands>
                             create-file-user --groups staff:mgr --passwordfile ${project.build.directory}/test-classes/j2ee.pass j2ee
                             create-file-user --groups Manager --passwordfile ${project.build.directory}/test-classes/javajoe.pass javajoe
@@ -216,9 +216,7 @@
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>3.0.0-M7</version>
                 <executions>
                     <execution>
                         <id>generate-test-report</id>
@@ -253,5 +251,5 @@
             </properties>
         </profile>
     </profiles>
-    
+
 </project>

@@ -132,7 +132,6 @@
         <shoal.version>3.0.1</shoal.version>
         <ha-api.version>3.1.13</ha-api.version>
         <logging-annotation-processor.version>1.9</logging-annotation-processor.version>
-        <command-security-plugin.version>1.0.16</command-security-plugin.version>
         <command.security.maven.plugin.isFailureFatal>true</command.security.maven.plugin.isFailureFatal>
 
 
@@ -750,7 +749,6 @@
                 <artifactId>logging-annotation-processor</artifactId>
                 <version>${logging-annotation-processor.version}</version>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 
@@ -791,7 +789,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-antrun-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <version>3.1.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.felix</groupId>
@@ -836,16 +834,21 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.5.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
                     <artifactId>glassfishbuild-maven-plugin</artifactId>
-                    <version>3.2.27</version>
+                    <version>3.2.28</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.4.1</version>
+                    <version>3.5.0</version>
+                    <configuration>
+                        <detectOfflineLinks>false</detectOfflineLinks>
+                        <notimestamp>false</notimestamp>
+                        <skip>${javadoc.skip}</skip>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-source-plugin</artifactId>
@@ -857,7 +860,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0-M7</version>
+                    <version>3.0.0-M9</version>
                     <configuration>
                         <environmentVariables>
                             <LANG>en</LANG>
@@ -871,16 +874,16 @@
                            <exclude>**/*ITest.java</exclude>
                            <exclude>**/*IT.java</exclude>
                         </excludes>
-                        <systemProperties>
+                        <systemPropertyVariables>
                             <java.util.logging.manager>${test.logManager}</java.util.logging.manager>
                             <java.util.logging.config.useDefaults>true</java.util.logging.config.useDefaults>
                             <java.util.logging.config.defaultLevel>${test.logLevel}</java.util.logging.config.defaultLevel>
-                        </systemProperties>
+                        </systemPropertyVariables>
                     </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.0.0-M7</version>
+                    <version>3.0.0-M9</version>
                     <configuration>
                         <environmentVariables>
                             <LANG>en</LANG>
@@ -888,17 +891,16 @@
                         <argLine>${failsafe.argLine}</argLine>
                         <trimStackTrace>false</trimStackTrace>
                         <useSystemClassLoader>true</useSystemClassLoader>
-                        <verbose>true</verbose>
                         <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>
                         <includes>
                            <include>**/*ITest.java</include>
                            <include>**/*IT.java</include>
                         </includes>
-                        <systemProperties>
+                        <systemPropertyVariables>
                             <java.util.logging.manager>${test.logManager}</java.util.logging.manager>
                             <java.util.logging.config.useDefaults>true</java.util.logging.config.useDefaults>
                             <java.util.logging.config.defaultLevel>${test.logLevel}</java.util.logging.config.defaultLevel>
-                        </systemProperties>
+                        </systemPropertyVariables>
                     </configuration>
                     <executions>
                         <execution>
@@ -916,8 +918,12 @@
                     </executions>
                 </plugin>
                 <plugin>
+                    <artifactId>maven-surefire-report-plugin</artifactId>
+                    <version>3.0.0-M9</version>
+                </plugin>
+                <plugin>
                     <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.2.1</version>
                     <configuration>
                         <configLocation>org/glassfish/qa/config/checkstyle/checkstyle.xml</configLocation>
                         <suppressionsLocation>org/glassfish/qa/config/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
@@ -968,31 +974,31 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>3.0.0-M5</version>
+                    <version>3.0.0-M7</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.2.0</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-site-plugin</artifactId>
-                    <version>4.0.0-M2</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-assembly-plugin</artifactId>
                     <version>3.3.0</version>
                 </plugin>
                 <plugin>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>4.0.0-M5</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>3.5.0</version>
+                </plugin>
+                <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
-                    <version>3.0.0-M2</version>
+                    <version>3.1.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-install-plugin</artifactId>
-                    <version>3.0.0-M1</version>
+                    <version>3.1.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.2.2</version>
+                    <version>3.3.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -1001,7 +1007,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-invoker-plugin</artifactId>
-                    <version>3.2.2</version>
+                    <version>3.5.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.copyright</groupId>
@@ -1050,11 +1056,6 @@
                     </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>com.google.code.maven-replacer-plugin</groupId>
-                    <artifactId>replacer</artifactId>
-                    <version>${replacer.plugin.version}</version>
-                </plugin>
-                <plugin>
                     <groupId>io.github.git-commit-id</groupId>
                     <artifactId>git-commit-id-maven-plugin</artifactId>
                     <version>5.0.0</version>
@@ -1076,11 +1077,18 @@
                         </includeOnlyProperties>
                     </configuration>
                 </plugin>
-                
+                <plugin>
+                    <groupId>org.glassfish.build</groupId>
+                    <artifactId>command-security-maven-plugin</artifactId>
+                    <version>1.0.16</version>
+                    <configuration>
+                        <isFailureFatal>${command.security.maven.plugin.isFailureFatal}</isFailureFatal>
+                    </configuration>
+                </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>versions-maven-plugin</artifactId>
-                    <version>2.14.2</version>
+                    <version>2.15.0</version>
                     <executions>
                         <execution>
                             <id>default-cli</id>
@@ -1089,12 +1097,12 @@
                                 <goal>display-dependency-updates</goal>
                             </goals>
                             <configuration>
-                                <!-- 
-                                    Exclude several versions that we never want to update to since they are OLDER than 
+                                <!--
+                                    Exclude several versions that we never want to update to since they are OLDER than
                                     what we currently use.
-                                    
-                                    Note that we actually want to specify the version per artefact, but this is currently 
-                                    broken. 
+
+                                    Note that we actually want to specify the version per artefact, but this is currently
+                                    broken.
                                     See https://github.com/mojohaus/versions/issues/258#issuecomment-1438149133
                                  -->
                                 <ignoredVersions>3.2-b..,2.5.0-b..,5.0-jdk8-rc.,20030911,10.0-b..</ignoredVersions>
@@ -1116,7 +1124,7 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>3.6.0</version>
+                                    <version>3.8.6</version>
                                 </requireMavenVersion>
                             </rules>
                         </configuration>
@@ -1317,15 +1325,6 @@
             </plugin>
 
             <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <detectOfflineLinks>false</detectOfflineLinks>
-                    <additionalparam>-Xdoclint:none</additionalparam>
-                    <skip>${javadoc.skip}</skip>
-                </configuration>
-            </plugin>
-
-            <plugin>
                 <groupId>org.glassfish.hk2</groupId>
                 <artifactId>osgiversion-maven-plugin</artifactId>
                 <!-- Since we don't want qualifier like b05 or SNAPSHOT to appear in package version attribute, we use the
@@ -1383,10 +1382,6 @@
             <plugin>
                 <groupId>org.glassfish.build</groupId>
                 <artifactId>command-security-maven-plugin</artifactId>
-                <version>${command-security-plugin.version}</version>
-                <configuration>
-                    <isFailureFatal>${command.security.maven.plugin.isFailureFatal}</isFailureFatal>
-                </configuration>
             </plugin>
         </plugins>
     </build>

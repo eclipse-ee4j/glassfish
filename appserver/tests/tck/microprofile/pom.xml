@@ -133,23 +133,14 @@
 
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>2.22.2</version>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>integration-test</goal>
-                                <goal>verify</goal>
-                            </goals>
-                        </execution>
-                    </executions>
                     <configuration>
-                        <systemProperties>
+                        <systemPropertyVariables>
                             <glassfish.home>${glassfish.home}</glassfish.home>
 
                             <!-- Use the Arquillian XML from the parent in each child module -->
                             <arquillian.xml>${project.parent.basedir}/arquillian.xml</arquillian.xml>
                             <arquillian.launch>arquillian-glassfish</arquillian.launch>
-                        </systemProperties>
+                        </systemPropertyVariables>
                         <environmentVariables>
                             <GLASSFISH_HOME>${glassfish.home}</GLASSFISH_HOME>
                         </environmentVariables>

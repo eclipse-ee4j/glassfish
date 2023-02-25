@@ -112,7 +112,7 @@ production environment.
 For production environments, any upgrade should be performed as a
 rolling upgrade, which upgrades applications and modules without
 interruption in service. For more information, see
-link:ha-administration-guide/rolling-upgrade.html#upgrading-applications-without-loss-of-availability[Upgrading Applications Without Loss of Availability] in
+xref:ha-administration-guide.adoc#upgrading-applications-without-loss-of-availability[Upgrading Applications Without Loss of Availability] in
 {productName} High Availability Administration
 Guide.
 
@@ -265,7 +265,7 @@ format for assembling connector modules. Each {productName} connector
 has annotations or a deployment descriptor file (`ra.xml`).
 +
 After deploying a J2EE connector module, you must configure it as
-described in link:application-development-guide/connectors.html#developing-connectors[Developing Connectors] in {productName} Application Development Guide.
+described in xref:application-development-guide.adoc#developing-connectors[Developing Connectors] in {productName} Application Development Guide.
 * Application Client Module. An application client module is a
 deployable software unit that consists of one or more classes, and
 application client deployment descriptors (`application-client.xml` and
@@ -274,7 +274,7 @@ applies to a {productName} type of Jakarta EE client. An application
 client supports the standard Jakarta EE Application Client specifications.
 * Lifecycle Module. A lifecycle module provides a means of running
 short-duration or long-duration Java-based tasks within the {productName} environment. Lifecycle modules are not Jakarta EE standard modules.
-See link:application-development-guide/lifecycle-listeners.html#developing-lifecycle-listeners[Developing Lifecycle Listeners] in {productName} Application Development Guide for more information.
+See xref:application-development-guide.adoc#developing-lifecycle-listeners[Developing Lifecycle Listeners] in {productName} Application Development Guide for more information.
 
 [[module-based-deployment]]
 
@@ -339,7 +339,7 @@ remove the libraries with `remove-library`. For more information about
 all these commands, see the {productName}
 Reference Manual.
 
-For more information about class loaders, see link:application-development-guide/class-loaders.html#class-loaders[Class
+For more information about class loaders, see xref:application-development-guide.adoc#class-loaders[Class
 Loaders] in {productName} Application Development
 Guide.
 
@@ -688,8 +688,8 @@ asadmin help list-applications
 ----
 
 For additional information on the `asadmin` utility, see
-"link:administration-guide/general-administration.html#using-the-asadmin-utility[Using the `asadmin` Utility]" in {productName} Administration Guide and the
-link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] help page.
+"xref:administration-guide.adoc#using-the-asadmin-utility[Using the `asadmin` Utility]" in {productName} Administration Guide and the
+xref:reference-manual.adoc#asadmin[`asadmin`(1M)] help page.
 
 [[netbeans-ide]]
 

@@ -157,7 +157,7 @@ Open Message Queue has a broker logger, which can be useful for
 debugging Java Message Service (JMS) applications, including
 message-driven bean applications. You can adjust the logger's verbosity,
 and you can send the logger output to the broker's console using the
-broker's `-tty` option. For more information, see the xref:{mq-admin-guide-url}[Open
+broker's `-tty` option. For more information, see the link:{mq-admin-guide-url}[Open
 Message Queue Administration Guide].
 
 

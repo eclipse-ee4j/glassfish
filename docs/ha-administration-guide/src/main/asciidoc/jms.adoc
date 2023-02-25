@@ -51,7 +51,7 @@ Cluster]
 ==== About Message Queue Broker Clusters
 
 The following discussion provides a brief overview of Message Queue
-broker clusters. For complete information, see "link:../openmq/mq-tech-over/broker-clusters.html#GMTOV00028[Broker
+broker clusters. For complete information, see "link:{mq-tech-over-url}/broker-clusters.html#GMTOV00028[Broker
 Clusters]" in Open Message Queue Technical Overview.
 
 Message Queue supports two clustering models both of which provide a
@@ -106,7 +106,7 @@ It is the responsibility of the messaging application (both producers
 and consumers) to respond to JMS exceptions appropriately.
 For information about the kinds of exceptions that can occur and how to
 respond to them,
-see "link:../openmq/mq-dev-guide-java/client-design-and-features.html#GMJVG00229[Handling Exceptions When Failover Occurs]"
+see "link:{mq-dev-guide-java-url}/client-design-and-features.html#GMJVG00229[Handling Exceptions When Failover Occurs]"
 in Open Message Queue Developer's Guide for Java Clients.
 ====
 
@@ -310,7 +310,7 @@ typing `asadmin help change-master-broker` at the command line.
 
 If the need arises to convert from a conventional broker cluster with
 master broker to a conventional broker cluster of peer brokers, or the
-reverse, follow the instructions in "link:../openmq/mq-admin-guide/broker-clusters.html#GMADG00563[Managing
+reverse, follow the instructions in "link:{mq-admin-guide-url}/broker-clusters.html#GMADG00563[Managing
 Conventional Clusters]" in Open Message Queue Administration Guide.
 
 [[to-configure-a-glassfish-cluster-to-use-a-local-enhanced-broker-cluster]]
@@ -332,7 +332,7 @@ the cluster.
 Before using this procedure to reconfigure an existing cluster, you must
 follow the special procedures to migrate from a conventional broker
 cluster to an enhanced broker cluster, as described in
-"link:../openmq/mq-admin-guide/broker-clusters.html#GMADG00565[Converting a Conventional Cluster to an Enhanced
+"link:{mq-admin-guide-url}/broker-clusters.html#GMADG00565[Converting a Conventional Cluster to an Enhanced
 Cluster]" in Open Message Queue Administration Guide. Failing to perform
 these special procedures could lead to data loss or corruption and even
 render your setup unusable, depending on the JMS operations performed on
@@ -405,7 +405,7 @@ jms-host-name-for-broker
 
 4. Start the brokers in the cluster by using the Message Queue
 `imqbrokerd` command, as described in
-"link:../openmq/mq-admin-guide/broker-clusters.html#GMADG00254[Managing Broker Clusters]"
+"link:{mq-admin-guide-url}/broker-clusters.html#GMADG00254[Managing Broker Clusters]"
 in Open Message Queue Administration Guide.
 
 5. Create instances in the {productName} cluster, as described in
@@ -440,7 +440,7 @@ Behavior and Address List Iterations fields are ignored.
 
 For more information on connection failover, including how failover on
 conventional clusters differs from failover on enhanced clusters, see
-"link:../openmq/mq-admin-guide/administered-objects.html#GMADG00087[Automatic Reconnection]" in Open Message Queue
+"link:{mq-admin-guide-url}/administered-objects.html#GMADG00087[Automatic Reconnection]" in Open Message Queue
 Administration Guide.
 
 Reconnect::
@@ -514,6 +514,6 @@ non-durable subscription on a topic, then only one MDB instance across
 the whole GlassFish cluster will receive each message.
 
 For more information about these features, see
-"link:../openmq/mq-admin-guide/jmsra-properties.html#GMADG00300[
+"link:{mq-admin-guide-url}/jmsra-properties.html#GMADG00300[
 About Shared Topic Subscriptions for Clustered Containers]"
 in Open Message Queue Administration Guide.

@@ -389,8 +389,8 @@ impossible unless you have previously created a backup of these items.
 To create such a backup, use a utility such as `zip`, `gzip` or `tar` to
 create archives of these directories and all their content. When
 creating the backup, you should first quiesce all brokers and physical
-destinations, as described in "link:../openmq/mq-admin-guide/broker-management.html#GMADG00522[Quiescing a Broker]" and
-"link:../openmq/mq-admin-guide/message-delivery.html#GMADG00533[Pausing and Resuming a Physical Destination]" in Open
+destinations, as described in "link:{mq-admin-guide-url}/broker-management.html#GMADG00522[Quiescing a Broker]" and
+"link:{mq-admin-guide-url}/message-delivery.html#GMADG00533[Pausing and Resuming a Physical Destination]" in Open
 Message Queue Administration Guide, respectively. Then, after the failed
 disk is replaced and put into service, expand the backup archive into
 the same location.

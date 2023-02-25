@@ -92,7 +92,7 @@ the transactional user application uses Java Naming and Directory
 Interface (JNDI) to look up transactional data sources and, optionally,
 the user transaction). The application might use declarative transaction
 attribute settings for enterprise beans, or explicit programmatic
-transaction demarcation. For more information, see "link:application-development-guide/transaction-service.html#the-transaction-manager-the-transaction-synchronization-registry-and-usertransaction[The
+transaction demarcation. For more information, see "xref:application-development-guide.adoc#the-transaction-manager-the-transaction-synchronization-registry-and-usertransaction[The
 Transaction Manager, the Transaction Synchronization Registry, and
 UserTransaction]" in {productName} Application
 Development Guide.
@@ -110,7 +110,7 @@ There are three types of transaction resource managers:
 
 * Databases - Use of transactions prevents databases from being left in
 inconsistent states due to incomplete updates. For information about
-JDBC transaction isolation levels, see "link:application-development-guide/transaction-service.html#using-jdbc-transaction-isolation-levels[Using JDBC
+JDBC transaction isolation levels, see "xref:application-development-guide.adoc#using-jdbc-transaction-isolation-levels[Using JDBC
 Transaction Isolation Levels]" in {productName}
 Application Development Guide.
 +
@@ -185,7 +185,7 @@ following ways:
 * To configure the transaction service using the Administration Console,
 open the Transaction Service component under the relevant configuration.
 For details, click the Help button in the Administration Console.
-* To configure the transaction service, use the link:reference-manual/set.html#set[`set`]
+* To configure the transaction service, use the xref:reference-manual.adoc#set[`set`]
 subcommand to set the following attributes.
 +
 The following examples show the `server-config` configuration, but
@@ -246,7 +246,7 @@ empty value, the value used is `jdbc/TxnDS`.
 ** The `xa-servername` property does not have a default value. Use this
 property to override server names that can cause errors.
 +
-You can use the link:reference-manual/get.html#get[`get`] subcommand to list all the
+You can use the xref:reference-manual.adoc#get[`get`] subcommand to list all the
 transaction service attributes and the properties that have been set.
 For details, see the xref:reference-manual.adoc#GSRFM[{productName}
 Reference Manual].
@@ -297,7 +297,7 @@ by using the `unfreeze-transaction-service` subcommand.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Stop the transaction service by using the
-link:reference-manual/freeze-transaction-service.html#freeze-transaction-service[`freeze-transaction-service`] subcommand.
+xref:reference-manual.adoc#freeze-transaction-service[`freeze-transaction-service`] subcommand.
 
 [[giufq]]
 Example 19-1 Stopping the Transaction Service
@@ -346,7 +346,7 @@ Statistics]. For example:
 asadmin> get --monitor instance1.server.transaction-service.activeids-current
 ----
 5. Roll back the transaction by using the
-link:reference-manual/rollback-transaction.html#rollback-transaction[`rollback-transaction`] subcommand.
+xref:reference-manual.adoc#rollback-transaction[`rollback-transaction`] subcommand.
 +
 The transaction is not rolled back at the time of this command's
 execution, but only marked for rollback. The transaction is rolled back
@@ -379,7 +379,7 @@ restart the transaction service after it has been frozen.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Restart the suspended transaction service by using the
-link:reference-manual/unfreeze-transaction-service.html#unfreeze-transaction-service[`unfreeze-transaction-service`] subcommand.
+xref:reference-manual.adoc#unfreeze-transaction-service[`unfreeze-transaction-service`] subcommand.
 
 [[giuef]]
 Example 19-3 Restarting the Transaction Service
@@ -413,7 +413,7 @@ To explicitly specify whether {productName} commits or rolls back
 non-XA transactions at server shutdown, set the
 `com.sun.enterprise.in-progress-local-transaction.completion-mode` JVM
 option to either `commit` or `rollback` using the
-link:reference-manual/create-jvm-options.html#create-jvm-options[`create-jvm-options`] subcommand. For example:
+xref:reference-manual.adoc#create-jvm-options[`create-jvm-options`] subcommand. For example:
 
 [source]
 ----
@@ -489,7 +489,7 @@ following conditions must be met:
 resource is restarted.
 * Connection validation should be enabled so the connection pool is
 refreshed when the resource is accessed after the recovery. For more
-information, see "link:performance-tuning-guide/tuning-glassfish.html#connection-validation-settings[Connection Validation Settings]" in
+information, see "xref:performance-tuning-guide.adoc#connection-validation-settings[Connection Validation Settings]" in
 {productName} Performance Tuning Guide.
 
 If commit fails during recovery, a message is written to the server log.
@@ -501,14 +501,14 @@ A JMS resource crash is handled the same way as any other resource.
 
 You can list in-doubt Open Message Queue transactions using the
 `imqcmd list txn` subcommand. For more information, see
-"olink:GMADG00241[Managing Transactions]" in Open Message Queue
+"link:{mq-admin-guide-url}/message-delivery.html#aeoel[Managing Transactions]" in Open Message Queue
 Administration Guide.
 ====
 
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Manually recover transactions by using the
-link:reference-manual/recover-transactions.html#recover-transactions[`recover-transactions`] subcommand.
+xref:reference-manual.adoc#recover-transactions[`recover-transactions`] subcommand.
 
 [[giugn]]
 Example 19-4 Manually Recovering Transactions

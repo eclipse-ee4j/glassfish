@@ -58,7 +58,7 @@ without the need to administer {productName} instances explicitly.
 You administer the default instance when you administer its domain.
 
 If you require multiple instances, you must administer the instances
-explicitly. For more information, see "link:ha-administration-guide/instances.html#administering-glassfish-server-instances[Administering
+explicitly. For more information, see "xref:ha-administration-guide.adoc#administering-glassfish-server-instances[Administering
 {productName} Instances]" in {productName}
 High Availability Administration Guide.
 
@@ -98,7 +98,7 @@ as necessary.
 When a domain is created, you are prompted for the administration user
 name and password. If you accept the default, the user `admin` is
 created without password. To reset the administration password, see
-"link:security-guide/system-security.html#to-change-an-administration-password[To Change an Administration Password]" in {productName} Security Guide.
+"xref:security-guide.adoc#to-change-an-administration-password[To Change an Administration Password]" in {productName} Security Guide.
 
 [[domain-administration-server-das]]
 
@@ -161,8 +161,8 @@ domain, or you can accept the default login identity which is username
 
 1. Select a name for the domain that you are creating.
 You can verify that a name is not already in use by using the
-link:reference-manual/list-domains.html#list-domains[`list-domains`] subcommand
-2. Create a domain by using the link:reference-manual/create-domain.html#create-domain[`create-domain`] subcommand.
+xref:reference-manual.adoc#list-domains[`list-domains`] subcommand
+2. Create a domain by using the xref:reference-manual.adoc#create-domain[`create-domain`] subcommand.
 Information about the options for this subcommand is included in this help page.
 3. Type an admin user name and password for the domain.
 To avoid setting up an admin login, you can accept the default `admin`,
@@ -332,18 +332,18 @@ examine the as-install``/lib/templates/domain.xml`` file.
 5. Create the domain that you want to be based on a custom template.
 In the command to create the domain, pass the name of file that you
 edited in the previous step as the `--template` option of the
-link:reference-manual/create-domain.html#create-domain[`create-domain`] subcommand.
+xref:reference-manual.adoc#create-domain[`create-domain`] subcommand.
 
 6. Before starting the domain, verify that the domain's `domain.xml` file is valid.
-Use the link:reference-manual/verify-domain-xml.html#verify-domain-xml[`verify-domain-xml`]
+Use the xref:reference-manual.adoc#verify-domain-xml[`verify-domain-xml`]
 subcommand for this purpose.
 Information about the options for this subcommand is included in the subcommand's help page.
 
 See Also
 
 * <<To Create a Domain>>
-* link:reference-manual/create-domain.html#create-domain[`create-domain`(1)]
-* link:reference-manual/verify-domain-xml.html#verify-domain-xml[`verify-domain-xml`(1)]
+* xref:reference-manual.adoc#create-domain[`create-domain`(1)]
+* xref:reference-manual.adoc#verify-domain-xml[`verify-domain-xml`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line.
@@ -362,7 +362,7 @@ If there is more than one domain, the domain name must be specified.
 
 To list domains that were created in other directories, specify the `--domaindir` option.
 
-List domains by using the link:reference-manual/list-domains.html#list-domains[`list-domains`] subcommand.
+List domains by using the xref:reference-manual.adoc#list-domains[`list-domains`] subcommand.
 
 [[ggpfv]]
 Example 3-2 Listing Domains
@@ -435,7 +435,7 @@ To list the existing domains:
 ----
 asadmin list-domains
 ----
-2. Log in to the domain by using the olink:GSRFM00210[`login`] command.
+2. Log in to the domain by using the xref:reference-manual.adoc#login[`login`] command.
 
 [[ghlfx]]
 Example 3-3 Logging In To a Domain on a Remote Machine
@@ -479,7 +479,7 @@ See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help login` at the command line. For additional
-information about passwords, see "link:security-guide/system-security.html#administering-passwords[Administering
+information about passwords, see "xref:security-guide.adoc#administering-passwords[Administering
 Passwords]" in {productName} Security Guide.
 
 [[to-delete-a-domain]]
@@ -494,10 +494,10 @@ Before You Begin
 
 A domain must be stopped before it can be deleted.
 
-1. List domains by using the link:reference-manual/list-domains.html#list-domains[`list-domains`] subcommand.
+1. List domains by using the xref:reference-manual.adoc#list-domains[`list-domains`] subcommand.
 2. If necessary, notify domain users that the domain is being deleted.
 3. Ensure that the domain you want to delete is stopped. If needed, see <<To Stop a Domain>>.
-4. Delete the domain by using the link:reference-manual/delete-domain.html#delete-domain[`delete-domain`] subcommand.
+4. Delete the domain by using the xref:reference-manual.adoc#delete-domain[`delete-domain`] subcommand.
 
 [[ggoiy]]
 Example 3-5 Deleting a Domain
@@ -554,7 +554,7 @@ distribution of {productName}:
 
 This subcommand is supported in local mode only.
 
-Start a domain by using the link:reference-manual/start-domain.html#start-domain[`start-domain`] subcommand.
+Start a domain by using the xref:reference-manual.adoc#start-domain[`start-domain`] subcommand.
 
 [[ggocw]]
 Example 3-6 Starting a Domain
@@ -593,7 +593,7 @@ shutdown process takes a few seconds. While the domain is stopped, the
 Administration Console and most of the `asadmin` subcommands cannot be
 used. This subcommand is particularly useful in stopping a runaway
 server. For more controlled situations, you can use the
-link:reference-manual/restart-domain.html#restart-domain[`restart-domain`] subcommand.
+xref:reference-manual.adoc#restart-domain[`restart-domain`] subcommand.
 
 
 [NOTE]
@@ -608,7 +608,7 @@ From the Start menu, select the command for your distribution of
 
 
 1. If necessary, notify users that you are going to stop the domain.
-2. Stop the domain by using the link:reference-manual/stop-domain.html#stop-domain[`stop-domain`]
+2. Stop the domain by using the xref:reference-manual.adoc#stop-domain[`stop-domain`]
 subcommand.
 
 [[gioes]]
@@ -645,11 +645,11 @@ machine is secured and difficult to get to. With the right credentials,
 you can restart the server from a remote location as well as from the
 same machine.
 
-If the server will not restart, use the link:reference-manual/stop-domain.html#stop-domain[`stop-domain`]
-subcommand followed by the link:reference-manual/start-domain.html#start-domain[`start-domain`] subcommand.
+If the server will not restart, use the xref:reference-manual.adoc#stop-domain[`stop-domain`]
+subcommand followed by the xref:reference-manual.adoc#start-domain[`start-domain`] subcommand.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. Restart the domain by using the link:reference-manual/restart-domain.html#restart-domain[`restart-domain`] subcommand.
+2. Restart the domain by using the xref:reference-manual.adoc#restart-domain[`restart-domain`] subcommand.
 
 [[ggoet]]
 Example 3-8 Restarting a Domain (or Server)
@@ -715,7 +715,7 @@ the Windows command line, use the `sc.exe` tool.
 
 This subcommand must be run as the OS-level administrator user.
 
-1. Create the service by using the link:reference-manual/create-service.html#create-service[`create-service`]
+1. Create the service by using the xref:reference-manual.adoc#create-service[`create-service`]
 subcommand.
 2. After the service is created, start the service by using the Windows
 Services Manager or the Windows Services Wrapper.
@@ -809,7 +809,7 @@ to delete the initialization script and the link to the script that the
 
 The `create-service` subcommand must be run as the OS-level root user.
 
-Create the service by using the link:reference-manual/create-service.html#create-service[`create-service`]
+Create the service by using the xref:reference-manual.adoc#create-service[`create-service`]
 subcommand.
 
 [[domains-ex-3-12]]
@@ -882,7 +882,7 @@ If a particular {productName} domain or instance should not have
 default user privileges, modify the manifest of the service and reimport
 the service.
 
-1. Create the service by using the link:reference-manual/create-service.html#create-service[`create-service`]
+1. Create the service by using the xref:reference-manual.adoc#create-service[`create-service`]
 subcommand.
 2. After the service is created, enable the service by using the
 `svacdm enable` command.
@@ -955,7 +955,7 @@ set the `-Xrs` Java VM option
 1. Ensure that the DAS is running.
 
 2. Set the `-Xrs` Java VM option for the DAS.
-Use the link:reference-manual/create-jvm-options.html#create-jvm-options[`create-jvm-options`] subcommand for this purpose.
+Use the xref:reference-manual.adoc#create-jvm-options[`create-jvm-options`] subcommand for this purpose.
 +
 [source]
 ----
@@ -1013,7 +1013,7 @@ the backup itself.
 1. Ensure that the domain is stopped .
 +
 The `backup-domain` subcommand operates only when the domain is stopped.
-2. Back up the domain by using the link:reference-manual/backup-domain.html#backup-domain[`backup-domain`]
+2. Back up the domain by using the xref:reference-manual.adoc#backup-domain[`backup-domain`]
 subcommand.
 3. Restore the domain to its previous state, if necessary.
 +
@@ -1058,13 +1058,13 @@ The `restore-domain` subcommand operates only when the domain is
 stopped.
 +
 To determine whether the domain is running, use the
-link:reference-manual/list-domains.html#list-domains[`list-domains`] subcommand, as described in
+xref:reference-manual.adoc#list-domains[`list-domains`] subcommand, as described in
 <<To List Domains>>.
 +
-To stop the domain, use the link:reference-manual/stop-domain.html#stop-domain[`stop-domain`] subcommand
+To stop the domain, use the xref:reference-manual.adoc#stop-domain[`stop-domain`] subcommand
 as described in <<To Stop a Domain>>.
 3. Restore backup files for a domain by using the
-link:reference-manual/restore-domain.html#restore-domain[`restore-domain`] subcommand.
+xref:reference-manual.adoc#restore-domain[`restore-domain`] subcommand.
 4. Verify that the restore has succeeded.
 5. If necessary, notify users that the domain has been restored and is
 available.
@@ -1144,7 +1144,7 @@ situation where the first host crashes or is being taken out of service.
 [NOTE]
 ====
 You must maintain a backup of the DAS from the first host using the
-olink:GSRFM00003[`backup-domain`] subcommand as described in
+xref:reference-manual.adoc#backup-domain[`backup-domain`] subcommand as described in
 <<To Back Up a Domain>>. You can automatically maintain a
 backup of the DAS using the automatic backups feature of {productName}.
 ====
@@ -1185,7 +1185,7 @@ domain name should be same as the original.
 3. Stop the domain on olddashost, if it is running.
 
 4. Start the domain on newdashost by using the
-link:reference-manual/start-domain.html#start-domain[`start-domain`] subcommand.
+xref:reference-manual.adoc#start-domain[`start-domain`] subcommand.
 For example:
 +
 [source]
@@ -1195,7 +1195,7 @@ asadmin> start-domain domain1
 
 5. If the domain on olddashost was centrally administered, set up
 centralized administration on newdashost.
-See "link:ha-administration-guide/ssh-setup.html#enabling-centralized-administration-of-glassfish-server-instances[Enabling Centralized Administration of {productName} Instances]"
+See "xref:ha-administration-guide.adoc#enabling-centralized-administration-of-glassfish-server-instances[Enabling Centralized Administration of {productName} Instances]"
 in {productName} High Availability Administration Guide for instructions.
 
 6. Verify that instances on other hosts are visible to the new DAS on newdashost:
@@ -1247,7 +1247,7 @@ that the domain administration server (DAS) has been running since it
 was last started.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. Display uptime by using the link:reference-manual/uptime.html#uptime[`uptime`] subcommand.
+2. Display uptime by using the xref:reference-manual.adoc#uptime[`uptime`] subcommand.
 
 [[ghlds]]
 Example 3-17 Displaying the DAS Uptime
@@ -1317,13 +1317,13 @@ port of a domain.
 
 The HTTP port or the HTTPS port for administration of a domain is
 defined by the `--adminport` option of the
-link:reference-manual/create-domain.html#create-domain[`create-domain`] subcommand when the domain is created.
+xref:reference-manual.adoc#create-domain[`create-domain`] subcommand when the domain is created.
 If this port must be reallocated for another purpose, change the port on
 which the DAS listens for administration requests.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Set the port number to its new value.
-Use the link:reference-manual/set.html#set[`set`] subcommand for this purpose.
+Use the xref:reference-manual.adoc#set[`set`] subcommand for this purpose.
 +
 [source]
 ----
@@ -1353,7 +1353,7 @@ contact the DAS through the new port number.
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for controlling the
-behavior of the domain, see the olink:GSRFM00240[`stop-domain`(1)] help
+behavior of the domain, see the xref:reference-manual.adoc#stop-domain[`stop-domain`(1)] help
 page.
 ====
 +
@@ -1376,7 +1376,7 @@ old-port-number::
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for controlling the
-behavior of the domain, see the olink:GSRFM00235[`start-domain`(1)] help
+behavior of the domain, see the xref:reference-manual.adoc#start-domain[`start-domain`(1)] help
 page.
 ====
 +
@@ -1414,10 +1414,10 @@ Command start-domain executed successfully.
 
 See Also
 
-* link:reference-manual/create-domain.html#create-domain[`create-domain`(1)]
-* link:reference-manual/set.html#set[`set`(1)]
-* link:reference-manual/start-domain.html#start-domain[`start-domain`(1)]
-* link:reference-manual/stop-domain.html#stop-domain[`stop-domain`(1)]
+* xref:reference-manual.adoc#create-domain[`create-domain`(1)]
+* xref:reference-manual.adoc#set[`set`(1)]
+* xref:reference-manual.adoc#start-domain[`start-domain`(1)]
+* xref:reference-manual.adoc#stop-domain[`stop-domain`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:

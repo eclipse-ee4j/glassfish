@@ -852,31 +852,31 @@ scalability through failover and load balancing.</p></td>
 commands, and related concepts.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://javaee.github.io/openmq/Documentation.html">Message Queue Release Notes</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-release-notes/toc.html">Message Queue Release Notes</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Describes new features, compatibility issues, and existing bugs for Open Message Queue.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://javaee.github.io/openmq/Documentation.html">Message Queue Technical Overview</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-tech-over/toc.html">Message Queue Technical Overview</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Provides an introduction to the technology, concepts, architecture, capabilities, and features of
 the Message Queue messaging service.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://javaee.github.io/openmq/Documentation.html">Message Queue Administration Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-admin-guide/toc.html">Message Queue Administration Guide</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to set up and manage a Message Queue messaging system.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://javaee.github.io/openmq/Documentation.html">Message Queue Developer&#8217;s Guide for JMX Clients</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-dev-guide-jmx/toc.html">Message Queue Developer&#8217;s Guide for JMX Clients</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Describes the application programming interface in Message Queue for
 programmatically configuring and monitoring Message Queue resources in
 conformance with the Java Management Extensions (JMX).</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://javaee.github.io/openmq/Documentation.html">Message Queue Developer&#8217;s Guide for Java Clients</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-dev-guide-java/toc.html">Message Queue Developer&#8217;s Guide for Java Clients</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Provides information about concepts and procedures for developing Java messaging
 applications (Java clients) that work with Eclipse GlassFish.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://javaee.github.io/openmq/Documentation.html">Message Queue Developer&#8217;s Guide for C Clients</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-dev-guide-c/toc.html">Message Queue Developer&#8217;s Guide for C Clients</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Provides programming and reference information for developers working with
 Message Queue who want to use the C language binding to the Message
 Queue messaging service to send, receive, and process Message Queue messages.</p></td>
@@ -7108,7 +7108,7 @@ You administer the default instance when you administer its domain.</p>
 </div>
 <div class="paragraph">
 <p>If you require multiple instances, you must administer the instances
-explicitly. For more information, see "<a href="ha-administration-guide/instances.html#administering-glassfish-server-instances">Administering
+explicitly. For more information, see "<a href="ha-administration-guide.html#administering-glassfish-server-instances">Administering
 Eclipse GlassFish Instances</a>" in Eclipse GlassFish
 High Availability Administration Guide.</p>
 </div>
@@ -7153,7 +7153,7 @@ as necessary.</p>
 <p>When a domain is created, you are prompted for the administration user
 name and password. If you accept the default, the user <code>admin</code> is
 created without password. To reset the administration password, see
-"<a href="security-guide/system-security.html#to-change-an-administration-password">To Change an Administration Password</a>" in Eclipse GlassFish Security Guide.</p>
+"<a href="security-guide.html#to-change-an-administration-password">To Change an Administration Password</a>" in Eclipse GlassFish Security Guide.</p>
 </div>
 </div>
 <div class="sect3">
@@ -7237,10 +7237,10 @@ domain, or you can accept the default login identity which is username
 <li>
 <p>Select a name for the domain that you are creating.
 You can verify that a name is not already in use by using the
-<a href="reference-manual/list-domains.html#list-domains"><code>list-domains</code></a> subcommand</p>
+<a href="reference-manual.html#list-domains"><code>list-domains</code></a> subcommand</p>
 </li>
 <li>
-<p>Create a domain by using the <a href="reference-manual/create-domain.html#create-domain"><code>create-domain</code></a> subcommand.
+<p>Create a domain by using the <a href="reference-manual.html#create-domain"><code>create-domain</code></a> subcommand.
 Information about the options for this subcommand is included in this help page.</p>
 </li>
 <li>
@@ -7556,11 +7556,11 @@ examine the as-install<code>/lib/templates/domain.xml</code> file.</p>
 <p>Create the domain that you want to be based on a custom template.
 In the command to create the domain, pass the name of file that you
 edited in the previous step as the <code>--template</code> option of the
-<a href="reference-manual/create-domain.html#create-domain"><code>create-domain</code></a> subcommand.</p>
+<a href="reference-manual.html#create-domain"><code>create-domain</code></a> subcommand.</p>
 </li>
 <li>
 <p>Before starting the domain, verify that the domain&#8217;s <code>domain.xml</code> file is valid.
-Use the <a href="reference-manual/verify-domain-xml.html#verify-domain-xml"><code>verify-domain-xml</code></a>
+Use the <a href="reference-manual.html#verify-domain-xml"><code>verify-domain-xml</code></a>
 subcommand for this purpose.
 Information about the options for this subcommand is included in the subcommand&#8217;s help page.</p>
 </li>
@@ -7575,10 +7575,10 @@ Information about the options for this subcommand is included in the subcommand&
 <p><a href="#to-create-a-domain">To Create a Domain</a></p>
 </li>
 <li>
-<p><a href="reference-manual/create-domain.html#create-domain"><code>create-domain</code>(1)</a></p>
+<p><a href="reference-manual.html#create-domain"><code>create-domain</code>(1)</a></p>
 </li>
 <li>
-<p><a href="reference-manual/verify-domain-xml.html#verify-domain-xml"><code>verify-domain-xml</code>(1)</a></p>
+<p><a href="reference-manual.html#verify-domain-xml"><code>verify-domain-xml</code>(1)</a></p>
 </li>
 </ul>
 </div>
@@ -7609,7 +7609,7 @@ If there is more than one domain, the domain name must be specified.</p>
 <p>To list domains that were created in other directories, specify the <code>--domaindir</code> option.</p>
 </div>
 <div class="paragraph">
-<p>List domains by using the <a href="reference-manual/list-domains.html#list-domains"><code>list-domains</code></a> subcommand.</p>
+<p>List domains by using the <a href="reference-manual.html#list-domains"><code>list-domains</code></a> subcommand.</p>
 </div>
 <div id="ggpfv" class="paragraph">
 <p>Example 3-2 Listing Domains</p>
@@ -7704,7 +7704,7 @@ To list the existing domains:</p>
 </div>
 </li>
 <li>
-<p>Log in to the domain by using the o<a href="GSRFM00210"><code>login</code></a> command.</p>
+<p>Log in to the domain by using the <a href="reference-manual.html#login"><code>login</code></a> command.</p>
 </li>
 </ol>
 </div>
@@ -7754,7 +7754,7 @@ asadmin commands to manage associated domain.</code></pre>
 <div class="paragraph">
 <p>You can also view the full syntax and options of the subcommand by
 typing <code>asadmin help login</code> at the command line. For additional
-information about passwords, see "<a href="security-guide/system-security.html#administering-passwords">Administering
+information about passwords, see "<a href="security-guide.html#administering-passwords">Administering
 Passwords</a>" in Eclipse GlassFish Security Guide.</p>
 </div>
 </div>
@@ -7774,7 +7774,7 @@ authorized to administer the domain can run this subcommand.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>List domains by using the <a href="reference-manual/list-domains.html#list-domains"><code>list-domains</code></a> subcommand.</p>
+<p>List domains by using the <a href="reference-manual.html#list-domains"><code>list-domains</code></a> subcommand.</p>
 </li>
 <li>
 <p>If necessary, notify domain users that the domain is being deleted.</p>
@@ -7783,7 +7783,7 @@ authorized to administer the domain can run this subcommand.</p>
 <p>Ensure that the domain you want to delete is stopped. If needed, see <a href="#to-stop-a-domain">To Stop a Domain</a>.</p>
 </li>
 <li>
-<p>Delete the domain by using the <a href="reference-manual/delete-domain.html#delete-domain"><code>delete-domain</code></a> subcommand.</p>
+<p>Delete the domain by using the <a href="reference-manual.html#delete-domain"><code>delete-domain</code></a> subcommand.</p>
 </li>
 </ol>
 </div>
@@ -7871,7 +7871,7 @@ distribution of Eclipse GlassFish:</p>
 <p>This subcommand is supported in local mode only.</p>
 </div>
 <div class="paragraph">
-<p>Start a domain by using the <a href="reference-manual/start-domain.html#start-domain"><code>start-domain</code></a> subcommand.</p>
+<p>Start a domain by using the <a href="reference-manual.html#start-domain"><code>start-domain</code></a> subcommand.</p>
 </div>
 <div id="ggocw" class="paragraph">
 <p>Example 3-6 Starting a Domain</p>
@@ -7914,7 +7914,7 @@ shutdown process takes a few seconds. While the domain is stopped, the
 Administration Console and most of the <code>asadmin</code> subcommands cannot be
 used. This subcommand is particularly useful in stopping a runaway
 server. For more controlled situations, you can use the
-<a href="reference-manual/restart-domain.html#restart-domain"><code>restart-domain</code></a> subcommand.</p>
+<a href="reference-manual.html#restart-domain"><code>restart-domain</code></a> subcommand.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -7948,7 +7948,7 @@ Eclipse GlassFish:</p>
 <p>If necessary, notify users that you are going to stop the domain.</p>
 </li>
 <li>
-<p>Stop the domain by using the <a href="reference-manual/stop-domain.html#stop-domain"><code>stop-domain</code></a>
+<p>Stop the domain by using the <a href="reference-manual.html#stop-domain"><code>stop-domain</code></a>
 subcommand.</p>
 </li>
 </ol>
@@ -7992,8 +7992,8 @@ you can restart the server from a remote location as well as from the
 same machine.</p>
 </div>
 <div class="paragraph">
-<p>If the server will not restart, use the <a href="reference-manual/stop-domain.html#stop-domain"><code>stop-domain</code></a>
-subcommand followed by the <a href="reference-manual/start-domain.html#start-domain"><code>start-domain</code></a> subcommand.</p>
+<p>If the server will not restart, use the <a href="reference-manual.html#stop-domain"><code>stop-domain</code></a>
+subcommand followed by the <a href="reference-manual.html#start-domain"><code>start-domain</code></a> subcommand.</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -8001,7 +8001,7 @@ subcommand followed by the <a href="reference-manual/start-domain.html#start-dom
 <p>Ensure that the server is running. Remote subcommands require a running server.</p>
 </li>
 <li>
-<p>Restart the domain by using the <a href="reference-manual/restart-domain.html#restart-domain"><code>restart-domain</code></a> subcommand.</p>
+<p>Restart the domain by using the <a href="reference-manual.html#restart-domain"><code>restart-domain</code></a> subcommand.</p>
 </li>
 </ol>
 </div>
@@ -8099,7 +8099,7 @@ the Windows command line, use the <code>sc.exe</code> tool.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Create the service by using the <a href="reference-manual/create-service.html#create-service"><code>create-service</code></a>
+<p>Create the service by using the <a href="reference-manual.html#create-service"><code>create-service</code></a>
 subcommand.</p>
 </li>
 <li>
@@ -8216,7 +8216,7 @@ to delete the initialization script and the link to the script that the
 <p>The <code>create-service</code> subcommand must be run as the OS-level root user.</p>
 </div>
 <div class="paragraph">
-<p>Create the service by using the <a href="reference-manual/create-service.html#create-service"><code>create-service</code></a>
+<p>Create the service by using the <a href="reference-manual.html#create-service"><code>create-service</code></a>
 subcommand.</p>
 </div>
 <div id="domains-ex-3-12" class="paragraph">
@@ -8299,7 +8299,7 @@ the service.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Create the service by using the <a href="reference-manual/create-service.html#create-service"><code>create-service</code></a>
+<p>Create the service by using the <a href="reference-manual.html#create-service"><code>create-service</code></a>
 subcommand.</p>
 </li>
 <li>
@@ -8407,7 +8407,7 @@ set the <code>-Xrs</code> Java VM option
 </li>
 <li>
 <p>Set the <code>-Xrs</code> Java VM option for the DAS.
-Use the <a href="reference-manual/create-jvm-options.html#create-jvm-options"><code>create-jvm-options</code></a> subcommand for this purpose.</p>
+Use the <a href="reference-manual.html#create-jvm-options"><code>create-jvm-options</code></a> subcommand for this purpose.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>asadmin&gt; create-jvm-options -Xrs</code></pre>
@@ -8498,7 +8498,7 @@ the backup itself.</p>
 </div>
 </li>
 <li>
-<p>Back up the domain by using the <a href="reference-manual/backup-domain.html#backup-domain"><code>backup-domain</code></a>
+<p>Back up the domain by using the <a href="reference-manual.html#backup-domain"><code>backup-domain</code></a>
 subcommand.</p>
 </li>
 <li>
@@ -8561,17 +8561,17 @@ stopped.</p>
 </div>
 <div class="paragraph">
 <p>To determine whether the domain is running, use the
-<a href="reference-manual/list-domains.html#list-domains"><code>list-domains</code></a> subcommand, as described in
+<a href="reference-manual.html#list-domains"><code>list-domains</code></a> subcommand, as described in
 <a href="#to-list-domains">To List Domains</a>.</p>
 </div>
 <div class="paragraph">
-<p>To stop the domain, use the <a href="reference-manual/stop-domain.html#stop-domain"><code>stop-domain</code></a> subcommand
+<p>To stop the domain, use the <a href="reference-manual.html#stop-domain"><code>stop-domain</code></a> subcommand
 as described in <a href="#to-stop-a-domain">To Stop a Domain</a>.</p>
 </div>
 </li>
 <li>
 <p>Restore backup files for a domain by using the
-<a href="reference-manual/restore-domain.html#restore-domain"><code>restore-domain</code></a> subcommand.</p>
+<a href="reference-manual.html#restore-domain"><code>restore-domain</code></a> subcommand.</p>
 </li>
 <li>
 <p>Verify that the restore has succeeded.</p>
@@ -8681,7 +8681,7 @@ situation where the first host crashes or is being taken out of service.</p>
 <td class="content">
 <div class="paragraph">
 <p>You must maintain a backup of the DAS from the first host using the
-o<a href="GSRFM00003"><code>backup-domain</code></a> subcommand as described in
+<a href="reference-manual.html#backup-domain"><code>backup-domain</code></a> subcommand as described in
 <a href="#to-back-up-a-domain">To Back Up a Domain</a>. You can automatically maintain a
 backup of the DAS using the automatic backups feature of Eclipse GlassFish.</p>
 </div>
@@ -8738,7 +8738,7 @@ domain name should be same as the original.</p>
 </li>
 <li>
 <p>Start the domain on newdashost by using the
-<a href="reference-manual/start-domain.html#start-domain"><code>start-domain</code></a> subcommand.
+<a href="reference-manual.html#start-domain"><code>start-domain</code></a> subcommand.
 For example:</p>
 <div class="listingblock">
 <div class="content">
@@ -8749,7 +8749,7 @@ For example:</p>
 <li>
 <p>If the domain on olddashost was centrally administered, set up
 centralized administration on newdashost.
-See "<a href="ha-administration-guide/ssh-setup.html#enabling-centralized-administration-of-glassfish-server-instances">Enabling Centralized Administration of Eclipse GlassFish Instances</a>"
+See "<a href="ha-administration-guide.html#enabling-centralized-administration-of-glassfish-server-instances">Enabling Centralized Administration of Eclipse GlassFish Instances</a>"
 in Eclipse GlassFish High Availability Administration Guide for instructions.</p>
 </li>
 <li>
@@ -8838,7 +8838,7 @@ was last started.</p>
 <p>Ensure that the server is running. Remote subcommands require a running server.</p>
 </li>
 <li>
-<p>Display uptime by using the <a href="reference-manual/uptime.html#uptime"><code>uptime</code></a> subcommand.</p>
+<p>Display uptime by using the <a href="reference-manual.html#uptime"><code>uptime</code></a> subcommand.</p>
 </li>
 </ol>
 </div>
@@ -8937,7 +8937,7 @@ port of a domain.</p>
 <div class="paragraph">
 <p>The HTTP port or the HTTPS port for administration of a domain is
 defined by the <code>--adminport</code> option of the
-<a href="reference-manual/create-domain.html#create-domain"><code>create-domain</code></a> subcommand when the domain is created.
+<a href="reference-manual.html#create-domain"><code>create-domain</code></a> subcommand when the domain is created.
 If this port must be reallocated for another purpose, change the port on
 which the DAS listens for administration requests.</p>
 </div>
@@ -8948,7 +8948,7 @@ which the DAS listens for administration requests.</p>
 </li>
 <li>
 <p>Set the port number to its new value.
-Use the <a href="reference-manual/set.html#set"><code>set</code></a> subcommand for this purpose.</p>
+Use the <a href="reference-manual.html#set"><code>set</code></a> subcommand for this purpose.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>$ asadmin set
@@ -8995,7 +8995,7 @@ contact the DAS through the new port number.</p>
 <div class="paragraph">
 <p>Only the options that are required to complete this task are provided in
 this step. For information about all the options for controlling the
-behavior of the domain, see the o<a href="GSRFM00240"><code>stop-domain</code>(1)</a> help
+behavior of the domain, see the <a href="reference-manual.html#stop-domain"><code>stop-domain</code>(1)</a> help
 page.</p>
 </div>
 </td>
@@ -9036,7 +9036,7 @@ changed it in the preceding step.</p>
 <div class="paragraph">
 <p>Only the options that are required to complete this task are provided in
 this step. For information about all the options for controlling the
-behavior of the domain, see the o<a href="GSRFM00235"><code>start-domain</code>(1)</a> help
+behavior of the domain, see the <a href="reference-manual.html#start-domain"><code>start-domain</code>(1)</a> help
 page.</p>
 </div>
 </td>
@@ -9087,16 +9087,16 @@ Command start-domain executed successfully.</code></pre>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="reference-manual/create-domain.html#create-domain"><code>create-domain</code>(1)</a></p>
+<p><a href="reference-manual.html#create-domain"><code>create-domain</code>(1)</a></p>
 </li>
 <li>
-<p><a href="reference-manual/set.html#set"><code>set</code>(1)</a></p>
+<p><a href="reference-manual.html#set"><code>set</code>(1)</a></p>
 </li>
 <li>
-<p><a href="reference-manual/start-domain.html#start-domain"><code>start-domain</code>(1)</a></p>
+<p><a href="reference-manual.html#start-domain"><code>start-domain</code>(1)</a></p>
 </li>
 <li>
-<p><a href="reference-manual/stop-domain.html#stop-domain"><code>stop-domain</code>(1)</a></p>
+<p><a href="reference-manual.html#stop-domain"><code>stop-domain</code>(1)</a></p>
 </li>
 </ul>
 </div>
@@ -12933,7 +12933,7 @@ represent exactly what can be monitored for that object. All child
 objects are addressed using the dot (.) character as a separator. These
 constructed names are referred to as dotted names. Detailed information
 on dotted names is available in the
-<a href="reference-manual/dotted-names.html#dotted-names"><code>dotted-names</code>(5ASC)</a> help page.</p>
+<a href="reference-manual.html#dotted-names"><code>dotted-names</code>(5ASC)</a> help page.</p>
 </div>
 <div class="paragraph">
 <p>The following command lists the monitorable child objects of the
@@ -13438,7 +13438,7 @@ itself, or to enable monitoring for individual modules. Monitoring is
 immediately activated, without restarting Eclipse GlassFish.</p>
 </div>
 <div class="paragraph">
-<p>You can also use the <a href="reference-manual/set.html#set"><code>set</code></a> subcommand to enable
+<p>You can also use the <a href="reference-manual.html#set"><code>set</code></a> subcommand to enable
 monitoring for a module. Using the <code>set</code> command is not a dynamic
 procedure, so you need to restart Eclipse GlassFish for your changes to
 take effect.</p>
@@ -13466,7 +13466,7 @@ monitoring), but other objects are enabled:</p>
 </div>
 </li>
 <li>
-<p>Enable monitoring by using the o<a href="GSRFM00128"><code>enable-monitoring</code></a>
+<p>Enable monitoring by using the <a href="reference-manual.html#enable-monitoring"><code>enable-monitoring</code></a>
 subcommand.</p>
 <div class="paragraph">
 <p>Server restart is not required.</p>
@@ -13530,7 +13530,7 @@ service itself, or to disable monitoring for individual modules.
 Monitoring is immediately stopped, without restarting Eclipse GlassFish.</p>
 </div>
 <div class="paragraph">
-<p>You can also use the <a href="reference-manual/set.html#set"><code>set</code></a> subcommand to disable
+<p>You can also use the <a href="reference-manual.html#set"><code>set</code></a> subcommand to disable
 monitoring for a module. Using the <code>set</code> command is not a dynamic
 procedure, so you need to restart Eclipse GlassFish for your changes to
 take effect.</p>
@@ -13559,7 +13559,7 @@ monitoring.</p>
 </li>
 <li>
 <p>Disable monitoring for a service or module by using the
-<a href="reference-manual/disable-monitoring.html#disable-monitoring"><code>disable-monitoring</code></a> subcommand.</p>
+<a href="reference-manual.html#disable-monitoring"><code>disable-monitoring</code></a> subcommand.</p>
 <div class="paragraph">
 <p>Server restart is not required.</p>
 </div>
@@ -13659,7 +13659,7 @@ display data on the object. See <a href="#to-enable-monitoring">To Enable Monito
 </div>
 </li>
 <li>
-<p>Request the monitoring data by using the <a href="reference-manual/monitor.html#monitor"><code>monitor</code></a>
+<p>Request the monitoring data by using the <a href="reference-manual.html#monitor"><code>monitor</code></a>
 subcommand.</p>
 </li>
 </ol>
@@ -13979,7 +13979,7 @@ attributes and values corresponding to connection pool attributes.</p></td>
 </table>
 <div class="paragraph">
 <p>For detailed information on dotted names, see the
-<a href="reference-manual/dotted-names.html#dotted-names"><code>dotted-names</code>(5ASC)</a> help page.</p>
+<a href="reference-manual.html#dotted-names"><code>dotted-names</code>(5ASC)</a> help page.</p>
 </div>
 </div>
 <div class="sect3">
@@ -14003,7 +14003,7 @@ Monitoring</a> if needed.</p>
 <ol class="arabic">
 <li>
 <p>List the objects that are enabled for monitoring by using the
-<a href="reference-manual/list.html#list"><code>list</code></a> subcommand.</p>
+<a href="reference-manual.html#list"><code>list</code></a> subcommand.</p>
 <div class="paragraph">
 <p>For example, the following subcommand lists all components and services
 that have monitoring enabled for instance <code>server</code>.</p>
@@ -14023,7 +14023,7 @@ server.thread-pools</code></pre>
 </li>
 <li>
 <p>Get data for a monitored component or service by using the
-<a href="reference-manual/get.html#get"><code>get</code></a> subcommand.</p>
+<a href="reference-manual.html#get"><code>get</code></a> subcommand.</p>
 </li>
 </ol>
 </div>
@@ -24978,7 +24978,7 @@ production environments.</p>
 <p>Just as Eclipse GlassFish supports clusters of instances to provide high
 availability, Message Queue supports clusters of brokers to provide
 service availability or service and data availability, depending on the
-type of broker cluster, as described in "<a href="../openmq/mq-tech-over/broker-clusters.html#GMTOV00028">Broker
+type of broker cluster, as described in "<a href="https://eclipse-ee4j.github.io/openmq/guides//mq-tech-over/toc.html/broker-clusters.html#GMTOV00028">Broker
 Clusters</a>" in Open Message Queue Technical Overview.</p>
 </div>
 <div class="paragraph">
@@ -25031,7 +25031,7 @@ start before aborting the startup.</p>
 <p>A list of arguments the JMS service passes to Embedded and Local type
 JMS hosts on startup. Permissible arguments are the options supported
 by the Message Queue <code>imqbrokerd</code> command, as described in
-"<a href="../openmq/mq-admin-guide/command-line-reference.html#GMADG00280">Broker Utility</a>" in Open Message Queue
+"<a href="https://eclipse-ee4j.github.io/openmq/guides//mq-admin-guide/toc.html/command-line-reference.html#GMADG00280">Broker Utility</a>" in Open Message Queue
 Administration Guide.</p>
 </dd>
 <dt class="hdlist1"><code>default-jms-host</code></dt>
@@ -25091,7 +25091,7 @@ indicates that the number of attempts is unlimited.</p>
 <dd>
 <p>The Message Queue address scheme name and connection service name to
 use for the AddressList if a non-default scheme or service is to be
-used. See "<a href="../openmq/mq-admin-guide/administered-object-attributes.html#GMADG00622">Connection Handling</a>" in Open Message
+used. See "<a href="https://eclipse-ee4j.github.io/openmq/guides//mq-admin-guide/toc.html/administered-object-attributes.html#GMADG00622">Connection Handling</a>" in Open Message
 Queue Administration Guide for syntax information.</p>
 </dd>
 </dl>
@@ -25236,7 +25236,7 @@ specify Message Queue broker startup options.</p>
 JMS service uses the information defined by the default JMS host to
 communicate with an MQ broker or broker cluster that has been
 configured and started using Message Queue tools, as described in the
-<a href="https://javaee.github.io/openmq/Documentation.html">Open Message Queue Administration Guide</a>. Ongoing
+<a href="https://eclipse-ee4j.github.io/openmq/guides//mq-admin-guide/toc.html">Open Message Queue Administration Guide</a>. Ongoing
 administration and tuning of the broker or broker cluster are also
 performed using Message Queue tools.</p>
 </dd>
@@ -25734,7 +25734,7 @@ a JMS connection factory resource or a destination resource.</p>
 <code>asadmin create-jms-resource</code> command, escape the : by using <code>\\</code>. For
 example, <code>host1\\:mqport,host2\\:mqport,host3\\:mpqport</code>. For more
 information about using escape characters, see the
-<a href="asadmin"><code>asadmin</code>(1M)</a> help page.</p>
+<a href="reference-manual.html#asadmin"><code>asadmin</code>(1M)</a> help page.</p>
 </div>
 </td>
 </tr>
@@ -25985,7 +25985,7 @@ physical destination.</p>
 <p>Because a physical destination is actually a Message Queue object rather
 than a server object, you use Message Queue broker commands to update
 properties. For information on Message Queue properties, see the
-<a href="https://javaee.github.io/openmq/Documentation.html">Open Message Queue Administration Guide</a>.</p>
+<a href="https://eclipse-ee4j.github.io/openmq/guides//mq-admin-guide/toc.html">Open Message Queue Administration Guide</a>.</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -29486,7 +29486,7 @@ the transactional user application uses Java Naming and Directory
 Interface (JNDI) to look up transactional data sources and, optionally,
 the user transaction). The application might use declarative transaction
 attribute settings for enterprise beans, or explicit programmatic
-transaction demarcation. For more information, see "<a href="application-development-guide/transaction-service.html#the-transaction-manager-the-transaction-synchronization-registry-and-usertransaction">The
+transaction demarcation. For more information, see "<a href="application-development-guide.html#the-transaction-manager-the-transaction-synchronization-registry-and-usertransaction">The
 Transaction Manager, the Transaction Synchronization Registry, and
 UserTransaction</a>" in Eclipse GlassFish Application
 Development Guide.</p>
@@ -29516,7 +29516,7 @@ Development Guide.</p>
 <li>
 <p>Databases - Use of transactions prevents databases from being left in
 inconsistent states due to incomplete updates. For information about
-JDBC transaction isolation levels, see "<a href="application-development-guide/transaction-service.html#using-jdbc-transaction-isolation-levels">Using JDBC
+JDBC transaction isolation levels, see "<a href="application-development-guide.html#using-jdbc-transaction-isolation-levels">Using JDBC
 Transaction Isolation Levels</a>" in Eclipse GlassFish
 Application Development Guide.</p>
 <div class="paragraph">
@@ -29623,7 +29623,7 @@ open the Transaction Service component under the relevant configuration.
 For details, click the Help button in the Administration Console.</p>
 </li>
 <li>
-<p>To configure the transaction service, use the <a href="reference-manual/set.html#set"><code>set</code></a>
+<p>To configure the transaction service, use the <a href="reference-manual.html#set"><code>set</code></a>
 subcommand to set the following attributes.</p>
 <div class="paragraph">
 <p>The following examples show the <code>server-config</code> configuration, but
@@ -29696,7 +29696,7 @@ empty value, the value used is <code>jdbc/TxnDS</code>.</p>
 <p>The <code>xa-servername</code> property does not have a default value. Use this
 property to override server names that can cause errors.</p>
 <div class="paragraph">
-<p>You can use the <a href="reference-manual/get.html#get"><code>get</code></a> subcommand to list all the
+<p>You can use the <a href="reference-manual.html#get"><code>get</code></a> subcommand to list all the
 transaction service attributes and the properties that have been set.
 For details, see the <a href="reference-manual.html#GSRFM">Eclipse GlassFish
 Reference Manual</a>.</p>
@@ -29775,7 +29775,7 @@ by using the <code>unfreeze-transaction-service</code> subcommand.</p>
 </li>
 <li>
 <p>Stop the transaction service by using the
-<a href="reference-manual/freeze-transaction-service.html#freeze-transaction-service"><code>freeze-transaction-service</code></a> subcommand.</p>
+<a href="reference-manual.html#freeze-transaction-service"><code>freeze-transaction-service</code></a> subcommand.</p>
 </li>
 </ol>
 </div>
@@ -29841,7 +29841,7 @@ Statistics</a>. For example:</p>
 </li>
 <li>
 <p>Roll back the transaction by using the
-<a href="reference-manual/rollback-transaction.html#rollback-transaction"><code>rollback-transaction</code></a> subcommand.</p>
+<a href="reference-manual.html#rollback-transaction"><code>rollback-transaction</code></a> subcommand.</p>
 <div class="paragraph">
 <p>The transaction is not rolled back at the time of this command&#8217;s
 execution, but only marked for rollback. The transaction is rolled back
@@ -29885,7 +29885,7 @@ restart the transaction service after it has been frozen.</p>
 </li>
 <li>
 <p>Restart the suspended transaction service by using the
-<a href="reference-manual/unfreeze-transaction-service.html#unfreeze-transaction-service"><code>unfreeze-transaction-service</code></a> subcommand.</p>
+<a href="reference-manual.html#unfreeze-transaction-service"><code>unfreeze-transaction-service</code></a> subcommand.</p>
 </li>
 </ol>
 </div>
@@ -29925,7 +29925,7 @@ your JDBC driver vendor.</p>
 non-XA transactions at server shutdown, set the
 <code>com.sun.enterprise.in-progress-local-transaction.completion-mode</code> JVM
 option to either <code>commit</code> or <code>rollback</code> using the
-<a href="reference-manual/create-jvm-options.html#create-jvm-options"><code>create-jvm-options</code></a> subcommand. For example:</p>
+<a href="reference-manual.html#create-jvm-options"><code>create-jvm-options</code></a> subcommand. For example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -30030,7 +30030,7 @@ resource is restarted.</p>
 <li>
 <p>Connection validation should be enabled so the connection pool is
 refreshed when the resource is accessed after the recovery. For more
-information, see "<a href="performance-tuning-guide/tuning-glassfish.html#connection-validation-settings">Connection Validation Settings</a>" in
+information, see "<a href="performance-tuning-guide.html#connection-validation-settings">Connection Validation Settings</a>" in
 Eclipse GlassFish Performance Tuning Guide.</p>
 </li>
 </ul>
@@ -30051,7 +30051,7 @@ Eclipse GlassFish Performance Tuning Guide.</p>
 <div class="paragraph">
 <p>You can list in-doubt Open Message Queue transactions using the
 <code>imqcmd list txn</code> subcommand. For more information, see
-"o<a href="GMADG00241">Managing Transactions</a>" in Open Message Queue
+"<a href="https://eclipse-ee4j.github.io/openmq/guides//mq-admin-guide/toc.html/message-delivery.html#aeoel">Managing Transactions</a>" in Open Message Queue
 Administration Guide.</p>
 </div>
 </td>
@@ -30065,7 +30065,7 @@ Administration Guide.</p>
 </li>
 <li>
 <p>Manually recover transactions by using the
-<a href="reference-manual/recover-transactions.html#recover-transactions"><code>recover-transactions</code></a> subcommand.</p>
+<a href="reference-manual.html#recover-transactions"><code>recover-transactions</code></a> subcommand.</p>
 </li>
 </ol>
 </div>
@@ -32414,7 +32414,7 @@ Resource That Provides Class Loader Statistics</a></p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-02-25 18:02:47 UTC
+Last updated 2023-02-25 19:38:03 UTC
 </div>
 </div>
 </body>

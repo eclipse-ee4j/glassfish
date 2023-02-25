@@ -1,15 +1,14 @@
 package org.glassfish.microprofile.config.tck.client;
 
+import java.io.File;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
+
 import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
 import org.jboss.arquillian.test.spi.TestClass;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
-
-import java.io.File;
-import java.util.logging.Logger;
-
-import static java.util.logging.Level.SEVERE;
 
 /**
  *  This extension adds certain libraries to deployed Arquillian apps.
@@ -19,26 +18,23 @@ import static java.util.logging.Level.SEVERE;
  */
 public class LibraryIncluder implements ApplicationArchiveProcessor {
 
-    private static final Logger LOGGER = Logger.getLogger(LibraryIncluder.class.getName());
+    private static final Logger LOG = System.getLogger(LibraryIncluder.class.getName());
 
     @Override
     public void process(Archive<?> archive, TestClass testClass) {
 
         // Only process web archives
-        if (!(archive instanceof WebArchive)) return;
-        final var webArchive = (WebArchive) archive;
-
-        try {
-            // Add Hamcrest
-            webArchive.addAsLibraries(resolveDependency("org.hamcrest:hamcrest:2.2"));
-        } catch (Exception e) {
-            LOGGER.log(SEVERE, "Error adding dependencies", e);
+        if (!(archive instanceof WebArchive)) {
+            return;
         }
+        final var webArchive = (WebArchive) archive;
+        webArchive.addAsLibraries(resolveDependency("org.hamcrest:hamcrest"));
+        LOG.log(Level.INFO, () -> "webArchive:\n" + webArchive.toString(true));
     }
 
     private static File[] resolveDependency(String coordinates) {
-        return Maven.resolver()
-                .resolve(coordinates)
-                .withoutTransitivity().asFile();
+        return Maven.configureResolver().workOffline().loadPomFromFile("pom.xml")
+                .resolve(coordinates).withoutTransitivity()
+                .asFile();
     }
 }

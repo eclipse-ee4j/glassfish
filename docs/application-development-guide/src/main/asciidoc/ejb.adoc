@@ -922,7 +922,7 @@ Read-only beans have the following characteristics:
 (CMP) is allowed. If CMP is used, do not create the database schema
 during deployment. Instead, work with your database administrator to
 populate the data into the tables. See
-link:container_managed-persistence.html#using-container-managed-persistence[Using Container-Managed
+xref:container_managed-persistence.adoc#using-container-managed-persistence[Using Container-Managed
 Persistence].
 * Only container-managed transactions are allowed; read-only beans
 cannot start their own transactions.

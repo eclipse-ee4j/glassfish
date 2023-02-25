@@ -1324,7 +1324,7 @@ module. Redeployment of a connector module results in the shared class
 loader reloading the new classes. Other modules that refer to the old
 resource adapter classes must be redeployed to gain access to the new
 classes. For more information about class loaders, see
-"link:application-development-guide/class-loaders.html#class-loaders[Class Loaders]" in {productName} Application Development Guide.
+"xref:application-development-guide.adoc#class-loaders[Class Loaders]" in {productName} Application Development Guide.
 
 During connector module redeployment, the server log provides a warning
 indicating that all dependent applications should be redeployed. Client
@@ -1439,7 +1439,7 @@ For more detailed information about the `appclient` script, see
 xref:reference-manual.adoc#appclient[`appclient`(1M)].
 
 For more detailed information about creating application clients, see
-"link:application-development-guide/java-clients.html#developing-java-clients[Developing Java Clients]" in {productName} Application Development Guide. This chapter includes
+"xref:application-development-guide.adoc#developing-java-clients[Developing Java Clients]" in {productName} Application Development Guide. This chapter includes
 information on the following topics:
 
 * Accessing EJB components and JMS resources from application clients
@@ -1547,7 +1547,7 @@ module interfaces are in the as-install``/modules/glassfish-api.jar``
 file.
 
 For general information about lifecycle modules, see
-"link:application-development-guide/lifecycle-listeners.html#developing-lifecycle-listeners[Developing Lifecycle Listeners]" in {productName} Application Development Guide.
+"xref:application-development-guide.adoc#developing-lifecycle-listeners[Developing Lifecycle Listeners]" in {productName} Application Development Guide.
 
 You can deploy a lifecycle module using the `create-lifecycle-module`
 subcommand. Do not use `asadmin deploy` or related commands.
@@ -1601,7 +1601,7 @@ click the Web Service component. The table in the right frame lists
 deployed web service endpoints.
 
 For more information about web services, see
-"link:application-development-guide/webservices.html#developing-web-services[Developing Web Services]" in {productName} Application Development Guide.
+"xref:application-development-guide.adoc#developing-web-services[Developing Web Services]" in {productName} Application Development Guide.
 
 [[osgi-bundle-deployment-guidelines]]
 

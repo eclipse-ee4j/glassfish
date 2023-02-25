@@ -88,7 +88,7 @@ forcefully redeploy if you set the `--force` option of the `deploy`
 subcommand to true. The `redeploy` subcommand also accomplishes this.
 See xref:#gikiw[Example 2-10]. You can see the enabled or disabled
 status of an application or module by using the
-link:reference-manual/show-component-status.html#show-component-status[`show-component-status`] subcommand.
+xref:reference-manual.adoc#show-component-status[`show-component-status`] subcommand.
 
 For information about how the application or module name is derived, see
 xref:overview.adoc#naming-standards[Naming Standards].
@@ -116,9 +116,9 @@ first at server startup.
 +
 Remote commands require a running server.
 2. List deployed applications by using the
-link:reference-manual/list-applications.html#list-applications[`list-applications`] subcommand.
+xref:reference-manual.adoc#list-applications[`list-applications`] subcommand.
 3. Deploy the application or module by using the
-link:reference-manual/deploy.html#deploy[`deploy`] subcommand.
+xref:reference-manual.adoc#deploy[`deploy`] subcommand.
 +
 Information about the options and properties of the subcommand is
 included in this help page.
@@ -202,8 +202,8 @@ version of the component on different targets.
 +
 Remote commands require a running server.
 2. Add and remove targets by using the
-link:reference-manual/create-application-ref.html#create-application-ref[`create-application-ref`] and
-link:reference-manual/delete-application-ref.html#delete-application-ref[`delete-application-ref`] subcommands.
+xref:reference-manual.adoc#create-application-ref[`create-application-ref`] and
+xref:reference-manual.adoc#delete-application-ref[`delete-application-ref`] subcommands.
 
 See Also
 
@@ -223,12 +223,12 @@ this section in remote mode.
 +
 Remote commands require a running server.
 2. List the desired applications by using the
-link:reference-manual/list-applications.html#list-applications[`list-applications`] subcommand or the
-link:reference-manual/list-sub-components.html#list-sub-components[`list-sub-components`] subcommand.
+xref:reference-manual.adoc#list-applications[`list-applications`] subcommand or the
+xref:reference-manual.adoc#list-sub-components[`list-sub-components`] subcommand.
 +
 Information about these commands is included in these help pages.
 3. Show the status of a deployed component by using the
-link:reference-manual/show-component-status.html#show-component-status[`show-component-status`] subcommand.
+xref:reference-manual.adoc#show-component-status[`show-component-status`] subcommand.
 
 [[giumj]]
 Example 2-5 Listing Applications
@@ -295,8 +295,8 @@ You must remove a preconfigured resource before it can be updated.
 +
 Remote commands require a running server.
 2. Redeploy an application or module by using the
-link:reference-manual/redeploy.html#redeploy[`redeploy`] subcommand or the
-link:reference-manual/deploy.html#deploy[`deploy`] subcommand with the `--force` option.
+xref:reference-manual.adoc#redeploy[`redeploy`] subcommand or the
+xref:reference-manual.adoc#deploy[`deploy`] subcommand with the `--force` option.
 +
 Information about the options and properties of these commands is
 included in these help pages.
@@ -372,15 +372,15 @@ Remote commands require a running server.
 disabling.
 +
 To list deployed applications or modules, use the
-link:reference-manual/list-applications.html#list-applications[`list-applications`] subcommand. If you do not specify
+xref:reference-manual.adoc#list-applications[`list-applications`] subcommand. If you do not specify
 a type, all deployed applications and modules are listed. For example,
 valid types can be `web`, `ejb`, `connector`, `application`, and
 `webservice`.
 +
 To see the status of deployed components, use the
-link:reference-manual/show-component-status.html#show-component-status[`show-component-status`] subcommand.
+xref:reference-manual.adoc#show-component-status[`show-component-status`] subcommand.
 3. Deactivate the application or module by using the
-link:reference-manual/disable.html#disable[`disable`] subcommand.
+xref:reference-manual.adoc#disable[`disable`] subcommand.
 +
 Information about the options and properties of the subcommand is
 included in this help page.
@@ -432,12 +432,12 @@ enabled on that target.
 +
 Remote commands require a running server.
 2. Enable the application or module by using the
-link:reference-manual/enable.html#enable[`enable`] subcommand.
+xref:reference-manual.adoc#enable[`enable`] subcommand.
 +
 If the component has not been deployed, an error message is displayed.
 If the component is already enabled, it is re-enabled. To see the status
 of deployed components, use the
-link:reference-manual/show-component-status.html#show-component-status[`show-component-status`] subcommand.
+xref:reference-manual.adoc#show-component-status[`show-component-status`] subcommand.
 +
 Information about the options and properties of the subcommand is
 included in this help page.
@@ -474,15 +474,15 @@ Remote commands require a running server.
 undeploying.
 +
 To list deployed applications or modules, use the
-link:reference-manual/list-applications.html#list-applications[`list-applications`] subcommand. If you do not specify
+xref:reference-manual.adoc#list-applications[`list-applications`] subcommand. If you do not specify
 a type, all deployed applications and modules are listed. For example,
 valid types can be `web`, `ejb`, `connector`, `application`, and
 `webservice`.
 +
 To see the status of deployed components, use the
-link:reference-manual/show-component-status.html#show-component-status[`show-component-status`] subcommand.
+xref:reference-manual.adoc#show-component-status[`show-component-status`] subcommand.
 3. Undeploy the application or module by using the
-link:reference-manual/undeploy.html#undeploy[`undeploy`] subcommand.
+xref:reference-manual.adoc#undeploy[`undeploy`] subcommand.
 +
 Information about the options and properties of the subcommand is
 included in this help page.
@@ -575,12 +575,12 @@ development environment because it allows new code to be tested quickly.
 Automatic deployment is enabled by default, and is available only on the
 default server instance.
 
-1. Use the link:reference-manual/set.html#set[`set`] subcommand to adjust the
+1. Use the xref:reference-manual.adoc#set[`set`] subcommand to adjust the
 autodeployment interval.
 +
 This sets the interval at which applications and modules are checked for
 code changes and dynamically reloaded. The default is `2`.
-2. Use the link:reference-manual/set.html#set[`set`] subcommand to enable JSP
+2. Use the xref:reference-manual.adoc#set[`set`] subcommand to enable JSP
 precompilation.
 3. Copy your archive file to the autodeploy directory.
 +
@@ -640,7 +640,7 @@ root level. Each `/` (forward slash) is replaced by a `#` (pound sign).
 +
 Remote commands require a running server.
 2. Deploy the application or module by using the
-link:reference-manual/deploy.html#deploy[`deploy`] subcommand with the `--deploymentplan`
+xref:reference-manual.adoc#deploy[`deploy`] subcommand with the `--deploymentplan`
 option.
 +
 
@@ -762,7 +762,7 @@ Remote commands require a running server.
 +
 For information about the required directory contents, see the
 appropriate specifications.
-3. Deploy the directory by using the link:reference-manual/deploy.html#deploy[`deploy`]
+3. Deploy the directory by using the xref:reference-manual.adoc#deploy[`deploy`]
 subcommand and specifying the path to the expanded directory.
 +
 
@@ -845,7 +845,7 @@ The application must already be deployed. Otherwise, an error occurs.
 +
 Remote commands require a running server.
 2. Set a servlet context-initialization parameter by using the
-link:reference-manual/set-web-context-param.html#set-web-context-param[`set-web-context-param`] subcommand.
+xref:reference-manual.adoc#set-web-context-param[`set-web-context-param`] subcommand.
 +
 Information about the options for the subcommand is included in this
 help page.
@@ -892,7 +892,7 @@ When an entry is unset, its value reverts to the value, if any, that is
 set in the application's deployment descriptor. This subcommand cannot
 be used to change the value of an environment entry that is set in an
 application's deployment descriptor. Instead, use the
-link:reference-manual/set-web-context-param.html#set-web-context-param[`set-web-context-param`] subcommand for this purpose.
+xref:reference-manual.adoc#set-web-context-param[`set-web-context-param`] subcommand for this purpose.
 
 Before You Begin
 
@@ -904,7 +904,7 @@ Otherwise, an error occurs.
 +
 Remote commands require a running server.
 2. Unset an environment entry by using the
-link:reference-manual/unset-web-context-param.html#unset-web-context-param[`unset-web-context-param`] subcommand.
+xref:reference-manual.adoc#unset-web-context-param[`unset-web-context-param`] subcommand.
 +
 Information about the options for the subcommand is included in this
 help page.
@@ -934,7 +934,7 @@ typing `asadmin help unset-web-context-param` at the command line.
 
 Use the `list-web-context-param` subcommand in remote mode to list the
 parameters that have previously been set by using the
-link:reference-manual/set-web-context-param.html#set-web-context-param[`set-web-context-param`] subcommand. The subcommand
+xref:reference-manual.adoc#set-web-context-param[`set-web-context-param`] subcommand. The subcommand
 does not list parameters that are set only in the application's
 deployment descriptor. For each parameter, the following information is
 displayed:
@@ -951,7 +951,7 @@ specified when the parameter was set
 +
 Remote commands require a running server.
 2. List servlet context-initialization parameters by using the
-link:reference-manual/list-web-context-param.html#list-web-context-param[`list-web-context-param`] subcommand.
+xref:reference-manual.adoc#list-web-context-param[`list-web-context-param`] subcommand.
 
 [[gjixd]]
 Example 2-24 Listing Servlet Context-Initialization Parameters for a Web
@@ -1011,7 +1011,7 @@ The application must already be deployed. Otherwise, an error occurs.
 +
 Remote commands require a running server.
 2. Set an environment entry for a deployed web application or module by
-using the link:reference-manual/set-web-env-entry.html#set-web-env-entry[`set-web-env-entry`] subcommand.
+using the xref:reference-manual.adoc#set-web-env-entry[`set-web-env-entry`] subcommand.
 +
 Information about the options for the subcommand is included in this
 help page.
@@ -1047,7 +1047,7 @@ environment entry for a deployed web application or module.
 +
 Remote commands require a running server.
 2. Unset a web environment entry by using the
-link:reference-manual/unset-web-env-entry.html#unset-web-env-entry[`unset-web-env-entry`] subcommand.
+xref:reference-manual.adoc#unset-web-env-entry[`unset-web-env-entry`] subcommand.
 +
 Information about the options for the subcommand is included in this
 help page.
@@ -1089,7 +1089,7 @@ when the entry was set
 +
 Remote commands require a running server.
 2. List the environment entries by using
-theolink:GSRFM00209[`list-web-env-entry`] subcommand.
+the xref:reference-manual.adoc#list-web-env-entry[`list-web-env-entry`] subcommand.
 
 [[gjiws]]
 Example 2-27 Listing Environment Entries for a Web Application
@@ -1223,7 +1223,7 @@ names for an EJB module, set the value of the
 `<disable-nonportable-jndi-names>` element in the
 `glassfish-ejb-jar.xml` file to `true`. The default is `false`.
 * Stateful Session Bean and Timer State. — Use the `--keepstate` option
-of the link:reference-manual/redeploy.html#redeploy[`redeploy`] subcommand or the `<keepstate>`
+of the xref:reference-manual.adoc#redeploy[`redeploy`] subcommand or the `<keepstate>`
 element in the `glassfish-ejb-jar.xml` file to retain stateful session
 bean instances and persistently created EJB timers across redeployments.
 The `--keepstate` option of the `redeploy` subcommand takes precedence.
@@ -1237,7 +1237,7 @@ changes to EJB names, or adding or removing EJBs to or from an
 application.
 * EJB Singletons. — EJB Singletons are created for each server instance
 in a cluster, and not once per cluster.
-* Stubs and Ties. — Use the link:reference-manual/get-client-stubs.html#get-client-stubs[`get-client-stubs`]
+* Stubs and Ties. — Use the xref:reference-manual.adoc#get-client-stubs[`get-client-stubs`]
 subcommand in remote mode to retrieve stubs and ties.
 * Compatibility of JAR Visibility Requirements. — Use the
 `compatibility` element of the `glassfish-application.xml` or
@@ -1275,20 +1275,20 @@ see xref:#application-scoped-resources[Application-Scoped Resources].
 
 1. Ensure that the server is running. Remote commands require a running server.
 
-2. Deploy the connector module by using the link:reference-manual/deploy.html#deploy[`deploy`]
+2. Deploy the connector module by using the xref:reference-manual.adoc#deploy[`deploy`]
 subcommand.
 
 3. [[gkojp]]
 Configure connector connection pools for the deployed connector module.
 +
 Use the `create-connector-connection-pool` subcommand. For procedures,
-see "link:administration-guide/connectors.html#to-create-a-connector-connection-pool[To Create a Connector Connection Pool]" in
+see "xref:administration-guide.adoc#to-create-a-connector-connection-pool[To Create a Connector Connection Pool]" in
 {productName} Administration Guide.
 
 4. Configure connector resources for the connector connection pools.
 +
 Use the `create-resource-adapter-config` subcommand. For procedures, see
-"link:administration-guide/connectors.html#to-create-configuration-information-for-a-resource-adapter[To Create Configuration Information for a Resource
+"xref:administration-guide.adoc#to-create-configuration-information-for-a-resource-adapter[To Create Configuration Information for a Resource
 Adapter]" in {productName} Administration Guide.
 If needed, you can override the default configuration properties of a
 resource adapter.
@@ -1298,7 +1298,7 @@ This step associates a connector resource with a JNDI name.
 5. Configure a resource adapter.
 +
 Use the `create-resource-adapter-config` subcommand. For procedures, see
-"link:administration-guide/connectors.html#to-create-configuration-information-for-a-resource-adapter[To Create Configuration Information for a Resource
+"xref:administration-guide.adoc#to-create-configuration-information-for-a-resource-adapter[To Create Configuration Information for a Resource
 Adapter]" in {productName} Administration Guide.
 If needed, you can override the default configuration properties of a
 resource adapter.
@@ -1307,7 +1307,7 @@ resource adapter.
 If needed, create an administered object for an inbound resource adapter.
 +
 Use the `create-admin-object` subcommand. For procedures, see
-"link:administration-guide/connectors.html#to-create-an-administered-object[To Create an Administered Object]" in {productName} Administration Guide.
+"xref:administration-guide.adoc#to-create-an-administered-object[To Create an Administered Object]" in {productName} Administration Guide.
 
 [[redeploying-a-stand-alone-connector-module]]
 
@@ -1410,10 +1410,10 @@ application client. In this release of {productName}, the client
 artifacts include multiple files. You can use either the
 `get-client-stubs` subcommand or the `--retrieve` option of the `deploy`
 subcommand, but you do not need to use both.
-* Use the link:reference-manual/deploy.html#deploy[`deploy`] subcommand with the `--retrieve`
+* Use the xref:reference-manual.adoc#deploy[`deploy`] subcommand with the `--retrieve`
 option to retrieve the client files as part of deploying the
 application.
-* Use the link:reference-manual/get-client-stubs.html#get-client-stubs[`get-client-stubs`] subcommand to retrieve
+* Use the xref:reference-manual.adoc#get-client-stubs[`get-client-stubs`] subcommand to retrieve
 client files for a previously-deployed application.
 6. Test the client on the {productName} machine in one of the
 following ways:
@@ -1436,7 +1436,7 @@ file, is also required if you are not using the default instance.
 See Also
 
 For more detailed information about the `appclient` script, see
-link:reference-manual/appclient.html#appclient[`appclient`(1M)].
+xref:reference-manual.adoc#appclient[`appclient`(1M)].
 
 For more detailed information about creating application clients, see
 "link:application-development-guide/java-clients.html#developing-java-clients[Developing Java Clients]" in {productName} Application Development Guide. This chapter includes
@@ -1509,7 +1509,7 @@ You are now ready to run the client.
 See Also
 
 For more detailed information about Java Web Start and the
-`package-appclient` script, see link:reference-manual/appclient.html#appclient[`appclient`(1M)].
+`package-appclient` script, see xref:reference-manual.adoc#appclient[`appclient`(1M)].
 
 [[to-undeploy-an-application-client]]
 
@@ -1738,8 +1738,8 @@ asadmin> redeploy --property preserveAppScopedResources=true MyApp.ear
 asadmin> deploy --force=true --property preserveAppScopedResources=true MyApp.ear
 ----
 
-For more information, see link:reference-manual/redeploy.html#redeploy[`redeploy`(1)] and
-link:reference-manual/deploy.html#deploy[`deploy`(1)].
+For more information, see xref:reference-manual.adoc#redeploy[`redeploy`(1)] and
+xref:reference-manual.adoc#deploy[`deploy`(1)].
 
 Listing. Use the `--resources` option of the `list-applications`
 subcommand to list application-scoped resources. Use the
@@ -1748,8 +1748,8 @@ enterprise application modules or for module subcomponents. To list
 scoped resources for subcomponents only, use the `--resources` option of
 the `list-subcomponents` subcommand
 
-For more information, see link:reference-manual/list-applications.html#list-applications[`list-applications`(1)] and
-link:reference-manual/list-sub-components.html#list-sub-components[`list-sub-components`(1)].
+For more information, see xref:reference-manual.adoc#list-applications[`list-applications`(1)] and
+xref:reference-manual.adoc#list-sub-components[`list-sub-components`(1)].
 
 Restrictions. Use of application-scoped resources is subject to the
 following restrictions:

@@ -688,8 +688,8 @@ asadmin help list-applications
 ----
 
 For additional information on the `asadmin` utility, see
-"link:administration-guide/general-administration.html#using-the-asadmin-utility[Using the `asadmin` Utility]" in {productName} Administration Guide and the
-link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] help page.
+"xref:administration-guide.adoc#using-the-asadmin-utility[Using the `asadmin` Utility]" in {productName} Administration Guide and the
+xref:reference-manual.adoc#asadmin[`asadmin`(1M)] help page.
 
 [[netbeans-ide]]
 

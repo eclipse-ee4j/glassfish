@@ -92,7 +92,7 @@ the transactional user application uses Java Naming and Directory
 Interface (JNDI) to look up transactional data sources and, optionally,
 the user transaction). The application might use declarative transaction
 attribute settings for enterprise beans, or explicit programmatic
-transaction demarcation. For more information, see "link:application-development-guide/transaction-service.html#the-transaction-manager-the-transaction-synchronization-registry-and-usertransaction[The
+transaction demarcation. For more information, see "xref:application-development-guide.adoc#the-transaction-manager-the-transaction-synchronization-registry-and-usertransaction[The
 Transaction Manager, the Transaction Synchronization Registry, and
 UserTransaction]" in {productName} Application
 Development Guide.
@@ -110,7 +110,7 @@ There are three types of transaction resource managers:
 
 * Databases - Use of transactions prevents databases from being left in
 inconsistent states due to incomplete updates. For information about
-JDBC transaction isolation levels, see "link:application-development-guide/transaction-service.html#using-jdbc-transaction-isolation-levels[Using JDBC
+JDBC transaction isolation levels, see "xref:application-development-guide.adoc#using-jdbc-transaction-isolation-levels[Using JDBC
 Transaction Isolation Levels]" in {productName}
 Application Development Guide.
 +
@@ -489,7 +489,7 @@ following conditions must be met:
 resource is restarted.
 * Connection validation should be enabled so the connection pool is
 refreshed when the resource is accessed after the recovery. For more
-information, see "link:performance-tuning-guide/tuning-glassfish.html#connection-validation-settings[Connection Validation Settings]" in
+information, see "xref:performance-tuning-guide.adoc#connection-validation-settings[Connection Validation Settings]" in
 {productName} Performance Tuning Guide.
 
 If commit fails during recovery, a message is written to the server log.

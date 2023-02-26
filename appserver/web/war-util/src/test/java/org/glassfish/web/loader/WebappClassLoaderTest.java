@@ -18,6 +18,7 @@ package org.glassfish.web.loader;
 
 import com.sun.enterprise.util.io.FileUtils;
 
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -25,11 +26,16 @@ import java.nio.file.Path;
 
 import org.apache.naming.resources.WebDirContext;
 import org.glassfish.common.util.GlassfishUrlClassLoader;
+import org.hamcrest.core.StringEndsWith;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.arrayContaining;
+import static org.hamcrest.Matchers.arrayWithSize;
+import static org.hamcrest.Matchers.hasLength;
+import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -73,12 +79,7 @@ class WebappClassLoaderTest {
 
     @Test
     public void getResource() {
-        WebappClassLoader classLoader = new WebappClassLoader(WebappClassLoaderTest.class.getClassLoader());
-        WebDirContext webDirContext = new WebDirContext();
-        webDirContext.setDocBase(docBase.toFile().getAbsolutePath());
-        classLoader.setResources(webDirContext);
-        classLoader.addRepository(repo.getFileName().toString() + "/", repo.toFile());
-        classLoader.setDelegate(false);
+        WebappClassLoader classLoader = createCL();
         classLoader.start();
         assertAll(
             () -> assertThat(classLoader.getResource(".").toExternalForm(), endsWith("/repo1/")),
@@ -92,12 +93,7 @@ class WebappClassLoaderTest {
 
     @Test
     public void getResourceAsStream() {
-        WebappClassLoader classLoader = new WebappClassLoader(WebappClassLoaderTest.class.getClassLoader());
-        WebDirContext webDirContext = new WebDirContext();
-        webDirContext.setDocBase(docBase.toFile().getAbsolutePath());
-        classLoader.setResources(webDirContext);
-        classLoader.addRepository(repo.getFileName().toString() + "/", repo.toFile());
-        classLoader.setDelegate(false);
+        WebappClassLoader classLoader = createCL();
         classLoader.start();
         assertAll(
             // streams of 4 bytes returned by the delegate CL
@@ -108,5 +104,27 @@ class WebappClassLoaderTest {
             () -> assertNull(classLoader.getResourceAsStream("Dir1"), "Dir1"),
             () -> assertNotNull(classLoader.getResourceAsStream("Dir1/fileInDir1.txt"), "Dir1/fileInDir1.txt")
         );
+    }
+
+
+    @Test
+    public void getURLs() throws Exception {
+        WebappClassLoader classLoader = createCL();
+        assertThat(classLoader.getURLs(), arrayWithSize(1));
+        classLoader.start();
+        assertThat(classLoader.getURLs(), arrayWithSize(1));
+        classLoader.close();
+        assertThat(classLoader.getURLs(), arrayWithSize(0));
+    }
+
+
+    private WebappClassLoader createCL() {
+        WebappClassLoader classLoader = new WebappClassLoader(WebappClassLoaderTest.class.getClassLoader());
+        WebDirContext webDirContext = new WebDirContext();
+        webDirContext.setDocBase(docBase.toFile().getAbsolutePath());
+        classLoader.setResources(webDirContext);
+        classLoader.addRepository(repo.getFileName().toString() + "/", repo.toFile());
+        classLoader.setDelegate(false);
+        return classLoader;
     }
 }

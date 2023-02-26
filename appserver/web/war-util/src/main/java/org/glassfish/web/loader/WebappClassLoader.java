@@ -998,7 +998,9 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
     @Override
     public synchronized URL[] getURLs() {
-        checkStatus(LifeCycleStatus.RUNNING);
+        if (this.status == LifeCycleStatus.CLOSED) {
+            return new URL[0];
+        }
         if (repositoryURLs != null) {
             return repositoryURLs.toArray(URL[]::new);
         }

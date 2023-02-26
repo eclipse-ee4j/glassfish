@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -347,7 +347,7 @@ public abstract class CLICommand implements PostConstruct {
     public BufferedReader expandManPage(Reader r) {
         manpageTokenValues[0] = programOpts.getCommandName();
         manpageTokenValues[1] = Environment.getPrefix();
-        manpageTokenValues[2] = Version.getAbbrevProductName();
+        manpageTokenValues[2] = Version.getProductNameAbbreviation();
         TokenValueSet tvs = new TokenValueSet();
         for (int i = 0; i < manpageTokens.length; i++) {
             tvs.add(new TokenValue(manpageTokens[i], manpageTokenValues[i], "{", "}"));
@@ -381,7 +381,7 @@ public abstract class CLICommand implements PostConstruct {
         usageText.append(getName());
         int len = usageText.length();
         StringBuilder optText = new StringBuilder();
-        String lsep = System.getProperty("line.separator");
+        String lsep = System.lineSeparator();
         for (ParamModel opt : usageOptions()) {
             optText.setLength(0);
             final String optName = lc(opt.getName());

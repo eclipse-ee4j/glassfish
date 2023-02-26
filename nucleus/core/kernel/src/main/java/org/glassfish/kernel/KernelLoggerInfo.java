@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +18,7 @@
 package org.glassfish.kernel;
 
 import java.util.logging.Logger;
+
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
@@ -136,7 +138,7 @@ public class KernelLoggerInfo {
     public static final String startupFailure = LOGMSG_PREFIX + "-00016";
 
     @LogMessageInfo(
-            message = "{0} ({1}) startup time : {2} ({3}ms), startup services({4}ms), total({5}ms)",
+            message = "{0} startup time: {1} ({2} ms), startup services({3} ms), total({4} ms)",
             level = "INFO")
     public static final String startupEndMessage = LOGMSG_PREFIX + "-00017";
 

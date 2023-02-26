@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,23 +27,22 @@ import org.jvnet.hk2.annotations.Service;
 public class VersionInfoImpl implements VersionInfo {
 
     @Override
-    public String getAbbreviatedProductName() {
-        return Version.getAbbrevProductName();
+    public String getProductNameAbbreviation() {
+        return Version.getProductNameAbbreviation();
     }
 
     @Override
-    public String getVersionPrefix() {
-        return Version.getVersionPrefix();
+    public String getFullVersion() {
+        return Version.getVersion();
     }
 
     @Override
-    public String getMajorVersion() {
+    public int getMajorVersion() {
         return Version.getMajorVersion();
     }
 
     @Override
-    public String getMinorVersion() {
+    public int getMinorVersion() {
         return Version.getMinorVersion();
     }
-
 }

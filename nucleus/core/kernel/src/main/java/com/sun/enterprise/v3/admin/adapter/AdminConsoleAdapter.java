@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,8 +18,17 @@
 package com.sun.enterprise.v3.admin.adapter;
 
 import com.sun.appserv.server.util.Version;
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.AdminService;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.SecureAdmin;
+import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.v3.admin.AdminConsoleConfigUpgrade;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
 import java.beans.PropertyVetoException;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -37,8 +47,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
+
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.container.Adapter;
 import org.glassfish.api.event.EventListener;
@@ -208,7 +217,7 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
         // see usage in status.html
 
 
-        String serverVersion = Version.getFullVersion();
+        String serverVersion = Version.getProductIdInfo();
 
         if ("/testifbackendisready.html".equals(req.getRequestURI())) {
 

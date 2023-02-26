@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,12 +20,18 @@ package com.sun.enterprise.v3.admin;
 import com.sun.appserv.server.util.Version;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import java.util.Properties;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.ExitCode;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandLock;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
@@ -46,29 +53,28 @@ import org.jvnet.hk2.annotations.Service;
 })
 public class VersionCommand implements AdminCommand {
 
-    @Param(optional=true, defaultValue="false", shortName = "v")
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(VersionCommand.class);
+
+    @Param(optional = true, defaultValue = "false", shortName = "v")
     Boolean verbose;
 
-    final private static LocalStringManagerImpl strings = new LocalStringManagerImpl(VersionCommand.class);
 
     @Override
     public void execute(AdminCommandContext context) {
-        String vers;
+        String msg;
         if (verbose) {
-            vers = strings.getLocalString("version.verbose",
-                "{0}, JRE version {1}",
-                Version.getFullVersion(), System.getProperty("java.version"));
+            msg = I18N.getLocalString("version.verbose", "{0}, JRE version {1}", Version.getProductIdInfo(),
+                System.getProperty("java.version"));
         } else {
-            vers = strings.getLocalString("version",
-                "{0}", Version.getFullVersion());
+            msg = I18N.getLocalString("version", "{0}", Version.getProductIdInfo());
         }
         ActionReport report = context.getActionReport();
         Properties ep = new Properties();
-        ep.setProperty("version", Version.getVersion());
-        ep.setProperty("full-version", Version.getFullVersion());
+        ep.setProperty("version", Version.getProductId());
+        ep.setProperty("full-version", Version.getProductIdInfo());
         ep.setProperty("version-number", Version.getVersionNumber());
         report.setExtraProperties(ep);
         report.setActionExitCode(ExitCode.SUCCESS);
-        report.setMessage(vers);
+        report.setMessage(msg);
     }
 }

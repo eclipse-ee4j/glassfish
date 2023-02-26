@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -58,7 +58,7 @@ import org.jvnet.hk2.annotations.Service;
  * @author Byron Nevins
  */
 @Service
-@RunLevel( value=InitRunLevel.VAL, mode=RunLevel.RUNLEVEL_MODE_NON_VALIDATING)
+@RunLevel(value = InitRunLevel.VAL, mode = RunLevel.RUNLEVEL_MODE_NON_VALIDATING)
 public class SystemTasksImpl implements SystemTasks, PostConstruct {
 
     private static final Logger LOG = KernelLoggerInfo.getLogger();
@@ -105,7 +105,7 @@ public class SystemTasksImpl implements SystemTasks, PostConstruct {
     }
 
     private void setVersion() {
-        System.setProperty("glassfish.version", Version.getFullVersion());
+        System.setProperty("glassfish.version", Version.getProductIdInfo());
     }
 
     /**

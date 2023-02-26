@@ -334,7 +334,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
      */
     static {
         if (System.getProperty(DOL_DEPLOYMENT) != null) {
-            useDOLforDeployment = Boolean.parseBoolean(System.getProperty(DOL_DEPLOYMENT));
+            useDOLforDeployment = Boolean.getBoolean(DOL_DEPLOYMENT);
         }
     }
 
@@ -452,10 +452,10 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
              */
             String serverInfo = System.getProperty("product.name");
             if (serverInfo == null) {
-                ServerInfo.setServerInfo(Version.getVersion());
-                ServerInfo.setPublicServerInfo(Version.getVersion());
+                ServerInfo.setServerInfo(Version.getProductId());
+                ServerInfo.setPublicServerInfo(Version.getProductId());
             } else if (serverInfo.isEmpty()) {
-                ServerInfo.setServerInfo(Version.getVersion());
+                ServerInfo.setServerInfo(Version.getProductId());
                 ServerInfo.setPublicServerInfo(serverInfo);
             } else {
                 ServerInfo.setServerInfo(serverInfo);

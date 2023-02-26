@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +18,7 @@
 package com.sun.enterprise.v3.services.impl;
 
 import com.sun.appserv.server.util.Version;
+
 import org.glassfish.grizzly.http.server.ErrorPageGenerator;
 import org.glassfish.grizzly.http.server.Request;
 
@@ -29,15 +31,14 @@ public class GlassfishErrorPageGenerator implements ErrorPageGenerator {
     public String generate(final Request request, final int status,
             final String reasonPhrase, final String description,
             final Throwable exception) {
-
-
         if (status == 404) {
-            return HttpUtils.getErrorPage(Version.getVersion(),
-                    "The requested resource is not available.", "404");
-        } else {
-            return HttpUtils.getErrorPage(Version.getVersion(),
-                    "The server encountered an internal error that prevented it from fulfilling this request.", String.valueOf(status));
+            return HttpUtils.getErrorPage(Version.getProductId(), "The requested resource is not available.", "404");
         }
-   }
+        return HttpUtils.getErrorPage(
+            Version.getProductId(),
+            "The server encountered an internal error that prevented it from fulfilling this request.",
+            String.valueOf(status)
+        );
+    }
 }
 

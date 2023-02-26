@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,15 +17,15 @@
 
 package com.sun.enterprise.admin.servermgmt.domain;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
 import com.sun.appserv.server.util.Version;
 import com.sun.enterprise.admin.servermgmt.DomainConfig;
 import com.sun.enterprise.admin.servermgmt.pe.PEFileLayout;
 import com.sun.enterprise.util.io.FileUtils;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 public class SubstitutableTokens {
 
@@ -62,11 +63,11 @@ public class SubstitutableTokens {
     private static final String DOMAIN_DIR = "DOMAIN_DIR";
 
     public static Map<String, String> getSubstitutableTokens(DomainConfig domainConfig) {
-        Map<String, String> substitutableTokens = new HashMap<String, String>();
+        Map<String, String> substitutableTokens = new HashMap<>();
         Properties domainProperties = domainConfig.getDomainProperties();
 
         String instanceName = (String) domainConfig.get(DomainConfig.K_SERVERID);
-        if ((instanceName == null) || (instanceName.equals(""))) {
+        if (instanceName == null || instanceName.isEmpty()) {
             instanceName = PEFileLayout.DEFAULT_INSTANCE_NAME;
         }
         substitutableTokens.put(SERVER_ID_TOKEN_NAME, instanceName);
@@ -90,7 +91,7 @@ public class SubstitutableTokens {
         substitutableTokens.put(INSTANCE_CERT_DN_TOKEN_NAME, (String) domainConfig.get(DomainConfig.K_INSTANCE_CERT_DN));
         substitutableTokens.put(SECURE_ADMIN_IDENTIFIER_TOKEN_NAME, (String) domainConfig.get(DomainConfig.K_SECURE_ADMIN_IDENTIFIER));
 
-        substitutableTokens.put(VERSION_TOKEN_NAME, Version.getFullVersion());
+        substitutableTokens.put(VERSION_TOKEN_NAME, Version.getVersionNumber());
         substitutableTokens.put(INSTALL_ROOT_TOKEN_NAME, domainConfig.getInstallRoot());
 
         substitutableTokens.put(SERVER_ROOT, FileUtils.makeForwardSlashes(domainConfig.getInstallRoot()));

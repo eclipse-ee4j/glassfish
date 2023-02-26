@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,10 +17,13 @@
 
 package com.sun.appserv.server.util;
 
+import com.sun.enterprise.util.SystemPropertyConstants;
+
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -35,227 +38,178 @@ import java.util.Properties;
  */
 public class Version {
 
-    private static final String INSTALL_ROOT_PROP_NAME = "com.sun.aas.installRoot";
-    private static final String PRODUCT_NAME_KEY = "product_name";
-    private static final String ABBREV_PRODUCT_NAME_KEY = "abbrev_product_name";
-    private static final String MAJOR_VERSION_KEY = "major_version";
-    private static final String MINOR_VERSION_KEY = "minor_version";
-    private static final String UPDATE_VERSION_KEY = "update_version";
-    private static final String BUILD_ID_KEY = "build_id";
-    private static final String VERSION_PREFIX_KEY = "version_prefix";
-    private static final String VERSION_SUFFIX_KEY = "version_suffix";
-    private static final String BASED_ON_KEY = "based_on";
-    private static final String DEFAULT_DOMAIN_TEMPLATE_NAME = "default_domain_template";
-    private static final String DEFAULT_DOMAIN_TEMPLATE_JAR = "nucleus-domain.jar";
-    private static final String ADMIN_CLIENT_COMMAND_NAME_KEY = "admin_client_command_name";
-    private static final String INITIAL_ADMIN_GROUPS_KEY = "initial_admin_user_groups";
-    private static List<Properties> versionProps = new ArrayList<>();
-    private static Map<String,Properties> versionPropsMap = new HashMap<>();
-    private static Properties versionProp = getVersionProp();
+    private static final String KEY_PRODUCT_NAME = "product.name";
+    private static final String KEY_PRODUCT_NAME_ABBREVIATION = "product.name.abbreviation";
+    private static final String KEY_PRODUCT_VERSION = "product.version";
+    private static final String KEY_GIT_BRANCH = "product.build.git.branch";
+    private static final String KEY_GIT_COMMIT = "product.build.git.commit";
+    private static final String KEY_BUILD_TIMESTAMP = "product.build.timestamp";
+    private static final String KEY_BASED_ON = "based.on";
 
-    private static Properties getVersionProp() {
-        String installRoot = System.getProperty(INSTALL_ROOT_PROP_NAME);
-        if (installRoot != null) {
-            File ir = new File(installRoot);
-            File bd = new File(new File(ir, "config"), "branding");
-            if (bd.isDirectory()) {
-                for (File f : bd.listFiles(new FileFilter() {
-                    @Override
-                    public boolean accept(File f) {
-                        return f.getName().endsWith(".properties") && f.canRead();
-                    }
-                })) {
-                    FileReader fr = null;
-                    try {
-                        fr = new FileReader(f);
-                        Properties p = new Properties();
-                        p.load(fr);
-                        versionProps.add(p);
-                        String apn = p.getProperty(ABBREV_PRODUCT_NAME_KEY);
-                        if (apn != null) {
-                            versionPropsMap.put(apn, p);
-                        }
-                        fr.close();
-                    } catch (IOException ex) {
-                        // ignore files that cannot be read
-                    } finally {
-                        if (fr != null) {
-                            try {
-                                fr.close();
-                            } catch (IOException ex) {
-                                // nothing to do
-                            }
-                        }
-                    }
-                }
-            }
-            // sort the list based on the based-on property.  If a is based on b,
-            // then a is earlier then b in the list.
-            Collections.sort(versionProps, new Comparator<Properties>() {
-                @Override
-                public int compare(Properties p1, Properties p2) {
-                    String abp1 = p1.getProperty(ABBREV_PRODUCT_NAME_KEY);
-                    String bo1 = p1.getProperty(BASED_ON_KEY);
-                    String abp2 = p2.getProperty(ABBREV_PRODUCT_NAME_KEY);
-                    String bo2 = p2.getProperty(BASED_ON_KEY);
-                    if (bo1 != null && abp2 != null && bo1.contains(abp2)) {
-                        return -1;
-                    }
-                    if (bo2 != null && abp1 != null && bo2.contains(abp1)) {
-                        return 1;
-                    }
-                    return 0;
-                }
-            });
+    private static final String KEY_ADMIN_COMMAND_NAME = "admin.command.name";
+    private static final String KEY_DOMAIN_TEMPLATE_DEFAULTJARFILENAME = "domain.template.defaultJarFileName";
+    private static final String KEY_DOMAIN_DEFAULT_ADMIN_GROUPS = "domain.admin.groups";
 
-            // save the first element in the list for later use
-            if (versionProps.size() > 0) {
-                return versionProps.get(0);
+    private static final List<Properties> VERSION_PROPERTIES = new ArrayList<>();
+    private static final Map<String,Properties> VERSION_PROPERTIES_MAP = new HashMap<>();
+    private static final Properties PROPERTIES = loadVersionProp();
+
+    private static final String PRODUCT_NAME;
+    private static final String PRODUCT_NAME_ABBREVIATION;
+    private static final String VERSION;
+    private static final String VERSION_RELEASE;
+    private static final int VERSION_MAJOR;
+    private static final int VERSION_MINOR;
+    private static final int VERSION_PATCH;
+
+    private static final String GIT_BRANCH;
+    private static final String COMMIT;
+    private static final Instant BUILD_TIMESTAMP;
+
+    static {
+        PRODUCT_NAME = getProperty(KEY_PRODUCT_NAME, "GlassFish");
+        PRODUCT_NAME_ABBREVIATION = getProperty(KEY_PRODUCT_NAME_ABBREVIATION, "GF");
+        VERSION = getProperty(KEY_PRODUCT_VERSION, "");
+        int dotBeforeMinor = VERSION.indexOf('.');
+        int dotBeforePatch = VERSION.indexOf('.', dotBeforeMinor + 2);
+        int suffixStart = dotBeforePatch > 0 ? dotBeforePatch + 1
+            : (dotBeforeMinor > 0 ? dotBeforeMinor + 1 : 0);
+        for (; suffixStart < VERSION.length(); suffixStart++) {
+            if (!Character.isDigit(VERSION.charAt(suffixStart))) {
+                break;
             }
-        } else {
-            System.out.println("installRoot is null");
         }
-        return null;
-    }
-
-    /**
-     * Returns version
-     */
-    public static String getVersion() {
-        StringBuilder sb = new StringBuilder(getProductName());
-        sb.append(" ").append(getVersionPrefix());
-        sb.append(" ").append(getVersionNumber());
-        sb.append(" ").append(getVersionSuffix());
-        return sb.toString();
-    }
-
-    /**
-     * Return major_version [. minor_version [. update_version]]
-     */
-    public static String getVersionNumber() {
-        // construct version number
-        String maj = getMajorVersion();
-        String min = getMinorVersion();
-        String upd = getUpdateVersion();
-        String v;
-        try {
-            if (min != null && min.length() > 0 && Integer.parseInt(min) >= 0) {
-                if (upd != null && upd.length() > 0 && Integer.parseInt(upd) >= 0) {
-                    v = maj + "." + min + "." + upd;
+        if (dotBeforeMinor > 0) {
+            VERSION_MAJOR = parseInt(VERSION.substring(0, dotBeforeMinor), 0);
+            if (dotBeforePatch > dotBeforeMinor) {
+                VERSION_MINOR = parseInt(VERSION.substring(dotBeforeMinor + 1, dotBeforePatch), 0);
+                if (suffixStart > dotBeforePatch) {
+                    VERSION_PATCH = parseInt(VERSION.substring(dotBeforePatch + 1, suffixStart), 0);
                 } else {
-                    v = maj + "." + min;
+                    VERSION_PATCH = parseInt(VERSION.substring(dotBeforePatch + 1), 0);
                 }
             } else {
-                if (upd != null && upd.length() > 0 && Integer.parseInt(upd) >= 0) {
-                    v = maj + ".0." + upd;
+                if (suffixStart > dotBeforeMinor) {
+                    VERSION_MINOR = parseInt(VERSION.substring(dotBeforeMinor + 1, suffixStart), 0);
                 } else {
-                    v = maj;
+                    VERSION_MINOR = parseInt(VERSION.substring(dotBeforeMinor + 1), 0);
                 }
+                VERSION_PATCH = 0;
             }
-        } catch (NumberFormatException nfe) {
-            v = maj;
+        } else {
+            if (suffixStart > 0) {
+                VERSION_MAJOR = parseInt(VERSION.substring(0, suffixStart), 0);
+            } else {
+                VERSION_MAJOR = parseInt(VERSION, 0);
+            }
+            VERSION_MINOR = 0;
+            VERSION_PATCH = 0;
         }
-        return v;
+        VERSION_RELEASE = Integer.toString(VERSION_MAJOR) + '.' + Integer.toString(VERSION_MINOR) + '.'
+            + Integer.toString(VERSION_PATCH);
+        GIT_BRANCH = getProperty(KEY_GIT_BRANCH, null);
+        COMMIT = getProperty(KEY_GIT_COMMIT, null);
+        String timestamp = getProperty(KEY_BUILD_TIMESTAMP, null);
+        BUILD_TIMESTAMP = timestamp == null ? null : Instant.parse(timestamp);
     }
 
+
     /**
-     * Returns full version including build id
+     * @return whole version string
      */
-    public static String getFullVersion() {
-        return (getVersion() + " (build " + getBuildVersion() + ")");
+    public static String getVersion() {
+        return VERSION;
     }
 
     /**
-     * Returns abbreviated version.
+     * @return major.minor.patch
      */
-    public static String getAbbreviatedVersion() {
-        return getMajorVersion();
+    public static String getVersionNumber() {
+        return VERSION_RELEASE;
     }
 
+
     /**
-     * Returns Major version
+     * @return Eclipse GlassFish 7.0.0
      */
-    public static String getMajorVersion() {
-        return getProperty(MAJOR_VERSION_KEY, "0");
+    public static String getProductId() {
+        return getProductName() + " " + getVersionNumber();
     }
 
+
     /**
-     * Returns Minor version
+     * @return
+     *         <pre>
+     * Eclipse GlassFish 7.0.0-SNAPSHOT (commit: 93176e2555176091c8522e43d1d32a0a30652d4a, timestamp: 2023-02-24T18:24:00Z)
+     *         </pre>
      */
-    public static String getMinorVersion() {
-        return getProperty(MINOR_VERSION_KEY, "0");
+    public static String getProductIdInfo() {
+        return getProductName() + " " + getVersion() + " (branch: " + GIT_BRANCH + ", commit: " + COMMIT
+            + ", timestamp: " + BUILD_TIMESTAMP + ")";
     }
 
     /**
-     * Returns Update version
+     * @return major version
      */
-    public static String getUpdateVersion() {
-        return getProperty(UPDATE_VERSION_KEY, "0");
+    public static int getMajorVersion() {
+        return VERSION_MAJOR;
     }
 
     /**
-     * Returns Build version
+     * @return minor version
      */
-    public static String getBuildVersion() {
-        return getProperty(BUILD_ID_KEY, "0");
+    public static int getMinorVersion() {
+        return VERSION_MINOR;
     }
 
     /**
-     * Returns version prefix
+     * @return patch version
      */
-    public static String getVersionPrefix() {
-        return getProperty(VERSION_PREFIX_KEY, "");
+    public static int getPatchVersion() {
+        return VERSION_PATCH;
     }
 
     /**
-     * Returns version suffix
-     */
-    public static String getVersionSuffix() {
-        return getProperty(VERSION_SUFFIX_KEY, "");
-    }
-
-    /**
-     * Returns Proper Product Name
+     * @return Product Name, ie. Eclipse GlassFish
      */
     public static String getProductName() {
-        return getProperty(PRODUCT_NAME_KEY,
-                "Undefined Product Name - define product and version info in config/branding");
+        return PRODUCT_NAME;
     }
 
     /**
-     * Returns Abbreviated Product Name
+     * @return Abbreviated Product Name, ie. GF
      */
-    public static String getAbbrevProductName() {
-        return getProperty(ABBREV_PRODUCT_NAME_KEY, "undefined");
+    public static String getProductNameAbbreviation() {
+        return PRODUCT_NAME_ABBREVIATION;
     }
 
     /**
-     * Returns template name use to create default domain.
-     */
-    public static String getDefaultDomainTemplate() {
-        return getProperty(DEFAULT_DOMAIN_TEMPLATE_NAME, DEFAULT_DOMAIN_TEMPLATE_JAR);
-    }
-
-    /**
-     * Returns the admin client command string which represents the name of the
+     * @return the admin client command string which represents the name of the
      * command use for performing admin related domain tasks.
      */
     public static String getAdminClientCommandName() {
-        return getProperty(ADMIN_CLIENT_COMMAND_NAME_KEY, "nadmin");
+        return getProperty(KEY_ADMIN_COMMAND_NAME, "nadmin");
     }
 
-    public static String getInitialAdminGroups() {
-        return getProperty(INITIAL_ADMIN_GROUPS_KEY, "asadmin");
+    /**
+     * @return template name use to create default domain.
+     */
+    public static String getDomainTemplateDefaultJarFileName() {
+        return getProperty(KEY_DOMAIN_TEMPLATE_DEFAULTJARFILENAME, "nucleus-domain.jar");
     }
 
-    /*
-     * Fetch the value for the property identified by key
-     * from the first Properties object in the list. If it doesn't exist
-     * look in the based on Properties, recursively. If still not found,
-     * return the default, def.
+    public static String getDomainDefaultAdminGroups() {
+        return getProperty(KEY_DOMAIN_DEFAULT_ADMIN_GROUPS, "asadmin");
+    }
+
+    /**
+     * Fetch the value for the property identified by key from the first Properties object
+     * in the list.
+     * If it doesn't exist look in the based on Properties, recursively.
+     * If still not found, return the default, def.
      */
     private static String getProperty(String key, String def) {
-        return getProperty(versionProp, key, def);
+        return getProperty(PROPERTIES, key, def);
     }
 
     private static String getProperty(Properties p, String key, String def) {
@@ -266,13 +220,64 @@ public class Version {
         if (v != null) {
             return v;
         }
-        String basedon = p.getProperty(BASED_ON_KEY);
+        String basedon = p.getProperty(KEY_BASED_ON);
         if (basedon != null) {
-            Properties bp = versionPropsMap.get(basedon);
+            Properties bp = VERSION_PROPERTIES_MAP.get(basedon);
             if (bp != null) {
                 return getProperty(bp, key, def);
             }
         }
         return def;
+    }
+
+
+    private static Properties loadVersionProp() {
+        String installRoot = System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
+        if (installRoot == null) {
+            System.out.println("installRoot is null");
+            return null;
+        }
+        File directory = new File(installRoot).toPath().resolve(Path.of("config", "branding")).toFile();
+        if (directory.isDirectory()) {
+            for (File file : directory.listFiles(f1 -> f1.getName().endsWith(".properties") && f1.canRead())) {
+                try (FileReader fr = new FileReader(file)) {
+                    Properties p = new Properties();
+                    p.load(fr);
+                    VERSION_PROPERTIES.add(p);
+                    String shortName = p.getProperty(KEY_PRODUCT_NAME_ABBREVIATION);
+                    if (shortName != null) {
+                        VERSION_PROPERTIES_MAP.put(shortName, p);
+                    }
+                } catch (IOException ex) {
+                    // ignore files that cannot be read
+                }
+            }
+        }
+        // sort the list based on the based-on property.  If a is based on b,
+        // then a is earlier then b in the list.
+        Comparator<Properties> comparator = (p1, p2) -> {
+            String abp1 = p1.getProperty(KEY_PRODUCT_NAME_ABBREVIATION);
+            String bo1 = p1.getProperty(KEY_BASED_ON);
+            String abp2 = p2.getProperty(KEY_PRODUCT_NAME_ABBREVIATION);
+            String bo2 = p2.getProperty(KEY_BASED_ON);
+            if (bo1 != null && abp2 != null && bo1.contains(abp2)) {
+                return -1;
+            }
+            if (bo2 != null && abp1 != null && bo2.contains(abp1)) {
+                return 1;
+            }
+            return 0;
+        };
+        Collections.sort(VERSION_PROPERTIES, comparator);
+        return VERSION_PROPERTIES.isEmpty() ? null : VERSION_PROPERTIES.get(0);
+    }
+
+
+    private static int parseInt(String source, int defaultValue) {
+        try {
+            return Integer.parseInt(source);
+        } catch (Exception e) {
+            return 0;
+        }
     }
 }

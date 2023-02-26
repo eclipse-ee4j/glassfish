@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +18,10 @@
 package org.glassfish.admin.rest.provider;
 
 import com.sun.appserv.server.util.Version;
+
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.UriInfo;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -26,19 +31,17 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.UriInfo;
+
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.glassfish.admin.rest.Constants;
+import org.glassfish.admin.rest.results.OptionsResult;
 import org.glassfish.admin.rest.utils.ResourceUtil;
 import org.glassfish.admin.rest.utils.Util;
-import org.glassfish.admin.rest.results.OptionsResult;
 import org.glassfish.external.statistics.Statistic;
 import org.glassfish.external.statistics.impl.StatisticImpl;
 import org.jvnet.hk2.config.ConfigBean;
@@ -198,7 +201,7 @@ public class ProviderUtil {
     }
 
     static public HashMap<String, String> getStringMap(Map<String, Object> map) {
-        HashMap<String, String> stringMap = new HashMap<String, String>();
+        HashMap<String, String> stringMap = new HashMap<>();
         if (map != null) {
             //Convert attribute value to String if that's not the case.
             //Attribute value can be Boolean, Interger etc.
@@ -226,12 +229,9 @@ public class ProviderUtil {
         MethodMetaData methodMetaData = ResourceUtil.getMethodMetaData(proxy.model);
 
         Set<String> parameters = methodMetaData.parameters();
-        Iterator<String> iterator = parameters.iterator();
         ParameterMetaData parameterMetaData;
-        String parameter;
 
-        while (iterator.hasNext()) {
-            parameter = iterator.next();
+        for (String parameter : parameters) {
             parameterMetaData = methodMetaData.getParameterMetaData(parameter);
             //parameterMetaData contains attributeNames in camelCasedNames convert them to xmlNames to get the attribute's current value
             String xmlAttributeName = ResourceUtil.convertToXMLName(parameter);
@@ -251,11 +251,8 @@ public class ProviderUtil {
         StringBuilder result = new StringBuilder();
         if (methodMetaData != null) {
             Set<String> parameters = methodMetaData.parameters();
-            Iterator<String> iterator = parameters.iterator();
-            String parameter;
             ParameterMetaData parameterMetaData;
-            while (iterator.hasNext()) {
-                parameter = iterator.next();
+            for (String parameter : parameters) {
                 parameterMetaData = methodMetaData.getParameterMetaData(parameter);
                 if ((methodMetaData.isFileUploadOperation()) && (parameter.equals("id"))) {
                     parameterMetaData.setIsFileParameter(true);
@@ -365,7 +362,7 @@ public class ProviderUtil {
     }
 
     static public String getHtmlHeader(String baseUri) {
-        String title = Version.getVersion() + " REST Interface";
+        String title = Version.getProductId() + " REST Interface";
         String result = "<html><head><title>" + title + "</title>";
         result = result + getInternalStyleSheet(baseUri);
         result = result + getAjaxJavascript(baseUri);

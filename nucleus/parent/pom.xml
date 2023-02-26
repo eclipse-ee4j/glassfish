@@ -1069,10 +1069,15 @@
                         </execution>
                     </executions>
                     <configuration>
+                        <generateGitPropertiesFile>false</generateGitPropertiesFile>
+                        <dateFormat>YYYY-MM-dd'T'HH:mm:ss'Z'</dateFormat>
+                        <dateFormatTimeZone>UTC</dateFormatTimeZone>
+                        <commitIdGenerationMode>full</commitIdGenerationMode>
                         <includeOnlyProperties>
                             <includeOnlyProperty>git.branch</includeOnlyProperty>
                             <includeOnlyProperty>git.build.time</includeOnlyProperty>
                             <includeOnlyProperty>git.commit.id.abbrev</includeOnlyProperty>
+                            <includeOnlyProperty>git.commit.id.full</includeOnlyProperty>
                             <includeOnlyProperty>git.closest.tag.commit.count</includeOnlyProperty>
                         </includeOnlyProperties>
                     </configuration>

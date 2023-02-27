@@ -23,7 +23,6 @@ import java.lang.System.Logger;
 import java.lang.ref.Reference;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
-import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.security.AccessController;
@@ -32,14 +31,12 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.glassfish.web.util.IntrospectionUtils;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.ERROR;
-import static java.lang.System.Logger.Level.INFO;
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.Logger.Level.WARNING;
 import static java.text.MessageFormat.format;
@@ -75,7 +72,6 @@ class ReferenceCleaner {
 
             clearReferencesJdbc();
             checkThreadLocalsForLeaks();
-            clearReferencesRmiTargets();
 
             // Null out any static or final fields from loaded classes,
             // as a workaround for apparent garbage collection bugs
@@ -213,67 +209,6 @@ class ReferenceCleaner {
             if (valueLeak) {
                 LOG.log(ERROR, CHECK_THREAD_LOCALS_FOR_LEAKS, loader.getName(), keyDescription, describe(value));
             }
-        }
-    }
-
-
-    /**
-     * Clear RMI Targets loaded by this class loader.
-     * This depends on the internals of the JVM so it does everything by reflection.
-     */
-    private void clearReferencesRmiTargets() {
-        LOG.log(TRACE, "clearReferencesRmiTargets()");
-        try {
-            // Need access to the ccl field of sun.rmi.transport.Target
-            Class<?> objectTargetClass = Class.forName("sun.rmi.transport.Target");
-            Field cclField = objectTargetClass.getDeclaredField("ccl");
-            setAccessible(cclField);
-
-            // Clear the objTable map
-            Class<?> objectTableClass = Class.forName("sun.rmi.transport.ObjectTable");
-            Field objTableField = objectTableClass.getDeclaredField("objTable");
-            setAccessible(objTableField);
-            Object objTable = objTableField.get(null);
-            if (objTable == null) {
-                return;
-            }
-
-            // Iterate over the values in the table
-            if (objTable instanceof Map<?, ?>) {
-                Iterator<?> iter = ((Map<?, ?>) objTable).values().iterator();
-                while (iter.hasNext()) {
-                    Object obj = iter.next();
-                    Object cclObject = cclField.get(obj);
-                    if (loader == cclObject) {
-                        iter.remove();
-                    }
-                }
-            }
-
-            // Clear the implTable map
-            Field implTableField = objectTableClass.getDeclaredField("implTable");
-            setAccessible(implTableField);
-            Object implTable = implTableField.get(null);
-            if (implTable == null) {
-                return;
-            }
-
-            // Iterate over the values in the table
-            if (implTable instanceof Map<?, ?>) {
-                Iterator<?> iter = ((Map<?, ?>) implTable).values().iterator();
-                while (iter.hasNext()) {
-                    Object obj = iter.next();
-                    Object cclObject = cclField.get(obj);
-                    if (loader == cclObject) {
-                        iter.remove();
-                    }
-                }
-            }
-        } catch (ClassNotFoundException e) {
-            LOG.log(INFO, getString(LogFacade.CLEAR_RMI_INFO, loader.getName()), e);
-        } catch (SecurityException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException
-            | InaccessibleObjectException e) {
-            LOG.log(WARNING, getString(LogFacade.CLEAR_RMI_FAIL, loader.getName()), e);
         }
     }
 

@@ -23,6 +23,7 @@ import java.lang.System.Logger;
 import java.lang.ref.Reference;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
+import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.security.AccessController;
@@ -270,7 +271,8 @@ class ReferenceCleaner {
             }
         } catch (ClassNotFoundException e) {
             LOG.log(INFO, getString(LogFacade.CLEAR_RMI_INFO, loader.getName()), e);
-        } catch (SecurityException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
+        } catch (SecurityException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException
+            | InaccessibleObjectException e) {
             LOG.log(WARNING, getString(LogFacade.CLEAR_RMI_FAIL, loader.getName()), e);
         }
     }

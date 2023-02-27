@@ -43,6 +43,10 @@
             <artifactId>microprofile-config-api</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -74,11 +78,11 @@
                         <customer_name>Bob</customer_name>
                     </environmentVariables>
 
-                    <systemProperties>
+                    <systemPropertyVariables>
                         <mp.tck.prop.dummy>dummy</mp.tck.prop.dummy>
                         <customer.hobby>Tennis</customer.hobby>
                         <config_ordinal>120</config_ordinal>
-                    </systemProperties>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>

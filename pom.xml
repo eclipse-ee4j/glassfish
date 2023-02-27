@@ -43,17 +43,14 @@
       <url>https://github.com/eclipse-ee4j/glassfish</url>
     </scm>
 
-    <!--
-        Skip deploy and install as this is an aggregator POM
-    -->
     <build>
         <defaultGoal>install</defaultGoal>
         <pluginManagement>
             <plugins>
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
-                    <version>3.0.0-M2</version>
                     <configuration>
+                        <!-- Skip deploy as this is an aggregator POM -->
                         <skip>true</skip>
                     </configuration>
                 </plugin>
@@ -84,7 +81,7 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>3.6.0</version>
+                                    <version>3.8.6</version>
                                 </requireMavenVersion>
                             </rules>
                         </configuration>

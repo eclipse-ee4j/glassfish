@@ -30,8 +30,7 @@ def dumpSysInfo() {
   """
 }
 
-def jobs = [
-  "verifyPhase",
+def antjobs = [
   "cdi_all",
   "ql_gf_full_profile_all",
   "ql_gf_web_profile_all",
@@ -53,37 +52,8 @@ def jobs = [
   "webservice_all"
 ]
 
-def parallelStagesMap = jobs.collectEntries {
-  ["${it}": generateStage(it)]
-}
-
-def generateStage(job) {
-  if (job == 'verifyPhase') {
-    return generateMvnPodTemplate(job)
-  } else {
-    return generateAntPodTemplate(job)
-  }
-}
-
-def generateMvnPodTemplate(job) {
-  return {
-    node {
-      stage("${job}") {
-        checkout scm
-        try {
-          timeout(time: 1, unit: 'HOURS') {
-            dumpSysInfo()
-            sh """
-              mvn -B -e clean install -Pstaging
-            """
-          }
-        } finally {
-          archiveArtifacts artifacts: "**/server.log"
-          junit testResults: '**/*-reports/*.xml', allowEmptyResults: false
-        }
-      }
-    }
-  }
+def parallelStagesMap = antjobs.collectEntries {
+  ["${it}": generateAntPodTemplate(it)]
 }
 
 def generateAntPodTemplate(job) {
@@ -114,7 +84,70 @@ def generateAntPodTemplate(job) {
 
 pipeline {
 
-  agent any
+  agent {
+    kubernetes {
+      inheritFrom "basic"
+      yaml """
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: maven
+    image: maven:3.9.0-eclipse-temurin-17
+    command:
+    - cat
+    tty: true
+    env:
+    - name: "HOME"
+      value: "/home/jenkins"
+    - name: "MAVEN_OPTS"
+      value: "-Duser.home=/home/jenkins -Xmx2500m -Xss768k -XX:+UseG1GC -XX:+UseStringDeduplication"
+    volumeMounts:
+    - name: "jenkins-home"
+      mountPath: "/home/jenkins"
+      readOnly: false
+    - name: maven-repo-shared-storage
+      mountPath: /home/jenkins/.m2/repository
+    - name: settings-xml
+      mountPath: /home/jenkins/.m2/settings.xml
+      subPath: settings.xml
+      readOnly: true
+    - name: settings-security-xml
+      mountPath: /home/jenkins/.m2/settings-security.xml
+      subPath: settings-security.xml
+      readOnly: true
+    - name: maven-repo-local-storage
+      mountPath: "/home/jenkins/.m2/repository/org/glassfish/main"
+    resources:
+      limits:
+        memory: "8Gi"
+        cpu: "6000m"
+      requests:
+        memory: "8Gi"
+        cpu: "6000m"
+  volumes:
+  - name: "jenkins-home"
+    emptyDir: {}
+  - name: maven-repo-shared-storage
+    persistentVolumeClaim:
+      claimName: glassfish-maven-repo-storage
+  - name: settings-xml
+    secret:
+      secretName: m2-secret-dir
+      items:
+      - key: settings.xml
+        path: settings.xml
+  - name: settings-security-xml
+    secret:
+      secretName: m2-secret-dir
+      items:
+      - key: settings-security.xml
+        path: settings-security.xml
+  - name: maven-repo-local-storage
+    emptyDir: {}
+"""
+    }
+  }
 
   environment {
     S1AS_HOME = "${WORKSPACE}/glassfish7/glassfish"
@@ -124,7 +157,6 @@ pipeline {
     PORT_ADMIN=4848
     PORT_HTTP=8080
     PORT_HTTPS=8181
-    MAVEN_OPTS="-Xms1g -Xmx1g -Xss768k -XX:+UseG1GC -XX:+UseStringDeduplication"
   }
 
   options {
@@ -149,40 +181,47 @@ pipeline {
   stages {
 
     stage('build') {
-      agent {
-        kubernetes {
-          label 'basic'
-        }
-      }
-      tools {
-        jdk 'temurin-jdk17-latest'
-        maven 'apache-maven-latest'
-      }
       steps {
         checkout scm
-        dumpSysInfo()
-        sh '''
-          # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
-          mvn -B -e clean install -Pfastest,staging -T4C
-          ./gfbuild.sh archive_bundles
-          mvn -B -e clean
-          tar -c -C ${WORKSPACE}/appserver/tests common_test.sh gftest.sh appserv-tests quicklook | gzip --fast > ${WORKSPACE}/bundles/appserv_tests.tar.gz
-          ls -la ${WORKSPACE}/bundles
-        '''
+        container('maven') {
+          dumpSysInfo()
+          sh '''
+            # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
+            mvn -B -e clean install -Pfastest,staging -T4C
+            ./gfbuild.sh archive_bundles
+            mvn -B -e clean
+            tar -c -C ${WORKSPACE}/appserver/tests common_test.sh gftest.sh appserv-tests quicklook | gzip --fast > ${WORKSPACE}/bundles/appserv_tests.tar.gz
+            ls -la ${WORKSPACE}/bundles
+          '''
+        }
         archiveArtifacts artifacts: 'bundles/*.zip'
         stash includes: 'bundles/*', name: 'build-bundles'
       }
     }
-
-    stage('tests') {
+    stage('mvn-tests') {
+      steps {
+        checkout scm
+        container('maven') {
+          dumpSysInfo()
+          timeout(time: 1, unit: 'HOURS') {
+            sh '''
+                mvn -B -e clean install -Pstaging
+            '''
+          }
+        }
+        archiveArtifacts artifacts: "**/server.log"
+        junit testResults: '**/*-reports/*.xml', allowEmptyResults: false
+      }
+    }
+    stage('ant-tests') {
       agent {
         kubernetes {
-          label 'basic'
+          inheritFrom 'basic'
         }
       }
       tools {
         jdk 'temurin-jdk17-latest'
-        maven 'apache-maven-latest'
+        maven 'apache-maven-3.8.6'
       }
       steps {
         script {

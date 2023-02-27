@@ -9,6 +9,14 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
+## February 27, 2023 -- Eclipse GlassFish 7.0.2 Available
+
+We are happy to announce the release of Eclipse GlassFish 7.0.2. 
+
+The main features of this release are the updates of various components, fixing a wide array of issues. Specifically with WaSP 3.2.0 a major change is that it now includes the Pages Standard Tags, so the separate jar for this is no longer present in GlassFish. We also fixed an important regression where requesting a directory from the ClassLoader failed for exploded deploys. This now works again. Additionally the version (7.0.2 now) is reported correctly again, which can be important for package managers such as brew.
+
+Eclipse GlassFish 7.0.2 compiles and runs with JDK 11 to JDK 19 releases. MicroProfile support requires JDK 17 or higher. JDK 20ea30 has been succesfully used to compile and run GlassFish as well, but is not yet officially supported.
+
 ## January 30, 2023 -- Eclipse GlassFish 7.0.1 Available
 
 We are pleased to announce the release of Eclipse GlassFish 7.0.1. 

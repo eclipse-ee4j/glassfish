@@ -138,12 +138,12 @@ public class KernelLoggerInfo {
     public static final String startupFailure = LOGMSG_PREFIX + "-00016";
 
     @LogMessageInfo(
-            message = "{0} startup time: {1} ({2} ms), startup services({3} ms), total({4} ms)",
+            message = "{0} startup time: {1} ({2} ms), startup services ({3} ms), total ({4} ms)",
             level = "INFO")
     public static final String startupEndMessage = LOGMSG_PREFIX + "-00017";
 
     @LogMessageInfo(
-            message = "TOTAL TIME INCLUDING CLI: {0}",
+            message = "Total startup time including CLI: {0} ms",
             level = "INFO")
     public static final String startupTotalTime = LOGMSG_PREFIX + "-00018";
 

@@ -30,6 +30,8 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -360,10 +362,10 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
         if (wallClockStart != null) {
             try {
                 // it will only be set when called from AsadminMain and the env. variable AS_DEBUG is set to true
-                long realstart = Long.parseLong(wallClockStart);
-                logger.log(Level.INFO, KernelLoggerInfo.startupTotalTime, (System.currentTimeMillis() - realstart));
-            }
-            catch(Exception e) {
+                Instant realstart = Instant.parse(wallClockStart);
+                long duration = Duration.between(realstart, Instant.now()).toMillis();
+                logger.log(Level.INFO, KernelLoggerInfo.startupTotalTime, duration);
+            } catch(Exception e) {
                 // do nothing.
             }
         }

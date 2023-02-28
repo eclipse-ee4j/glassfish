@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -35,7 +35,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
@@ -126,7 +125,7 @@ public class LogManagerService implements org.glassfish.internal.api.LogManager 
         fileMonitoring.monitors(loggingPropertiesFile, new LoggingCfgFileChangeListener(this::reconfigure));
 
         LOG.config("LogManagerService completed successfuly ...");
-        LOG.log(Level.INFO, LogFacade.GF_VERSION_INFO, Version.getFullVersion());
+        LOG.log(Level.INFO, LogFacade.GF_VERSION_INFO, Version.getProductIdInfo());
     }
 
 
@@ -212,9 +211,7 @@ public class LogManagerService implements org.glassfish.internal.api.LogManager 
      */
     public Map<String, String> validateLoggingProperties(Map<String, String> loggingProperties) {
         Map<String, String> invalidProps = new HashMap<>();
-        Iterator<Entry<String, String>> propertyIterator = loggingProperties.entrySet().iterator();
-        while (propertyIterator.hasNext()) {
-            Entry<String, String> propertyEntry = propertyIterator.next();
+        for (Entry<String, String> propertyEntry : loggingProperties.entrySet()) {
             try {
                 validateLoggingProperty(propertyEntry.getKey(), propertyEntry.getValue());
             } catch (ValidationException ex) {
@@ -251,8 +248,9 @@ public class LogManagerService implements org.glassfish.internal.api.LogManager 
 
     @PreDestroy
     public void preDestroy() {
-        LOG.config("Completed shutdown of Log manager service");
+        LOG.config("Completed shutdown of the Log Manager Service");
     }
+
 
     private void setProductId() {
         final ServiceLocator locator = Globals.getDefaultBaseServiceLocator();
@@ -262,12 +260,9 @@ public class LogManagerService implements org.glassfish.internal.api.LogManager 
             return;
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(versionInfo.getAbbreviatedProductName());
+        sb.append(versionInfo.getProductNameAbbreviation());
         sb.append(' ');
-        sb.append(versionInfo.getVersionPrefix());
-        sb.append(versionInfo.getMajorVersion());
-        sb.append('.');
-        sb.append(versionInfo.getMinorVersion());
+        sb.append(versionInfo.getFullVersion());
         LoggingSystemEnvironment.setProductId(sb.toString());
     }
 

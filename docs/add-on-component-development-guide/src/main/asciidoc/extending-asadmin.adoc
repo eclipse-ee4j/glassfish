@@ -915,72 +915,53 @@ To change the brand in the {productName} CLI, create an OSGi fragment
 bundle that contains a plain text file that is named
 `src/main/resources/BrandingVersion.properties`.
 
-In the `BrandingVersion.properties` file, define the following
-keyword-value pairs:
+In the `BrandingVersion.properties` file, define the following keyword-value pairs:
 
 [source]
 ----
-product_name=product-name
-abbrev_product_name=abbrev-product-name
-major_version=major-version
-minor_version=minor-version
-build_id=build-id
-version_prefix=version-prefix
-version_suffix=version-suffix
+product.name=...
+product.name.abbreviation=...
+product.version=...
+...
 ----
 
-Define each keyword-value pair on a separate line of the file. Each
-value is a text string without quotes.
+Define each keyword-value pair on a separate line of the file.
+Each value is a text string without quotes.
 
 The meaning of each keyword-value pair is as follows:
 
-`product_name=`product-name::
-  Specifies the full product name without any release information, for
-  example,
-  `name="ProductNameFullPlain" content="{productName}"`.
-`abbrev_product_name=`abbrev-product-name::
-  Specifies an abbreviated form of the product name without any release
-  information, for example,
-  `name="ProductNamePlain" content="{productName}"`.
-`major_version=`major-version::
-  Returns the product major version, for example, `6`
-`minor_version=`minor-version::
-  Specifies the product minor version, for example, `0`.
-`build_id=`build-id::
-  Specifies the build version, for example, `build 17`.
-`version_prefix=`version-prefix::
-  Specifies a prefix for the product version, for example, `v`.
-`version_suffix=`version-suffix::
-  Specifies a suffix for the product version, for example, `Beta`.
+`product.name=Eclipse GlassFish`::
+  Specifies the full product name without any release information.
+`product.name.abbreviation=GF`::
+  Specifies an abbreviated form of the product name without any release information.
+`product.version=2023.02.24`::
+  Returns the product version. It should follow standard form `major.minor.patch[-suffix]`
+`product.build.git.branch=experimental`::
+  Specifies the git branch, used for the build.
+`product.build.git.commit=ec1ce24934f0bb174333a9886b58a0d2f9e52b44`::
+  Specifies the git commit, used for the build.
+`product.build.timestamp=2023-02-27T11:09:42Z`::
+  Specifies the build timestamp.
 
 [[ghrfh]]
-Example 4-4 `BrandingVersion.properties` File for Changing the Brand in
+Example 4-4 `glassfish-version.properties` File for Changing the Brand in
 the {productName} CLI
 
-This example shows the content of the `BrandingVersion.properties` for
-defining the product name and release information of {productName} 6.0.0, build 17. The abbreviated product name is
-`glassfish-server`.
+This example shows the content of the `glassfish-version.properties` for
+defining the product name and release information of {productName} 7.0.3-SNAPSHOT.
+The abbreviated product name is `GF`.
 
 [source]
 ----
-product_name=Eclipse GlassFish
-abbrev_product_name=glassfish-server
-major_version=6
-minor_version=0.0
-build_id=build 17
-----
+product.name=Eclipse GlassFish
+product.name.short=GF
+product.version=7.0.3-SNAPSHOT
+product.build.git.branch=master
+product.build.git.commit=93176e2555176091c8522e43d1d32a0a30652d4a
+product.build.timestamp=2023-02-27T11:09:42Z
 
-To enable the display of OEM-specific information, the following
-properties might also be required:
-
-[source]
-----
-LEGAL_COPYRIGHT                "Copyright 2020"
-LEGAL_COMPANY_NAME             "Eclipse Foundation"
-LEGAL_RIGHTS                   "All rights reserved."
-SIMPLE_COMPANY_NAME            "Eclipse"
-COMPANY_CONTACT_URL            "http://www.glassfish.org"
-PRODUCT_TRADEMARKS             "GlassFish is a trademark of the Eclipse Foundation"
+domain.template.defaultJarFileName=appserver-domain.jar
+admin.command.name=asadmin
 ----
 
 [[examples-of-extending-the-asadmin-utility]]

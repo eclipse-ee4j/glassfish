@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,38 +18,76 @@
 package org.glassfish.config.support;
 
 import com.sun.appserv.server.util.Version;
-import java.beans.PropertyVetoException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.List;
-
-import jakarta.inject.Inject;
-import javax.xml.stream.XMLInputFactory;
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
-
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.AccessLog;
+import com.sun.enterprise.config.serverbeans.AdminService;
+import com.sun.enterprise.config.serverbeans.AuditModule;
+import com.sun.enterprise.config.serverbeans.AuthRealm;
+import com.sun.enterprise.config.serverbeans.AvailabilityService;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Configs;
+import com.sun.enterprise.config.serverbeans.DasConfig;
+import com.sun.enterprise.config.serverbeans.DiagnosticService;
+import com.sun.enterprise.config.serverbeans.HttpService;
+import com.sun.enterprise.config.serverbeans.JaccProvider;
+import com.sun.enterprise.config.serverbeans.JavaConfig;
+import com.sun.enterprise.config.serverbeans.LogService;
+import com.sun.enterprise.config.serverbeans.MessageSecurityConfig;
+import com.sun.enterprise.config.serverbeans.ModuleLogLevels;
+import com.sun.enterprise.config.serverbeans.ProviderConfig;
+import com.sun.enterprise.config.serverbeans.RequestPolicy;
+import com.sun.enterprise.config.serverbeans.ResponsePolicy;
+import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.config.serverbeans.SystemProperty;
+import com.sun.enterprise.config.serverbeans.ThreadPools;
+import com.sun.enterprise.config.serverbeans.VirtualServer;
 import com.sun.enterprise.config.util.ConfigApiLoggerInfo;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import org.glassfish.grizzly.config.dom.*;
-import org.glassfish.api.admin.config.ConfigurationUpgrade;
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.jvnet.hk2.config.*;
-import org.jvnet.hk2.config.types.Property;
-import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.*;
+
+import jakarta.inject.Inject;
+
+import java.beans.PropertyVetoException;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
+
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.glassfish.api.admin.config.ConfigurationUpgrade;
+import org.glassfish.grizzly.config.dom.FileCache;
+import org.glassfish.grizzly.config.dom.Http;
+import org.glassfish.grizzly.config.dom.HttpRedirect;
+import org.glassfish.grizzly.config.dom.NetworkConfig;
+import org.glassfish.grizzly.config.dom.NetworkListener;
+import org.glassfish.grizzly.config.dom.NetworkListeners;
+import org.glassfish.grizzly.config.dom.PortUnification;
+import org.glassfish.grizzly.config.dom.Protocol;
+import org.glassfish.grizzly.config.dom.ProtocolFinder;
+import org.glassfish.grizzly.config.dom.Protocols;
+import org.glassfish.grizzly.config.dom.Ssl;
+import org.glassfish.grizzly.config.dom.ThreadPool;
+import org.glassfish.grizzly.config.dom.Transport;
+import org.glassfish.grizzly.config.dom.Transports;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.Dom;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
+import org.jvnet.hk2.config.types.Property;
+
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.*;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 
 /**
  * Upgrade service to add the default-config if it doesn't exist. 3.0.1 and v2.x developer profile do not have
@@ -65,16 +104,20 @@ import java.util.zip.ZipFile;
 @Service(name = "defaultconfigupgrade")
 public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct {
 
+    private static final String DEFAULT_CONFIG = "default-config";
+    private static final String INSTALL_ROOT = "com.sun.aas.installRoot";
+    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DefaultConfigUpgrade.class);
+    private static final Logger logger = ConfigApiLoggerInfo.getLogger();
+
     @Inject
     Configs configs;
 
     @Inject
     ServiceLocator habitat;
 
-    private static final String DEFAULT_CONFIG = "default-config";
-    private static final String INSTALL_ROOT = "com.sun.aas.installRoot";
-    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DefaultConfigUpgrade.class);
-    private final static Logger logger = ConfigApiLoggerInfo.getLogger();
+    private XMLStreamReader parser;
+    private InputStreamReader reader;
+
 
     @Override
     public void postConstruct() {
@@ -95,7 +138,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
 
         InputStream template = null;
         ZipFile templatezip = null;
-        String templatefilename = Version.getDefaultDomainTemplate();
+        String templatefilename = Version.getDomainTemplateDefaultJarFileName();
         File templatefile = new File(new File(new File(new File(installRoot, "common"), "templates"), "gf"), templatefilename);
         try {
             templatezip = new ZipFile(templatefile);
@@ -286,6 +329,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
      */
     private static class MinDefaultConfigCode implements SingleConfigCode<Configs> {
 
+        @Override
         public Object run(Configs configs) throws PropertyVetoException, TransactionFailure {
             Config defaultConfig = configs.createChild(Config.class);
             defaultConfig.setName(DEFAULT_CONFIG);
@@ -299,6 +343,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
 
     private class DefaultConfigCode implements SingleConfigCode<Config> {
 
+        @Override
         public Object run(Config config) throws PropertyVetoException, TransactionFailure {
 
             config.setDynamicReconfigurationEnabled(parser.getAttributeValue(null, "dynamic-reconfiguration-enabled"));
@@ -319,6 +364,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
      */
     private class HttpServiceConfigCode implements SingleConfigCode<Config> {
 
+        @Override
         public Object run(Config config) throws PropertyVetoException, TransactionFailure {
 
             HttpService httpService = config.createChild(HttpService.class);
@@ -388,6 +434,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
      */
     private class AdminServiceConfigCode implements SingleConfigCode<Config> {
 
+        @Override
         public Object run(Config config) throws PropertyVetoException, TransactionFailure {
 
             AdminService adminService = config.createChild(AdminService.class);
@@ -444,6 +491,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
      */
     private class LogServiceConfigCode implements SingleConfigCode<Config> {
 
+        @Override
         public Object run(Config config) throws PropertyVetoException {
             LogService ls = null;
             try {
@@ -546,6 +594,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
      */
     private class SecurityServiceConfigCode implements SingleConfigCode<Config> {
 
+        @Override
         public Object run(Config config) throws PropertyVetoException {
             try {
                 SecurityService ss = config.createChild(SecurityService.class);
@@ -904,6 +953,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
      */
     private static class DiagnosticServiceConfigCode implements SingleConfigCode<Config> {
 
+        @Override
         public Object run(Config config) throws PropertyVetoException, TransactionFailure {
             DiagnosticService ds = config.createChild(DiagnosticService.class);
             config.setDiagnosticService(ds);
@@ -918,6 +968,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
      */
     private class JavaConfigCode implements SingleConfigCode<Config> {
 
+        @Override
         public Object run(Config config) throws PropertyVetoException {
             try {
                 JavaConfig jc = config.createChild(JavaConfig.class);
@@ -970,6 +1021,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
      */
     static private class AvailabilityServiceConfigCode implements SingleConfigCode<Config> {
 
+        @Override
         public Object run(Config config) throws PropertyVetoException {
             try {
                 AvailabilityService as = config.createChild(AvailabilityService.class);
@@ -988,6 +1040,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
      */
     private class NetworkConfigCode implements SingleConfigCode<Config> {
 
+        @Override
         public Object run(Config config) throws PropertyVetoException {
             try {
                 NetworkConfig nc = config.createChild(NetworkConfig.class);
@@ -1364,6 +1417,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
      */
     private class ThreadPoolsConfigCode implements SingleConfigCode<Config> {
 
+        @Override
         public Object run(Config config) throws PropertyVetoException {
             try {
                 ThreadPools tps = config.createChild(ThreadPools.class);
@@ -1417,6 +1471,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
      */
     private class SystemPropertyConfigCode implements SingleConfigCode<Config> {
 
+        @Override
         public Object run(Config config) throws PropertyVetoException {
 
             createSystemProperty(config);
@@ -1484,7 +1539,4 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
             parser = XMLInputFactory.newInstance().createXMLStreamReader("domain.xml", reader);
         }
     }
-
-    private XMLStreamReader parser;
-    private InputStreamReader reader;
 }

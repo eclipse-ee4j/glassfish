@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2022 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,13 @@
 package com.sun.enterprise.v3.services.impl;
 
 import com.sun.appserv.server.util.Version;
+import com.sun.enterprise.config.serverbeans.VirtualServer;
+import com.sun.enterprise.v3.services.impl.monitor.ConnectionMonitor;
+import com.sun.enterprise.v3.services.impl.monitor.FileCacheMonitor;
+import com.sun.enterprise.v3.services.impl.monitor.GrizzlyMonitoring;
+import com.sun.enterprise.v3.services.impl.monitor.KeepAliveMonitor;
+import com.sun.enterprise.v3.services.impl.monitor.ThreadPoolMonitor;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,12 +32,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.sun.enterprise.config.serverbeans.VirtualServer;
-import com.sun.enterprise.v3.services.impl.monitor.ConnectionMonitor;
-import com.sun.enterprise.v3.services.impl.monitor.FileCacheMonitor;
-import com.sun.enterprise.v3.services.impl.monitor.GrizzlyMonitoring;
-import com.sun.enterprise.v3.services.impl.monitor.KeepAliveMonitor;
-import com.sun.enterprise.v3.services.impl.monitor.ThreadPoolMonitor;
 import org.glassfish.grizzly.Buffer;
 import org.glassfish.grizzly.config.GenericGrizzlyListener;
 import org.glassfish.grizzly.config.dom.Http;
@@ -369,11 +370,11 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
             */
             String serverInfo = System.getProperty("product.name");
 
-            serverVersion = serverInfo != null ? serverInfo : Version.getVersion();
+            serverVersion = serverInfo == null ? Version.getProductId() : serverInfo;
 
             if (isXPoweredByEnabled) {
                 xPoweredBy = "Servlet/6.0 JSP/3.1"
-                        + "(" + ((serverInfo != null && !serverInfo.isEmpty()) ? serverInfo : Version.getVersion())
+                        + "(" + serverVersion
                         + " Java/"
                         + System.getProperty("java.vm.vendor") + "/"
                         + System.getProperty("java.specification.version") + ")";

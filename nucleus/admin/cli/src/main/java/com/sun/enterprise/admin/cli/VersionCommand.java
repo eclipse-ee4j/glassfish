@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,13 +18,15 @@
 package com.sun.enterprise.admin.cli;
 
 import com.sun.appserv.server.util.Version;
-import com.sun.enterprise.admin.cli.remote.*;
+import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+
 import java.util.logging.Level;
+
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.CommandException;
 import org.glassfish.hk2.api.PerLookup;
-import org.jvnet.hk2.annotations.*;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * A local version command. Prints the version of the server, if running. Prints the version from locally available
@@ -59,10 +62,11 @@ public class VersionCommand extends CLICommand {
         try {
             RemoteCLICommand cmd = new RemoteCLICommand("version", programOpts, env);
             String version;
-            if (verbose)
+            if (verbose) {
                 version = cmd.executeAndReturnOutput("version", "--verbose");
-            else
+            } else {
                 version = cmd.executeAndReturnOutput("version");
+            }
             version = version.trim(); // get rid of gratuitous newlines
             logger.info(terse ? version : strings.get("version.remote", version));
         } catch (Exception e) {
@@ -74,11 +78,12 @@ public class VersionCommand extends CLICommand {
     }
 
     private void invokeLocal() {
-        String fv = Version.getFullVersion();
+        String fv = Version.getProductIdInfo();
 
         logger.info(terse ? fv : strings.get("version.local", fv));
-        if (verbose)
+        if (verbose) {
             logger.info(strings.get("version.local.java", System.getProperty("java.version")));
+        }
     }
 
     private void printRemoteException(Exception e) {

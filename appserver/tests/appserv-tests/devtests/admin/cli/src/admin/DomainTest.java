@@ -30,7 +30,7 @@ import javax.xml.xpath.XPathConstants;
 public class DomainTest extends AdminBaseDevTest {
 
     private final String NUCLEUS_DOMAIN_TEMPLATE_NAME = "nucleus-domain.jar";
-    private final String DEFAULT_DOMAIN_TEMPLATE_NAME = "default_domain_template";
+    private final String DEFAULT_DOMAIN_TEMPLATE_NAME = "domain.template.defaultJarFileName";
     private final String BRANDING_FILE_RELATIVE_PATH = "config" + File.separator + "branding" + File.separator + "glassfish-version.properties";
     private Properties _brandingProperties;
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,24 +15,24 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * Status.java
- *
- * Created on March 27, 2004, 10:40 PM
- */
-
 package com.sun.enterprise.backup;
 
-import com.sun.enterprise.util.io.FileUtils;
-import java.io.*;
-import java.util.*;
-import java.util.zip.*;
-
 import com.sun.appserv.server.util.Version;
+import com.sun.enterprise.util.io.FileUtils;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
- *
- * @author  Byron Nevins
+ * @author  Byron Nevins 2004
  */
 class Status {
 
@@ -95,8 +96,9 @@ class Status {
         props = null;
         setPropsFromFile(file);
 
-        if (props == null)
+        if (props == null) {
             return false;
+        }
 
         return true;
     }
@@ -127,30 +129,34 @@ class Status {
     }
 
     String getDomainName() {
-        if(props == null)
+        if(props == null) {
             return null;
+        }
 
         return props.getProperty(Constants.PROPS_DOMAIN_NAME);
     }
 
     String getTimeStamp() {
-        if(props == null)
+        if(props == null) {
             return null;
+        }
 
         return props.getProperty(Constants.PROPS_TIMESTAMP_HUMAN);
     }
 
     String getUserName() {
-        if(props == null)
+        if(props == null) {
             return null;
+        }
 
         return props.getProperty(Constants.PROPS_USER_NAME);
     }
 
     // Return the full path to the backup file.
     String getBackupPath() {
-        if(props == null)
+        if(props == null) {
             return null;
+        }
 
         try {
             File f = new File(props.getProperty(Constants.PROPS_BACKUP_FILE));
@@ -163,8 +169,9 @@ class Status {
 
     // Return the filename portion of the path.
     String getFileName() {
-        if(props == null)
+        if(props == null) {
             return null;
+        }
 
         try {
             File f = new File(props.getProperty(Constants.PROPS_BACKUP_FILE));
@@ -176,15 +183,17 @@ class Status {
     }
 
     String getBackupConfigName(){
-       if(props == null)
-            return "";
+       if(props == null) {
+        return "";
+    }
 
         return props.getProperty(Constants.BACKUP_CONFIG, "");
     }
 
     String getBackupType(){
-       if(props == null)
-            return "";
+       if(props == null) {
+        return "";
+    }
 
         return props.getProperty(Constants.PROPS_TYPE, "");
     }
@@ -274,7 +283,7 @@ class Status {
                           new Date(request.timestamp).toString());
 
         props.setProperty(Constants.PROPS_VERSION,
-                          Version.getFullVersion());
+                          Version.getProductIdInfo());
 
         String type = request.configOnly ? Constants.CONFIG_ONLY :
                 Constants.FULL;

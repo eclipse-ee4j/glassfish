@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -72,7 +72,7 @@ public class DomainBuilder {
     private JarFile _templateJar;
     private DomainTemplate _domainTempalte;
     private final Properties _defaultPortValues = new Properties();
-    private byte[] _keystoreBytes = null;
+    private byte[] _keystoreBytes;
     private final Set<String> _extractedEntries = new HashSet<>();
 
     /**
@@ -95,7 +95,7 @@ public class DomainBuilder {
     private void initialize() throws DomainException {
         String templateJarPath = (String) _domainConfig.get(DomainConfig.K_TEMPLATE_NAME);
         if (templateJarPath == null || templateJarPath.isEmpty()) {
-            String defaultTemplateName = Version.getDefaultDomainTemplate();
+            String defaultTemplateName = Version.getDomainTemplateDefaultJarFileName();
             if (defaultTemplateName == null || defaultTemplateName.isEmpty()) {
                 throw new DomainException("Missing default template information in branding file.");
             }

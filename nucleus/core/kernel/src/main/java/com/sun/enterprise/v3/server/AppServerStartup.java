@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,6 @@
 
 package com.sun.enterprise.v3.server;
 
-
 import com.sun.appserv.server.util.Version;
 import com.sun.enterprise.module.HK2Module;
 import com.sun.enterprise.module.ModuleState;
@@ -25,6 +25,13 @@ import com.sun.enterprise.module.bootstrap.ModuleStartup;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.util.Result;
 import com.sun.enterprise.v3.common.DoNothingActionReporter;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
+
+import java.time.Duration;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -36,9 +43,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
-import jakarta.inject.Singleton;
+
 import org.glassfish.api.FutureProvider;
 import org.glassfish.api.StartupRunLevel;
 import org.glassfish.api.admin.CommandRunner;
@@ -102,6 +107,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
     @Inject
     ModulesRegistry systemRegistry;
 
+    @Override
     @Inject
     public void setStartupContext(StartupContext context) {
         this.context = context;
@@ -186,6 +192,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
 
     }
 
+    @Override
     public synchronized void start() {
         ClassLoader origCL = Thread.currentThread().getContextClassLoader();
         try {
@@ -342,11 +349,12 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
 
         // finally let's calculate our starting times
         long nowTime = System.currentTimeMillis();
-        logger.log(Level.INFO, KernelLoggerInfo.startupEndMessage,
-                new Object[] { Version.getVersion(), Version.getBuildVersion(), platform,
-                (platformInitTime - context.getCreationTime()),
-                (nowTime - platformInitTime),
-                nowTime - context.getCreationTime()});
+        logger.log(Level.INFO, KernelLoggerInfo.startupEndMessage, new Object[] {
+            Version.getProductIdInfo(), platform,
+            platformInitTime - context.getCreationTime(),
+            nowTime - platformInitTime,
+            nowTime - context.getCreationTime(),
+        });
 
         printModuleStatus(systemRegistry, level);
 
@@ -354,10 +362,10 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
         if (wallClockStart != null) {
             try {
                 // it will only be set when called from AsadminMain and the env. variable AS_DEBUG is set to true
-                long realstart = Long.parseLong(wallClockStart);
-                logger.log(Level.INFO, KernelLoggerInfo.startupTotalTime, (System.currentTimeMillis() - realstart));
-            }
-            catch(Exception e) {
+                Instant realstart = Instant.parse(wallClockStart);
+                long duration = Duration.between(realstart, Instant.now()).toMillis();
+                logger.log(Level.INFO, KernelLoggerInfo.startupTotalTime, duration);
+            } catch(Exception e) {
                 // do nothing.
             }
         }
@@ -443,6 +451,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
         }
     }
 
+    @Override
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public synchronized void stop() {
         if(env.getStatus() == ServerEnvironment.Status.stopped) {
@@ -523,7 +532,9 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
 
             @Override
             public boolean matches(Descriptor d) {
-                if (d.getScope() != null && d.getScope().equals(RunLevel.class.getName())) return true;
+                if (d.getScope() != null && d.getScope().equals(RunLevel.class.getName())) {
+                    return true;
+                }
 
                 return false;
             }
@@ -535,8 +546,8 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
 
         private volatile RunLevelController controller;
 
-        private Map<String, Long> startTimes = new HashMap<String, Long>();
-        private LinkedHashMap<String, Long> recordedTimes = new LinkedHashMap<String, Long>();
+        private Map<String, Long> startTimes = new HashMap<>();
+        private LinkedHashMap<String, Long> recordedTimes = new LinkedHashMap<>();
         private LinkedList<Future<Result<Thread>>> futures = null;
 
         @Override
@@ -565,10 +576,14 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
         }
 
         private RunLevelController getController() {
-            if (controller != null) return controller;
+            if (controller != null) {
+                return controller;
+            }
 
             synchronized (this) {
-                if (controller != null) return controller;
+                if (controller != null) {
+                    return controller;
+                }
 
                 controller = controllerProvider.get();
                 return controller;
@@ -581,7 +596,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
         }
 
         private void startRecordingFutures() {
-            futures = new LinkedList<Future<Result<Thread>>>();
+            futures = new LinkedList<>();
         }
 
         private LinkedList<Future<Result<Thread>>> getFutures() {
@@ -607,7 +622,9 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
             if (startTimes != null && recordedTimes != null) {
 
                 Long startupTime = startTimes.remove(descriptor.getImplementation());
-                if (startupTime == null) return;
+                if (startupTime == null) {
+                    return;
+                }
 
                 recordedTimes.put(descriptor.getImplementation(),
                     (System.currentTimeMillis() - startupTime));
@@ -665,7 +682,9 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
                 int previousProceedTo) {
             logger.log(Level.INFO, KernelLoggerInfo.shutdownRequested);
 
-            if (future.isDown()) return;
+            if (future.isDown()) {
+                return;
+            }
 
             forcedShutdown = true;
             shutdown();

@@ -403,7 +403,7 @@ public final class CreateDomainCommand extends CLICommand {
             domainConfig.put(DomainConfig.KEYTOOLOPTIONS, keytoolOptions);
             domainConfig.put(DomainConfig.K_TEMPLATE_NAME, template);
             domainConfig.put(DomainConfig.K_PORTBASE, portBase);
-            domainConfig.put(DomainConfig.K_INITIAL_ADMIN_USER_GROUPS, Version.getInitialAdminGroups());
+            domainConfig.put(DomainConfig.K_INITIAL_ADMIN_USER_GROUPS, Version.getDomainDefaultAdminGroups());
             initSecureAdminSettings(domainConfig);
             try {
                 DomainBuilder domainBuilder = new DomainBuilder(domainConfig);

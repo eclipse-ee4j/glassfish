@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,28 +17,34 @@
 
 package org.glassfish.config.support;
 
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
-import org.jvnet.hk2.config.*;
-
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamException;
-import java.beans.PropertyChangeEvent;
-import java.util.List;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import java.util.concurrent.ExecutorService;
-import java.io.IOException;
-
+import com.sun.appserv.server.util.Version;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.util.ConfigApiLoggerInfo;
-import com.sun.appserv.server.util.Version;
+
+import java.beans.PropertyChangeEvent;
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigModel;
+import org.jvnet.hk2.config.Dom;
+import org.jvnet.hk2.config.DomDocument;
+import org.jvnet.hk2.config.TransactionListener;
+import org.jvnet.hk2.config.Transactions;
+import org.jvnet.hk2.config.UnprocessedChangeEvents;
 
 /**
  * plug our Dom implementation
  *
  * @author Jerome Dochez
- *
  */
 public class GlassFishDocument extends DomDocument<GlassFishConfigBean> {
 
@@ -52,6 +59,7 @@ public class GlassFishDocument extends DomDocument<GlassFishConfigBean> {
         final DomDocument doc = this;
 
         habitat.<Transactions>getService(Transactions.class).addTransactionsListener(new TransactionListener() {
+            @Override
             public void transactionCommited(List<PropertyChangeEvent> changes) {
                 if (!isGlassFishDocumentChanged(changes)) {
                     return;
@@ -61,7 +69,7 @@ public class GlassFishDocument extends DomDocument<GlassFishConfigBean> {
                     try {
                         if (doc.getRoot().getProxyType().equals(Domain.class)) {
                             Dom domainRoot = doc.getRoot();
-                            domainRoot.attribute("version", Version.getBuildVersion());
+                            domainRoot.attribute("version", Version.getVersionNumber());
                         }
                         pers.save(doc);
                     } catch (IOException e) {
@@ -83,6 +91,7 @@ public class GlassFishDocument extends DomDocument<GlassFishConfigBean> {
                 return false;
             }
 
+            @Override
             public void unprocessedTransactedEvents(List<UnprocessedChangeEvents> changes) {
 
             }

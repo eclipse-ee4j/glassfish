@@ -21,7 +21,6 @@ public class VersionPrinter {
   public static void main(final String[] arg) {
     try {
        System.out.println("Full Version: " + Version.getFullVersion());
-       System.out.println("Abbreviated Version: " + Version.getAbbreviatedVersion());
        System.out.println("Build Version: " + Version.getBuildVersion());
        System.out.println("Major Version: " + Version.getMajorVersion());
        System.out.println("Minor Version: " + Version.getMinorVersion());

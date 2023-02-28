@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,15 +20,26 @@ package org.glassfish.admin.amx.impl.mbean;
 import com.sun.appserv.server.util.Version;
 import com.sun.enterprise.universal.Duration;
 import com.sun.enterprise.universal.io.SmartFile;
+
 import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-import org.glassfish.admin.amx.base.*;
+
+import org.glassfish.admin.amx.base.BulkAccess;
+import org.glassfish.admin.amx.base.DomainRoot;
+import org.glassfish.admin.amx.base.Ext;
+import org.glassfish.admin.amx.base.Pathnames;
+import org.glassfish.admin.amx.base.Query;
+import org.glassfish.admin.amx.base.Realms;
+import org.glassfish.admin.amx.base.RuntimeRoot;
+import org.glassfish.admin.amx.base.Sample;
+import org.glassfish.admin.amx.base.Tools;
 import org.glassfish.admin.amx.core.AMXValidator;
 import org.glassfish.admin.amx.impl.util.InjectedValues;
 import org.glassfish.admin.amx.impl.util.Issues;
@@ -82,6 +94,7 @@ public class DomainRootImpl extends AMXImplBase // implements DomainRoot
         return child(BulkAccess.class);
     }
 
+    @Override
     protected ObjectName preRegisterHook(final MBeanServer server,
             final ObjectName selfObjectName)
             throws Exception {
@@ -95,6 +108,7 @@ public class DomainRootImpl extends AMXImplBase // implements DomainRoot
         return selfObjectName;
     }
 
+    @Override
     public void preRegisterDone()
             throws Exception {
         super.preRegisterDone();
@@ -181,7 +195,7 @@ public class DomainRootImpl extends AMXImplBase // implements DomainRoot
         mbean = new ExtImpl(self);
         registerChild(mbean, childObjectName);
 
-        childObjectName = objectNames.buildChildObjectName(server, extObjectName, Realms.class);
+        childObjectName = ObjectNameBuilder.buildChildObjectName(server, extObjectName, Realms.class);
         mbean = new RealmsImpl(extObjectName);
         registerChild(mbean, childObjectName);
 
@@ -207,7 +221,7 @@ public class DomainRootImpl extends AMXImplBase // implements DomainRoot
     }
 
     public String getApplicationServerFullVersion() {
-        return Version.getFullVersion();
+        return Version.getProductIdInfo();
     }
 
     public String getInstanceRoot() {

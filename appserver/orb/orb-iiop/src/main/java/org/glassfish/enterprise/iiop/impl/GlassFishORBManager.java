@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022-2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.admin.ProcessEnvironment.ProcessType;
@@ -609,35 +610,26 @@ public final class GlassFishORBManager {
         return serverHost;
     }
 
-
     private void validateIiopListeners() {
         if (iiopListeners == null) {
             return;
         }
-        int lazyCount = 0;
-        for (IiopListener ilb : iiopListeners) {
-            boolean securityEnabled = Boolean.valueOf(ilb.getSecurityEnabled());
-            boolean isLazy = Boolean.valueOf(ilb.getLazyInit());
-            if (isLazy) {
-                lazyCount++;
-            }
+        var lazyListeners = iiopListeners.stream()
+                .filter(ilb -> Boolean.valueOf(ilb.getLazyInit())).collect(Collectors.toList());
 
-            if (lazyCount > 1) {
-                throw new IllegalStateException("Invalid iiop-listener " + ilb.getId()
-                    + ". Only one iiop-listener can be configured with lazy-init=true");
-            }
+        if (lazyListeners.size() > 1) {
+            throw new IllegalStateException(
+                    "Only one iiop-listener can be configured with lazy-init=true. "
+                            + lazyListeners.stream().map(ilb -> ilb.getId()).collect(Collectors.toList()));
+        }
 
-            if (securityEnabled || ilb.getSsl() == null) {
-                // no-op
-            } else {
-                if (isLazy) {
-                    throw new IllegalStateException("Invalid iiop-listener " + ilb.getId()
-                        + ". Lazy-init not supported for SSL iiop-listeners");
-                }
+        var lazySslListeners = lazyListeners.stream()
+                .filter(ilb -> Boolean.valueOf(ilb.getSecurityEnabled()) && ilb.getSsl() != null).collect(Collectors.toList());
 
-                Ssl sslBean = ilb.getSsl();
-                assert sslBean != null;
-            }
+        if (lazySslListeners.size() > 0) {
+            throw new IllegalStateException(
+                    "Lazy-init not supported for SSL iiop-listeners. "
+                            + lazySslListeners.stream().map(ilb -> ilb.getId()).collect(Collectors.toList()));
         }
     }
 

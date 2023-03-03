@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.glassfish.admin.rest.client.utils.MarshallingUtils;
-import org.glassfish.main.admin.test.tool.RandomGenerator;
+import org.glassfish.main.itest.tools.RandomGenerator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;

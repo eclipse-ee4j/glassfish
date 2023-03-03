@@ -23,7 +23,7 @@ import java.net.HttpURLConnection;
 
 import org.junit.jupiter.api.Test;
 
-import static org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment.openConnection;
+import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.openConnection;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -23,9 +23,9 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.util.Map;
 
-import org.glassfish.main.admin.test.tool.DomainAdminRestClient;
-import org.glassfish.main.admin.test.tool.RandomGenerator;
 import org.glassfish.main.admin.test.webapp.HelloServlet;
+import org.glassfish.main.itest.tools.DomainAdminRestClient;
+import org.glassfish.main.itest.tools.RandomGenerator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

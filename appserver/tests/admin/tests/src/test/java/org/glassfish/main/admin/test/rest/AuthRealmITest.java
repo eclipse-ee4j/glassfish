@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import org.glassfish.admin.rest.client.utils.MarshallingUtils;
-import org.glassfish.main.admin.test.tool.RandomGenerator;
+import org.glassfish.main.itest.tools.RandomGenerator;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;

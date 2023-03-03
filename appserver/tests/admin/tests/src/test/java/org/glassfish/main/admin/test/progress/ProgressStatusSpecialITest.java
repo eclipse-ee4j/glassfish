@@ -20,14 +20,14 @@ package org.glassfish.main.admin.test.progress;
 import java.util.Iterator;
 import java.util.List;
 
-import org.glassfish.main.admin.test.tool.asadmin.Asadmin;
-import org.glassfish.main.admin.test.tool.asadmin.AsadminResult;
-import org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment;
+import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
+import org.glassfish.main.itest.tools.asadmin.Asadmin;
+import org.glassfish.main.itest.tools.asadmin.AsadminResult;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.glassfish.main.admin.test.progress.ProgressMessage.isIncreasing;
-import static org.glassfish.main.admin.test.tool.AsadminResultMatcher.asadminOK;
+import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.lessThan;

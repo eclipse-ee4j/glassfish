@@ -21,9 +21,9 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.Map;
 
-import org.glassfish.main.admin.test.tool.RandomGenerator;
-import org.glassfish.main.admin.test.tool.asadmin.Asadmin;
-import org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment;
+import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
+import org.glassfish.main.itest.tools.RandomGenerator;
+import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;

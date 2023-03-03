@@ -17,17 +17,17 @@
 
 package org.glassfish.main.admin.test.progress;
 
-import org.glassfish.main.admin.test.tool.asadmin.Asadmin;
-import org.glassfish.main.admin.test.tool.asadmin.AsadminResult;
-import org.glassfish.main.admin.test.tool.asadmin.DetachedTerseAsadminResult;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.glassfish.main.itest.tools.asadmin.Asadmin;
+import org.glassfish.main.itest.tools.asadmin.AsadminResult;
+import org.glassfish.main.itest.tools.asadmin.DetachedTerseAsadminResult;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.glassfish.main.admin.test.tool.AsadminResultMatcher.asadminOK;
-import static org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment.getAsadmin;
+import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getAsadmin;
+import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.hamcrest.Matchers.stringContainsInOrder;

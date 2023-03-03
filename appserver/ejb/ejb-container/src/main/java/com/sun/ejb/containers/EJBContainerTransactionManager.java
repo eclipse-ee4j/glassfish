@@ -22,6 +22,7 @@ import com.sun.ejb.EjbInvocation;
 import com.sun.enterprise.deployment.MethodDescriptor;
 import com.sun.enterprise.transaction.api.JavaEETransaction;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
+import com.sun.enterprise.transaction.config.TransactionService;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import jakarta.ejb.EJBException;
@@ -39,6 +40,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.ejb.deployment.descriptor.ContainerTransaction;
 import org.glassfish.ejb.deployment.descriptor.EjbApplicationExceptionInfo;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
@@ -74,6 +76,14 @@ public class EJBContainerTransactionManager {
         container = (BaseContainer)c;
         ejbDescriptor = ejbDesc;
         transactionManager = ejbContainerUtilImpl.getTransactionManager();
+
+        // get transactionTimeout from TransactionService
+        TransactionService txnService = ejbContainerUtilImpl.getServices().getService(TransactionService.class,
+                ServerEnvironment.DEFAULT_INSTANCE_NAME);
+        int transactionTimeout = Integer.parseInt(txnService.getTimeoutInSeconds());
+        if (transactionTimeout != 0) {
+            cmtTimeoutInSeconds = transactionTimeout;
+        }
 
         IASEjbExtraDescriptors iased = ejbDesc.getIASEjbExtraDescriptors();
 

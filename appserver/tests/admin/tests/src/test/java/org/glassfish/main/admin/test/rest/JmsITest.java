@@ -24,7 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.glassfish.main.admin.test.tool.RandomGenerator;
+import org.glassfish.main.itest.tools.RandomGenerator;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 

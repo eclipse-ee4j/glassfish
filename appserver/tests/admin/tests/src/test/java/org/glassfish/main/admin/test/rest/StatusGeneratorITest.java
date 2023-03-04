@@ -18,7 +18,7 @@ package org.glassfish.main.admin.test.rest;
 
 import jakarta.ws.rs.core.Response;
 
-import org.glassfish.main.admin.test.tool.DomainAdminRestClient;
+import org.glassfish.main.itest.tools.DomainAdminRestClient;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;

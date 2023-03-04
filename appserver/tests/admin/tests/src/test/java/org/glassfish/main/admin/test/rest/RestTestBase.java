@@ -34,9 +34,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.admin.rest.client.utils.MarshallingUtils;
-import org.glassfish.main.admin.test.tool.DomainAdminRestClient;
-import org.glassfish.main.admin.test.tool.RandomGenerator;
 import org.glassfish.main.admin.test.webapp.HelloServlet;
+import org.glassfish.main.itest.tools.DomainAdminRestClient;
+import org.glassfish.main.itest.tools.RandomGenerator;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
@@ -47,7 +47,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInfo;
 
 import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN;
-import static org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment.getTargetDirectory;
+import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getTargetDirectory;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;

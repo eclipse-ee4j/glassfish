@@ -26,14 +26,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.glassfish.main.admin.test.tool.AsadminResultMatcher;
-import org.glassfish.main.admin.test.tool.asadmin.Asadmin;
-import org.glassfish.main.admin.test.tool.asadmin.AsadminResult;
-import org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment;
+import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
+import org.glassfish.main.itest.tools.asadmin.Asadmin;
+import org.glassfish.main.itest.tools.asadmin.AsadminResult;
+import org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher;
 import org.hamcrest.collection.IsEmptyCollection;
 import org.junit.jupiter.api.Test;
 
-import static org.glassfish.main.admin.test.tool.AsadminResultMatcher.asadminOK;
+import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.stringContainsInOrder;

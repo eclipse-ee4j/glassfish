@@ -17,9 +17,9 @@
 package org.glassfish.main.admin.test;
 
 import org.apache.commons.lang3.StringUtils;
-import org.glassfish.main.admin.test.tool.asadmin.Asadmin;
-import org.glassfish.main.admin.test.tool.asadmin.AsadminResult;
-import org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment;
+import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
+import org.glassfish.main.itest.tools.asadmin.Asadmin;
+import org.glassfish.main.itest.tools.asadmin.AsadminResult;
 import org.hamcrest.io.FileMatchers;
 import org.junit.jupiter.api.Test;
 
@@ -37,8 +37,8 @@ import java.util.stream.Stream;
 
 import static org.apache.commons.lang3.StringUtils.replaceChars;
 import static org.apache.commons.lang3.StringUtils.substringBefore;
-import static org.glassfish.main.admin.test.tool.AsadminResultMatcher.asadminOK;
-import static org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment.getDomain1Directory;
+import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getDomain1Directory;
+import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.glassfish.tests.utils.junit.matcher.DirectoryMatchers.hasEntryCount;
 import static org.glassfish.tests.utils.junit.matcher.TextFileMatchers.hasLineCount;
 import static org.hamcrest.CoreMatchers.endsWith;

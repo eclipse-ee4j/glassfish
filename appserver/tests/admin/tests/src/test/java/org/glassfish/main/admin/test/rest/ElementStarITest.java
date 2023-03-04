@@ -22,7 +22,7 @@ import jakarta.ws.rs.core.Response;
 import java.net.URISyntaxException;
 import java.util.Map;
 
-import org.glassfish.main.admin.test.tool.RandomGenerator;
+import org.glassfish.main.itest.tools.RandomGenerator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

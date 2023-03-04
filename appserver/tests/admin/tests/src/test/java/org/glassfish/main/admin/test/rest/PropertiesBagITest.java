@@ -27,11 +27,11 @@ import java.util.Map;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.glassfish.admin.rest.client.utils.MarshallingUtils;
-import org.glassfish.main.admin.test.tool.RandomGenerator;
+import org.glassfish.main.itest.tools.RandomGenerator;
 import org.junit.jupiter.api.Test;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.glassfish.main.admin.test.tool.RandomGenerator.generateRandomString;
+import static org.glassfish.main.itest.tools.RandomGenerator.generateRandomString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;

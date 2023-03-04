@@ -25,7 +25,7 @@ import java.util.Map;
 import org.glassfish.admin.rest.client.ClientWrapper;
 import org.glassfish.admin.rest.client.utils.MarshallingUtils;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
-import org.glassfish.main.admin.test.tool.DomainAdminRestClient;
+import org.glassfish.main.itest.tools.DomainAdminRestClient;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 

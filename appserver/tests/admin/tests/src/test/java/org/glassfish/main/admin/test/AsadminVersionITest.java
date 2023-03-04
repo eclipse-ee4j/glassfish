@@ -19,9 +19,9 @@ package org.glassfish.main.admin.test;
 import java.time.Instant;
 
 import org.apache.commons.lang3.StringUtils;
-import org.glassfish.main.admin.test.tool.asadmin.Asadmin;
-import org.glassfish.main.admin.test.tool.asadmin.AsadminResult;
-import org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment;
+import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
+import org.glassfish.main.itest.tools.asadmin.Asadmin;
+import org.glassfish.main.itest.tools.asadmin.AsadminResult;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.opentest4j.MultipleFailuresError;
 
-import static org.glassfish.main.admin.test.tool.AsadminResultMatcher.asadminOK;
+import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.hamcrest.Matchers.stringContainsInOrder;

@@ -23,7 +23,7 @@ import jakarta.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.glassfish.main.admin.test.tool.DomainAdminRestClient;
+import org.glassfish.main.itest.tools.DomainAdminRestClient;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;

@@ -20,7 +20,7 @@ package org.glassfish.main.admin.test.rest;
 import jakarta.ws.rs.core.MultivaluedHashMap;
 import jakarta.ws.rs.core.Response;
 
-import org.glassfish.main.admin.test.tool.RandomGenerator;
+import org.glassfish.main.itest.tools.RandomGenerator;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;

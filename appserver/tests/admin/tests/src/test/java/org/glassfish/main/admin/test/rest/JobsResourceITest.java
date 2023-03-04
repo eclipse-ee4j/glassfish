@@ -21,14 +21,14 @@ import jakarta.ws.rs.core.Response;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
-import org.glassfish.main.admin.test.tool.DomainAdminRestClient;
-import org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment;
+import org.glassfish.main.itest.tools.DomainAdminRestClient;
+import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.glassfish.main.admin.test.tool.AsadminResultMatcher.asadminOK;
-import static org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment.getAsadmin;
+import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getAsadmin;
+import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;

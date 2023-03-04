@@ -21,7 +21,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.Map;
 
-import org.glassfish.main.admin.test.tool.RandomGenerator;
+import org.glassfish.main.itest.tools.RandomGenerator;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;

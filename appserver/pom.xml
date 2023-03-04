@@ -67,6 +67,7 @@
         <module>webservices</module>
         <module>orb</module>
         <module>appclient</module>
+        <module>itest-tools</module>
         <module>ant-tasks</module>
     </modules>
 

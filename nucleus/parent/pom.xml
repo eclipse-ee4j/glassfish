@@ -839,7 +839,8 @@
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
                     <artifactId>glassfishbuild-maven-plugin</artifactId>
-                    <version>3.2.28</version>
+                    <!-- Don't use 3.2.28, FeatureSetsDependenciesMojo is broken. 3.3.0 is fixed, but not released yet. -->
+                    <version>3.2.27</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>

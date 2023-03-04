@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -1426,12 +1426,12 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
     protected EJBContextImpl createEjbInstanceAndContext() throws Exception {
         EjbBundleDescriptorImpl ejbBundle = ejbDescriptor.getEjbBundleDescriptor();
 
-        CDIService.CDIInjectionContext<Object> cdiCtx = null;
         Object instance = null;
 
         EJBContextImpl ctx = _constructEJBContextImpl(null);
         EjbInvocation ejbInv = null;
         boolean success = false;
+        CDIService.CDIInjectionContext<Object> cdiCtx = null;
         try {
             ejbInv = createEjbInvocation(null, ctx);
             invocationManager.preInvoke(ejbInv);
@@ -1444,7 +1444,9 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             }
 
             // Interceptors must be created before the ejb so they're available for around construct.
-            createEjbInterceptors(ctx, cdiCtx);
+            if (interceptorManager != null) {
+                createEjbInterceptors(ctx, cdiCtx);
+            }
 
             if (cdiService != null && cdiService.isCDIEnabled(ejbBundle)) {
                 HashMap<Class, Object> ejbInfo = new HashMap<>();
@@ -1463,7 +1465,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
         } catch (Throwable th) {
             try {
                 if (cdiCtx != null) {
-                    // protecte against memory leak
+                    // protect against memory leak
                     cdiCtx.cleanup(true);
                 }
             } catch (Throwable ignore) {

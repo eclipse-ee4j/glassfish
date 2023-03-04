@@ -2,22 +2,20 @@
 
 ## Eclipse GlassFish 7.x
 
-Eclipse GlassFish 7.0.0 is a final release, containing final [Jakarta EE 10](https://jakarta.ee/specifications/platform/10) APIs and final Jakarta EE 10 implementation components. It compiles and runs on JDK 11 to JDK 19. MicroProfile support requires JDK 17 or higher.
+Eclipse GlassFish 7.0.2 is the second maintenance update of GlassFish 7. It compiles and runs on JDK 11 to JDK 19. MicroProfile support requires JDK 17 or higher. Compiling and running on JDK 20ea has been sucesfully tested, but is not yet officially supported.
 
-Download GlassFish Server:
+Download:
 
-* [Eclipse GlassFish ${glassfish.version.7x}, Jakarta EE Platform, 10](https://download.eclipse.org/ee4j/glassfish/glassfish-${glassfish.version.7x}.zip)
-* [Eclipse GlassFish ${glassfish.version.7x}, Jakarta EE Web Profile, 10](https://download.eclipse.org/ee4j/glassfish/web-${glassfish.version.7x}.zip)
-
-Download GlassFish Embedded:
-
-* [Eclipse GlassFish Embedded ${glassfish.version.7x}, Jakarta EE Platform, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-all/${glassfish.version.7x}/jar)
-* [Eclipse GlassFish Embedded ${glassfish.version.7x}, Jakarta EE Web Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-web/${glassfish.version.7x}/jar)
+* [Eclipse GlassFish 7.0.2, Jakarta EE Platform, 10](https://download.eclipse.org/ee4j/glassfish/glassfish-7.0.2.zip)
+* [Eclipse GlassFish 7.0.2, Jakarta EE Web Profile, 10](https://download.eclipse.org/ee4j/glassfish/web-7.0.2.zip)
+* [Eclipse GlassFish Embedded 7.0.2, Jakarta EE Full Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-all/7.0.2/jar)
+* [Eclipse GlassFish Embedded 7.0.2, Jakarta EE Web Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-web/7.0.2/jar)
 
 More details:
 
-* [Eclipse GlassFish ${glassfish.version.7x} Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/${glassfish.version.7x})
+* [Eclipse GlassFish 7.0.2 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.2)
 * [Jakarte EE Platform Specification Project](https://eclipse-ee4j.github.io/jakartaee-platform/) for more info about Jakarta EE 10
+
 
 ### All Eclipse GlassFish 7.x Downloads
 

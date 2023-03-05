@@ -98,7 +98,6 @@
         <module>corba</module>
         <module>full</module>
         <module>war</module>
-        <module>dist-fragment</module>
     </modules>
 
     <dependencies>

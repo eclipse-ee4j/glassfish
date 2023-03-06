@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -285,11 +285,13 @@ public class ConnectorService implements ConnectorConstants {
     public boolean checkAndLoadPool(PoolInfo poolInfo) {
         try {
             ResourcePool pool = _runtime.getConnectionPoolConfig(poolInfo);
+            if (pool == null) {
+                return false;
+            }
             DeferredResourceConfig defResConfig = getResourcesUtil().getDeferredResourceConfig(null, pool, null, null);
             return loadResourcesAndItsRar(defResConfig);
-        } catch (ConnectorRuntimeException cre) {
-            Object params[] = new Object[]{poolInfo, cre};
-            _logger.log(Level.WARNING, "unable.to.load.connection.pool", params);
+        } catch (ConnectorRuntimeException e) {
+            _logger.log(Level.WARNING, "unable.to.load.connection.pool", new Object[]{poolInfo, e});
             return false;
         }
     }

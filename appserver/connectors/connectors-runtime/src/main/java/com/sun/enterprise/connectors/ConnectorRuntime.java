@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to Eclipse Foundation. All rights reserved.
+ * Copyright (c) 2022, 2023 Contributors to Eclipse Foundation. All rights reserved.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -1012,6 +1012,7 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
 
     @Override
     public ResourcePool getConnectionPoolConfig(PoolInfo poolInfo) {
+        _logger.log(Level.FINEST, "getConnectionPoolConfig(poolInfo={0})", poolInfo);
         ResourcePool pool = ResourcesUtil.createInstance().getPoolConfig(poolInfo);
         if (pool != null) {
             return pool;
@@ -1024,7 +1025,7 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
                 return pool;
             }
         }
-        throw new RuntimeException("No pool found by " + poolInfo);
+        return null;
     }
 
     @Override

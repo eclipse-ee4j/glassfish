@@ -59,6 +59,8 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
+                        <!-- Copy XSD files from Jakarta Persistence API JAR. 
+                          That JAR conains only schemas for Jakarta EE, not for older Java EE versions. -->
                         <id>unpack</id>
                         <goals>
                             <goal>unpack</goal>

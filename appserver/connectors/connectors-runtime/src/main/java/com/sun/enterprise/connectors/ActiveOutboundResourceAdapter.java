@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -384,44 +384,40 @@ public class ActiveOutboundResourceAdapter extends ActiveResourceAdapterImpl {
         }
 
         ConnectorRegistry registry = ConnectorRegistry.getInstance();
-
         ConnectorDescriptor desc = registry.getDescriptor(connectorName);
-
-        AdminObject aoDesc = null;
+        AdminObject adminObject = null;
         // The admin-object can be identified by interface name, class name
         // or the combination of the both names.
-        if (adminObjectClassName == null || adminObjectClassName.trim().equals("")) {
+        if (adminObjectClassName == null || adminObjectClassName.isBlank()) {
             // get AO through interface name
             List<AdminObject> adminObjects = desc.getAdminObjectsByType(adminObjectType);
             if (adminObjects.size() > 1) {
                 String msg = localStrings.getString("aor.could_not_determine_aor_type", adminObjectType);
                 throw new ConnectorRuntimeException(msg);
-            } else {
-                aoDesc = adminObjects.get(0);
             }
-        } else if (adminObjectType == null || adminObjectType.trim().equals("")) {
+            adminObject = adminObjects.isEmpty() ? null : adminObjects.get(0);
+        } else if (adminObjectType == null || adminObjectType.isBlank()) {
             // get AO through class name
             List<AdminObject> adminObjects = desc.getAdminObjectsByClass(adminObjectClassName);
             if (adminObjects.size() > 1) {
                 String msg = localStrings.getString("aor.could_not_determine_aor_class", adminObjectClassName);
                 throw new ConnectorRuntimeException(msg);
-            } else {
-                aoDesc = adminObjects.get(0);
             }
+            adminObject = adminObjects.isEmpty() ? null : adminObjects.get(0);
         } else {
             // get AO through interface name and class name
-            aoDesc = desc.getAdminObject(adminObjectType, adminObjectClassName);
+            adminObject = desc.getAdminObject(adminObjectType, adminObjectClassName);
         }
-        if (aoDesc == null) {
+        if (adminObject == null) {
             String msg = localStrings.getString("aor.could_not_determine_aor", adminObjectType, adminObjectClassName);
             throw new ConnectorRuntimeException(msg);
         }
 
         AdministeredObjectResource aor = new AdministeredObjectResource(resourceInfo);
-        aor.initialize(aoDesc);
+        aor.initialize(adminObject);
         aor.setResourceAdapter(connectorName);
 
-        ConnectorConfigProperty[] envProps = aoDesc.getConfigProperties().toArray(ConnectorConfigProperty[]::new);
+        ConnectorConfigProperty[] envProps = adminObject.getConfigProperties().toArray(ConnectorConfigProperty[]::new);
 
         //Add default config properties to aor
         // Override them if same config properties are provided by the user

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,15 @@
 
 package com.sun.enterprise.deployment.web;
 
- /** For the mime Mapping table. Objects exhibiting this interface represent
- * a mapping between a file extension and a mime type. */
+/**
+ * For the mime Mapping table. Objects exhibiting this interface represent
+ * a mapping between a file extension and a mime type.
+ */
 public interface MimeMapping {
 
-    public String getExtension();
-    public void setExtension(String extension);
-    public String getMimeType();
-    public void setMimeType(String mimeType);
+    String getExtension();
+    void setExtension(String extension);
+    String getMimeType();
+    void setMimeType(String mimeType);
 
 }

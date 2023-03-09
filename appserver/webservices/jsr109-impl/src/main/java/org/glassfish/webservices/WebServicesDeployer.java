@@ -652,7 +652,7 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer, We
     }
 
     private void addWSServletContextListener(WebBundleDescriptor webBunDesc) {
-        for (AppListenerDescriptor appListner : webBunDesc.getAppListenerDescriptors()) {
+        for (AppListenerDescriptor appListner : webBunDesc.getAppListenersCopy()) {
             if (appListner.getListener().equals(WSServletContextListener.class.getName())) {
                 // already registered
                 return;

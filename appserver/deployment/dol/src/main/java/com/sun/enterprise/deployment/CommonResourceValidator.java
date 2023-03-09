@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +17,9 @@
 
 package com.sun.enterprise.deployment;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.Descriptor;
@@ -27,33 +29,30 @@ import org.glassfish.deployment.common.Descriptor;
  */
 public class CommonResourceValidator {
 
-    private Descriptor descriptor;
+    private final Descriptor descriptor;
     private final SimpleJndiName jndiName;
-    private Vector<String> scope;
+    private final List<String> scope;
 
-    public CommonResourceValidator(Descriptor descriptor, SimpleJndiName jndiName, Vector<String> scope) {
-        this.setDescriptor(descriptor);
-        this.jndiName = jndiName;
-        this.setScope(scope);
+    public CommonResourceValidator(Descriptor descriptor, SimpleJndiName jndiName, String scope) {
+        this.descriptor = descriptor;
+        this.jndiName = Objects.requireNonNull(jndiName, "jndiName");
+        this.scope = new ArrayList<>();
+        this.scope.add(scope);
     }
 
     public Descriptor getDescriptor() {
         return descriptor;
     }
 
-    public void setDescriptor(Descriptor descriptor) {
-        this.descriptor = descriptor;
-    }
-
     public SimpleJndiName getJndiName() {
         return jndiName;
     }
 
-    public Vector<String> getScope() {
+    public List<String> getScope() {
         return scope;
     }
 
-    public void setScope(Vector<String> scope) {
-        this.scope = scope;
+    public void addScope(String scope) {
+        this.scope.add(scope);
     }
 }

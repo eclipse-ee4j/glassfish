@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -80,7 +80,7 @@ public class ResourceDescriptor extends Descriptor {
         if (name == null) {
             return null;
         }
-        // some names really contain java: in the middle...?
+        // some names really contain java: in the middle.
         if (name.contains(SimpleJndiName.JNDI_CTX_JAVA)) {
             return name;
         }

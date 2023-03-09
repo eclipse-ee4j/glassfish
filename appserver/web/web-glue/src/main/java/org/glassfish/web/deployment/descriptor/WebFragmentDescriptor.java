@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -56,6 +56,22 @@ public class WebFragmentDescriptor extends WebBundleDescriptorImpl {
     private String jarName;
     private OrderingDescriptor ordering;
 
+    private boolean conflictLoginConfig;
+    private boolean conflictDataSourceDefinition;
+    private boolean conflictMailSessionDefinition;
+    private boolean conflictConnectionFactoryDefinition;
+    private boolean conflictAdminObjectDefinition;
+    private boolean conflictJMSConnectionFactoryDefinition;
+    private boolean conflictJMSDestinationDefinition;
+    private boolean conflictEnvironmentEntry;
+    private boolean conflictEjbReference;
+    private boolean conflictServiceReference;
+    private boolean conflictResourceReference;
+    private boolean conflictResourceEnvReference;
+    private boolean conflictMessageDestinationReference;
+    private boolean conflictEntityManagerReference;
+    private boolean conflictEntityManagerFactoryReference;
+
     /**
      * Constrct an empty web app [{0}].
      */
@@ -75,48 +91,97 @@ public class WebFragmentDescriptor extends WebBundleDescriptorImpl {
         return ordering;
     }
 
+
     public void setOrderingDescriptor(OrderingDescriptor ordering) {
         this.ordering = ordering;
     }
 
-    @Override
-    protected WebComponentDescriptor combineWebComponentDescriptor(
-            WebComponentDescriptor webComponentDescriptor) {
 
-        WebComponentDescriptor resultDesc = null;
-        String name = webComponentDescriptor.getCanonicalName();
-        WebComponentDescriptor webCompDesc = getWebComponentByCanonicalName(name);
-
-        if (webCompDesc != null) {
-            resultDesc = webCompDesc;
-            if (webCompDesc.isConflict(webComponentDescriptor, false)) {
-                webCompDesc.setConflict(true);
-            } else {
-                // combine the contents of the given one to this one
-                webCompDesc.add(webComponentDescriptor, true, true);
-            }
-        } else {
-            resultDesc = webComponentDescriptor;
-            this.getWebComponentDescriptors().add(webComponentDescriptor);
-        }
-
-        return resultDesc;
+    public boolean isConflictLoginConfig() {
+        return conflictLoginConfig;
     }
 
-    @Override
-    protected void combineMimeMappings(Set<MimeMapping> mimeMappings) {
-        // do not call getMimeMappingsSet().addAll() as there is special overriding rule
-        for (MimeMapping mimeMap : mimeMappings) {
-            if (!mimeMap.getMimeType().equals(addMimeMapping(mimeMap))) {
-                getConflictedMimeMappingExtensions().add(mimeMap.getExtension());
-            }
-        }
+
+    public boolean isConflictDataSourceDefinition() {
+        return conflictDataSourceDefinition;
     }
+
+
+    public boolean isConflictMailSessionDefinition() {
+        return conflictMailSessionDefinition;
+    }
+
+
+    public boolean isConflictConnectionFactoryDefinition() {
+        return conflictConnectionFactoryDefinition;
+    }
+
+
+    public boolean isConflictAdminObjectDefinition() {
+        return conflictAdminObjectDefinition;
+    }
+
+
+    public boolean isConflictJMSConnectionFactoryDefinition() {
+        return conflictJMSConnectionFactoryDefinition;
+    }
+
+
+    public boolean isConflictJMSDestinationDefinition() {
+        return conflictJMSDestinationDefinition;
+    }
+
+
+    public boolean isConflictEnvironmentEntry() {
+        return conflictEnvironmentEntry;
+    }
+
+
+    public boolean isConflictEjbReference() {
+        return conflictEjbReference;
+    }
+
+
+    public boolean isConflictServiceReference() {
+        return conflictServiceReference;
+    }
+
+
+    public boolean isConflictResourceReference() {
+        return conflictResourceReference;
+    }
+
+
+    public boolean isConflictResourceEnvReference() {
+        return conflictResourceEnvReference;
+    }
+
+
+    public boolean isConflictMessageDestinationReference() {
+        return conflictMessageDestinationReference;
+    }
+
+
+    public boolean isConflictEntityManagerReference() {
+        return conflictEntityManagerReference;
+    }
+
+
+    public boolean isConflictEntityManagerFactoryReference() {
+        return conflictEntityManagerFactoryReference;
+    }
+
+
+    @Override
+    protected void combineSecurityConstraints(Set<SecurityConstraint> firstScSet, Set<SecurityConstraint> secondScSet) {
+        firstScSet.addAll(secondScSet);
+    }
+
 
     @Override
     protected void combineServletFilters(WebBundleDescriptor webBundleDescriptor) {
         for (ServletFilter servletFilter : webBundleDescriptor.getServletFilters()) {
-            ServletFilterDescriptor servletFilterDesc = (ServletFilterDescriptor)servletFilter;
+            ServletFilterDescriptor servletFilterDesc = (ServletFilterDescriptor) servletFilter;
             String name = servletFilter.getName();
             ServletFilterDescriptor aServletFilterDesc = null;
             for (ServletFilter sf : getServletFilters()) {
@@ -136,16 +201,12 @@ public class WebFragmentDescriptor extends WebBundleDescriptorImpl {
         }
     }
 
+
     @Override
     protected void combineServletFilterMappings(WebBundleDescriptor webBundleDescriptor) {
         getServletFilterMappings().addAll(webBundleDescriptor.getServletFilterMappings());
     }
 
-    @Override
-    protected void combineSecurityConstraints(Set<SecurityConstraint> firstScSet,
-           Set<SecurityConstraint>secondScSet) {
-        firstScSet.addAll(secondScSet);
-    }
 
     @Override
     protected void combineLoginConfiguration(WebBundleDescriptor webBundleDescriptor) {
@@ -153,16 +214,29 @@ public class WebFragmentDescriptor extends WebBundleDescriptorImpl {
             setLoginConfiguration(webBundleDescriptor.getLoginConfiguration());
         } else {
             LoginConfiguration lgConf = webBundleDescriptor.getLoginConfiguration();
-            if (lgConf != null && (!lgConf.equals(getLoginConfiguration()))) {
+            if (lgConf != null && !lgConf.equals(getLoginConfiguration())) {
                 conflictLoginConfig = true;
             }
         }
     }
 
+
+    @Override
+    protected void combinePostConstructDescriptors(WebBundleDescriptor webBundleDescriptor) {
+        getPostConstructDescriptors().addAll(webBundleDescriptor.getPostConstructDescriptors());
+    }
+
+
+    @Override
+    protected void combinePreDestroyDescriptors(WebBundleDescriptor webBundleDescriptor) {
+        getPreDestroyDescriptors().addAll(webBundleDescriptor.getPreDestroyDescriptors());
+    }
+
+
     @Override
     protected void combineEnvironmentEntries(JndiNameEnvironment env) {
         for (EnvironmentProperty enve : env.getEnvironmentProperties()) {
-            EnvironmentProperty envProp = _getEnvironmentPropertyByName(enve.getName());
+            EnvironmentProperty envProp = findEnvironmentEntryByName(enve.getName());
             if (envProp == null) {
                 addEnvironmentEntry(enve);
             } else {
@@ -174,40 +248,11 @@ public class WebFragmentDescriptor extends WebBundleDescriptorImpl {
         }
     }
 
-    @Override
-    protected void combineEjbReferenceDescriptors(JndiNameEnvironment env) {
-        for (EjbReferenceDescriptor ejbRef : env.getEjbReferenceDescriptors()) {
-            EjbReferenceDescriptor ejbRefDesc = _getEjbReference(ejbRef.getName());
-            if (ejbRefDesc == null) {
-                addEjbReferenceDescriptor(ejbRef);
-            } else {
-                if (ejbRefDesc.isConflict(ejbRef)) {
-                    conflictEjbReference = true;
-                }
-                combineInjectionTargets(ejbRefDesc, ejbRef);
-            }
-        }
-    }
-
-    @Override
-    protected void combineServiceReferenceDescriptors(JndiNameEnvironment env) {
-        for (ServiceReferenceDescriptor serviceRef : env.getServiceReferenceDescriptors()) {
-            ServiceReferenceDescriptor sr = _getServiceReferenceByName(serviceRef.getName());
-            if (sr == null) {
-                addServiceReferenceDescriptor(serviceRef);
-            } else {
-                if (sr.isConflict(serviceRef)) {
-                    conflictServiceReference = true;
-                }
-                combineInjectionTargets(sr, serviceRef);
-            }
-        }
-    }
 
     @Override
     protected void combineResourceReferenceDescriptors(JndiNameEnvironment env) {
         for (ResourceReferenceDescriptor resRef : env.getResourceReferenceDescriptors()) {
-            ResourceReferenceDescriptor rrd = _getResourceReferenceByName(resRef.getName());
+            ResourceReferenceDescriptor rrd = findResourceReferenceByName(resRef.getName());
             if (rrd == null) {
                 addResourceReferenceDescriptor(resRef);
             } else {
@@ -221,9 +266,41 @@ public class WebFragmentDescriptor extends WebBundleDescriptorImpl {
 
 
     @Override
+    protected void combineEjbReferenceDescriptors(JndiNameEnvironment env) {
+        for (EjbReferenceDescriptor ejbRef : env.getEjbReferenceDescriptors()) {
+            EjbReferenceDescriptor ejbRefDesc = findEjbReference(ejbRef.getName());
+            if (ejbRefDesc == null) {
+                addEjbReferenceDescriptor(ejbRef);
+            } else {
+                if (ejbRefDesc.isConflict(ejbRef)) {
+                    conflictEjbReference = true;
+                }
+                combineInjectionTargets(ejbRefDesc, ejbRef);
+            }
+        }
+    }
+
+
+    @Override
+    protected void combineServiceReferenceDescriptors(JndiNameEnvironment env) {
+        for (ServiceReferenceDescriptor serviceRef : env.getServiceReferenceDescriptors()) {
+            ServiceReferenceDescriptor sr = findServiceReferenceByName(serviceRef.getName());
+            if (sr == null) {
+                addServiceReferenceDescriptor(serviceRef);
+            } else {
+                if (sr.isConflict(serviceRef)) {
+                    conflictServiceReference = true;
+                }
+                combineInjectionTargets(sr, serviceRef);
+            }
+        }
+    }
+
+
+    @Override
     protected void combineResourceEnvReferenceDescriptors(JndiNameEnvironment env) {
         for (ResourceEnvReferenceDescriptor jdRef : env.getResourceEnvReferenceDescriptors()) {
-            ResourceEnvReferenceDescriptor jdr = _getResourceEnvReferenceByName(jdRef.getName());
+            ResourceEnvReferenceDescriptor jdr = findResourceEnvReferenceByName(jdRef.getName());
             if (jdr == null) {
                 addResourceEnvReferenceDescriptor(jdRef);
             } else {
@@ -239,7 +316,7 @@ public class WebFragmentDescriptor extends WebBundleDescriptorImpl {
     @Override
     protected void combineMessageDestinationReferenceDescriptors(JndiNameEnvironment env) {
         for (MessageDestinationReferenceDescriptor mdRef : env.getMessageDestinationReferenceDescriptors()) {
-            MessageDestinationReferenceDescriptor mdr = _getMessageDestinationReferenceByName(mdRef.getName());
+            MessageDestinationReferenceDescriptor mdr = findMessageDestinationReferenceByName(mdRef.getName());
             if (mdr == null) {
                 addMessageDestinationReferenceDescriptor(mdRef);
             } else {
@@ -255,7 +332,7 @@ public class WebFragmentDescriptor extends WebBundleDescriptorImpl {
     @Override
     protected void combineEntityManagerReferenceDescriptors(JndiNameEnvironment env) {
         for (EntityManagerReferenceDescriptor emRef : env.getEntityManagerReferenceDescriptors()) {
-            EntityManagerReferenceDescriptor emr = _getEntityManagerReferenceByName(emRef.getName());
+            EntityManagerReferenceDescriptor emr = findEntityManagerReferenceByName(emRef.getName());
             if (emr == null) {
                 addEntityManagerReferenceDescriptor(emRef);
             } else {
@@ -271,7 +348,7 @@ public class WebFragmentDescriptor extends WebBundleDescriptorImpl {
     @Override
     protected void combineEntityManagerFactoryReferenceDescriptors(JndiNameEnvironment env) {
         for (EntityManagerFactoryReferenceDescriptor emfRef : env.getEntityManagerFactoryReferenceDescriptors()) {
-            EntityManagerFactoryReferenceDescriptor emfr = _getEntityManagerFactoryReferenceByName(emfRef.getName());
+            EntityManagerFactoryReferenceDescriptor emfr = findEntityManagerFactoryReferenceByName(emfRef.getName());
             if (emfr == null) {
                 addEntityManagerFactoryReferenceDescriptor(emfRef);
             } else {
@@ -285,30 +362,25 @@ public class WebFragmentDescriptor extends WebBundleDescriptorImpl {
 
 
     @Override
-    protected void combinePostConstructDescriptors(WebBundleDescriptor webBundleDescriptor) {
-        getPostConstructDescriptors().addAll(webBundleDescriptor.getPostConstructDescriptors());
+    protected WebComponentDescriptor combineWebComponentDescriptor(WebComponentDescriptor webComponentDescriptor) {
+        final WebComponentDescriptor webCompDesc = getWebComponentByCanonicalName(
+            webComponentDescriptor.getCanonicalName());
+        final WebComponentDescriptor resultDesc;
+        if (webCompDesc == null) {
+            resultDesc = webComponentDescriptor;
+            this.getWebComponentDescriptors().add(webComponentDescriptor);
+        } else {
+            resultDesc = webCompDesc;
+            if (webCompDesc.isConflict(webComponentDescriptor, false)) {
+                webCompDesc.setConflict(true);
+            } else {
+                // combine the contents of the given one to this one
+                webCompDesc.add(webComponentDescriptor, true, true);
+            }
+        }
+        return resultDesc;
     }
 
-    @Override
-    protected void combinePreDestroyDescriptors(WebBundleDescriptor webBundleDescriptor) {
-        getPreDestroyDescriptors().addAll(webBundleDescriptor.getPreDestroyDescriptors());
-    }
-
-    /**
-     * Return a formatted version as a String.
-     */
-    @Override
-    public void print(StringBuffer toStringBuffer) {
-        toStringBuffer.append("\nWeb Fragment descriptor");
-        toStringBuffer.append("\n");
-        printCommon(toStringBuffer);
-        if (jarName != null) {
-            toStringBuffer.append("\njar name " + jarName);
-        }
-        if (ordering != null) {
-            toStringBuffer.append("\nordering " + ordering);
-        }
-    }
 
     @Override
     protected void combineResourceDescriptors(JndiNameEnvironment env, JavaEEResourceType javaEEResourceType) {
@@ -325,22 +397,45 @@ public class WebFragmentDescriptor extends WebBundleDescriptorImpl {
                     conflictMailSessionDefinition = true;
                 } else if (descriptor.getResourceType().equals(JavaEEResourceType.AODD)
                     && ((AdministeredObjectDefinitionDescriptor) descriptor)
-                        .isConflict((AdministeredObjectDefinitionDescriptor) ddd)) {
+                    .isConflict((AdministeredObjectDefinitionDescriptor) ddd)) {
                     conflictAdminObjectDefinition = true;
                 } else if (descriptor.getResourceType().equals(JavaEEResourceType.CFD)
                     && ((ConnectionFactoryDefinitionDescriptor) descriptor)
-                        .isConflict((ConnectionFactoryDefinitionDescriptor) ddd)) {
+                    .isConflict((ConnectionFactoryDefinitionDescriptor) ddd)) {
                     conflictConnectionFactoryDefinition = true;
                 } else if (descriptor.getResourceType().equals(JavaEEResourceType.JMSCFDD)
                     && ((JMSConnectionFactoryDefinitionDescriptor) descriptor)
-                        .isConflict((JMSConnectionFactoryDefinitionDescriptor) ddd)) {
+                    .isConflict((JMSConnectionFactoryDefinitionDescriptor) ddd)) {
                     conflictJMSConnectionFactoryDefinition = true;
                 } else if (descriptor.getResourceType().equals(JavaEEResourceType.JMSDD)
                     && ((JMSDestinationDefinitionDescriptor) descriptor)
-                        .isConflict((JMSDestinationDefinitionDescriptor) ddd)) {
+                    .isConflict((JMSDestinationDefinitionDescriptor) ddd)) {
                     conflictJMSDestinationDefinition = true;
                 }
             }
+        }
+    }
+
+
+    @Override
+    protected void combineMimeMappings(Set<MimeMapping> mimeMappings) {
+        // do not call getMimeMappingsSet().addAll() as there is special overriding rule
+        for (MimeMapping mimeMap : mimeMappings) {
+            if (!mimeMap.getMimeType().equals(addMimeMapping(mimeMap))) {
+                getConflictedMimeMappingExtensions().add(mimeMap.getExtension());
+            }
+        }
+    }
+
+
+    @Override
+    public void print(StringBuffer toStringBuffer) {
+        super.print(toStringBuffer);
+        if (jarName != null) {
+            toStringBuffer.append("\njar name " + jarName);
+        }
+        if (ordering != null) {
+            toStringBuffer.append("\nordering " + ordering);
         }
     }
 }

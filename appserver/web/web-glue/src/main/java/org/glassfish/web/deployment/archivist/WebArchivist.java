@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -183,27 +183,19 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
      */
     private WebBundleDescriptorImpl getPlainDefaultWebXmlBundleDescriptor() {
         WebBundleDescriptorImpl defaultWebBundleDesc = new WebBundleDescriptorImpl();
-        InputStream fis = null;
-
         try {
             // parse default-web.xml contents
             URL defaultWebXml = getDefaultWebXML();
-            if (defaultWebXml!=null)  {
-                fis = defaultWebXml.openStream();
+            if (defaultWebXml == null) {
+                return defaultWebBundleDesc;
+            }
+            try (InputStream fis = defaultWebXml.openStream()) {
                 WebDeploymentDescriptorFile wddf = new WebDeploymentDescriptorFile();
                 wddf.setXMLValidation(false);
                 defaultWebBundleDesc.addWebBundleDescriptor(wddf.read(fis));
             }
         } catch (Exception e) {
-            logger.log(Level.WARNING, LogFacade.ERROR_PARSING);
-        } finally {
-            try {
-                if (fis != null) {
-                    fis.close();
-                }
-            } catch (IOException ioe) {
-                // do nothing
-            }
+            logger.log(Level.WARNING, LogFacade.ERROR_PARSING, e);
         }
         return defaultWebBundleDesc;
     }
@@ -289,7 +281,8 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
 
             String entryName = entries.nextElement();
             if (!entryName.startsWith("WEB-INF/lib")) {
-                continue; // not in WEB-INF...
+                // not in WEB-INF...
+                continue;
             }
             if (entryName.endsWith(".jar")) {
                 libs.add(entryName);
@@ -353,47 +346,41 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
         ReadableArchive archive) throws IOException {
         List<WebFragmentDescriptor> wfList = new ArrayList<>();
         Vector<String> libs = getLibraries(archive);
-        if (libs != null && !libs.isEmpty()) {
+        if (libs == null || libs.isEmpty()) {
+            return wfList;
+        }
+        for (String lib : libs) {
+            Archivist<?> wfArchivist = new WebFragmentArchivist(this, habitat);
+            wfArchivist.setRuntimeXMLValidation(this.getRuntimeXMLValidation());
+            wfArchivist.setRuntimeXMLValidationLevel(this.getRuntimeXMLValidationLevel());
+            wfArchivist.setAnnotationProcessingRequested(false);
 
-            for (String lib : libs) {
-                Archivist<?> wfArchivist = new WebFragmentArchivist(this, habitat);
-                wfArchivist.setRuntimeXMLValidation(this.getRuntimeXMLValidation());
-                wfArchivist.setRuntimeXMLValidationLevel(this.getRuntimeXMLValidationLevel());
-                wfArchivist.setAnnotationProcessingRequested(false);
-
-                WebFragmentDescriptor wfDesc = null;
-                try (ReadableArchive embeddedArchive = archive.getSubArchive(lib)) {
-                    if (embeddedArchive != null &&
-                            wfArchivist.hasStandardDeploymentDescriptor(embeddedArchive)) {
-                        try {
-                            wfDesc = (WebFragmentDescriptor)wfArchivist.open(embeddedArchive);
-                        } catch(SAXException ex) {
-                            IOException ioex = new IOException();
-                            ioex.initCause(ex);
-                            throw ioex;
-                        }
-                    } else {
-                        wfDesc = new WebFragmentDescriptor();
+            final WebFragmentDescriptor wfDesc;
+            try (ReadableArchive embeddedArchive = archive.getSubArchive(lib)) {
+                if (embeddedArchive != null && wfArchivist.hasStandardDeploymentDescriptor(embeddedArchive)) {
+                    try {
+                        wfDesc = (WebFragmentDescriptor) wfArchivist.open(embeddedArchive);
+                    } catch (SAXException ex) {
+                        throw new IOException(ex);
                     }
+                } else {
+                    wfDesc = new WebFragmentDescriptor();
                 }
-                wfDesc.setJarName(lib.substring(lib.lastIndexOf('/') + 1));
-                wfList.add(wfDesc);
-
-                descriptor.putJarNameWebFragmentNamePair(wfDesc.getJarName(), wfDesc.getName());
-
             }
-
-            if (descriptor.getAbsoluteOrderingDescriptor() != null) {
-                wfList = descriptor.getAbsoluteOrderingDescriptor().order(wfList);
-            } else {
-                OrderingDescriptor.sort(wfList);
-            }
-
-            for (WebFragmentDescriptor wf : wfList) {
-                descriptor.addOrderedLib(wf.getJarName());
-            }
+            wfDesc.setJarName(lib.substring(lib.lastIndexOf('/') + 1));
+            wfList.add(wfDesc);
+            descriptor.putJarNameWebFragmentNamePair(wfDesc.getJarName(), wfDesc.getName());
         }
 
+        if (descriptor.getAbsoluteOrderingDescriptor() == null) {
+            OrderingDescriptor.sort(wfList);
+        } else {
+            wfList = descriptor.getAbsoluteOrderingDescriptor().order(wfList);
+        }
+
+        for (WebFragmentDescriptor wf : wfList) {
+            descriptor.addOrderedLib(wf.getJarName());
+        }
         return wfList;
     }
 }

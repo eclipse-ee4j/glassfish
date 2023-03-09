@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,33 +20,33 @@ package com.sun.enterprise.deployment.web;
 /**
  * Objects exhibiting this interface represent a lifecycle listener.
  * This represents the <listener-class> XML element in the servlet spec.
+ *
  * @author Vivek Nagar
  */
-
 public interface AppListenerDescriptor {
 
     /**
-     * Return the listener class.
      * @return the listener class name.
      */
-    public String getListener();
+    String getListener();
 
     /**
      * Set the listener class.
-     * @param the listener class name.
+     *
+     * @param listener class name.
      */
-    public void setListener(String listener);
+    void setListener(String listener);
 
     // add get/set for descriptionGroup
-    public String getDescription();
-    public void setDescription(String description);
+    String getDescription();
+    void setDescription(String description);
 
-    public void setDisplayName(String name);
-    public String getDisplayName();
+    void setDisplayName(String name);
+    String getDisplayName();
 
-    public void setLargeIconUri(String largeIconUri);
-    public String getLargeIconUri();
+    void setLargeIconUri(String largeIconUri);
+    String getLargeIconUri();
 
-    public void setSmallIconUri(String smallIconUri);
-    public String getSmallIconUri();
+    void setSmallIconUri(String smallIconUri);
+    String getSmallIconUri();
 }

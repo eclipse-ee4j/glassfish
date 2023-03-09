@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,11 +17,11 @@
 
 package org.glassfish.web.deployment.node;
 
+import com.sun.enterprise.deployment.ErrorPageDescriptor;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 
 import java.util.Map;
 
-import org.glassfish.web.deployment.descriptor.ErrorPageDescriptor;
 import org.glassfish.web.deployment.xml.WebTagNames;
 import org.w3c.dom.Node;
 

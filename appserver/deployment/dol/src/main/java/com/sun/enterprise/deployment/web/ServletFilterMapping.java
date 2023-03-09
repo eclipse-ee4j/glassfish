@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,21 +17,22 @@
 
 package com.sun.enterprise.deployment.web;
 
+import jakarta.servlet.DispatcherType;
+
 import java.util.List;
 import java.util.Set;
-import jakarta.servlet.DispatcherType;
 
 /** Servlet filter objects */
 public interface ServletFilterMapping {
 
-    public void setName(String name);
-    public String getName();
+    void setName(String name);
+    String getName();
 
-    public void addDispatcher(String dispatcher);
-    public Set<DispatcherType> getDispatchers();
+    void addDispatcher(String dispatcher);
+    Set<DispatcherType> getDispatchers();
 
-    public void addURLPattern(String urlPattern);
-    public List<String> getUrlPatterns();
-    public void addServletName(String servletName);
-    public List<String> getServletNames();
+    void addURLPattern(String urlPattern);
+    List<String> getUrlPatterns();
+    void addServletName(String servletName);
+    List<String> getServletNames();
 }

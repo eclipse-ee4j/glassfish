@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -2278,7 +2278,6 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
      */
     @Override
     public void notifyNewModule(WebBundleDescriptor wbd) {
-        // add our JNDI entries to the web bundle
         wbd.addJndiNameEnvironment(this);
         // clear our entries
         environmentProperties.clear();

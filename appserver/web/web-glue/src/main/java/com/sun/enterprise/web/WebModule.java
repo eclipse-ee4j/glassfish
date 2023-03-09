@@ -545,7 +545,6 @@ public class WebModule extends PwcWebModule implements Context {
 
         if (webBundleDescriptor != null) {
             showArchivedRealPathEnabled = webBundleDescriptor.isShowArchivedRealPathEnabled();
-            servletReloadCheckSecs = webBundleDescriptor.getServletReloadCheckSecs();
         }
 
         // Start and register Tomcat mbeans

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,23 +17,23 @@
 
 package com.sun.enterprise.deployment.web;
 
-import java.util.Set;
 import jakarta.servlet.SessionTrackingMode;
+
+import java.util.Set;
 
 /**
  * Objects exhibiting this interface represent a session-config for a servlet.
  *
  * @author Shing Wai Chan
  */
-
 public interface SessionConfig {
-    public int getSessionTimeout();
-    public void setSessionTimeout(int sessionTimeout);
+    int getSessionTimeout();
+    void setSessionTimeout(int sessionTimeout);
 
-    public CookieConfig getCookieConfig();
-    public void setCookieConfig(CookieConfig cookieConfig);
+    CookieConfig getCookieConfig();
+    void setCookieConfig(CookieConfig cookieConfig);
 
-    public void addTrackingMode(String trackingMode);
-    public void removeTrackingMode(String trackingMode);
-    public Set<SessionTrackingMode> getTrackingModes();
+    void addTrackingMode(String trackingMode);
+    void removeTrackingMode(String trackingMode);
+    Set<SessionTrackingMode> getTrackingModes();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.web.deployment.descriptor;
+package com.sun.enterprise.deployment;
 
 import org.glassfish.deployment.common.Descriptor;
 
@@ -28,7 +28,8 @@ import org.glassfish.deployment.common.Descriptor;
 public class ErrorPageDescriptor extends Descriptor {
 
     private static final long serialVersionUID = 1L;
-    private int errorCode = -1; // none
+    /** Default -1 means none */
+    private int errorCode = -1;
     private String exceptionType;
     private String location;
 

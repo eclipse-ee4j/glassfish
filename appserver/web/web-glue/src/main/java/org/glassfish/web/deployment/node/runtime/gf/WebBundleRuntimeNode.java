@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -67,11 +67,9 @@ import org.xml.sax.Attributes;
 
 
 /**
- * This node is responsible for handling all runtime information for
- * web bundle.
+ * This node is responsible for handling all runtime information for web bundle.
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
 public class WebBundleRuntimeNode extends RuntimeBundleNode<WebBundleDescriptorImpl> {
 

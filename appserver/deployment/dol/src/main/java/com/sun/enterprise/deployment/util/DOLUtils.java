@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -102,72 +102,87 @@ public class DOLUtils {
 
     // Reserve this range [AS-DEPLOYMENT-00001, AS-DEPLOYMENT-02000]
     // for message ids used in this deployment dol module
-    @LoggerInfo(subsystem = "DEPLOYMENT", description="Deployment logger for dol module", publish=true)
+    @LoggerInfo(subsystem = "DEPLOYMENT", description = "Deployment logger for dol module", publish = true)
     private static final String DEPLOYMENT_LOGGER = "jakarta.enterprise.system.tools.deployment.dol";
 
     public static final Logger deplLogger = Logger.getLogger(DEPLOYMENT_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
+    private static final System.Logger LOGGER = System.getLogger(DEPLOYMENT_LOGGER, deplLogger.getResourceBundle());
 
-    @LogMessageInfo(message = "Ignore {0} in archive {1}, as WLS counterpart runtime xml {2} is present in the same archive.", level="WARNING")
+    @LogMessageInfo(
+        message = "Ignore {0} in archive {1}, as WLS counterpart runtime xml {2} is present in the same archive.",
+        level = "WARNING")
     private static final String COUNTERPART_CONFIGDD_EXISTS = "AS-DEPLOYMENT-00001";
 
-    @LogMessageInfo(message = "Exception caught:  {0}.", level="WARNING")
+    @LogMessageInfo(message = "Exception caught:  {0}.", level = "WARNING")
     private static final String EXCEPTION_CAUGHT = "AS-DEPLOYMENT-00002";
 
-    @LogMessageInfo(message = "{0} module [{1}] contains characteristics of other module type: {2}.", level="WARNING")
+    @LogMessageInfo(message = "{0} module [{1}] contains characteristics of other module type: {2}.", level = "WARNING")
     private static final String INCOMPATIBLE_TYPE = "AS-DEPLOYMENT-00003";
 
-    @LogMessageInfo(message = "Unsupported deployment descriptors element {0} value {1}.", level="WARNING")
+    @LogMessageInfo(message = "Unsupported deployment descriptors element {0} value {1}.", level = "WARNING")
     public static final String INVALID_DESC_MAPPING = "AS-DEPLOYMENT-00015";
 
-    @LogMessageInfo(message = "DOLUtils: Invalid Deployment Descriptors in {0} \nLine {1} Column {2} -- {3}.", level="SEVERE",
-        cause = "Failed to find the resource specified in the deployment descriptor. May be because of wrong specification in the descriptor",
-        action = "Ensure that the resource specified is present. Ensure that there is no typo in the resource specified in the descriptor"
-    )
+    @LogMessageInfo(
+        message = "DOLUtils: Invalid Deployment Descriptors in {0} \nLine {1} Column {2} -- {3}.",
+        level = "SEVERE",
+        cause = "Failed to find the resource specified in the deployment descriptor."
+            + " May be because of wrong specification in the descriptor",
+        action = "Ensure that the resource specified is present."
+            + " Ensure that there is no typo in the resource specified in the descriptor")
     public static final String INVALILD_DESCRIPTOR_LONG = "AS-DEPLOYMENT-00118";
 
-    @LogMessageInfo(message = "Deployment Descriptor parsing failure: {0}",
-        cause="Error while parsing the deployment descriptor."
+    @LogMessageInfo(
+        message = "Deployment Descriptor parsing failure: {0}",
+        cause = "Error while parsing the deployment descriptor."
             + " May be because of malformed descriptor or absence of all required descriptor elements.",
-        action="Ensure that the descriptor is well formed and as per specification."
-            + " Ensure that the SAX parser configuration is correct and the descriptor has right permissions."
-    )
+        action = "Ensure that the descriptor is well formed and as per specification."
+            + " Ensure that the SAX parser configuration is correct and the descriptor has right permissions.")
     public static final String INVALILD_DESCRIPTOR_SHORT = "AS-DEPLOYMENT-00120";
 
-    @LogMessageInfo(message = "DEP0001:Application validation fails for given application: {0}, and jndi-name: {1}",
-            level = "SEVERE",
-            cause = "A JNDI name used for a resource in the given app fails validation",
-            action = "This is an aggregated error. Have a look at previous log messages for more details about the errors")
+    @LogMessageInfo(
+        message = "DEP0001:Application validation fails for given application: {0}, and jndi-name: {1}",
+        level = "SEVERE",
+        cause = "A JNDI name used for a resource in the given app fails validation",
+        action = "This is an aggregated error. Have a look at previous log messages for more details about the errors")
     public static final String APPLICATION_VALIDATION_FAILS = "enterprise.deployment.util.application.fail";
 
-    @LogMessageInfo(message = "DEP0002:Duplicate descriptor found for given jndi-name: {0}",
-            level = "SEVERE",
-            cause = "Two or more resource definitions use the same jndi-name in the same or related contexts",
-            action = "Make sure that all JNDI names used to define resources in application's resource annotations or desciptors are unique in each context. For example java:app/myname conflicts with java:comp:myname because myname jndi-name is defined twice in the component context")
+    @LogMessageInfo(
+        message = "DEP0002:Duplicate descriptor found for given jndi-name: {0}",
+        level = "SEVERE",
+        cause = "Two or more resource definitions use the same jndi-name in the same or related contexts",
+        action = "Make sure that all JNDI names used to define resources in application's resource annotations"
+            + " or desciptors are unique in each context. For example java:app/myname conflicts"
+            + " with java:comp:myname because myname jndi-name is defined twice in the component context")
     public static final String DUPLICATE_DESCRIPTOR = "enterprise.deployment.util.descriptor.duplicate";
 
-    @LogMessageInfo(message = "DEP0003:The jndi-name is already used in the global tree failed for given jndi-name: {0}",
-            level = "SEVERE",
-            cause = "The JNDI name of the descriptor is already used in the global JNDI tree, probably by a resource defined on the server",
-            action = "Make sure that the JNDI name doesn't conflict with any global resource already defined on the server")
+    @LogMessageInfo(
+        message = "DEP0003:The jndi-name is already used in the global tree failed for given jndi-name: {0}",
+        level = "SEVERE",
+        cause = "The JNDI name of the descriptor is already used in the global JNDI tree,"
+            + " probably by a resource defined on the server",
+        action = "Make sure that the JNDI name doesn't conflict with any global resource already defined on the server")
     public static final String JNDI_LOOKUP_FAILED = "enterprise.deployment.util.application.lookup";
 
-    @LogMessageInfo(message = "DEP0004:Deployment failed because a conflict occured for jndi-name: {0} for application: {1}",
-            level="SEVERE",
-            cause = "Unknown",
-            action = "Unknown")
+    @LogMessageInfo(
+        message = "DEP0004:Deployment failed because a conflict occured for jndi-name: {0} for application: {1}",
+        level = "SEVERE",
+        cause = "Unknown",
+        action = "Unknown")
     public static final String INVALID_NAMESPACE = "enterprise.deployment.util.application.invalid.namespace";
 
-    @LogMessageInfo(message = "DEP0005:Deployment failed due to the invalid scope defined for jndi-name: {0}",
-            level = "SEVERE",
-            cause = "Unknown",
-            action = "Unknown")
+    @LogMessageInfo(
+        message = "DEP0005:Deployment failed due to the invalid scope defined for jndi-name: {0}",
+        level = "SEVERE",
+        cause = "Unknown",
+        action = "Unknown")
     public static final String INVALID_JNDI_SCOPE = "enterprise.deployment.util.application.invalid.jndiname.scope";
 
-    @LogMessageInfo(message = "DPL8006: get/add descriptor failure : {0} TO {1}",
+    @LogMessageInfo(
+        message = "DPL8006: get/add descriptor failure : {0} TO {1}",
         level = "SEVERE",
-        cause = "Adding or getting a descriptor failed. May be because the node / information to be added is not valid; may be because of the descriptor was not registered",
-        action = "Ensure that the node to be added is valid. Ensure that the permissions are set as expected."
-    )
+        cause = "Adding or getting a descriptor failed. May be because the node / information to be added is not valid;"
+            + " may be because of the descriptor was not registered",
+        action = "Ensure that the node to be added is valid. Ensure that the permissions are set as expected.")
     public static final String ADD_DESCRIPTOR_FAILURE = "enterprise.deployment.backend.addDescriptorFailure";
 
     // The system property to control the precedence between GF DD
@@ -189,12 +204,16 @@ public class DOLUtils {
     /**
      * @return a logger to use in the DOL implementation classes
      */
-    public static synchronized Logger getDefaultLogger() {
+    public static Logger getDefaultLogger() {
         return deplLogger;
     }
 
+    public static System.Logger getLogger() {
+        return LOGGER;
+    }
+
     public static boolean equals(Object a, Object b) {
-        return ((a == null && b == null) || (a != null && a.equals(b)));
+        return (a == null && b == null) || (a != null && a.equals(b));
     }
 
     public static List<URI> getLibraryJarURIs(BundleDescriptor bundleDesc, ReadableArchive archive) throws Exception {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,6 +21,7 @@ import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.node.runtime.RuntimeDescriptorNode;
 import com.sun.enterprise.deployment.runtime.common.wls.SecurityRoleAssignment;
+import com.sun.enterprise.deployment.runtime.web.SunWebApp;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 
 import java.util.List;
@@ -82,10 +83,12 @@ public class SecurityRoleAssignmentNode extends RuntimeDescriptorNode<SecurityRo
         if (parentDesc instanceof WebBundleDescriptor) {
             WebBundleDescriptor webBundleDescriptor = (WebBundleDescriptor) parentDesc;
             // security-role-assignment*
-            SecurityRoleAssignment[] securityRoleAssignments = webBundleDescriptor.getSunDescriptor()
-                .getSecurityRoleAssignments();
-            for (SecurityRoleAssignment securityRoleAssignment : securityRoleAssignments) {
-                writeDescriptor(parent, nodeName, securityRoleAssignment);
+            SunWebApp sunWebApp = webBundleDescriptor.getSunDescriptor();
+            if (sunWebApp != null) {
+                SecurityRoleAssignment[] securityRoleAssignments = sunWebApp.getSecurityRoleAssignments();
+                for (SecurityRoleAssignment securityRoleAssignment : securityRoleAssignments) {
+                    writeDescriptor(parent, nodeName, securityRoleAssignment);
+                }
             }
         }
         return parent;

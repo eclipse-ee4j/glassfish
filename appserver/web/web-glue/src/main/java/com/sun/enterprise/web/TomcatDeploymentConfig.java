@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,6 +19,8 @@ package com.sun.enterprise.web;
 
 import com.sun.enterprise.deployment.EjbReferenceDescriptor;
 import com.sun.enterprise.deployment.EnvironmentProperty;
+import com.sun.enterprise.deployment.ErrorPageDescriptor;
+import com.sun.enterprise.deployment.JspConfigDefinitionDescriptor;
 import com.sun.enterprise.deployment.LocaleEncodingMappingDescriptor;
 import com.sun.enterprise.deployment.LocaleEncodingMappingListDescriptor;
 import com.sun.enterprise.deployment.MessageDestinationDescriptor;
@@ -58,7 +60,7 @@ import jakarta.servlet.descriptor.JspPropertyGroupDescriptor;
 
 import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -67,8 +69,6 @@ import org.apache.catalina.LifecycleException;
 import org.apache.catalina.Wrapper;
 import org.apache.catalina.core.StandardWrapper;
 import org.glassfish.web.LogFacade;
-import org.glassfish.web.deployment.descriptor.ErrorPageDescriptor;
-import org.glassfish.web.deployment.descriptor.JspConfigDescriptorImpl;
 import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
 
 /**
@@ -184,8 +184,8 @@ public class TomcatDeploymentConfig {
      * by a <code>&lt;filter&gt;</code> element in the deployment descriptor.
      */
     protected static void configureFilterDef(WebModule webModule, WebBundleDescriptorImpl wmd) {
-        Vector<ServletFilter> vector = wmd.getServletFilters();
-        for (ServletFilter servletFilter : vector) {
+        List<ServletFilter> filters = wmd.getServletFilters();
+        for (ServletFilter servletFilter : filters) {
             FilterDefDecorator filterDef = new FilterDefDecorator(servletFilter);
             webModule.addFilterDef(filterDef);
         }
@@ -199,9 +199,9 @@ public class TomcatDeploymentConfig {
      * a URL pattern or a servlet name.
      */
     protected static void configureFilterMap(WebModule webModule, WebBundleDescriptorImpl wmd) {
-        Vector<ServletFilterMapping> vector = wmd.getServletFilterMappingDescriptors();
-        for (ServletFilterMapping element : vector) {
-            webModule.addFilterMap(element);
+        List<ServletFilterMapping> mappings = wmd.getServletFilterMappingDescriptors();
+        for (ServletFilterMapping mapping : mappings) {
+            webModule.addFilterMap(mapping);
         }
     }
 
@@ -214,22 +214,20 @@ public class TomcatDeploymentConfig {
      * to modify the application deployment descriptor itself.
      */
     protected static void configureApplicationListener(WebModule webModule, WebBundleDescriptorImpl wmd) {
-        Vector<AppListenerDescriptor> vector = wmd.getAppListenerDescriptors();
-        for (AppListenerDescriptor element : vector) {
-            webModule.addApplicationListener(element.getListener());
+        List<AppListenerDescriptor> listeners = wmd.getAppListenersCopy();
+        for (AppListenerDescriptor listener : listeners) {
+            webModule.addApplicationListener(listener.getListener());
         }
-
     }
 
 
     /**
-     * Configure <code>jsp-config</code> element contained in the deployment
-     * descriptor
+     * Configure <code>jsp-config</code> element contained in the deployment descriptor
      */
     protected static void configureJspConfig(WebModule webModule, WebBundleDescriptorImpl wmd) {
         webModule.setJspConfigDescriptor(wmd.getJspConfigDescriptor());
 
-        JspConfigDescriptorImpl jspConfig = wmd.getJspConfigDescriptor();
+        JspConfigDefinitionDescriptor jspConfig = wmd.getJspConfigDescriptor();
         if (jspConfig != null) {
             for (JspPropertyGroupDescriptor jspGroup : jspConfig.getJspPropertyGroups()) {
                 for (String urlPattern : jspGroup.getUrlPatterns()) {

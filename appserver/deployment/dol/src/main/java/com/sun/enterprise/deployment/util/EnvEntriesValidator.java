@@ -56,7 +56,7 @@ public class EnvEntriesValidator {
     public void validateEnvEntries(JndiNameEnvironment env) {
         LOG.log(Level.FINER, "validateEnvEntries: {0}", env);
         if (env instanceof WebBundleDescriptor) {
-            Set<EnvironmentProperty> envEntries = ((WebBundleDescriptor) env).getEnvironmentEntrySet();
+            Set<EnvironmentProperty> envEntries = ((WebBundleDescriptor) env).getEnvironmentEntries();
             validateSimpleEnvEntries(env, envEntries);
         } else {
             Set<EnvironmentProperty> envProperties = env.getEnvironmentProperties();

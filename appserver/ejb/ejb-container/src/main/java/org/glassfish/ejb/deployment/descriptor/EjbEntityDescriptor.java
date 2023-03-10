@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -77,19 +77,20 @@ public class EjbEntityDescriptor extends EjbDescriptor {
 
 
     /**
-     * Sets the transaction type for this entity bean.
-     * Throws an illegal argument exception if this type is not
-     * CONTAINER_TRANSACTION_TYPE.
+     * Sets the transaction type for this entity bean.\
+     *
+     * @throws IllegalArgumentException if this type is not {@link EjbDescriptor#CONTAINER_TRANSACTION_TYPE}.
      */
     @Override
     public void setTransactionType(String transactionType) {
-        if (!CONTAINER_TRANSACTION_TYPE.equals(transactionType) && Descriptor.isBoundsChecking()) {
-            throw new IllegalArgumentException(localStrings.getLocalString(
-                "enterprise.deployment.exceptionentitybeancanonlyhavecntnrtxtype",
-                "Entity beans can only have Container transaction type. The type was being set to {0}",
-                new Object[] {transactionType}));
+        if (CONTAINER_TRANSACTION_TYPE.equals(transactionType) || !Descriptor.isBoundsChecking()) {
+            super.setTransactionType(transactionType);
+        } else {
+            throw new IllegalArgumentException(
+                localStrings.getLocalString("enterprise.deployment.exceptionentitybeancanonlyhavecntnrtxtype",
+                    "Entity beans can only have Container transaction type. The type was being set to {0}",
+                    new Object[] {transactionType}));
         }
-        super.transactionType = transactionType;
     }
 
     @Override
@@ -99,7 +100,7 @@ public class EjbEntityDescriptor extends EjbDescriptor {
 
 
     /**
-     * Return true if this entity bean is reentrant, false else.
+     * @return true if this entity bean is reentrant, false else.
      */
     public boolean isReentrant() {
         return this.isReentrant;
@@ -160,8 +161,7 @@ public class EjbEntityDescriptor extends EjbDescriptor {
     }
 
     /**
-     * Return the classname of the primary key for this bean, or the empty
-     * string if none has been set.
+     * @return the classname of the primary key for this bean, or the empty string if none has been set.
      */
     public String getPrimaryKeyClassName() {
         if (this.primaryKeyClassName == null) {

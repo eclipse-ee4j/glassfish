@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,27 +26,23 @@ import com.sun.enterprise.deployment.InjectionCapable;
 public interface EntityManagerFactoryReference extends NamedInformation, InjectionCapable {
 
     /**
-     * Set the unit name of the entity manager fa ctory to which this
-     * reference is associated.
+     * @param unitName the entity manager fa ctory to which this reference is associated.
      */
     void setUnitName(String unitName);
 
-
     /**
-     * Get the unit name of the entity manager factory to which this
-     * reference is associated.
+     * @return the unit name of the entity manager factory to which this reference is associated.
      */
     String getUnitName();
 
     /**
-     * Set the referring bundle, i.e. the bundle within which this
-     * reference is declared.
+     * @param referringBundle the referring bundle, i.e. the bundle within which this
+     *            reference is declared.
      */
     void setReferringBundleDescriptor(BundleDescriptor referringBundle);
 
     /**
-     * Get the referring bundle, i.e. the bundle within which this
-     * reference is declared.
+     * @return the referring bundle, i.e. the bundle within which this reference is declared.
      */
     BundleDescriptor getReferringBundleDescriptor();
 }

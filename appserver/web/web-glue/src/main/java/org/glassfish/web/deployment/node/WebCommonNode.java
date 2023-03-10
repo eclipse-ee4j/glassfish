@@ -70,6 +70,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.security.common.Role;
 import org.glassfish.web.deployment.descriptor.AppListenerDescriptorImpl;
 import org.glassfish.web.deployment.descriptor.LoginConfigurationImpl;
 import org.glassfish.web.deployment.descriptor.MimeMappingDescriptor;
@@ -298,7 +299,7 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
         }
 
         // context-param*
-        addInitParam(jarNode, WebTagNames.CONTEXT_PARAM, webBundleDesc.getContextParametersSet());
+        addInitParam(jarNode, WebTagNames.CONTEXT_PARAM, webBundleDesc.getContextParameters());
 
         // filter*
         FilterNode filterNode = new FilterNode();
@@ -349,28 +350,23 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
 
         // mime-mapping*
         MimeMappingNode mimeNode = new MimeMappingNode();
-        for (Enumeration<MimeMapping> e = webBundleDesc.getMimeMappings(); e.hasMoreElements();) {
-            // there's no other implementation
-            MimeMappingDescriptor mimeMapping = (MimeMappingDescriptor) e.nextElement();
-            mimeNode.writeDescriptor(jarNode, WebTagNames.MIME_MAPPING, mimeMapping);
+        for (MimeMapping mimeMapping : webBundleDesc.getMimeMappings()) {
+            mimeNode.writeDescriptor(jarNode, WebTagNames.MIME_MAPPING, (MimeMappingDescriptor) mimeMapping);
         }
 
         // welcome-file-list?
-        Enumeration<String> welcomeFiles = webBundleDesc.getWelcomeFiles();
-        if (welcomeFiles.hasMoreElements()) {
+        Set<String> welcomeFiles = webBundleDesc.getWelcomeFiles();
+        if (!welcomeFiles.isEmpty()) {
             Node welcomeList = appendChild(jarNode, WebTagNames.WELCOME_FILE_LIST);
-            while (welcomeFiles.hasMoreElements()) {
-                appendTextChild(welcomeList, WebTagNames.WELCOME_FILE, welcomeFiles.nextElement());
+            for (String welcomeFile : welcomeFiles) {
+                appendTextChild(welcomeList, WebTagNames.WELCOME_FILE, welcomeFile);
             }
         }
 
         // error-page*
-        Enumeration<ErrorPageDescriptor> errorPages = webBundleDesc.getErrorPageDescriptors();
-        if (errorPages.hasMoreElements()) {
+        for (ErrorPageDescriptor errorPage : webBundleDesc.getErrorPageDescriptors()) {
             ErrorPageNode errorPageNode = new ErrorPageNode();
-            while (errorPages.hasMoreElements()) {
-                errorPageNode.writeDescriptor(jarNode, WebTagNames.ERROR_PAGE, errorPages.nextElement());
-            }
+            errorPageNode.writeDescriptor(jarNode, WebTagNames.ERROR_PAGE, errorPage);
         }
 
         // jsp-config *
@@ -381,12 +377,10 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
         }
 
         // security-constraint*
-        Enumeration<SecurityConstraint> securityConstraints = webBundleDesc.getSecurityConstraints();
-        if (securityConstraints.hasMoreElements()) {
+        if (!webBundleDesc.getSecurityConstraints().isEmpty()) {
             SecurityConstraintNode scNode = new SecurityConstraintNode();
-            while (securityConstraints.hasMoreElements()) {
-                SecurityConstraintImpl sc = (SecurityConstraintImpl) securityConstraints.nextElement();
-                scNode.writeDescriptor(jarNode, WebTagNames.SECURITY_CONSTRAINT, sc);
+            for (SecurityConstraint sc : webBundleDesc.getSecurityConstraints()) {
+                scNode.writeDescriptor(jarNode, WebTagNames.SECURITY_CONSTRAINT, (SecurityConstraintImpl) sc);
             }
         }
 
@@ -398,12 +392,11 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
         }
 
         // security-role*
-        Enumeration<SecurityRoleDescriptor> roles = webBundleDesc.getSecurityRoles();
-        if (roles.hasMoreElements()) {
+        Set<Role> roles = webBundleDesc.getRoles();
+        if (!roles.isEmpty()) {
             SecurityRoleNode srNode = new SecurityRoleNode();
-            while (roles.hasMoreElements()) {
-                SecurityRoleDescriptor role = roles.nextElement();
-                srNode.writeDescriptor(jarNode, TagNames.ROLE, role);
+            for (Role role : roles) {
+                srNode.writeDescriptor(jarNode, TagNames.ROLE, new SecurityRoleDescriptor(role));
             }
         }
 

@@ -116,7 +116,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
     // Is set to true if this bean exposes a no-interface view
     private boolean localBean;
 
-    protected String transactionType;
+    private String transactionType;
     private boolean usesDefaultTransaction;
     private Hashtable<MethodDescriptor, ContainerTransaction> methodContainerTransactions;
     private Map<MethodPermission, Set<MethodDescriptor>> permissionedMethodsByPermission;
@@ -567,7 +567,9 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
     /**
      * Set the transaction type of this ejb.
      */
-    public abstract void setTransactionType(String transactionType);
+    public void setTransactionType(String transactionType) {
+        this.transactionType = transactionType;
+    }
 
 
     /**

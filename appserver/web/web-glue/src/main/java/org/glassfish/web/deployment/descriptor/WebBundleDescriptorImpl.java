@@ -25,6 +25,7 @@ import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.ErrorPageDescriptor;
 import com.sun.enterprise.deployment.InjectionTarget;
 import com.sun.enterprise.deployment.JndiNameEnvironment;
+import com.sun.enterprise.deployment.JspConfigDefinitionDescriptor;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
 import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
 import com.sun.enterprise.deployment.MetadataSource;
@@ -41,6 +42,7 @@ import com.sun.enterprise.deployment.WebServicesDescriptor;
 import com.sun.enterprise.deployment.runtime.web.SunWebApp;
 import com.sun.enterprise.deployment.util.ComponentPostVisitor;
 import com.sun.enterprise.deployment.util.ComponentVisitor;
+import com.sun.enterprise.deployment.web.ContextParameter;
 import com.sun.enterprise.deployment.web.MimeMapping;
 import com.sun.enterprise.deployment.web.SecurityConstraint;
 import com.sun.enterprise.deployment.web.ServletFilter;
@@ -149,9 +151,6 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
     }
 
 
-    /**
-     * Adds a new context parameter to my list.
-     */
     public void addContextParameter(EnvironmentProperty contextParameter) {
         super.addContextParameter(contextParameter);
     }
@@ -168,6 +167,7 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
     public void addServletFilterMapping(ServletFilterMappingDescriptor ref) {
         super.addServletFilterMapping(ref);
     }
+
 
     /**
      * Add a new security constraint.
@@ -234,16 +234,16 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
             addWebComponentDescriptor(webComponentDescriptor);
         }
 
-        addContextParameters(webBundleDescriptor.getContextParametersSet());
+        addContextParameters(webBundleDescriptor.getContextParameters());
 
         if (webBundleDescriptor instanceof WebBundleDescriptorImpl) {
             addConflictedMimeMappingExtensions(
                 ((WebBundleDescriptorImpl) webBundleDescriptor).getConflictedMimeMappingExtensions());
         }
-        combineMimeMappings(webBundleDescriptor.getMimeMappingsSet());
+        combineMimeMappings(webBundleDescriptor.getMimeMappings());
 
         // do not call getErrorPageDescriptorsSet.addAll() as there is special overriding rule
-        for (ErrorPageDescriptor errPageDesc : webBundleDescriptor.getErrorPageDescriptorsSet()) {
+        for (ErrorPageDescriptor errPageDesc : webBundleDescriptor.getErrorPageDescriptors()) {
             addErrorPageDescriptor(errPageDesc);
         }
         addAppListeners(webBundleDescriptor.getAppListeners());
@@ -251,7 +251,7 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
         if (webBundleDescriptor.isDenyUncoveredHttpMethods()) {
             setDenyUncoveredHttpMethods(true);
         }
-        combineSecurityConstraints(getSecurityConstraintsSet(), webBundleDescriptor.getSecurityConstraintsSet());
+        combineSecurityConstraints(getSecurityConstraints(), webBundleDescriptor.getSecurityConstraints());
 
         combineServletFilters(webBundleDescriptor);
         combineServletFilterMappings(webBundleDescriptor);
@@ -261,6 +261,10 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
         }
 
         if (webBundleDescriptor.getJspConfigDescriptor() != null) {
+            JspConfigDefinitionDescriptor jspConfigDesc = getJspConfigDescriptor();
+            if (jspConfigDesc == null) {
+                setJspConfigDescriptor(new JspConfigDefinitionDescriptor());
+            }
             addJspDescriptor(webBundleDescriptor.getJspConfigDescriptor());
         }
 
@@ -290,7 +294,7 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
 
 
     protected void combineMimeMappings(Set<MimeMapping> mimeMappings) {
-        for (MimeMapping mm : getMimeMappingsSet()) {
+        for (MimeMapping mm : getMimeMappings()) {
             conflictedMimeMappingExtensions.remove(mm.getExtension());
         }
         if (!conflictedMimeMappingExtensions.isEmpty()) {

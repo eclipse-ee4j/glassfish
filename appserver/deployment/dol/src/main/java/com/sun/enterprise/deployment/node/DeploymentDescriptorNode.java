@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 202
+ *  Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -40,6 +41,9 @@ import com.sun.enterprise.deployment.web.MimeMapping;
 import com.sun.enterprise.deployment.xml.TagNames;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.servlet.descriptor.JspPropertyGroupDescriptor;
+import jakarta.servlet.descriptor.TaglibDescriptor;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -193,12 +197,17 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
             return;
         }
         try {
+            // FIXME: More generic, try to find compatible method.
             final Class<?> parameterType;
             if (node.getDescriptor() instanceof ResourceDescriptor
                 && ((ResourceDescriptor) node.getDescriptor()).getResourceType() != null) {
                 parameterType = ResourceDescriptor.class;
             } else if (node.getDescriptor() instanceof MimeMapping) {
                 parameterType = MimeMapping.class;
+            } else if (node.getDescriptor() instanceof TaglibDescriptor) {
+                parameterType = TaglibDescriptor.class;
+            } else if (node.getDescriptor() instanceof JspPropertyGroupDescriptor) {
+                parameterType = JspPropertyGroupDescriptor.class;
             } else {
                 parameterType = node.getDescriptor().getClass();
             }

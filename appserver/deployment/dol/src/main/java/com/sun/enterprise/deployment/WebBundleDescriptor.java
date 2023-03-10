@@ -30,34 +30,29 @@ import com.sun.enterprise.deployment.web.LoginConfiguration;
 import com.sun.enterprise.deployment.web.MimeMapping;
 import com.sun.enterprise.deployment.web.ResourceReference;
 import com.sun.enterprise.deployment.web.SecurityConstraint;
-import com.sun.enterprise.deployment.web.SecurityRole;
-import com.sun.enterprise.deployment.web.SecurityRoleReference;
 import com.sun.enterprise.deployment.web.ServletFilter;
 import com.sun.enterprise.deployment.web.ServletFilterMapping;
 import com.sun.enterprise.deployment.web.SessionConfig;
 import com.sun.enterprise.deployment.web.WebResourceCollection;
 
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextListener;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.event.EventTypes;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.grizzly.http.util.MimeType;
-import org.glassfish.security.common.Role;
 
 /**
  * I am an object that represents all the deployment information about a web application.
@@ -85,7 +80,7 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
     private String responseCharacterEncoding;
     private SessionConfig sessionConfig;
     private boolean showArchivedRealPathEnabled = true;
-    private JspConfigDefinitionDescriptor jspConfigDescriptor = new JspConfigDefinitionDescriptor();
+    private JspConfigDefinitionDescriptor jspConfigDescriptor;
 
     /**
      * An entry here, may be set to indicate additional processing.
@@ -145,7 +140,7 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
      * @param webBundleDescriptor
      */
     public void addWebBundleDescriptor(WebBundleDescriptor webBundleDescriptor) {
-        addWelcomeFiles(webBundleDescriptor.getWelcomeFilesSet());
+        this.welcomeFiles.addAll(webBundleDescriptor.getWelcomeFiles());
         addCommonWebBundleDescriptor(webBundleDescriptor, true);
     }
 
@@ -156,8 +151,8 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
      * @param descriptor
      */
     public void addDefaultWebBundleDescriptor(WebBundleDescriptor descriptor) {
-        if (getWelcomeFilesSet().isEmpty()) {
-            addWelcomeFiles(descriptor.getWelcomeFilesSet());
+        if (getWelcomeFiles().isEmpty()) {
+            this.welcomeFiles.addAll(descriptor.getWelcomeFiles());
         }
         if (this.requestCharacterEncoding == null) {
             this.requestCharacterEncoding = descriptor.getRequestCharacterEncoding();
@@ -444,7 +439,7 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
     /**
      * @param listeners list of {@link AppListenerDescriptor}s to use {@link ServletContextListener}s
      */
-    public void addAppListeners(Collection<? extends AppListenerDescriptor> listeners) {
+    protected void addAppListeners(Collection<? extends AppListenerDescriptor> listeners) {
         this.appListenerDescriptors.addAll(listeners);
     }
 
@@ -476,21 +471,25 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
     /**
      * @return the Set of my Context Parameters.
      */
-    public Set<ContextParameter> getContextParametersSet() {
+    public Set<ContextParameter> getContextParameters() {
         return contextParameters;
     }
 
 
     /**
      * Adds all context parameters to my list.
+     *
+     * @param parameters
      */
-    public void addContextParameters(Collection<ContextParameter> contextParameters) {
-        this.contextParameters.addAll(contextParameters);
+    protected void addContextParameters(Collection<ContextParameter> parameters) {
+        this.contextParameters.addAll(parameters);
     }
 
 
     /**
      * Adds a new context parameter to my list.
+     *
+     * @param contextParameter
      */
     public void addContextParameter(ContextParameter contextParameter) {
         contextParameters.add(contextParameter);
@@ -499,31 +498,18 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
     /**
      * Removes the given context parameter from my list.
+     * Equals is used for the comparison.
+     *
+     * @param contextParameter
      */
     public void removeContextParameter(ContextParameter contextParameter) {
         contextParameters.remove(contextParameter);
     }
 
 
-    /**
-     * @return the enumeration of my references to Enterprise Beans.
-     */
-    public final Enumeration<EjbReferenceDescriptor> getEjbReferences() {
-        return Collections.enumeration(getEjbReferenceDescriptors());
-    }
-
-
     @Override
     public Set<EjbReferenceDescriptor> getEjbReferenceDescriptors() {
         return ejbReferences;
-    }
-
-
-    /**
-     * @return {@link EjbReferenceDescriptor} with the matching name or throw.
-     */
-    public EjbReferenceDescriptor getEjbReferenceByName(String name) {
-        return getEjbReference(name);
     }
 
 
@@ -625,6 +611,12 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
     }
 
 
+    /**
+     * Case sensitive search.
+     *
+     * @param name
+     * @return null or {@link EntityManagerReferenceDescriptor} found by the name.
+     */
     protected EntityManagerReferenceDescriptor findEntityManagerReferenceByName(String name) {
         for (EntityManagerReferenceDescriptor next : entityManagerReferences) {
             if (next.getName().equals(name)) {
@@ -642,24 +634,16 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
     }
 
 
-    /**
-     * @return enumeration of {@link EnvironmentProperty}, must not be null but may be empty.
-     */
-    public final Enumeration<EnvironmentProperty> getEnvironmentEntries() {
-        return Collections.enumeration(getEnvironmentEntrySet());
-    }
-
-
     @Override
     public Set<EnvironmentProperty> getEnvironmentProperties() {
-        return getEnvironmentEntrySet();
+        return getEnvironmentEntries();
     }
 
 
     /**
-     * @return {@link Set} of {@link EnvironmentProperty}, must not be null but may be empty.
+     * @return {@link Set} of {@link EnvironmentProperty}, never null but may be empty.
      */
-    public Set<EnvironmentProperty> getEnvironmentEntrySet() {
+    public Set<EnvironmentProperty> getEnvironmentEntries() {
         return environmentEntries;
     }
 
@@ -676,11 +660,13 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
 
     /**
+     * Case sensitive search.
+     *
      * @param name
-     * @return null or {@link EnvironmentProperty} found by the name. Case sensitive.
+     * @return null or {@link EnvironmentProperty} found by the name.
      */
     protected EnvironmentProperty findEnvironmentEntryByName(String name) {
-        for (EnvironmentProperty ev : getEnvironmentEntrySet()) {
+        for (EnvironmentProperty ev : environmentEntries) {
             if (ev.getName().equals(name)) {
                 return ev;
             }
@@ -697,6 +683,8 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
     /**
      * Adds this given environment property to my list.
+     *
+     * @param environmentEntry
      */
     public void addEnvironmentEntry(EnvironmentProperty environmentEntry) {
         environmentEntries.add(environmentEntry);
@@ -711,6 +699,8 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
     /**
      * Removes this given environment property from my list.
+     *
+     * @param environmentEntry
      */
     public void removeEnvironmentEntry(EnvironmentProperty environmentEntry) {
         environmentEntries.remove(environmentEntry);
@@ -718,20 +708,17 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
 
     /**
-     * @return an enumeration of the error pages I have.
+     * @return {@link Set} of {@link ErrorPageDescriptor}, never null but may be empty.
      */
-    public Enumeration<ErrorPageDescriptor> getErrorPageDescriptors() {
-        return Collections.enumeration(getErrorPageDescriptorsSet());
-    }
-
-
-    public Set<ErrorPageDescriptor> getErrorPageDescriptorsSet() {
+    public Set<ErrorPageDescriptor> getErrorPageDescriptors() {
         return errorPageDescriptors;
     }
 
 
     /**
      * Adds a new error page to my list.
+     *
+     * @param errorPageDescriptor
      */
     public void addErrorPageDescriptor(ErrorPageDescriptor errorPageDescriptor) {
         String errorSignifier = errorPageDescriptor.getErrorSignifierAsString();
@@ -749,9 +736,9 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
      * @return {@link ErrorPageDescriptor} or null
      */
     private ErrorPageDescriptor getErrorPageDescriptorBySignifier(String signifier) {
-        for (ErrorPageDescriptor next : getErrorPageDescriptorsSet()) {
-            if (next.getErrorSignifierAsString().equals(signifier)) {
-                return next;
+        for (ErrorPageDescriptor errorPage : errorPageDescriptors) {
+            if (errorPage.getErrorSignifierAsString().equals(signifier)) {
+                return errorPage;
             }
         }
         return null;
@@ -760,6 +747,9 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
     /**
      * Removes the given error page from my list.
+     * Equals is used for the comparison.
+     *
+     * @param errorPageDescriptor
      */
     public void removeErrorPageDescriptor(ErrorPageDescriptor errorPageDescriptor) {
         errorPageDescriptors.remove(errorPageDescriptor);
@@ -767,7 +757,7 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
 
     /**
-     * This method return an unmodifiable map of jarName2WebFragNameMap.
+     * This method return an unmodifiable map of a jar name mappings to a web.xml fragment names.
      *
      * @return unmodifiable {@link Map}
      */
@@ -776,8 +766,14 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
     }
 
 
-    public void putJarNameWebFragmentNamePair(String jarName, String webFragName) {
-        jarName2WebFragNameMap.put(jarName, webFragName);
+    /**
+     * Registers a jar name mapping to a web.xml fragment's name
+     *
+     * @param jarName
+     * @param webFragmentName
+     */
+    public void putJarNameWebFragmentNamePair(String jarName, String webFragmentName) {
+        jarName2WebFragNameMap.put(jarName, webFragmentName);
     }
 
 
@@ -798,6 +794,12 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
     }
 
 
+    /**
+     * Case sensitive search.
+     *
+     * @param name
+     * @return null or {@link MessageDestinationReferenceDescriptor} found by the name.
+     */
     protected MessageDestinationReferenceDescriptor findMessageDestinationReferenceByName(String name) {
         for (MessageDestinationReferenceDescriptor mdr : messageDestReferences) {
             if (mdr.getName().equals(name)) {
@@ -822,14 +824,9 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
 
     /**
-     * @return an enumeration of my mime mappings.
+     * @return a set of mime mappings.
      */
-    public Enumeration<MimeMapping> getMimeMappings() {
-        return Collections.enumeration(getMimeMappingsSet());
-    }
-
-
-    public Set<MimeMapping> getMimeMappingsSet() {
+    public Set<MimeMapping> getMimeMappings() {
         return mimeMappings;
     }
 
@@ -837,6 +834,7 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
     /**
      * Add the given mime mapping to my list if the given MimeType is not added
      *
+     * @param mimeMapping
      * @return the result {@link MimeType} of the {@link MimeMapping} in the resulting
      *         set of MimeMapping
      */
@@ -858,18 +856,25 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
 
     /**
-     * Removes the given mime mapping from my list.
+     * Removes the given mime mapping from my list. Uses equals for comparison.
+     *
+     * @param mimeMapping
      */
     public void removeMimeMapping(MimeMapping mimeMapping) {
         mimeMappings.remove(mimeMapping);
     }
 
-
+    /**
+     * @return the list for the {@link ServletContext#ORDERED_LIBS}
+     */
     public List<String> getOrderedLibs() {
         return orderedLibs;
     }
 
 
+    /**
+     * @param libName an item for the {@link ServletContext#ORDERED_LIBS}
+     */
     public void addOrderedLib(String libName) {
         orderedLibs.add(libName);
     }
@@ -948,6 +953,12 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
     }
 
 
+    /**
+     * Case sensitive search.
+     *
+     * @param name
+     * @return null or {@link ResourceEnvReferenceDescriptor} found by the name.
+     */
     protected ResourceEnvReferenceDescriptor findResourceEnvReferenceByName(String name) {
         for (ResourceEnvReferenceDescriptor jdr : resourceEnvRefReferences) {
             if (jdr.getName().equals(name)) {
@@ -970,11 +981,6 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
     }
 
 
-    public Enumeration<ResourceReferenceDescriptor> getResourceReferences() {
-        return Collections.enumeration(getResourceReferenceDescriptors());
-    }
-
-
     @Override
     public Set<ResourceReferenceDescriptor> getResourceReferenceDescriptors() {
         return resourceReferences;
@@ -992,6 +998,12 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
     }
 
 
+    /**
+     * Case sensitive search.
+     *
+     * @param name
+     * @return null or {@link ResourceReferenceDescriptor} found by the name.
+     */
     protected ResourceReferenceDescriptor findResourceReferenceByName(String name) {
         for (ResourceReference next : resourceReferences) {
             if (next.getName().equals(name)) {
@@ -1015,25 +1027,27 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
 
     /**
-     * @return My list of security constraints.
+     * @return set of {@link SecurityConstraint}. Never null.
      */
-    public Enumeration<SecurityConstraint> getSecurityConstraints() {
-        return Collections.enumeration(getSecurityConstraintsSet());
-    }
-
-
-    public Set<SecurityConstraint> getSecurityConstraintsSet() {
+    public Set<SecurityConstraint> getSecurityConstraints() {
         return securityConstraints;
     }
 
 
+    /**
+     * @param urlPattern
+     * @return collection of all security constraints with the given url pattern.
+     */
     public Collection<SecurityConstraint> getSecurityConstraintsForUrlPattern(String urlPattern) {
+        if (urlPattern == null) {
+            return Collections.emptySet();
+        }
         Set<SecurityConstraint> constraints = new HashSet<>();
         for (SecurityConstraint constraint : securityConstraints) {
             boolean include = false;
-            for (WebResourceCollection nextCol : constraint.getWebResourceCollections()) {
-                for (String nextPattern : nextCol.getUrlPatterns()) {
-                    if (urlPattern != null && urlPattern.equals(nextPattern)) {
+            for (WebResourceCollection wsCollection : constraint.getWebResourceCollections()) {
+                for (String wsCollectionUrlPattern : wsCollection.getUrlPatterns()) {
+                    if (urlPattern.equals(wsCollectionUrlPattern)) {
                         include = true;
                         break;
                     }
@@ -1052,6 +1066,8 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
     /**
      * Add a new security constraint.
+     *
+     * @param securityConstraint
      */
     public void addSecurityConstraint(SecurityConstraint securityConstraint) {
         securityConstraints.add(securityConstraint);
@@ -1060,45 +1076,11 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
     /**
      * Remove the given security constraint.
+     *
+     * @param securityConstraint
      */
     public void removeSecurityConstraint(SecurityConstraint securityConstraint) {
         securityConstraints.remove(securityConstraint);
-    }
-
-
-    /**
-     * @return an Enumeration of my {@link SecurityRoleDescriptor} objects.
-     */
-    public Enumeration<SecurityRoleDescriptor> getSecurityRoles() {
-        return Collections
-            .enumeration(getRoles().stream().map(SecurityRoleDescriptor::new).collect(Collectors.toList()));
-    }
-
-
-    public void addSecurityRole(SecurityRoleDescriptor securityRole) {
-        addSecurityRole((SecurityRole) securityRole);
-    }
-
-
-    public void addSecurityRole(SecurityRole securityRole) {
-        addRole(new Role(securityRole.getName(), securityRole.getDescription()));
-    }
-
-
-    /**
-     * @return all the references by a given component (by name) to the given rolename.
-     */
-    public SecurityRoleReference getSecurityRoleReferenceByName(String compName, String roleName) {
-        for (WebComponentDescriptor comp : getWebComponentDescriptors()) {
-            if (!comp.getCanonicalName().equals(compName)) {
-                continue;
-            }
-            SecurityRoleReference r = comp.getSecurityRoleReferenceByName(roleName);
-            if (r != null) {
-                return r;
-            }
-        }
-        return null;
     }
 
 
@@ -1136,6 +1118,12 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
     }
 
 
+    /**
+     * Case sensitive search.
+     *
+     * @param name
+     * @return null or {@link ServiceReferenceDescriptor} found by the name.
+     */
     protected ServiceReferenceDescriptor findServiceReferenceByName(String name) {
         for (ServiceReferenceDescriptor srd : serviceReferences) {
             if (srd.getName().equals(name)) {
@@ -1178,9 +1166,12 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
     /**
      * Adds a servlet filter to this web component.
+     * If there already is a filter of the same name, the new filter will be ignored.
+     *
+     * @param filter
      */
-    public void addServletFilter(ServletFilter ref) {
-        String name = ref.getName();
+    public void addServletFilter(ServletFilter filter) {
+        String name = filter.getName();
         boolean found = false;
         for (ServletFilter servletFilter : servletFilters) {
             if (name.equals(servletFilter.getName())) {
@@ -1188,31 +1179,14 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
                 break;
             }
         }
-
         if (!found) {
-            servletFilters.add(ref);
+            servletFilters.add(filter);
         }
     }
 
 
     /**
-     * Removes the given servlet filter from this web component.
-     */
-    public void removeServletFilter(ServletFilter ref) {
-        removeItem(servletFilters, ref);
-    }
-
-
-    /**
-     * @return a Vector of servlet filter mappings that I have.
-     */
-    public List<ServletFilterMapping> getServletFilterMappingDescriptors() {
-        return List.copyOf(getServletFilterMappings());
-    }
-
-
-    /**
-     * @return a Vector of servlet filters that I have.
+     * @return a list of servlet filters that I have.
      */
     public List<ServletFilterMapping> getServletFilterMappings() {
         return servletFilterMappings;
@@ -1221,27 +1195,14 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
     /**
      * Adds a servlet filter mapping to this web component.
+     * If there already is an equal filter, the new one will be ignored.
+     *
+     * @param filter
      */
-    public void addServletFilterMapping(ServletFilterMapping ref) {
-        if (!servletFilterMappings.contains(ref)) {
-            servletFilterMappings.add(ref);
+    public void addServletFilterMapping(ServletFilterMapping filter) {
+        if (!servletFilterMappings.contains(filter)) {
+            servletFilterMappings.add(filter);
         }
-    }
-
-
-    /**
-     * Removes the given servlet filter mapping from this web component.
-     */
-    public void removeServletFilterMapping(ServletFilterMapping ref) {
-        removeItem(servletFilterMappings, ref);
-    }
-
-
-    /**
-     * Moves the given servlet filter mapping to a new relative location in the list
-     */
-    public void moveServletFilterMapping(ServletFilterMapping ref, int relPos) {
-        moveItem(servletFilterMappings, ref, relPos);
     }
 
 
@@ -1254,25 +1215,13 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
 
     /**
-     * @return {@link WebComponentDescriptor} by name or null
-     */
-    public WebComponentDescriptor getWebComponentByName(String name) {
-        for (WebComponentDescriptor webComponent : webComponentDescriptors) {
-            if (webComponent.getName().equals(name)) {
-                return webComponent;
-            }
-        }
-        return null;
-    }
-
-
-    /**
+     * @param canonicalName
      * @return {@link WebComponentDescriptor} by canonical name or null
      */
-    public WebComponentDescriptor getWebComponentByCanonicalName(String name) {
-        for (WebComponentDescriptor next : webComponentDescriptors) {
-            if (next.getCanonicalName().equals(name)) {
-                return next;
+    public WebComponentDescriptor getWebComponentByCanonicalName(String canonicalName) {
+        for (WebComponentDescriptor descriptor : webComponentDescriptors) {
+            if (descriptor.getCanonicalName().equals(canonicalName)) {
+                return descriptor;
             }
         }
         return null;
@@ -1280,6 +1229,7 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
 
     /**
+     * @param webComponentImplementation
      * @return {@link WebComponentDescriptor} by web component implementation, never null.
      */
     public WebComponentDescriptor[] getWebComponentByImplName(String webComponentImplementation) {
@@ -1303,25 +1253,18 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
     }
 
 
+    /**
+     * Forgets the URL pattern to servlet mapping.
+     */
     public void resetUrlPatternToServletNameMap() {
         urlPattern2ServletName = null;
-    }
-
-
-    public Set<WebComponentDescriptor> getServletDescriptors() {
-        Set<WebComponentDescriptor> servletDescriptors = new HashSet<>();
-        for (WebComponentDescriptor webComponent : webComponentDescriptors) {
-            if (webComponent.isServlet()) {
-                servletDescriptors.add(webComponent);
-            }
-        }
-        return servletDescriptors;
     }
 
 
     /**
      * The returned map is supposed to be only modified by the corresponding url patterns set.
      *
+     * @param initializeIfNull
      * @return the internal urlPattern2ServletName map
      */
     public Map<String, String> getUrlPatternToServletNameMap(boolean initializeIfNull) {
@@ -1343,20 +1286,17 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
 
     /**
-     * @return an enumeration of the welcome files I have..
+     * @return set of the welcome files I have..
      */
-    public Enumeration<String> getWelcomeFiles() {
-        return Collections.enumeration(getWelcomeFilesSet());
-    }
-
-
-    public Set<String> getWelcomeFilesSet() {
+    public Set<String> getWelcomeFiles() {
         return welcomeFiles;
     }
 
 
     /**
      * Adds a new welcome file to my list.
+     *
+     * @param fileUri
      */
     public void addWelcomeFile(String fileUri) {
         welcomeFiles.add(fileUri);
@@ -1364,23 +1304,7 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
 
     /**
-     * Adds the collection to my welcome files.
-     */
-    public void addWelcomeFiles(Set<String> welcomeFiles) {
-        this.welcomeFiles.addAll(welcomeFiles);
-    }
-
-
-    /**
-     * Removes a welcome file from my list.
-     */
-    public void removeWelcomeFile(String fileUri) {
-        welcomeFiles.remove(fileUri);
-    }
-
-
-    /**
-     * This returns the extra web sun specific info not in the RI DID.
+     * This returns the extra web sun specific info not in the spec.
      *
      * @return {@link SunWebApp} or null
      */
@@ -1390,7 +1314,7 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
 
     /**
-     * This sets the extra web sun specific info not in the RI DID.
+     * This sets the extra web sun specific info not in the spec.
      *
      * @param webApp SunWebApp object representation of web deployment descriptor
      */
@@ -1460,11 +1384,11 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
         if (wname != null && !wname.isEmpty()) {
             toStringBuffer.append("\n name ").append(wname);
         }
-        toStringBuffer.append("\n mimeMappings ").append(getMimeMappingsSet());
-        toStringBuffer.append("\n welcomeFiles ").append(getWelcomeFilesSet());
+        toStringBuffer.append("\n mimeMappings ").append(getMimeMappings());
+        toStringBuffer.append("\n welcomeFiles ").append(getWelcomeFiles());
         toStringBuffer.append("\n errorPageDescriptors ").append(errorPageDescriptors);
         toStringBuffer.append("\n appListenerDescriptors ").append(getAppListenersCopy());
-        toStringBuffer.append("\n contextParameters ").append(getContextParametersSet());
+        toStringBuffer.append("\n contextParameters ").append(getContextParameters());
         toStringBuffer.append("\n ejbReferences ");
         printDescriptorSet(getEjbReferenceDescriptors(), toStringBuffer);
         toStringBuffer.append("\n resourceEnvRefReferences ");
@@ -1477,14 +1401,14 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
         printDescriptorSet(getServiceReferenceDescriptors(), toStringBuffer);
         toStringBuffer.append("\n distributable ").append(isDistributable());
         toStringBuffer.append("\n denyUncoveredHttpMethods ").append(isDenyUncoveredHttpMethods());
-        toStringBuffer.append("\n securityRoles ").append(getSecurityRoles());
-        toStringBuffer.append("\n securityConstraints ").append(getSecurityConstraintsSet());
+        toStringBuffer.append("\n securityRoles ").append(getRoles());
+        toStringBuffer.append("\n securityConstraints ").append(getSecurityConstraints());
         toStringBuffer.append("\n contextRoot ").append(getContextRoot());
         toStringBuffer.append("\n loginConfiguration ").append(getLoginConfiguration());
         toStringBuffer.append("\n webComponentDescriptors ");
         printDescriptorSet(getWebComponentDescriptors(), toStringBuffer);
         toStringBuffer.append("\n environmentEntries ");
-        printDescriptorSet(getEnvironmentEntrySet(), toStringBuffer);
+        printDescriptorSet(getEnvironmentEntries(), toStringBuffer);
 
     }
 
@@ -1500,57 +1424,4 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
             }
         }
     }
-
-    /**
-     * Removes a specific object from the given list.
-     * <p>
-     * Does not rely on 'equals', must be the same instance
-     */
-    private static <T> boolean removeItem(List<T> list, T ref) {
-        for (Iterator<T> i = list.iterator(); i.hasNext();) {
-            if (ref == i.next()) {
-                i.remove();
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Moves the given object to a new relative location in the specified list
-     */
-    private static <T> void moveItem(List<T> list, T ref, int rpos) {
-        /* get current position of ref */
-        // 'indexOf' is not used because it is base on 'equals()' which may not be unique.
-        int size = list.size();
-        int old_pos = size - 1;
-        for (; old_pos >= 0; old_pos--) {
-            if (ref == list.get(old_pos)) {
-                break;
-            }
-        }
-        if (old_pos < 0) {
-            // not found
-            return;
-        }
-
-        // limit up/down movement
-        int new_pos = old_pos + rpos;
-        if (new_pos < 0) {
-            new_pos = 0;
-        } else if (new_pos >= size) {
-            new_pos = size - 1;
-        }
-
-        // is it really moving?
-        if (new_pos == old_pos) {
-            // it's not moving
-            return;
-        }
-
-        // move it
-        list.remove(old_pos);
-        list.add(new_pos, ref);
-    }
 }
-

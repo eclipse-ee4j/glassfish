@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -669,7 +669,7 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
                 localStrings.getLocalString("enterprise.deployment.exceptionmsgbeantxtypenotlegaltype",
                     "{0} is not a legal transaction type for a message-driven bean", new Object[] {transactionType}));
         }
-        super.transactionType = transactionType;
+        super.setTransactionType(transactionType);
         super.setMethodContainerTransactions(new Hashtable<>());
     }
 

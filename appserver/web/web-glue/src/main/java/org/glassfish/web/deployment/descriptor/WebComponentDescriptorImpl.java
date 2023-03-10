@@ -50,6 +50,8 @@ import java.util.Vector;
  */
 public class WebComponentDescriptorImpl extends WebComponentDescriptor {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Constant for Basic authentication.
      */
@@ -80,7 +82,7 @@ public class WebComponentDescriptorImpl extends WebComponentDescriptor {
     public static final String DELETE = "DELETE";
 
     private Set<InitializationParameter> initializationParameters;
-    private Set<String> urlPatterns;
+    private final Set<String> urlPatterns = new UrlPatternsSet();
     private String canonicalName;
     private Integer loadOnStartUp;
     private Set<SecurityRoleReference> securityRoleReferences;
@@ -183,9 +185,6 @@ public class WebComponentDescriptorImpl extends WebComponentDescriptor {
      */
     @Override
     public Set<String> getUrlPatternsSet() {
-        if (urlPatterns == null) {
-            urlPatterns = new UrlPatternsSet();
-        }
         return urlPatterns;
     }
 

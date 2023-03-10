@@ -345,10 +345,12 @@ public class WebBundleRuntimeNode extends RuntimeBundleNode<WebBundleDescriptorI
         }
 
         // servlet
-        Set<WebComponentDescriptor> servlets = bundleDescriptor.getServletDescriptors();
-        org.glassfish.web.deployment.node.runtime.gf.ServletNode servletNode = new org.glassfish.web.deployment.node.runtime.gf.ServletNode();
-        for (WebComponentDescriptor servlet : servlets) {
-            servletNode.writeDescriptor(web, RuntimeTagNames.SERVLET, servlet);
+        org.glassfish.web.deployment.node.runtime.gf.ServletNode servletNode
+            = new org.glassfish.web.deployment.node.runtime.gf.ServletNode();
+        for (WebComponentDescriptor servlet : bundleDescriptor.getWebComponentDescriptors()) {
+            if (servlet.isServlet()) {
+                servletNode.writeDescriptor(web, RuntimeTagNames.SERVLET, servlet);
+            }
         }
 
         // idempotent-url-pattern

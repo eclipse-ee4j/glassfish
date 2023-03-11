@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,52 +17,34 @@
 
 package org.glassfish.resources.mail.annotation.handler;
 
+import com.sun.enterprise.deployment.MailSessionDescriptor;
+import com.sun.enterprise.deployment.MetadataSource;
+import com.sun.enterprise.deployment.ResourceDescriptor;
+import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
+import com.sun.enterprise.deployment.annotation.handlers.AbstractResourceHandler;
+import com.sun.enterprise.deployment.annotation.handlers.ResourceAnnotationControl;
+
+import jakarta.mail.MailSessionDefinition;
+
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.Properties;
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.apf.HandlerProcessingResult;
 import org.glassfish.deployment.common.JavaEEResourceType;
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.deployment.EjbBundleDescriptor;
-import com.sun.enterprise.deployment.EjbDescriptor;
-import com.sun.enterprise.deployment.MailSessionDescriptor;
-import com.sun.enterprise.deployment.MetadataSource;
-import com.sun.enterprise.deployment.ResourceDescriptor;
-import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.annotation.context.EjbBundleContext;
-import com.sun.enterprise.deployment.annotation.context.EjbContext;
-import com.sun.enterprise.deployment.annotation.context.EjbInterceptorContext;
-import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
-import com.sun.enterprise.deployment.annotation.context.WebBundleContext;
-import com.sun.enterprise.deployment.annotation.context.WebComponentContext;
-import com.sun.enterprise.deployment.annotation.context.WebComponentsContext;
-import com.sun.enterprise.deployment.annotation.handlers.AbstractResourceHandler;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
-import jakarta.interceptor.AroundInvoke;
-import jakarta.interceptor.AroundTimeout;
-import jakarta.interceptor.Interceptors;
-import jakarta.mail.MailSessionDefinition;
-
 /**
- * Created by IntelliJ IDEA. User: naman mehta Date: 18/4/12 Time: 11:04 AM To change this template use File | Settings
- * | File Templates.
+ * @author naman mehta 2012
  */
-
 @Service
 @AnnotationHandlerFor(MailSessionDefinition.class)
 public class MailSessionDefinitionHandler extends AbstractResourceHandler {
 
-    protected final static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(MailSessionDefinitionHandler.class);
+    private static final ResourceAnnotationControl CTRL = new ResourceAnnotationControl(MailSessionDefinition.class);
 
     public MailSessionDefinitionHandler() {
 
@@ -75,13 +57,13 @@ public class MailSessionDefinitionHandler extends AbstractResourceHandler {
     }
 
     protected HandlerProcessingResult processAnnotation(MailSessionDefinition mailSessionDefnAn, AnnotationInfo aiInfo, ResourceContainerContext[] rcContexts) throws AnnotationProcessorException {
-        Class annotatedClass = (Class) aiInfo.getAnnotatedElement();
+        Class<?> annotatedClass = (Class<?>) aiInfo.getAnnotatedElement();
         Annotation[] annotations = annotatedClass.getAnnotations();
         boolean warClass = isAWebComponentClass(annotations);
         boolean ejbClass = isAEjbComponentClass(annotations);
 
         for (ResourceContainerContext context : rcContexts) {
-            if (!canProcessAnnotation(annotatedClass, ejbClass, warClass, context)) {
+            if (!CTRL.canProcessAnnotation(annotatedClass, ejbClass, warClass, context)) {
                 return getDefaultProcessedResult();
             }
 
@@ -96,79 +78,6 @@ public class MailSessionDefinitionHandler extends AbstractResourceHandler {
         return getDefaultProcessedResult();
     }
 
-    private boolean canProcessAnnotation(Class annotatedClass, boolean ejbClass, boolean warClass, ResourceContainerContext context) {
-        if (ejbClass) {
-            if (!(context instanceof EjbBundleContext || context instanceof EjbContext || context instanceof EjbInterceptorContext)) {
-                if (logger.isLoggable(Level.FINEST)) {
-                    logger.log(Level.FINEST, "Ignoring @MailSessionDefinition annotation processing as the class is "
-                            + "an EJB class and context is not one of EJBContext");
-                }
-                return false;
-            }
-        } else if (context instanceof EjbBundleContext) {
-            EjbBundleContext ejbContext = (EjbBundleContext) context;
-            EjbBundleDescriptor ejbBundleDescriptor = ejbContext.getDescriptor();
-            EjbDescriptor[] ejbDescriptor = ejbBundleDescriptor.getEjbByClassName(annotatedClass.getName());
-            if (ejbDescriptor == null || ejbDescriptor.length == 0) {
-                if (logger.isLoggable(Level.FINEST)) {
-                    logger.log(Level.FINEST, "Ignoring @MailSessionDefinition annotation processing as the class " + "[ " + annotatedClass
-                            + " ] is " + "not an EJB class and the context is EJBContext");
-                }
-                return false;
-            }
-        } else if (warClass) {
-            if (!(context instanceof WebBundleContext || context instanceof WebComponentsContext
-                    || context instanceof WebComponentContext)) {
-                if (logger.isLoggable(Level.FINEST)) {
-                    logger.log(Level.FINEST, "Ignoring @MailSessionDefinition annotation processing as the class is "
-                            + "an Web class and context is not one of WebContext");
-                }
-                return false;
-            }
-        } else if (context instanceof WebBundleContext) {
-            WebBundleContext webBundleContext = (WebBundleContext) context;
-            WebBundleDescriptor webBundleDescriptor = webBundleContext.getDescriptor();
-            Collection<RootDeploymentDescriptor> extDesc = webBundleDescriptor.getExtensionsDescriptors();
-            for (RootDeploymentDescriptor desc : extDesc) {
-                if (desc instanceof EjbBundleDescriptor) {
-                    EjbBundleDescriptor ejbBundleDesc = (EjbBundleDescriptor) desc;
-                    EjbDescriptor[] ejbDescs = ejbBundleDesc.getEjbByClassName(annotatedClass.getName());
-                    if (ejbDescs != null && ejbDescs.length > 0) {
-                        if (logger.isLoggable(Level.FINEST)) {
-                            logger.log(Level.FINEST, "Ignoring @MailSessionDefinition annotation processing as the class " + "[ "
-                                    + annotatedClass + " ] is " + "not an Web class and the context is WebContext");
-                        }
-                        return false;
-                    } else if (ejbBundleDesc.getInterceptorByClassName(annotatedClass.getName()) != null) {
-                        if (logger.isLoggable(Level.FINEST)) {
-                            logger.log(Level.FINEST, "Ignoring @MailSessionDefinition annotation processing " + "as the class " + "[ "
-                                    + annotatedClass + " ] is " + "not an Web class and the context is WebContext");
-                        }
-                        return false;
-                    } else {
-                        Method[] methods = annotatedClass.getDeclaredMethods();
-                        for (Method method : methods) {
-                            Annotation annotations[] = method.getAnnotations();
-                            for (Annotation annotation : annotations) {
-                                if (annotation.annotationType().equals(AroundInvoke.class)
-                                        || annotation.annotationType().equals(AroundTimeout.class)
-                                        || annotation.annotationType().equals(Interceptors.class)) {
-                                    if (logger.isLoggable(Level.FINEST)) {
-                                        logger.log(Level.FINEST,
-                                                "Ignoring @MailSessionDefinition annotation processing " + "as the class " + "[ "
-                                                        + annotatedClass + " ] is "
-                                                        + "not an Web class, an interceptor and the context is WebContext");
-                                    }
-                                    return false;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return true;
-    }
 
     private MailSessionDescriptor createDescriptor(MailSessionDefinition defn) {
 
@@ -177,31 +86,31 @@ public class MailSessionDefinitionHandler extends AbstractResourceHandler {
 
         desc.setName(defn.name());
 
-        if (defn.description() != null && !defn.description().equals("")) {
+        if (defn.description() != null && !defn.description().isEmpty()) {
             desc.setDescription(defn.description());
         }
 
-        if (defn.storeProtocol() != null && !defn.storeProtocol().equals("")) {
+        if (defn.storeProtocol() != null && !defn.storeProtocol().isEmpty()) {
             desc.setStoreProtocol(defn.storeProtocol());
         }
 
-        if (defn.transportProtocol() != null && !defn.transportProtocol().equals("")) {
+        if (defn.transportProtocol() != null && !defn.transportProtocol().isEmpty()) {
             desc.setTransportProtocol(defn.transportProtocol());
         }
 
-        if (defn.host() != null && !defn.host().equals("")) {
+        if (defn.host() != null && !defn.host().isEmpty()) {
             desc.setHost(defn.host());
         }
 
-        if (defn.user() != null && !defn.user().equals("")) {
+        if (defn.user() != null && !defn.user().isEmpty()) {
             desc.setUser(defn.user());
         }
 
-        if (defn.password() != null /* ALLOW EMPTY PASSWORDS && !defn.password().equals("") */) {
+        if (defn.password() != null /* ALLOW EMPTY PASSWORDS && !defn.password().isEmpty() */) {
             desc.setPassword(defn.password());
         }
 
-        if (defn.from() != null && !defn.from().equals("")) {
+        if (defn.from() != null && !defn.from().isEmpty()) {
             desc.setFrom(defn.from());
         }
 
@@ -211,7 +120,7 @@ public class MailSessionDefinitionHandler extends AbstractResourceHandler {
             String[] defnProperties = defn.properties();
             if (defnProperties.length > 0) {
                 for (String property : defnProperties) {
-                    int index = property.indexOf("=");
+                    int index = property.indexOf('=');
                     // found "=" and not at start or end of string
                     if (index > -1 && index != 0 && index < property.length() - 1) {
                         String name = property.substring(0, index);
@@ -243,7 +152,7 @@ public class MailSessionDefinitionHandler extends AbstractResourceHandler {
             if (desc.getName().equals(mailSessionDefn.name())) {
 
                 if (desc.getDescription() == null) {
-                    if (mailSessionDefn.description() != null && !mailSessionDefn.description().equals("")) {
+                    if (mailSessionDefn.description() != null && !mailSessionDefn.description().isEmpty()) {
                         desc.setDescription(mailSessionDefn.description());
                     }
                 }
@@ -261,13 +170,13 @@ public class MailSessionDefinitionHandler extends AbstractResourceHandler {
                 }
 
                 if (desc.getUser() == null) {
-                    if (mailSessionDefn.user() != null && !mailSessionDefn.user().equals("")) {
+                    if (mailSessionDefn.user() != null && !mailSessionDefn.user().isEmpty()) {
                         desc.setUser(mailSessionDefn.user());
                     }
                 }
 
                 if (desc.getPassword() == null) {
-                    if (mailSessionDefn.password() != null /* ALLOW EMPTY PASSWORDS && !defn.password().equals("") */) {
+                    if (mailSessionDefn.password() != null /* ALLOW EMPTY PASSWORDS && !defn.password().isEmpty() */) {
                         desc.setPassword(mailSessionDefn.password());
                     }
                 }

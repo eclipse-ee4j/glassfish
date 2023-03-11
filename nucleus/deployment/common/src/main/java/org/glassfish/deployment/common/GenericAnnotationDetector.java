@@ -36,8 +36,9 @@ import org.glassfish.internal.api.Globals;
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+
+import static org.objectweb.asm.Opcodes.ASM9;
 
 /**
  * This class will detect whether an archive contains specified annotations.
@@ -61,7 +62,7 @@ public class GenericAnnotationDetector extends AnnotationScanner {
     List<String> annotations = new ArrayList<>();
 
     public GenericAnnotationDetector(Class[] annotationClasses) {
-        super(Opcodes.ASM7);
+        super(ASM9);
         if (annotationClasses != null) {
             for (Class annClass : annotationClasses) {
                 annotations.add(Type.getDescriptor(annClass));

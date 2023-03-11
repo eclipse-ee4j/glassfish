@@ -22,7 +22,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
-import java.io.InputStream;
+
+import static org.objectweb.asm.Opcodes.ASM9;
 
 
 /**
@@ -69,7 +70,7 @@ class NodeInfo
     }
 
     NodeInfo(byte[] classData) {
-        super(Opcodes.ASM7);
+        super(ASM9);
         ClassReader cr = new ClassReader(classData);
 
         cr.accept(this, ClassReader.SKIP_CODE);
@@ -117,7 +118,7 @@ class NodeInfo
     }
 
     NodeInfo(String className) {
-        super(Opcodes.ASM7);
+        super(ASM9);
         this.className = className;
     }
 

@@ -28,7 +28,8 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.Opcodes;
+
+import static org.objectweb.asm.Opcodes.ASM9;
 
 
 /**
@@ -50,7 +51,7 @@ class HK2ClasssVisitor extends ClassVisitor {
      * @param excludedClasses
      */
     public HK2ClasssVisitor(final ServiceLocator locator, final Set<Class<?>> excludedClasses) {
-        super(Opcodes.ASM7);
+        super(ASM9);
         this.locator = locator;
         this.excludedClasses = excludedClasses.stream().map(Class::getName).collect(Collectors.toSet());
     }

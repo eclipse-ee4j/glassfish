@@ -18,6 +18,7 @@ package org.glassfish.flashlight.impl.client;
 
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.Utility;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.instrument.ClassFileTransformer;
@@ -36,6 +37,8 @@ import java.util.WeakHashMap;
 
 import org.glassfish.flashlight.FlashlightLoggerInfo;
 import static org.glassfish.flashlight.FlashlightLoggerInfo.*;
+import static org.objectweb.asm.Opcodes.ASM9;
+
 import org.glassfish.flashlight.provider.FlashlightProbe;
 import org.glassfish.flashlight.provider.ProbeRegistry;
 
@@ -286,7 +289,7 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
             extends ClassVisitor {
 
         ProbeProviderClassVisitor(ClassVisitor cv) {
-            super(Opcodes.ASM7, cv);
+            super(ASM9, cv);
             if (Log.getLogger().isLoggable(Level.FINER)) {
                 for (String methodDesc : probes.keySet()) {
                     Log.finer("visit" + methodDesc);
@@ -315,7 +318,7 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
         private Label startFinally;
 
         ProbeProviderMethodVisitor(MethodVisitor mv, int access, String name, String desc, FlashlightProbe probe) {
-            super(Opcodes.ASM7, mv, access, name, desc);
+            super(ASM9, mv, access, name, desc);
             this.probe = probe;
         }
 

@@ -20,7 +20,8 @@ import org.objectweb.asm.AnnotationVisitor;
 import org.glassfish.api.admin.config.PropertiesDesc;
 import org.glassfish.api.admin.config.PropertyDesc;
 import org.jvnet.hk2.config.Attribute;
-import org.objectweb.asm.Opcodes;
+
+import static org.objectweb.asm.Opcodes.ASM9;
 
 public class AttributeMethodVisitor extends EmptyVisitor {
     private ClassDef def;
@@ -29,7 +30,7 @@ public class AttributeMethodVisitor extends EmptyVisitor {
     private boolean duckTyped;
 
     public AttributeMethodVisitor(ClassDef classDef, String method, String aggType) {
-        super(Opcodes.ASM7);
+        super(ASM9);
         def = classDef;
         name = method;
         type = aggType;

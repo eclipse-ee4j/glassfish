@@ -32,6 +32,8 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static org.objectweb.asm.Opcodes.ASM9;
+
 public class ProviderSubClassImplGenerator {
     private static final Logger logger = FlashlightLoggerInfo.getLogger();
     public final static LocalStringManagerImpl localStrings =
@@ -136,7 +138,7 @@ public class ProviderSubClassImplGenerator {
         String id;
 
         ProbeProviderSubClassGenerator(ClassVisitor cv, String token, String id) {
-            super(Opcodes.ASM7, cv);
+            super(ASM9, cv);
             this.id = id;
             this.token = token;
         }
@@ -184,7 +186,7 @@ public class ProviderSubClassImplGenerator {
         private String token;
 
         ProbeProviderAnnotationVisitor(AnnotationVisitor delegate, String token) {
-            super(Opcodes.ASM7);
+            super(ASM9);
             this.delegate = delegate;
             this.token = token;
         }

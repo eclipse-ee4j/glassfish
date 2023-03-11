@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.objectweb.asm.*;
 
+import static org.objectweb.asm.Opcodes.ASM9;
+
 public class DocClassVisitor extends ClassVisitor {
     private boolean hasConfiguredAnnotation = false;
     private String className;
@@ -28,7 +30,7 @@ public class DocClassVisitor extends ClassVisitor {
     private boolean showDeprecated;
 
     public DocClassVisitor(final boolean showDep) {
-        super(Opcodes.ASM7);
+        super(ASM9);
         showDeprecated = showDep;
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,19 +17,16 @@
 
 package org.glassfish.ejb.deployment.descriptor;
 
-import com.sun.enterprise.deployment.EjbInterceptor;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EjbReferenceDescriptor;
 import com.sun.enterprise.deployment.EntityManagerFactoryReferenceDescriptor;
 import com.sun.enterprise.deployment.EntityManagerReferenceDescriptor;
 import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.InjectionCapable;
 import com.sun.enterprise.deployment.InjectionInfo;
-import com.sun.enterprise.deployment.JndiNameEnvironment;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
 import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
 import com.sun.enterprise.deployment.NameValuePairDescriptor;
-import com.sun.enterprise.deployment.NamedDescriptor;
-import com.sun.enterprise.deployment.NamedReferencePair;
 import com.sun.enterprise.deployment.OrderedSet;
 import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
 import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
@@ -46,6 +43,8 @@ import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.util.EjbBundleVisitor;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -57,8 +56,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.deployment.common.Descriptor;
@@ -70,17 +67,13 @@ import org.glassfish.ejb.deployment.util.EjbBundleTracerVisitor;
 import org.glassfish.ejb.deployment.util.EjbBundleValidator;
 import org.glassfish.security.common.Role;
 
-/**
- * The concrete implementation of abstract super class com.sun.enterprise.deployment.EjbBundleDescriptor.
- * EjbBundleDescriptor could be changed from abstract class to an interface in the future, with this
- * class as its implementation.
- */
-public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBundleDescriptor {
+public class EjbBundleDescriptorImpl extends EjbBundleDescriptor<EjbDescriptor> {
     private static final long serialVersionUID = 1L;
+
+    private static final Logger LOG = DOLUtils.getLogger();
 
     private long uniqueId;
     private Boolean disableNonportableJndiNames;
-    private final Set<EjbDescriptor> ejbs = new HashSet<>();
     private Set<Long> ejbIDs;
     private final Set<RelationshipDescriptor> relationships = new HashSet<>();
     private String relationshipsDescription;
@@ -99,13 +92,8 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
 
     private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(EjbBundleDescriptorImpl.class);
 
-    static Logger _logger = DOLUtils.getDefaultLogger();
 
     private final List<SecurityRoleMapping> roleMaps = new ArrayList<>();
-
-    // All interceptor classes defined within this ejb module, keyed by
-    // interceptor class name.
-    private final Map<String, EjbInterceptor> interceptors = new HashMap<>();
 
     private LinkedList<InterceptorBindingDescriptor> interceptorBindings = new LinkedList<>();
 
@@ -122,19 +110,27 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
     private final Set<EntityManagerReferenceDescriptor> entityManagerReferences = new HashSet<>();
 
 
-    /**
-     * @return the default version of the deployment descriptor
-     * loaded by this descriptor
-     */
     @Override
     public String getDefaultSpecVersion() {
         return EjbBundleNode.SPEC_VERSION;
     }
 
 
+    @Override
+    protected DummyEjbDescriptor createDummyEjbDescriptor(String ejbName) {
+        LOG.log(Level.DEBUG, "Construct a Dummy EJB Descriptor with name {0}", ejbName);
+        DummyEjbDescriptor dummyEjbDesc = new DummyEjbDescriptor();
+        dummyEjbDesc.setName(ejbName);
+        return dummyEjbDesc;
+    }
+
+
+
+
+
+
     /**
-     * Return the empty String or the entry name of the ejb client JAR
-     * in my archive if I have one.
+     * @return the empty String or the entry name of the ejb client JAR in my archive if I have one.
      */
     public String getEjbClientJarUri() {
         if (ejbClientJarUri == null) {
@@ -143,11 +139,6 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
         return ejbClientJarUri;
     }
 
-
-    @Override
-    public boolean isEmpty() {
-        return ejbs.isEmpty();
-    }
 
     public void setEjbClientJarUri(String ejbClientJarUri) {
         this.ejbClientJarUri = ejbClientJarUri;
@@ -161,42 +152,6 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
         return new HashMap<>(applicationExceptions);
     }
 
-    /**
-    * Return the set of NamedDescriptors that I have.
-    */
-    public Collection<NamedDescriptor> getNamedDescriptors() {
-        Collection<NamedDescriptor> namedDescriptors = new Vector<>();
-        for (EjbDescriptor ejbDescriptor : getEjbs()) {
-            namedDescriptors.add(ejbDescriptor);
-            namedDescriptors.addAll(super.getNamedDescriptorsFrom(ejbDescriptor));
-        }
-        return namedDescriptors;
-    }
-
-    /**
-    * Return all the named descriptors I have together with the descriptor
-    * that references each one in a Vector of NameReferencePairs.
-    */
-
-    public Vector<NamedReferencePair> getNamedReferencePairs() {
-        Vector<NamedReferencePair> pairs = new Vector<>();
-        for (EjbDescriptor ejbDescriptor : getEjbs()) {
-            pairs.add(NamedReferencePair.createEjbPair(ejbDescriptor, ejbDescriptor));
-            pairs.addAll(super.getNamedReferencePairsFrom(ejbDescriptor));
-        }
-        return pairs;
-    }
-
-    /**
-    * Return the set of references to resources held by ejbs defined in this module.
-    */
-    public Set<ResourceReferenceDescriptor> getEjbResourceReferenceDescriptors() {
-        Set<ResourceReferenceDescriptor> resourceReferences = new HashSet<>();
-        for (EjbDescriptor ejbDescriptor : getEjbs()) {
-            resourceReferences.addAll(ejbDescriptor.getResourceReferenceDescriptors());
-        }
-        return resourceReferences;
-    }
 
     /**
     * Return true if I reference other ejbs, false else.
@@ -210,91 +165,19 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
         return false;
     }
 
-    /**
-    * Return the Set of ejb descriptors that I have.
-    */
-    @Override
-    public Set<EjbDescriptor> getEjbs() {
-        return Collections.unmodifiableSet(ejbs);
-    }
+
 
     /**
      * Setup EJB Ids during deployment and shouldn't be called at runtime
      */
     public void setupDataStructuresForRuntime() {
         Set<Long> ids = new HashSet<>();
-        for (EjbDescriptor ejbDescriptor : ejbs) {
+        for (EjbDescriptor ejbDescriptor : getEjbs()) {
             ids.add(ejbDescriptor.getUniqueId());
         }
         ejbIDs = Collections.unmodifiableSet(ids);
     }
 
-    /**
-    * Returns true if I have an ejb descriptor by that name.
-    */
-    @Override
-    public boolean hasEjbByName(String name) {
-        for (Descriptor element : getEjbs()) {
-            if (element.getName().equals(name)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-    * Returns an ejb descriptor that I have by the same name, otherwise
-    * throws an IllegalArgumentException
-    */
-    @Override
-    public EjbDescriptor getEjbByName(String name) {
-        return getEjbByName(name, false);
-    }
-
-
-    /**
-     * Returns an ejb descriptor that I have by the same name.
-     * Create a DummyEjbDescriptor if requested, otherwise
-     * throws an IllegalArgumentException
-     */
-    public EjbDescriptor getEjbByName(String name, boolean isCreateDummy) {
-        for (EjbDescriptor next : getEjbs()) {
-            if (next.getName().equals(name)) {
-                return next;
-            }
-        }
-
-        if (!isCreateDummy) {
-            throw new IllegalArgumentException(localStrings.getLocalString("enterprise.deployment.exceptionbeanbundle",
-                "Referencing error: this bundle has no bean of name: {0}", name));
-        }
-
-        // there could be cases where the annotation defines the ejb component
-        // and the ejb-jar.xml just uses it
-        // we have to create a dummy version of the ejb descriptor in this
-        // case as we process xml before annotations.
-        _logger.log(Level.FINE, "enterprise.deployment_dummy_ejb_descriptor", new Object[] {name});
-        DummyEjbDescriptor dummyEjbDesc = new DummyEjbDescriptor();
-        dummyEjbDesc.setName(name);
-        addEjb(dummyEjbDesc);
-        return dummyEjbDesc;
-    }
-
-
-    /**
-     * Returns all ejb descriptors that has a give Class name.
-     * It returns an empty array if no ejb is found.
-     */
-    @Override
-    public EjbDescriptor[] getEjbByClassName(String className) {
-        ArrayList<EjbDescriptor> ejbList = new ArrayList<>();
-        for (EjbDescriptor ejb : getEjbs()) {
-            if (className.equals(ejb.getEjbClassName())) {
-                ejbList.add(ejb);
-            }
-        }
-        return ejbList.toArray(new EjbDescriptor[ejbList.size()]);
-    }
 
     /**
      * Returns all ejb descriptors that has a given Class name as
@@ -302,14 +185,14 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
      * It returns an empty array if no ejb is found.
      */
     @Override
-    public EjbDescriptor[] getEjbBySEIName(String className) {
+    public List<EjbDescriptor> getEjbBySEIName(String className) {
         ArrayList<EjbDescriptor> ejbList = new ArrayList<>();
         for (EjbDescriptor ejb : getEjbs()) {
             if (className.equals(ejb.getWebServiceEndpointInterfaceName())) {
                 ejbList.add(ejb);
             }
         }
-        return ejbList.toArray(new EjbDescriptor[ejbList.size()]);
+        return ejbList;
     }
 
     /**
@@ -320,20 +203,6 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
         return ejbIDs;
     }
 
-    public void addEjb(EjbDescriptor ejbDescriptor) {
-        ejbDescriptor.setEjbBundleDescriptor(this);
-        ejbs.add(ejbDescriptor);
-
-    }
-
-    /**
-    * Remove the given ejb descriptor from my (by equality).
-    */
-
-    public void removeEjb(EjbDescriptor ejbDescriptor) {
-        ejbDescriptor.setEjbBundleDescriptor(null);
-        ejbs.remove(ejbDescriptor);
-    }
 
     /**
      * @return true if this bundle descriptor contains at least one CMP
@@ -347,31 +216,6 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
             }
         }
         return false;
-    }
-
-
-    public void addInterceptor(EjbInterceptor interceptor) {
-        EjbInterceptor ic = getInterceptorByClassName(interceptor.getInterceptorClassName());
-        if (ic == null) {
-            interceptor.setEjbBundleDescriptor(this);
-            interceptors.put(interceptor.getInterceptorClassName(), interceptor);
-        }
-    }
-
-    @Override
-    public EjbInterceptor getInterceptorByClassName(String className) {
-        return interceptors.get(className);
-    }
-
-    public boolean hasInterceptors() {
-        return !interceptors.isEmpty();
-    }
-
-
-    @Override
-    public Set<EjbInterceptor> getInterceptors() {
-        return new HashSet<>(interceptors.values());
-
     }
 
 
@@ -399,15 +243,13 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
     * Checks whether the role references my ejbs have reference roles that I have.
     */
     public boolean areResourceReferencesValid() {
-        // run through each of the ejb's role references, checking that the roles exist in this
-        // bundle
+        // run through each of the ejb's role references, checking that the roles exist in this bundle
         for (EjbDescriptor ejbDescriptor : getEjbs()) {
             for (RoleReference element : ejbDescriptor.getRoleReferences()) {
                 Role referredRole = element.getRole();
-                if (!referredRole.getName().isEmpty() && !super.getRoles().contains(referredRole)) {
-                    _logger.log(Level.FINE, localStrings.getLocalString("enterprise.deployment.badrolereference",
-                        "Warning: Bad role reference to {0}", new Object[] {referredRole}));
-                    _logger.log(Level.FINE, "Roles:  " + getRoles());
+                Set<Role> roles = getRoles();
+                if (!referredRole.getName().isEmpty() && !roles.contains(referredRole)) {
+                    LOG.log(Level.WARNING, "Bad role reference to {0}, roles: {1}", referredRole, roles);
                     return false;
                 }
             }
@@ -416,14 +258,11 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
     }
 
 
-    /**
-     * Removes the given org.glassfish.security.common.Role object from me.
-     */
     @Override
     public void removeRole(Role role) {
         if (super.getRoles().contains(role)) {
-            for (EjbDescriptor element : getEjbs()) {
-                element.removeRole(role);
+            for (EjbDescriptor ejb : getEjbs()) {
+                ejb.removeRole(role);
             }
             super.removeRole(role);
         }
@@ -431,11 +270,11 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
 
 
     /**
-     * Returns true if I have Roles to which method permissions have been assigned.
+     * @return true if I have Roles to which method permissions have been assigned.
      */
     public boolean hasPermissionedRoles() {
-        for (EjbDescriptor element : getEjbs()) {
-            if (!element.getPermissionedMethodsByPermission().isEmpty()) {
+        for (EjbDescriptor ejb : getEjbs()) {
+            if (!ejb.getPermissionedMethodsByPermission().isEmpty()) {
                 return true;
             }
         }
@@ -444,11 +283,11 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
 
 
     /**
-     * Return true if any of my ejb's methods have been assigned transaction attributes.
+     * @return true if any of my ejb's methods have been assigned transaction attributes.
      */
     public boolean hasContainerTransactions() {
-        for (EjbDescriptor element : getEjbs()) {
-            if (!element.getMethodContainerTransactions().isEmpty()) {
+        for (EjbDescriptor ejb : getEjbs()) {
+            if (!ejb.getMethodContainerTransactions().isEmpty()) {
                 return true;
             }
         }
@@ -457,7 +296,7 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
 
 
     /**
-     * Return true if I have roles, permissioned roles or container transactions.
+     * @return true if I have roles, permissioned roles or container transactions.
      */
     public boolean hasAssemblyInformation() {
         return (!getRoles().isEmpty()) || hasPermissionedRoles() || hasContainerTransactions();
@@ -579,7 +418,7 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
         uniqueId = id;
 
         // First sort the beans in alphabetical order.
-        EjbDescriptor[] descs = ejbs.toArray(new EjbDescriptor[ejbs.size()]);
+        EjbDescriptor[] descs = getEjbs().toArray(EjbDescriptor[]::new);
 
         // The sorting algorithm used by this api is a modified mergesort.
         // This algorithm offers guaranteed n*log(n) performance, and
@@ -694,8 +533,8 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
 
 
     public void setPersistenceManagerInuse(String id, String ver) {
+        LOG.log(Level.DEBUG, "setPersistenceManagerInuse(id={0}, ver={1})", id, ver);
         pm_inuse = new PersistenceManagerInUse(id, ver);
-        _logger.fine("***IASEjbBundleDescriptor.setPersistenceManagerInUse done -#- ");
     }
 
 
@@ -714,13 +553,10 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
             configured_pms = new Vector<>();
         }
         configured_pms.add(pmDesc);
-        _logger.fine("***IASEjbBundleDescriptor.addPersistenceManager done -#- ");
     }
 
 
     public IASPersistenceManagerDescriptor getPreferredPersistenceManager() {
-        boolean debug = _logger.isLoggable(Level.FINE);
-
         if (configured_pms == null || configured_pms.isEmpty()) {
             // return the default persistence manager descriptor
             return null;
@@ -728,28 +564,12 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
 
         String pminuse_id = pm_inuse.get_pm_identifier().trim();
         String pminuse_ver = pm_inuse.get_pm_version().trim();
-        if (debug) {
-            _logger.fine("IASPersistenceManagerDescriptor.getPreferred - inid*" + pminuse_id.trim() + "*");
-            _logger.fine("IASPersistenceManagerDescriptor.getPreferred - inver*" + pminuse_ver.trim() + "*");
-        }
-
         int size = configured_pms.size();
         for (int i = 0; i < size; i++) {
             IASPersistenceManagerDescriptor pmdesc = configured_pms.elementAt(i);
             String pmdesc_id = pmdesc.getPersistenceManagerIdentifier();
             String pmdesc_ver = pmdesc.getPersistenceManagerVersion();
-
-            if (debug) {
-                _logger.fine("IASPersistenceManagerDescriptor.getPreferred - pmid*" + pmdesc_id.trim() + "*");
-                _logger.fine("IASPersistenceManagerDescriptor.getPreferred - pmver*" + pmdesc_ver.trim() + "*");
-            }
-
-            if (((pmdesc_id.trim()).equals(pminuse_id)) && ((pmdesc_ver.trim()).equals(pminuse_ver))) {
-
-                if (debug) {
-                    _logger.fine("***IASEjbBundleDescriptor.getPreferredPersistenceManager done -#- ");
-                }
-
+            if (pmdesc_id.trim().equals(pminuse_id) && pmdesc_ver.trim().equals(pminuse_ver)) {
                 return pmdesc;
             }
         }
@@ -1080,12 +900,12 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
 
     @Override
     public List<InjectionCapable> getInjectableResourcesByClass(String className) {
-        return (getInjectableResourcesByClass(className, this));
+        return getInjectableResourcesByClass(className, this);
     }
 
     @Override
     public InjectionInfo getInjectionInfoByClass(Class clazz) {
-        return (getInjectionInfoByClass(clazz, this));
+        return getInjectionInfoByClass(clazz, this);
     }
 
     @Override
@@ -1151,10 +971,6 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
         return null;
     }
 
-    //
-    //  end no-op PostConstruct/PreDestroy methods
-    //
-
 
     public String getEnterpriseBeansProperty(String key) {
         for (NameValuePairDescriptor p : enterpriseBeansProperties) {
@@ -1174,11 +990,4 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
     public List<NameValuePairDescriptor> getEnterpriseBeansProperties() {
         return enterpriseBeansProperties;
     }
-
-
-    @Override
-    protected List<InjectionCapable> getInjectableResourcesByClass(String className, JndiNameEnvironment jndiNameEnv) {
-        return super.getInjectableResourcesByClass(className, jndiNameEnv);
-    }
-
 }

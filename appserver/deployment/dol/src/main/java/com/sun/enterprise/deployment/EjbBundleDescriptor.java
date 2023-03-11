@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,37 +22,193 @@ import com.sun.enterprise.deployment.types.MessageDestinationReferenceContainer;
 import com.sun.enterprise.deployment.types.ResourceEnvReferenceContainer;
 import com.sun.enterprise.deployment.types.ResourceReferenceContainer;
 import com.sun.enterprise.deployment.types.ServiceReferenceContainer;
+import com.sun.enterprise.deployment.util.DOLUtils;
 
+import java.lang.System.Logger;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
- * I represent all the configurable deployment information contained in
- * an EJB JAR.
+ * I represent all the configurable deployment information contained in an EJB JAR.
  *
  * @author Danny Coward
+ * @author David Matejcek
  */
-public abstract class EjbBundleDescriptor extends CommonResourceBundleDescriptor
-    implements WritableJndiNameEnvironment, EjbReferenceContainer,
-               ResourceEnvReferenceContainer, ResourceReferenceContainer,
-               ServiceReferenceContainer, MessageDestinationReferenceContainer {
+public abstract class EjbBundleDescriptor<T extends EjbDescriptor>
+    extends CommonResourceBundleDescriptor
+    implements WritableJndiNameEnvironment, EjbReferenceContainer, ResourceEnvReferenceContainer,
+    ResourceReferenceContainer, ServiceReferenceContainer, MessageDestinationReferenceContainer {
 
     private static final long serialVersionUID = 1L;
+    private static final Logger LOG = DOLUtils.getLogger();
 
-    public abstract Set<EjbInterceptor> getInterceptors();
 
-    public abstract EjbInterceptor getInterceptorByClassName(String className);
+    private final Set<T> ejbs = new HashSet<>();
 
-    public abstract EjbDescriptor getEjbByName(String name);
+    /** All interceptor classes defined within this ejb module, keyed by interceptor class name. */
+    private final Map<String, EjbInterceptor> interceptors = new HashMap<>();
 
-    public abstract boolean hasEjbByName(String name);
+    /**
+     * Creates a dummy {@link EjbDescriptor} instance of the given name.
+     *
+     * @param ejbName
+     * @return {@link EjbDescriptor}, never null.
+     */
+    protected abstract T createDummyEjbDescriptor(String ejbName);
 
-    public abstract Set<? extends EjbDescriptor> getEjbs();
 
-    public abstract EjbDescriptor[] getEjbByClassName(String className);
+    @Override
+    public boolean isEmpty() {
+        return ejbs.isEmpty();
+    }
+
+
+    /**
+     * @return unmodifiable set of ejb descriptors.
+     */
+    public Set<T> getEjbs() {
+        return Collections.unmodifiableSet(ejbs);
+    }
+
+
+    /**
+     * @param name name of the {@link EjbDescriptor}
+     * @return an ejb descriptor that I have by the same name, otherwise throws
+     *          an IllegalArgumentException
+     */
+    public T getEjbByName(String name) {
+        return getEjbByName(name, false);
+    }
+
+
+    /**
+     * Returns an ejb descriptor of the given name.
+     *
+     * @param name name of the {@link EjbDescriptor}
+     * @param isCreateDummy
+     * @return {@link EjbDescriptor} found by the name OR a dummy {@link EjbDescriptor}
+     *         if requested.
+     * @throws IllegalArgumentException if isCreateDummy is false and we don't have such EJB
+     */
+    public T getEjbByName(String name, boolean isCreateDummy) {
+        for (T next : getEjbs()) {
+            if (next.getName().equals(name)) {
+                return next;
+            }
+        }
+        if (!isCreateDummy) {
+            throw new IllegalArgumentException("Referencing error: this bundle has no bean of name: " + name);
+        }
+
+        // there could be cases where the annotation defines the ejb component
+        // and the ejb-jar.xml just uses it
+        // we have to create a dummy version of the ejb descriptor in this
+        // case as we process xml before annotations.
+        T dummyEjbDesc = createDummyEjbDescriptor(name);
+        addEjb(dummyEjbDesc);
+        return dummyEjbDesc;
+    }
+
+
+    /**
+     * @param className {@link EjbDescriptor#getEjbClassName()}
+     * @return all ejb descriptors that has a given class name.
+     *         It returns an empty list if no ejb is found.
+     */
+    public List<T> getEjbByClassName(String className) {
+        List<T> ejbList = new ArrayList<>();
+        for (T ejb : getEjbs()) {
+            if (className.equals(ejb.getEjbClassName())) {
+                ejbList.add(ejb);
+            }
+        }
+        return ejbList;
+    }
+
+
+    /**
+     * @param name
+     * @return true if I have an ejb descriptor by that name.
+     */
+    public boolean hasEjbByName(String name) {
+        for (T ejb : getEjbs()) {
+            if (ejb.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public abstract List<T> getEjbBySEIName(String className);
+
+
+    /**
+     * Add the given ejb descriptor to my (uses equals).
+     *
+     * @param ejbDescriptor
+     */
+    public void addEjb(T ejbDescriptor) {
+        ejbDescriptor.setEjbBundleDescriptor(this);
+        ejbs.add(ejbDescriptor);
+    }
+
+
+    /**
+     * Remove the given ejb descriptor from my (uses equals).
+     *
+     * @param ejbDescriptor
+     */
+    public void removeEjb(T ejbDescriptor) {
+        ejbDescriptor.setEjbBundleDescriptor(null);
+        ejbs.remove(ejbDescriptor);
+    }
+
+
+    /**
+     * Adds the interceptor. If there already is another interceptor with the same
+     * {@link EjbInterceptor#getInterceptorClassName()}, the call is ignored.
+     *
+     * @param interceptor
+     */
+    public void addInterceptor(EjbInterceptor interceptor) {
+        EjbInterceptor ic = getInterceptorByClassName(interceptor.getInterceptorClassName());
+        if (ic == null) {
+            interceptor.setEjbBundleDescriptor(this);
+            interceptors.put(interceptor.getInterceptorClassName(), interceptor);
+        }
+    }
+
+    /**
+     * @param className
+     * @return {@link EjbInterceptor} or null
+     */
+    public EjbInterceptor getInterceptorByClassName(String className) {
+        return interceptors.get(className);
+    }
+
+    /**
+     * @return true if this class holds some {@link EjbInterceptor}s
+     */
+    public boolean hasInterceptors() {
+        return !interceptors.isEmpty();
+    }
+
+
+    /**
+     * @return new {@link Set} with all our {@link EjbInterceptor}s
+     */
+    public Set<EjbInterceptor> getInterceptors() {
+        return new HashSet<>(interceptors.values());
+
+    }
 
     public abstract Set<ServiceReferenceDescriptor> getEjbServiceReferenceDescriptors();
 
-    public abstract EjbDescriptor[] getEjbBySEIName(String className);
 
     public abstract Boolean getDisableNonportableJndiNames();
 

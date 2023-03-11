@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,20 +17,20 @@
 
 package org.glassfish.ejb.deployment.annotation.impl;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.EjbInterceptor;
 import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
 import com.sun.enterprise.deployment.EjbSessionDescriptor;
 import com.sun.enterprise.deployment.annotation.impl.ModuleScanner;
-import org.glassfish.apf.impl.AnnotationUtils;
 
-import org.jvnet.hk2.annotations.Service;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+
+import org.glassfish.apf.impl.AnnotationUtils;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Implementation of the Scanner interface for Ejb jar.
@@ -38,11 +39,10 @@ import org.glassfish.hk2.api.PerLookup;
  */
 @Service(name="ejb")
 @PerLookup
-public class EjbJarScanner extends ModuleScanner<EjbBundleDescriptor> {
+public class EjbJarScanner extends ModuleScanner<EjbBundleDescriptor<EjbDescriptor>> {
 
     @Override
-    public void process(File af, EjbBundleDescriptor desc, ClassLoader cl)
-            throws IOException {
+    public void process(File af, EjbBundleDescriptor<EjbDescriptor> desc, ClassLoader cl) throws IOException {
         this.archiveFile = af;
         this.classLoader = cl;
 
@@ -51,17 +51,21 @@ public class EjbJarScanner extends ModuleScanner<EjbBundleDescriptor> {
             AnnotationUtils.getLogger().fine("classLoader is " + classLoader);
         }
 
-        if (!archiveFile.isDirectory()) return ; // in app client jar
+        if (!archiveFile.isDirectory()) {
+            // in app client jar
+            return;
+        }
 
         addScanDirectories();
         addClassesFromDescriptor(desc);
     }
 
+
     protected void addScanDirectories() throws IOException {
         addScanDirectory(archiveFile);
     }
 
-    protected void addClassesFromDescriptor(EjbBundleDescriptor desc) {
+    protected void addClassesFromDescriptor(EjbBundleDescriptor<EjbDescriptor> desc) {
         // always add session beans, message driven beans,
         // interceptor classes that are defined in ejb-jar.xml
         // regardless of they have annotation or not

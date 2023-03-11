@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,6 +21,7 @@ import com.sun.enterprise.deployment.EjbDescriptor;
 
 import java.lang.annotation.ElementType;
 import java.lang.reflect.AnnotatedElement;
+import java.util.List;
 
 import org.glassfish.apf.context.AnnotationContext;
 
@@ -34,10 +35,11 @@ public class EjbsContext extends AnnotationContext implements ComponentContext {
     private final EjbContext[] ejbContexts;
     private final String componentClassName;
 
-    public EjbsContext(EjbDescriptor[] ejbDescs, Class ejbClass) {
-        ejbContexts = new EjbContext[ejbDescs.length];
-        for (int i = 0; i < ejbDescs.length; i++) {
-            ejbContexts[i] = new EjbContext(ejbDescs[i], ejbClass);
+    public EjbsContext(List<? extends EjbDescriptor> ejbDescs, Class<?> ejbClass) {
+        ejbContexts = new EjbContext[ejbDescs.size()];
+        int i = 0;
+        for (EjbDescriptor ejbDescriptor : ejbDescs) {
+            ejbContexts[i++] = new EjbContext(ejbDescriptor, ejbClass);
         }
         this.componentClassName = ejbClass.getName();
     }

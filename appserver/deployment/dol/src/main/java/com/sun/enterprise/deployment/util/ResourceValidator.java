@@ -189,7 +189,7 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
                 for (ManagedBeanDescriptor mbd: bd.getManagedBeans()) {
                     parseResources(mbd, (JndiNameEnvironment) bd, appResources);
                 }
-                EjbBundleDescriptor ebd = (EjbBundleDescriptor) bd;
+                EjbBundleDescriptor<EjbDescriptor> ebd = (EjbBundleDescriptor<EjbDescriptor>) bd;
                 for (EjbDescriptor ejb : ebd.getEjbs()) {
                     parseEJB(ejb, appResources);
                 }

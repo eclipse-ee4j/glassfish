@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -49,7 +49,15 @@ public interface EjbDescriptor extends NamedDescriptor,
      */
     String CONTAINER_TRANSACTION_TYPE = "Container";
 
+    /**
+     * Name of the EJB
+     */
+    @Override
+    String getName();
+
     EjbBundleDescriptor getEjbBundleDescriptor();
+
+    void setEjbBundleDescriptor(EjbBundleDescriptor<?> ejbBundleDescriptor);
 
     boolean isRemoteInterfacesSupported();
 
@@ -95,9 +103,27 @@ public interface EjbDescriptor extends NamedDescriptor,
 
     void setUniqueId(long id);
 
+    /**
+     * @return copy of the role references set.
+     */
+    Set<RoleReference> getRoleReferences();
+
     RoleReference getRoleReferenceByName(String roleReferenceName);
 
+    /**
+     * Removes the given {@link Role} object from me.
+     *
+     * @param role
+     */
+    void removeRole(Role role);
+
     Set<MethodDescriptor> getSecurityBusinessMethodDescriptors();
+
+    /**
+     * @return the Map of {@link MethodPermission} (keys) that have been assigned to
+     *         {@link MethodDescriptor}s (elements)
+     */
+    Map<MethodPermission, Set<MethodDescriptor>> getPermissionedMethodsByPermission();
 
     void addPermissionedMethod(MethodPermission mp, MethodDescriptor md);
 

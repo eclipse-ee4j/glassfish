@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,7 +30,6 @@ import java.security.PrivilegedAction;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
 import java.util.logging.Level;
@@ -197,13 +196,11 @@ public final class PersistenceDescriptor extends Descriptor {
         }
 
         Set<RelationshipDescriptor> relationships = getRelationships();
-        Iterator<RelationshipDescriptor> it = relationships.iterator();
         // set to the biggest possible size when all relationships
         // are self-referencing
         CMRFieldInfo[] cmrFieldInfo2 = new CMRFieldInfo[relationships.size() * 2];
         int count = 0;
-        while (it.hasNext()) {
-            RelationshipDescriptor rd = it.next();
+        for (RelationshipDescriptor rd : relationships) {
             RelationRoleDescriptor source = rd.getSource();
             RelationRoleDescriptor sink = rd.getSink();
             RelationRoleDescriptor[] myroles;
@@ -671,10 +668,9 @@ public final class PersistenceDescriptor extends Descriptor {
         persFieldInfo = new PersistentFieldInfo[cmpFieldCount + fkeyCount];
         // Add CMP fields
         int fcount = 0;
-        Iterator<FieldDescriptor> itr = cmpFields.iterator();
-        while (itr.hasNext()) {
+        for (FieldDescriptor cmpField : cmpFields) {
             persFieldInfo[fcount] = new PersistentFieldInfo();
-            persFieldInfo[fcount].name = itr.next().getName();
+            persFieldInfo[fcount].name = cmpField.getName();
             fcount++;
         }
         // Add foreign key fields

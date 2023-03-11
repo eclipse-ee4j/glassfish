@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -212,7 +212,7 @@ final class RegistrationSupport {
             top = parentMBean;
         }
 
-        for (final EjbBundleDescriptor desc : application.getBundleDescriptors(EjbBundleDescriptor.class))
+        for (final EjbBundleDescriptor<EjbDescriptor> desc : application.getBundleDescriptors(EjbBundleDescriptor.class))
         {
             final ObjectName objectName = registerEjbModuleAndItsComponents(parentMBean, meta, appConfig, desc);
             if (isStandalone)
@@ -264,7 +264,7 @@ final class RegistrationSupport {
             final ObjectName parentMBean,
             final MetadataImpl meta,
             final com.sun.enterprise.config.serverbeans.Application appConfig,
-            final EjbBundleDescriptor ejbBundleDescriptor )
+            final EjbBundleDescriptor<EjbDescriptor> ejbBundleDescriptor )
     {
         final String xmlDesc = getDeploymentDescriptor(ejbBundleDescriptor);
         if ( xmlDesc != null )

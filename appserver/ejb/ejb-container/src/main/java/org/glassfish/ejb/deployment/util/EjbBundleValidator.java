@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,6 +20,7 @@ package org.glassfish.ejb.deployment.util;
 import com.sun.ejb.containers.EJBTimerSchedule;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EjbInterceptor;
 import com.sun.enterprise.deployment.InjectionCapable;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
@@ -44,6 +45,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.ejb.LogFacade;
 import org.glassfish.ejb.deployment.descriptor.DummyEjbDescriptor;
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
@@ -69,11 +71,7 @@ import static com.sun.enterprise.deployment.MethodDescriptor.EJB_BEAN;
  * @author Jerome Dochez
  */
 public class EjbBundleValidator extends ComponentValidator implements EjbBundleVisitor, EjbVisitor {
-
-    protected EjbBundleDescriptorImpl ejbBundleDescriptor;
-    protected EjbDescriptor ejb;
-
-    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(EjbBundleValidator.class);
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(EjbBundleValidator.class);
     private static final Logger LOG  = LogFacade.getLogger();
 
     @LogMessageInfo(
@@ -82,6 +80,10 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
                 "but you have configuration at [{1}].",
         level = "WARNING")
     private static final String REDUNDANT_PASSIVATION_CALLBACK_METADATA = "AS-EJB-00048";
+
+    protected EjbBundleDescriptorImpl ejbBundleDescriptor;
+    protected EjbDescriptor ejb;
+
 
     @Override
     public void accept(BundleDescriptor descriptor) {
@@ -117,11 +119,11 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
     }
 
     @Override
-    public void accept(com.sun.enterprise.deployment.EjbBundleDescriptor bundleDesc) {
+    public void accept(EjbBundleDescriptor bundleDesc) {
         this.application = bundleDesc.getApplication();
         EjbBundleDescriptorImpl bundleDescriptor = (EjbBundleDescriptorImpl) bundleDesc;
         if (bundleDescriptor.getEjbs().isEmpty()) {
-            throw new IllegalArgumentException(localStrings.getLocalString(
+            throw new IllegalArgumentException(I18N.getLocalString(
                 "enterprise.deployment.util.no_ejb_in_ejb_jar",
                 "Invalid ejb jar {0}: it contains zero ejb. A valid ejb jar requires at least one session/entity/message driven bean.",
                 new Object[] {bundleDescriptor.getModuleDescriptor().getArchiveUri()}));
@@ -145,13 +147,13 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
             if (ejb0.isRemoteInterfacesSupported()
                 && (ejb0.getRemoteClassName() == null || ejb0.getRemoteClassName().isBlank())) {
                 throw new IllegalArgumentException(
-                    localStrings.getLocalString("enterprise.deployment.util.componentInterfaceMissing",
+                    I18N.getLocalString("enterprise.deployment.util.componentInterfaceMissing",
                         "{0} Component interface is missing in EJB [{1}]", "Remote", ejb0.getName()));
             }
             if (ejb0.isLocalInterfacesSupported()
                 && (ejb0.getLocalClassName() == null || ejb0.getLocalClassName().isBlank())) {
                 throw new IllegalArgumentException(
-                    localStrings.getLocalString("enterprise.deployment.util.componentInterfaceMissing",
+                    I18N.getLocalString("enterprise.deployment.util.componentInterfaceMissing",
                         "{0} Component interface is missing in EJB [{1}]", "Local", ejb0.getName()));
             }
 
@@ -229,8 +231,7 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
         // if not, this means there is a referencing error in the user
         // application
         if (ejb instanceof DummyEjbDescriptor) {
-            throw new IllegalArgumentException(localStrings.getLocalString("enterprise.deployment.exceptionbeanbundle",
-                "Referencing error: this bundle has no bean of name: {0}", new Object[] {ejb.getName()}));
+            throw new IllegalArgumentException("Referencing error: this bundle has no bean of name: " + ejb.getName());
         }
 
         this.ejb =ejb;
@@ -379,7 +380,7 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
             EjbSessionDescriptor sessionDesc = (EjbSessionDescriptor) ejb;
             Long statefulTimeoutValue = sessionDesc.getStatefulTimeoutValue();
             if (statefulTimeoutValue != null && statefulTimeoutValue < -1) {
-                throw new IllegalArgumentException(localStrings.getLocalString(
+                throw new IllegalArgumentException(I18N.getLocalString(
                     "enterprise.deployment.invalid_stateful_timeout_value",
                     "Invalid value [{0}] for @StatefulTimeout or <stateful-timeout> element in EJB [{1}]."
                     + " Values less than -1 are not valid.",
@@ -448,7 +449,7 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
 
                     boolean fullyQualified = next.contains("#");
 
-                    EjbBundleDescriptorImpl sessionEjbBundleDescriptor = sessionDesc.getEjbBundleDescriptor();
+                    EjbBundleDescriptor sessionEjbBundleDescriptor = sessionDesc.getEjbBundleDescriptor();
                     Application app = sessionEjbBundleDescriptor.getApplication();
 
                     if (fullyQualified) {
@@ -476,7 +477,7 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
 
                     } else {
 
-                        EjbBundleDescriptorImpl bundle = ejb.getEjbBundleDescriptor();
+                        EjbBundleDescriptor bundle = ejb.getEjbBundleDescriptor();
                         if (!bundle.hasEjbByName(next) ) {
                             throw new RuntimeException("Invalid DependsOn dependency '" +
                                next + "' for EJB " + ejb.getName());

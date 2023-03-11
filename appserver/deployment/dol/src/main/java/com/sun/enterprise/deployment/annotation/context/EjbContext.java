@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,7 +23,6 @@ import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.enterprise.deployment.annotation.handlers.PostProcessor;
 import com.sun.enterprise.deployment.types.HandlerChainContainer;
-import com.sun.enterprise.deployment.types.ServiceReferenceContainer;
 import com.sun.enterprise.deployment.util.TypeUtil;
 
 import java.lang.annotation.ElementType;
@@ -119,15 +118,10 @@ public class EjbContext extends ResourceContainerContextImpl {
     }
 
 
-    public ServiceReferenceContainer[] getServiceRefContainers(String implName) {
-        return getDescriptor().getEjbBundleDescriptor().getEjbByClassName(implName);
-    }
-
-
     @Override
     public HandlerChainContainer[] getHandlerChainContainers(boolean serviceSideHandlerChain, Class<?> declaringClass) {
         if (serviceSideHandlerChain) {
-            EjbDescriptor[] ejbs = getDescriptor().getEjbBundleDescriptor().getEjbByClassName(declaringClass.getName());
+            List<EjbDescriptor> ejbs = getDescriptor().getEjbBundleDescriptor().getEjbByClassName(declaringClass.getName());
             List<WebServiceEndpoint> result = new ArrayList<>();
             for (EjbDescriptor ejb : ejbs) {
                 result.addAll(getDescriptor().getEjbBundleDescriptor().getWebServices().getEndpointsImplementedBy(ejb));

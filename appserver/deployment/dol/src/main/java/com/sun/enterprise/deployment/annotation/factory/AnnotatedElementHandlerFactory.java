@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,6 +20,7 @@ package com.sun.enterprise.deployment.annotation.factory;
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.annotation.context.AppClientContext;
 import com.sun.enterprise.deployment.annotation.context.EjbBundleContext;
@@ -42,7 +43,7 @@ public class AnnotatedElementHandlerFactory {
 
     public static AnnotationContext createAnnotatedElementHandler(RootDeploymentDescriptor bundleDesc) {
         if (bundleDesc instanceof EjbBundleDescriptor) {
-            EjbBundleDescriptor ejbBundleDesc = (EjbBundleDescriptor) bundleDesc;
+            EjbBundleDescriptor<EjbDescriptor> ejbBundleDesc = (EjbBundleDescriptor<EjbDescriptor>) bundleDesc;
             return new EjbBundleContext(ejbBundleDesc);
         } else if (bundleDesc instanceof ApplicationClientDescriptor) {
             ApplicationClientDescriptor appClientDesc = (ApplicationClientDescriptor) bundleDesc;

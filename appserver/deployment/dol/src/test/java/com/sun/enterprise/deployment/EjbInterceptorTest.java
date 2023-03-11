@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,10 +25,10 @@ import jakarta.enterprise.inject.spi.Interceptor;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-public class EjbInterceptorTest {
+class EjbInterceptorTest {
 
     @Test
-    public void testGetSetInterceptor() throws Exception {
+    void testGetSetInterceptor() throws Exception {
         EjbInterceptor ejbInterceptor = new EjbInterceptor();
         assertNull(ejbInterceptor.getInterceptor());
 

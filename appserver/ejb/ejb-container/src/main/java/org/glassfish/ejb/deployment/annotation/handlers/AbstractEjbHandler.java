@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,14 @@
 
 package org.glassfish.ejb.deployment.annotation.handlers;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.enterprise.deployment.MethodDescriptor;
+import com.sun.enterprise.deployment.annotation.context.EjbBundleContext;
+import com.sun.enterprise.deployment.annotation.context.EjbContext;
+import com.sun.enterprise.deployment.annotation.context.EjbsContext;
+import com.sun.enterprise.deployment.annotation.handlers.AbstractHandler;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import jakarta.ejb.EJBHome;
 import jakarta.ejb.EJBLocalHome;
 import jakarta.ejb.Local;
@@ -32,12 +34,14 @@ import jakarta.ejb.Remote;
 import jakarta.ejb.RemoteHome;
 import jakarta.ejb.Timeout;
 
-import com.sun.enterprise.deployment.MethodDescriptor;
-import com.sun.enterprise.deployment.annotation.context.EjbBundleContext;
-import com.sun.enterprise.deployment.annotation.context.EjbContext;
-import com.sun.enterprise.deployment.annotation.context.EjbsContext;
-import com.sun.enterprise.deployment.annotation.handlers.AbstractHandler;
-import com.sun.enterprise.util.LocalStringManagerImpl;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+
 import org.glassfish.apf.AnnotatedElementHandler;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
@@ -67,7 +71,7 @@ import org.glassfish.internal.deployment.AnnotationTypesProvider;
  */
 public abstract class AbstractEjbHandler extends AbstractHandler {
 
-    private AnnotationTypesProvider provider = null;
+    private AnnotationTypesProvider provider;
 
     protected final static LocalStringManagerImpl localStrings =
             new LocalStringManagerImpl(AbstractEjbHandler.class);
@@ -85,14 +89,13 @@ public abstract class AbstractEjbHandler extends AbstractHandler {
      */
     protected abstract String getAnnotatedName(Annotation annotation);
 
-    /*
+    /**
      * check if the given EjbDescriptor matches the given Annotation.
      * @param ejbDesc
      * @param annotation
      * @return boolean check for validity of EjbDescriptor
      */
-    protected abstract boolean isValidEjbDescriptor(EjbDescriptor ejbDesc,
-            Annotation annotation);
+    protected abstract boolean isValidEjbDescriptor(EjbDescriptor ejbDesc, Annotation annotation);
 
     /**
      * Create a new EjbDescriptor for a given elementName and AnnotationInfo.
@@ -124,21 +127,21 @@ public abstract class AbstractEjbHandler extends AbstractHandler {
      *
      * @param ainfo the annotation information
      */
+    @Override
     public HandlerProcessingResult processAnnotation(AnnotationInfo ainfo)
             throws AnnotationProcessorException {
 
 
 
-        Class ejbClass = (Class) ainfo.getAnnotatedElement();
+        Class<?> ejbClass = (Class<?>) ainfo.getAnnotatedElement();
         Annotation annotation = ainfo.getAnnotation();
         if (logger.isLoggable(Level.FINER)) {
             logger.finer("@ process ejb annotation " +
                 annotation + " in " + ejbClass);
         }
-        AnnotatedElementHandler aeHandler =
-                ainfo.getProcessingContext().getHandler();
+        AnnotatedElementHandler aeHandler = ainfo.getProcessingContext().getHandler();
         if (aeHandler != null && aeHandler instanceof EjbContext) {
-            EjbContext context = (EjbContext)aeHandler;
+            EjbContext context = (EjbContext) aeHandler;
             EjbDescriptor desc = (EjbDescriptor) context.getDescriptor();
             if (isValidEjbDescriptor(desc, annotation)) {
                 return getDefaultProcessedResult();
@@ -155,18 +158,16 @@ public abstract class AbstractEjbHandler extends AbstractHandler {
                 ainfo.getProcessingContext().getHandler(), ainfo);
         }
 
-        EjbBundleContext ctx = (EjbBundleContext)aeHandler;
+        EjbBundleContext ctx = (EjbBundleContext) aeHandler;
 
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine("My context is " + ctx);
-        }
+        logger.log(Level.FINE, "My context is {0}", ctx);
 
         String elementName = getAnnotatedName(annotation);
-        if (elementName.length() == 0) {
+        if (elementName.isEmpty()) {
             elementName = ejbClass.getSimpleName();
         }
 
-        EjbBundleDescriptorImpl currentBundle = (EjbBundleDescriptorImpl) ctx.getDescriptor();
+        EjbBundleDescriptorImpl currentBundle = ctx.getDescriptor();
         EjbDescriptor ejbDesc = null;
         try {
             ejbDesc = currentBundle.getEjbByName(elementName);
@@ -188,7 +189,7 @@ public abstract class AbstractEjbHandler extends AbstractHandler {
                     localStrings.getLocalString(
                     "enterprise.deployment.annotation.handlers.wrongejbtype",
                     "Wrong annotation symbol for ejb {0}",
-                    new Object[] { ejbDesc }));
+                     ejbDesc ));
                 return getDefaultFailedResult();
             }
 
@@ -197,7 +198,7 @@ public abstract class AbstractEjbHandler extends AbstractHandler {
             // must match the class on which the component defining annotation
             // appears.
             String descriptorEjbClass = ejbDesc.getEjbClassName();
-            if( descriptorEjbClass == null ) {
+            if (descriptorEjbClass == null) {
                 ejbDesc.setEjbClassName(ejbClass.getName());
                 ejbDesc.applyDefaultClassToLifecycleMethods();
             } else if( !descriptorEjbClass.equals(ejbClass.getName()) ) {
@@ -205,8 +206,7 @@ public abstract class AbstractEjbHandler extends AbstractHandler {
                     localStrings.getLocalString(
                     "enterprise.deployment.annotation.handlers.ejbclsmismatch",
                     "",
-                    new Object[] { descriptorEjbClass, elementName,
-                                   ejbClass.getName() }));
+                    new Object[] { descriptorEjbClass, elementName, ejbClass.getName() }));
                 return getDefaultFailedResult();
             }
 
@@ -244,21 +244,19 @@ public abstract class AbstractEjbHandler extends AbstractHandler {
         // annotation and there are other ejb-jar.xml-defined beans with the same bean class.
 
 
-        EjbDescriptor[] ejbDescs = currentBundle.getEjbByClassName(ejbClass.getName());
+        List<EjbDescriptor> ejbDescs = currentBundle.getEjbByClassName(ejbClass.getName());
         HandlerProcessingResult procResult = null;
-        for(EjbDescriptor next : ejbDescs) {
+        for (EjbDescriptor next : ejbDescs) {
             procResult = setEjbDescriptorInfo(next, ainfo);
             doTimedObjectProcessing(ejbClass, next);
         }
 
-        AnnotationContext annContext = null;
-        if( ejbDescs.length == 1 ) {
+        final AnnotationContext annContext;
+        if (ejbDescs.size() == 1) {
             annContext = new EjbContext(ejbDesc, ejbClass);
         } else {
-
             annContext = new EjbsContext(ejbDescs, ejbClass);
         }
-
 
         // we push the new context on the stack...
         ctx.getProcessingContext().pushHandler(annContext);
@@ -323,10 +321,10 @@ public abstract class AbstractEjbHandler extends AbstractHandler {
             EjbDescriptor ejbDesc, AnnotationInfo ainfo)
             throws AnnotationProcessorException {
 
-        Set<Class>  localBusIntfs  = new HashSet<Class>();
-        Set<Class>  remoteBusIntfs  = new HashSet<Class>();
+        Set<Class>  localBusIntfs  = new HashSet<>();
+        Set<Class>  remoteBusIntfs  = new HashSet<>();
 
-        Set<Class> clientInterfaces = new HashSet<Class>();
+        Set<Class> clientInterfaces = new HashSet<>();
 
         Class ejbClass = (Class)ainfo.getAnnotatedElement();
 
@@ -372,8 +370,8 @@ public abstract class AbstractEjbHandler extends AbstractHandler {
             }
         }
 
-        List<Class> imlementingInterfaces = new ArrayList<Class>();
-        List<Class> implementedDesignatedInterfaces = new ArrayList<Class>();
+        List<Class> imlementingInterfaces = new ArrayList<>();
+        List<Class> implementedDesignatedInterfaces = new ArrayList<>();
         for(Class next : ejbClass.getInterfaces()) {
             if( !excludedFromImplementsClause(next) ) {
                 if( next.getAnnotation(Local.class) != null || next.getAnnotation(Remote.class) != null ) {

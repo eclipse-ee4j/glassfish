@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,7 +22,6 @@ import java.io.FileFilter;
 import java.io.IOException;
 
 import org.glassfish.hk2.api.PerLookup;
-
 import org.jvnet.hk2.annotations.Service;
 
 @Service
@@ -40,13 +40,8 @@ public class EjbInWarScanner extends EjbJarScanner {
         // add WEB-INF/lib
         File lib = new File(webinf, "lib");
         if (lib.exists()) {
-            File[] jarFiles = lib.listFiles(new FileFilter() {
-                 @Override
-                public boolean accept(File pathname) {
-                     return (pathname.getAbsolutePath().endsWith(".jar"));
-                 }
-            });
-
+            FileFilter filter = pathname -> (pathname.getAbsolutePath().endsWith(".jar"));
+            File[] jarFiles = lib.listFiles(filter);
             if (jarFiles != null && jarFiles.length > 0) {
                 for (File jarFile : jarFiles) {
                     // support exploded jar file

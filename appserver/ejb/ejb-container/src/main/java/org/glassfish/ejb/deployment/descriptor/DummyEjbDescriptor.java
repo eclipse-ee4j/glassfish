@@ -22,13 +22,12 @@ import com.sun.enterprise.deployment.util.DOLUtils;
 
 /**
  * A dummy implementation of the EjbDescriptor
- *
  */
+public class DummyEjbDescriptor extends EjbDescriptor {
 
-public class DummyEjbDescriptor extends EjbDescriptor
-{
     public DummyEjbDescriptor() {
     }
+
 
     @Override
     public void setTransactionType(String transactionType) {

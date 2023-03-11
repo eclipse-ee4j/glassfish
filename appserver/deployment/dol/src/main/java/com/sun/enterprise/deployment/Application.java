@@ -576,7 +576,7 @@ public class Application extends CommonResourceBundleDescriptor
 
     @Override
     public List<InjectionCapable> getInjectableResourcesByClass(String className) {
-        return (getInjectableResourcesByClass(className, this));
+        return getInjectableResourcesByClass(className, this);
     }
 
     @Override
@@ -588,8 +588,6 @@ public class Application extends CommonResourceBundleDescriptor
         generatedXMLDir = xmlDir;
     }
 
-   /**
-     */
     public String getGeneratedXMLDirectory() {
         return generatedXMLDir;
     }

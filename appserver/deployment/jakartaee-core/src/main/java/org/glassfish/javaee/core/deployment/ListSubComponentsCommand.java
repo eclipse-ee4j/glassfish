@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,15 +17,6 @@
 
 package org.glassfish.javaee.core.deployment;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import jakarta.inject.Inject;
-
 import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.Applications;
 import com.sun.enterprise.config.serverbeans.Module;
@@ -35,6 +27,17 @@ import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.WebComponentDescriptor;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
@@ -51,12 +54,11 @@ import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.deployment.common.ModuleDescriptor;
 import org.glassfish.deployment.versioning.VersioningSyntaxException;
 import org.glassfish.deployment.versioning.VersioningUtils;
+import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
 import org.glassfish.internal.deployment.Deployment;
-
 import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
 
 /**
  * list-sub-components command
@@ -106,6 +108,7 @@ public class ListSubComponentsCommand implements AdminCommand {
 
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListSubComponentsCommand.class);
 
+    @Override
     public void execute(AdminCommandContext context) {
 
         final ActionReport report = context.getActionReport();
@@ -157,7 +160,7 @@ public class ListSubComponentsCommand implements AdminCommand {
         }
 
         Map<String, String> subComponents ;
-        Map<String, String> subComponentsMap = new HashMap<String, String>();
+        Map<String, String> subComponentsMap = new HashMap<>();
 
         if (appname == null) {
             subComponents = getAppLevelComponents(app, type, subComponentsMap);
@@ -181,7 +184,7 @@ public class ListSubComponentsCommand implements AdminCommand {
             }
         }
 
-        List<String> subModuleInfos = new ArrayList<String>();
+        List<String> subModuleInfos = new ArrayList<>();
         if (!app.isVirtual()) {
             subModuleInfos = getSubModulesForEar(app, type);
         }
@@ -209,9 +212,7 @@ public class ListSubComponentsCommand implements AdminCommand {
             part.setMessage(localStrings.getLocalString("listsubcomponents.no.elements.to.list", "Nothing to List."));
         }
         int i=0;
-        Iterator<Map.Entry<String, String>> entries = subComponents.entrySet().iterator();
-        while (entries.hasNext()) {
-            Map.Entry<String, String> subComponent = entries.next();
+        for (Entry<String, String> subComponent : subComponents.entrySet()) {
             ActionReport.MessagePart childPart = part.addChild();
             childPart.setMessage(
                     String.format(formattedLine,
@@ -244,10 +245,7 @@ public class ListSubComponentsCommand implements AdminCommand {
             i++;
         }
 
-        // add the properties for GUI to display
-        Iterator<Map.Entry<String, String>> entryIterator = subComponentsMap.entrySet().iterator();
-        while (entryIterator.hasNext()) {
-            Map.Entry<String, String> subComponentMap = entryIterator.next();
+        for (Entry<String, String> subComponentMap : subComponentsMap.entrySet()) {
             part.addProperty(subComponentMap.getKey(), subComponentMap.getValue());
         }
         // now this is the normal output for the list-sub-components command
@@ -256,7 +254,7 @@ public class ListSubComponentsCommand implements AdminCommand {
 
     // list sub components for ear
     private List<String> getSubModulesForEar(com.sun.enterprise.deployment.Application application, String type) {
-        List<String> moduleInfoList = new ArrayList<String>();
+        List<String> moduleInfoList = new ArrayList<>();
         Collection<ModuleDescriptor<BundleDescriptor>> modules =
             getSubModuleListForEar(application, type);
         for (ModuleDescriptor moduleDesc : modules) {
@@ -271,7 +269,7 @@ public class ListSubComponentsCommand implements AdminCommand {
     }
 
     private Map<String, String> getAppLevelComponents(com.sun.enterprise.deployment.Application application, String type, Map<String, String> subComponentsMap) {
-        Map<String, String> subComponentList = new LinkedHashMap<String, String>();
+        Map<String, String> subComponentList = new LinkedHashMap<>();
         if (application.isVirtual()) {
             // for standalone module, get servlets or ejbs
             BundleDescriptor bundleDescriptor =
@@ -299,7 +297,7 @@ public class ListSubComponentsCommand implements AdminCommand {
 
     private Collection<ModuleDescriptor<BundleDescriptor>> getSubModuleListForEar(com.sun.enterprise.deployment.Application application, String type) {
         Collection<ModuleDescriptor<BundleDescriptor>> modules =
-            new ArrayList<ModuleDescriptor<BundleDescriptor>>();
+            new ArrayList<>();
         if (type == null) {
             modules = application.getModules();
         } else if (type.equals("servlets")) {
@@ -323,7 +321,7 @@ public class ListSubComponentsCommand implements AdminCommand {
 
     private Map<String, String> getModuleLevelComponents(BundleDescriptor bundle,
         String type, Map<String, String> subComponentsMap) {
-        Map<String, String> moduleSubComponentMap = new LinkedHashMap<String, String>();
+        Map<String, String> moduleSubComponentMap = new LinkedHashMap<>();
         if (bundle instanceof WebBundleDescriptor) {
             WebBundleDescriptor wbd = (WebBundleDescriptor)bundle;
             // look at ejb in war case
@@ -354,7 +352,7 @@ public class ListSubComponentsCommand implements AdminCommand {
             if (type != null && type.equals("servlets")) {
                 return moduleSubComponentMap;
             }
-            EjbBundleDescriptor ebd = (EjbBundleDescriptor)bundle;
+            EjbBundleDescriptor<EjbDescriptor> ebd = (EjbBundleDescriptor<EjbDescriptor>) bundle;
             for (EjbDescriptor ejbDesc : ebd.getEjbs()) {
                 StringBuffer sb = new StringBuffer();
                 String ejbName = ejbDesc.getName();

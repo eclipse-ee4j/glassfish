@@ -20,6 +20,7 @@ package org.glassfish.ejb.deployment.descriptor;
 import com.sun.enterprise.container.common.spi.CDIService;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.CommonResourceDescriptor;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EjbIORConfigurationDescriptor;
 import com.sun.enterprise.deployment.EjbInterceptor;
 import com.sun.enterprise.deployment.EjbReferenceDescriptor;
@@ -90,7 +91,8 @@ import static com.sun.enterprise.deployment.MethodDescriptor.EJB_BEAN;
  * @author Danny Coward
  * @author Sanjeev Krishnan
  */
-public abstract class EjbDescriptor extends CommonResourceDescriptor implements com.sun.enterprise.deployment.EjbDescriptor {
+public abstract class EjbDescriptor extends CommonResourceDescriptor
+    implements com.sun.enterprise.deployment.EjbDescriptor {
 
     // Used in <transaction-scope> element in XML
     public static final String LOCAL_TRANSACTION_SCOPE = "Local";
@@ -1330,9 +1332,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
         return allPermissionedRoles;
     }
 
-    /**
-     * @return the Map of MethodPermission (keys) that have been assigned to MethodDescriptors (elements)
-     */
+    @Override
     public Map<MethodPermission, Set<MethodDescriptor>> getPermissionedMethodsByPermission() {
         if (permissionedMethodsByPermission == null) {
             permissionedMethodsByPermission = new Hashtable<>();
@@ -2215,7 +2215,8 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
                 "This bean {0} has no ejb reference by the name of {1}", new Object[] {getName(), name}));
     }
 
-    void removeRole(Role role) {
+    @Override
+    public void removeRole(Role role) {
         getPermissionedMethodsByPermission().remove(new MethodPermission(role));
         Set<RoleReference> refs = new HashSet<>(this.getRoleReferences());
         for (RoleReference roleReference : refs) {
@@ -2225,9 +2226,8 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
         }
     }
 
-    /**
-     * Return a copy of the role references set.
-     */
+
+    @Override
     public Set<RoleReference> getRoleReferences() {
         if (roleReferences == null) {
             roleReferences = new HashSet<>();
@@ -2271,8 +2271,11 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
         return bundleDescriptor;
     }
 
-    public void setEjbBundleDescriptor(EjbBundleDescriptorImpl bundleDescriptor) {
-        this.bundleDescriptor = bundleDescriptor;
+
+    @Override
+    public void setEjbBundleDescriptor(EjbBundleDescriptor<?> bundleDescriptor) {
+        // We accept just this type.
+        this.bundleDescriptor = (EjbBundleDescriptorImpl) bundleDescriptor;
     }
 
     /**

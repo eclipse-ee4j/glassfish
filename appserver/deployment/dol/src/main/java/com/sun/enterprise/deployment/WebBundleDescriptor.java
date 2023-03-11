@@ -1330,7 +1330,7 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
 
     @Override
-    protected List<InjectionCapable> getInjectableResourcesByClass(String className, JndiNameEnvironment jndiNameEnv) {
+    public List<InjectionCapable> getInjectableResourcesByClass(String className, JndiNameEnvironment jndiNameEnv) {
         List<InjectionCapable> injectables = new LinkedList<>();
         for (InjectionCapable next : getInjectableResources(jndiNameEnv)) {
             if (!next.isInjectable()) {

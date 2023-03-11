@@ -525,7 +525,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
      * Define implementation of getInjectableResourceByClass here so it
      * isn't replicated across appclient, web, ejb descriptors.
      */
-    protected List<InjectionCapable> getInjectableResourcesByClass(String className, JndiNameEnvironment jndiNameEnv) {
+    public List<InjectionCapable> getInjectableResourcesByClass(String className, JndiNameEnvironment jndiNameEnv) {
         List<InjectionCapable> injectables = new LinkedList<>();
 
         for (InjectionCapable next : getInjectableResources(jndiNameEnv)) {

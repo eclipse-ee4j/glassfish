@@ -78,7 +78,7 @@ public class EmptyVisitor extends MethodVisitor {
     }
 
     @Override
-    public void visitMethodInsn(int i, String s, String s1, String s2) {
+    public void visitMethodInsn(int i, String s, String s1, String s2, boolean isInterface) {
     }
 
     @Override

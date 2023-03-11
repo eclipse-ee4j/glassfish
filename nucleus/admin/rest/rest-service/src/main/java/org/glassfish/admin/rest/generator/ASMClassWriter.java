@@ -82,7 +82,7 @@ public class ASMClassWriter implements ClassWriter {
         MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
         mv.visitCode();
         mv.visitVarInsn(ALOAD, 0);
-        mv.visitMethodInsn(INVOKESPECIAL, baseClassName, "<init>", "()V");
+        mv.visitMethodInsn(INVOKESPECIAL, baseClassName, "<init>", "()V", false);
         mv.visitInsn(RETURN);
         mv.visitMaxs(1, 1);
         mv.visitEnd();
@@ -106,13 +106,13 @@ public class ASMClassWriter implements ClassWriter {
         mv.visitVarInsn(ALOAD, 0);
         mv.visitFieldInsn(GETFIELD, baseClassName, INJECTOR_FIELD, FORNAME_INJECTOR_TYPE);
         mv.visitLdcInsn(Type.getType("L" + completeName + ";"));
-        mv.visitMethodInsn(INVOKEINTERFACE, INTERFACE_INJECTOR_TYPE, CREATE_AND_INITIALIZE, CREATE_AND_INITIALIZE_SIG);
+        mv.visitMethodInsn(INVOKEINTERFACE, INTERFACE_INJECTOR_TYPE, CREATE_AND_INITIALIZE, CREATE_AND_INITIALIZE_SIG, true);
         mv.visitTypeInsn(CHECKCAST, completeName);
         mv.visitVarInsn(ASTORE, 1);
         mv.visitVarInsn(ALOAD, 1);
         mv.visitVarInsn(ALOAD, 0);
-        mv.visitMethodInsn(INVOKEVIRTUAL, baseClassName, "getEntity", "()Lorg/jvnet/hk2/config/Dom;");
-        mv.visitMethodInsn(INVOKEVIRTUAL, completeName, "setEntity", "(Lorg/jvnet/hk2/config/Dom;)V");
+        mv.visitMethodInsn(INVOKEVIRTUAL, baseClassName, "getEntity", "()Lorg/jvnet/hk2/config/Dom;", false);
+        mv.visitMethodInsn(INVOKEVIRTUAL, completeName, "setEntity", "(Lorg/jvnet/hk2/config/Dom;)V", false);
         mv.visitVarInsn(ALOAD, 1);
         mv.visitInsn(ARETURN);
         mv.visitMaxs(2, 2);
@@ -214,7 +214,7 @@ public class ASMClassWriter implements ClassWriter {
         mv.visitVarInsn(ALOAD, 0);
         mv.visitFieldInsn(GETFIELD, generatedPath + className, INJECTOR_FIELD, FORNAME_INJECTOR_TYPE);
         mv.visitLdcInsn(Type.getType("L" + generatedPath + commandResourceClassName + ";"));
-        mv.visitMethodInsn(INVOKEINTERFACE, INTERFACE_INJECTOR_TYPE, CREATE_AND_INITIALIZE, CREATE_AND_INITIALIZE_SIG);
+        mv.visitMethodInsn(INVOKEINTERFACE, INTERFACE_INJECTOR_TYPE, CREATE_AND_INITIALIZE, CREATE_AND_INITIALIZE_SIG, true);
         mv.visitTypeInsn(CHECKCAST, generatedPath + commandResourceClassName);
         mv.visitVarInsn(ASTORE, 1);
         mv.visitVarInsn(ALOAD, 1);
@@ -262,9 +262,9 @@ public class ASMClassWriter implements ClassWriter {
         if (!isget) {
 
             mv.visitMethodInsn(INVOKESPECIAL, baseClassName, "<init>",
-                    "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)V");
+                    "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)V", false);
         } else {
-            mv.visitMethodInsn(INVOKESPECIAL, baseClassName, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)V");
+            mv.visitMethodInsn(INVOKESPECIAL, baseClassName, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)V", false);
 
         }
         mv.visitInsn(RETURN);
@@ -284,14 +284,14 @@ public class ASMClassWriter implements ClassWriter {
             mv.visitCode();
             mv.visitTypeInsn(NEW, "java/util/HashMap");
             mv.visitInsn(DUP);
-            mv.visitMethodInsn(INVOKESPECIAL, "java/util/HashMap", "<init>", "()V");
+            mv.visitMethodInsn(INVOKESPECIAL, "java/util/HashMap", "<init>", "()V", false);
             mv.visitVarInsn(ASTORE, 1);
 
             for (CommandResourceMetaData.ParameterMetaData commandParam : commandParams) {
                 mv.visitVarInsn(ALOAD, 1);
                 mv.visitLdcInsn(commandParam.name);
                 mv.visitLdcInsn(commandParam.value);
-                mv.visitMethodInsn(INVOKEVIRTUAL, "java/util/HashMap", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
+                mv.visitMethodInsn(INVOKEVIRTUAL, "java/util/HashMap", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", false);
                 mv.visitInsn(POP);
             }
 
@@ -363,14 +363,14 @@ public class ASMClassWriter implements ClassWriter {
         mv.visitVarInsn(ALOAD, 0);
         mv.visitFieldInsn(GETFIELD, generatedPath + className, INJECTOR_FIELD, FORNAME_INJECTOR_TYPE);
         mv.visitLdcInsn(Type.getType("L" + childClass + ";"));
-        mv.visitMethodInsn(INVOKEINTERFACE, INTERFACE_INJECTOR_TYPE, CREATE_AND_INITIALIZE, CREATE_AND_INITIALIZE_SIG);
+        mv.visitMethodInsn(INVOKEINTERFACE, INTERFACE_INJECTOR_TYPE, CREATE_AND_INITIALIZE, CREATE_AND_INITIALIZE_SIG, true);
         mv.visitTypeInsn(CHECKCAST, childClass);
         mv.visitVarInsn(ASTORE, 1);
         mv.visitVarInsn(ALOAD, 1);
         mv.visitVarInsn(ALOAD, 0);
-        mv.visitMethodInsn(INVOKEVIRTUAL, generatedPath + className, "getEntity", "()Lorg/jvnet/hk2/config/Dom;");
+        mv.visitMethodInsn(INVOKEVIRTUAL, generatedPath + className, "getEntity", "()Lorg/jvnet/hk2/config/Dom;", false);
         mv.visitLdcInsn(path);
-        mv.visitMethodInsn(INVOKEVIRTUAL, childClass, "setParentAndTagName", "(Lorg/jvnet/hk2/config/Dom;Ljava/lang/String;)V");
+        mv.visitMethodInsn(INVOKEVIRTUAL, childClass, "setParentAndTagName", "(Lorg/jvnet/hk2/config/Dom;Ljava/lang/String;)V", false);
         mv.visitVarInsn(ALOAD, 1);
         mv.visitInsn(ARETURN);
         mv.visitMaxs(3, 2);
@@ -395,7 +395,7 @@ public class ASMClassWriter implements ClassWriter {
         mv.visitVarInsn(ALOAD, 0);
         mv.visitFieldInsn(GETFIELD, generatedPath + "List" + childResourceClassName, INJECTOR_FIELD, FORNAME_INJECTOR_TYPE);
         mv.visitLdcInsn(Type.getType("L" + generatedPath + childResourceClassName + ";"));
-        mv.visitMethodInsn(INVOKEINTERFACE, INTERFACE_INJECTOR_TYPE, CREATE_AND_INITIALIZE, CREATE_AND_INITIALIZE_SIG);
+        mv.visitMethodInsn(INVOKEINTERFACE, INTERFACE_INJECTOR_TYPE, CREATE_AND_INITIALIZE, CREATE_AND_INITIALIZE_SIG, true);
         mv.visitTypeInsn(CHECKCAST, generatedPath + childResourceClassName);
         mv.visitVarInsn(ASTORE, 2);
         mv.visitVarInsn(ALOAD, 2);
@@ -405,7 +405,7 @@ public class ASMClassWriter implements ClassWriter {
         mv.visitVarInsn(ALOAD, 0);
         mv.visitFieldInsn(GETFIELD, generatedPath + "List" + childResourceClassName, "tagName", "Ljava/lang/String;");
         mv.visitMethodInsn(INVOKEVIRTUAL, generatedPath + childResourceClassName, "setBeanByKey",
-                "(Ljava/util/List;Ljava/lang/String;Ljava/lang/String;)V");
+                "(Ljava/util/List;Ljava/lang/String;Ljava/lang/String;)V", false);
         mv.visitVarInsn(ALOAD, 2);
         mv.visitInsn(ARETURN);
         mv.visitMaxs(4, 3);

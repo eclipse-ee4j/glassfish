@@ -167,7 +167,7 @@ public class ProviderSubClassImplGenerator {
                 MethodVisitor mv = super.visitMethod(access, name, desc, signature, strings);
                 mv.visitCode();
                 mv.visitVarInsn(Opcodes.ALOAD, 0);
-                mv.visitMethodInsn(Opcodes.INVOKESPECIAL, superClassName, "<init>", desc);
+                mv.visitMethodInsn(Opcodes.INVOKESPECIAL, superClassName, "<init>", desc, false);
                 mv.visitInsn(Opcodes.RETURN);
                 mv.visitMaxs(1, 1);
                 mv.visitEnd();

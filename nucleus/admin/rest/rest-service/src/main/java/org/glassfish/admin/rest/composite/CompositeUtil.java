@@ -744,7 +744,7 @@ public class CompositeUtil {
         MethodVisitor method = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
         method.visitCode();
         method.visitVarInsn(ALOAD, 0);
-        method.visitMethodInsn(INVOKESPECIAL, "org/glassfish/admin/rest/composite/RestModelImpl", "<init>", "()V");
+        method.visitMethodInsn(INVOKESPECIAL, "org/glassfish/admin/rest/composite/RestModelImpl", "<init>", "()V", false);
 
         for (Map.Entry<String, Map<String, Object>> property : properties.entrySet()) {
             String fieldName = property.getKey();
@@ -808,7 +808,7 @@ public class CompositeUtil {
                 method.visitTypeInsn(NEW, internalName);
                 method.visitInsn(DUP);
                 method.visitLdcInsn(defaultValue);
-                method.visitMethodInsn(INVOKESPECIAL, internalName, "<init>", "(Ljava/lang/String;)V");
+                method.visitMethodInsn(INVOKESPECIAL, internalName, "<init>", "(Ljava/lang/String;)V", false);
                 method.visitFieldInsn(PUTFIELD, getInternalName(className), fieldName, type);
             } else {
                 method.visitVarInsn(ALOAD, 0);
@@ -873,7 +873,7 @@ public class CompositeUtil {
         setter.visitFieldInsn(PUTFIELD, className, getPropertyName(name), internalType);
         setter.visitVarInsn(ALOAD, 0);
         setter.visitLdcInsn(name);
-        setter.visitMethodInsn(INVOKEVIRTUAL, className, "fieldSet", "(Ljava/lang/String;)V");
+        setter.visitMethodInsn(INVOKEVIRTUAL, className, "fieldSet", "(Ljava/lang/String;)V", false);
         setter.visitInsn(RETURN);
         setter.visitMaxs(0, 0);
         setter.visitEnd();

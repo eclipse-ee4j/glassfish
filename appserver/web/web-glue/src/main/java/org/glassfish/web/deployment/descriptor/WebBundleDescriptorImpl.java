@@ -42,7 +42,6 @@ import com.sun.enterprise.deployment.WebServicesDescriptor;
 import com.sun.enterprise.deployment.runtime.web.SunWebApp;
 import com.sun.enterprise.deployment.util.ComponentPostVisitor;
 import com.sun.enterprise.deployment.util.ComponentVisitor;
-import com.sun.enterprise.deployment.web.ContextParameter;
 import com.sun.enterprise.deployment.web.MimeMapping;
 import com.sun.enterprise.deployment.web.SecurityConstraint;
 import com.sun.enterprise.deployment.web.ServletFilter;
@@ -109,19 +108,6 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
     }
 
 
-    public void setLoginConfiguration(LoginConfigurationImpl loginConfiguration) {
-        super.setLoginConfiguration(loginConfiguration);
-    }
-
-
-    /**
-     * DeploymentDescriptorNode.addNodeDescriptor(node) need this.
-     */
-    public void setSessionConfig(SessionConfigDescriptor sessionConfigDesc) {
-        super.setSessionConfig(sessionConfigDesc);
-    }
-
-
     /**
      * @return {@link SunWebApp}, never null.
      */
@@ -143,37 +129,6 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
     @Override
     public DescriptorVisitor getTracerVisitor() {
         return new WebBundleTracerVisitor();
-    }
-
-
-    public void addAppListenerDescriptor(AppListenerDescriptorImpl ref) {
-        super.addAppListenerDescriptor(ref);
-    }
-
-
-    public void addContextParameter(EnvironmentProperty contextParameter) {
-        super.addContextParameter(contextParameter);
-    }
-
-
-    public void addServletFilter(ServletFilterDescriptor ref) {
-        super.addServletFilter(ref);
-    }
-
-
-    /**
-     * Adds a servlet filter mapping to this web component.
-     */
-    public void addServletFilterMapping(ServletFilterMappingDescriptor ref) {
-        super.addServletFilterMapping(ref);
-    }
-
-
-    /**
-     * Add a new security constraint.
-     */
-    public void addSecurityConstraint(SecurityConstraintImpl securityConstraint) {
-        super.addSecurityConstraint(securityConstraint);
     }
 
 

@@ -40,6 +40,8 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 
+import static org.objectweb.asm.Opcodes.V11;
+
 public class ProviderImplGenerator {
     private static final Logger logger = FlashlightLoggerInfo.getLogger();
 
@@ -74,7 +76,7 @@ public class ProviderImplGenerator {
 
         int access = Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL;
         String[] interfaces = new String[]{providerClazz.getName().replace('.', '/')};
-        cw.visit(Opcodes.V1_5, access, generatedClassName, null, "java/lang/Object", interfaces);
+        cw.visit(V11, access, generatedClassName, null, "java/lang/Object", interfaces);
 
 
         for (FlashlightProbe probe : provider.getProbes()) {

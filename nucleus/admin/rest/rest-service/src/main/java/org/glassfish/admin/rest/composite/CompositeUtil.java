@@ -724,7 +724,7 @@ public class CompositeUtil {
             ifaceNames[i++] = iface.getName().replace(".", "/");
         }
         className = getInternalName(className);
-        classWriter.visit(V1_6, ACC_PUBLIC + ACC_SUPER, className, null, "org/glassfish/admin/rest/composite/RestModelImpl", ifaceNames);
+        classWriter.visit(V11, ACC_PUBLIC + ACC_SUPER, className, null, "org/glassfish/admin/rest/composite/RestModelImpl", ifaceNames);
 
         // Add @XmlRootElement
         classWriter.visitAnnotation("Ljakarta/xml/bind/annotation/XmlRootElement;", true).visitEnd();

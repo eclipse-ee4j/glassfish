@@ -70,7 +70,7 @@ public class ASMClassWriter implements ClassWriter {
         } else {
             baseClassName = "org/glassfish/admin/rest/resources/" + baseClassName;
         }
-        cw.visit(V1_5, ACC_PUBLIC + ACC_SUPER, generatedPath + className, null, baseClassName, null);
+        cw.visit(V11, ACC_PUBLIC + ACC_SUPER, generatedPath + className, null, baseClassName, null);
 
         if (resourcePath != null) {
             RestLogging.restLogger.log(Level.FINE, "Creating resource with path {0} (1)", resourcePath);
@@ -240,7 +240,7 @@ public class ASMClassWriter implements ClassWriter {
         }
         boolean isget = (httpMethod.equals("GET"));
 
-        cw.visit(V1_5, ACC_PUBLIC + ACC_SUPER, generatedPath + commandResourceClassName, null, baseClassName, null);
+        cw.visit(V11, ACC_PUBLIC + ACC_SUPER, generatedPath + commandResourceClassName, null, baseClassName, null);
         //     cw.visitInnerClass(generatedPath + commandResourceClassName +"$1", null, null, 0);
         MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
         mv.visitCode();

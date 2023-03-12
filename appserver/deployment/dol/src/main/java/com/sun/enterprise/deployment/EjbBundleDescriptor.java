@@ -39,8 +39,7 @@ import java.util.Set;
  * @author Danny Coward
  * @author David Matejcek
  */
-public abstract class EjbBundleDescriptor<T extends EjbDescriptor>
-    extends CommonResourceBundleDescriptor
+public abstract class EjbBundleDescriptor extends CommonResourceBundleDescriptor
     implements WritableJndiNameEnvironment, EjbReferenceContainer, ResourceEnvReferenceContainer,
     ResourceReferenceContainer, ServiceReferenceContainer, MessageDestinationReferenceContainer {
 
@@ -48,7 +47,7 @@ public abstract class EjbBundleDescriptor<T extends EjbDescriptor>
     private static final Logger LOG = DOLUtils.getLogger();
 
 
-    private final Set<T> ejbs = new HashSet<>();
+    private final Set<EjbDescriptor> ejbs = new HashSet<>();
 
     /** All interceptor classes defined within this ejb module, keyed by interceptor class name. */
     private final Map<String, EjbInterceptor> interceptors = new HashMap<>();
@@ -59,7 +58,7 @@ public abstract class EjbBundleDescriptor<T extends EjbDescriptor>
      * @param ejbName
      * @return {@link EjbDescriptor}, never null.
      */
-    protected abstract T createDummyEjbDescriptor(String ejbName);
+    protected abstract EjbDescriptor createDummyEjbDescriptor(String ejbName);
 
 
     @Override
@@ -71,7 +70,7 @@ public abstract class EjbBundleDescriptor<T extends EjbDescriptor>
     /**
      * @return unmodifiable set of ejb descriptors.
      */
-    public Set<T> getEjbs() {
+    public Set<? extends EjbDescriptor> getEjbs() {
         return Collections.unmodifiableSet(ejbs);
     }
 
@@ -81,7 +80,7 @@ public abstract class EjbBundleDescriptor<T extends EjbDescriptor>
      * @return an ejb descriptor that I have by the same name, otherwise throws
      *          an IllegalArgumentException
      */
-    public T getEjbByName(String name) {
+    public EjbDescriptor getEjbByName(String name) {
         return getEjbByName(name, false);
     }
 
@@ -95,8 +94,8 @@ public abstract class EjbBundleDescriptor<T extends EjbDescriptor>
      *         if requested.
      * @throws IllegalArgumentException if isCreateDummy is false and we don't have such EJB
      */
-    public T getEjbByName(String name, boolean isCreateDummy) {
-        for (T next : getEjbs()) {
+    public EjbDescriptor getEjbByName(String name, boolean isCreateDummy) {
+        for (EjbDescriptor next : ejbs) {
             if (next.getName().equals(name)) {
                 return next;
             }
@@ -109,7 +108,7 @@ public abstract class EjbBundleDescriptor<T extends EjbDescriptor>
         // and the ejb-jar.xml just uses it
         // we have to create a dummy version of the ejb descriptor in this
         // case as we process xml before annotations.
-        T dummyEjbDesc = createDummyEjbDescriptor(name);
+        EjbDescriptor dummyEjbDesc = createDummyEjbDescriptor(name);
         addEjb(dummyEjbDesc);
         return dummyEjbDesc;
     }
@@ -120,14 +119,30 @@ public abstract class EjbBundleDescriptor<T extends EjbDescriptor>
      * @return all ejb descriptors that has a given class name.
      *         It returns an empty list if no ejb is found.
      */
-    public List<T> getEjbByClassName(String className) {
-        List<T> ejbList = new ArrayList<>();
-        for (T ejb : getEjbs()) {
+    public EjbDescriptor[] getEjbByClassName(String className) {
+        List<EjbDescriptor> ejbList = new ArrayList<>();
+        for (EjbDescriptor ejb : ejbs) {
             if (className.equals(ejb.getEjbClassName())) {
                 ejbList.add(ejb);
             }
         }
-        return ejbList;
+        return ejbList.toArray(EjbDescriptor[]::new);
+    }
+
+
+    /**
+     * @param className
+     * @return all ejb descriptors that have a given class name as the web service endpoint
+     *         interface. It returns an empty list if no ejb is found.
+     */
+    public EjbDescriptor[] getEjbBySEIName(String className) {
+        ArrayList<EjbDescriptor> ejbList = new ArrayList<>();
+        for (EjbDescriptor ejb : ejbs) {
+            if (className.equals(ejb.getWebServiceEndpointInterfaceName())) {
+                ejbList.add(ejb);
+            }
+        }
+        return ejbList.toArray(EjbDescriptor[]::new);
     }
 
 
@@ -136,7 +151,7 @@ public abstract class EjbBundleDescriptor<T extends EjbDescriptor>
      * @return true if I have an ejb descriptor by that name.
      */
     public boolean hasEjbByName(String name) {
-        for (T ejb : getEjbs()) {
+        for (EjbDescriptor ejb : ejbs) {
             if (ejb.getName().equals(name)) {
                 return true;
             }
@@ -144,15 +159,13 @@ public abstract class EjbBundleDescriptor<T extends EjbDescriptor>
         return false;
     }
 
-    public abstract List<T> getEjbBySEIName(String className);
-
 
     /**
      * Add the given ejb descriptor to my (uses equals).
      *
      * @param ejbDescriptor
      */
-    public void addEjb(T ejbDescriptor) {
+    public void addEjb(EjbDescriptor ejbDescriptor) {
         ejbDescriptor.setEjbBundleDescriptor(this);
         ejbs.add(ejbDescriptor);
     }
@@ -163,9 +176,18 @@ public abstract class EjbBundleDescriptor<T extends EjbDescriptor>
      *
      * @param ejbDescriptor
      */
-    public void removeEjb(T ejbDescriptor) {
+    public void removeEjb(EjbDescriptor ejbDescriptor) {
         ejbDescriptor.setEjbBundleDescriptor(null);
         ejbs.remove(ejbDescriptor);
+    }
+
+
+    /**
+     * @param className
+     * @return {@link EjbInterceptor} or null
+     */
+    public EjbInterceptor getInterceptorByClassName(String className) {
+        return interceptors.get(className);
     }
 
 
@@ -183,13 +205,6 @@ public abstract class EjbBundleDescriptor<T extends EjbDescriptor>
         }
     }
 
-    /**
-     * @param className
-     * @return {@link EjbInterceptor} or null
-     */
-    public EjbInterceptor getInterceptorByClassName(String className) {
-        return interceptors.get(className);
-    }
 
     /**
      * @return true if this class holds some {@link EjbInterceptor}s
@@ -207,7 +222,18 @@ public abstract class EjbBundleDescriptor<T extends EjbDescriptor>
 
     }
 
-    public abstract Set<ServiceReferenceDescriptor> getEjbServiceReferenceDescriptors();
+
+    /**
+     * @return set of service-ref from ejbs contained in this bundle this bundle or empty set
+     *         if none
+     */
+    public Set<ServiceReferenceDescriptor> getEjbServiceReferenceDescriptors() {
+        Set<ServiceReferenceDescriptor> serviceRefs = new OrderedSet<>();
+        for (EjbDescriptor next : getEjbs()) {
+            serviceRefs.addAll(next.getServiceReferenceDescriptors());
+        }
+        return serviceRefs;
+    }
 
 
     public abstract Boolean getDisableNonportableJndiNames();

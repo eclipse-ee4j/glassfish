@@ -20,7 +20,6 @@ package com.sun.enterprise.deployment.annotation.factory;
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
-import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.annotation.context.AppClientContext;
 import com.sun.enterprise.deployment.annotation.context.EjbBundleContext;
@@ -43,7 +42,7 @@ public class AnnotatedElementHandlerFactory {
 
     public static AnnotationContext createAnnotatedElementHandler(RootDeploymentDescriptor bundleDesc) {
         if (bundleDesc instanceof EjbBundleDescriptor) {
-            EjbBundleDescriptor<EjbDescriptor> ejbBundleDesc = (EjbBundleDescriptor<EjbDescriptor>) bundleDesc;
+            EjbBundleDescriptor ejbBundleDesc = (EjbBundleDescriptor) bundleDesc;
             return new EjbBundleContext(ejbBundleDesc);
         } else if (bundleDesc instanceof ApplicationClientDescriptor) {
             ApplicationClientDescriptor appClientDesc = (ApplicationClientDescriptor) bundleDesc;

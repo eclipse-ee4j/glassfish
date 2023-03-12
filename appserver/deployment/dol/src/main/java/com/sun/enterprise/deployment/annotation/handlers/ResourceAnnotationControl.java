@@ -78,8 +78,8 @@ public final class ResourceAnnotationControl {
         } else if (context instanceof EjbBundleContext) {
             EjbBundleContext ejbContext = (EjbBundleContext) context;
             EjbBundleDescriptor ejbBundleDescriptor = ejbContext.getDescriptor();
-            List<EjbDescriptor> ejbDescriptor = ejbBundleDescriptor.getEjbByClassName(annotatedClass.getName());
-            if (ejbDescriptor.isEmpty()) {
+            EjbDescriptor[] ejbDescriptors = ejbBundleDescriptor.getEjbByClassName(annotatedClass.getName());
+            if (ejbDescriptors.length == 0) {
                 LOG.log(DEBUG, "Ignoring @{0} annotation processing as the {1} is not an EJB class"
                     + " and the context is EJBContext", annotationName, annotatedClass);
                 return false;
@@ -99,8 +99,8 @@ public final class ResourceAnnotationControl {
             for (RootDeploymentDescriptor desc : extDesc) {
                 if (desc instanceof EjbBundleDescriptor) {
                     EjbBundleDescriptor ejbBundleDesc = (EjbBundleDescriptor) desc;
-                    List<?> ejbDescs = ejbBundleDesc.getEjbByClassName(annotatedClass.getName());
-                    if (!ejbDescs.isEmpty()) {
+                    EjbDescriptor[] ejbDescs = ejbBundleDesc.getEjbByClassName(annotatedClass.getName());
+                    if (ejbDescs.length > 0) {
                         LOG.log(DEBUG, "Ignoring @{0} annotation processing as the {1} is not a Web class"
                             + " and the context is WebContext", annotationName, annotatedClass);
                         return false;

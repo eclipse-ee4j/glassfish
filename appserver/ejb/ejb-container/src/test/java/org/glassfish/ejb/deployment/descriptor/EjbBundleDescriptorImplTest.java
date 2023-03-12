@@ -71,7 +71,6 @@ public class EjbBundleDescriptorImplTest {
             () -> assertFalse(descriptor.hasChanged()),
             () -> assertFalse(descriptor.hasAssemblyInformation()),
             () -> assertFalse(descriptor.hasContainerTransactions()),
-            () -> assertFalse(descriptor.hasEjbReferences()),
             () -> assertFalse(descriptor.hasInterceptors()),
             () -> assertFalse(descriptor.hasPermissionedRoles()),
             () -> assertFalse(descriptor.hasRelationships()),

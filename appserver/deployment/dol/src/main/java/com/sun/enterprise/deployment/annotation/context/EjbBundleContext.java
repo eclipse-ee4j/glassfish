@@ -42,12 +42,12 @@ import org.glassfish.apf.context.AnnotationContext;
 public class EjbBundleContext extends ResourceContainerContextImpl {
 
     /** Creates a new instance of EjbBundleContext */
-    public EjbBundleContext(EjbBundleDescriptor<EjbDescriptor> descriptor) {
+    public EjbBundleContext(EjbBundleDescriptor descriptor) {
         super(descriptor);
     }
 
 
-    public <T extends EjbBundleDescriptor<? extends EjbDescriptor>> T getDescriptor() {
+    public <T extends EjbBundleDescriptor> T getDescriptor() {
         return (T) descriptor;
     }
 
@@ -59,7 +59,7 @@ public class EjbBundleContext extends ResourceContainerContextImpl {
      */
     public AnnotatedElementHandler createContextForEjb() {
         Class<?> ejbClass = (Class<?>) getProcessingContext().getProcessor().getLastAnnotatedElement(ElementType.TYPE);
-        List<? extends EjbDescriptor> ejbDescs = null;
+        EjbDescriptor[] ejbDescs = null;
         String ejbClassName = null;
         if (ejbClass != null) {
             ejbClassName = ejbClass.getName();
@@ -67,10 +67,10 @@ public class EjbBundleContext extends ResourceContainerContextImpl {
         }
 
         AnnotationContext aeHandler = null;
-        if (ejbDescs != null && ejbDescs.size() > 1) {
+        if (ejbDescs != null && ejbDescs.length > 1) {
             aeHandler = new EjbsContext(ejbDescs, ejbClass);
-        } else if (ejbDescs != null && ejbDescs.size() == 1) {
-            aeHandler = new EjbContext(ejbDescs.get(0), ejbClass);
+        } else if (ejbDescs != null && ejbDescs.length == 1) {
+            aeHandler = new EjbContext(ejbDescs[0], ejbClass);
         }
 
         if (aeHandler != null) {
@@ -82,9 +82,9 @@ public class EjbBundleContext extends ResourceContainerContextImpl {
 
 
     @Override
-    public HandlerChainContainer[] getHandlerChainContainers(boolean serviceSideHandlerChain, Class declaringClass) {
+    public HandlerChainContainer[] getHandlerChainContainers(boolean serviceSideHandlerChain, Class<?> declaringClass) {
         if (serviceSideHandlerChain) {
-            List<? extends EjbDescriptor> ejbs;
+            EjbDescriptor[] ejbs;
             if (declaringClass.isInterface()) {
                 ejbs = getDescriptor().getEjbBySEIName(declaringClass.getName());
             } else {

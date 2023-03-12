@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -189,7 +189,7 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
                 for (ManagedBeanDescriptor mbd: bd.getManagedBeans()) {
                     parseResources(mbd, (JndiNameEnvironment) bd, appResources);
                 }
-                EjbBundleDescriptor<EjbDescriptor> ebd = (EjbBundleDescriptor<EjbDescriptor>) bd;
+                EjbBundleDescriptor ebd = (EjbBundleDescriptor) bd;
                 for (EjbDescriptor ejb : ebd.getEjbs()) {
                     parseEJB(ejb, appResources);
                 }

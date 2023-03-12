@@ -212,7 +212,7 @@ final class RegistrationSupport {
             top = parentMBean;
         }
 
-        for (final EjbBundleDescriptor<EjbDescriptor> desc : application.getBundleDescriptors(EjbBundleDescriptor.class))
+        for (final EjbBundleDescriptor desc : application.getBundleDescriptors(EjbBundleDescriptor.class))
         {
             final ObjectName objectName = registerEjbModuleAndItsComponents(parentMBean, meta, appConfig, desc);
             if (isStandalone)
@@ -264,7 +264,7 @@ final class RegistrationSupport {
             final ObjectName parentMBean,
             final MetadataImpl meta,
             final com.sun.enterprise.config.serverbeans.Application appConfig,
-            final EjbBundleDescriptor<EjbDescriptor> ejbBundleDescriptor )
+            final EjbBundleDescriptor ejbBundleDescriptor )
     {
         final String xmlDesc = getDeploymentDescriptor(ejbBundleDescriptor);
         if ( xmlDesc != null )

@@ -17,7 +17,6 @@
 
 package org.glassfish.ejb.deployment.annotation.handlers;
 
-import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.MethodDescriptor;
 import com.sun.enterprise.deployment.annotation.context.EjbBundleContext;
 import com.sun.enterprise.deployment.annotation.context.EjbContext;
@@ -32,7 +31,9 @@ import jakarta.ejb.LocalBean;
 import jakarta.ejb.LocalHome;
 import jakarta.ejb.Remote;
 import jakarta.ejb.RemoteHome;
+import jakarta.ejb.TimedObject;
 import jakarta.ejb.Timeout;
+import jakarta.ejb.Timer;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -244,15 +245,15 @@ public abstract class AbstractEjbHandler extends AbstractHandler {
         // annotation and there are other ejb-jar.xml-defined beans with the same bean class.
 
 
-        List<EjbDescriptor> ejbDescs = currentBundle.getEjbByClassName(ejbClass.getName());
+        com.sun.enterprise.deployment.EjbDescriptor[] ejbDescs = currentBundle.getEjbByClassName(ejbClass.getName());
         HandlerProcessingResult procResult = null;
-        for (EjbDescriptor next : ejbDescs) {
-            procResult = setEjbDescriptorInfo(next, ainfo);
-            doTimedObjectProcessing(ejbClass, next);
+        for (com.sun.enterprise.deployment.EjbDescriptor ejb : ejbDescs) {
+            procResult = setEjbDescriptorInfo((EjbDescriptor) ejb, ainfo);
+            doTimedObjectProcessing(ejbClass, (EjbDescriptor) ejb);
         }
 
         final AnnotationContext annContext;
-        if (ejbDescs.size() == 1) {
+        if (ejbDescs.length == 1) {
             annContext = new EjbContext(ejbDesc, ejbClass);
         } else {
             annContext = new EjbsContext(ejbDescs, ejbClass);
@@ -294,14 +295,11 @@ public abstract class AbstractEjbHandler extends AbstractHandler {
             nextClass = nextClass.getSuperclass();
         }
 
-        if( (timeoutMethodDesc == null) &&
-            jakarta.ejb.TimedObject.class.isAssignableFrom(ejbClass) ) {
+        if ((timeoutMethodDesc == null) && TimedObject.class.isAssignableFrom(ejbClass)) {
             // If the class implements the TimedObject interface, it must
             // be ejbTimeout.
-            timeoutMethodDesc = new MethodDescriptor
-                ("ejbTimeout", "@Timeout method",
-                 new String[] { "jakarta.ejb.Timer" },
-                 MethodDescriptor.TIMER_METHOD);
+            timeoutMethodDesc = new MethodDescriptor("ejbTimeout", "@Timeout method",
+                new String[] {Timer.class.getName()}, MethodDescriptor.TIMER_METHOD);
         }
 
         if( timeoutMethodDesc != null ) {
@@ -575,30 +573,25 @@ public abstract class AbstractEjbHandler extends AbstractHandler {
                    intf.getPackage().getName().equals("jakarta.ejb")) );
     }
 
-    protected void doDescriptionProcessing(String description,
-                                           EjbDescriptor ejbDescriptor) {
+
+    protected void doDescriptionProcessing(String description, EjbDescriptor ejbDescriptor) {
         // Since there are multiple descriptions allowed in the deployment
         // descriptor, there are no overriding issues here.  If the
         // component-defining annotation contains a description, it will
         // always be added to the list of descriptions for the bean.
-        if( (description != null) && !description.equals("") ) {
+        if (description != null && !description.isEmpty()) {
             ejbDescriptor.setDescription(description);
         }
-
     }
 
-    protected void doMappedNameProcessing(String mappedName,
-                                          EjbDescriptor ejbDesc) {
 
+    protected void doMappedNameProcessing(String mappedName, EjbDescriptor ejbDesc) {
         // Set mappedName() if a value has been given in the annotation and
         // it hasn't already been set on the descriptor via the .xml.
-        if( ejbDesc.getMappedName().equals("") ) {
-            if( !mappedName.equals("") ) {
+        if( ejbDesc.getMappedName().isEmpty() ) {
+            if( !mappedName.isEmpty() ) {
                 ejbDesc.setMappedName(mappedName);
             }
         }
-
-
     }
-
 }

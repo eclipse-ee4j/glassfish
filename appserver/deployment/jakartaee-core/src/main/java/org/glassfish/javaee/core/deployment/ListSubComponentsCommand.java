@@ -325,13 +325,10 @@ public class ListSubComponentsCommand implements AdminCommand {
         if (bundle instanceof WebBundleDescriptor) {
             WebBundleDescriptor wbd = (WebBundleDescriptor)bundle;
             // look at ejb in war case
-            Collection<EjbBundleDescriptor> ejbBundleDescs =
-                wbd.getExtensionsDescriptors(EjbBundleDescriptor.class);
+            Collection<EjbBundleDescriptor> ejbBundleDescs = wbd.getExtensionsDescriptors(EjbBundleDescriptor.class);
             if (ejbBundleDescs.size() > 0) {
-                EjbBundleDescriptor ejbBundle =
-                        ejbBundleDescs.iterator().next();
-                moduleSubComponentMap.putAll(getModuleLevelComponents(
-                        ejbBundle, type, subComponentsMap));
+                EjbBundleDescriptor ejbBundle = ejbBundleDescs.iterator().next();
+                moduleSubComponentMap.putAll(getModuleLevelComponents(ejbBundle, type, subComponentsMap));
             }
 
             if (type != null && type.equals("ejbs")) {
@@ -352,7 +349,7 @@ public class ListSubComponentsCommand implements AdminCommand {
             if (type != null && type.equals("servlets")) {
                 return moduleSubComponentMap;
             }
-            EjbBundleDescriptor<EjbDescriptor> ebd = (EjbBundleDescriptor<EjbDescriptor>) bundle;
+            EjbBundleDescriptor ebd = (EjbBundleDescriptor) bundle;
             for (EjbDescriptor ejbDesc : ebd.getEjbs()) {
                 StringBuffer sb = new StringBuffer();
                 String ejbName = ejbDesc.getName();

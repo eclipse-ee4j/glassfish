@@ -62,8 +62,7 @@ public class InternalInterceptorBindingImpl  {
             Collection<EjbBundleDescriptor> ejbBundles = moduleDesc.getDescriptor()
                 .getExtensionsDescriptors(EjbBundleDescriptor.class);
             if (ejbBundles.size() == 1) {
-                @SuppressWarnings("unchecked")
-                EjbBundleDescriptor<EjbDescriptor> ejbBundle = ejbBundles.iterator().next();
+                EjbBundleDescriptor ejbBundle = ejbBundles.iterator().next();
                 for (EjbDescriptor ejb : ejbBundle.getEjbs()) {
                     BaseContainer container = EjbContainerUtilImpl.getInstance().getContainer(ejb.getUniqueId());
                     container.registerSystemInterceptor(systemInterceptor);

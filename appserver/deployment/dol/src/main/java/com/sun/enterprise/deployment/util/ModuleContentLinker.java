@@ -75,7 +75,7 @@ public class ModuleContentLinker extends DefaultDOLVisitor implements ComponentV
         }
 
         if (bundle instanceof EjbBundleDescriptor) {
-            EjbBundleDescriptor<EjbDescriptor> ejbBundle = (EjbBundleDescriptor<EjbDescriptor>) bundle;
+            EjbBundleDescriptor ejbBundle = (EjbBundleDescriptor) bundle;
             for (EjbDescriptor anEjb : ejbBundle.getEjbs()) {
                 for (ServiceReferenceDescriptor serviceReferenceDescriptor : anEjb.getServiceReferenceDescriptors()) {
                     accept(serviceReferenceDescriptor);

@@ -230,7 +230,7 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
     }
 
 //    FIXME by srini - add support in the new structure
-    public void accept(EjbBundleDescriptor<EjbDescriptor> bundleDescriptor) {
+    public void accept(EjbBundleDescriptor bundleDescriptor) {
         LOG.log(Level.DEBUG, "accept(bundleDescriptor.name={0})", bundleDescriptor.getName());
         this.bundleDescriptor = bundleDescriptor;
         this.application = bundleDescriptor.getApplication();
@@ -381,7 +381,7 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
             ebdLevel.add(EJBBUNDLE_LEVEL + ebd.getName());
 
             // Reads resource definition descriptor at ejb level
-            Set<EjbDescriptor> ejbDescriptors = ebd.getEjbs();
+            Set<? extends EjbDescriptor> ejbDescriptors = ebd.getEjbs();
             for (EjbDescriptor ejbDescriptor : ejbDescriptors) {
                 resourceDescriptors = ejbDescriptor.getAllResourcesDescriptors();
                 if (findConflictingDescriptors(resourceDescriptors,
@@ -465,7 +465,7 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
         Set<EjbBundleDescriptor> ejbBundleDescs = application.getBundleDescriptors(EjbBundleDescriptor.class);
         for (EjbBundleDescriptor ebd : ejbBundleDescs) {
             // Reads resource definition descriptor at ejb level
-            Set<EjbDescriptor> ejbDescriptors = ebd.getEjbs();
+            Set<? extends EjbDescriptor> ejbDescriptors = ebd.getEjbs();
             for (EjbDescriptor ejbDescriptor : ejbDescriptors) {
                 envValidator.validateEnvEntries(ejbDescriptor);
             }

@@ -27,7 +27,6 @@ import com.sun.enterprise.deployment.InjectionInfo;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
 import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
 import com.sun.enterprise.deployment.NameValuePairDescriptor;
-import com.sun.enterprise.deployment.OrderedSet;
 import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
 import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
@@ -67,7 +66,7 @@ import org.glassfish.ejb.deployment.util.EjbBundleTracerVisitor;
 import org.glassfish.ejb.deployment.util.EjbBundleValidator;
 import org.glassfish.security.common.Role;
 
-public class EjbBundleDescriptorImpl extends EjbBundleDescriptor<EjbDescriptor> {
+public class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
     private static final long serialVersionUID = 1L;
 
     private static final Logger LOG = DOLUtils.getLogger();
@@ -116,6 +115,25 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor<EjbDescriptor> 
     }
 
 
+    // temporary solution until we change the hierarchy to more consistent to be able to use getEjbs
+    @Override
+    public Set<EjbDescriptor> getEjbs() {
+        return (Set<EjbDescriptor>) super.getEjbs();
+    }
+
+
+    @Override
+    public EjbDescriptor getEjbByName(String name) {
+        return (EjbDescriptor) super.getEjbByName(name);
+    }
+
+
+    @Override
+    public EjbDescriptor getEjbByName(String name, boolean isCreateDummy) {
+        return (EjbDescriptor) super.getEjbByName(name, isCreateDummy);
+    }
+
+
     @Override
     protected DummyEjbDescriptor createDummyEjbDescriptor(String ejbName) {
         LOG.log(Level.DEBUG, "Construct a Dummy EJB Descriptor with name {0}", ejbName);
@@ -154,20 +172,6 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor<EjbDescriptor> 
 
 
     /**
-    * Return true if I reference other ejbs, false else.
-    */
-    public boolean hasEjbReferences() {
-        for (EjbDescriptor nextEjbDescriptor : getEjbs()) {
-            if (!nextEjbDescriptor.getEjbReferenceDescriptors().isEmpty()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-
-    /**
      * Setup EJB Ids during deployment and shouldn't be called at runtime
      */
     public void setupDataStructuresForRuntime() {
@@ -178,22 +182,6 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor<EjbDescriptor> 
         ejbIDs = Collections.unmodifiableSet(ids);
     }
 
-
-    /**
-     * Returns all ejb descriptors that has a given Class name as
-     * the web service endpoint interface.
-     * It returns an empty array if no ejb is found.
-     */
-    @Override
-    public List<EjbDescriptor> getEjbBySEIName(String className) {
-        ArrayList<EjbDescriptor> ejbList = new ArrayList<>();
-        for (EjbDescriptor ejb : getEjbs()) {
-            if (className.equals(ejb.getWebServiceEndpointInterfaceName())) {
-                ejbList.add(ejb);
-            }
-        }
-        return ejbList;
-    }
 
     /**
      *
@@ -381,15 +369,6 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor<EjbDescriptor> 
     }
 
 
-    public Descriptor getDescriptorByName(String name) {
-        try {
-            return getEjbByName(name);
-        } catch (IllegalArgumentException iae) {
-            // Bundle doesn't contain ejb with the given name.
-            return null;
-        }
-    }
-
 
     /**
      * Returns my name.
@@ -462,18 +441,6 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor<EjbDescriptor> 
         return false;
     }
 
-    /**
-     * @return a set of service-ref from ejbs contained in this bundle this bundle or empty set
-     * if none
-     */
-    @Override
-    public Set<ServiceReferenceDescriptor> getEjbServiceReferenceDescriptors() {
-        Set<ServiceReferenceDescriptor> serviceRefs = new OrderedSet<>();
-        for (EjbDescriptor next : getEjbs()) {
-            serviceRefs.addAll(next.getServiceReferenceDescriptors());
-        }
-        return serviceRefs;
-    }
 
     /**
     * Returns a formatted String representing my state.

@@ -1340,12 +1340,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
         return permissionedMethodsByPermission;
     }
 
-    /**
-     * Add a new method permission to a method or a set of methods
-     *
-     * @param mp is the new method permission to assign
-     * @param md describe the method or set of methods this permission apply to
-     */
+
     @Override
     public void addPermissionedMethod(MethodPermission mp, MethodDescriptor md) {
         LOG.log(Level.FINEST, "addPermissionedMethod {0}: {1}", new Object[] {mp, md});
@@ -2273,7 +2268,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
 
 
     @Override
-    public void setEjbBundleDescriptor(EjbBundleDescriptor<?> bundleDescriptor) {
+    public void setEjbBundleDescriptor(EjbBundleDescriptor bundleDescriptor) {
         // We accept just this type.
         this.bundleDescriptor = (EjbBundleDescriptorImpl) bundleDescriptor;
     }

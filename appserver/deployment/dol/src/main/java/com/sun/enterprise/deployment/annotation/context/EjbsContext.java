@@ -21,7 +21,6 @@ import com.sun.enterprise.deployment.EjbDescriptor;
 
 import java.lang.annotation.ElementType;
 import java.lang.reflect.AnnotatedElement;
-import java.util.List;
 
 import org.glassfish.apf.context.AnnotationContext;
 
@@ -35,11 +34,10 @@ public class EjbsContext extends AnnotationContext implements ComponentContext {
     private final EjbContext[] ejbContexts;
     private final String componentClassName;
 
-    public EjbsContext(List<? extends EjbDescriptor> ejbDescs, Class<?> ejbClass) {
-        ejbContexts = new EjbContext[ejbDescs.size()];
-        int i = 0;
-        for (EjbDescriptor ejbDescriptor : ejbDescs) {
-            ejbContexts[i++] = new EjbContext(ejbDescriptor, ejbClass);
+    public EjbsContext(EjbDescriptor[] ejbDescs, Class<?> ejbClass) {
+        ejbContexts = new EjbContext[ejbDescs.length];
+        for (int i = 0; i < ejbDescs.length; i++) {
+            ejbContexts[i] = new EjbContext(ejbDescs[i], ejbClass);
         }
         this.componentClassName = ejbClass.getName();
     }

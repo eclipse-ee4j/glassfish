@@ -39,10 +39,10 @@ import org.jvnet.hk2.annotations.Service;
  */
 @Service(name="ejb")
 @PerLookup
-public class EjbJarScanner extends ModuleScanner<EjbBundleDescriptor<EjbDescriptor>> {
+public class EjbJarScanner extends ModuleScanner<EjbBundleDescriptor> {
 
     @Override
-    public void process(File af, EjbBundleDescriptor<EjbDescriptor> desc, ClassLoader cl) throws IOException {
+    public void process(File af, EjbBundleDescriptor desc, ClassLoader cl) throws IOException {
         this.archiveFile = af;
         this.classLoader = cl;
 
@@ -65,7 +65,7 @@ public class EjbJarScanner extends ModuleScanner<EjbBundleDescriptor<EjbDescript
         addScanDirectory(archiveFile);
     }
 
-    protected void addClassesFromDescriptor(EjbBundleDescriptor<EjbDescriptor> desc) {
+    protected void addClassesFromDescriptor(EjbBundleDescriptor desc) {
         // always add session beans, message driven beans,
         // interceptor classes that are defined in ejb-jar.xml
         // regardless of they have annotation or not

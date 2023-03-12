@@ -57,7 +57,7 @@ public interface EjbDescriptor extends NamedDescriptor,
 
     EjbBundleDescriptor getEjbBundleDescriptor();
 
-    void setEjbBundleDescriptor(EjbBundleDescriptor<?> ejbBundleDescriptor);
+    void setEjbBundleDescriptor(EjbBundleDescriptor ejbBundleDescriptor);
 
     boolean isRemoteInterfacesSupported();
 
@@ -125,6 +125,12 @@ public interface EjbDescriptor extends NamedDescriptor,
      */
     Map<MethodPermission, Set<MethodDescriptor>> getPermissionedMethodsByPermission();
 
+    /**
+     * Add a new method permission to a method or a set of methods
+     *
+     * @param mp is the new method permission to assign
+     * @param md describe the method or set of methods this permission apply to
+     */
     void addPermissionedMethod(MethodPermission mp, MethodDescriptor md);
 
     void setUsesCallerIdentity(boolean flag);

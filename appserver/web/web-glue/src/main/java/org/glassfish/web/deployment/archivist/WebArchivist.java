@@ -169,7 +169,7 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
                 throws IOException {
         for (RootDeploymentDescriptor rd : extensions.values()) {
             if (rd instanceof EjbBundleDescriptor) {
-                EjbBundleDescriptor<EjbDescriptor> eb = (EjbBundleDescriptor<EjbDescriptor>) rd;
+                EjbBundleDescriptor eb = (EjbBundleDescriptor) rd;
                 descriptor.addJndiNameEnvironment(eb);
                 for (EjbDescriptor ejb : eb.getEjbs()) {
                     ejb.notifyNewModule(descriptor);

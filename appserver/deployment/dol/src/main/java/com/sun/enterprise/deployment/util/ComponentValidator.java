@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -348,38 +348,11 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
         // save anticipated type for checking if bean type is compatible
         String type = ejbRef.getType();
 
-        EjbDescriptor ejbReferee=null;
+        EjbDescriptor ejbReferee = null;
 
         String linkName = ejbRef.getLinkName();
         int ind = linkName.lastIndexOf('#');
-        if ( ind != -1 ) {
-            // link has a relative path from referring EJB JAR,
-            // of form "../products/product.jar#ProductEJB"
-            String ejbName = linkName.substring(ind+1);
-            String jarPath = linkName.substring(0, ind);
-            BundleDescriptor referringJar = ejbRef.getReferringBundleDescriptor();
-            if (referringJar==null) {
-                ejbRef.setReferringBundleDescriptor(getBundleDescriptor());
-                referringJar = getBundleDescriptor();
-            }
-
-            if (getApplication()!=null) {
-                BundleDescriptor refereeJar = null;
-                if( referringJar instanceof Application ) {
-                    refereeJar = ((Application)referringJar).getModuleByUri(jarPath);
-                } else {
-                 refereeJar =
-                    getApplication().getRelativeBundle(referringJar, jarPath);
-                }
-                if( (refereeJar != null) &&
-                    refereeJar instanceof EjbBundleDescriptor ) {
-                    // this will throw an exception if ejb is not found
-                    ejbReferee =
-                       ((EjbBundleDescriptor)refereeJar).getEjbByName(ejbName);
-                }
-            }
-        }
-        else {
+        if (ind == -1) {
 
             // Handle an unqualified ejb-link, which is just an ejb-name.
 
@@ -399,182 +372,184 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
                 ejbReferee = ebd.getEjbByName(linkName);
             } else if (app != null && app.hasEjbByName(linkName)) {
                 ejbReferee = app.getEjbByName(ejbRef.getLinkName());
-            } else if (getEjbDescriptor()!=null) {
+            } else if (getEjbDescriptor() != null) {
                 try {
                     ejbReferee = getEjbDescriptor().getEjbBundleDescriptor().getEjbByName(ejbRef.getLinkName());
                 } catch (IllegalArgumentException e) {
                     // this may happen when we have no application and the ejb ref
                     // cannot be resolved to a ejb in the bundle. The ref will
                     // probably be resolved when the application is assembled.
-                    LOG.warning("Unresolved <ejb-link>: "+linkName);
+                    LOG.warning("Unresolved <ejb-link>: " + linkName);
                     return;
                 }
 
             }
+        } else {
+            // link has a relative path from referring EJB JAR,
+            // of form "../products/product.jar#ProductEJB"
+            String ejbName = linkName.substring(ind + 1);
+            String jarPath = linkName.substring(0, ind);
+            BundleDescriptor referringJar = ejbRef.getReferringBundleDescriptor();
+            if (referringJar == null) {
+                ejbRef.setReferringBundleDescriptor(getBundleDescriptor());
+                referringJar = getBundleDescriptor();
+            }
+
+            if (getApplication() != null) {
+                BundleDescriptor refereeJar = null;
+                if (referringJar instanceof Application) {
+                    refereeJar = ((Application) referringJar).getModuleByUri(jarPath);
+                } else {
+                    refereeJar = getApplication().getRelativeBundle(referringJar, jarPath);
+                }
+                if ((refereeJar != null) && refereeJar instanceof EjbBundleDescriptor) {
+                    // this will throw an exception if ejb is not found
+                    ejbReferee = ((EjbBundleDescriptor) refereeJar).getEjbByName(ejbName);
+                }
+            }
         }
 
-        if (ejbReferee==null) {
+        if (ejbReferee == null) {
             // we could not resolve through the ejb-link. if this is a local ref, this
             // is an error, if this is a remote ref, this should be also an error at
             // runtime but maybe the jndi name will be specified by deployer so
             // a warning should suffice
             if (ejbRef.isLocal()) {
-                LOG.severe("Unresolved <ejb-link>: "+linkName);
-                throw new RuntimeException("Error: Unresolved <ejb-link>: "+linkName);
+                LOG.severe("Unresolved <ejb-link>: " + linkName);
+                throw new RuntimeException("Error: Unresolved <ejb-link>: " + linkName);
+            }
+            final ArchiveType moduleType = ejbRef.getReferringBundleDescriptor().getModuleType();
+            if (moduleType != null && moduleType.equals(DOLUtils.carType())) {
+                // Because no annotation processing is done within ACC runtime, this case
+                // typically
+                // arises for remote @EJB annotations, so don't log it as warning.
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Unresolved <ejb-link>: " + linkName);
+                }
             } else {
-                final ArchiveType moduleType = ejbRef.getReferringBundleDescriptor().getModuleType();
-                if (moduleType != null && moduleType.equals(DOLUtils.carType())) {
-                    // Because no annotation processing is done within ACC runtime, this case typically
-                    // arises for remote @EJB annotations, so don't log it as warning.
-                    if (LOG.isLoggable(Level.FINE)) {
-                        LOG.fine("Unresolved <ejb-link>: "+linkName);
-                    }
-                } else {
-                    LOG.warning("Unresolved <ejb-link>: "+linkName);
-                }
-                return;
+                LOG.warning("Unresolved <ejb-link>: " + linkName);
             }
-        } else {
-
-            if( ejbRef.isEJB30ClientView() ) {
-
-                BundleDescriptor referringBundle =
-                    ejbRef.getReferringBundleDescriptor();
-
-                // If we can verify that the current ejb 3.0 reference is defined
-                // in any Application Client module or in a stand-alone web module
-                // it must be remote business.
-                if( ( (referringBundle == null) && (getEjbBundleDescriptor() == null) )
-                    ||
-                    ((referringBundle != null) && (referringBundle.getModuleType() == DOLUtils.carType()))
-                    ||
-                    ( (getApplication() == null) &&
-                      (referringBundle.getModuleType() != null && referringBundle.getModuleType().equals(DOLUtils.warType())) ) ) {
-
-                    ejbRef.setLocal(false);
-
-                    // Double-check that target has a remote business interface of this
-                    // type.  This will handle the common error case that the target
-                    // EJB has intended to support a remote business interface but
-                    // has not used @Remote to specify it, in which case
-                    // the interface was assigned the default of local business.
-
-                    if( !ejbReferee.getRemoteBusinessClassNames().contains
-                        (intfClassName) ) {
-                        String msg = "Target ejb " + ejbReferee.getName() + " for " +
-                            " remote ejb 3.0 reference " + ejbRef.getName() +
-                            " does not expose a remote business interface of type " +
-                            intfClassName;
-                        throw new RuntimeException(msg);
-                    }
-
-                } else if(ejbReferee.getLocalBusinessClassNames().contains(intfClassName)) {
-                    ejbRef.setLocal(true);
-                } else if(ejbReferee.getRemoteBusinessClassNames().contains(intfClassName)) {
-                    ejbRef.setLocal(false);
-                } else {
-                    if (ejbReferee.isLocalBean()) {
-                        ejbRef.setLocal(true);
-                    } else {
-                        String msg = "Warning : Unable to determine local " +
-                            " business vs. remote business designation for " +
-                            " EJB 3.0 ref " + ejbRef;
-                        throw new RuntimeException(msg);
-                    }
-                }
-            }
-
-            ejbRef.setEjbDescriptor(ejbReferee);
+            return;
         }
 
+        if (ejbRef.isEJB30ClientView()) {
+            BundleDescriptor referringBundle = ejbRef.getReferringBundleDescriptor();
+
+            // If we can verify that the current ejb 3.0 reference is defined
+            // in any Application Client module or in a stand-alone web module
+            // it must be remote business.
+            if ((referringBundle == null && getEjbBundleDescriptor() == null)
+                || (referringBundle != null && DOLUtils.carType().equals(referringBundle.getModuleType()))
+                || (referringBundle != null && DOLUtils.warType().equals(referringBundle.getModuleType())
+                    && getApplication() == null && referringBundle.getModuleType() != null)) {
+
+                ejbRef.setLocal(false);
+
+                // Double-check that target has a remote business interface of this
+                // type. This will handle the common error case that the target
+                // EJB has intended to support a remote business interface but
+                // has not used @Remote to specify it, in which case
+                // the interface was assigned the default of local business.
+
+                if (!ejbReferee.getRemoteBusinessClassNames().contains(intfClassName)) {
+                    String msg = "Target ejb " + ejbReferee.getName() + " for remote ejb 3.0 reference "
+                        + ejbRef.getName() + " does not expose a remote business interface of type " + intfClassName;
+                    throw new RuntimeException(msg);
+                }
+
+            } else if (ejbReferee.getLocalBusinessClassNames().contains(intfClassName)) {
+                ejbRef.setLocal(true);
+            } else if (ejbReferee.getRemoteBusinessClassNames().contains(intfClassName)) {
+                ejbRef.setLocal(false);
+            } else {
+                if (ejbReferee.isLocalBean()) {
+                    ejbRef.setLocal(true);
+                } else {
+                    String msg = "Warning : Unable to determine local business vs. remote business designation"
+                        + " for EJB 3.0 ref " + ejbRef;
+                    throw new RuntimeException(msg);
+                }
+            }
+        }
+
+        ejbRef.setEjbDescriptor(ejbReferee);
+
         // if we are here, we must have resolved the reference
-        if(LOG.isLoggable(Level.FINE)) {
-            if (getEjbDescriptor() != null){
+        if (LOG.isLoggable(Level.FINE)) {
+            if (getEjbDescriptor() != null) {
                 LOG.fine("Done Visiting " + getEjbDescriptor().getName() + " reference " + ejbRef);
             }
         }
 
         // check that declared types are compatible with expected values
         // if there is a target ejb descriptor available
-            if( ejbRef.isEJB30ClientView() ) {
+        if (ejbRef.isEJB30ClientView()) {
 
-                Set<String> targetBusinessIntfs = ejbRef.isLocal() ?
-                    ejbReferee.getLocalBusinessClassNames() :
-                    ejbReferee.getRemoteBusinessClassNames();
+            Set<String> targetBusinessIntfs = ejbRef.isLocal()
+                ? ejbReferee.getLocalBusinessClassNames()
+                : ejbReferee.getRemoteBusinessClassNames();
 
-                EjbDescriptor ejbDesc = ejbRef.getEjbDescriptor();
+            EjbDescriptor ejbDesc = ejbRef.getEjbDescriptor();
 
-                // If it's neither a business interface nor a no-interface view
-                if( !targetBusinessIntfs.contains(intfClassName) &&
-                    (   ejbDesc.isLocalBean() &&
-                        !(intfClassName.equals(ejbReferee.getEjbClassName()))) ) {
+            // If it's neither a business interface nor a no-interface view
+            if (!targetBusinessIntfs.contains(intfClassName)
+                && ejbDesc.isLocalBean() && !intfClassName.equals(ejbReferee.getEjbClassName())) {
 
+                LOG.log(Level.WARNING, "enterprise.deployment.backend.ejbRefTypeMismatch",
+                    new Object[] {ejbRef.getName(), intfClassName, ejbReferee.getName(),
+                        (ejbRef.isLocal() ? "Local Business" : "Remote Business"), targetBusinessIntfs.toString()});
 
-                    LOG.log(Level.WARNING,
-                           "enterprise.deployment.backend.ejbRefTypeMismatch",
-                           new Object[] {ejbRef.getName() , intfClassName,
-                           ejbReferee.getName(), ( ejbRef.isLocal() ?
-                           "Local Business" : "Remote Business"),
-                                             targetBusinessIntfs.toString()});
-
-
-                    // We can only figure out what the correct type should be
-                    // if there is only 1 target remote/local business intf.
-                    if( targetBusinessIntfs.size() == 1 ) {
-                        Iterator iter = targetBusinessIntfs.iterator();
-                        ejbRef.setEjbInterface((String)iter.next());
-                    }
-                }
-
-            } else {
-
-                String targetHome = ejbRef.isLocal() ?
-                    ejbReferee.getLocalHomeClassName() :
-                    ejbReferee.getHomeClassName();
-
-                if( !homeClassName.equals(targetHome) ) {
-
-                    LOG.log(Level.WARNING,
-                       "enterprise.deployment.backend.ejbRefTypeMismatch",
-                       new Object[] {ejbRef.getName() , homeClassName,
-                       ejbReferee.getName(), ( ejbRef.isLocal() ?
-                       "Local Home" : "Remote Home"), targetHome});
-
-                    if( targetHome != null ) {
-                        ejbRef.setEjbHomeInterface(targetHome);
-                    }
-                }
-
-                String targetComponentIntf = ejbRef.isLocal() ?
-                    ejbReferee.getLocalClassName() :
-                    ejbReferee.getRemoteClassName();
-
-                // In some cases for 2.x style @EJBs that point to Entity beans
-                // the interface class cannot be derived, so only do the
-                // check if the intf is known.
-                if( (intfClassName != null) &&
-                    !intfClassName.equals(targetComponentIntf) ) {
-
-                    LOG.log(Level.WARNING,
-                       "enterprise.deployment.backend.ejbRefTypeMismatch",
-                       new Object[] {ejbRef.getName() , intfClassName,
-                       ejbReferee.getName(), ( ejbRef.isLocal() ?
-                       "Local" : "Remote"), targetComponentIntf});
-
-                    if( targetComponentIntf != null ) {
-                        ejbRef.setEjbInterface(targetComponentIntf);
-                    }
+                // We can only figure out what the correct type should be
+                // if there is only 1 target remote/local business intf.
+                if (targetBusinessIntfs.size() == 1) {
+                    Iterator<String> iter = targetBusinessIntfs.iterator();
+                    ejbRef.setEjbInterface(iter.next());
                 }
             }
 
-            // set jndi name in ejb ref
-            ejbRef.setJndiName(ejbReferee.getJndiName());
+        } else {
+
+            String targetHome = ejbRef.isLocal()
+                ? ejbReferee.getLocalHomeClassName()
+                : ejbReferee.getHomeClassName();
+
+            if (!homeClassName.equals(targetHome)) {
+
+                LOG.log(Level.WARNING, "enterprise.deployment.backend.ejbRefTypeMismatch",
+                    new Object[] {ejbRef.getName(), homeClassName, ejbReferee.getName(),
+                        (ejbRef.isLocal() ? "Local Home" : "Remote Home"), targetHome});
+
+                if (targetHome != null) {
+                    ejbRef.setEjbHomeInterface(targetHome);
+                }
+            }
+
+            String targetComponentIntf = ejbRef.isLocal()
+                ? ejbReferee.getLocalClassName()
+                : ejbReferee.getRemoteClassName();
+
+            // In some cases for 2.x style @EJBs that point to Entity beans
+            // the interface class cannot be derived, so only do the
+            // check if the intf is known.
+            if (intfClassName != null && !intfClassName.equals(targetComponentIntf)) {
+
+                LOG.log(Level.WARNING, "enterprise.deployment.backend.ejbRefTypeMismatch",
+                    new Object[] {ejbRef.getName(), intfClassName, ejbReferee.getName(),
+                        (ejbRef.isLocal() ? "Local" : "Remote"), targetComponentIntf});
+
+                if (targetComponentIntf != null) {
+                    ejbRef.setEjbInterface(targetComponentIntf);
+                }
+            }
+        }
+
+        // set jndi name in ejb ref
+        ejbRef.setJndiName(ejbReferee.getJndiName());
 
         if (!type.equals(ejbRef.getType())) {
             // if they don't match
             // print a warning and reset the type in ejb ref
-            LOG.log(Level.WARNING, DOLUtils.INVALID_DESC_MAPPING,
-            new Object[] {ejbRef.getName() , type});
+            LOG.log(Level.WARNING, DOLUtils.INVALID_DESC_MAPPING, new Object[] {ejbRef.getName(), type});
 
             ejbRef.setType(ejbRef.getType());
 
@@ -584,7 +559,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
     protected Collection getEjbDescriptors() {
         if (getApplication() != null) {
             return getApplication().getEjbDescriptors();
-        } else if (getEjbBundleDescriptor()!=null) {
+        } else if (getEjbBundleDescriptor() != null) {
             return getEjbBundleDescriptor().getEjbs();
         } else {
             return new HashSet<EjbDescriptor>();
@@ -606,40 +581,32 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
      */
     private Map<String, EjbIntfInfo> getEjbIntfMap() {
         Map<String, EjbIntfInfo> intfInfoMap = new HashMap<>();
-
         for (Object element : getEjbDescriptors()) {
             EjbDescriptor next = (EjbDescriptor) element;
-            if( next.isRemoteInterfacesSupported() ) {
-                addIntfInfo(intfInfoMap, next.getHomeClassName(),
-                            EjbIntfType.REMOTE_HOME, next);
+            if (next.isRemoteInterfacesSupported()) {
+                addIntfInfo(intfInfoMap, next.getHomeClassName(), EjbIntfType.REMOTE_HOME, next);
             }
 
-            if( next.isRemoteBusinessInterfacesSupported() ) {
-                for(String nextIntf : next.getRemoteBusinessClassNames()) {
-                    addIntfInfo(intfInfoMap, nextIntf,
-                                EjbIntfType.REMOTE_BUSINESS, next);
+            if (next.isRemoteBusinessInterfacesSupported()) {
+                for (String nextIntf : next.getRemoteBusinessClassNames()) {
+                    addIntfInfo(intfInfoMap, nextIntf, EjbIntfType.REMOTE_BUSINESS, next);
                 }
             }
 
-            if( next.isLocalInterfacesSupported() ) {
-                addIntfInfo(intfInfoMap, next.getLocalHomeClassName(),
-                            EjbIntfType.LOCAL_HOME, next);
+            if (next.isLocalInterfacesSupported()) {
+                addIntfInfo(intfInfoMap, next.getLocalHomeClassName(), EjbIntfType.LOCAL_HOME, next);
             }
 
-            if( next.isLocalBusinessInterfacesSupported() ) {
-                for(String nextIntf : next.getLocalBusinessClassNames()) {
-                    addIntfInfo(intfInfoMap, nextIntf,
-                                EjbIntfType.LOCAL_BUSINESS, next);
+            if (next.isLocalBusinessInterfacesSupported()) {
+                for (String nextIntf : next.getLocalBusinessClassNames()) {
+                    addIntfInfo(intfInfoMap, nextIntf, EjbIntfType.LOCAL_BUSINESS, next);
                 }
             }
 
             if (next.isLocalBean()) {
-                addIntfInfo(intfInfoMap, next.getEjbClassName(),
-                                EjbIntfType.NO_INTF_LOCAL_BUSINESS, next);
+                addIntfInfo(intfInfoMap, next.getEjbClassName(), EjbIntfType.NO_INTF_LOCAL_BUSINESS, next);
             }
-
         }
-
         return intfInfoMap;
     }
 
@@ -662,29 +629,17 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
 
     }
 
-    /**
-     * Visits a service reference for the last J2EE component visited
-     *
-     * @param the service reference
-     */
     @Override
     protected void accept(ServiceReferenceDescriptor serviceRef) {
-
-        Set portsInfo = serviceRef.getPortsInfo();
-
-        for (Object element : portsInfo) {
-            ServiceRefPortInfo next = (ServiceRefPortInfo) element;
-
-            if( next.hasPortComponentLinkName() &&
-                !next.isLinkedToPortComponent() ) {
+        Set<ServiceRefPortInfo> portsInfo = serviceRef.getPortsInfo();
+        for (ServiceRefPortInfo next : portsInfo) {
+            if (next.hasPortComponentLinkName() && !next.isLinkedToPortComponent()) {
                 WebServiceEndpoint portComponentLink = next.resolveLinkName();
-                if( portComponentLink == null ) {
+                if (portComponentLink == null) {
                     String linkName = next.getPortComponentLinkName();
-                    LOG.log(Level.WARNING, DOLUtils.INVALID_DESC_MAPPING,
-                        new Object[] {"port-component" , linkName});
+                    LOG.log(Level.WARNING, DOLUtils.INVALID_DESC_MAPPING, new Object[] {"port-component", linkName});
                 }
             }
-
         }
     }
 
@@ -695,7 +650,6 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
 
     @Override
     protected void accept(ResourceEnvReferenceDescriptor resourceEnvRef) {
-
         if (resourceEnvRef.getJndiName() == null || resourceEnvRef.getJndiName().isEmpty()) {
             Map<String, ManagedBeanDescriptor> managedBeanMap = getManagedBeanMap();
             String refType = resourceEnvRef.getRefType();
@@ -713,7 +667,6 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
                 resourceEnvRef.setManagedBeanDescriptor(desc);
             }
         }
-
         computeRuntimeDefault(resourceEnvRef);
     }
 
@@ -746,85 +699,74 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
         // the inject target name refers to an injection field or an
         // injection method for each injection target
         for (InjectionTarget target : injectable.getInjectionTargets()) {
-            if( (target.getFieldName() == null) &&
-                    (target.getMethodName() == null) ) {
-
-                String injectTargetName = target.getTargetName();
-                String targetClassName  = target.getClassName();
-                ClassLoader classLoader = getBundleDescriptor().getClassLoader();
-
-                Class targetClazz = null;
-
-                try {
-
-                    targetClazz = classLoader.loadClass(targetClassName);
-
-                } catch(ClassNotFoundException cnfe) {
-                    // @@@
-                    // Don't treat this as a fatal error for now.  One known issue
-                    // is that all .xml, even web.xml, is processed within the
-                    // appclient container during startup.  In that case, there
-                    // are issues with finding .classes in .wars due to the
-                    // structure of the returned client .jar and the way the
-                    // classloader is formed.
-                    if (LOG.isLoggable(Level.FINE)) {
-                        LOG.fine
-                                ("Injection class " + targetClassName + " not found for " +
-                                injectable);
-                    }
-                    return;
+            if (target.getFieldName() != null || target.getMethodName() != null) {
+                continue;
+            }
+            String injectTargetName = target.getTargetName();
+            String targetClassName = target.getClassName();
+            ClassLoader classLoader = getBundleDescriptor().getClassLoader();
+            Class<?> targetClazz = null;
+            try {
+                targetClazz = classLoader.loadClass(targetClassName);
+            } catch (ClassNotFoundException cnfe) {
+                // @@@
+                // Don't treat this as a fatal error for now. One known issue
+                // is that all .xml, even web.xml, is processed within the
+                // appclient container during startup. In that case, there
+                // are issues with finding .classes in .wars due to the
+                // structure of the returned client .jar and the way the
+                // classloader is formed.
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Injection class " + targetClassName + " not found for " + injectable);
                 }
+                return;
+            }
 
-                // Spec requires that we attempt to match on method before field.
-                boolean matched = false;
+            // Spec requires that we attempt to match on method before field.
+            boolean matched = false;
 
-                // The only information we have is method name, so iterate
-                // through the methods find a match.  There is no overloading
-                // allowed for injection methods, so any match is considered
-                // the only possible match.
+            // The only information we have is method name, so iterate
+            // through the methods find a match.  There is no overloading
+            // allowed for injection methods, so any match is considered
+            // the only possible match.
 
-                String setterMethodName = TypeUtil.
-                        propertyNameToSetterMethod(injectTargetName);
+            String setterMethodName = TypeUtil.propertyNameToSetterMethod(injectTargetName);
 
-                // method can have any access type so use getDeclaredMethods()
-                for(Method next : targetClazz.getDeclaredMethods()) {
-                    // only when the method name matches and the method
-                    // has exactly one parameter, we find a match
-                    if( next.getName().equals(setterMethodName) &&
-                        next.getParameterTypes().length == 1) {
-                        target.setMethodName(next.getName());
-                        if( injectable.getInjectResourceType() == null ) {
-                            Class[] paramTypes = next.getParameterTypes();
-                            if (paramTypes.length == 1) {
-                                String resourceType = paramTypes[0].getName();
-                                injectable.setInjectResourceType(resourceType);
-                            }
-                        }
-                        matched = true;
-                        break;
-                    }
-                }
-
-               if( !matched ) {
-
-                    // In the case of injection fields, inject target name ==
-                    // field name.  Field can have any access type.
-                    try {
-                        Field f = targetClazz.getDeclaredField(injectTargetName);
-                        target.setFieldName(injectTargetName);
-                        if( injectable.getInjectResourceType() == null ) {
-                            String resourceType = f.getType().getName();
+            // method can have any access type so use getDeclaredMethods()
+            for (Method next : targetClazz.getDeclaredMethods()) {
+                // only when the method name matches and the method
+                // has exactly one parameter, we find a match
+                if (next.getName().equals(setterMethodName) && next.getParameterTypes().length == 1) {
+                    target.setMethodName(next.getName());
+                    if (injectable.getInjectResourceType() == null) {
+                        Class<?>[] paramTypes = next.getParameterTypes();
+                        if (paramTypes.length == 1) {
+                            String resourceType = paramTypes[0].getName();
                             injectable.setInjectResourceType(resourceType);
                         }
-                        matched = true;
-                    } catch(NoSuchFieldException nsfe) {
-                        String msg = "No matching injection setter method or " +
-                                "injection field found for injection property " +
-                                injectTargetName + " on class " + targetClassName +
-                                " for component dependency " + injectable;
-
-                        throw new RuntimeException(msg, nsfe);
                     }
+                    matched = true;
+                    break;
+                }
+            }
+
+            if (!matched) {
+                // In the case of injection fields, inject target name ==
+                // field name. Field can have any access type.
+                try {
+                    Field field = targetClazz.getDeclaredField(injectTargetName);
+                    target.setFieldName(injectTargetName);
+                    if (injectable.getInjectResourceType() == null) {
+                        String resourceType = field.getType().getName();
+                        injectable.setInjectResourceType(resourceType);
+                    }
+                    matched = true;
+                } catch (NoSuchFieldException nsfe) {
+                    String msg = "No matching injection setter method or "
+                        + "injection field found for injection property " + injectTargetName + " on class "
+                        + targetClassName + " for component dependency " + injectable;
+
+                    throw new RuntimeException(msg, nsfe);
                 }
             }
         }
@@ -840,47 +782,38 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
      * @param application
      * @exception RuntimeException
      */
-    protected void computeRunAsPrincipalDefault(RunAsIdentityDescriptor runAs,
-            Application application) {
-
+    protected void computeRunAsPrincipalDefault(RunAsIdentityDescriptor runAs, Application application) {
         // for backward compatibile
-        if (runAs != null &&
-                (runAs.getRoleName() == null ||
-                    runAs.getRoleName().length() == 0)) {
-            LOG.log(Level.WARNING,
-            "enterprise.deployment.backend.emptyRoleName");
+        if (runAs != null && (runAs.getRoleName() == null || runAs.getRoleName().isEmpty())) {
+            LOG.log(Level.WARNING, "enterprise.deployment.backend.emptyRoleName");
             return;
         }
 
-        if (runAs != null &&
-                (runAs.getPrincipal() == null ||
-                    runAs.getPrincipal().length() == 0) &&
-                application != null && application.getRoleMapper() != null) {
+        if (runAs != null && (runAs.getPrincipal() == null || runAs.getPrincipal().isEmpty()) && application != null
+            && application.getRoleMapper() != null) {
 
             String principalName = null;
             String roleName = runAs.getRoleName();
-
             final Subject fs = application.getRoleMapper().getRoleToSubjectMapping().get(roleName);
             if (fs != null) {
-                principalName = (String)AccessController.doPrivileged(new PrivilegedAction() {
-                    @Override
-                    public Object run() {
-                        Set<Principal> pset = fs.getPrincipals();
-                        Principal prin = null;
-                        if (pset.size() > 0) {
-                            prin = pset.iterator().next();
-                            LOG.log(Level.WARNING,
-                            "enterprise.deployment.backend.computeRunAsPrincipal",
-                            new Object[] { prin.getName() });
-                        }
-                        return (prin != null) ? prin.getName() : null;
+                PrivilegedAction<String> action = () -> {
+                    Set<Principal> pset = fs.getPrincipals();
+                    if (pset.isEmpty()) {
+                        return null;
                     }
-                });
+                    String name = pset.iterator().next().getName();
+                    LOG.log(Level.WARNING,
+                        "The run-as principal {0} was assigned by the deployment system based"
+                            + " on the specified role. Please consider defining an explicit run-as principal"
+                            + " in the sun-specific deployment descriptor.",
+                        name);
+                    return name;
+                };
+                principalName = AccessController.doPrivileged(action);
             }
 
-            if (principalName == null || principalName.length() == 0) {
-                throw new RuntimeException("The RunAs role " + "\"" + roleName + "\"" +
-                    " is not mapped to a principal.");
+            if (principalName == null || principalName.isEmpty()) {
+                throw new RuntimeException("The RunAs role \"" + roleName + "\" is not mapped to a principal.");
             }
             runAs.setPrincipal(principalName);
         }
@@ -892,28 +825,23 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
      */
     private Map<String, ManagedBeanDescriptor> getManagedBeanMap() {
         BundleDescriptor thisBundle = getBundleDescriptor();
-
         Set<ManagedBeanDescriptor> managedBeans = new HashSet<>();
 
         // Make sure we're dealing with the top-level bundle descriptor when looking
         // for managed beans
-        if( thisBundle != null ) {
+        if (thisBundle != null) {
             Object desc = thisBundle.getModuleDescriptor().getDescriptor();
-            if( desc instanceof BundleDescriptor ) {
-                managedBeans = ((BundleDescriptor)desc).getManagedBeans();
+            if (desc instanceof BundleDescriptor) {
+                managedBeans = ((BundleDescriptor) desc).getManagedBeans();
             }
         }
 
         Map<String, ManagedBeanDescriptor> managedBeanMap = new HashMap<>();
-
-        for(ManagedBeanDescriptor managedBean : managedBeans ) {
-
+        for (ManagedBeanDescriptor managedBean : managedBeans) {
             String beanClassName = managedBean.getBeanClassName();
             managedBeanMap.put(beanClassName, managedBean);
         }
-
         return managedBeanMap;
-
     }
 
     /**

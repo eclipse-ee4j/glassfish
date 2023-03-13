@@ -52,7 +52,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.JavaEEResourceType;
 import org.glassfish.deployment.common.ModuleDescriptor;
@@ -136,7 +135,7 @@ class ApplicationValidatorTest {
         /**
          * @param ejbName
          */
-        public FakeEjbDescriptor(String ejbName) {
+        FakeEjbDescriptor(String ejbName) {
             this.name = ejbName;
         }
 
@@ -806,157 +805,13 @@ class ApplicationValidatorTest {
 
     private static final class FakeEjbBundleDescriptor extends EjbBundleDescriptor {
 
-        @Override
-        public void addEjbReferenceDescriptor(EjbReferenceDescriptor ejbReference) {
-        }
-
-        @Override
-        public void removeEjbReferenceDescriptor(EjbReferenceDescriptor ejbReference) {
-        }
-
-        @Override
-        public void addResourceReferenceDescriptor(ResourceReferenceDescriptor resourceReference) {
-        }
-
-        @Override
-        public void removeResourceReferenceDescriptor(ResourceReferenceDescriptor resourceReference) {
-        }
-
-        @Override
-        public void addResourceEnvReferenceDescriptor(ResourceEnvReferenceDescriptor resourceEnvReference) {
-        }
-
-        @Override
-        public void removeResourceEnvReferenceDescriptor(ResourceEnvReferenceDescriptor resourceEnvReference) {
-        }
-
-        @Override
-        public void addMessageDestinationReferenceDescriptor(MessageDestinationReferenceDescriptor msgDestRef) {
-        }
-
-        @Override
-        public void removeMessageDestinationReferenceDescriptor(MessageDestinationReferenceDescriptor msgDestRef) {
-        }
-
-        @Override
-        public void addPostConstructDescriptor(LifecycleCallbackDescriptor postConstructDesc) {
-        }
-
-        @Override
-        public void addPreDestroyDescriptor(LifecycleCallbackDescriptor preDestroyDesc) {
-        }
-
-        @Override
-        public void addServiceReferenceDescriptor(ServiceReferenceDescriptor serviceReference) {
-        }
-
-        @Override
-        public void removeServiceReferenceDescriptor(ServiceReferenceDescriptor serviceReference) {
-        }
-
-        @Override
-        public void addEntityManagerFactoryReferenceDescriptor(EntityManagerFactoryReferenceDescriptor reference) {
-        }
-
-        @Override
-        public void addEntityManagerReferenceDescriptor(EntityManagerReferenceDescriptor reference) {
-        }
-
-        @Override
-        public Set<EjbReferenceDescriptor> getEjbReferenceDescriptors() {
-            return Set.of();
-        }
-
-        @Override
-        public Set<ServiceReferenceDescriptor> getServiceReferenceDescriptors() {
-            return Set.of();
-        }
-
-        @Override
-        public ServiceReferenceDescriptor getServiceReferenceByName(String name) {
-            return null;
-        }
-
-        @Override
-        public Set<ResourceReferenceDescriptor> getResourceReferenceDescriptors() {
-            return Set.of();
-        }
-
-        @Override
-        public Set<ResourceEnvReferenceDescriptor> getResourceEnvReferenceDescriptors() {
-            return Set.of();
-        }
-
-        @Override
-        public ResourceEnvReferenceDescriptor getResourceEnvReferenceByName(String name) {
-            return null;
-        }
-
-        @Override
-        public Set<MessageDestinationReferenceDescriptor> getMessageDestinationReferenceDescriptors() {
-            return Set.of();
-        }
-
-        @Override
-        public MessageDestinationReferenceDescriptor getMessageDestinationReferenceByName(String name) {
-            return null;
-        }
-
-        @Override
-        public Set<LifecycleCallbackDescriptor> getPostConstructDescriptors() {
-            return Set.of();
-        }
-
-        @Override
-        public Set<EntityManagerFactoryReferenceDescriptor> getEntityManagerFactoryReferenceDescriptors() {
-            return Set.of();
-        }
-
-        @Override
-        public EntityManagerFactoryReferenceDescriptor getEntityManagerFactoryReferenceByName(String name) {
-            return null;
-        }
-
-        @Override
-        public Set<EntityManagerReferenceDescriptor> getEntityManagerReferenceDescriptors() {
-            return Set.of();
-        }
-
-        @Override
-        public EntityManagerReferenceDescriptor getEntityManagerReferenceByName(String name) {
-            return null;
-        }
-
-        @Override
-        public List<InjectionCapable> getInjectableResourcesByClass(String className) {
-            return List.of();
-        }
-
-        @Override
-        public InjectionInfo getInjectionInfoByClass(Class<?> clazz) {
-            return null;
-        }
-
-        @Override
-        public EjbReferenceDescriptor getEjbReference(String name) {
-            return null;
-        }
-
-        @Override
-        public ResourceReferenceDescriptor getResourceReferenceByName(String name) {
-            return null;
-        }
-
-
-        @Override
-        public Boolean getDisableNonportableJndiNames() {
-            return null;
-        }
+        private static final long serialVersionUID = 1L;
 
         @Override
         public String getDefaultSpecVersion() {
             return "0.0";
         }
+
 
         @Override
         protected EjbDescriptor createDummyEjbDescriptor(String ejbName) {
@@ -966,15 +821,19 @@ class ApplicationValidatorTest {
 
     private static final class FakeWebBundleDescriptor extends WebBundleDescriptor {
 
+        private static final long serialVersionUID = 1L;
+
         @Override
         public void addJndiNameEnvironment(JndiNameEnvironment env) {
             throw new UnsupportedOperationException("Merging other descriptors is not supported");
         }
 
+
         @Override
         protected void addCommonWebBundleDescriptor(WebBundleDescriptor wbd, boolean defaultDescriptor) {
             throw new UnsupportedOperationException("Merging other descriptors is not supported");
         }
+
 
         @Override
         public String getDefaultSpecVersion() {

@@ -144,7 +144,10 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
         validateEnvEntries(application);
 
         for (BundleDescriptor ebd : application.getBundleDescriptorsOfType(DOLUtils.ejbType())) {
-            ebd.visit(getSubDescriptorVisitor(ebd));
+            DescriptorVisitor visitor = getSubDescriptorVisitor(ebd);
+            if (visitor != null) {
+                ebd.visit(visitor);
+            }
         }
 
         for (BundleDescriptor wbd : application.getBundleDescriptorsOfType(DOLUtils.warType())) {
@@ -200,10 +203,10 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
         List<ModuleDescriptor<BundleDescriptor>> conflicted = new ArrayList<>();
         // make sure all the modules have unique names
         Set<ModuleDescriptor<BundleDescriptor>> modules = application.getModules();
-        for (ModuleDescriptor<BundleDescriptor> module : modules) {
+        for (ModuleDescriptor<BundleDescriptor> module1 : modules) {
             // if this module is already added to the conflicted list
             // no need to process it again
-            if (conflicted.contains(module)) {
+            if (conflicted.contains(module1)) {
                 continue;
             }
             boolean foundConflictedModule = false;
@@ -213,13 +216,13 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
                 if (conflicted.contains(module2)) {
                     continue;
                 }
-                if (!module.equals(module2) && Objects.equals(module.getModuleName(), module2.getModuleName())) {
+                if (!module1.equals(module2) && Objects.equals(module1.getModuleName(), module2.getModuleName())) {
                     conflicted.add(module2);
                     foundConflictedModule = true;
                 }
             }
             if (foundConflictedModule) {
-                conflicted.add(module);
+                conflicted.add(module1);
             }
         }
 

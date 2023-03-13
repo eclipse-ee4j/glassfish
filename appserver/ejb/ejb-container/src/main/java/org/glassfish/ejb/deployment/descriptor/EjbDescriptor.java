@@ -2059,10 +2059,10 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
             if (getEjbBundleDescriptor() != null) {
                 reference.setReferringBundleDescriptor(getEjbBundleDescriptor());
             }
-            if (env != null) {
-                env.addEntityManagerFactoryReferenceDescriptor(reference);
-            } else {
+            if (env == null) {
                 entityManagerFactoryReferences.add(reference);
+            } else {
+                env.addEntityManagerFactoryReferenceDescriptor(reference);
             }
         }
     }

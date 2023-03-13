@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -56,7 +56,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -275,13 +274,14 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
     }
 
     @Override
-    public void addToComponentNamespace(JndiNameEnvironment origEnv, Collection<EnvironmentProperty> envProps, Collection<ResourceReferenceDescriptor> resRefs) throws NamingException {
+    public void addToComponentNamespace(JndiNameEnvironment origEnv, Collection<EnvironmentProperty> envProps,
+        Collection<ResourceReferenceDescriptor> resRefs) throws NamingException {
         String componentEnvId = getComponentEnvId(origEnv);
 
         Collection<JNDIBinding> bindings = new ArrayList<>();
 
-        addEnvironmentProperties(ScopeType.COMPONENT, envProps.iterator(), bindings);
-        addResourceReferences(ScopeType.COMPONENT, resRefs.iterator(), bindings);
+        addEnvironmentProperties(ScopeType.COMPONENT, envProps, bindings);
+        addResourceReferences(ScopeType.COMPONENT, resRefs, bindings);
 
         boolean treatComponentAsModule = getTreatComponentAsModule(origEnv);
 
@@ -482,9 +482,10 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
         }
     }
 
-    private void addEnvironmentProperties(ScopeType scope, Iterator<EnvironmentProperty> envItr, Collection<JNDIBinding> jndiBindings) {
-        while (envItr.hasNext()) {
-            EnvironmentProperty environmentProperty = envItr.next();
+
+    private void addEnvironmentProperties(ScopeType scope, Collection<EnvironmentProperty> envProps,
+        Collection<JNDIBinding> jndiBindings) {
+        for (EnvironmentProperty environmentProperty : envProps) {
             if (!dependencyAppliesToScope(environmentProperty, scope)) {
                 continue;
             }
@@ -503,22 +504,19 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
         }
     }
 
-    private void addResourceReferences(ScopeType scope, Iterator<ResourceReferenceDescriptor> resRefItr, Collection<JNDIBinding> jndiBindings) {
-        while (resRefItr.hasNext()) {
-            ResourceReferenceDescriptor resourceRef = resRefItr.next();
-
+    private void addResourceReferences(ScopeType scope, Collection<ResourceReferenceDescriptor> resRefs, Collection<JNDIBinding> jndiBindings) {
+        for (ResourceReferenceDescriptor resourceRef : resRefs) {
             if (!dependencyAppliesToScope(resourceRef, scope)) {
                 continue;
             }
-
             resourceRef.checkType();
 
             SimpleJndiName name = toLogicalJndiName(resourceRef);
-            Object value = null;
             SimpleJndiName physicalJndiName = resourceRef.getJndiName();
 
             // the jndi-name of URL resource can be either the actual URL value,
             // or another jndi-name that can be looked up
+            Object value = null;
             if (resourceRef.isURLResource()) {
                 if (physicalJndiName.isJavaGlobal() || physicalJndiName.isJavaApp() || physicalJndiName.isJavaModule()
                     || physicalJndiName.isJavaComponent()) {
@@ -564,7 +562,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
         // Create objects to be bound for each env dependency. Only add bindings that
         // match the given scope.
 
-        addEnvironmentProperties(scope, env.getEnvironmentProperties().iterator(), jndiBindings);
+        addEnvironmentProperties(scope, env.getEnvironmentProperties(), jndiBindings);
 
         for (ResourceEnvReferenceDescriptor descriptor : env.getResourceEnvReferenceDescriptors()) {
             if (!dependencyAppliesToScope(descriptor, scope)) {
@@ -592,7 +590,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
             jndiBindings.add(getCompEnvBinding(descriptor));
         }
 
-        addResourceReferences(scope, env.getResourceReferenceDescriptors().iterator(), jndiBindings);
+        addResourceReferences(scope, env.getResourceReferenceDescriptors(), jndiBindings);
 
         for (EntityManagerFactoryReferenceDescriptor descriptor : env.getEntityManagerFactoryReferenceDescriptors()) {
 

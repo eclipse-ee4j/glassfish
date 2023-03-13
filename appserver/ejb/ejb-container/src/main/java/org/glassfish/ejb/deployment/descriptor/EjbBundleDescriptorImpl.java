@@ -18,22 +18,10 @@
 package org.glassfish.ejb.deployment.descriptor;
 
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
-import com.sun.enterprise.deployment.EjbReferenceDescriptor;
-import com.sun.enterprise.deployment.EntityManagerFactoryReferenceDescriptor;
-import com.sun.enterprise.deployment.EntityManagerReferenceDescriptor;
-import com.sun.enterprise.deployment.InjectionCapable;
-import com.sun.enterprise.deployment.InjectionInfo;
-import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
 import com.sun.enterprise.deployment.NameValuePairDescriptor;
-import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
-import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.RoleReference;
-import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.runtime.common.SecurityRoleMapping;
-import com.sun.enterprise.deployment.types.EjbReference;
-import com.sun.enterprise.deployment.types.EntityManagerFactoryReference;
-import com.sun.enterprise.deployment.types.EntityManagerReference;
 import com.sun.enterprise.deployment.util.ComponentPostVisitor;
 import com.sun.enterprise.deployment.util.ComponentVisitor;
 import com.sun.enterprise.deployment.util.DOLUtils;
@@ -88,19 +76,23 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
 
     private final List<NameValuePairDescriptor> enterpriseBeansProperties = new ArrayList<>();
 
-    // EJB module level dependencies
-    private final Set<EjbReferenceDescriptor> ejbReferences = new HashSet<>();
-    private final Set<ResourceEnvReferenceDescriptor> resourceEnvReferences = new HashSet<>();
-    private final Set<MessageDestinationReferenceDescriptor> messageDestReferences = new HashSet<>();
-    private final Set<ResourceReferenceDescriptor> resourceReferences = new HashSet<>();
-    private final Set<ServiceReferenceDescriptor> serviceReferences = new HashSet<>();
-    private final Set<EntityManagerFactoryReferenceDescriptor> entityManagerFactoryReferences = new HashSet<>();
-    private final Set<EntityManagerReferenceDescriptor> entityManagerReferences = new HashSet<>();
 
 
     @Override
     public String getDefaultSpecVersion() {
         return EjbBundleNode.SPEC_VERSION;
+    }
+
+
+    /**
+     * Returns a name or Ejb1 as a default.
+     */
+    @Override
+    public String getName() {
+        if ("".equals(super.getName())) {
+            super.setName("Ejb1");
+        }
+        return super.getName();
     }
 
 
@@ -341,32 +333,36 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
     }
 
 
-
     /**
-     * Returns my name.
+     * visit the descriptor and all sub descriptors with a DOL visitor implementation
+     *
+     * @param aVisitor a visitor to traverse the descriptors
      */
     @Override
-    public String getName() {
-        if ("".equals(super.getName())) {
-            super.setName("Ejb1");
+    public void visit(DescriptorVisitor aVisitor) {
+        if (aVisitor instanceof EjbBundleVisitor ||
+            aVisitor instanceof ComponentPostVisitor) {
+            visit((ComponentVisitor) aVisitor);
+        } else {
+            super.visit(aVisitor);
         }
-        return super.getName();
+    }
+
+
+    @Override
+    public DescriptorVisitor getTracerVisitor() {
+        return new EjbBundleTracerVisitor();
     }
 
 
     /**
-     * @return true if this bundle descriptor defines web service clients
+     * @return new {@link EjbBundleValidator}
      */
     @Override
-    public boolean hasWebServiceClients() {
-        for (EjbDescriptor next : getEjbs()) {
-            Collection<ServiceReferenceDescriptor> serviceRefs = next.getServiceReferenceDescriptors();
-            if (!(serviceRefs.isEmpty())) {
-                return true;
-            }
-        }
-        return false;
+    public ComponentVisitor getBundleVisitor() {
+        return new EjbBundleValidator();
     }
+
 
 
     /**
@@ -385,35 +381,6 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
             toStringBuffer.append("\n------------\n");
             o.print(toStringBuffer);
             toStringBuffer.append("\n------------");
-        }
-    }
-
-    @Override
-    public DescriptorVisitor getTracerVisitor() {
-        return new EjbBundleTracerVisitor();
-    }
-
-
-    /**
-     * @return the visitor for this bundle descriptor
-     */
-    @Override
-    public ComponentVisitor getBundleVisitor() {
-        return new EjbBundleValidator();
-    }
-
-    /**
-     * visit the descriptor and all sub descriptors with a DOL visitor implementation
-     *
-     * @param aVisitor a visitor to traverse the descriptors
-     */
-    @Override
-    public void visit(DescriptorVisitor aVisitor) {
-        if (aVisitor instanceof EjbBundleVisitor ||
-            aVisitor instanceof ComponentPostVisitor) {
-            visit((ComponentVisitor) aVisitor);
-        } else {
-            super.visit(aVisitor);
         }
     }
 
@@ -479,291 +446,6 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
     public List<SecurityRoleMapping> getSecurityRoleMappings() {
         return roleMaps;
     }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Collection<? extends PersistenceUnitDescriptor> findReferencedPUs() {
-        Collection<PersistenceUnitDescriptor> pus = new HashSet<>();
-        // Iterate through all the ejbs
-        for (EjbDescriptor ejb : getEjbs()) {
-            pus.addAll(findReferencedPUsViaPURefs(ejb));
-            pus.addAll(findReferencedPUsViaPCRefs(ejb));
-        }
-
-        // Add bundle level artifacts added by e.g. CDDI
-        for (EntityManagerFactoryReference emfRef : getEntityManagerFactoryReferenceDescriptors()) {
-            pus.add(findReferencedPUViaEMFRef(emfRef));
-        }
-
-        for (EntityManagerReference emRef : getEntityManagerReferenceDescriptors()) {
-            pus.add(findReferencedPUViaEMRef(emRef));
-        }
-        return pus;
-    }
-
-
-    /**
-     * Returns the generated XML directory feturn the set of ejb references this ejb declares.
-     */
-    @Override
-    public Set<EjbReferenceDescriptor> getEjbReferenceDescriptors() {
-        return ejbReferences;
-    }
-
-
-    /**
-     * Adds a reference to another ejb to me.
-     */
-
-    @Override
-    public void addEjbReferenceDescriptor(EjbReferenceDescriptor ejbReference) {
-        ejbReferences.add(ejbReference);
-        ejbReference.setReferringBundleDescriptor(this);
-    }
-
-
-    @Override
-    public void removeEjbReferenceDescriptor(EjbReferenceDescriptor ejbReference) {
-        ejbReferences.remove(ejbReference);
-    }
-
-
-    /**
-     * Return a reference to another ejb by the same name or throw an IllegalArgumentException.
-     */
-    public EjbReference getEjbReferenceByName(String name) {
-        return getEjbReference(name);
-    }
-
-
-    @Override
-    public EjbReferenceDescriptor getEjbReference(String name) {
-        for (EjbReferenceDescriptor er : getEjbReferenceDescriptors()) {
-            if (er.getName().equals(name)) {
-                return er;
-            }
-        }
-        throw new IllegalArgumentException(
-            I18N.getLocalString("enterprise.deployment.exceptionapphasnoejbrefbyname",
-                "This ejb jar [{0}] has no ejb reference by the name of [{1}] ", new Object[] {getName(), name}));
-    }
-
-
-    @Override
-    public Set<ServiceReferenceDescriptor> getServiceReferenceDescriptors() {
-        return serviceReferences;
-    }
-
-
-    @Override
-    public void addServiceReferenceDescriptor(ServiceReferenceDescriptor serviceRef) {
-        serviceRef.setBundleDescriptor(this);
-        serviceReferences.add(serviceRef);
-    }
-
-
-    @Override
-    public void removeServiceReferenceDescriptor(ServiceReferenceDescriptor serviceRef) {
-        serviceReferences.remove(serviceRef);
-    }
-
-
-    /**
-     * Looks up an service reference with the given name.
-     * Throws an IllegalArgumentException if it is not found.
-     */
-    @Override
-    public ServiceReferenceDescriptor getServiceReferenceByName(String name) {
-        for (Object element : getServiceReferenceDescriptors()) {
-            ServiceReferenceDescriptor srd = (ServiceReferenceDescriptor) element;
-            if (srd.getName().equals(name)) {
-                return srd;
-            }
-        }
-        throw new IllegalArgumentException("No service ref of name " + name);
-    }
-
-
-    @Override
-    public Set<MessageDestinationReferenceDescriptor> getMessageDestinationReferenceDescriptors() {
-        return messageDestReferences;
-    }
-
-
-    @Override
-    public void addMessageDestinationReferenceDescriptor(MessageDestinationReferenceDescriptor messageDestRef) {
-        messageDestRef.setReferringBundleDescriptor(this);
-        messageDestReferences.add(messageDestRef);
-    }
-
-
-    @Override
-    public void removeMessageDestinationReferenceDescriptor(MessageDestinationReferenceDescriptor msgDestRef) {
-        messageDestReferences.remove(msgDestRef);
-    }
-
-
-    /**
-     * Looks up an message destination reference with the given name.
-     * Throws an IllegalArgumentException if it is not found.
-     */
-    @Override
-    public MessageDestinationReferenceDescriptor
-        getMessageDestinationReferenceByName(String name) {
-
-        for (MessageDestinationReferenceDescriptor mdr : messageDestReferences) {
-            if (mdr.getName().equals(name)) {
-                return mdr;
-            }
-        }
-        throw new IllegalArgumentException("No message destination ref of name " + name);
-    }
-
-    /**
-     * Return the set of resource environment references this ejb declares.
-     */
-    @Override
-    public Set<ResourceEnvReferenceDescriptor> getResourceEnvReferenceDescriptors() {
-        return resourceEnvReferences;
-    }
-
-    @Override
-    public void addResourceEnvReferenceDescriptor(ResourceEnvReferenceDescriptor resourceEnvReference) {
-        resourceEnvReferences.add(resourceEnvReference);
-    }
-
-    @Override
-    public void removeResourceEnvReferenceDescriptor(ResourceEnvReferenceDescriptor resourceEnvReference) {
-        resourceEnvReferences.remove(resourceEnvReference);
-    }
-
-    /**
-     * Return a reference to another ejb by the same name or throw an IllegalArgumentException.
-     */
-    @Override
-    public ResourceEnvReferenceDescriptor getResourceEnvReferenceByName(String name) {
-        for (ResourceEnvReferenceDescriptor element : getResourceEnvReferenceDescriptors()) {
-            if (element.getName().equals(name)) {
-                return element;
-            }
-        }
-        throw new IllegalArgumentException("No resource env ref of name " + name);
-    }
-
-
-    /**
-     * Return the set of resource references this ejb declares.
-     */
-    @Override
-    public Set<ResourceReferenceDescriptor> getResourceReferenceDescriptors() {
-        return resourceReferences;
-    }
-    /**
-     * Adds a resource reference to me.
-     */
-    @Override
-    public void addResourceReferenceDescriptor(ResourceReferenceDescriptor resourceReference) {
-        resourceReferences.add(resourceReference);
-    }
-
-    /**
-     * Removes the given resource reference from me.
-     */
-    @Override
-    public void removeResourceReferenceDescriptor(ResourceReferenceDescriptor resourceReference) {
-        resourceReferences.remove(resourceReference);
-    }
-
-    /**
-     * Return the resource object corresponding to the supplied name or throw an illegal argument exception.
-     */
-    @Override
-    public ResourceReferenceDescriptor getResourceReferenceByName(String name) {
-        for (ResourceReferenceDescriptor element : getResourceReferenceDescriptors()) {
-            if (element.getName().equals(name)) {
-                return element;
-            }
-        }
-        throw new IllegalArgumentException("no resource ref of name " + name);
-    }
-
-
-
-    @Override
-    public Set<EntityManagerFactoryReferenceDescriptor> getEntityManagerFactoryReferenceDescriptors() {
-        return entityManagerFactoryReferences;
-    }
-
-
-    /**
-     * Return the entity manager factory reference descriptor corresponding to
-     * the given name.
-     */
-    @Override
-    public EntityManagerFactoryReferenceDescriptor getEntityManagerFactoryReferenceByName(String name) {
-        for (EntityManagerFactoryReferenceDescriptor next : getEntityManagerFactoryReferenceDescriptors()) {
-            if (next.getName().equals(name)) {
-                return next;
-            }
-        }
-        throw new IllegalArgumentException("No entity manager factory reference of name " + name);
-    }
-
-
-    @Override
-    public void addEntityManagerFactoryReferenceDescriptor(EntityManagerFactoryReferenceDescriptor reference) {
-        reference.setReferringBundleDescriptor(this);
-        entityManagerFactoryReferences.add(reference);
-    }
-
-
-    @Override
-    public Set<EntityManagerReferenceDescriptor> getEntityManagerReferenceDescriptors() {
-        return entityManagerReferences;
-    }
-
-
-    /**
-     * Return the entity manager factory reference descriptor corresponding to
-     * the given name.
-     */
-    @Override
-    public EntityManagerReferenceDescriptor getEntityManagerReferenceByName(String name) {
-        for (EntityManagerReferenceDescriptor next : getEntityManagerReferenceDescriptors()) {
-            if (next.getName().equals(name)) {
-                return next;
-            }
-        }
-        throw new IllegalArgumentException("No entity manager reference of name " + name);
-    }
-
-
-    @Override
-    public void addEntityManagerReferenceDescriptor(EntityManagerReferenceDescriptor reference) {
-        reference.setReferringBundleDescriptor(this);
-        getEntityManagerReferenceDescriptors().add(reference);
-    }
-
-
-    @Override
-    public List<InjectionCapable> getInjectableResourcesByClass(String className) {
-        return getInjectableResourcesByClass(className, this);
-    }
-
-    @Override
-    public InjectionInfo getInjectionInfoByClass(Class clazz) {
-        return getInjectionInfoByClass(clazz, this);
-    }
-
-
-    //
-    // There is still some redundant DOL processing of the modules that can result in these
-    // being called so just treat them as no-ops.
-    //
-
 
 
     public String getEnterpriseBeansProperty(String key) {

@@ -286,9 +286,8 @@ public class Application extends CommonResourceBundleDescriptor
                 return er;
             }
         }
-        throw new IllegalArgumentException(I18N.getLocalString(
-                "enterprise.deployment.exceptionapphasnoejbrefbyname",
-                "This app [{0}] has no ejb reference by the name of [{1}] ", new Object[]{getName(), name}));
+        throw new IllegalArgumentException(
+            MessageFormat.format("This app [{0}] has no ejb reference by the name of [{1}] ", getName(), name));
     }
 
 

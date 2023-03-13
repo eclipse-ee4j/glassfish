@@ -18,14 +18,19 @@
 package com.sun.enterprise.deployment;
 
 import com.sun.enterprise.deployment.types.EjbReferenceContainer;
+import com.sun.enterprise.deployment.types.EntityManagerFactoryReference;
+import com.sun.enterprise.deployment.types.EntityManagerReference;
 import com.sun.enterprise.deployment.types.MessageDestinationReferenceContainer;
 import com.sun.enterprise.deployment.types.ResourceEnvReferenceContainer;
 import com.sun.enterprise.deployment.types.ResourceReferenceContainer;
 import com.sun.enterprise.deployment.types.ServiceReferenceContainer;
+import com.sun.enterprise.deployment.util.ComponentVisitor;
 import com.sun.enterprise.deployment.util.DOLUtils;
 
 import java.lang.System.Logger;
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -55,10 +60,17 @@ public abstract class EjbBundleDescriptor extends CommonResourceBundleDescriptor
 
     private final Map<String, EjbApplicationExceptionInfo> applicationExceptions = new HashMap<>();
     private final Set<EjbDescriptor> ejbs = new HashSet<>();
+    /** EJB module level dependencies */
+    private final Set<EjbReferenceDescriptor> ejbReferences = new HashSet<>();
+    private final Set<EntityManagerFactoryReferenceDescriptor> entityManagerFactoryReferences = new HashSet<>();
+    private final Set<EntityManagerReferenceDescriptor> entityManagerReferences = new HashSet<>();
     private final Set<EnvironmentProperty> environmentProperties = new HashSet<>();
-
     /** All interceptor classes defined within this ejb module, keyed by interceptor class name. */
     private final Map<String, EjbInterceptor> interceptors = new HashMap<>();
+    private final Set<MessageDestinationReferenceDescriptor> messageDestReferences = new HashSet<>();
+    private final Set<ResourceEnvReferenceDescriptor> resourceEnvReferences = new HashSet<>();
+    private final Set<ResourceReferenceDescriptor> resourceReferences = new HashSet<>();
+    private final Set<ServiceReferenceDescriptor> serviceReferences = new HashSet<>();
 
     /**
      * Creates a dummy {@link EjbDescriptor} instance of the given name.
@@ -126,6 +138,20 @@ public abstract class EjbBundleDescriptor extends CommonResourceBundleDescriptor
 
 
     /**
+     * @param name
+     * @return true if I have an ejb descriptor by that name.
+     */
+    public boolean hasEjbByName(String name) {
+        for (EjbDescriptor ejb : ejbs) {
+            if (ejb.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    /**
      * @param name name of the {@link EjbDescriptor}
      * @return an ejb descriptor that I have by the same name, otherwise throws
      *          an IllegalArgumentException
@@ -133,7 +159,6 @@ public abstract class EjbBundleDescriptor extends CommonResourceBundleDescriptor
     public EjbDescriptor getEjbByName(String name) {
         return getEjbByName(name, false);
     }
-
 
     /**
      * Returns an ejb descriptor of the given name.
@@ -197,12 +222,26 @@ public abstract class EjbBundleDescriptor extends CommonResourceBundleDescriptor
 
 
     /**
-     * @param name
-     * @return true if I have an ejb descriptor by that name.
+     * @return set of service-ref from ejbs contained in this bundle this bundle or empty set
+     *         if none
      */
-    public boolean hasEjbByName(String name) {
+    public Set<ServiceReferenceDescriptor> getEjbServiceReferenceDescriptors() {
+        Set<ServiceReferenceDescriptor> serviceRefs = new OrderedSet<>();
         for (EjbDescriptor ejb : ejbs) {
-            if (ejb.getName().equals(name)) {
+            serviceRefs.addAll(ejb.getServiceReferenceDescriptors());
+        }
+        return serviceRefs;
+    }
+
+
+    /**
+     * @return true if this bundle descriptor defines web service clients
+     */
+    @Override
+    public boolean hasWebServiceClients() {
+        for (EjbDescriptor next : ejbs) {
+            Collection<ServiceReferenceDescriptor> serviceRefs = next.getServiceReferenceDescriptors();
+            if (!serviceRefs.isEmpty()) {
                 return true;
             }
         }
@@ -229,6 +268,109 @@ public abstract class EjbBundleDescriptor extends CommonResourceBundleDescriptor
     public void removeEjb(EjbDescriptor ejbDescriptor) {
         ejbDescriptor.setEjbBundleDescriptor(null);
         ejbs.remove(ejbDescriptor);
+    }
+
+
+    /**
+     * Returns the generated XML directory feturn the set of ejb references this ejb declares.
+     */
+    @Override
+    public Set<EjbReferenceDescriptor> getEjbReferenceDescriptors() {
+        return ejbReferences;
+    }
+
+
+    @Override
+    public EjbReferenceDescriptor getEjbReference(String name) {
+        for (EjbReferenceDescriptor reference : ejbReferences) {
+            if (reference.getName().equals(name)) {
+                return reference;
+            }
+        }
+        throw new IllegalArgumentException(
+            MessageFormat.format("This ejb jar [{0}] has no ejb reference by the name of [{1}] ", getName(), name));
+    }
+
+
+    @Override
+    public void addEjbReferenceDescriptor(EjbReferenceDescriptor ejbReference) {
+        ejbReferences.add(ejbReference);
+        ejbReference.setReferringBundleDescriptor(this);
+    }
+
+
+    @Override
+    public void removeEjbReferenceDescriptor(EjbReferenceDescriptor ejbReference) {
+        ejbReferences.remove(ejbReference);
+    }
+
+
+    @Override
+    public Collection<? extends PersistenceUnitDescriptor> findReferencedPUs() {
+        Collection<PersistenceUnitDescriptor> persistenceUnits = new HashSet<>();
+        // Iterate through all the ejbs
+        for (EjbDescriptor ejb : ejbs) {
+            persistenceUnits.addAll(findReferencedPUsViaPURefs(ejb));
+            persistenceUnits.addAll(findReferencedPUsViaPCRefs(ejb));
+        }
+
+        // Add bundle level artifacts added by e.g. CDDI
+        for (EntityManagerFactoryReference emfRef : getEntityManagerFactoryReferenceDescriptors()) {
+            persistenceUnits.add(findReferencedPUViaEMFRef(emfRef));
+        }
+
+        for (EntityManagerReference emRef : getEntityManagerReferenceDescriptors()) {
+            persistenceUnits.add(findReferencedPUViaEMRef(emRef));
+        }
+        return persistenceUnits;
+    }
+
+
+    @Override
+    public Set<EntityManagerFactoryReferenceDescriptor> getEntityManagerFactoryReferenceDescriptors() {
+        return entityManagerFactoryReferences;
+    }
+
+
+    @Override
+    public EntityManagerFactoryReferenceDescriptor getEntityManagerFactoryReferenceByName(String name) {
+        for (EntityManagerFactoryReferenceDescriptor reference : getEntityManagerFactoryReferenceDescriptors()) {
+            if (reference.getName().equals(name)) {
+                return reference;
+            }
+        }
+        throw new IllegalArgumentException("No entity manager factory reference of name " + name);
+    }
+
+
+    @Override
+    public void addEntityManagerFactoryReferenceDescriptor(EntityManagerFactoryReferenceDescriptor reference) {
+        reference.setReferringBundleDescriptor(this);
+        entityManagerFactoryReferences.add(reference);
+    }
+
+
+    @Override
+    public Set<EntityManagerReferenceDescriptor> getEntityManagerReferenceDescriptors() {
+        return entityManagerReferences;
+    }
+
+
+    @Override
+    public EntityManagerReferenceDescriptor getEntityManagerReferenceByName(String name) {
+        for (EntityManagerReferenceDescriptor reference : entityManagerReferences) {
+            if (reference.getName().equals(name)) {
+                return reference;
+            }
+        }
+        throw new IllegalArgumentException("No entity manager reference of name " + name);
+    }
+
+
+    @Override
+    public void addEntityManagerReferenceDescriptor(EntityManagerReferenceDescriptor reference) {
+        reference.setReferringBundleDescriptor(this);
+        entityManagerReferences.add(reference);
     }
 
 
@@ -263,6 +405,14 @@ public abstract class EjbBundleDescriptor extends CommonResourceBundleDescriptor
 
 
     /**
+     * @return new {@link Set} with all our {@link EjbInterceptor}s
+     */
+    public Set<EjbInterceptor> getInterceptors() {
+        return new HashSet<>(interceptors.values());
+    }
+
+
+    /**
      * @param className
      * @return {@link EjbInterceptor} or null
      */
@@ -286,24 +436,121 @@ public abstract class EjbBundleDescriptor extends CommonResourceBundleDescriptor
     }
 
 
-    /**
-     * @return new {@link Set} with all our {@link EjbInterceptor}s
-     */
-    public Set<EjbInterceptor> getInterceptors() {
-        return new HashSet<>(interceptors.values());
+    @Override
+    public Set<MessageDestinationReferenceDescriptor> getMessageDestinationReferenceDescriptors() {
+        return messageDestReferences;
     }
 
 
-    /**
-     * @return set of service-ref from ejbs contained in this bundle this bundle or empty set
-     *         if none
-     */
-    public Set<ServiceReferenceDescriptor> getEjbServiceReferenceDescriptors() {
-        Set<ServiceReferenceDescriptor> serviceRefs = new OrderedSet<>();
-        for (EjbDescriptor next : ejbs) {
-            serviceRefs.addAll(next.getServiceReferenceDescriptors());
+    @Override
+    public MessageDestinationReferenceDescriptor getMessageDestinationReferenceByName(String name) {
+        for (MessageDestinationReferenceDescriptor mdr : messageDestReferences) {
+            if (mdr.getName().equals(name)) {
+                return mdr;
+            }
         }
-        return serviceRefs;
+        throw new IllegalArgumentException("No message destination ref of name " + name);
+    }
+
+
+    @Override
+    public void addMessageDestinationReferenceDescriptor(MessageDestinationReferenceDescriptor messageDestRef) {
+        messageDestRef.setReferringBundleDescriptor(this);
+        messageDestReferences.add(messageDestRef);
+    }
+
+
+    @Override
+    public void removeMessageDestinationReferenceDescriptor(MessageDestinationReferenceDescriptor msgDestRef) {
+        messageDestReferences.remove(msgDestRef);
+    }
+
+
+    @Override
+    public Set<ResourceEnvReferenceDescriptor> getResourceEnvReferenceDescriptors() {
+        return resourceEnvReferences;
+    }
+
+
+    @Override
+    public ResourceEnvReferenceDescriptor getResourceEnvReferenceByName(String name) {
+        for (ResourceEnvReferenceDescriptor element : resourceEnvReferences) {
+            if (element.getName().equals(name)) {
+                return element;
+            }
+        }
+        throw new IllegalArgumentException("No resource env ref of name " + name);
+    }
+
+
+    @Override
+    public void addResourceEnvReferenceDescriptor(ResourceEnvReferenceDescriptor resourceEnvReference) {
+        resourceEnvReferences.add(resourceEnvReference);
+    }
+
+
+    @Override
+    public void removeResourceEnvReferenceDescriptor(ResourceEnvReferenceDescriptor resourceEnvReference) {
+        resourceEnvReferences.remove(resourceEnvReference);
+    }
+
+
+    @Override
+    public Set<ResourceReferenceDescriptor> getResourceReferenceDescriptors() {
+        return resourceReferences;
+    }
+
+
+    @Override
+    public ResourceReferenceDescriptor getResourceReferenceByName(String name) {
+        for (ResourceReferenceDescriptor reference : resourceReferences) {
+            if (reference.getName().equals(name)) {
+                return reference;
+            }
+        }
+        throw new IllegalArgumentException("No resource ref of name " + name);
+    }
+
+
+    @Override
+    public void addResourceReferenceDescriptor(ResourceReferenceDescriptor resourceReference) {
+        resourceReferences.add(resourceReference);
+    }
+
+
+    @Override
+    public void removeResourceReferenceDescriptor(ResourceReferenceDescriptor resourceReference) {
+        resourceReferences.remove(resourceReference);
+    }
+
+
+    @Override
+    public Set<ServiceReferenceDescriptor> getServiceReferenceDescriptors() {
+        return serviceReferences;
+    }
+
+
+    @Override
+    public ServiceReferenceDescriptor getServiceReferenceByName(String name) {
+        for (ServiceReferenceDescriptor reference : getServiceReferenceDescriptors()) {
+            if (reference.getName().equals(name)) {
+                return reference;
+            }
+        }
+        throw new IllegalArgumentException("No service ref of name " + name);
+    }
+
+
+    @Override
+    public void addServiceReferenceDescriptor(ServiceReferenceDescriptor serviceRef) {
+        serviceRef.setBundleDescriptor(this);
+        serviceReferences.add(serviceRef);
+    }
+
+
+    @Override
+    public void removeServiceReferenceDescriptor(ServiceReferenceDescriptor serviceRef) {
+        serviceReferences.remove(serviceRef);
     }
 
 
@@ -316,6 +563,27 @@ public abstract class EjbBundleDescriptor extends CommonResourceBundleDescriptor
             }
             super.removeRole(role);
         }
+    }
+
+
+    /**
+     * @return null if not overriden
+     */
+    @Override
+    public ComponentVisitor getBundleVisitor() {
+        return null;
+    }
+
+
+    @Override
+    public List<InjectionCapable> getInjectableResourcesByClass(String className) {
+        return getInjectableResourcesByClass(className, this);
+    }
+
+
+    @Override
+    public InjectionInfo getInjectionInfoByClass(Class clazz) {
+        return getInjectionInfoByClass(clazz, this);
     }
 
 

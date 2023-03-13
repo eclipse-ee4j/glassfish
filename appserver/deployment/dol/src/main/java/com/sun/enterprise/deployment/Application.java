@@ -37,6 +37,7 @@ import jakarta.persistence.EntityManagerFactory;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -62,6 +63,7 @@ import org.glassfish.deployment.versioning.VersioningUtils;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.security.common.Role;
+import org.jvnet.hk2.annotations.Optional;
 
 /**
  * Objects of this type encapsulate the data and behaviour of a JEE application.
@@ -139,6 +141,7 @@ public class Application extends CommonResourceBundleDescriptor
     private String realm;
 
     @Inject
+    @Optional
     private transient SecurityRoleMapperFactory securityRoleMapperFactory;
 
     /**

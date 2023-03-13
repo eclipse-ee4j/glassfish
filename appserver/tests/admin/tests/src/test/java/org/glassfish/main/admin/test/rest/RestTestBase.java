@@ -76,7 +76,7 @@ public class RestTestBase {
         baseAdminUrl = "http://localhost:4848";
         baseInstanceUrl = "http://localhost:8080";
         managementClient = new DomainAdminRestClient(baseAdminUrl + CONTEXT_ROOT_MANAGEMENT);
-        Response response = managementClient.get("/domain/rotate-log");
+        Response response = managementClient.post("/domain/rotate-log");
         assertThat(response.getStatus(), equalTo(200));
     }
 

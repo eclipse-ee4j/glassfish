@@ -25,8 +25,12 @@ import java.net.HttpURLConnection;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
+import org.glassfish.main.itest.tools.asadmin.AsadminResult;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getAsadmin;
+import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
@@ -38,6 +42,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author David Matejcek
  */
 public class LoggingRestITest {
+
+    @BeforeAll
+    public static void fillUpLog() {
+        // The server log may become empty due to log rotation.
+        // Restart domain to fill it up.
+        AsadminResult result = getAsadmin().exec("restart-domain");
+        assertThat(result, asadminOK());
+    }
 
     @Test
     public void logFileNames() throws Exception {

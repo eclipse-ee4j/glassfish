@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -724,7 +724,7 @@ public class CompositeUtil {
             ifaceNames[i++] = iface.getName().replace(".", "/");
         }
         className = getInternalName(className);
-        classWriter.visit(V1_6, ACC_PUBLIC + ACC_SUPER, className, null, "org/glassfish/admin/rest/composite/RestModelImpl", ifaceNames);
+        classWriter.visit(V11, ACC_PUBLIC + ACC_SUPER, className, null, "org/glassfish/admin/rest/composite/RestModelImpl", ifaceNames);
 
         // Add @XmlRootElement
         classWriter.visitAnnotation("Ljakarta/xml/bind/annotation/XmlRootElement;", true).visitEnd();
@@ -744,7 +744,7 @@ public class CompositeUtil {
         MethodVisitor method = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
         method.visitCode();
         method.visitVarInsn(ALOAD, 0);
-        method.visitMethodInsn(INVOKESPECIAL, "org/glassfish/admin/rest/composite/RestModelImpl", "<init>", "()V");
+        method.visitMethodInsn(INVOKESPECIAL, "org/glassfish/admin/rest/composite/RestModelImpl", "<init>", "()V", false);
 
         for (Map.Entry<String, Map<String, Object>> property : properties.entrySet()) {
             String fieldName = property.getKey();
@@ -808,7 +808,7 @@ public class CompositeUtil {
                 method.visitTypeInsn(NEW, internalName);
                 method.visitInsn(DUP);
                 method.visitLdcInsn(defaultValue);
-                method.visitMethodInsn(INVOKESPECIAL, internalName, "<init>", "(Ljava/lang/String;)V");
+                method.visitMethodInsn(INVOKESPECIAL, internalName, "<init>", "(Ljava/lang/String;)V", false);
                 method.visitFieldInsn(PUTFIELD, getInternalName(className), fieldName, type);
             } else {
                 method.visitVarInsn(ALOAD, 0);
@@ -873,7 +873,7 @@ public class CompositeUtil {
         setter.visitFieldInsn(PUTFIELD, className, getPropertyName(name), internalType);
         setter.visitVarInsn(ALOAD, 0);
         setter.visitLdcInsn(name);
-        setter.visitMethodInsn(INVOKEVIRTUAL, className, "fieldSet", "(Ljava/lang/String;)V");
+        setter.visitMethodInsn(INVOKEVIRTUAL, className, "fieldSet", "(Ljava/lang/String;)V", false);
         setter.visitInsn(RETURN);
         setter.visitMaxs(0, 0);
         setter.visitEnd();

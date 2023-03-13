@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -40,6 +41,8 @@ import java.security.PrivilegedActionException;
 import java.security.ProtectionDomain;
 import java.util.Collection;
 
+import static org.objectweb.asm.Opcodes.V11;
+
 public class BtraceClientGenerator {
     private BtraceClientGenerator() {
         // all static class -- no instances allowed
@@ -54,7 +57,7 @@ public class BtraceClientGenerator {
 
         //Define the access identifiers for the BTrace Client class
         int access = Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL;
-        cw.visit(Opcodes.V1_5, access, generatedClassName, null,
+        cw.visit(V11, access, generatedClassName, null,
                 "java/lang/Object", null);
         //Need a @OnMethod annotation, so prepare your Annotation Visitor for that
         cw.visitAnnotation("Lcom/sun/btrace/annotations/BTrace;", true);

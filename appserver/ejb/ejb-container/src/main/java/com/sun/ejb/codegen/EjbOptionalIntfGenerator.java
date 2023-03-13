@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -219,7 +219,7 @@ public class EjbOptionalIntfGenerator {
                 // num params + one for 'this' pointer
                 maxValue = paramTypes.length + 1;
             }
-            cv.visitMethodInsn(INVOKESPECIAL,  Type.getType(superClass).getInternalName(), "<init>", paramTypeString);
+            cv.visitMethodInsn(INVOKESPECIAL,  Type.getType(superClass).getInternalName(), "<init>", paramTypeString, false);
             cv.visitInsn(RETURN);
             cv.visitMaxs(maxValue, 1);
         }
@@ -331,14 +331,14 @@ public class EjbOptionalIntfGenerator {
         mv.visitVarInsn(ALOAD, 0);
         mv.visitTypeInsn(NEW, stringBuilder);
         mv.visitInsn(DUP);
-        mv.visitMethodInsn(INVOKESPECIAL, stringBuilder, "<init>", "()V");
+        mv.visitMethodInsn(INVOKESPECIAL, stringBuilder, "<init>", "()V", false);
         mv.visitLdcInsn(superClass.getName() + "@");
-        mv.visitMethodInsn(INVOKEVIRTUAL, stringBuilder, "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;");
+        mv.visitMethodInsn(INVOKEVIRTUAL, stringBuilder, "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
         mv.visitVarInsn(ALOAD, 0);
-        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Object", "hashCode", "()I");
-        mv.visitMethodInsn(INVOKESTATIC, "java/lang/Integer", "toHexString", "(I)Ljava/lang/String;");
-        mv.visitMethodInsn(INVOKEVIRTUAL, stringBuilder, "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;");
-        mv.visitMethodInsn(INVOKEVIRTUAL, stringBuilder, toStringMethodName, toStringMethodDescriptor);
+        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Object", "hashCode", "()I", false);
+        mv.visitMethodInsn(INVOKESTATIC, "java/lang/Integer", "toHexString", "(I)Ljava/lang/String;", false);
+        mv.visitMethodInsn(INVOKEVIRTUAL, stringBuilder, "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
+        mv.visitMethodInsn(INVOKEVIRTUAL, stringBuilder, toStringMethodName, toStringMethodDescriptor, false);
         mv.visitInsn(ARETURN);
         mv.visitMaxs(2, 1);
 
@@ -379,7 +379,7 @@ public class EjbOptionalIntfGenerator {
         cv.visitTypeInsn(CHECKCAST, IndirectlySerializable.class.getName().replace('.', '/'));
         cv.visitMethodInsn(INVOKEINTERFACE,
                 IndirectlySerializable.class.getName().replace('.', '/'), "getSerializableObjectFactory",
-                "()L" + SerializableObjectFactory.class.getName().replace('.', '/') + ";");
+                "()L" + SerializableObjectFactory.class.getName().replace('.', '/') + ";", true);
         cv.visitInsn(ARETURN);
         cv.visitMaxs(1, 1);
     }

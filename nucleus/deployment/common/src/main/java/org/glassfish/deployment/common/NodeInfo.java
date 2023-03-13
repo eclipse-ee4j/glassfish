@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +23,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
-import java.io.InputStream;
+
+import static org.objectweb.asm.Opcodes.ASM9;
 
 
 /**
@@ -69,7 +71,7 @@ class NodeInfo
     }
 
     NodeInfo(byte[] classData) {
-        super(Opcodes.ASM7);
+        super(ASM9);
         ClassReader cr = new ClassReader(classData);
 
         cr.accept(this, ClassReader.SKIP_CODE);
@@ -117,7 +119,7 @@ class NodeInfo
     }
 
     NodeInfo(String className) {
-        super(Opcodes.ASM7);
+        super(ASM9);
         this.className = className;
     }
 

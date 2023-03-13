@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,7 +21,8 @@ import org.objectweb.asm.AnnotationVisitor;
 import org.glassfish.api.admin.config.PropertiesDesc;
 import org.glassfish.api.admin.config.PropertyDesc;
 import org.jvnet.hk2.config.Attribute;
-import org.objectweb.asm.Opcodes;
+
+import static org.objectweb.asm.Opcodes.ASM9;
 
 public class AttributeMethodVisitor extends EmptyVisitor {
     private ClassDef def;
@@ -29,7 +31,7 @@ public class AttributeMethodVisitor extends EmptyVisitor {
     private boolean duckTyped;
 
     public AttributeMethodVisitor(ClassDef classDef, String method, String aggType) {
-        super(Opcodes.ASM7);
+        super(ASM9);
         def = classDef;
         name = method;
         type = aggType;

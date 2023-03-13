@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,6 +32,8 @@ import java.security.ProtectionDomain;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.objectweb.asm.Opcodes.ASM9;
 
 public class ProviderSubClassImplGenerator {
     private static final Logger logger = FlashlightLoggerInfo.getLogger();
@@ -136,7 +139,7 @@ public class ProviderSubClassImplGenerator {
         String id;
 
         ProbeProviderSubClassGenerator(ClassVisitor cv, String token, String id) {
-            super(Opcodes.ASM7, cv);
+            super(ASM9, cv);
             this.id = id;
             this.token = token;
         }
@@ -165,7 +168,7 @@ public class ProviderSubClassImplGenerator {
                 MethodVisitor mv = super.visitMethod(access, name, desc, signature, strings);
                 mv.visitCode();
                 mv.visitVarInsn(Opcodes.ALOAD, 0);
-                mv.visitMethodInsn(Opcodes.INVOKESPECIAL, superClassName, "<init>", desc);
+                mv.visitMethodInsn(Opcodes.INVOKESPECIAL, superClassName, "<init>", desc, false);
                 mv.visitInsn(Opcodes.RETURN);
                 mv.visitMaxs(1, 1);
                 mv.visitEnd();
@@ -184,7 +187,7 @@ public class ProviderSubClassImplGenerator {
         private String token;
 
         ProbeProviderAnnotationVisitor(AnnotationVisitor delegate, String token) {
-            super(Opcodes.ASM7);
+            super(ASM9);
             this.delegate = delegate;
             this.token = token;
         }

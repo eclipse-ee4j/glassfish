@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,8 +36,9 @@ import org.glassfish.internal.api.Globals;
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+
+import static org.objectweb.asm.Opcodes.ASM9;
 
 /**
  * This class will detect whether an archive contains specified annotations.
@@ -61,7 +62,7 @@ public class GenericAnnotationDetector extends AnnotationScanner {
     List<String> annotations = new ArrayList<>();
 
     public GenericAnnotationDetector(Class[] annotationClasses) {
-        super(Opcodes.ASM7);
+        super(ASM9);
         if (annotationClasses != null) {
             for (Class annClass : annotationClasses) {
                 annotations.add(Type.getDescriptor(annClass));

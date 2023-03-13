@@ -18,6 +18,7 @@
 package org.glassfish.ejb.deployment.descriptor;
 
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
+//import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.NameValuePairDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.RoleReference;
@@ -26,7 +27,6 @@ import com.sun.enterprise.deployment.util.ComponentPostVisitor;
 import com.sun.enterprise.deployment.util.ComponentVisitor;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.util.EjbBundleVisitor;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
@@ -37,7 +37,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.Vector;
 
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.deployment.common.DescriptorVisitor;
@@ -48,35 +47,25 @@ import org.glassfish.ejb.deployment.util.EjbBundleTracerVisitor;
 import org.glassfish.ejb.deployment.util.EjbBundleValidator;
 import org.glassfish.security.common.Role;
 
-public class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
+public final class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
     private static final long serialVersionUID = 1L;
 
     private static final Logger LOG = DOLUtils.getLogger();
-    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(EjbBundleDescriptorImpl.class);
 
-    private Set<Long> ejbIDs;
-    private final Set<RelationshipDescriptor> relationships = new HashSet<>();
-    private String relationshipsDescription;
     private String ejbClientJarUri;
-
-    // list of configured persistence manager
-    private Vector<IASPersistenceManagerDescriptor> configured_pms;
-    private PersistenceManagerInUse pm_inuse;
 
     // the resource (database) to be used for persisting CMP EntityBeans
     // the same resource is used for all beans in this ejb jar.
     private ResourceReferenceDescriptor cmpResourceReference;
 
-
-
-
+    private final List<NameValuePairDescriptor> enterpriseBeansProperties = new ArrayList<>();
+    private final LinkedList<InterceptorBindingDescriptor> interceptorBindings = new LinkedList<>();
+    private String relationshipsDescription;
+    private final Set<RelationshipDescriptor> relationships = new HashSet<>();
     private final List<SecurityRoleMapping> roleMaps = new ArrayList<>();
 
-    private LinkedList<InterceptorBindingDescriptor> interceptorBindings = new LinkedList<>();
-
-    private final List<NameValuePairDescriptor> enterpriseBeansProperties = new ArrayList<>();
-
-
+    // non-descriptor runtime fields
+    private Set<Long> ejbIDs;
 
     @Override
     public String getDefaultSpecVersion() {
@@ -93,6 +82,204 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
             super.setName("Ejb1");
         }
         return super.getName();
+    }
+
+
+    /**
+     * @return the empty String or the entry name of the ejb client JAR in my archive if I have one.
+     */
+    public String getEjbClientJarUri() {
+        if (ejbClientJarUri == null) {
+            ejbClientJarUri = "";
+        }
+        return ejbClientJarUri;
+    }
+
+
+    // Reflection in EjbBundleNode
+    public void setEjbClientJarUri(String ejbClientJarUri) {
+        this.ejbClientJarUri = ejbClientJarUri;
+    }
+
+
+    /**
+     * @return the Resource I use for CMP.
+     */
+    public ResourceReferenceDescriptor getCMPResourceReference() {
+        return cmpResourceReference;
+    }
+
+
+    /**
+     * @param resourceReference the resource reference I use for CMP.
+     */
+    public void setCMPResourceReference(ResourceReferenceDescriptor resourceReference) {
+        this.cmpResourceReference = resourceReference;
+    }
+
+
+    /**
+     * @return list of enterprise beans properties
+     */
+    public List<NameValuePairDescriptor> getEnterpriseBeansProperties() {
+        return enterpriseBeansProperties;
+    }
+
+
+    /**
+     * @param key
+     * @return property value of enterprise beans
+     */
+    public String getEnterpriseBeansProperty(String key) {
+        for (NameValuePairDescriptor property : enterpriseBeansProperties) {
+            if (property.getName().equals(key)) {
+                return property.getValue();
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * @param newProp property of enterprise beans
+     */
+    // Reflection in EnterpriseBeansRuntimeNode
+    public void addEnterpriseBeansProperty(NameValuePairDescriptor newProp) {
+        enterpriseBeansProperties.add(newProp);
+    }
+
+
+    /**
+     * @return list of {@link InterceptorBindingDescriptor}
+     */
+    public List<InterceptorBindingDescriptor> getInterceptorBindings() {
+        return interceptorBindings;
+    }
+
+
+    /**
+     * Adds the binding as the first in the internal list.
+     *
+     * @param binding
+     */
+    public void prependInterceptorBinding(InterceptorBindingDescriptor binding) {
+        interceptorBindings.addFirst(binding);
+    }
+
+
+    /**
+     * Adds the binding as the last in the internal list.
+     *
+     * @param binding
+     */
+    // Used by EjbBundleNode
+    public void appendInterceptorBinding(InterceptorBindingDescriptor binding) {
+        interceptorBindings.addLast(binding);
+    }
+
+
+    /**
+     * Clears the internal list and adds all bindings in the same order.
+     *
+     * @param bindings
+     */
+    public void setInterceptorBindings(List<InterceptorBindingDescriptor> bindings) {
+        interceptorBindings.clear();
+        interceptorBindings.addAll(bindings);
+    }
+
+
+    /**
+     * @return description for relationships element.
+     */
+    public String getRelationshipsDescription() {
+        return relationshipsDescription;
+    }
+
+
+    /**
+     * @param relationshipsDescription EJB2.0: set description for relationships element.
+     */
+    // Reflection in RelationshipsNode
+    public void setRelationshipsDescription(String relationshipsDescription) {
+        this.relationshipsDescription = relationshipsDescription;
+    }
+
+
+    /**
+     * @return true if there are some definitions of relationships
+     */
+    public boolean hasRelationships() {
+        return !relationships.isEmpty();
+    }
+
+
+    /**
+     * Get all relationships in this ejb-jar.
+     *
+     * @return a Set of {@link RelationshipDescriptor}s.
+     */
+    public Set<RelationshipDescriptor> getRelationships() {
+        return relationships;
+    }
+
+
+    /**
+     * Add a RelationshipDescriptor which describes a CMR field between a bean/DO/entityRef
+     * in this ejb-jar.
+     *
+     * @param relationship
+     */
+    public void addRelationship(RelationshipDescriptor relationship) {
+        relationships.add(relationship);
+    }
+
+
+    /**
+     * Remove a {@link RelationshipDescriptor}. Does nothing if it is not present.
+     *
+     * @param relationship
+     */
+    public void removeRelationship(RelationshipDescriptor relationship) {
+        relationships.remove(relationship);
+    }
+
+
+    /**
+     * Adds the mapping.
+     *
+     * @param roleMapping {@link SecurityRoleMapping}
+     */
+    public void addSecurityRoleMapping(SecurityRoleMapping roleMapping) {
+        roleMaps.add(roleMapping);
+    }
+
+
+    /**
+     * @return a list of {@link SecurityRoleMapping}s
+     */
+    public List<SecurityRoleMapping> getSecurityRoleMappings() {
+        return roleMaps;
+    }
+
+
+    /**
+     * Setup EJB Ids during deployment and shouldn't be called at runtime
+     */
+    public void setupDataStructuresForRuntime() {
+        Set<Long> ids = new HashSet<>();
+        for (EjbDescriptor ejbDescriptor : getEjbs()) {
+            ids.add(ejbDescriptor.getUniqueId());
+        }
+        ejbIDs = Collections.unmodifiableSet(ids);
+    }
+
+
+    /**
+     * @return Collection of unique ID of EJBs within the same module
+     */
+    public Collection<Long> getDescriptorIds() {
+        return ejbIDs;
     }
 
 
@@ -125,84 +312,6 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
 
 
     /**
-     * @return the empty String or the entry name of the ejb client JAR in my archive if I have one.
-     */
-    public String getEjbClientJarUri() {
-        if (ejbClientJarUri == null) {
-            ejbClientJarUri = "";
-        }
-        return ejbClientJarUri;
-    }
-
-
-    // Reflection in EjbBundleNode
-    public void setEjbClientJarUri(String ejbClientJarUri) {
-        this.ejbClientJarUri = ejbClientJarUri;
-    }
-
-
-
-
-
-
-
-    /**
-     * Setup EJB Ids during deployment and shouldn't be called at runtime
-     */
-    public void setupDataStructuresForRuntime() {
-        Set<Long> ids = new HashSet<>();
-        for (EjbDescriptor ejbDescriptor : getEjbs()) {
-            ids.add(ejbDescriptor.getUniqueId());
-        }
-        ejbIDs = Collections.unmodifiableSet(ids);
-    }
-
-
-    /**
-     *
-     * @return Collection of unique ID of EJBs within the same module
-     */
-    public Collection<Long> getDescriptorIds() {
-        return ejbIDs;
-    }
-
-
-    /**
-     * @return true if this bundle descriptor contains at least one CMP
-     * EntityBean
-     */
-    public boolean containsCMPEntity() {
-        Set<EjbDescriptor> ejbs = getEjbs();
-        for (EjbDescriptor ejb : ejbs) {
-            if (ejb instanceof EjbCMPEntityDescriptor) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    public void prependInterceptorBinding(InterceptorBindingDescriptor binding) {
-        interceptorBindings.addFirst(binding);
-    }
-
-
-    public void appendInterceptorBinding(InterceptorBindingDescriptor binding) {
-        interceptorBindings.addLast(binding);
-    }
-
-
-    public List<InterceptorBindingDescriptor> getInterceptorBindings() {
-        return new LinkedList<>(interceptorBindings);
-    }
-
-
-    public void setInterceptorBindings(List<InterceptorBindingDescriptor> bindings) {
-        interceptorBindings = new LinkedList<>();
-        interceptorBindings.addAll(bindings);
-    }
-
-    /**
     * @return true if all ejb role references link to roles specified here.
     */
     public boolean areResourceReferencesValid() {
@@ -222,15 +331,25 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
 
 
     /**
-     * @return true if I have Roles to which method permissions have been assigned.
+     * @return true if this bundle descriptor contains at least one CMP
+     * EntityBean
      */
-    public boolean hasPermissionedRoles() {
-        for (EjbDescriptor ejb : getEjbs()) {
-            if (!ejb.getPermissionedMethodsByPermission().isEmpty()) {
+    public boolean containsCMPEntity() {
+        Set<EjbDescriptor> ejbs = getEjbs();
+        for (EjbDescriptor ejb : ejbs) {
+            if (ejb instanceof EjbCMPEntityDescriptor) {
                 return true;
             }
         }
         return false;
+    }
+
+
+    /**
+     * @return true if I have roles, permissioned roles or container transactions.
+     */
+    public boolean hasAssemblyInformation() {
+        return (!getRoles().isEmpty()) || hasPermissionedRoles() || hasContainerTransactions();
     }
 
 
@@ -248,88 +367,15 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
 
 
     /**
-     * @return true if I have roles, permissioned roles or container transactions.
+     * @return true if I have Roles to which method permissions have been assigned.
      */
-    public boolean hasAssemblyInformation() {
-        return (!getRoles().isEmpty()) || hasPermissionedRoles() || hasContainerTransactions();
-    }
-
-
-    /**
-     * Add a RelationshipDescriptor which describes a CMR field
-     * between a bean/DO/entityRef in this ejb-jar.
-     */
-    public void addRelationship(RelationshipDescriptor relDesc) {
-        relationships.add(relDesc);
-
-    }
-
-
-    /**
-     * Add a RelationshipDescriptor which describes a CMR field
-     * between a bean/DO/entityRef in this ejb-jar.
-     */
-    public void removeRelationship(RelationshipDescriptor relDesc) {
-        relationships.remove(relDesc);
-
-    }
-
-
-    /**
-     * EJB2.0: get description for <relationships> element.
-     */
-    public String getRelationshipsDescription() {
-        if (relationshipsDescription == null) {
-            relationshipsDescription = "";
+    public boolean hasPermissionedRoles() {
+        for (EjbDescriptor ejb : getEjbs()) {
+            if (!ejb.getPermissionedMethodsByPermission().isEmpty()) {
+                return true;
+            }
         }
-        return relationshipsDescription;
-    }
-
-
-    /**
-     * EJB2.0: set description for <relationships> element.
-     */
-    public void setRelationshipsDescription(String relationshipsDescription) {
-        this.relationshipsDescription = relationshipsDescription;
-    }
-
-
-    /**
-     * Get all relationships in this ejb-jar.
-     *
-     * @return a Set of RelationshipDescriptors.
-     */
-    public Set<RelationshipDescriptor> getRelationships() {
-        return relationships;
-    }
-
-
-    public boolean hasRelationships() {
-        return !relationships.isEmpty();
-    }
-
-
-    /**
-     * Returns true if given relationship is already part of this
-     * ejb-jar.
-     */
-    public boolean hasRelationship(RelationshipDescriptor rd) {
-        return relationships.contains(rd);
-    }
-
-    /**
-     * Return the Resource I use for CMP.
-     */
-    public ResourceReferenceDescriptor getCMPResourceReference() {
-        return cmpResourceReference;
-    }
-
-
-    /**
-     * Sets the resource reference I use for CMP.
-     */
-    public void setCMPResourceReference(ResourceReferenceDescriptor resourceReference) {
-        this.cmpResourceReference = resourceReference;
+        return false;
     }
 
 
@@ -364,10 +410,20 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
     }
 
 
+    // Used by reflection in PMDescriptorsNode
+    @Deprecated(forRemoval = true, since = "3.1")
+    public void setPersistenceManagerInUse(PersistenceManagerInUse inuse) {
+        // ignored
+    }
 
-    /**
-    * Returns a formatted String representing my state.
-    */
+
+    // Used by reflection in PMDescriptorsNode
+    @Deprecated(forRemoval = true, since = "3.1")
+    public void addPersistenceManager(IASPersistenceManagerDescriptor pmDesc) {
+        // ignored
+    }
+
+
     @Override
     public void print(StringBuffer toStringBuffer) {
         toStringBuffer.append("EjbBundleDescriptor\n");
@@ -382,88 +438,5 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
             o.print(toStringBuffer);
             toStringBuffer.append("\n------------");
         }
-    }
-
-
-    public void setPersistenceManagerInuse(String id, String ver) {
-        LOG.log(Level.DEBUG, "setPersistenceManagerInuse(id={0}, ver={1})", id, ver);
-        pm_inuse = new PersistenceManagerInUse(id, ver);
-    }
-
-
-    public void setPersistenceManagerInUse(PersistenceManagerInUse inuse) {
-        pm_inuse = inuse;
-    }
-
-
-    public PersistenceManagerInUse getPersistenceManagerInUse() {
-        return pm_inuse;
-    }
-
-
-    public void addPersistenceManager(IASPersistenceManagerDescriptor pmDesc) {
-        if (configured_pms == null) {
-            configured_pms = new Vector<>();
-        }
-        configured_pms.add(pmDesc);
-    }
-
-
-    public IASPersistenceManagerDescriptor getPreferredPersistenceManager() {
-        if (configured_pms == null || configured_pms.isEmpty()) {
-            // return the default persistence manager descriptor
-            return null;
-        }
-
-        String pminuse_id = pm_inuse.get_pm_identifier().trim();
-        String pminuse_ver = pm_inuse.get_pm_version().trim();
-        int size = configured_pms.size();
-        for (int i = 0; i < size; i++) {
-            IASPersistenceManagerDescriptor pmdesc = configured_pms.elementAt(i);
-            String pmdesc_id = pmdesc.getPersistenceManagerIdentifier();
-            String pmdesc_ver = pmdesc.getPersistenceManagerVersion();
-            if (pmdesc_id.trim().equals(pminuse_id) && pmdesc_ver.trim().equals(pminuse_ver)) {
-                return pmdesc;
-            }
-        }
-        throw new IllegalArgumentException(
-            I18N.getLocalString(
-                "enterprise.deployment.nomatchingpminusefound",
-                "No PersistenceManager found that matches specified PersistenceManager in use."));
-    }
-
-
-    public Vector<IASPersistenceManagerDescriptor> getPersistenceManagers() {
-        return configured_pms;
-    }
-
-
-    public void addSecurityRoleMapping(SecurityRoleMapping roleMapping) {
-        roleMaps.add(roleMapping);
-    }
-
-
-    public List<SecurityRoleMapping> getSecurityRoleMappings() {
-        return roleMaps;
-    }
-
-
-    public String getEnterpriseBeansProperty(String key) {
-        for (NameValuePairDescriptor p : enterpriseBeansProperties) {
-            if (p.getName().equals(key)) {
-                return p.getValue();
-            }
-        }
-        return null;
-    }
-
-
-    public void addEnterpriseBeansProperty(NameValuePairDescriptor newProp) {
-        enterpriseBeansProperties.add(newProp);
-    }
-
-
-    public List<NameValuePairDescriptor> getEnterpriseBeansProperties() {
-        return enterpriseBeansProperties;
     }
 }

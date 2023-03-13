@@ -38,7 +38,6 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -170,7 +169,7 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
         }
 
         ClassLoader cl = bundleDesc.getClassLoader();
-        List<InterceptorBindingDescriptor> newBindings = new LinkedList<>();
+        List<InterceptorBindingDescriptor> newBindings = new ArrayList<>();
         for (InterceptorBindingDescriptor next : origBindings) {
             if (!next.getNeedsOverloadResolution()) {
                 newBindings.add(next);

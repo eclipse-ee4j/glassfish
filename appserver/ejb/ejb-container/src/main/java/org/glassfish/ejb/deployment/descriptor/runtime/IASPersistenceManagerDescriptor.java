@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,6 +27,7 @@ import org.glassfish.deployment.common.Descriptor;
  *
  * @author Prashant Jamkhedkar
  */
+@Deprecated(forRemoval = true, since = "3.1")
 public class IASPersistenceManagerDescriptor extends Descriptor {
 
     private static final long serialVersionUID = 1L;
@@ -36,11 +37,12 @@ public class IASPersistenceManagerDescriptor extends Descriptor {
     public static final String PM_CLASS_GENERATOR_DEFAULT = "com.sun.jdo.spi.persistence.support.ejb.ejbc.JDOCodeGenerator"; // NOI18N
     public static final String PM_CLASS_GENERATOR_DEFAULT_OLD = "com.iplanet.ias.persistence.internal.ejb.ejbc.JDOCodeGenerator"; //NOI18N
     public static final String PM_MAPPING_FACTORY_DEFAULT = "com.sun.ffj.MyFactory"; // NOI18N
-    private String pm_identifier = null;
-    private String pm_version = null;
-    private String pm_config = null;
-    private String pm_class_generator = null;
-    private String pm_mapping_factory = null;
+
+    private String pm_identifier;
+    private String pm_version;
+    private String pm_config;
+    private String pm_class_generator;
+    private String pm_mapping_factory;
 
     public IASPersistenceManagerDescriptor() {
        pm_identifier = PM_IDENTIFIER_DEFAULT;

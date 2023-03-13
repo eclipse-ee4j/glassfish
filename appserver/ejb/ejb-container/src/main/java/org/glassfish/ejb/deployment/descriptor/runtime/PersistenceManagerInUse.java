@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +19,7 @@ package org.glassfish.ejb.deployment.descriptor.runtime;
 
 import org.glassfish.deployment.common.Descriptor;
 
+@Deprecated(forRemoval = true, since = "3.1")
 public class PersistenceManagerInUse extends Descriptor {
 
     private String pm_identifier;

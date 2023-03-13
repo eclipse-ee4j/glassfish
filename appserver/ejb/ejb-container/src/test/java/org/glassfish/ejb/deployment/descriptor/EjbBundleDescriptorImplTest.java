@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,6 +19,7 @@ package org.glassfish.ejb.deployment.descriptor;
 import com.sun.enterprise.deployment.EjbReferenceDescriptor;
 import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.util.ComponentValidator;
+
 import org.glassfish.api.naming.SimpleJndiName;
 import org.junit.jupiter.api.Test;
 
@@ -71,7 +72,7 @@ public class EjbBundleDescriptorImplTest {
             () -> assertFalse(descriptor.hasChanged()),
             () -> assertFalse(descriptor.hasAssemblyInformation()),
             () -> assertFalse(descriptor.hasContainerTransactions()),
-            () -> assertFalse(descriptor.hasInterceptors()),
+            () -> assertTrue(descriptor.getInterceptors().isEmpty()),
             () -> assertFalse(descriptor.hasPermissionedRoles()),
             () -> assertFalse(descriptor.hasRelationships()),
             () -> assertFalse(descriptor.hasWebServiceClients()),

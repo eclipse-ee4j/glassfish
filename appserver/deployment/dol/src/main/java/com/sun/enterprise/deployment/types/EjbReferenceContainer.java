@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,15 +31,16 @@ public interface EjbReferenceContainer {
     /**
      * Add a reference to an ejb.
      *
-     * @param the ejb reference
+     * @param ejbReference the ejb reference
      */
     void addEjbReferenceDescriptor(EjbReferenceDescriptor ejbReference);
 
     /**
      * Looks up an ejb reference with the given name.
      *
-     * @param the name of the ejb-reference
-     * @throws an IllegalArgumentException if it is not found.
+     * @param name the name of the ejb-reference
+     * @return {@link EjbReferenceDescriptor}
+     * @throws IllegalArgumentException if it is not found.
      */
     EjbReferenceDescriptor getEjbReference(String name);
 

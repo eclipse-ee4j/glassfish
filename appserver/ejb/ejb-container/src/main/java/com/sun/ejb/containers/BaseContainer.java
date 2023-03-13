@@ -46,6 +46,7 @@ import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
 import com.sun.enterprise.container.common.spi.util.IndirectlySerializable;
 import com.sun.enterprise.container.common.spi.util.InjectionManager;
 import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.EjbApplicationExceptionInfo;
 import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.InterceptorDescriptor;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
@@ -134,7 +135,6 @@ import org.glassfish.deployment.common.DeploymentException;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.ejb.LogFacade;
 import org.glassfish.ejb.api.EjbEndpointFacade;
-import org.glassfish.ejb.deployment.descriptor.EjbApplicationExceptionInfo;
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 import org.glassfish.ejb.deployment.descriptor.EjbInitInfo;
@@ -1424,6 +1424,10 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
     }
 
     protected EJBContextImpl createEjbInstanceAndContext() throws Exception {
+        if (containerState != CONTAINER_STARTED) {
+            throw new IllegalStateException(localStrings.getLocalString("ejb.container_not_started",
+                "Attempt to invoke when container is in {0}", containerStateToString(containerState)));
+        }
         EjbBundleDescriptorImpl ejbBundle = ejbDescriptor.getEjbBundleDescriptor();
 
         Object instance = null;
@@ -1738,7 +1742,6 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
     }
 
     public boolean intercept(CallbackType eventType, EJBContextImpl ctx) throws Throwable {
-
         return interceptorManager.intercept(eventType, ctx);
     }
 
@@ -1776,8 +1779,8 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
     protected void postInvoke(EjbInvocation inv, boolean doTxProcessing) {
         if (containerState != CONTAINER_STARTED) {
-            throw new EJBException(localStrings.getLocalString("ejb.container_not_started", "Attempt to invoke when container is in {0}",
-                    containerStateToString(containerState)));
+            throw new EJBException(localStrings.getLocalString("ejb.container_not_started",
+                "Attempt to invoke when container is in {0}", containerStateToString(containerState)));
         }
 
         inv.setDoTxProcessingInPostInvoke(doTxProcessing);
@@ -4048,7 +4051,8 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
             Class clazz = exception.getClass();
             String exceptionClassName = clazz.getName();
-            Map<String, EjbApplicationExceptionInfo> appExceptions = ejbDescriptor.getEjbBundleDescriptor().getApplicationExceptions();
+            Map<String, EjbApplicationExceptionInfo> appExceptions = ejbDescriptor.getEjbBundleDescriptor()
+                .getApplicationExceptions();
             while (clazz != null) {
                 String eClassName = clazz.getName();
                 if (appExceptions.containsKey(eClassName)) {

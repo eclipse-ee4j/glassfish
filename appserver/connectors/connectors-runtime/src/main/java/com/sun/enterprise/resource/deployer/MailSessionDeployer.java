@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -64,7 +64,6 @@ import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.deriveResou
  * Handle deployment of resources defined by @MailSessionDefinition
  * and represented by a MailSessionDescriptor.
  */
-
 @Service
 @ResourceDeployerInfo(MailSessionDescriptor.class)
 public class MailSessionDeployer implements ResourceDeployer<MailSessionDescriptor> {
@@ -164,8 +163,7 @@ public class MailSessionDeployer implements ResourceDeployer<MailSessionDescript
                 }
             }
             //ejb interceptors
-            Set<EjbInterceptor> ejbInterceptors = ejbDesc.getInterceptors();
-            for (EjbInterceptor ejbInterceptor : ejbInterceptors) {
+            for (EjbInterceptor ejbInterceptor : ejbDesc.getInterceptors()) {
                 for (Descriptor msd : ejbInterceptor.getResourceDescriptors(JavaEEResourceType.MSD)) {
                     registerMSDReferredByApplication(appName, (MailSessionDescriptor)msd);
                 }
@@ -232,15 +230,13 @@ public class MailSessionDeployer implements ResourceDeployer<MailSessionDescript
         //ejb descriptor
         if (descriptor instanceof EjbBundleDescriptor) {
             EjbBundleDescriptor ejbDesc = (EjbBundleDescriptor) descriptor;
-            Set<EjbDescriptor> ejbDescriptors = (Set<EjbDescriptor>) ejbDesc.getEjbs();
-            for (EjbDescriptor ejbDescriptor : ejbDescriptors) {
+            for (EjbDescriptor ejbDescriptor : ejbDesc.getEjbs()) {
                 for (Descriptor msd : ejbDescriptor.getResourceDescriptors(JavaEEResourceType.MSD)) {
                     unRegisterMSDReferredByApplication((MailSessionDescriptor)msd);
                 }
             }
             //ejb interceptors
-            Set<EjbInterceptor> ejbInterceptors = ejbDesc.getInterceptors();
-            for (EjbInterceptor ejbInterceptor : ejbInterceptors) {
+            for (EjbInterceptor ejbInterceptor : ejbDesc.getInterceptors()) {
                 for (Descriptor msd : ejbInterceptor.getResourceDescriptors(JavaEEResourceType.MSD)) {
                     unRegisterMSDReferredByApplication((MailSessionDescriptor)msd);
                 }
@@ -347,7 +343,7 @@ public class MailSessionDeployer implements ResourceDeployer<MailSessionDescript
         private final MailSessionDescriptor desc;
         private final SimpleJndiName name;
 
-        public MyMailResource(MailSessionDescriptor desc, SimpleJndiName name) {
+        MyMailResource(MailSessionDescriptor desc, SimpleJndiName name) {
             this.desc = desc;
             this.name = name;
         }

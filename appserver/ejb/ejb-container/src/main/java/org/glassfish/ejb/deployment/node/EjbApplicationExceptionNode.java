@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,11 @@
 
 package org.glassfish.ejb.deployment.node;
 
+import com.sun.enterprise.deployment.EjbApplicationExceptionInfo;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 
 import java.util.Map;
 
-import org.glassfish.ejb.deployment.descriptor.EjbApplicationExceptionInfo;
 import org.w3c.dom.Node;
 
 import static org.glassfish.ejb.deployment.EjbTagNames.APP_EXCEPTION_CLASS;

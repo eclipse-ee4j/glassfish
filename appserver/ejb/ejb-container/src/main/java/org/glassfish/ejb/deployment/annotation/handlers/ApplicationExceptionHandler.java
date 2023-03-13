@@ -17,6 +17,7 @@
 
 package org.glassfish.ejb.deployment.annotation.handlers;
 
+import com.sun.enterprise.deployment.EjbApplicationExceptionInfo;
 import com.sun.enterprise.deployment.annotation.context.EjbBundleContext;
 import com.sun.enterprise.deployment.annotation.handlers.AbstractHandler;
 
@@ -30,55 +31,37 @@ import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.apf.HandlerProcessingResult;
-import org.glassfish.ejb.deployment.descriptor.EjbApplicationExceptionInfo;
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * Handles @jakarta.ejb.ApplicationException
+ * Handles {@link ApplicationException}
  */
 @Service
 @AnnotationHandlerFor(ApplicationException.class)
 public class ApplicationExceptionHandler extends AbstractHandler {
 
-    public ApplicationExceptionHandler() {
-    }
-
-
     @Override
     public HandlerProcessingResult processAnnotation(AnnotationInfo ainfo) throws AnnotationProcessorException {
-        AnnotatedElement ae = ainfo.getAnnotatedElement();
+        AnnotatedElement element = ainfo.getAnnotatedElement();
         Annotation annotation = ainfo.getAnnotation();
+        AnnotatedElementHandler handler = ainfo.getProcessingContext().getHandler();
 
-        AnnotatedElementHandler aeHandler = ainfo.getProcessingContext().getHandler();
-
-        if (aeHandler instanceof EjbBundleContext) {
-            EjbBundleContext ejbBundleContext = (EjbBundleContext) aeHandler;
-
+        if (handler instanceof EjbBundleContext) {
+            EjbBundleContext ejbBundleContext = (EjbBundleContext) handler;
             EjbBundleDescriptorImpl ejbBundle = ejbBundleContext.getDescriptor();
-
             ApplicationException appExcAnn = (ApplicationException) annotation;
 
-            EjbApplicationExceptionInfo appExcInfo = new EjbApplicationExceptionInfo();
-            Class<?> annotatedClass = (Class<?>) ae;
-            appExcInfo.setExceptionClassName(annotatedClass.getName());
-            appExcInfo.setRollback(appExcAnn.rollback());
-            appExcInfo.setInherited(appExcAnn.inherited());
-
-            // Set on descriptor unless the same application exception was defined
-            // in ejb-jar.xml
+            // Set on descriptor unless the same application exception was defined in ejb-jar.xml
+            Class<?> annotatedClass = (Class<?>) element;
             if (!ejbBundle.getApplicationExceptions().containsKey(annotatedClass.getName())) {
+                EjbApplicationExceptionInfo appExcInfo = new EjbApplicationExceptionInfo();
+                appExcInfo.setExceptionClassName(annotatedClass.getName());
+                appExcInfo.setRollback(appExcAnn.rollback());
+                appExcInfo.setInherited(appExcAnn.inherited());
                 ejbBundle.addApplicationException(appExcInfo);
             }
-
         }
-
         return getDefaultProcessedResult();
-
-    }
-
-
-    protected boolean supportTypeInheritance() {
-        return true;
     }
 }

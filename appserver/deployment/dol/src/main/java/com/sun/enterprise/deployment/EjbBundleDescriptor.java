@@ -33,6 +33,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.security.common.Role;
+
+import static java.lang.System.Logger.Level.DEBUG;
+
 /**
  * I represent all the configurable deployment information contained in an EJB JAR.
  *
@@ -46,8 +51,11 @@ public abstract class EjbBundleDescriptor extends CommonResourceBundleDescriptor
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = DOLUtils.getLogger();
 
+    private Boolean disableNonportableJndiNames;
 
+    private final Map<String, EjbApplicationExceptionInfo> applicationExceptions = new HashMap<>();
     private final Set<EjbDescriptor> ejbs = new HashSet<>();
+    private final Set<EnvironmentProperty> environmentProperties = new HashSet<>();
 
     /** All interceptor classes defined within this ejb module, keyed by interceptor class name. */
     private final Map<String, EjbInterceptor> interceptors = new HashMap<>();
@@ -59,6 +67,48 @@ public abstract class EjbBundleDescriptor extends CommonResourceBundleDescriptor
      * @return {@link EjbDescriptor}, never null.
      */
     protected abstract EjbDescriptor createDummyEjbDescriptor(String ejbName);
+
+
+    @Override
+    public ArchiveType getModuleType() {
+        return DOLUtils.ejbType();
+    }
+
+
+    /**
+     * @return value of the disable-nonportable-jndi-names element. May be null.
+     */
+    public Boolean getDisableNonportableJndiNames() {
+        return disableNonportableJndiNames;
+    }
+
+
+    /**
+     * @param disable value of the disable-nonportable-jndi-names element.May be null.
+     */
+    public void setDisableNonportableJndiNames(String disable) {
+        disableNonportableJndiNames = Boolean.valueOf(disable);
+    }
+
+
+    /**
+     * @return always new {@link HashMap} with mappings of the class name
+     *         and the {@link EjbApplicationExceptionInfo}.
+     */
+    public Map<String, EjbApplicationExceptionInfo> getApplicationExceptions() {
+        return new HashMap<>(applicationExceptions);
+    }
+
+
+    /**
+     * Adds the mapping of the class name and the exception info.
+     *
+     * @param appExc
+     */
+    // Reflection in EjbBundleNode
+    public void addApplicationException(EjbApplicationExceptionInfo appExc) {
+        applicationExceptions.put(appExc.getExceptionClassName(), appExc);
+    }
 
 
     @Override
@@ -182,6 +232,36 @@ public abstract class EjbBundleDescriptor extends CommonResourceBundleDescriptor
     }
 
 
+    @Override
+    public Set<EnvironmentProperty> getEnvironmentProperties() {
+        return environmentProperties;
+    }
+
+
+    @Override
+    public EnvironmentProperty getEnvironmentPropertyByName(String name) {
+        for (EnvironmentProperty ev : environmentProperties) {
+            if (ev.getName().equals(name)) {
+                return ev;
+            }
+        }
+        throw new IllegalArgumentException("no env-entry of name " + name);
+    }
+
+
+    @Override
+    public void addEnvironmentProperty(EnvironmentProperty environmentProperty) {
+        environmentProperties.add(environmentProperty);
+    }
+
+
+    @Override
+    public void removeEnvironmentProperty(EnvironmentProperty environmentProperty) {
+        environmentProperties.remove(environmentProperty);
+
+    }
+
+
     /**
      * @param className
      * @return {@link EjbInterceptor} or null
@@ -207,19 +287,10 @@ public abstract class EjbBundleDescriptor extends CommonResourceBundleDescriptor
 
 
     /**
-     * @return true if this class holds some {@link EjbInterceptor}s
-     */
-    public boolean hasInterceptors() {
-        return !interceptors.isEmpty();
-    }
-
-
-    /**
      * @return new {@link Set} with all our {@link EjbInterceptor}s
      */
     public Set<EjbInterceptor> getInterceptors() {
         return new HashSet<>(interceptors.values());
-
     }
 
 
@@ -229,13 +300,75 @@ public abstract class EjbBundleDescriptor extends CommonResourceBundleDescriptor
      */
     public Set<ServiceReferenceDescriptor> getEjbServiceReferenceDescriptors() {
         Set<ServiceReferenceDescriptor> serviceRefs = new OrderedSet<>();
-        for (EjbDescriptor next : getEjbs()) {
+        for (EjbDescriptor next : ejbs) {
             serviceRefs.addAll(next.getServiceReferenceDescriptors());
         }
         return serviceRefs;
     }
 
 
-    public abstract Boolean getDisableNonportableJndiNames();
+    @Override
+    public void removeRole(Role role) {
+        LOG.log(DEBUG, "removeRole(role={0})", role);
+        if (getRoles().contains(role)) {
+            for (EjbDescriptor ejb : ejbs) {
+                ejb.removeRole(role);
+            }
+            super.removeRole(role);
+        }
+    }
 
+
+    /**
+     * Always empty immutable {@link Set}.
+     */
+    @Override
+    public Set<LifecycleCallbackDescriptor> getPostConstructDescriptors() {
+        return Collections.emptySet();
+    }
+
+
+    /**
+     * Ignored.
+     */
+    @Override
+    public void addPostConstructDescriptor(LifecycleCallbackDescriptor postConstructDesc) {
+        // no-op
+    }
+
+
+    /**
+     * Always null.
+     */
+    @Override
+    public LifecycleCallbackDescriptor getPostConstructDescriptorByClass(String className) {
+        return null;
+    }
+
+
+    /**
+     * Always empty immutable {@link Set}.
+     */
+    @Override
+    public Set<LifecycleCallbackDescriptor> getPreDestroyDescriptors() {
+        return Collections.emptySet();
+    }
+
+
+    /**
+     * Ignored.
+     */
+    @Override
+    public void addPreDestroyDescriptor(LifecycleCallbackDescriptor preDestroyDesc) {
+        // no-op
+    }
+
+
+    /**
+     * Always null.
+     */
+    @Override
+    public LifecycleCallbackDescriptor getPreDestroyDescriptorByClass(String className) {
+        return null;
+    }
 }

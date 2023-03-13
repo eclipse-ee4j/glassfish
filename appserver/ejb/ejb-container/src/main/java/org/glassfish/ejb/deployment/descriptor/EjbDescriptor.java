@@ -2195,9 +2195,6 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
 
     // END methods closely related to WritableJndiNameEnvironment
 
-    /**
-     * Return a reference to another ejb by the same name or throw an IllegalArgumentException.
-     */
     @Override
     public EjbReferenceDescriptor getEjbReference(String name) {
         for (EjbReferenceDescriptor er : getEjbReferenceDescriptors()) {

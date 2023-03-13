@@ -40,7 +40,7 @@ public interface JndiNameEnvironment {
 
     /**
      * @param name
-     * @return the environment property object found by the supplied key.
+     * @return the environment property object found by the supplied name.
      * @throws IllegalArgumentException if no such environment property exists.
      */
     EnvironmentProperty getEnvironmentPropertyByName(String name) throws IllegalArgumentException;

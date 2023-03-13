@@ -156,8 +156,7 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer<DataSource
             }
 
             // ejb interceptors
-            Set<EjbInterceptor> ejbInterceptors = ejbDesc.getInterceptors();
-            for (EjbInterceptor ejbInterceptor : ejbInterceptors) {
+            for (EjbInterceptor ejbInterceptor : ejbDesc.getInterceptors()) {
                 for (Descriptor resourceDescriptor : ejbInterceptor.getResourceDescriptors(JavaEEResourceType.DSD)) {
                     registerDSDReferredByApplication(appName, (DataSourceDefinitionDescriptor) resourceDescriptor);
                 }
@@ -216,8 +215,7 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer<DataSource
                 }
             }
             // ejb interceptors
-            Set<EjbInterceptor> ejbInterceptors = ejbDesc.getInterceptors();
-            for (EjbInterceptor ejbInterceptor : ejbInterceptors) {
+            for (EjbInterceptor ejbInterceptor : ejbDesc.getInterceptors()) {
                 for (Descriptor resourceDescriptor : ejbInterceptor.getResourceDescriptors(JavaEEResourceType.DSD)) {
                     unregisterDSDReferredByApplication((DataSourceDefinitionDescriptor) resourceDescriptor);
                 }

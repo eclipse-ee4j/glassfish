@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.ejb.deployment.descriptor;
+package com.sun.enterprise.deployment;
 
 import org.glassfish.deployment.common.Descriptor;
 
@@ -29,13 +29,15 @@ public class EjbApplicationExceptionInfo extends Descriptor {
     private boolean rollback;
     private boolean inherited = true;
 
-    public void setExceptionClassName(String className) {
-        exceptionClassName = className;
-    }
-
 
     public String getExceptionClassName() {
         return exceptionClassName;
+    }
+
+
+    // Used by reflection in EjbApplicationExceptionNode
+    public void setExceptionClassName(String className) {
+        exceptionClassName = className;
     }
 
 
@@ -44,18 +46,20 @@ public class EjbApplicationExceptionInfo extends Descriptor {
     }
 
 
+    // Used by reflection in EjbApplicationExceptionNode
     public void setRollback(boolean flag) {
         rollback = flag;
     }
 
 
-    public void setInherited(boolean flag) {
-        inherited = flag;
+    public boolean getInherited() {
+        return inherited;
     }
 
 
-    public boolean getInherited() {
-        return inherited;
+    // Used by reflection in EjbApplicationExceptionNode
+    public void setInherited(boolean flag) {
+        inherited = flag;
     }
 
 

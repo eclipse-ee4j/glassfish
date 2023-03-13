@@ -21,10 +21,8 @@ import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EjbReferenceDescriptor;
 import com.sun.enterprise.deployment.EntityManagerFactoryReferenceDescriptor;
 import com.sun.enterprise.deployment.EntityManagerReferenceDescriptor;
-import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.InjectionCapable;
 import com.sun.enterprise.deployment.InjectionInfo;
-import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
 import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
 import com.sun.enterprise.deployment.NameValuePairDescriptor;
 import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
@@ -45,18 +43,14 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.deployment.common.DescriptorVisitor;
 import org.glassfish.ejb.deployment.descriptor.runtime.IASPersistenceManagerDescriptor;
@@ -70,9 +64,8 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
     private static final long serialVersionUID = 1L;
 
     private static final Logger LOG = DOLUtils.getLogger();
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(EjbBundleDescriptorImpl.class);
 
-    private long uniqueId;
-    private Boolean disableNonportableJndiNames;
     private Set<Long> ejbIDs;
     private final Set<RelationshipDescriptor> relationships = new HashSet<>();
     private String relationshipsDescription;
@@ -86,10 +79,7 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
     // the same resource is used for all beans in this ejb jar.
     private ResourceReferenceDescriptor cmpResourceReference;
 
-    // Application exceptions defined for the ejbs in this module.
-    private final Map<String, EjbApplicationExceptionInfo> applicationExceptions = new HashMap<>();
 
-    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(EjbBundleDescriptorImpl.class);
 
 
     private final List<SecurityRoleMapping> roleMaps = new ArrayList<>();
@@ -99,7 +89,6 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
     private final List<NameValuePairDescriptor> enterpriseBeansProperties = new ArrayList<>();
 
     // EJB module level dependencies
-    private final Set<EnvironmentProperty> environmentProperties = new HashSet<>();
     private final Set<EjbReferenceDescriptor> ejbReferences = new HashSet<>();
     private final Set<ResourceEnvReferenceDescriptor> resourceEnvReferences = new HashSet<>();
     private final Set<MessageDestinationReferenceDescriptor> messageDestReferences = new HashSet<>();
@@ -143,10 +132,6 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
     }
 
 
-
-
-
-
     /**
      * @return the empty String or the entry name of the ejb client JAR in my archive if I have one.
      */
@@ -158,17 +143,15 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
     }
 
 
+    // Reflection in EjbBundleNode
     public void setEjbClientJarUri(String ejbClientJarUri) {
         this.ejbClientJarUri = ejbClientJarUri;
     }
 
-    public void addApplicationException(EjbApplicationExceptionInfo appExc) {
-        applicationExceptions.put(appExc.getExceptionClassName(), appExc);
-    }
 
-    public Map<String, EjbApplicationExceptionInfo> getApplicationExceptions() {
-        return new HashMap<>(applicationExceptions);
-    }
+
+
+
 
 
     /**
@@ -228,7 +211,7 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
     }
 
     /**
-    * Checks whether the role references my ejbs have reference roles that I have.
+    * @return true if all ejb role references link to roles specified here.
     */
     public boolean areResourceReferencesValid() {
         // run through each of the ejb's role references, checking that the roles exist in this bundle
@@ -243,17 +226,6 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
             }
         }
         return true;
-    }
-
-
-    @Override
-    public void removeRole(Role role) {
-        if (super.getRoles().contains(role)) {
-            for (EjbDescriptor ejb : getEjbs()) {
-                ejb.removeRole(role);
-            }
-            super.removeRole(role);
-        }
     }
 
 
@@ -373,57 +345,12 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
     /**
      * Returns my name.
      */
-
     @Override
     public String getName() {
         if ("".equals(super.getName())) {
             super.setName("Ejb1");
         }
         return super.getName();
-    }
-
-
-        // START OF IASRI 4645310
-    /**
-     * Sets the unique id for a stand alone ejb module. It traverses through
-     * all the ejbs in this stand alone module and sets the unique id for
-     * each of them. The traversal order is done in ascending element order.
-     * <p>
-     * Note: This method will not be called for application.
-     *
-     * @param id unique id for stand alone module
-     */
-    public void setUniqueId(long id) {
-        uniqueId = id;
-
-        // First sort the beans in alphabetical order.
-        EjbDescriptor[] descs = getEjbs().toArray(EjbDescriptor[]::new);
-
-        // The sorting algorithm used by this api is a modified mergesort.
-        // This algorithm offers guaranteed n*log(n) performance, and
-        // can approach linear performance on nearly sorted lists.
-        Arrays.sort(descs, (o1, o2) -> o2.getName().compareTo(o1.getName()));
-
-        for (int i = 0; i < descs.length; i++) {
-            // 2^16 beans max per stand alone module
-            descs[i].setUniqueId((id | i));
-        }
-    }
-
-    /**
-     * Returns the unique id used in a stand alone ejb module.
-     * For application, this will return zero.
-     *
-     * @return    the unique if used in stand alone ejb module
-     */
-    public long getUniqueId() {
-        return uniqueId;
-    }
-
-
-    public static int getIdFromEjbId(long ejbId) {
-        long id = ejbId >> 32;
-        return (int) id;
     }
 
 
@@ -490,14 +417,6 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
         }
     }
 
-    /**
-     * @return the module type for this bundle descriptor
-     */
-    @Override
-    public ArchiveType getModuleType() {
-        return DOLUtils.ejbType();
-    }
-
 
     public void setPersistenceManagerInuse(String id, String ver) {
         LOG.log(Level.DEBUG, "setPersistenceManagerInuse(id={0}, ver={1})", id, ver);
@@ -541,7 +460,7 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
             }
         }
         throw new IllegalArgumentException(
-            localStrings.getLocalString(
+            I18N.getLocalString(
                 "enterprise.deployment.nomatchingpminusefound",
                 "No PersistenceManager found that matches specified PersistenceManager in use."));
     }
@@ -628,7 +547,7 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
             }
         }
         throw new IllegalArgumentException(
-            localStrings.getLocalString("enterprise.deployment.exceptionapphasnoejbrefbyname",
+            I18N.getLocalString("enterprise.deployment.exceptionapphasnoejbrefbyname",
                 "This ejb jar [{0}] has no ejb reference by the name of [{1}] ", new Object[] {getName(), name}));
     }
 
@@ -771,42 +690,6 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
         throw new IllegalArgumentException("no resource ref of name " + name);
     }
 
-    /**
-     * Returns the environment property object searching on the supplied key.
-     * throws an illegal argument exception if no such environment property exists.
-     */
-    @Override
-    public EnvironmentProperty getEnvironmentPropertyByName(String name) {
-        for (EnvironmentProperty ev : getEnvironmentProperties()) {
-            if (ev.getName().equals(name)) {
-                return ev;
-            }
-        }
-        throw new IllegalArgumentException("no env-entry of name " + name);
-    }
-
-    /**
-     * Return a copy of the structure holding the environment properties.
-     */
-    @Override
-    public Set<EnvironmentProperty> getEnvironmentProperties() {
-        return environmentProperties;
-    }
-
-    @Override
-    public void addEnvironmentProperty(EnvironmentProperty environmentProperty) {
-        environmentProperties.add(environmentProperty);
-    }
-
-    /**
-     * Removes the given environment property from me.
-     */
-
-    @Override
-    public void removeEnvironmentProperty(EnvironmentProperty environmentProperty) {
-        getEnvironmentProperties().remove(environmentProperty);
-
-    }
 
 
     @Override
@@ -875,68 +758,12 @@ public class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
         return getInjectionInfoByClass(clazz, this);
     }
 
-    @Override
-    public Boolean getDisableNonportableJndiNames() {
-        return disableNonportableJndiNames;
-    }
-
-    public void setDisableNonportableJndiNames(String disableOrNot) {
-        disableNonportableJndiNames = Boolean.valueOf(disableOrNot);
-    }
 
     //
     // There is still some redundant DOL processing of the modules that can result in these
     // being called so just treat them as no-ops.
     //
 
-    public Set<LifecycleCallbackDescriptor> getAroundConstructDescriptors() {
-        return new HashSet<>();
-    }
-
-
-    public void addAroundConstructDescriptor(LifecycleCallbackDescriptor aroundConstructDesc) {
-        // no-op
-    }
-
-
-    public LifecycleCallbackDescriptor getAroundConstructDescriptorByClass(String className) {
-        return null;
-    }
-
-    @Override
-    public Set<LifecycleCallbackDescriptor> getPostConstructDescriptors() {
-        return new HashSet<>();
-    }
-
-
-    @Override
-    public void addPostConstructDescriptor(LifecycleCallbackDescriptor postConstructDesc) {
-        // no-op
-    }
-
-
-    @Override
-    public LifecycleCallbackDescriptor getPostConstructDescriptorByClass(String className) {
-        return null;
-    }
-
-
-    @Override
-    public Set<LifecycleCallbackDescriptor> getPreDestroyDescriptors() {
-        return new HashSet<>();
-    }
-
-
-    @Override
-    public void addPreDestroyDescriptor(LifecycleCallbackDescriptor preDestroyDesc) {
-        // no-op
-    }
-
-
-    @Override
-    public LifecycleCallbackDescriptor getPreDestroyDescriptorByClass(String className) {
-        return null;
-    }
 
 
     public String getEnterpriseBeansProperty(String key) {

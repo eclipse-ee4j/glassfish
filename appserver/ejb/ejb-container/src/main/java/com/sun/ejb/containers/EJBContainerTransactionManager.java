@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,6 +19,7 @@ package com.sun.ejb.containers;
 
 import com.sun.ejb.Container;
 import com.sun.ejb.EjbInvocation;
+import com.sun.enterprise.deployment.EjbApplicationExceptionInfo;
 import com.sun.enterprise.deployment.MethodDescriptor;
 import com.sun.enterprise.transaction.api.JavaEETransaction;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
@@ -42,7 +43,6 @@ import java.util.logging.Logger;
 
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.ejb.deployment.descriptor.ContainerTransaction;
-import org.glassfish.ejb.deployment.descriptor.EjbApplicationExceptionInfo;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 import org.glassfish.ejb.deployment.descriptor.runtime.IASEjbExtraDescriptors;
 
@@ -725,9 +725,9 @@ public class EJBContainerTransactionManager {
         }
 
         // EJB2.0 section 18.3.4
-        if ( sysEx instanceof NoSuchEntityException ) { // for EntityBeans only
-            newException = new NoSuchObjectLocalException
-                ("NoSuchEntityException thrown by EJB method.");
+        if (sysEx instanceof NoSuchEntityException) {
+            // for EntityBeans only
+            newException = new NoSuchObjectLocalException("NoSuchEntityException thrown by EJB method.");
             newException.initCause(sysEx);
         } else {
             newException = new EJBException();
@@ -743,30 +743,26 @@ public class EJBContainerTransactionManager {
      * it requires rollback of the transaction in which it was thrown.
      */
     private boolean isAppExceptionRequiringRollback(Throwable exception) {
-        boolean appExceptionRequiringRollback = false;
-
-        if ( exception != null ) {
-
-            Class clazz = exception.getClass();
-            String exceptionClassName = clazz.getName();
-            Map<String, EjbApplicationExceptionInfo> appExceptions =
-                    ejbDescriptor.getEjbBundleDescriptor().getApplicationExceptions();
-            while (clazz != null) {
-                String eClassName = clazz.getName();
-                if (appExceptions.containsKey(eClassName)) {
-                    if( exceptionClassName.equals(eClassName) ||
-                            appExceptions.get(eClassName).getInherited() == true) {
-                        // Exact exception is specified as an ApplicationException
-                        // or superclass exception is inherited
-                        appExceptionRequiringRollback = appExceptions.get(eClassName).getRollback();
-                    }
-                    break;
-                }
-                clazz = clazz.getSuperclass();
-            }
+        if (exception == null) {
+            return false;
         }
-
+        Class<?> clazz = exception.getClass();
+        String exceptionClassName = clazz.getName();
+        Map<String, EjbApplicationExceptionInfo> appExceptions = ejbDescriptor.getEjbBundleDescriptor()
+            .getApplicationExceptions();
+        boolean appExceptionRequiringRollback = false;
+        while (clazz != null) {
+            String eClassName = clazz.getName();
+            if (appExceptions.containsKey(eClassName)) {
+                if (exceptionClassName.equals(eClassName) || appExceptions.get(eClassName).getInherited()) {
+                    // Exact exception is specified as an ApplicationException
+                    // or superclass exception is inherited
+                    appExceptionRequiringRollback = appExceptions.get(eClassName).getRollback();
+                }
+                break;
+            }
+            clazz = clazz.getSuperclass();
+        }
         return appExceptionRequiringRollback;
     }
-
 }

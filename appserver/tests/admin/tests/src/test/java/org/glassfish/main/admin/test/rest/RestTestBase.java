@@ -21,11 +21,10 @@ import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +45,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInfo;
 
+import static com.sun.enterprise.util.io.FileUtils.copy;
+import static com.sun.enterprise.util.io.FileUtils.ensureWritableDir;
 import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN;
 import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getTargetDirectory;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -88,12 +89,12 @@ public class RestTestBase {
         try (DomainAdminRestClient client = new DomainAdminRestClient(baseAdminUrl + CONTEXT_ROOT_MANAGEMENT, TEXT_PLAIN)) {
             Response response = client.get("/domain/view-log");
             assertThat(response.getStatus(), equalTo(200));
-            File directory = new File(getTargetDirectory(), "surefire-reports");
-            directory.mkdirs();
-            File output = new File(directory, testInfo.getTestClass().get().getName() + "-server.log");
-            try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(output)))) {
-                out.write(response.readEntity(String.class));
-            }
+
+            File reportDir = new File(getTargetDirectory(), "surefire-reports");
+            ensureWritableDir(reportDir);
+
+            File reportFile = new File(reportDir, testInfo.getTestClass().orElseThrow().getName() + "-server.log");
+            copy(response.readEntity(InputStream.class), new FileOutputStream(reportFile), Long.MAX_VALUE);
         }
     }
 

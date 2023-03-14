@@ -21,16 +21,20 @@ import java.util.Map;
 import jakarta.ws.rs.core.Response;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
+import org.glassfish.main.itest.tools.DomainAdminRestClient;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN;
 import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getAsadmin;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -39,6 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
  */
 public class LoggingRestITest extends RestTestBase {
 
+    private static final String URL_VIEW_LOG = "/domain/view-log";
     private static final String URL_VIEW_LOG_DETAILS = "/domain/view-log/details";
     private static final String URL_LOGNAMES = "/domain/view-log/details/lognames";
 
@@ -48,6 +53,26 @@ public class LoggingRestITest extends RestTestBase {
         // Restart domain to fill it up.
         AsadminResult result = getAsadmin().exec("restart-domain");
         assertThat(result, asadminOK());
+    }
+
+    @Test
+    public void viewLog() {
+        try (ViewLogClient client = new ViewLogClient()) {
+            // Read entire log
+            Response response = client.get(URL_VIEW_LOG);
+            assertThat(response.getStatus(), equalTo(200));
+            // Should not be empty
+            assertThat(response.readEntity(String.class), not(emptyOrNullString()));
+
+            // Get the entire URL to return the changes since the last call
+            String nextUrl = response.getHeaderString("X-Text-Append-Next");
+            assertThat(nextUrl, not(emptyOrNullString()));
+
+            // Because log unchanged, response should be empty
+            response = client.get(nextUrl);
+            assertThat(response.getStatus(), equalTo(200));
+            assertThat(response.readEntity(String.class), emptyOrNullString());
+        }
     }
 
     @Test
@@ -78,5 +103,20 @@ public class LoggingRestITest extends RestTestBase {
 
     static JSONArray getJsonArrayFrom(Response response, String name) throws Exception {
         return readJsonObjectFrom(response).getJSONArray(name);
+    }
+
+    private static final class ViewLogClient extends DomainAdminRestClient {
+
+        public ViewLogClient() {
+            super("", TEXT_PLAIN);
+        }
+
+        @Override
+        public Response get(String url) {
+            if (url.startsWith("/")) {
+                url = getBaseAdminUrl() + CONTEXT_ROOT_MANAGEMENT + url;
+            }
+            return super.get(url);
+        }
     }
 }

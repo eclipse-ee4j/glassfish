@@ -33,7 +33,7 @@
 
     <properties>
         <!-- Be patient, it is over 500 MB -->
-        <tck.test.jee.file>jakarta-jakartaeetck-10.0.0.zip</tck.test.jee.file>
+        <tck.test.jee.file>jakarta-jakartaeetck-10.0.2.zip</tck.test.jee.file>
         <tck.test.jee.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/${tck.test.jee.file}</tck.test.jee.url>
     </properties>
 

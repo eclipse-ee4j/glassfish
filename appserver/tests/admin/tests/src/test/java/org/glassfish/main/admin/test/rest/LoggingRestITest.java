@@ -16,76 +16,108 @@
 
 package org.glassfish.main.admin.test.rest;
 
-import jakarta.ws.rs.core.MediaType;
+import java.util.Map;
 
-import java.io.InputStreamReader;
-import java.io.StringWriter;
-import java.net.HttpURLConnection;
+import jakarta.ws.rs.core.Response;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
-import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
+import org.glassfish.main.itest.tools.DomainAdminRestClient;
+import org.glassfish.main.itest.tools.asadmin.AsadminResult;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN;
+import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getAsadmin;
+import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.emptyOrNullString;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author David Matejcek
  */
-public class LoggingRestITest {
+public class LoggingRestITest extends RestTestBase {
+
+    private static final String URL_VIEW_LOG = "/domain/view-log";
+    private static final String URL_VIEW_LOG_DETAILS = "/domain/view-log/details";
+    private static final String URL_LOGNAMES = "/domain/view-log/details/lognames";
+
+    @BeforeAll
+    public static void fillUpLog() {
+        // The server log may become empty due to log rotation.
+        // Restart domain to fill it up.
+        AsadminResult result = getAsadmin().exec("restart-domain");
+        assertThat(result, asadminOK());
+    }
+
+    @Test
+    public void viewLog() {
+        try (ViewLogClient client = new ViewLogClient()) {
+            // Read entire log
+            Response response = client.get(URL_VIEW_LOG);
+            assertThat(response.getStatus(), equalTo(200));
+            // Should not be empty
+            assertThat(response.readEntity(String.class), not(emptyOrNullString()));
+
+            // Get the entire URL to return the changes since the last call
+            String nextUrl = response.getHeaderString("X-Text-Append-Next");
+            assertThat(nextUrl, not(emptyOrNullString()));
+
+            // Because log unchanged, response should be empty
+            response = client.get(nextUrl);
+            assertThat(response.getStatus(), equalTo(200));
+            assertThat(response.readEntity(String.class), emptyOrNullString());
+        }
+    }
 
     @Test
     public void logFileNames() throws Exception {
-        HttpURLConnection connection = GlassFishTestEnvironment
-            .openConnection("/management/domain/view-log/details/lognames?instanceName=server");
-        try {
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("Accept", MediaType.APPLICATION_JSON);
-            connection.setDoOutput(true);
-            assertEquals(200, connection.getResponseCode());
-            JSONArray array = getJsonArrayFrom(connection, "InstanceLogFileNames");
-            // Depends on the order of tests, there may be rolled file too.
-            assertAll(
-                () -> assertThat("InstanceLogFileNames", array.length(), greaterThanOrEqualTo(1)),
-                () -> assertThat(array.get(0).toString(), startsWith("server.log"))
-            );
-        } finally {
-            connection.disconnect();
-        }
+        Response response = managementClient.get(URL_LOGNAMES, Map.of("instanceName", "server"));
+        assertThat(response.getStatus(), equalTo(200));
+
+        JSONArray logFileNames = getJsonArrayFrom(response, "InstanceLogFileNames");
+        // Depends on the order of tests, there may be rolled file too.
+        assertAll(
+            () -> assertThat("InstanceLogFileNames", logFileNames.length(), greaterThanOrEqualTo(1)),
+            () -> assertThat(logFileNames.get(0).toString(), startsWith("server.log"))
+        );
     }
 
     @Test
     public void viewLogDetails() throws Exception {
-        HttpURLConnection connection = GlassFishTestEnvironment.openConnection("/management/domain/view-log/details");
-        try {
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("Accept", MediaType.APPLICATION_JSON);
-            assertEquals(200, connection.getResponseCode());
-            JSONArray array = getJsonArrayFrom(connection, "records");
-            assertThat(array.length(), greaterThan(15));
-        } finally {
-            connection.disconnect();
+        Response response = managementClient.get(URL_VIEW_LOG_DETAILS);
+        assertThat(response.getStatus(), equalTo(200));
+
+        JSONArray array = getJsonArrayFrom(response, "records");
+        assertThat(array.length(), greaterThan(15));
+    }
+
+    static JSONObject readJsonObjectFrom(Response response) {
+        return response.readEntity(JSONObject.class);
+    }
+
+    static JSONArray getJsonArrayFrom(Response response, String name) throws Exception {
+        return readJsonObjectFrom(response).getJSONArray(name);
+    }
+
+    private static final class ViewLogClient extends DomainAdminRestClient {
+
+        public ViewLogClient() {
+            super("", TEXT_PLAIN);
         }
-    }
 
-    static String readIntoStringFrom(HttpURLConnection connection) throws Exception {
-        StringWriter buffer = new StringWriter();
-        try (InputStreamReader reader = new InputStreamReader(connection.getInputStream())) {
-            reader.transferTo(buffer);
+        @Override
+        public Response get(String url) {
+            if (url.startsWith("/")) {
+                url = getBaseAdminUrl() + CONTEXT_ROOT_MANAGEMENT + url;
+            }
+            return super.get(url);
         }
-        return buffer.toString();
-    }
-
-    static JSONObject readJsonObjectFrom(HttpURLConnection connection) throws Exception {
-        return new JSONObject(readIntoStringFrom(connection));
-    }
-
-    static JSONArray getJsonArrayFrom(HttpURLConnection connection, String name) throws Exception {
-        return readJsonObjectFrom(connection).getJSONArray(name);
     }
 }

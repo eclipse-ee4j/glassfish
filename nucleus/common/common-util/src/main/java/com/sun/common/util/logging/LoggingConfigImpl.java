@@ -141,7 +141,10 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
     }
 
     private File getLoggingPropertiesFile(String target) {
-        String pathForLoggingFile = loggingConfigDir.getAbsolutePath() + File.separator + target;
+        String pathForLoggingFile = loggingConfigDir.getAbsolutePath();
+        if (target != null) {
+            pathForLoggingFile += File.separator + target;
+        }
         return new File(pathForLoggingFile, ServerEnvironmentImpl.kLoggingPropertiesFileName);
     }
 

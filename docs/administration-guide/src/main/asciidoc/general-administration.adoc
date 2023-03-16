@@ -1874,7 +1874,7 @@ credentials to enable the client to pass the credentials with each
 request. If you require a REST client not to cache credentials, your
 client must use session tokens for authentication.
 
-1. Request a session token by using the `GET` method on the resource at
+1. Request a session token by using the `POST` method on the resource at
 `http://`host`:`port`/management/sessions`.
 {productName} uses basic authentication to authenticate the client,
 generates a session token, and passes the token to the client.

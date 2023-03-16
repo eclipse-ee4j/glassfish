@@ -59,6 +59,7 @@ public class RestTestBase {
 
     protected static final String CONTEXT_ROOT_MANAGEMENT = "/management";
 
+    protected static final String URL_DOMAIN = "/domain";
     protected static final String URL_CLUSTER = "/domain/clusters/cluster";
     protected static final String URL_APPLICATION_DEPLOY = "/domain/applications/application";
     protected static final String URL_CREATE_INSTANCE = "/domain/create-instance";

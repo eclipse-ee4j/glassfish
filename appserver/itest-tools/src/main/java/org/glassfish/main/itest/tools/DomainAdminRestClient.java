@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,14 +19,12 @@ package org.glassfish.main.itest.tools;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.Invocation.Builder;
 import jakarta.ws.rs.client.WebTarget;
-import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedHashMap;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
 
 import java.io.Closeable;
 import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -35,6 +33,10 @@ import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static jakarta.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
+import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN_TYPE;
+import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.createClient;
 
 /**
  * @author David Matejcek
@@ -46,12 +48,11 @@ public class DomainAdminRestClient implements Closeable {
     private final String responseType;
 
     public DomainAdminRestClient(final String baseUrl) {
-        this(baseUrl, MediaType.APPLICATION_JSON);
+        this(baseUrl, APPLICATION_JSON);
     }
 
-
     public DomainAdminRestClient(final String baseUrl, final String responseType) {
-        this(GlassFishTestEnvironment.createClient(), baseUrl, responseType);
+        this(createClient(), baseUrl, responseType);
     }
 
 
@@ -63,7 +64,7 @@ public class DomainAdminRestClient implements Closeable {
 
 
     /**
-     * @return http://localhost:4848/management or something else, see constructor.
+     * @return {@code http://localhost:4848/management} or something else, see constructor.
      */
     public final String getBaseUrl() {
         return baseUrl;
@@ -76,7 +77,7 @@ public class DomainAdminRestClient implements Closeable {
 
 
     public Response get(final String relativePath) {
-        return get(relativePath, new HashMap<String, String>());
+        return get(relativePath, null);
     }
 
 
@@ -115,15 +116,15 @@ public class DomainAdminRestClient implements Closeable {
             if (entry.getValue() instanceof File) {
                 form.getBodyParts().add((new FileDataBodyPart(entry.getKey(), (File) entry.getValue())));
             } else {
-                form.field(entry.getKey(), entry.getValue(), MediaType.TEXT_PLAIN_TYPE);
+                form.field(entry.getKey(), entry.getValue(), TEXT_PLAIN_TYPE);
             }
         }
-        return getRequestBuilder(relativePath).post(Entity.entity(form, MediaType.MULTIPART_FORM_DATA), Response.class);
+        return getRequestBuilder(relativePath).post(Entity.entity(form, MULTIPART_FORM_DATA), Response.class);
     }
 
 
     public Response delete(final String relativePath) {
-        return delete(relativePath, new HashMap<String, String>());
+        return delete(relativePath, null);
     }
 
     public Response delete(final String relativePath, final Map<String, String> queryParams) {
@@ -133,9 +134,12 @@ public class DomainAdminRestClient implements Closeable {
 
 
     public Builder getRequestBuilder(final String relativePath) {
-        return getTarget(relativePath, null).request(responseType);
+        return getRequestBuilder(relativePath, null);
     }
 
+    public Builder getRequestBuilder(final  String relativePath, Map<String, String> queryParams) {
+        return getTarget(relativePath, queryParams).request(responseType);
+    }
 
     public WebTarget getTarget(final String relativePath, final Map<String, String> queryParams) {
         WebTarget target = client.target(baseUrl + relativePath);

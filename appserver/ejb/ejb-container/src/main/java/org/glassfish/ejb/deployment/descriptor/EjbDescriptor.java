@@ -236,6 +236,14 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
     @Override
     public abstract String getEjbTypeForDisplay();
 
+    /**
+     * @return EJB name
+     */
+    @Override
+    public String getName() {
+        return super.getName();
+    }
+
 
     /**
      * @return the extra iAS specific info (not in the RI DID) in the iAS DTD. no setter.

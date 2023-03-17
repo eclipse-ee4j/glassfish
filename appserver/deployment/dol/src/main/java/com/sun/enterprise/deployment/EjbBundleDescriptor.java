@@ -62,6 +62,7 @@ public abstract class EjbBundleDescriptor extends CommonResourceBundleDescriptor
     private final Set<EjbDescriptor> ejbs = new HashSet<>();
     /** EJB module level dependencies */
     private final Set<EjbReferenceDescriptor> ejbReferences = new HashSet<>();
+    private final List<NameValuePairDescriptor> enterpriseBeansProperties = new ArrayList<>();
     private final Set<EntityManagerFactoryReferenceDescriptor> entityManagerFactoryReferences = new HashSet<>();
     private final Set<EntityManagerReferenceDescriptor> entityManagerReferences = new HashSet<>();
     private final Set<EnvironmentProperty> environmentProperties = new HashSet<>();
@@ -323,6 +324,37 @@ public abstract class EjbBundleDescriptor extends CommonResourceBundleDescriptor
             persistenceUnits.add(findReferencedPUViaEMRef(emRef));
         }
         return persistenceUnits;
+    }
+
+
+    /**
+     * @return list of enterprise beans properties
+     */
+    public List<NameValuePairDescriptor> getEnterpriseBeansProperties() {
+        return enterpriseBeansProperties;
+    }
+
+
+    /**
+     * @param key
+     * @return property value of enterprise beans
+     */
+    public String getEnterpriseBeansProperty(String key) {
+        for (NameValuePairDescriptor property : enterpriseBeansProperties) {
+            if (property.getName().equals(key)) {
+                return property.getValue();
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * @param newProp property of enterprise beans
+     */
+    // Reflection in EnterpriseBeansRuntimeNode
+    public void addEnterpriseBeansProperty(NameValuePairDescriptor newProp) {
+        enterpriseBeansProperties.add(newProp);
     }
 
 

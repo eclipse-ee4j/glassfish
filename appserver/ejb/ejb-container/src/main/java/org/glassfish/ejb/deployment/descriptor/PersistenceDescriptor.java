@@ -137,7 +137,7 @@ public final class PersistenceDescriptor extends Descriptor {
      * keeping the two sets consistent.  NOTE : To add or remove
      * a relationship use EjbBundleDescriptor.
      */
-    public Set<RelationshipDescriptor> getRelationships() {
+    private Set<RelationshipDescriptor> getRelationships() {
         Set<RelationshipDescriptor> allRelationships = getEjbBundleDescriptor().getRelationships();
         Set<RelationshipDescriptor> myRelationships  = new HashSet<>();
         for (RelationshipDescriptor next : allRelationships) {

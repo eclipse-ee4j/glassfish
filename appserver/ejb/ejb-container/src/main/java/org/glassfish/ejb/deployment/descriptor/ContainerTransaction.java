@@ -76,9 +76,8 @@ public final class ContainerTransaction extends Descriptor {
                 "enterprise.deployment.exceptionunknowncontainertxtype",
                 "Unknown ContainerTransaction type: {0}",
                 new Object[] {transactionAttribute}));
-        } else {
-            this.transactionAttribute = transactionAttribute;
         }
+        this.transactionAttribute = transactionAttribute;
     }
 
     /**

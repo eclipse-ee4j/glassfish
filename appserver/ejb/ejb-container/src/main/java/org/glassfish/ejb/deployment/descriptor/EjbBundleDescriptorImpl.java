@@ -18,8 +18,6 @@
 package org.glassfish.ejb.deployment.descriptor;
 
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
-//import com.sun.enterprise.deployment.EjbDescriptor;
-import com.sun.enterprise.deployment.NameValuePairDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.RoleReference;
 import com.sun.enterprise.deployment.runtime.common.SecurityRoleMapping;
@@ -38,7 +36,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.deployment.common.DescriptorVisitor;
 import org.glassfish.ejb.deployment.descriptor.runtime.IASPersistenceManagerDescriptor;
 import org.glassfish.ejb.deployment.descriptor.runtime.PersistenceManagerInUse;
@@ -58,7 +55,6 @@ public final class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
     // the same resource is used for all beans in this ejb jar.
     private ResourceReferenceDescriptor cmpResourceReference;
 
-    private final List<NameValuePairDescriptor> enterpriseBeansProperties = new ArrayList<>();
     private final LinkedList<InterceptorBindingDescriptor> interceptorBindings = new LinkedList<>();
     private String relationshipsDescription;
     private final Set<RelationshipDescriptor> relationships = new HashSet<>();
@@ -115,37 +111,6 @@ public final class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
      */
     public void setCMPResourceReference(ResourceReferenceDescriptor resourceReference) {
         this.cmpResourceReference = resourceReference;
-    }
-
-
-    /**
-     * @return list of enterprise beans properties
-     */
-    public List<NameValuePairDescriptor> getEnterpriseBeansProperties() {
-        return enterpriseBeansProperties;
-    }
-
-
-    /**
-     * @param key
-     * @return property value of enterprise beans
-     */
-    public String getEnterpriseBeansProperty(String key) {
-        for (NameValuePairDescriptor property : enterpriseBeansProperties) {
-            if (property.getName().equals(key)) {
-                return property.getValue();
-            }
-        }
-        return null;
-    }
-
-
-    /**
-     * @param newProp property of enterprise beans
-     */
-    // Reflection in EnterpriseBeansRuntimeNode
-    public void addEnterpriseBeansProperty(NameValuePairDescriptor newProp) {
-        enterpriseBeansProperties.add(newProp);
     }
 
 
@@ -433,9 +398,9 @@ public final class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
             cmpResourceReference.print(toStringBuffer);
         }
         toStringBuffer.append("\nclient JAR ").append(getEjbClientJarUri());
-        for (Descriptor o : getEjbs()) {
+        for (EjbDescriptor ejb : getEjbs()) {
             toStringBuffer.append("\n------------\n");
-            o.print(toStringBuffer);
+            toStringBuffer.append(ejb);
             toStringBuffer.append("\n------------");
         }
     }

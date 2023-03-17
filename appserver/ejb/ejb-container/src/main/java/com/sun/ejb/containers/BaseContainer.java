@@ -47,6 +47,7 @@ import com.sun.enterprise.container.common.spi.util.IndirectlySerializable;
 import com.sun.enterprise.container.common.spi.util.InjectionManager;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.EjbApplicationExceptionInfo;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.InterceptorDescriptor;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
@@ -135,7 +136,6 @@ import org.glassfish.deployment.common.DeploymentException;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.ejb.LogFacade;
 import org.glassfish.ejb.api.EjbEndpointFacade;
-import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 import org.glassfish.ejb.deployment.descriptor.EjbInitInfo;
 import org.glassfish.ejb.deployment.descriptor.EjbSessionDescriptor;
@@ -644,7 +644,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             }
 
             if (isStatelessSession || isSingleton) {
-                EjbBundleDescriptorImpl bundle = ejbDescriptor.getEjbBundleDescriptor();
+                EjbBundleDescriptor bundle = ejbDescriptor.getEjbBundleDescriptor();
                 WebServicesDescriptor webServices = bundle.getWebServices();
                 Collection<?> endpoints = webServices.getEndpointsImplementedBy(ejbDescriptor);
                 // JSR 109 doesn't require support for a single ejb
@@ -1046,7 +1046,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
      */
     protected void initializeHome() throws Exception {
         if (isWebServiceEndpoint) {
-            final EjbBundleDescriptorImpl bundle = ejbDescriptor.getEjbBundleDescriptor();
+            final EjbBundleDescriptor bundle = ejbDescriptor.getEjbBundleDescriptor();
             final WebServicesDescriptor webServices = bundle.getWebServices();
             final Collection<WebServiceEndpoint> myEndpoints = webServices.getEndpointsImplementedBy(ejbDescriptor);
 
@@ -1412,7 +1412,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
     // This method is used to create the ejb after the around_construct interceptor chain has completed.
     public void createEjbInstanceForInterceptors(Object[] params, EJBContextImpl ctx) throws Exception {
         final Object instance;
-        final EjbBundleDescriptorImpl ejbBundle = ejbDescriptor.getEjbBundleDescriptor();
+        final EjbBundleDescriptor ejbBundle = ejbDescriptor.getEjbBundleDescriptor();
         if (cdiService != null && cdiService.isCDIEnabled(ejbBundle)) {
             // EJB creation for CDI is handled in CDIServiceImpl not here.
             instance = ctx.getCDIInjectionContext().createEjbAfterAroundConstruct();
@@ -1428,7 +1428,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             throw new IllegalStateException(localStrings.getLocalString("ejb.container_not_started",
                 "Attempt to invoke when container is in {0}", containerStateToString(containerState)));
         }
-        EjbBundleDescriptorImpl ejbBundle = ejbDescriptor.getEjbBundleDescriptor();
+        EjbBundleDescriptor ejbBundle = ejbDescriptor.getEjbBundleDescriptor();
 
         Object instance = null;
 
@@ -1506,7 +1506,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
     }
 
     private void createEjbInterceptors(EJBContextImpl context, CDIService.CDIInjectionContext ejbInterceptorsCDIInjectionContext) throws Exception {
-        EjbBundleDescriptorImpl ejbBundle = ejbDescriptor.getEjbBundleDescriptor();
+        EjbBundleDescriptor ejbBundle = ejbDescriptor.getEjbBundleDescriptor();
 
         Object[] interceptorInstances;
 
@@ -1537,7 +1537,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
     protected void injectEjbInstance(EJBContextImpl context) throws Exception {
 
-        EjbBundleDescriptorImpl ejbBundle = ejbDescriptor.getEjbBundleDescriptor();
+        EjbBundleDescriptor ejbBundle = ejbDescriptor.getEjbBundleDescriptor();
 
         if (cdiService != null && cdiService.isCDIEnabled(ejbBundle)) {
             cdiService.injectEJBInstance(context.getCDIInjectionContext());

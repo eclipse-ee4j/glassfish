@@ -18,6 +18,7 @@
 package org.glassfish.ejb.deployment.descriptor;
 
 import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
 import com.sun.enterprise.deployment.MethodDescriptor;
 import com.sun.enterprise.deployment.util.TypeUtil;
@@ -417,7 +418,7 @@ public class EjbSessionDescriptor extends EjbDescriptor implements com.sun.enter
         // have a limited set of possible transaction attributes.
         if (isStateful()) {
             try {
-                EjbBundleDescriptorImpl ejbBundle = getEjbBundleDescriptor();
+                EjbBundleDescriptor ejbBundle = getEjbBundleDescriptor();
                 ClassLoader classLoader = ejbBundle.getClassLoader();
                 Class<?> ejbClass = classLoader.loadClass(getEjbClassName());
                 ServiceLocator serviceLocator = Globals.getDefaultHabitat();

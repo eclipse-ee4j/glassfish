@@ -1,7 +1,7 @@
 type=page
 status=published
 title=list-log-levels
-next=list-managed-executor-services.html
+next=list-mail-resources.html
 prev=list-loggers.html
 ~~~~~~
 

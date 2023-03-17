@@ -1,15 +1,15 @@
 type=page
 status=published
-title=create-javamail-resource
-next=create-jdbc-connection-pool.html
-prev=create-jacc-provider.html
+title=create-mail-resource
+next=create-managed-executor-service.html
+prev=create-local-instance.html
 ~~~~~~
 
-= create-javamail-resource
+= create-mail-resource
 
-[[create-javamail-resource]]
+[[create-mail-resource]]
 
-== create-javamail-resource
+== create-mail-resource
 
 Creates a JavaMail session resource
 
@@ -17,7 +17,7 @@ Creates a JavaMail session resource
 
 [source]
 ----
-asadmin [asadmin-options] create-javamail-resource [--help]
+asadmin [asadmin-options] create-mail-resource [--help]
 [--target target] --mailhost hostname
 --mailuser username --fromaddress address [--storeprotocol storeprotocol]
 [--storeprotocolclass storeprotocolclass] [--transprotocol transprotocol]
@@ -27,7 +27,7 @@ asadmin [asadmin-options] create-javamail-resource [--help]
 
 === Description
 
-The `create-javamail-resource` subcommand creates a JavaMail session
+The `create-mail-resource` subcommand creates a JavaMail session
 resource.
 
 This subcommand is supported in remote mode only.
@@ -118,9 +118,9 @@ JNDI name for a JavaMail session resource customarily includes the
 
 [source]
 ----
-asadmin> create-javamail-resource --mailhost localhost
+asadmin> create-mail-resource --mailhost localhost
 --mailuser sample --fromaddress sample@sun.com mail/MyMailSession
-Command create-javamail-resource executed successfully.
+Command create-mail-resource executed successfully.
 ----
 
 === Exit Status
@@ -134,7 +134,7 @@ Command create-javamail-resource executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-xref:delete-javamail-resource.adoc#delete-javamail-resource[`delete-javamail-resource`(1)],
-xref:list-javamail-resources.adoc#list-javamail-resources[`list-javamail-resources`(1)]
+xref:delete-mail-resource.adoc#delete-mail-resource[`delete-mail-resource`(1)],
+xref:list-mail-resources.adoc#list-mail-resources[`list-mail-resources`(1)]
 
 

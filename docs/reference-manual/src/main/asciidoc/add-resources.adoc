@@ -165,7 +165,7 @@ xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 xref:create-jdbc-connection-pool.adoc#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)],xref:create-jdbc-resource.adoc#create-jdbc-resource[`create-jdbc-resource`(1)],
 xref:create-jms-resource.adoc#create-jms-resource[`create-jms-resource`(1)],
 xref:create-jndi-resource.adoc#create-jndi-resource[`create-jndi-resource`(1)],
-xref:create-javamail-resource.adoc#create-javamail-resource[`create-javamail-resource`(1)],
+xref:create-mail-resource.adoc#create-mail-resource[`create-mail-resource`(1)],
 xref:create-custom-resource.adoc#create-custom-resource[`create-custom-resource`(1)],
 xref:create-connector-resource.adoc#create-connector-resource[`create-connector-resource`(1)],
 xref:create-connector-work-security-map.adoc#create-connector-work-security-map[`create-connector-work-security-map`(1)],

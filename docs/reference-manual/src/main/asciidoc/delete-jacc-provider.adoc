@@ -1,7 +1,7 @@
 type=page
 status=published
 title=delete-jacc-provider
-next=delete-javamail-resource.html
+next=delete-jdbc-connection-pool.html
 prev=delete-instance.html
 ~~~~~~
 

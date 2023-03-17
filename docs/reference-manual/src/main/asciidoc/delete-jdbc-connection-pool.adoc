@@ -2,7 +2,7 @@ type=page
 status=published
 title=delete-jdbc-connection-pool
 next=delete-jdbc-resource.html
-prev=delete-javamail-resource.html
+prev=delete-jacc-provider.html
 ~~~~~~
 
 = delete-jdbc-connection-pool

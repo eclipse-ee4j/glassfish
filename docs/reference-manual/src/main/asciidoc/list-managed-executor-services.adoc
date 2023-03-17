@@ -2,7 +2,7 @@ type=page
 status=published
 title=list-managed-executor-services
 next=list-managed-scheduled-executor-services.html
-prev=list-log-levels.html
+prev=list-mail-resources.html
 ~~~~~~
 
 = list-managed-executor-services

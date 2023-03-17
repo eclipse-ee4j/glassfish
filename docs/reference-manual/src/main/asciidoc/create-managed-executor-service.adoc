@@ -2,7 +2,7 @@ type=page
 status=published
 title=create-managed-executor-service
 next=create-managed-scheduled-executor-service.html
-prev=create-local-instance.html
+prev=create-mail-resource.html
 ~~~~~~
 
 = create-managed-executor-service

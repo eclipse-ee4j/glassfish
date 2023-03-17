@@ -2,7 +2,7 @@ type=page
 status=published
 title=create-jdbc-connection-pool
 next=create-jdbc-resource.html
-prev=create-javamail-resource.html
+prev=create-jacc-provider.html
 ~~~~~~
 
 = create-jdbc-connection-pool

@@ -506,17 +506,17 @@ xref:reference-manual.adoc#list-virtual-servers[`list-virtual-servers`]::
 
 === JavaMail Subcommands
 
-xref:reference-manual.adoc#create-javamail-resource[`create-javamail-resource`]::
+xref:reference-manual.adoc#create-mail-resource[`create-mail-resource`]::
   Creates a JavaMail session resource. Supported in remote mode only.
   For procedural information in this guide, see
   xref:javamail.adoc#to-create-a-javamail-resource[To Create a JavaMail Resource].
-xref:reference-manual.adoc#delete-javamail-resource[`delete-javamail-resource`]::
+xref:reference-manual.adoc#delete-mail-resource[`delete-mail-resource`]::
   Deletes a JavaMail session resource. Supported in remote mode only.
   For procedural information in this guide, see
   xref:javamail.adoc#to-delete-a-javamail-resource[To Delete a JavaMail Resource].
-xref:reference-manual.adoc#list-javamail-resources[`list-javamail-resources`]::
+xref:reference-manual.adoc#list-mail-resources[`list-mail-resources`]::
   Creates JavaMail session resources. Supported in remote mode only. For
-  procedural information in this guide, see xref:javamail.adoc#to-list-javamail-resources[To
+  procedural information in this guide, see xref:javamail.adoc#to-list-mail-resources[To
   List JavaMail Resources].
 
 [[jms-subcommands]]

@@ -1,15 +1,15 @@
 type=page
 status=published
-title=list-javamail-resources
-next=list-jdbc-connection-pools.html
-prev=list-jacc-providers.html
+title=list-mail-resources
+next=list-managed-executor-services.html
+prev=list-log-levels.html
 ~~~~~~
 
-= list-javamail-resources
+= list-mail-resources
 
-[[list-javamail-resources]]
+[[list-mail-resources]]
 
-== list-javamail-resources
+== list-mail-resources
 
 Lists the existing JavaMail session resources
 
@@ -17,13 +17,13 @@ Lists the existing JavaMail session resources
 
 [source]
 ----
-asadmin [asadmin-options] list-javamail-resources [--help]
+asadmin [asadmin-options] list-mail-resources [--help]
 [target]
 ----
 
 === Description
 
-The `list-javamail-resources` subcommand lists the existing JavaMail
+The `list-mail-resources` subcommand lists the existing JavaMail
 session resources.
 
 This subcommand is supported in remote mode only.
@@ -64,9 +64,9 @@ instance.
 
 [source]
 ----
-asadmin> list-javamail-resources
+asadmin> list-mail-resources
 mail/MyMailSession
-Command list-javamail-resources executed successfuly.
+Command list-mail-resources executed successfuly.
 ----
 
 === Exit Status
@@ -80,7 +80,7 @@ Command list-javamail-resources executed successfuly.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-xref:create-javamail-resource.adoc#create-javamail-resource[`create-javamail-resource`(1)],
-xref:delete-javamail-resource.adoc#delete-javamail-resource[`delete-javamail-resource`(1)]
+xref:create-mail-resource.adoc#create-mail-resource[`create-mail-resource`(1)],
+xref:delete-mail-resource.adoc#delete-mail-resource[`delete-mail-resource`(1)]
 
 

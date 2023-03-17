@@ -2,7 +2,7 @@ type=page
 status=published
 title=list-jdbc-connection-pools
 next=list-jdbc-resources.html
-prev=list-javamail-resources.html
+prev=list-jacc-providers.html
 ~~~~~~
 
 = list-jdbc-connection-pools

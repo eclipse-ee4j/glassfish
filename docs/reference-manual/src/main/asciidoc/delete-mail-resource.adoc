@@ -1,15 +1,15 @@
 type=page
 status=published
-title=delete-javamail-resource
-next=delete-jdbc-connection-pool.html
-prev=delete-jacc-provider.html
+title=delete-mail-resource
+next=delete-managed-executor-service.html
+prev=delete-local-instance.html
 ~~~~~~
 
-= delete-javamail-resource
+= delete-mail-resource
 
-[[delete-javamail-resource]]
+[[delete-mail-resource]]
 
-== delete-javamail-resource
+== delete-mail-resource
 
 Removes a JavaMail session resource
 
@@ -17,13 +17,13 @@ Removes a JavaMail session resource
 
 [source]
 ----
-asadmin [asadmin-options] delete-javamail-resource [--help]
+asadmin [asadmin-options] delete-mail-resource [--help]
 [--target target] jndi_name
 ----
 
 === Description
 
-The `delete-javamail-resource` subcommand removes the specified JavaMail
+The `delete-mail-resource` subcommand removes the specified JavaMail
 session resource. Ensure that you remove all references to this resource
 before running this subcommand.
 
@@ -67,8 +67,8 @@ This example deletes the JavaMail session resource named
 
 [source]
 ----
-asadmin> delete-javamail-resource mail/MyMailSession
-Command delete-javamail-resource executed successfully.
+asadmin> delete-mail-resource mail/MyMailSession
+Command delete-mail-resource executed successfully.
 ----
 
 === Exit Status
@@ -82,7 +82,7 @@ Command delete-javamail-resource executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-xref:create-javamail-resource.adoc#create-javamail-resource[`create-javamail-resource`(1)],
-xref:list-javamail-resources.adoc#list-javamail-resources[`list-javamail-resources`(1)]
+xref:create-mail-resource.adoc#create-mail-resource[`create-mail-resource`(1)],
+xref:list-mail-resources.adoc#list-mail-resources[`list-mail-resources`(1)]
 
 

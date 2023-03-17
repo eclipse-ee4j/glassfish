@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -445,7 +446,7 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
     //RESTREdirect currently only support automatically these deletes:
     /*
      * delete-admin-object delete-audit-module delete-auth-realm delete-connector-connection-pool delete-connector-resource
-     * delete-custom-resource delete-http-listener delete-iiop-listener delete-javamail-resource delete-jdbc-connection-pool
+     * delete-custom-resource delete-http-listener delete-iiop-listener delete-mail-resource delete-jdbc-connection-pool
      * delete-jdbc-resource delete-jms-host delete-message-security-provider delete-profiler delete-resource-adapter-config
      * delete-resource-ref delete-system-property delete-virtual-server What is missing is: delete-jms-resource delete-jmsdest
      * delete-jndi-resource delete-lifecycle-module delete-message-security-provider delete-connector-security-map
@@ -514,7 +515,7 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
             put("ListJmsHost", "create-jms-host");
             put("ListLbConfig", "create-http-lb-config");
             put("ListLoadBalancer", "create-http-lb");
-            put("ListMailResource", "create-javamail-resource");
+            put("ListMailResource", "create-mail-resource");
             put("ListMessageSecurityConfig", "create-message-security-provider");
             put("ListNetworkListener", "create-network-listener");
             put("ListProtocol", "create-protocol");

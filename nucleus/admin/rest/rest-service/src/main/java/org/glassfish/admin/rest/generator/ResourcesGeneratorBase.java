@@ -17,13 +17,12 @@
 
 package org.glassfish.admin.rest.generator;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.Collections;
+
 import org.glassfish.admin.rest.Constants;
 import org.glassfish.admin.rest.utils.ResourceUtil;
 import org.glassfish.hk2.api.MultiException;
@@ -32,13 +31,15 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.ConfigModel;
 import org.jvnet.hk2.config.DomDocument;
 
+import static java.util.Map.entry;
+
 /**
  * @author Mitesh Meswani
  * @author Ludovic Champenois
  */
 public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
 
-    private static Set<String> alreadyGenerated = new HashSet<String>();
+    private static final Set<String> alreadyGenerated = new HashSet<>();
     ServiceLocator habitat;
 
     public ResourcesGeneratorBase(ServiceLocator habitat) {
@@ -49,6 +50,7 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
      * Generate REST resource for a single config model.
      */
     @Override
+    @SuppressWarnings("rawtypes")
     public void generateSingle(ConfigModel model, DomDocument domDocument) {
         configModelVisited(model);
         //processRedirectsAnnotation(model); // TODO need to extract info from RestRedirect Annotations
@@ -99,20 +101,20 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
                     }
                 } else if (childElement.isLeaf()) {
                     if (childElement.isCollection()) {
-                        //handle the CollectionLeaf config objects.
-                        //JVM Options is an example of CollectionLeaf object.
+                        // handle the CollectionLeaf config objects.
+                        // JVM Options is an example of CollectionLeaf object.
                         String childResourceBeanName = getBeanName(elementName);
                         String childResourceClassName = getClassName(childResourceBeanName);
                         classWriter.createGetChildResource(elementName, childResourceClassName);
 
-                        //create resource class
+                        // create resource class
                         generateCollectionLeafResource(childResourceBeanName);
                     } else {
                         String childResourceBeanName = getBeanName(elementName);
                         String childResourceClassName = getClassName(childResourceBeanName);
                         classWriter.createGetChildResource(elementName, childResourceClassName);
 
-                        //create resource class
+                        // create resource class
                         generateLeafResource(childResourceBeanName);
                     }
                 } else { // => !childElement.isLeaf()
@@ -124,6 +126,7 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
         }
     }
 
+    @SuppressWarnings("rawtypes")
     public void generateList(ConfigModel model, DomDocument domDocument) {
         configModelVisited(model);
 
@@ -152,7 +155,7 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
     }
 
     /*
-     * empty method to be overwritten to get a callback when a model is visited.
+     * Empty method to be overwritten to get a callback when a model is visited.
      */
     public void configModelVisited(ConfigModel model) {
     }
@@ -171,18 +174,18 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
 
             if (metaData != null) {
                 if (metaData.postCommandName != null) {
-                    if (ResourceUtil.commandIsPresent(habitat, metaData.postCommandName)) {//and the command exits
+                    if (ResourceUtil.commandIsPresent(habitat, metaData.postCommandName)) { // and the command exits
                         classWriter.createGetPostCommandForCollectionLeafResource(metaData.postCommandName);
                     }
                 }
 
                 if (metaData.deleteCommandName != null) {
-                    if (ResourceUtil.commandIsPresent(habitat, metaData.deleteCommandName)) {//and the command exits
+                    if (ResourceUtil.commandIsPresent(habitat, metaData.deleteCommandName)) { // and the command exits
                         classWriter.createGetDeleteCommandForCollectionLeafResource(metaData.deleteCommandName);
                     }
                 }
 
-                //display name method
+                // display name method
                 classWriter.createGetDisplayNameForCollectionLeafResource(metaData.displayName);
             }
 
@@ -204,8 +207,9 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
         }
     }
 
-    private void processNonLeafChildElement(String elementName, ConfigModel.Property childElement, DomDocument domDocument,
-            ClassWriter classWriter) {
+    @SuppressWarnings("rawtypes")
+    private void processNonLeafChildElement(String elementName, ConfigModel.Property childElement,
+            DomDocument domDocument, ClassWriter classWriter) {
         ConfigModel.Node node = (ConfigModel.Node) childElement;
         ConfigModel childModel = node.getModel();
         String beanName = ResourceUtil.getUnqualifiedTypeName(childModel.targetTypeName);
@@ -217,9 +221,7 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
             if (childElement.isCollection()) {
                 childResourceClassName = "List" + childResourceClassName;
             }
-            classWriter.createGetChildResource(/*
-                                               * childModel.getTagName()
-                                               */elementName, childResourceClassName);
+            classWriter.createGetChildResource(/*childModel.getTagName()*/ elementName, childResourceClassName);
         }
 
         if (childElement.isCollection()) {
@@ -230,30 +232,31 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
     }
 
     /**
-     * process given childConfigModel.
+     * Process given childConfigModel.
      *
-     * @param childConfigModel
-     * @param childElement
-     * @param domDocument
-     * @param classWriter
+     * @param childConfigModel the child config model
+     * @param childElement the child element
+     * @param domDocument the DOM document
+     * @param classWriter the class writer
      */
-    private void processNonLeafChildConfigModel(ConfigModel childConfigModel, ConfigModel.Property childElement, DomDocument domDocument,
-            ClassWriter classWriter) {
+    @SuppressWarnings("rawtypes")
+    private void processNonLeafChildConfigModel(ConfigModel childConfigModel, ConfigModel.Property childElement,
+            DomDocument domDocument, ClassWriter classWriter) {
         String childResourceClassName = getClassName("List" + ResourceUtil.getUnqualifiedTypeName(childConfigModel.targetTypeName));
         String childPath = childConfigModel.getTagName();
         classWriter.createGetChildResource(childPath, childResourceClassName);
         if (childElement.isCollection()) {
             generateList(childConfigModel, domDocument);
         } else {
-            //The code flow should never reach here. NonLeaf ChildElements are assumed to be collection typed that is why we generate childResource as
-            //generateSingle(childConfigModel, domDocument);
+            // The code flow should never reach here. NonLeaf ChildElements are assumed to be collection typed
+            // that is why we generate childResource as generateSingle(childConfigModel, domDocument);
         }
     }
 
     private void generateGetDeleteCommandMethod(String beanName, ClassWriter classWriter) {
         String commandName = configBeanToDELETECommand.get(beanName);
         if (commandName != null) {
-            if (ResourceUtil.commandIsPresent(habitat, commandName)) {//and the command exits
+            if (ResourceUtil.commandIsPresent(habitat, commandName)) { // and the command exits
                 classWriter.createGetDeleteCommand(commandName);
             }
         }
@@ -268,44 +271,44 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
     void generateGetPostCommandMethod(String resourceName, ClassWriter classWriter) {
         String commandName = configBeanToPOSTCommand.get(resourceName);
         if (commandName != null) {
-            if (ResourceUtil.commandIsPresent(habitat, commandName)) {//and the command exits
+            if (ResourceUtil.commandIsPresent(habitat, commandName)) { // and the command exits
                 classWriter.createGetPostCommand(commandName);
             }
         }
     }
 
     /**
-     * Generate resources for commands mapped under given parentBeanName
+     * Generate resources for commands mapped under given {@code parentBeanName}.
      *
-     * @param parentBeanName
-     * @param parentWriter
+     * @param parentBeanName the parent bean name
+     * @param parentWriter - the parent class writer
      */
     private void generateCommandResources(String parentBeanName, ClassWriter parentWriter) {
         List<CommandResourceMetaData> commandMetaData = CommandResourceMetaData.getMetaData(parentBeanName);
         if (commandMetaData.size() > 0) {
             for (CommandResourceMetaData metaData : commandMetaData) {
-                if (ResourceUtil.commandIsPresent(habitat, metaData.command)) { //only if the command really exists
+                if (ResourceUtil.commandIsPresent(habitat, metaData.command)) { // only if the command really exists
                     String commandResourceName = parentBeanName + getBeanName(metaData.resourcePath);
                     String commandResourceClassName = getClassName(commandResourceName);
 
-                    //Generate command resource class
+                    // Generate command resource class
                     generateCommandResourceClass(parentBeanName, metaData);
 
-                    //Generate getCommandResource() method in parent
+                    // Generate getCommandResource() method in parent
                     parentWriter.createGetCommandResource(commandResourceClassName, metaData.resourcePath);
                 }
 
             }
-            //Generate GetCommandResourcePaths() method in parent
+            // Generate GetCommandResourcePaths() method in parent
             parentWriter.createGetCommandResourcePaths(commandMetaData);
         }
     }
 
     /**
-     * Generate code for Resource class corresponding to given parentBeanName and command
+     * Generate code for Resource class corresponding to given {@code parentBeanName} and command.
      *
-     * @param parentBeanName
-     * @param metaData
+     * @param parentBeanName the parent bean name
+     * @param metaData the command metadata
      */
     private void generateCommandResourceClass(String parentBeanName, CommandResourceMetaData metaData) {
 
@@ -339,19 +342,20 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
                 for (CommandResourceMetaData.ParameterMetaData parameterMetaData : metaData.commandParams) {
                     if (Constants.VAR_PARENT.equals(parameterMetaData.value)) {
                         isLinkedToParent = true;
+                        break;
                     }
                 }
             }
 
-            classWriter.createCommandResourceConstructor(commandResourceClassName, commandName, httpMethod, isLinkedToParent,
-                    metaData.commandParams, commandDisplayName, commandAction);
+            classWriter.createCommandResourceConstructor(commandResourceClassName, commandName, httpMethod,
+                    isLinkedToParent, metaData.commandParams, commandDisplayName, commandAction);
             classWriter.done();
         }
     }
 
     /**
-     * @param className
-     * @return true if the given className is already generated. false otherwise.
+     * @param className the class name
+     * @return true if the given {@code className} is already generated, false otherwise.
      */
     protected boolean alreadyGenerated(String className) {
         boolean retVal = true;
@@ -363,33 +367,36 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
     }
 
     /**
-     * @param beanName
-     * @return generated class name for given beanName
+     * @param beanName the bean name
+     * @return generated class name for given {@code beanName}
      */
     private String getClassName(String beanName) {
         return beanName + "Resource";
     }
 
     /**
-     * @param elementName
-     * @return bean name for the given element name. The name is derived by uppercasing first letter of elementName,
-     * eliminating hyphens from elementName and uppercasing letter followed by hyphen
+     * Gets the bean name corresponding given {@code elementName}.
+     *
+     * <p>The name is derived by uppercasing first letter of {@code elementName},
+     * eliminating hyphens from {@code elementName} and uppercasing letter followed by hyphen.
+     *
+     * @param elementName the element name
+     * @return the bean name for the given element name.
      */
     public static String getBeanName(String elementName) {
         StringBuilder ret = new StringBuilder();
-        boolean nextisUpper = true;
+        boolean nextIsUpper = true;
         for (int i = 0; i < elementName.length(); i++) {
-            if (nextisUpper == true) {
+            if (nextIsUpper) {
                 ret.append(elementName.substring(i, i + 1).toUpperCase(Locale.US));
-                nextisUpper = false;
+                nextIsUpper = false;
             } else {
                 if (elementName.charAt(i) == '-') {
-                    nextisUpper = true;
+                    nextIsUpper = true;
                 } else if (elementName.charAt(i) == '/') {
-                    nextisUpper = true;
+                    nextIsUpper = true;
                 } else {
-                    nextisUpper = false;
-                    ret.append(elementName.substring(i, i + 1));
+                    ret.append(elementName.charAt(i));
                 }
             }
         }
@@ -397,25 +404,25 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
     }
 
     /**
-     * @param model
-     * @return name of the key attribute for the given model.
+     * @param model the config model
+     * @return name of the key attribute for the given {@code model}.
      */
     private String getKeyAttributeName(ConfigModel model) {
         String keyAttributeName = null;
         if (model.key == null) {
-            for (String s : model.getAttributeNames()) {//no key, by default use the name attr
+            for (String s : model.getAttributeNames()) { // no key, by default use the name attr
                 if (s.equals("name")) {
                     keyAttributeName = getBeanName(s);
                 }
             }
-            if (keyAttributeName == null)//nothing, so pick the first one
+            if (keyAttributeName == null) // nothing, so pick the first one
             {
                 Set<String> attributeNames = model.getAttributeNames();
                 if (!attributeNames.isEmpty()) {
                     keyAttributeName = getBeanName(attributeNames.iterator().next());
                 } else {
-                    //TODO carried forward from old generator. Should never reach here. But we do for ConfigExtension and WebModuleConfig
-                    keyAttributeName = "ThisIsAModelBug:NoKeyAttr"; //no attr choice fo a key!!! Error!!!
+                    // TODO carried forward from old generator. Should never reach here. But we do for ConfigExtension and WebModuleConfig
+                    keyAttributeName = "ThisIsAModelBug:NoKeyAttr"; // no attr choice fo a key!!! Error!!!
                 }
 
             }
@@ -427,9 +434,9 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
         return keyAttributeName;
     }
 
+    @SuppressWarnings("unchecked")
     private boolean hasSingletonAnnotation(ConfigModel model) {
-
-        Class<? extends ConfigBeanProxy> cbp = null;
+        Class<? extends ConfigBeanProxy> cbp;
         try {
             cbp = (Class<? extends ConfigBeanProxy>) model.classLoaderHolder.loadClass(model.targetTypeName);
             if (cbp != null) {
@@ -442,8 +449,8 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
         return false;
     }
 
-    //TODO - fetch command name from config bean(RestRedirect annotation).
-    //RESTREdirect currently only support automatically these deletes:
+    // TODO - fetch command name from config bean(RestRedirect annotation).
+    // RESTREdirect currently only support automatically these deletes:
     /*
      * delete-admin-object delete-audit-module delete-auth-realm delete-connector-connection-pool delete-connector-resource
      * delete-custom-resource delete-http-listener delete-iiop-listener delete-mail-resource delete-jdbc-connection-pool
@@ -453,93 +460,85 @@ public abstract class ResourcesGeneratorBase implements ResourcesGenerator {
      * delete-connector-work-security-map delete-node-config delete-node-ssh delete-file-user delete-password-alias
      * delete-http-health-checker delete-http-lb-ref delete-http-redirect delete-instance
      */
-    private static final Map<String, String> configBeanToDELETECommand = Collections.unmodifiableMap(new HashMap<String, String>() {
+    private static final Map<String, String> configBeanToDELETECommand = Map.ofEntries(
+            entry("AdminObjectResource", "delete-admin-object"),
+            entry("AuditModule", "delete-audit-module"),
+            entry("AuthRealm", "delete-auth-realm"),
+            entry("ApplicationRef", "delete-application-ref"),
+            entry("Cluster", "delete-cluster"),
+            entry("Config", "delete-config"),
+            entry("ConnectorConnectionPool", "delete-connector-connection-pool"),
+            entry("ConnectorResource", "delete-connector-resource"),
+            entry("CustomResource", "delete-custom-resource"),
+            entry("ExternalJndiResource", "delete-jndi-resource"),
+            entry("HttpListener", "delete-http-listener"),
+            entry("Http", "delete-http"),
+            entry("IiopListener", "delete-iiop-listener"),
+            entry("JdbcResource", "delete-jdbc-resource"),
+            entry("JaccProvider", "delete-jacc-provider"),
+            // entry("JmsHost", "delete-jms-host"),
+            entry("LbConfig", "delete-http-lb-config"),
+            entry("LoadBalancer", "delete-http-lb"),
+            entry("NetworkListener", "delete-network-listener"),
+            entry("Profiler", "delete-profiler"),
+            entry("Protocol", "delete-protocol"),
+            entry("ProtocolFilter", "delete-protocol-filter"),
+            entry("ProtocolFinder", "delete-protocol-finder"),
+            entry("ProviderConfig", "delete-message-security-provider"),
+            entry("ResourceAdapterConfig", "delete-resource-adapter-config"),
+            entry("SecurityMap", "delete-connector-security-map"),
+            entry("Ssl", "delete-ssl"),
+            entry("Transport", "delete-transport"),
+            entry("ThreadPool", "delete-threadpool"),
+            entry("VirtualServer", "delete-virtual-server"),
+            entry("WorkSecurityMap", "delete-connector-work-security-map")
+    );
 
-        {
-            put("AdminObjectResource", "delete-admin-object");
-            put("AuditModule", "delete-audit-module");
-            put("AuthRealm", "delete-auth-realm");
-            put("ApplicationRef", "delete-application-ref");
-            put("Cluster", "delete-cluster");
-            put("ConnectorConnectionPool", "delete-connector-connection-pool");
-            put("Config", "delete-config");
-            put("ConnectorConnectionPool", "delete-connector-connection-pool");
-            put("ConnectorResource", "delete-connector-resource");
-            put("CustomResource", "delete-custom-resource");
-            put("ExternalJndiResource", "delete-jndi-resource");
-            put("HttpListener", "delete-http-listener");
-            put("Http", "delete-http");
-            put("IiopListener", "delete-iiop-listener");
-            put("JdbcResource", "delete-jdbc-resource");
-            put("JaccProvider", "delete-jacc-provider");
-            //            put("JmsHost", "delete-jms-host");
-            put("LbConfig", "delete-http-lb-config");
-            put("LoadBalancer", "delete-http-lb");
-            put("NetworkListener", "delete-network-listener");
-            put("Profiler", "delete-profiler");
-            put("Protocol", "delete-protocol");
-            put("ProtocolFilter", "delete-protocol-filter");
-            put("ProtocolFinder", "delete-protocol-finder");
-            put("ProviderConfig", "delete-message-security-provider");
-            put("ResourceAdapterConfig", "delete-resource-adapter-config");
-            put("SecurityMap", "delete-connector-security-map");
-            put("Ssl", "delete-ssl");
-            put("Transport", "delete-transport");
-            put("ThreadPool", "delete-threadpool");
-            put("VirtualServer", "delete-virtual-server");
-            put("WorkSecurityMap", "delete-connector-work-security-map");
-        }
-    });
-    //TODO - fetch command name from config bean(RestRedirect annotation).
-    public static final Map<String, String> configBeanToPOSTCommand = Collections.unmodifiableMap(new HashMap<String, String>() {
+    // TODO - fetch command name from config bean(RestRedirect annotation).
+    public static final Map<String, String> configBeanToPOSTCommand = Map.ofEntries(
+            entry("Application", "redeploy"), // TODO check : This row is not used
+            entry("JavaConfig", "create-profiler"), // TODO check: This row is not used
+            entry("ListAdminObjectResource", "create-admin-object"),
+            entry("ListApplication", "deploy"),
+            entry("ListApplicationRef", "create-application-ref"),
+            entry("ListAuditModule", "create-audit-module"),
+            entry("ListAuthRealm", "create-auth-realm"),
+            entry("ListCluster", "create-cluster"),
+            entry("ListConfig", "_create-config"),
+            entry("ListConnectorConnectionPool", "create-connector-connection-pool"),
+            entry("ListConnectorResource", "create-connector-resource"),
+            entry("ListCustomResource", "create-custom-resource"),
+            entry("ListExternalJndiResource", "create-jndi-resource"),
+            entry("ListHttpListener", "create-http-listener"),
+            entry("ListIiopListener", "create-iiop-listener"),
+            entry("ListJaccProvider", "create-jacc-provider"),
+            entry("ListJdbcConnectionPool", "create-jdbc-connection-pool"),
+            entry("ListJdbcResource", "create-jdbc-resource"),
+            entry("ListJmsHost", "create-jms-host"),
+            entry("ListLbConfig", "create-http-lb-config"),
+            entry("ListLoadBalancer", "create-http-lb"),
+            entry("ListMailResource", "create-mail-resource"),
+            entry("ListMessageSecurityConfig", "create-message-security-provider"),
+            entry("ListNetworkListener", "create-network-listener"),
+            entry("ListProtocol", "create-protocol"),
+            entry("ListResourceAdapterConfig", "create-resource-adapter-config"),
+            entry("ListResourceRef", "create-resource-ref"),
+            entry("ListSystemProperty", "create-system-properties"),
+            entry("ListThreadPool", "create-threadpool"),
+            entry("ListTransport", "create-transport"),
+            entry("ListVirtualServer", "create-virtual-server"),
+            entry("ListWorkSecurityMap", "create-connector-work-security-map"),
+            entry("ProtocolFilter", "create-protocol-filter"),
+            entry("ProtocolFinder", "create-protocol-finder"),
+            entry("ListSecurityMap", "create-connector-security-map")
+    );
 
-        {
-            put("Application", "redeploy"); //TODO check : This row is not used
-            put("JavaConfig", "create-profiler"); // TODO check: This row is not used
-            put("ListAdminObjectResource", "create-admin-object");
-            put("ListApplication", "deploy");
-            put("ListApplicationRef", "create-application-ref");
-            put("ListAuditModule", "create-audit-module");
-            put("ListAuthRealm", "create-auth-realm");
-            put("ListCluster", "create-cluster");
-            put("ListConfig", "_create-config");
-            put("ListConnectorConnectionPool", "create-connector-connection-pool");
-            put("ListConnectorResource", "create-connector-resource");
-            put("ListCustomResource", "create-custom-resource");
-            put("ListExternalJndiResource", "create-jndi-resource");
-            put("ListHttpListener", "create-http-listener");
-            put("ListIiopListener", "create-iiop-listener");
-            put("ListJaccProvider", "create-jacc-provider");
-            put("ListJdbcConnectionPool", "create-jdbc-connection-pool");
-            put("ListJdbcResource", "create-jdbc-resource");
-            put("ListJmsHost", "create-jms-host");
-            put("ListLbConfig", "create-http-lb-config");
-            put("ListLoadBalancer", "create-http-lb");
-            put("ListMailResource", "create-mail-resource");
-            put("ListMessageSecurityConfig", "create-message-security-provider");
-            put("ListNetworkListener", "create-network-listener");
-            put("ListProtocol", "create-protocol");
-            put("ListResourceAdapterConfig", "create-resource-adapter-config");
-            put("ListResourceRef", "create-resource-ref");
-            put("ListSystemProperty", "create-system-properties");
-            put("ListThreadPool", "create-threadpool");
-            put("ListTransport", "create-transport");
-            put("ListVirtualServer", "create-virtual-server");
-            put("ListWorkSecurityMap", "create-connector-work-security-map");
-            put("ProtocolFilter", "create-protocol-filter");
-            put("ProtocolFinder", "create-protocol-finder");
-            put("ListSecurityMap", "create-connector-security-map");
-        }
-    });
-    //This map is used to generate CollectionLeaf resources.
-    //Example: JVM Options. This information will eventually move to config bean-
-    //JavaConfig or JvmOptionBag
-    public static final Map<String, CollectionLeafMetaData> configBeanToCollectionLeafMetaData = new HashMap<String, CollectionLeafMetaData>() {
-
-        {
-            put("JvmOptions", new CollectionLeafMetaData("create-jvm-options", "delete-jvm-options", "JvmOption"));
-            //          put("Principal", new CollectionLeafMetaData("__create-principal", "__delete-principal", "Principal"));
-            //          put("UserGroup", new CollectionLeafMetaData("__create-user-group", "__delete-user-group", "User Group"));
-        }
-    };
+    // This map is used to generate CollectionLeaf resources.
+    // Example: JVM Options. This information will eventually move to config bean -
+    // JavaConfig or JvmOptionBag
+    public static final Map<String, CollectionLeafMetaData> configBeanToCollectionLeafMetaData = Map.ofEntries(
+            entry("JvmOptions", new CollectionLeafMetaData("create-jvm-options", "delete-jvm-options", "JvmOption"))
+            // entry("Principal", new CollectionLeafMetaData("__create-principal", "__delete-principal", "Principal"));
+            // entry("UserGroup", new CollectionLeafMetaData("__create-user-group", "__delete-user-group", "User Group"));
+    );
 }

@@ -46,6 +46,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -57,6 +58,8 @@ import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.logging.annotation.LogMessageInfo;
 
+import static com.sun.enterprise.deployment.MethodDescriptor.EJB_LOCAL;
+import static com.sun.enterprise.deployment.MethodDescriptor.EJB_REMOTE;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 
 /**
@@ -101,7 +104,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
             if (msgDest == null) {
                 String linkName = msgDestReferencer.getMessageDestinationLinkName();
                 LOG.log(Level.WARNING, DOLUtils.INVALID_DESC_MAPPING,
-                    new Object[] {"message-destination", linkName});
+                    new Object[] {"message-destination", linkName, msgDestReferencer.getClass()});
             } else {
                 if (msgDestReferencer instanceof MessageDestinationReferenceDescriptor) {
                     ((MessageDestinationReferenceDescriptor) msgDestReferencer).setJndiName(msgDest.getJndiName());
@@ -178,12 +181,12 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
                     if (ejbRef.getType() == null) {
                         ejbRef.setType("Session");
                     }
-                } catch(Exception e) {
-                  LogRecord lr = new LogRecord(Level.FINE, LOAD_ERROR);
-                  Object args[] = { homeIntf };
-                  lr.setParameters(args);
-                  lr.setThrown(e);
-                  LOG.log(lr);
+                } catch (Exception e) {
+                    LogRecord lr = new LogRecord(Level.FINE, LOAD_ERROR);
+                    Object args[] = {homeIntf};
+                    lr.setParameters(args);
+                    lr.setThrown(e);
+                    LOG.log(lr);
                 }
             }
         }
@@ -346,7 +349,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
         String intfClassName = ejbRef.getEjbInterface();
 
         // save anticipated type for checking if bean type is compatible
-        String type = ejbRef.getType();
+        final String type = ejbRef.getType();
 
         EjbDescriptor ejbReferee = null;
 
@@ -421,8 +424,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
             final ArchiveType moduleType = ejbRef.getReferringBundleDescriptor().getModuleType();
             if (moduleType != null && moduleType.equals(DOLUtils.carType())) {
                 // Because no annotation processing is done within ACC runtime, this case
-                // typically
-                // arises for remote @EJB annotations, so don't log it as warning.
+                // typically arises for remote @EJB annotations, so don't log it as warning.
                 if (LOG.isLoggable(Level.FINE)) {
                     LOG.fine("Unresolved <ejb-link>: " + linkName);
                 }
@@ -439,8 +441,8 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
             // in any Application Client module or in a stand-alone web module
             // it must be remote business.
             if ((referringBundle == null && getEjbBundleDescriptor() == null)
-                || (referringBundle != null && DOLUtils.carType().equals(referringBundle.getModuleType()))
-                || (referringBundle != null && DOLUtils.warType().equals(referringBundle.getModuleType())
+                || (referringBundle != null && Objects.equals(DOLUtils.carType(), referringBundle.getModuleType()))
+                || (referringBundle != null && Objects.equals(DOLUtils.warType(), referringBundle.getModuleType())
                     && getApplication() == null && referringBundle.getModuleType() != null)) {
 
                 ejbRef.setLocal(false);
@@ -535,7 +537,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
 
                 LOG.log(Level.WARNING, "enterprise.deployment.backend.ejbRefTypeMismatch",
                     new Object[] {ejbRef.getName(), intfClassName, ejbReferee.getName(),
-                        (ejbRef.isLocal() ? "Local" : "Remote"), targetComponentIntf});
+                        (ejbRef.isLocal() ? EJB_LOCAL : EJB_REMOTE), targetComponentIntf});
 
                 if (targetComponentIntf != null) {
                     ejbRef.setEjbInterface(targetComponentIntf);
@@ -547,9 +549,9 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
         ejbRef.setJndiName(ejbReferee.getJndiName());
 
         if (!type.equals(ejbRef.getType())) {
-            // if they don't match
             // print a warning and reset the type in ejb ref
-            LOG.log(Level.WARNING, DOLUtils.INVALID_DESC_MAPPING, new Object[] {ejbRef.getName(), type});
+            LOG.log(Level.WARNING, "Detected type {0} doesn't match the configured type {1} for ejb reference {2}",
+                new Object[] {ejbRef.getName(), type, ejbRef.getClass()});
 
             ejbRef.setType(ejbRef.getType());
 
@@ -637,7 +639,8 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
                 WebServiceEndpoint portComponentLink = next.resolveLinkName();
                 if (portComponentLink == null) {
                     String linkName = next.getPortComponentLinkName();
-                    LOG.log(Level.WARNING, DOLUtils.INVALID_DESC_MAPPING, new Object[] {"port-component", linkName});
+                    LOG.log(Level.WARNING, DOLUtils.INVALID_DESC_MAPPING,
+                        new Object[] {"port-component", linkName, next.getClass()});
                 }
             }
         }
@@ -658,7 +661,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
 
                 // In app-client, keep lookup local to JVM so it doesn't need to access
                 // server's global JNDI namespace for managed bean.
-                SimpleJndiName jndiName = bundleDescriptor.getModuleType() == DOLUtils.carType()
+                SimpleJndiName jndiName = Objects.equals(bundleDescriptor.getModuleType(), DOLUtils.carType())
                     ? desc.getAppJndiName()
                     : desc.getGlobalJndiName();
 
@@ -872,33 +875,35 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
      * Set runtime default value for ResourceEnvReferenceDescriptor.
      */
     private void computeRuntimeDefault(ResourceEnvReferenceDescriptor resourceEnvRef) {
-        if (resourceEnvRef.getRefType() != null
-            && resourceEnvRef.getRefType().equals("jakarta.transaction.UserTransaction")) {
+        String refType = resourceEnvRef.getRefType();
+        if (refType != null
+            && refType.equals("jakarta.transaction.UserTransaction")) {
             resourceEnvRef.setJndiName(new SimpleJndiName(JNDI_CTX_JAVA_COMPONENT + "UserTransaction"));
-        } else if (resourceEnvRef.getRefType() != null
-            && resourceEnvRef.getRefType().equals("jakarta.transaction.TransactionSynchronizationRegistry")) {
-            resourceEnvRef
-                .setJndiName(new SimpleJndiName(JNDI_CTX_JAVA_COMPONENT + "TransactionSynchronizationRegistry"));
-        } else if (resourceEnvRef.getJndiName() == null || resourceEnvRef.getJndiName().isEmpty()) {
-            if (resourceEnvRef.getRefType() == null) {
-                resourceEnvRef.setJndiName(getDefaultResourceJndiName(resourceEnvRef.getName()));
-            } else {
-                if (resourceEnvRef.getRefType().equals("jakarta.enterprise.concurrent.ManagedExecutorService")) {
-                    resourceEnvRef
-                        .setLookupName(new SimpleJndiName(JNDI_CTX_JAVA_COMPONENT + "DefaultManagedExecutorService"));
-                } else if (resourceEnvRef.getRefType()
-                    .equals("jakarta.enterprise.concurrent.ManagedScheduledExecutorService")) {
-                    resourceEnvRef.setLookupName(
-                        new SimpleJndiName(JNDI_CTX_JAVA_COMPONENT + "DefaultManagedScheduledExecutorService"));
-                } else if (resourceEnvRef.getRefType().equals("jakarta.enterprise.concurrent.ManagedThreadFactory")) {
-                    resourceEnvRef
-                        .setLookupName(new SimpleJndiName(JNDI_CTX_JAVA_COMPONENT + "DefaultManagedThreadFactory"));
-                } else if (resourceEnvRef.getRefType().equals("jakarta.enterprise.concurrent.ContextService")) {
-                    resourceEnvRef.setLookupName(new SimpleJndiName(JNDI_CTX_JAVA_COMPONENT + "DefaultContextService"));
-                } else {
-                    resourceEnvRef.setJndiName(getDefaultResourceJndiName(resourceEnvRef.getName()));
-                }
-            }
+            return;
+        }
+        if (refType != null && refType.equals("jakarta.transaction.TransactionSynchronizationRegistry")) {
+            String jndiName = JNDI_CTX_JAVA_COMPONENT + "TransactionSynchronizationRegistry";
+            resourceEnvRef.setJndiName(new SimpleJndiName(jndiName));
+            return;
+        }
+        if (resourceEnvRef.getJndiName() != null && !resourceEnvRef.getJndiName().isEmpty()) {
+            return;
+        }
+        if (refType == null) {
+            resourceEnvRef.setJndiName(getDefaultResourceJndiName(resourceEnvRef.getName()));
+            return;
+        }
+        if (refType.equals("jakarta.enterprise.concurrent.ManagedExecutorService")) {
+            resourceEnvRef.setLookupName(new SimpleJndiName(JNDI_CTX_JAVA_COMPONENT + "DefaultManagedExecutorService"));
+        } else if (refType.equals("jakarta.enterprise.concurrent.ManagedScheduledExecutorService")) {
+            String jndiName = JNDI_CTX_JAVA_COMPONENT + "DefaultManagedScheduledExecutorService";
+            resourceEnvRef.setLookupName(new SimpleJndiName(jndiName));
+        } else if (refType.equals("jakarta.enterprise.concurrent.ManagedThreadFactory")) {
+            resourceEnvRef.setLookupName(new SimpleJndiName(JNDI_CTX_JAVA_COMPONENT + "DefaultManagedThreadFactory"));
+        } else if (refType.equals("jakarta.enterprise.concurrent.ContextService")) {
+            resourceEnvRef.setLookupName(new SimpleJndiName(JNDI_CTX_JAVA_COMPONENT + "DefaultContextService"));
+        } else {
+            resourceEnvRef.setJndiName(getDefaultResourceJndiName(resourceEnvRef.getName()));
         }
     }
 

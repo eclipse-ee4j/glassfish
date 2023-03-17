@@ -280,12 +280,12 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
     @Override
     public XMLNode<?> getHandlerFor(XMLElement element) {
         if (handlers == null) {
-            LOG.log(WARNING, INVALID_DESC_MAPPING, this, "No handler registered");
+            LOG.log(WARNING, "No handler registered in " + this);
             return null;
         }
         Class<?> c = handlers.get(element.getQName());
         if (c == null) {
-            LOG.log(WARNING, INVALID_DESC_MAPPING, element.getQName(), "No handler registered");
+            LOG.log(WARNING, "No class registered for " + element.getQName() + " in " + this);
             return null;
         }
         LOG.log(DEBUG, "New Handler requested for {0}", c);
@@ -422,38 +422,40 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
      */
     @Override
     public void setElementValue(XMLElement element, String value) {
-        Map<String, String> dispatchTable = getDispatchTable();
-        if (dispatchTable != null && dispatchTable.containsKey(element.getQName())) {
-            if (dispatchTable.get(element.getQName()) == null) {
-                // we just ignore these values from the DDs
-                LOG.log(DEBUG, "Deprecated element {0} with value {1} is ignored.", element, value);
-                return;
-            }
-            try {
-                T descriptor = getDescriptor();
-                if (descriptor == null) {
-                    LOG.log(WARNING, INVALID_DESC_MAPPING, element.getQName(), value);
-                } else {
-                    setDescriptorInfo(descriptor, dispatchTable.get(element.getQName()), value);
-                }
-                return;
-            } catch (InvocationTargetException e) {
-                LOG.log(WARNING, INVALID_DESC_MAPPING, dispatchTable.get(element.getQName()),
-                    getDescriptor().getClass());
-                Throwable t = e.getTargetException();
-                if (t instanceof IllegalArgumentException) {
-                    // We report the error but we continue loading, this will allow the verifier
-                    // to catch these errors or to register an error handler for notification
-                    LOG.log(WARNING, INVALID_DESC_MAPPING, element, value);
-                } else {
-                    LOG.log(WARNING, "Error occurred", t);
-                }
-            } catch (Throwable t) {
-                LOG.log(WARNING, "Error occurred", t);
-            }
+        LOG.log(DEBUG, "setElementValue(element={0}, value={1})", element, value);
+        T descriptor = getDescriptor();
+        if (descriptor == null) {
+            throw new IllegalStateException("Descriptor not available in " + this);
         }
-        if (!value.isBlank()) {
-            LOG.log(WARNING, INVALID_DESC_MAPPING, element.getQName(), value);
+        Map<String, String> dispatchTable = getDispatchTable();
+        if (dispatchTable == null) {
+            throw new IllegalStateException("Method dispatch table not available in " + this);
+        }
+        String qName = element.getQName();
+        String methodName = dispatchTable.get(qName);
+        if (methodName == null) {
+            // we just ignore these values from the DDs
+            LOG.log(WARNING, "Deprecated element {0} with value {1} is ignored for descriptor {2} of node {3}.",
+                element, value, descriptor.getClass(), getClass());
+            LOG.log(DEBUG, "Helpful stacktrace for the previous warning.", new RuntimeException());
+            return;
+        }
+        try {
+            setDescriptorInfo(descriptor, methodName, value);
+        } catch (InvocationTargetException e) {
+            LOG.log(WARNING, INVALID_DESC_MAPPING, qName, value, descriptor.getClass());
+            Throwable t = e.getCause();
+            if (t instanceof IllegalArgumentException) {
+                // We report the error but we continue loading, this will allow the verifier
+                // to catch these errors or to register an error handler for notification
+                LOG.log(WARNING, INVALID_DESC_MAPPING, qName, value, descriptor.getClass());
+            } else {
+                throw new IllegalArgumentException(
+                    "Failed " + methodName + " when tried to set '" + value + "' to the descriptor " + descriptor, e);
+            }
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalArgumentException(
+                "Failed " + methodName + " when tried to set '" + value + "' to the descriptor " + descriptor, e);
         }
     }
 
@@ -472,17 +474,21 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
 
 
     /**
-     * call a setter method on a descriptor with a new value
+     * Call a setter method on a descriptor with a new value converted automatically
+     * to a compatible type.
      *
      * @param target the descriptor to use
      * @param methodName the setter method to invoke
      * @param value the new value for the field in the descriptor
+     * @throws ReflectiveOperationException if method failed because of number formatting or method
+     *             doesn't exist.
+     * @throws InvocationTargetException if the invocation failed for other reason.
      * @deprecated guessing element type
      */
     @Deprecated
     private void setDescriptorInfo(Object target, String methodName, String value) throws ReflectiveOperationException {
-        LOG.log(Level.DEBUG, "setDescriptorInfo(target.class={0}, methodName={1}, value={2})",
-            new Object[] {target.getClass(), methodName, value});
+        LOG.log(Level.DEBUG, "setDescriptorInfo(target.class={0}, methodName={1}, value={2})", target.getClass(),
+            methodName, value);
 
         ReflectiveOperationException e = new ReflectiveOperationException("Could not find compatible setter.");
         for (Entry<Class<?>, Function<String, Object>> entry : ALLOWED_DESCRIPTOR_INFO_CONVERSIONS.entrySet()) {

@@ -47,6 +47,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -1125,13 +1126,14 @@ public class Application extends CommonResourceBundleDescriptor
         }
         Set<BundleDescriptor> bundleSet = new OrderedSet<>();
         for (ModuleDescriptor<BundleDescriptor> aModule : getModules()) {
-            if (aModule.getDescriptor().getModuleType() == bundleType) {
+            if (Objects.equals(aModule.getDescriptor().getModuleType(), bundleType)) {
                 bundleSet.add(aModule.getDescriptor());
             }
             for (RootDeploymentDescriptor rd : aModule.getDescriptor().getExtensionsDescriptors()) {
                 if (rd instanceof BundleDescriptor) {
-                    if (((BundleDescriptor) rd).getModuleType() == bundleType) {
-                        bundleSet.add((BundleDescriptor) rd);
+                    BundleDescriptor bundleDescriptor = (BundleDescriptor) rd;
+                    if (Objects.equals(bundleDescriptor.getModuleType(), bundleType)) {
+                        bundleSet.add(bundleDescriptor);
                     }
                 }
             }
@@ -1150,13 +1152,12 @@ public class Application extends CommonResourceBundleDescriptor
         for (ModuleDescriptor<BundleDescriptor> aModule : getModules()) {
             BundleDescriptor bundleDesc = aModule.getDescriptor();
             if (bundleDesc == null) {
-                DOLUtils.getDefaultLogger().fine("Null descriptor for module " + aModule.getArchiveUri());
-            } else {
-                bundleSet.add(bundleDesc);
-                for (RootDeploymentDescriptor rd : bundleDesc.getExtensionsDescriptors()) {
-                    if (rd instanceof BundleDescriptor) {
-                        bundleSet.add((BundleDescriptor) rd);
-                    }
+                throw new IllegalArgumentException("Null descriptor for module " + aModule);
+            }
+            bundleSet.add(bundleDesc);
+            for (RootDeploymentDescriptor rd : bundleDesc.getExtensionsDescriptors()) {
+                if (rd instanceof BundleDescriptor) {
+                    bundleSet.add((BundleDescriptor) rd);
                 }
             }
         }

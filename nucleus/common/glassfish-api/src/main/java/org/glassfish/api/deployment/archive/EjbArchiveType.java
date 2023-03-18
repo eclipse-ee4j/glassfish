@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,20 +14,25 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.deployment;
+package org.glassfish.api.deployment.archive;
 
-import jakarta.inject.Singleton;
-
-import org.glassfish.api.deployment.archive.EarArchiveType;
-import org.jvnet.hk2.annotations.Service;
 
 /**
- * EAR Archive Type - injectable singleton.
+ * This module is an Enterprise Java Bean archive.
+ * <p>
+ * Please note, a war containing EJBs is not of this type, because
+ * those EJBs are components running in a web container,
  *
+ * @author David Matejcek
  * @author sanjeeb.sahoo@oracle.com
  */
-@Service(name = EarArchiveType.ARCHIVE_TYPE)
-@Singleton
-@Deprecated(forRemoval = true, since = "7.0.3")
-public class EarType extends EarArchiveType {
+public class EjbArchiveType extends ArchiveType {
+
+    public static final String ARCHIVE_TYPE = "ejb";
+    public static final String ARCHIVE_EXTENSION = ".jar";
+    public static final EjbArchiveType EJB_ARCHIVE = new EjbArchiveType();
+
+    public EjbArchiveType() {
+        super(ARCHIVE_TYPE, ARCHIVE_EXTENSION);
+    }
 }

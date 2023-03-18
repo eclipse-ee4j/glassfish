@@ -238,8 +238,8 @@ public class EnvEntriesValidator {
         private final String module;
 
         AppModuleKey(String appName, String moduleName) {
-            app = appName;
-            module = moduleName;
+            app = Objects.requireNonNull(appName, "appName");
+            module = Objects.requireNonNull(moduleName, "moduleName");
         }
 
 

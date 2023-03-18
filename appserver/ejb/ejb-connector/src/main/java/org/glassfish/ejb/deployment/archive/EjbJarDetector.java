@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 import org.glassfish.api.deployment.archive.ArchiveDetector;
 import org.glassfish.api.deployment.archive.ArchiveHandler;
 import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.EjbArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.deployment.common.GenericAnnotationDetector;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -38,7 +39,7 @@ import org.jvnet.hk2.annotations.Service;
  *
  * @author sanjeeb.sahoo@oracle.com
  */
-@Service(name = EjbType.ARCHIVE_TYPE)
+@Service(name = EjbArchiveType.ARCHIVE_TYPE)
 @Singleton
 public class EjbJarDetector implements ArchiveDetector {
 
@@ -53,8 +54,6 @@ public class EjbJarDetector implements ArchiveDetector {
 
     @Inject
     private EjbSniffer sniffer;
-    @Inject
-    private EjbType archiveType;
     @Inject
     private ServiceLocator baseServiceLocator;
 
@@ -92,7 +91,7 @@ public class EjbJarDetector implements ArchiveDetector {
                     // TODO(Sahoo): Proper Exception Handling
                     throw new RuntimeException(e);
                 }
-                archiveHandler = baseServiceLocator.getService(ArchiveHandler.class, EjbType.ARCHIVE_TYPE);
+                archiveHandler = baseServiceLocator.getService(ArchiveHandler.class, EjbArchiveType.ARCHIVE_TYPE);
             }
             return archiveHandler;
         }
@@ -101,6 +100,6 @@ public class EjbJarDetector implements ArchiveDetector {
 
     @Override
     public ArchiveType getArchiveType() {
-        return archiveType;
+        return EjbArchiveType.EJB_ARCHIVE;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +18,6 @@
 package com.sun.enterprise.deployment.io.runtime;
 
 import com.sun.enterprise.deployment.Application;
-import com.sun.enterprise.deployment.EarType;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFileFor;
 import com.sun.enterprise.deployment.io.DescriptorConstants;
@@ -27,6 +26,7 @@ import com.sun.enterprise.deployment.node.runtime.application.gf.GFApplicationRu
 import java.util.List;
 import java.util.Map;
 
+import org.glassfish.api.deployment.archive.EarArchiveType;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
@@ -35,7 +35,7 @@ import org.jvnet.hk2.annotations.Service;
  * This class is responsible for handling the XML configuration information
  * for the Glassfish Application Container
  */
-@ConfigurationDeploymentDescriptorFileFor(EarType.ARCHIVE_TYPE)
+@ConfigurationDeploymentDescriptorFileFor(EarArchiveType.ARCHIVE_TYPE)
 @PerLookup
 @Service
 public class GFApplicationRuntimeDDFile extends ConfigurationDeploymentDescriptorFile<Application> {

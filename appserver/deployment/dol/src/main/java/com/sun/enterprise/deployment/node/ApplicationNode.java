@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,7 +19,6 @@ package com.sun.enterprise.deployment.node;
 
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.BundleDescriptor;
-import com.sun.enterprise.deployment.EarType;
 import com.sun.enterprise.deployment.EjbReferenceDescriptor;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
 import com.sun.enterprise.deployment.util.DOLUtils;
@@ -37,6 +36,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
+import org.glassfish.api.deployment.archive.EarArchiveType;
 import org.glassfish.deployment.common.ModuleDescriptor;
 import org.jvnet.hk2.annotations.Service;
 import org.w3c.dom.Node;
@@ -115,7 +115,7 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
         Map<String, List<Class<?>>> versionUpgrades) {
         final Map<String, Class<?>> result = new HashMap<>();
         for (ConfigurationDeploymentDescriptorFile<?> confDD : DOLUtils
-            .getConfigurationDeploymentDescriptorFiles(serviceLocator, EarType.ARCHIVE_TYPE)) {
+            .getConfigurationDeploymentDescriptorFiles(serviceLocator, EarArchiveType.ARCHIVE_TYPE)) {
             confDD.registerBundle(result, publicIDToDTD, versionUpgrades);
         }
         return result;

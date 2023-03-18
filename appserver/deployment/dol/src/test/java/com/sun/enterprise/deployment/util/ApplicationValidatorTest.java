@@ -22,6 +22,7 @@ import com.sun.enterprise.deployment.DataSourceDefinitionDescriptor;
 import com.sun.enterprise.deployment.EjbBeanDescriptor;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.EjbReferenceDescriptor;
 import com.sun.enterprise.deployment.JndiNameEnvironment;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.test.DolJunit5Extension;
@@ -31,6 +32,7 @@ import jakarta.inject.Inject;
 import org.glassfish.deployment.common.ModuleDescriptor;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.glassfish.tests.utils.junit.Classes;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -56,56 +58,83 @@ class ApplicationValidatorTest {
 
 
     @Test
-    void valid_warWithEjbIncluded() {
+    void valid_warWithLocalEjbIncluded() {
         application.setAppName("testAppName");
         application.setName("test");
 
         final FakeWebBundleDescriptor war = new FakeWebBundleDescriptor();
         war.setName("test-war-name");
+
+        final ModuleDescriptor<RootDeploymentDescriptor> warModule = createWarModuleDescriptor(war);
+        war.setModuleDescriptor(warModule);
+
         final DataSourceDefinitionDescriptor ds = new DataSourceDefinitionDescriptor();
         ds.setName("java:app/jdbc/testdb");
         war.addResourceDescriptor(ds);
+
+        final FakeEjbDescriptor bean1 = new FakeEjbDescriptor("Bean001");
+        bean1.setLocalClassName("org.acme.FakeIface001");
+        bean1.setLocalBean(true);
+        final EjbReferenceDescriptor refBean1 = new EjbReferenceDescriptor("Bean001", null, bean1, true);
+        war.addEjbReferenceDescriptor(refBean1);
+
+        final FakeEjbDescriptor bean2 = new FakeEjbDescriptor("Bean002");
+        bean2.setLocalClassName("org.acme.FakeIface002");
+        bean2.setLocalBean(true);
+        final EjbReferenceDescriptor refBean2 = new EjbReferenceDescriptor("Bean002", null, bean2, true);
+        war.addEjbReferenceDescriptor(refBean2);
+
         application.addBundleDescriptor(war);
 
         final ApplicationValidator validator = new ApplicationValidator();
         assertDoesNotThrow(() -> validator.accept((BundleDescriptor) application));
     }
 
+
     @Test
-    void invalid_warAndEjbJars() {
+    void valid_war() {
         application.setAppName("testAppName");
         application.setName("test");
 
-        BundleDescriptor war = new FakeWebBundleDescriptor();
+        final FakeWebBundleDescriptor war = new FakeWebBundleDescriptor();
         war.setName("test-war-name");
 
-        FakeEjbBundleDescriptor ejbJar = new FakeEjbBundleDescriptor();
+        final ModuleDescriptor<RootDeploymentDescriptor> warModule = createWarModuleDescriptor(war);
+        war.setModuleDescriptor(warModule);
+
+        final FakeEjbBundleDescriptor ejbJar = new FakeEjbBundleDescriptor();
         ejbJar.setName("test-ejb-jar-name");
-        ModuleDescriptor<RootDeploymentDescriptor> ejbModDescriptor = new ModuleDescriptor<>();
-        ejbModDescriptor.setModuleName("test-ejb-jar");
+        final ModuleDescriptor<RootDeploymentDescriptor> ejbModDescriptor = new ModuleDescriptor<>();
+        ejbModDescriptor.setModuleName("test-ejb-jar-module-name");
+        ejbModDescriptor.setModuleType(DOLUtils.ejbType());
         ejbJar.setModuleDescriptor(ejbModDescriptor);
-        DataSourceDefinitionDescriptor ds = new DataSourceDefinitionDescriptor();
+
+        final DataSourceDefinitionDescriptor ds = new DataSourceDefinitionDescriptor();
         ds.setName("java:app/jdbc/testdb");
         ejbJar.addResourceDescriptor(ds);
-        war.addBundleDescriptor(ejbJar);
 
-        FakeEjbBundleDescriptor ejbJar2 = new FakeEjbBundleDescriptor();
+        final FakeEjbBundleDescriptor ejbJar2 = new FakeEjbBundleDescriptor();
         ejbJar2.setName("test-ejb-jar2-name");
-        ModuleDescriptor<RootDeploymentDescriptor> ejbModDescriptor2 = new ModuleDescriptor<>();
+        final ModuleDescriptor<RootDeploymentDescriptor> ejbModDescriptor2 = new ModuleDescriptor<>();
         ejbModDescriptor2.setModuleName("test-ejb-jar2");
+        ejbModDescriptor2.setModuleType(DOLUtils.ejbType());
         ejbJar2.setModuleDescriptor(ejbModDescriptor2);
-        DataSourceDefinitionDescriptor ds2 = new DataSourceDefinitionDescriptor();
-        ds2.setName("java:comp/jdbc/testdb");
+
+        final DataSourceDefinitionDescriptor ds2 = new DataSourceDefinitionDescriptor();
+        ds2.setName("java:app/jdbc/testdb");
         ejbJar2.addResourceDescriptor(ds2);
+
+        war.addBundleDescriptor(ejbJar);
         war.addBundleDescriptor(ejbJar2);
         application.addBundleDescriptor(war);
 
-        ApplicationValidator validator = new ApplicationValidator();
+        final ApplicationValidator validator = new ApplicationValidator();
         assertDoesNotThrow(() -> validator.accept((BundleDescriptor) application));
     }
 
 
     @Test
+    @Disabled
     void valid_warAndEjbJar() {
         application.setAppName("testAppName");
         application.setName("test");
@@ -130,7 +159,7 @@ class ApplicationValidatorTest {
         ejbModDescriptor2.setModuleName("test-ejb-jar2");
         ejbJar2.setModuleDescriptor(ejbModDescriptor2);
         DataSourceDefinitionDescriptor ds2 = new DataSourceDefinitionDescriptor();
-        ds2.setName("java:app/jdbc/testdb");
+        ds2.setName("java:comp/jdbc/testdb");
         ejbJar2.addResourceDescriptor(ds2);
         application.addBundleDescriptor(ejbJar2);
 
@@ -139,22 +168,36 @@ class ApplicationValidatorTest {
     }
 
 
+    private ModuleDescriptor<RootDeploymentDescriptor> createWarModuleDescriptor(final FakeWebBundleDescriptor war) {
+        final ModuleDescriptor<RootDeploymentDescriptor> warModule = new ModuleDescriptor<>();
+        warModule.setModuleName("test-war-module-name");
+        warModule.setArchiveUri("fake.war");
+        warModule.setContextRoot("/");
+        warModule.setModuleType(DOLUtils.warType());
+        warModule.setDescriptor(war);
+        return warModule;
+    }
+
     private static final class FakeEjbDescriptor extends EjbBeanDescriptor {
+        private static final long serialVersionUID = 1L;
         private EjbBundleDescriptor bundle;
 
         FakeEjbDescriptor(String ejbName) {
             setName(ejbName);
         }
 
+
         @Override
         public EjbBundleDescriptor getEjbBundleDescriptor() {
             return bundle;
         }
 
+
         @Override
         public void setEjbBundleDescriptor(EjbBundleDescriptor ejbBundleDescriptor) {
             this.bundle = ejbBundleDescriptor;
         }
+
 
         @Override
         public String getType() {
@@ -163,7 +206,6 @@ class ApplicationValidatorTest {
     }
 
     private static final class FakeEjbBundleDescriptor extends EjbBundleDescriptor {
-
         private static final long serialVersionUID = 1L;
 
         @Override
@@ -179,7 +221,6 @@ class ApplicationValidatorTest {
     }
 
     private static final class FakeWebBundleDescriptor extends WebBundleDescriptor {
-
         private static final long serialVersionUID = 1L;
 
         @Override

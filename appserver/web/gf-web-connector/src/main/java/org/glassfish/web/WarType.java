@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,24 +17,18 @@
 
 package org.glassfish.web;
 
-import org.glassfish.api.deployment.archive.ArchiveType;
+import jakarta.inject.Singleton;
 
+import org.glassfish.api.deployment.archive.WarArchiveType;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * {@link ArchiveType}
+ * Web Archive Type - injectable singleton.
  *
  * @author sanjeeb.sahoo@oracle.com
  */
-@Service(name = WarType.ARCHIVE_TYPE)
-@jakarta.inject.Singleton
-public class WarType extends ArchiveType {
-
-    public static final String ARCHIVE_TYPE = "war";
-
-    public static final String ARCHIVE_EXTENSION = ".war";
-
-    public WarType() {
-        super(ARCHIVE_TYPE, ARCHIVE_EXTENSION);
-    }
+@Service(name = WarArchiveType.ARCHIVE_TYPE)
+@Singleton
+@Deprecated(forRemoval = true, since = "7.0.3")
+public class WarType extends WarArchiveType {
 }

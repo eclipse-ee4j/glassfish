@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,12 +19,12 @@ package org.glassfish.ejb.deployment.io;
 
 import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.DescriptorConstants;
-import com.sun.enterprise.deployment.util.DOLUtils;
 
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.glassfish.ejb.deployment.node.EjbBundleNode;
 
+import static com.sun.enterprise.deployment.util.DOLUtils.scatteredWarType;
 import static com.sun.enterprise.deployment.util.DOLUtils.warType;
 
 /**
@@ -32,7 +32,6 @@ import static com.sun.enterprise.deployment.util.DOLUtils.warType;
  *
  * @author Jerome Dochez
  */
-
 public class EjbDeploymentDescriptorFile extends DeploymentDescriptorFile<EjbBundleDescriptorImpl> {
 
     /**
@@ -41,7 +40,7 @@ public class EjbDeploymentDescriptorFile extends DeploymentDescriptorFile<EjbBun
      */
     @Override
     public String getDeploymentDescriptorPath() {
-        return warType().equals(getArchiveType()) || DOLUtils.scatteredWarType().equals(getArchiveType())
+        return warType().equals(getArchiveType()) || scatteredWarType().equals(getArchiveType())
             ? DescriptorConstants.EJB_IN_WAR_ENTRY
             : DescriptorConstants.EJB_JAR_ENTRY;
     }

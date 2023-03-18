@@ -26,7 +26,6 @@ import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.JndiNameEnvironment;
 import com.sun.enterprise.deployment.ManagedBeanDescriptor;
-import com.sun.enterprise.deployment.ScatteredWarType;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.archivist.Archivist;
 import com.sun.enterprise.deployment.archivist.ArchivistFactory;
@@ -59,7 +58,13 @@ import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ArchiveHandler;
 import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.CarArchiveType;
+import org.glassfish.api.deployment.archive.EarArchiveType;
+import org.glassfish.api.deployment.archive.EjbArchiveType;
+import org.glassfish.api.deployment.archive.RarArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.api.deployment.archive.ScatteredWarArchiveType;
+import org.glassfish.api.deployment.archive.WarArchiveType;
 import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.DeploymentContextImpl;
 import org.glassfish.deployment.common.DeploymentProperties;
@@ -335,28 +340,47 @@ public class DOLUtils {
     }
 
     public static ArchiveType scatteredWarType() {
-        return getModuleType(ScatteredWarType.ARCHIVE_TYPE);
+        return getModuleType(ScatteredWarArchiveType.ARCHIVE_TYPE);
     }
+
 
     /**
      * Utility method to retrieve a {@link ArchiveType} from a stringified module type.
-     * Since {@link ArchiveType} is an extensible abstraction and implementations are plugged in via HK2 service
-     * registry, this method returns null if HK2 service registry is not setup.
-     *
-     * If null is passed to this method, it returns null instead of returning an arbitrary ArchiveType or throwing
-     * an exception.
+     * Since {@link ArchiveType} is an extensible abstraction and implementations are plugged
+     * in via HK2 service registry, this method returns null if HK2 service registry is not set
+     * and the type is not one of supported.
+     * <p>
+     * If null is passed to this method, it returns null instead of returning an arbitrary
+     * {@link ArchiveType} or throwing an exception.
      *
      * @param moduleType String equivalent of the module type being looked up. null is allowed.
-     * @return the corresponding ArchiveType, null if no such module type exists or HK2 Service registry is not set up
+     * @return the corresponding {@link ArchiveType}, null if no such module type exists
+     *         or HK2 Service registry is not set up
      */
     public static ArchiveType getModuleType(String moduleType) {
         if (moduleType == null) {
             return null;
         }
-        final ServiceLocator services = Globals.getStaticBaseServiceLocator();
-        // This method is called without HK2 being setup when dol unit tests are run,
-        // so protect against NPE.
-        return services == null ? null : services.getService(ArchiveType.class, moduleType);
+        switch (moduleType) {
+            case WarArchiveType.ARCHIVE_TYPE:
+                return WarArchiveType.WAR_ARCHIVE;
+            case EjbArchiveType.ARCHIVE_TYPE:
+                return EjbArchiveType.EJB_ARCHIVE;
+            case EarArchiveType.ARCHIVE_TYPE:
+                return EarArchiveType.EAR_ARCHIVE;
+            case CarArchiveType.ARCHIVE_TYPE:
+                return CarArchiveType.CAR_ARCHIVE;
+            case RarArchiveType.ARCHIVE_TYPE:
+                return RarArchiveType.RAR_ARCHIVE;
+            case ScatteredWarArchiveType.ARCHIVE_TYPE:
+                return ScatteredWarArchiveType.SCATTERED_WAR_ARCHIVE;
+            default:
+                ServiceLocator services = Globals.getStaticBaseServiceLocator();
+                if (services != null) {
+                    return services.getService(ArchiveType.class, moduleType);
+                }
+        }
+        throw new IllegalArgumentException("Unsupported type: " + moduleType);
     }
 
     // returns true if GF DD should have higher precedence over
@@ -818,7 +842,7 @@ public class DOLUtils {
             ManagedBeanDescriptor mb = (ManagedBeanDescriptor) env;
             return mb.getBundle().getModuleName();
         } else {
-            throw new IllegalArgumentException("IllegalJndiNameEnvironment : env");
+            throw new IllegalArgumentException("Unsupported: " + env);
         }
     }
 

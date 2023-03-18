@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +16,6 @@
 
 package org.glassfish.web.embed.impl;
 
-import com.sun.enterprise.deployment.ScatteredWarType;
 import com.sun.enterprise.deployment.annotation.impl.ModuleScanner;
 import com.sun.enterprise.deployment.archivist.ArchivistFor;
 
@@ -31,6 +30,7 @@ import java.util.logging.Logger;
 
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.api.deployment.archive.ScatteredWarArchiveType;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.classmodel.reflect.Parser;
 import org.glassfish.internal.api.Globals;
@@ -46,7 +46,7 @@ import org.jvnet.hk2.annotations.Service;
  */
 @Service
 @PerLookup
-@ArchivistFor(ScatteredWarType.ARCHIVE_TYPE)
+@ArchivistFor(ScatteredWarArchiveType.ARCHIVE_TYPE)
 public class ScatteredWebArchivist extends WebArchivist {
 
     private static final Logger LOG = LogFacade.getLogger();
@@ -73,7 +73,7 @@ public class ScatteredWebArchivist extends WebArchivist {
 
     @Override
     public ArchiveType getModuleType() {
-        return Globals.getDefaultHabitat().getService(ArchiveType.class, ScatteredWarType.ARCHIVE_TYPE);
+        return Globals.getDefaultHabitat().getService(ArchiveType.class, ScatteredWarArchiveType.ARCHIVE_TYPE);
     }
 
 

@@ -125,7 +125,7 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
 
     @Override
     public void accept(BundleDescriptor descriptor) {
-        LOG.log(Level.INFO, "accept(descriptor.name={0})", descriptor.getName());
+        LOG.log(Level.DEBUG, "accept(descriptor.name={0})", descriptor.getName());
         if (!Application.class.isInstance(descriptor)) {
             super.accept(descriptor);
             return;
@@ -515,6 +515,7 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
      * @return true if there is another descriptor under the same name.
      */
     private boolean isConflictingDescriptor(SimpleJndiName name, ResourceDescriptor descriptor, String scope) {
+        // FIXME: lower level!
         LOG.log(Level.INFO, "isConflictingDescriptor(name={0}, descriptor, scope={1})", name, scope);
         if (descriptor == null) {
             return false;
@@ -542,8 +543,8 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
      */
     private boolean compareDescriptors() {
 
-        List<String> appVectorName = validNameSpaceDetails.get(APP_KEYS);
-        List<String> ebdVectorName = validNameSpaceDetails.get(EJBBUNDLE_KEYS);
+        List<String> appLevelScopes = validNameSpaceDetails.get(APP_KEYS);
+        List<String> ebdLevelScopes = validNameSpaceDetails.get(EJBBUNDLE_KEYS);
         for (Entry<SimpleJndiName, CommonResourceValidator> descriptor : allResourceDescriptors.entrySet()) {
             CommonResourceValidator commonResourceValidator = descriptor.getValue();
             List<String> scopes = commonResourceValidator.getScope();
@@ -551,15 +552,15 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
 
             if (jndiName.contains(JNDI_COMP)) {
                 for (String scope : scopes) {
-                    for (String element2 : appVectorName) {
-                        if (scope.equals(element2)) {
+                    for (String appLevelScope : appLevelScopes) {
+                        if (scope.equals(appLevelScope)) {
                             inValidJndiName = jndiName;
                             LOG.log(Level.ERROR, DOLUtils.INVALID_JNDI_SCOPE, jndiName);
                             return false;
                         }
                     }
-                    for (String element2 : ebdVectorName) {
-                        if (scope.equals(element2)) {
+                    for (String ebdLevelScope : ebdLevelScopes) {
+                        if (scope.equals(ebdLevelScope)) {
                             inValidJndiName = jndiName;
                             LOG.log(Level.ERROR, DOLUtils.INVALID_JNDI_SCOPE, jndiName);
                             return false;
@@ -570,8 +571,8 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
 
             if (jndiName.contains(JNDI_MODULE)) {
                 for (String scope : scopes) {
-                    for (String element2 : appVectorName) {
-                        if (scope.equals(element2)) {
+                    for (String appLevelScope : appLevelScopes) {
+                        if (scope.equals(appLevelScope)) {
                             inValidJndiName = jndiName;
                             LOG.log(Level.ERROR, DOLUtils.INVALID_JNDI_SCOPE, jndiName);
                             return false;

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,22 +23,24 @@ import com.sun.enterprise.deployment.annotation.introspection.ResourceAdapterAnn
 import com.sun.enterprise.deployment.archivist.Archivist;
 import com.sun.enterprise.deployment.archivist.ArchivistFor;
 import com.sun.enterprise.deployment.deploy.shared.InputJarArchive;
-import com.sun.enterprise.deployment.util.*;
+import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.ConnectorDeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
-import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.runtime.ConnectorRuntimeDDFile;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.api.deployment.archive.ArchiveType;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.ArrayList;
+import com.sun.enterprise.deployment.util.ConnectorAnnotationDetector;
+import com.sun.enterprise.deployment.util.ConnectorVisitor;
 
 import jakarta.inject.Inject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.RarArchiveType;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * This class is responsible for handling J2EE Connector archive files.
@@ -47,7 +50,7 @@ import jakarta.inject.Inject;
  */
 @Service
 @PerLookup
-@ArchivistFor(RarType.ARCHIVE_TYPE)
+@ArchivistFor(RarArchiveType.ARCHIVE_TYPE)
 public class ConnectorArchivist extends Archivist<ConnectorDescriptor> {
 
     @Inject
@@ -84,9 +87,10 @@ public class ConnectorArchivist extends Archivist<ConnectorDescriptor> {
      * @return the list of the DeploymentDescriptorFile responsible for
      *         handling the configuration deployment descriptors
      */
+    @Override
     public List<ConfigurationDeploymentDescriptorFile> getConfigurationDDFiles() {
         if (confDDFiles == null) {
-            confDDFiles = new ArrayList<ConfigurationDeploymentDescriptorFile>();
+            confDDFiles = new ArrayList<>();
             confDDFiles.add(new ConnectorRuntimeDDFile());
         }
         return confDDFiles;

@@ -46,10 +46,10 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ArchiveDetector;
+import org.glassfish.api.deployment.archive.EjbArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.deployment.common.DeploymentProperties;
 import org.glassfish.ejb.LogFacade;
-import org.glassfish.ejb.deployment.archive.EjbType;
 import org.glassfish.loader.util.ASClassLoaderUtil;
 import org.jvnet.hk2.annotations.Service;
 
@@ -61,7 +61,7 @@ import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 /**
  * @author sanjeeb.sahoo@oracle.com
  */
-@Service(name = EjbType.ARCHIVE_TYPE)
+@Service(name = EjbArchiveType.ARCHIVE_TYPE)
 public class EjbJarHandler extends AbstractArchiveHandler {
 
     private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(EjbJarHandler.class);
@@ -69,12 +69,12 @@ public class EjbJarHandler extends AbstractArchiveHandler {
     private static final Logger LOG = LogFacade.getLogger();
 
     @Inject
-    @Named(EjbType.ARCHIVE_TYPE)
+    @Named(EjbArchiveType.ARCHIVE_TYPE)
     private ArchiveDetector detector;
 
     @Override
     public String getArchiveType() {
-        return EjbType.ARCHIVE_TYPE;
+        return EjbArchiveType.ARCHIVE_TYPE;
     }
 
 

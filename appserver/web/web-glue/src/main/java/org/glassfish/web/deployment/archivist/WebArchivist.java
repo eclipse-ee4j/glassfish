@@ -48,11 +48,11 @@ import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.deployment.archive.Archive;
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.api.deployment.archive.WarArchiveType;
 import org.glassfish.deployment.common.DeploymentUtils;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.web.LogFacade;
-import org.glassfish.web.WarType;
 import org.glassfish.web.deployment.annotation.impl.WarScanner;
 import org.glassfish.web.deployment.descriptor.OrderingDescriptor;
 import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
@@ -71,7 +71,7 @@ import org.xml.sax.SAXException;
  */
 @Service
 @PerLookup
-@ArchivistFor(WarType.ARCHIVE_TYPE)
+@ArchivistFor(WarArchiveType.ARCHIVE_TYPE)
 public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
 
     private static final Logger logger = LogFacade.getLogger();
@@ -128,7 +128,7 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
     @Override
     public List<ConfigurationDeploymentDescriptorFile> getConfigurationDDFiles() {
         if (confDDFiles == null) {
-            confDDFiles = DOLUtils.getConfigurationDeploymentDescriptorFiles(habitat, WarType.ARCHIVE_TYPE);
+            confDDFiles = DOLUtils.getConfigurationDeploymentDescriptorFiles(habitat, WarArchiveType.ARCHIVE_TYPE);
         }
         return confDDFiles;
     }

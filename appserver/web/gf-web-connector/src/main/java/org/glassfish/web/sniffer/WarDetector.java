@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,8 +30,8 @@ import org.glassfish.api.deployment.archive.ArchiveDetector;
 import org.glassfish.api.deployment.archive.ArchiveHandler;
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.api.deployment.archive.WarArchiveType;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.web.WarType;
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -42,7 +42,7 @@ import org.jvnet.hk2.annotations.Service;
  *
  * @author Sanjeeb.Sahoo@Sun.COM
  */
-@Service(name = WarType.ARCHIVE_TYPE)
+@Service(name = WarArchiveType.ARCHIVE_TYPE)
 @Singleton
 public class WarDetector implements ArchiveDetector {
     private static final Logger logger = Logger.getLogger(WarDetector.class.getName());
@@ -58,8 +58,6 @@ public class WarDetector implements ArchiveDetector {
     private WebSniffer sniffer;
     @Inject
     private ServiceLocator services;
-    @Inject
-    private WarType archiveType;
     private ArchiveHandler archiveHandler;
 
     // for avatar
@@ -105,7 +103,7 @@ public class WarDetector implements ArchiveDetector {
             if (archiveHandler == null) {
                 try {
                     sniffer.setup(null, logger);
-                    archiveHandler = services.getService(ArchiveHandler.class, WarType.ARCHIVE_TYPE);
+                    archiveHandler = services.getService(ArchiveHandler.class, WarArchiveType.ARCHIVE_TYPE);
                 } catch (IOException e) {
                     throw new RuntimeException(e); // TODO(Sahoo): Proper Exception Handling
                 }
@@ -116,6 +114,6 @@ public class WarDetector implements ArchiveDetector {
 
     @Override
     public ArchiveType getArchiveType() {
-        return archiveType;
+        return WarArchiveType.WAR_ARCHIVE;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,20 +14,20 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.deployment;
-
-import jakarta.inject.Singleton;
-
-import org.glassfish.api.deployment.archive.EarArchiveType;
-import org.jvnet.hk2.annotations.Service;
+package org.glassfish.api.deployment.archive;
 
 /**
- * EAR Archive Type - injectable singleton.
+ * Application Client Connector
  *
- * @author sanjeeb.sahoo@oracle.com
+ * @author David Matejcek
  */
-@Service(name = EarArchiveType.ARCHIVE_TYPE)
-@Singleton
-@Deprecated(forRemoval = true, since = "7.0.3")
-public class EarType extends EarArchiveType {
+public class CarArchiveType extends ArchiveType {
+
+    public static final String ARCHIVE_TYPE = "car";
+    public static final String ARCHIVE_EXTENSION = ".car";
+    public static final CarArchiveType CAR_ARCHIVE = new CarArchiveType();
+
+    public CarArchiveType() {
+        super(ARCHIVE_TYPE, ARCHIVE_EXTENSION);
+    }
 }

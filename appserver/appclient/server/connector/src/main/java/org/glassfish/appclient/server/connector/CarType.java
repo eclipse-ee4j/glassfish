@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,24 +17,18 @@
 
 package org.glassfish.appclient.server.connector;
 
-import org.glassfish.api.deployment.archive.ArchiveType;
+import jakarta.inject.Singleton;
 
+import org.glassfish.api.deployment.archive.CarArchiveType;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * {@link ArchiveType} .
+ * Application Client Connector - injectable singleton.
  *
  * @author sanjeeb.sahoo@oracle.com
  */
-@Service(name = CarType.ARCHIVE_TYPE)
-@jakarta.inject.Singleton
-public class CarType extends ArchiveType {
-
-    public static final String ARCHIVE_TYPE = "car";
-
-    public static final String ARCHIVE_EXTENSION = ".car";
-
-    public CarType() {
-        super(ARCHIVE_TYPE, ARCHIVE_EXTENSION);
-    }
+@Service(name = CarArchiveType.ARCHIVE_TYPE)
+@Singleton
+@Deprecated(forRemoval = true, since = "7.0.3")
+public class CarType extends CarArchiveType {
 }

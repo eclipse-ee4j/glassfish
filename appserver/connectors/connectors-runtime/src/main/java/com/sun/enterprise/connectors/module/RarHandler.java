@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +17,17 @@
 
 package com.sun.enterprise.connectors.module;
 
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.appserv.connectors.internal.api.ConnectorsClassLoaderUtil;
+import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
+import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
+import com.sun.enterprise.security.perms.PermsArchiveDelegate;
+import com.sun.enterprise.security.perms.SMGlobalPolicyUtil;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -29,28 +40,17 @@ import java.util.logging.Logger;
 
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ArchiveDetector;
+import org.glassfish.api.deployment.archive.RarArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.loader.util.ASClassLoaderUtil;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.appserv.connectors.internal.api.ConnectorsClassLoaderUtil;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.connectors.connector.module.RarType;
-import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
-import com.sun.enterprise.security.perms.PermsArchiveDelegate;
-import com.sun.enterprise.security.perms.SMGlobalPolicyUtil;
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
 
 /**
  * Archive handler for resource-adapters
  *
  * @author Jagadish Ramu
  */
-@Service(name= RarType.ARCHIVE_TYPE)
+@Service(name = RarArchiveType.ARCHIVE_TYPE)
 public class RarHandler extends AbstractArchiveHandler {
     // This class should be moved to connector runtime along with ConnectorClassLoaderUtil.
     // We should also consider merging connectors-connector with connectors-internal-api
@@ -59,7 +59,7 @@ public class RarHandler extends AbstractArchiveHandler {
     private ConnectorsClassLoaderUtil loader;
 
     @Inject
-    @Named(RarType.ARCHIVE_TYPE)
+    @Named(RarArchiveType.ARCHIVE_TYPE)
     private ArchiveDetector detector;
 
     private final Logger _logger = LogDomains.getLogger(RarHandler.class, LogDomains.RSR_LOGGER);
@@ -69,7 +69,7 @@ public class RarHandler extends AbstractArchiveHandler {
      */
     @Override
     public String getArchiveType() {
-        return RarType.ARCHIVE_TYPE;
+        return RarArchiveType.ARCHIVE_TYPE;
     }
 
     /**

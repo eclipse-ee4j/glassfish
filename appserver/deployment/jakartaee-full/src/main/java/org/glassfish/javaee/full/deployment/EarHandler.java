@@ -69,8 +69,12 @@ import org.glassfish.api.deployment.archive.Archive;
 import org.glassfish.api.deployment.archive.ArchiveDetector;
 import org.glassfish.api.deployment.archive.ArchiveHandler;
 import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.CarArchiveType;
 import org.glassfish.api.deployment.archive.CompositeHandler;
+import org.glassfish.api.deployment.archive.EjbArchiveType;
+import org.glassfish.api.deployment.archive.RarArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.api.deployment.archive.WarArchiveType;
 import org.glassfish.api.deployment.archive.WritableArchive;
 import org.glassfish.appclient.server.connector.CarType;
 import org.glassfish.deployment.common.DeploymentContextImpl;
@@ -533,13 +537,13 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
     // the normal way which might involve annotation scanning
     private ArchiveHandler getArchiveHandlerFromModuleType(ArchiveType type) {
         if (type.equals(DOLUtils.warType())) {
-            return habitat.getService(ArchiveHandler.class, WarType.ARCHIVE_TYPE);
+            return habitat.getService(ArchiveHandler.class, WarArchiveType.ARCHIVE_TYPE);
         } else if (type.equals(DOLUtils.rarType())) {
-            return habitat.getService(ArchiveHandler.class, RarType.ARCHIVE_TYPE);
+            return habitat.getService(ArchiveHandler.class, RarArchiveType.ARCHIVE_TYPE);
         } else if (type.equals(DOLUtils.ejbType())) {
-            return habitat.getService(ArchiveHandler.class, EjbType.ARCHIVE_TYPE);
+            return habitat.getService(ArchiveHandler.class, EjbArchiveType.ARCHIVE_TYPE);
         } else if (type.equals(DOLUtils.carType())) {
-            return habitat.getService(ArchiveHandler.class, CarType.ARCHIVE_TYPE);
+            return habitat.getService(ArchiveHandler.class, CarArchiveType.ARCHIVE_TYPE);
         } else {
             return null;
         }

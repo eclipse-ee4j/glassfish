@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,9 @@
 
 package org.glassfish.extras.osgicontainer;
 
-import org.glassfish.api.deployment.archive.ArchiveType;
+import jakarta.inject.Singleton;
 
+import org.glassfish.api.deployment.archive.ArchiveType;
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -26,14 +28,17 @@ import org.jvnet.hk2.annotations.Service;
  * @author sanjeeb.sahoo@oracle.com
  */
 @Service(name = OSGiArchiveType.ARCHIVE_TYPE)
-@jakarta.inject.Singleton
+@Singleton
 public class OSGiArchiveType extends ArchiveType {
+
     /**
-     * String value of this module type. This is what is accepted in --type argument of deploy command.
+     * String value of this module type.
+     * This is what is accepted in --type argument of deploy command.
      */
     public static final String ARCHIVE_TYPE = "osgi";
 
     public OSGiArchiveType() {
-        super(ARCHIVE_TYPE); // there is no definite extension for OSGi bundles.
+        // there is no definite extension for OSGi bundles.
+        super(ARCHIVE_TYPE);
     }
 }

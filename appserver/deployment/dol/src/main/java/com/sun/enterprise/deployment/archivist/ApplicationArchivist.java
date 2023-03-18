@@ -54,6 +54,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 
 import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.EarArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
 import org.glassfish.deployment.common.ModuleDescriptor;
@@ -71,7 +72,7 @@ import static com.sun.enterprise.deployment.util.DOLUtils.ejbType;
  */
 @Service
 @PerLookup
-@ArchivistFor(EarType.ARCHIVE_TYPE)
+@ArchivistFor(EarArchiveType.ARCHIVE_TYPE)
 public class ApplicationArchivist extends Archivist<Application> {
     @Inject
     Provider<ArchivistFactory> archivistFactory;
@@ -710,7 +711,7 @@ public class ApplicationArchivist extends Archivist<Application> {
     @Override
     public List<ConfigurationDeploymentDescriptorFile> getConfigurationDDFiles() {
         if (confDDFiles == null) {
-            confDDFiles = DOLUtils.getConfigurationDeploymentDescriptorFiles(habitat, EarType.ARCHIVE_TYPE);
+            confDDFiles = DOLUtils.getConfigurationDeploymentDescriptorFiles(habitat, EarArchiveType.ARCHIVE_TYPE);
         }
         return confDDFiles;
     }

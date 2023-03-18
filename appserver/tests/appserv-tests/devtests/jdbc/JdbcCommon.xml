@@ -373,7 +373,6 @@
               <jvmarg value="-Dderby.system.home=${env.S1AS_HOME}/databases"/>
           </java>
       </parallel>
-      <antcall target="execute-sleep"/>
    </target>
 
    <target name="start-derby-nonaix" unless="aix">

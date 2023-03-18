@@ -1662,7 +1662,6 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
         <arg line="${as.props}"/>
         <arg line="${appserver.instance.name}"/>
     </exec>
-    <sleep seconds="30"/>
         <exec executable="${ASADMIN}" failonerror="false">
         <arg line="start-instance"/>
         <arg line="${as.props}"/>
@@ -1831,9 +1830,7 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
 
     <target name="restart-server">
         <antcall target="stop-server"/>
-        <sleep seconds="5"/>
         <antcall target="start-server"/>
-
     </target>
 
     <target name="stop-server" depends="setOSConditions">
@@ -1846,7 +1843,6 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
         <exec executable="${env.S1AS_HOME}/bin/asadmin">
             <arg value="stop-domain"/>
         </exec>
-        <sleep seconds="10"/>
     </target>
 
     <target name="stop-server-windows" if="isWindows">
@@ -1856,7 +1852,6 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
             <arg value="${env.S1AS_HOME}\bin\asadmin.bat"/>
             <arg value="stop-domain"/>
         </exec>
-        <sleep seconds="5"/>
     </target>
 
     <target name="start-server" depends="setOSConditions">
@@ -1877,7 +1872,6 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
             <env key="GlassFish_Platform" value="Felix"/>
             <arg value="start-domain"/>
         </exec>
-        <sleep seconds="10"/>
     </target>
 
     <target name="start-server-windows" if="isWindows">
@@ -1887,7 +1881,6 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
             <arg value="${env.S1AS_HOME}\bin\asadmin.bat"/>
             <arg value="start-domain"/>
         </exec>
-        <sleep seconds="5"/>
     </target>
 
     <target name="create-jvm-options" depends="init-common">

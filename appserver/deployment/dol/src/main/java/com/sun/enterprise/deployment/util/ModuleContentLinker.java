@@ -177,7 +177,7 @@ public class ModuleContentLinker extends DefaultDOLVisitor implements ComponentV
         } catch(Exception e) {
             DOLUtils.getDefaultLogger().log
                 (Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
-                new Object[] {serviceRef.getName() , rootLocation_});
+                new Object[] {serviceRef.getName() , rootLocation_, serviceRef.getClass()});
         }
     }
 
@@ -212,7 +212,7 @@ public class ModuleContentLinker extends DefaultDOLVisitor implements ComponentV
         } catch(Exception e) {
             DOLUtils.getDefaultLogger().log
                 (Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
-                new Object[] {webService.getName() , rootLocation_});
+                new Object[] {webService.getName() , rootLocation_, webService.getClass()});
         }
     }
 }

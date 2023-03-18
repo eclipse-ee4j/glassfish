@@ -124,7 +124,7 @@ public class EJBContainerTransactionManager {
         }
 
         if (txAttr == -1) {
-            throw new EJBException("Transaction Attribute not found for method " + md.prettyPrint());
+            throw new EJBException("Transaction Attribute not found for method " + md);
         }
 
         container.validateTxAttr(md, txAttr);

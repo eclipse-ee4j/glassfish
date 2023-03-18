@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +17,7 @@
 
 package org.glassfish.ejb.deployment.node;
 
+import com.sun.enterprise.deployment.ScheduledTimerDescriptor;
 import com.sun.enterprise.deployment.node.DataSourceDefinitionNode;
 import com.sun.enterprise.deployment.node.LifecycleCallbackNode;
 import com.sun.enterprise.deployment.node.MailSessionNode;
@@ -30,7 +31,6 @@ import java.util.Map;
 import org.glassfish.ejb.deployment.EjbTagNames;
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.glassfish.ejb.deployment.descriptor.EjbMessageBeanDescriptor;
-import org.glassfish.ejb.deployment.descriptor.ScheduledTimerDescriptor;
 import org.w3c.dom.Node;
 
 /**

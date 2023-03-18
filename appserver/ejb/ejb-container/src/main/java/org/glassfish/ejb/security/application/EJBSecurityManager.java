@@ -16,15 +16,22 @@
 
 package org.glassfish.ejb.security.application;
 
-import static java.lang.System.getSecurityManager;
-import static java.util.Collections.synchronizedMap;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
-import static java.util.stream.Collectors.toSet;
-import static org.glassfish.ejb.security.application.GlassFishToExousiaConverter.convertEJBMethodPermissions;
-import static org.glassfish.ejb.security.application.GlassFishToExousiaConverter.getSecurityRoleRefsFromBundle;
-import static org.glassfish.exousia.permissions.RolesToPermissionsTransformer.createEnterpriseBeansRoleRefPermission;
+import com.sun.ejb.EjbInvocation;
+import com.sun.enterprise.deployment.EjbIORConfigurationDescriptor;
+import com.sun.enterprise.deployment.RunAsIdentityDescriptor;
+import com.sun.enterprise.security.SecurityContext;
+import com.sun.enterprise.security.SecurityManager;
+import com.sun.enterprise.security.auth.login.LoginContextDriver;
+import com.sun.enterprise.security.authorize.PolicyContextHandlerImpl;
+import com.sun.enterprise.security.common.AppservAccessController;
+import com.sun.enterprise.security.ee.PermissionCache;
+import com.sun.enterprise.security.ee.PermissionCacheFactory;
+import com.sun.enterprise.security.ee.SecurityUtil;
+import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
+import com.sun.logging.LogDomains;
+
+import jakarta.security.jacc.EJBMethodPermission;
+import jakarta.security.jacc.PolicyContext;
 
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -59,22 +66,15 @@ import org.glassfish.exousia.AuthorizationService;
 import org.glassfish.external.probe.provider.PluginPoint;
 import org.glassfish.external.probe.provider.StatsProviderManager;
 
-import com.sun.ejb.EjbInvocation;
-import com.sun.enterprise.deployment.EjbIORConfigurationDescriptor;
-import com.sun.enterprise.deployment.RunAsIdentityDescriptor;
-import com.sun.enterprise.security.SecurityContext;
-import com.sun.enterprise.security.SecurityManager;
-import com.sun.enterprise.security.auth.login.LoginContextDriver;
-import com.sun.enterprise.security.authorize.PolicyContextHandlerImpl;
-import com.sun.enterprise.security.common.AppservAccessController;
-import com.sun.enterprise.security.ee.PermissionCache;
-import com.sun.enterprise.security.ee.PermissionCacheFactory;
-import com.sun.enterprise.security.ee.SecurityUtil;
-import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
-import com.sun.logging.LogDomains;
-
-import jakarta.security.jacc.EJBMethodPermission;
-import jakarta.security.jacc.PolicyContext;
+import static java.lang.System.getSecurityManager;
+import static java.util.Collections.synchronizedMap;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+import static java.util.stream.Collectors.toSet;
+import static org.glassfish.ejb.security.application.GlassFishToExousiaConverter.convertEJBMethodPermissions;
+import static org.glassfish.ejb.security.application.GlassFishToExousiaConverter.getSecurityRoleRefsFromBundle;
+import static org.glassfish.exousia.permissions.RolesToPermissionsTransformer.createEnterpriseBeansRoleRefPermission;
 
 /**
  * This class is used by the Enterprise Beans server to manage security. All the container object only call into this object for managing
@@ -122,12 +122,12 @@ public final class EJBSecurityManager implements SecurityManager {
      * ContextId id is the same as an application name.
      * This will be used to get a PolicyConfiguration object per application.
      */
-    private String contextId;
-    private CodeSource applicationCodeSource; // contrast to managerCodeSource above
+    private final String contextId;
+    private final CodeSource applicationCodeSource; // contrast to managerCodeSource above
     private String codebase;
-    private String ejbName;
-    private String realmName;
-    private AppServerAuditManager auditManager;
+    private final String ejbName;
+    private final String realmName;
+    private final AppServerAuditManager auditManager;
 
 
     public EJBSecurityManager(EjbDescriptor ejbDescriptor, InvocationManager invMgr, EJBSecurityManagerFactory ejbSecurityManagerFactory) throws Exception {

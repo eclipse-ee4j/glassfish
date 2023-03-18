@@ -97,31 +97,22 @@ public class WebBundleRuntimeNode extends RuntimeBundleNode<WebBundleDescriptorI
         handlers = null;
 
         registerElementHandler(new XMLElement(RuntimeTagNames.SECURITY_ROLE_MAPPING), SecurityRoleMappingNode.class);
-        registerElementHandler(new XMLElement(RuntimeTagNames.SERVLET),
-            org.glassfish.web.deployment.node.runtime.gf.ServletNode.class);
+        registerElementHandler(new XMLElement(RuntimeTagNames.SERVLET), ServletNode.class);
         registerElementHandler(new XMLElement(RuntimeTagNames.IDEMPOTENT_URL_PATTERN), IdempotentUrlPatternNode.class);
         registerElementHandler(new XMLElement(RuntimeTagNames.SESSION_CONFIG), SessionConfigNode.class);
         registerElementHandler(new XMLElement(TagNames.RESOURCE_ENV_REFERENCE), ResourceEnvRefNode.class);
         registerElementHandler(new XMLElement(TagNames.MESSAGE_DESTINATION_REFERENCE), MessageDestinationRefNode.class);
-
         registerElementHandler(new XMLElement(TagNames.RESOURCE_REFERENCE), ResourceRefNode.class);
         registerElementHandler(new XMLElement(TagNames.EJB_REFERENCE), EjbRefNode.class);
-
         registerElementHandler(new XMLElement(RuntimeTagNames.CACHE), CacheNode.class);
-
         registerElementHandler(new XMLElement(RuntimeTagNames.CLASS_LOADER), ClassLoaderNode.class);
-
         registerElementHandler(new XMLElement(RuntimeTagNames.JSP_CONFIG), JspConfigRuntimeNode.class);
-
         registerElementHandler(new XMLElement(RuntimeTagNames.LOCALE_CHARSET_INFO), LocaleCharsetInfoNode.class);
-
         registerElementHandler(new XMLElement(RuntimeTagNames.PROPERTY), WebPropertyNode.class);
-
         registerElementHandler(new XMLElement(WebServicesTagNames.SERVICE_REF), ServiceRefNode.class);
         registerElementHandler(new XMLElement(RuntimeTagNames.MESSAGE_DESTINATION), MessageDestinationRuntimeNode.class);
         registerElementHandler(new XMLElement(WebServicesTagNames.WEB_SERVICE), WebServiceRuntimeNode.class);
         registerElementHandler(new XMLElement(RuntimeTagNames.VALVE), ValveNode.class);
-
     }
 
 
@@ -285,11 +276,11 @@ public class WebBundleRuntimeNode extends RuntimeBundleNode<WebBundleDescriptorI
         XMLElement attributeName, String value) {
         SunWebAppImpl sunWebApp = (SunWebAppImpl)getSunDescriptor();
         if (attributeName.getQName().equals(RuntimeTagNames.ERROR_URL)) {
-            sunWebApp.setAttributeValue(SunWebApp.ERROR_URL, value);
+            sunWebApp.setValue(SunWebApp.ERROR_URL, value);
             return true;
         }
         if (attributeName.getQName().equals(RuntimeTagNames.HTTPSERVLET_SECURITY_PROVIDER)) {
-            sunWebApp.setAttributeValue(SunWebApp.HTTPSERVLET_SECURITY_PROVIDER, value);
+            sunWebApp.setValue(SunWebApp.HTTPSERVLET_SECURITY_PROVIDER, value);
             return true;
         }
 

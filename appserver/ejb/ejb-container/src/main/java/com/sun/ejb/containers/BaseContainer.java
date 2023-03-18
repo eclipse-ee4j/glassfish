@@ -53,6 +53,7 @@ import com.sun.enterprise.deployment.InterceptorDescriptor;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
 import com.sun.enterprise.deployment.MethodDescriptor;
+import com.sun.enterprise.deployment.ScheduledTimerDescriptor;
 import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.enterprise.deployment.WebServicesDescriptor;
 import com.sun.enterprise.deployment.util.TypeUtil;
@@ -139,7 +140,6 @@ import org.glassfish.ejb.api.EjbEndpointFacade;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 import org.glassfish.ejb.deployment.descriptor.EjbInitInfo;
 import org.glassfish.ejb.deployment.descriptor.EjbSessionDescriptor;
-import org.glassfish.ejb.deployment.descriptor.ScheduledTimerDescriptor;
 import org.glassfish.ejb.spi.EjbContainerInterceptor;
 import org.glassfish.ejb.spi.WSEjbEndpointRegistry;
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
@@ -151,6 +151,9 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.logging.annotation.LogMessageInfo;
 
+import static com.sun.enterprise.deployment.EjbDescriptor.BEAN_TRANSACTION_TYPE;
+import static com.sun.enterprise.deployment.MethodDescriptor.EJB_LOCAL;
+import static com.sun.enterprise.deployment.MethodDescriptor.EJB_REMOTE;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_GLOBAL;
 
 /**
@@ -526,7 +529,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             containerStateManager = new EJBContainerStateManager(this);
             containerTransactionManager = new EJBContainerTransactionManager(this, ejbDesc);
 
-            isBeanManagedTran = ejbDescriptor.getTransactionType().equals("Bean");
+            isBeanManagedTran = ejbDescriptor.getTransactionType().equals(BEAN_TRANSACTION_TYPE);
 
             if (ejbDescriptor instanceof EjbSessionDescriptor) {
                 isSession = true;
@@ -2934,7 +2937,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             }
 
         } catch (NoSuchMethodException nsme) {
-            Object[] params = { containerInfo + ":" + nsme.toString(), (isLocal ? "Local" : "Remote"), invInfo.method.toString() };
+            Object[] params = {containerInfo + ":" + nsme, isLocal ? EJB_LOCAL : EJB_REMOTE, invInfo.method.toString()};
             _logger.log(Level.WARNING, BEAN_CLASS_METHOD_NOT_FOUND, params);
             // Treat this as a warning instead of a fatal error.
             // That matches the behavior of the generated code.
@@ -4249,7 +4252,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
     }
 
     protected String[] getMonitoringMethodsArray() {
-        return getMonitoringMethodsArray((monitoredGeneratedClasses.size() > 0));
+        return getMonitoringMethodsArray(!monitoredGeneratedClasses.isEmpty());
     }
 
     protected String[] getMonitoringMethodsArray(boolean hasGeneratedClasses) {

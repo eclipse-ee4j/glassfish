@@ -22,6 +22,7 @@ import com.sun.enterprise.deployment.MessageDestinationDescriptor;
 import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
 import com.sun.enterprise.deployment.MessageDestinationReferencerImpl;
 import com.sun.enterprise.deployment.MethodDescriptor;
+import com.sun.enterprise.deployment.ScheduledTimerDescriptor;
 import com.sun.enterprise.deployment.types.MessageDestinationReferencer;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
@@ -101,21 +102,6 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
     }
 
 
-    /**
-     * The copy constructor.
-     */
-    public EjbMessageBeanDescriptor(EjbMessageBeanDescriptor other) {
-        super(other);
-        this.messageListenerType = other.messageListenerType;
-        this.beanClassTxMethods = null;
-        this.durableSubscriptionName = other.durableSubscriptionName;
-        this.msgDestReferencer = new MessageDestinationReferencerImpl(this);
-        this.activationConfig = new ActivationConfigDescriptor(other.activationConfig);
-        this.runtimeActivationConfig = new ActivationConfigDescriptor(other.runtimeActivationConfig);
-        this.destinationType = other.destinationType;
-    }
-
-
     @Override
     public String getEjbTypeForDisplay() {
         return "MessageDrivenBean";
@@ -144,17 +130,6 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
     }
 
 
-    /**
-     * Sets my type
-     */
-    @Override
-    public void setType(String type) {
-        throw new IllegalArgumentException(
-            localStrings.getLocalString("enterprise.deployment.exceptioncannotsettypeofmsgdrivenbean",
-                "Cannot set the type of a message-drive bean"));
-    }
-
-
     public void setMessageListenerType(String messagingType) {
         messageListenerType = messagingType;
 
@@ -173,11 +148,10 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
     @Override
     public Set<MethodDescriptor> getTxBusinessMethodDescriptors() {
         ClassLoader classLoader = getEjbBundleDescriptor().getClassLoader();
-        Set<MethodDescriptor> methods = new HashSet<>();
         try {
+            Set<MethodDescriptor> methods = new HashSet<>();
             addAllInterfaceMethodsIn(methods, classLoader.loadClass(messageListenerType), MethodDescriptor.EJB_BEAN);
             addAllInterfaceMethodsIn(methods, classLoader.loadClass(getEjbClassName()), MethodDescriptor.EJB_BEAN);
-
             if (isTimedObject()) {
                 if (getEjbTimeoutMethod() != null) {
                     methods.add(getEjbTimeoutMethod());
@@ -186,16 +160,15 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
                     methods.add(schd.getTimeoutMethod());
                 }
             }
-
-        } catch (Throwable t) {
-            throw new RuntimeException("", t);
+            return methods;
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException("getTxBusinessMethodDescriptors failed", e);
         }
-        return methods;
     }
 
 
     @Override
-    public Set getSecurityBusinessMethodDescriptors() {
+    public Set<MethodDescriptor> getSecurityBusinessMethodDescriptors() {
         throw new IllegalArgumentException(
             localStrings.getLocalString("enterprise.deployment.exceptioncannotgetsecbusmethodsinmsgbean",
                 "Cannot get business method for security for message-driven bean."));
@@ -203,9 +176,12 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
 
 
     /**
-     * This returns the message listener onMessage method from the
-     * *message listener interface* itself, as opposed to the method
-     * from the ejb class that implements it.
+     * This returns the message listener onMessage method from the message listener interface
+     * itself, as opposed to the method from the ejb class that implements it.
+     *
+     * @param classLoader
+     * @return array of methods
+     * @throws NoSuchMethodException
      */
     public Method[] getMessageListenerInterfaceMethods(ClassLoader classLoader) throws NoSuchMethodException {
         List<Method> methods = new ArrayList<>();
@@ -242,10 +218,6 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
     public boolean hasMessageDestinationLinkName() {
         return msgDestReferencer.getMessageDestinationLinkName() != null;
     }
-
-    //
-    // Implementations of MessageDestinationReferencer methods.
-    //
 
 
     @Override
@@ -385,9 +357,6 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
     }
 
 
-    /**
-     * @return Set of EnvironmentProperty elements.
-     */
     @Override
     public Set<EnvironmentProperty> getRuntimeActivationConfigProperties() {
         return runtimeActivationConfig.getActivationConfig();

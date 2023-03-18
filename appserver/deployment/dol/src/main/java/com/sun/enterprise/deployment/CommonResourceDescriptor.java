@@ -36,6 +36,12 @@ public abstract class CommonResourceDescriptor extends Descriptor {
     protected CommonResourceDescriptor() {
     }
 
+
+    /**
+     * The copy constructor.
+     *
+     * @param other the source descriptor
+     */
     protected CommonResourceDescriptor(Descriptor other) {
         super(other);
     }

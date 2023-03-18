@@ -221,8 +221,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
                     LOG.fine("Ref " + ejbRef.getName() + " is bound to Ejb with JNDI Name " + ejbRef.getJndiName());
                 }
                 if (getEjbDescriptors() != null) {
-                    for (Object element : getEjbDescriptors()) {
-                        EjbDescriptor ejb = (EjbDescriptor) element;
+                    for (EjbDescriptor ejb : getEjbDescriptors()) {
                         if (ejbRef.getJndiName().equals(ejb.getJndiName())) {
                             ejbRef.setEjbDescriptor(ejb);
                             return;
@@ -241,7 +240,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
             && !ejbRef.hasLookupName()) {
 
             Map<String, EjbIntfInfo> ejbIntfInfoMap = getEjbIntfMap();
-            if (ejbIntfInfoMap.size() > 0) {
+            if (!ejbIntfInfoMap.isEmpty()) {
 
                 String interfaceToMatch = ejbRef.isEJB30ClientView() ?
                     ejbRef.getEjbInterface() : ejbRef.getEjbHomeInterface();
@@ -558,13 +557,13 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
         }
     }
 
-    protected Collection getEjbDescriptors() {
+    protected Collection<? extends EjbDescriptor> getEjbDescriptors() {
         if (getApplication() != null) {
             return getApplication().getEjbDescriptors();
         } else if (getEjbBundleDescriptor() != null) {
             return getEjbBundleDescriptor().getEjbs();
         } else {
-            return new HashSet<EjbDescriptor>();
+            return new HashSet<>();
         }
     }
 

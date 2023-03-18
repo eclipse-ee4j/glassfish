@@ -176,7 +176,7 @@ public abstract class AbstractEjbHandler extends AbstractHandler {
             //getEjbByName throws IllegalArgumentException when no ejb is found
         }
 
-        if (ejbDesc != null && !(ejbDesc instanceof DummyEjbDescriptor) ) {
+        if (ejbDesc != null && !(ejbDesc instanceof DummyEjbDescriptor)) {
             // element has already been defined in the standard DDs,
             // overriding rules applies
             if (logger.isLoggable(Level.FINE)) {
@@ -214,8 +214,7 @@ public abstract class AbstractEjbHandler extends AbstractHandler {
 
         } else {
             if (logger.isLoggable(Level.FINE)) {
-                logger.fine("Creating a new descriptor for "
-                    + ejbClass.getName());
+                logger.fine("Creating a new descriptor for " + ejbClass.getName());
             }
 
             EjbDescriptor dummyEjbDesc = ejbDesc;
@@ -226,7 +225,7 @@ public abstract class AbstractEjbHandler extends AbstractHandler {
             // the information from dummy ejb descriptor if applicable
             if (dummyEjbDesc != null) {
                 currentBundle.removeEjb(dummyEjbDesc);
-                ejbDesc.addEjbDescriptor(dummyEjbDesc);
+                ejbDesc.copyEjbDescriptor(dummyEjbDesc);
                 // reset ejbClassName on ejbDesc
                 ejbDesc.setEjbClassName(ejbClass.getName());
             }
@@ -235,8 +234,7 @@ public abstract class AbstractEjbHandler extends AbstractHandler {
             currentBundle.addEjb(ejbDesc);
 
             if (logger.isLoggable(Level.FINE)) {
-                logger.fine("New " +
-                    getAnnotationType().getName() + " bean " + elementName);
+                logger.fine("New " + getAnnotationType().getName() + " bean " + elementName);
             }
         }
 

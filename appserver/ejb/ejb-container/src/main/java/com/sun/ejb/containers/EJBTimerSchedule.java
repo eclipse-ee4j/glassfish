@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,23 +17,23 @@
 
 package com.sun.ejb.containers;
 
+import com.sun.enterprise.deployment.ScheduledTimerDescriptor;
+
 import jakarta.ejb.ScheduleExpression;
 
 import org.glassfish.common.util.timer.TimerSchedule;
-import org.glassfish.ejb.deployment.descriptor.ScheduledTimerDescriptor;
 
 /**
- * A runtime representation of the user-defined calendar-based
- * timeout expression for an enterprise bean timer.
+ * A runtime representation of the user-defined calendar-based timeout expression for an enterprise
+ * bean timer.
  *
  * @author mvatkina
  */
-
 public class EJBTimerSchedule extends TimerSchedule {
 
-    private boolean automatic_ = false;
-    private String methodName_ = null;
-    private int paramCount_ = 0;
+    private boolean automatic;
+    private String methodName;
+    private int paramCount;
 
     /** Construct EJBTimerSchedule instance with all defaults.
      */
@@ -75,10 +76,9 @@ public class EJBTimerSchedule extends TimerSchedule {
         start(sd.getStart());
         end(sd.getEnd());
 
-        methodName_ = methodName;
-        paramCount_ = paramCount;
-
-        automatic_ = true;
+        this.methodName = methodName;
+        this.paramCount = paramCount;
+        this.automatic = true;
 
         configure();
     }
@@ -91,37 +91,38 @@ public class EJBTimerSchedule extends TimerSchedule {
 
         // Parse the rest of elements
         String[] sp = s.split(" # ");
-        automatic_ = Boolean.parseBoolean(sp[10]);
+        automatic = Boolean.parseBoolean(sp[10]);
 
         if (sp.length == 13) {
-            methodName_ = sp[11];
-            paramCount_ = Integer.parseInt(sp[12]);
+            methodName = sp[11];
+            paramCount = Integer.parseInt(sp[12]);
         }
     }
 
     public EJBTimerSchedule setAutomatic(boolean b) {
-        automatic_ = b;
+        automatic = b;
         return this;
     }
 
     public boolean isAutomatic() {
-        return automatic_;
+        return automatic;
     }
 
     public String getTimerMethodName() {
-        return methodName_;
+        return methodName;
     }
 
     public int getMethodParamCount() {
-        return paramCount_;
+        return paramCount;
     }
 
+    @Override
     public String getScheduleAsString() {
         StringBuffer s = new StringBuffer(super.getScheduleAsString())
-               .append(" # ").append(automatic_);
+               .append(" # ").append(automatic);
 
-        if (automatic_) {
-            s.append(" # ").append(methodName_).append(" # ").append(paramCount_);
+        if (automatic) {
+            s.append(" # ").append(methodName).append(" # ").append(paramCount);
         }
 
         return s.toString();
@@ -142,6 +143,7 @@ public class EJBTimerSchedule extends TimerSchedule {
 
     }
 
+    @Override
     public int hashCode() {
         return getScheduleAsString().hashCode();
     }
@@ -164,7 +166,7 @@ public class EJBTimerSchedule extends TimerSchedule {
 
     @Override
     protected boolean isExpectedElementCount(String[] el) {
-        return (el.length == 11 || el.length == 13);
+        return el.length == 11 || el.length == 13;
     }
 
 }

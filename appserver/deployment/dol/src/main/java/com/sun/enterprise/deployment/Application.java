@@ -440,10 +440,6 @@ public class Application extends CommonResourceBundleDescriptor
                 new Object[]{getRegistrationName(), name}));
     }
 
-    /**
-     * Returns the environment property object searching on the supplied key.
-     * throws an illegal argument exception if no such environment property exists.
-     */
     @Override
     public EnvironmentProperty getEnvironmentPropertyByName(String name) {
         for (EnvironmentProperty ev : this.getEnvironmentProperties()) {
@@ -457,9 +453,6 @@ public class Application extends CommonResourceBundleDescriptor
                 new Object[]{getRegistrationName(), name}));
     }
 
-    /**
-     * Return a copy of the structure holding the environment properties.
-     */
     @Override
     public Set<EnvironmentProperty> getEnvironmentProperties() {
         return environmentProperties;
@@ -470,14 +463,9 @@ public class Application extends CommonResourceBundleDescriptor
         this.environmentProperties.add(environmentProperty);
     }
 
-    /**
-     * Removes the given environment property from me.
-     */
-
     @Override
     public void removeEnvironmentProperty(EnvironmentProperty environmentProperty) {
         this.getEnvironmentProperties().remove(environmentProperty);
-
     }
 
 

@@ -19,6 +19,7 @@ package org.glassfish.ejb.deployment;
 
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
 import com.sun.enterprise.deployment.MethodDescriptor;
+import com.sun.enterprise.deployment.ScheduledTimerDescriptor;
 import com.sun.logging.LogDomains;
 
 import java.lang.reflect.Method;
@@ -36,7 +37,6 @@ import java.util.logging.Logger;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 import org.glassfish.ejb.deployment.descriptor.EjbSessionDescriptor;
 import org.glassfish.ejb.deployment.descriptor.FieldDescriptor;
-import org.glassfish.ejb.deployment.descriptor.ScheduledTimerDescriptor;
 
 /**
  * Utility class to calculate the list of methods required  to have transaction attributes

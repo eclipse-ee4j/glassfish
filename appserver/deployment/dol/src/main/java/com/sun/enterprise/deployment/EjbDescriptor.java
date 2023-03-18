@@ -55,69 +55,132 @@ public interface EjbDescriptor extends NamedDescriptor,
     @Override
     String getName();
 
+
+    /**
+     * @return {@link EjbBundleDescriptor} instance owning this descriptor.
+     */
     EjbBundleDescriptor getEjbBundleDescriptor();
 
+    /**
+     * @param ejbBundleDescriptor {@link EjbBundleDescriptor} instance owning this descriptor.
+     */
     void setEjbBundleDescriptor(EjbBundleDescriptor ejbBundleDescriptor);
 
-    boolean isRemoteInterfacesSupported();
-
-    boolean isLocalInterfacesSupported();
-
-    boolean isRemoteBusinessInterfacesSupported();
-
-    boolean isLocalBusinessInterfacesSupported();
-
-    boolean hasWebServiceEndpointInterface();
-
-    boolean isLocalBean();
-
+    /**
+     * @return classname of the Home interface of this ejb.
+     */
     String getHomeClassName();
 
-    String getLocalHomeClassName();
+    /**
+     * @return true if this is an EJB provides a no interface Local view.
+     */
+    boolean isLocalBean();
 
-    String getEjbImplClassName();
+    /**
+     * @return true if the EJB has 1 or more local business interfaces
+     */
+    boolean isLocalBusinessInterfacesSupported();
 
-    String getWebServiceEndpointInterfaceName();
-
-    void setWebServiceEndpointInterfaceName(String name);
-
-    void addEjbReferencer(EjbReferenceDescriptor ref);
-
+    /**
+     * Returns a new set of local business interface names for this ejb.
+     * If the bean does not expose a local business view, return a set of size 0.
+     *
+     * @return a new set of class names or empty set.
+     */
     Set<String> getLocalBusinessClassNames();
 
-    Set<String> getRemoteBusinessClassNames();
-
+    /**
+     * @return the fully qualified class name for the local interface of this ejb
+     */
     String getLocalClassName();
 
+    /**
+     * @return true if the EJB described has a LocalHome/Local interface
+     */
+    boolean isLocalInterfacesSupported();
+
+    /**
+     * @return the fully qualified class name for the local home interface of this ejb
+     */
+    String getLocalHomeClassName();
+
+    /**
+     * @return true if the EJB has a RemoteHome/Remote interface
+     */
+    boolean isRemoteInterfacesSupported();
+
+    /**
+     * @return true if the EJB has 1 or more remote business interfaces
+     */
+    boolean isRemoteBusinessInterfacesSupported();
+
+    /**
+     * Returns the set of remote business interface names for this ejb.
+     * If the bean does not expose a remote business view, return a set of size 0.
+     *
+     * @return a new set of class names or empty set.
+     */
+    Set<String> getRemoteBusinessClassNames();
+
+    /**
+     * @return classname of the Remote interface of this ejb.
+     */
+    String getRemoteClassName();
+
+    /**
+     * The result is usually same as the {@link #getEjbClassName()}.
+     * <p>
+     * It is the same as the user-specified class in case of Message, Session and bean managed
+     * Persistence Entity Beans but is different for Container Mananged Persistence Entity Bean
+     * Therefore, the implementation in the base class is to return {@link #getEjbClassName()}
+     * and the method is redefined in IASEjbCMPEntityDescriptor.
+     *
+     * @return the execution class.
+     */
+    default String getEjbImplClassName() {
+        return getEjbClassName();
+    }
+
+    /**
+     * @return true if this is an EJB that implements a web service endpoint.
+     */
+    boolean hasWebServiceEndpointInterface();
+
+    /**
+     * @return class name of a web service interface
+     */
+    String getWebServiceEndpointInterfaceName();
+
+    /**
+     * @param name class name of a web service interface
+     */
+    void setWebServiceEndpointInterfaceName(String name);
+
+    /**
+     * @return full set of method descriptors I have (from all the methods on my home and remote interfaces).
+     */
     Set<MethodDescriptor> getMethodDescriptors();
 
-    Map<MethodPermission, ArrayList<MethodDescriptor>> getMethodPermissionsFromDD();
 
+    /**
+     * @return class name of the EJB
+     */
     String getEjbClassName();
 
+    /**
+     * @return string describing the type, ie. StatefulSessionBean or Message-driven
+     */
     String getType();
 
+    /**
+     * @return application to which this ejb descriptor belongs.
+     */
     Application getApplication();
 
-    long getUniqueId();
-
-    void setUniqueId(long id);
-
     /**
-     * @return copy of the role references set.
+     * @return record of all the Method Permissions exactly as they were in the`DD
      */
-    Set<RoleReference> getRoleReferences();
-
-    RoleReference getRoleReferenceByName(String roleReferenceName);
-
-    /**
-     * Removes the given {@link Role} object from me.
-     *
-     * @param role
-     */
-    void removeRole(Role role);
-
-    Set<MethodDescriptor> getSecurityBusinessMethodDescriptors();
+    Map<MethodPermission, ArrayList<MethodDescriptor>> getMethodPermissionsFromDD();
 
     /**
      * @return the Map of {@link MethodPermission} (keys) that have been assigned to
@@ -133,21 +196,54 @@ public interface EjbDescriptor extends NamedDescriptor,
      */
     void addPermissionedMethod(MethodPermission mp, MethodDescriptor md);
 
+    /**
+     * Removes the given {@link Role} object from me.
+     *
+     * @param role
+     */
+    void removeRole(Role role);
+
+    /**
+     * @return set of the role references
+     */
+    Set<RoleReference> getRoleReferences();
+
+    /**
+     * @param roleReferenceName
+     * @return a matching {@link RoleReference} by name or null.
+     */
+    RoleReference getRoleReferenceByName(String roleReferenceName);
+
+    /**
+     * Adds a role reference.
+     *
+     * @param roleReference
+     */
+    void addRoleReference(RoleReference roleReference);
+
+    /**
+     * @return security business method descriptors of this EJB.
+     */
+    Set<MethodDescriptor> getSecurityBusinessMethodDescriptors();
+
+    /**
+     * @param flag true if this bean uses caller identity
+     */
     void setUsesCallerIdentity(boolean flag);
 
+    /**
+     * @return Boolean.TRUE if this bean uses caller identity, null if this is called before
+     *         validator visit
+     */
     Boolean getUsesCallerIdentity();
 
     RunAsIdentityDescriptor getRunAsIdentity();
 
-    String getRemoteClassName();
-
-    void removeEjbReferencer(EjbReferenceDescriptor ref);
-
-    void addRoleReference(RoleReference roleReference);
-
     void setRunAsIdentity(RunAsIdentityDescriptor desc);
 
-    String getEjbTypeForDisplay();
+    default String getEjbTypeForDisplay() {
+        return getType();
+    }
 
     boolean hasInterceptorClass(String interceptorClassName);
 
@@ -161,18 +257,36 @@ public interface EjbDescriptor extends NamedDescriptor,
 
     Set<Role> getPermissionedRoles();
 
+    /**
+     * @return transaction type of this ejb (Bean/Container)
+     */
     String getTransactionType();
 
-    Set<EjbIORConfigurationDescriptor> getIORConfigurationDescriptors(); // FIXME by srini - consider ejb-internal-api
+    Set<EjbIORConfigurationDescriptor> getIORConfigurationDescriptors();
 
-    void addFrameworkInterceptor(InterceptorDescriptor interceptor); // FIXME by srini - consider ejb-internal-api
-
-    void notifyNewModule(WebBundleDescriptor wbd); // FIXME by srini - can we eliminate the need for this
+    default void addFrameworkInterceptor(InterceptorDescriptor interceptor) {
+        throw new UnsupportedOperationException("Not implemented for " + getClass());
+    }
 
     /**
-     * This method determines if all the mechanisms defined in the
-     * CSIV2 CompoundSecMechList structure require protected
-     * invocations.
+     * Called by WebArchivist to notify this EjbDescriptor that it has been associated with a web bundle.
+     */
+    // FIXME by srini - can we eliminate the need for this
+    void notifyNewModule(WebBundleDescriptor wbd);
+
+    /**
+     * @return true if all the mechanisms defined in the CSIV2 (Common Secure Interoperability
+     *         Protocol Version 2) CompoundSecMechList structure require protected invocations.
      */
     boolean allMechanismsRequireSSL();
+
+    /**
+     * @return generated unique id of the bean
+     */
+    long getUniqueId();
+
+    /**
+     * @param id generated unique id of the bean
+     */
+    void setUniqueId(long id);
 }

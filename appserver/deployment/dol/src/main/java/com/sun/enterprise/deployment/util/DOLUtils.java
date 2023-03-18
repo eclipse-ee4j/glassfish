@@ -81,6 +81,7 @@ import org.glassfish.logging.annotation.LoggerInfo;
 import org.xml.sax.SAXException;
 
 import static com.sun.enterprise.deployment.deploy.shared.Util.toURI;
+import static java.lang.System.Logger.Level.DEBUG;
 import static java.util.Collections.emptyList;
 import static org.glassfish.deployment.common.DeploymentUtils.getManifestLibraries;
 import static org.glassfish.loader.util.ASClassLoaderUtil.getAppLibDirLibrariesAsList;
@@ -119,7 +120,9 @@ public class DOLUtils {
     @LogMessageInfo(message = "{0} module [{1}] contains characteristics of other module type: {2}.", level = "WARNING")
     private static final String INCOMPATIBLE_TYPE = "AS-DEPLOYMENT-00003";
 
-    @LogMessageInfo(message = "Unsupported deployment descriptors element {0} value {1}.", level = "WARNING")
+    @LogMessageInfo(
+        message = "Unsupported deployment descriptors element {0} value {1} for descriptor {2}.",
+        level = "WARNING")
     public static final String INVALID_DESC_MAPPING = "AS-DEPLOYMENT-00015";
 
     @LogMessageInfo(
@@ -318,6 +321,7 @@ public class DOLUtils {
      * @return Can return null when not executed on the server!!!
      * @see ProcessEnvironment#getProcessType()
      */
+    // FIXME: Can return null when not executed on the server!!!
     public static ArchiveType carType() {
         return getModuleType("car");
     }
@@ -694,12 +698,15 @@ public class DOLUtils {
      *
      * @param element the xml element
      * @param value it's associated value
+     * @param o descriptor
+     * @return true if the value has been processed, false if it is on the caller.
      */
     public static boolean setElementValue(XMLElement element, String value, Object o) {
+        LOGGER.log(DEBUG, "setElementValue(element={0}, value={1}, o={2})", element, value, o);
         if (SCHEMA_LOCATION_TAG.equals(element.getCompleteName())) {
             // we need to keep all the non j2ee/javaee schemaLocation tags
             StringTokenizer st = new StringTokenizer(value);
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             while (st.hasMoreElements()) {
                 String namespace = (String) st.nextElement();
                 String schema;
@@ -722,7 +729,7 @@ public class DOLUtils {
                     continue;
                 }
                 sb.append(namespace);
-                sb.append(" ");
+                sb.append(' ');
                 sb.append(schema);
             }
             String clientSchemaLocation = sb.toString();

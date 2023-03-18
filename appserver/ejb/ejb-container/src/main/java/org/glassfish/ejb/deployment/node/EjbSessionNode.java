@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +18,7 @@
 package org.glassfish.ejb.deployment.node;
 
 import com.sun.enterprise.deployment.MethodDescriptor;
+import com.sun.enterprise.deployment.ScheduledTimerDescriptor;
 import com.sun.enterprise.deployment.node.DataSourceDefinitionNode;
 import com.sun.enterprise.deployment.node.LifecycleCallbackNode;
 import com.sun.enterprise.deployment.node.MailSessionNode;
@@ -29,14 +30,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.glassfish.ejb.deployment.EjbTagNames;
 import org.glassfish.ejb.deployment.descriptor.ConcurrentMethodDescriptor;
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.glassfish.ejb.deployment.descriptor.EjbInitInfo;
 import org.glassfish.ejb.deployment.descriptor.EjbRemovalInfo;
 import org.glassfish.ejb.deployment.descriptor.EjbSessionDescriptor;
 import org.glassfish.ejb.deployment.descriptor.EjbSessionDescriptor.ConcurrencyManagementType;
-import org.glassfish.ejb.deployment.descriptor.ScheduledTimerDescriptor;
 import org.glassfish.ejb.deployment.descriptor.TimeoutValueDescriptor;
 import org.w3c.dom.Node;
 import org.xml.sax.Attributes;
@@ -59,7 +58,7 @@ public class EjbSessionNode extends InterfaceBasedEjbNode<EjbSessionDescriptor> 
         registerElementHandler(new XMLElement(AROUND_INVOKE_METHOD), AroundInvokeNode.class,
             "addAroundInvokeDescriptor");
 
-        registerElementHandler(new XMLElement(EjbTagNames.AROUND_TIMEOUT_METHOD), AroundTimeoutNode.class,
+        registerElementHandler(new XMLElement(AROUND_TIMEOUT_METHOD), AroundTimeoutNode.class,
             "addAroundTimeoutDescriptor");
 
         registerElementHandler(new XMLElement(TagNames.POST_CONSTRUCT), LifecycleCallbackNode.class,

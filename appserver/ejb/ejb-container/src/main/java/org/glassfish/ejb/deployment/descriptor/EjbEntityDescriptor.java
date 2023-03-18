@@ -186,16 +186,6 @@ public class EjbEntityDescriptor extends EjbDescriptor {
     }
 
     /**
-     * Sets my type String.
-     */
-    @Override
-    public void setType(String type) {
-        throw new IllegalArgumentException(localStrings.getLocalString(
-               "enterprise.deployment.exceptioncannotsettypeonentitybean",
-               "Cannon set type on an entity bean"));
-    }
-
-    /**
      * Return my formatted string representation.
      */
     @Override

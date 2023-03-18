@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -421,8 +421,7 @@ public class SaxParserHandler extends DefaultHandler {
             // this must be a root element...
             Class<?> rootNodeClass = mappingStuff.mRootNodes.get(localName);
             if (rootNodeClass == null) {
-                LOG.log(Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
-                    new Object[] {localName, " not supported !"});
+                LOG.log(Level.SEVERE, "The " + localName + " is not supported!");
                 if (stopOnXMLErrors) {
                     throw new IllegalArgumentException(
                         errorReportingString + " Element [" + localName + "] is not a valid root element");

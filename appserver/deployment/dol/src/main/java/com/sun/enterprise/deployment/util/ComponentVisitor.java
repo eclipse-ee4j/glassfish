@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,15 +22,16 @@ import com.sun.enterprise.deployment.BundleDescriptor;
 import org.glassfish.deployment.common.DescriptorVisitor;
 
 /**
- * This class defines the protocol for visiting J2EE Component DOL
- * related classes
+ * This class defines the protocol for visiting Jakarta EE Component DOL related classes
  *
  * @author Jerome Dochez 2002
  */
 public interface ComponentVisitor extends DescriptorVisitor {
 
     /**
-     * visits a J2EE component bundle descriptor.
+     * Visits a Jakarta EE component bundle descriptor.
+     *
+     * @param bundleDesc
      */
     void accept(BundleDescriptor bundleDesc);
 }

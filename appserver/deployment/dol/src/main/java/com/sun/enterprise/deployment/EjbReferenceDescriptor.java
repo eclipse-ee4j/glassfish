@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,6 +21,9 @@ import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.util.DOLUtils;
 
 import org.glassfish.api.naming.SimpleJndiName;
+
+import static com.sun.enterprise.deployment.MethodDescriptor.EJB_LOCAL;
+import static com.sun.enterprise.deployment.MethodDescriptor.EJB_REMOTE;
 
 /**
  * An object representing a link to another ejb.
@@ -90,44 +93,34 @@ public final class EjbReferenceDescriptor extends EnvironmentProperty implements
         this.referringBundle = referringBundle;
     }
 
-    /**
-     * Get the referring bundle, i.e. the bundle within which this
-     * EJB reference is declared.
-     */
+
     @Override
     public BundleDescriptor getReferringBundleDescriptor() {
         return referringBundle;
     }
 
-    /**
-     * Sets the ejb descriptor to which I refer.
-     * @param ejbDescriptor the ejb descriptor referenced, null if it is unknown at this time
-     */
+
     @Override
     public void setEjbDescriptor(EjbDescriptor ejbDescriptor) {
-        if (this.ejbDescriptor != null) {
-            this.ejbDescriptor.removeEjbReferencer(this); // remove previous referencer
-        }
         this.ejbDescriptor = ejbDescriptor;
         if (ejbDescriptor != null) {
-            ejbDescriptor.addEjbReferencer(this);
             if (isLocal()) {
-                if (!ejbDescriptor.isLocalInterfacesSupported() && !ejbDescriptor.isLocalBusinessInterfacesSupported()
-                    && !ejbDescriptor.isLocalBean()) {
-                    throw new RuntimeException(localStrings.getLocalString(
-                        "entreprise.deployment.invalidLocalInterfaceReference",
-                        "Trying to set an ejb-local-ref on an EJB while the EJB [{0}] does not define local interfaces",
-                        new Object[] {ejbDescriptor.getName()}));
+                if (ejbDescriptor.isLocalInterfacesSupported() || ejbDescriptor.isLocalBusinessInterfacesSupported()
+                    || ejbDescriptor.isLocalBean()) {
+                    return;
                 }
-            } else {
-                if (!ejbDescriptor.isRemoteInterfacesSupported()
-                    && !ejbDescriptor.isRemoteBusinessInterfacesSupported()) {
-                    throw new RuntimeException(
-                        localStrings.getLocalString("entreprise.deployment.invalidRemoteInterfaceReference",
-                            "Trying to set an ejb-ref on an EJB, while the EJB [{0}] does not define remote interfaces",
-                            new Object[] {ejbDescriptor.getName()}));
-                }
+                throw new RuntimeException(localStrings.getLocalString(
+                    "entreprise.deployment.invalidLocalInterfaceReference",
+                    "Trying to set an ejb-local-ref on an EJB while the EJB [{0}] does not define local interfaces",
+                    new Object[] {ejbDescriptor.getName()}));
             }
+            if (ejbDescriptor.isRemoteInterfacesSupported() || ejbDescriptor.isRemoteBusinessInterfacesSupported()) {
+                return;
+            }
+            throw new RuntimeException(
+                localStrings.getLocalString("entreprise.deployment.invalidRemoteInterfaceReference",
+                    "Trying to set an ejb-ref on an EJB, while the EJB [{0}] does not define remote interfaces",
+                    new Object[] {ejbDescriptor.getName()}));
         }
     }
 
@@ -291,7 +284,9 @@ public final class EjbReferenceDescriptor extends EnvironmentProperty implements
     }
 
     /**
-     * Sets the home classname of the bean to whcioh I refer.
+     * Sets the home classname of the bean to which I refer.
+     *
+     * @param homeClassName
      */
     public void setHomeClassName(String homeClassName) {
         refHomeIntf = homeClassName;
@@ -304,13 +299,18 @@ public final class EjbReferenceDescriptor extends EnvironmentProperty implements
         return refIntf;
     }
 
-    /** Sets the bean instance business interface classname of the bean to which I refer.
-     * this interface is the local object or the remote interfaces depending if the
-     * reference is local or not.
-    */
+
+    /**
+     * Sets the bean instance business interface classname of the bean to which I refer.
+     * this interface is the local object or the remote interfaces depending if the reference
+     * is local or not.
+     *
+     * @param remoteClassName
+     */
     public void setBeanClassName(String remoteClassName) {
         refIntf = remoteClassName;
     }
+
 
     /**
      * Gets the home classname of the referee EJB.
@@ -360,7 +360,7 @@ public final class EjbReferenceDescriptor extends EnvironmentProperty implements
      */
     @Override
     public void print(StringBuffer toStringBuffer) {
-        String localVsRemote = isLocal() ? "Local" : "Remote";
+        String localVsRemote = isLocal() ? EJB_LOCAL : EJB_REMOTE;
         toStringBuffer.append(localVsRemote + " ejb-ref ");
         toStringBuffer.append("name=" + getName());
 
@@ -405,7 +405,7 @@ public final class EjbReferenceDescriptor extends EnvironmentProperty implements
     }
 
     public boolean isConflict(EjbReferenceDescriptor other) {
-        return (getName().equals(other.getName())) &&
+        return getName().equals(other.getName()) &&
             (!(
                 DOLUtils.equals(getType(), other.getType()) &&
                 DOLUtils.equals(getEjbHomeInterface(), other.getEjbHomeInterface()) &&

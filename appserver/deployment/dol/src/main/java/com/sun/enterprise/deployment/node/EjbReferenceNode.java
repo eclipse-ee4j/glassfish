@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,13 +18,11 @@
 package com.sun.enterprise.deployment.node;
 
 import com.sun.enterprise.deployment.EjbReferenceDescriptor;
-import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.InjectionTarget;
 import com.sun.enterprise.deployment.xml.TagNames;
 
 import java.util.Map;
 
-import org.glassfish.deployment.common.Descriptor;
 import org.w3c.dom.Node;
 
 /**
@@ -69,34 +67,29 @@ public class EjbReferenceNode extends DeploymentDescriptorNode<EjbReferenceDescr
 
 
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, EjbReferenceDescriptor descriptor) {
+    public Node writeDescriptor(Node parent, String nodeName, EjbReferenceDescriptor ejbRefDesc) {
         Node ejbRefNode = appendChild(parent, nodeName);
-        Descriptor ejbRefDesc = descriptor;
         writeLocalizedDescriptions(ejbRefNode, ejbRefDesc);
-        appendTextChild(ejbRefNode, TagNames.EJB_REFERENCE_NAME, descriptor.getName());
-        appendTextChild(ejbRefNode, TagNames.EJB_REFERENCE_TYPE, descriptor.getType());
-        if (descriptor.isLocal()) {
-            appendTextChild(ejbRefNode, TagNames.LOCAL_HOME, descriptor.getEjbHomeInterface());
-            appendTextChild(ejbRefNode, TagNames.LOCAL, descriptor.getEjbInterface());
+        appendTextChild(ejbRefNode, TagNames.EJB_REFERENCE_NAME, ejbRefDesc.getName());
+        appendTextChild(ejbRefNode, TagNames.EJB_REFERENCE_TYPE, ejbRefDesc.getType());
+        if (ejbRefDesc.isLocal()) {
+            appendTextChild(ejbRefNode, TagNames.LOCAL_HOME, ejbRefDesc.getEjbHomeInterface());
+            appendTextChild(ejbRefNode, TagNames.LOCAL, ejbRefDesc.getEjbInterface());
         } else {
-            appendTextChild(ejbRefNode, TagNames.HOME, descriptor.getEjbHomeInterface());
-            appendTextChild(ejbRefNode, TagNames.REMOTE, descriptor.getEjbInterface());
+            appendTextChild(ejbRefNode, TagNames.HOME, ejbRefDesc.getEjbHomeInterface());
+            appendTextChild(ejbRefNode, TagNames.REMOTE, ejbRefDesc.getEjbInterface());
         }
-        appendTextChild(ejbRefNode, TagNames.EJB_LINK, descriptor.getLinkName());
-
-        EnvironmentProperty envProp = descriptor;
-        appendTextChild(ejbRefNode, TagNames.MAPPED_NAME, envProp.getMappedName());
-        if (descriptor.isInjectable()) {
+        appendTextChild(ejbRefNode, TagNames.EJB_LINK, ejbRefDesc.getLinkName());
+        appendTextChild(ejbRefNode, TagNames.MAPPED_NAME, ejbRefDesc.getMappedName());
+        if (ejbRefDesc.isInjectable()) {
             InjectionTargetNode ijNode = new InjectionTargetNode();
-            for (InjectionTarget target : descriptor.getInjectionTargets()) {
+            for (InjectionTarget target : ejbRefDesc.getInjectionTargets()) {
                 ijNode.writeDescriptor(ejbRefNode, TagNames.INJECTION_TARGET, target);
             }
         }
-
-        if (descriptor.hasLookupName()) {
-            appendTextChild(ejbRefNode, TagNames.LOOKUP_NAME, descriptor.getLookupName());
+        if (ejbRefDesc.hasLookupName()) {
+            appendTextChild(ejbRefNode, TagNames.LOOKUP_NAME, ejbRefDesc.getLookupName());
         }
-
         return ejbRefNode;
     }
 

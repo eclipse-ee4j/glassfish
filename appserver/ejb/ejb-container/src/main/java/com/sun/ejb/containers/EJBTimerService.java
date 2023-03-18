@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,6 +21,7 @@ import com.sun.ejb.PersistentTimerService;
 import com.sun.enterprise.admin.monitor.callflow.Agent;
 import com.sun.enterprise.admin.monitor.callflow.RequestType;
 import com.sun.enterprise.deployment.MethodDescriptor;
+import com.sun.enterprise.deployment.ScheduledTimerDescriptor;
 import com.sun.logging.LogDomains;
 
 import jakarta.ejb.CreateException;
@@ -52,7 +53,6 @@ import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.ejb.config.EjbContainer;
 import org.glassfish.ejb.config.EjbTimerService;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
-import org.glassfish.ejb.deployment.descriptor.ScheduledTimerDescriptor;
 import org.glassfish.server.ServerEnvironmentImpl;
 
 /*
@@ -69,8 +69,8 @@ public class EJBTimerService {
 
     protected final EjbContainerUtil ejbContainerUtil = EjbContainerUtilImpl.getInstance();
 
-    private long nextTimerIdMillis_ = 0;
-    private long nextTimerIdCounter_ = 0;
+    private long nextTimerIdMillis_;
+    private long nextTimerIdCounter_;
     private final String domainName_;
 
     protected boolean isDas;
@@ -129,11 +129,11 @@ public class EJBTimerService {
 
     // Allow to reschedule a failed timer for the next delivery
     private static final String RESCHEDULE_FAILED_TIMER = "reschedule-failed-timer";
-    private boolean rescheduleFailedTimer = false;
+    private boolean rescheduleFailedTimer;
 
     // Flag that allows to load EJBTimerService on the 1st access and
     // distinguish between not available and not loaded
-    private static volatile boolean _timerServiceVerified = false;
+    private static volatile boolean _timerServiceVerified;
     private static Object lock = new Object();
 
     private static EJBTimerService _timerService;

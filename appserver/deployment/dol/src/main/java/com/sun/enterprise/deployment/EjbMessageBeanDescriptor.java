@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -43,6 +43,9 @@ public interface EjbMessageBeanDescriptor extends EjbDescriptor, MessageDestinat
 
     String getActivationConfigValue(String name);
 
+    /**
+     * @return Set of {@link EnvironmentProperty} elements.
+     */
     Set<EnvironmentProperty> getRuntimeActivationConfigProperties();
 
     void putRuntimeActivationConfigProperty(EnvironmentProperty prop);

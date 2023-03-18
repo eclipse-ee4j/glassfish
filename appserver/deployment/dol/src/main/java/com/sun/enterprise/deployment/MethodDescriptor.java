@@ -592,13 +592,6 @@ public final class MethodDescriptor extends Descriptor {
     }
 
 
-    public String prettyPrint() {
-        return "Name : " + this.getName()
-            + " Params: " + this.getPrettyParameterString()
-            + " Intf: " + this.ejbClassSymbol;
-    }
-
-
     public String[] getParameterClassNamesFor(Method method, Class[] paramTypes) {
         String[] classNames = new String[paramTypes.length];
         for (int i = 0; i < paramTypes.length; i++) {

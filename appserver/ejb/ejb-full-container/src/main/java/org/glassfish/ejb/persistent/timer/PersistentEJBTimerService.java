@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to Eclipse Foundation. All rights reserved.
+ * Copyright (c) 2022, 2023 Contributors to Eclipse Foundation. All rights reserved.
  * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,6 +27,7 @@ import com.sun.ejb.containers.RuntimeTimerState;
 import com.sun.ejb.containers.TimerPrimaryKey;
 import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.deployment.MethodDescriptor;
+import com.sun.enterprise.deployment.ScheduledTimerDescriptor;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.logging.LogDomains;
 
@@ -63,7 +64,6 @@ import org.glassfish.deployment.common.DeploymentProperties;
 import org.glassfish.ejb.config.EjbContainer;
 import org.glassfish.ejb.config.EjbTimerService;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
-import org.glassfish.ejb.deployment.descriptor.ScheduledTimerDescriptor;
 import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.internal.deployment.ExtendedDeploymentContext;
 import org.glassfish.persistence.common.DatabaseConstants;
@@ -90,15 +90,15 @@ public class PersistentEJBTimerService extends EJBTimerService {
     // This boolean value would be set in PE to be a default value of false.
     // In case of EE the default value would be true. When set to true the
     // timer service would have maximim consistency with performance degration.
-    private boolean performDBReadBeforeTimeout = false;
+    private boolean performDBReadBeforeTimeout;
 
-    private boolean removeOldTimers = false;
+    private final boolean removeOldTimers;
 
     private static final String strDBReadBeforeTimeout = "com.sun.ejb.timer.ReadDBBeforeTimeout";
-    private boolean foundSysPropDBReadBeforeTimeout = false;
+    private boolean foundSysPropDBReadBeforeTimeout;
 
-    EjbTimerService ejbt = null;
-    private DataSource timerDataSource = null;
+    EjbTimerService ejbt;
+    private DataSource timerDataSource;
 
     private static final SimpleJndiName TIMER_RESOURCE_JNDI = new SimpleJndiName("jdbc/__TimerPool");
     private static final String TIMER_SERVICE_APP_NAME = "ejb-timer-service-app";
@@ -110,7 +110,7 @@ public class PersistentEJBTimerService extends EJBTimerService {
     private static final String OP_STOP = "stop";
 
     // Possible values "redeliver" and "stop"
-    private String operationOnConnectionFailure = null;
+    private String operationOnConnectionFailure;
 
     private PersistentEJBTimerService(String ejbName, boolean removeOldTimers) throws Exception {
         super();

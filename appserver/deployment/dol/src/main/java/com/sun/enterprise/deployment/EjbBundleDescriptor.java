@@ -614,7 +614,7 @@ public abstract class EjbBundleDescriptor extends CommonResourceBundleDescriptor
 
 
     @Override
-    public InjectionInfo getInjectionInfoByClass(Class clazz) {
+    public InjectionInfo getInjectionInfoByClass(Class<?> clazz) {
         return getInjectionInfoByClass(clazz, this);
     }
 

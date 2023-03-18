@@ -19,7 +19,6 @@ package org.glassfish.ejb.deployment.descriptor;
 
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
-import com.sun.enterprise.deployment.RoleReference;
 import com.sun.enterprise.deployment.runtime.common.SecurityRoleMapping;
 import com.sun.enterprise.deployment.util.ComponentPostVisitor;
 import com.sun.enterprise.deployment.util.ComponentVisitor;
@@ -42,7 +41,6 @@ import org.glassfish.ejb.deployment.descriptor.runtime.PersistenceManagerInUse;
 import org.glassfish.ejb.deployment.node.EjbBundleNode;
 import org.glassfish.ejb.deployment.util.EjbBundleTracerVisitor;
 import org.glassfish.ejb.deployment.util.EjbBundleValidator;
-import org.glassfish.security.common.Role;
 
 public final class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
     private static final long serialVersionUID = 1L;
@@ -273,25 +271,6 @@ public final class EjbBundleDescriptorImpl extends EjbBundleDescriptor {
         DummyEjbDescriptor dummyEjbDesc = new DummyEjbDescriptor();
         dummyEjbDesc.setName(ejbName);
         return dummyEjbDesc;
-    }
-
-
-    /**
-    * @return true if all ejb role references link to roles specified here.
-    */
-    public boolean areResourceReferencesValid() {
-        // run through each of the ejb's role references, checking that the roles exist in this bundle
-        for (EjbDescriptor ejbDescriptor : getEjbs()) {
-            for (RoleReference element : ejbDescriptor.getRoleReferences()) {
-                Role referredRole = element.getRole();
-                Set<Role> roles = getRoles();
-                if (!referredRole.getName().isEmpty() && !roles.contains(referredRole)) {
-                    LOG.log(Level.WARNING, "Bad role reference to {0}, roles: {1}", referredRole, roles);
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 
 

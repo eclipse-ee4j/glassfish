@@ -179,7 +179,7 @@ public interface JndiNameEnvironment {
      * @return the entity manager reference descriptor corresponding to the given name.
      * @throws IllegalArgumentException if no such reference exists.
      */
-    EntityManagerReferenceDescriptor getEntityManagerReferenceByName(String name);
+    EntityManagerReferenceDescriptor getEntityManagerReferenceByName(String name) throws IllegalArgumentException;
 
     /**
      * @param className

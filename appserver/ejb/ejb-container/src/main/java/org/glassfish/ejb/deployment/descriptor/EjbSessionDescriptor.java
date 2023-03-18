@@ -181,17 +181,6 @@ public class EjbSessionDescriptor extends EjbDescriptor implements com.sun.enter
         return sessionTypeIsSet;
     }
 
-    /**
-    * Sets my type
-    */
-    @Override
-    public void setType(String type) {
-        throw new IllegalArgumentException(localStrings.getLocalString(
-                                   "enterprise.deployment.exceptioncannotsettypeofsessionbean",
-                                   "Cannot set the type of a session bean"));
-    }
-
-
 
     /**
     *  Sets the transaction type for this bean. Must be either BEAN_TRANSACTION_TYPE or CONTAINER_TRANSACTION_TYPE.

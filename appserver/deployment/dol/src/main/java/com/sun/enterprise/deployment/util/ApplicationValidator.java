@@ -228,7 +228,7 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
 
         // append the conflicted module names with their module type to make the names unique
         for (ModuleDescriptor<BundleDescriptor> cModule : conflicted) {
-            cModule.setModuleName(cModule.getModuleName() + cModule.getModuleType().toString());
+            cModule.setModuleName(cModule.getModuleName() + Objects.toString(cModule.getModuleType()));
         }
     }
 
@@ -524,7 +524,7 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
             allResourceDescriptors.put(name, new CommonResourceValidator(descriptor, name, scope));
             return false;
         }
-        final Descriptor existingDescriptor = commonResourceValidator.getDescriptor();
+        final ResourceDescriptor existingDescriptor = commonResourceValidator.getDescriptor();
         if (descriptor.equals(existingDescriptor)) {
             // Requires further processing based on scopes
             commonResourceValidator.addScope(scope);

@@ -22,25 +22,24 @@ import java.util.List;
 import java.util.Objects;
 
 import org.glassfish.api.naming.SimpleJndiName;
-import org.glassfish.deployment.common.Descriptor;
 
 /**
  * @author naman, date: 24/5/12
  */
 public class CommonResourceValidator {
 
-    private final Descriptor descriptor;
+    private final ResourceDescriptor descriptor;
     private final SimpleJndiName jndiName;
     private final List<String> scope;
 
-    public CommonResourceValidator(Descriptor descriptor, SimpleJndiName jndiName, String scope) {
+    public CommonResourceValidator(ResourceDescriptor descriptor, SimpleJndiName jndiName, String scope) {
         this.descriptor = descriptor;
         this.jndiName = Objects.requireNonNull(jndiName, "jndiName");
         this.scope = new ArrayList<>();
         this.scope.add(scope);
     }
 
-    public Descriptor getDescriptor() {
+    public ResourceDescriptor getDescriptor() {
         return descriptor;
     }
 

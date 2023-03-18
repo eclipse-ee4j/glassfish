@@ -775,7 +775,7 @@ resources, such as JDBC, is contained in other chapters.
 
 Use the `add-resources` subcommand in remote mode to create the
 resources named in the specified XML file. The following resources are
-supported: JDBC connection pool and resource, JMS, JNDI, and JavaMail
+supported: JDBC connection pool and resource, JMS, JNDI, and Jakarta Mail
 resources, custom resource, connector resource and work security map,
 admin object, and resource adapter configuration.
 

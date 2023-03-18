@@ -11,7 +11,7 @@ prev=list-log-levels.html
 
 == list-mail-resources
 
-Lists the existing JavaMail session resources
+Lists the existing Jakarta Mail session resources
 
 === Synopsis
 
@@ -23,7 +23,7 @@ asadmin [asadmin-options] list-mail-resources [--help]
 
 === Description
 
-The `list-mail-resources` subcommand lists the existing JavaMail
+The `list-mail-resources` subcommand lists the existing Jakarta Mail
 session resources.
 
 This subcommand is supported in remote mode only.
@@ -40,7 +40,7 @@ asadmin-options::
 === Operands
 
 target::
-  This operand specifies the target for which the JavaMail session
+  This operand specifies the target for which the Jakarta Mail session
   resources are to be listed. Valid values are:
 
   `server`;;
@@ -57,9 +57,9 @@ target::
 
 [[sthref1541]]
 
-==== Example 1   Listing JavaMail Resources
+==== Example 1   Listing Jakarta Mail Resources
 
-This example lists the JavaMail session resources for the server
+This example lists the Jakarta Mail session resources for the server
 instance.
 
 [source]

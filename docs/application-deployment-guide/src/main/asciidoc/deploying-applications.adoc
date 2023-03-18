@@ -1695,7 +1695,7 @@ The following resource types can be application-scoped:
 * External JNDI resources
 * Custom resources
 * Admin object resources
-* JavaMail resources
+* Jakarta Mail resources
 
 Deployment Descriptor. An application-scoped resource is defined in the
 `glassfish-resources.xml` deployment descriptor file. This file is

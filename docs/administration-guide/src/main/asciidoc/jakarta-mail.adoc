@@ -1,66 +1,66 @@
-title=Administering the JavaMail Service
+title=Administering the Jakarta Mail Service
 next=jms.adoc
 prev=orb.adoc
 ~~~~~~
 
-= Administering the JavaMail Service
+= Administering the Jakarta Mail Service
 
-[[administering-the-javamail-service]]
-== 16 Administering the JavaMail Service
+[[administering-the-jakarta-mail-service]]
+== 16 Administering the Jakarta Mail Service
 
-{productName} includes the JavaMail API along with JavaMail service
+{productName} includes the Jakarta Mail API along with Jakarta Mail service
 providers that allow an application component to send email
 notifications over the Internet and to read email from IMAP and POP3
 mail servers.
 
 The following topics are addressed here:
 
-* <<About JavaMail>>
-* <<Administering JavaMail Resources>>
+* <<About Jakarta Mail>>
+* <<Administering Jakarta Mail Resources>>
 
 Instructions for accomplishing the tasks in this chapter by using the
 Administration Console are contained in the Administration Console
 online help.
 
-[[about-javamail]]
+[[about-jakarta-mail]]
 
-=== About JavaMail
+=== About Jakarta Mail
 
-The JavaMail API is a set of abstract APIs that model a mail system. The
-JavaMail API provides a platform-independent and protocol-independent
+The Jakarta Mail API is a set of abstract APIs that model a mail system. The
+Jakarta Mail API provides a platform-independent and protocol-independent
 framework to build mail and messaging applications and provide
 facilities for reading and sending electronic messages. Service
 providers implement particular protocols. Using the API you can add
-email capabilities to your applications. JavaMail provides access from
+email capabilities to your applications. Jakarta Mail provides access from
 Java applications to Internet Message Access Protocol (IMAP) and Simple
 Mail Transfer Protocol (SMTP) capable mail servers on your network or
 the Internet. The API does not provide mail server functionality; you
-must have access to a mail server to use JavaMail.
+must have access to a mail server to use Jakarta Mail.
 
-The JavaMail API is implemented as an optional package in the Java
+The Jakarta Mail API is implemented as an optional package in the Java
 platform and is also available as part of the Jakarta EE platform.
 
-To learn more about the JavaMail API, consult the
-http://www.oracle.com/technetwork/java/javamail/[JavaMail web site] .
+To learn more about the Jakarta Mail API, consult the
+https://jakartaee.github.io/mail-api/[Jakarta Mail web site] .
 
-[[administering-javamail-resources]]
+[[administering-jakarta-mail-resources]]
 
-=== Administering JavaMail Resources
+=== Administering Jakarta Mail Resources
 
 When you create a mail session, the server-side components and
-applications are enabled to access JavaMail services with JNDI, using
+applications are enabled to access Jakarta Mail services with JNDI, using
 the session properties you assign for them. When creating a mail
 session, you can designate the mail hosts, the transport and store
 protocols, and the default mail user so that components that use
-JavaMail do not have to set these properties. Applications that are
+Jakarta Mail do not have to set these properties. Applications that are
 heavy email users benefit because {productName} creates a single
 session object and makes the session available to any component that
 needs it.
 
-JavaMail settings such as the following can be specified:
+Jakarta Mail settings such as the following can be specified:
 
 * JNDI Name. The unique name for the mail session. Use the naming
-sub-context prefix mail/ for JavaMail resources. For example:
+sub-context prefix mail/ for Jakarta Mail resources. For example:
 `mail/MySession`
 * Mail Host. The host name of the default mail server. The connect
 methods of the store and transport objects use this value if a
@@ -77,22 +77,22 @@ at this time
 
 The following topics are addressed here:
 
-* <<To Create a JavaMail Resource>>
-* <<To List JavaMail Resources>>
-* <<To Update a JavaMail Resource>>
-* <<To Delete a JavaMail Resource>>
+* <<To Create a Jakarta Mail Resource>>
+* <<To List Jakarta Mail Resources>>
+* <<To Update a Jakarta Mail Resource>>
+* <<To Delete a Jakarta Mail Resource>>
 
-[[to-create-a-javamail-resource]]
+[[to-create-a-jakarta-mail-resource]]
 
-==== To Create a JavaMail Resource
+==== To Create a Jakarta Mail Resource
 
 Use the `create-mail-resource` subcommand in remote mode to create a
-JavaMail session resource. The JNDI name for a JavaMail session resource
+Jakarta Mail session resource. The JNDI name for a Jakarta Mail session resource
 customarily includes the mail/ naming subcontext, For example:
 `mail/MyMailSession.`
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. Create a JavaMail resource by using the
+2. Create a Jakarta Mail resource by using the
 xref:reference-manual.adoc#create-mail-resource[`create-mail-resource`] subcommand.
 +
 Information about the properties for the subcommand is included in this
@@ -102,9 +102,9 @@ help page.
 See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
 [[gipfs]]
-Example 16-1 Creating a JavaMail Resource
+Example 16-1 Creating a Jakarta Mail Resource
 
-This example creates a JavaMail resource named `mail/MyMailSession`. The
+This example creates a Jakarta Mail resource named `mail/MyMailSession`. The
 escape character (\) is used in the `--fromaddress` option to
 distinguish the dot (.) and at sign (@).
 
@@ -122,19 +122,19 @@ typing `asadmin help create-mail-resource` at the command line.
 
 [[to-list-mail-resources]]
 
-==== To List JavaMail Resources
+==== To List Jakarta Mail Resources
 
 Use the `list-mail-resources` subcommand in remote mode to list the
-existing JavaMail session resources.
+existing Jakarta Mail session resources.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. List the JavaMail resources by using the
+2. List the Jakarta Mail resources by using the
 xref:reference-manual.adoc#list-mail-resources[`list-mail-resources`] subcommand.
 
 [[gipfe]]
-Example 16-2 Listing JavaMail Resources
+Example 16-2 Listing Jakarta Mail Resources
 
-This example lists the JavaMail resources on `localhost`.
+This example lists the Jakarta Mail resources on `localhost`.
 
 [source]
 ----
@@ -148,19 +148,19 @@ See Also
 You can also view the full syntax and options of the subcommands by
 typing `asadmin help list-mail-resources` at the command line.
 
-[[to-update-a-javamail-resource]]
+[[to-update-a-jakarta-mail-resource]]
 
-==== To Update a JavaMail Resource
+==== To Update a Jakarta Mail Resource
 
-1. List the JavaMail resources by using the
+1. List the Jakarta Mail resources by using the
 xref:reference-manual.adoc#list-mail-resources[`list-mail-resources`] subcommand.
-2. Modify the values for the specified JavaMail source by using the
+2. Modify the values for the specified Jakarta Mail source by using the
 xref:reference-manual.adoc#set[`set`] subcommand.
 +
 The resource is identified by its dotted name.
 
 [[giwjb]]
-Example 16-3 Updating a JavaMail Resource
+Example 16-3 Updating a Jakarta Mail Resource
 
 This example changes `joeserver` to `joe`.
 
@@ -172,12 +172,12 @@ MyMailSession.user=joe
 Command set executed successfully.
 ----
 
-[[to-delete-a-javamail-resource]]
+[[to-delete-a-jakarta-mail-resource]]
 
-==== To Delete a JavaMail Resource
+==== To Delete a Jakarta Mail Resource
 
 Use the `delete-mail-resource` subcommands in remote mode to delete
-a JavaMail session resource.
+a Jakarta Mail session resource.
 
 Before You Begin
 
@@ -185,18 +185,18 @@ References to the specified resource must be removed before running the
 `delete-mail-resource` subcommands.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. List the JavaMail resources by using the
+2. List the Jakarta Mail resources by using the
 xref:reference-manual.adoc#list-mail-resources[`list-mail-resources`] subcommands.
-3. Delete a JavaMail resource by using the
+3. Delete a Jakarta Mail resource by using the
 xref:reference-manual.adoc#delete-mail-resource[`delete-mail-resource`] subcommands.
 4. To apply your changes, restart {productName}.
 +
 See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
 [[gipcd]]
-Example 16-4 Deleting a JavaMail Resource
+Example 16-4 Deleting a Jakarta Mail Resource
 
-This example deletes the JavaMail session resource named
+This example deletes the Jakarta Mail session resource named
 `mail/MyMailSession`.
 
 [source]

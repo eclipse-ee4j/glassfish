@@ -11,7 +11,7 @@ prev=delete-local-instance.html
 
 == delete-mail-resource
 
-Removes a JavaMail session resource
+Removes a Jakarta Mail session resource
 
 === Synopsis
 
@@ -23,7 +23,7 @@ asadmin [asadmin-options] delete-mail-resource [--help]
 
 === Description
 
-The `delete-mail-resource` subcommand removes the specified JavaMail
+The `delete-mail-resource` subcommand removes the specified Jakarta Mail
 session resource. Ensure that you remove all references to this resource
 before running this subcommand.
 
@@ -39,7 +39,7 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   This option specifies the target from which you are deleting the
-  JavaMail session resource. Valid values are:
+  Jakarta Mail session resource. Valid values are:
 
   `server`;;
     Deletes the resource from the default server instance. This is the
@@ -54,15 +54,15 @@ asadmin-options::
 === Operands
 
 jndi_name::
-  The JNDI name of the JavaMail session resource to be deleted.
+  The JNDI name of the Jakarta Mail session resource to be deleted.
 
 === Examples
 
 [[sthref774]]
 
-==== Example 1   Deleting a JavaMail Resource
+==== Example 1   Deleting a Jakarta Mail Resource
 
-This example deletes the JavaMail session resource named
+This example deletes the Jakarta Mail session resource named
 `mail/MyMailSession`.
 
 [source]

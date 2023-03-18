@@ -27,7 +27,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 
-public class JavaMailITest extends RestTestBase {
+public class MailITest extends RestTestBase {
 
     private static final String URL_CREATE_MAIL_RESOURCE = "/domain/resources/create-mail-resource";
 

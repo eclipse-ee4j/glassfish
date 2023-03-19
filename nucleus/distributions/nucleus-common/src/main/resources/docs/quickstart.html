@@ -3,6 +3,7 @@
 <!--
 
     Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2023 Contributors to the Eclipse Foundation.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -50,7 +51,8 @@ cellspacing="4" cellpadding="2">
 </tbody>
 </table><div class="maincontent">
 <a name="aboaa"></a><h1>GlassFish Server 7 Quick Start Guide</h1>
-<p>GlassFish Server provides a server for the development and deployment of Java Platform, Enterprise Edition (Java EE platform) applications and web technologies based on Java technology. GlassFish Server 7 provides the following:</p>
+<p>GlassFish Server provides a server for the development and deployment of Jakarta EE Platform applications
+and web technologies based on Java technology. GlassFish Server 7 provides the following:</p>
 <ul>
 <li><p>A lightweight and extensible core based on OSGi Alliance standards</p></li>
 <li><p>A web container</p></li>
@@ -70,15 +72,24 @@ cellspacing="4" cellpadding="2">
 </ul>
 <a id="ghgpe" name="ghgpe"></a><a id="GSQSG00030" name="GSQSG00030"></a>
 <h2>About This Quick Start Guide</h2>
-<p>This <i>Quick Start Guide</i> demonstrates key features of GlassFish Server and enables you to quickly learn the basics. Step-by-step procedures introduce you to product features and enable you to use them immediately.</p>
-<p>This guide assumes that you have already obtained and installed the GlassFish Server 7 software. For more information about installing GlassFish Server 7, see the <a href="https://javaee.github.io/glassfish/documentation"><cite>Installation Guide</cite></a>.</p>
-<p>Instructions and examples in this guide that apply to all supported operating systems use the forward slash character (<code>/</code>) as path separators in all file names and commands. Ensure that you use the correct character for the system on which GlassFish Server is installed. For example:</p>
+<p>This <i>Quick Start Guide</i> demonstrates key features of GlassFish Server and enables you to quickly learn the basics.
+Step-by-step procedures introduce you to product features and enable you to use them immediately.</p>
+<p>This guide assumes that you have already obtained and installed the GlassFish Server 7 software. For more information
+about installing GlassFish Server 7, see the <a href="https://glassfish.org/docs/latest/installation-guide.html"><cite>Installation Guide</cite></a>.</p>
+<p>Instructions and examples in this guide that apply to all supported operating systems use the forward slash character
+(<code>/</code>) as path separators in all file names and commands. Ensure that you use the correct character for the
+system on which GlassFish Server is installed. For example:</p>
 <ul>
 <li><p><b>UNIX, Linux, or Mac OS X systems:</b> <i>as-install</i><code>/bin/asadmin</code></p></li>
 <li><p><b>Windows systems:</b> <i>as-install</i><code>\bin\asadmin</code></p></li>
 </ul>
-<p>This guide provides basic information only. For comprehensive information about GlassFish Server and other entities mentioned in this guide, see <a href="#ggkzh">For More Information</a>.</p>
-<p>To review additional details about this release before you begin using the software, see the <a href="https://javaee.github.io/glassfish/documentation"><cite>Release Notes</cite></a>. The <i>Release Notes</i> provide important information about the GlassFish Server 7 release, including details about new features, information about known issues and possible workarounds, and tips for installing and working with GlassFish Server 7 software.</p>
+<p>This guide provides basic information only. For comprehensive information about GlassFish Server and
+other entities mentioned in this guide, see <a href="#ggkzh">For More Information</a>.</p>
+<p>To review additional details about this release before you begin using the software,
+see the <a href="https://glassfish.org/docs/latest/release-notes.html"><cite>Release Notes</cite></a>.
+The <i>Release Notes</i> provide important information about the GlassFish Server 7 release,
+including details about new features, information about known issues and possible workarounds,
+and tips for installing and working with GlassFish Server 7 software.</p>
 
 
 <a id="ghpfg" name="ghpfg"></a><a id="GSQSG00031" name="GSQSG00031"></a>
@@ -172,7 +183,9 @@ cellspacing="4" cellpadding="2">
 <a id="gixue" name="gixue"></a><a id="GSQSG00032" name="GSQSG00032"></a>
 
 <h2>Default Administration Values</h2>
-<p>The following table lists default administration values for GlassFish Server. See <a href="#ghpfg">Default Paths and File Names</a> for more information about the <i>as-install</i> and <i>domain-dir</i> placeholders.</p>
+<p>The following table lists default administration values for GlassFish Server.
+See <a href="#ghpfg">Default Paths and File Names</a> for more information
+about the <i>as-install</i> and <i>domain-dir</i> placeholders.</p>
 <a id="sthref4" name="sthref4"></a><a id="gixxy" name="gixxy"></a>
 <p><b>Table 1-2 Default Administration Values</b></p>
 <table  title="Default Administration Values" summary="Summary of default paths and port numbers for administration." dir="ltr" border="1" width="100%" frame="hsides" rules="rows" cellpadding="3" cellspacing="0">
@@ -301,7 +314,8 @@ cellspacing="4" cellpadding="2">
 The following procedures describe how to start and stop <code>domain1</code>
 when it is the only domain.
 For information about starting and stopping a domain when there are multiple domains,
-see <i>Administering Domains</i> in <a href="https://glassfish.org/docs/latest/administration-guide/toc.html"><i>Eclipse GlassFish Administration Guide</i></a>.</p>
+see <i>Administering Domains</i> in <a href="https://glassfish.org/docs/latest/administration-guide.html">
+<i>Eclipse GlassFish Administration Guide</i></a>.</p>
 <a id="ggmpd" name="ggmpd"></a><a id="GSQSG00005" name="GSQSG00005"></a>
 
 <h3>To Start the Default Domain</h3>
@@ -342,8 +356,10 @@ see <i>Administering Domains</i> in <a href="https://glassfish.org/docs/latest/a
 If your applications require a database back end, you must start and stop the database server manually.</p>
 <p>The following procedures describe how to start and stop the Java DB server that is bundled with GlassFish Server.
 For information about starting and stopping other database servers, see the documentation for your specific product.</p>
-<p>For the list of database products supported in this release, see the <a href="https://glassfish.org/docs/latest/release-notes/toc.html"><cite>Release Notes</cite></a>.</p>
-<p>For more information about database connectivity, see <i>Administering Database Connectivity,</i> in <a href="https://glassfish.org/docs/latest/administration-guide/toc.html"><i>Eclipse GlassFish Administration Guide</i></a>.</p>
+<p>For the list of database products supported in this release,
+see the <a href="https://glassfish.org/docs/latest/release-notes.html"><cite>Release Notes</cite></a>.</p>
+<p>For more information about database connectivity, see <i>Administering Database Connectivity,</i>
+in <a href="https://glassfish.org/docs/latest/administration-guide.html"><i>Eclipse GlassFish Administration Guide</i></a>.</p>
 <a id="ggncr" name="ggncr"></a><a id="GSQSG00007" name="GSQSG00007"></a>
 
 <h3>To Start the Java DB Server</h3>
@@ -398,7 +414,8 @@ For information about starting and stopping other database servers, see the docu
 
 <h2>Deploying and Undeploying Applications</h2>
 <p>The process of configuring and enabling applications to run within the GlassFish Server framework is referred to as deployment.</p>
-<p>This section explains how to deploy, list, and undeploy applications. The procedures in this section use the <code>hello.war</code> sample application. The following topics are addressed here:</p>
+<p>This section explains how to deploy, list, and undeploy applications. The procedures in this section use the <code>hello.war</code>
+sample application. The following topics are addressed here:</p>
 <ul>
 <li><p><a href="#ghgis">To Obtain the Sample Application</a></p></li>
 <li><p><a href="#gkpao">Deploying and Undeploying the Sample Application From the Command Line</a></p></li>
@@ -409,7 +426,8 @@ For information about starting and stopping other database servers, see the docu
 
 <h3>To Obtain the Sample Application</h3>
 <ol>
-<li><p>Download a copy of the <code>hello.war</code> sample application from <code><a href="https://javaee.github.io/glassfish/downloads/quickstart/hello.war">https://javaee.github.io/glassfish/downloads/quickstart/hello.war</a></code>.</p></li>
+<li><p>Download a copy of the <code>hello.war</code> sample application from
+<code><a href="https://javaee.github.io/glassfish/downloads/quickstart/hello.war">https://javaee.github.io/glassfish/downloads/quickstart/hello.war</a></code>.</p></li>
 <li><p>Save the <code>hello.war</code> file in the directory of your choice.</p>
 <p>This directory is referred to as <i>sample-dir</i>.</p></li>
 </ol>
@@ -429,7 +447,9 @@ For information about starting and stopping other database servers, see the docu
 <h4>To Deploy the Sample Application From the Command Line</h4>
 <a id="sthref9" name="sthref9"></a>
 <h6>Before You Begin</h6>
-<p>The sample application must be available before you start this task. To download the sample, see <a href="#ghgis">To Obtain the Sample Application</a>. At least one GlassFish Server domain must be started before you deploy the sample application.</p>
+<p>The sample application must be available before you start this task. To download the sample,
+see <a href="#ghgis">To Obtain the Sample Application</a>. At least one GlassFish Server domain
+must be started before you deploy the sample application.</p>
 <ol>
 <li><p>Run the <code>asadmin deploy</code> command.</p>
 <p>The general form for the command is as follows:</p>
@@ -453,7 +473,8 @@ Hi, my name is Duke. What's yours?
 </ol>
 <a id="sthref10" name="sthref10"></a>
 <h6>See Also</h6>
-<p>For more information about deploying applications from the command line, see <a href="https://javaee.github.io/glassfish/documentation"><i>GlassFish Server Application Deployment Guide</i></a>.</p>
+<p>For more information about deploying applications from the command line,
+see <a href="https://glassfish.org/docs/latest/application-deployment-guide.html"><i>GlassFish Server Application Deployment Guide</i></a>.</p>
 
 
 <a id="ggnco" name="ggnco"></a><a id="GSQSG00012" name="GSQSG00012"></a>
@@ -494,7 +515,9 @@ Hi, my name is Duke. What's yours?
 <h4>To Deploy the Sample Application by Using the Administration Console</h4>
 <a id="sthref12" name="sthref12"></a>
 <h6>Before You Begin</h6>
-<p>The sample application must be available before you start this task. To download the sample, see <a href="#ghgis">To Obtain the Sample Application</a>. At least one GlassFish Server domain must be started before you deploy the sample application.</p>
+<p>The sample application must be available before you start this task. To download the sample,
+see <a href="#ghgis">To Obtain the Sample Application</a>. At least one GlassFish Server domain
+must be started before you deploy the sample application.</p>
 <ol>
 <li><p>Launch the Administration Console by typing the following URL in your browser:</p>
 <pre>
@@ -570,7 +593,9 @@ Hi, my name is Duke. What's yours?
 <a id="geyvj" name="geyvj"></a><a id="GSQSG00017" name="GSQSG00017"></a>
 
 <h4>To Deploy the Sample Application Automatically</h4>
-<p>You can deploy applications automatically by placing them in the <i>domain-dir</i><code>/autodeploy</code> directory, where <i>domain-dir</i> is the directory of the domain for which you want to configure automatic deployment. For this example, use the default domain, <code>domain1</code>, in the default <i>domain-root-dir</i>, which is <i>as-install</i><code>/domains</code>:</p>
+<p>You can deploy applications automatically by placing them in the <i>domain-dir</i><code>/autodeploy</code>
+directory, where <i>domain-dir</i> is the directory of the domain for which you want to configure automatic deployment.
+For this example, use the default domain, <code>domain1</code>, in the default <i>domain-root-dir</i>, which is <i>as-install</i><code>/domains</code>:</p>
 <pre>
 <i>as-install</i>/domains/domain1/autodeploy
 </pre>
@@ -639,15 +664,15 @@ Hi, my name is Duke. What's yours?
 <li><p><a href="#ghhir">Product Documentation</a></p></li>
 <li><p><a href="#ghhis">GlassFish Community</a></p></li>
 <li><p><a href="#giyjo">Tutorials</a></p></li>
-<li><p><a href="#gintm">Java EE 8 Samples</a></p></li>
+<li><p><a href="#gintm">Jakarta EE Samples</a></p></li>
 </ul>
 <a id="ghhir" name="ghhir"></a><a id="GSQSG00050" name="GSQSG00050"></a>
 
 <h3>Product Documentation</h3>
 <p>Comprehensive product documentation is available and includes the following.</p>
 <ul>
-<li><p><a href="https://javaee.github.io/glassfish/documentation"><cite>Release Notes</cite></a>: Latest details about new features, known issues, and tips for installing and working with GlassFish Server software.</p></li>
-<li><p>The <a href="https://javaee.github.io/glassfish/documentation">GlassFish Product Documentation</a> page: Collection of guides that document GlassFish Server Open Source Edition features and functions.</p></li>
+<li><p><a href="https://glassfish.org/docs/latest/release-notes.html"><cite>Release Notes</cite></a>: Latest details about new features, known issues, and tips for installing and working with GlassFish Server software.</p></li>
+<li><p>The <a href="https://glassfish.org/documentation">GlassFish Product Documentation</a> page: Collection of guides that document GlassFish Server Open Source Edition features and functions.</p></li>
 </ul>
 
 
@@ -662,19 +687,17 @@ Hi, my name is Duke. What's yours?
 <a id="giyjo" name="giyjo"></a><a id="GSQSG00052" name="GSQSG00052"></a>
 
 <h3>Tutorials</h3>
-<p>The following tutorials provide working examples and detailed instructions for creating enterprise applications for the Java EE 8 platform.</p>
+<p>The following tutorials provide working examples and detailed instructions for creating enterprise applications for the Jakarta EE Platform 10.</p>
 <ul>
-<li><p><a href="https://javaee.github.io/firstcup">Your First Cup: An Introduction to the Java EE Platform</a>: Provides a short tutorial for beginning Java EE programmers that shows how to develop a simple enterprise application from scratch. The sample application consists of four main components: a JAX-RS RESTful web service, an enterprise bean, a Java Persistence API entity, and a web application created with JavaServer Faces Facelets technology.</p></li>
-<li><p><a href="https://javaee.github.io/tutorial">The Java EE 8 Tutorial</a>: Provides a beginner's guide to developing enterprise applications for GlassFish Server. The tutorial includes working examples and instructions for creating applications with Java EE 8 technologies, including Java Servlets, JavaServer Faces, Facelets, RESTful Web Services, Enterprise JavaBeans, Java Persistence API, Contexts and Dependency Injection for the Java EE platform, and more.</p></li>
+<li><p><a href="https://eclipse-ee4j.github.io/jakartaee-firstcup">Your First Cup: An Introduction to the Jakarta EE Platform</a>: Provides a short tutorial for beginning Jakarta EE programmers that shows how to develop a simple enterprise application from scratch. The sample application consists of four main components: a Jakarta RESTful web service, an enterprise bean, a Jakarta Persistence entity, and a web application created with Jakarta Faces Facelets technology.</p></li>
+<li><p><a href="https://eclipse-ee4j.github.io/jakartaee-tutorial">The Jakarta EE Tutorial</a>: Provides a beginner's guide to developing enterprise applications for GlassFish Server. The tutorial includes working examples and instructions for creating applications with Jakarta EE technologies, including Jakarta Servlets, Jakarta Faces Facelets, Jakarta RESTful Web Services, Jakarta Enterprise Beans, Jakarta Persistence, Jakarta Contexts and Dependency Injection for the Jakarta EE Platform, and more.</p></li>
 </ul>
 
 
 <a id="gintm" name="gintm"></a><a id="GSQSG00053" name="GSQSG00053"></a>
 
-<h3>Java EE 8 Samples</h3>
-<p>The sample applications demonstrate Java EE technologies. The samples are part of the Java EE 8 SDK distributions. The SDK distributions are available from the <a href="http://www.oracle.com/technetwork/java/javaee/downloads/index.html">Java EE SDK downloads page</a>.</p>
+<h3>Jakarta EE Samples</h3>
+<p>The sample applications demonstrate Jakarta EE technologies. The samples are available from the <a href="https://github.com/eclipse-ee4j/glassfish-samples">Jakarta EE samples downloads page</a>.</p>
 </div> <hr style="width: 80%; height: 2px;"> <p
-class="copy"><a href="http://www.oracle.com/corporate/">Company Info</a> &nbsp;&nbsp;|&nbsp;&nbsp; <a
-href="http://www.oracle.com/corporate/contact/">Contact</a> &nbsp;&nbsp;|&nbsp;&nbsp;
-Copyright &copy; 2010, 2017 Oracle Corporation &nbsp;&nbsp;|&nbsp;&nbsp; <a
+class="copy">Copyright &copy; 2023 Eclipse Foundation &nbsp;&nbsp;|&nbsp;&nbsp; <a
 href="./copyright.html">Legal Notices</a></p></body></html>

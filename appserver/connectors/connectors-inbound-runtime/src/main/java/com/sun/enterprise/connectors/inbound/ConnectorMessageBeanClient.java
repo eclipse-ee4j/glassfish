@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -65,33 +65,30 @@ import org.glassfish.server.ServerEnvironmentImpl;
  */
 public final class ConnectorMessageBeanClient implements MessageBeanClient, MessageEndpointFactory {
 
+    private static final String RA_MID = "com.sun.enterprise.connectors.inbound.ramid";
+    private static final StringManager localStrings = StringManager.getManager(ConnectorMessageBeanClient.class);
+    private static final Logger logger = LogDomains.getLogger(ConnectorMessageBeanClient.class, LogDomains.RSR_LOGGER);
+
+    private static final int CREATED = 0;
+    private static final int BLOCKED = 1;
+    private static final int UNBLOCKED = 2;
+
+    private static final long WAIT_TIME = 60000;
+
+    private final ConnectorRegistry registry;
+    private final EjbMessageBeanDescriptor descriptor;
+    private final BasicResourceAllocator allocator;
+
     private String activationName;
-
-    private final ConnectorRegistry registry_;
-
-    private MessageBeanProtocolManager messageBeanPM_;
-    private final EjbMessageBeanDescriptor descriptor_;
-    private final BasicResourceAllocator allocator_;
-    private Class beanClass_;
-    private boolean started_ = false;
-
-    private final int CREATED = 0;
-    private final int BLOCKED = 1;
-    private final int UNBLOCKED = 2;
+    private MessageBeanProtocolManager messageBeanPM;
+    private Class<?> beanClass;
+    private boolean started;
     private int myState = CREATED;
 
-    private final long WAIT_TIME = 60000;
 
-    private static final String RA_MID="com.sun.enterprise.connectors.inbound.ramid";
+    /** unique identification of a message-driven bean: appName:modlueID:beanName */
+    private final String beanID_;
 
-    private final StringManager localStrings =
-                StringManager.getManager(ConnectorMessageBeanClient.class);
-
-    //unique identify a message-driven bean
-    private final String beanID_; //appName:modlueID:beanName
-
-    private static final Logger logger =
-            LogDomains.getLogger(ConnectorMessageBeanClient.class, LogDomains.RSR_LOGGER);
 
     /**
      * Creates an instance of <code>ConnectorMessageBeanClient</code>
@@ -99,20 +96,16 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
      * @param descriptor <code>EjbMessageBeanDescriptor</code> object.
      */
     public ConnectorMessageBeanClient(EjbMessageBeanDescriptor descriptor) {
-        this.descriptor_ = descriptor;
-        allocator_ = new BasicResourceAllocator();
+        this.descriptor = descriptor;
+        this.allocator = new BasicResourceAllocator();
 
         String appName = descriptor.getApplication().getName();
-
         String moduleID = descriptor.getEjbBundleDescriptor().getModuleID();
-
         String beanName = descriptor.getName();
 
-        activationName = null;
-
-        beanID_ = appName + ":" + moduleID + ":" + beanName;
-
-        registry_ = ConnectorRegistry.getInstance();
+        this.activationName = null;
+        this.beanID_ = appName + ":" + moduleID + ":" + beanName;
+        this.registry = ConnectorRegistry.getInstance();
     }
 
     /**
@@ -126,75 +119,62 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
      * </code>
      *
      * @param messageBeanPM <code>MessageBeanProtocolManager</code> object.
+     * @throws ClassNotFoundException
+     * @throws ConnectorRuntimeException
      */
     @Override
-    public void setup(MessageBeanProtocolManager messageBeanPM) throws Exception {
-
-        ClassLoader loader = descriptor_.getEjbBundleDescriptor().getClassLoader();
-
+    public void setup(MessageBeanProtocolManager messageBeanPM)
+        throws ClassNotFoundException, ConnectorRuntimeException {
+        ClassLoader loader = descriptor.getEjbBundleDescriptor().getClassLoader();
         if (loader == null) {
             loader = Thread.currentThread().getContextClassLoader();
         }
 
-        beanClass_ = loader.loadClass(descriptor_.getEjbClassName());
+        this.beanClass = loader.loadClass(descriptor.getEjbClassName());
+        this.messageBeanPM = messageBeanPM;
 
-        messageBeanPM_ = messageBeanPM;
-
-        String resourceAdapterMid = getResourceAdapterMid(descriptor_);
-
+        String resourceAdapterMid = getResourceAdapterMid(descriptor);
         ActiveInboundResourceAdapter aira = getActiveResourceAdapter(resourceAdapterMid);
+        aira.updateMDBRuntimeInfo(descriptor, this.messageBeanPM.getPoolDescriptor());
 
-        aira.updateMDBRuntimeInfo(descriptor_,
-                                       messageBeanPM_.getPoolDescriptor());
-
-        //the resource adapter this MDB client is deployed to
+        // the resource adapter this MDB client is deployed to
         ResourceAdapter ra = aira.getResourceAdapter();
-
-        if(ra == null){
+        if (ra == null) {
             String i18nMsg = localStrings.getString("msg-bean-client.ra.class.not.specified", resourceAdapterMid);
             throw new ConnectorRuntimeException(i18nMsg);
         }
 
         ConnectorDescriptor desc = aira.getDescriptor();
-
         MessageListener msgListener = getMessageListener(desc);
-
         String activationSpecClassName = null;
         if (msgListener != null) {
             activationSpecClassName = msgListener.getActivationSpecClass();
         }
 
-        if (activationSpecClassName != null) {
-            if (logger.isLoggable(Level.FINEST)) {
-                logger.log(Level.FINEST, "ActivationSpecClassName = " + activationSpecClassName);
-            }
+        if (activationSpecClassName == null) {
+            throw new IllegalStateException("Unsupported message listener type");
+        }
 
-            try {
-                ActivationSpec activationSpec = getActivationSpec(aira, activationSpecClassName);
-                activationSpec.setResourceAdapter(ra);
+        if (logger.isLoggable(Level.FINEST)) {
+            logger.log(Level.FINEST, "ActivationSpecClassName = " + activationSpecClassName);
+        }
+        try {
+            ActivationSpec activationSpec = getActivationSpec(aira, activationSpecClassName);
+            activationSpec.setResourceAdapter(ra);
 
-                //at this stage, activation-spec is created, config properties merged with ejb-descriptor.
-                //validate activation-spec now
-                ConnectorRuntime runtime = ConnectorRuntime.getRuntime();
-                runtime.getConnectorBeanValidator().validateJavaBean(activationSpec, resourceAdapterMid);
+            // at this stage, activation-spec is created, config properties merged with ejb-descriptor.
+            // validate activation-spec now
+            ConnectorRuntime runtime = ConnectorRuntime.getRuntime();
+            runtime.getConnectorBeanValidator().validateJavaBean(activationSpec, resourceAdapterMid);
 
-                aira.validateActivationSpec(activationSpec);
-
-                myState = BLOCKED;
-
-                ra.endpointActivation(this, activationSpec);
-
-                aira.addEndpointFactoryInfo(beanID_,
-                        new MessageEndpointFactoryInfo(this, activationSpec));
-
-            } catch (Exception ex) {
-                Object args[] = new Object[]{resourceAdapterMid, activationSpecClassName, ex};
-                logger.log(Level.WARNING, "endpoint.activation.failure", args);
-                throw (Exception) (new Exception()).initCause(ex);
-            }
-        } else {
-            //FIXME  throw some exception here.
-            throw new Exception("Unsupported message listener type");
+            aira.validateActivationSpec(activationSpec);
+            this.myState = BLOCKED;
+            ra.endpointActivation(this, activationSpec);
+            aira.addEndpointFactoryInfo(beanID_, new MessageEndpointFactoryInfo(this, activationSpec));
+        } catch (Exception ex) {
+            logger.log(Level.WARNING, "endpoint.activation.failure",
+                new Object[] {resourceAdapterMid, activationSpecClassName, ex});
+            throw new ConnectorRuntimeException("Setup failed.", ex);
         }
     }
 
@@ -204,41 +184,37 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
      * b) jms-ra message-listener of type jakarta.jms.MessageListener<br/>
      * c) Check the resource-adapters supporting the message-listener-type and
      * if there is only one use it, otherwise fail.<br/>
-     * @param descriptor_ EJB Descriptor
+     * @param descriptor EJB Descriptor
      * @return resource-adapter-mid (resource-adapter-name)
      * @throws ConnectorRuntimeException
      */
-    private String getResourceAdapterMid(EjbMessageBeanDescriptor descriptor_) throws ConnectorRuntimeException {
-        String resourceAdapterMid = descriptor_.getResourceAdapterMid();
+    private String getResourceAdapterMid(EjbMessageBeanDescriptor descriptor) throws ConnectorRuntimeException {
+        String resourceAdapterMid = descriptor.getResourceAdapterMid();
         if (resourceAdapterMid == null) {
             resourceAdapterMid = System.getProperty(RA_MID);
         }
 
         if (resourceAdapterMid == null) {
-            String messageListener = descriptor_.getMessageListenerType();
+            String messageListener = descriptor.getMessageListenerType();
             //DOL of MDB descriptor has default value as "jakarta.jms.MessageListener" which
             //will take care of the case when the message-listener-type is not specified in the DD
-            if(ResourceConstants.JMS_MESSAGE_LISTENER.equals(messageListener)){
+            if (ResourceConstants.JMS_MESSAGE_LISTENER.equals(messageListener)) {
                 resourceAdapterMid = ConnectorConstants.DEFAULT_JMS_ADAPTER;
-                logger.fine("No ra-mid is specified, using default JMS Resource Adapter for message-listener-type " +
-                        "["+descriptor_.getMessageListenerType()+"]");
-            }else{
-                List<String> resourceAdapters =
-                        ConnectorRegistry.getInstance().getConnectorsSupportingMessageListener(messageListener);
-                if(resourceAdapters.size() == 1){
+                logger.fine("No ra-mid is specified, using default JMS Resource Adapter for message-listener-type "
+                    + "[" + descriptor.getMessageListenerType() + "]");
+            } else {
+                List<String> resourceAdapters = ConnectorRegistry.getInstance()
+                    .getConnectorsSupportingMessageListener(messageListener);
+                if (resourceAdapters.size() == 1) {
                     resourceAdapterMid = resourceAdapters.get(0);
-                    String message = localStrings.getString("msg-bean-client.defaulting.message-listener.supporting.rar",
-                            resourceAdapterMid, messageListener);
-                    logger.info(message);
-                }else if(resourceAdapters.size()<=0){
-                    String message = localStrings.getString("msg-bean-client.could-not-detect-ra-mid",
-                            descriptor_.getMessageListenerType() );
-
-                    throw new ConnectorRuntimeException(message);
-                }else{
-                    String message = localStrings.getString("msg-bean-client.multiple-ras-supporting-message-listener",
-                            messageListener);
-                    throw new ConnectorRuntimeException(message);
+                    logger.info(localStrings.getString("msg-bean-client.defaulting.message-listener.supporting.rar",
+                        resourceAdapterMid, messageListener));
+                } else if (resourceAdapters.isEmpty()) {
+                    throw new ConnectorRuntimeException(localStrings
+                        .getString("msg-bean-client.could-not-detect-ra-mid", descriptor.getMessageListenerType()));
+                } else {
+                    throw new ConnectorRuntimeException(localStrings
+                        .getString("msg-bean-client.multiple-ras-supporting-message-listener", messageListener));
                 }
             }
         }
@@ -277,8 +253,10 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
         return null;
     }
 
-    private ActiveInboundResourceAdapter getActiveResourceAdapter(String resourceAdapterMid) throws Exception {
-        Object activeRar = registry_.getActiveResourceAdapter(resourceAdapterMid);
+
+    private ActiveInboundResourceAdapter getActiveResourceAdapter(String resourceAdapterMid)
+        throws ConnectorRuntimeException {
+        Object activeRar = registry.getActiveResourceAdapter(resourceAdapterMid);
 
         // Except system-rars, all other rars are loaded eagerly.
         // Check whether the rar is a system-rar.
@@ -286,7 +264,7 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
         if (activeRar == null && ConnectorsUtil.belongsToSystemRA(resourceAdapterMid)) {
             ConnectorRuntime crt = ConnectorRuntime.getRuntime();
             crt.loadDeferredResourceAdapter(resourceAdapterMid);
-            activeRar = registry_.getActiveResourceAdapter(resourceAdapterMid);
+            activeRar = registry.getActiveResourceAdapter(resourceAdapterMid);
         }
 
         if (activeRar == null) {
@@ -295,7 +273,7 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
         }
 
         if (!(activeRar instanceof ActiveInboundResourceAdapter)) {
-            throw new Exception("Resource Adapter selected doesn't support Inbound");
+            throw new ConnectorRuntimeException("Resource Adapter selected doesn't support Inbound");
         }
         return (ActiveInboundResourceAdapter) activeRar;
     }
@@ -308,8 +286,8 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
      */
     @Override
     public void start() throws Exception {
-        logger.logp(Level.FINEST, "ConnectorMessageBeanClient", "start", "called...");
-        started_ = true;
+        logger.logp(Level.FINEST, "ConnectorMessageBeanClient", "start", "Starting the ConnectorMessageBeanClient");
+        started = true;
         synchronized (this) {
             myState = UNBLOCKED;
             notifyAll();
@@ -324,22 +302,21 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
      */
     @Override
     public void close() {
-        logger.logp(Level.FINEST,
-                "ConnectorMessageBeanClient", "close", "called...");
+        logger.logp(Level.FINEST, "ConnectorMessageBeanClient", "close", "Closing the ConnectorMessageBeanClient");
 
-        started_ = false; //no longer available
+        started = false; //no longer available
 
 
         String resourceAdapterMid = null;
         try {
-            resourceAdapterMid = getResourceAdapterMid(descriptor_);
+            resourceAdapterMid = getResourceAdapterMid(descriptor);
         } catch (ConnectorRuntimeException e) {
-            String message = localStrings.getString("msg-bean-client.could-not-derive-ra-mid", descriptor_.getName());
+            String message = localStrings.getString("msg-bean-client.could-not-derive-ra-mid", descriptor.getName());
             logger.log(Level.WARNING, message, e);
         }
 
         ActiveResourceAdapter activeRar =
-                registry_.getActiveResourceAdapter(resourceAdapterMid);
+                registry.getActiveResourceAdapter(resourceAdapterMid);
 
         if (activeRar instanceof ActiveInboundResourceAdapter) { //in case the RA is already undeployed
             ActiveInboundResourceAdapter rar = (ActiveInboundResourceAdapter) activeRar;
@@ -357,7 +334,7 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
     }
 
     private EjbMessageBeanDescriptor getDescriptor() {
-        return descriptor_;
+        return descriptor;
     }
 
 
@@ -390,7 +367,7 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
      */
     @Override
     public boolean isDeliveryTransacted(Method method) {
-        return messageBeanPM_.isDeliveryTransacted(method);
+        return messageBeanPM.isDeliveryTransacted(method);
     }
 
     /**
@@ -422,7 +399,7 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
             }
         }
 
-        if (!started_) {
+        if (!started) {
             logger.log(Level.WARNING, "endpointfactory.unavailable");
             throw new UnavailableException(
                     "EndpointFactory is currently not available");
@@ -430,14 +407,14 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
 
         MessageEndpoint endpoint = null;
         try {
-            ResourceHandle resourceHandle = allocator_.createResource(xaResource);
+            ResourceHandle resourceHandle = allocator.createResource(xaResource);
 
             MessageBeanListener listener =
-                    messageBeanPM_.createMessageBeanListener(resourceHandle);
+                    messageBeanPM.createMessageBeanListener(resourceHandle);
 
             MessageEndpointInvocationHandler handler =
-                    new MessageEndpointInvocationHandler(listener, messageBeanPM_);
-            endpoint = (MessageEndpoint) messageBeanPM_.createMessageBeanProxy(handler);
+                    new MessageEndpointInvocationHandler(listener, messageBeanPM);
+            endpoint = (MessageEndpoint) messageBeanPM.createMessageBeanProxy(handler);
         } catch (Exception ex) {
             throw (UnavailableException)
                     (new UnavailableException()).initCause(ex);
@@ -452,15 +429,15 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
     public String getActivationName() {
         if (activationName == null) {
 
-            String appName = descriptor_.getApplication().getName();
-            String moduleID = descriptor_.getEjbBundleDescriptor().getModuleID();
+            String appName = descriptor.getApplication().getName();
+            String moduleID = descriptor.getEjbBundleDescriptor().getModuleID();
             int pound = moduleID.indexOf("#");
             if (pound >= 0) {
                 // the module ID is in the format: appName#ejbName.jar
                 // remove the appName part since it is duplicated
                 moduleID = moduleID.substring(pound + 1);
             }
-            String mdbClassName = descriptor_.getEjbClassName();
+            String mdbClassName = descriptor.getEjbClassName();
 
             ServerEnvironmentImpl env = Globals.get(ServerEnvironmentImpl.class);
             String instanceName = env.getInstanceName();
@@ -663,7 +640,7 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
 
     @Override
     public Class<?> getEndpointClass() {
-        return beanClass_;
+        return beanClass;
     }
 
 //    private String computeMD5(String message){

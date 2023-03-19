@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -72,8 +72,8 @@ import org.jvnet.hk2.annotations.Service;
 public class ConnectionPoolStatsProviderBootstrap implements PostConstruct,
         PoolLifeCycle {
 
-    protected final static Logger logger =
-    LogDomains.getLogger(ConnectionPoolStatsProviderBootstrap.class,LogDomains.RSR_LOGGER);
+    protected final static Logger logger = LogDomains.getLogger(ConnectionPoolStatsProviderBootstrap.class,
+        LogDomains.RSR_LOGGER);
 
     @Inject
     private PoolManager poolManager;
@@ -127,35 +127,33 @@ public class ConnectionPoolStatsProviderBootstrap implements PostConstruct,
      * @param poolInfo
      * @return registry of pool lifecycle listeners
      */
-    public PoolLifeCycleListenerRegistry registerPool(PoolInfo poolInfo,
-            ConnectionPoolProbeProvider poolProvider) {
-        PoolLifeCycleListenerRegistry poolRegistry = null;
-        if(poolRegistries.get(poolInfo)==null){
-            poolRegistry =
-                new PoolLifeCycleListenerRegistry(poolInfo);
+    public PoolLifeCycleListenerRegistry registerPool(PoolInfo poolInfo, ConnectionPoolProbeProvider poolProvider) {
+        final PoolLifeCycleListenerRegistry poolRegistry;
+        if (poolRegistries.get(poolInfo) == null) {
+            poolRegistry = new PoolLifeCycleListenerRegistry(poolInfo);
             poolRegistries.put(poolInfo, poolRegistry);
-        }else{
+        } else {
             poolRegistry = poolRegistries.get(poolInfo);
         }
-        ConnectionPoolEmitterImpl emitter =
-                new com.sun.enterprise.resource.pool.monitor.ConnectionPoolEmitterImpl(
-                poolInfo, poolProvider);
+        ConnectionPoolEmitterImpl emitter = new ConnectionPoolEmitterImpl(poolInfo, poolProvider);
         poolRegistry.registerPoolLifeCycleListener(emitter);
         addToPoolEmitters(poolInfo, emitter);
         return poolRegistry;
     }
 
+
     public ConnectionPoolAppProbeProvider registerPool(PoolInfo poolInfo, String appName) {
         ConnectionPoolAppProbeProvider probeAppProvider = null;
-        Collection<ConnectionPoolMonitoringExtension> extensions =
-                habitat.getAllServices(ConnectionPoolMonitoringExtension.class);
-        for(ConnectionPoolMonitoringExtension extension : extensions) {
+        Collection<ConnectionPoolMonitoringExtension> extensions = habitat
+            .getAllServices(ConnectionPoolMonitoringExtension.class);
+        for (ConnectionPoolMonitoringExtension extension : extensions) {
             probeAppProvider = extension.registerConnectionPool(poolInfo, appName);
         }
         return probeAppProvider;
     }
 
-    public Resources getResources(){
+
+    public Resources getResources() {
         return domainProvider.get().getResources();
     }
 
@@ -172,67 +170,64 @@ public class ConnectionPoolStatsProviderBootstrap implements PostConstruct,
      * @param poolInfo
      */
     private void registerCcPool(PoolInfo poolInfo) {
-        if(poolManager.getPool(poolInfo) != null) {
-            getProbeProviderUtil().createJcaProbeProvider();
-            //Found in the pool table (pool has been initialized/created)
-            ConnectorConnPoolStatsProvider ccPoolStatsProvider =
-                    new ConnectorConnPoolStatsProvider(poolInfo, logger);
+        getProbeProviderUtil().createJcaProbeProvider();
+        // Found in the pool table (pool has been initialized/created)
+        ConnectorConnPoolStatsProvider ccPoolStatsProvider = new ConnectorConnPoolStatsProvider(poolInfo, logger);
 
-            StatsProviderManager.register(
-                    "connector-connection-pool",
-                    PluginPoint.SERVER,
-                    ConnectorsUtil.getPoolMonitoringSubTreeRoot(poolInfo, true), ccPoolStatsProvider);
+        StatsProviderManager.register("connector-connection-pool", PluginPoint.SERVER,
+            ConnectorsUtil.getPoolMonitoringSubTreeRoot(poolInfo, true), ccPoolStatsProvider);
 
-            PoolLifeCycleListenerRegistry registry = registerPool(
-                    poolInfo, getProbeProviderUtil().getJcaProbeProvider());
-            ccPoolStatsProvider.setPoolRegistry(registry);
+        PoolLifeCycleListenerRegistry registry = registerPool(poolInfo, getProbeProviderUtil().getJcaProbeProvider());
+        ccPoolStatsProvider.setPoolRegistry(registry);
 
-            ccStatsProviders.add(ccPoolStatsProvider);
+        ccStatsProviders.add(ccPoolStatsProvider);
 
-            if(!ConnectorsUtil.isApplicationScopedResource(poolInfo)){
-                ResourcesUtil resourcesUtil = ResourcesUtil.createInstance();
-                ResourcePool pool = resourcesUtil.getPoolConfig(poolInfo);
-                Resources resources = resourcesUtil.getResources(poolInfo);
-                String raName = resourcesUtil.getRarNameOfResource(pool, resources);
-
-                ConnectorConnPoolStatsProvider connectorServicePoolStatsProvider =
-                        new ConnectorConnPoolStatsProvider(poolInfo, logger);
-
-                String dottedNamesHierarchy = null;
-                String monitoringModuleName = null;
-
-                if(ConnectorsUtil.isJMSRA(raName)){
-                    monitoringModuleName =  ConnectorConstants.MONITORING_JMS_SERVICE_MODULE_NAME;
-                    dottedNamesHierarchy = ConnectorConstants.MONITORING_JMS_SERVICE +
-                        ConnectorConstants.MONITORING_SEPARATOR + ConnectorConstants.MONITORING_CONNECTION_FACTORIES
-                            + ConnectorConstants.MONITORING_SEPARATOR +
-                            ConnectorsUtil.escapeResourceNameForMonitoring(poolInfo.getName());
-
-                }else{
-                    monitoringModuleName =  ConnectorConstants.MONITORING_CONNECTOR_SERVICE_MODULE_NAME;
-                    dottedNamesHierarchy = ConnectorConstants.MONITORING_CONNECTOR_SERVICE_MODULE_NAME +
-                    ConnectorConstants.MONITORING_SEPARATOR + raName + ConnectorConstants.MONITORING_SEPARATOR +
-                    ConnectorsUtil.escapeResourceNameForMonitoring(poolInfo.getName());
-                }
-
-                StatsProviderManager.register(monitoringModuleName, PluginPoint.SERVER,
-                    dottedNamesHierarchy, connectorServicePoolStatsProvider);
-
-                if(logger.isLoggable(Level.FINE)){
-                    logger.log(Level.FINE, "Registered pool-monitoring stats [ "+dottedNamesHierarchy+" ]  " +
-                        "for [ " + raName + " ] with monitoring-stats-registry.");
-                }
-
-                /* no need to create multiple probe provider instances, one per pool will
-                   work for multiple stats providers
-                PoolLifeCycleListenerRegistry poolLifeCycleListenerRegistry = registerPool(
-                        poolInfo, getProbeProviderUtil().getJcaProbeProvider());
-                */
-
-                connectorServicePoolStatsProvider.setPoolRegistry(registry);
-                ccStatsProviders.add(connectorServicePoolStatsProvider);
-            }
+        if (ConnectorsUtil.isApplicationScopedResource(poolInfo)) {
+            return;
         }
+
+        ResourcesUtil resourcesUtil = ResourcesUtil.createInstance();
+        ResourcePool pool = resourcesUtil.getPoolConfig(poolInfo);
+        Resources resources = resourcesUtil.getResources(poolInfo);
+        String raName = resourcesUtil.getRarNameOfResource(pool, resources);
+
+        ConnectorConnPoolStatsProvider connectorServicePoolStatsProvider = new ConnectorConnPoolStatsProvider(
+            poolInfo, logger);
+
+        String dottedNamesHierarchy = null;
+        String monitoringModuleName = null;
+
+        if (ConnectorsUtil.isJMSRA(raName)) {
+            monitoringModuleName = ConnectorConstants.MONITORING_JMS_SERVICE_MODULE_NAME;
+            dottedNamesHierarchy = ConnectorConstants.MONITORING_JMS_SERVICE
+                + ConnectorConstants.MONITORING_SEPARATOR + ConnectorConstants.MONITORING_CONNECTION_FACTORIES
+                + ConnectorConstants.MONITORING_SEPARATOR
+                + ConnectorsUtil.escapeResourceNameForMonitoring(poolInfo.getName());
+
+        } else {
+            monitoringModuleName = ConnectorConstants.MONITORING_CONNECTOR_SERVICE_MODULE_NAME;
+            dottedNamesHierarchy = ConnectorConstants.MONITORING_CONNECTOR_SERVICE_MODULE_NAME
+                + ConnectorConstants.MONITORING_SEPARATOR + raName + ConnectorConstants.MONITORING_SEPARATOR
+                + ConnectorsUtil.escapeResourceNameForMonitoring(poolInfo.getName());
+        }
+
+        StatsProviderManager.register(monitoringModuleName, PluginPoint.SERVER, dottedNamesHierarchy,
+            connectorServicePoolStatsProvider);
+
+        if (logger.isLoggable(Level.FINE)) {
+            logger.log(Level.FINE, "Registered pool-monitoring stats [ " + dottedNamesHierarchy + " ]  " + "for [ "
+                + raName + " ] with monitoring-stats-registry.");
+        }
+
+        /*
+         * no need to create multiple probe provider instances, one per pool will
+         * work for multiple stats providers
+         * PoolLifeCycleListenerRegistry poolLifeCycleListenerRegistry = registerPool(
+         * poolInfo, getProbeProviderUtil().getJcaProbeProvider());
+         */
+
+        connectorServicePoolStatsProvider.setPoolRegistry(registry);
+        ccStatsProviders.add(connectorServicePoolStatsProvider);
     }
 
     /**
@@ -240,8 +235,8 @@ public class ConnectionPoolStatsProviderBootstrap implements PostConstruct,
      * PoolLifeCycle events - pool creation or destroy.
      */
     private void registerPoolLifeCycleListener() {
-        //Register provider only for server and not for clients
-        if(runtime.isServer()) {
+        // Register provider only for server and not for clients
+        if (runtime.isServer()) {
             PoolLifeCycleRegistry poolLifeCycleRegistry = PoolLifeCycleRegistry.getRegistry();
             poolLifeCycleRegistry.registerPoolLifeCycle(this);
         }
@@ -253,13 +248,12 @@ public class ConnectionPoolStatsProviderBootstrap implements PostConstruct,
      * @param poolInfo
      */
     private void unregisterPool(PoolInfo poolInfo) {
-        if(ccStatsProviders != null) {
-            Iterator i = ccStatsProviders.iterator();
+        if (ccStatsProviders != null) {
+            Iterator<ConnectorConnPoolStatsProvider> i = ccStatsProviders.iterator();
             while (i.hasNext()) {
-                ConnectorConnPoolStatsProvider ccPoolStatsProvider =
-                        (ConnectorConnPoolStatsProvider) i.next();
+                ConnectorConnPoolStatsProvider ccPoolStatsProvider = i.next();
                 if (poolInfo.equals(ccPoolStatsProvider.getPoolInfo())) {
-                    //Get registry and unregister this pool from the registry
+                    // Get registry and unregister this pool from the registry
                     PoolLifeCycleListenerRegistry poolRegistry = ccPoolStatsProvider.getPoolRegistry();
                     poolRegistry.unRegisterPoolLifeCycleListener(poolInfo);
                     StatsProviderManager.unregister(ccPoolStatsProvider);
@@ -271,10 +265,11 @@ public class ConnectionPoolStatsProviderBootstrap implements PostConstruct,
         postUnregisterPool(poolInfo);
     }
 
+
     public void unRegisterPool() {
-        Collection<ConnectionPoolMonitoringExtension> extensions =
-                habitat.getAllServices(ConnectionPoolMonitoringExtension.class);
-        for(ConnectionPoolMonitoringExtension extension : extensions) {
+        Collection<ConnectionPoolMonitoringExtension> extensions = habitat
+            .getAllServices(ConnectionPoolMonitoringExtension.class);
+        for (ConnectionPoolMonitoringExtension extension : extensions) {
             extension.unRegisterConnectionPool();
         }
     }
@@ -293,13 +288,13 @@ public class ConnectionPoolStatsProviderBootstrap implements PostConstruct,
     }
 
     /**
-     * Find if the monitoring is enabled based on the monitoring level :
+     * Find if the monitoring is enabled based on the monitoring level:
      * <code> strEnabled </code>
-     * @param strEnabled
-     * @return
+     * @param enabled
+     * @return false if enabled is OFF, true otherwise
      */
-    public boolean getEnabledValue(String strEnabled) {
-        if ("OFF".equals(strEnabled)) {
+    public boolean getEnabledValue(String enabled) {
+        if ("OFF".equals(enabled)) {
             return false;
         }
         return true;
@@ -317,13 +312,17 @@ public class ConnectionPoolStatsProviderBootstrap implements PostConstruct,
         logger.log(Level.FINEST, "Pool created: {0}", poolInfo);
         if (runtime.isServer()) {
             ResourcePool pool = runtime.getConnectionPoolConfig(poolInfo);
+            if (pool instanceof ConnectorConnectionPool) {
+                com.sun.enterprise.resource.pool.ResourcePool resource = poolManager.getPool(poolInfo);
+                if (resource != null) {
+                    registerCcPool(poolInfo);
+                }
+            }
+
             Collection<ConnectionPoolMonitoringExtension> extensions = habitat
                 .getAllServices(ConnectionPoolMonitoringExtension.class);
             for (ConnectionPoolMonitoringExtension extension : extensions) {
                 extension.registerPool(poolInfo);
-            }
-            if (pool instanceof ConnectorConnectionPool) {
-                registerCcPool(poolInfo);
             }
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -94,7 +94,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     // in the past x sec. (x=idle-timeout)
     // The property will be set from system property -
     // com.sun.enterprise.connectors.ValidateAtmostEveryIdleSecs=true
-    private boolean validateAtmostEveryIdleSecs = false;
+    private boolean validateAtmostEveryIdleSecs;
 
     protected String resourceSelectionStrategyClass;
 
@@ -1242,7 +1242,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
 
     @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer("Pool [");
+        StringBuilder sb = new StringBuilder("Pool [");
         sb.append(poolInfo);
         sb.append("] PoolSize=");
         sb.append(dataStructure.getResourcesSize());
@@ -1624,8 +1624,8 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     @Override
     public PoolStatus getPoolStatus() {
         PoolStatus poolStatus = new PoolStatus(this.poolInfo);
-        int numFree = (this.poolInitialized) ? dataStructure.getFreeListSize() : 0;
-        int numUsed = (this.poolInitialized) ? dataStructure.getResourcesSize() - dataStructure.getFreeListSize() : 0;
+        int numFree = this.poolInitialized ? dataStructure.getFreeListSize() : 0;
+        int numUsed = this.poolInitialized ? dataStructure.getResourcesSize() - dataStructure.getFreeListSize() : 0;
         poolStatus.setNumConnFree(numFree);
         poolStatus.setNumConnUsed(numUsed);
         return poolStatus;

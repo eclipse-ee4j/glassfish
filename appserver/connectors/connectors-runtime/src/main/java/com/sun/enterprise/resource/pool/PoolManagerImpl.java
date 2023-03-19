@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -66,6 +66,7 @@ import org.jvnet.hk2.annotations.Service;
 
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 import static javax.transaction.xa.XAResource.TMSUCCESS;
 
@@ -101,19 +102,20 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
     public void createEmptyConnectionPool(PoolInfo poolInfo, PoolType pooltype, Hashtable env) throws PoolingException {
         // Create and initialise the connection pool
         createAndInitPool(poolInfo, pooltype, env);
-        if (listener != null) {
-            try {
-                listener.poolCreated(poolInfo);
-            } catch (Exception ex) {
-                LOG.log(WARNING, "Exception thrown on pool listener", ex);
-            }
-        }
 
         // notify mcf-create
         ManagedConnectionFactory managedConnectionFactory = ConnectorRegistry.getInstance().getManagedConnectionFactory(poolInfo);
         if (managedConnectionFactory != null) {
             if (managedConnectionFactory instanceof MCFLifecycleListener) {
                 ((MCFLifecycleListener) managedConnectionFactory).mcfCreated();
+            }
+        }
+
+        if (listener != null) {
+            try {
+                listener.poolCreated(poolInfo);
+            } catch (RuntimeException ex) {
+                LOG.log(SEVERE, "Listener " + listener + " failed for " + poolInfo, ex);
             }
         }
     }
@@ -240,7 +242,7 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
 
     private void addPool(ResourcePool pool) {
         LOG.log(FINE, "Adding pool {0} to pooltable", pool.getPoolInfo());
-        poolTable.put(pool.getPoolStatus().getPoolInfo(), pool);
+        poolTable.put(pool.getPoolInfo(), pool);
     }
 
     private ResourceManager getResourceManager(ResourceSpec resourceSpec) {
@@ -417,6 +419,7 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
      */
     @Override
     public void killPool(PoolInfo poolInfo) {
+        LOG.log(Level.FINEST, "killPool(poolInfo={0})", poolInfo);
         // Empty the pool and remove from poolTable
         ResourcePool pool = poolTable.get(poolInfo);
         if (pool != null) {
@@ -442,25 +445,22 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
     @Override
     public void killFreeConnectionsInPools() {
         LOG.fine("Killing all free connections in pools");
-
         for (ResourcePool pool : poolTable.values()) {
-            if (pool != null) {
-                PoolInfo poolInfo = pool.getPoolStatus().getPoolInfo();
-                try {
-                    if (poolInfo != null) {
-                        ResourcePool poolToKill = poolTable.get(poolInfo);
-                        if (poolToKill != null) {
-                            pool.emptyFreeConnectionsInPool();
-                        }
+            PoolInfo poolInfo = pool.getPoolStatus().getPoolInfo();
+            try {
+                if (poolInfo != null) {
+                    ResourcePool poolToKill = poolTable.get(poolInfo);
+                    if (poolToKill != null) {
+                        pool.emptyFreeConnectionsInPool();
+                    }
 
-                        if (LOG.isLoggable(FINE)) {
-                            LOG.fine("Now killing free connections in pool : " + poolInfo);
-                        }
-                    }
-                } catch (Exception e) {
                     if (LOG.isLoggable(FINE)) {
-                        LOG.fine("Error killing pool : " + poolInfo + " :: " + (e.getMessage() == null ? " " : e.getMessage()));
+                        LOG.fine("Now killing free connections in pool : " + poolInfo);
                     }
+                }
+            } catch (Exception e) {
+                if (LOG.isLoggable(FINE)) {
+                    LOG.fine("Error killing pool : " + poolInfo + " :: " + (e.getMessage() == null ? " " : e.getMessage()));
                 }
             }
         }
@@ -650,20 +650,12 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
         return result;
     }
 
-    /**
-     * Get connection pool status.
-     *
-     * @param poolInfo
-     * @return
-     */
     @Override
     public PoolStatus getPoolStatus(PoolInfo poolInfo) {
         ResourcePool pool = poolTable.get(poolInfo);
         if (pool != null) {
             return pool.getPoolStatus();
         }
-
-        // TODO log exception
         return null;
     }
 }

@@ -91,7 +91,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
      */
     public void createConnectorConnectionPool(ConnectorConnectionPool connectorPoolObj)
         throws ConnectorRuntimeException {
-
+        _logger.log(Level.FINEST, "createConnectorConnectionPool(connectorPoolObj={0})", connectorPoolObj);
         if (connectorPoolObj == null) {
             throw new ConnectorRuntimeException(I18N.getString("ccp_adm.wrong_params_for_create"));
         }
@@ -142,10 +142,10 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
      * @throws ConnectorRuntimeException if pool deletion operation fails
      */
 
-    public void deleteConnectorConnectionPool(PoolInfo poolInfo)
-            throws ConnectorRuntimeException {
-        deleteConnectorConnectionPool(poolInfo, false );
+    public void deleteConnectorConnectionPool(PoolInfo poolInfo) throws ConnectorRuntimeException {
+        deleteConnectorConnectionPool(poolInfo, false);
     }
+
 
     /**
      * Deletes connector Connection pool. Here check in made whether resources
@@ -159,10 +159,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
      *                 are present pool is deleted.
      * @throws ConnectorRuntimeException if pool deletion operation fails
      */
-
-    public void deleteConnectorConnectionPool(PoolInfo poolInfo, boolean cascade)
-            throws ConnectorRuntimeException {
-
+    public void deleteConnectorConnectionPool(PoolInfo poolInfo, boolean cascade) throws ConnectorRuntimeException {
         if (poolInfo == null) {
             _logger.log(Level.WARNING, "ccp_adm.null_pool_name");
             String i18nMsg = I18N.getString("ccp_adm.null_pool_name");
@@ -244,8 +241,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
      * @return true if the connection pool is healthy. false otherwise
      * @throws ResourceException if pool is not usable
      */
-    public boolean testConnectionPool(PoolInfo poolInfo)
-            throws ResourceException {
+    public boolean testConnectionPool(PoolInfo poolInfo) throws ResourceException {
         //dump(poolName); //TODO V3 no way to call dump ?
         ManagedConnection con = null;
         try {
@@ -321,9 +317,8 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
      * @return
      * @throws jakarta.resource.ResourceException
      */
-    protected ManagedConnection getManagedConnection(ManagedConnectionFactory mcf,
-            Subject defaultSubject, ConnectionRequestInfo cReqInfo) throws ResourceException {
-
+    protected ManagedConnection getManagedConnection(ManagedConnectionFactory mcf, Subject defaultSubject,
+        ConnectionRequestInfo cReqInfo) throws ResourceException {
         ManagedConnection mc = null;
 
         //Create the ManagedConnection
@@ -466,7 +461,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
       * @param poolInfo pool-name
       * @return boolean indicating whether the pool is referred or not
       */
-    private boolean isPoolReferredByResource(PoolInfo poolInfo){
+    private boolean isPoolReferredByResource(PoolInfo poolInfo) {
         ResourcesUtil resUtil = ResourcesUtil.createInstance();
         boolean isJdbcPoolReferredInServerInstance = false;
         Collection<ConnectorRuntimeExtension> extensions =
@@ -485,8 +480,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
      * @param prop
      * @return
      */
-    public String getPropertyValue(String prop,
-            ConnectorConnectionPool connectorConnectionPool) {
+    public String getPropertyValue(String prop, ConnectorConnectionPool connectorConnectionPool) {
         String result = null;
         ConnectorDescriptorInfo cdi = connectorConnectionPool.getConnectorDescriptorInfo();
 
@@ -570,13 +564,15 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
         }
     }
 
-   /**
-    * Create a ConnectorConnectionPool from information in memory
-    */
-   private ConnectorConnectionPool getOriginalConnectorConnectionPool(PoolInfo poolInfo) throws NamingException {
-       SimpleJndiName jndiNameForPool = ConnectorAdminServiceUtils.getReservePrefixedJNDINameForPool(poolInfo);
-       return _runtime.getResourceNamingService().lookup(poolInfo, jndiNameForPool);
+
+    /**
+     * Create a ConnectorConnectionPool from information in memory
+     */
+    private ConnectorConnectionPool getOriginalConnectorConnectionPool(PoolInfo poolInfo) throws NamingException {
+        SimpleJndiName jndiNameForPool = ConnectorAdminServiceUtils.getReservePrefixedJNDINameForPool(poolInfo);
+        return _runtime.getResourceNamingService().lookup(poolInfo, jndiNameForPool);
     }
+
 
     private ConnectorConnectionPool getConnectorConnectionPool(PoolInfo poolInfo)
         throws ConnectorRuntimeException, NamingException  {
@@ -697,7 +693,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
      * @throws ConnectorRuntimeException if creation/retrieval of MCF fails
      */
     public ManagedConnectionFactory obtainManagedConnectionFactory(PoolInfo poolInfo, Hashtable env)
-            throws ConnectorRuntimeException {
+        throws ConnectorRuntimeException {
         _logger.log(Level.FINE, "obtainManagedConnectionFactory(poolInfo={0}, env)", poolInfo);
         try {
             if (_registry.isMCFCreated(poolInfo)) {
@@ -902,8 +898,8 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
         return false;
     }
 
-    private void updateMCFAndPoolAttributes(ConnectorConnectionPool
-            ccp) throws ConnectorRuntimeException {
+
+    private void updateMCFAndPoolAttributes(ConnectorConnectionPool ccp) throws ConnectorRuntimeException {
         PoolInfo poolInfo = ccp.getPoolInfo();
         try {
             ConnectorConnectionPool origCcp =
@@ -1028,6 +1024,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
 
     }
 
+
     /**
      * unloads and kills the connector Connection pool without checking for
      * resources in domain.xml.
@@ -1036,9 +1033,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
      * @throws ConnectorRuntimeException if pool unload or kill operation fails
      */
 
-    private void unloadAndKillPool(PoolInfo poolInfo)
-            throws ConnectorRuntimeException {
-
+    private void unloadAndKillPool(PoolInfo poolInfo) throws ConnectorRuntimeException {
         killPool(poolInfo);
         boolean result = _registry.removeManagedConnectionFactory(poolInfo);
         if (!result) {
@@ -1099,9 +1094,10 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
         createConnectorConnectionPool(ccp);
     }
 
+
     /**
-     * Flush Connection pool by reinitializing the connections
-     * established in the pool.
+     * Flush Connection pool by reinitializing the connections established in the pool.
+     *
      * @param poolInfo
      * @throws com.sun.appserv.connectors.internal.api.ConnectorRuntimeException
      */
@@ -1118,6 +1114,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
         }
     }
 
+
     /**
      * Get a sql connection from the DataSource specified by the jdbcJndiName.
      * This API is intended to be used in the DAS. The motivation for having this
@@ -1129,14 +1126,13 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
      * This API will mitigate this need.
      *
      * @param resourceInfo the jndi name of the resource being used to get Connection from
-     *                 This resource can either be a pmf resource or a jdbc resource
-     * @param user     the user used to authenticate this request
+     *            This resource can either be a pmf resource or a jdbc resource
+     * @param user the user used to authenticate this request
      * @param password the password used to authenticate this request
      * @return a java.sql.Connection
      * @throws java.sql.SQLException in case of errors
      */
-    public Connection getConnection(ResourceInfo resourceInfo, String user, String password)
-            throws SQLException {
+    public Connection getConnection(ResourceInfo resourceInfo, String user, String password) throws SQLException {
         java.sql.Connection con = null;
         try {
             //DASResourcesUtil.setAdminConfigContext();
@@ -1182,6 +1178,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
         return con;
     }
 
+
     /**
      * Get a sql connection from the DataSource specified by the jdbcJndiName.
      * This API is intended to be used in the DAS. The motivation for having this
@@ -1193,12 +1190,11 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
      * This API will mitigate this need.
      *
      * @param resourceInfo the jndi name of the resource being used to get Connection from
-     *                 This resource can either be a pmf resource or a jdbc resource
+     *            This resource can either be a pmf resource or a jdbc resource
      * @return a java.sql.Connection
      * @throws java.sql.SQLException in case of errors
      */
-    public Connection getConnection(ResourceInfo resourceInfo)
-            throws SQLException {
+    public Connection getConnection(ResourceInfo resourceInfo) throws SQLException {
         java.sql.Connection con = null;
         try {
             //DASResourcesUtil.setAdminConfigContext();

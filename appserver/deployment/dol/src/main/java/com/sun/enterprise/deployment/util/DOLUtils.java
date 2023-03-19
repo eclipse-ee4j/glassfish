@@ -148,13 +148,6 @@ public class DOLUtils {
     public static final String INVALILD_DESCRIPTOR_SHORT = "AS-DEPLOYMENT-00120";
 
     @LogMessageInfo(
-        message = "DEP0001:Application validation fails for given application: {0}, and jndi-name: {1}",
-        level = "SEVERE",
-        cause = "A JNDI name used for a resource in the given app fails validation",
-        action = "This is an aggregated error. Have a look at previous log messages for more details about the errors")
-    public static final String APPLICATION_VALIDATION_FAILS = "enterprise.deployment.util.application.fail";
-
-    @LogMessageInfo(
         message = "DEP0002:Duplicate descriptor found for given jndi-name: {0}",
         level = "SEVERE",
         cause = "Two or more resource definitions use the same jndi-name in the same or related contexts",
@@ -179,7 +172,7 @@ public class DOLUtils {
     public static final String INVALID_NAMESPACE = "enterprise.deployment.util.application.invalid.namespace";
 
     @LogMessageInfo(
-        message = "DEP0005:Deployment failed due to the invalid scope defined for jndi-name: {0}",
+        message = "DEP0005:Deployment failed due to the invalid scope {0} defined for jndi-name: {1}",
         level = "SEVERE",
         cause = "Unknown",
         action = "Unknown")

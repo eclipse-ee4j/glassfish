@@ -15,7 +15,9 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.deployment;
+package com.sun.enterprise.deployment.util;
+
+import com.sun.enterprise.deployment.ResourceDescriptor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,33 +27,53 @@ import org.glassfish.api.naming.SimpleJndiName;
 
 /**
  * @author naman, date: 24/5/12
+ * @author David Matejcek 2023
  */
-public class CommonResourceValidator {
+class CommonResourceValidator {
 
     private final ResourceDescriptor descriptor;
     private final SimpleJndiName jndiName;
-    private final List<String> scope;
+    private final List<DuplicitDescriptor> descriptors;
 
-    public CommonResourceValidator(ResourceDescriptor descriptor, SimpleJndiName jndiName, String scope) {
+    CommonResourceValidator(ResourceDescriptor descriptor, SimpleJndiName jndiName, String scope) {
         this.descriptor = descriptor;
         this.jndiName = Objects.requireNonNull(jndiName, "jndiName");
-        this.scope = new ArrayList<>();
-        this.scope.add(scope);
+        this.descriptors = new ArrayList<>();
+        this.descriptors.add(new DuplicitDescriptor(descriptor, scope));
     }
 
-    public ResourceDescriptor getDescriptor() {
+    ResourceDescriptor getDescriptor() {
         return descriptor;
     }
 
-    public SimpleJndiName getJndiName() {
+    SimpleJndiName getJndiName() {
         return jndiName;
     }
 
-    public List<String> getScope() {
-        return scope;
+    /**
+     * @return descriptors with the same JNDI name and their scopes
+     */
+    List<DuplicitDescriptor> getDescriptors() {
+        return descriptors;
     }
 
-    public void addScope(String scope) {
-        this.scope.add(scope);
+    void addDuplicity(ResourceDescriptor duplicit, String scope) {
+        this.descriptors.add(new DuplicitDescriptor(duplicit, scope));
+    }
+
+
+    static class DuplicitDescriptor {
+        public final ResourceDescriptor descriptor;
+        public final String scope;
+
+        private DuplicitDescriptor(ResourceDescriptor descriptor, String scope) {
+            this.descriptor = descriptor;
+            this.scope = scope;
+        }
+
+        @Override
+        public String toString() {
+            return scope;
+        }
     }
 }

@@ -893,7 +893,7 @@ public abstract class EjbDescriptor extends EjbBeanDescriptor {
 
     @Override
     public final void visit(DescriptorVisitor aVisitor) {
-        LOG.log(Level.CONFIG, "public visit(aVisitor={0})", aVisitor);
+        LOG.log(Level.CONFIG, "visit(aVisitor={0})", aVisitor);
         if (aVisitor instanceof EjbVisitor) {
             // warn: don't inline, EjbVisitor.accept overlaps with ComponentVisitor.accept!
             EjbVisitor visitor = (EjbVisitor) aVisitor;

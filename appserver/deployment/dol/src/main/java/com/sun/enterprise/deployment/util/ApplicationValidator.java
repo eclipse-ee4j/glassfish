@@ -21,7 +21,6 @@ import com.sun.enterprise.deployment.AbstractConnectorResourceDescriptor;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 import com.sun.enterprise.deployment.BundleDescriptor;
-import com.sun.enterprise.deployment.CommonResourceValidator;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
@@ -36,6 +35,7 @@ import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.types.MessageDestinationReferencer;
+import com.sun.enterprise.deployment.util.CommonResourceValidator.DuplicitDescriptor;
 
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
@@ -134,8 +134,7 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
         accept((Application) descriptor);
 
         if (!validateResourceDescriptor()) {
-            LOG.log(Level.ERROR, DOLUtils.APPLICATION_VALIDATION_FAILS, application.getAppName(), inValidJndiName);
-            throw new IllegalStateException(
+            throw new IllegalArgumentException(
                 MessageFormat.format("Application validation fails for given application {0} for jndi-name {1}",
                     application.getAppName(), inValidJndiName));
         }
@@ -515,8 +514,7 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
      * @return true if there is another descriptor under the same name.
      */
     private boolean isConflictingDescriptor(SimpleJndiName name, ResourceDescriptor descriptor, String scope) {
-        // FIXME: lower level!
-        LOG.log(Level.INFO, "isConflictingDescriptor(name={0}, descriptor, scope={1})", name, scope);
+        LOG.log(Level.DEBUG, "isConflictingDescriptor(name={0}, descriptor, scope={1})", name, scope);
         if (descriptor == null) {
             return false;
         }
@@ -528,9 +526,10 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
         final ResourceDescriptor existingDescriptor = commonResourceValidator.getDescriptor();
         if (descriptor.equals(existingDescriptor)) {
             // Requires further processing based on scopes
-            commonResourceValidator.addScope(scope);
+            commonResourceValidator.addDuplicity(descriptor, scope);
             return false;
         }
+
         // Same JNDI names, but different descriptors
         LOG.log(Level.ERROR, DOLUtils.DUPLICATE_DESCRIPTOR, name);
         allUniqueResource = false;
@@ -542,27 +541,26 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
      * Compare descriptor at given scope is valid and unique.
      */
     private boolean compareDescriptors() {
-
         List<String> appLevelScopes = validNameSpaceDetails.get(APP_KEYS);
         List<String> ebdLevelScopes = validNameSpaceDetails.get(EJBBUNDLE_KEYS);
-        for (Entry<SimpleJndiName, CommonResourceValidator> descriptor : allResourceDescriptors.entrySet()) {
-            CommonResourceValidator commonResourceValidator = descriptor.getValue();
-            List<String> scopes = commonResourceValidator.getScope();
-            SimpleJndiName jndiName = commonResourceValidator.getJndiName();
+        for (Entry<SimpleJndiName, CommonResourceValidator> entry : allResourceDescriptors.entrySet()) {
+            CommonResourceValidator validator = entry.getValue();
+            SimpleJndiName jndiName = validator.getJndiName();
+            List<DuplicitDescriptor> possibleConflicts = validator.getDescriptors();
 
             if (jndiName.contains(JNDI_COMP)) {
-                for (String scope : scopes) {
+                for (DuplicitDescriptor candidate : possibleConflicts) {
                     for (String appLevelScope : appLevelScopes) {
-                        if (scope.equals(appLevelScope)) {
+                        if (candidate.scope.equals(appLevelScope)) {
                             inValidJndiName = jndiName;
-                            LOG.log(Level.ERROR, DOLUtils.INVALID_JNDI_SCOPE, jndiName);
+                            LOG.log(Level.ERROR, DOLUtils.INVALID_JNDI_SCOPE, candidate, jndiName);
                             return false;
                         }
                     }
                     for (String ebdLevelScope : ebdLevelScopes) {
-                        if (scope.equals(ebdLevelScope)) {
+                        if (candidate.scope.equals(ebdLevelScope)) {
                             inValidJndiName = jndiName;
-                            LOG.log(Level.ERROR, DOLUtils.INVALID_JNDI_SCOPE, jndiName);
+                            LOG.log(Level.ERROR, DOLUtils.INVALID_JNDI_SCOPE, candidate, jndiName);
                             return false;
                         }
                     }
@@ -570,45 +568,44 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
             }
 
             if (jndiName.contains(JNDI_MODULE)) {
-                for (String scope : scopes) {
+                for (DuplicitDescriptor candidate : possibleConflicts) {
                     for (String appLevelScope : appLevelScopes) {
-                        if (scope.equals(appLevelScope)) {
+                        if (candidate.scope.equals(appLevelScope)) {
                             inValidJndiName = jndiName;
-                            LOG.log(Level.ERROR, DOLUtils.INVALID_JNDI_SCOPE, jndiName);
+                            LOG.log(Level.ERROR, DOLUtils.INVALID_JNDI_SCOPE, candidate, jndiName);
                             return false;
                         }
                     }
                 }
             }
 
-            if (scopes.size() > 1) {
-                if (jndiName.contains(JNDI_COMP)) {
-                    if (!compareVectorForComp(scopes, jndiName)) {
+            if (possibleConflicts.size() <= 1) {
+                continue;
+            }
+            if (jndiName.contains(JNDI_COMP)) {
+                if (!compareVectorForComp(possibleConflicts, jndiName)) {
+                    return false;
+                }
+            } else if (jndiName.contains(JNDI_MODULE)) {
+                if (!compareVectorForModule(possibleConflicts, jndiName)) {
+                    return false;
+                }
+            } else if (jndiName.contains(JNDI_APP)) {
+                if (!compareVectorForApp(possibleConflicts, jndiName)) {
+                    return false;
+                }
+            } else {
+                try {
+                    InitialContext ic = new InitialContext();
+                    Object lookup = ic.lookup(jndiName.toString());
+                    if (lookup != null) {
+                        inValidJndiName = jndiName;
+                        LOG.log(Level.ERROR, DOLUtils.JNDI_LOOKUP_FAILED, jndiName);
                         return false;
                     }
-                } else if (jndiName.contains(JNDI_MODULE)) {
-                    if (!compareVectorForModule(scopes, jndiName)) {
-                        return false;
-                    }
-                } else if (jndiName.contains(JNDI_APP)) {
-                    if (!compareVectorForApp(scopes, jndiName)) {
-                        return false;
-                    }
-                } else {
-                    try {
-                        InitialContext ic = new InitialContext();
-                        Object lookup = ic.lookup(jndiName.toString());
-                        if (lookup != null) {
-                            inValidJndiName = jndiName;
-                            LOG.log(Level.ERROR, DOLUtils.JNDI_LOOKUP_FAILED, jndiName);
-                            return false;
-                        }
-                    } catch (NamingException e) {
-                        /*
-                         Do nothing, this is expected.
-                         A failed lookup means there's no conflict with a resource defined on the server.
-                        */
-                    }
+                } catch (NamingException e) {
+                    // Do nothing, this is expected. Failed lookup means there's no conflict
+                    // with a resource defined on the server.
                 }
             }
         }
@@ -618,20 +615,18 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
     /**
      * Method to validate jndi name for app namespace
      */
-    private boolean compareVectorForApp(List<String> scopes, SimpleJndiName jndiName) {
-        for (int j = 0; j < scopes.size(); j++) {
-            String firstElement = scopes.get(j);
-            if (firstElement.contains("#")) {
-                firstElement = firstElement.substring(0, firstElement.indexOf("#"));
-            }
-            for (int i = j + 1; i < scopes.size(); i++) {
-                String otherElements = scopes.get(i);
-                if (otherElements.contains("#")) {
-                    otherElements = otherElements.substring(0, otherElements.indexOf("#"));
-                }
-                if (firstElement.equals(otherElements)) {
+    private boolean compareVectorForApp(List<DuplicitDescriptor> possibleConflicts, SimpleJndiName jndiName) {
+        for (int j = 0; j < possibleConflicts.size(); j++) {
+            final DuplicitDescriptor candidate1 = possibleConflicts.get(j);
+            final String scope1 = getFirstScopeSegment(candidate1.scope);
+            for (int i = j + 1; i < possibleConflicts.size(); i++) {
+                final DuplicitDescriptor candidate2 = possibleConflicts.get(i);
+                final String scope2 = getFirstScopeSegment(candidate2.scope);
+                if (scope1.equals(scope2) && candidate1.descriptor != candidate2.descriptor) {
                     inValidJndiName = jndiName;
-                    LOG.log(Level.ERROR, DOLUtils.INVALID_NAMESPACE, jndiName, application.getAppName());
+                    LOG.log(Level.WARNING,
+                        "JNDI name {0} is declared by multiple modules of the application {1}: {2}, {3}", jndiName,
+                        application.getAppName(), candidate1.scope, candidate2.scope);
                 }
             }
         }
@@ -642,28 +637,18 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
     /**
      * Method to validate jndi name for module namespace
      */
-    private boolean compareVectorForModule(List<String> scopes, SimpleJndiName jndiName) {
-        if (!compareVectorForApp(scopes, jndiName)) {
+    private boolean compareVectorForModule(List<DuplicitDescriptor> possibleConflicts, SimpleJndiName jndiName) {
+        if (!compareVectorForApp(possibleConflicts, jndiName)) {
             return false;
         }
 
-        for (int j = 0; j < scopes.size(); j++) {
-            String firstElement = scopes.get(0);
-            if (firstElement.contains("#")) {
-                firstElement = firstElement.substring(firstElement.indexOf("#") + 1, firstElement.length());
-            }
-            if (firstElement.contains("#")) {
-                firstElement = firstElement.substring(0, firstElement.indexOf("#"));
-            }
-            for (int i = j + 1; i < scopes.size(); i++) {
-                String otherElements = scopes.get(i);
-                if (otherElements.contains("#")) {
-                    otherElements = otherElements.substring(otherElements.indexOf("#") + 1, otherElements.length());
-                }
-                if (otherElements.contains("#")) {
-                    otherElements = otherElements.substring(0, otherElements.indexOf("#"));
-                }
-                if (firstElement.equals(otherElements)) {
+        for (int j = 0; j < possibleConflicts.size(); j++) {
+            DuplicitDescriptor candidate1 = possibleConflicts.get(j);
+            String scope1 = getFirstScopeSegment(removeFirstScopeSegment(candidate1.scope));
+            for (int i = j + 1; i < possibleConflicts.size(); i++) {
+                DuplicitDescriptor candidate2 = possibleConflicts.get(i);
+                String scope2 = getFirstScopeSegment(removeFirstScopeSegment(candidate1.scope));
+                if (scope1.equals(scope2) && candidate1.descriptor != candidate2.descriptor) {
                     inValidJndiName = jndiName;
                     LOG.log(Level.ERROR, INVALID_NAMESPACE, jndiName, application.getAppName());
                 }
@@ -676,28 +661,18 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
     /**
      * Method to validate jndi name for comp namespace
      */
-    private boolean compareVectorForComp(List<String> scopes, SimpleJndiName jndiName) {
-        if (!compareVectorForModule(scopes, jndiName)) {
+    private boolean compareVectorForComp(List<DuplicitDescriptor> possibleConflicts, SimpleJndiName jndiName) {
+        if (!compareVectorForModule(possibleConflicts, jndiName)) {
             return false;
         }
 
-        for (int j = 0; j < scopes.size(); j++) {
-            String firstElement = scopes.get(0);
-            if (firstElement.contains("#")) {
-                firstElement = firstElement.substring(firstElement.lastIndexOf("#") + 1, firstElement.length());
-            }
-            if (firstElement.contains("#")) {
-                firstElement = firstElement.substring(firstElement.lastIndexOf("#") + 1, firstElement.length());
-            }
-            for (int i = j + 1; i < scopes.size(); i++) {
-                String otherElements = scopes.get(i);
-                if (otherElements.contains("#")) {
-                    otherElements = otherElements.substring(otherElements.lastIndexOf("#") + 1, otherElements.length());
-                }
-                if (otherElements.contains("#")) {
-                    otherElements = otherElements.substring(otherElements.lastIndexOf("#") + 1, otherElements.length());
-                }
-                if (firstElement.equals(otherElements)) {
+        for (int j = 0; j < possibleConflicts.size(); j++) {
+            DuplicitDescriptor candidate1 = possibleConflicts.get(j);
+            String scope1 = getLastScopeSegment(getLastScopeSegment(candidate1.scope));
+            for (int i = j + 1; i < possibleConflicts.size(); i++) {
+                DuplicitDescriptor candidate2 = possibleConflicts.get(i);
+                String scope2 = getLastScopeSegment(getLastScopeSegment(candidate2.scope));
+                if (scope1.equals(scope2) && candidate1.descriptor != candidate2.descriptor) {
                     inValidJndiName = jndiName;
                     LOG.log(Level.ERROR, INVALID_NAMESPACE, jndiName, application.getAppName());
                     return false;
@@ -705,5 +680,23 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
             }
         }
         return true;
+    }
+
+
+    private String getFirstScopeSegment(String scope) {
+        final int index = scope.indexOf('#');
+        return index > 0 ? scope.substring(0, index) : scope;
+    }
+
+
+    private String removeFirstScopeSegment(String scope) {
+        final int index = scope.indexOf('#');
+        return index > 0 ? scope.substring(index + 1) : scope;
+    }
+
+
+    private String getLastScopeSegment(String scope) {
+        int index = scope.lastIndexOf('#') + 1;
+        return index > 0 ? scope.substring(index) : scope;
     }
 }

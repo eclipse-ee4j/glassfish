@@ -157,7 +157,7 @@ standalone Resource Adapter Archive (RAR) modules or included in Jakarta EE
 application archives. As RARs, they are deployed like other Jakarta EE
 components. {productName} includes evaluation resource adapters that
 integrate with popular EIS.
-* JavaMail - Through the JavaMail API, applications can connect to a
+* Jakarta Mail - Through the Jakarta Mail API, applications can connect to a
 Simple Mail Transport Protocol (SMTP) server to send email and to an
 IMAP or POP3 server to receive email.
 

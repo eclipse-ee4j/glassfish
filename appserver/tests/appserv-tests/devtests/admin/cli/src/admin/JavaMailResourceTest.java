@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,9 +38,9 @@ public class JavaMailResourceTest extends AdminBaseDevTest {
     private static final String LIST_RESOURCE_REF = "list-resource-refs";
     private static final String LIST_JNDI_ENTRIES = "list-jndi-entries";
 
-    private static final String DELETE_MAIL_RESOURCE = "delete-javamail-resource";
-    private static final String CREATE_MAIL_RESOURCE = "create-javamail-resource";
-    private static final String LIST_MAIL_RESOURCES = "list-javamail-resources";
+    private static final String DELETE_MAIL_RESOURCE = "delete-mail-resource";
+    private static final String CREATE_MAIL_RESOURCE = "create-mail-resource";
+    private static final String LIST_MAIL_RESOURCES = "list-mail-resources";
     private static final String TARGET_OPTION = "--target";
 
     private static final String FROM_ADDRESS_OPTION = "--fromaddress";

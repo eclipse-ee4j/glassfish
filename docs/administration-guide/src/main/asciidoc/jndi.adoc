@@ -129,7 +129,7 @@ Table 18-1 JNDI Lookup Names and Their Associated References
 
 |`java:comp/UserTransaction` |UserTransaction references
 
-|`java:comp/env/mail` |JavaMail Session Connection Factories
+|`java:comp/env/mail` |Jakarta Mail Session Connection Factories
 
 |`java:comp/env/url` |URL Connection Factories
 

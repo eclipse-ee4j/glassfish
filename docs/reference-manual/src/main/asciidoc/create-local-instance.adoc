@@ -1,7 +1,7 @@
 type=page
 status=published
 title=create-local-instance
-next=create-managed-executor-service.html
+next=create-mail-resource.html
 prev=create-lifecycle-module.html
 ~~~~~~
 

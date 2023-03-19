@@ -721,7 +721,7 @@ Table 1-2 {productName} Full Profile and Web Profile Features
 
 |JMS 2.0 |X |-
 
-|JavaMail 1.6 |X |-
+|Jakarta Mail 2.1 |X |-
 
 |JACC 1.5 |X |-
 

@@ -1,7 +1,7 @@
 type=page
 status=published
 title=Administering the Object Request Broker (ORB)
-next=javamail.html
+next=jakarta-mail.html
 prev=concurrent.html
 ~~~~~~
 

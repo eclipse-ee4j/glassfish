@@ -2,7 +2,7 @@ type=page
 status=published
 title=delete-managed-executor-service
 next=delete-managed-scheduled-executor-service.html
-prev=delete-local-instance.html
+prev=delete-mail-resource.html
 ~~~~~~
 
 = delete-managed-executor-service

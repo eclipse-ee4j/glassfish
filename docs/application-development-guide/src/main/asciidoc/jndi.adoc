@@ -521,7 +521,7 @@ Application Deployment Guide.
 
 The rest of this section uses an example of a JDBC resource lookup to
 describe how to reference resource factories. The same principle is
-applicable to all resources (such as JMS destinations, JavaMail
+applicable to all resources (such as JMS destinations, Jakarta Mail
 sessions, and so on).
 
 The `@Resource` annotation in the application code looks like this:

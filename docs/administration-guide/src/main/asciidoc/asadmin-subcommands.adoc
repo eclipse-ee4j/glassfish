@@ -17,7 +17,7 @@ this release of the {productName} 7 software.
 * <<Connectivity Subcommands>>
 * <<Domain Subcommands>>
 * <<Internet Connectivity Subcommands>>
-* <<JavaMail Subcommands>>
+* <<Jakarta Mail Subcommands>>
 * <<JMS Subcommands>>
 * <<JNDI Subcommands>>
 * <<JVM Subcommands>>
@@ -502,22 +502,22 @@ xref:reference-manual.adoc#list-virtual-servers[`list-virtual-servers`]::
   procedural information in this guide, see xref:http_https.adoc#to-list-virtual-servers[To
   List Virtual Servers].
 
-[[javamail-subcommands]]
+[[jakarta-mail-subcommands]]
 
-=== JavaMail Subcommands
+=== Jakarta Mail Subcommands
 
-xref:reference-manual.adoc#create-javamail-resource[`create-javamail-resource`]::
-  Creates a JavaMail session resource. Supported in remote mode only.
+xref:reference-manual.adoc#create-mail-resource[`create-mail-resource`]::
+  Creates a Jakarta Mail session resource. Supported in remote mode only.
   For procedural information in this guide, see
-  xref:javamail.adoc#to-create-a-javamail-resource[To Create a JavaMail Resource].
-xref:reference-manual.adoc#delete-javamail-resource[`delete-javamail-resource`]::
-  Deletes a JavaMail session resource. Supported in remote mode only.
+  xref:jakarta-mail.adoc#to-create-a-jakarta-mail-resource[To Create a Jakarta Mail Resource].
+xref:reference-manual.adoc#delete-mail-resource[`delete-mail-resource`]::
+  Deletes a Jakarta Mail session resource. Supported in remote mode only.
   For procedural information in this guide, see
-  xref:javamail.adoc#to-delete-a-javamail-resource[To Delete a JavaMail Resource].
-xref:reference-manual.adoc#list-javamail-resources[`list-javamail-resources`]::
-  Creates JavaMail session resources. Supported in remote mode only. For
-  procedural information in this guide, see xref:javamail.adoc#to-list-javamail-resources[To
-  List JavaMail Resources].
+  xref:jakarta-mail.adoc#to-delete-a-jakarta-mail-resource[To Delete a Jakarta Mail Resource].
+xref:reference-manual.adoc#list-mail-resources[`list-mail-resources`]::
+  Creates Jakarta Mail session resources. Supported in remote mode only. For
+  procedural information in this guide, see xref:jakarta-mail.adoc#to-list-mail-resources[To
+  List Jakarta Mail Resources].
 
 [[jms-subcommands]]
 

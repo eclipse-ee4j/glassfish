@@ -1,6 +1,6 @@
 title=Administering the Java Message Service (JMS)
 next=jndi.adoc
-prev=javamail.adoc
+prev=jakarta-mail.adoc
 ~~~~~~
 
 = Administering the Java Message Service (JMS)

@@ -184,9 +184,9 @@ Internet Connectivity::
 Object Request Broker (ORB)::
   An initial configuration task might involve creating an IIOP listener.
   See xref:orb.adoc#administering-the-object-request-broker-orb[Administering the Object Request Broker (ORB)].
-JavaMail Service::
-  An initial configuration task might involve creating a JavaMail
-  resource. See xref:javamail.adoc#administering-the-javamail-service[Administering the JavaMail
+Jakarta Mail Service::
+  An initial configuration task might involve creating a Jakarta Mail
+  resource. See xref:jakarta-mail.adoc#administering-the-jakarta-mail-service[Administering the Jakarta Mail
   Service].
 Java Message Service (JMS)::
   Initial configuration tasks might include creating a physical

@@ -137,7 +137,7 @@ be correctly rolled back or committed.
 
 ** JDBC DataSource
 ** Java Message Service (JMS) `ConnectionFactory` and `Destination` objects
-** JavaMail Session
+** Jakarta Mail Session
 ** Connection Factory
 ** Administered Objects
 ** Web service reference +

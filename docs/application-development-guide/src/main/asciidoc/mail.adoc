@@ -52,7 +52,7 @@ layer using the RFC822 and MIME internet standards.
 message data and to handle commands intended to interact with that data.
 
 For more information, see
-"xref:administration-guide.adoc#administering-the-javamail-service[Administering the Jakarta Mail Service]"
+"xref:administration-guide.adoc#administering-the-jakarta-mail-service[Administering the Jakarta Mail Service]"
 in {productName} Administration Guide
 and the Jakarta Mail specification at
 `https://jakarta.ee/specifications/mail`.

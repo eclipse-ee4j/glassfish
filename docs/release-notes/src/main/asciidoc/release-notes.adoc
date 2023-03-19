@@ -680,7 +680,7 @@ In the Web Profile, a servlet or EJB component cannot be a web service
 endpoint. The `sun-web.xml` and `sun-ejb-jar.xml` elements that are
 related to web services are ignored.
 * Message security
-* JavaMail resources
+* Jakarta Mail resources
 
 Connector modules that use only outbound communication features and
 work-management that does not involve inbound communication features are

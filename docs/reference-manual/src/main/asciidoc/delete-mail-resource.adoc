@@ -1,29 +1,29 @@
 type=page
 status=published
-title=delete-javamail-resource
-next=delete-jdbc-connection-pool.html
-prev=delete-jacc-provider.html
+title=delete-mail-resource
+next=delete-managed-executor-service.html
+prev=delete-local-instance.html
 ~~~~~~
 
-= delete-javamail-resource
+= delete-mail-resource
 
-[[delete-javamail-resource]]
+[[delete-mail-resource]]
 
-== delete-javamail-resource
+== delete-mail-resource
 
-Removes a JavaMail session resource
+Removes a Jakarta Mail session resource
 
 === Synopsis
 
 [source]
 ----
-asadmin [asadmin-options] delete-javamail-resource [--help]
+asadmin [asadmin-options] delete-mail-resource [--help]
 [--target target] jndi_name
 ----
 
 === Description
 
-The `delete-javamail-resource` subcommand removes the specified JavaMail
+The `delete-mail-resource` subcommand removes the specified Jakarta Mail
 session resource. Ensure that you remove all references to this resource
 before running this subcommand.
 
@@ -39,7 +39,7 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   This option specifies the target from which you are deleting the
-  JavaMail session resource. Valid values are:
+  Jakarta Mail session resource. Valid values are:
 
   `server`;;
     Deletes the resource from the default server instance. This is the
@@ -54,21 +54,21 @@ asadmin-options::
 === Operands
 
 jndi_name::
-  The JNDI name of the JavaMail session resource to be deleted.
+  The JNDI name of the Jakarta Mail session resource to be deleted.
 
 === Examples
 
 [[sthref774]]
 
-==== Example 1   Deleting a JavaMail Resource
+==== Example 1   Deleting a Jakarta Mail Resource
 
-This example deletes the JavaMail session resource named
+This example deletes the Jakarta Mail session resource named
 `mail/MyMailSession`.
 
 [source]
 ----
-asadmin> delete-javamail-resource mail/MyMailSession
-Command delete-javamail-resource executed successfully.
+asadmin> delete-mail-resource mail/MyMailSession
+Command delete-mail-resource executed successfully.
 ----
 
 === Exit Status
@@ -82,7 +82,7 @@ Command delete-javamail-resource executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-xref:create-javamail-resource.adoc#create-javamail-resource[`create-javamail-resource`(1)],
-xref:list-javamail-resources.adoc#list-javamail-resources[`list-javamail-resources`(1)]
+xref:create-mail-resource.adoc#create-mail-resource[`create-mail-resource`(1)],
+xref:list-mail-resources.adoc#list-mail-resources[`list-mail-resources`(1)]
 
 

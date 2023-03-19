@@ -785,7 +785,7 @@ correctly rolled back or committed.
 
 |Java Message Service (JMS) ConnectionFactory, Destination |No
 
-|JavaMail Session |No
+|Jakarta Mail Session |No
 
 |Connection Factory |No
 

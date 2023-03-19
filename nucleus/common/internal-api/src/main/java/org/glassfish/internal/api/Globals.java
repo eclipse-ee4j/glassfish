@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,16 +17,16 @@
 
 package org.glassfish.internal.api;
 
+import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.single.StaticModulesRegistry;
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.common.util.Constants;
-import org.glassfish.hk2.api.Rank;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.hk2.runlevel.RunLevel;
-import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.runlevel.RunLevel;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Very sensitive class, anything stored here cannot be garbage collected
@@ -41,7 +42,6 @@ public class Globals {
     private static Object staticLock = new Object();
 
     // dochez : remove this once we can get rid of ConfigBeanUtilities class
-    @SuppressWarnings("unused")
     @Inject
     private ConfigBeansUtilities utilities;
 
@@ -96,7 +96,6 @@ public class Globals {
     @Service
     @RunLevel(value=(InitRunLevel.VAL - 1), mode=RunLevel.RUNLEVEL_MODE_NON_VALIDATING)
     public static class GlobalsInitializer {
-        @SuppressWarnings("unused")
         @Inject
         private Globals globals;
     }

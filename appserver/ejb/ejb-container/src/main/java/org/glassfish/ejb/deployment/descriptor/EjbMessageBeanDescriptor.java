@@ -29,6 +29,7 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -40,8 +41,7 @@ import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.ejb.deployment.EjbTagNames;
 
 /**
- * Objects of this kind represent the deployment information describing a
- * single message driven Ejb.
+ * Objects of this kind represent the deployment information describing a single message driven Ejb.
  */
 public final class EjbMessageBeanDescriptor extends EjbDescriptor
     implements MessageDestinationReferencer, com.sun.enterprise.deployment.EjbMessageBeanDescriptor {
@@ -119,14 +119,16 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
 
     @Override
     public void setContainerTransactionFor(MethodDescriptor methodDescriptor, ContainerTransaction containerTransaction) {
-        Vector<ContainerTransaction> allowedTxAttributes = getPossibleTransactionAttributes();
-        if (allowedTxAttributes.contains(containerTransaction)) {
+        String txType = containerTransaction.getTransactionAttribute();
+        if (ContainerTransaction.REQUIRED.equals(txType) || ContainerTransaction.NOT_SUPPORTED.equals(txType)) {
             super.setContainerTransactionFor(methodDescriptor, containerTransaction);
-        } else {
-            throw new IllegalArgumentException(
-                localStrings.getLocalString("enterprise.deployment.msgbeantxattrnotvalid",
-                    "Invalid transaction attribute for message-driven bean"));
+            return;
         }
+        if (isTimedObject() && ContainerTransaction.REQUIRES_NEW.equals(txType)) {
+            super.setContainerTransactionFor(methodDescriptor, containerTransaction);
+            return;
+        }
+        throw new IllegalArgumentException("Invalid transaction attribute for message-driven bean: " + txType);
     }
 
 
@@ -200,18 +202,6 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
             throw nsme;
         }
         return methods.toArray(Method[]::new);
-    }
-
-
-    @Override
-    public Vector<ContainerTransaction> getPossibleTransactionAttributes() {
-        Vector<ContainerTransaction> txAttributes = new Vector<>();
-        txAttributes.add(new ContainerTransaction(ContainerTransaction.REQUIRED, ""));
-        txAttributes.add(new ContainerTransaction(ContainerTransaction.NOT_SUPPORTED, ""));
-        if (isTimedObject()) {
-            txAttributes.add(new ContainerTransaction(ContainerTransaction.REQUIRES_NEW, ""));
-        }
-        return txAttributes;
     }
 
 
@@ -524,6 +514,7 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
     }
 
 
+    // Reflection in EjbNode
     public void setDurableSubscriptionName(String durableSubscriptionName) {
         this.durableSubscriptionName = durableSubscriptionName;
     }
@@ -538,6 +529,7 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
      * Connection factory is optional. If set to null,
      * hasConnectionFactory will return false.
      */
+    // Reflection in EjbNode
     public void setConnectionFactoryName(String connectionFactory) {
         connectionFactoryName = connectionFactory;
     }
@@ -560,12 +552,6 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
     }
 
 
-    /**
-     * resource-adapter-mid is optional. It is set when
-     * a resource adapter is responsible for delivering
-     * messages to the message-driven bean. If not set,
-     * hasResourceAdapterMid will return false.
-     */
     @Override
     public void setResourceAdapterMid(String resourceAdapterMid) {
         this.resourceAdapterMid = resourceAdapterMid;
@@ -573,13 +559,13 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
 
 
     public boolean hasResourceAdapterMid() {
-        return (resourceAdapterMid != null);
+        return resourceAdapterMid != null;
     }
 
 
     @Override
-    public Vector<Method> getMethods(ClassLoader classLoader) {
-        return new Vector<>();
+    public List<Method> getMethods() {
+        return Collections.emptyList();
     }
 
 

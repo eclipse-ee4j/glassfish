@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -73,11 +73,11 @@ public class TransactionAttributeHandler extends AbstractAttributeHandler implem
 
             Method annMethod = (Method) ainfo.getAnnotatedElement();
             Set<MethodDescriptor> txBusMethods = ejbDesc.getTxBusinessMethodDescriptors();
-            for (MethodDescriptor next : txBusMethods) {
-                Method m = next.getMethod(ejbDesc);
-                if (TypeUtil.sameMethodSignature(m, annMethod) && ejbDesc.getContainerTransactionFor(next) == null) {
+            for (MethodDescriptor md : txBusMethods) {
+                Method method = md.getMethod(ejbDesc);
+                if (TypeUtil.sameMethodSignature(method, annMethod) && ejbDesc.getContainerTransactionFor(md) == null) {
                     // override by xml
-                    ejbDesc.setContainerTransactionFor(next, containerTransaction);
+                    ejbDesc.setContainerTransactionFor(md, containerTransaction);
                 }
             }
 
@@ -104,15 +104,15 @@ public class TransactionAttributeHandler extends AbstractAttributeHandler implem
                     }
                     // stateful lifecycle callback txn attr type EJB spec
                     if (sd.isStateful() && containerTransaction != null) {
-                        String tattr = containerTransaction.getTransactionAttribute();
-                        if (tattr != null && !tattr.equals(ContainerTransaction.REQUIRES_NEW)
-                            && !tattr.equals(ContainerTransaction.NOT_SUPPORTED)) {
+                        String txAttr = containerTransaction.getTransactionAttribute();
+                        if (txAttr != null && !txAttr.equals(ContainerTransaction.REQUIRES_NEW)
+                            && !txAttr.equals(ContainerTransaction.NOT_SUPPORTED)) {
                             logger.log(Level.WARNING,
                                 MessageFormat.format(
                                     "Stateful session bean {0} lifecycle callback method {1} has transaction "
                                         + "attribute {2} with container-managed transaction demarcation. "
                                         + "The transaction attribute should be either REQUIRES_NEW or NOT_SUPPORTED",
-                                    sd.getName(), m.getName(), tattr));
+                                    sd.getName(), m.getName(), txAttr));
                         }
                     }
                     // override by xml

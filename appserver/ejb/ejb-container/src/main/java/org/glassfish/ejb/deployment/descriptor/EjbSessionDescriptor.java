@@ -18,7 +18,6 @@
 package org.glassfish.ejb.deployment.descriptor;
 
 import com.sun.enterprise.deployment.Application;
-import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
 import com.sun.enterprise.deployment.MethodDescriptor;
 import com.sun.enterprise.deployment.util.TypeUtil;
@@ -34,14 +33,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
 import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.Descriptor;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.Globals;
-import org.glassfish.internal.deployment.AnnotationTypesProvider;
 
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_GLOBAL;
 
@@ -398,36 +393,6 @@ public class EjbSessionDescriptor extends EjbDescriptor implements com.sun.enter
 
     public boolean hasPrePassivateMethod() {
         return !getPrePassivateDescriptors().isEmpty();
-    }
-
-
-    @Override
-    public Vector<ContainerTransaction> getPossibleTransactionAttributes() {
-        // Session beans that implement SessionSynchronization interface
-        // have a limited set of possible transaction attributes.
-        if (isStateful()) {
-            try {
-                EjbBundleDescriptor ejbBundle = getEjbBundleDescriptor();
-                ClassLoader classLoader = ejbBundle.getClassLoader();
-                Class<?> ejbClass = classLoader.loadClass(getEjbClassName());
-                ServiceLocator serviceLocator = Globals.getDefaultHabitat();
-                AnnotationTypesProvider provider = serviceLocator.getService(AnnotationTypesProvider.class, "EJB");
-                if (provider != null) {
-                    Class<?> sessionSynchClass = provider.getType("jakarta.ejb.SessionSynchronization");
-                    if (sessionSynchClass.isAssignableFrom(ejbClass)) {
-                        Vector<ContainerTransaction> txAttributes = new Vector<>();
-                        txAttributes.add(new ContainerTransaction(ContainerTransaction.REQUIRED, ""));
-                        txAttributes.add(new ContainerTransaction(ContainerTransaction.REQUIRES_NEW, ""));
-                        txAttributes.add(new ContainerTransaction(ContainerTransaction.MANDATORY, ""));
-                        return txAttributes;
-                    }
-                }
-            } catch (Exception e) {
-                // Don't treat this as a fatal error.
-                // Just return full set of possible transaction attributes.
-            }
-        }
-        return super.getPossibleTransactionAttributes();
     }
 
 

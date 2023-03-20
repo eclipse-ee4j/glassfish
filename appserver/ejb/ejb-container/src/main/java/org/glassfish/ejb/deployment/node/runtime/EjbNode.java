@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -53,8 +53,7 @@ import org.w3c.dom.Node;
 /**
  * This node handles all runtime information for ejbs
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
 public class EjbNode extends DeploymentDescriptorNode<EjbDescriptor> {
 
@@ -88,12 +87,7 @@ public class EjbNode extends DeploymentDescriptorNode<EjbDescriptor> {
         return descriptor;
     }
 
-    /**
-     * receives notification of the value for a particular tag
-     *
-     * @param element the xml element
-     * @param value it's associated value
-     */
+
     @Override
     public void setElementValue(XMLElement element, String value) {
         if (RuntimeTagNames.EJB_NAME.equals(element.getQName())) {
@@ -152,15 +146,10 @@ public class EjbNode extends DeploymentDescriptorNode<EjbDescriptor> {
         }
     }
 
-    /**
-     * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value.
-     *
-     * @return the map with the element name as a key, the setter method as a value
-     */
+
     @Override
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
 
         table.put(RuntimeTagNames.JNDI_NAME, "setJndiName");
 
@@ -177,6 +166,7 @@ public class EjbNode extends DeploymentDescriptorNode<EjbDescriptor> {
         return table;
     }
 
+
     @Override
     public boolean endElement(XMLElement element) {
         if(RuntimeTagNames.EJB.equals(element.getQName())) {
@@ -185,12 +175,7 @@ public class EjbNode extends DeploymentDescriptorNode<EjbDescriptor> {
         return super.endElement(element);
     }
 
-    /**
-     * Adds  a new DOL descriptor instance to the descriptor instance associated with
-     * this XMLNode
-     *
-     * @param newDescriptor the new descriptor
-     */
+
     @Override
     public void addDescriptor(Object newDescriptor) {
         if (newDescriptor instanceof MdbConnectionFactoryDescriptor) {
@@ -209,14 +194,7 @@ public class EjbNode extends DeploymentDescriptorNode<EjbDescriptor> {
         }
     }
 
-    /**
-     * write the descriptor class to a DOM tree and return it
-     *
-     * @param parent node for the DOM tree
-     * @param node name for the descriptor
-     * @param the descriptor to write
-     * @return the DOM tree top node
-     */
+
     @Override
     public Node writeDescriptor(Node parent, String nodeName, EjbDescriptor ejbDescriptor) {
         Element ejbNode = (Element)super.writeDescriptor(parent, nodeName, ejbDescriptor);
@@ -309,48 +287,45 @@ public class EjbNode extends DeploymentDescriptorNode<EjbDescriptor> {
         }
 
         // flush-at-end-of-method
-        FlushAtEndOfMethodDescriptor flushMethodDesc = ejbDescriptor.getIASEjbExtraDescriptors().getFlushAtEndOfMethodDescriptor();
-        if (flushMethodDesc!=null) {
+        FlushAtEndOfMethodDescriptor flushMethodDesc = ejbDescriptor.getIASEjbExtraDescriptors()
+            .getFlushAtEndOfMethodDescriptor();
+        if (flushMethodDesc != null) {
             FlushAtEndOfMethodNode flushNode = new FlushAtEndOfMethodNode();
             flushNode.writeDescriptor(ejbNode, RuntimeTagNames.FLUSH_AT_END_OF_METHOD, flushMethodDesc);
         }
 
         // checkpointed-methods
         // checkpoint-at-end-of-method
-        CheckpointAtEndOfMethodDescriptor checkpointMethodDesc = ejbDescriptor.getIASEjbExtraDescriptors().getCheckpointAtEndOfMethodDescriptor();
-        if (checkpointMethodDesc!=null) {
-            CheckpointAtEndOfMethodNode checkpointNode =
-                new CheckpointAtEndOfMethodNode();
+        CheckpointAtEndOfMethodDescriptor checkpointMethodDesc = ejbDescriptor.getIASEjbExtraDescriptors()
+            .getCheckpointAtEndOfMethodDescriptor();
+        if (checkpointMethodDesc != null) {
+            CheckpointAtEndOfMethodNode checkpointNode = new CheckpointAtEndOfMethodNode();
             checkpointNode.writeDescriptor(ejbNode, RuntimeTagNames.CHECKPOINT_AT_END_OF_METHOD, checkpointMethodDesc);
         }
         if (ejbDescriptor.getIASEjbExtraDescriptors().getPerRequestLoadBalancing() != null) {
-            appendTextChild(ejbNode, RuntimeTagNames.PER_REQUEST_LOAD_BALANCING, String.valueOf(ejbDescriptor.getIASEjbExtraDescriptors().getPerRequestLoadBalancing()));
+            appendTextChild(ejbNode, RuntimeTagNames.PER_REQUEST_LOAD_BALANCING,
+                String.valueOf(ejbDescriptor.getIASEjbExtraDescriptors().getPerRequestLoadBalancing()));
         }
         // availability-enabled
-        setAttribute(ejbNode, RuntimeTagNames.AVAILABILITY_ENABLED, ejbDescriptor.getIASEjbExtraDescriptors().getAttributeValue(IASEjbExtraDescriptors.AVAILABILITY_ENABLED));
+        setAttribute(ejbNode, RuntimeTagNames.AVAILABILITY_ENABLED,
+            ejbDescriptor.getIASEjbExtraDescriptors().getValue(IASEjbExtraDescriptors.AVAILABILITY_ENABLED));
 
         return ejbNode;
     }
 
+
     /**
-     * write all the classes info generated at deployment
+     * Write all the classes info generated at deployment
+     *
      * @param parent node for the information
      * @param descriptor the descriptor containing the generated info
      */
     private void writeGenClasses(Node parent, EjbDescriptor ejbDescriptor) {
         // common to all ejbs but mdb...
         Node genClasses = appendChild(parent, RuntimeTagNames.GEN_CLASSES);
-
-        appendTextChild(genClasses, RuntimeTagNames.REMOTE_IMPL,
-            ejbDescriptor.getEJBObjectImplClassName());
-
-        appendTextChild(genClasses, RuntimeTagNames.LOCAL_IMPL,
-            ejbDescriptor.getEJBLocalObjectImplClassName());
-
-        appendTextChild(genClasses, RuntimeTagNames.REMOTE_HOME_IMPL,
-            ejbDescriptor.getRemoteHomeImplClassName());
-
-        appendTextChild(genClasses, RuntimeTagNames.LOCAL_HOME_IMPL,
-            ejbDescriptor.getLocalHomeImplClassName());
+        appendTextChild(genClasses, RuntimeTagNames.REMOTE_IMPL, ejbDescriptor.getEJBObjectImplClassName());
+        appendTextChild(genClasses, RuntimeTagNames.LOCAL_IMPL, ejbDescriptor.getEJBLocalObjectImplClassName());
+        appendTextChild(genClasses, RuntimeTagNames.REMOTE_HOME_IMPL, ejbDescriptor.getRemoteHomeImplClassName());
+        appendTextChild(genClasses, RuntimeTagNames.LOCAL_HOME_IMPL, ejbDescriptor.getLocalHomeImplClassName());
     }
 }

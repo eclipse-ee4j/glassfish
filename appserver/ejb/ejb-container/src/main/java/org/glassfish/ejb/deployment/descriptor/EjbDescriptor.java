@@ -38,22 +38,20 @@ import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
+import jakarta.ejb.EJBLocalObject;
+import jakarta.ejb.EJBObject;
 import jakarta.inject.Inject;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.Vector;
 import java.util.logging.Level;
-import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 import org.glassfish.deployment.common.Descriptor;
@@ -79,14 +77,7 @@ public abstract class EjbDescriptor extends EjbBeanDescriptor {
     private static final Logger LOG = DOLUtils.getDefaultLogger();
     private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(EjbDescriptor.class);
 
-    private EjbBundleDescriptorImpl bundleDescriptor;
-    private boolean usesDefaultTransaction;
-
-    private String securityIdentityDescription;
-
-    private Hashtable<MethodDescriptor, ContainerTransaction> methodContainerTransactions;
     private final Set<String> noInterfaceLocalBeanClassNames = new HashSet<>();
-
     private final Set<LifecycleCallbackDescriptor> aroundInvokeDescs = new HashSet<>();
     private final Set<LifecycleCallbackDescriptor> aroundTimeoutDescs = new HashSet<>();
 
@@ -95,14 +86,20 @@ public abstract class EjbDescriptor extends EjbBeanDescriptor {
     // binding translation that happens for application-defined interceptors.
     private final List<InterceptorDescriptor> frameworkInterceptors = new LinkedList<>();
 
-    private String remoteHomeImplClassName;
-    private String ejbObjectImplClassName;
-    private String localHomeImplClassName;
-    private String ejbLocalObjectImplClassName;
-
     // Ludo 12/10/2001 extra DTD info only for iAS
     private final IASEjbExtraDescriptors iASEjbExtraDescriptors = new IASEjbExtraDescriptors();
 
+    private EjbBundleDescriptorImpl bundleDescriptor;
+    private boolean usesDefaultTransaction;
+
+    private String ejbObjectImplClassName;
+    private String ejbLocalObjectImplClassName;
+    private String localHomeImplClassName;
+    private String remoteHomeImplClassName;
+
+    private String securityIdentityDescription;
+
+    private Hashtable<MethodDescriptor, ContainerTransaction> methodContainerTransactions = new Hashtable<>();
 
     /**
      * Default constructor.
@@ -110,11 +107,14 @@ public abstract class EjbDescriptor extends EjbBeanDescriptor {
     protected EjbDescriptor() {
     }
 
+
     public EjbDescriptor(EjbDescriptor other) {
         super(other);
         copyEjbDescriptor(other);
     }
 
+
+    public abstract String getContainerFactoryQualifier();
 
 
     /**
@@ -129,16 +129,84 @@ public abstract class EjbDescriptor extends EjbBeanDescriptor {
     public void copyEjbDescriptor(EjbDescriptor other) {
         this.bundleDescriptor = other.bundleDescriptor;
         copyEjbDescriptor(other, this);
-        this.methodContainerTransactions = new Hashtable<>(other.getMethodContainerTransactions());
+        this.methodContainerTransactions = new Hashtable<>(other.methodContainerTransactions);
     }
 
+
+    @Override
+    public final EjbBundleDescriptorImpl getEjbBundleDescriptor() {
+        return bundleDescriptor;
+    }
+
+
+    @Override
+    public void setEjbBundleDescriptor(EjbBundleDescriptor bundleDescriptor) {
+        // We accept just this type.
+        this.bundleDescriptor = (EjbBundleDescriptorImpl) bundleDescriptor;
+    }
+
+
     /**
-     * Add a classname for a no-interface view of the local ejb
-     *
-     * @param className fully qualified class name for the interface
+     * @return the classname of the {@link EJBLocalObject} impl.
      */
-    public void addNoInterfaceLocalBeanClass(String className) {
-        this.noInterfaceLocalBeanClassNames.add(className);
+    public String getEJBLocalObjectImplClassName() {
+        return this.ejbLocalObjectImplClassName;
+    }
+
+
+    /**
+     * @param className the {@link EJBLocalObject} implementation classname of the ejb.
+     */
+    public void setEJBLocalObjectImplClassName(String className) {
+        this.ejbLocalObjectImplClassName = className;
+    }
+
+
+    /**
+     * @return the classname of the {@link EJBObject} impl.
+     */
+    public String getEJBObjectImplClassName() {
+        return this.ejbObjectImplClassName;
+    }
+
+
+    /**
+     * @param className {@link EJBObject} implementation classname of the ejb.
+     */
+    public void setEJBObjectImplClassName(String className) {
+        this.ejbObjectImplClassName = className;
+    }
+
+
+    /**
+     * @return the classname of the Local home impl.
+     */
+    public String getLocalHomeImplClassName() {
+        return this.localHomeImplClassName;
+    }
+
+
+    /**
+     * @param className the Local home implementation classname of the ejb.
+     */
+    public void setLocalHomeImplClassName(String className) {
+        this.localHomeImplClassName = className;
+    }
+
+
+    /**
+     * @return the classname of the remote home impl.
+     */
+    public String getRemoteHomeImplClassName() {
+        return this.remoteHomeImplClassName;
+    }
+
+
+    /**
+     * @param className remote home implementation classname of the ejb.
+     */
+    public void setRemoteHomeImplClassName(String className) {
+        this.remoteHomeImplClassName = className;
     }
 
 
@@ -151,160 +219,185 @@ public abstract class EjbDescriptor extends EjbBeanDescriptor {
 
 
     /**
-     * Sets the remote home implementation classname of the ejb.
+     * Add a classname for a no-interface view of the local ejb
+     *
+     * @param className fully qualified class name for the interface
      */
-    public void setRemoteHomeImplClassName(String name) {
-        this.remoteHomeImplClassName = name;
-    }
-
-    /**
-     * @return the classname of the remote home impl.
-     */
-    public String getRemoteHomeImplClassName() {
-        return this.remoteHomeImplClassName;
-    }
-
-    /**
-     * Sets the Local home implementation classname of the ejb.
-     */
-    public void setLocalHomeImplClassName(String name) {
-        this.localHomeImplClassName = name;
-    }
-
-    /**
-     * @return the classname of the Local home impl.
-     */
-    public String getLocalHomeImplClassName() {
-        return this.localHomeImplClassName;
-    }
-
-    /**
-     * Sets the EJBLocalObject implementation classname of the ejb.
-     */
-    public void setEJBLocalObjectImplClassName(String name) {
-        this.ejbLocalObjectImplClassName = name;
-    }
-
-    /**
-     * @return the classname of the EJBLocalObject impl.
-     */
-    public String getEJBLocalObjectImplClassName() {
-        return this.ejbLocalObjectImplClassName;
-    }
-
-    /**
-     * Sets the EJBObject implementation classname of the ejb.
-     */
-    public void setEJBObjectImplClassName(String name) {
-        this.ejbObjectImplClassName = name;
-    }
-
-    /**
-     * @return the classname of the EJBObject impl.
-     */
-    public String getEJBObjectImplClassName() {
-        return this.ejbObjectImplClassName;
+    public void addNoInterfaceLocalBeanClass(String className) {
+        this.noInterfaceLocalBeanClassNames.add(className);
     }
 
 
-    /**
-     * @return the set of transaction attributes that can be assigned to methods of this ejb when in
-     *         CMT mode. Elements are of type ContainerTransaction
-     */
-    public Vector<ContainerTransaction> getPossibleTransactionAttributes() {
-        Vector<ContainerTransaction> txAttributes = new Vector<>();
-        txAttributes.add(new ContainerTransaction(ContainerTransaction.MANDATORY, ""));
-        txAttributes.add(new ContainerTransaction(ContainerTransaction.NEVER, ""));
-        txAttributes.add(new ContainerTransaction(ContainerTransaction.NOT_SUPPORTED, ""));
-        txAttributes.add(new ContainerTransaction(ContainerTransaction.REQUIRED, ""));
-        txAttributes.add(new ContainerTransaction(ContainerTransaction.REQUIRES_NEW, ""));
-        txAttributes.add(new ContainerTransaction(ContainerTransaction.SUPPORTS, ""));
-        return txAttributes;
+    public boolean hasAroundInvokeMethod() {
+        return !aroundInvokeDescs.isEmpty();
     }
 
-    public Set<LifecycleCallbackDescriptor> getAroundInvokeDescriptors() {
+
+    public final Set<LifecycleCallbackDescriptor> getAroundInvokeDescriptors() {
         return aroundInvokeDescs;
     }
 
-    public void addAroundInvokeDescriptor(LifecycleCallbackDescriptor aroundInvokeDesc) {
-        String className = aroundInvokeDesc.getLifecycleCallbackClass();
-        boolean found = false;
-        for (LifecycleCallbackDescriptor next : getAroundInvokeDescriptors()) {
-            if (next.getLifecycleCallbackClass().equals(className)) {
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            getAroundInvokeDescriptors().add(aroundInvokeDesc);
-        }
-    }
 
+    /**
+     * @param className
+     * @return {@link LifecycleCallbackDescriptor} with
+     *         {@link LifecycleCallbackDescriptor#getLifecycleCallbackClass()} of a given
+     */
     public LifecycleCallbackDescriptor getAroundInvokeDescriptorByClass(String className) {
-
-        for (LifecycleCallbackDescriptor next : getAroundInvokeDescriptors()) {
-            if (next.getLifecycleCallbackClass().equals(className)) {
-                return next;
+        for (LifecycleCallbackDescriptor aroundInvoke : aroundInvokeDescs) {
+            if (aroundInvoke.getLifecycleCallbackClass().equals(className)) {
+                return aroundInvoke;
             }
         }
         return null;
     }
 
-    public boolean hasAroundInvokeMethod() {
-        return !getAroundInvokeDescriptors().isEmpty();
+
+    /**
+     * @param businessMethod intercepted method
+     * @return the ordered list of interceptor info for AroundInvoke behavior of a particular
+     *         business method.
+     *         This list *does* include the info on any bean class interceptor.
+     *         If present, this would always be the last element in the list because of the
+     *         precedence defined by the spec.
+     */
+    public List<EjbInterceptor> getAroundInvokeInterceptors(MethodDescriptor businessMethod) {
+        LinkedList<EjbInterceptor> aroundInvokeInterceptors = new LinkedList<>();
+        List<EjbInterceptor> classOrMethodInterceptors = getClassOrMethodInterceptors(businessMethod);
+        for (EjbInterceptor interceptor : classOrMethodInterceptors) {
+            if (!interceptor.getAroundInvokeDescriptors().isEmpty()) {
+                aroundInvokeInterceptors.add(interceptor);
+            }
+        }
+
+        if (hasAroundInvokeMethod()) {
+            EjbInterceptor interceptorInfo = new EjbInterceptor();
+            interceptorInfo.setFromBeanClass(true);
+            interceptorInfo.addAroundInvokeDescriptors(aroundInvokeDescs);
+            interceptorInfo.setInterceptorClassName(getEjbImplClassName());
+            aroundInvokeInterceptors.add(interceptorInfo);
+        }
+        return aroundInvokeInterceptors;
     }
 
-    public Set<LifecycleCallbackDescriptor> getAroundTimeoutDescriptors() {
+
+    /**
+     * Adds the descriptor if there is no other with the same lifecycle callback class.
+     *
+     * @param aroundInvokeDesc
+     */
+    public void addAroundInvokeDescriptor(LifecycleCallbackDescriptor aroundInvokeDesc) {
+        String className = aroundInvokeDesc.getLifecycleCallbackClass();
+        for (LifecycleCallbackDescriptor aroundInvoke : aroundInvokeDescs) {
+            if (aroundInvoke.getLifecycleCallbackClass().equals(className)) {
+                return;
+            }
+        }
+        aroundInvokeDescs.add(aroundInvokeDesc);
+    }
+
+
+    public boolean hasAroundTimeoutMethod() {
+        return !aroundTimeoutDescs.isEmpty();
+    }
+
+
+    public final Set<LifecycleCallbackDescriptor> getAroundTimeoutDescriptors() {
         return aroundTimeoutDescs;
     }
 
-    public void addAroundTimeoutDescriptor(LifecycleCallbackDescriptor aroundTimeoutDesc) {
-        String className = aroundTimeoutDesc.getLifecycleCallbackClass();
-        boolean found = false;
-        for (LifecycleCallbackDescriptor next : getAroundTimeoutDescriptors()) {
-            if (next.getLifecycleCallbackClass().equals(className)) {
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            getAroundTimeoutDescriptors().add(aroundTimeoutDesc);
-        }
-    }
 
     public LifecycleCallbackDescriptor getAroundTimeoutDescriptorByClass(String className) {
-
-        for (LifecycleCallbackDescriptor next : getAroundTimeoutDescriptors()) {
-            if (next.getLifecycleCallbackClass().equals(className)) {
-                return next;
+        for (LifecycleCallbackDescriptor callback : aroundTimeoutDescs) {
+            if (callback.getLifecycleCallbackClass().equals(className)) {
+                return callback;
             }
         }
         return null;
     }
 
-    public boolean hasAroundTimeoutMethod() {
-        return !getAroundTimeoutDescriptors().isEmpty();
-    }
 
-    @Override
-    public void addFrameworkInterceptor(InterceptorDescriptor interceptor) {
-        boolean found = false;
-        for (InterceptorDescriptor next : frameworkInterceptors) {
-            if (next.getInterceptorClassName().equals(interceptor.getInterceptorClassName())) {
-                found = true;
-                break;
+    /**
+     * @param businessMethod intercepted method
+     * @return the ordered list of interceptor info for AroundTimeout behavior of a particular
+     *         business method.
+     *         This list *does* include the info on any bean class interceptor.
+     *         If present, this would always be the last element in the list because of the
+     *         precedence defined by the spec.
+     */
+    public List<EjbInterceptor> getAroundTimeoutInterceptors(MethodDescriptor businessMethod) {
+        LinkedList<EjbInterceptor> aroundTimeoutInterceptors = new LinkedList<>();
+        List<EjbInterceptor> classOrMethodInterceptors = getClassOrMethodInterceptors(businessMethod);
+        for (EjbInterceptor interceptor : classOrMethodInterceptors) {
+            if (!interceptor.getAroundTimeoutDescriptors().isEmpty()) {
+                aroundTimeoutInterceptors.add(interceptor);
             }
         }
 
-        if (!found) {
-            frameworkInterceptors.add(interceptor);
+        if (hasAroundTimeoutMethod()) {
+            EjbInterceptor interceptorInfo = new EjbInterceptor();
+            interceptorInfo.setFromBeanClass(true);
+            interceptorInfo.addAroundTimeoutDescriptors(aroundTimeoutDescs);
+            interceptorInfo.setInterceptorClassName(getEjbImplClassName());
+            aroundTimeoutInterceptors.add(interceptorInfo);
         }
-
+        return aroundTimeoutInterceptors;
     }
+
+
+    public void addAroundTimeoutDescriptor(LifecycleCallbackDescriptor aroundTimeoutDesc) {
+        String className = aroundTimeoutDesc.getLifecycleCallbackClass();
+        for (LifecycleCallbackDescriptor callback : aroundTimeoutDescs) {
+            if (callback.getLifecycleCallbackClass().equals(className)) {
+                return;
+            }
+        }
+        aroundTimeoutDescs.add(aroundTimeoutDesc);
+    }
+
 
     public List<InterceptorDescriptor> getFrameworkInterceptors() {
         return frameworkInterceptors;
     }
+
+
+    @Override
+    public void addFrameworkInterceptor(InterceptorDescriptor interceptor) {
+        for (InterceptorDescriptor existing : frameworkInterceptors) {
+            if (existing.getInterceptorClassName().equals(interceptor.getInterceptorClassName())) {
+                return;
+            }
+        }
+        frameworkInterceptors.add(interceptor);
+    }
+
+
+    /**
+     * @return the description field of security-identity
+     */
+    public String getSecurityIdentityDescription() {
+        if (securityIdentityDescription == null) {
+            securityIdentityDescription = "";
+        }
+        return securityIdentityDescription;
+    }
+
+
+    /**
+     * @param securityIdentityDescription the description field of security-identity
+     */
+    public void setSecurityIdentityDescription(String securityIdentityDescription) {
+        this.securityIdentityDescription = securityIdentityDescription;
+    }
+
+
+    /**
+     * Have default method transaction if isBoundsChecking is on.
+     */
+    public void setUsesDefaultTransaction() {
+        usesDefaultTransaction = true;
+    }
+
 
     /**
      * Since ejb-class is optional, in some cases the lifecycle-class for AroundInvoke, PostConstruct, etc. methods on the
@@ -313,20 +406,21 @@ public abstract class EjbDescriptor extends EjbBeanDescriptor {
      */
     public void applyDefaultClassToLifecycleMethods() {
         Set<LifecycleCallbackDescriptor> lifecycleMethods = getLifecycleCallbackDescriptors();
-        lifecycleMethods.addAll(getAroundInvokeDescriptors());
-        lifecycleMethods.addAll(getAroundTimeoutDescriptors());
-        for (LifecycleCallbackDescriptor next : lifecycleMethods) {
-            if (next.getLifecycleCallbackClass() == null) {
-                next.setLifecycleCallbackClass(getEjbClassName());
+        lifecycleMethods.addAll(aroundInvokeDescs);
+        lifecycleMethods.addAll(aroundTimeoutDescs);
+        for (LifecycleCallbackDescriptor method : lifecycleMethods) {
+            if (method.getLifecycleCallbackClass() == null) {
+                method.setLifecycleCallbackClass(getEjbClassName());
             }
         }
     }
+
 
     public Set<LifecycleCallbackDescriptor> getLifecycleCallbackDescriptors() {
         Set<LifecycleCallbackDescriptor> lifecycleMethods = new HashSet<>();
         lifecycleMethods.addAll(getPostConstructDescriptors());
         lifecycleMethods.addAll(getPreDestroyDescriptors());
-        if (getType().equals(com.sun.enterprise.deployment.EjbSessionDescriptor.TYPE)) {
+        if (com.sun.enterprise.deployment.EjbSessionDescriptor.TYPE.equals(getType())) {
             EjbSessionDescriptor sfulDesc = (EjbSessionDescriptor) this;
             lifecycleMethods.addAll(sfulDesc.getPrePassivateDescriptors());
             lifecycleMethods.addAll(sfulDesc.getPostActivateDescriptors());
@@ -334,6 +428,7 @@ public abstract class EjbDescriptor extends EjbBeanDescriptor {
 
         return lifecycleMethods;
     }
+
 
     /**
      * Derive all interceptors that are applicable to this bean.
@@ -388,78 +483,12 @@ public abstract class EjbDescriptor extends EjbBeanDescriptor {
         }
     }
 
-
     /**
-     * @return the ordered list of interceptor info for AroundInvoke behavior of a particular
-     *         business method.
-     *         This list *does* include the info on any bean class interceptor.
-     *         If present, this would always be the last element in the list because of the
-     *         precedence defined by the spec.
-     */
-    public List<EjbInterceptor> getAroundInvokeInterceptors(MethodDescriptor businessMethod) {
-
-        LinkedList<EjbInterceptor> aroundInvokeInterceptors = new LinkedList<>();
-
-        List<EjbInterceptor> classOrMethodInterceptors = getClassOrMethodInterceptors(businessMethod);
-
-        for (EjbInterceptor next : classOrMethodInterceptors) {
-            if (next.getAroundInvokeDescriptors().size() > 0) {
-                aroundInvokeInterceptors.add(next);
-            }
-        }
-
-        if (hasAroundInvokeMethod()) {
-
-            EjbInterceptor interceptorInfo = new EjbInterceptor();
-            interceptorInfo.setFromBeanClass(true);
-            interceptorInfo.addAroundInvokeDescriptors(getAroundInvokeDescriptors());
-            interceptorInfo.setInterceptorClassName(getEjbImplClassName());
-
-            aroundInvokeInterceptors.add(interceptorInfo);
-        }
-
-        return aroundInvokeInterceptors;
-    }
-
-
-    /**
-     * @return the ordered list of interceptor info for AroundTimeout behavior of a particular
-     *         business method.
-     *         This list *does* include the info on any bean class interceptor.
-     *         If present, this would always be the last element in the list because of the
-     *         precedence defined by the spec.
-     */
-    public List<EjbInterceptor> getAroundTimeoutInterceptors(MethodDescriptor businessMethod) {
-        LinkedList<EjbInterceptor> aroundTimeoutInterceptors = new LinkedList<>();
-
-        List<EjbInterceptor> classOrMethodInterceptors = getClassOrMethodInterceptors(businessMethod);
-
-        for (EjbInterceptor next : classOrMethodInterceptors) {
-            if (next.getAroundTimeoutDescriptors().size() > 0) {
-                aroundTimeoutInterceptors.add(next);
-            }
-        }
-
-        if (hasAroundTimeoutMethod()) {
-
-            EjbInterceptor interceptorInfo = new EjbInterceptor();
-            interceptorInfo.setFromBeanClass(true);
-            interceptorInfo.addAroundTimeoutDescriptors(getAroundTimeoutDescriptors());
-            interceptorInfo.setInterceptorClassName(getEjbImplClassName());
-
-            aroundTimeoutInterceptors.add(interceptorInfo);
-        }
-
-        return aroundTimeoutInterceptors;
-    }
-
-
-    /**
-     * Return the ordered list of interceptor info for a particular callback event type. This list
-     * *does* include the info
-     * on any bean class callback. If present, this would always be the last element in the list
-     * because of the precedence
-     * defined by the spec.
+     * @param type {@link CallbackType} used as a filter
+     * @return the ordered list of interceptor info for a particular callback event type.
+     *         This list *does* include the info on any bean class callback.
+     *         If present, this would always be the last element in the list because
+     *         of the precedence defined by the spec.
      */
     public List<EjbInterceptor> getCallbackInterceptors(CallbackType type) {
         Set<LifecycleCallbackDescriptor> callbackDescriptors = null;
@@ -486,7 +515,7 @@ public abstract class EjbDescriptor extends EjbBeanDescriptor {
     }
 
 
-    protected final LinkedList<EjbInterceptor> getCallbackInterceptors(CallbackType type,
+    private LinkedList<EjbInterceptor> getCallbackInterceptors(CallbackType type,
         Set<LifecycleCallbackDescriptor> callbackDescriptors) {
         LinkedList<EjbInterceptor> callbackInterceptors = new LinkedList<>();
 
@@ -575,121 +604,78 @@ public abstract class EjbDescriptor extends EjbBeanDescriptor {
 
 
     /**
-     * Set the description field of security-identity
-     */
-    public void setSecurityIdentityDescription(String s) {
-        securityIdentityDescription = s;
-    }
-
-    /**
-     * @return the description field of security-identity
-     */
-    public String getSecurityIdentityDescription() {
-        if (securityIdentityDescription == null) {
-            securityIdentityDescription = "";
-        }
-        return securityIdentityDescription;
-    }
-
-
-    /**
-     * Have default method transaction if isBoundsChecking is on.
-     */
-    public void setUsesDefaultTransaction() {
-        usesDefaultTransaction = true;
-    }
-
-    /**
-     * @return a state to indicate whether default method transaction is used if isBoundsChecking is on.
-     */
-    public boolean isUsesDefaultTransaction() {
-        return usesDefaultTransaction;
-    }
-
-    /**
      * @return a copy of the mapping held internally of method descriptors to container transaction objects.
      */
-    public Hashtable<MethodDescriptor, ContainerTransaction> getMethodContainerTransactions() {
-        if (this.methodContainerTransactions == null) {
-            this.methodContainerTransactions = new Hashtable<>();
-        }
+    public final Hashtable<MethodDescriptor, ContainerTransaction> getMethodContainerTransactions() {
         return methodContainerTransactions;
     }
 
-    /**
-     * Sets the container transaction for the given method descriptor. Throws an Illegal argument if this ejb has
-     * transaction type BEAN_TRANSACTION_TYPE.
-     */
-    public void setContainerTransactionFor(MethodDescriptor methodDescriptor, ContainerTransaction containerTransaction) {
-        ContainerTransaction oldValue = this.getContainerTransactionFor(methodDescriptor);
-        if (oldValue == null || !oldValue.equals(containerTransaction)) {
-            String txType = this.getTransactionType();
-            if (txType == null) {
-                setTransactionType(CONTAINER_TRANSACTION_TYPE);
-            } else if (BEAN_TRANSACTION_TYPE.equals(txType)) {
-                throw new IllegalArgumentException(
-                        I18N.getLocalString("enterprise.deployment.exceptiontxattrbtnotspecifiedinbeanwithtxtype",
-                                "Method level transaction attributes may not be specified on a bean with transaction type {0}",
-                                new Object[] { com.sun.enterprise.deployment.EjbDescriptor.BEAN_TRANSACTION_TYPE }));
-            }
-            // LOG.log(Level.FINE,"put " + methodDescriptor + " " + containerTransaction);
-            getMethodContainerTransactions().put(methodDescriptor, containerTransaction);
-        }
-    }
 
     /**
-     * Sets the container transactions for all the method descriptors of this ejb. The Hashtable is keyed by method
-     * descriptor and the values are the corresponding container transaction objects.. Throws an Illegal argument if this
-     * ejb has transaction type BEAN_TRANSACTION_TYPE.
+     * Sets the container transactions for all the method descriptors of this ejb.
+     * The Hashtable is keyed by method descriptor and the values are the corresponding container
+     * transaction objects..
+     *
+     * @throws IllegalArgumentException if this ejb has transaction type BEAN_TRANSACTION_TYPE.
      */
-    public void setMethodContainerTransactions(Hashtable<MethodDescriptor, ContainerTransaction> methodContainerTransactions) {
+    public void setMethodContainerTransactions(
+        Hashtable<MethodDescriptor, ContainerTransaction> methodContainerTransactions) throws IllegalArgumentException {
         if (methodContainerTransactions != null) {
-            for (Enumeration<MethodDescriptor> e = methodContainerTransactions.keys(); e.hasMoreElements();) {
-                MethodDescriptor methodDescriptor = e.nextElement();
-                ContainerTransaction containerTransaction = methodContainerTransactions.get(methodDescriptor);
-                setContainerTransactionFor(methodDescriptor, containerTransaction);
+            for (Entry<MethodDescriptor, ContainerTransaction> entry : methodContainerTransactions.entrySet()) {
+                setContainerTransactionFor(entry.getKey(), entry.getValue());
             }
         }
     }
 
-    Set<MethodDescriptor> getAllMethodDescriptors() {
-        Set<MethodDescriptor> allMethodDescriptors = new HashSet<>();
-        for (Enumeration<MethodDescriptor> e = getMethodContainerTransactions().keys(); e.hasMoreElements();) {
-            allMethodDescriptors.add(e.nextElement());
-        }
-        for (MethodPermission nextPermission : this.getPermissionedMethodsByPermission().keySet()) {
-            Set<MethodDescriptor> permissionedMethods = this.getPermissionedMethodsByPermission().get(nextPermission);
-            for (MethodDescriptor permissionedMethod : permissionedMethods) {
-                allMethodDescriptors.add(permissionedMethod);
-            }
-        }
-        return allMethodDescriptors;
-    }
 
     /**
-     * Fetches the assigned container transaction object for the given method object or null.
+     * Sets the container transaction for the given method descriptor.
+     *
+     * @throws IllegalArgumentException if this ejb has transaction type BEAN_TRANSACTION_TYPE.
+     */
+    public void setContainerTransactionFor(MethodDescriptor methodDescriptor, ContainerTransaction containerTx)
+        throws IllegalArgumentException {
+        ContainerTransaction oldValue = getContainerTransactionFor(methodDescriptor);
+        if (oldValue != null && oldValue.equals(containerTx)) {
+            return;
+        }
+        String txType = getTransactionType();
+        if (txType == null) {
+            setTransactionType(CONTAINER_TRANSACTION_TYPE);
+        } else if (BEAN_TRANSACTION_TYPE.equals(txType)) {
+            throw new IllegalArgumentException(
+                I18N.getLocalString("enterprise.deployment.exceptiontxattrbtnotspecifiedinbeanwithtxtype",
+                    "Method level transaction attributes may not be specified on a bean with transaction type {0}",
+                    new Object[] {com.sun.enterprise.deployment.EjbDescriptor.BEAN_TRANSACTION_TYPE}));
+        }
+        methodContainerTransactions.put(methodDescriptor, containerTx);
+    }
+
+
+    /**
+     * Fetches the assigned container transaction object for the given method object.
+     *
+     * @return {@link ContainerTransaction} or null.
      */
     public ContainerTransaction getContainerTransactionFor(MethodDescriptor methodDescriptor) {
-        ContainerTransaction containerTransaction = null;
-        if (this.needToConvertMethodContainerTransactions()) {
-            this.convertMethodContainerTransactions();
+        if (needToConvertMethodContainerTransactions()) {
+            this.methodContainerTransactions = convertMethodContainerTransactions();
         }
-        containerTransaction = this.getMethodContainerTransactions().get(methodDescriptor);
+        ContainerTransaction containerTransaction = getMethodContainerTransactions().get(methodDescriptor);
         if (containerTransaction != null) {
             return containerTransaction;
         }
         if (Descriptor.isBoundsChecking() && usesDefaultTransaction) {
             containerTransaction = new ContainerTransaction(ContainerTransaction.REQUIRED, "");
-            this.getMethodContainerTransactions().put(methodDescriptor, containerTransaction);
+            getMethodContainerTransactions().put(methodDescriptor, containerTransaction);
         }
         return containerTransaction;
     }
 
     private boolean needToConvertMethodContainerTransactions() {
-        if (this.getEjbBundleDescriptor() != null) {
-            for (Enumeration<MethodDescriptor> e = this.getMethodContainerTransactions().keys(); e.hasMoreElements();) {
-                MethodDescriptor md = e.nextElement();
-                if (!md.isExact()) {
+        if (getEjbBundleDescriptor() != null) {
+            for (MethodDescriptor method : getMethodContainerTransactions().keySet()) {
+                if (!method.isExact()) {
                     return true;
                 }
             }
@@ -697,68 +683,29 @@ public abstract class EjbDescriptor extends EjbBeanDescriptor {
         return false;
     }
 
-    private void convertMethodContainerTransactions() {
-        // container transactions first
-        // Hashtable transactions = this.getMethodContainerTransactions();
-        // LOG.log(Level.FINE,"Pre conversion = " + transactions);
+
+    private Hashtable<MethodDescriptor, ContainerTransaction> convertMethodContainerTransactions() {
         Hashtable<MethodDescriptor, ContainerTransaction> convertedTransactions = new Hashtable<>();
         convertMethodContainerTransactionsOfStyle(1, convertedTransactions);
         convertMethodContainerTransactionsOfStyle(2, convertedTransactions);
         convertMethodContainerTransactionsOfStyle(3, convertedTransactions);
-        // LOG.log(Level.FINE,"Post conversion = " + convertedTransactions);
-        this.methodContainerTransactions = convertedTransactions;
+        return convertedTransactions;
     }
 
 
     private void convertMethodContainerTransactionsOfStyle(int requestedStyleForConversion,
         Hashtable<MethodDescriptor, ContainerTransaction> convertedMethods) {
-        Collection<MethodDescriptor> transactionMethods = this.getTransactionMethodDescriptors();
-        Hashtable<MethodDescriptor, ContainerTransaction> transactions = this.getMethodContainerTransactions();
-        for (Enumeration<MethodDescriptor> e = transactions.keys(); e.hasMoreElements();) {
-            MethodDescriptor md = e.nextElement();
-            if (md.getStyle() == requestedStyleForConversion) {
-                ContainerTransaction ct = getMethodContainerTransactions().get(md);
-                for (MethodDescriptor next : md.doStyleConversion(this, transactionMethods)) {
-                    convertedMethods.put(next, new ContainerTransaction(ct));
+        Collection<MethodDescriptor> transactionMethods = getTransactionMethodDescriptors();
+        for (Entry<MethodDescriptor, ContainerTransaction> entry : methodContainerTransactions.entrySet()) {
+            MethodDescriptor method = entry.getKey();
+            if (method.getStyle() == requestedStyleForConversion) {
+                for (MethodDescriptor next : method.doStyleConversion(this, transactionMethods)) {
+                    convertedMethods.put(next, new ContainerTransaction(entry.getValue()));
                 }
             }
         }
     }
 
-    /**
-     * returns a ContainerTransaction if all the transactional methods on the ejb descriptor have the same transaction type
-     * else return null
-     */
-    public ContainerTransaction getContainerTransaction() {
-        Vector<MethodDescriptor> transactionalMethods = new Vector<>(this.getTransactionMethodDescriptors());
-        MethodDescriptor md = transactionalMethods.firstElement();
-        if (md != null) {
-            ContainerTransaction first = this.getContainerTransactionFor(md);
-            for (MethodDescriptor next : transactionalMethods) {
-                ContainerTransaction nextCt = this.getContainerTransactionFor(next);
-                if (nextCt != null && !nextCt.equals(first)) {
-                    return null;
-                }
-            }
-            return first;
-        }
-        return null;
-    }
-
-    /**
-     * @return true if this ejb descriptor has resource references that are resolved.
-     */
-    public boolean hasResolvedResourceReferences() {
-        if (!this.getResourceReferenceDescriptors().isEmpty()) {
-            return false;
-        }
-        for (ResourceReferenceDescriptor resourceReference : getResourceReferenceDescriptors()) {
-            if (resourceReference.isResolved()) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     private void addOrMergeEnvironmentProperty(EnvironmentProperty environmentProperty) {
         try {
@@ -772,24 +719,13 @@ public abstract class EjbDescriptor extends EjbBeanDescriptor {
     }
 
 
-    @Override
-    public final EjbBundleDescriptorImpl getEjbBundleDescriptor() {
-        return bundleDescriptor;
-    }
-
-
-    @Override
-    public void setEjbBundleDescriptor(EjbBundleDescriptor bundleDescriptor) {
-        // We accept just this type.
-        this.bundleDescriptor = (EjbBundleDescriptorImpl) bundleDescriptor;
-    }
-
     /**
      * @return the collection of MethodDescriptors to which ContainerTransactions may be assigned.
      */
     public Collection<MethodDescriptor> getTransactionMethodDescriptors() {
         return getTransactionMethods(getEjbBundleDescriptor().getClassLoader());
     }
+
 
     /**
      * @return a collection of MethodDescriptor for methods which may have a associated transaction attribute
@@ -798,83 +734,30 @@ public abstract class EjbDescriptor extends EjbBeanDescriptor {
         try {
             BeanMethodCalculatorImpl bmc = new BeanMethodCalculatorImpl();
             return bmc.getTransactionalMethodsFor(this, classLoader);
-        } catch (Throwable t) {
-            throw new RuntimeException(getEjbClassName(), t);
+        } catch (Exception e) {
+            throw new IllegalStateException(getEjbClassName(), e);
         }
     }
 
-    /**
-     * @return the set of method objects representing no-interface view
-     */
-    public Set<Method> getOptionalLocalBusinessMethods() {
-        Set<Method> methods = new HashSet<>();
-        try {
-            Class<?> c = getEjbBundleDescriptor().getClassLoader().loadClass(getEjbClassName());
-            Method[] ms = c.getMethods();
-            for (Method m : ms) {
-                if (m.getDeclaringClass() != Object.class) {
-                    methods.add(m);
-                }
-            }
-        } catch (Throwable t) {
-            throw new RuntimeException(getEjbClassName(), t);
-        }
-
-        return methods;
-    }
-
-    public abstract String getContainerFactoryQualifier();
-
-    /**
-     * @return the set of method objects on my home and remote interfaces.
-     */
-    public Vector<Method> getMethods() {
-        return getMethods(getEjbBundleDescriptor().getClassLoader());
-    }
 
     /**
      * @return the ejb method objects, i.e. the methods on the home and remote interfaces.
      */
-    public Vector<Method> getMethods(ClassLoader classLoader) {
+    public List<Method> getMethods() {
+        return getMethods(getEjbBundleDescriptor().getClassLoader());
+    }
+
+
+    /**
+     * @return the ejb method objects, i.e. the methods on the home and remote interfaces.
+     */
+    private List<Method> getMethods(ClassLoader classLoader) {
         try {
             BeanMethodCalculatorImpl bmc = new BeanMethodCalculatorImpl();
             return bmc.getMethodsFor(this, classLoader);
-        } catch (Throwable t) {
-            throw new RuntimeException(getEjbClassName(), t);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException(getEjbClassName(), e);
         }
-    }
-
-    /**
-     * @return a Vector of the Field objetcs of this ejb.
-     */
-    public Vector<Field> getFields() {
-        Vector<Field> fieldsVector = new Vector<>();
-        Class<?> ejb = null;
-        try {
-            ClassLoader cl = getEjbBundleDescriptor().getClassLoader();
-            ejb = cl.loadClass(this.getEjbClassName());
-        } catch (Throwable t) {
-            LogRecord log = new LogRecord(Level.SEVERE, "enterprise.deployment.backend.methodClassLoadFailure");
-            log.setParameters(new Object[] { this.getEjbClassName() });
-            LOG.log(log);
-            return fieldsVector;
-        }
-        Field[] fields = ejb.getFields();
-        for (Field field : fields) {
-            fieldsVector.addElement(field);
-        }
-        return fieldsVector;
-
-    }
-
-    public Vector<FieldDescriptor> getFieldDescriptors() {
-        Vector<Field> fields = this.getFields();
-        Vector<FieldDescriptor> fieldDescriptors = new Vector<>();
-        for (int fieldIndex = 0; fieldIndex < fields.size(); fieldIndex++) {
-            Field field = fields.elementAt(fieldIndex);
-            fieldDescriptors.insertElementAt(new FieldDescriptor(field), fieldIndex);
-        }
-        return fieldDescriptors;
     }
 
 

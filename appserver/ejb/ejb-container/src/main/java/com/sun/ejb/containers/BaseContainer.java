@@ -120,7 +120,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
-import java.util.Vector;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -4256,7 +4255,6 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
     }
 
     protected String[] getMonitoringMethodsArray(boolean hasGeneratedClasses) {
-        String[] method_sigs = null;
         if (hasGeneratedClasses) {
             List<String> methodList = new ArrayList<>();
             for (Class clz : monitoredGeneratedClasses) {
@@ -4264,17 +4262,10 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                     methodList.add(EjbMonitoringUtils.stringify(m));
                 }
             }
-            method_sigs = methodList.toArray(new String[methodList.size()]);
+            return methodList.toArray(new String[methodList.size()]);
         } else {
-            Vector methodVec = ejbDescriptor.getMethods();
-            int sz = methodVec.size();
-            method_sigs = new String[sz];
-            for (int i = 0; i < sz; i++) {
-                method_sigs[i] = EjbMonitoringUtils.stringify((Method) methodVec.get(i));
-            }
+            return ejbDescriptor.getMethods().stream().map(EjbMonitoringUtils::stringify).toArray(String[]::new);
         }
-
-        return method_sigs;
     }
 
     protected void doFlush(EjbInvocation inv) {

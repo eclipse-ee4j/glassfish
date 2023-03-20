@@ -37,6 +37,12 @@ public interface EjbMessageBeanDescriptor extends EjbDescriptor, MessageDestinat
 
     boolean hasQueueDest();
 
+    /**
+     * The resource-adapter-mid is optional.
+     * It is set when a resource adapter is responsible for delivering messages
+     * to the message-driven bean.
+     */
+    // Reflection in EjbNode
     void setResourceAdapterMid(String resourceAdapterMid);
 
     Set<EnvironmentProperty> getActivationConfigProperties();

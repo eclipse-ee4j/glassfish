@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,6 +37,7 @@ import java.util.jar.Manifest;
 import java.util.logging.Level;
 
 import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.CarArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
@@ -51,8 +52,7 @@ import org.xml.sax.SAXException;
  */
 @Service
 @PerLookup
-//TODO change to CarType.ARCHIVE_TYPE once moved to appclient module
-@ArchivistFor("car")
+@ArchivistFor(CarArchiveType.ARCHIVE_TYPE)
 public class AppClientArchivist extends Archivist<ApplicationClientDescriptor> {
 
     public static final Attributes.Name GLASSFISH_APPCLIENT =

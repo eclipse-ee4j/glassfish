@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -47,8 +47,8 @@ public class EjbBundleContext extends ResourceContainerContextImpl {
     }
 
 
-    public EjbBundleDescriptor getDescriptor() {
-        return (EjbBundleDescriptor) descriptor;
+    public <T extends EjbBundleDescriptor> T getDescriptor() {
+        return (T) descriptor;
     }
 
 
@@ -63,7 +63,7 @@ public class EjbBundleContext extends ResourceContainerContextImpl {
         String ejbClassName = null;
         if (ejbClass != null) {
             ejbClassName = ejbClass.getName();
-            ejbDescs = this.getDescriptor().getEjbByClassName(ejbClassName);
+            ejbDescs = getDescriptor().getEjbByClassName(ejbClassName);
         }
 
         AnnotationContext aeHandler = null;
@@ -82,7 +82,7 @@ public class EjbBundleContext extends ResourceContainerContextImpl {
 
 
     @Override
-    public HandlerChainContainer[] getHandlerChainContainers(boolean serviceSideHandlerChain, Class declaringClass) {
+    public HandlerChainContainer[] getHandlerChainContainers(boolean serviceSideHandlerChain, Class<?> declaringClass) {
         if (serviceSideHandlerChain) {
             EjbDescriptor[] ejbs;
             if (declaringClass.isInterface()) {
@@ -104,8 +104,7 @@ public class EjbBundleContext extends ResourceContainerContextImpl {
 
     @Override
     public ServiceReferenceContainer[] getServiceRefContainers() {
-        ServiceReferenceContainer[] container = new ServiceReferenceContainer[getDescriptor().getEjbs().size()];
-        return getDescriptor().getEjbs().toArray(container);
+        return getDescriptor().getEjbs().toArray(ServiceReferenceContainer[]::new);
     }
 
 

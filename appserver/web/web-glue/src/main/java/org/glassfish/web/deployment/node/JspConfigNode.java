@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,20 +17,22 @@
 
 package org.glassfish.web.deployment.node;
 
+import com.sun.enterprise.deployment.JspConfigDefinitionDescriptor;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.XMLElement;
-import org.glassfish.web.deployment.descriptor.JspConfigDescriptorImpl;
+
+import jakarta.servlet.descriptor.JspPropertyGroupDescriptor;
+import jakarta.servlet.descriptor.TaglibDescriptor;
+
 import org.glassfish.web.deployment.descriptor.JspGroupDescriptor;
 import org.glassfish.web.deployment.descriptor.TagLibConfigurationDescriptor;
 import org.glassfish.web.deployment.xml.WebTagNames;
 import org.w3c.dom.Node;
 
-import jakarta.servlet.descriptor.*;
-
 /**
  * This node represents the <jsp-config> element in a web application.
  */
-public class JspConfigNode extends DeploymentDescriptorNode<JspConfigDescriptorImpl> {
+public class JspConfigNode extends DeploymentDescriptorNode<JspConfigDefinitionDescriptor> {
 
     public JspConfigNode() {
         super();
@@ -37,30 +40,19 @@ public class JspConfigNode extends DeploymentDescriptorNode<JspConfigDescriptorI
         registerElementHandler(new XMLElement(WebTagNames.JSP_GROUP), JspGroupNode.class, "addJspGroup");
     }
 
-    protected JspConfigDescriptorImpl descriptor = null;
+    private JspConfigDefinitionDescriptor descriptor;
 
-    /**
-     * @return the descriptor instance to associate with this XMLNode
-     */
     @Override
-    public JspConfigDescriptorImpl getDescriptor() {
+    public JspConfigDefinitionDescriptor getDescriptor() {
         if (descriptor == null) {
-            descriptor = new JspConfigDescriptorImpl();
+            descriptor = new JspConfigDefinitionDescriptor();
         }
         return descriptor;
     }
 
 
-    /**
-     * write the descriptor class to a DOM tree and return it
-     *
-     * @param parent node in the DOM tree
-     * @param node name for the root element of this xml fragment
-     * @param the descriptor to write
-     * @return the DOM tree top node
-     */
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, JspConfigDescriptorImpl descriptor) {
+    public Node writeDescriptor(Node parent, String nodeName, JspConfigDefinitionDescriptor descriptor) {
         Node myNode = appendChild(parent, nodeName);
         TagLibNode lNode = new TagLibNode();
         for (TaglibDescriptor desc : descriptor.getTaglibs()) {

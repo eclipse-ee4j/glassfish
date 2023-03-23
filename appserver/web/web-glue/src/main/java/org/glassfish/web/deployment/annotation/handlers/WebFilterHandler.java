@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,6 +25,15 @@ import com.sun.enterprise.deployment.web.ServletFilter;
 import com.sun.enterprise.deployment.web.ServletFilterMapping;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.net.URLPattern;
+
+import jakarta.servlet.DispatcherType;
+import jakarta.servlet.Filter;
+import jakarta.servlet.annotation.WebFilter;
+import jakarta.servlet.annotation.WebInitParam;
+
+import java.util.Arrays;
+import java.util.logging.Level;
+
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
@@ -31,15 +41,6 @@ import org.glassfish.apf.HandlerProcessingResult;
 import org.glassfish.web.deployment.descriptor.ServletFilterDescriptor;
 import org.glassfish.web.deployment.descriptor.ServletFilterMappingDescriptor;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.servlet.DispatcherType;
-import jakarta.servlet.annotation.WebFilter;
-import jakarta.servlet.annotation.WebInitParam;
-import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Level;
 
 /**
  * This handler is responsible in handling
@@ -50,53 +51,47 @@ import java.util.logging.Level;
 @Service
 @AnnotationHandlerFor(WebFilter.class)
 public class WebFilterHandler extends AbstractWebHandler {
-    protected final static LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(WebFilterHandler.class);
+
+    protected final static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(WebFilterHandler.class);
 
     public WebFilterHandler() {
     }
 
     @Override
-    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,
-            WebComponentContext[] webCompContexts)
-            throws AnnotationProcessorException {
-
-        return processAnnotation(ainfo,
-                webCompContexts[0].getDescriptor().getWebBundleDescriptor());
+    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo, WebComponentContext[] webCompContexts)
+        throws AnnotationProcessorException {
+        return processAnnotation(ainfo, webCompContexts[0].getDescriptor().getWebBundleDescriptor());
     }
 
     @Override
-    protected HandlerProcessingResult processAnnotation(
-            AnnotationInfo ainfo, WebBundleContext webBundleContext)
-            throws AnnotationProcessorException {
-
+    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo, WebBundleContext webBundleContext)
+        throws AnnotationProcessorException {
         return processAnnotation(ainfo, webBundleContext.getDescriptor());
     }
 
-    private HandlerProcessingResult processAnnotation(
-            AnnotationInfo ainfo, WebBundleDescriptor webBundleDesc)
-            throws AnnotationProcessorException {
 
-        Class filterClass = (Class)ainfo.getAnnotatedElement();
-        if (!jakarta.servlet.Filter.class.isAssignableFrom(filterClass)) {
+    private HandlerProcessingResult processAnnotation(AnnotationInfo ainfo, WebBundleDescriptor webBundleDesc)
+        throws AnnotationProcessorException {
+        Class<?> filterClass = (Class<?>) ainfo.getAnnotatedElement();
+        if (!Filter.class.isAssignableFrom(filterClass)) {
             log(Level.SEVERE, ainfo,
                 localStrings.getLocalString(
                 "web.deployment.annotation.handlers.needtoimpl",
                 "The Class {0} having annotation {1} need to implement the interface {2}.",
-                new Object[] { filterClass.getName(), WebFilter.class.getName(), jakarta.servlet.Filter.class.getName() }));
+                new Object[] { filterClass.getName(), WebFilter.class.getName(), Filter.class.getName() }));
             return getDefaultFailedResult();
         }
 
         WebFilter webFilterAn = (WebFilter)ainfo.getAnnotation();
         String filterName = webFilterAn.filterName();
-        if (filterName == null || filterName.length() == 0) {
+        if (filterName == null || filterName.isEmpty()) {
             filterName = filterClass.getName();
         }
 
         ServletFilterDescriptor servletFilterDesc = null;
         for (ServletFilter sfDesc : webBundleDesc.getServletFilters()) {
             if (filterName.equals(sfDesc.getName())) {
-                servletFilterDesc = (ServletFilterDescriptor)sfDesc;
+                servletFilterDesc = (ServletFilterDescriptor) sfDesc;
                 break;
             }
         }
@@ -107,8 +102,7 @@ public class WebFilterHandler extends AbstractWebHandler {
             webBundleDesc.addServletFilter(servletFilterDesc);
         } else {
             String filterImpl = servletFilterDesc.getClassName();
-            if (filterImpl != null && filterImpl.length() > 0 &&
-                    !filterImpl.equals(filterClass.getName())) {
+            if (filterImpl != null && !filterImpl.isEmpty() && !filterImpl.equals(filterClass.getName())) {
                 log(Level.SEVERE, ainfo,
                     localStrings.getLocalString(
                     "web.deployment.annotation.handlers.filternamedontmatch",
@@ -120,16 +114,14 @@ public class WebFilterHandler extends AbstractWebHandler {
         }
 
         servletFilterDesc.setClassName(filterClass.getName());
-        if (servletFilterDesc.getDescription() == null ||
-                servletFilterDesc.getDescription().length() == 0) {
-
+        if (servletFilterDesc.getDescription() == null || servletFilterDesc.getDescription().isEmpty()) {
             servletFilterDesc.setDescription(webFilterAn.description());
         }
         if (servletFilterDesc.hasSetDisplayName()) {
             servletFilterDesc.setDisplayName(webFilterAn.displayName());
         }
 
-        if (servletFilterDesc.getInitializationParameters().size() == 0) {
+        if (servletFilterDesc.getInitializationParameters().isEmpty()) {
             WebInitParam[] initParams = webFilterAn.initParams();
             if (initParams != null && initParams.length > 0) {
                 for (WebInitParam initParam : initParams) {
@@ -159,8 +151,8 @@ public class WebFilterHandler extends AbstractWebHandler {
         for (ServletFilterMapping sfm : webBundleDesc.getServletFilterMappings()) {
             if (filterName.equals(sfm.getName())) {
                 servletFilterMappingDesc = sfm;
-                hasUrlPattern = hasUrlPattern || (sfm.getUrlPatterns().size() > 0);
-                hasServletName = hasServletName || (sfm.getServletNames().size() > 0);
+                hasUrlPattern = hasUrlPattern || !sfm.getUrlPatterns().isEmpty();
+                hasServletName = hasServletName || !sfm.getServletNames().isEmpty();
             }
         }
 
@@ -189,8 +181,7 @@ public class WebFilterHandler extends AbstractWebHandler {
             }
 
             if (!validUrlPatterns) {
-                String urlPatternString =
-                    (urlPatterns != null) ? Arrays.toString(urlPatterns) : "";
+                String urlPatternString = urlPatterns == null ? "" : Arrays.toString(urlPatterns);
 
                 throw new IllegalArgumentException(localStrings.getLocalString(
                         "web.deployment.annotation.handlers.invalidUrlPatterns",
@@ -208,9 +199,9 @@ public class WebFilterHandler extends AbstractWebHandler {
             }
         }
 
-        if (servletFilterMappingDesc.getDispatchers().size() == 0) {
+        if (servletFilterMappingDesc.getDispatchers().isEmpty()) {
             DispatcherType[] dispatcherTypes = webFilterAn.dispatcherTypes();
-                if (dispatcherTypes != null && dispatcherTypes.length > 0) {
+            if (dispatcherTypes != null && dispatcherTypes.length > 0) {
                 for (DispatcherType dType : dispatcherTypes) {
                     servletFilterMappingDesc.addDispatcher(dType.name());
                 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,16 @@
 
 package org.glassfish.ejb.deployment.annotation.handlers;
 
+import com.sun.enterprise.deployment.MethodDescriptor;
+import com.sun.enterprise.deployment.annotation.context.EjbContext;
+
+import jakarta.interceptor.ExcludeClassInterceptors;
+
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import jakarta.interceptor.ExcludeClassInterceptors;
 
-import com.sun.enterprise.deployment.MethodDescriptor;
-import com.sun.enterprise.deployment.annotation.context.EjbContext;
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
@@ -34,50 +37,43 @@ import org.glassfish.ejb.deployment.descriptor.InterceptorBindingDescriptor;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * This handler is responsible for handling the
- * jakarta.ejb.ExcludeClassInterceptors annotation.
- *
+ * This handler is responsible for handling the {@link ExcludeClassInterceptors} annotation.
  */
 @Service
 @AnnotationHandlerFor(ExcludeClassInterceptors.class)
-public class ExcludeClassInterceptorsHandler
-    extends AbstractAttributeHandler {
+public class ExcludeClassInterceptorsHandler extends AbstractAttributeHandler {
 
-    public ExcludeClassInterceptorsHandler() {
-    }
+    @Override
+    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo, EjbContext[] ejbContexts)
+        throws AnnotationProcessorException {
 
-    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,
-            EjbContext[] ejbContexts) throws AnnotationProcessorException {
-
-         EjbBundleDescriptorImpl ejbBundle =
-             ((EjbDescriptor)ejbContexts[0].getDescriptor()).
-                 getEjbBundleDescriptor();
-
-         for(EjbContext next : ejbContexts) {
-
+        // Assumption: there is just one possibility, same instance for all.
+        EjbBundleDescriptorImpl ejbBundle = ((EjbDescriptor) ejbContexts[0].getDescriptor()).getEjbBundleDescriptor();
+        for (EjbContext next : ejbContexts) {
             EjbDescriptor ejbDescriptor = (EjbDescriptor) next.getDescriptor();
 
             // Create binding information.
-            InterceptorBindingDescriptor binding =
-                new InterceptorBindingDescriptor();
+            InterceptorBindingDescriptor binding = new InterceptorBindingDescriptor();
 
             binding.setEjbName(ejbDescriptor.getName());
             binding.setExcludeClassInterceptors(true);
 
             // Annotation can be defined at a method level or constructor level.
-            MethodDescriptor md = null;
-            if(ElementType.METHOD.equals(ainfo.getElementType())) {
+            final MethodDescriptor md;
+            if (ElementType.METHOD.equals(ainfo.getElementType())) {
                 Method m = (Method) ainfo.getAnnotatedElement();
                 md = new MethodDescriptor(m, MethodDescriptor.EJB_BEAN);
-            } else if(ElementType.CONSTRUCTOR.equals(ainfo.getElementType())) {
-                Constructor c = (Constructor) ainfo.getAnnotatedElement();
-                Class cl = c.getDeclaringClass();
-                Class[] ctorParamTypes = c.getParameterTypes();
+            } else if (ElementType.CONSTRUCTOR.equals(ainfo.getElementType())) {
+                Constructor<?> c = (Constructor<?>) ainfo.getAnnotatedElement();
+                Class<?> cl = c.getDeclaringClass();
+                Class<?>[] ctorParamTypes = c.getParameterTypes();
                 String[] parameterClassNames = (new MethodDescriptor()).getParameterClassNamesFor(null, ctorParamTypes);
 
-                md = new MethodDescriptor(cl.getSimpleName(), null,
-                        parameterClassNames, MethodDescriptor.EJB_BEAN);
-            } // else throw Exception?
+                md = new MethodDescriptor(cl.getSimpleName(), null, parameterClassNames, MethodDescriptor.EJB_BEAN);
+            } else {
+                // else throw Exception?
+                md = null;
+            }
 
             binding.setBusinessMethod(md);
             ejbBundle.prependInterceptorBinding(binding);
@@ -86,11 +82,8 @@ public class ExcludeClassInterceptorsHandler
         return getDefaultProcessedResult();
     }
 
-    /**
-     * @return an array of annotation types this annotation handler would
-     * require to be processed (if present) before it processes it's own
-     * annotation type.
-     */
+
+    @Override
     public Class<? extends Annotation>[] getTypeDependencies() {
         return getEjbAnnotationTypes();
     }

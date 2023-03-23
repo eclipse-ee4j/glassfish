@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,6 +32,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static com.sun.enterprise.deployment.MethodDescriptor.EJB_LOCAL;
 
 /**
  * Handler for EJBLocalObject invocations through EJBLocalObject proxy.
@@ -139,7 +141,7 @@ public final class EJBLocalObjectInvocationHandler extends EJBLocalObjectImpl im
             if ((methodClass == jakarta.ejb.EJBLocalObject.class) || invInfo.ejbIntfOverride) {
                 return invokeEJBLocalObjectMethod(method.getName(), args);
             } else if (invInfo.targetMethod1 == null) {
-                Object[] params = new Object[] {invInfo.ejbName, "Local", invInfo.method.toString()};
+                Object[] params = new Object[] {invInfo.ejbName, EJB_LOCAL, invInfo.method.toString()};
                 logger.log(Level.SEVERE, "ejb.bean_class_method_not_found", params);
                 String errorMsg = localStrings.getLocalString("ejb.bean_class_method_not_found", "", params);
                 throw new EJBException(errorMsg);

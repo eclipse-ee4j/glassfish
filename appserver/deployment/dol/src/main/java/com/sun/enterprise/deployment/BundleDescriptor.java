@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -453,8 +453,8 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
         String postConstructMethodName = postConstructDesc == null ? null : postConstructDesc.getLifecycleCallbackMethod();
         LifecycleCallbackDescriptor preDestroyDesc = getPreDestroyDescriptorByClass(className, jndiNameEnv);
         String preDestroyMethodName = preDestroyDesc == null ? null : preDestroyDesc.getLifecycleCallbackMethod();
-        injectionInfo = new InjectionInfo(className, postConstructMethodName, preDestroyMethodName,
-            getInjectableResourcesByClass(className, jndiNameEnv));
+        List<InjectionCapable> resourcesByClass = getInjectableResourcesByClass(className, jndiNameEnv);
+        injectionInfo = new InjectionInfo(className, postConstructMethodName, preDestroyMethodName, resourcesByClass);
 
         // store it in the cache and return
         injectionInfos.put(key, injectionInfo);
@@ -525,7 +525,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
      * Define implementation of getInjectableResourceByClass here so it
      * isn't replicated across appclient, web, ejb descriptors.
      */
-    protected List<InjectionCapable> getInjectableResourcesByClass(String className, JndiNameEnvironment jndiNameEnv) {
+    public List<InjectionCapable> getInjectableResourcesByClass(String className, JndiNameEnvironment jndiNameEnv) {
         List<InjectionCapable> injectables = new LinkedList<>();
 
         for (InjectionCapable next : getInjectableResources(jndiNameEnv)) {

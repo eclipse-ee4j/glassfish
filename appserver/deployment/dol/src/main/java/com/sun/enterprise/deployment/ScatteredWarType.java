@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,24 +17,18 @@
 
 package com.sun.enterprise.deployment;
 
-import org.glassfish.api.deployment.archive.ArchiveType;
+import jakarta.inject.Singleton;
 
+import org.glassfish.api.deployment.archive.ScatteredWarArchiveType;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * {@link ArchiveType} .
+ * Scattered Web Archive Type - injectable service
  *
  * @author sanjeeb.sahoo@oracle.com
  */
-@Service(name = ScatteredWarType.ARCHIVE_TYPE)
-// don't change to imports, it is easy to make a mistake and replace it with ejb's Singleton
-@jakarta.inject.Singleton
-public class ScatteredWarType extends ArchiveType {
+@Service(name = ScatteredWarArchiveType.ARCHIVE_TYPE)
+@Singleton
+public class ScatteredWarType extends ScatteredWarArchiveType {
 
-    public static final String ARCHIVE_TYPE = "scattered-war";
-    public static final String ARCHIVE_EXTENSION = "";
-
-    public ScatteredWarType() {
-        super(ARCHIVE_TYPE, ARCHIVE_EXTENSION);
-    }
 }

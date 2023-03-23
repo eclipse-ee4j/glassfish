@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -156,8 +156,7 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer<DataSource
             }
 
             // ejb interceptors
-            Set<EjbInterceptor> ejbInterceptors = ejbDesc.getInterceptors();
-            for (EjbInterceptor ejbInterceptor : ejbInterceptors) {
+            for (EjbInterceptor ejbInterceptor : ejbDesc.getInterceptors()) {
                 for (Descriptor resourceDescriptor : ejbInterceptor.getResourceDescriptors(JavaEEResourceType.DSD)) {
                     registerDSDReferredByApplication(appName, (DataSourceDefinitionDescriptor) resourceDescriptor);
                 }
@@ -216,8 +215,7 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer<DataSource
                 }
             }
             // ejb interceptors
-            Set<EjbInterceptor> ejbInterceptors = ejbDesc.getInterceptors();
-            for (EjbInterceptor ejbInterceptor : ejbInterceptors) {
+            for (EjbInterceptor ejbInterceptor : ejbDesc.getInterceptors()) {
                 for (Descriptor resourceDescriptor : ejbInterceptor.getResourceDescriptors(JavaEEResourceType.DSD)) {
                     unregisterDSDReferredByApplication((DataSourceDefinitionDescriptor) resourceDescriptor);
                 }
@@ -494,7 +492,7 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer<DataSource
         private final DataSourceDefinitionDescriptor dataSourceDefinitionDescriptor;
         private final SimpleJndiName name;
 
-        public MyJdbcConnectionPool(DataSourceDefinitionDescriptor desc, SimpleJndiName name) {
+        MyJdbcConnectionPool(DataSourceDefinitionDescriptor desc, SimpleJndiName name) {
             this.dataSourceDefinitionDescriptor = desc;
             this.name = name;
         }

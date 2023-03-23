@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,7 +28,6 @@ import com.sun.enterprise.deployment.web.LoginConfiguration;
 import com.sun.enterprise.security.SecurityContext;
 import com.sun.enterprise.security.SecurityRoleMapperFactoryGen;
 import com.sun.enterprise.security.SecurityServicesUtil;
-import com.sun.enterprise.security.WebSecurityDeployerProbeProvider;
 import com.sun.enterprise.security.audit.AuditManager;
 import com.sun.enterprise.security.ee.CachedPermission;
 import com.sun.enterprise.security.ee.CachedPermissionImpl;
@@ -50,11 +49,8 @@ import java.security.CodeSource;
 import java.security.Permission;
 import java.security.Principal;
 import java.security.cert.Certificate;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.WeakHashMap;
 import java.util.logging.Logger;
 
 import org.glassfish.exousia.AuthorizationService;
@@ -79,8 +75,6 @@ import static org.glassfish.api.web.Constants.ADMIN_VS;
  *
  * @author Jean-Francois Arcand
  * @author Harpreet Singh.
- * @todo introduce a new class called AbstractSecurityManager. Move functionality from this class and EJBSecurityManager class
- * and extend this class from AbstractSecurityManager
  */
 public class WebSecurityManager {
     private static final Logger logger = LogUtils.getLogger();
@@ -100,9 +94,6 @@ public class WebSecurityManager {
     private String codebase;
 
     protected CodeSource codesource;
-
-    // protection domain cache
-    private final Map protectionDomainCache = Collections.synchronizedMap(new WeakHashMap());
 
     private static final WebResourcePermission allResources = new WebResourcePermission("/*", (String) null);
 
@@ -128,8 +119,6 @@ public class WebSecurityManager {
     // WebBundledescriptor
     private final WebBundleDescriptor webBundleDescriptor;
 
-    // ProbeProvider
-    private final WebSecurityDeployerProbeProvider probeProvider = new WebSecurityDeployerProbeProvider();
     private boolean register = true;
 
     AuthorizationService authorizationService;

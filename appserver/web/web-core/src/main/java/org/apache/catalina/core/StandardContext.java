@@ -750,8 +750,6 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
 
     protected boolean showArchivedRealPathEnabled = true;
 
-    protected int servletReloadCheckSecs = 1;
-
     /**
      * Should we generate directory listings?
      */

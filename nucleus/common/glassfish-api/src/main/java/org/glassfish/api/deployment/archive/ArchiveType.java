@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -49,17 +49,8 @@ public abstract class ArchiveType {
     private final String value;
 
     /**
-     * Return the file extension string for this module type.
-     */
-    public String getExtension() {
-        return extension;
-    }
-
-    /**
-     * Ensure a correct value is passed as that's what is returned by {@link #toString()} which is sometimes used during
-     * comparison as some old APIs like {@link ArchiveHandler#getArchiveType()} use String.
-     *
-     * @param value value of this archive type as reported in {@link #toString()}
+     * @param value value of this archive type as reported. Used for comparison
+     *            and as {@link #toString()}
      * @param extension file extension for this type of archive
      */
     protected ArchiveType(String value, String extension) {
@@ -67,12 +58,23 @@ public abstract class ArchiveType {
         this.value = value;
     }
 
+
     /**
      * Same as calling {@link #ArchiveType(String, String)} with an empty string as extension.
      */
     protected ArchiveType(String value) {
-        this(value, "");
+        this.extension = "";
+        this.value = value;
     }
+
+
+    /**
+     * @return the file extension string for this module type.
+     */
+    public String getExtension() {
+        return extension;
+    }
+
 
     /**
      * @return the string equivalent of this type.
@@ -82,15 +84,24 @@ public abstract class ArchiveType {
         return value;
     }
 
+
+    /**
+     * @return value's hash code.
+     */
     @Override
     public int hashCode() {
-        return toString().hashCode();
+        return value.hashCode();
     }
 
+
+    /**
+     * @return two types are equal just if they have the same value ({@link #toString()})
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof ArchiveType) {
-            return toString().equals(obj.toString());
+            ArchiveType other = (ArchiveType) obj;
+            return value.equals(other.value);
         }
         return false;
     }

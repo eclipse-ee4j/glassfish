@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +17,8 @@
 
 package org.glassfish.javaee.full.deployment;
 
-import static com.sun.enterprise.deployment.deploy.shared.Util.getURIName;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -25,18 +26,16 @@ import java.util.logging.Logger;
 import org.glassfish.api.deployment.archive.ArchiveDetector;
 import org.glassfish.api.deployment.archive.ArchiveHandler;
 import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.EarArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.deployment.EarType;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
+import static com.sun.enterprise.deployment.deploy.shared.Util.getURIName;
 
 /**
- * Detects ear type archives. It's rank can be set using system property {@link #EAR_DETECTOR_RANK_PROP}. Default rank
- * is {@link #DEFAULT_EAR_DETECTOR_RANK}.
+ * Detects ear type archives. It's rank can be set using system property {@link #EAR_DETECTOR_RANK_PROP}.
+ * Default rank is {@link #DEFAULT_EAR_DETECTOR_RANK}.
  *
  * @author sanjeeb.sahoo@oracle.com
  */
@@ -46,9 +45,9 @@ public class EarDetector implements ArchiveDetector {
 
     public static final String EAR_DETECTOR_RANK_PROP = "glassfish.ear.detector.rank";
     public static final int DEFAULT_EAR_DETECTOR_RANK = 100;
-    public static final String ARCHIVE_TYPE = EarType.ARCHIVE_TYPE;
+    public static final String ARCHIVE_TYPE = EarArchiveType.ARCHIVE_TYPE;
 
-    private Logger logger = Logger.getLogger(getClass().getPackage().getName());
+    private final Logger logger = Logger.getLogger(getClass().getPackage().getName());
 
     private static final String APPLICATION_XML = "META-INF/application.xml";
     private static final String SUN_APPLICATION_XML = "META-INF/sun-application.xml";
@@ -64,13 +63,7 @@ public class EarDetector implements ArchiveDetector {
     @Inject
     private EarSniffer sniffer;
 
-    @Inject
-    private EarType archiveType;
-
     private ArchiveHandler archiveHandler;
-
-
-
 
 
     @Override
@@ -115,7 +108,7 @@ public class EarDetector implements ArchiveDetector {
 
     @Override
     public ArchiveType getArchiveType() {
-        return archiveType;
+        return EarArchiveType.EAR_ARCHIVE;
     }
 
     // introspecting the sub archives to see if any of them

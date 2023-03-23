@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,8 +23,7 @@ import com.sun.enterprise.deployment.util.DOLUtils;
 import jakarta.persistence.EntityManagerFactory;
 
 /**
- * An object representing a component environment reference
- * to an EntityManagerFactory
+ * An object representing a component environment reference to an {@link EntityManagerFactory}
  */
 public class EntityManagerFactoryReferenceDescriptor extends EnvironmentProperty
     implements EntityManagerFactoryReference {
@@ -38,7 +37,9 @@ public class EntityManagerFactoryReferenceDescriptor extends EnvironmentProperty
         this.unitName = unitName;
     }
 
-    public EntityManagerFactoryReferenceDescriptor() {}
+
+    public EntityManagerFactoryReferenceDescriptor() {
+    }
 
     @Override
     public void setUnitName(String unitName) {
@@ -55,6 +56,9 @@ public class EntityManagerFactoryReferenceDescriptor extends EnvironmentProperty
         return EntityManagerFactory.class.getName();
     }
 
+    /**
+     * Ignored.
+     */
     @Override
     public void setInjectResourceType(String resourceType) {
     }
@@ -64,15 +68,6 @@ public class EntityManagerFactoryReferenceDescriptor extends EnvironmentProperty
         this.referringBundle = referringBundle;
     }
 
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        return super.equals(other);
-    }
 
     @Override
     public BundleDescriptor getReferringBundleDescriptor() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,12 +20,15 @@ package org.glassfish.ejb.deployment.util;
 import com.sun.ejb.containers.EJBTimerSchedule;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EjbInterceptor;
 import com.sun.enterprise.deployment.InjectionCapable;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
 import com.sun.enterprise.deployment.MethodDescriptor;
 import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
+import com.sun.enterprise.deployment.RoleReference;
+import com.sun.enterprise.deployment.ScheduledTimerDescriptor;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.WebService;
 import com.sun.enterprise.deployment.types.EjbReference;
@@ -37,7 +40,6 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -56,12 +58,13 @@ import org.glassfish.ejb.deployment.descriptor.FieldDescriptor;
 import org.glassfish.ejb.deployment.descriptor.InterceptorBindingDescriptor;
 import org.glassfish.ejb.deployment.descriptor.PersistenceDescriptor;
 import org.glassfish.ejb.deployment.descriptor.RelationshipDescriptor;
-import org.glassfish.ejb.deployment.descriptor.ScheduledTimerDescriptor;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.deployment.AnnotationTypesProvider;
 import org.glassfish.logging.annotation.LogMessageInfo;
+import org.glassfish.security.common.Role;
 
 import static com.sun.enterprise.deployment.MethodDescriptor.EJB_BEAN;
+import static com.sun.enterprise.deployment.MethodDescriptor.EJB_LOCAL;
 
 /**
  * This class validates a EJB Bundle descriptor once loaded from an .jar file
@@ -69,11 +72,7 @@ import static com.sun.enterprise.deployment.MethodDescriptor.EJB_BEAN;
  * @author Jerome Dochez
  */
 public class EjbBundleValidator extends ComponentValidator implements EjbBundleVisitor, EjbVisitor {
-
-    protected EjbBundleDescriptorImpl ejbBundleDescriptor;
-    protected EjbDescriptor ejb;
-
-    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(EjbBundleValidator.class);
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(EjbBundleValidator.class);
     private static final Logger LOG  = LogFacade.getLogger();
 
     @LogMessageInfo(
@@ -82,6 +81,10 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
                 "but you have configuration at [{1}].",
         level = "WARNING")
     private static final String REDUNDANT_PASSIVATION_CALLBACK_METADATA = "AS-EJB-00048";
+
+    protected EjbBundleDescriptorImpl ejbBundleDescriptor;
+    protected EjbDescriptor ejb;
+
 
     @Override
     public void accept(BundleDescriptor descriptor) {
@@ -117,48 +120,67 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
     }
 
     @Override
-    public void accept(com.sun.enterprise.deployment.EjbBundleDescriptor bundleDesc) {
+    public void accept(EjbBundleDescriptor bundleDesc) {
         this.application = bundleDesc.getApplication();
-        EjbBundleDescriptorImpl bundleDescriptor = (EjbBundleDescriptorImpl) bundleDesc;
-        if (bundleDescriptor.getEjbs().isEmpty()) {
-            throw new IllegalArgumentException(localStrings.getLocalString(
+        EjbBundleDescriptorImpl bundle = (EjbBundleDescriptorImpl) bundleDesc;
+        if (bundle.getEjbs().isEmpty()) {
+            throw new IllegalArgumentException(I18N.getLocalString(
                 "enterprise.deployment.util.no_ejb_in_ejb_jar",
                 "Invalid ejb jar {0}: it contains zero ejb. A valid ejb jar requires at least one session/entity/message driven bean.",
-                new Object[] {bundleDescriptor.getModuleDescriptor().getArchiveUri()}));
+                new Object[] {bundle.getModuleDescriptor().getArchiveUri()}));
         }
 
-        if (!bundleDescriptor.areResourceReferencesValid()) {
+        if (!areResourceReferencesValid(bundle)) {
             throw new RuntimeException("Incorrectly resolved role references");
         }
 
-        this.ejbBundleDescriptor = bundleDescriptor;
+        this.ejbBundleDescriptor = bundle;
 
         // Now that we have a classloader, we have to check for any
         // interceptor bindings that were specified in .xml to use
         // the syntax that refers to all overloaded methods with a
         // given name.
-        handleOverloadedInterceptorMethodBindings(bundleDescriptor);
+        handleOverloadedInterceptorMethodBindings(bundle);
 
-        InterceptorBindingTranslator bindingTranslator = new InterceptorBindingTranslator(bundleDescriptor);
+        InterceptorBindingTranslator bindingTranslator = new InterceptorBindingTranslator(bundle);
 
-        for (EjbDescriptor ejb0 : bundleDescriptor.getEjbs()) {
+        for (EjbDescriptor ejb0 : bundle.getEjbs()) {
             if (ejb0.isRemoteInterfacesSupported()
                 && (ejb0.getRemoteClassName() == null || ejb0.getRemoteClassName().isBlank())) {
                 throw new IllegalArgumentException(
-                    localStrings.getLocalString("enterprise.deployment.util.componentInterfaceMissing",
+                    I18N.getLocalString("enterprise.deployment.util.componentInterfaceMissing",
                         "{0} Component interface is missing in EJB [{1}]", "Remote", ejb0.getName()));
             }
             if (ejb0.isLocalInterfacesSupported()
                 && (ejb0.getLocalClassName() == null || ejb0.getLocalClassName().isBlank())) {
                 throw new IllegalArgumentException(
-                    localStrings.getLocalString("enterprise.deployment.util.componentInterfaceMissing",
-                        "{0} Component interface is missing in EJB [{1}]", "Local", ejb0.getName()));
+                    I18N.getLocalString("enterprise.deployment.util.componentInterfaceMissing",
+                        "{0} Component interface is missing in EJB [{1}]", EJB_LOCAL, ejb0.getName()));
             }
 
             if (!EjbEntityDescriptor.TYPE.equals(ejb0.getType())) {
                 ejb0.applyInterceptors(bindingTranslator);
             }
         }
+    }
+
+
+    /**
+     * @return true if all ejb role references link to roles specified here.
+     */
+    private boolean areResourceReferencesValid(EjbBundleDescriptorImpl bundle) {
+        // run through each of the ejb's role references, checking that the roles exist in bundle
+        for (EjbDescriptor ejbDescriptor : bundle.getEjbs()) {
+            for (RoleReference reference : ejbDescriptor.getRoleReferences()) {
+                Role referredRole = reference.getRole();
+                Set<Role> roles = bundle.getRoles();
+                if (!referredRole.getName().isEmpty() && !roles.contains(referredRole)) {
+                    LOG.log(Level.WARNING, "Bad role reference to {0}, roles: {1}", new Object[] {referredRole, roles});
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
 
@@ -169,7 +191,7 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
         }
 
         ClassLoader cl = bundleDesc.getClassLoader();
-        List<InterceptorBindingDescriptor> newBindings = new LinkedList<>();
+        List<InterceptorBindingDescriptor> newBindings = new ArrayList<>();
         for (InterceptorBindingDescriptor next : origBindings) {
             if (!next.getNeedsOverloadResolution()) {
                 newBindings.add(next);
@@ -229,8 +251,7 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
         // if not, this means there is a referencing error in the user
         // application
         if (ejb instanceof DummyEjbDescriptor) {
-            throw new IllegalArgumentException(localStrings.getLocalString("enterprise.deployment.exceptionbeanbundle",
-                "Referencing error: this bundle has no bean of name: {0}", new Object[] {ejb.getName()}));
+            throw new IllegalArgumentException("Referencing error: this bundle has no bean of name: " + ejb.getName());
         }
 
         this.ejb =ejb;
@@ -379,7 +400,7 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
             EjbSessionDescriptor sessionDesc = (EjbSessionDescriptor) ejb;
             Long statefulTimeoutValue = sessionDesc.getStatefulTimeoutValue();
             if (statefulTimeoutValue != null && statefulTimeoutValue < -1) {
-                throw new IllegalArgumentException(localStrings.getLocalString(
+                throw new IllegalArgumentException(I18N.getLocalString(
                     "enterprise.deployment.invalid_stateful_timeout_value",
                     "Invalid value [{0}] for @StatefulTimeout or <stateful-timeout> element in EJB [{1}]."
                     + " Values less than -1 are not valid.",
@@ -448,7 +469,7 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
 
                     boolean fullyQualified = next.contains("#");
 
-                    EjbBundleDescriptorImpl sessionEjbBundleDescriptor = sessionDesc.getEjbBundleDescriptor();
+                    EjbBundleDescriptor sessionEjbBundleDescriptor = sessionDesc.getEjbBundleDescriptor();
                     Application app = sessionEjbBundleDescriptor.getApplication();
 
                     if (fullyQualified) {
@@ -476,7 +497,7 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
 
                     } else {
 
-                        EjbBundleDescriptorImpl bundle = ejb.getEjbBundleDescriptor();
+                        EjbBundleDescriptor bundle = ejb.getEjbBundleDescriptor();
                         if (!bundle.hasEjbByName(next) ) {
                             throw new RuntimeException("Invalid DependsOn dependency '" +
                                next + "' for EJB " + ejb.getName());

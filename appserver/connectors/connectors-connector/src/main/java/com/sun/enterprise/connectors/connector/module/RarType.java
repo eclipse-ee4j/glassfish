@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,25 +17,17 @@
 
 package com.sun.enterprise.connectors.connector.module;
 
-import org.glassfish.api.deployment.archive.ArchiveType;
+import jakarta.inject.Singleton;
 
+import org.glassfish.api.deployment.archive.RarArchiveType;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * {@link ArchiveType} .
+ * Resource Archive Type - injectable service.
  *
  * @author sanjeeb.sahoo@oracle.com
  */
-@Service(name = RarType.ARCHIVE_TYPE)
-@jakarta.inject.Singleton
-public class RarType extends ArchiveType {
-
-    public static final String ARCHIVE_TYPE = "rar";
-
-
-    public static final String ARCHIVE_EXTENSION = ".rar";
-
-    public RarType() {
-        super(ARCHIVE_TYPE, ARCHIVE_EXTENSION);
-    }
+@Service(name = RarArchiveType.ARCHIVE_TYPE)
+@Singleton
+public class RarType extends RarArchiveType {
 }

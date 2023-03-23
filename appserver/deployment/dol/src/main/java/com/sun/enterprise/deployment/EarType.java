@@ -16,25 +16,18 @@
 
 package com.sun.enterprise.deployment;
 
-import org.glassfish.api.deployment.archive.ArchiveType;
+import jakarta.inject.Singleton;
 
+import org.glassfish.api.deployment.archive.EarArchiveType;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * {@link ArchiveType} .
+ * EAR Archive Type - injectable singleton.
  *
  * @author sanjeeb.sahoo@oracle.com
  */
-@Service(name = EarType.ARCHIVE_TYPE)
-// don't change to imports, it is easy to make a mistake and replace it with ejb's Singleton
-@jakarta.inject.Singleton
-public class EarType extends ArchiveType {
-
-    public static final String ARCHIVE_TYPE = "ear";
-
-    public static final String ARCHIVE_EXTENSION = ".ear";
-
-    public EarType() {
-        super(ARCHIVE_TYPE, ARCHIVE_EXTENSION);
-    }
+@Service(name = EarArchiveType.ARCHIVE_TYPE)
+@Singleton
+@Deprecated(forRemoval = true, since = "7.0.3")
+public class EarType extends EarArchiveType {
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,23 +17,26 @@
 
 package org.glassfish.ejb.deployment.annotation.handlers;
 
-import java.lang.annotation.Annotation;
-import java.lang.annotation.ElementType;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.Set;
+import com.sun.enterprise.deployment.EjbInterceptor;
+import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
+import com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
+import com.sun.enterprise.deployment.MethodDescriptor;
+import com.sun.enterprise.deployment.annotation.context.EjbContext;
+import com.sun.enterprise.deployment.annotation.context.EjbInterceptorContext;
+
 import jakarta.ejb.PostActivate;
 import jakarta.ejb.PrePassivate;
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.AroundTimeout;
 import jakarta.interceptor.Interceptors;
 
-import com.sun.enterprise.deployment.EjbInterceptor;
-import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
-import com.sun.enterprise.deployment.MethodDescriptor;
-import com.sun.enterprise.deployment.annotation.context.EjbContext;
-import com.sun.enterprise.deployment.annotation.context.EjbInterceptorContext;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.ElementType;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
@@ -44,64 +48,51 @@ import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 import org.glassfish.ejb.deployment.descriptor.InterceptorBindingDescriptor;
 import org.jvnet.hk2.annotations.Service;
 
-import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
-
 /**
- * This handler is responsible for handling jakarta.ejb.Interceptors
- *
+ * This handler is responsible for handling {@link Interceptors}
  */
 @Service
 @AnnotationHandlerFor(Interceptors.class)
 public class InterceptorsHandler extends AbstractAttributeHandler {
 
-    public InterceptorsHandler() {
-    }
-
+    @Override
     protected boolean supportTypeInheritance() {
         return true;
     }
 
-    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,
-            EjbContext[] ejbContexts) throws AnnotationProcessorException {
-
+    @Override
+    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo, EjbContext[] ejbContexts)
+        throws AnnotationProcessorException {
         Interceptors interceptors = (Interceptors) ainfo.getAnnotation();
 
-
-        EjbBundleDescriptorImpl ejbBundle =
-            ((EjbDescriptor)ejbContexts[0].getDescriptor()).
-                getEjbBundleDescriptor();
+        // Assumption: there is just one possibility, same instance for all.
+        EjbBundleDescriptorImpl ejbBundle = ((EjbDescriptor) ejbContexts[0].getDescriptor()).getEjbBundleDescriptor();
 
         // Process each of the interceptor classes.
-        for(Class interceptor : interceptors.value()) {
+        for (Class<?> interceptor : interceptors.value()) {
             processInterceptorClass(interceptor, ejbBundle, ainfo);
         }
 
-        for(EjbContext next : ejbContexts) {
-
+        for (EjbContext next : ejbContexts) {
             EjbDescriptor ejbDescriptor = (EjbDescriptor) next.getDescriptor();
-
-            // Create binding information.
-            InterceptorBindingDescriptor binding =
-                new InterceptorBindingDescriptor();
-
+            InterceptorBindingDescriptor binding = new InterceptorBindingDescriptor();
             binding.setEjbName(ejbDescriptor.getName());
 
-            for(Class interceptor : interceptors.value()) {
+            for (Class<?> interceptor : interceptors.value()) {
                 binding.appendInterceptorClass(interceptor.getName());
             }
 
-            if(ElementType.METHOD.equals(ainfo.getElementType())) {
+            if (ElementType.METHOD.equals(ainfo.getElementType())) {
                 Method m = (Method) ainfo.getAnnotatedElement();
-                MethodDescriptor md =
-                    new MethodDescriptor(m, MethodDescriptor.EJB_BEAN);
+                MethodDescriptor md = new MethodDescriptor(m, MethodDescriptor.EJB_BEAN);
                 binding.setBusinessMethod(md);
-            } else if(ElementType.CONSTRUCTOR.equals(ainfo.getElementType())) {
-                                Constructor c = (Constructor) ainfo.getAnnotatedElement();
-                Class cl = c.getDeclaringClass();
-                Class[] ctorParamTypes = c.getParameterTypes();
+            } else if (ElementType.CONSTRUCTOR.equals(ainfo.getElementType())) {
+                Constructor<?> c = (Constructor<?>) ainfo.getAnnotatedElement();
+                Class<?> cl = c.getDeclaringClass();
+                Class<?>[] ctorParamTypes = c.getParameterTypes();
                 String[] parameterClassNames = (new MethodDescriptor()).getParameterClassNamesFor(null, ctorParamTypes);
-                MethodDescriptor md = new MethodDescriptor(cl.getSimpleName(), null,
-                        parameterClassNames, MethodDescriptor.EJB_BEAN);
+                MethodDescriptor md = new MethodDescriptor(cl.getSimpleName(), null, parameterClassNames,
+                    MethodDescriptor.EJB_BEAN);
                 binding.setBusinessMethod(md);
             }
 
@@ -119,37 +110,31 @@ public class InterceptorsHandler extends AbstractAttributeHandler {
         return getDefaultProcessedResult();
     }
 
-    private void processInterceptorClass(Class interceptorClass,
-            EjbBundleDescriptorImpl ejbBundle, AnnotationInfo ainfo)
-        throws AnnotationProcessorException {
 
-        Set<LifecycleCallbackDescriptor> aroundInvokeDescriptors =
-            new HashSet<LifecycleCallbackDescriptor>();
-        Set<LifecycleCallbackDescriptor> aroundTimeoutDescriptors =
-            new HashSet<LifecycleCallbackDescriptor>();
-        Set<LifecycleCallbackDescriptor> postActivateDescriptors =
-            new HashSet<LifecycleCallbackDescriptor>();
-        Set<LifecycleCallbackDescriptor> prePassivateDescriptors =
-            new HashSet<LifecycleCallbackDescriptor>();
+    private void processInterceptorClass(Class<?> interceptorClass, EjbBundleDescriptorImpl ejbBundle,
+        AnnotationInfo ainfo) throws AnnotationProcessorException {
+        Set<LifecycleCallbackDescriptor> aroundInvokeDescriptors = new HashSet<>();
+        Set<LifecycleCallbackDescriptor> aroundTimeoutDescriptors = new HashSet<>();
+        Set<LifecycleCallbackDescriptor> postActivateDescriptors = new HashSet<>();
+        Set<LifecycleCallbackDescriptor> prePassivateDescriptors = new HashSet<>();
 
         ComponentDefinition cdef = new ComponentDefinition(interceptorClass);
-        for(Method m : cdef.getMethods()) {
-            if( m.getAnnotation(AroundInvoke.class) != null ) {
+        for (Method m : cdef.getMethods()) {
+            if (m.getAnnotation(AroundInvoke.class) != null) {
                 aroundInvokeDescriptors.add(getLifecycleCallbackDescriptor(m));
             }
-            if( m.getAnnotation(AroundTimeout.class) != null ) {
+            if (m.getAnnotation(AroundTimeout.class) != null) {
                 aroundTimeoutDescriptors.add(getLifecycleCallbackDescriptor(m));
             }
-            if( m.getAnnotation(PostActivate.class) != null ) {
+            if (m.getAnnotation(PostActivate.class) != null) {
                 postActivateDescriptors.add(getLifecycleCallbackDescriptor(m));
             }
-            if( m.getAnnotation(PrePassivate.class) != null ) {
+            if (m.getAnnotation(PrePassivate.class) != null) {
                 prePassivateDescriptors.add(getLifecycleCallbackDescriptor(m));
             }
         }
 
-        EjbInterceptor interceptor =
-            ejbBundle.getInterceptorByClassName(interceptorClass.getName());
+        EjbInterceptor interceptor = ejbBundle.getInterceptorByClassName(interceptorClass.getName());
         if (interceptor == null) {
             interceptor = new EjbInterceptor();
             interceptor.setInterceptorClassName(interceptorClass.getName());
@@ -157,42 +142,40 @@ public class InterceptorsHandler extends AbstractAttributeHandler {
             ejbBundle.addInterceptor(interceptor);
         }
 
-        if (aroundInvokeDescriptors.size() > 0) {
+        if (!aroundInvokeDescriptors.isEmpty()) {
             interceptor.addAroundInvokeDescriptors(aroundInvokeDescriptors);
         }
 
-        if (aroundTimeoutDescriptors.size() > 0) {
+        if (!aroundTimeoutDescriptors.isEmpty()) {
             interceptor.addAroundTimeoutDescriptors(aroundTimeoutDescriptors);
         }
 
-        if (postActivateDescriptors.size() > 0) {
-            interceptor.addCallbackDescriptors(CallbackType.POST_ACTIVATE,
-                postActivateDescriptors);
+        if (!postActivateDescriptors.isEmpty()) {
+            interceptor.addCallbackDescriptors(CallbackType.POST_ACTIVATE, postActivateDescriptors);
         }
 
-        if (prePassivateDescriptors.size() > 0) {
-            interceptor.addCallbackDescriptors(CallbackType.PRE_PASSIVATE,
-                prePassivateDescriptors);
+        if (!prePassivateDescriptors.isEmpty()) {
+            interceptor.addCallbackDescriptors(CallbackType.PRE_PASSIVATE, prePassivateDescriptors);
         }
 
         // process resource related annotations
-        EjbInterceptorContext ejbInterceptorContext =
-            new EjbInterceptorContext(interceptor);
+        EjbInterceptorContext ejbInterceptorContext = new EjbInterceptorContext(interceptor);
         ProcessingContext procContext = ainfo.getProcessingContext();
         procContext.pushHandler(ejbInterceptorContext);
-        procContext.getProcessor().process(
-            procContext, new Class[] { interceptorClass });
-        return;
+        procContext.getProcessor().process(procContext, new Class[] {interceptorClass});
     }
+
 
     /**
      * @return an array of annotation types this annotation handler would
-     * require to be processed (if present) before it processes it's own
-     * annotation type.
+     *         require to be processed (if present) before it processes it's own
+     *         annotation type.
      */
+    @Override
     public Class<? extends Annotation>[] getTypeDependencies() {
         return getEjbAnnotationTypes();
     }
+
 
     private LifecycleCallbackDescriptor getLifecycleCallbackDescriptor(Method m) {
         LifecycleCallbackDescriptor lccDesc = new LifecycleCallbackDescriptor();

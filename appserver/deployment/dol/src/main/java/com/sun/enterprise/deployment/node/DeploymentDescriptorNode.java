@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,11 +36,11 @@ import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.node.runtime.RuntimeBundleNode;
 import com.sun.enterprise.deployment.util.DOLUtils;
-import com.sun.enterprise.deployment.web.MimeMapping;
 import com.sun.enterprise.deployment.xml.TagNames;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -55,8 +55,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.function.Function;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.Descriptor;
@@ -68,11 +66,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.Attributes;
 
+import static com.sun.enterprise.deployment.util.DOLUtils.ADD_DESCRIPTOR_FAILURE;
 import static com.sun.enterprise.deployment.util.DOLUtils.INVALID_DESC_MAPPING;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINER;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.WARNING;
 
 /**
  * Superclass of all Nodes implementation
@@ -97,8 +95,7 @@ import static java.util.logging.Level.WARNING;
  */
 public abstract class DeploymentDescriptorNode<T extends Descriptor> implements XMLNode<T>  {
 
-    private static final Logger LOG = DOLUtils.getDefaultLogger();
-    protected static final LocalStringManagerImpl I18N_NODE = new LocalStringManagerImpl(DeploymentDescriptorNode.class);
+    private static final Logger LOG = DOLUtils.getLogger();
     private static final String QNAME_SEPARATOR = ":";
 
     private static final Map<Class<?>, Function<String, Object>> ALLOWED_DESCRIPTOR_INFO_CONVERSIONS = Map.of(
@@ -193,31 +190,15 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
             return;
         }
         try {
-            final Class<?> parameterType;
-            if (node.getDescriptor() instanceof ResourceDescriptor
-                && ((ResourceDescriptor) node.getDescriptor()).getResourceType() != null) {
-                parameterType = ResourceDescriptor.class;
-            } else if (node.getDescriptor() instanceof MimeMapping) {
-                parameterType = MimeMapping.class;
-            } else {
-                parameterType = node.getDescriptor().getClass();
-            }
-            Method toInvoke = getDescriptor().getClass().getMethod(addMethods.get(xmlRootTag), parameterType);
-            toInvoke.invoke(getDescriptor(), new Object[] {node.getDescriptor()});
-        } catch (InvocationTargetException e) {
-            Throwable t = e.getTargetException();
-            if (t instanceof IllegalArgumentException) {
-                // We report the error but we continue loading, this will allow the verifier to
-                // catch these errors or to register an error handler for notification
-                LOG.log(SEVERE, DOLUtils.ADD_DESCRIPTOR_FAILURE,
-                    new Object[] {node.getDescriptor().getClass(), getDescriptor().getClass()});
-            } else {
-                LOG.log(SEVERE, "Error occurred", t);
-            }
-        } catch (Throwable t) {
-            LOG.log(SEVERE, DOLUtils.ADD_DESCRIPTOR_FAILURE,
-                new Object[] {node.getDescriptor().getClass(), getDescriptor().getClass()});
-            LOG.log(SEVERE, "Error occurred", t);
+            String methodName = addMethods.get(xmlRootTag);
+            final Class<?> parameterType = node.getDescriptor().getClass();
+            Method toInvoke = getCompatibleMethod(getDescriptor().getClass(), methodName, parameterType);
+            toInvoke.invoke(getDescriptor(), node.getDescriptor());
+        } catch (Exception t) {
+            // We report the error but we continue loading, this will allow the verifier to
+            // catch these errors or to register an error handler for notification
+            LOG.log(ERROR, ADD_DESCRIPTOR_FAILURE, node.getDescriptor().getClass(), getDescriptor().getClass());
+            LOG.log(ERROR, "Cause:", t);
         }
     }
 
@@ -299,15 +280,15 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
     @Override
     public XMLNode<?> getHandlerFor(XMLElement element) {
         if (handlers == null) {
-            LOG.log(WARNING, INVALID_DESC_MAPPING, new Object[] {this, "No handler registered"});
+            LOG.log(WARNING, "No handler registered in " + this);
             return null;
         }
         Class<?> c = handlers.get(element.getQName());
         if (c == null) {
-            LOG.log(WARNING, INVALID_DESC_MAPPING, new Object[] {element.getQName(), "No handler registered"});
+            LOG.log(WARNING, "No class registered for " + element.getQName() + " in " + this);
             return null;
         }
-        LOG.log(FINER, "New Handler requested for {0}", c);
+        LOG.log(DEBUG, "New Handler requested for {0}", c);
         DeploymentDescriptorNode<?> node;
         try {
             node = (DeploymentDescriptorNode<?>) c.getDeclaredConstructor().newInstance();
@@ -342,7 +323,7 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
             for (int i = 0; i < attributes.getLength(); i++) {
                 String attrName = attributes.getQName(i);
                 String attrValue = attributes.getValue(i);
-                LOG.log(FINER, "With attribute {0} and value {1}", new Object[] {attrName, attrValue});
+                LOG.log(DEBUG, "With attribute {0} and value {1}", attrName, attrValue);
                 // we try the setAttributeValue first, if not processed then the setElement
                 if (!setAttributeValue(element, new XMLElement(attrName), attrValue)) {
                     setElementValue(new XMLElement(attrName), attrValue);
@@ -441,38 +422,40 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
      */
     @Override
     public void setElementValue(XMLElement element, String value) {
-        Map<String, String> dispatchTable = getDispatchTable();
-        if (dispatchTable != null && dispatchTable.containsKey(element.getQName())) {
-            if (dispatchTable.get(element.getQName()) == null) {
-                // we just ignore these values from the DDs
-                LOG.log(FINE, "Deprecated element {0} with value {1} is ignored.", new Object[] {element, value});
-                return;
-            }
-            try {
-                T descriptor = getDescriptor();
-                if (descriptor == null) {
-                    LOG.log(WARNING, INVALID_DESC_MAPPING, new Object[] {element.getQName(), value});
-                } else {
-                    setDescriptorInfo(descriptor, dispatchTable.get(element.getQName()), value);
-                }
-                return;
-            } catch (InvocationTargetException e) {
-                LOG.log(WARNING, INVALID_DESC_MAPPING,
-                    new Object[] {dispatchTable.get(element.getQName()), getDescriptor().getClass()});
-                Throwable t = e.getTargetException();
-                if (t instanceof IllegalArgumentException) {
-                    // We report the error but we continue loading, this will allow the verifier
-                    // to catch these errors or to register an error handler for notification
-                    LOG.log(WARNING, INVALID_DESC_MAPPING, new Object[] {element, value});
-                } else {
-                    LOG.log(WARNING, "Error occurred", t);
-                }
-            } catch (Throwable t) {
-                LOG.log(WARNING, "Error occurred", t);
-            }
+        LOG.log(DEBUG, "setElementValue(element={0}, value={1})", element, value);
+        T descriptor = getDescriptor();
+        if (descriptor == null) {
+            throw new IllegalStateException("Descriptor not available in " + this);
         }
-        if (!value.isBlank()) {
-            LOG.log(WARNING, INVALID_DESC_MAPPING, new Object[] {element.getQName(), value});
+        Map<String, String> dispatchTable = getDispatchTable();
+        if (dispatchTable == null) {
+            throw new IllegalStateException("Method dispatch table not available in " + this);
+        }
+        String qName = element.getQName();
+        String methodName = dispatchTable.get(qName);
+        if (methodName == null) {
+            // we just ignore these values from the DDs
+            LOG.log(WARNING, "Deprecated element {0} with value {1} is ignored for descriptor {2} of node {3}.",
+                element, value, descriptor.getClass(), getClass());
+            LOG.log(DEBUG, "Helpful stacktrace for the previous warning.", new RuntimeException());
+            return;
+        }
+        try {
+            setDescriptorInfo(descriptor, methodName, value);
+        } catch (InvocationTargetException e) {
+            LOG.log(WARNING, INVALID_DESC_MAPPING, qName, value, descriptor.getClass());
+            Throwable t = e.getCause();
+            if (t instanceof IllegalArgumentException) {
+                // We report the error but we continue loading, this will allow the verifier
+                // to catch these errors or to register an error handler for notification
+                LOG.log(WARNING, INVALID_DESC_MAPPING, qName, value, descriptor.getClass());
+            } else {
+                throw new IllegalArgumentException(
+                    "Failed " + methodName + " when tried to set '" + value + "' to the descriptor " + descriptor, e);
+            }
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalArgumentException(
+                "Failed " + methodName + " when tried to set '" + value + "' to the descriptor " + descriptor, e);
         }
     }
 
@@ -491,17 +474,21 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
 
 
     /**
-     * call a setter method on a descriptor with a new value
+     * Call a setter method on a descriptor with a new value converted automatically
+     * to a compatible type.
      *
      * @param target the descriptor to use
      * @param methodName the setter method to invoke
      * @param value the new value for the field in the descriptor
+     * @throws ReflectiveOperationException if method failed because of number formatting or method
+     *             doesn't exist.
+     * @throws InvocationTargetException if the invocation failed for other reason.
      * @deprecated guessing element type
      */
     @Deprecated
     private void setDescriptorInfo(Object target, String methodName, String value) throws ReflectiveOperationException {
-        LOG.log(Level.FINE, "setDescriptorInfo(target.class={0}, methodName={1}, value={2})",
-            new Object[] {target.getClass(), methodName, value});
+        LOG.log(Level.DEBUG, "setDescriptorInfo(target.class={0}, methodName={1}, value={2})", target.getClass(),
+            methodName, value);
 
         ReflectiveOperationException e = new ReflectiveOperationException("Could not find compatible setter.");
         for (Entry<Class<?>, Function<String, Object>> entry : ALLOWED_DESCRIPTOR_INFO_CONVERSIONS.entrySet()) {
@@ -647,9 +634,7 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
     }
 
     /**
-     *  <p>
      * @return the Document for the given node
-     * </p>
      */
     static protected Document getOwnerDocument(Node node) {
 
@@ -660,9 +645,8 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
     }
 
     /**
-     * <p>
      * Append a new element child to the current node
-     * </p>
+     *
      * @param parent is the parent node for the new child element
      * @param elementName is new element tag name
      * @return the newly created child node
@@ -675,9 +659,7 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
 
 
     /**
-     * <p>
      * Append a new text child
-     * </p>
      *
      * @param parent for the new child element
      * @param elementName is the new element tag name
@@ -696,9 +678,7 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
 
 
     /**
-     * <p>
      * Append a new text child
-     * </p>
      *
      * @param parent for the new child element
      * @param elementName is the new element tag name
@@ -716,9 +696,7 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
 
 
     /**
-     * <p>
      * Append a new text child
-     * </p>
      *
      * @param parent for the new child element
      * @param elementName is the new element tag name
@@ -731,9 +709,7 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
 
 
     /**
-     * <p>
      * Append a new text child even if text is empty
-     * </p>
      *
      * @param parent for the new child element
      * @param elementName is the new element tag name
@@ -749,9 +725,8 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
     }
 
     /**
-     * <p>
      * Append a new attribute to an element
-     * </p>
+     *
      * @param parent for the new child element
      * @param elementName is the new element tag name
      * @param text the text for the new element
@@ -766,6 +741,7 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
 
     /**
      * Set a namespace attribute on an element.
+     *
      * @param element on which to set attribute
      * @param prefix raw prefix (without "xmlns:")
      * @param namespaceURI namespace URI to which prefix is mapped.
@@ -1156,5 +1132,42 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
         // by the deploytool, there is no prefix->namespace information in
         // the first place.
         setAttributeNS(element, prefix, namespaceUri);
+    }
+
+
+    /**
+     * First tries the exact match, when no such method exists it tries to find any compatible
+     * method of the same name.
+     *
+     * @return never null, throws runtime exceptions if it is not possible to find the method for
+     *         any reason.
+     */
+    private Method getCompatibleMethod(Class<?> descriptor, String methodName, Class<?> parameter) {
+        LOG.log(DEBUG, "getCompatibleMethod(descriptor={0}, methodName={1}, parameter={2})",
+            descriptor, methodName, parameter);
+        try {
+            return descriptor.getMethod(methodName, parameter);
+        } catch (NoSuchMethodException e) {
+            // ignore
+        } catch (SecurityException e) {
+            throw new IllegalStateException("Reflection failed - SecurityException", e);
+        }
+
+        Method[] methods = descriptor.getMethods();
+        for (Method method : methods) {
+            Class<?>[] parameterTypes = method.getParameterTypes();
+            if (parameterTypes.length != 1) {
+                continue;
+            }
+            if (!method.getName().equals(methodName)) {
+                continue;
+            }
+            Class<?> parameterOfMethod = parameterTypes[0];
+            if (parameterOfMethod.isAssignableFrom(parameter)) {
+                return method;
+            }
+        }
+        throw new IllegalArgumentException("Reflection failed for descriptor " + descriptor + ", it's method named "
+            + methodName + " and parameter " + parameter);
     }
 }

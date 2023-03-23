@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,7 +34,7 @@ public class EjbsContext extends AnnotationContext implements ComponentContext {
     private final EjbContext[] ejbContexts;
     private final String componentClassName;
 
-    public EjbsContext(EjbDescriptor[] ejbDescs, Class ejbClass) {
+    public EjbsContext(EjbDescriptor[] ejbDescs, Class<?> ejbClass) {
         ejbContexts = new EjbContext[ejbDescs.length];
         for (int i = 0; i < ejbDescs.length; i++) {
             ejbContexts[i] = new EjbContext(ejbDescs[i], ejbClass);

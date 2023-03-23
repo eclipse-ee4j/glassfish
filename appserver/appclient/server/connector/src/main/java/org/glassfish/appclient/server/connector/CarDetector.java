@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 import org.glassfish.api.deployment.archive.ArchiveDetector;
 import org.glassfish.api.deployment.archive.ArchiveHandler;
 import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.CarArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
@@ -39,7 +40,7 @@ import org.jvnet.hk2.annotations.Service;
  *
  * @author sanjeeb.sahoo@oracle.com
  */
-@Service(name = CarType.ARCHIVE_TYPE)
+@Service(name = CarArchiveType.ARCHIVE_TYPE)
 @Singleton
 public class CarDetector implements ArchiveDetector {
     private static final String CAR_DETECTOR_RANK_PROP = "glassfish.car.detector.rank";
@@ -49,8 +50,6 @@ public class CarDetector implements ArchiveDetector {
     private ServiceLocator serviceLocator;
     @Inject
     private AppClientSniffer sniffer;
-    @Inject
-    private CarType archiveType;
     private ArchiveHandler archiveHandler;
 
     private static final Logger LOG = Logger.getLogger(CarDetector.class.getName());
@@ -94,7 +93,7 @@ public class CarDetector implements ArchiveDetector {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                archiveHandler = serviceLocator.getService(ArchiveHandler.class, CarType.ARCHIVE_TYPE);
+                archiveHandler = serviceLocator.getService(ArchiveHandler.class, CarArchiveType.ARCHIVE_TYPE);
             }
             return archiveHandler;
         }
@@ -102,6 +101,6 @@ public class CarDetector implements ArchiveDetector {
 
     @Override
     public ArchiveType getArchiveType() {
-        return archiveType;
+        return CarArchiveType.CAR_ARCHIVE;
     }
 }

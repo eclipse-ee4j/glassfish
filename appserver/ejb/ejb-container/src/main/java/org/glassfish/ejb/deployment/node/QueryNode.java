@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -75,8 +75,8 @@ public class QueryNode extends DeploymentDescriptorNode<QueryDescriptor> {
             } else if (QUERY_LOCAL_TYPE_MAPPING.equals(value)) {
                 descriptor.setHasLocalReturnTypeMapping();
             } else {
-                DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
-                    new Object[] {((Descriptor) getParentNode().getDescriptor()).getName(), value});
+                DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING, new Object[] {
+                    ((Descriptor) getParentNode().getDescriptor()).getName(), value, descriptor.getClass()});
             }
         } else {
             super.setElementValue(element, value);

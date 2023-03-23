@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,22 +23,19 @@ import org.glassfish.deployment.common.Descriptor;
 import java.util.Set;
 import jakarta.servlet.descriptor.JspPropertyGroupDescriptor;
 
-/**
- */
-public class JspGroupDescriptor extends Descriptor
-        implements JspPropertyGroupDescriptor {
+public class JspGroupDescriptor extends Descriptor implements JspPropertyGroupDescriptor {
 
     private String elIgnored;
     private String scriptingInvalid;
     private String isXml;
     private String deferredSyntaxAllowedAsLiteral;
     private String trimDirectiveWhitespaces;
-    private Set<String> urlPatterns = null;
-    private Set<String> includePreludes = null;
-    private Set<String> includeCodas = null;
-    private String pageEncoding = null;
-    private String defaultContentType = null;
-    private String buffer = null;
+    private Set<String> urlPatterns;
+    private Set<String> includePreludes;
+    private Set<String> includeCodas;
+    private String pageEncoding;
+    private String defaultContentType;
+    private String buffer;
     private String errorOnUndeclaredNamespace;
 
     /**
@@ -46,7 +44,7 @@ public class JspGroupDescriptor extends Descriptor
     @Override
     public Set<String> getUrlPatterns() {
         if (this.urlPatterns == null) {
-            this.urlPatterns = new OrderedSet<String>();
+            this.urlPatterns = new OrderedSet<>();
         }
         return this.urlPatterns;
     }
@@ -73,7 +71,7 @@ public class JspGroupDescriptor extends Descriptor
     @Override
     public Set<String> getIncludePreludes() {
         if (this.includePreludes == null) {
-            this.includePreludes = new OrderedSet<String>();
+            this.includePreludes = new OrderedSet<>();
         }
         return this.includePreludes;
     }
@@ -100,7 +98,7 @@ public class JspGroupDescriptor extends Descriptor
     @Override
     public Set<String> getIncludeCodas() {
         if (this.includeCodas == null) {
-            this.includeCodas = new OrderedSet<String>();
+            this.includeCodas = new OrderedSet<>();
         }
         return this.includeCodas;
     }
@@ -252,9 +250,6 @@ public class JspGroupDescriptor extends Descriptor
         return errorOnUndeclaredNamespace;
     }
 
-    /**
-     * @return a string describing the values I hold
-     */
     @Override
     public void print(StringBuffer toStringBuffer) {
         toStringBuffer.append("\n JspGroupDescriptor");

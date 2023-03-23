@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,24 +17,20 @@
 
 package org.glassfish.ejb.deployment.node.runtime;
 
-import java.util.Iterator;
-import java.util.Vector;
-
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.node.runtime.RuntimeDescriptorNode;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
+
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
-import org.glassfish.ejb.deployment.descriptor.runtime.IASPersistenceManagerDescriptor;
-import org.glassfish.ejb.deployment.descriptor.runtime.PersistenceManagerInUse;
 import org.w3c.dom.Node;
 
 /**
  * This node handles the pm-descriptors runtime xml element
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
-public class PMDescriptorsNode extends RuntimeDescriptorNode {
+@Deprecated(forRemoval = true, since = "3.1")
+public class PMDescriptorsNode extends RuntimeDescriptorNode<EjbBundleDescriptorImpl> {
 
     public PMDescriptorsNode() {
         registerElementHandler(new XMLElement(RuntimeTagNames.PM_DESCRIPTOR), PMDescriptorNode.class, "addPersistenceManager");
@@ -41,31 +38,8 @@ public class PMDescriptorsNode extends RuntimeDescriptorNode {
     }
 
 
-    /**
-     * write the descriptor class to a DOM tree and return it
-     *
-     * @param parent node for the DOM tree
-     * @param node name
-     * @param the descriptor to write
-     * @return the DOM tree top node
-     */
+    @Override
     public Node writeDescriptor(Node parent, String nodeName, EjbBundleDescriptorImpl descriptor) {
-        Node pms = null;
-        Vector pmDescriptors = descriptor.getPersistenceManagers();
-        if (pmDescriptors != null && !pmDescriptors.isEmpty()) {
-            pms = super.writeDescriptor(parent, nodeName, descriptor);
-            PMDescriptorNode pmNode = new PMDescriptorNode();
-
-            for (Iterator pmIterator = pmDescriptors.iterator(); pmIterator.hasNext();) {
-                IASPersistenceManagerDescriptor pmDescriptor = (IASPersistenceManagerDescriptor) pmIterator.next();
-                pmNode.writeDescriptor(pms, RuntimeTagNames.PM_DESCRIPTOR, pmDescriptor);
-            }
-            PersistenceManagerInUse inUse = descriptor.getPersistenceManagerInUse();
-            if (inUse != null) {
-                PMInUseNode inUseNode = new PMInUseNode();
-                inUseNode.writeDescriptor(pms, RuntimeTagNames.PM_INUSE, inUse);
-            }
-        }
-        return pms;
+        return null;
     }
 }

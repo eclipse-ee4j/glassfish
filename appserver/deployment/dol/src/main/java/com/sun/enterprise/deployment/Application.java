@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,6 +37,7 @@ import jakarta.persistence.EntityManagerFactory;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -46,6 +47,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -62,10 +64,10 @@ import org.glassfish.deployment.versioning.VersioningUtils;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.security.common.Role;
+import org.jvnet.hk2.annotations.Optional;
 
 /**
- * Objects of this type encapsulate the data and behaviour of a J2EE
- * application.
+ * Objects of this type encapsulate the data and behaviour of a JEE application.
  *
  * @author Danny Coward
  */
@@ -76,6 +78,9 @@ public class Application extends CommonResourceBundleDescriptor
             MessageDestinationReferenceContainer {
 
     private static final long serialVersionUID = 1L;
+    private static final Logger LOG = DOLUtils.getDefaultLogger();
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(Application.class);
+
 
     /**
      * default value for the library-directory element
@@ -102,13 +107,11 @@ public class Application extends CommonResourceBundleDescriptor
      */
     private long uniqueId;
 
-    // IASRI 4645310
     /**
      * represents the virtual status of this application object
      */
     private boolean virtual;
 
-    // IASRI 4662001, 4720955
     /**
      * represents whether all ejb modules in an application will be pass by
      * value or pass by reference
@@ -122,7 +125,6 @@ public class Application extends CommonResourceBundleDescriptor
     // data structure to map roles to users and groups
     private transient SecurityRoleMapper roleMapper;
 
-    // IASRI 4648645 - application registration name
     /**
      * name used to register this application
      */
@@ -140,6 +142,7 @@ public class Application extends CommonResourceBundleDescriptor
     private String realm;
 
     @Inject
+    @Optional
     private transient SecurityRoleMapperFactory securityRoleMapperFactory;
 
     /**
@@ -165,9 +168,6 @@ public class Application extends CommonResourceBundleDescriptor
     private final Set<EntityManagerFactoryReferenceDescriptor> entityManagerFactoryReferences = new HashSet<>();
     private final Set<EntityManagerReferenceDescriptor> entityManagerReferences = new HashSet<>();
 
-    // for i18N
-    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(Application.class);
-
     private Set<Role> appRoles;
 
     private String libraryDirectory;
@@ -181,18 +181,11 @@ public class Application extends CommonResourceBundleDescriptor
 
     private final Set<ApplicationParam> applicationParams = new HashSet<>();
 
-    private static final ServiceLocator habitat = Globals.getDefaultHabitat();
-
     private Application() {
-        super("", localStrings.getLocalString(
+        super("", I18N.getLocalString(
                 "enterprise.deployment.application.description",
                 "Application description"));
     }
-
-    // Create logger object per Java SDK 1.4 to log messages
-    // introduced Santanu De, Sun Microsystems, March 2002
-
-    static Logger _logger = DOLUtils.getDefaultLogger();
 
 
     /**
@@ -209,10 +202,11 @@ public class Application extends CommonResourceBundleDescriptor
         return modules.isEmpty();
     }
 
+
     /**
      * Creates a new application to hold a standalone module
      *
-     * @param name      the application name
+     * @param name the application name
      * @param newModule the standalone module descriptor
      * @return the application
      */
@@ -246,13 +240,15 @@ public class Application extends CommonResourceBundleDescriptor
         return application;
     }
 
+    /**
+     * @return a new empty application
+     */
     public static Application createApplication() {
-        // create a new empty application
-        Application retVal = habitat.create(Application.class);
-        habitat.inject(retVal);
-        habitat.postConstruct(retVal);
-
-        return retVal; // new Application();
+        ServiceLocator locator = Globals.getStaticBaseServiceLocator();
+        Application application = locator.create(Application.class);
+        locator.inject(application);
+        locator.postConstruct(application);
+        return application;
     }
 
     /**
@@ -291,9 +287,8 @@ public class Application extends CommonResourceBundleDescriptor
                 return er;
             }
         }
-        throw new IllegalArgumentException(localStrings.getLocalString(
-                "enterprise.deployment.exceptionapphasnoejbrefbyname",
-                "This app [{0}] has no ejb reference by the name of [{1}] ", new Object[]{getName(), name}));
+        throw new IllegalArgumentException(
+            MessageFormat.format("This app [{0}] has no ejb reference by the name of [{1}] ", getName(), name));
     }
 
 
@@ -327,7 +322,7 @@ public class Application extends CommonResourceBundleDescriptor
             }
         }
         throw new IllegalArgumentException(
-            localStrings.getLocalString("enterprise.deployment.exceptionapphasnoservicerefbyname",
+            I18N.getLocalString("enterprise.deployment.exceptionapphasnoservicerefbyname",
                 "This app [{0}] has no service reference by the name of [{1}]",
                 new Object[] {getRegistrationName(), name}));
     }
@@ -363,7 +358,7 @@ public class Application extends CommonResourceBundleDescriptor
                 return mdr;
             }
         }
-        throw new IllegalArgumentException(localStrings.getLocalString("exceptionapphasnomsgdestrefbyname",
+        throw new IllegalArgumentException(I18N.getLocalString("exceptionapphasnomsgdestrefbyname",
             "This app [{0}] has no message destination reference by the name of [{1}]",
             new Object[] {getRegistrationName(), name}));
     }
@@ -399,7 +394,7 @@ public class Application extends CommonResourceBundleDescriptor
                 return jdr;
             }
         }
-        throw new IllegalArgumentException(localStrings.getLocalString(
+        throw new IllegalArgumentException(I18N.getLocalString(
                 "enterprise.deployment.exceptionapphasnoresourceenvrefbyname",
                 "This app {0} has no resource environment reference by the name of {1}",
                 new Object[] {getRegistrationName(), name}));
@@ -440,16 +435,12 @@ public class Application extends CommonResourceBundleDescriptor
                 return next;
             }
         }
-        throw new IllegalArgumentException(localStrings.getLocalString(
+        throw new IllegalArgumentException(I18N.getLocalString(
                 "enterprise.deployment.exceptionapphasnoresourcerefbyname",
                 "This app {0} has no resource reference by the name of {1}",
                 new Object[]{getRegistrationName(), name}));
     }
 
-    /**
-     * Returns the environment property object searching on the supplied key.
-     * throws an illegal argument exception if no such environment property exists.
-     */
     @Override
     public EnvironmentProperty getEnvironmentPropertyByName(String name) {
         for (EnvironmentProperty ev : this.getEnvironmentProperties()) {
@@ -457,15 +448,12 @@ public class Application extends CommonResourceBundleDescriptor
                 return ev;
             }
         }
-        throw new IllegalArgumentException(localStrings.getLocalString(
+        throw new IllegalArgumentException(I18N.getLocalString(
                 "enterprise.deployment.exceptionapphasnoenvpropertybyname",
                 "This app {0} has no environment property by the name of {1}",
                 new Object[]{getRegistrationName(), name}));
     }
 
-    /**
-     * Return a copy of the structure holding the environment properties.
-     */
     @Override
     public Set<EnvironmentProperty> getEnvironmentProperties() {
         return environmentProperties;
@@ -476,14 +464,9 @@ public class Application extends CommonResourceBundleDescriptor
         this.environmentProperties.add(environmentProperty);
     }
 
-    /**
-     * Removes the given environment property from me.
-     */
-
     @Override
     public void removeEnvironmentProperty(EnvironmentProperty environmentProperty) {
         this.getEnvironmentProperties().remove(environmentProperty);
-
     }
 
 
@@ -505,7 +488,7 @@ public class Application extends CommonResourceBundleDescriptor
             }
         }
         throw new IllegalArgumentException(
-            localStrings.getLocalString("enterprise.deployment.exceptionapphasnoentitymgrfactoryrefbyname",
+            I18N.getLocalString("enterprise.deployment.exceptionapphasnoentitymgrfactoryrefbyname",
                 "This app {0} has no entity manager factory reference by the name of {1}",
                 new Object[] {getRegistrationName(), name}));
     }
@@ -536,7 +519,7 @@ public class Application extends CommonResourceBundleDescriptor
             }
         }
         throw new IllegalArgumentException(
-            localStrings.getLocalString("enterprise.deployment.exceptionapphasnoentitymgrrefbyname",
+            I18N.getLocalString("enterprise.deployment.exceptionapphasnoentitymgrrefbyname",
                 "This app {0} has no entity manager reference by the name of {1}",
                 new Object[] {getRegistrationName(), name}));
     }
@@ -584,7 +567,7 @@ public class Application extends CommonResourceBundleDescriptor
 
     @Override
     public List<InjectionCapable> getInjectableResourcesByClass(String className) {
-        return (getInjectableResourcesByClass(className, this));
+        return getInjectableResourcesByClass(className, this);
     }
 
     @Override
@@ -596,8 +579,6 @@ public class Application extends CommonResourceBundleDescriptor
         generatedXMLDir = xmlDir;
     }
 
-   /**
-     */
     public String getGeneratedXMLDirectory() {
         return generatedXMLDir;
     }
@@ -613,15 +594,16 @@ public class Application extends CommonResourceBundleDescriptor
     public void setRegistrationName(String appId) {
 
         // at his point we need to swap our RoleMapper, if we have one...
-        SecurityRoleMapper roleMapper = null;
+        SecurityRoleMapper roleMapper;
         try {
             roleMapper = getRoleMapper();
         } catch (IllegalArgumentException ignore) {
+            roleMapper = null;
         }
 
         if (roleMapper != null) {
             if (securityRoleMapperFactory == null) {
-                throw new IllegalArgumentException(localStrings.getLocalString(
+                throw new IllegalArgumentException(I18N.getLocalString(
                         "enterprise.deployment.norolemapperfactorydefine",
                         "This application has no role mapper factory defined"));
             }
@@ -927,7 +909,7 @@ public class Application extends CommonResourceBundleDescriptor
             URI resolvedUri = originUri.resolve(relativeTargetUri);
             return resolvedUri.getPath();
         } catch (URISyntaxException use) {
-            _logger.log(Level.FINE, "origin " + origin + " has invalid syntax", use);
+            LOG.log(Level.FINE, "origin " + origin + " has invalid syntax", use);
             return null;
         }
     }
@@ -1065,7 +1047,7 @@ public class Application extends CommonResourceBundleDescriptor
                 return ejbd.getEjbByName(ejbName);
             }
         }
-        throw new IllegalArgumentException(localStrings.getLocalString(
+        throw new IllegalArgumentException(I18N.getLocalString(
             "enterprise.deployment.exceptionapphasnobeannamed", "This application has no beans of name {0}", ejbName));
     }
 
@@ -1144,13 +1126,14 @@ public class Application extends CommonResourceBundleDescriptor
         }
         Set<BundleDescriptor> bundleSet = new OrderedSet<>();
         for (ModuleDescriptor<BundleDescriptor> aModule : getModules()) {
-            if (aModule.getDescriptor().getModuleType() == bundleType) {
+            if (Objects.equals(aModule.getDescriptor().getModuleType(), bundleType)) {
                 bundleSet.add(aModule.getDescriptor());
             }
             for (RootDeploymentDescriptor rd : aModule.getDescriptor().getExtensionsDescriptors()) {
                 if (rd instanceof BundleDescriptor) {
-                    if (((BundleDescriptor) rd).getModuleType() == bundleType) {
-                        bundleSet.add((BundleDescriptor) rd);
+                    BundleDescriptor bundleDescriptor = (BundleDescriptor) rd;
+                    if (Objects.equals(bundleDescriptor.getModuleType(), bundleType)) {
+                        bundleSet.add(bundleDescriptor);
                     }
                 }
             }
@@ -1166,18 +1149,16 @@ public class Application extends CommonResourceBundleDescriptor
      */
     public Set<BundleDescriptor> getBundleDescriptors() {
         Set<BundleDescriptor> bundleSet = new OrderedSet<>();
-        for (ModuleDescriptor<BundleDescriptor> aModule :  getModules()) {
+        for (ModuleDescriptor<BundleDescriptor> aModule : getModules()) {
             BundleDescriptor bundleDesc = aModule.getDescriptor();
-            if (bundleDesc != null) {
-                bundleSet.add(bundleDesc);
-                for (RootDeploymentDescriptor rd :
-                    bundleDesc.getExtensionsDescriptors()) {
-                    if (rd instanceof BundleDescriptor) {
-                        bundleSet.add((BundleDescriptor)rd);
-                    }
+            if (bundleDesc == null) {
+                throw new IllegalArgumentException("Null descriptor for module " + aModule);
+            }
+            bundleSet.add(bundleDesc);
+            for (RootDeploymentDescriptor rd : bundleDesc.getExtensionsDescriptors()) {
+                if (rd instanceof BundleDescriptor) {
+                    bundleSet.add((BundleDescriptor) rd);
                 }
-            } else {
-                DOLUtils.getDefaultLogger().fine("Null descriptor for module " + aModule.getArchiveUri());
             }
         }
         return bundleSet;
@@ -1268,7 +1249,7 @@ public class Application extends CommonResourceBundleDescriptor
      * @param id unique id for this application
      */
     public void setUniqueId(long id) {
-        _logger.log(Level.FINE, "[Application] " + getName() + " , uid: " + id);
+        LOG.log(Level.FINE, "[Application] " + getName() + " , uid: " + id);
         this.uniqueId = id;
 
         EjbDescriptor[] descs = getSortedEjbDescriptors();
@@ -1276,9 +1257,9 @@ public class Application extends CommonResourceBundleDescriptor
         for (int i = 0; i < descs.length; i++) {
             // Maximum of 2^16 beans max per application
             descs[i].setUniqueId((id | i));
-            if (_logger.isLoggable(Level.FINE)) {
+            if (LOG.isLoggable(Level.FINE)) {
                 String module = descs[i].getEjbBundleDescriptor().getModuleDescriptor().getArchiveUri();
-                _logger.log(Level.FINE, "Ejb  " + module + ":" + descs[i].getName() + " id = " +
+                LOG.log(Level.FINE, "Ejb  " + module + ":" + descs[i].getName() + " id = " +
                         descs[i].getUniqueId());
             }
         }
@@ -1380,7 +1361,7 @@ public class Application extends CommonResourceBundleDescriptor
     public SecurityRoleMapper getRoleMapper() {
         if (this.roleMapper == null) {
             if (securityRoleMapperFactory == null) {
-                _logger.log(Level.FINE, "SecurityRoleMapperFactory NOT set.");
+                LOG.log(Level.FINE, "SecurityRoleMapperFactory NOT set.");
             } else {
                 this.roleMapper = securityRoleMapperFactory.getRoleMapper(this.getName());
             }

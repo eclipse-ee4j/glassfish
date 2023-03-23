@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -89,7 +89,7 @@ public class WebApplication implements ApplicationContainer<WebBundleDescriptorI
         // release DeploymentContext in memory
         wmInfo.setDeploymentContext(null);
 
-        if (results.size() == 0) {
+        if (results.isEmpty()) {
             logger.log(Level.SEVERE, "webApplication.unknownError");
             return false;
         }
@@ -263,10 +263,10 @@ public class WebApplication implements ApplicationContainer<WebBundleDescriptorI
 
         try {
             if (appConfigCustomizations != null) {
-                EnvEntryCustomizer envEntryCustomizer = new EnvEntryCustomizer(descriptor.getEnvironmentEntrySet(),
+                EnvEntryCustomizer envEntryCustomizer = new EnvEntryCustomizer(descriptor.getEnvironmentEntries(),
                     appConfigCustomizations.getEnvEntry());
                 ContextParamCustomizer contextParamCustomizer = new ContextParamCustomizer(
-                    descriptor.getContextParametersSet(), appConfigCustomizations.getContextParam());
+                    descriptor.getContextParameters(), appConfigCustomizations.getContextParam());
 
                 envEntryCustomizer.applyCustomizations();
                 contextParamCustomizer.applyCustomizations();
@@ -277,11 +277,10 @@ public class WebApplication implements ApplicationContainer<WebBundleDescriptorI
              * work with the env-entry type it can cause a class cast
              * exception.  Log the warning but continue working.
              */
-            logger.log(Level.WARNING, "", ex);
+            logger.log(Level.WARNING, "Environment entry customization failed.", ex);
         }
     }
 
-    @SuppressWarnings("unchecked")
     private Properties getActionReportProperties(DeploymentContext deployContext) {
         if (!wmInfo.getDescriptor().getApplication().isVirtual()) {
             deployContext = ((ExtendedDeploymentContext)deployContext).getParentContext();

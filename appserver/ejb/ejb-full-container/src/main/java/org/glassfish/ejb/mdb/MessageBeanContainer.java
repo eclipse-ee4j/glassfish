@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,37 +16,6 @@
  */
 
 package org.glassfish.ejb.mdb;
-
-import static com.sun.ejb.containers.EJBContextImpl.BeanState.DESTROYED;
-import static com.sun.ejb.containers.EJBContextImpl.BeanState.POOLED;
-import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.POST_CONSTRUCT;
-import static com.sun.enterprise.util.Utility.setContextClassLoader;
-import static jakarta.transaction.Status.STATUS_MARKED_ROLLBACK;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
-import static javax.transaction.xa.XAResource.TMSUCCESS;
-
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.api.invocation.ComponentInvocation;
-import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.ejb.api.MessageBeanListener;
-import org.glassfish.ejb.api.MessageBeanProtocolManager;
-import org.glassfish.ejb.api.ResourcesExceededException;
-import org.glassfish.ejb.config.MdbContainer;
-import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
-import org.glassfish.ejb.deployment.descriptor.EjbMessageBeanDescriptor;
-import org.glassfish.ejb.mdb.monitoring.stats.MessageDrivenBeanStatsProvider;
-import org.glassfish.ejb.spi.MessageBeanClient;
-import org.glassfish.ejb.spi.MessageBeanClientFactory;
 
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
@@ -86,6 +55,37 @@ import jakarta.ejb.MessageDrivenBean;
 import jakarta.ejb.RemoveException;
 import jakarta.resource.spi.endpoint.MessageEndpoint;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.ejb.api.MessageBeanListener;
+import org.glassfish.ejb.api.MessageBeanProtocolManager;
+import org.glassfish.ejb.api.ResourcesExceededException;
+import org.glassfish.ejb.config.MdbContainer;
+import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
+import org.glassfish.ejb.deployment.descriptor.EjbMessageBeanDescriptor;
+import org.glassfish.ejb.mdb.monitoring.stats.MessageDrivenBeanStatsProvider;
+import org.glassfish.ejb.spi.MessageBeanClient;
+import org.glassfish.ejb.spi.MessageBeanClientFactory;
+
+import static com.sun.ejb.containers.EJBContextImpl.BeanState.DESTROYED;
+import static com.sun.ejb.containers.EJBContextImpl.BeanState.POOLED;
+import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.POST_CONSTRUCT;
+import static com.sun.enterprise.util.Utility.setContextClassLoader;
+import static jakarta.transaction.Status.STATUS_MARKED_ROLLBACK;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+import static javax.transaction.xa.XAResource.TMSUCCESS;
+
 /**
  * This class provides container functionality specific to message-driven EJBs. At deployment time, one instance of this
  * class is created for each message-driven bean in an application.
@@ -102,10 +102,10 @@ import jakarta.resource.spi.endpoint.MessageEndpoint;
  *
  * @author Kenneth Saks
  */
-public final class MessageBeanContainer extends BaseContainer implements MessageBeanProtocolManager { // , MessageDrivenBeanStatsProvider {
+public final class MessageBeanContainer extends BaseContainer implements MessageBeanProtocolManager {
     private static final Logger _logger = LogDomains.getLogger(MessageBeanContainer.class, LogDomains.MDB_LOGGER);
 
-    private String appEJBName_;
+    private final String appEJBName_;
 
     private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(MessageBeanContainer.class);
 
@@ -195,8 +195,8 @@ public final class MessageBeanContainer extends BaseContainer implements Message
             String factoryClassName = System.getProperty(MESSAGE_BEAN_CLIENT_FACTORY_PROP);
             MessageBeanClientFactory clientFactory = null;
             if (factoryClassName != null) {
-                Class clientFactoryClass = classLoader.loadClass(factoryClassName);
-                clientFactory = (MessageBeanClientFactory) clientFactoryClass.newInstance();
+                Class<?> clientFactoryClass = classLoader.loadClass(factoryClassName);
+                clientFactory = (MessageBeanClientFactory) clientFactoryClass.getDeclaredConstructor().newInstance();
             } else {
                 clientFactory = ejbContainerUtilImpl.getServices().getService(MessageBeanClientFactory.class,
                         DEFAULT_MESSAGE_BEAN_CLIENT_FACTORY);
@@ -229,9 +229,6 @@ public final class MessageBeanContainer extends BaseContainer implements Message
             if (messageBeanClient != null) {
                 messageBeanClient.close();
             }
-
-            _logger.log(SEVERE, "containers.mdb.create_container_exception", new Object[] { ejbDescriptor.getName(), ex.toString() });
-            _logger.log(SEVERE, ex.getClass().getName(), ex);
             throw ex;
         } finally {
             if (componentInvocation != null) {
@@ -906,8 +903,9 @@ public final class MessageBeanContainer extends BaseContainer implements Message
                         // wait in loop to guard against spurious wake-up
                         do {
                             long timeTillTimeout = maxWaitTime - System.currentTimeMillis();
-                            if (timeTillTimeout <= 0)
+                            if (timeTillTimeout <= 0) {
                                 break;
+                            }
                             task.wait(timeTillTimeout);
                         } while (!task.isDone());
                     }

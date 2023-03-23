@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,12 +22,14 @@ import com.sun.enterprise.deployment.MessageDestinationDescriptor;
 import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
 import com.sun.enterprise.deployment.MessageDestinationReferencerImpl;
 import com.sun.enterprise.deployment.MethodDescriptor;
+import com.sun.enterprise.deployment.ScheduledTimerDescriptor;
 import com.sun.enterprise.deployment.types.MessageDestinationReferencer;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -39,8 +41,7 @@ import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.ejb.deployment.EjbTagNames;
 
 /**
- * Objects of this kind represent the deployment information describing a
- * single message driven Ejb.
+ * Objects of this kind represent the deployment information describing a single message driven Ejb.
  */
 public final class EjbMessageBeanDescriptor extends EjbDescriptor
     implements MessageDestinationReferencer, com.sun.enterprise.deployment.EjbMessageBeanDescriptor {
@@ -101,21 +102,6 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
     }
 
 
-    /**
-     * The copy constructor.
-     */
-    public EjbMessageBeanDescriptor(EjbMessageBeanDescriptor other) {
-        super(other);
-        this.messageListenerType = other.messageListenerType;
-        this.beanClassTxMethods = null;
-        this.durableSubscriptionName = other.durableSubscriptionName;
-        this.msgDestReferencer = new MessageDestinationReferencerImpl(this);
-        this.activationConfig = new ActivationConfigDescriptor(other.activationConfig);
-        this.runtimeActivationConfig = new ActivationConfigDescriptor(other.runtimeActivationConfig);
-        this.destinationType = other.destinationType;
-    }
-
-
     @Override
     public String getEjbTypeForDisplay() {
         return "MessageDrivenBean";
@@ -133,25 +119,16 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
 
     @Override
     public void setContainerTransactionFor(MethodDescriptor methodDescriptor, ContainerTransaction containerTransaction) {
-        Vector<ContainerTransaction> allowedTxAttributes = getPossibleTransactionAttributes();
-        if (allowedTxAttributes.contains(containerTransaction)) {
+        String txType = containerTransaction.getTransactionAttribute();
+        if (ContainerTransaction.REQUIRED.equals(txType) || ContainerTransaction.NOT_SUPPORTED.equals(txType)) {
             super.setContainerTransactionFor(methodDescriptor, containerTransaction);
-        } else {
-            throw new IllegalArgumentException(
-                localStrings.getLocalString("enterprise.deployment.msgbeantxattrnotvalid",
-                    "Invalid transaction attribute for message-driven bean"));
+            return;
         }
-    }
-
-
-    /**
-     * Sets my type
-     */
-    @Override
-    public void setType(String type) {
-        throw new IllegalArgumentException(
-            localStrings.getLocalString("enterprise.deployment.exceptioncannotsettypeofmsgdrivenbean",
-                "Cannot set the type of a message-drive bean"));
+        if (isTimedObject() && ContainerTransaction.REQUIRES_NEW.equals(txType)) {
+            super.setContainerTransactionFor(methodDescriptor, containerTransaction);
+            return;
+        }
+        throw new IllegalArgumentException("Invalid transaction attribute for message-driven bean: " + txType);
     }
 
 
@@ -173,11 +150,10 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
     @Override
     public Set<MethodDescriptor> getTxBusinessMethodDescriptors() {
         ClassLoader classLoader = getEjbBundleDescriptor().getClassLoader();
-        Set<MethodDescriptor> methods = new HashSet<>();
         try {
+            Set<MethodDescriptor> methods = new HashSet<>();
             addAllInterfaceMethodsIn(methods, classLoader.loadClass(messageListenerType), MethodDescriptor.EJB_BEAN);
             addAllInterfaceMethodsIn(methods, classLoader.loadClass(getEjbClassName()), MethodDescriptor.EJB_BEAN);
-
             if (isTimedObject()) {
                 if (getEjbTimeoutMethod() != null) {
                     methods.add(getEjbTimeoutMethod());
@@ -186,16 +162,15 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
                     methods.add(schd.getTimeoutMethod());
                 }
             }
-
-        } catch (Throwable t) {
-            throw new RuntimeException("", t);
+            return methods;
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException("getTxBusinessMethodDescriptors failed", e);
         }
-        return methods;
     }
 
 
     @Override
-    public Set getSecurityBusinessMethodDescriptors() {
+    public Set<MethodDescriptor> getSecurityBusinessMethodDescriptors() {
         throw new IllegalArgumentException(
             localStrings.getLocalString("enterprise.deployment.exceptioncannotgetsecbusmethodsinmsgbean",
                 "Cannot get business method for security for message-driven bean."));
@@ -203,9 +178,12 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
 
 
     /**
-     * This returns the message listener onMessage method from the
-     * *message listener interface* itself, as opposed to the method
-     * from the ejb class that implements it.
+     * This returns the message listener onMessage method from the message listener interface
+     * itself, as opposed to the method from the ejb class that implements it.
+     *
+     * @param classLoader
+     * @return array of methods
+     * @throws NoSuchMethodException
      */
     public Method[] getMessageListenerInterfaceMethods(ClassLoader classLoader) throws NoSuchMethodException {
         List<Method> methods = new ArrayList<>();
@@ -227,25 +205,9 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
     }
 
 
-    @Override
-    public Vector<ContainerTransaction> getPossibleTransactionAttributes() {
-        Vector<ContainerTransaction> txAttributes = new Vector<>();
-        txAttributes.add(new ContainerTransaction(ContainerTransaction.REQUIRED, ""));
-        txAttributes.add(new ContainerTransaction(ContainerTransaction.NOT_SUPPORTED, ""));
-        if (isTimedObject()) {
-            txAttributes.add(new ContainerTransaction(ContainerTransaction.REQUIRES_NEW, ""));
-        }
-        return txAttributes;
-    }
-
-
     public boolean hasMessageDestinationLinkName() {
         return msgDestReferencer.getMessageDestinationLinkName() != null;
     }
-
-    //
-    // Implementations of MessageDestinationReferencer methods.
-    //
 
 
     @Override
@@ -385,9 +347,6 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
     }
 
 
-    /**
-     * @return Set of EnvironmentProperty elements.
-     */
     @Override
     public Set<EnvironmentProperty> getRuntimeActivationConfigProperties() {
         return runtimeActivationConfig.getActivationConfig();
@@ -555,6 +514,7 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
     }
 
 
+    // Reflection in EjbNode
     public void setDurableSubscriptionName(String durableSubscriptionName) {
         this.durableSubscriptionName = durableSubscriptionName;
     }
@@ -569,6 +529,7 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
      * Connection factory is optional. If set to null,
      * hasConnectionFactory will return false.
      */
+    // Reflection in EjbNode
     public void setConnectionFactoryName(String connectionFactory) {
         connectionFactoryName = connectionFactory;
     }
@@ -591,12 +552,6 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
     }
 
 
-    /**
-     * resource-adapter-mid is optional. It is set when
-     * a resource adapter is responsible for delivering
-     * messages to the message-driven bean. If not set,
-     * hasResourceAdapterMid will return false.
-     */
     @Override
     public void setResourceAdapterMid(String resourceAdapterMid) {
         this.resourceAdapterMid = resourceAdapterMid;
@@ -604,13 +559,13 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
 
 
     public boolean hasResourceAdapterMid() {
-        return (resourceAdapterMid != null);
+        return resourceAdapterMid != null;
     }
 
 
     @Override
-    public Vector<Method> getMethods(ClassLoader classLoader) {
-        return new Vector<>();
+    public List<Method> getMethods() {
+        return Collections.emptyList();
     }
 
 
@@ -669,7 +624,7 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
                 localStrings.getLocalString("enterprise.deployment.exceptionmsgbeantxtypenotlegaltype",
                     "{0} is not a legal transaction type for a message-driven bean", new Object[] {transactionType}));
         }
-        super.transactionType = transactionType;
+        super.setTransactionType(transactionType);
         super.setMethodContainerTransactions(new Hashtable<>());
     }
 

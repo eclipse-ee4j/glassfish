@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,9 +18,8 @@
 package com.sun.enterprise.deployment;
 
 /**
- * Objects implementing this interface allow their
- * environment properties, ejb references and resource
- * references to be written.
+ * Objects implementing this interface allow their environment properties, ejb references
+ * and resource references to be written.
  *
  * @author Danny Coward
  */
@@ -124,8 +123,20 @@ public interface WritableJndiNameEnvironment extends JndiNameEnvironment {
      */
     void removeServiceReferenceDescriptor(ServiceReferenceDescriptor serviceReference);
 
+    /**
+     * Adds the {@link EntityManagerFactoryReferenceDescriptor}. Usually sets also it's
+     * {@link EntityManagerFactoryReferenceDescriptor#setReferringBundleDescriptor(BundleDescriptor)}
+     *
+     * @param reference
+     */
     void addEntityManagerFactoryReferenceDescriptor(EntityManagerFactoryReferenceDescriptor reference);
 
+    /**
+     * Adds the {@link EntityManagerReferenceDescriptor}. Usually sets also it's
+     * {@link EntityManagerReferenceDescriptor#setReferringBundleDescriptor(BundleDescriptor)}
+     *
+     * @param reference
+     */
     void addEntityManagerReferenceDescriptor(EntityManagerReferenceDescriptor reference);
 
     /**

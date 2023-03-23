@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,12 +19,13 @@ package com.sun.enterprise.web;
 
 import com.sun.enterprise.deployment.EjbReferenceDescriptor;
 import com.sun.enterprise.deployment.EnvironmentProperty;
+import com.sun.enterprise.deployment.ErrorPageDescriptor;
+import com.sun.enterprise.deployment.JspConfigDefinitionDescriptor;
 import com.sun.enterprise.deployment.LocaleEncodingMappingDescriptor;
 import com.sun.enterprise.deployment.LocaleEncodingMappingListDescriptor;
 import com.sun.enterprise.deployment.MessageDestinationDescriptor;
 import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
-import com.sun.enterprise.deployment.SecurityRoleDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.WebComponentDescriptor;
 import com.sun.enterprise.deployment.types.EjbReference;
@@ -35,6 +36,7 @@ import com.sun.enterprise.deployment.web.InitializationParameter;
 import com.sun.enterprise.deployment.web.LoginConfiguration;
 import com.sun.enterprise.deployment.web.MimeMapping;
 import com.sun.enterprise.deployment.web.MultipartConfig;
+import com.sun.enterprise.deployment.web.SecurityConstraint;
 import com.sun.enterprise.deployment.web.SecurityRoleReference;
 import com.sun.enterprise.deployment.web.ServletFilter;
 import com.sun.enterprise.deployment.web.ServletFilterMapping;
@@ -58,7 +60,8 @@ import jakarta.servlet.descriptor.JspPropertyGroupDescriptor;
 
 import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -66,9 +69,8 @@ import org.apache.catalina.Container;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.Wrapper;
 import org.apache.catalina.core.StandardWrapper;
+import org.glassfish.security.common.Role;
 import org.glassfish.web.LogFacade;
-import org.glassfish.web.deployment.descriptor.ErrorPageDescriptor;
-import org.glassfish.web.deployment.descriptor.JspConfigDescriptorImpl;
 import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
 
 /**
@@ -160,7 +162,7 @@ public class TomcatDeploymentConfig {
      * an <code>&lt;env-entry&gt;</code> element in the deployment descriptor.
      */
     protected static void configureContextEnvironment(WebModule webModule, WebBundleDescriptorImpl wmd) {
-        for (ContextParameter envRef : wmd.getContextParametersSet()) {
+        for (ContextParameter envRef : wmd.getContextParameters()) {
             webModule.addEnvironment(new ContextEnvironmentDecorator((EnvironmentProperty) envRef));
         }
     }
@@ -172,9 +174,8 @@ public class TomcatDeploymentConfig {
      * deployment descriptor.
      */
     protected static void configureErrorPage(WebModule webModule, WebBundleDescriptorImpl wmd) {
-        Enumeration<ErrorPageDescriptor> e = wmd.getErrorPageDescriptors();
-        while (e.hasMoreElements()) {
-            webModule.addErrorPage(new ErrorPageDecorator(e.nextElement()));
+        for (ErrorPageDescriptor descriptor : wmd.getErrorPageDescriptors()) {
+            webModule.addErrorPage(new ErrorPageDecorator(descriptor));
         }
     }
 
@@ -184,8 +185,8 @@ public class TomcatDeploymentConfig {
      * by a <code>&lt;filter&gt;</code> element in the deployment descriptor.
      */
     protected static void configureFilterDef(WebModule webModule, WebBundleDescriptorImpl wmd) {
-        Vector<ServletFilter> vector = wmd.getServletFilters();
-        for (ServletFilter servletFilter : vector) {
+        List<ServletFilter> filters = wmd.getServletFilters();
+        for (ServletFilter servletFilter : filters) {
             FilterDefDecorator filterDef = new FilterDefDecorator(servletFilter);
             webModule.addFilterDef(filterDef);
         }
@@ -199,9 +200,9 @@ public class TomcatDeploymentConfig {
      * a URL pattern or a servlet name.
      */
     protected static void configureFilterMap(WebModule webModule, WebBundleDescriptorImpl wmd) {
-        Vector<ServletFilterMapping> vector = wmd.getServletFilterMappingDescriptors();
-        for (ServletFilterMapping element : vector) {
-            webModule.addFilterMap(element);
+        List<ServletFilterMapping> mappings = wmd.getServletFilterMappings();
+        for (ServletFilterMapping mapping : mappings) {
+            webModule.addFilterMap(mapping);
         }
     }
 
@@ -214,22 +215,20 @@ public class TomcatDeploymentConfig {
      * to modify the application deployment descriptor itself.
      */
     protected static void configureApplicationListener(WebModule webModule, WebBundleDescriptorImpl wmd) {
-        Vector<AppListenerDescriptor> vector = wmd.getAppListenerDescriptors();
-        for (AppListenerDescriptor element : vector) {
-            webModule.addApplicationListener(element.getListener());
+        List<AppListenerDescriptor> listeners = wmd.getAppListenersCopy();
+        for (AppListenerDescriptor listener : listeners) {
+            webModule.addApplicationListener(listener.getListener());
         }
-
     }
 
 
     /**
-     * Configure <code>jsp-config</code> element contained in the deployment
-     * descriptor
+     * Configure <code>jsp-config</code> element contained in the deployment descriptor
      */
     protected static void configureJspConfig(WebModule webModule, WebBundleDescriptorImpl wmd) {
         webModule.setJspConfigDescriptor(wmd.getJspConfigDescriptor());
 
-        JspConfigDescriptorImpl jspConfig = wmd.getJspConfigDescriptor();
+        JspConfigDefinitionDescriptor jspConfig = wmd.getJspConfigDescriptor();
         if (jspConfig != null) {
             for (JspPropertyGroupDescriptor jspGroup : jspConfig.getJspPropertyGroups()) {
                 for (String urlPattern : jspGroup.getUrlPatterns()) {
@@ -261,10 +260,7 @@ public class TomcatDeploymentConfig {
      * Configure mime-mapping defined in the deployment descriptor.
      */
     protected static void configureMimeMapping(WebModule webModule, WebBundleDescriptorImpl wmd) {
-        Enumeration<MimeMapping> enumeration = wmd.getMimeMappings();
-        MimeMapping mimeMapping;
-        while (enumeration.hasMoreElements()) {
-            mimeMapping = enumeration.nextElement();
+        for (MimeMapping mimeMapping : wmd.getMimeMappings()) {
             webModule.addMimeMapping(mimeMapping.getExtension(), mimeMapping.getMimeType());
         }
     }
@@ -284,7 +280,7 @@ public class TomcatDeploymentConfig {
      * Configure context parameter defined in the deployment descriptor.
      */
     protected static void configureContextParam(WebModule webModule, WebBundleDescriptorImpl wmd) {
-        for (ContextParameter ctxParam : wmd.getContextParametersSet()) {
+        for (ContextParameter ctxParam : wmd.getContextParameters()) {
             if ("com.sun.faces.injectionProvider".equals(ctxParam.getName())
                 && "com.sun.faces.vendor.GlassFishInjectionProvider".equals(ctxParam.getValue())) {
                 // Ignore, see IT 9641
@@ -344,12 +340,8 @@ public class TomcatDeploymentConfig {
     protected static void configureStandardContext(WebModule webModule,
                                                    WebBundleDescriptorImpl wmd) {
         StandardWrapper wrapper;
-        Enumeration enumeration;
         SecurityRoleReference securityRoleReference;
-
-        for (WebComponentDescriptor webComponentDesc :
-                wmd.getWebComponentDescriptors()) {
-
+        for (WebComponentDescriptor webComponentDesc : wmd.getWebComponentDescriptors()) {
             if (!webComponentDesc.isEnabled()) {
                 continue;
             }
@@ -373,10 +365,10 @@ public class TomcatDeploymentConfig {
              */
             webModule.addChild(wrapper);
 
-            enumeration = webComponentDesc.getInitializationParameters();
+            Enumeration<InitializationParameter> initParams = webComponentDesc.getInitializationParameters();
             InitializationParameter initP = null;
-            while (enumeration.hasMoreElements()) {
-                initP = (InitializationParameter)enumeration.nextElement();
+            while (initParams.hasMoreElements()) {
+                initP = initParams.nextElement();
                 wrapper.addInitParameter(initP.getName(), initP.getValue());
             }
 
@@ -396,10 +388,9 @@ public class TomcatDeploymentConfig {
                     webComponentDesc.getCanonicalName());
             }
 
-            enumeration = webComponentDesc.getSecurityRoleReferences();
+            Enumeration<SecurityRoleReference> enumeration = webComponentDesc.getSecurityRoleReferences();
             while (enumeration.hasMoreElements()){
-                securityRoleReference = (SecurityRoleReference)
-                    enumeration.nextElement();
+                securityRoleReference = enumeration.nextElement();
                 wrapper.addSecurityReference(
                     securityRoleReference.getRoleName(),
                     securityRoleReference.getSecurityRoleLink().getName());
@@ -422,15 +413,13 @@ public class TomcatDeploymentConfig {
         // <session-config><cookie-config>
         CookieConfig cookieConfig = sessionConfig.getCookieConfig();
         if (cookieConfig != null) {
-            SessionCookieConfig sessionCookieConfig =
-                webModule.getSessionCookieConfig();
+            SessionCookieConfig sessionCookieConfig = webModule.getSessionCookieConfig();
             /*
              * Unlike a cookie's domain, path, and comment, its name
              * will be empty (instead of null) if left unspecified
              * inside <session-config><cookie-config>
              */
-            if (cookieConfig.getName() != null &&
-                    !cookieConfig.getName().isEmpty()) {
+            if (cookieConfig.getName() != null && !cookieConfig.getName().isEmpty()) {
                 sessionCookieConfig.setName(cookieConfig.getName());
             }
             sessionCookieConfig.setDomain(cookieConfig.getDomain());
@@ -443,19 +432,16 @@ public class TomcatDeploymentConfig {
 
         // <session-config><tracking-mode>
         if (!sessionConfig.getTrackingModes().isEmpty()) {
-            webModule.setSessionTrackingModes(
-                sessionConfig.getTrackingModes());
+            webModule.setSessionTrackingModes(sessionConfig.getTrackingModes());
         }
 
         // glassfish-web.xml override the web.xml
         com.sun.enterprise.web.session.SessionCookieConfig gfSessionCookieConfig =
                 webModule.getSessionCookieConfigFromSunWebXml();
         if (gfSessionCookieConfig != null) {
-            WebSessionCookieConfig sessionCookieConfig =
-                (WebSessionCookieConfig)webModule.getSessionCookieConfig();
+            WebSessionCookieConfig sessionCookieConfig = (WebSessionCookieConfig) webModule.getSessionCookieConfig();
 
-            if (gfSessionCookieConfig.getName() != null &&
-                    !gfSessionCookieConfig.getName().isEmpty()) {
+            if (gfSessionCookieConfig.getName() != null && !gfSessionCookieConfig.getName().isEmpty()) {
                 sessionCookieConfig.setName(gfSessionCookieConfig.getName());
             }
 
@@ -484,18 +470,14 @@ public class TomcatDeploymentConfig {
             }
         }
 
-        enumeration = wmd.getWelcomeFiles();
-        while (enumeration.hasMoreElements()){
-            webModule.addWelcomeFile((String)enumeration.nextElement());
+        for (String welcomeFile : wmd.getWelcomeFiles()) {
+            webModule.addWelcomeFile(welcomeFile);
         }
 
-        LocaleEncodingMappingListDescriptor lemds =
-                            wmd.getLocaleEncodingMappingListDescriptor();
+        LocaleEncodingMappingListDescriptor lemds = wmd.getLocaleEncodingMappingListDescriptor();
         if (lemds != null) {
-            for (LocaleEncodingMappingDescriptor lemd :
-                    lemds.getLocaleEncodingMappingSet()) {
-                webModule.addLocaleEncodingMappingParameter(
-                    lemd.getLocale(), lemd.getEncoding());
+            for (LocaleEncodingMappingDescriptor lemd : lemds.getLocaleEncodingMappingSet()) {
+                webModule.addLocaleEncodingMappingParameter(lemd.getLocale(), lemd.getEncoding());
             }
         }
 
@@ -505,36 +487,25 @@ public class TomcatDeploymentConfig {
         if (majorMinorVersions.length != 2) {
             throw new IllegalArgumentException("Illegal Servlet spec version");
         }
-        webModule.setEffectiveMajorVersion(
-            Integer.parseInt(majorMinorVersions[0]));
-        webModule.setEffectiveMinorVersion(
-            Integer.parseInt(majorMinorVersions[1]));
+        webModule.setEffectiveMajorVersion(Integer.parseInt(majorMinorVersions[0]));
+        webModule.setEffectiveMinorVersion(Integer.parseInt(majorMinorVersions[1]));
     }
 
 
     /**
-     * Configure security constraint element for a web application,
-     * as represented by a <code>&lt;security-constraint&gt;</code> element in
-     * the deployment descriptor.
-     *
-     * Configure a web resource collection for a web application's security
-     * constraint, as represented by a
-     * <code>&lt;web-resource-collection&gt;</code>
+     * Configure security constraint element for a web application, as represented
+     * by a <code>&lt;security-constraint&gt;</code> element in the deployment descriptor.
+     * Configure a web resource collection for a web application's security constraint,
+     * as represented by a <code>&lt;web-resource-collection&gt;</code>
      * element in the deployment descriptor.
-     *
      */
-    protected static void configureSecurityConstraint(
-            WebModule webModule, WebBundleDescriptor wmd) {
-        Enumeration<com.sun.enterprise.deployment.web.SecurityConstraint> enumeration = wmd.getSecurityConstraints();
-        com.sun.enterprise.deployment.web.SecurityConstraint securityConstraint;
+    protected static void configureSecurityConstraint(WebModule webModule, WebBundleDescriptor wmd) {
+        Set<SecurityConstraint> constraints = wmd.getSecurityConstraints();
         SecurityConstraintDecorator decorator;
         SecurityCollectionDecorator secCollDecorator;
-        while (enumeration.hasMoreElements()){
-            securityConstraint = enumeration.nextElement();
-            decorator = new SecurityConstraintDecorator(securityConstraint,
-                                                        webModule);
-            for (WebResourceCollection wrc:
-                    securityConstraint.getWebResourceCollections()) {
+        for (SecurityConstraint constraint : constraints) {
+            decorator = new SecurityConstraintDecorator(constraint, webModule);
+            for (WebResourceCollection wrc : constraint.getWebResourceCollections()) {
                 secCollDecorator = new SecurityCollectionDecorator(wrc);
                 decorator.addCollection(secCollDecorator);
             }
@@ -550,47 +521,38 @@ public class TomcatDeploymentConfig {
      * (To make these problems fatal instead, simply set the <code>ok</code>
      * instance variable to <code>false</code> as well).
      */
-    protected static void configureSecurityRoles(WebModule webModule,
-                                                 WebBundleDescriptorImpl wmd) {
-
-        Enumeration<SecurityRoleDescriptor> e = wmd.getSecurityRoles();
-        if (e != null) {
-            while (e.hasMoreElements()){
-                webModule.addSecurityRole(e.nextElement().getName());
-            }
+    protected static void configureSecurityRoles(WebModule webModule, WebBundleDescriptorImpl wmd) {
+        Set<Role> roles = wmd.getRoles();
+        for (Role role : roles) {
+            webModule.addSecurityRole(role.getName());
         }
 
         // Check role names used in <security-constraint> elements
-        Iterator<org.apache.catalina.deploy.SecurityConstraint> iter =
-            webModule.getConstraints().iterator();
+        Iterator<org.apache.catalina.deploy.SecurityConstraint> iter = webModule.getConstraints().iterator();
         while (iter.hasNext()) {
-            String[] roles = iter.next().findAuthRoles();
-            for (String role : roles) {
-                if (!"*".equals(role) &&
-                        !webModule.hasSecurityRole(role)) {
-                    logger.log(Level.WARNING,
-                        LogFacade.ROLE_AUTH, role);
+            String[] roleNames = iter.next().findAuthRoles();
+            for (String role : roleNames) {
+                if (!"*".equals(role) && !webModule.hasSecurityRole(role)) {
+                    logger.log(Level.WARNING, LogFacade.ROLE_AUTH, role);
                     webModule.addSecurityRole(role);
                 }
             }
         }
 
         // Check role names used in <servlet> elements
-        Container wrappers[] = webModule.findChildren();
+        Container[] wrappers = webModule.findChildren();
         for (Container wrapper2 : wrappers) {
             Wrapper wrapper = (Wrapper) wrapper2;
             String runAs = wrapper.getRunAs();
-            if ((runAs != null) && !webModule.hasSecurityRole(runAs)) {
-                logger.log(Level.WARNING,
-                    LogFacade.ROLE_RUNAS, runAs);
+            if (runAs != null && !webModule.hasSecurityRole(runAs)) {
+                logger.log(Level.WARNING, LogFacade.ROLE_RUNAS, runAs);
                 webModule.addSecurityRole(runAs);
             }
-            String names[] = wrapper.findSecurityReferences();
+            String[] names = wrapper.findSecurityReferences();
             for (String name : names) {
                 String link = wrapper.findSecurityReference(name);
-                if ((link != null) && !webModule.hasSecurityRole(link)) {
-                    logger.log(Level.WARNING,
-                        LogFacade.ROLE_LINK, link);
+                if (link != null && !webModule.hasSecurityRole(link)) {
+                    logger.log(Level.WARNING, LogFacade.ROLE_LINK, link);
                     webModule.addSecurityRole(link);
                 }
             }

@@ -55,9 +55,9 @@ import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ArchiveDetector;
 import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.api.deployment.archive.WarArchiveType;
 import org.glassfish.deployment.common.DeploymentProperties;
 import org.glassfish.loader.util.ASClassLoaderUtil;
-import org.glassfish.web.WarType;
 import org.glassfish.web.loader.LogFacade;
 import org.glassfish.web.loader.WebappClassLoader;
 import org.jvnet.hk2.annotations.Service;
@@ -72,7 +72,7 @@ import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
  *
  * @author Jerome Dochez, Sanjeeb Sahoo, Shing Wai Chan
  */
-@Service(name = WarType.ARCHIVE_TYPE)
+@Service(name = WarArchiveType.ARCHIVE_TYPE)
 public class WarHandler extends AbstractArchiveHandler {
 
     private static final String GLASSFISH_WEB_XML = "WEB-INF/glassfish-web.xml";
@@ -89,7 +89,7 @@ public class WarHandler extends AbstractArchiveHandler {
     private static final boolean ignoreWLSDD = Boolean.valueOf(System.getProperty("ignore.wlsdd"));
 
     @Inject
-    @Named(WarType.ARCHIVE_TYPE)
+    @Named(WarArchiveType.ARCHIVE_TYPE)
     private ArchiveDetector detector;
 
     @Inject
@@ -101,7 +101,7 @@ public class WarHandler extends AbstractArchiveHandler {
 
     @Override
     public String getArchiveType() {
-        return WarType.ARCHIVE_TYPE;
+        return WarArchiveType.ARCHIVE_TYPE;
     }
 
 

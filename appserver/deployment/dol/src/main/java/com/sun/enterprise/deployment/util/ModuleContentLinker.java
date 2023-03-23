@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -61,8 +61,9 @@ public class ModuleContentLinker extends DefaultDOLVisitor implements ComponentV
     protected ModuleContentLinker() {
     }
 
+
     @Override
-    public void accept (BundleDescriptor bundle) {
+    public void accept(BundleDescriptor bundle) {
         for (WebService aWebService : bundle.getWebServices().getWebServices()) {
             accept(aWebService);
         }
@@ -74,7 +75,7 @@ public class ModuleContentLinker extends DefaultDOLVisitor implements ComponentV
         }
 
         if (bundle instanceof EjbBundleDescriptor) {
-            EjbBundleDescriptor ejbBundle = (EjbBundleDescriptor)bundle;
+            EjbBundleDescriptor ejbBundle = (EjbBundleDescriptor) bundle;
             for (EjbDescriptor anEjb : ejbBundle.getEjbs()) {
                 for (ServiceReferenceDescriptor serviceReferenceDescriptor : anEjb.getServiceReferenceDescriptors()) {
                     accept(serviceReferenceDescriptor);
@@ -176,7 +177,7 @@ public class ModuleContentLinker extends DefaultDOLVisitor implements ComponentV
         } catch(Exception e) {
             DOLUtils.getDefaultLogger().log
                 (Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
-                new Object[] {serviceRef.getName() , rootLocation_});
+                new Object[] {serviceRef.getName() , rootLocation_, serviceRef.getClass()});
         }
     }
 
@@ -211,7 +212,7 @@ public class ModuleContentLinker extends DefaultDOLVisitor implements ComponentV
         } catch(Exception e) {
             DOLUtils.getDefaultLogger().log
                 (Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
-                new Object[] {webService.getName() , rootLocation_});
+                new Object[] {webService.getName() , rootLocation_, webService.getClass()});
         }
     }
 }

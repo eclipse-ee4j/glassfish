@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -47,7 +47,16 @@ public class NameValuePairDescriptor extends Descriptor {
 
 
     /**
-     * set the value
+     * @return the name of the property pair
+     */
+    @Override
+    public String getName() {
+        return super.getName();
+    }
+
+
+    /**
+     * Set the value of the property pair.
      */
     public void setValue(String value) {
         this.value = value;
@@ -55,7 +64,7 @@ public class NameValuePairDescriptor extends Descriptor {
 
 
     /**
-     * @return the value
+     * @return the value of the property pair.
      */
     public String getValue() {
         return value;

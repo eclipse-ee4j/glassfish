@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,17 +17,18 @@
 
 package com.sun.enterprise.deployment;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
-import java.util.Vector;
 
 /**
- * I am an ordered collection that does not allow duplicates.
+ * Ordered collection (by the order of additions) that does not allow duplicates.
+ *
+ * @param <T> type of all items.
  *
  * @author Danny Coward
  */
-public class OrderedSet<T> extends Vector<T> implements Set<T> {
-    // FIXME by srini - can we instead change the usage to be TreeSet based?
+public class OrderedSet<T> extends ArrayList<T> implements Set<T> {
 
     private static final long serialVersionUID = 1L;
 
@@ -40,8 +41,8 @@ public class OrderedSet<T> extends Vector<T> implements Set<T> {
     /**
      * Construct an ordered set from the given collection.
      */
-    public OrderedSet(Collection<T> c) {
-        this.addAll(c);
+    public OrderedSet(Collection<T> collection) {
+        this.addAll(collection);
     }
 
     /**
@@ -61,15 +62,16 @@ public class OrderedSet<T> extends Vector<T> implements Set<T> {
      * in this ordered set.
      */
     @Override
-    public boolean addAll(Collection<? extends T> c) {
-        boolean setChanged = false;
-        if (c != null) {
-            for (T o : c) {
-                if (add(o)) {
-                    setChanged = true;
-                }
+    public boolean addAll(Collection<? extends T> collection) {
+        if (collection == null) {
+            return false;
+        }
+        boolean changed = false;
+        for (T o : collection) {
+            if (add(o)) {
+                changed = true;
             }
         }
-        return setChanged;
+        return changed;
     }
 }

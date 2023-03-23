@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,12 +37,21 @@ public interface EjbMessageBeanDescriptor extends EjbDescriptor, MessageDestinat
 
     boolean hasQueueDest();
 
+    /**
+     * The resource-adapter-mid is optional.
+     * It is set when a resource adapter is responsible for delivering messages
+     * to the message-driven bean.
+     */
+    // Reflection in EjbNode
     void setResourceAdapterMid(String resourceAdapterMid);
 
     Set<EnvironmentProperty> getActivationConfigProperties();
 
     String getActivationConfigValue(String name);
 
+    /**
+     * @return Set of {@link EnvironmentProperty} elements.
+     */
     Set<EnvironmentProperty> getRuntimeActivationConfigProperties();
 
     void putRuntimeActivationConfigProperty(EnvironmentProperty prop);

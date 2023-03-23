@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.glassfish.web.WarType;
+import org.glassfish.api.deployment.archive.WarArchiveType;
 import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
 import org.glassfish.web.deployment.xml.WebTagNames;
 import org.w3c.dom.Node;
@@ -99,7 +99,7 @@ public class WebBundleNode extends WebCommonNode<WebBundleDescriptorImpl> {
 
         final Map<String, Class<?>> result = new HashMap<>();
         for (ConfigurationDeploymentDescriptorFile<?> wddFile : DOLUtils
-            .getConfigurationDeploymentDescriptorFiles(serviceLocator, WarType.ARCHIVE_TYPE)) {
+            .getConfigurationDeploymentDescriptorFiles(serviceLocator, WarArchiveType.ARCHIVE_TYPE)) {
             wddFile.registerBundle(result, publicIDToDTD, versionUpgrades);
         }
         return result;

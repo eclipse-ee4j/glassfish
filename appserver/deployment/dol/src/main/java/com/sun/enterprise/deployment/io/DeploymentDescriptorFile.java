@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -203,23 +203,23 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
     }
 
     /**
-     * read and parse a J2EE Deployment Descriptor input file and
-     * return the constructed DOL descriptors for the J2EE Module
+     * read and parse a Jakarta EE Deployment Descriptor input file and
+     * return the constructed DOL descriptors for the Jakarta EE Module
      *
      * @param is the input stream for the XML file
-     * @return the DOL descriptor for the J2EE Module
+     * @return the DOL descriptor for the Jakarta EE Module
      */
     public T read(InputStream is) throws IOException, SAXException {
         return read(null, is);
     }
 
     /**
-     * read and parse a J2EE Deployment Descriptor input file and
-     * return the constructed DOL descriptors for the J2EE Module
+     * read and parse a Jakarta EE Deployment Descriptor input file and
+     * return the constructed DOL descriptors for the Jakarta EE Module
      *
      * @param descriptor the read is incremental, the descriptor to apply the DDs to
      * @param in the input stream for the XML file
-     * @return the DOL descriptor for the J2EE Module
+     * @return the DOL descriptor for the Jakarta EE Module
      */
     public T read(T descriptor, File in) throws IOException, SAXException {
         FileInputStream fis = new FileInputStream(in);
@@ -231,12 +231,12 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
     }
 
     /**
-     * read and parse a J2EE Deployment Descriptor input file and
-     * return the constructed DOL descriptors for the J2EE Module
+     * read and parse a Jakarta EE Deployment Descriptor input file and
+     * return the constructed DOL descriptors for the Jakarta EE Module
      *
      * @param descriptor the read is incremental, the descriptor to apply the DDs to
      * @param in the input archive abstraction for the XML file
-     * @return the DOL descriptor for the J2EE Module
+     * @return the DOL descriptor for the Jakarta EE Module
      */
     public T read(T descriptor, ReadableArchive in) throws IOException, SAXException {
         InputStream is = in.getEntry(getDeploymentDescriptorPath());
@@ -248,12 +248,12 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
     }
 
     /**
-     * read and parse a J2EE Deployment Descriptor input file and
-     * return the constructed DOL descriptors for the J2EE Module
+     * read and parse a Jakarta EE Deployment Descriptor input file and
+     * return the constructed DOL descriptors for the Jakarta EE Module
      *
      * @param descriptor if the read is incremental, the descriptor to apply the DDs to
      * @param is the input stream for the XML file
-     * @return the DOL descriptor for the J2EE Module
+     * @return the DOL descriptor for the Jakarta EE Module
      */
     @SuppressWarnings("unchecked")
     public T read(T descriptor, InputStream is) throws IOException, SAXException {

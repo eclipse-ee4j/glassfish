@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,19 +32,20 @@ import org.glassfish.deployment.common.DescriptorVisitor;
 /**
  * Default implementation of DescriptorVisitor interface for convenience
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
 public class DefaultDOLVisitor implements DescriptorVisitor {
 
     /**
-     * get the visitor for its sub descriptor
-     * @param sub descriptor to return visitor for
+     * Get the visitor for its sub descriptor
+     *
+     * @param subDescriptor descriptor to return visitor for
      */
     @Override
     public DescriptorVisitor getSubDescriptorVisitor(Descriptor subDescriptor) {
         return this;
     }
+
 
     protected void accept(BundleDescriptor bundleDescriptor) {
         if (bundleDescriptor instanceof JndiNameEnvironment) {
@@ -77,7 +78,7 @@ public class DefaultDOLVisitor implements DescriptorVisitor {
 
 
     /**
-     * visits a J2EE descriptor
+     * Visits a Jakarta EE descriptor
      *
      * @param descriptor the descriptor
      */
@@ -87,7 +88,7 @@ public class DefaultDOLVisitor implements DescriptorVisitor {
 
 
     /**
-     * visits an ejb reference for the last J2EE component visited
+     * Visits an ejb reference for the last Jakarta EE component visited
      *
      * @param ejbRef the ejb reference
      */
@@ -96,7 +97,7 @@ public class DefaultDOLVisitor implements DescriptorVisitor {
 
 
     /**
-     * visits a web service reference descriptor
+     * Visits a web service reference descriptor
      *
      * @param serviceRef
      */
@@ -105,25 +106,31 @@ public class DefaultDOLVisitor implements DescriptorVisitor {
 
 
     /**
-     * visits an resource reference for the last J2EE component visited
-     * @param the resource reference
+     * Visits an resource reference for the last Jakarta EE component visited
+     *
+     * @param resRef the resource reference
      */
     protected void accept(ResourceReferenceDescriptor resRef) {
     }
 
+
     /**
-     * visits an resource environment reference for the last J2EE component visited
-     * @param the resource environment reference
+     * Visits an resource environment reference for the last Jakarta EE component visited
+     *
+     * @param resourceEnvRef the resource environment reference
      */
     protected void accept(ResourceEnvReferenceDescriptor resourceEnvRef) {
     }
 
+
     protected void accept(MessageDestinationReferencer msgDestReferencer) {
     }
 
+
     /**
-     * visits an message destination for the last J2EE component visited
-     * @param the message destination
+     * Visits an message destination for the last Jakarta EE component visited
+     *
+     * @param msgDest the message destination
      */
     protected void accept(MessageDestinationDescriptor msgDest) {
     }

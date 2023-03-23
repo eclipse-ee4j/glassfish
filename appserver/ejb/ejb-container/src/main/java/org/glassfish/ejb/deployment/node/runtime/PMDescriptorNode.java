@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,12 @@
 
 package org.glassfish.ejb.deployment.node.runtime;
 
+import com.sun.enterprise.deployment.node.runtime.RuntimeDescriptorNode;
+import com.sun.enterprise.deployment.xml.RuntimeTagNames;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sun.enterprise.deployment.node.runtime.RuntimeDescriptorNode;
-import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 import org.glassfish.ejb.deployment.descriptor.runtime.IASPersistenceManagerDescriptor;
 import org.w3c.dom.Node;
 
@@ -28,8 +30,8 @@ import org.w3c.dom.Node;
  * This node handles the pm-descriptor runtime xml element
  *
  * @author  Jerome Dochez
- * @version
  */
+@Deprecated(forRemoval = true, since = "3.1")
 public class PMDescriptorNode extends RuntimeDescriptorNode<IASPersistenceManagerDescriptor> {
 
     private IASPersistenceManagerDescriptor descriptor;
@@ -45,7 +47,7 @@ public class PMDescriptorNode extends RuntimeDescriptorNode<IASPersistenceManage
 
     @Override
     protected Map getDispatchTable() {
-        Map table = new HashMap();
+        Map<String, String> table = new HashMap<>();
         table.put(RuntimeTagNames.PM_IDENTIFIER, "setPersistenceManagerIdentifier");
         table.put(RuntimeTagNames.PM_VERSION, "setPersistenceManagerVersion");
         table.put(RuntimeTagNames.PM_CONFIG, "setPersistenceManagerConfig");

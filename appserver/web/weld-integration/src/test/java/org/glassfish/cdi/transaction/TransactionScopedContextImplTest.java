@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,14 @@
 
 package org.glassfish.cdi.transaction;
 
+import jakarta.enterprise.context.ContextNotActiveException;
+import jakarta.enterprise.context.spi.Contextual;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.spi.PassivationCapable;
+import jakarta.transaction.Status;
+import jakarta.transaction.TransactionScoped;
+import jakarta.transaction.TransactionSynchronizationRegistry;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -25,14 +33,6 @@ import org.easymock.EasyMockSupport;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import jakarta.enterprise.context.ContextNotActiveException;
-import jakarta.enterprise.context.spi.Contextual;
-import jakarta.enterprise.context.spi.CreationalContext;
-import jakarta.enterprise.inject.spi.PassivationCapable;
-import jakarta.transaction.Status;
-import jakarta.transaction.TransactionScoped;
-import jakarta.transaction.TransactionSynchronizationRegistry;
 
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.isA;
@@ -49,10 +49,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class TransactionScopedContextImplTest {
     private static final String TRANSACTION_SYNCHRONIZATION_REGISTRY_JNDI_NAME = "java:comp/TransactionSynchronizationRegistry";
 
-    private String initialContextFactoryProperty = null;
-    private String urlPkgPrefixes = null;
-    private EasyMockSupport mockSupport = null;
-    private InitialContext initialContext = null;
+    private String initialContextFactoryProperty;
+    private String urlPkgPrefixes;
+    private EasyMockSupport mockSupport;
+    private InitialContext initialContext;
 
     @BeforeEach
     public void beforeTest() throws Exception {
@@ -68,8 +68,16 @@ public class TransactionScopedContextImplTest {
 
     @AfterEach
     public void afterTest() throws Exception {
-        System.setProperty(Context.INITIAL_CONTEXT_FACTORY, initialContextFactoryProperty == null ? "" : initialContextFactoryProperty);
-        System.setProperty(Context.URL_PKG_PREFIXES, urlPkgPrefixes == null ? "" : urlPkgPrefixes);
+        if (initialContextFactoryProperty == null) {
+            System.clearProperty(Context.INITIAL_CONTEXT_FACTORY);
+        } else {
+            System.setProperty(Context.INITIAL_CONTEXT_FACTORY, initialContextFactoryProperty);
+        }
+        if (urlPkgPrefixes == null) {
+            System.clearProperty(Context.URL_PKG_PREFIXES);
+        } else {
+            System.setProperty(Context.URL_PKG_PREFIXES, urlPkgPrefixes);
+        }
     }
 
     @Test

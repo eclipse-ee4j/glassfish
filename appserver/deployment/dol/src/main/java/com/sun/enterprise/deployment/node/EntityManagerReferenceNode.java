@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,11 +20,14 @@ package com.sun.enterprise.deployment.node;
 import com.sun.enterprise.deployment.EntityManagerReferenceDescriptor;
 import com.sun.enterprise.deployment.InjectionTarget;
 import com.sun.enterprise.deployment.xml.TagNames;
-import org.w3c.dom.Node;
+import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import jakarta.persistence.PersistenceContextType;
 import jakarta.persistence.SynchronizationType;
+
 import java.util.Map;
+
+import org.w3c.dom.Node;
 
 /**
  * This node handles all persistence-context-ref xml tag elements
@@ -32,13 +36,15 @@ import java.util.Map;
  * @version
  */
 public class EntityManagerReferenceNode extends DeploymentDescriptorNode {
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(EntityManagerReferenceNode.class);
+
     private static final String TRANSACTION = "Transaction";
     private static final String EXTENDED = "Extended";
     private static final String SYNCHRONIZED = "Synchronized";
     private static final String UNSYNCHRONIZED = "Unsynchronized";
 
     // Holds property name during name/value processing.
-    private String propertyName = null;
+    private String propertyName;
 
     public EntityManagerReferenceNode() {
         super();
@@ -55,6 +61,7 @@ public class EntityManagerReferenceNode extends DeploymentDescriptorNode {
      * @return the map with the element name as a key, the setter method as
      *         a value
      */
+    @Override
     protected Map getDispatchTable() {
         // no need to be synchronized for now
         Map table = super.getDispatchTable();
@@ -69,6 +76,7 @@ public class EntityManagerReferenceNode extends DeploymentDescriptorNode {
      * @param element the xml element
      * @param value it's associated value
      */
+    @Override
     public void setElementValue(XMLElement element, String value) {
         if (TagNames.PERSISTENCE_CONTEXT_TYPE.equals(element.getQName())) {
             EntityManagerReferenceDescriptor entityMgrReferenceDescriptor =
@@ -79,7 +87,7 @@ public class EntityManagerReferenceNode extends DeploymentDescriptorNode {
             } else if (TRANSACTION.equals(value)) {
                 contextType = PersistenceContextType.TRANSACTION;
             } else {
-                throw new IllegalArgumentException(I18N_NODE.getLocalString(
+                throw new IllegalArgumentException(I18N.getLocalString(
                 "enterprise.deployment.node.invalidvalue",
                 "Invalid value for a tag under {0} : {1}",
                 new Object[] {TagNames.PERSISTENCE_CONTEXT_TYPE, value}));
@@ -96,7 +104,7 @@ public class EntityManagerReferenceNode extends DeploymentDescriptorNode {
             } else if (UNSYNCHRONIZED.equals(value)) {
                 synchronizationType = SynchronizationType.UNSYNCHRONIZED;
             } else {
-                throw new IllegalArgumentException(I18N_NODE.getLocalString(
+                throw new IllegalArgumentException(I18N.getLocalString(
                         "enterprise.deployment.node.invalidvalue",
                         "Invalid value for a tag under {0} : {1}",
                         new Object[] {TagNames.PERSISTENCE_CONTEXT_SYNCHRONIZATION_TYPE, value}));

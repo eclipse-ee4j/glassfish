@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to Eclipse Foundation. All rights reserved.
+ * Copyright (c) 2022, 2023 Contributors to Eclipse Foundation. All rights reserved.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -141,9 +141,7 @@ abstract class AbstractAuthAnnotationHandler extends AbstractCommonAttributeHand
     public void postProcessAnnotation(AnnotationInfo ainfo, EjbContext ejbContext) throws AnnotationProcessorException {
         EjbDescriptor ejbDesc = ejbContext.getDescriptor();
         Annotation authAnnotation = ainfo.getAnnotation();
-
-        if (ejbContext.isInherited()
-            || (ejbDesc.getMethodPermissionsFromDD() != null && !ejbDesc.getMethodPermissionsFromDD().isEmpty())) {
+        if (ejbContext.isInherited() || !ejbDesc.getMethodPermissionsFromDD().isEmpty()) {
             Class<?> classAn = (Class<?>) ainfo.getAnnotatedElement();
             for (MethodDescriptor md : ejbDesc.getSecurityBusinessMethodDescriptors()) {
                 // override by existing info
@@ -219,15 +217,17 @@ abstract class AbstractAuthAnnotationHandler extends AbstractCommonAttributeHand
     private boolean hasMethodPermissionsFromDD(MethodDescriptor methodDesc, EjbDescriptor ejbDesc) {
         Map<MethodPermission, ArrayList<MethodDescriptor>> methodPermissionsFromDD = ejbDesc
             .getMethodPermissionsFromDD();
-        if (methodPermissionsFromDD != null) {
-            Set<MethodDescriptor> allMethods = ejbDesc.getMethodDescriptors();
-            for (List<MethodDescriptor> mdObjs : methodPermissionsFromDD.values()) {
-                for (MethodDescriptor md : mdObjs) {
-                    for (MethodDescriptor style3Md : md.doStyleConversion(ejbDesc, allMethods)) {
-                        LOG.log(Level.FINEST, "Comparing style3Md: {0} and methodDesc: {1}", new Object[] {style3Md, methodDesc});
-                        if (methodDesc.equals(style3Md)) {
-                            return true;
-                        }
+        if (methodPermissionsFromDD.isEmpty()) {
+            return false;
+        }
+        Set<MethodDescriptor> allMethods = ejbDesc.getMethodDescriptors();
+        for (List<MethodDescriptor> mdObjs : methodPermissionsFromDD.values()) {
+            for (MethodDescriptor md : mdObjs) {
+                for (MethodDescriptor style3Md : md.doStyleConversion(ejbDesc, allMethods)) {
+                    LOG.log(Level.FINEST, "Comparing style3Md: {0} and methodDesc: {1}",
+                        new Object[] {style3Md, methodDesc});
+                    if (methodDesc.equals(style3Md)) {
+                        return true;
                     }
                 }
             }

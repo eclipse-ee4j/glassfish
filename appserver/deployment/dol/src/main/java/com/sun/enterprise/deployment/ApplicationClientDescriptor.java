@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -451,10 +451,6 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
         return getInjectableResourcesByClass(className, this);
     }
 
-    /**
-     * Looks up an ejb reference with the given name. Throws an IllegalArgumentException
-     * if it is not found.
-     */
     @Override
     public EjbReferenceDescriptor getEjbReference(String name) {
         for (EjbReferenceDescriptor ejr : this.getEjbReferenceDescriptors()) {
@@ -468,9 +464,6 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
             new Object[] {getName(), name}));
     }
 
-    /**
-     * Return a resource environment reference by the same name or throw an IllegalArgumentException.
-     */
     @Override
     public ResourceEnvReferenceDescriptor getResourceEnvReferenceByName(String name) {
         for (ResourceEnvReferenceDescriptor jdr : this.getResourceEnvReferenceDescriptors()) {
@@ -484,9 +477,6 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
             new Object[] {getName(), name}));
     }
 
-    /**
-     * Return the set of references to resources that I have.
-     */
     @Override
     public Set<ResourceReferenceDescriptor> getResourceReferenceDescriptors() {
         if (this.resourceReferences == null) {
@@ -496,10 +486,6 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
         return this.resourceReferences;
     }
 
-    /**
-     * Looks up a reference to a resource by its name (getName()).
-     * @throws an IllegalArgumentException if no such descriptor is found.
-     */
     @Override
     public ResourceReferenceDescriptor getResourceReferenceByName(String name) {
         for (ResourceReferenceDescriptor rr : this.getResourceReferenceDescriptors()) {

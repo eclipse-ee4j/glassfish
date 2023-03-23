@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,23 +28,24 @@ import org.w3c.dom.Node;
 /**
  * This node handles the pm-inuse runtime xml element
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
-
+@Deprecated(forRemoval = true, since = "3.1")
 public class PMInUseNode extends RuntimeDescriptorNode<PersistenceManagerInUse> {
 
     private PersistenceManagerInUse descriptor;
 
     @Override
     public PersistenceManagerInUse getDescriptor() {
-        if (descriptor == null) descriptor = new PersistenceManagerInUse();
+        if (descriptor == null) {
+            descriptor = new PersistenceManagerInUse();
+        }
         return descriptor;
     }
 
     @Override
     protected Map getDispatchTable() {
-        Map table = new HashMap();
+        Map<String, String> table = new HashMap<>();
         table.put(RuntimeTagNames.PM_IDENTIFIER, "set_pm_identifier");
         table.put(RuntimeTagNames.PM_VERSION, "set_pm_version");
         return table;

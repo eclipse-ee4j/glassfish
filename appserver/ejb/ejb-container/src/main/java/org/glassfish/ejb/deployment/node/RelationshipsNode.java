@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,17 +36,6 @@ import org.w3c.dom.Node;
  */
 public class RelationshipsNode extends DeploymentDescriptorNode<RelationshipDescriptor> {
 
-    public static Node writeRelationships(Node parent, String nodeName, EjbBundleDescriptorImpl descriptor) {
-        Node relationshipsNode = appendChild(parent, nodeName);
-        appendTextChild(relationshipsNode, TagNames.DESCRIPTION, descriptor.getRelationshipsDescription());
-        EjbRelationNode subNode = new EjbRelationNode();
-        for (RelationshipDescriptor rd : descriptor.getRelationships()) {
-            subNode.writeDescriptor(relationshipsNode, EjbTagNames.EJB_RELATION, rd);
-        }
-        return relationshipsNode;
-    }
-
-
     public RelationshipsNode() {
         registerElementHandler(new XMLElement(EjbTagNames.EJB_RELATION), EjbRelationNode.class);
     }
@@ -70,5 +59,16 @@ public class RelationshipsNode extends DeploymentDescriptorNode<RelationshipDesc
         Map<String, String> table = new HashMap<>();
         table.put(TagNames.DESCRIPTION, "setRelationshipsDescription");
         return table;
+    }
+
+
+    public static Node writeRelationships(Node parent, String nodeName, EjbBundleDescriptorImpl descriptor) {
+        Node relationshipsNode = appendChild(parent, nodeName);
+        appendTextChild(relationshipsNode, TagNames.DESCRIPTION, descriptor.getRelationshipsDescription());
+        EjbRelationNode subNode = new EjbRelationNode();
+        for (RelationshipDescriptor rd : descriptor.getRelationships()) {
+            subNode.writeDescriptor(relationshipsNode, EjbTagNames.EJB_RELATION, rd);
+        }
+        return relationshipsNode;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,6 +20,7 @@ package com.sun.enterprise.deployment;
 import com.sun.enterprise.deployment.util.DOLUtils;
 
 import java.sql.Connection;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.logging.Level;
 
@@ -337,9 +338,7 @@ public class DataSourceDefinitionDescriptor extends ResourceDescriptor {
 
     @Override
     public int hashCode() {
-        int result = 17;
-        result = 37 * result + getName().hashCode();
-        return result;
+        return Objects.hash(getName());
     }
 
     public void addDataSourcePropertyDescriptor(ResourcePropertyDescriptor propertyDescriptor){

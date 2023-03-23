@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,7 +23,7 @@ import org.glassfish.deployment.common.Descriptor;
 
 /***
  * I represent a mapping between a mime type and a file extension for specifiying how
- * to handle mime types in a J2EE WAR.
+ * to handle mime types in a Jakarta EE war.
  *
  * @author Danny Coward
  */

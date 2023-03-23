@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,7 +27,7 @@ import jakarta.inject.Inject;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.List;
 
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.hk2.api.PerLookup;
@@ -113,21 +113,19 @@ public class WarScanner extends ModuleScanner<WebBundleDescriptor> {
             }
         }
 
-        Vector<ServletFilter> servletFilters = webBundleDesc.getServletFilters();
-        for (int i = 0; i < servletFilters.size(); i++) {
-            ServletFilter filter = servletFilters.elementAt(i);
+        List<ServletFilter> servletFilters = webBundleDesc.getServletFilters();
+        for (ServletFilter filter : servletFilters) {
             String filterName = filter.getClassName();
             if (isScan(filterName, commonCL)) {
                 addScanClassName(filter.getClassName());
             }
         }
 
-        Vector<AppListenerDescriptor> listeners = webBundleDesc.getAppListenerDescriptors();
-        for (int j = 0; j < listeners.size(); j++) {
-            AppListenerDescriptor listenerDesc = listeners.elementAt(j);
+        List<AppListenerDescriptor> listeners = webBundleDesc.getAppListenersCopy();
+        for (AppListenerDescriptor listenerDesc : listeners) {
             String listenerName = listenerDesc.getListener();
             if (isScan(listenerName, commonCL)) {
-                addScanClassName(listenerDesc.getListener());
+                addScanClassName(listenerName);
             }
         }
     }

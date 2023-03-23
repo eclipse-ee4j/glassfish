@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,39 +17,32 @@
 
 package org.glassfish.ejb.deployment.descriptor;
 
-import java.util.logging.Level;
-
 import com.sun.enterprise.deployment.util.DOLUtils;
+
+import java.util.logging.Level;
 
 /**
  * A dummy implementation of the EjbDescriptor
- *
  */
-
-public class DummyEjbDescriptor extends EjbDescriptor
-{
-    public DummyEjbDescriptor() {
-    }
+public class DummyEjbDescriptor extends EjbDescriptor {
 
     @Override
     public void setTransactionType(String transactionType) {
-        DOLUtils.getDefaultLogger().log(Level.WARNING, "enterprise.deployment_dummy_set_trans_type", new Object[] {getName()});
+        DOLUtils.getDefaultLogger().log(Level.WARNING, "enterprise.deployment_dummy_set_trans_type", getName());
     }
+
 
     @Override
     public String getContainerFactoryQualifier() {
         throw new UnsupportedOperationException();
     }
 
+
     @Override
     public String getType() {
         return "Dummy";
     }
 
-    @Override
-    public void setType(String type) {
-        DOLUtils.getDefaultLogger().log(Level.WARNING, "enterprise.deployment_dummy_set_type", new Object[] {getName()});
-    }
 
     @Override
     public String getEjbTypeForDisplay() {

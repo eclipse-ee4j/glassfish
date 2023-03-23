@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,9 +20,6 @@ package com.sun.enterprise.deployment.node;
 import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
 import com.sun.enterprise.deployment.util.DOLUtils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.logging.Level;
 
@@ -96,25 +93,6 @@ public class J2EEDocumentBuilder {
         }
     }
 
-    public static void write (Descriptor descriptor, final RootXMLNode node,  final File resultFile) throws Exception {
-        if (node == null) {
-            DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
-                new Object[] {descriptor, null});
-            return;
-        }
-        if (resultFile.getParent() != null) {
-            File f = new File(resultFile.getParent());
-            if (!f.isDirectory() && !f.mkdirs()) {
-                throw new IOException("Cannot create parent directory " + f.getAbsolutePath());
-            }
-        }
-        FileOutputStream out = new FileOutputStream(resultFile);
-        try {
-            write(descriptor, node, out);
-        } finally {
-            out.close();
-        }
-    }
 
     public static void write(Descriptor descriptor, final RootXMLNode node, final OutputStream os) throws Exception {
         Result output = new StreamResult(os);
@@ -123,8 +101,7 @@ public class J2EEDocumentBuilder {
 
     public static void write(Descriptor descriptor, final RootXMLNode node, final Result output) throws Exception {
         if (node == null) {
-            DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
-                new Object[] {descriptor, null});
+            DOLUtils.getDefaultLogger().log(Level.SEVERE, "Root XML node is null for descriptor: " + descriptor);
             return;
         }
         Document document = getDocument(descriptor, node);

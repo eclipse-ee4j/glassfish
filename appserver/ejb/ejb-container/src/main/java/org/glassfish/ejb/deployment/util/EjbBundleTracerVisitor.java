@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,6 @@
 
 package org.glassfish.ejb.deployment.util;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
-
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
 import com.sun.enterprise.deployment.EnvironmentProperty;
@@ -32,9 +29,15 @@ import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.WebService;
 import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.types.MessageDestinationReferencer;
-import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.util.EjbBundleVisitor;
 import com.sun.enterprise.deployment.util.TracerVisitor;
+
+import java.lang.System.Logger;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import org.glassfish.ejb.deployment.descriptor.ContainerTransaction;
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.glassfish.ejb.deployment.descriptor.EjbCMPEntityDescriptor;
@@ -44,12 +47,17 @@ import org.glassfish.ejb.deployment.descriptor.PersistenceDescriptor;
 import org.glassfish.ejb.deployment.descriptor.QueryDescriptor;
 import org.glassfish.ejb.deployment.descriptor.RelationshipDescriptor;
 
+import static java.lang.System.Logger.Level.INFO;
+
 public class EjbBundleTracerVisitor extends TracerVisitor implements EjbBundleVisitor {
 
+    private static final Logger LOG = System.getLogger(EjbBundleTracerVisitor.class.getName());
+
     @Override
-    public void accept(BundleDescriptor descriptor) {
-        if (descriptor instanceof EjbBundleDescriptorImpl) {
-            EjbBundleDescriptorImpl ejbBundle = (EjbBundleDescriptorImpl) descriptor;
+    public void accept(BundleDescriptor bundle) {
+        LOG.log(INFO, "accept(bundle.name={0})", bundle.getName());
+        if (bundle instanceof EjbBundleDescriptorImpl) {
+            EjbBundleDescriptorImpl ejbBundle = (EjbBundleDescriptorImpl) bundle;
             accept(ejbBundle);
 
             for (EjbDescriptor anEjb : ejbBundle.getEjbs()) {
@@ -64,48 +72,32 @@ public class EjbBundleTracerVisitor extends TracerVisitor implements EjbBundleVi
                 accept(ws);
             }
         }
-        super.accept(descriptor);
+        super.accept(bundle);
     }
 
     @Override
-    public void accept(com.sun.enterprise.deployment.EjbBundleDescriptor ebd) {
-        logInfo("Ejb Bundle " + ebd.getName());
+    public void accept(com.sun.enterprise.deployment.EjbBundleDescriptor bundle) {
+        LOG.log(INFO, "accept(bundle.name={0})", bundle.getName());
     }
 
     protected void accept(EjbDescriptor ejb) {
-        logInfo("==================");
-        logInfo(ejb.getType() + " Bean " + ejb.getName());
-        logInfo("\thomeClassName " + ejb.getHomeClassName());
-        logInfo("\tremoteClassName " + ejb.getRemoteClassName());
-        logInfo("\tlocalhomeClassName " + ejb.getLocalHomeClassName());
-        logInfo("\tlocalClassName " + ejb.getLocalClassName());
-        logInfo("\tremoteBusinessIntfs " + ejb.getRemoteBusinessClassNames());
-        logInfo("\tlocalBusinessIntfs " + ejb.getLocalBusinessClassNames());
-
-        logInfo("\tjndiName " + ejb.getJndiName());
-        logInfo("\tejbClassName " + ejb.getEjbClassName());
-        logInfo("\ttransactionType " + ejb.getTransactionType());
-        if (ejb.getUsesCallerIdentity() == false) {
-            logInfo("\trun-as role " + ejb.getRunAsIdentity());
-        } else {
-            logInfo("\tuse-caller-identity " + ejb.getUsesCallerIdentity());
-        }
+        LOG.log(INFO, "accept ejb:\n{0}", ejb);
 
         for (EjbReference aRef : ejb.getEjbReferenceDescriptors()) {
             accept(aRef);
         }
 
-        for (Iterator e = ejb.getPermissionedMethodsByPermission().keySet().iterator(); e.hasNext();) {
-            MethodPermission mp = (MethodPermission) e.next();
-            Set methods = (Set) ejb.getPermissionedMethodsByPermission().get(mp);
+        for (MethodPermission mp : ejb.getPermissionedMethodsByPermission().keySet()) {
+            Set<MethodDescriptor> methods = ejb.getPermissionedMethodsByPermission().get(mp);
             accept(mp, methods);
         }
 
-        if (ejb.getStyledPermissionedMethodsByPermission() != null) {
-            for (Iterator e = ejb.getStyledPermissionedMethodsByPermission().keySet().iterator(); e.hasNext();) {
-                MethodPermission mp = (MethodPermission) e.next();
-                Set methods = (Set) ejb.getStyledPermissionedMethodsByPermission().get(mp);
-                accept(mp, methods);
+        {
+            Map<MethodPermission, Set<MethodDescriptor>> methodPerms = ejb.getStyledPermissionedMethodsByPermission();
+            if (methodPerms != null) {
+                for (Entry<MethodPermission, Set<MethodDescriptor>> mp : methodPerms.entrySet()) {
+                    accept(mp.getKey(), mp.getValue());
+                }
             }
         }
 
@@ -113,10 +105,8 @@ public class EjbBundleTracerVisitor extends TracerVisitor implements EjbBundleVi
             accept(roleRef);
         }
 
-        for (Iterator e = ejb.getMethodContainerTransactions().keySet().iterator(); e.hasNext();) {
-            MethodDescriptor md = (MethodDescriptor) e.next();
-            ContainerTransaction ct = (ContainerTransaction) ejb.getMethodContainerTransactions().get(md);
-            accept(md, ct);
+        for (Entry<MethodDescriptor, ContainerTransaction> md : ejb.getMethodContainerTransactions().entrySet()) {
+            accept(md.getKey(), md.getValue());
         }
 
         for (EnvironmentProperty envProp : ejb.getEnvironmentProperties()) {
@@ -137,7 +127,7 @@ public class EjbBundleTracerVisitor extends TracerVisitor implements EjbBundleVi
 
         // If this is a message bean, it can be a message destination
         // referencer as well.
-        if (ejb.getType().equals(EjbMessageBeanDescriptor.TYPE)) {
+        if (EjbMessageBeanDescriptor.TYPE.equals(ejb.getType())) {
             MessageDestinationReferencer msgDestReferencer = (MessageDestinationReferencer) ejb;
             if (msgDestReferencer.getMessageDestinationLinkName() != null) {
                 accept(msgDestReferencer);
@@ -151,63 +141,48 @@ public class EjbBundleTracerVisitor extends TracerVisitor implements EjbBundleVi
         if (ejb instanceof EjbCMPEntityDescriptor) {
             EjbCMPEntityDescriptor cmp = (EjbCMPEntityDescriptor) ejb;
             PersistenceDescriptor persistenceDesc = cmp.getPersistenceDescriptor();
-            for (Object fd : persistenceDesc.getCMPFields()) {
-                accept((FieldDescriptor) fd);
+            for (FieldDescriptor field : persistenceDesc.getCMPFields()) {
+                accept(field);
             }
-            for (Object o : persistenceDesc.getQueriedMethods()) {
-                if (o instanceof MethodDescriptor) {
-                    QueryDescriptor qd = persistenceDesc.getQueryFor((MethodDescriptor) o);
-                    accept(qd);
-                }
+            for (MethodDescriptor method : persistenceDesc.getQueriedMethods()) {
+                QueryDescriptor qd = persistenceDesc.getQueryFor(method);
+                accept(qd);
             }
         }
     }
 
-    protected void accept(MethodPermission pm, Collection<MethodDescriptor> mds) {
-        logInfo("For method permission : " + pm.toString());
-        for (MethodDescriptor md : mds) {
-            logInfo("\t" + md.prettyPrint());
-        }
+    protected void accept(MethodPermission methodPermission, Collection<MethodDescriptor> methodDescriptors) {
+        LOG.log(INFO, "accept(methodPermission={0}, methods)", methodPermission);
     }
 
-    protected void accept(RoleReference rr) {
-        logInfo("Security Role Reference : " + rr.getName() + " link " + rr.getValue());
+    protected void accept(RoleReference reference) {
+        LOG.log(INFO, "accept(reference={0})", reference);
     }
 
-    protected void accept(MethodDescriptor md, ContainerTransaction ct) {
-        logInfo(ct.getTransactionAttribute()
-                + " Container Transaction for method " + md.prettyPrint());
+    protected void accept(MethodDescriptor method, ContainerTransaction transaction) {
+        LOG.log(INFO, "accept(method={0}, transaction={1})", method, transaction);
     }
 
-    protected void accept(FieldDescriptor fd) {
-        logInfo("CMP Field " + fd);
+    protected void accept(FieldDescriptor field) {
+        LOG.log(INFO, "accept(field={0})", field);
     }
 
-    protected void accept(QueryDescriptor qd) {
-        logInfo(qd.toString());
+    protected void accept(QueryDescriptor query) {
+        LOG.log(INFO, "accept(query={0})", query);
     }
 
     protected void accept(RelationshipDescriptor rd) {
-        logInfo("============ Relationships ===========");
-        logInfo("From EJB " + rd.getSource().getName() + " cmr field : "
-                + rd.getSource().getCMRField() + "("
-                + rd.getSource().getCMRFieldType() + ")  to EJB "
-                + rd.getSink().getName() + " isMany "
-                + rd.getSource().getIsMany() + " cascade-delete "
-                + rd.getSource().getCascadeDelete());
-
-        logInfo("To  EJB " + rd.getSink().getName() + " isMany "
-                + rd.getSink().getIsMany() + " cascade-delete "
-                + rd.getSink().getCascadeDelete());
-
-        if (rd.getIsBidirectional()) {
-            logInfo("Bidirectional cmr field : " + rd.getSink().getCMRField()
-                    + "(" + rd.getSink().getCMRFieldType() + ")");
-        }
+        LOG.log(INFO, () -> "accept relationship:\n"
+            + "From EJB " + rd.getSource().getName() + " cmr field: "
+            + rd.getSource().getCMRField() + "("
+            + rd.getSource().getCMRFieldType() + ")  to EJB "
+            + rd.getSink().getName() + " isMany "
+            + rd.getSource().getIsMany() + " cascade-delete "
+            + rd.getSource().getCascadeDelete() + "\n"
+            + "To  EJB " + rd.getSink().getName() + " isMany "
+            + rd.getSink().getIsMany() + " cascade-delete "
+            + rd.getSink().getCascadeDelete() + "\n"
+            + "Bidirectional cmr field: " + (rd.getIsBidirectional() ? rd.getSink().getCMRField()
+                + "(" + rd.getSink().getCMRFieldType() + ")" : "false"));
     }
-
-    private void logInfo(String message) {
-        DOLUtils.getDefaultLogger().info(message);
-    }
-
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,11 +19,36 @@ package org.glassfish.web.deployment.node;
 
 import com.sun.enterprise.deployment.EjbReferenceDescriptor;
 import com.sun.enterprise.deployment.EnvironmentProperty;
+import com.sun.enterprise.deployment.ErrorPageDescriptor;
+import com.sun.enterprise.deployment.JspConfigDefinitionDescriptor;
 import com.sun.enterprise.deployment.LocaleEncodingMappingDescriptor;
 import com.sun.enterprise.deployment.LocaleEncodingMappingListDescriptor;
 import com.sun.enterprise.deployment.SecurityRoleDescriptor;
 import com.sun.enterprise.deployment.WebComponentDescriptor;
-import com.sun.enterprise.deployment.node.*;
+import com.sun.enterprise.deployment.node.AbstractBundleNode;
+import com.sun.enterprise.deployment.node.AdministeredObjectDefinitionNode;
+import com.sun.enterprise.deployment.node.ConnectionFactoryDefinitionNode;
+import com.sun.enterprise.deployment.node.ContextServiceDefinitionNode;
+import com.sun.enterprise.deployment.node.DataSourceDefinitionNode;
+import com.sun.enterprise.deployment.node.EjbLocalReferenceNode;
+import com.sun.enterprise.deployment.node.EjbReferenceNode;
+import com.sun.enterprise.deployment.node.EntityManagerFactoryReferenceNode;
+import com.sun.enterprise.deployment.node.EntityManagerReferenceNode;
+import com.sun.enterprise.deployment.node.EnvEntryNode;
+import com.sun.enterprise.deployment.node.JMSConnectionFactoryDefinitionNode;
+import com.sun.enterprise.deployment.node.JMSDestinationDefinitionNode;
+import com.sun.enterprise.deployment.node.JndiEnvRefNode;
+import com.sun.enterprise.deployment.node.LifecycleCallbackNode;
+import com.sun.enterprise.deployment.node.MailSessionNode;
+import com.sun.enterprise.deployment.node.ManagedExecutorDefinitionNode;
+import com.sun.enterprise.deployment.node.ManagedScheduledExecutorDefinitionNode;
+import com.sun.enterprise.deployment.node.ManagedThreadFactoryDefinitionNode;
+import com.sun.enterprise.deployment.node.MessageDestinationNode;
+import com.sun.enterprise.deployment.node.MessageDestinationRefNode;
+import com.sun.enterprise.deployment.node.ResourceEnvRefNode;
+import com.sun.enterprise.deployment.node.ResourceRefNode;
+import com.sun.enterprise.deployment.node.SecurityRoleNode;
+import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.web.AppListenerDescriptor;
 import com.sun.enterprise.deployment.web.ContextParameter;
@@ -38,15 +63,15 @@ import com.sun.enterprise.deployment.xml.WebServicesTagNames;
 
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.security.common.Role;
 import org.glassfish.web.deployment.descriptor.AppListenerDescriptorImpl;
-import org.glassfish.web.deployment.descriptor.ErrorPageDescriptor;
-import org.glassfish.web.deployment.descriptor.JspConfigDescriptorImpl;
 import org.glassfish.web.deployment.descriptor.LoginConfigurationImpl;
 import org.glassfish.web.deployment.descriptor.MimeMappingDescriptor;
 import org.glassfish.web.deployment.descriptor.SecurityConstraintImpl;
@@ -167,20 +192,20 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
                 logger.fine("Adding taglib component " + newDescriptor);
             }
             if (descriptor.getJspConfigDescriptor() == null) {
-                descriptor.setJspConfigDescriptor(new JspConfigDescriptorImpl());
+                descriptor.setJspConfigDescriptor(new JspConfigDefinitionDescriptor());
             }
             descriptor.getJspConfigDescriptor().addTagLib((TagLibConfigurationDescriptor) newDescriptor);
-        } else if (newDescriptor instanceof JspConfigDescriptorImpl) {
+        } else if (newDescriptor instanceof JspConfigDefinitionDescriptor) {
             if (logger.isLoggable(Level.FINE)) {
-                logger.fine("Adding JSP Config Descriptor" + newDescriptor);
+                logger.fine("Adding JSP Config Descriptor " + newDescriptor);
             }
             if (descriptor.getJspConfigDescriptor() != null) {
                 throw new RuntimeException("Has more than one jsp-config element!");
             }
-            descriptor.setJspConfigDescriptor((JspConfigDescriptorImpl) newDescriptor);
+            descriptor.setJspConfigDescriptor((JspConfigDefinitionDescriptor) newDescriptor);
         } else if (newDescriptor instanceof LoginConfiguration) {
             if (logger.isLoggable(Level.FINE)) {
-                logger.fine("Adding Login Config Descriptor" + newDescriptor);
+                logger.fine("Adding Login Config Descriptor " + newDescriptor);
             }
             if (descriptor.getLoginConfiguration() != null) {
                 throw new RuntimeException("Has more than one login-config element!");
@@ -274,7 +299,7 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
         }
 
         // context-param*
-        addInitParam(jarNode, WebTagNames.CONTEXT_PARAM, webBundleDesc.getContextParametersSet());
+        addInitParam(jarNode, WebTagNames.CONTEXT_PARAM, webBundleDesc.getContextParameters());
 
         // filter*
         FilterNode filterNode = new FilterNode();
@@ -289,7 +314,7 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
         }
 
         // listener*
-        Vector<AppListenerDescriptor> appListeners = webBundleDesc.getAppListenerDescriptors();
+        List<AppListenerDescriptor> appListeners = webBundleDesc.getAppListenersCopy();
         if (!appListeners.isEmpty()) {
             ListenerNode listenerNode = new ListenerNode();
             for (AppListenerDescriptor appListener : appListeners) {
@@ -325,44 +350,37 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
 
         // mime-mapping*
         MimeMappingNode mimeNode = new MimeMappingNode();
-        for (Enumeration<MimeMapping> e = webBundleDesc.getMimeMappings(); e.hasMoreElements();) {
-            // there's no other implementation
-            MimeMappingDescriptor mimeMapping = (MimeMappingDescriptor) e.nextElement();
-            mimeNode.writeDescriptor(jarNode, WebTagNames.MIME_MAPPING, mimeMapping);
+        for (MimeMapping mimeMapping : webBundleDesc.getMimeMappings()) {
+            mimeNode.writeDescriptor(jarNode, WebTagNames.MIME_MAPPING, (MimeMappingDescriptor) mimeMapping);
         }
 
         // welcome-file-list?
-        Enumeration<String> welcomeFiles = webBundleDesc.getWelcomeFiles();
-        if (welcomeFiles.hasMoreElements()) {
+        Set<String> welcomeFiles = webBundleDesc.getWelcomeFiles();
+        if (!welcomeFiles.isEmpty()) {
             Node welcomeList = appendChild(jarNode, WebTagNames.WELCOME_FILE_LIST);
-            while (welcomeFiles.hasMoreElements()) {
-                appendTextChild(welcomeList, WebTagNames.WELCOME_FILE, welcomeFiles.nextElement());
+            for (String welcomeFile : welcomeFiles) {
+                appendTextChild(welcomeList, WebTagNames.WELCOME_FILE, welcomeFile);
             }
         }
 
         // error-page*
-        Enumeration<ErrorPageDescriptor> errorPages = webBundleDesc.getErrorPageDescriptors();
-        if (errorPages.hasMoreElements()) {
+        for (ErrorPageDescriptor errorPage : webBundleDesc.getErrorPageDescriptors()) {
             ErrorPageNode errorPageNode = new ErrorPageNode();
-            while (errorPages.hasMoreElements()) {
-                errorPageNode.writeDescriptor(jarNode, WebTagNames.ERROR_PAGE, errorPages.nextElement());
-            }
+            errorPageNode.writeDescriptor(jarNode, WebTagNames.ERROR_PAGE, errorPage);
         }
 
         // jsp-config *
-        JspConfigDescriptorImpl jspConf = webBundleDesc.getJspConfigDescriptor();
+        JspConfigDefinitionDescriptor jspConf = webBundleDesc.getJspConfigDescriptor();
         if (jspConf != null) {
             JspConfigNode ln = new JspConfigNode();
             ln.writeDescriptor(jarNode, JSPCONFIG, jspConf);
         }
 
         // security-constraint*
-        Enumeration<SecurityConstraint> securityConstraints = webBundleDesc.getSecurityConstraints();
-        if (securityConstraints.hasMoreElements()) {
+        if (!webBundleDesc.getSecurityConstraints().isEmpty()) {
             SecurityConstraintNode scNode = new SecurityConstraintNode();
-            while (securityConstraints.hasMoreElements()) {
-                SecurityConstraintImpl sc = (SecurityConstraintImpl) securityConstraints.nextElement();
-                scNode.writeDescriptor(jarNode, WebTagNames.SECURITY_CONSTRAINT, sc);
+            for (SecurityConstraint sc : webBundleDesc.getSecurityConstraints()) {
+                scNode.writeDescriptor(jarNode, WebTagNames.SECURITY_CONSTRAINT, (SecurityConstraintImpl) sc);
             }
         }
 
@@ -374,12 +392,11 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
         }
 
         // security-role*
-        Enumeration<SecurityRoleDescriptor> roles = webBundleDesc.getSecurityRoles();
-        if (roles.hasMoreElements()) {
+        Set<Role> roles = webBundleDesc.getRoles();
+        if (!roles.isEmpty()) {
             SecurityRoleNode srNode = new SecurityRoleNode();
-            while (roles.hasMoreElements()) {
-                SecurityRoleDescriptor role = roles.nextElement();
-                srNode.writeDescriptor(jarNode, TagNames.ROLE, role);
+            for (Role role : roles) {
+                srNode.writeDescriptor(jarNode, TagNames.ROLE, new SecurityRoleDescriptor(role));
             }
         }
 

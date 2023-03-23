@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,13 +17,13 @@
 
 package com.sun.enterprise.deployment.annotation.context;
 
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.MethodDescriptor;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.enterprise.deployment.annotation.handlers.PostProcessor;
 import com.sun.enterprise.deployment.types.HandlerChainContainer;
-import com.sun.enterprise.deployment.types.ServiceReferenceContainer;
 import com.sun.enterprise.deployment.util.TypeUtil;
 
 import java.lang.annotation.ElementType;
@@ -42,10 +42,10 @@ import org.glassfish.deployment.common.Descriptor;
  * @author dochez
  */
 public class EjbContext extends ResourceContainerContextImpl {
-    private WebServiceEndpoint endpoint;
     private final Method[] methods;
     private final boolean inherited;
     private final ArrayList<PostProcessInfo> postProcessInfos = new ArrayList<>();
+    private WebServiceEndpoint endpoint;
 
     public EjbContext(EjbDescriptor currentEjb, Class<?> ejbClass) {
         super((Descriptor) currentEjb);
@@ -119,23 +119,19 @@ public class EjbContext extends ResourceContainerContextImpl {
     }
 
 
-    public ServiceReferenceContainer[] getServiceRefContainers(String implName) {
-        return getDescriptor().getEjbBundleDescriptor().getEjbByClassName(implName);
-    }
-
-
     @Override
     public HandlerChainContainer[] getHandlerChainContainers(boolean serviceSideHandlerChain, Class<?> declaringClass) {
+        EjbBundleDescriptor bundleDescriptor = getDescriptor().getEjbBundleDescriptor();
         if (serviceSideHandlerChain) {
-            EjbDescriptor[] ejbs = getDescriptor().getEjbBundleDescriptor().getEjbByClassName(declaringClass.getName());
+            EjbDescriptor[] ejbs = bundleDescriptor.getEjbByClassName(declaringClass.getName());
             List<WebServiceEndpoint> result = new ArrayList<>();
             for (EjbDescriptor ejb : ejbs) {
-                result.addAll(getDescriptor().getEjbBundleDescriptor().getWebServices().getEndpointsImplementedBy(ejb));
+                result.addAll(bundleDescriptor.getWebServices().getEndpointsImplementedBy(ejb));
             }
             return result.toArray(new HandlerChainContainer[result.size()]);
         }
         List<ServiceReferenceDescriptor> result = new ArrayList<>();
-        result.addAll(getDescriptor().getEjbBundleDescriptor().getEjbServiceReferenceDescriptors());
+        result.addAll(bundleDescriptor.getEjbServiceReferenceDescriptors());
         return result.toArray(new HandlerChainContainer[result.size()]);
     }
 

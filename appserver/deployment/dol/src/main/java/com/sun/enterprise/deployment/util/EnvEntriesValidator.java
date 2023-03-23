@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,7 +25,6 @@ import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.types.EjbReference;
 
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -57,7 +56,7 @@ public class EnvEntriesValidator {
     public void validateEnvEntries(JndiNameEnvironment env) {
         LOG.log(Level.FINER, "validateEnvEntries: {0}", env);
         if (env instanceof WebBundleDescriptor) {
-            Enumeration<EnvironmentProperty> envEntries = ((WebBundleDescriptor) env).getEnvironmentEntries();
+            Set<EnvironmentProperty> envEntries = ((WebBundleDescriptor) env).getEnvironmentEntries();
             validateSimpleEnvEntries(env, envEntries);
         } else {
             Set<EnvironmentProperty> envProperties = env.getEnvironmentProperties();
@@ -75,15 +74,6 @@ public class EnvEntriesValidator {
     private void validateSimpleEnvEntries(JndiNameEnvironment env, Set<EnvironmentProperty> envEntries) {
         for (EnvironmentProperty environmentProperty : envEntries) {
             SimpleEnvEntry simpleEnvEntry = new SimpleEnvEntry(environmentProperty);
-            validateEnvEntry(env, simpleEnvEntry, simpleEnvEntry.getName());
-        }
-    }
-
-
-    private void validateSimpleEnvEntries(JndiNameEnvironment env, Enumeration<EnvironmentProperty> envEntries) {
-        while (envEntries.hasMoreElements()) {
-            EnvironmentProperty envEntry = envEntries.nextElement();
-            SimpleEnvEntry simpleEnvEntry = new SimpleEnvEntry(envEntry);
             validateEnvEntry(env, simpleEnvEntry, simpleEnvEntry.getName());
         }
     }
@@ -248,8 +238,8 @@ public class EnvEntriesValidator {
         private final String module;
 
         AppModuleKey(String appName, String moduleName) {
-            app = appName;
-            module = moduleName;
+            app = Objects.requireNonNull(appName, "appName");
+            module = Objects.requireNonNull(moduleName, "moduleName");
         }
 
 

@@ -29,6 +29,7 @@ import java.util.logging.Logger;
 import org.glassfish.api.deployment.archive.ArchiveDetector;
 import org.glassfish.api.deployment.archive.ArchiveHandler;
 import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.RarArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.deployment.common.GenericAnnotationDetector;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -41,7 +42,7 @@ import org.jvnet.hk2.annotations.Service;
  *
  * @author sanjeeb.sahoo@oracle.com
  */
-@Service(name = RarType.ARCHIVE_TYPE)
+@Service(name = RarArchiveType.ARCHIVE_TYPE)
 @Singleton
 public class RarDetector implements ArchiveDetector {
 
@@ -78,7 +79,7 @@ public class RarDetector implements ArchiveDetector {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                archiveHandler = services.getService(ArchiveHandler.class, RarType.ARCHIVE_TYPE);
+                archiveHandler = services.getService(ArchiveHandler.class, RarArchiveType.ARCHIVE_TYPE);
             }
             return archiveHandler;
         }

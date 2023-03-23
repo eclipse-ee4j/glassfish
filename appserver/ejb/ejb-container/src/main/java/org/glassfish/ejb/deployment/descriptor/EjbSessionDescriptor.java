@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,14 +33,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
 import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.Descriptor;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.Globals;
-import org.glassfish.internal.deployment.AnnotationTypesProvider;
 
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_GLOBAL;
 
@@ -180,17 +176,6 @@ public class EjbSessionDescriptor extends EjbDescriptor implements com.sun.enter
         return sessionTypeIsSet;
     }
 
-    /**
-    * Sets my type
-    */
-    @Override
-    public void setType(String type) {
-        throw new IllegalArgumentException(localStrings.getLocalString(
-                                   "enterprise.deployment.exceptioncannotsettypeofsessionbean",
-                                   "Cannot set the type of a session bean"));
-    }
-
-
 
     /**
     *  Sets the transaction type for this bean. Must be either BEAN_TRANSACTION_TYPE or CONTAINER_TRANSACTION_TYPE.
@@ -205,7 +190,7 @@ public class EjbSessionDescriptor extends EjbDescriptor implements com.sun.enter
                                        "enterprise.deployment..exceptointxtypenotlegaltype",
                                        "{0} is not a legal transaction type for session beans", new Object[] {transactionType}));
         }
-        super.transactionType = transactionType;
+        super.setTransactionType(transactionType);
         super.setMethodContainerTransactions(new Hashtable<>());
     }
 
@@ -408,36 +393,6 @@ public class EjbSessionDescriptor extends EjbDescriptor implements com.sun.enter
 
     public boolean hasPrePassivateMethod() {
         return !getPrePassivateDescriptors().isEmpty();
-    }
-
-
-    @Override
-    public Vector<ContainerTransaction> getPossibleTransactionAttributes() {
-        // Session beans that implement SessionSynchronization interface
-        // have a limited set of possible transaction attributes.
-        if (isStateful()) {
-            try {
-                EjbBundleDescriptorImpl ejbBundle = getEjbBundleDescriptor();
-                ClassLoader classLoader = ejbBundle.getClassLoader();
-                Class<?> ejbClass = classLoader.loadClass(getEjbClassName());
-                ServiceLocator serviceLocator = Globals.getDefaultHabitat();
-                AnnotationTypesProvider provider = serviceLocator.getService(AnnotationTypesProvider.class, "EJB");
-                if (provider != null) {
-                    Class<?> sessionSynchClass = provider.getType("jakarta.ejb.SessionSynchronization");
-                    if (sessionSynchClass.isAssignableFrom(ejbClass)) {
-                        Vector<ContainerTransaction> txAttributes = new Vector<>();
-                        txAttributes.add(new ContainerTransaction(ContainerTransaction.REQUIRED, ""));
-                        txAttributes.add(new ContainerTransaction(ContainerTransaction.REQUIRES_NEW, ""));
-                        txAttributes.add(new ContainerTransaction(ContainerTransaction.MANDATORY, ""));
-                        return txAttributes;
-                    }
-                }
-            } catch (Exception e) {
-                // Don't treat this as a fatal error.
-                // Just return full set of possible transaction attributes.
-            }
-        }
-        return super.getPossibleTransactionAttributes();
     }
 
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,13 +15,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * DeploymentDescriptorModel.java
- *
- * Created on December 3, 2001, 3:43 PM
- */
-
 package com.sun.jdo.spi.persistence.support.ejb.model;
+
+import com.sun.jdo.api.persistence.mapping.ejb.AbstractNameMapper;
+import com.sun.jdo.api.persistence.model.RuntimeModel;
+import com.sun.jdo.api.persistence.model.jdo.PersistenceFieldElement;
+import com.sun.jdo.api.persistence.model.jdo.RelationshipElement;
+import com.sun.jdo.spi.persistence.support.ejb.model.util.NameMapper;
+import com.sun.jdo.spi.persistence.utility.JavaTypeHelper;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -32,38 +34,33 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
-import com.sun.jdo.api.persistence.model.RuntimeModel;
-import com.sun.jdo.api.persistence.model.jdo.PersistenceFieldElement;
-import com.sun.jdo.api.persistence.model.jdo.RelationshipElement;
-import com.sun.jdo.spi.persistence.support.ejb.model.util.NameMapper;
-import com.sun.jdo.spi.persistence.utility.JavaTypeHelper;
 import org.glassfish.ejb.deployment.descriptor.EjbCMPEntityDescriptor;
 import org.glassfish.ejb.deployment.descriptor.FieldDescriptor;
 import org.glassfish.ejb.deployment.descriptor.PersistenceDescriptor;
 
-/** This is a subclass of RuntimeModel which uses the deployment descriptor
+/**
+ * This is a subclass of RuntimeModel which uses the deployment descriptor
  * to augment the java metadata for a non-existent persistence-capable
- * java/class file.  It is primarily used at ejbc time, though it could be
+ * java/class file. It is primarily used at ejbc time, though it could be
  * used at any time as long as sufficient mapping and deployment descriptor
- * information is available.  See the javadoc for individual methods below
+ * information is available. See the javadoc for individual methods below
  * for differences and translations between persistence-capable and ejb
- * names and behavior.  There are different answers to methods depending
- * on whether they are called on the persistence-capable or the ejb.  These
+ * names and behavior. There are different answers to methods depending
+ * on whether they are called on the persistence-capable or the ejb. These
  * are primarily for the handling of serializable, non-primitive, non-wrapper
  * type fields: isByteArray, getFieldType (returning byte array),
  * isPersistentTypeAllowed and isPersistentAllowed (returning true) which
  * return answers about the byte array when called on the persistence-capable
  * and return answers about the serializable type when called on the ejb.
  *
- * @author Rochelle Raccah
+ * @author Rochelle Raccah 2001
  */
-public class DeploymentDescriptorModel extends RuntimeModel
-{
-    private ClassLoader _classLoader;
-    private NameMapper _nameMapper;
+public class DeploymentDescriptorModel extends RuntimeModel {
+
+    private final ClassLoader classLoader;
+    private final NameMapper nameMapper;
 
     /**
      * Signature with CVS keyword substitution for identifying the generated code
@@ -76,36 +73,24 @@ public class DeploymentDescriptorModel extends RuntimeModel
      * @param classLoader the class loader object which is used for the
      * application.
      */
-    public DeploymentDescriptorModel (NameMapper nameMapper,
-        ClassLoader classLoader)
-    {
+    public DeploymentDescriptorModel(NameMapper nameMapper, ClassLoader classLoader) {
         super();
-        _classLoader = classLoader;
-        _nameMapper = nameMapper;
+        this.classLoader = classLoader;
+        this.nameMapper = nameMapper;
     }
 
-    private ClassLoader getClassLoader () { return _classLoader; }
-    private NameMapper getNameMapper () { return _nameMapper; }
 
-    /** Returns the input stream with the supplied resource name found with
-     * the supplied class name.  This method overrides the one in
-     * RuntimeModel to enforce using the class loader provided at construction
-     * time instead of the one specified in this method.
-     * @param className the fully qualified name of the class which will be
-     * used as a base to find the resource
-     * @param classLoader the class loader used to find mapping information
-     * This parameter is ignored in this implementation - instead the
-     * class loader supplied at construction time is used.
-     * @param resourceName the name of the resource to be found
-     * @return the input stream for the specified resource, <code>null</code>
-     * if an error occurs or none exists
+    /**
+     * {@inheritDoc}
+     *
+     * @param classLoader ignored parameter, using CL provided in constructor instead
      */
-    protected BufferedInputStream getInputStreamForResource (String className,
-        ClassLoader classLoader, String resourceName)
-    {
-        return super.getInputStreamForResource(
-            className, getClassLoader(), resourceName);
+    @Override
+    protected BufferedInputStream getInputStreamForResource(String className, ClassLoader classLoader,
+        String resourceName) {
+        return super.getInputStreamForResource(className, this.classLoader, resourceName);
     }
+
 
     /** Returns the name of the second to top (top excluding java.lang.Object)
      * superclass for the given class name.  This method overrides the one in
@@ -117,10 +102,9 @@ public class DeploymentDescriptorModel extends RuntimeModel
      * @return the top non-Object superclass for className,
      * <code>className</code> if an error occurs or none exists
      */
-    protected String findPenultimateSuperclass (String className)
-    {
-        return (isPCClassName(className) ? className :
-            super.findPenultimateSuperclass(className));
+    @Override
+    protected String findPenultimateSuperclass(String className) {
+        return isPCClassName(className) ? className : super.findPenultimateSuperclass(className);
     }
 
     /** Returns the name of the superclass for the given class name.  This
@@ -132,10 +116,9 @@ public class DeploymentDescriptorModel extends RuntimeModel
      * @return the superclass for className, <code>null</code> if an error
      * occurs or none exists
      */
-    protected String getSuperclass (String className)
-    {
-        return (isPCClassName(className) ? "java.lang.Object" :    // NOI18N
-            super.getSuperclass(className));
+    @Override
+    protected String getSuperclass(String className) {
+        return isPCClassName(className) ? "java.lang.Object" : super.getSuperclass(className);
     }
 
     /** Creates a file with the given base file name and extension
@@ -152,17 +135,18 @@ public class DeploymentDescriptorModel extends RuntimeModel
      * if an error occurs or none exists
      * @exception IOException if there is some error creating the file
      */
-    protected BufferedOutputStream createFile (String className, String baseFileName,
-        String extension) throws IOException
-    {
-        BufferedOutputStream outputStream =
-            super.createFile(className, baseFileName, extension);
+    @Override
+    protected BufferedOutputStream createFile(String className, String baseFileName, String extension)
+        throws IOException {
+        BufferedOutputStream outputStream = super.createFile(className, baseFileName, extension);
 
-        if (outputStream != null)
+        if (outputStream != null) {
             return outputStream;
+        }
 
         throw new UnsupportedOperationException();
     }
+
 
     /** Deletes the file with the given file name which is parallel
      * to the supplied class.  This method overrides the one in RuntimeModel
@@ -171,9 +155,8 @@ public class DeploymentDescriptorModel extends RuntimeModel
      * @param fileName the name of the file
      * @exception IOException if there is some error deleting the file
      */
-    protected void deleteFile (String className, String fileName)
-        throws IOException
-    {
+    @Override
+    protected void deleteFile(String className, String fileName) throws IOException {
         throw new UnsupportedOperationException();
     }
 
@@ -191,46 +174,35 @@ public class DeploymentDescriptorModel extends RuntimeModel
      * @param classLoader the class loader used to find mapping information
      * @return the class element for the specified className
      */
-    public Object getClass (final String className,
-        final ClassLoader classLoader)
-    {
+    @Override
+    public Object getClass(final String className, final ClassLoader classLoader) {
         String testClass = className;
 
         // translate the class name to corresponding ejb name's abstract
         // bean or key class if necessary
-        if (className != null)
-        {
-            NameMapper nameMapper = getNameMapper();
-            String ejbName =
-                (isPCClassName(className) ? getEjbName(className) : className);
-
-            if (nameMapper.isEjbName(ejbName))
+        if (className != null) {
+            String ejbName = (isPCClassName(className) ? getEjbName(className) : className);
+            if (nameMapper.isEjbName(ejbName)) {
                 testClass = nameMapper.getAbstractBeanClassForEjbName(ejbName);
-            else
-            {
-                String keyClass =
-                    nameMapper.getKeyClassForPersistenceKeyClass(className);
-
-                if (keyClass != null)
-                {
+            } else {
+                String keyClass = nameMapper.getKeyClassForPersistenceKeyClass(className);
+                if (keyClass != null) {
                     // if it's a pk field of type primitive, byte[],
-                    // or other array, return the primitive class or a
-                    // dummy class
-                    if (NameMapper.PRIMARY_KEY_FIELD ==
-                        getPersistenceKeyClassType(className))
-                    {
-                        if (isPrimitive(keyClass))
+                    // or other array, return the primitive class or a dummy class
+                    if (AbstractNameMapper.PRIMARY_KEY_FIELD == getPersistenceKeyClassType(className)) {
+                        if (isPrimitive(keyClass)) {
                             return JavaTypeHelper.getPrimitiveClass(keyClass);
-                        if (isByteArray(keyClass) || keyClass.endsWith("[]"))
+                        }
+                        if (isByteArray(keyClass) || keyClass.endsWith("[]")) {
                             return byte[].class;
+                        }
                     }
 
                     testClass = keyClass;
                 }
             }
         }
-
-        return super.getClass(testClass, getClassLoader());
+        return super.getClass(testClass, this.classLoader);
     }
 
     /** Returns a wrapped constructor element for the specified argument types
@@ -245,26 +217,16 @@ public class DeploymentDescriptorModel extends RuntimeModel
      * @return the constructor element
      * @see #getClass
      */
-    public Object getConstructor (final String className, String[] argTypeNames)
-    {
-        Object returnObject = null;
-
-        if ((NameMapper.PRIMARY_KEY_FIELD ==
-            getPersistenceKeyClassType(className)) &&
-            Arrays.equals(argTypeNames, NO_ARGS))
-        {
-            returnObject = new MemberWrapper(className, null, Modifier.PUBLIC,
-                (Class)getClass(className));
+    @Override
+    public Object getConstructor(final String className, String[] argTypeNames) {
+        if ((AbstractNameMapper.PRIMARY_KEY_FIELD == getPersistenceKeyClassType(className))
+            && Arrays.equals(argTypeNames, NO_ARGS)) {
+            return new MemberWrapper(className, null, Modifier.PUBLIC, (Class) getClass(className));
         }
-
-        if (returnObject == null)
-        {
-            returnObject = super.getConstructor(className, argTypeNames);
-
-            if (returnObject instanceof Constructor)        // wrap it
-                returnObject = new MemberWrapper((Constructor)returnObject);
+        Object returnObject = super.getConstructor(className, argTypeNames);
+        if (returnObject instanceof Constructor) {
+            return new MemberWrapper((Constructor<?>) returnObject);
         }
-
         return returnObject;
     }
 
@@ -287,46 +249,34 @@ public class DeploymentDescriptorModel extends RuntimeModel
      * @return the method element
      * @see #getClass
      */
-    public Object getMethod (final String className, final String methodName,
-        String[] argTypeNames)
-    {
+    @Override
+    public Object getMethod(final String className, final String methodName, String[] argTypeNames) {
         int keyClassType = getPersistenceKeyClassType(className);
         Object returnObject = null;
 
-        if (isPCClassName(className))
-        {
-            if ((methodName.equals("readObject") &&     // NOI18N
-                    Arrays.equals(argTypeNames, getReadObjectArgs())) ||
-                (methodName.equals("writeObject") &&     // NOI18N
-                        Arrays.equals(argTypeNames, getWriteObjectArgs())))
-            {
-                returnObject = new MemberWrapper(methodName,
-                    Void.TYPE, Modifier.PRIVATE, (Class)getClass(className));
+        if (isPCClassName(className)) {
+            if ((methodName.equals("readObject") && Arrays.equals(argTypeNames, getReadObjectArgs()))
+                || (methodName.equals("writeObject") && Arrays.equals(argTypeNames, getWriteObjectArgs()))) {
+                returnObject = new MemberWrapper(methodName, Void.TYPE, Modifier.PRIVATE, (Class<?>) getClass(className));
             }
         }
-        if ((NameMapper.UNKNOWN_KEY_CLASS == keyClassType) ||
-            (NameMapper.PRIMARY_KEY_FIELD == keyClassType))
-        {
-            if (methodName.equals("equals") &&     // NOI18N
-                    Arrays.equals(argTypeNames, getEqualsArgs()))
-            {
-                returnObject = new MemberWrapper(methodName,
-                    Boolean.TYPE, Modifier.PUBLIC, (Class)getClass(className));
-            }
-            else if (methodName.equals("hashCode") &&     // NOI18N
-                    Arrays.equals(argTypeNames, NO_ARGS))
-            {
-                returnObject = new MemberWrapper(methodName,
-                    Integer.TYPE, Modifier.PUBLIC, (Class)getClass(className));
+        if ((AbstractNameMapper.UNKNOWN_KEY_CLASS == keyClassType)
+            || (AbstractNameMapper.PRIMARY_KEY_FIELD == keyClassType)) {
+            if (methodName.equals("equals") && Arrays.equals(argTypeNames, getEqualsArgs())) {
+                returnObject = new MemberWrapper(methodName, Boolean.TYPE, Modifier.PUBLIC,
+                    (Class<?>) getClass(className));
+            } else if (methodName.equals("hashCode") && Arrays.equals(argTypeNames, NO_ARGS)) {
+                returnObject = new MemberWrapper(methodName, Integer.TYPE, Modifier.PUBLIC,
+                    (Class<?>) getClass(className));
             }
         }
 
-        if (returnObject == null)
-        {
+        if (returnObject == null) {
             returnObject = super.getMethod(className, methodName, argTypeNames);
-
-            if (returnObject instanceof Method)        // wrap it
-                returnObject = new MemberWrapper((Method)returnObject);
+            if (returnObject instanceof Method) {
+                // wrap it
+                returnObject = new MemberWrapper((Method) returnObject);
+            }
         }
 
         return returnObject;
@@ -349,13 +299,12 @@ public class DeploymentDescriptorModel extends RuntimeModel
      * @return the method element
      * @see #getClass
      */
-    public Object getInheritedMethod (String className, String methodName,
-        String[] argTypeNames)
-    {
+    @Override
+    public Object getInheritedMethod(String className, String methodName, String[] argTypeNames) {
         // If the class name corresponds to a pk field (which means that
         // there is no user defined primary key class, we don't want to
         // climb the inheritance hierarchy, we only process this class.
-        return ((NameMapper.PRIMARY_KEY_FIELD ==
+        return ((AbstractNameMapper.PRIMARY_KEY_FIELD ==
             getPersistenceKeyClassType(className)) ?
             getMethod(className, methodName, argTypeNames) :
             super.getInheritedMethod(className, methodName, argTypeNames));
@@ -369,56 +318,40 @@ public class DeploymentDescriptorModel extends RuntimeModel
      * @param className the fully qualified name of the class to be checked
      * @return the names of the field elements for the specified class
      */
-    public List getFields (final String className)
-    {
+    @Override
+    public List getFields(final String className) {
         final EjbCMPEntityDescriptor descriptor = getCMPDescriptor(className);
         String testClass = className;
-
-        if (descriptor != null)        // need to get names of ejb fields
-        {
-            Iterator iterator = descriptor.getFieldDescriptors().iterator();
-            List returnList = new ArrayList();
-
-            while (iterator.hasNext())
-                returnList.add(((FieldDescriptor)iterator.next()).getName());
-
+        if (descriptor != null) {
+            // need to get names of ejb fields
+            List<String> returnList = new ArrayList<>();
+            for (FieldDescriptor element : descriptor.getFieldDescriptors()) {
+                returnList.add(element.getName());
+            }
             return returnList;
         }
-        else
-        {
-            NameMapper nameMapper = getNameMapper();
-            String ejbName =
-                nameMapper.getEjbNameForPersistenceKeyClass(className);
-
-            switch (getPersistenceKeyClassType(className))
-            {
-                // find the field names we need in the corresponding
-                // ejb key class
-                case NameMapper.USER_DEFINED_KEY_CLASS:
-                    testClass = nameMapper.getKeyClassForEjbName(ejbName);
-                    break;
-                // find the field name we need in the abstract bean
-                case NameMapper.PRIMARY_KEY_FIELD:
-                    return Arrays.asList(new String[]{
-                        getCMPDescriptor(ejbName).
-                        getPrimaryKeyFieldDesc().getName()});
-                // find the field name we need in the persistence capable
-                case NameMapper.UNKNOWN_KEY_CLASS:
-                    String pcClassName =
-                        nameMapper.getPersistenceClassForEjbName(ejbName);
-                    PersistenceFieldElement[] fields =
-                        getPersistenceClass(pcClassName).getFields();
-                    int i, count = ((fields != null) ? fields.length : 0);
-
-                    for (i = 0; i < count; i++)
-                    {
-                        PersistenceFieldElement pfe = fields[i];
-
-                        if (pfe.isKey())
-                            return Arrays.asList(new String[]{pfe.getName()});
+        String ejbName = nameMapper.getEjbNameForPersistenceKeyClass(className);
+        switch (getPersistenceKeyClassType(className)) {
+            // find the field names we need in the corresponding
+            // ejb key class
+            case AbstractNameMapper.USER_DEFINED_KEY_CLASS:
+                testClass = nameMapper.getKeyClassForEjbName(ejbName);
+                break;
+            // find the field name we need in the abstract bean
+            case AbstractNameMapper.PRIMARY_KEY_FIELD:
+                return Arrays.asList(new String[] {getCMPDescriptor(ejbName).getPrimaryKeyFieldDesc().getName()});
+            // find the field name we need in the persistence capable
+            case AbstractNameMapper.UNKNOWN_KEY_CLASS:
+                String pcClassName = nameMapper.getPersistenceClassForEjbName(ejbName);
+                PersistenceFieldElement[] fields = getPersistenceClass(pcClassName).getFields();
+                int i, count = ((fields != null) ? fields.length : 0);
+                for (i = 0; i < count; i++) {
+                    PersistenceFieldElement pfe = fields[i];
+                    if (pfe.isKey()) {
+                        return Arrays.asList(new String[] {pfe.getName()});
                     }
-                    break;
-            }
+                }
+                break;
         }
 
         return super.getFields(testClass);
@@ -437,12 +370,12 @@ public class DeploymentDescriptorModel extends RuntimeModel
      * @param className the fully qualified name of the class to be checked
      * @return the names of the field elements for the specified class
      */
-    public List getAllFields (String className)
-    {
+    @Override
+    public List getAllFields(String className) {
         // If the class name corresponds to a pk field (which means that
         // there is no user defined primary key class, we don't want to
         // climb the inheritance hierarchy, we only process this class.
-        return ((NameMapper.PRIMARY_KEY_FIELD ==
+        return ((AbstractNameMapper.PRIMARY_KEY_FIELD ==
             getPersistenceKeyClassType(className)) ? getFields(className) :
             super.getAllFields(className));
     }
@@ -461,79 +394,70 @@ public class DeploymentDescriptorModel extends RuntimeModel
      * @param fieldName the name of the field to be checked
      * @return the wrapped field element for the specified fieldName
      */
-    public Object getField (final String className, String fieldName)
-    {
+    @Override
+    public Object getField(final String className, String fieldName) {
+        if (className == null) {
+            return null;
+        }
         String testClass = className;
         Object returnObject = null;
+        boolean isPCClass = isPCClassName(className);
+        boolean isPKClassName = false;
+        String searchClassName = className;
+        String searchFieldName = fieldName;
 
-        if (className != null)
-        {
-            NameMapper nameMapper = getNameMapper();
-            boolean isPCClass = isPCClassName(className);
-            boolean isPKClassName = false;
-            String searchClassName = className;
-            String searchFieldName = fieldName;
-
-            // translate the class name & field names to corresponding
-            // ejb name's abstract bean equivalents if necessary
-            if (isPCClass)
-            {
-                searchFieldName = nameMapper.
-                    getEjbFieldForPersistenceField(className, fieldName);
-                searchClassName = getEjbName(className);
+        // translate the class name & field names to corresponding
+        // ejb name's abstract bean equivalents if necessary
+        if (isPCClass) {
+            searchFieldName = nameMapper.getEjbFieldForPersistenceField(className, fieldName);
+            searchClassName = getEjbName(className);
+        } else {
+            // check if it's a pk class without a user defined key class
+            String ejbName = nameMapper.getEjbNameForPersistenceKeyClass(className);
+            switch (getPersistenceKeyClassType(className)) {
+                // find the field we need in the corresponding
+                // abstract bean (translated below from ejbName)
+                case AbstractNameMapper.PRIMARY_KEY_FIELD:
+                    testClass = ejbName;
+                    searchClassName = ejbName;
+                    isPKClassName = true;
+                    break;
+                // find the field we need by called updateFieldWrapper
+                // below which handles the generated field for the
+                // unknown key class - need to use the
+                // persistence-capable class name and flag to call that
+                // code, so we configure it here
+                case AbstractNameMapper.UNKNOWN_KEY_CLASS:
+                    testClass = nameMapper.
+                        getPersistenceClassForEjbName(ejbName);
+                    isPCClass = true;
+                    isPKClassName = true;
+                    break;
             }
-            else    // check if it's a pk class without a user defined key class
-            {
-                String ejbName =
-                    nameMapper.getEjbNameForPersistenceKeyClass(className);
+        }
 
-                switch (getPersistenceKeyClassType(className))
-                {
-                    // find the field we need in the corresponding
-                    // abstract bean (translated below from ejbName)
-                    case NameMapper.PRIMARY_KEY_FIELD:
-                        testClass = ejbName;
-                        searchClassName = ejbName;
-                        isPKClassName = true;
-                        break;
-                    // find the field we need by called updateFieldWrapper
-                    // below which handles the generated field for the
-                    // unknown key class - need to use the
-                    // persistence-capable class name and flag to call that
-                    // code, so we configure it here
-                    case NameMapper.UNKNOWN_KEY_CLASS:
-                        testClass = nameMapper.
-                            getPersistenceClassForEjbName(ejbName);
-                        isPCClass = true;
-                        isPKClassName = true;
-                        break;
-                }
-            }
+        if (nameMapper.isEjbName(searchClassName)) {
+            searchClassName = nameMapper.getAbstractBeanClassForEjbName(searchClassName);
+        }
 
-            if (nameMapper.isEjbName(searchClassName))
-            {
-                searchClassName = nameMapper.
-                    getAbstractBeanClassForEjbName(searchClassName);
-            }
+        returnObject = super.getField(searchClassName, searchFieldName);
 
-            returnObject = super.getField(searchClassName, searchFieldName);
+        if (returnObject == null) {
+            // try getting it from the descriptor
+            returnObject = getFieldWrapper(testClass, searchFieldName);
+        } else if (returnObject instanceof Field) {
+            // wrap it
+            returnObject = new MemberWrapper((Field) returnObject);
+        }
 
-            if (returnObject == null)    // try getting it from the descriptor
-                returnObject = getFieldWrapper(testClass, searchFieldName);
-            else if (returnObject instanceof Field)        // wrap it
-                returnObject = new MemberWrapper((Field)returnObject);
-
-            if (isPCClass)
-            {
-                returnObject = updateFieldWrapper(
-                    (MemberWrapper)returnObject, testClass, fieldName);
-            }
-            // when asking for these fields as part of the
-            // persistence-capable's key class, we need to represent the
-            // public modifier which will be generated in the inner class
-            if (isPKClassName && (returnObject instanceof MemberWrapper))
-                ((MemberWrapper)returnObject)._modifiers = Modifier.PUBLIC;
-
+        if (isPCClass) {
+            returnObject = updateFieldWrapper((MemberWrapper) returnObject, testClass, fieldName);
+        }
+        // when asking for these fields as part of the
+        // persistence-capable's key class, we need to represent the
+        // public modifier which will be generated in the inner class
+        if (isPKClassName && returnObject instanceof MemberWrapper) {
+            ((MemberWrapper) returnObject).modifiers = Modifier.PUBLIC;
         }
 
         return returnObject;
@@ -556,34 +480,20 @@ public class DeploymentDescriptorModel extends RuntimeModel
      * @param fieldName the name of the field to be checked
      * @return the field type for the specified fieldName
      */
-    public String getFieldType (String className, String fieldName)
-    {
+    @Override
+    public String getFieldType(String className, String fieldName) {
         String returnType = super.getFieldType(className, fieldName);
-
-        if (!isCollection(returnType) && isPCClassName(className))
-        {
-            NameMapper nameMapper = getNameMapper();
-            String ejbName =
-                nameMapper.getEjbNameForPersistenceClass(className);
-            String ejbField =
-                nameMapper.getEjbFieldForPersistenceField(className, fieldName);
-
-            if (nameMapper.isGeneratedEjbRelationship(ejbName, ejbField))
-            {
-                String[] inverse =
-                    nameMapper.getEjbFieldForGeneratedField(ejbName, ejbField);
-
-                returnType = nameMapper.
-                    getPersistenceClassForEjbName(inverse[0]);
+        if (!isCollection(returnType) && isPCClassName(className)) {
+            String ejbName = nameMapper.getEjbNameForPersistenceClass(className);
+            String ejbField = nameMapper.getEjbFieldForPersistenceField(className, fieldName);
+            if (nameMapper.isGeneratedEjbRelationship(ejbName, ejbField)) {
+                String[] inverse = nameMapper.getEjbFieldForGeneratedField(ejbName, ejbField);
+                returnType = nameMapper.getPersistenceClassForEjbName(inverse[0]);
             }
-
-            if (nameMapper.isLocalInterface(returnType))
-            {
-                returnType = nameMapper.getPersistenceClassForLocalInterface(
-                    className, fieldName, returnType);
+            if (nameMapper.isLocalInterface(returnType)) {
+                returnType = nameMapper.getPersistenceClassForLocalInterface(className, fieldName, returnType);
             }
         }
-
         return returnType;
     }
 
@@ -603,16 +513,12 @@ public class DeploymentDescriptorModel extends RuntimeModel
      * @see #getConstructor
      * @see #getMethod
      */
-    public String getDeclaringClass (Object memberElement)
-    {
-        if ((memberElement != null) && (memberElement instanceof MemberWrapper))
-        {
-            Class classElement =
-                ((MemberWrapper)memberElement).getDeclaringClass();
-
+    @Override
+    public String getDeclaringClass(Object memberElement) {
+        if ((memberElement != null) && (memberElement instanceof MemberWrapper)) {
+            Class<?> classElement = ((MemberWrapper) memberElement).getDeclaringClass();
             return ((classElement != null) ? classElement.getName() : null);
         }
-
         return super.getDeclaringClass(memberElement);
     }
 
@@ -631,11 +537,11 @@ public class DeploymentDescriptorModel extends RuntimeModel
      * @see #getConstructor
      * @see #getMethod
      */
-    public int getModifiers (Object memberElement)
-    {
-        if ((memberElement != null) && (memberElement instanceof MemberWrapper))
-            return ((MemberWrapper)memberElement).getModifiers();
-
+    @Override
+    public int getModifiers(Object memberElement) {
+        if ((memberElement != null) && (memberElement instanceof MemberWrapper)) {
+            return ((MemberWrapper) memberElement).getModifiers();
+        }
         return super.getModifiers(memberElement);
     }
 
@@ -648,15 +554,12 @@ public class DeploymentDescriptorModel extends RuntimeModel
      * @return the modifier mask for the specified class
      * @see java.lang.reflect.Modifier
      */
-    public int getModifiersForClass (String className)
-    {
+    @Override
+    public int getModifiersForClass(String className) {
         int modifiers = super.getModifiersForClass(className);
-
-        if (isPCClassName(className))
+        if (isPCClassName(className)) {
             modifiers &= ~Modifier.ABSTRACT;
-        else if (getNameMapper().
-            getKeyClassForPersistenceKeyClass(className) != null)
-        {
+        } else if (nameMapper.getKeyClassForPersistenceKeyClass(className) != null) {
             modifiers |= Modifier.STATIC;
         }
 
@@ -677,9 +580,9 @@ public class DeploymentDescriptorModel extends RuntimeModel
      * @return <code>true</code> if this field name represents a field
      * with a valid type for a key field; <code>false</code> otherwise.
      */
-    public boolean isValidKeyType (String className, String fieldName)
-    {
-        return (((NameMapper.PRIMARY_KEY_FIELD ==
+    @Override
+    public boolean isValidKeyType(String className, String fieldName) {
+        return (((AbstractNameMapper.PRIMARY_KEY_FIELD ==
             getPersistenceKeyClassType(className)) &&
             isPrimitive(className, fieldName)) ? false :
             super.isValidKeyType(className, fieldName));
@@ -696,13 +599,12 @@ public class DeploymentDescriptorModel extends RuntimeModel
      * @see #getField
      * @see RuntimeModel#getMethod
      */
-    protected Class getTypeObject (Object element)
-    {
-        Class type = super.getTypeObject(element);
-
-        if ((element != null) && (element instanceof MemberWrapper))
-            type = ((MemberWrapper)element).getType();
-
+    @Override
+    protected Class getTypeObject(Object element) {
+        Class<?> type = super.getTypeObject(element);
+        if ((element != null) && (element instanceof MemberWrapper)) {
+            type = ((MemberWrapper) element).getType();
+        }
         return type;
     }
 
@@ -716,196 +618,177 @@ public class DeploymentDescriptorModel extends RuntimeModel
      * @return the class loader used to find mapping information for the
      * specified className
      */
-    protected ClassLoader findClassLoader (String className,
-        ClassLoader classLoader)
-    {
-        return getClassLoader();
+    @Override
+    protected ClassLoader findClassLoader(String className, ClassLoader classLoader) {
+        return this.classLoader;
     }
 
     // return true if a conversion to a ejb class is needed for
     // java.lang.reflect metadata
-    private boolean isPCClassName (String className)
-    {
-        return (getEjbName(className) != null);
+    private boolean isPCClassName(String className) {
+        return getEjbName(className) != null;
     }
 
-    private String getEjbName (String className)
-    {
-        return getNameMapper().getEjbNameForPersistenceClass(className);
+
+    private String getEjbName(String className) {
+        return nameMapper.getEjbNameForPersistenceClass(className);
     }
 
-    private EjbCMPEntityDescriptor getCMPDescriptor (String className)
-    {
-        String descriptorName = (isPCClassName(className) ?
-            getEjbName(className) : className);
 
-        return getNameMapper().getDescriptorForEjbName(descriptorName);
+    private EjbCMPEntityDescriptor getCMPDescriptor(String className) {
+        String descriptorName = (isPCClassName(className) ? getEjbName(className) : className);
+        return nameMapper.getDescriptorForEjbName(descriptorName);
     }
 
-    private int getPersistenceKeyClassType (String className)
-    {
+
+    private int getPersistenceKeyClassType(String className) {
         int returnValue = -1;
-
-        if (getCMPDescriptor(className) == null)
-        {
-            NameMapper nameMapper = getNameMapper();
-            String ejbName =
-                nameMapper.getEjbNameForPersistenceKeyClass(className);
-
-            if (ejbName != null)
+        if (getCMPDescriptor(className) == null) {
+            String ejbName = nameMapper.getEjbNameForPersistenceKeyClass(className);
+            if (ejbName != null) {
                 returnValue = nameMapper.getKeyClassTypeForEjbName(ejbName);
+            }
         }
-
         return returnValue;
     }
 
-    private MemberWrapper getFieldWrapper (String className, String fieldName)
-    {
+
+    private MemberWrapper getFieldWrapper(String className, String fieldName) {
         EjbCMPEntityDescriptor descriptor = getCMPDescriptor(className);
-        MemberWrapper returnObject = null;
 
-        if (descriptor != null)
-        {
-            PersistenceDescriptor persistenceDescriptor =
-                descriptor.getPersistenceDescriptor();
-
-            if (persistenceDescriptor != null)
-            {
-                Class fieldType = null;
-
-                try
-                {
-                    fieldType = persistenceDescriptor.getTypeFor(fieldName);
-                }
-                catch (RuntimeException e)
-                {
-                    // fieldType will be null - there is no such field
-                }
-
-                returnObject = ((fieldType == null) ? null :
-                    new MemberWrapper(fieldName, fieldType,
-                    Modifier.PRIVATE, (Class)getClass(className)));
-            }
+        if (descriptor == null) {
+            return null;
         }
-
-        return returnObject;
+        PersistenceDescriptor persistenceDescriptor = descriptor.getPersistenceDescriptor();
+        if (persistenceDescriptor == null) {
+            return null;
+        }
+        Class<?> fieldType = null;
+        try {
+            fieldType = persistenceDescriptor.getTypeFor(fieldName);
+        } catch (RuntimeException e) {
+            // fieldType will be null - there is no such field
+        }
+        return fieldType == null ? null
+            : new MemberWrapper(fieldName, fieldType, Modifier.PRIVATE, (Class<?>) getClass(className));
     }
 
-    private MemberWrapper updateFieldWrapper (MemberWrapper returnObject,
-        String className, String fieldName)
-    {
-        NameMapper nameMapper = getNameMapper();
 
-        if (returnObject == null)
-        {
+    private MemberWrapper updateFieldWrapper(MemberWrapper returnObject, String className, String fieldName) {
+        if (returnObject == null) {
             // can't call isPersistent or isKey because that calls
             // hasField which calls getField and that would end up
             // in an endless loop
-            PersistenceFieldElement field =
-                getPersistenceFieldInternal(className, fieldName);
+            PersistenceFieldElement field = getPersistenceFieldInternal(className, fieldName);
+            if (field == null) {
+                return null;
+            }
+            String ejbName = getEjbName(className);
+            String ejbFieldName = nameMapper.getEjbFieldForPersistenceField(className, fieldName);
 
-            if (field != null)
-            {
-                String ejbName = getEjbName(className);
-                String ejbFieldName = nameMapper.
-                    getEjbFieldForPersistenceField(className, fieldName);
-
-                // Check if this is the auto-added field for unknown pk
-                // support.  If so, return a private field of type Long.
-                if (field.isKey() && (ejbName != null) &&
-                    (nameMapper.getKeyClassTypeForEjbName(ejbName) ==
-                    NameMapper.UNKNOWN_KEY_CLASS))
-                {
-                    returnObject = new MemberWrapper(ejbFieldName,
-                        Long.class, Modifier.PRIVATE,
-                        (Class)getClass(className));
-                }
-
+            // Check if this is the auto-added field for unknown pk
+            // support. If so, return a private field of type Long.
+            if (field.isKey() && (ejbName != null)
+                && (nameMapper.getKeyClassTypeForEjbName(ejbName) == AbstractNameMapper.UNKNOWN_KEY_CLASS)) {
+                returnObject = new MemberWrapper(ejbFieldName, Long.class, Modifier.PRIVATE,
+                    (Class<?>) getClass(className));
+            } else if ((field instanceof RelationshipElement)
+                && nameMapper.isGeneratedEjbRelationship(ejbName, ejbFieldName)) {
                 // Check if this is the auto-added field for 2 way managed rels
-                // support.  If so, return a private field of type according to
+                // support. If so, return a private field of type according to
                 // cardinality of the relationship.
-                else if ((field instanceof RelationshipElement) &&
-                    nameMapper.isGeneratedEjbRelationship(ejbName,
-                    ejbFieldName))
-                {
-                    RelationshipElement rel = (RelationshipElement)field;
-                    Class classType = null;
+                RelationshipElement rel = (RelationshipElement) field;
+                Class<?> classType = null;
 
-                    // figure out the type
-                    if (rel.getUpperBound() > 1)
-                        classType = java.util.HashSet.class;
-                    else
-                    {
-                        String[] inverse = nameMapper.
-                            getEjbFieldForGeneratedField(ejbName, ejbFieldName);
-
-                        classType = (Class)getClass(inverse[0]);
-                    }
-
-                    if (classType != null)
-                    {
-                        returnObject = new MemberWrapper(ejbFieldName,
-                            classType, Modifier.PRIVATE,
-                            (Class)getClass(className));
-                    }
+                // figure out the type
+                if (rel.getUpperBound() > 1) {
+                    classType = java.util.HashSet.class;
+                } else {
+                    String[] inverse = nameMapper.getEjbFieldForGeneratedField(ejbName, ejbFieldName);
+                    classType = (Class<?>) getClass(inverse[0]);
                 }
+
+                if (classType != null) {
+                    returnObject = new MemberWrapper(ejbFieldName, classType, Modifier.PRIVATE,
+                        (Class<?>) getClass(className));
+                }
+            } else if (ejbFieldName.startsWith(AbstractNameMapper.GENERATED_VERSION_FIELD_PREFIX)
+                && nameMapper.isGeneratedField(ejbName, ejbFieldName)) {
                 // Check if this is the auto-added version field.
                 // If so, return a private field of type long.
-                else if (ejbFieldName.startsWith(
-                    NameMapper.GENERATED_VERSION_FIELD_PREFIX) &&
-                    nameMapper.isGeneratedField(ejbName, ejbFieldName))
-                {
-                    returnObject = new MemberWrapper(ejbFieldName,
-                        Long.TYPE, Modifier.PRIVATE,
-                        (Class)getClass(className));
-                }
+                returnObject = new MemberWrapper(ejbFieldName, Long.TYPE, Modifier.PRIVATE,
+                    (Class<?>) getClass(className));
+            } else {
+                return null;
             }
         }
 
         // if the field in the corresponding ejb is a serializable,
         // non-primitive, non-wrapper type, convert it to byte[] here
-        if (!isPersistentTypeAllowed(getType(returnObject),
-            getClassLoader()) && isSerializable(returnObject))
-        {
+        if (!isPersistentTypeAllowed(getType(returnObject), classLoader) && isSerializable(returnObject)) {
             returnObject.setType(byte[].class);
         }
 
         return returnObject;
     }
 
-    private class MemberWrapper
-    {
-        private String _name;
-        private Class _type;
-        private int _modifiers;
-        private Class _declaringClass;
+    private class MemberWrapper {
 
-        private MemberWrapper (Member member)
-        {
-            this(member.getName(), ((member instanceof Field) ?
-                ((Field)member).getType() : ((member instanceof Method) ?
-                ((Method)member).getReturnType() : null)),
+        private final String name;
+        private Class<?> type;
+        private int modifiers;
+        private final Class<?> declaringClass;
+
+        private MemberWrapper(Member member) {
+            this(member.getName(),
+                member instanceof Field ? ((Field) member).getType()
+                    : member instanceof Method ? ((Method) member).getReturnType()
+                        : null,
                 member.getModifiers(), member.getDeclaringClass());
         }
 
-        private MemberWrapper (String name, Class type, int modifiers,
-            Class declaringClass)
-        {
-            _name = name;
-            _type = type;
-            _modifiers = modifiers;
-            _declaringClass = declaringClass;
+
+        private MemberWrapper(String name, Class<?> type, int modifiers, Class<?> declaringClass) {
+            this.name = name;
+            this.type = type;
+            this.modifiers = modifiers;
+            this.declaringClass = declaringClass;
         }
 
-        private Class getType () { return _type; }
-        private void setType (Class type) { _type = type; }
-        private String getName () { return _name; }
-        private int getModifiers () { return _modifiers; }
-        private Class getDeclaringClass () { return _declaringClass; }
 
-        /** Returns a string representation of this object.
+        private Class<?> getType() {
+            return type;
+        }
+
+
+        private void setType(Class<?> type) {
+            this.type = type;
+        }
+
+
+        private String getName() {
+            return name;
+        }
+
+
+        private int getModifiers() {
+            return modifiers;
+        }
+
+
+        private Class<?> getDeclaringClass() {
+            return declaringClass;
+        }
+
+
+        /**
+         * Returns a string representation of this object.
+         *
          * @return a string reprentation of the member wrapper object.
          */
-        public String toString () { return getName(); }
+        @Override
+        public String toString() {
+            return getName();
+        }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation. All rights reserved.
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -71,32 +71,29 @@ public class GlassFishToExousiaConverter {
         String ejbName = ejbDescriptor.getName();
 
         // phase 1
-        Map<MethodPermission, ArrayList<MethodDescriptor>> methodPermissionsFromDD = ejbDescriptor.getMethodPermissionsFromDD();
-        if (methodPermissionsFromDD != null) {
+        Map<MethodPermission, ArrayList<MethodDescriptor>> methodPermissionsFromDD = ejbDescriptor
+            .getMethodPermissionsFromDD();
 
-            for (var methodPermissionFromDD : methodPermissionsFromDD.entrySet()) {
+        for (var methodPermissionFromDD : methodPermissionsFromDD.entrySet()) {
+            MethodPermission methodPermission = methodPermissionFromDD.getKey();
+            for (MethodDescriptor methodDescriptor : methodPermissionFromDD.getValue()) {
+                String methodName = methodDescriptor.getName();
+                String methodInterface = methodDescriptor.getEjbClassSymbol();
+                String methodParameters[] = methodDescriptor.getStyle() == 3
+                    ? methodDescriptor.getParameterClassNames()
+                    : null;
 
-                MethodPermission methodPermission = methodPermissionFromDD.getKey();
+                EJBMethodPermission ejbMethodPermission = new EJBMethodPermission(ejbName,
+                    methodName.equals("*") ? null : methodName, methodInterface, methodParameters);
 
-                for (MethodDescriptor methodDescriptor : methodPermissionFromDD.getValue()) {
-
-                    String methodName = methodDescriptor.getName();
-                    String methodInterface = methodDescriptor.getEjbClassSymbol();
-                    String methodParameters[] = methodDescriptor.getStyle() == 3 ? methodDescriptor.getParameterClassNames() : null;
-
-                    EJBMethodPermission ejbMethodPermission = new EJBMethodPermission(ejbName, methodName.equals("*") ? null : methodName, methodInterface, methodParameters);
-
-                    if (methodPermission.isExcluded()) {
-                        jakartaPermissions.getExcluded().add(ejbMethodPermission);
-
-                    } else if (methodPermission.isUnchecked()) {
-                        jakartaPermissions.getUnchecked().add(ejbMethodPermission);
-
-                    } else if (methodPermission.isRoleBased()) {
-                        jakartaPermissions.getPerRole()
-                                          .computeIfAbsent(methodPermission.getRole().getName(), e -> new Permissions())
-                                          .add(ejbMethodPermission);
-                    }
+                if (methodPermission.isExcluded()) {
+                    jakartaPermissions.getExcluded().add(ejbMethodPermission);
+                } else if (methodPermission.isUnchecked()) {
+                    jakartaPermissions.getUnchecked().add(ejbMethodPermission);
+                } else if (methodPermission.isRoleBased()) {
+                    jakartaPermissions.getPerRole()
+                        .computeIfAbsent(methodPermission.getRole().getName(), e -> new Permissions())
+                        .add(ejbMethodPermission);
                 }
             }
         }

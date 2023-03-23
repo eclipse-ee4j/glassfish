@@ -46,11 +46,14 @@ import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
 import com.sun.enterprise.container.common.spi.util.IndirectlySerializable;
 import com.sun.enterprise.container.common.spi.util.InjectionManager;
 import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.EjbApplicationExceptionInfo;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.InterceptorDescriptor;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
 import com.sun.enterprise.deployment.MethodDescriptor;
+import com.sun.enterprise.deployment.ScheduledTimerDescriptor;
 import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.enterprise.deployment.WebServicesDescriptor;
 import com.sun.enterprise.deployment.util.TypeUtil;
@@ -117,7 +120,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
-import java.util.Vector;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -134,12 +136,9 @@ import org.glassfish.deployment.common.DeploymentException;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.ejb.LogFacade;
 import org.glassfish.ejb.api.EjbEndpointFacade;
-import org.glassfish.ejb.deployment.descriptor.EjbApplicationExceptionInfo;
-import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 import org.glassfish.ejb.deployment.descriptor.EjbInitInfo;
 import org.glassfish.ejb.deployment.descriptor.EjbSessionDescriptor;
-import org.glassfish.ejb.deployment.descriptor.ScheduledTimerDescriptor;
 import org.glassfish.ejb.spi.EjbContainerInterceptor;
 import org.glassfish.ejb.spi.WSEjbEndpointRegistry;
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
@@ -151,6 +150,9 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.logging.annotation.LogMessageInfo;
 
+import static com.sun.enterprise.deployment.EjbDescriptor.BEAN_TRANSACTION_TYPE;
+import static com.sun.enterprise.deployment.MethodDescriptor.EJB_LOCAL;
+import static com.sun.enterprise.deployment.MethodDescriptor.EJB_REMOTE;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_GLOBAL;
 
 /**
@@ -526,7 +528,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             containerStateManager = new EJBContainerStateManager(this);
             containerTransactionManager = new EJBContainerTransactionManager(this, ejbDesc);
 
-            isBeanManagedTran = ejbDescriptor.getTransactionType().equals("Bean");
+            isBeanManagedTran = ejbDescriptor.getTransactionType().equals(BEAN_TRANSACTION_TYPE);
 
             if (ejbDescriptor instanceof EjbSessionDescriptor) {
                 isSession = true;
@@ -644,7 +646,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             }
 
             if (isStatelessSession || isSingleton) {
-                EjbBundleDescriptorImpl bundle = ejbDescriptor.getEjbBundleDescriptor();
+                EjbBundleDescriptor bundle = ejbDescriptor.getEjbBundleDescriptor();
                 WebServicesDescriptor webServices = bundle.getWebServices();
                 Collection<?> endpoints = webServices.getEndpointsImplementedBy(ejbDescriptor);
                 // JSR 109 doesn't require support for a single ejb
@@ -1046,7 +1048,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
      */
     protected void initializeHome() throws Exception {
         if (isWebServiceEndpoint) {
-            final EjbBundleDescriptorImpl bundle = ejbDescriptor.getEjbBundleDescriptor();
+            final EjbBundleDescriptor bundle = ejbDescriptor.getEjbBundleDescriptor();
             final WebServicesDescriptor webServices = bundle.getWebServices();
             final Collection<WebServiceEndpoint> myEndpoints = webServices.getEndpointsImplementedBy(ejbDescriptor);
 
@@ -1412,7 +1414,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
     // This method is used to create the ejb after the around_construct interceptor chain has completed.
     public void createEjbInstanceForInterceptors(Object[] params, EJBContextImpl ctx) throws Exception {
         final Object instance;
-        final EjbBundleDescriptorImpl ejbBundle = ejbDescriptor.getEjbBundleDescriptor();
+        final EjbBundleDescriptor ejbBundle = ejbDescriptor.getEjbBundleDescriptor();
         if (cdiService != null && cdiService.isCDIEnabled(ejbBundle)) {
             // EJB creation for CDI is handled in CDIServiceImpl not here.
             instance = ctx.getCDIInjectionContext().createEjbAfterAroundConstruct();
@@ -1424,7 +1426,11 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
     }
 
     protected EJBContextImpl createEjbInstanceAndContext() throws Exception {
-        EjbBundleDescriptorImpl ejbBundle = ejbDescriptor.getEjbBundleDescriptor();
+        if (containerState != CONTAINER_STARTED) {
+            throw new IllegalStateException(localStrings.getLocalString("ejb.container_not_started",
+                "Attempt to invoke when container is in {0}", containerStateToString(containerState)));
+        }
+        EjbBundleDescriptor ejbBundle = ejbDescriptor.getEjbBundleDescriptor();
 
         Object instance = null;
 
@@ -1502,7 +1508,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
     }
 
     private void createEjbInterceptors(EJBContextImpl context, CDIService.CDIInjectionContext ejbInterceptorsCDIInjectionContext) throws Exception {
-        EjbBundleDescriptorImpl ejbBundle = ejbDescriptor.getEjbBundleDescriptor();
+        EjbBundleDescriptor ejbBundle = ejbDescriptor.getEjbBundleDescriptor();
 
         Object[] interceptorInstances;
 
@@ -1533,7 +1539,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
     protected void injectEjbInstance(EJBContextImpl context) throws Exception {
 
-        EjbBundleDescriptorImpl ejbBundle = ejbDescriptor.getEjbBundleDescriptor();
+        EjbBundleDescriptor ejbBundle = ejbDescriptor.getEjbBundleDescriptor();
 
         if (cdiService != null && cdiService.isCDIEnabled(ejbBundle)) {
             cdiService.injectEJBInstance(context.getCDIInjectionContext());
@@ -1738,7 +1744,6 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
     }
 
     public boolean intercept(CallbackType eventType, EJBContextImpl ctx) throws Throwable {
-
         return interceptorManager.intercept(eventType, ctx);
     }
 
@@ -1776,8 +1781,8 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
     protected void postInvoke(EjbInvocation inv, boolean doTxProcessing) {
         if (containerState != CONTAINER_STARTED) {
-            throw new EJBException(localStrings.getLocalString("ejb.container_not_started", "Attempt to invoke when container is in {0}",
-                    containerStateToString(containerState)));
+            throw new EJBException(localStrings.getLocalString("ejb.container_not_started",
+                "Attempt to invoke when container is in {0}", containerStateToString(containerState)));
         }
 
         inv.setDoTxProcessingInPostInvoke(doTxProcessing);
@@ -2931,7 +2936,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             }
 
         } catch (NoSuchMethodException nsme) {
-            Object[] params = { containerInfo + ":" + nsme.toString(), (isLocal ? "Local" : "Remote"), invInfo.method.toString() };
+            Object[] params = {containerInfo + ":" + nsme, isLocal ? EJB_LOCAL : EJB_REMOTE, invInfo.method.toString()};
             _logger.log(Level.WARNING, BEAN_CLASS_METHOD_NOT_FOUND, params);
             // Treat this as a warning instead of a fatal error.
             // That matches the behavior of the generated code.
@@ -4048,7 +4053,8 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
             Class clazz = exception.getClass();
             String exceptionClassName = clazz.getName();
-            Map<String, EjbApplicationExceptionInfo> appExceptions = ejbDescriptor.getEjbBundleDescriptor().getApplicationExceptions();
+            Map<String, EjbApplicationExceptionInfo> appExceptions = ejbDescriptor.getEjbBundleDescriptor()
+                .getApplicationExceptions();
             while (clazz != null) {
                 String eClassName = clazz.getName();
                 if (appExceptions.containsKey(eClassName)) {
@@ -4245,11 +4251,10 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
     }
 
     protected String[] getMonitoringMethodsArray() {
-        return getMonitoringMethodsArray((monitoredGeneratedClasses.size() > 0));
+        return getMonitoringMethodsArray(!monitoredGeneratedClasses.isEmpty());
     }
 
     protected String[] getMonitoringMethodsArray(boolean hasGeneratedClasses) {
-        String[] method_sigs = null;
         if (hasGeneratedClasses) {
             List<String> methodList = new ArrayList<>();
             for (Class clz : monitoredGeneratedClasses) {
@@ -4257,17 +4262,10 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                     methodList.add(EjbMonitoringUtils.stringify(m));
                 }
             }
-            method_sigs = methodList.toArray(new String[methodList.size()]);
+            return methodList.toArray(new String[methodList.size()]);
         } else {
-            Vector methodVec = ejbDescriptor.getMethods();
-            int sz = methodVec.size();
-            method_sigs = new String[sz];
-            for (int i = 0; i < sz; i++) {
-                method_sigs[i] = EjbMonitoringUtils.stringify((Method) methodVec.get(i));
-            }
+            return ejbDescriptor.getMethods().stream().map(EjbMonitoringUtils::stringify).toArray(String[]::new);
         }
-
-        return method_sigs;
     }
 
     protected void doFlush(EjbInvocation inv) {

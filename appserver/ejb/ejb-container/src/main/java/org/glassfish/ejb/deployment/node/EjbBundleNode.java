@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +17,7 @@
 
 package org.glassfish.ejb.deployment.node;
 
+import com.sun.enterprise.deployment.EjbApplicationExceptionInfo;
 import com.sun.enterprise.deployment.EjbInterceptor;
 import com.sun.enterprise.deployment.MethodDescriptor;
 import com.sun.enterprise.deployment.MethodPermission;
@@ -37,7 +38,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
 
-import org.glassfish.ejb.deployment.descriptor.EjbApplicationExceptionInfo;
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 import org.glassfish.ejb.deployment.descriptor.EjbEntityDescriptor;
@@ -222,10 +222,11 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
             }
         }
 
-        if (ejbDesc.hasInterceptors()) {
+        Set<EjbInterceptor> interceptors = ejbDesc.getInterceptors();
+        if (!interceptors.isEmpty()) {
             Node interceptorsNode = appendChild(jarNode, INTERCEPTORS);
             EjbInterceptorNode interceptorNode = new EjbInterceptorNode();
-            for (EjbInterceptor next : ejbDesc.getInterceptors()) {
+            for (EjbInterceptor next : interceptors) {
                 interceptorNode.writeDescriptor(interceptorsNode, INTERCEPTOR, next);
             }
         }

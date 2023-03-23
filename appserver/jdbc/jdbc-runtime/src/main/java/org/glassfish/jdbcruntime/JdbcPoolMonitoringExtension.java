@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,20 @@
 
 package org.glassfish.jdbcruntime;
 
+import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
+import com.sun.enterprise.config.serverbeans.ResourcePool;
+import com.sun.enterprise.connectors.ConnectionPoolMonitoringExtension;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.resource.pool.PoolLifeCycleListenerRegistry;
+import com.sun.enterprise.resource.pool.PoolManager;
+import com.sun.enterprise.resource.pool.monitor.ConnectionPoolAppProbeProvider;
+import com.sun.enterprise.resource.pool.monitor.ConnectionPoolProbeProviderUtil;
+import com.sun.enterprise.resource.pool.monitor.ConnectionPoolStatsProviderBootstrap;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -30,20 +45,6 @@ import org.glassfish.jdbc.pool.monitor.JdbcConnPoolProbeProvider;
 import org.glassfish.jdbc.pool.monitor.JdbcConnPoolStatsProvider;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.ResourcePool;
-import com.sun.enterprise.connectors.ConnectionPoolMonitoringExtension;
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.enterprise.resource.pool.PoolLifeCycleListenerRegistry;
-import com.sun.enterprise.resource.pool.PoolManager;
-import com.sun.enterprise.resource.pool.monitor.ConnectionPoolAppProbeProvider;
-import com.sun.enterprise.resource.pool.monitor.ConnectionPoolProbeProviderUtil;
-import com.sun.enterprise.resource.pool.monitor.ConnectionPoolStatsProviderBootstrap;
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
 
 /**
  * @author Shalini M
@@ -60,17 +61,17 @@ public class JdbcPoolMonitoringExtension implements ConnectionPoolMonitoringExte
     @Inject
     private PoolManager poolManager;
 
-    private ConnectorRuntime runtime;
+    private final ConnectorRuntime runtime;
 
     private final static Logger logger = LogDomains.getLogger(JdbcPoolMonitoringExtension.class, LogDomains.RSR_LOGGER);
 
     // List of all jdbc pool stats providers that are created and stored.
-    private List<JdbcConnPoolStatsProvider> jdbcStatsProviders = null;
-    private List<JdbcConnPoolAppStatsProvider> jdbcPoolAppStatsProviders = null;
+    private final List<JdbcConnPoolStatsProvider> jdbcStatsProviders;
+    private final List<JdbcConnPoolAppStatsProvider> jdbcPoolAppStatsProviders;
 
     public JdbcPoolMonitoringExtension() {
-        jdbcStatsProviders = new ArrayList<JdbcConnPoolStatsProvider>();
-        jdbcPoolAppStatsProviders = new ArrayList<JdbcConnPoolAppStatsProvider>();
+        jdbcStatsProviders = new ArrayList<>();
+        jdbcPoolAppStatsProviders = new ArrayList<>();
         runtime = ConnectorRuntime.getRuntime();
     }
 
@@ -111,9 +112,9 @@ public class JdbcPoolMonitoringExtension implements ConnectionPoolMonitoringExte
     @Override
     public void unregisterPool(PoolInfo poolInfo) {
         if (jdbcStatsProviders != null) {
-            Iterator i = jdbcStatsProviders.iterator();
+            Iterator<JdbcConnPoolStatsProvider> i = jdbcStatsProviders.iterator();
             while (i.hasNext()) {
-                JdbcConnPoolStatsProvider jdbcPoolStatsProvider = (JdbcConnPoolStatsProvider) i.next();
+                JdbcConnPoolStatsProvider jdbcPoolStatsProvider = i.next();
                 if (poolInfo.equals(jdbcPoolStatsProvider.getPoolInfo())) {
                     // Get registry and unregister this pool from the registry
                     PoolLifeCycleListenerRegistry poolRegistry = jdbcPoolStatsProvider.getPoolRegistry();
@@ -154,9 +155,7 @@ public class JdbcPoolMonitoringExtension implements ConnectionPoolMonitoringExte
      */
     @Override
     public void unRegisterConnectionPool() {
-        Iterator jdbcProviders = jdbcPoolAppStatsProviders.iterator();
-        while (jdbcProviders.hasNext()) {
-            JdbcConnPoolAppStatsProvider jdbcPoolAppStatsProvider = (JdbcConnPoolAppStatsProvider) jdbcProviders.next();
+        for (JdbcConnPoolAppStatsProvider jdbcPoolAppStatsProvider : jdbcPoolAppStatsProviders) {
             StatsProviderManager.unregister(jdbcPoolAppStatsProvider);
         }
         jdbcPoolAppStatsProviders.clear();

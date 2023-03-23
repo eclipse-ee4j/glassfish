@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,6 +29,9 @@ import org.glassfish.apf.HandlerProcessingResult;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 import org.jvnet.hk2.annotations.Service;
 
+import static com.sun.enterprise.deployment.EjbDescriptor.BEAN_TRANSACTION_TYPE;
+import static com.sun.enterprise.deployment.EjbDescriptor.CONTAINER_TRANSACTION_TYPE;
+
 /**
  * This handler is responsible for handling the jakarta.ejb.TransactionManagement.
  *
@@ -37,18 +41,13 @@ import org.jvnet.hk2.annotations.Service;
 @AnnotationHandlerFor(TransactionManagement.class)
 public class TransactionManagementHandler extends AbstractAttributeHandler {
 
-    public TransactionManagementHandler() {
-    }
-
-    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,
-            EjbContext[] ejbContexts) throws AnnotationProcessorException {
-
-        TransactionManagement tmAn = (TransactionManagement)ainfo.getAnnotation();
-
-        String tmType =
-                TransactionManagementType.CONTAINER.equals(tmAn.value())?
-                EjbDescriptor.CONTAINER_TRANSACTION_TYPE :
-                EjbDescriptor.BEAN_TRANSACTION_TYPE;
+    @Override
+    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo, EjbContext[] ejbContexts)
+        throws AnnotationProcessorException {
+        TransactionManagement tmAn = (TransactionManagement) ainfo.getAnnotation();
+        String tmType = TransactionManagementType.CONTAINER.equals(tmAn.value())
+            ? CONTAINER_TRANSACTION_TYPE
+            : BEAN_TRANSACTION_TYPE;
 
         for (EjbContext ejbContext : ejbContexts) {
             EjbDescriptor ejbDesc = (EjbDescriptor) ejbContext.getDescriptor();
@@ -61,15 +60,14 @@ public class TransactionManagementHandler extends AbstractAttributeHandler {
         return getDefaultProcessedResult();
     }
 
-    /**
-     * @return an array of annotation types this annotation handler would
-     * require to be processed (if present) before it processes it's own
-     * annotation type.
-     */
+
+    @Override
     public Class<? extends Annotation>[] getTypeDependencies() {
         return getEjbAnnotationTypes();
     }
 
+
+    @Override
     protected boolean supportTypeInheritance() {
         return true;
     }

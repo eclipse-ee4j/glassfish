@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,44 +17,31 @@
 
 package com.sun.enterprise.connectors.jms.deployment.annotation.handlers;
 
+import com.sun.enterprise.deployment.JMSDestinationDefinitionDescriptor;
+import com.sun.enterprise.deployment.MetadataSource;
+import com.sun.enterprise.deployment.ResourceDescriptor;
+import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
+import com.sun.enterprise.deployment.annotation.handlers.AbstractResourceHandler;
+import com.sun.enterprise.deployment.annotation.handlers.ResourceAnnotationControl;
+
+import jakarta.jms.JMSDestinationDefinition;
+
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.Properties;
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.apf.HandlerProcessingResult;
 import org.glassfish.deployment.common.JavaEEResourceType;
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.deployment.EjbBundleDescriptor;
-import com.sun.enterprise.deployment.EjbDescriptor;
-import com.sun.enterprise.deployment.JMSDestinationDefinitionDescriptor;
-import com.sun.enterprise.deployment.MetadataSource;
-import com.sun.enterprise.deployment.ResourceDescriptor;
-import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.annotation.context.EjbBundleContext;
-import com.sun.enterprise.deployment.annotation.context.EjbContext;
-import com.sun.enterprise.deployment.annotation.context.EjbInterceptorContext;
-import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
-import com.sun.enterprise.deployment.annotation.context.WebBundleContext;
-import com.sun.enterprise.deployment.annotation.context.WebComponentContext;
-import com.sun.enterprise.deployment.annotation.context.WebComponentsContext;
-import com.sun.enterprise.deployment.annotation.handlers.AbstractResourceHandler;
-
-import jakarta.interceptor.AroundInvoke;
-import jakarta.interceptor.AroundTimeout;
-import jakarta.interceptor.Interceptors;
-import jakarta.jms.JMSDestinationDefinition;
 
 @Service
 @AnnotationHandlerFor(JMSDestinationDefinition.class)
 public class JMSDestinationDefinitionHandler extends AbstractResourceHandler {
+
+    private static final ResourceAnnotationControl CTRL = new ResourceAnnotationControl(JMSDestinationDefinition.class);
 
     public JMSDestinationDefinitionHandler() {
     }
@@ -71,7 +59,7 @@ public class JMSDestinationDefinitionHandler extends AbstractResourceHandler {
         boolean ejbClass = isAEjbComponentClass(annotations);
 
         for (ResourceContainerContext context : rcContexts) {
-            if (!canProcessAnnotation(annotatedClass, ejbClass, warClass, context)) {
+            if (!CTRL.canProcessAnnotation(annotatedClass, ejbClass, warClass, context)) {
                 return getDefaultProcessedResult();
             }
 
@@ -85,92 +73,6 @@ public class JMSDestinationDefinitionHandler extends AbstractResourceHandler {
         }
 
         return getDefaultProcessedResult();
-    }
-
-    /**
-     * To take care of the case where an ejb is provided in a .war and annotation processor will process this class twice
-     * (once for ejb and once for web-bundle-context, which is a bug).<br>
-     * This method helps to overcome the issue, partially.<br>
-     * Checks whether both the annotated class and the context are either ejb or web.
-     *
-     * @param annotatedClass annotated-class
-     * @param ejbClass indicates whether the class is an ejb-class
-     * @param warClass indicates whether the class is an web-class
-     * @param context resource-container-context
-     * @return boolean indicates whether the annotation can be processed.
-     */
-    private boolean canProcessAnnotation(Class<?> annotatedClass, boolean ejbClass, boolean warClass, ResourceContainerContext context) {
-        if (ejbClass) {
-            if (!(context instanceof EjbBundleContext || context instanceof EjbContext || context instanceof EjbInterceptorContext)) {
-                if (logger.isLoggable(Level.FINEST)) {
-                    logger.log(Level.FINEST, "Ignoring @JMSDestinationDefinition annotation processing as the class is "
-                            + "an EJB class and context is not one of EJBContext");
-                }
-                return false;
-            }
-        } else if (context instanceof EjbBundleContext) {
-            EjbBundleContext ejbContext = (EjbBundleContext) context;
-            EjbBundleDescriptor ejbBundleDescriptor = ejbContext.getDescriptor();
-            EjbDescriptor[] ejbDescriptor = ejbBundleDescriptor.getEjbByClassName(annotatedClass.getName());
-            if (ejbDescriptor == null || ejbDescriptor.length == 0) {
-                if (logger.isLoggable(Level.FINEST)) {
-                    logger.log(Level.FINEST, "Ignoring @JMSDestinationDefinition annotation processing as the class " + "[ "
-                            + annotatedClass + " ] is " + "not an EJB class and the context is EJBContext");
-                }
-                return false;
-            }
-        } else if (warClass) {
-            if (!(context instanceof WebBundleContext || context instanceof WebComponentsContext
-                    || context instanceof WebComponentContext)) {
-                if (logger.isLoggable(Level.FINEST)) {
-                    logger.log(Level.FINEST, "Ignoring @JMSDestinationDefinition annotation processing as the class is "
-                            + "an Web class and context is not one of WebContext");
-                }
-                return false;
-            }
-        } else if (context instanceof WebBundleContext) {
-            WebBundleContext webBundleContext = (WebBundleContext) context;
-            WebBundleDescriptor webBundleDescriptor = webBundleContext.getDescriptor();
-            Collection<RootDeploymentDescriptor> extDesc = webBundleDescriptor.getExtensionsDescriptors();
-            for (RootDeploymentDescriptor desc : extDesc) {
-                if (desc instanceof EjbBundleDescriptor) {
-                    EjbBundleDescriptor ejbBundleDesc = (EjbBundleDescriptor) desc;
-                    EjbDescriptor[] ejbDescs = ejbBundleDesc.getEjbByClassName(annotatedClass.getName());
-                    if (ejbDescs != null && ejbDescs.length > 0) {
-                        if (logger.isLoggable(Level.FINEST)) {
-                            logger.log(Level.FINEST, "Ignoring @JMSDestinationDefinition annotation processing as the class " + "[ "
-                                    + annotatedClass + " ] is " + "not an Web class and the context is WebContext");
-                        }
-                        return false;
-                    } else if (ejbBundleDesc.getInterceptorByClassName(annotatedClass.getName()) != null) {
-                        if (logger.isLoggable(Level.FINEST)) {
-                            logger.log(Level.FINEST, "Ignoring @JMSDestinationDefinition annotation processing " + "as the class " + "[ "
-                                    + annotatedClass + " ] is " + "not an Web class and the context is WebContext");
-                        }
-                        return false;
-                    } else {
-                        Method[] methods = annotatedClass.getDeclaredMethods();
-                        for (Method method : methods) {
-                            Annotation annotations[] = method.getAnnotations();
-                            for (Annotation annotation : annotations) {
-                                if (annotation.annotationType().equals(AroundInvoke.class)
-                                        || annotation.annotationType().equals(AroundTimeout.class)
-                                        || annotation.annotationType().equals(Interceptors.class)) {
-                                    if (logger.isLoggable(Level.FINEST)) {
-                                        logger.log(Level.FINEST,
-                                                "Ignoring @JMSDestinationDefinition annotation processing " + "as the class " + "[ "
-                                                        + annotatedClass + " ] is "
-                                                        + "not an Web class, an interceptor and the context is WebContext");
-                                    }
-                                    return false;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return true;
     }
 
     private boolean isDefinitionAlreadyPresent(Set<ResourceDescriptor> jmsddDescs, JMSDestinationDefinitionDescriptor desc) {
@@ -222,7 +124,7 @@ public class JMSDestinationDefinitionHandler extends AbstractResourceHandler {
 
                     if (defnProperties.length > 0) {
                         for (String property : defnProperties) {
-                            int index = property.indexOf("=");
+                            int index = property.indexOf('=');
                             // found "=" and not at start or end of string
                             if (index > 0 && index < property.length() - 1) {
                                 String name = property.substring(0, index).trim();
@@ -285,6 +187,6 @@ public class JMSDestinationDefinitionHandler extends AbstractResourceHandler {
     }
 
     private boolean isValid(String s) {
-        return (s != null) && !s.equals("");
+        return s != null && !s.isEmpty();
     }
 }

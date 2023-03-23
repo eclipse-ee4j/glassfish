@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -84,7 +84,7 @@ public class ResourceRefNode extends DeploymentDescriptorNode<ResourceReferenceD
     public void addDescriptor(Object newDescriptor) {
         if (descriptor == null) {
             DOLUtils.getDefaultLogger().log(Level.WARNING, DOLUtils.INVALID_DESC_MAPPING,
-                new Object[] {newDescriptor, this});
+                new Object[] {newDescriptor, this, newDescriptor.getClass()});
             return;
         }
         if (newDescriptor instanceof ResourcePrincipalDescriptor) {
@@ -95,11 +95,11 @@ public class ResourceRefNode extends DeploymentDescriptorNode<ResourceReferenceD
             // ever happen; see MailConfigurationNode.
             descriptor.setMailConfiguration((MailConfiguration) newDescriptor);
         } else {
-            DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
-                new Object[] {"In " + this + " do not know what to do with " + newDescriptor});
+            DOLUtils.getDefaultLogger().log(Level.SEVERE, "Unsupported descriptor in " + this + ": " + newDescriptor);
         }
     }
 
+    @Override
     public Node writeDescriptor(Node parent, String nodeName, ResourceReferenceDescriptor rrDescriptor) {
         Node rrNode = super.writeDescriptor(parent, nodeName, descriptor);
         appendTextChild(rrNode, TagNames.RESOURCE_REFERENCE_NAME, rrDescriptor.getName());

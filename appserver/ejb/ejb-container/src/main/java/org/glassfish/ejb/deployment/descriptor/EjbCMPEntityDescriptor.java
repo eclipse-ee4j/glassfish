@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,9 +22,12 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
-import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.ejb.deployment.BeanMethodCalculatorImpl;
@@ -86,37 +89,34 @@ public class EjbCMPEntityDescriptor extends EjbEntityDescriptor {
         return this.stateImplClassName;
     }
 
-    @Override
-    public Vector<Field> getFields() {
-        Vector<Field> fields = new Vector<>();
+    private List<Field> getFields() {
         if (isEJB20()) {
             // All cmp "fields" are abstract, so we can't construct
             // java.lang.reflect.Field elements from them.  Use
             // getFieldDescriptors() instead.
-        } else {
-            fields = super.getFields();
+            return Collections.emptyList();
         }
-        return fields;
+        Class<?> ejb = null;
+        try {
+            ClassLoader cl = getEjbBundleDescriptor().getClassLoader();
+            ejb = cl.loadClass(getEjbClassName());
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException("Class could not be loaded: " + getEjbClassName(), e);
+        }
+        return Arrays.asList(ejb.getFields());
     }
 
-    @Override
-    public Vector<FieldDescriptor> getFieldDescriptors() {
-        Vector<FieldDescriptor> fieldDescriptors = new Vector<>();
+    public List<FieldDescriptor> getFieldDescriptors() {
         if (isEJB20()) {
             try {
                 ClassLoader cl = getEjbBundleDescriptor().getClassLoader();
                 BeanMethodCalculatorImpl bmc = new BeanMethodCalculatorImpl();
-                fieldDescriptors = bmc.getPossibleCmpCmrFields(cl, this.getEjbClassName());
-            } catch (Throwable t) {
-                String errorMsg = localStrings.getLocalString("enterprise.deployment.errorloadingejbclass",
-                    "error loading the ejb class {0} in getFields" + " on EjbDescriptor\n {1}",
-                    new Object[] {this.getEjbClassName(), t.toString()});
-                _logger.log(Level.FINE, errorMsg);
+                return bmc.getPossibleCmpCmrFields(cl, getEjbClassName());
+            } catch (Exception e) {
+                throw new IllegalStateException("Class could not be loaded: " + getEjbClassName(), e);
             }
-        } else {
-            fieldDescriptors = super.getFieldDescriptors();
         }
-        return fieldDescriptors;
+        return getFields().stream().map(FieldDescriptor::new).collect(Collectors.toList());
     }
 
 
@@ -159,30 +159,6 @@ public class EjbCMPEntityDescriptor extends EjbEntityDescriptor {
      */
     public boolean isEJB20() {
         return getCMPVersion() == CMP_2_x;
-    }
-
-
-    @Override
-    public void setEjbBundleDescriptor(EjbBundleDescriptorImpl bundleDescriptor) {
-        super.setEjbBundleDescriptor(bundleDescriptor);
-    }
-
-
-    @Override
-    public Vector<ContainerTransaction> getPossibleTransactionAttributes() {
-        Vector<ContainerTransaction> txAttributes = null;
-        if (isEJB20()) {
-            txAttributes = new Vector<>();
-            txAttributes.add(new ContainerTransaction(ContainerTransaction.REQUIRED, ""));
-            txAttributes.add(new ContainerTransaction(ContainerTransaction.REQUIRES_NEW, ""));
-            txAttributes.add(new ContainerTransaction(ContainerTransaction.MANDATORY, ""));
-            if (isTimedObject()) {
-                txAttributes.add(new ContainerTransaction(ContainerTransaction.NOT_SUPPORTED, ""));
-            }
-        } else {
-            txAttributes = super.getPossibleTransactionAttributes();
-        }
-        return txAttributes;
     }
 
 

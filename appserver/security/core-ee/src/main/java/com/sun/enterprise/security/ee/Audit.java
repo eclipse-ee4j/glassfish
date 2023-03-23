@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -67,7 +67,7 @@ import org.glassfish.security.common.Role;
  */
 public class Audit extends AuditModule {
     private static final String AUDIT_ON = "auditOn";
-    private static boolean auditFlag = false;
+    private static boolean auditFlag;
     private static Logger logger = LogDomains.getLogger(Audit.class, LogDomains.SECURITY_LOGGER);
     /*
      * private static String strPrivateAudit = null; private static String strDenied = null; private static String strOK =
@@ -527,10 +527,9 @@ public class Audit extends AuditModule {
 
             // security constraints
             logger.finest("  Security constraints:");
-            Enumeration<SecurityConstraint> scEnum = wbd.getSecurityConstraints();
-            while (scEnum.hasMoreElements()) {
-                SecurityConstraint sc = scEnum.nextElement();
-                for (WebResourceCollection wrc : sc.getWebResourceCollections()) {
+            Set<SecurityConstraint> constraints = wbd.getSecurityConstraints();
+            for (SecurityConstraint constraint : constraints) {
+                for (WebResourceCollection wrc : constraint.getWebResourceCollections()) {
                     // show list of methods for this collection
                     StringBuffer sbm = new StringBuffer();
                     for (String httpMethod : wrc.getHttpMethods()) {
@@ -546,7 +545,7 @@ public class Audit extends AuditModule {
                 } // end res.collection iterator
 
                 // show roles which apply to above set of collections
-                AuthorizationConstraint authCons = sc.getAuthorizationConstraint();
+                AuthorizationConstraint authCons = constraint.getAuthorizationConstraint();
                 Enumeration<SecurityRole> rolesEnum = authCons.getSecurityRoles();
                 StringBuffer rsb = new StringBuffer();
                 rsb.append("     Accessible by roles: ");
@@ -558,7 +557,7 @@ public class Audit extends AuditModule {
                 logger.finest(rsb.toString());
 
                 // show transport guarantee
-                UserDataConstraint udc = sc.getUserDataConstraint();
+                UserDataConstraint udc = constraint.getUserDataConstraint();
                 if (udc != null) {
                     logger.finest("     Transport guarantee: " + udc.getTransportGuarantee());
                 }

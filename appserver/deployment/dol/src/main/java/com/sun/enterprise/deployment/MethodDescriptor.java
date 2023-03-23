@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -163,6 +163,15 @@ public final class MethodDescriptor extends Descriptor {
         }
         parameterClassNames[parameterClassNames.length - 1] = parameter;
         javaParameterClassNames = xmlFormat2JavaClassNames(parameterClassNames);
+    }
+
+
+    /**
+     * @return method name
+     */
+    @Override
+    public String getName() {
+        return super.getName();
     }
 
 
@@ -580,13 +589,6 @@ public final class MethodDescriptor extends Descriptor {
         }
         toStringBuffer.append(" name: ").append(getName()).append(" params: ").append(getPrettyParameterString())
             .append(" intf: ").append(this.ejbClassSymbol);
-    }
-
-
-    public String prettyPrint() {
-        return "Name : " + this.getName()
-            + " Params: " + this.getPrettyParameterString()
-            + " Intf: " + this.ejbClassSymbol;
     }
 
 

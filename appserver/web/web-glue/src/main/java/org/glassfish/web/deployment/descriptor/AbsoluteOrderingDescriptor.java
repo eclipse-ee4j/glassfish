@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,31 +17,34 @@
 
 package org.glassfish.web.deployment.descriptor;
 
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import org.glassfish.deployment.common.Descriptor;
 
-/*
+/**
  * Deployment object representing the absolute-ordering of web-fragment.
+ *
  * @author Shing Wai Chan
  */
 public class AbsoluteOrderingDescriptor extends Descriptor {
+
     private static final Object OTHERS = new Object();
 
-    private static final LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(AbsoluteOrderingDescriptor.class);
+    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(
+        AbsoluteOrderingDescriptor.class);
 
-    private List<Object> absOrder = new ArrayList<Object>();
+    private final List<Object> absOrder = new ArrayList<>();
 
-    private boolean hasOthers = false;
+    private boolean hasOthers;
 
     public void addName(String name) {
-        if (absOrder.add(name) == false) {
+        if (!absOrder.add(name)) {
             throw new IllegalStateException(localStrings.getLocalString(
                     "web.deployment.exceptionalreadydefinedinabsoluteordering",
                     "[{0}] has already been defined in the absolute-ordering.",
@@ -49,13 +53,12 @@ public class AbsoluteOrderingDescriptor extends Descriptor {
     }
 
     public void addOthers() {
-        if (absOrder.add(OTHERS) == false) {
+        if (!absOrder.add(OTHERS)) {
             throw new IllegalStateException(localStrings.getLocalString(
                     "web.deployment.exceptionalreadydefinedinabsoluteordering",
                     "[{0}] is already defined in the absolute-ordering.",
                     new Object[] { "<others/>" }));
         }
-
         hasOthers = true;
     }
 
@@ -76,10 +79,10 @@ public class AbsoluteOrderingDescriptor extends Descriptor {
      * Note that the number of element return may be less than that of the original list.
      */
     public List<WebFragmentDescriptor> order(List<WebFragmentDescriptor> wfs) {
-        List<WebFragmentDescriptor> wfList = new ArrayList<WebFragmentDescriptor>();
-        if (wfs != null && wfs.size() > 0) {
-            Map<String, WebFragmentDescriptor> map = new HashMap<String, WebFragmentDescriptor>();
-            List<WebFragmentDescriptor> othersList = new ArrayList<WebFragmentDescriptor>();
+        List<WebFragmentDescriptor> wfList = new ArrayList<>();
+        if (wfs != null && !wfs.isEmpty()) {
+            Map<String, WebFragmentDescriptor> map = new HashMap<>();
+            List<WebFragmentDescriptor> othersList = new ArrayList<>();
             for (WebFragmentDescriptor wf : wfs) {
                 String name = wf.getName();
                 if (name != null && name.length() > 0 && absOrder.contains(name)) {
@@ -91,11 +94,12 @@ public class AbsoluteOrderingDescriptor extends Descriptor {
 
             for (Object obj : absOrder) {
                 if (obj instanceof String) {
-                    WebFragmentDescriptor wf = map.get((String)obj);
+                    WebFragmentDescriptor wf = map.get(obj);
                     if (wf != null) {
                         wfList.add(wf);
                     }
-                } else { // others
+                } else {
+                    // others
                     for (WebFragmentDescriptor wf : othersList) {
                         wfList.add(wf);
                     }

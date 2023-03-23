@@ -383,9 +383,9 @@ public class ActiveOutboundResourceAdapter extends ActiveResourceAdapterImpl {
             props = new Properties();
         }
 
-        ConnectorRegistry registry = ConnectorRegistry.getInstance();
-        ConnectorDescriptor desc = registry.getDescriptor(connectorName);
-        AdminObject adminObject = null;
+        final ConnectorRegistry registry = ConnectorRegistry.getInstance();
+        final ConnectorDescriptor desc = registry.getDescriptor(connectorName);
+        final AdminObject adminObject;
         // The admin-object can be identified by interface name, class name
         // or the combination of the both names.
         if (adminObjectClassName == null || adminObjectClassName.isBlank()) {
@@ -424,10 +424,10 @@ public class ActiveOutboundResourceAdapter extends ActiveResourceAdapterImpl {
         for (ConnectorConfigProperty envProp : envProps) {
             String name = envProp.getName();
             String userValue = (String) props.remove(name);
-            if (userValue != null) {
-                aor.addConfigProperty(new ConnectorConfigProperty(name, userValue, userValue, envProp.getType()));
-            } else {
+            if (userValue == null) {
                 aor.addConfigProperty(envProp);
+            } else {
+                aor.addConfigProperty(new ConnectorConfigProperty(name, userValue, userValue, envProp.getType()));
             }
         }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -66,10 +66,13 @@ public interface PoolManager extends TransactedPoolManager {
      */
     boolean flushConnectionPool(PoolInfo poolInfo) throws PoolingException;
 
-    // Get status of pool
+    /**
+     * @return connection pool status.
+     */
     PoolStatus getPoolStatus(PoolInfo poolInfo);
 
-    ResourceHandle getResourceFromPool(ResourceSpec spec, ResourceAllocator alloc, ClientSecurityInfo info, Transaction transaction) throws PoolingException, RetryableUnavailableException;
+    ResourceHandle getResourceFromPool(ResourceSpec spec, ResourceAllocator alloc, ClientSecurityInfo info,
+        Transaction transaction) throws PoolingException, RetryableUnavailableException;
 
     void createEmptyConnectionPool(PoolInfo poolInfo, PoolType pt, Hashtable env) throws PoolingException;
 

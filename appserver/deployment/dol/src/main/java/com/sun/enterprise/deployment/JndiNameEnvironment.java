@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -39,11 +39,11 @@ public interface JndiNameEnvironment {
     Set<EnvironmentProperty> getEnvironmentProperties();
 
     /**
-     * Return the env-entry with the given name
-     *
-     * @return EnvironmentProperty descriptor
+     * @param name
+     * @return the environment property object found by the supplied name.
+     * @throws IllegalArgumentException if no such environment property exists.
      */
-    EnvironmentProperty getEnvironmentPropertyByName(String name);
+    EnvironmentProperty getEnvironmentPropertyByName(String name) throws IllegalArgumentException;
 
     /**
      * Return a set of ejb reference descriptors.
@@ -60,9 +60,9 @@ public interface JndiNameEnvironment {
     Set<ServiceReferenceDescriptor> getServiceReferenceDescriptors();
 
     /**
-     * Return the Service reference descriptor corresponding to
-     * the given name.
+     * Return the Service reference descriptor corresponding to the given name.
      *
+     * @param name
      * @return ServiceReferenceDescriptor object
      */
     ServiceReferenceDescriptor getServiceReferenceByName(String name);
@@ -82,9 +82,9 @@ public interface JndiNameEnvironment {
     Set<ResourceEnvReferenceDescriptor> getResourceEnvReferenceDescriptors();
 
     /**
-     * Return the resource environment reference descriptor corresponding to
-     * the given name.
+     * Return the resource environment reference descriptor corresponding to the given name.
      *
+     * @param name
      * @return ResourceEnvReferenceDescriptor object
      */
     ResourceEnvReferenceDescriptor getResourceEnvReferenceByName(String name);
@@ -97,9 +97,9 @@ public interface JndiNameEnvironment {
     Set<MessageDestinationReferenceDescriptor> getMessageDestinationReferenceDescriptors();
 
     /**
-     * Return the message destination reference descriptor corresponding to
-     * the given name.
+     * Return the message destination reference descriptor corresponding to the given name.
      *
+     * @param name
      * @return MessageDestinationReferenceDescriptor object
      */
     MessageDestinationReferenceDescriptor getMessageDestinationReferenceByName(String name);
@@ -115,6 +115,7 @@ public interface JndiNameEnvironment {
      * Return the post-construct descriptor corresponding to
      * the given name.
      *
+     * @param className
      * @return LifecycleCallbackDescriptor post-construct object
      */
     LifecycleCallbackDescriptor getPostConstructDescriptorByClass(String className);
@@ -129,6 +130,7 @@ public interface JndiNameEnvironment {
     /**
      * Return a set of descriptors based on the type.
      *
+     * @param type
      * @return writeable {@link Set} of descriptor objects
      */
     Set<ResourceDescriptor> getResourceDescriptors(JavaEEResourceType type);
@@ -136,6 +138,7 @@ public interface JndiNameEnvironment {
     /**
      * Return a set of descriptors based on the class value.
      *
+     * @param givenClass
      * @return java.util.Set of descriptor objects
      */
     Set<ResourceDescriptor> getAllResourcesDescriptors(Class<?> givenClass);
@@ -150,6 +153,7 @@ public interface JndiNameEnvironment {
     /**
      * Return the pre-destroy descriptor corresponding to the given name.
      *
+     * @param className
      * @return LifecycleCallbackDescriptor pre-destroy object
      */
     LifecycleCallbackDescriptor getPreDestroyDescriptorByClass(String className);
@@ -160,6 +164,7 @@ public interface JndiNameEnvironment {
     Set<EntityManagerFactoryReferenceDescriptor> getEntityManagerFactoryReferenceDescriptors();
 
     /**
+     * @param name
      * @return the entity manager factory reference descriptor corresponding to the given name.
      */
     EntityManagerFactoryReferenceDescriptor getEntityManagerFactoryReferenceByName(String name);
@@ -170,11 +175,21 @@ public interface JndiNameEnvironment {
     Set<EntityManagerReferenceDescriptor> getEntityManagerReferenceDescriptors();
 
     /**
+     * @param name
      * @return the entity manager reference descriptor corresponding to the given name.
+     * @throws IllegalArgumentException if no such reference exists.
      */
-    EntityManagerReferenceDescriptor getEntityManagerReferenceByName(String name);
+    EntityManagerReferenceDescriptor getEntityManagerReferenceByName(String name) throws IllegalArgumentException;
 
+    /**
+     * @param className
+     * @return list of resources injectable by the class name.
+     */
     List<InjectionCapable> getInjectableResourcesByClass(String className);
 
+    /**
+     * @param clazz
+     * @return {@link InjectionInfo} to be used in management of object's lifecycle.
+     */
     InjectionInfo getInjectionInfoByClass(Class<?> clazz);
 }

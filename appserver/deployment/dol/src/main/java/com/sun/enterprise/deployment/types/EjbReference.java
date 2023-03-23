@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,61 +37,68 @@ public interface EjbReference  extends NamedInformation, InjectionCapable {
     String getType();
 
     /**
-     * Set the type of the EJB. Allowed values are Session, Entity or
-     * Message-driven.
-     * @param the type of the EJB.
+     * Set the type of the EJB. Allowed values are Session, Entity or Message-driven.
+     *
+     * @param type the type of the EJB.
      */
     void setType(String type);
 
     /**
      * Gets the home classname of the referee EJB.
+     *
      * @return the class name of the EJB home.
      */
     String getEjbHomeInterface();
 
     /**
      * Sets the local or remote home classname of the referee EJB.
-     * @param the class name of the EJB home.
+     *
+     * @param ejbHomeInterface the class name of the EJB home.
      */
     void setEjbHomeInterface(String ejbHomeInterface);
 
     /**
      * Gets the local or remote interface classname of the referee EJB.
+     *
      * @return the classname of the EJB remote object.
      */
     String getEjbInterface();
 
     /**
      * Sets the local or remote bean interface classname of the referee EJB.
-     * @param the classname of the EJB remote object.
+     *
+     * @param ejbInterface the classname of the EJB remote object.
      */
     void setEjbInterface(String ejbInterface);
 
     /**
      * Gets the link name of the reference. For use when linking to an EJB
-     * within a J2EE application.
+     * within a Jakarta EE application.
+     *
      * @return the link name.
      */
     String getLinkName();
 
     /**
      * Sets the link name of the reference. For use when linking to an EJB
-     * within a J2EE application.
-     * @param the link name.
+     * within a Jakarta EE application.
+     *
+     * @param linkName the link name.
      */
     void setLinkName(String linkName);
 
     /**
      * Tests if the reference to the referree EJB is through local or
      * remote interface
+     *
      * @return true if using the local interfaces
      */
     boolean isLocal();
 
     /**
-     * Sets whether the reference uses the local or remote interfaces of
-     * the referring EJB
-     * @param true if using the local interface
+     * Sets whether the reference uses the local or remote interfaces of the referring EJB
+     *
+     * @param isLocal true if using the local interface
      */
     void setLocal(boolean isLocal);
 
@@ -103,13 +110,12 @@ public interface EjbReference  extends NamedInformation, InjectionCapable {
     void setReferringBundleDescriptor(BundleDescriptor referringBundle);
 
     /**
-     * Get the referring bundle, i.e. the bundle within which this
-     * EJB reference is declared.
+     * @return the referring bundle, i.e. the bundle within which this EJB reference is declared.
      */
     BundleDescriptor getReferringBundleDescriptor();
 
     /**
-     * Set the jndi name for this ejb reference
+     * @param jndiName Set the jndi name for this ejb reference
      */
     void setJndiName(SimpleJndiName jndiName);
 
@@ -121,10 +127,17 @@ public interface EjbReference  extends NamedInformation, InjectionCapable {
     boolean hasJndiName();
 
     boolean hasLookupName();
+
     SimpleJndiName getLookupName();
 
     EjbDescriptor getEjbDescriptor();
-    void setEjbDescriptor(EjbDescriptor descriptor);
+
+    /**
+     * Sets the ejb descriptor to which I refer.
+     *
+     * @param ejbDescriptor the ejb descriptor referenced, null if it is unknown at this time
+     */
+    void setEjbDescriptor(EjbDescriptor ejbDescriptor);
 
     /**
      * @return true if the EJB reference is a 30 client view
@@ -132,4 +145,3 @@ public interface EjbReference  extends NamedInformation, InjectionCapable {
     boolean isEJB30ClientView();
 
 }
-

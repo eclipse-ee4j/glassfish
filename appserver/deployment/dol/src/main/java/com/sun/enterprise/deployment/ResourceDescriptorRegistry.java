@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +16,6 @@
  */
 
 package com.sun.enterprise.deployment;
-
-import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -48,7 +46,6 @@ import static org.glassfish.deployment.common.JavaEEResourceType.MTFDD;
 public class ResourceDescriptorRegistry implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(ResourceDescriptorRegistry.class);
 
     /**
      * This map contains the list of descriptors for where a particular annotation is not applicable. In future update this
@@ -112,7 +109,6 @@ public class ResourceDescriptorRegistry implements Serializable {
                 allResourceDescriptors.addAll(getResourceDescriptors(javaEEResourceType));
             }
         }
-
         return allResourceDescriptors;
     }
 
@@ -126,7 +122,6 @@ public class ResourceDescriptorRegistry implements Serializable {
                 return resourceDescriptor;
             }
         }
-
         return null;
     }
 
@@ -150,7 +145,6 @@ public class ResourceDescriptorRegistry implements Serializable {
         if (resourceDescriptorSet == null) {
             resourceDescriptors.put(javaEEResourceType, new HashSet<ResourceDescriptor>());
         }
-
         return resourceDescriptors.get(javaEEResourceType);
     }
 
@@ -164,7 +158,6 @@ public class ResourceDescriptorRegistry implements Serializable {
                 return resourceDescriptor;
             }
         }
-
         return null;
     }
 
@@ -176,10 +169,9 @@ public class ResourceDescriptorRegistry implements Serializable {
      */
     public void addResourceDescriptor(ResourceDescriptor reference) {
         if (isDescriptorRegistered(reference)) {
-            throw new IllegalStateException(I18N.getLocalString("exceptionwebduplicatedescriptor",
-                "This app cannot have descriptor definitions of same name : [{0}]", reference.getName()));
+            throw new IllegalStateException(
+                "This app cannot have descriptor definitions of same name: " + reference.getName());
         }
-
         Set<ResourceDescriptor> resourceDescriptorSet = getResourceDescriptors(reference.getResourceType());
         resourceDescriptorSet.add(reference);
         resourceDescriptors.put(reference.getResourceType(), resourceDescriptorSet);

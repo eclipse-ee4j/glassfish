@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -35,7 +35,7 @@ import org.glassfish.web.deployment.descriptor.SessionConfigDescriptor;
 public class WebBundleValidator extends ApplicationValidator implements WebBundleVisitor {
 
     @Override
-    public void accept (BundleDescriptor descriptor) {
+    public void accept(BundleDescriptor descriptor) {
         if (descriptor instanceof WebBundleDescriptor) {
             WebBundleDescriptor webBundle = (WebBundleDescriptor)descriptor;
             accept(webBundle);
@@ -57,7 +57,7 @@ public class WebBundleValidator extends ApplicationValidator implements WebBundl
 
             super.accept(descriptor);
 
-            for (ServletFilter servletFilter : webBundle.getServletFilterDescriptors()) {
+            for (ServletFilter servletFilter : webBundle.getServletFiltersCopy()) {
                 ServletFilterDescriptor servletFilterDescriptor = (ServletFilterDescriptor) servletFilter;
                 accept(servletFilterDescriptor);
             }
@@ -111,8 +111,7 @@ public class WebBundleValidator extends ApplicationValidator implements WebBundl
 
     private void computeRuntimeDefault(WebComponentDescriptor webComp) {
         if (!webComp.getUsesCallerIdentity()) {
-            computeRunAsPrincipalDefault(
-                webComp.getRunAsIdentity(), webComp.getApplication());
+            computeRunAsPrincipalDefault(webComp.getRunAsIdentity(), webComp.getApplication());
         }
     }
 

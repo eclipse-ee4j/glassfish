@@ -38,6 +38,7 @@ import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
+import static com.sun.ejb.codegen.ClassGenerator.defineClass;
 import static org.objectweb.asm.Opcodes.ACC_ABSTRACT;
 import static org.objectweb.asm.Opcodes.ACC_INTERFACE;
 import static org.objectweb.asm.Opcodes.ACC_PRIVATE;
@@ -78,8 +79,7 @@ public class EjbOptionalIntfGenerator extends BeanGeneratorBase {
         } catch (ClassNotFoundException cnfe) {
             final byte[] classData = classMap.get(name);
             if (classData != null) {
-                PrivilegedAction<Class<?>> action =
-                        () -> ClassGenerator.defineClass(loader, name, classData, protectionDomain);
+                PrivilegedAction<Class<?>> action = () -> defineClass(loader, name, classData, protectionDomain);
                 clz = AccessController.doPrivileged(action);
             }
         }

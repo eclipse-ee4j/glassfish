@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,9 @@
 
 package org.glassfish.ejb.mdb;
 
-import com.sun.ejb.codegen.EjbOptionalIntfGenerator;
-
 import jakarta.resource.spi.endpoint.MessageEndpoint;
+
+import com.sun.ejb.codegen.EjbOptionalIntfGenerator;
 
 public class MessageBeanInterfaceGenerator extends EjbOptionalIntfGenerator {
 
@@ -26,17 +27,19 @@ public class MessageBeanInterfaceGenerator extends EjbOptionalIntfGenerator {
         super(loader);
     }
 
-    public Class generateMessageBeanSubClass(Class<?> beanClass, Class messageBeanInterface) throws Exception {
+    public Class<?> generateMessageBeanSubClass(Class<?> beanClass, Class<?> messageBeanInterface) throws Exception {
         final String generatedMessageBeanSubClassName = messageBeanInterface.getName() + "__Bean__";
 
         generateSubclass(beanClass, generatedMessageBeanSubClassName, messageBeanInterface, MessageEndpoint.class);
+
         return loadClass(generatedMessageBeanSubClassName);
     }
 
-    public Class generateMessageBeanInterface(Class<?> beanClass) throws Exception {
+    public Class<?> generateMessageBeanInterface(Class<?> beanClass) throws Exception {
         final String generatedMessageBeanInterfaceName = getGeneratedMessageBeanInterfaceName(beanClass);
 
         generateInterface(beanClass, generatedMessageBeanInterfaceName, MessageEndpoint.class);
+
         return loadClass(generatedMessageBeanInterfaceName);
     }
 
@@ -48,5 +51,4 @@ public class MessageBeanInterfaceGenerator extends EjbOptionalIntfGenerator {
 
         return packageName != null ? packageName + "." + name : name;
     }
-
 }

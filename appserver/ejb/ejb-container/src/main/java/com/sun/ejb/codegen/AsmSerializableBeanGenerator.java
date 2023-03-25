@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,31 +17,27 @@
 
 package com.sun.ejb.codegen;
 
-import java.io.Serializable;
-import java.lang.reflect.Constructor;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
+import static com.sun.ejb.codegen.ClassGenerator.defineClass;
 import static org.objectweb.asm.Opcodes.ACC_PRIVATE;
 import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
 import static org.objectweb.asm.Opcodes.ALOAD;
-import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
 import static org.objectweb.asm.Opcodes.INVOKESTATIC;
 import static org.objectweb.asm.Opcodes.RETURN;
 import static org.objectweb.asm.Opcodes.V11;
 
-public class AsmSerializableBeanGenerator {
-
-    private static final int INTF_FLAGS = ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES;
+public class AsmSerializableBeanGenerator extends BeanGeneratorBase {
 
     private final ClassLoader loader;
-    private final Class<?> baseClass;
-    private final String subclassName;
-
+    private final Class<?> superClass;
+    private final String subClassName;
 
     /**
      * Adds _Serializable to the original name.
@@ -55,89 +51,73 @@ public class AsmSerializableBeanGenerator {
         return packageName == null ? generatedSimpleName : packageName + "." + generatedSimpleName;
     }
 
-
-    public AsmSerializableBeanGenerator(ClassLoader loader, Class baseClass, String serializableSubclassName) {
+    public AsmSerializableBeanGenerator(ClassLoader loader, Class<?> superClass, String serializableSubclassName) {
         this.loader = loader;
-        this.baseClass = baseClass;
-        this.subclassName = serializableSubclassName;
+        this.superClass = superClass;
+        this.subClassName = serializableSubclassName;
     }
 
+    @SuppressWarnings("unused")
     public String getSerializableSubclassName() {
-        return subclassName;
+        return subClassName;
     }
 
+    public Class<?> generateSerializableSubclass() {
+        String subClassInternalName = subClassName.replace('.', '/');
 
-    public Class generateSerializableSubclass() throws Exception {
-        ClassWriter cw = new ClassWriter(INTF_FLAGS);
+        ClassWriter cw = new ClassWriter(0);
 
-        //ClassVisitor tv = //(_debug)
-        //new TraceClassVisitor(cw, new PrintWriter(System.out));
-        ClassVisitor tv = cw;
-        String subclassInternalName = subclassName.replace('.', '/');
+        cw.visit(V11, ACC_PUBLIC, subClassInternalName, null, Type.getInternalName(superClass), new String[] {"java/io/Serializable"});
 
-        String[] interfaces = new String[] {
-            Type.getType(Serializable.class).getInternalName()
-        };
+        generateConstructor(cw, superClass, false);
 
-        tv.visit(V11, ACC_PUBLIC,
-            subclassInternalName, null,
-            Type.getType(baseClass).getInternalName(), interfaces);
+        generateWriteObjectMethod(cw);
 
+        generateReadObjectMethod(cw);
 
-        // Generate constructor. The EJB spec only allows no-arg constructors, but
-        // CDI added requirements that allow a single constructor to define
-        // parameters injected by CDI.
+        cw.visitEnd();
 
-        Constructor<?>[] ctors = baseClass.getConstructors();
-        Constructor<?> ctorWithParams = null;
-        for(Constructor<?> ctor : ctors) {
-            if(ctor.getParameterTypes().length == 0) {
-                ctorWithParams = null;    //exists the no-arg ctor, use it
-                break;
-            } else if(ctorWithParams == null) {
-                ctorWithParams = ctor;
-            }
-        }
+        PrivilegedAction<Class<?>> action =
+                () -> defineClass(loader, subClassName, cw.toByteArray(), superClass.getProtectionDomain());
 
-        int numArgsToPass = 1; // default is 1 to just handle 'this'
-        String paramTypeString = "()V";
-
-        if (ctorWithParams != null) {
-            Class<?>[] paramTypes = ctorWithParams.getParameterTypes();
-            numArgsToPass = paramTypes.length + 1;
-            paramTypeString = Type.getConstructorDescriptor(ctorWithParams);
-        }
-
-        MethodVisitor ctorv = tv.visitMethod(ACC_PUBLIC, "<init>", paramTypeString, null, null);
-
-        for (int i = 0; i < numArgsToPass; i++) {
-            ctorv.visitVarInsn(ALOAD, i);
-        }
-        ctorv.visitMethodInsn(INVOKESPECIAL,  Type.getType(baseClass).getInternalName(), "<init>", paramTypeString, false);
-        ctorv.visitInsn(RETURN);
-        ctorv.visitMaxs(numArgsToPass, numArgsToPass);
-
-        MethodVisitor cv = cw.visitMethod(ACC_PRIVATE, "writeObject", "(Ljava/io/ObjectOutputStream;)V", null, new String[] { "java/io/IOException" });
-        cv.visitVarInsn(ALOAD, 0);
-        cv.visitVarInsn(ALOAD, 1);
-        cv.visitMethodInsn(INVOKESTATIC, "com/sun/ejb/EJBUtils", "serializeObjectFields", "(Ljava/lang/Object;Ljava/io/ObjectOutputStream;)V", false);
-        cv.visitInsn(RETURN);
-        cv.visitMaxs(2, 2);
-
-
-        cv = cw.visitMethod(ACC_PRIVATE, "readObject", "(Ljava/io/ObjectInputStream;)V", null, new String[] { "java/io/IOException", "java/lang/ClassNotFoundException" });
-        cv.visitVarInsn(ALOAD, 0);
-        cv.visitVarInsn(ALOAD, 1);
-        cv.visitMethodInsn(INVOKESTATIC, "com/sun/ejb/EJBUtils", "deserializeObjectFields", "(Ljava/lang/Object;Ljava/io/ObjectInputStream;)V", false);
-        cv.visitInsn(RETURN);
-        cv.visitMaxs(2, 2);
-
-        tv.visitEnd();
-
-        byte[] classData = cw.toByteArray();
-
-        PrivilegedAction<Class<?>> action = () -> ClassGenerator.defineClass(loader, subclassName, classData,
-            baseClass.getProtectionDomain());
         return AccessController.doPrivileged(action);
+    }
+
+    private static void generateWriteObjectMethod(ClassVisitor cv) {
+        MethodVisitor mv = cv.visitMethod(ACC_PRIVATE,
+                "writeObject",
+                "(Ljava/io/ObjectOutputStream;)V",
+                null,
+                new String[] {"java/io/IOException"});
+        mv.visitCode();
+        mv.visitVarInsn(ALOAD, 0);
+        mv.visitVarInsn(ALOAD, 1);
+        mv.visitMethodInsn(INVOKESTATIC,
+                "com/sun/ejb/EJBUtils",
+                "serializeObjectFields",
+                "(Ljava/lang/Object;Ljava/io/ObjectOutputStream;)V",
+                false);
+        mv.visitInsn(RETURN);
+        mv.visitMaxs(2, 2);
+        mv.visitEnd();
+    }
+
+    private static void generateReadObjectMethod(ClassVisitor cv) {
+        MethodVisitor mv = cv.visitMethod(ACC_PRIVATE,
+                "readObject",
+                "(Ljava/io/ObjectInputStream;)V",
+                null,
+                new String[] {"java/io/IOException", "java/lang/ClassNotFoundException"});
+        mv.visitCode();
+        mv.visitVarInsn(ALOAD, 0);
+        mv.visitVarInsn(ALOAD, 1);
+        mv.visitMethodInsn(INVOKESTATIC,
+                "com/sun/ejb/EJBUtils",
+                "deserializeObjectFields",
+                "(Ljava/lang/Object;Ljava/io/ObjectInputStream;)V",
+                false);
+        mv.visitInsn(RETURN);
+        mv.visitMaxs(2, 2);
+        mv.visitEnd();
     }
 }

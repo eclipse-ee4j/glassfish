@@ -16,6 +16,7 @@
 
 package org.glassfish.main.admin.test.rest;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import jakarta.ws.rs.core.Response;
@@ -31,11 +32,12 @@ import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN;
 import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getAsadmin;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.emptyOrNullString;
+import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -64,19 +66,28 @@ public class LoggingRestITest extends RestTestBase {
             Response response = client.get(URL_VIEW_LOG);
             assertThat(response.getStatus(), equalTo(200));
 
-            int logSize = response.readEntity(String.class).length();
+            String content = response.readEntity(String.class).trim();
             // Should not be empty
-            assertThat(logSize, greaterThan(0));
+            assertThat(content, not(emptyString()));
 
             // Get the entire URL to return the changes since the last call
-            String nextUrl = response.getHeaderString("X-Text-Append-Next");
-            assertThat(nextUrl, not(emptyOrNullString()));
+            String nextAppend = response.getHeaderString("X-Text-Append-Next");
+            assertThat(nextAppend, not(emptyOrNullString()));
 
             // Because log unchanged, response should be empty.
-            // Actually they may contain several records due to deferred writing.
-            response = client.get(nextUrl);
+            // In rare cases it may contain a few records.
+            response = client.get(nextAppend);
             assertThat(response.getStatus(), equalTo(200));
-            assertThat(response.readEntity(String.class).length(), lessThan(logSize));
+
+            String newNextAppend = response.getHeaderString("X-Text-Append-Next");
+            assertThat(newNextAppend, not(emptyOrNullString()));
+
+            String newContent = response.readEntity(String.class).trim();
+            if (sameURIs(nextAppend, newNextAppend)) {
+                assertThat(newContent, emptyString());
+            } else {
+                assertThat(content, not(containsString(newContent.lines().findFirst().orElseThrow())));
+            }
         }
     }
 
@@ -108,6 +119,25 @@ public class LoggingRestITest extends RestTestBase {
 
     static JSONArray getJsonArrayFrom(Response response, String name) throws Exception {
         return readJsonObjectFrom(response).getJSONArray(name);
+    }
+
+    private static boolean sameURIs(String uri1, String uri2) {
+        // Fast path
+        if (uri1.equals(uri2)) {
+            return true;
+        }
+
+        // Compare only query params, because they may have
+        // a different order for each call (theoretically) and
+        // different value of the 'start' param.
+        // The rest parts of the URI is unchanged.
+        String[] queryParams1 = uri1.substring(uri1.indexOf('?') + 1).split("&");
+        String[] queryParams2 = uri2.substring(uri2.indexOf('?') + 1).split("&");
+
+        Arrays.sort(queryParams1);
+        Arrays.sort(queryParams2);
+
+        return Arrays.equals(queryParams1, queryParams2);
     }
 
     private static final class ViewLogClient extends DomainAdminRestClient {

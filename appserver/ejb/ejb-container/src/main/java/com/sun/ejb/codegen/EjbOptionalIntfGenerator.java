@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,6 +33,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import jakarta.inject.Inject;
+import org.glassfish.deployment.common.DeploymentException;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
@@ -195,33 +197,33 @@ public class EjbOptionalIntfGenerator {
         {
 
             Constructor[] ctors = superClass.getConstructors();
-            Constructor ctorWithParams = null;
+            Constructor parentCtor = null;
             for(Constructor ctor : ctors) {
                 if(ctor.getParameterTypes().length == 0) {
-                    ctorWithParams = null;    //exists the no-arg ctor, use it
+                    parentCtor = ctor;    //exists the no-arg ctor, use it
                     break;
-                } else if(ctorWithParams == null) {
-                    ctorWithParams = ctor;
+                } else if(ctor.isAnnotationPresent(Inject.class)) {
+                    parentCtor = ctor;
                 }
+            }
+
+            if (parentCtor == null) {
+                throw new DeploymentException("A class " + superClass.getName() + " doesn't have any appropriate constructor");
             }
 
             MethodVisitor cv = tv.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
             cv.visitVarInsn(ALOAD, 0);
-            String paramTypeString = "()V";
-            // if void, only one param (implicit 'this' param)
-            int maxValue = 1;
-            if (ctorWithParams != null) {
-                Class[] paramTypes = ctorWithParams.getParameterTypes();
-                for (Class paramType : paramTypes) {
-                    cv.visitInsn(ACONST_NULL);
-                }
-                paramTypeString = Type.getConstructorDescriptor(ctorWithParams);
-                // num params + one for 'this' pointer
-                maxValue = paramTypes.length + 1;
+
+            String paramTypeString = Type.getConstructorDescriptor(parentCtor);
+
+            int argCount = parentCtor.getParameterCount();
+            for (int i = 0; i < argCount; i++) {
+                cv.visitInsn(ACONST_NULL);
             }
+
             cv.visitMethodInsn(INVOKESPECIAL,  Type.getType(superClass).getInternalName(), "<init>", paramTypeString, false);
             cv.visitInsn(RETURN);
-            cv.visitMaxs(maxValue, 1);
+            cv.visitMaxs(argCount + 1, 1);
         }
 
         generateSetDelegateMethod(tv, delegateClass, subClassName);

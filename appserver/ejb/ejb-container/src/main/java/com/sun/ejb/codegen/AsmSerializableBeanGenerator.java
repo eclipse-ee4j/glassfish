@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,6 +21,9 @@ import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+
+import jakarta.inject.Inject;
+import org.glassfish.deployment.common.DeploymentException;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
@@ -89,24 +92,22 @@ public class AsmSerializableBeanGenerator {
         // parameters injected by CDI.
 
         Constructor<?>[] ctors = baseClass.getConstructors();
-        Constructor<?> ctorWithParams = null;
+        Constructor<?> parentCtor = null;
         for(Constructor<?> ctor : ctors) {
             if(ctor.getParameterTypes().length == 0) {
-                ctorWithParams = null;    //exists the no-arg ctor, use it
+                parentCtor = ctor;    //exists the no-arg ctor, use it
                 break;
-            } else if(ctorWithParams == null) {
-                ctorWithParams = ctor;
+            } else if(ctor.isAnnotationPresent(Inject.class)) {
+                parentCtor = ctor;
             }
         }
 
-        int numArgsToPass = 1; // default is 1 to just handle 'this'
-        String paramTypeString = "()V";
-
-        if (ctorWithParams != null) {
-            Class<?>[] paramTypes = ctorWithParams.getParameterTypes();
-            numArgsToPass = paramTypes.length + 1;
-            paramTypeString = Type.getConstructorDescriptor(ctorWithParams);
+        if (parentCtor == null) {
+            throw new DeploymentException("A class " + baseClass.getName() + " doesn't have any appropriate constructor");
         }
+
+        String paramTypeString = Type.getConstructorDescriptor(parentCtor);
+        int numArgsToPass = parentCtor.getParameterCount() + 1; // default is 1 to just handle 'this'
 
         MethodVisitor ctorv = tv.visitMethod(ACC_PUBLIC, "<init>", paramTypeString, null, null);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,7 @@ package com.sun.enterprise.deployment;
 
 import com.sun.enterprise.deployment.annotation.handlers.ContextServiceDefinitionData;
 
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 
@@ -127,6 +128,21 @@ public class ContextServiceDefinitionDescriptor extends ResourceDescriptor {
         return data;
     }
 
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof ContextServiceDefinitionDescriptor) {
+            ContextServiceDefinitionDescriptor another = (ContextServiceDefinitionDescriptor) object;
+            return getJndiName().equals(another.getJndiName());
+        }
+        return false;
+    }
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName());
+    }
 
     @Override
     public String toString() {

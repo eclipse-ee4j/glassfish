@@ -148,15 +148,6 @@ public class DOLUtils {
     public static final String INVALILD_DESCRIPTOR_SHORT = "AS-DEPLOYMENT-00120";
 
     @LogMessageInfo(
-        message = "DEP0002:Duplicate descriptor found for given jndi-name: {0}",
-        level = "SEVERE",
-        cause = "Two or more resource definitions use the same jndi-name in the same or related contexts",
-        action = "Make sure that all JNDI names used to define resources in application's resource annotations"
-            + " or desciptors are unique in each context. For example java:app/myname conflicts"
-            + " with java:comp:myname because myname jndi-name is defined twice in the component context")
-    public static final String DUPLICATE_DESCRIPTOR = "enterprise.deployment.util.descriptor.duplicate";
-
-    @LogMessageInfo(
         message = "DEP0003:The jndi-name is already used in the global tree failed for given jndi-name: {0}",
         level = "SEVERE",
         cause = "The JNDI name of the descriptor is already used in the global JNDI tree,"

@@ -72,13 +72,22 @@ import static com.sun.enterprise.deployment.util.DOLUtils.INVALID_NAMESPACE;
 public class ApplicationValidator extends ComponentValidator implements ApplicationVisitor, ManagedBeanVisitor {
 
     @LogMessageInfo(
+        message = "Duplicate descriptor found for given jndi-name: {0}.\nDescriptor 1:\n{1}\nDescriptor 2:\n{2}",
+        level = "SEVERE",
+        cause = "Two or more resource definitions use the same jndi-name in the same or related contexts",
+        action = "Make sure that all JNDI names used to define resources in application's resource annotations"
+            + " or desciptors are unique in each context. For example java:app/myname conflicts"
+            + " with java:comp:myname because myname jndi-name is defined twice in the component context")
+    private static final String DUPLICATE_DESCRIPTOR = "dol.validation.application.jndiNameConflict";
+
+    @LogMessageInfo(
         message = "Application validation failed for application: {0}, jndi-name: {1}, resource adapter name: {2} is wrong.",
         level="SEVERE",
         cause = "For embedded resource adapter, its name should begin with '#' symbol",
         action = "Remove application name before the '#' symbol in the resource adapter name.",
         comment = "For the method validateResourceDescriptor of com.sun.enterprise.deployment.util.ApplicationValidator"
     )
-    private static final String RESOURCE_ADAPTER_NAME_INVALID = "AS-DEPLOYMENT-00020";
+    private static final String RESOURCE_ADAPTER_NAME_INVALID = "dol.validation.application.failed";
 
     private static final Logger LOG = DOLUtils.getLogger();
 
@@ -531,7 +540,8 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
         }
 
         // Same JNDI names, but different descriptors
-        LOG.log(Level.ERROR, DOLUtils.DUPLICATE_DESCRIPTOR, name);
+        LOG.log(Level.ERROR, DUPLICATE_DESCRIPTOR, name, existingDescriptor, descriptor);
+        inValidJndiName = name;
         allUniqueResource = false;
         return true;
     }

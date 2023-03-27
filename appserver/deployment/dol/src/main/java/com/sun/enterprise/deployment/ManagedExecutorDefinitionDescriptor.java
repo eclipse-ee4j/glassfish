@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,6 +19,7 @@ package com.sun.enterprise.deployment;
 import com.sun.enterprise.deployment.annotation.factory.ManagedExecutorDefinitionData;
 import com.sun.enterprise.deployment.annotation.handlers.ContextualResourceDefinition;
 
+import java.util.Objects;
 import java.util.Properties;
 
 import org.glassfish.deployment.common.JavaEEResourceType;
@@ -116,6 +117,22 @@ public class ManagedExecutorDefinitionDescriptor extends ResourceDescriptor impl
 
     public ManagedExecutorDefinitionData getData() {
         return data;
+    }
+
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof ManagedExecutorDefinitionDescriptor) {
+            ManagedExecutorDefinitionDescriptor another = (ManagedExecutorDefinitionDescriptor) object;
+            return getJndiName().equals(another.getJndiName());
+        }
+        return false;
+    }
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName());
     }
 
 

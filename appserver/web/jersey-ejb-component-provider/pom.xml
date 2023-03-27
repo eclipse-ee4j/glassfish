@@ -78,7 +78,7 @@
                     <instructions>
                         <Import-Package>
                             jakarta.annotation.*;version="${jakarta.annotation-api.version}",
-                            org.glassfish.hk2.*;version="${hk2.version}",
+                            org.glassfish.hk2.*,
                             *
                         </Import-Package>
                         <Export-Package>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +16,6 @@
  */
 
 package com.sun.enterprise.resource.allocator;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.security.auth.Subject;
 
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
@@ -42,6 +35,13 @@ import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.ManagedConnectionFactory;
 import jakarta.resource.spi.ValidatingManagedConnectionFactory;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
+
 
 /**
  * An abstract implementation of the <code>ResourceAllocator</code> interface
@@ -51,8 +51,8 @@ import jakarta.resource.spi.ValidatingManagedConnectionFactory;
  *
  * @author Sivakumar Thyagarajan
  */
-public abstract class AbstractConnectorAllocator
-        implements ResourceAllocator {
+public abstract class AbstractConnectorAllocator implements ResourceAllocator {
+    protected final static Logger _logger = LogDomains.getLogger(AbstractConnectorAllocator.class,LogDomains.RSR_LOGGER);
 
     protected PoolManager poolMgr;
     protected ResourceSpec spec;
@@ -62,7 +62,6 @@ public abstract class AbstractConnectorAllocator
     protected ConnectorDescriptor desc;
     protected ClientSecurityInfo info;
 
-    protected final static Logger _logger = LogDomains.getLogger(AbstractConnectorAllocator.class,LogDomains.RSR_LOGGER);
 
     public AbstractConnectorAllocator() {
     }
@@ -81,15 +80,12 @@ public abstract class AbstractConnectorAllocator
         this.reqInfo = reqInfo;
         this.info = info;
         this.desc = desc;
-
     }
 
     @Override
-    public Set getInvalidConnections(Set connectionSet)
-            throws ResourceException {
+    public Set getInvalidConnections(Set connectionSet) throws ResourceException {
         if (mcf instanceof ValidatingManagedConnectionFactory) {
-            return ((ValidatingManagedConnectionFactory) this.mcf).
-                    getInvalidConnections(connectionSet);
+            return ((ValidatingManagedConnectionFactory) this.mcf).getInvalidConnections(connectionSet);
         }
         return null;
     }
@@ -98,7 +94,7 @@ public abstract class AbstractConnectorAllocator
     public boolean isConnectionValid(ResourceHandle h) {
         HashSet<ManagedConnection> conn = new HashSet<>();
         conn.add((ManagedConnection) h.getResource());
-        Set invalids = null;
+        Set<?> invalids = null;
         try {
             invalids = getInvalidConnections(conn);
         } catch (ResourceException re) {
@@ -115,12 +111,7 @@ public abstract class AbstractConnectorAllocator
             }
         }
 
-        if ((invalids != null && invalids.size() > 0) ||
-                h.hasConnectionErrorOccurred()) {
-            return false;
-        }
-
-        return true;
+        return (invalids == null || invalids.isEmpty()) && !h.hasConnectionErrorOccurred();
     }
 
     @Override

@@ -302,7 +302,7 @@ public class KernelLoggerInfo {
     @LogMessageInfo(
             message = "Application previously deployed is not at its original location any more: {0}",
             cause = "An unexpected exception occurred while loading an application.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String notFoundInOriginalLocation = LOGMSG_PREFIX + "-00043";
 

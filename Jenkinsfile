@@ -187,9 +187,7 @@ spec:
           dumpSysInfo()
           sh '''
             # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
-            mvn dependency:purge-local-repository -DmanualInclude="org.glassfish.hk2:hk2-bom" -Pstaging -U
-            
-            mvn -B -e clean install -Pfastest,staging -T4C -U
+            mvn -B -e clean install -Pfastest,staging -T4C
             ./gfbuild.sh archive_bundles
             mvn -B -e clean
             tar -c -C ${WORKSPACE}/appserver/tests common_test.sh gftest.sh appserv-tests quicklook | gzip --fast > ${WORKSPACE}/bundles/appserv_tests.tar.gz
@@ -233,5 +231,4 @@ spec:
     }
   }
 }
-
 

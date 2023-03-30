@@ -9,6 +9,14 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
+## March 30, 2023 -- Eclipse GlassFish 7.0.3 Available
+
+We are pleased to announce the release today of Eclipse GlassFish 7.0.3. 
+
+The main features of this release are various bug fixes for things like a StackOverflow exception, a deployment error, and creating JavaMail sessions using the admin console. Additionally components have been updated for Faces, Messaging, Persistence, and (MP) Config. Support for newer JDK versions has been solidified by a new HK2 release and ASM 9.5 integration.
+
+Eclipse GlassFish 7.0.3 compiles and runs with JDK 11 to JDK 20 releases. MicroProfile support requires JDK 17 or higher.
+
 ## February 27, 2023 -- Eclipse GlassFish 7.0.2 Available
 
 We are happy to announce the release of Eclipse GlassFish 7.0.2. 

@@ -4215,93 +4215,71 @@ bundle that contains a plain text file that is named
 <code>src/main/resources/BrandingVersion.properties</code>.</p>
 </div>
 <div class="paragraph">
-<p>In the <code>BrandingVersion.properties</code> file, define the following
-keyword-value pairs:</p>
+<p>In the <code>BrandingVersion.properties</code> file, define the following keyword-value pairs:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>product_name=product-name
-abbrev_product_name=abbrev-product-name
-major_version=major-version
-minor_version=minor-version
-build_id=build-id
-version_prefix=version-prefix
-version_suffix=version-suffix</code></pre>
+<pre class="CodeRay highlight"><code>product.name=...
+product.name.abbreviation=...
+product.version=...
+...</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Define each keyword-value pair on a separate line of the file. Each
-value is a text string without quotes.</p>
+<p>Define each keyword-value pair on a separate line of the file.
+Each value is a text string without quotes.</p>
 </div>
 <div class="paragraph">
 <p>The meaning of each keyword-value pair is as follows:</p>
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">`product_name=`product-name</dt>
+<dt class="hdlist1"><code>product.name=Eclipse GlassFish</code></dt>
 <dd>
-<p>Specifies the full product name without any release information, for
-example,
-<code>name="ProductNameFullPlain" content="Eclipse GlassFish"</code>.</p>
+<p>Specifies the full product name without any release information.</p>
 </dd>
-<dt class="hdlist1">`abbrev_product_name=`abbrev-product-name</dt>
+<dt class="hdlist1"><code>product.name.abbreviation=GF</code></dt>
 <dd>
-<p>Specifies an abbreviated form of the product name without any release
-information, for example,
-<code>name="ProductNamePlain" content="Eclipse GlassFish"</code>.</p>
+<p>Specifies an abbreviated form of the product name without any release information.</p>
 </dd>
-<dt class="hdlist1">`major_version=`major-version</dt>
+<dt class="hdlist1"><code>product.version=2023.02.24</code></dt>
 <dd>
-<p>Returns the product major version, for example, <code>6</code></p>
+<p>Returns the product version. It should follow standard form <code>major.minor.patch[-suffix]</code></p>
 </dd>
-<dt class="hdlist1">`minor_version=`minor-version</dt>
+<dt class="hdlist1"><code>product.build.git.branch=experimental</code></dt>
 <dd>
-<p>Specifies the product minor version, for example, <code>0</code>.</p>
+<p>Specifies the git branch, used for the build.</p>
 </dd>
-<dt class="hdlist1">`build_id=`build-id</dt>
+<dt class="hdlist1"><code>product.build.git.commit=ec1ce24934f0bb174333a9886b58a0d2f9e52b44</code></dt>
 <dd>
-<p>Specifies the build version, for example, <code>build 17</code>.</p>
+<p>Specifies the git commit, used for the build.</p>
 </dd>
-<dt class="hdlist1">`version_prefix=`version-prefix</dt>
+<dt class="hdlist1"><code>product.build.timestamp=2023-02-27T11:09:42Z</code></dt>
 <dd>
-<p>Specifies a prefix for the product version, for example, <code>v</code>.</p>
-</dd>
-<dt class="hdlist1">`version_suffix=`version-suffix</dt>
-<dd>
-<p>Specifies a suffix for the product version, for example, <code>Beta</code>.</p>
+<p>Specifies the build timestamp.</p>
 </dd>
 </dl>
 </div>
 <div id="ghrfh" class="paragraph">
-<p>Example 4-4 <code>BrandingVersion.properties</code> File for Changing the Brand in
+<p>Example 4-4 <code>glassfish-version.properties</code> File for Changing the Brand in
 the Eclipse GlassFish CLI</p>
 </div>
 <div class="paragraph">
-<p>This example shows the content of the <code>BrandingVersion.properties</code> for
-defining the product name and release information of Eclipse GlassFish 6.0.0, build 17. The abbreviated product name is
-<code>glassfish-server</code>.</p>
+<p>This example shows the content of the <code>glassfish-version.properties</code> for
+defining the product name and release information of Eclipse GlassFish 7.0.3-SNAPSHOT.
+The abbreviated product name is <code>GF</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>product_name=Eclipse GlassFish
-abbrev_product_name=glassfish-server
-major_version=6
-minor_version=0.0
-build_id=build 17</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>To enable the display of OEM-specific information, the following
-properties might also be required:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code>LEGAL_COPYRIGHT                &quot;Copyright 2020&quot;
-LEGAL_COMPANY_NAME             &quot;Eclipse Foundation&quot;
-LEGAL_RIGHTS                   &quot;All rights reserved.&quot;
-SIMPLE_COMPANY_NAME            &quot;Eclipse&quot;
-COMPANY_CONTACT_URL            &quot;http://www.glassfish.org&quot;
-PRODUCT_TRADEMARKS             &quot;GlassFish is a trademark of the Eclipse Foundation&quot;</code></pre>
+<pre class="CodeRay highlight"><code>product.name=Eclipse GlassFish
+product.name.short=GF
+product.version=7.0.3-SNAPSHOT
+product.build.git.branch=master
+product.build.git.commit=93176e2555176091c8522e43d1d32a0a30652d4a
+product.build.timestamp=2023-02-27T11:09:42Z
+
+domain.template.defaultJarFileName=appserver-domain.jar
+admin.command.name=asadmin</code></pre>
 </div>
 </div>
 </div>
@@ -9662,7 +9640,7 @@ a Jakarta Server Faces page.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-02-27 14:42:15 UTC
+Last updated 2023-03-31 09:55:49 UTC
 </div>
 </div>
 </body>

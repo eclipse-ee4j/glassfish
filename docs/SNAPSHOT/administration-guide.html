@@ -518,15 +518,15 @@
 </li>
 </ul>
 </li>
-<li><a href="#administering-the-javamail-service">16 Administering the JavaMail Service</a>
+<li><a href="#administering-the-jakarta-mail-service">16 Administering the Jakarta Mail Service</a>
 <ul class="sectlevel2">
-<li><a href="#about-javamail">About JavaMail</a></li>
-<li><a href="#administering-javamail-resources">Administering JavaMail Resources</a>
+<li><a href="#about-jakarta-mail">About Jakarta Mail</a></li>
+<li><a href="#administering-jakarta-mail-resources">Administering Jakarta Mail Resources</a>
 <ul class="sectlevel3">
-<li><a href="#to-create-a-javamail-resource">To Create a JavaMail Resource</a></li>
-<li><a href="#to-list-javamail-resources">To List JavaMail Resources</a></li>
-<li><a href="#to-update-a-javamail-resource">To Update a JavaMail Resource</a></li>
-<li><a href="#to-delete-a-javamail-resource">To Delete a JavaMail Resource</a></li>
+<li><a href="#to-create-a-jakarta-mail-resource">To Create a Jakarta Mail Resource</a></li>
+<li><a href="#to-list-mail-resources">To List Jakarta Mail Resources</a></li>
+<li><a href="#to-update-a-jakarta-mail-resource">To Update a Jakarta Mail Resource</a></li>
+<li><a href="#to-delete-a-jakarta-mail-resource">To Delete a Jakarta Mail Resource</a></li>
 </ul>
 </li>
 </ul>
@@ -638,7 +638,7 @@
 <li><a href="#connectivity-subcommands">Connectivity Subcommands</a></li>
 <li><a href="#domain-subcommands">Domain Subcommands</a></li>
 <li><a href="#internet-connectivity-subcommands">Internet Connectivity Subcommands</a></li>
-<li><a href="#javamail-subcommands">JavaMail Subcommands</a></li>
+<li><a href="#jakarta-mail-subcommands">Jakarta Mail Subcommands</a></li>
 <li><a href="#jms-subcommands">JMS Subcommands</a></li>
 <li><a href="#jndi-subcommands">JNDI Subcommands</a></li>
 <li><a href="#jvm-subcommands">JVM Subcommands</a></li>
@@ -1444,10 +1444,10 @@ Connectivity</a>.</p>
 <p>An initial configuration task might involve creating an IIOP listener.
 See <a href="#administering-the-object-request-broker-orb">Administering the Object Request Broker (ORB)</a>.</p>
 </dd>
-<dt class="hdlist1">JavaMail Service</dt>
+<dt class="hdlist1">Jakarta Mail Service</dt>
 <dd>
-<p>An initial configuration task might involve creating a JavaMail
-resource. See <a href="#administering-the-javamail-service">Administering the JavaMail
+<p>An initial configuration task might involve creating a Jakarta Mail
+resource. See <a href="#administering-the-jakarta-mail-service">Administering the Jakarta Mail
 Service</a>.</p>
 </dd>
 <dt class="hdlist1">Java Message Service (JMS)</dt>
@@ -3775,7 +3775,7 @@ resources, such as JDBC, is contained in other chapters.</p>
 <div class="paragraph">
 <p>Use the <code>add-resources</code> subcommand in remote mode to create the
 resources named in the specified XML file. The following resources are
-supported: JDBC connection pool and resource, JMS, JNDI, and JavaMail
+supported: JDBC connection pool and resource, JMS, JNDI, and Jakarta Mail
 resources, custom resource, connector resource and work security map,
 admin object, and resource adapter configuration.</p>
 </div>
@@ -5298,7 +5298,7 @@ client must use session tokens for authentication.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Request a session token by using the <code>GET</code> method on the resource at
+<p>Request a session token by using the <code>POST</code> method on the resource at
 <code><a href="http://`host" class="bare">http://`host</a></code>:`port`/management/sessions`.
 Eclipse GlassFish uses basic authentication to authenticate the client,
 generates a session token, and passes the token to the client.</p>
@@ -24544,10 +24544,10 @@ typing <code>asadmin help delete-iiop-listener</code> at the command line.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="administering-the-javamail-service"><a class="anchor" href="#administering-the-javamail-service"></a>16 Administering the JavaMail Service</h2>
+<h2 id="administering-the-jakarta-mail-service"><a class="anchor" href="#administering-the-jakarta-mail-service"></a>16 Administering the Jakarta Mail Service</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Eclipse GlassFish includes the JavaMail API along with JavaMail service
+<p>Eclipse GlassFish includes the Jakarta Mail API along with Jakarta Mail service
 providers that allow an application component to send email
 notifications over the Internet and to read email from IMAP and POP3
 mail servers.</p>
@@ -24558,10 +24558,10 @@ mail servers.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#about-javamail">About JavaMail</a></p>
+<p><a href="#about-jakarta-mail">About Jakarta Mail</a></p>
 </li>
 <li>
-<p><a href="#administering-javamail-resources">Administering JavaMail Resources</a></p>
+<p><a href="#administering-jakarta-mail-resources">Administering Jakarta Mail Resources</a></p>
 </li>
 </ul>
 </div>
@@ -24571,49 +24571,49 @@ Administration Console are contained in the Administration Console
 online help.</p>
 </div>
 <div class="sect2">
-<h3 id="about-javamail"><a class="anchor" href="#about-javamail"></a>About JavaMail</h3>
+<h3 id="about-jakarta-mail"><a class="anchor" href="#about-jakarta-mail"></a>About Jakarta Mail</h3>
 <div class="paragraph">
-<p>The JavaMail API is a set of abstract APIs that model a mail system. The
-JavaMail API provides a platform-independent and protocol-independent
+<p>The Jakarta Mail API is a set of abstract APIs that model a mail system. The
+Jakarta Mail API provides a platform-independent and protocol-independent
 framework to build mail and messaging applications and provide
 facilities for reading and sending electronic messages. Service
 providers implement particular protocols. Using the API you can add
-email capabilities to your applications. JavaMail provides access from
+email capabilities to your applications. Jakarta Mail provides access from
 Java applications to Internet Message Access Protocol (IMAP) and Simple
 Mail Transfer Protocol (SMTP) capable mail servers on your network or
 the Internet. The API does not provide mail server functionality; you
-must have access to a mail server to use JavaMail.</p>
+must have access to a mail server to use Jakarta Mail.</p>
 </div>
 <div class="paragraph">
-<p>The JavaMail API is implemented as an optional package in the Java
+<p>The Jakarta Mail API is implemented as an optional package in the Java
 platform and is also available as part of the Jakarta EE platform.</p>
 </div>
 <div class="paragraph">
-<p>To learn more about the JavaMail API, consult the
-<a href="http://www.oracle.com/technetwork/java/javamail/">JavaMail web site</a> .</p>
+<p>To learn more about the Jakarta Mail API, consult the
+<a href="https://jakartaee.github.io/mail-api/">Jakarta Mail web site</a> .</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="administering-javamail-resources"><a class="anchor" href="#administering-javamail-resources"></a>Administering JavaMail Resources</h3>
+<h3 id="administering-jakarta-mail-resources"><a class="anchor" href="#administering-jakarta-mail-resources"></a>Administering Jakarta Mail Resources</h3>
 <div class="paragraph">
 <p>When you create a mail session, the server-side components and
-applications are enabled to access JavaMail services with JNDI, using
+applications are enabled to access Jakarta Mail services with JNDI, using
 the session properties you assign for them. When creating a mail
 session, you can designate the mail hosts, the transport and store
 protocols, and the default mail user so that components that use
-JavaMail do not have to set these properties. Applications that are
+Jakarta Mail do not have to set these properties. Applications that are
 heavy email users benefit because Eclipse GlassFish creates a single
 session object and makes the session available to any component that
 needs it.</p>
 </div>
 <div class="paragraph">
-<p>JavaMail settings such as the following can be specified:</p>
+<p>Jakarta Mail settings such as the following can be specified:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
 <p>JNDI Name. The unique name for the mail session. Use the naming
-sub-context prefix mail/ for JavaMail resources. For example:
+sub-context prefix mail/ for Jakarta Mail resources. For example:
 <code>mail/MySession</code></p>
 </li>
 <li>
@@ -24646,24 +24646,24 @@ at this time</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#to-create-a-javamail-resource">To Create a JavaMail Resource</a></p>
+<p><a href="#to-create-a-jakarta-mail-resource">To Create a Jakarta Mail Resource</a></p>
 </li>
 <li>
-<p><a href="#to-list-javamail-resources">To List JavaMail Resources</a></p>
+<p><a href="#to-list-mail-resources">To List Jakarta Mail Resources</a></p>
 </li>
 <li>
-<p><a href="#to-update-a-javamail-resource">To Update a JavaMail Resource</a></p>
+<p><a href="#to-update-a-jakarta-mail-resource">To Update a Jakarta Mail Resource</a></p>
 </li>
 <li>
-<p><a href="#to-delete-a-javamail-resource">To Delete a JavaMail Resource</a></p>
+<p><a href="#to-delete-a-jakarta-mail-resource">To Delete a Jakarta Mail Resource</a></p>
 </li>
 </ul>
 </div>
 <div class="sect3">
-<h4 id="to-create-a-javamail-resource"><a class="anchor" href="#to-create-a-javamail-resource"></a>To Create a JavaMail Resource</h4>
+<h4 id="to-create-a-jakarta-mail-resource"><a class="anchor" href="#to-create-a-jakarta-mail-resource"></a>To Create a Jakarta Mail Resource</h4>
 <div class="paragraph">
-<p>Use the <code>create-javamail-resource</code> subcommand in remote mode to create a
-JavaMail session resource. The JNDI name for a JavaMail session resource
+<p>Use the <code>create-mail-resource</code> subcommand in remote mode to create a
+Jakarta Mail session resource. The JNDI name for a Jakarta Mail session resource
 customarily includes the mail/ naming subcontext, For example:
 <code>mail/MyMailSession.</code></p>
 </div>
@@ -24673,8 +24673,8 @@ customarily includes the mail/ naming subcontext, For example:
 <p>Ensure that the server is running. Remote subcommands require a running server.</p>
 </li>
 <li>
-<p>Create a JavaMail resource by using the
-<a href="reference-manual.html#create-javamail-resource"><code>create-javamail-resource</code></a> subcommand.</p>
+<p>Create a Jakarta Mail resource by using the
+<a href="reference-manual.html#create-mail-resource"><code>create-mail-resource</code></a> subcommand.</p>
 <div class="paragraph">
 <p>Information about the properties for the subcommand is included in this
 help page.</p>
@@ -24689,18 +24689,18 @@ help page.</p>
 </ol>
 </div>
 <div id="gipfs" class="paragraph">
-<p>Example 16-1 Creating a JavaMail Resource</p>
+<p>Example 16-1 Creating a Jakarta Mail Resource</p>
 </div>
 <div class="paragraph">
-<p>This example creates a JavaMail resource named <code>mail/MyMailSession</code>. The
+<p>This example creates a Jakarta Mail resource named <code>mail/MyMailSession</code>. The
 escape character (\) is used in the <code>--fromaddress</code> option to
 distinguish the dot (.) and at sign (@).</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; create-javamail-resource --mailhost localhost
+<pre class="CodeRay highlight"><code>asadmin&gt; create-mail-resource --mailhost localhost
 --mailuser sample --fromaddress sample\@sun\.com mail/MyMailSession
-Command create-javamail-resource executed successfully.</code></pre>
+Command create-mail-resource executed successfully.</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -24708,14 +24708,14 @@ Command create-javamail-resource executed successfully.</code></pre>
 </div>
 <div class="paragraph">
 <p>You can also view the full syntax and options of the subcommand by
-typing <code>asadmin help create-javamail-resource</code> at the command line.</p>
+typing <code>asadmin help create-mail-resource</code> at the command line.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="to-list-javamail-resources"><a class="anchor" href="#to-list-javamail-resources"></a>To List JavaMail Resources</h4>
+<h4 id="to-list-mail-resources"><a class="anchor" href="#to-list-mail-resources"></a>To List Jakarta Mail Resources</h4>
 <div class="paragraph">
-<p>Use the <code>list-javamail-resources</code> subcommand in remote mode to list the
-existing JavaMail session resources.</p>
+<p>Use the <code>list-mail-resources</code> subcommand in remote mode to list the
+existing Jakarta Mail session resources.</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -24723,22 +24723,22 @@ existing JavaMail session resources.</p>
 <p>Ensure that the server is running. Remote subcommands require a running server.</p>
 </li>
 <li>
-<p>List the JavaMail resources by using the
-<a href="reference-manual.html#list-javamail-resources"><code>list-javamail-resources</code></a> subcommand.</p>
+<p>List the Jakarta Mail resources by using the
+<a href="reference-manual.html#list-mail-resources"><code>list-mail-resources</code></a> subcommand.</p>
 </li>
 </ol>
 </div>
 <div id="gipfe" class="paragraph">
-<p>Example 16-2 Listing JavaMail Resources</p>
+<p>Example 16-2 Listing Jakarta Mail Resources</p>
 </div>
 <div class="paragraph">
-<p>This example lists the JavaMail resources on <code>localhost</code>.</p>
+<p>This example lists the Jakarta Mail resources on <code>localhost</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; list-javamail-resources
+<pre class="CodeRay highlight"><code>asadmin&gt; list-mail-resources
 mail/MyMailSession
-Command list-javamail-resources executed successfuly.</code></pre>
+Command list-mail-resources executed successfuly.</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -24746,19 +24746,19 @@ Command list-javamail-resources executed successfuly.</code></pre>
 </div>
 <div class="paragraph">
 <p>You can also view the full syntax and options of the subcommands by
-typing <code>asadmin help list-javamail-resources</code> at the command line.</p>
+typing <code>asadmin help list-mail-resources</code> at the command line.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="to-update-a-javamail-resource"><a class="anchor" href="#to-update-a-javamail-resource"></a>To Update a JavaMail Resource</h4>
+<h4 id="to-update-a-jakarta-mail-resource"><a class="anchor" href="#to-update-a-jakarta-mail-resource"></a>To Update a Jakarta Mail Resource</h4>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>List the JavaMail resources by using the
-<a href="reference-manual.html#list-javamail-resources"><code>list-javamail-resources</code></a> subcommand.</p>
+<p>List the Jakarta Mail resources by using the
+<a href="reference-manual.html#list-mail-resources"><code>list-mail-resources</code></a> subcommand.</p>
 </li>
 <li>
-<p>Modify the values for the specified JavaMail source by using the
+<p>Modify the values for the specified Jakarta Mail source by using the
 <a href="reference-manual.html#set"><code>set</code></a> subcommand.</p>
 <div class="paragraph">
 <p>The resource is identified by its dotted name.</p>
@@ -24767,7 +24767,7 @@ typing <code>asadmin help list-javamail-resources</code> at the command line.</p
 </ol>
 </div>
 <div id="giwjb" class="paragraph">
-<p>Example 16-3 Updating a JavaMail Resource</p>
+<p>Example 16-3 Updating a Jakarta Mail Resource</p>
 </div>
 <div class="paragraph">
 <p>This example changes <code>joeserver</code> to <code>joe</code>.</p>
@@ -24782,17 +24782,17 @@ Command set executed successfully.</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="to-delete-a-javamail-resource"><a class="anchor" href="#to-delete-a-javamail-resource"></a>To Delete a JavaMail Resource</h4>
+<h4 id="to-delete-a-jakarta-mail-resource"><a class="anchor" href="#to-delete-a-jakarta-mail-resource"></a>To Delete a Jakarta Mail Resource</h4>
 <div class="paragraph">
-<p>Use the <code>delete-javamail-resource</code> subcommands in remote mode to delete
-a JavaMail session resource.</p>
+<p>Use the <code>delete-mail-resource</code> subcommands in remote mode to delete
+a Jakarta Mail session resource.</p>
 </div>
 <div class="paragraph">
 <p>Before You Begin</p>
 </div>
 <div class="paragraph">
 <p>References to the specified resource must be removed before running the
-<code>delete-javamail-resource</code> subcommands.</p>
+<code>delete-mail-resource</code> subcommands.</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -24800,12 +24800,12 @@ a JavaMail session resource.</p>
 <p>Ensure that the server is running. Remote subcommands require a running server.</p>
 </li>
 <li>
-<p>List the JavaMail resources by using the
-<a href="reference-manual.html#list-javamail-resources"><code>list-javamail-resources</code></a> subcommands.</p>
+<p>List the Jakarta Mail resources by using the
+<a href="reference-manual.html#list-mail-resources"><code>list-mail-resources</code></a> subcommands.</p>
 </li>
 <li>
-<p>Delete a JavaMail resource by using the
-<a href="reference-manual.html#delete-javamail-resource"><code>delete-javamail-resource</code></a> subcommands.</p>
+<p>Delete a Jakarta Mail resource by using the
+<a href="reference-manual.html#delete-mail-resource"><code>delete-mail-resource</code></a> subcommands.</p>
 </li>
 <li>
 <p>To apply your changes, restart Eclipse GlassFish.</p>
@@ -24816,16 +24816,16 @@ a JavaMail session resource.</p>
 </ol>
 </div>
 <div id="gipcd" class="paragraph">
-<p>Example 16-4 Deleting a JavaMail Resource</p>
+<p>Example 16-4 Deleting a Jakarta Mail Resource</p>
 </div>
 <div class="paragraph">
-<p>This example deletes the JavaMail session resource named
+<p>This example deletes the Jakarta Mail session resource named
 <code>mail/MyMailSession</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; delete-javamail-resource mail/MyMailSession
-Command delete-javamail-resource executed successfully.</code></pre>
+<pre class="CodeRay highlight"><code>asadmin&gt; delete-mail-resource mail/MyMailSession
+Command delete-mail-resource executed successfully.</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -24833,7 +24833,7 @@ Command delete-javamail-resource executed successfully.</code></pre>
 </div>
 <div class="paragraph">
 <p>You can also view the full syntax and options of the subcommand by
-typing <code>asadmin help delete-javamail-resource</code> at the command line.</p>
+typing <code>asadmin help delete-mail-resource</code> at the command line.</p>
 </div>
 </div>
 </div>
@@ -28801,7 +28801,7 @@ references for the Jakarta EE resources used by the Eclipse GlassFish.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java:comp/env/mail</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JavaMail Session Connection Factories</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jakarta Mail Session Connection Factories</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java:comp/env/url</code></p></td>
@@ -30502,7 +30502,7 @@ this release of the Eclipse GlassFish 7 software.</p>
 <p><a href="#internet-connectivity-subcommands">Internet Connectivity Subcommands</a></p>
 </li>
 <li>
-<p><a href="#javamail-subcommands">JavaMail Subcommands</a></p>
+<p><a href="#jakarta-mail-subcommands">Jakarta Mail Subcommands</a></p>
 </li>
 <li>
 <p><a href="#jms-subcommands">JMS Subcommands</a></p>
@@ -31231,26 +31231,26 @@ List Virtual Servers</a>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="javamail-subcommands"><a class="anchor" href="#javamail-subcommands"></a>JavaMail Subcommands</h3>
+<h3 id="jakarta-mail-subcommands"><a class="anchor" href="#jakarta-mail-subcommands"></a>Jakarta Mail Subcommands</h3>
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><a href="reference-manual.html#create-javamail-resource"><code>create-javamail-resource</code></a></dt>
+<dt class="hdlist1"><a href="reference-manual.html#create-mail-resource"><code>create-mail-resource</code></a></dt>
 <dd>
-<p>Creates a JavaMail session resource. Supported in remote mode only.
+<p>Creates a Jakarta Mail session resource. Supported in remote mode only.
 For procedural information in this guide, see
-<a href="#to-create-a-javamail-resource">To Create a JavaMail Resource</a>.</p>
+<a href="#to-create-a-jakarta-mail-resource">To Create a Jakarta Mail Resource</a>.</p>
 </dd>
-<dt class="hdlist1"><a href="reference-manual.html#delete-javamail-resource"><code>delete-javamail-resource</code></a></dt>
+<dt class="hdlist1"><a href="reference-manual.html#delete-mail-resource"><code>delete-mail-resource</code></a></dt>
 <dd>
-<p>Deletes a JavaMail session resource. Supported in remote mode only.
+<p>Deletes a Jakarta Mail session resource. Supported in remote mode only.
 For procedural information in this guide, see
-<a href="#to-delete-a-javamail-resource">To Delete a JavaMail Resource</a>.</p>
+<a href="#to-delete-a-jakarta-mail-resource">To Delete a Jakarta Mail Resource</a>.</p>
 </dd>
-<dt class="hdlist1"><a href="reference-manual.html#list-javamail-resources"><code>list-javamail-resources</code></a></dt>
+<dt class="hdlist1"><a href="reference-manual.html#list-mail-resources"><code>list-mail-resources</code></a></dt>
 <dd>
-<p>Creates JavaMail session resources. Supported in remote mode only. For
-procedural information in this guide, see <a href="#to-list-javamail-resources">To
-List JavaMail Resources</a>.</p>
+<p>Creates Jakarta Mail session resources. Supported in remote mode only. For
+procedural information in this guide, see <a href="#to-list-mail-resources">To
+List Jakarta Mail Resources</a>.</p>
 </dd>
 </dl>
 </div>
@@ -32160,16 +32160,16 @@ Security Maps for a Connector Connection Pool</a></p>
 <p><a href="#giped">15-4 Deleting an IIOP Listener</a></p>
 </li>
 <li>
-<p><a href="#gipfs">16-1 Creating a JavaMail Resource</a></p>
+<p><a href="#gipfs">16-1 Creating a Jakarta Mail Resource</a></p>
 </li>
 <li>
-<p><a href="#gipfe">16-2 Listing JavaMail Resources</a></p>
+<p><a href="#gipfe">16-2 Listing Jakarta Mail Resources</a></p>
 </li>
 <li>
-<p><a href="#giwjb">16-3 Updating a JavaMail Resource</a></p>
+<p><a href="#giwjb">16-3 Updating a Jakarta Mail Resource</a></p>
 </li>
 <li>
-<p><a href="#gipcd">16-4 Deleting a JavaMail Resource</a></p>
+<p><a href="#gipcd">16-4 Deleting a Jakarta Mail Resource</a></p>
 </li>
 <li>
 <p><a href="#gipbb">17-1 Creating a JMS Host</a></p>
@@ -32414,7 +32414,7 @@ Resource That Provides Class Loader Statistics</a></p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-02-27 14:43:39 UTC
+Last updated 2023-03-31 09:56:55 UTC
 </div>
 </div>
 </body>

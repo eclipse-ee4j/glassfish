@@ -27,11 +27,12 @@ public class MessageBeanInterfaceGenerator extends EjbOptionalIntfGenerator {
         super(loader);
     }
 
-    public Class<?> generateMessageBeanSubClass(Class<?> beanClass, Class<?> messageBeanInterface) throws Exception {
+    @SuppressWarnings("unchecked")
+    public <T> Class<? extends T> generateMessageBeanSubClass(Class<?> beanClass, Class<T> messageBeanInterface) throws Exception {
         final String generatedMessageBeanSubClassName = messageBeanInterface.getName() + "__Bean__";
 
         generateSubclass(beanClass, generatedMessageBeanSubClassName, messageBeanInterface, MessageEndpoint.class);
-        return loadClass(generatedMessageBeanSubClassName);
+        return (Class<? extends T>) loadClass(generatedMessageBeanSubClassName);
     }
 
     public Class<?> generateMessageBeanInterface(Class<?> beanClass) throws Exception {

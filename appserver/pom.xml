@@ -172,7 +172,7 @@
         <schema2beans.version>6.7</schema2beans.version>
         <derby.version>10.15.2.0</derby.version>
         <wsdl4j.version>1.6.3</wsdl4j.version>
-        <maven-rar-plugin.version>2.4</maven-rar-plugin.version>
+        <maven-rar-plugin.version>3.0.0</maven-rar-plugin.version>
 
         <product.name>Eclipse GlassFish</product.name>
         <product.name.abbreviation>GF</product.name.abbreviation>

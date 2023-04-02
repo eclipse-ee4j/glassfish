@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -1131,7 +1131,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
             }
         }
         if (method.isDefault()) {
-            throw new IllegalArgumentException("Default methods are not supported for proxies. Method: " + method);
+            return ProxyHelper.invokeDefault(proxy, method, args);
         }
         if (method.getAnnotation(DuckTyped.class) != null) {
             return invokeDuckMethod(method, proxy, args);

@@ -892,11 +892,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
         }
         SentinelInputStream[] toClose = streams.toArray(new SentinelInputStream[streams.size()]);
         for (SentinelInputStream s : toClose) {
-            try {
-                s.closeWithWarning();
-            } catch (IOException ioe) {
-                _logger.log(Level.WARNING, CULoggerInfo.exceptionClosingStream, ioe);
-            }
+            s.closeWithWarning();
         }
         streams.clear();
     }
@@ -1196,7 +1192,6 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
 
     }
 
-
     /**
      * Wraps all InputStreams returned by this class loader to report when
      * a finalizer is run before the stream has been closed.  This helps
@@ -1206,7 +1201,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
      */
     protected final class SentinelInputStream extends FilterInputStream {
         private volatile boolean closed = false;
-        private final Throwable throwable;
+        private volatile Throwable throwable;
 
         /**
          * Constructs new FilteredInputStream which reports InputStreams not closed properly.
@@ -1238,15 +1233,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
          */
         @Override
         protected void finalize() throws Throwable {
-            if (!closed && this.in != null) {
-                try {
-                    in.close();
-                } catch (IOException ignored) {
-                    // Cannot do anything here.
-                }
-                //Well, give them a stack trace!
-                report();
-            }
+            closeWithWarning();
             super.finalize();
         }
 
@@ -1254,25 +1241,38 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
             if (closed) {
                 return;
             }
+
             // race condition with above check, but should have no harmful effects
             closed = true;
+            throwable = null;
             getStreams().remove(this);
             super.close();
         }
 
-        private void closeWithWarning() throws IOException {
-            _close();
-            report();
+        private void closeWithWarning() {
+            if (closed) {
+                return;
+            }
+
+            // stores the internal Throwable as it will be set to null in the _close method
+            Throwable localThrowable = this.throwable;
+
+            try {
+                _close();
+            } catch (IOException ioe) {
+                _logger.log(Level.WARNING, CULoggerInfo.exceptionClosingStream, ioe);
+            }
+
+            report(localThrowable);
         }
 
         /**
          * Report "left-overs"!
          */
-        private void report(){
-            _logger.log(Level.WARNING, CULoggerInfo.inputStreamFinalized, this.throwable);
+        private void report(Throwable localThrowable) {
+            _logger.log(Level.WARNING, CULoggerInfo.inputStreamFinalized, localThrowable);
         }
     }
-
 
     /**
      * To properly close streams obtained through URL.getResource().getStream():

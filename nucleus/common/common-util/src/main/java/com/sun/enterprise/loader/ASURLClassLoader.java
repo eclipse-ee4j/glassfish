@@ -51,15 +51,15 @@ import java.security.cert.Certificate;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
@@ -89,13 +89,13 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
     implements JasperAdapter, InstrumentableClassLoader, PreDestroy, DDPermissionsLoader {
 
     /** logger for this class */
-    private static final Logger _logger=CULoggerInfo.getLogger();
+    private static final Logger _logger = CULoggerInfo.getLogger();
 
     /**
      * list of url entries of this class loader. Using LinkedHashSet instead of original ArrayList
      * for faster search.
      */
-    private final Set<URLEntry> urlSet = Collections.synchronizedSet(new LinkedHashSet<URLEntry>());
+    private final Set<URLEntry> urlSet = Collections.synchronizedSet(new LinkedHashSet<>());
 
     /** cache of not found resources */
     private final Map<String, String> notFoundResources = new ConcurrentHashMap<>();
@@ -118,7 +118,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
     private volatile String doneSnapshot;
 
     /** streams opened by this loader */
-    private final Vector<SentinelInputStream> streams = new Vector<>();
+    private final List<SentinelInputStream> streams = Collections.synchronizedList(new ArrayList<>(16));
 
     private final ArrayList<ClassFileTransformer> transformers = new ArrayList<>(1);
 
@@ -242,10 +242,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
             appendURL(file.toURI().toURL());
         } catch (MalformedURLException mue) {
             _logger.log(Level.SEVERE, CULoggerInfo.getString(CULoggerInfo.badUrlEntry, file.toURI()), mue);
-
-            IOException ioe = new IOException();
-            ioe.initCause(mue);
-            throw ioe;
+            throw new IOException(mue);
         }
     }
 
@@ -319,7 +316,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
             url = new URL[this.urlSet.size()];
             int i = 0;
             for (URLEntry urlEntry : urlSet) {
-                url[i++] = (urlEntry).source;
+                url[i++] = urlEntry.source;
             }
         } else {
             url = new URL[0];
@@ -711,7 +708,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
         // Loop though the transformers here!!
         try {
             @SuppressWarnings("unchecked")
-            final ArrayList<ClassFileTransformer> xformers = (ArrayList<ClassFileTransformer>) transformers.clone();
+            final List<ClassFileTransformer> xformers = (ArrayList<ClassFileTransformer>) transformers.clone();
             for (final ClassFileTransformer transformer : xformers) {
                 // see javadocs of transform().
                 // It expects class name as java/lang/Object
@@ -750,7 +747,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
      * @return class bytes as well protection domain information
      * @throws ClassNotFoundException
      */
-    protected synchronized ClassData findClassData(String name) throws ClassNotFoundException {
+    private synchronized ClassData findClassData(String name) throws ClassNotFoundException {
         if (doneCalled) {
             ClassNotFoundException exception = new ClassNotFoundException(name);
             _logger.log(Level.WARNING, CULoggerInfo.getString(CULoggerInfo.findClassAfterDone, name, this), exception);
@@ -795,24 +792,15 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
      * @throws IOException if an i/o error
      */
     private byte[] getClassData(InputStream istream) throws IOException {
-        BufferedInputStream bstream = new BufferedInputStream(istream);
+        int num;
         byte[] buf = new byte[4096];
-        ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        int num = 0;
-        try {
+        try(BufferedInputStream bstream = new BufferedInputStream(istream);
+            ByteArrayOutputStream bout = new ByteArrayOutputStream()) {
             while( (num = bstream.read(buf)) != -1) {
                 bout.write(buf, 0, num);
             }
-        } finally {
-            try {
-                bstream.close();
-            } catch (IOException closeIOE) {
-                ASURLClassLoader._logger.log(INFO,
-                        CULoggerInfo.exceptionInASURLClassLoader, closeIOE);
-            }
+            return bout.toByteArray();
         }
-
-        return bout.toByteArray();
     }
 
 
@@ -874,7 +862,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
      *
      * @return Vector<SentinelInputStream> holding open streams
      */
-    private Vector<SentinelInputStream> getStreams() {
+    private Collection<SentinelInputStream> getStreams() {
         return streams;
     }
 
@@ -887,11 +875,9 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
      * Must be synchnronized to (a) avoid race condition checking 'streams'.
      */
     private synchronized void closeOpenStreams() {
-        if (streams == null) {
-            return;
-        }
-        SentinelInputStream[] toClose = streams.toArray(new SentinelInputStream[streams.size()]);
-        for (SentinelInputStream s : toClose) {
+        //copy is needed because closeWithWarning removes the instance from stream
+        List<SentinelInputStream> streamsCopy = new ArrayList<>(streams);
+        for (SentinelInputStream s : streamsCopy) {
             s.closeWithWarning();
         }
         streams.clear();
@@ -993,7 +979,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
         volatile boolean isJar = false;
 
         /** ensure thread visibility by making it 'volatile' */
-        volatile Hashtable<String, String> table = null;
+        volatile HashMap<String, String> table = null;
 
         /**
          * ProtectionDomain with signers if jar is signed,
@@ -1001,30 +987,28 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
          */
         volatile ProtectionDomain pd = null;
 
-        URLEntry(URL url) throws IOException {
+        public URLEntry(URL url) throws IOException {
             source = url;
             init();
         }
 
-
-        void init() throws IOException {
+        private void init() throws IOException {
             try {
                 file = new File(source.toURI());
-                isJar = file.isFile();
-
-                if (isJar) {
-                    zip = new ProtectedJarFile(file);
-                }
-
-                table = new Hashtable<>();
             } catch (URISyntaxException use) {
-                IOException ioe= new IOException();
-                ioe.initCause(use);
-                throw ioe;
+                throw new IOException(use);
             }
+
+            isJar = file.isFile();
+
+            if (isJar) {
+                zip = new ProtectedJarFile(file);
+            }
+
+            table = new HashMap<>();
         }
 
-        private void fillTable(File f, Hashtable t, String parent) throws IOException {
+        private void fillTable(File f, HashMap<String, String> t, String parent) throws IOException {
             String localName = parent.isEmpty() ? "" : parent + "/";
             File[] children = f.listFiles();
             for (File child : children) {
@@ -1039,12 +1023,12 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
          *Invokes fillTable for subdirectories which in turn invokes processFile
          *recursively.
          *@param fileToProcess the File to be processed
-         *@param t the Hashtable that holds the files the loader knows about
+         *@param t the HashMap that holds the files the loader knows about
          *@param parentLocalName prefix to be used for the full path; should be
          *non-empty only for recursive invocations
          *@throws IOException in case of errors working with the fileToProcess
          */
-        private void processFile(File fileToProcess, Hashtable t, String parentLocalName) throws IOException {
+        private void processFile(File fileToProcess, HashMap<String, String> t, String parentLocalName) throws IOException {
             String key = parentLocalName + fileToProcess.getName();
             if (fileToProcess.isFile()) {
                 t.put(key, key);
@@ -1054,10 +1038,10 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
         }
 
 
-        boolean hasItem(String item) {
+        private boolean hasItem(String item) {
             // in the case of ejbc stub compilation, asurlclassloader is created before stubs
             // gets generated, thus we need to return true for this case.
-            if (table.size() == 0) {
+            if (table.isEmpty()) {
                 return true;
             }
 
@@ -1069,7 +1053,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
              *the file.  If the file is now present but was not when the loader
              *was created, add an entry for the file in the table.
              */
-            boolean result = false;
+            boolean result;
             String target = item;
             // special handling
             if (item.startsWith("./")) {
@@ -1513,7 +1497,6 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
         protected Enumeration<URL> findResources(String name) throws IOException {
             return delegate.findResources(name);
         }
-
     }
 }
 

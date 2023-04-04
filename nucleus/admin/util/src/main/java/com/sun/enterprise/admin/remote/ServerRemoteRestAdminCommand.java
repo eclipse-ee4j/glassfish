@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -63,7 +64,7 @@ public class ServerRemoteRestAdminCommand extends RemoteRestAdminCommand {
         final Domain domain = habitat.getService(Domain.class);
         secureAdmin = domain.getSecureAdmin();
         serverEnv = habitat.getService(ServerEnvironment.class);
-        this.secure = SecureAdmin.Util.isEnabled(secureAdmin);
+        this.secure = SecureAdmin.isEnabled(secureAdmin);
         domainPasswordAliasStore = habitat.getService(DomainScopedPasswordAliasStore.class);
         setInteractive(false);
     }
@@ -77,7 +78,7 @@ public class ServerRemoteRestAdminCommand extends RemoteRestAdminCommand {
          * and password, is used for process-to-process authentication.
          */
         try {
-            final String certAlias = SecureAdmin.Util.isUsingUsernamePasswordAuth(secureAdmin) ? null : getCertAlias();
+            final String certAlias = SecureAdmin.isUsingUsernamePasswordAuth(secureAdmin) ? null : getCertAlias();
             return new HttpConnectorAddress(host, port,
                     certAlias == null ? null : sslUtils().getAdminSocketFactory(certAlias, SSL_SOCKET_PROTOCOL));
         } catch (Exception ex) {
@@ -88,8 +89,8 @@ public class ServerRemoteRestAdminCommand extends RemoteRestAdminCommand {
     @Override
     protected synchronized AuthenticationInfo authenticationInfo() {
         AuthenticationInfo result = null;
-        if (SecureAdmin.Util.isUsingUsernamePasswordAuth(secureAdmin)) {
-            final SecureAdminInternalUser secureAdminInternalUser = SecureAdmin.Util.secureAdminInternalUser(secureAdmin);
+        if (SecureAdmin.isUsingUsernamePasswordAuth(secureAdmin)) {
+            final SecureAdminInternalUser secureAdminInternalUser = SecureAdmin.secureAdminInternalUser(secureAdmin);
             if (secureAdminInternalUser != null) {
                 try {
                     result = new AuthenticationInfo(secureAdminInternalUser.getUsername(),
@@ -110,14 +111,14 @@ public class ServerRemoteRestAdminCommand extends RemoteRestAdminCommand {
      */
     @Override
     protected synchronized void addAdditionalHeaders(final URLConnection urlConnection) {
-        final String indicatorValue = SecureAdmin.Util.configuredAdminIndicator(secureAdmin);
+        final String indicatorValue = SecureAdmin.configuredAdminIndicator(secureAdmin);
         if (indicatorValue != null) {
-            urlConnection.setRequestProperty(SecureAdmin.Util.ADMIN_INDICATOR_HEADER_NAME, indicatorValue);
+            urlConnection.setRequestProperty(SecureAdmin.ADMIN_INDICATOR_HEADER_NAME, indicatorValue);
         }
     }
 
     private synchronized String getCertAlias() {
-        return (serverEnv.isDas() ? SecureAdmin.Util.DASAlias(secureAdmin) : SecureAdmin.Util.instanceAlias(secureAdmin));
+        return (serverEnv.isDas() ? SecureAdmin.DASAlias(secureAdmin) : SecureAdmin.instanceAlias(secureAdmin));
     }
 
     private synchronized SSLUtils sslUtils() {

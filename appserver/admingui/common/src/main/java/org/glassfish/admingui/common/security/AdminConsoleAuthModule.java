@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation. All rights reserved.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation. All rights reserved.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -130,7 +130,7 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
 
             final String host = adminListener.getAddress();
             // Save the REST URL we need to authenticate the user.
-            this.restURL = (SecureAdmin.Util.isEnabled(secureAdmin) ? "https://" : "http://")
+            this.restURL = (SecureAdmin.isEnabled(secureAdmin) ? "https://" : "http://")
                     + (host.equals("0.0.0.0") ? "localhost" : host) + ":" + adminListener.getPort() + "/management/sessions";
         }
     }

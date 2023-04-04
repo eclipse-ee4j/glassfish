@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -198,7 +198,7 @@ public class CreateFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
 
         //Issue 17525 Fix - Check for null passwords for admin-realm if secureadmin is enabled
         secureAdmin = domain.getSecureAdmin();
-        if ((SecureAdmin.Util.isEnabled(secureAdmin)) && (authRealmName.equals(adminService.getAuthRealmName()))) {
+        if ((SecureAdmin.isEnabled(secureAdmin)) && (authRealmName.equals(adminService.getAuthRealmName()))) {
             if (password.isEmpty()) {
                 report.setMessage(localStrings.getLocalString("null_empty_password", "The admin user password is null or empty"));
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);

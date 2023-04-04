@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -991,7 +992,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
                      * If this request is for metadata then we expect to reuse
                      * the auth token.
                      */
-                    urlConnection.setRequestProperty(SecureAdmin.Util.ADMIN_ONE_TIME_AUTH_TOKEN_HEADER_NAME,
+                    urlConnection.setRequestProperty(SecureAdmin.ADMIN_ONE_TIME_AUTH_TOKEN_HEADER_NAME,
                             (isForMetadata ? AuthTokenManager.markTokenForReuse(authToken) : authToken));
                 }
                 if (commandModel != null && isCommandModelFromCache() && commandModel instanceof CachedCommandModel) {

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -921,7 +922,7 @@ public class RestUtil {
 
             final SSLContext sslContext = habitat
                     .<SSLUtils>getService(SSLUtils.class)
-                    .getAdminSSLContext(SecureAdmin.Util.DASAlias(secureAdmin), null);
+                    .getAdminSSLContext(SecureAdmin.DASAlias(secureAdmin), null);
 
             // Instruct Jersey to use HostNameVerifier and SSLContext provided by us.
             clientBuilder

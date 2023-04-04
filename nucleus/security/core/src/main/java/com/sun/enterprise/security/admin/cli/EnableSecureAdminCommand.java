@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -92,10 +93,10 @@ import jakarta.inject.Inject;
 @AccessRequired(resource = "domain/secure-admin", action = "enable")
 public class EnableSecureAdminCommand extends SecureAdminCommand {
 
-    @Param(optional = true, defaultValue = SecureAdmin.Duck.DEFAULT_ADMIN_ALIAS)
+    @Param(optional = true, defaultValue = SecureAdmin.DEFAULT_ADMIN_ALIAS)
     public String adminalias;
 
-    @Param(optional = true, defaultValue = SecureAdmin.Duck.DEFAULT_INSTANCE_ALIAS)
+    @Param(optional = true, defaultValue = SecureAdmin.DEFAULT_INSTANCE_ALIAS)
     public String instancealias;
 
     @Inject
@@ -186,8 +187,8 @@ public class EnableSecureAdminCommand extends SecureAdminCommand {
          */
         try {
             final List<String> badAliases = new ArrayList<String>();
-            secureAdmin_w.setDasAlias(processAlias(adminalias, SecureAdmin.Duck.DEFAULT_ADMIN_ALIAS, secureAdmin_w, badAliases));
-            secureAdmin_w.setInstanceAlias(processAlias(instancealias, SecureAdmin.Duck.DEFAULT_INSTANCE_ALIAS, secureAdmin_w, badAliases));
+            secureAdmin_w.setDasAlias(processAlias(adminalias, SecureAdmin.DEFAULT_ADMIN_ALIAS, secureAdmin_w, badAliases));
+            secureAdmin_w.setInstanceAlias(processAlias(instancealias, SecureAdmin.DEFAULT_INSTANCE_ALIAS, secureAdmin_w, badAliases));
 
             ensureSpecialAdminIndicatorIsUnique(secureAdmin_w);
 
@@ -234,7 +235,7 @@ public class EnableSecureAdminCommand extends SecureAdminCommand {
     }
 
     private void ensureSpecialAdminIndicatorIsUnique(final SecureAdmin secureAdmin_w) {
-        if (secureAdmin_w.getSpecialAdminIndicator().equals(SecureAdmin.Util.ADMIN_INDICATOR_DEFAULT_VALUE)) {
+        if (secureAdmin_w.getSpecialAdminIndicator().equals(SecureAdmin.ADMIN_INDICATOR_DEFAULT_VALUE)) {
             /*
              * Set the special admin indicator to a unique identifier.
              */

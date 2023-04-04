@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -141,10 +142,10 @@ public class SecureAdminClientManager {
             return;
         }
         secureAdmin = domain.getSecureAdmin();
-        isEnabled = SecureAdmin.Util.isEnabled(secureAdmin);
-        configuredAdminIndicator = SecureAdmin.Util.configuredAdminIndicator(secureAdmin);
+        isEnabled = SecureAdmin.isEnabled(secureAdmin);
+        configuredAdminIndicator = SecureAdmin.configuredAdminIndicator(secureAdmin);
         if (isEnabled) {
-            instanceAlias = SecureAdmin.Util.instanceAlias(secureAdmin);
+            instanceAlias = SecureAdmin.instanceAlias(secureAdmin);
             logger.fine("SecureAdminClientManager: secure admin is enabled");
         } else {
             logger.fine("SecureAdminClientManager: secure admin is disabled");
@@ -155,7 +156,7 @@ public class SecureAdminClientManager {
          * RemoteAdminCommand can get it using the static accessor to
          * prepare the outbound admin request.
          */
-        configuredAdminIndicator = SecureAdmin.Util.configuredAdminIndicator(secureAdmin);
+        configuredAdminIndicator = SecureAdmin.configuredAdminIndicator(secureAdmin);
 
         if (isEnabled) {
             try {

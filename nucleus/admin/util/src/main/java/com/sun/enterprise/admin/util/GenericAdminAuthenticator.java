@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -273,7 +274,7 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
          * Accept the request if secure admin is enabled or if the
          * request is local.
          */
-        if (SecureAdmin.Util.isEnabled(secureAdmin) || NetUtils.isThisHostLocal(host)) {
+        if (SecureAdmin.isEnabled(secureAdmin) || NetUtils.isThisHostLocal(host)) {
             return;
         }
         throw new RemoteAdminAccessException();
@@ -308,7 +309,7 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
 
     private Subject consumeTokenIfPresent(final Request req) {
         Subject result = null;
-        final String token = req.getHeader(SecureAdmin.Util.ADMIN_ONE_TIME_AUTH_TOKEN_HEADER_NAME);
+        final String token = req.getHeader(SecureAdmin.ADMIN_ONE_TIME_AUTH_TOKEN_HEADER_NAME);
         if (token != null) {
             result = authTokenManager.consumeToken(token);
         }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -95,7 +96,7 @@ public class ChangeAdminPassword implements AdminCommand, AdminCommandSecurity.P
         final ActionReport report = context.getActionReport();
         //Issue 17513 Fix - Check for null passwords if secureadmin is enabled
         secureAdmin = domain.getSecureAdmin();
-        if (SecureAdmin.Util.isEnabled(secureAdmin)) {
+        if (SecureAdmin.isEnabled(secureAdmin)) {
             if ((newpassword == null) || (newpassword.isEmpty())) {
                 report.setMessage(localStrings.getLocalString("null_empty_password", "The new password is null or empty"));
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);

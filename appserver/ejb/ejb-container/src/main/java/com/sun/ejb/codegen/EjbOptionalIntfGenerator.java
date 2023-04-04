@@ -23,7 +23,7 @@ import com.sun.enterprise.container.common.spi.util.SerializableObjectFactory;
 import com.sun.enterprise.deployment.util.TypeUtil;
 
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -33,61 +33,54 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import jakarta.inject.Inject;
-import org.glassfish.deployment.common.DeploymentException;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
-import org.objectweb.asm.commons.GeneratorAdapter;
-import org.objectweb.asm.commons.Method;
 
+import static com.sun.ejb.codegen.ClassGenerator.defineClass;
 import static org.objectweb.asm.Opcodes.ACC_ABSTRACT;
 import static org.objectweb.asm.Opcodes.ACC_INTERFACE;
 import static org.objectweb.asm.Opcodes.ACC_PRIVATE;
 import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
-import static org.objectweb.asm.Opcodes.ACONST_NULL;
 import static org.objectweb.asm.Opcodes.ALOAD;
 import static org.objectweb.asm.Opcodes.ARETURN;
+import static org.objectweb.asm.Opcodes.ATHROW;
 import static org.objectweb.asm.Opcodes.CHECKCAST;
 import static org.objectweb.asm.Opcodes.DUP;
 import static org.objectweb.asm.Opcodes.GETFIELD;
+import static org.objectweb.asm.Opcodes.ILOAD;
 import static org.objectweb.asm.Opcodes.INVOKEINTERFACE;
 import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
 import static org.objectweb.asm.Opcodes.INVOKESTATIC;
 import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
+import static org.objectweb.asm.Opcodes.IRETURN;
 import static org.objectweb.asm.Opcodes.NEW;
 import static org.objectweb.asm.Opcodes.PUTFIELD;
 import static org.objectweb.asm.Opcodes.RETURN;
 import static org.objectweb.asm.Opcodes.V11;
 
-public class EjbOptionalIntfGenerator {
-
-    private static final int INTF_FLAGS = ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES;
+public class EjbOptionalIntfGenerator extends BeanGeneratorBase {
 
     private static final String DELEGATE_FIELD_NAME = "__ejb31_delegate";
 
     private final Map<String, byte[]> classMap = new HashMap<>();
-
     private final ClassLoader loader;
-
     private ProtectionDomain protectionDomain;
 
     public EjbOptionalIntfGenerator(ClassLoader loader) {
         this.loader = loader;
     }
 
-
-    public Class loadClass(final String name) throws ClassNotFoundException {
-        Class clz = null;
+    public Class<?> loadClass(final String name) throws ClassNotFoundException {
+        Class<?> clz = null;
         try {
             clz = loader.loadClass(name);
         } catch (ClassNotFoundException cnfe) {
             final byte[] classData = classMap.get(name);
             if (classData != null) {
-                PrivilegedAction<Class<?>> action = () -> ClassGenerator.defineClass(loader, name, classData,
-                    protectionDomain);
+                PrivilegedAction<Class<?>> action = () -> defineClass(loader, name, classData, protectionDomain);
                 clz = AccessController.doPrivileged(action);
             }
         }
@@ -97,62 +90,58 @@ public class EjbOptionalIntfGenerator {
         return clz;
     }
 
-    public void generateOptionalLocalInterface(Class ejbClass, String intfClassName)
-        throws Exception {
-
+    public void generateOptionalLocalInterface(Class<?> ejbClass, String intfClassName) {
         generateInterface(ejbClass, intfClassName, Serializable.class);
     }
 
-    public void generateInterface(Class ejbClass, String intfClassName, final Class... interfaces) throws Exception {
+    public void generateInterface(Class<?> ejbClass, String intfClassName, final Class<?>... interfaces) {
         String[] interfaceNames = new String[interfaces.length];
         for (int i = 0; i < interfaces.length; i++) {
-            interfaceNames[i] = Type.getType(interfaces[i]).getInternalName();
+            interfaceNames[i] = Type.getInternalName(interfaces[i]);
         }
 
         if (protectionDomain == null) {
             protectionDomain = ejbClass.getProtectionDomain();
         }
 
-        ClassWriter cw = new ClassWriter(INTF_FLAGS);
+        ClassWriter cw = new ClassWriter(0);
 
-        ClassVisitor tv = cw;
-        String intfInternalName = intfClassName.replace('.', '/');
-        tv.visit(V11, ACC_PUBLIC + ACC_ABSTRACT + ACC_INTERFACE,
-                intfInternalName, null,
-                Type.getType(Object.class).getInternalName(),
-                interfaceNames );
+        cw.visit(V11,
+                ACC_PUBLIC + ACC_ABSTRACT + ACC_INTERFACE,
+                intfClassName.replace('.', '/'),
+                null,
+                "java/lang/Object",
+                interfaceNames);
 
-        for (java.lang.reflect.Method m : ejbClass.getMethods()) {
-            if (qualifiedAsBeanMethod(m)) {
-                generateInterfaceMethod(tv, m);
+        for (Method method : ejbClass.getMethods()) {
+            if (qualifiedAsBeanMethod(method)) {
+                generateInterfaceMethod(cw, method);
             }
         }
 
-        tv.visitEnd();
+        cw.visitEnd();
 
-        byte[] classData = cw.toByteArray();
-        classMap.put(intfClassName, classData);
+        classMap.put(intfClassName, cw.toByteArray());
     }
 
     /**
      * Determines if a method from a bean class can be considered as a business
      * method for EJB of no-interface view.
-     * @param m a public method
+     * @param method a public method
      * @return true if m can be included as a bean business method.
      */
-    private boolean qualifiedAsBeanMethod(java.lang.reflect.Method m) {
-        if (m.getDeclaringClass() == Object.class) {
+    private boolean qualifiedAsBeanMethod(Method method) {
+        if (method.getDeclaringClass() == Object.class) {
             return false;
         }
-        int mod = m.getModifiers();
-        return !Modifier.isStatic(mod) && !Modifier.isFinal(mod);
+        int modifiers = method.getModifiers();
+        return !Modifier.isStatic(modifiers) && !Modifier.isFinal(modifiers);
     }
 
-    private boolean hasSameSignatureAsExisting(java.lang.reflect.Method toMatch,
-                                               Set<java.lang.reflect.Method> methods) {
+    private boolean hasSameSignatureAsExisting(Method methodToMatch, Set<Method> methods) {
         boolean sameSignature = false;
-        for(java.lang.reflect.Method m : methods) {
-            if( TypeUtil.sameMethodSignature(m, toMatch) ) {
+        for(Method method : methods) {
+            if( TypeUtil.sameMethodSignature(method, methodToMatch) ) {
                 sameSignature = true;
                 break;
             }
@@ -160,105 +149,63 @@ public class EjbOptionalIntfGenerator {
         return sameSignature;
     }
 
-
-    public void generateOptionalLocalInterfaceSubClass(Class superClass, String subClassName, Class delegateClass)
-        throws Exception {
+    public void generateOptionalLocalInterfaceSubClass(Class<?> superClass, String subClassName, Class<?> delegateClass) {
         generateSubclass(superClass, subClassName, delegateClass, IndirectlySerializable.class);
     }
 
+    public void generateSubclass(Class<?> superClass, String subClassName, Class<?> delegateClass, Class<?>... interfaces) {
+        String subClassInternalName = subClassName.replace('.', '/');
+        String fieldDesc = Type.getDescriptor(delegateClass);
 
-    public void generateSubclass(Class superClass, String subClassName, Class delegateClass, Class... interfaces)
-        throws Exception {
         if (protectionDomain == null) {
             protectionDomain = superClass.getProtectionDomain();
         }
 
-        ClassWriter cw = new ClassWriter(INTF_FLAGS);
-
-        ClassVisitor tv = cw;
+        ClassWriter cw = new ClassWriter(0);
 
         String[] interfaceNames = new String[interfaces.length + 1];
-        interfaceNames[0] = OptionalLocalInterfaceProvider.class.getName().replace('.', '/');
+        interfaceNames[0] = Type.getInternalName(OptionalLocalInterfaceProvider.class);
         for (int i = 0; i < interfaces.length; i++) {
-            interfaceNames[i+1] = interfaces[i].getName().replace('.', '/');
+            interfaceNames[i + 1] = Type.getInternalName(interfaces[i]);
         }
 
-        tv.visit(V11, ACC_PUBLIC, subClassName.replace('.', '/'), null,
-                Type.getType(superClass).getInternalName(), interfaceNames);
+        cw.visit(V11, ACC_PUBLIC, subClassInternalName, null, Type.getInternalName(superClass), interfaceNames);
 
-        String fldDesc = Type.getDescriptor(delegateClass);
-        FieldVisitor fv = tv.visitField(ACC_PRIVATE, DELEGATE_FIELD_NAME,
-                fldDesc, null, null);
-        fv.visitEnd();
+        generateDelegateField(cw, fieldDesc);
 
-        // Generate constructor. The EJB spec only allows no-arg constructors, but
-        // CDI added requirements that allow a single constructor to define
-        // parameters injected by CDI.
-        {
+        generateConstructor(cw, superClass, true);
 
-            Constructor[] ctors = superClass.getConstructors();
-            Constructor parentCtor = null;
-            for(Constructor ctor : ctors) {
-                if(ctor.getParameterTypes().length == 0) {
-                    parentCtor = ctor;    //exists the no-arg ctor, use it
-                    break;
-                } else if(ctor.isAnnotationPresent(Inject.class)) {
-                    parentCtor = ctor;
-                }
-            }
+        generateSetDelegateMethod(cw, delegateClass, subClassInternalName);
 
-            if (parentCtor == null) {
-                throw new DeploymentException("A class " + superClass.getName() + " doesn't have any appropriate constructor");
-            }
-
-            MethodVisitor cv = tv.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
-            cv.visitVarInsn(ALOAD, 0);
-
-            String paramTypeString = Type.getConstructorDescriptor(parentCtor);
-
-            int argCount = parentCtor.getParameterCount();
-            for (int i = 0; i < argCount; i++) {
-                cv.visitInsn(ACONST_NULL);
-            }
-
-            cv.visitMethodInsn(INVOKESPECIAL,  Type.getType(superClass).getInternalName(), "<init>", paramTypeString, false);
-            cv.visitInsn(RETURN);
-            cv.visitMaxs(argCount + 1, 1);
-        }
-
-        generateSetDelegateMethod(tv, delegateClass, subClassName);
-
-        for (Class anInterface : interfaces) {
-
+        for (Class<?> intf : interfaces) {
             // dblevins: Don't think we need this special case.
             // Should be covered by letting generateBeanMethod
             // handle the methods on IndirectlySerializable.
             //
             // Not sure where the related tests are to verify.
-            if (anInterface.equals(IndirectlySerializable.class)) {
-                generateGetSerializableObjectFactoryMethod(tv, fldDesc, subClassName.replace('.', '/'));
+            if (intf.equals(IndirectlySerializable.class)) {
+                generateGetSerializableObjectFactoryMethod(cw, fieldDesc, subClassInternalName);
                 continue;
             }
 
-            for (java.lang.reflect.Method method : anInterface.getMethods()) {
-                generateBeanMethod(tv, subClassName, method, delegateClass);
+            for (Method method : intf.getMethods()) {
+                generateBeanMethod(cw, subClassInternalName, method, delegateClass);
             }
         }
 
+        Set<Method> allMethods = new HashSet<>();
 
-        Set<java.lang.reflect.Method> allMethods = new HashSet<>();
-
-        for (java.lang.reflect.Method m : superClass.getMethods()) {
-            if (qualifiedAsBeanMethod(m)) {
-                generateBeanMethod(tv, subClassName, m, delegateClass);
+        for (Method method : superClass.getMethods()) {
+            if (qualifiedAsBeanMethod(method)) {
+                generateBeanMethod(cw, subClassInternalName, method, delegateClass);
             }
         }
 
-        for (Class clz = superClass; clz != Object.class; clz = clz.getSuperclass()) {
-            java.lang.reflect.Method[] beanMethods = clz.getDeclaredMethods();
-            for (java.lang.reflect.Method mth : beanMethods) {
-                if( !hasSameSignatureAsExisting(mth, allMethods)) {
-                    int modifiers = mth.getModifiers();
+        for (Class<?> clz = superClass; clz != Object.class; clz = clz.getSuperclass()) {
+            Method[] beanMethods = clz.getDeclaredMethods();
+            for (Method method : beanMethods) {
+                if(!hasSameSignatureAsExisting(method, allMethods)) {
+                    int modifiers = method.getModifiers();
                     boolean isPublic = Modifier.isPublic(modifiers);
                     boolean isPrivate = Modifier.isPrivate(modifiers);
                     boolean isProtected = Modifier.isProtected(modifiers);
@@ -267,157 +214,155 @@ public class EjbOptionalIntfGenerator {
                     boolean isStatic = Modifier.isStatic(modifiers);
 
                     if( (isPackage || isProtected) && !isStatic ) {
-                        generateNonAccessibleMethod(tv, mth);
+                        generateNonAccessibleMethod(cw, method);
                     }
-                    allMethods.add(mth);
+                    allMethods.add(method);
                 }
             }
         }
 
         // add toString() method if it was not overridden
-        java.lang.reflect.Method mth = Object.class.getDeclaredMethod("toString");
-        if (!hasSameSignatureAsExisting(mth, allMethods)) {
-            generateToStringBeanMethod(tv, superClass);
+        try {
+            Method method = Object.class.getDeclaredMethod("toString");
+            if (!hasSameSignatureAsExisting(method, allMethods)) {
+                generateToStringBeanMethod(cw, superClass);
+            }
+        } catch (NoSuchMethodException e) {
+            // Should never be thrown
+            throw new IllegalStateException(e);
         }
 
-        tv.visitEnd();
+        cw.visitEnd();
 
-        byte[] classData = cw.toByteArray();
-        classMap.put(subClassName, classData);
+        classMap.put(subClassName, cw.toByteArray());
     }
 
-
-    private static void generateInterfaceMethod(ClassVisitor cv, java.lang.reflect.Method m)
-        throws Exception {
-
-        String methodName = m.getName();
-        Type returnType = Type.getReturnType(m);
-        Type[] argTypes = Type.getArgumentTypes(m);
-
-        Method asmMethod = new Method(methodName, returnType, argTypes);
-        GeneratorAdapter cg = new GeneratorAdapter(ACC_PUBLIC + ACC_ABSTRACT,
-                asmMethod, null, getExceptionTypes(m), cv);
-        cg.endMethod();
-
+    private static void generateDelegateField(ClassVisitor cv, String fieldDesc) {
+        FieldVisitor fv = cv.visitField(ACC_PRIVATE, DELEGATE_FIELD_NAME, fieldDesc, null, null);
+        fv.visitEnd();
     }
 
-    private static void generateBeanMethod(ClassVisitor cv, String subClassName,
-                                           java.lang.reflect.Method m, Class delegateClass)
-        throws Exception {
-
-        String methodName = m.getName();
-        Type returnType = Type.getReturnType(m);
-        Type[] argTypes = Type.getArgumentTypes(m);
-        Method asmMethod = new Method(methodName, returnType, argTypes);
-
-        GeneratorAdapter mg = new GeneratorAdapter(ACC_PUBLIC, asmMethod, null,
-                getExceptionTypes(m), cv);
-        mg.loadThis();
-        mg.visitFieldInsn(GETFIELD, subClassName.replace('.', '/'),
-                DELEGATE_FIELD_NAME, Type.getType(delegateClass).getDescriptor());
-        mg.loadArgs();
-        mg.invokeInterface(Type.getType(delegateClass), asmMethod);
-        mg.returnValue();
-        mg.endMethod();
-
+    private static void generateInterfaceMethod(ClassVisitor cv, Method method) {
+        MethodVisitor mv = cv.visitMethod(ACC_PUBLIC + ACC_ABSTRACT,
+                method.getName(),
+                Type.getMethodDescriptor(method),
+                null,
+                getExceptions(method));
+        mv.visitEnd();
     }
 
-    private static void generateToStringBeanMethod(ClassVisitor cv, Class superClass)
-        throws Exception {
+    private static void generateBeanMethod(ClassVisitor cv, String subClassInternalName, Method method, Class<?> delegateClass) {
+        String methodName = method.getName();
+        String methodDesc = Type.getMethodDescriptor(method);
 
-        String toStringMethodName = "toString";
-        String toStringMethodDescriptor = "()Ljava/lang/String;";
-        String stringBuilder = "java/lang/StringBuilder";
-
-        MethodVisitor mv = cv.visitMethod(ACC_PUBLIC, toStringMethodName, toStringMethodDescriptor, null, null);
+        MethodVisitor mv = cv.visitMethod(ACC_PUBLIC, methodName, methodDesc, null, getExceptions(method));
+        mv.visitCode();
         mv.visitVarInsn(ALOAD, 0);
-        mv.visitTypeInsn(NEW, stringBuilder);
+        mv.visitFieldInsn(GETFIELD, subClassInternalName, DELEGATE_FIELD_NAME, Type.getDescriptor(delegateClass));
+
+        int varIndex = 1;
+        for (Type argumentType : Type.getArgumentTypes(methodDesc)) {
+            mv.visitVarInsn(argumentType.getOpcode(ILOAD), varIndex);
+            varIndex += argumentType.getSize();
+        }
+
+        mv.visitMethodInsn(INVOKEINTERFACE, Type.getInternalName(delegateClass), methodName, methodDesc, true);
+        mv.visitInsn(Type.getReturnType(methodDesc).getOpcode(IRETURN));
+        mv.visitMaxs(varIndex, varIndex);
+        mv.visitEnd();
+    }
+
+    private static void generateToStringBeanMethod(ClassVisitor cv, Class<?> superClass) {
+        MethodVisitor mv = cv.visitMethod(ACC_PUBLIC, "toString", "()Ljava/lang/String;", null, null);
+        mv.visitCode();
+        mv.visitTypeInsn(NEW, "java/lang/StringBuilder");
         mv.visitInsn(DUP);
-        mv.visitMethodInsn(INVOKESPECIAL, stringBuilder, "<init>", "()V", false);
         mv.visitLdcInsn(superClass.getName() + "@");
-        mv.visitMethodInsn(INVOKEVIRTUAL, stringBuilder, "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
+        mv.visitMethodInsn(INVOKESPECIAL,
+                "java/lang/StringBuilder",
+                "<init>",
+                "(Ljava/lang/String;)V",
+                false);
         mv.visitVarInsn(ALOAD, 0);
-        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Object", "hashCode", "()I", false);
-        mv.visitMethodInsn(INVOKESTATIC, "java/lang/Integer", "toHexString", "(I)Ljava/lang/String;", false);
-        mv.visitMethodInsn(INVOKEVIRTUAL, stringBuilder, "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
-        mv.visitMethodInsn(INVOKEVIRTUAL, stringBuilder, toStringMethodName, toStringMethodDescriptor, false);
+        mv.visitMethodInsn(INVOKEVIRTUAL,
+                "java/lang/Object",
+                "hashCode",
+                "()I",
+                false);
+        mv.visitMethodInsn(INVOKESTATIC,
+                "java/lang/Integer",
+                "toHexString",
+                "(I)Ljava/lang/String;",
+                false);
+        mv.visitMethodInsn(INVOKEVIRTUAL,
+                "java/lang/StringBuilder",
+                "append",
+                "(Ljava/lang/String;)Ljava/lang/StringBuilder;",
+                false);
+        mv.visitMethodInsn(INVOKEVIRTUAL,
+                "java/lang/StringBuilder",
+                "toString",
+                "()Ljava/lang/String;",
+                false);
         mv.visitInsn(ARETURN);
-        mv.visitMaxs(2, 1);
-
+        mv.visitMaxs(3, 1);
+        mv.visitEnd();
     }
 
-    private static void generateNonAccessibleMethod(ClassVisitor cv,
-                                           java.lang.reflect.Method m)
-        throws Exception {
+    // Only called for non-static Protected or Package access
+    private static void generateNonAccessibleMethod(ClassVisitor cv, Method method) {
+        String methodDesc = Type.getMethodDescriptor(method);
 
-        String methodName = m.getName();
-        Type returnType = Type.getReturnType(m);
-        Type[] argTypes = Type.getArgumentTypes(m);
-        Method asmMethod = new Method(methodName, returnType, argTypes);
-
-        // Only called for non-static Protected or Package access
-        int access =  ACC_PUBLIC;
-
-        GeneratorAdapter mg = new GeneratorAdapter(access, asmMethod, null,
-                getExceptionTypes(m), cv);
-
-        mg.throwException(Type.getType(jakarta.ejb.EJBException.class),
-                "Illegal non-business method access on no-interface view");
-
-        mg.returnValue();
-
-        mg.endMethod();
-
+        MethodVisitor mv = cv.visitMethod(ACC_PUBLIC, method.getName(), methodDesc, null, getExceptions(method));
+        mv.visitCode();
+        mv.visitTypeInsn(NEW, "jakarta/ejb/EJBException");
+        mv.visitInsn(DUP);
+        mv.visitLdcInsn("Illegal non-business method access on no-interface view");
+        mv.visitMethodInsn(INVOKESPECIAL,
+                "jakarta/ejb/EJBException",
+                "<init>",
+                "(Ljava/lang/String;)V",
+                false);
+        mv.visitInsn(ATHROW);
+        mv.visitMaxs(3, Type.getArgumentsAndReturnSizes(methodDesc) >> 2);
+        mv.visitEnd();
     }
 
-    private static void generateGetSerializableObjectFactoryMethod(ClassVisitor classVisitor,
-                                                                   String fieldDesc,
-                                                                   String classDesc) {
+    private static void generateGetSerializableObjectFactoryMethod(ClassVisitor cv, String fieldDesc, String classDesc) {
+        String methodName = "getSerializableObjectFactory";
+        String methodDesc = Type.getMethodDescriptor(Type.getType(SerializableObjectFactory.class));
+        String methodOwner = Type.getInternalName(IndirectlySerializable.class);
 
-        MethodVisitor cv = classVisitor.visitMethod(ACC_PUBLIC, "getSerializableObjectFactory",
-                "()L" + SerializableObjectFactory.class.getName().replace('.', '/') + ";", null, new String[] { "java/io/IOException" });
-        cv.visitVarInsn(ALOAD, 0);
-        cv.visitFieldInsn(GETFIELD, classDesc, DELEGATE_FIELD_NAME, fieldDesc);
-        cv.visitTypeInsn(CHECKCAST, IndirectlySerializable.class.getName().replace('.', '/'));
-        cv.visitMethodInsn(INVOKEINTERFACE,
-                IndirectlySerializable.class.getName().replace('.', '/'), "getSerializableObjectFactory",
-                "()L" + SerializableObjectFactory.class.getName().replace('.', '/') + ";", true);
-        cv.visitInsn(ARETURN);
-        cv.visitMaxs(1, 1);
+        MethodVisitor mv = cv.visitMethod(ACC_PUBLIC, methodName, methodDesc, null, new String[] {"java/io/IOException"});
+        mv.visitCode();
+        mv.visitVarInsn(ALOAD, 0);
+        mv.visitFieldInsn(GETFIELD, classDesc, DELEGATE_FIELD_NAME, fieldDesc);
+        mv.visitTypeInsn(CHECKCAST, methodOwner);
+        mv.visitMethodInsn(INVOKEINTERFACE, methodOwner, methodName, methodDesc, true);
+        mv.visitInsn(ARETURN);
+        mv.visitMaxs(1, 1);
+        mv.visitEnd();
     }
 
-
-    private static Type[] getExceptionTypes(java.lang.reflect.Method m) {
-        Class[] exceptions = m.getExceptionTypes();
-        Type[] eTypes = new Type[exceptions.length];
-        for (int i=0; i<exceptions.length; i++) {
-            eTypes[i] = Type.getType(exceptions[i]);
+    private static String[] getExceptions(Method method) {
+        Class<?>[] exceptionTypes = method.getExceptionTypes();
+        String[] exceptions = new String[exceptionTypes.length];
+        for (int i = 0; i < exceptionTypes.length; i++) {
+            exceptions[i] = Type.getInternalName(exceptionTypes[i]);
         }
 
-        return eTypes;
+        return exceptions;
     }
 
-    private static void generateSetDelegateMethod(ClassVisitor cv, Class delegateClass,
-                                                  String subClassName)
-        throws Exception {
-
-        Class optProxyClass = OptionalLocalInterfaceProvider.class;
-        java.lang.reflect.Method proxyMethod = optProxyClass.getMethod(
-                "setOptionalLocalIntfProxy", java.lang.reflect.Proxy.class);
-
-        String methodName = proxyMethod.getName();
-        Type returnType = Type.getReturnType(proxyMethod);
-        Type[] argTypes = Type.getArgumentTypes(proxyMethod);
-        Type[] eTypes = getExceptionTypes(proxyMethod);
-
-        Method asmMethod = new Method(methodName, returnType, argTypes);
-        GeneratorAdapter mg2 = new GeneratorAdapter(ACC_PUBLIC, asmMethod, null, eTypes, cv);
-        mg2.visitVarInsn(ALOAD, 0);
-        mg2.visitVarInsn(ALOAD, 1);
-        mg2.visitTypeInsn(CHECKCAST, delegateClass.getName().replace('.', '/'));
-        String delIntClassDesc = Type.getType(delegateClass).getDescriptor();
-        mg2.visitFieldInsn(PUTFIELD, subClassName.replace('.', '/'), DELEGATE_FIELD_NAME, delIntClassDesc);
-        mg2.returnValue();
-        mg2.endMethod();
+    private static void generateSetDelegateMethod(ClassVisitor cv, Class<?> delegateClass, String subClassInternalName) {
+        MethodVisitor mv = cv.visitMethod(ACC_PUBLIC, "setOptionalLocalIntfProxy", "(Ljava/lang/reflect/Proxy;)V", null, null);
+        mv.visitCode();
+        mv.visitVarInsn(ALOAD, 0);
+        mv.visitVarInsn(ALOAD, 1);
+        mv.visitTypeInsn(CHECKCAST, Type.getInternalName(delegateClass));
+        mv.visitFieldInsn(PUTFIELD, subClassInternalName, DELEGATE_FIELD_NAME, Type.getDescriptor(delegateClass));
+        mv.visitInsn(RETURN);
+        mv.visitMaxs(2, 2);
+        mv.visitEnd();
     }
 }

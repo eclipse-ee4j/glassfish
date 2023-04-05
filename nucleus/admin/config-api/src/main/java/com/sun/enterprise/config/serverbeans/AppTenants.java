@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +18,7 @@
 package com.sun.enterprise.config.serverbeans;
 
 import java.util.List;
+
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.DuckTyped;
@@ -33,16 +35,12 @@ public interface AppTenants extends ConfigBeanProxy {
     List<AppTenant> getAppTenant();
 
     @DuckTyped
-    AppTenant getAppTenant(String tenant);
-
-    class Duck {
-        public static AppTenant getAppTenant(final AppTenants instance, final String tenant) {
-            for (AppTenant candidate : instance.getAppTenant()) {
-                if (candidate.getTenant().equals(tenant)) {
-                    return candidate;
-                }
+    default AppTenant getAppTenant(String tenantName) {
+        for (AppTenant tenant : getAppTenant()) {
+            if (tenant.getTenant().equals(tenantName)) {
+                return tenant;
             }
-            return null;
         }
+        return null;
     }
 }

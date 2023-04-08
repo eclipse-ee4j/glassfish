@@ -160,4 +160,15 @@ public class LogRecord {
             writer.writeEndElement();
         }
     }
+
+    public void writeCsv(StringBuilder sb) {
+        sb.append(recordNumber).append(",");
+        sb.append(loggedDateTime == null ?
+                  "" : Long.toString(loggedDateTime.toInstant().toEpochMilli())).append(",");
+        sb.append(loggedLevel).append(",");
+        sb.append(productName).append(",");
+        sb.append(loggerName).append(",");
+        sb.append(nameValuePairs).append(",");
+        sb.append("\"").append(message.replace("\"", "\"\"")).append("\"");
+    }
 }

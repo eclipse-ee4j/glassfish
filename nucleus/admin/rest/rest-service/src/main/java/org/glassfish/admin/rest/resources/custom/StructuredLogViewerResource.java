@@ -26,6 +26,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Response;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -41,7 +42,6 @@ import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.xml.stream.XMLStreamWriter;
 
-import jakarta.ws.rs.core.Response;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.glassfish.admin.rest.logviewer.LogRecord;
@@ -162,14 +162,12 @@ public class StructuredLogViewerResource {
             case TEXT_PLAIN:
                 StringBuilder sb = new StringBuilder();
 
-                sb.append("{\"records\": [");
-                String separator = "";
+                String lineSeparator = "";
                 for (List<Serializable> logRecord : logRecords) {
-                    sb.append(separator);
-                    sb.append(new LogRecord(logRecord).toJSONObject().toString());
-                    separator = ",";
+                    sb.append(lineSeparator);
+                    new LogRecord(logRecord).writeCsv(sb);
+                    lineSeparator = "\r\n";
                 }
-                sb.append("]}\n");
 
                 entity = sb;
                 break;

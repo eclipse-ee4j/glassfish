@@ -108,14 +108,12 @@ public class LogNamesResource {
                 StringBuilder sb = new StringBuilder();
 
                 String separator = "";
-                sb.append("{\"InstanceLogFileNames\": [");
                 // extract every record
-                for (String name : files) {
+                for (String file : files) {
                     sb.append(separator);
-                    sb.append("\"").append(name).append("\"");
+                    sb.append(file);
                     separator = ",";
                 }
-                sb.append("]}\n");
 
                 entity = sb;
                 break;

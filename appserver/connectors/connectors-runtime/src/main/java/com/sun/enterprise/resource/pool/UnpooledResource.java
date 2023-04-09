@@ -78,7 +78,7 @@ public class UnpooledResource extends ConnectionPool {
         try {
             handle = createSingleResource(alloc);
         } catch (PoolingException | RuntimeException ex) {
-            poolSize.decrement();
+            this.poolSize.decrement();
             throw ex;
         }
 

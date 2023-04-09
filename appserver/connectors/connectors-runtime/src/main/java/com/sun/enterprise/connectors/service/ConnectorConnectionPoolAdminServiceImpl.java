@@ -1087,11 +1087,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
         try {
             return poolMgr.flushConnectionPool(poolInfo);
         } catch (PoolingException ex) {
-            ConnectorRuntimeException e = new ConnectorRuntimeException(
-                ex.getLocalizedMessage() + ". Please check the server.log for more details.");
-            e.initCause(ex);
-            throw e;
-
+            throw new ConnectorRuntimeException("Flushing the connection pool " + poolInfo.getName() + " failed.", ex);
         }
     }
 

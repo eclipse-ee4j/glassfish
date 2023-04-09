@@ -66,9 +66,10 @@ public class PoolSizeTest {
         AtomicInteger increases = new AtomicInteger();
         AtomicInteger decreases = new AtomicInteger();
         PoolSize poolSize = new PoolSize(100);
-        ExecutorService threadPool = Executors.newFixedThreadPool(100);
-        List<Callable<Void>> tasks = new ArrayList<>(100000);
-        for (int i = 0; i < 1000; i++) {
+        ExecutorService threadPool = Executors.newFixedThreadPool(500);
+        int taskCount = 10000;
+        List<Callable<Void>> tasks = new ArrayList<>(taskCount);
+        for (int i = 0; i < taskCount; i++) {
             tasks.add(() -> {
                 poolSize.increment();
                 increases.incrementAndGet();

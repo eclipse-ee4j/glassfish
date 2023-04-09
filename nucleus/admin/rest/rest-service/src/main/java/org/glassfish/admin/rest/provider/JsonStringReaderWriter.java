@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,43 +23,51 @@ import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
+import jakarta.annotation.Priority;
+import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.ext.Provider;
 
-import jakarta.inject.Singleton;
-
 import org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider;
+
+import static jakarta.ws.rs.Priorities.USER;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 /**
  * Json String reader writer.
- * <p>
- * The whole purpose is to override (and effectively disable) JSON-B processing of {@link String} returned as
- * application/json.
+ *
+ * <p>The whole purpose is to override (and effectively disable) JSON-B processing of {@link String}
+ * returned as application/json.
  *
  * @author Pavel Bucek (pavel.bucek at oracle.com)
  */
 @Provider
 @Singleton
-@Produces("application/json")
-@Consumes("application/json")
+@Priority(USER - 500)
+@Produces(APPLICATION_JSON)
+@Consumes(APPLICATION_JSON)
 public class JsonStringReaderWriter extends AbstractMessageReaderWriterProvider<String> {
 
     @Override
-    public boolean isReadable(Class<?> type, Type genericType, Annotation annotations[], MediaType mediaType) {
+    public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         return type == String.class;
     }
 
     @Override
-    public String readFrom(Class<String> type, Type genericType, Annotation annotations[], MediaType mediaType,
-            MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException {
+    public String readFrom(Class<String> type,
+            Type genericType,
+            Annotation[] annotations,
+            MediaType mediaType,
+            MultivaluedMap<String, String> httpHeaders,
+            InputStream entityStream) throws IOException {
         return readFromAsString(entityStream, mediaType);
     }
 
     @Override
-    public boolean isWriteable(Class<?> type, Type genericType, Annotation annotations[], MediaType mediaType) {
+    public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         return type == String.class;
     }
 
@@ -68,8 +77,13 @@ public class JsonStringReaderWriter extends AbstractMessageReaderWriterProvider<
     }
 
     @Override
-    public void writeTo(String t, Class<?> type, Type genericType, Annotation annotations[], MediaType mediaType,
-            MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException {
-        writeToAsString(t, entityStream, mediaType);
+    public void writeTo(String entity,
+            Class<?> type,
+            Type genericType,
+            Annotation[] annotations,
+            MediaType mediaType,
+            MultivaluedMap<String, Object> httpHeaders,
+            OutputStream entityStream) throws IOException {
+        writeToAsString(entity, entityStream, mediaType);
     }
 }

@@ -24,6 +24,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.security.AccessController;
@@ -118,7 +119,11 @@ public class ConnectorsClassLoaderUtil {
                 if (processEnv.getProcessType().isEmbedded()) {
                     events.register(event -> {
                         if (event.is(EventTypes.PREPARE_SHUTDOWN)) {
-                            ccf.done();
+                            try {
+                                ccf.close();
+                            } catch(IOException ioe) {
+                                _logger.log(Level.WARNING, "error.closing.connector.classloader", ioe);
+                            }
                         }
                     });
                 }

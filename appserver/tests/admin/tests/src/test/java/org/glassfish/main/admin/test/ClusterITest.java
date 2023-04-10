@@ -23,10 +23,12 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -52,6 +54,7 @@ public class ClusterITest {
     private static final String URL1 = "http://localhost:" + PORT1;
     private static final String URL2 = "http://localhost:" + PORT2;
     private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
+    private static final AtomicBoolean INSTANCES_REACHABLE = new AtomicBoolean();
 
 
     @AfterAll
@@ -108,11 +111,13 @@ public class ClusterITest {
         assertThat(ASADMIN.exec("list-instances"), asadminOK());
         assertThat(getURL(URL1), stringContainsInOrder("GlassFish Server"));
         assertThat(getURL(URL2), stringContainsInOrder("GlassFish Server"));
+        INSTANCES_REACHABLE.set(true);
     }
 
     @Test
     @Order(5)
     public void stopInstancesTest() {
+        Assumptions.assumeTrue(INSTANCES_REACHABLE.get());
         assertThat(ASADMIN.exec("stop-local-instance", "--kill", INSTANCE_NAME_1), asadminOK());
         assertThat(ASADMIN.exec("stop-local-instance", "--kill", INSTANCE_NAME_2), asadminOK());
     }
@@ -120,6 +125,7 @@ public class ClusterITest {
     @Test
     @Order(6)
     public void deleteInstancesTest() {
+        Assumptions.assumeTrue(INSTANCES_REACHABLE.get());
         assertThat(ASADMIN.exec("delete-local-instance", INSTANCE_NAME_1), asadminOK());
         assertThat(ASADMIN.exec("delete-local-instance", INSTANCE_NAME_2), asadminOK());
     }
@@ -127,6 +133,7 @@ public class ClusterITest {
     @Test
     @Order(7)
     public void deleteClusterTest() {
+        Assumptions.assumeTrue(INSTANCES_REACHABLE.get());
         assertThat(ASADMIN.exec("delete-cluster", CLUSTER_NAME), asadminOK());
     }
 

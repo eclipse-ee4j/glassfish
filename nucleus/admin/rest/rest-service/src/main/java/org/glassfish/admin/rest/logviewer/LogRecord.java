@@ -33,7 +33,6 @@ import org.codehaus.jettison.json.JSONObject;
  *
  * @author ludo
  */
-@SuppressWarnings("unused")
 public class LogRecord {
 
     private long recordNumber;

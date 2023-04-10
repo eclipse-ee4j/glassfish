@@ -179,7 +179,6 @@ public class StructuredLogViewerResource {
         return Response.ok(entity.toString(), type).build();
     }
 
-    @SuppressWarnings("unused")
     private static final class Params {
 
         @QueryParam("logFileName")

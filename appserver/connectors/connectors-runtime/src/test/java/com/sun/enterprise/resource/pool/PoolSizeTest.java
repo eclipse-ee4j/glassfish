@@ -29,6 +29,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -42,18 +44,20 @@ public class PoolSizeTest {
 
     @Test
     void increaseAndDecrease() throws Exception {
-        PoolSize poolSize = new PoolSize(1);
-        assertEquals(1, poolSize.getCapacity());
-        poolSize.decrement();
-        assertEquals(0, poolSize.getCurrentCount());
+        PoolSize poolSize = new PoolSize(2);
+        assertEquals(2, poolSize.getCapacity());
         poolSize.increment();
         assertEquals(1, poolSize.getCurrentCount());
+        poolSize.increment();
+        assertEquals(2, poolSize.getCurrentCount());
         PoolingException e = assertThrows(PoolingException.class, () -> poolSize.increment());
         assertAll(
-            () -> assertEquals(1, poolSize.getCurrentCount()),
-            () -> assertEquals("Count of provided connections is already equal to the capacity (1) therefore"
+            () -> assertEquals(2, poolSize.getCurrentCount()),
+            () -> assertEquals("Count of provided connections is already equal to the capacity (2) therefore"
                 + " you cannot allocate any more resources.", e.getMessage())
         );
+        poolSize.decrement();
+        assertEquals(1, poolSize.getCurrentCount());
         poolSize.decrement();
         assertEquals(0, poolSize.getCurrentCount());
         poolSize.decrement();
@@ -72,9 +76,11 @@ public class PoolSizeTest {
         for (int i = 0; i < taskCount; i++) {
             tasks.add(() -> {
                 poolSize.increment();
+                // increment succeeded
                 increases.incrementAndGet();
                 Thread.sleep(0, 10);
                 poolSize.decrement();
+                // if inc succeeded, dec must succeed too -> same count.
                 decreases.incrementAndGet();
                 return null;
             });
@@ -83,6 +89,7 @@ public class PoolSizeTest {
         assertAll(
             () -> assertTrue(futures.stream().allMatch(f -> f.isDone()), "All done."),
             () -> assertFalse(futures.stream().anyMatch(f -> f.isCancelled()), "None cancelled."),
+            () -> assertThat("Count of increases", increases.get(), greaterThan(poolSize.getCapacity())),
             () -> assertEquals(increases.get(), decreases.get(), "Count of increases and decreases"),
             () -> assertEquals(0, poolSize.getCurrentCount(), "Current count")
         );

@@ -66,7 +66,7 @@ public final class PoolSize {
      * @throws PoolingException if the current count already reached the capacity.
      */
     public void increment() throws PoolingException {
-        if (this.currentCount.getAndUpdate(v -> Math.max(v, this.capacity)) == this.capacity) {
+        if (this.currentCount.getAndUpdate(v -> Math.min(v + 1, this.capacity)) == this.capacity) {
             throw new PoolingException("Count of provided connections is already equal to the capacity (" + capacity
                 + ") therefore you cannot allocate any more resources.");
         }
@@ -78,7 +78,7 @@ public final class PoolSize {
      * If is already zero, doesn't do anything.
      */
     public void decrement() {
-        this.currentCount.getAndUpdate(v -> Math.min(v, 0));
+        this.currentCount.getAndUpdate(v -> Math.max(v - 1, 0));
     }
 
 

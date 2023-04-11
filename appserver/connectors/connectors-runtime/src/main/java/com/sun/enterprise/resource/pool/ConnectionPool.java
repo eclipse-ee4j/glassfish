@@ -961,7 +961,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         if (poolLifeCycleListener != null && !handle.getDestroyByLeakTimeOut()) {
             poolLifeCycleListener.connectionReleased(handle.getId());
         }
-        LOG.log(FINE, "Resource was freed after it's closure: {0}", handle);
+        LOG.log(FINE, "Resource was freed after it`s closure: {0}", handle);
     }
 
     /**

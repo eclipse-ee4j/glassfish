@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,19 +30,20 @@ import org.jvnet.hk2.config.types.PropertyBag;
 @Configured
 @Deprecated
 public interface SelectionKeyHandler extends ConfigBeanProxy, PropertyBag {
+
     /**
-     * SelectionKey handler name, which could be used as reference
+     * SelectionKey handler name, which could be used as reference.
      */
-    @Attribute(key = true, required = true, dataType = String.class)
+    @Attribute(key = true, required = true)
     String getName();
 
-    void setName(String value);
+    void setName(String name);
 
     /**
-     * SelectionKey handler implementation class
+     * SelectionKey handler implementation class.
      */
-    @Attribute(required = true, dataType = String.class)
+    @Attribute(required = true)
     String getClassname();
 
-    void setClassname(String value);
+    void setClassname(String classname);
 }

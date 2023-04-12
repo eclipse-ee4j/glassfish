@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +19,6 @@ package org.glassfish.grizzly.config.dom;
 
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.PropertyBag;
 
@@ -27,56 +27,49 @@ import org.jvnet.hk2.config.types.PropertyBag;
  */
 @Configured
 public interface NetworkConfig extends ConfigBeanProxy, PropertyBag {
+
     /**
-     * Describes low level transports configuration.  Like tcp, udp, ssl
-     * transports configuration
+     * Describes low level transports configuration.  Like {@code tcp}, {@code udp},
+     * {@code ssl} transports configuration.
      */
     @Element(required = true)
     Transports getTransports();
 
-    void setTransports(Transports value);
+    void setTransports(Transports transports);
 
     /**
-     * Describes higher level protocols like: http, https, iiop
+     * Describes higher level protocols like: {@code http}, {@code https}, {@code iiop}.
      */
     @Element(required = true)
     Protocols getProtocols();
 
-    void setProtocols(Protocols value);
+    void setProtocols(Protocols protocols);
 
     /**
-     * Binds protocols with lower level transports
+     * Binds protocols with lower level transports.
      */
     @Element(required = true)
     NetworkListeners getNetworkListeners();
 
-    void setNetworkListeners(NetworkListeners value);
+    void setNetworkListeners(NetworkListeners listeners);
 
-    @DuckTyped
-    NetworkListener getNetworkListener(String name);
-
-    @DuckTyped
-    Protocol findProtocol(String name);
-
-    class Duck {
-        public static Protocol findProtocol(NetworkConfig config, String name) {
-            for (final Protocol protocol : config.getProtocols().getProtocol()) {
-                if (protocol.getName().equals(name)) {
-                    return protocol;
+    default NetworkListener getNetworkListener(String listenerName) {
+        if (listenerName != null) {
+            for (final NetworkListener listener : getNetworkListeners().getNetworkListener()) {
+                if (listener.getName().equals(listenerName)) {
+                    return listener;
                 }
             }
-            return null;
         }
+        return null;
+    }
 
-        public static NetworkListener getNetworkListener(NetworkConfig config, String name) {
-            if (name != null) {
-                for (final NetworkListener listener : config.getNetworkListeners().getNetworkListener()) {
-                    if (listener.getName().equals(name)) {
-                        return listener;
-                    }
-                }
+    default Protocol findProtocol(String protocolName) {
+        for (final Protocol protocol : getProtocols().getProtocol()) {
+            if (protocol.getName().equals(protocolName)) {
+                return protocol;
             }
-            return null;
         }
+        return null;
     }
 }

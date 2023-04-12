@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,40 +17,43 @@
 
 package org.glassfish.grizzly.config.dom;
 
+import jakarta.validation.constraints.Pattern;
+
+import java.util.List;
+
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.PropertyBag;
 
-import jakarta.validation.constraints.Pattern;
-import java.util.List;
-
 /**
- * Defines the type of protocol chain and describes protocol filters, which will participate in request processing
+ * Defines the type of protocol chain and describes protocol filters,
+ * which will participate in request processing.
  */
 @Configured
 public interface ProtocolChain extends ConfigBeanProxy, PropertyBag {
+
     String TYPE = "STATELESS";
+
     String TYPE_PATTERN = "STATELESS|STATEFUL";
 
     /**
-     * Protocol chain instance handler implementation class
+     * Protocol chain instance handler implementation class.
      */
     @Attribute
     String getClassname();
 
-    void setClassname(String value);
+    void setClassname(String classname);
 
     /**
-     * Protocol chain type. Could be STATEFUL or STATELESS
+     * Protocol chain type. Could be {@code STATEFUL} or {@code STATELESS}.
      */
     @Attribute(defaultValue = TYPE)
     @Pattern(regexp = TYPE_PATTERN, message = "Valid values: " + TYPE_PATTERN)
     String getType();
 
-    void setType(String value);
+    void setType(String type);
 
     /**
      * Defines protocol filter sequence, which will process a request.
@@ -58,15 +61,10 @@ public interface ProtocolChain extends ConfigBeanProxy, PropertyBag {
     @Element
     List<ProtocolFilter> getProtocolFilter();
 
-    void setProtocolFilter(List<ProtocolFilter> list);
+    void setProtocolFilter(List<ProtocolFilter> protocolFilters);
 
     @Override
-    @DuckTyped
-    Protocol getParent();
-
-    class Duck {
-        public static Protocol getParent(ProtocolChain chain) {
-            return chain.getParent(Protocol.class);
-        }
+    default Protocol getParent() {
+        return getParent(Protocol.class);
     }
 }

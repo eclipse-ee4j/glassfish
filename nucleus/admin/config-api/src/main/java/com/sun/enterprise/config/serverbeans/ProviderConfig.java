@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,29 +37,23 @@ import org.jvnet.hk2.config.types.PropertyBag;
 import static org.glassfish.config.support.Constants.NAME_REGEX;
 
 /**
- * The provider-config element defines the configuration of an authentication provider
+ * The {@code provider-config} element defines the configuration of an authentication provider.
  *
- * A provider-config with no contained request-policy or response-policy sub-elements, is a null provider. The container
- * will not instantiate or invoke the methods of a null provider, and as such the implementation class of a null
- * provider need not exist
+ * <p>A provider-config with no contained request-policy or response-policy sub-elements,
+ * is a null provider. The container will not instantiate or invoke the methods of a null provider,
+ * and as such the implementation class of a null provider need not exist.
  */
-
-/* @XmlType(name = "", propOrder = {
-    "requestPolicy",
-    "responsePolicy",
-    "property"
-}) */
-
 @Configured
 public interface ProviderConfig extends ConfigBeanProxy, PropertyBag {
 
     String PROVIDER_TYPES = "(client|server|client-server)";
 
     /**
-     * Gets the value of the providerId property.
-     * Identifier used to uniquely identify this provider-config element
+     * Gets the value of the {@code providerId} property.
      *
-     * @return possible object is {@link String }
+     * <p>Identifier used to uniquely identify this {@code provider-config} element.
+     *
+     * @return possible object is {@link String}
      */
     @Attribute(key = true)
     @Pattern(regexp = NAME_REGEX, message = "Pattern: " + NAME_REGEX)
@@ -67,18 +61,19 @@ public interface ProviderConfig extends ConfigBeanProxy, PropertyBag {
     String getProviderId();
 
     /**
-     * Sets the value of the providerId property.
+     * Sets the value of the {@code providerId} property.
      *
-     * @param value allowed object is {@link String }
+     * @param providerId allowed object is {@link String}
      */
-    void setProviderId(String value) throws PropertyVetoException;
+    void setProviderId(String providerId) throws PropertyVetoException;
 
     /**
-     * Gets the value of the providerType property.
-     * Defines whether the provider is a client authentication provider or a server authentication
-     * provider.
+     * Gets the value of the {@code providerType} property.
      *
-     * @return possible object is {@link String }
+     * <p>Defines whether the provider is a client authentication provider or
+     * a server authentication provider.
+     *
+     * @return possible object is {@link String}
      */
     @Attribute
     @NotNull
@@ -86,23 +81,26 @@ public interface ProviderConfig extends ConfigBeanProxy, PropertyBag {
     String getProviderType();
 
     /**
-     * Sets the value of the providerType property.
+     * Sets the value of the {@code providerType} property.
      *
-     * @param value allowed object is {@link String }
+     * @param providerType allowed object is {@link String}
      */
-    void setProviderType(String value) throws PropertyVetoException;
+    void setProviderType(String providerType) throws PropertyVetoException;
 
     /**
-     * Gets the value of the className property.
-     * Defines the java implementation class of the provider.
-     * Client authentication providers must implement the
-     * com.sun.enterprise.security.jauth.ClientAuthModule interface.
-     * Server-side providers must implement the com.sun.enterprise.security.jauth.ServerAuthModule
+     * Gets the value of the {@code className} property.
+     *
+     * <p>Defines the java implementation class of the provider.
+     *
+     * <p>Client authentication providers must implement the
+     * {@code com.sun.enterprise.security.jauth.ClientAuthModule} interface.
+     * Server-side providers must implement the {@code com.sun.enterprise.security.jauth.ServerAuthModule}
      * interface.
-     * A provider may implement both interfaces, but it must implement the interface corresponding
+     *
+     * <p>A provider may implement both interfaces, but it must implement the interface corresponding
      * to its provider type.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     @NotNull
@@ -110,84 +108,83 @@ public interface ProviderConfig extends ConfigBeanProxy, PropertyBag {
     String getClassName();
 
     /**
-     * Sets the value of the className property.
+     * Sets the value of the {@code className} property.
      *
-     * @param value allowed object is {@link String }
+     * @param className allowed object is {@link String}
      */
-    void setClassName(String value) throws PropertyVetoException;
+    void setClassName(String className) throws PropertyVetoException;
 
     /**
-     * Gets the value of the requestPolicy property.
-     * Defines the authentication policy requirements associated with request processing performed
-     * by the authentication
-     * provider
+     * Gets the value of the {@code requestPolicy} property.
      *
-     * @return possible object is {@link RequestPolicy }
+     * <p>Defines the authentication policy requirements associated with request processing
+     * performed by the authentication provider.
+     *
+     * @return possible object is {@link RequestPolicy}
      */
     @Element
     RequestPolicy getRequestPolicy();
 
     /**
-     * Sets the value of the requestPolicy property.
+     * Sets the value of the {@code requestPolicy} property.
      *
-     * @param value allowed object is {@link RequestPolicy }
+     * @param requestPolicy allowed object is {@link RequestPolicy}
      */
-    void setRequestPolicy(RequestPolicy value) throws PropertyVetoException;
+    void setRequestPolicy(RequestPolicy requestPolicy) throws PropertyVetoException;
 
     /**
-     * Gets the value of the responsePolicy property.
-     * Defines the authentication policy requirements associated with the response processing
-     * performed by the
-     * authentication provider.
+     * Gets the value of the {@code responsePolicy} property.
      *
-     * @return possible object is {@link ResponsePolicy }
+     * <p>Defines the authentication policy requirements associated with
+     * the response processing performed by the authentication provider.
+     *
+     * @return possible object is {@link ResponsePolicy}
      */
     @Element
     ResponsePolicy getResponsePolicy();
 
     /**
-     * Sets the value of the responsePolicy property.
+     * Sets the value of the {@code responsePolicy} property.
      *
-     * @param value allowed object is {@link ResponsePolicy }
+     * @param responsePolicy allowed object is {@link ResponsePolicy}
      */
-    void setResponsePolicy(ResponsePolicy value) throws PropertyVetoException;
+    void setResponsePolicy(ResponsePolicy responsePolicy) throws PropertyVetoException;
 
     /**
      * Properties.
      */
     @Override
-    @PropertiesDesc(
-        props = {
+    @PropertiesDesc(props = {
             @PropertyDesc(
-                name = "security.config",
-                defaultValue = "${com.sun.aas.instanceRoot}/config/wss-server-config-1.0.xml",
-                description = "Specifies the location of the message security configuration file"),
-
+                    name = "security.config",
+                    defaultValue = "${com.sun.aas.instanceRoot}/config/wss-server-config-1.0.xml",
+                    description = "Specifies the location of the message security configuration file"
+            ),
             @PropertyDesc(
-                name = "debug",
-                defaultValue = "false",
-                dataType = Boolean.class,
-                description = "Enables dumping of server provider debug messages to the server log"),
-
+                    name = "debug",
+                    defaultValue = "false",
+                    dataType = Boolean.class,
+                    description = "Enables dumping of server provider debug messages to the server log"
+            ),
             @PropertyDesc(
-                name = "dynamic.username.password",
-                defaultValue = "false",
-                dataType = Boolean.class,
-                description = "Signals the provider runtime to collect the user name and password from the "
+                    name = "dynamic.username.password",
+                    defaultValue = "false",
+                    dataType = Boolean.class,
+                    description = "Signals the provider runtime to collect the user name and password from the "
                     + "CallbackHandler for each request. If false, the user name and password for wsse:UsernameToken(s) is "
-                    + "collected once, during module initialization. Applicable only for a ClientAuthModule"),
-
+                    + "collected once, during module initialization. Applicable only for a ClientAuthModule"
+            ),
             @PropertyDesc(
-                name = "encryption.key.alias",
-                defaultValue = "s1as",
-                description = "Specifies the encryption key used by the provider. The key is identified by its keystore alias"),
-
+                    name = "encryption.key.alias",
+                    defaultValue = "s1as",
+                    description = "Specifies the encryption key used by the provider. The key is identified by its keystore alias"
+            ),
             @PropertyDesc(
-                name = "signature.key.alias",
-                defaultValue = "s1as",
-                description = "Specifies the signature key used by the provider. The key is identified by its keystore alias")
-            }
-        )
+                    name = "signature.key.alias",
+                    defaultValue = "s1as",
+                    description = "Specifies the signature key used by the provider. The key is identified by its keystore alias"
+            )
+    })
     @Element
     List<Property> getProperty();
 }

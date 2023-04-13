@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,129 +17,122 @@
 
 package com.sun.enterprise.config.serverbeans;
 
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.Element;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.jvnet.hk2.config.types.Property;
-import org.jvnet.hk2.config.types.PropertyBag;
+import jakarta.validation.constraints.NotNull;
 
 import java.beans.PropertyVetoException;
 import java.util.List;
 
 import org.glassfish.api.admin.config.PropertiesDesc;
 import org.glassfish.quality.ToDo;
-
-import jakarta.validation.constraints.NotNull;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Element;
+import org.jvnet.hk2.config.types.Property;
+import org.jvnet.hk2.config.types.PropertyBag;
 
 /**
- * SE/EE Node Controller. The node agent is an agent that manages server instances on a host machine.
+ * SE/EE Node Controller. The node agent is an agent that manages server instances
+ * on a host machine.
  */
-
-/* @XmlType(name = "", propOrder = {
-    "jmxConnector",
-    "authRealm",
-    "logService",
-    "property"
-}) */
-
 @Configured
 public interface NodeAgent extends ConfigBeanProxy, PropertyBag {
 
     /**
-     * Gets the value of the name property.
+     * Gets the value of the {@code name} property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(key = true)
     @NotNull
-    public String getName();
+    String getName();
 
     /**
-     * Sets the value of the name property.
+     * Sets the value of the {@code name} property.
      *
-     * @param value allowed object is {@link String }
+     * @param name allowed object is {@link String}
      */
-    public void setName(String value) throws PropertyVetoException;
+    void setName(String name) throws PropertyVetoException;
 
     /**
-     * Gets the value of the systemJmxConnectorName property.
+     * Gets the value of the {@code systemJmxConnectorName} property.
      *
-     * The name of the internal jmx connector
+     * <p>The name of the internal jmx connector.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
-    public String getSystemJmxConnectorName();
+    String getSystemJmxConnectorName();
 
     /**
-     * Sets the value of the systemJmxConnectorName property.
+     * Sets the value of the {@code systemJmxConnectorName} property.
      *
-     * @param value allowed object is {@link String }
+     * @param connectorName allowed object is {@link String}
      */
-    public void setSystemJmxConnectorName(String value) throws PropertyVetoException;
+    void setSystemJmxConnectorName(String connectorName) throws PropertyVetoException;
 
     /**
-     * Gets the value of the startServersInStartup property.
+     * Gets the value of the {@code startServersInStartup} property.
      *
-     * If true, starts all managed server instances when the Node Controller is started.
+     * <p>If {@code true}, starts all managed server instances when
+     * the Node Controller is started.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
-    public String getStartServersInStartup();
+    String getStartServersInStartup();
 
     /**
-     * Sets the value of the startServersInStartup property.
+     * Sets the value of the {@code startServersInStartup} property.
      *
-     * @param value allowed object is {@link String }
+     * @param startServers allowed object is {@link String}
      */
-    public void setStartServersInStartup(String value) throws PropertyVetoException;
+    void setStartServersInStartup(String startServers) throws PropertyVetoException;
 
     /**
-     * Gets the value of the jmxConnector property.
+     * Gets the value of the {@code jmxConnector} property.
      *
-     * @return possible object is {@link JmxConnector }
-     */
-    @Element
-    public JmxConnector getJmxConnector();
-
-    /**
-     * Sets the value of the jmxConnector property.
-     *
-     * @param value allowed object is {@link JmxConnector }
-     */
-    public void setJmxConnector(JmxConnector value) throws PropertyVetoException;
-
-    /**
-     * Gets the value of the authRealm property.
-     *
-     * @return possible object is {@link AuthRealm }
+     * @return possible object is {@link JmxConnector}
      */
     @Element
-    public AuthRealm getAuthRealm();
+    JmxConnector getJmxConnector();
 
     /**
-     * Sets the value of the authRealm property.
+     * Sets the value of the {@code jmxConnector} property.
      *
-     * @param value allowed object is {@link AuthRealm }
+     * @param jmxConnector allowed object is {@link JmxConnector}
      */
-    public void setAuthRealm(AuthRealm value) throws PropertyVetoException;
+    void setJmxConnector(JmxConnector jmxConnector) throws PropertyVetoException;
 
     /**
-     * Gets the value of the logService property.
+     * Gets the value of the {@code authRealm} property.
      *
-     * @return possible object is {@link LogService }
+     * @return possible object is {@link AuthRealm}
+     */
+    @Element
+    AuthRealm getAuthRealm();
+
+    /**
+     * Sets the value of the {@code authRealm} property.
+     *
+     * @param authRealm allowed object is {@link AuthRealm}
+     */
+    void setAuthRealm(AuthRealm authRealm) throws PropertyVetoException;
+
+    /**
+     * Gets the value of the {@code logService} property.
+     *
+     * @return possible object is {@link LogService}
      */
     @Element(required = true)
-    public LogService getLogService();
+    LogService getLogService();
 
     /**
-     * Sets the value of the logService property.
+     * Sets the value of the {@code logService} property.
      *
-     * @param value allowed object is {@link LogService }
+     * @param logService allowed object is {@link LogService}
      */
-    public void setLogService(LogService value) throws PropertyVetoException;
+    void setLogService(LogService logService) throws PropertyVetoException;
 
     /**
      * Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}

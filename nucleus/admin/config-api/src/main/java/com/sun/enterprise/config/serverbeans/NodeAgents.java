@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,44 +17,35 @@
 
 package com.sun.enterprise.config.serverbeans;
 
+import java.util.List;
+
+import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.Element;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-
-import java.util.List;
 
 /**
  *
  */
-
-/* @XmlType(name = "", propOrder = {
-    "nodeAgent"
-}) */
-
 // general solution needed; this is intermediate solution
 @Configured
 public interface NodeAgents extends ConfigBeanProxy {
 
     /**
-     * Gets the value of the nodeAgent property.
-     * <p/>
-     * <p/>
-     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the
-     * nodeAgent property.
-     * <p/>
-     * <p/>
-     * For example, to add a new item, do as follows:
+     * Gets the value of the {@code nodeAgent} property.
+     *
+     * <p>This accessor method returns a reference to the live list, not a snapshot.
+     * Therefore any modification you make to the returned list will be present inside
+     * the JAXB object. This is why there is not a {@code set} method for the
+     * {@code nodeAgent} property.
+     *
+     * <p>For example, to add a new item, do as follows:
      *
      * <pre>
      * getNodeAgent().add(newItem);
      * </pre>
-     * <p/>
-     * <p/>
-     * <p/>
-     * Objects of the following type(s) are allowed in the list {@link NodeAgent }
+     *
+     * <p>Objects of the following type(s) are allowed in the list {@link NodeAgent}
      */
     @Element
-    public List<NodeAgent> getNodeAgent();
-
+    List<NodeAgent> getNodeAgent();
 }

@@ -35,8 +35,8 @@ import static org.glassfish.config.support.Constants.NAME_REGEX;
  */
 @Configured
 @RestRedirects({
-    @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-system-properties"),
-    @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-system-property")
+        @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-system-properties"),
+        @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-system-property")
 })
 public interface SystemProperty extends ConfigBeanProxy {
 

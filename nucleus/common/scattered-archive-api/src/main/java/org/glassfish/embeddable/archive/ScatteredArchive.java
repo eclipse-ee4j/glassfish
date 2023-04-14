@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
+import java.lang.System.Logger.Level;
 
 /**
  * Abstraction for a Scattered Jakarta EE module (parts disseminated in various directories).
@@ -62,6 +64,9 @@ import java.util.Map;
  * @author bhavanishankar@java.net
  */
 public class ScatteredArchive {
+
+    private static System.Logger logger = System.getLogger(ScatteredArchive.class.getName());
+    static final String JAVA_CLASS_PATH_PROPERTY_KEY = "java.class.path";
 
     String name;
     Type type;
@@ -238,6 +243,83 @@ public class ScatteredArchive {
         }
         this.classpaths.add(classpath);
     }
+
+    /**
+     * Add all directories and JAR files on the current classpath to this scattered archive
+     * using {@link #addClassPath(java.io.File).
+     * Ignores Jakarta EE API and GlassFish Embedded JAR files (those that match the {@code jakarta.}
+     * and {@code glassfish-embedded-} prefixes).
+     * <p/>
+     * Reads the current classpath from the {@code java.class.path} system property.
+     * If it's not available, nothing is added to the classpath.
+     * <p/>
+     * The classpath that is added is considered as a plain Java CLASSPATH.
+     * <p/>
+     * If a classpath element is not found, a warning is logged using {@link System.Logger} and
+     * the element is ignored.
+     *
+     * @param excludePatterns If a JAR file name matches any of these regular expressions
+     *
+     * @see #addCurrentClassPath(java.util.function.Predicate)
+     * @see #addClassPath(java.io.File)
+     */
+    public void addCurrentClassPath(String... excludePatterns) {
+        addCurrentClassPath(path -> {
+            var fileName = new File(path).getName();
+            return fileNameMatchesAny(fileName, excludePatterns)
+                    || fileNameMatchesAny(fileName, "jakarta\\..*\\.jar", "glassfish-embedded-.*\\.jar");
+        });
+    }
+
+
+    /**
+     * Add all directories and JAR files on the current classpath to this scattered archive
+     * using {@link #addClassPath(java.io.File).
+     * Ignores Jakarta EE API and GlassFish Embedded JAR files (those that match the {@code jakarta.}
+     * and {@code glassfish-embedded-} prefixes).
+     * <p/>
+     * Reads the current classpath from the {@code java.class.path} system property.
+     * If it's not available, nothing is added to the classpath.
+     * <p/>
+     * The classpath that is added is considered as a plain Java CLASSPATH.
+     * <p/>
+     * If a classpath element is not found, a warning is logged using {@link System.Logger} and
+     * the element is ignored.
+     *
+     * @param exclude A predicate to exclude mathing elements from the classpath.
+     *                If this predicate returns {@code true} for the whole path to the classpath element,
+     *                the element is not added to the classpath
+     *
+     * @see #addCurrentClassPath(java.lang.String...)
+     * @see #addClassPath(java.io.File)
+     */
+    public void addCurrentClassPath(Predicate<String> exclude) {
+        final String classpath = System.getProperty(JAVA_CLASS_PATH_PROPERTY_KEY, "");
+        if (classpath.isBlank()) {
+            return;
+        }
+        for (String pathElem : classpath.split(File.pathSeparator)) {
+            if ( ! exclude.test(pathElem)) {
+                try {
+                    this.addClassPath(new File(pathElem));
+                } catch (IOException ex) {
+                    logger.log(Level.WARNING,
+                            () -> "Could not add " + pathElem + " to the classpath: " + ex.getMessage(),
+                            ex);
+                }
+            }
+        }
+    }
+
+    private static boolean fileNameMatchesAny(String fileName, String... matches) {
+        for (String match : matches) {
+            if (fileName.matches(match)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     /**
      * Add a new metadata to this scattered archive.

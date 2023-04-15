@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,16 +17,16 @@
 
 package org.glassfish.security.services.config;
 
-import com.sun.enterprise.config.serverbeans.DomainExtension;
 import com.sun.enterprise.config.modularity.annotation.HasNoDefaultConfiguration;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
-import org.jvnet.hk2.config.Element;
+import com.sun.enterprise.config.serverbeans.DomainExtension;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Element;
 
 /**
  * The top level security configuration which holds the list of configured security services.
@@ -33,6 +34,7 @@ import java.util.List;
 @Configured
 @HasNoDefaultConfiguration
 public interface SecurityConfigurations extends ConfigBeanProxy, DomainExtension {
+
     /**
      * Gets the list of configured security services.
      */
@@ -42,87 +44,61 @@ public interface SecurityConfigurations extends ConfigBeanProxy, DomainExtension
     /**
      * Gets the list of configured security services by security service type.
      */
-    @DuckTyped
-    <T extends SecurityConfiguration> List<T> getSecurityServicesByType(Class<T> type);
+    default <T extends SecurityConfiguration> List<T> getSecurityServicesByType(Class<T> type) {
+        List<T> typedServices = new ArrayList<>();
+        for (SecurityConfiguration securityServiceConfiguration : getSecurityServices()) {
+            try {
+                if (type.isAssignableFrom(securityServiceConfiguration.getClass())) {
+                    typedServices.add(type.cast(securityServiceConfiguration));
+                }
+            } catch (Exception e) {
+                // ignore, not the right type.
+            }
+        }
+        return Collections.unmodifiableList(typedServices);
+    }
 
     /**
      * Gets the default configured security service by security service type.
      */
-    @DuckTyped
-    <T extends SecurityConfiguration> T getDefaultSecurityServiceByType(Class<T> type);
+    default <T extends SecurityConfiguration> T getDefaultSecurityServiceByType(Class<T> type) {
+        for (SecurityConfiguration securityServiceConfiguration : getSecurityServices()) {
+            try {
+                if (securityServiceConfiguration.getDefault()) {
+                    return type.cast(securityServiceConfiguration);
+                }
+            } catch (Exception e) {
+                // ignore, not the right type.
+            }
+        }
+        return null;
+    }
 
     /**
      * Gets a named security service configuration by specific security type.
      */
-    @DuckTyped
-    <T extends SecurityConfiguration> T getSecurityServiceByName(String name, Class<T> type);
+    default <T extends SecurityConfiguration> T getSecurityServiceByName(String name, Class<T> type) {
+        for (SecurityConfiguration securityServiceConfiguration : getSecurityServices()) {
+            try {
+                if (securityServiceConfiguration.getName().equals(name)) {
+                    return type.cast(securityServiceConfiguration);
+                }
+            } catch (Exception e) {
+                // ignore, not the right type.
+            }
+        }
+        return null;
+    }
 
     /**
      * Gets a named security service configuration.
      */
-    @DuckTyped
-    SecurityConfiguration getSecurityServiceByName(String name);
-
-    class Duck {
-        /**
-         * Gets the list of configured security services by security service type.
-         */
-        public static <T extends SecurityConfiguration> List<T> getSecurityServicesByType(SecurityConfigurations services, Class<T> type) {
-            List<T> typedServices = new ArrayList<T>();
-            for (SecurityConfiguration securityServiceConfiguration : services.getSecurityServices()) {
-                try {
-                    if (type.isAssignableFrom(securityServiceConfiguration.getClass())) {
-                        typedServices.add(type.cast(securityServiceConfiguration));
-                    }
-                } catch (Exception e) {
-                    // ignore, not the right type.
-                }
+    default SecurityConfiguration getSecurityServiceByName(String name) {
+        for (SecurityConfiguration securityServiceConfiguration : getSecurityServices()) {
+            if (securityServiceConfiguration.getName().equals(name)) {
+                return securityServiceConfiguration;
             }
-                        return Collections.unmodifiableList(typedServices);
         }
-
-        /**
-         * Gets the default configured security service by security service type.
-         */
-            public static <T extends SecurityConfiguration> T getDefaultSecurityServiceByType(SecurityConfigurations services, Class<T> type) {
-            for (SecurityConfiguration securityServiceConfiguration : services.getSecurityServices()) {
-                try {
-                    if (securityServiceConfiguration.getDefault()) {
-                        return type.cast(securityServiceConfiguration);
-                    }
-                } catch (Exception e) {
-                    // ignore, not the right type.
-                }
-            }
-            return null;
-        }
-
-        /**
-         * Gets a named security service configuration by specific security type.
-         */
-            public static <T extends SecurityConfiguration> T getSecurityServiceByName(SecurityConfigurations services, String name, Class<T> type) {
-            for (SecurityConfiguration securityServiceConfiguration : services.getSecurityServices()) {
-                try {
-                    if (securityServiceConfiguration.getName().equals(name)) {
-                        return type.cast(securityServiceConfiguration);
-                    }
-                } catch (Exception e) {
-                    // ignore, not the right type.
-                }
-            }
-            return null;
-        }
-
-        /**
-         * Gets a named security service configuration.
-         */
-            public static SecurityConfiguration getSecurityServiceByName(SecurityConfigurations services, String name) {
-            for (SecurityConfiguration securityServiceConfiguration : services.getSecurityServices()) {
-                if (securityServiceConfiguration.getName().equals(name)) {
-                    return securityServiceConfiguration;
-                }
-            }
-            return null;
-        }
+        return null;
     }
 }

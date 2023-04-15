@@ -95,7 +95,7 @@ public class SetWebEnvEntryCommand extends WebEnvEntryCommand {
             final String envEntryType,
             final ActionReport report) throws PropertyVetoException, TransactionFailure {
 
-        WebModuleConfig config = WebModuleConfig.Duck.webModuleConfig(owningEngine);
+        WebModuleConfig config = WebModuleConfig.webModuleConfig(owningEngine);
         if (config == null) {
             createEnvEntryOnNewWMC(owningEngine, name, value, envEntryType,
                     description, ignoreDescriptorItem);
@@ -199,7 +199,7 @@ public class SetWebEnvEntryCommand extends WebEnvEntryCommand {
                 throw new IllegalArgumentException(fmt);
             }
             try {
-                EnvEntry.Util.validateValue(candidateFinalType, candidateFinalValue);
+                EnvEntry.validateValue(candidateFinalType, candidateFinalValue);
             } catch (IllegalArgumentException ex) {
                 final String fmt = localStrings.getLocalString("valueTypeMismatch",
                         "Cannot assign value {0} to an env-entry of type {1}",

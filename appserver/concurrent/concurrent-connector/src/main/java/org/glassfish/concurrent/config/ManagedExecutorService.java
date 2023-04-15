@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,16 +38,15 @@ import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
 
 /**
- * Concurrency managed executor service resource definition
+ * Concurrency managed executor service resource definition.
  */
 @Configured
 @ResourceConfigCreator(commandName = "create-managed-executor-service")
 @RestRedirects({
-    @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-managed-executor-service"),
-    @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-managed-executor-service")
+        @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-managed-executor-service"),
+        @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-managed-executor-service")
 })
 @ResourceTypeOrder(deploymentOrder = ResourceDeploymentOrder.MANAGED_EXECUTOR_SERVICE)
 @ReferenceConstraint(skipDuringCreation = true, payload = ManagedExecutorService.class)
@@ -57,7 +56,7 @@ public interface ManagedExecutorService
     extends ConfigBeanProxy, Resource, BindableResource, ConcurrencyResource, ManagedExecutorServiceBase, Payload {
 
     /**
-     * Gets the value of the maximumPoolSize property.
+     * Gets the value of the {@code maximumPoolSize} property.
      *
      * @return possible object is {@link String}
      */
@@ -66,14 +65,14 @@ public interface ManagedExecutorService
     String getMaximumPoolSize();
 
     /**
-     * Sets the value of the maximumPoolSize property.
+     * Sets the value of the {@code maximumPoolSize} property.
      *
-     * @param value allowed object is {@link String}
+     * @param maximumPoolSize allowed object is {@link String}
      */
-    void setMaximumPoolSize(String value) throws PropertyVetoException;
+    void setMaximumPoolSize(String maximumPoolSize) throws PropertyVetoException;
 
     /**
-     * Gets the value of the threadLifetimeSeconds property.
+     * Gets the value of the {@code taskQueueCapacity} property.
      *
      * @return possible object is {@link String}
      */
@@ -82,25 +81,19 @@ public interface ManagedExecutorService
     String getTaskQueueCapacity();
 
     /**
-     * Sets the value of the threadLifetimeSeconds property.
+     * Sets the value of the {@code taskQueueCapacity} property.
      *
-     * @param value allowed object is {@link String}
+     * @param taskQueueCapacity allowed object is {@link String}
      */
-    void setTaskQueueCapacity(String value) throws PropertyVetoException;
+    void setTaskQueueCapacity(String taskQueueCapacity) throws PropertyVetoException;
 
     @Override
-    @DuckTyped
-    String getIdentity();
-
-    class Duck {
-
-        public static String getIdentity(ManagedExecutorService resource) {
-            return resource.getJndiName();
-        }
+    default String getIdentity() {
+        return getJndiName();
     }
 
     @Service
-    public class ManagedExecutorServiceConfigActivator extends ConfigBeanInstaller {
+    class ManagedExecutorServiceConfigActivator extends ConfigBeanInstaller {
 
     }
 }

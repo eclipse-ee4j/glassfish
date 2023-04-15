@@ -87,7 +87,7 @@ public class SetWebContextParamCommand extends WebModuleConfigCommand {
             final Boolean ignoreDescriptorItem,
             final ActionReport report) throws PropertyVetoException, TransactionFailure {
 
-        WebModuleConfig config = WebModuleConfig.Duck.webModuleConfig(owningEngine);
+        WebModuleConfig config = WebModuleConfig.webModuleConfig(owningEngine);
         if (config == null) {
             createContextParamOnNewWMC(owningEngine, paramName, paramValue,
                     description, ignoreDescriptorItem);

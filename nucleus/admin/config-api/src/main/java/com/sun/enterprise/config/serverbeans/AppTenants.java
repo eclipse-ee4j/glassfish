@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.Element;
 
 /**
@@ -34,7 +33,6 @@ public interface AppTenants extends ConfigBeanProxy {
     @Element
     List<AppTenant> getAppTenant();
 
-    @DuckTyped
     default AppTenant getAppTenant(String tenantName) {
         for (AppTenant tenant : getAppTenant()) {
             if (tenant.getTenant().equals(tenantName)) {

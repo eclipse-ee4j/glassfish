@@ -158,8 +158,8 @@ public final class CreateJvmOptions implements AdminCommand, AdminCommandSecurit
         }
         String existingXms = bag.getStartingWith("-Xms");
         if (existingXms != null) {
-            int xmsInConfig = JvmOptionBag.Duck.toMeg(existingXms, "-Xms");
-            int xmxGiven    = JvmOptionBag.Duck.toMeg(opt, "-Xmx");
+            int xmsInConfig = JvmOptionBag.toMeg(existingXms, "-Xms");
+            int xmxGiven    = JvmOptionBag.toMeg(opt, "-Xmx");
             if (xmsInConfig > xmxGiven) { //i.e. domain.xml contains -Xms1g and you ask -Xmx512m to be set
                 String msg = lsm.getString("soft.xmx.smaller.than.xms", xmxGiven + " MB", xmsInConfig + " MB");
                 report.getTopMessagePart().addChild().setMessage(msg);
@@ -190,8 +190,8 @@ public final class CreateJvmOptions implements AdminCommand, AdminCommandSecurit
         }
         String existingXmx = bag.getStartingWith("-Xmx");
         if (existingXmx != null) {
-            int xmxInConfig = JvmOptionBag.Duck.toMeg(existingXmx, "-Xmx");
-            int xmsGiven    = JvmOptionBag.Duck.toMeg(opt, "-Xms");
+            int xmxInConfig = JvmOptionBag.toMeg(existingXmx, "-Xmx");
+            int xmsGiven    = JvmOptionBag.toMeg(opt, "-Xms");
             if (xmsGiven > xmxInConfig) { //i.e. domain.xml contains -Xms1g and you ask -Xmx512m to be set
                 String msg = lsm.getString("soft.xms.larger.than.xmx", xmsGiven + " MB", xmxInConfig + " MB");
                 report.getTopMessagePart().addChild().setMessage(msg);

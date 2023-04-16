@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,7 +35,7 @@ public final class AMXConfigConstants
     /** prefix for all Descriptor fields for config */
     public static final String DESC_ANNOTATION_PREFIX = DESC_CONFIG_PREFIX + "annotation.";
 
-    /** Descriptor: annotation type (full classname): HK2 @Attribute, @Element, @DuckTyped */
+    /** Descriptor: annotation type (full classname): HK2 @Attribute, @Element */
     public static final String DESC_KIND = DESC_CONFIG_PREFIX + "kind";
 
     /** Descriptor: class of items in an @Element collection (fully-qualified class name) */

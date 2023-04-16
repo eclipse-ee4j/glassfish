@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -856,18 +857,17 @@ public class AMXConfigImpl extends AMXImplBase
         return removed;
     }
 
-    private Object invokeDuckMethod(
-            final ConfigBeanJMXSupport.DuckTypedInfo info,
+    private Object invokeDefaultMethod(
+            final ConfigBeanJMXSupport.DefaultMethodInfo info,
             Object[] args)
             throws MBeanException
     {
-        try
-        {
+        try {
             //cdebug( "invokeDuckMethod(): invoking: " + info.name() + " on " + info.method().getDeclaringClass() );
 
             if (!info.method().getDeclaringClass().isAssignableFrom(getConfigBeanProxy().getClass()))
             {
-                throw new IllegalArgumentException("invokeDuckMethod: " + getConfigBean().getProxyType() + " not asssignable to " + info.method().getDeclaringClass());
+                throw new IllegalArgumentException("invokeDefaultMethod: " + getConfigBean().getProxyType() + " not asssignable to " + info.method().getDeclaringClass());
             }
 
             Object result = info.method().invoke(getConfigBeanProxy(), args);
@@ -876,9 +876,7 @@ public class AMXConfigImpl extends AMXImplBase
             // cdebug( "invokeDuckMethod(): invoked: " + info.name() + ", got " + result );
 
             return result;
-        }
-        catch (final Exception e)
-        {
+        } catch (final Exception e) {
             throw new MBeanException(e);
         }
     }
@@ -979,10 +977,10 @@ public class AMXConfigImpl extends AMXImplBase
         Object result = null;
         debugMethod(operationName, args);
 
-        ConfigBeanJMXSupport.DuckTypedInfo duckTypedInfo = null;
-        if ((duckTypedInfo = getConfigBeanJMXSupport().findDuckTyped(operationName, types)) != null)
+        ConfigBeanJMXSupport.DefaultMethodInfo duckTypedInfo = null;
+        if ((duckTypedInfo = getConfigBeanJMXSupport().findDefaultMethod(operationName, types)) != null)
         {
-            result = invokeDuckMethod(duckTypedInfo, args);
+            result = invokeDefaultMethod(duckTypedInfo, args);
         }
         else
         {
@@ -1068,17 +1066,17 @@ public class AMXConfigImpl extends AMXImplBase
             //
             //cdebug( "getAttributeFromConfigBean: no info for " + amxName );
 
-            ConfigBeanJMXSupport.DuckTypedInfo info = getConfigBeanJMXSupport().findDuckTyped("get" + amxName, null);
+            ConfigBeanJMXSupport.DefaultMethodInfo info = getConfigBeanJMXSupport().findDefaultMethod("get" + amxName, null);
             if ( info == null )
             {
-                info = getConfigBeanJMXSupport().findDuckTyped("is" + amxName, null);
+                info = getConfigBeanJMXSupport().findDefaultMethod("is" + amxName, null);
             }
             if ( info != null )
             {
                 //cdebug( "getAttributeFromConfigBean: found DuckTyped for " + amxName );
                 try
                 {
-                    result = invokeDuckMethod( info, null);
+                    result = invokeDefaultMethod( info, null);
                     return result;
                 }
                 catch( final Exception e )

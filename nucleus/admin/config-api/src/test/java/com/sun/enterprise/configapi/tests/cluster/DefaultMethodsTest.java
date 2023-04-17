@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,14 +33,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
- * Test a number of cluster related {@link org.jvnet.hk2.config.DuckTyped}
- * methods implementation
+ * Test a number of cluster related default methods implementation.
  *
  * @author Jerome Dochez
  */
 @ExtendWith(ConfigApiJunit5Extension.class)
 @DomainXml("ClusterDomain.xml")
-public class DuckMethodsTest {
+public class DefaultMethodsTest {
 
     @Inject
     private ServiceLocator locator;

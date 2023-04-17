@@ -22,6 +22,8 @@ import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 final class ProxyHelper {
 
@@ -39,6 +41,14 @@ final class ProxyHelper {
             throw new IllegalStateException(e);
         }
     }
+
+    private static final ClassValue<ConcurrentMap<Method, MethodHandle>>
+            DEFAULT_METHODS_CACHE = new ClassValue<>() {
+                @Override
+                protected ConcurrentMap<Method, MethodHandle> computeValue(Class<?> type) {
+                    return new ConcurrentHashMap<>();
+                }
+            };
 
     private ProxyHelper() {
         throw new AssertionError();
@@ -73,25 +83,37 @@ final class ProxyHelper {
     }
 
     private static MethodHandle defaultMethodHandle(Class<? extends Proxy> proxyClass, Method method) {
-        MethodType mt = MethodType.methodType(method.getReturnType(), method.getParameterTypes());
-        MethodHandles.Lookup lookup = MethodHandles.lookup();
-        Class<?> proxyIntf = findProxyInterface(proxyClass, method);
+        ConcurrentMap<Method, MethodHandle> defaultMethods = DEFAULT_METHODS_CACHE.get(proxyClass);
 
-        MethodHandle mh;
-        try {
-            mh = lookup.findSpecial(proxyIntf, method.getName(), mt, proxyClass).asFixedArity();
-        } catch (IllegalAccessException | NoSuchMethodException e) {
-            // Should newer be thrown
-            throw new IllegalStateException(e);
+        MethodHandle defaultMethodHandle = defaultMethods.get(method);
+        if (defaultMethodHandle == null) {
+            MethodType mt = MethodType.methodType(method.getReturnType(), method.getParameterTypes());
+            MethodHandles.Lookup lookup = MethodHandles.lookup();
+            Class<?> proxyIntf = findProxyInterface(proxyClass, method);
+
+            MethodHandle methodHandle;
+            try {
+                methodHandle = lookup.findSpecial(proxyIntf, method.getName(), mt, proxyClass).asFixedArity();
+            } catch (IllegalAccessException | NoSuchMethodException e) {
+                // Should newer be thrown
+                throw new IllegalStateException(e);
+            }
+
+            methodHandle = methodHandle.asType(methodHandle.type().changeReturnType(Object.class));
+            // Wrap an exception thrown by the default method
+            methodHandle = MethodHandles.catchException(methodHandle, Throwable.class, EXCEPTION_HANDLER);
+            methodHandle = methodHandle.asSpreader(1, Object[].class, mt.parameterCount());
+            methodHandle = methodHandle.asType(MethodType.methodType(Object.class, Object.class, Object[].class));
+
+            MethodHandle cachedMethodHandle = defaultMethods.putIfAbsent(method, methodHandle);
+            if (cachedMethodHandle != null) {
+                defaultMethodHandle = cachedMethodHandle;
+            } else {
+                defaultMethodHandle = methodHandle;
+            }
         }
 
-        mh = mh.asType(mh.type().changeReturnType(Object.class));
-        // Wrap an exception thrown by the default method
-        mh = MethodHandles.catchException(mh, Throwable.class, EXCEPTION_HANDLER);
-        mh = mh.asSpreader(1, Object[].class, mt.parameterCount());
-        mh = mh.asType(MethodType.methodType(Object.class, Object.class, Object[].class));
-
-        return mh;
+        return defaultMethodHandle;
     }
 
     private static Class<?> findProxyInterface(Class<? extends Proxy> proxyClass, Method method) {

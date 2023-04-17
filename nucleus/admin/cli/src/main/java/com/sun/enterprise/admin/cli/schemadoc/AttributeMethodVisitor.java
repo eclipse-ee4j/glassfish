@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,30 +17,32 @@
 
 package com.sun.enterprise.admin.cli.schemadoc;
 
-import org.objectweb.asm.AnnotationVisitor;
 import org.glassfish.api.admin.config.PropertiesDesc;
 import org.glassfish.api.admin.config.PropertyDesc;
 import org.jvnet.hk2.config.Attribute;
+import org.objectweb.asm.AnnotationVisitor;
 
+import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
 import static org.objectweb.asm.Opcodes.ASM9;
 
 public class AttributeMethodVisitor extends EmptyVisitor {
-    private ClassDef def;
-    private String name;
-    private String type;
-    private boolean duckTyped;
+    private final ClassDef def;
+    private final String name;
+    private final String type;
+    private final boolean defaultMethod;
 
-    public AttributeMethodVisitor(ClassDef classDef, String method, String aggType) {
+    public AttributeMethodVisitor(ClassDef classDef, int access, String method, String aggType) {
         super(ASM9);
-        def = classDef;
-        name = method;
-        type = aggType;
+        this.def = classDef;
+        this.name = method;
+        this.type = aggType;
+        this.defaultMethod = access == ACC_PUBLIC;
         def.addAttribute(name, null);
     }
 
     @Override
     public String toString() {
-        return "AttributeMethodVisitor{" + "def=" + def + ", name='" + name + '\'' + ", type='" + type + '\'' + ", duckTyped=" + duckTyped
+        return "AttributeMethodVisitor{" + "def=" + def + ", name='" + name + '\'' + ", type='" + type + '\'' + ", defaultMethod=" + defaultMethod
                 + '}';
     }
 
@@ -55,7 +57,6 @@ public class AttributeMethodVisitor extends EmptyVisitor {
      */
     @Override
     public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-        duckTyped |= "Lorg/jvnet/hk2/config/DuckTyped;".equals(desc);
         AnnotationVisitor visitor = null;
         if ("Lorg/jvnet/hk2/config/Attribute;".equals(desc) || "Lorg/jvnet/hk2/config/Element;".equals(desc)) {
             try {
@@ -83,7 +84,7 @@ public class AttributeMethodVisitor extends EmptyVisitor {
 
     @Override
     public void visitEnd() {
-        if (!duckTyped) {
+        if (!defaultMethod) {
             if (!isSimpleType(type)) {
                 def.addAggregatedType(name, type);
                 def.removeAttribute(name);

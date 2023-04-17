@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -96,7 +96,7 @@ public class DocClassVisitor extends ClassVisitor {
         } catch (StringIndexOutOfBoundsException e) {
             throw new RuntimeException(e.getMessage());
         }
-        return name.startsWith("get") && type != null ? new AttributeMethodVisitor(classDef, name, type) : null;
+        return name.startsWith("get") && type != null ? new AttributeMethodVisitor(classDef, access, name, type) : null;
     }
 
     /**

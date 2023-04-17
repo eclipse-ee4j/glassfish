@@ -27,6 +27,19 @@ final class ProxyHelper {
 
     private static final Object[] NO_ARGS = new Object[0];
 
+    private static final MethodHandle EXCEPTION_HANDLER;
+    static {
+        try {
+            EXCEPTION_HANDLER = MethodHandles.lookup().findStatic(
+                    ProxyHelper.class,
+                    "exceptionHandler",
+                    MethodType.methodType(Object.class, Throwable.class));
+        } catch (NoSuchMethodException | IllegalAccessException e) {
+            // Should never be thrown
+            throw new IllegalStateException(e);
+        }
+    }
+
     private ProxyHelper() {
         throw new AssertionError();
     }
@@ -48,8 +61,15 @@ final class ProxyHelper {
 
         MethodHandle mh = defaultMethodHandle(proxyClass, method);
 
-        Object[] params = args != null ? args : NO_ARGS;
-        return mh.invokeExact(proxy, params);
+        try {
+            Object[] params = args != null ? args : NO_ARGS;
+            return mh.invokeExact(proxy, params);
+        } catch (ClassCastException | NullPointerException e) {
+            throw new IllegalArgumentException(e.getMessage(), e);
+        } catch (ProxyInvocationException e) {
+            // unwrap and throw the default method exception
+            throw e.getCause();
+        }
     }
 
     private static MethodHandle defaultMethodHandle(Class<? extends Proxy> proxyClass, Method method) {
@@ -66,6 +86,8 @@ final class ProxyHelper {
         }
 
         mh = mh.asType(mh.type().changeReturnType(Object.class));
+        // Wrap an exception thrown by the default method
+        mh = MethodHandles.catchException(mh, Throwable.class, EXCEPTION_HANDLER);
         mh = mh.asSpreader(1, Object[].class, mt.parameterCount());
         mh = mh.asType(MethodType.methodType(Object.class, Object.class, Object[].class));
 
@@ -79,7 +101,18 @@ final class ProxyHelper {
         }
         // Because all of our configuration proxies directly implements
         // only one interface annotated @Configured, we simply return
-        // this interface
+        // this interface, without search
         return proxyClass.getInterfaces()[0];
+    }
+
+    private static Object exceptionHandler(Throwable cause) throws ProxyInvocationException {
+        throw new ProxyInvocationException(cause);
+    }
+
+    private static class ProxyInvocationException extends ReflectiveOperationException {
+
+        ProxyInvocationException(Throwable cause) {
+            super(cause);
+        }
     }
 }

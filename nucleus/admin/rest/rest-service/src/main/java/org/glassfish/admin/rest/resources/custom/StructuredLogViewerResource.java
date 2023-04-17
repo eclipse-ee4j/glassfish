@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,18 +19,20 @@ package org.glassfish.admin.rest.resources.custom;
 
 import com.sun.enterprise.server.logging.logviewer.backend.LogFilter;
 
+import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.time.Instant;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -38,11 +40,20 @@ import java.util.Properties;
 
 import javax.management.Attribute;
 import javax.management.AttributeList;
+import javax.xml.stream.XMLStreamWriter;
 
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 import org.glassfish.admin.rest.logviewer.LogRecord;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.api.LogManager;
+
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_XML;
+import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN;
+import static jakarta.ws.rs.core.Response.Status.UNSUPPORTED_MEDIA_TYPE;
+import static javax.xml.stream.XMLOutputFactory.newDefaultFactory;
 
 /**
  * REST resource to get Log records simple wrapper around internal LogFilter query class
@@ -58,145 +69,203 @@ public class StructuredLogViewerResource {
 
     @Path("lognames/")
     public LogNamesResource getLogNamesResource() {
-        LogNamesResource resource = injector.createAndInitialize(LogNamesResource.class);
-        return resource;
+        return injector.createAndInitialize(LogNamesResource.class);
     }
 
     @GET
-    @Produces({MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON})
-    public String getJson(
-        @QueryParam("logFileName") @DefaultValue("${com.sun.aas.instanceRoot}/logs/server.log") String logFileName,
-        @QueryParam("startIndex") @DefaultValue("-1") long startIndex,
-        @QueryParam("searchForward") @DefaultValue("false") boolean searchForward,
-        @QueryParam("maximumNumberOfResults") @DefaultValue("40") int maximumNumberOfResults,
-        @QueryParam("onlyLevel") @DefaultValue("false") boolean onlyLevel,
-        @QueryParam("fromTime") @DefaultValue("-1") long fromTime,
-        @QueryParam("toTime") @DefaultValue("-1") long toTime,
-        @QueryParam("logLevel") @DefaultValue("INFO") String logLevel,
-        @QueryParam("anySearch") @DefaultValue("") String anySearch,
-        @QueryParam("listOfModules") String listOfModules, //default value is empty for List
-        @QueryParam("instanceName") @DefaultValue("") String instanceName)
-        throws IOException {
-
-        return getWithType(logFileName, startIndex, searchForward, maximumNumberOfResults, fromTime, toTime, logLevel,
-            onlyLevel, anySearch, listOfModules, instanceName, "json");
-
+    @Produces("text/plain; qs=0.5")
+    public Response getViewLogDetailsText(@BeanParam Params params) throws Exception {
+        return getViewLogDetails(params, TEXT_PLAIN);
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_XML})
-    public String getXML(
-        @QueryParam("logFileName") @DefaultValue("${com.sun.aas.instanceRoot}/logs/server.log") String logFileName,
-        @QueryParam("startIndex") @DefaultValue("-1") long startIndex,
-        @QueryParam("searchForward") @DefaultValue("false") boolean searchForward,
-        @QueryParam("maximumNumberOfResults") @DefaultValue("40") int maximumNumberOfResults,
-        @QueryParam("onlyLevel") @DefaultValue("true") boolean onlyLevel,
-        @QueryParam("fromTime") @DefaultValue("-1") long fromTime,
-        @QueryParam("toTime") @DefaultValue("-1") long toTime,
-        @QueryParam("logLevel") @DefaultValue("INFO") String logLevel,
-        @QueryParam("anySearch") @DefaultValue("") String anySearch,
-        @QueryParam("listOfModules") String listOfModules, //default value is empty for List,
-        @QueryParam("instanceName") @DefaultValue("") String instanceName)
-        throws IOException {
-
-        return getWithType(logFileName, startIndex, searchForward, maximumNumberOfResults, fromTime, toTime, logLevel,
-            onlyLevel, anySearch, listOfModules, instanceName, "xml");
-
+    @Produces("application/json; qs=1")
+    public Response getViewLogDetailsJson(@BeanParam Params params) throws Exception {
+        return getViewLogDetails(params, APPLICATION_JSON);
     }
 
-    private String getWithType(String logFileName, long startIndex, boolean searchForward, int maximumNumberOfResults, long fromTime,
-            long toTime, String logLevel, boolean onlyLevel, String anySearch, String listOfModules, String instanceName, String type)
-            throws IOException {
+    @GET
+    @Produces("application/xml; qs=0.75")
+    public Response getViewLogDetailsXml(@BeanParam Params params) throws Exception {
+        return getViewLogDetails(params, APPLICATION_XML);
+    }
+
+    private Response getViewLogDetails(Params params, String type) throws Exception {
         if (habitat.getService(LogManager.class) == null) {
             // the logger service is not install, so we cannot rely on it.
             throw new IOException("The GlassFish LogManager Service is not available. Not installed?");
         }
 
         List<String> modules = new ArrayList<>();
-        if (listOfModules != null && !listOfModules.isEmpty()) {
-            modules.addAll(Arrays.asList(listOfModules.split(",")));
+        if (params.getListOfModules() != null && !params.getListOfModules().isEmpty()) {
+            modules.addAll(Arrays.asList(params.getListOfModules().split(",")));
         }
 
         Properties nameValueMap = new Properties();
 
-        boolean sortAscending = true;
-        if (!searchForward) {
-            sortAscending = false;
-        }
         LogFilter logFilter = habitat.getService(LogFilter.class);
-        if (instanceName.isEmpty()) {
-            final AttributeList result = logFilter.getLogRecordsUsingQuery(logFileName, startIndex, searchForward,
-                sortAscending, maximumNumberOfResults, fromTime == -1 ? null : Instant.ofEpochMilli(fromTime),
-                toTime == -1 ? null : Instant.ofEpochMilli(toTime), logLevel, onlyLevel, modules, nameValueMap,
-                anySearch);
-            return convertQueryResult(result, type);
+
+        boolean sortAscending = params.isSearchForward();
+        AttributeList result;
+        if (params.getInstanceName().isEmpty()) {
+            result = logFilter.getLogRecordsUsingQuery(params.getLogFileName(), params.getStartIndex(),
+                    params.isSearchForward(), sortAscending, params.getMaximumNumberOfResults(),
+                    params.getFromTime() == -1 ? null : Instant.ofEpochMilli(params.getFromTime()),
+                    params.getToTime() == -1 ? null : Instant.ofEpochMilli(params.getToTime()),
+                    params.getLogLevel(), params.isOnlyLevel(), modules, nameValueMap, params.getAnySearch());
+        } else {
+            result = logFilter.getLogRecordsUsingQuery(params.getLogFileName(), params.getStartIndex(),
+                    params.isSearchForward(), sortAscending, params.getMaximumNumberOfResults(),
+                    params.getFromTime() == -1 ? null : Instant.ofEpochMilli(params.getFromTime()),
+                    params.getToTime() == -1 ? null : Instant.ofEpochMilli(params.getToTime()),
+                    params.getLogLevel(), params.isOnlyLevel(), modules, nameValueMap, params.getAnySearch(), params.getInstanceName());
         }
-        final AttributeList result = logFilter.getLogRecordsUsingQuery(logFileName, startIndex, searchForward,
-            sortAscending, maximumNumberOfResults, fromTime == -1 ? null : Instant.ofEpochMilli(fromTime),
-            toTime == -1 ? null : Instant.ofEpochMilli(toTime), logLevel, onlyLevel, modules, nameValueMap,
-            anySearch, instanceName);
         return convertQueryResult(result, type);
-
     }
 
+    @SuppressWarnings("unchecked")
     private <T> List<T> asList(final Object list) {
-        return List.class.cast(list);
+        return (List<T>) list;
     }
 
+    private Response convertQueryResult(final AttributeList queryResult, String type) throws Exception {
+        Object entity;
 
-    private String convertQueryResult(final AttributeList queryResult, String type) {
-        // extract field descriptions into a String[]
-        StringBuilder sb = new StringBuilder();
-        String sep = "";
-        if (type.equals("json")) {
-            sb.append("{\"records\": [");
-        } else {
-            sb.append("<records>\n");
-        }
+        List<List<Serializable>> logRecords = asList(((Attribute) queryResult.get(1)).getValue());
 
-        if (queryResult.size() > 0) {
-            final AttributeList fieldAttrs = (AttributeList) ((Attribute) queryResult.get(0)).getValue();
-            String[] fieldHeaders = new String[fieldAttrs.size()];
-            for (int i = 0; i < fieldHeaders.length; ++i) {
-                final Attribute attr = (Attribute) fieldAttrs.get(i);
-                fieldHeaders[i] = (String) attr.getValue();
-            }
+        switch (type) {
+            case APPLICATION_JSON:
+                JSONArray logDetails = new JSONArray();
 
-            List<List<Serializable>> srcRecords = asList(((Attribute) queryResult.get(1)).getValue());
-
-            // extract every record
-            for (List<Serializable> record : srcRecords) {
-                assert (record.size() == fieldHeaders.length);
-                //Serializable[] fieldValues = new Serializable[fieldHeaders.length];
-
-                LogRecord rec = new LogRecord();
-                int fieldIdx = 0;
-                rec.setRecordNumber(((Long) record.get(fieldIdx++)).longValue());
-                rec.setLoggedDateTime((OffsetDateTime) record.get(fieldIdx++));
-                rec.setLoggedLevel((String) record.get(fieldIdx++));
-                rec.setProductName((String) record.get(fieldIdx++));
-                rec.setLoggerName((String) record.get(fieldIdx++));
-                rec.setNameValuePairs((String) record.get(fieldIdx++));
-                rec.setMessageID((String) record.get(fieldIdx++));
-                rec.setMessage((String) record.get(fieldIdx++));
-                if (type.equals("json")) {
-                    sb.append(sep);
-                    sb.append(rec.toJSON());
-                    sep = ",";
-                } else {
-                    sb.append(rec.toXML());
-
+                for (List<Serializable> logRecord : logRecords) {
+                    logDetails.put(new LogRecord(logRecord).toJSONObject());
                 }
-            }
+
+                entity = new JSONObject().put("records", logDetails);
+                break;
+            case APPLICATION_XML:
+                Writer xml = new StringWriter();
+
+                XMLStreamWriter writer = newDefaultFactory().createXMLStreamWriter(xml);
+                try {
+                    writer.writeStartElement("records");
+                    for (List<Serializable> logRecord : logRecords) {
+                        new LogRecord(logRecord).writeXml(writer);
+                    }
+                    writer.writeEndElement();
+                } finally {
+                    writer.close();
+                }
+
+                entity = xml;
+                break;
+            case TEXT_PLAIN:
+                StringBuilder sb = new StringBuilder();
+
+                String lineSeparator = "";
+                for (List<Serializable> logRecord : logRecords) {
+                    sb.append(lineSeparator);
+                    new LogRecord(logRecord).writeCsv(sb);
+                    lineSeparator = "\r\n";
+                }
+
+                entity = sb;
+                break;
+            default:
+                // should not reach here
+                return Response.status(UNSUPPORTED_MEDIA_TYPE).build();
         }
 
-        if (type.equals("json")) {
-            sb.append("]}\n");
-        } else {
-            sb.append("\n</records>\n");
+        return Response.ok(entity.toString(), type).build();
+    }
 
+    private static final class Params {
+
+        @QueryParam("logFileName")
+        @DefaultValue("${com.sun.aas.instanceRoot}/logs/server.log")
+        private String logFileName;
+
+        @QueryParam("startIndex")
+        @DefaultValue("-1")
+        private long startIndex;
+
+        @QueryParam("searchForward")
+        @DefaultValue("false")
+        private boolean searchForward;
+
+        @QueryParam("maximumNumberOfResults")
+        @DefaultValue("40")
+        private int maximumNumberOfResults;
+
+        @QueryParam("onlyLevel")
+        @DefaultValue("false")
+        private boolean onlyLevel;
+
+        @QueryParam("fromTime")
+        @DefaultValue("-1")
+        private long fromTime;
+
+        @QueryParam("toTime")
+        @DefaultValue("-1")
+        private long toTime;
+
+        @QueryParam("logLevel")
+        @DefaultValue("INFO")
+        private String logLevel;
+
+        @QueryParam("anySearch")
+        @DefaultValue("")
+        private String anySearch;
+
+        @QueryParam("listOfModules")
+        private String listOfModules; //default value is empty for List
+
+        @QueryParam("instanceName")
+        @DefaultValue("")
+        private String instanceName;
+
+        public String getLogFileName() {
+            return logFileName;
         }
 
-        return sb.toString();
+        public long getStartIndex() {
+            return startIndex;
+        }
+
+        public boolean isSearchForward() {
+            return searchForward;
+        }
+
+        public int getMaximumNumberOfResults() {
+            return maximumNumberOfResults;
+        }
+
+        public boolean isOnlyLevel() {
+            return onlyLevel;
+        }
+
+        public long getFromTime() {
+            return fromTime;
+        }
+
+        public long getToTime() {
+            return toTime;
+        }
+
+        public String getLogLevel() {
+            return logLevel;
+        }
+
+        public String getAnySearch() {
+            return anySearch;
+        }
+
+        public String getListOfModules() {
+            return listOfModules;
+        }
+
+        public String getInstanceName() {
+            return instanceName;
+        }
     }
 }

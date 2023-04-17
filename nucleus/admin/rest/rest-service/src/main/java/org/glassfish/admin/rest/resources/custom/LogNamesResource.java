@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,14 +22,25 @@ import com.sun.enterprise.server.logging.logviewer.backend.LogFilter;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
-import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.List;
 
+import javax.xml.stream.XMLStreamWriter;
+
+import org.codehaus.jettison.json.JSONObject;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.api.LogManager;
+
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_XML;
+import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN;
+import static jakarta.ws.rs.core.Response.Status.UNSUPPORTED_MEDIA_TYPE;
+import static javax.xml.stream.XMLOutputFactory.newDefaultFactory;
 
 /**
  * REST resource to get Log Names simple wrapper around internal LogFilter class
@@ -41,60 +52,76 @@ public class LogNamesResource {
     protected ServiceLocator habitat = Globals.getDefaultBaseServiceLocator();
 
     @GET
-    @Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON })
-    public String getLogNamesJSON(@QueryParam("instanceName") String instanceName) throws IOException {
-        return getLogNames(instanceName, "json");
+    @Produces("text/plain; qs=0.5")
+    public Response getLogNamesText(@QueryParam("instanceName") String instanceName) throws Exception {
+        return getLogNames(instanceName, TEXT_PLAIN);
     }
 
     @GET
-    @Produces({ MediaType.APPLICATION_XML })
-    public String getLogNamesJXML(@QueryParam("instanceName") String instanceName) throws IOException {
-        return getLogNames(instanceName, "xml");
+    @Produces("application/json; qs=1")
+    public Response getLogNamesJson(@QueryParam("instanceName") String instanceName) throws Exception {
+        return getLogNames(instanceName, APPLICATION_JSON);
     }
 
-    private String getLogNames(String instanceName, String type) throws IOException {
+    @GET
+    @Produces("application/xml; qs=0.75")
+    public Response getLogNamesXml(@QueryParam("instanceName") String instanceName) throws Exception {
+        return getLogNames(instanceName, APPLICATION_XML);
+    }
 
+    private Response getLogNames(String instanceName, String type) throws Exception {
         if (habitat.getService(LogManager.class) == null) {
-            //the logger service is not install, so we cannot rely on it.
-            //return an error
+            // the logger service is not install, so we cannot rely on it.
+            // return an error
             throw new IOException("The GlassFish LogManager Service is not available. Not installed?");
         }
 
         LogFilter logFilter = habitat.getService(LogFilter.class);
 
         return convertQueryResult(logFilter.getInstanceLogFileNames(instanceName), type);
-
     }
 
-    private String convertQueryResult(List<String> files, String type) {
-        StringBuilder sb = new StringBuilder();
-        String sep = "";
-        if (type.equals("json")) {
-            sb.append("{\"InstanceLogFileNames\": [");
-        } else {
-            sb.append("<InstanceLogFileNames>\n");
+    private Response convertQueryResult(List<String> files, String type) throws Exception {
+        Object entity;
+
+        switch (type) {
+            case APPLICATION_JSON:
+                entity = new JSONObject().put("InstanceLogFileNames", files);
+                break;
+            case APPLICATION_XML:
+                Writer xml = new StringWriter();
+
+                XMLStreamWriter writer = newDefaultFactory().createXMLStreamWriter(xml);
+                try {
+                    writer.writeStartElement("InstanceLogFileNames");
+                    for (String file : files) {
+                        writer.writeEmptyElement(file);
+                    }
+                    writer.writeEndElement();
+                } finally {
+                    writer.close();
+                }
+
+                entity = xml;
+                break;
+            case TEXT_PLAIN:
+                StringBuilder sb = new StringBuilder();
+
+                String separator = "";
+                // extract every record
+                for (String file : files) {
+                    sb.append(separator);
+                    sb.append(file);
+                    separator = ",";
+                }
+
+                entity = sb;
+                break;
+            default:
+                // should not reach here
+                return Response.status(UNSUPPORTED_MEDIA_TYPE).build();
         }
 
-        // extract every record
-        for (String name : files) {
-            if (type.equals("json")) {
-                sb.append(sep);
-                sb.append(quote(name));
-                sep = ",";
-            } else {
-                sb.append("<" + name + "/>");
-            }
-        }
-        if (type.equals("json")) {
-            sb.append("]}\n");
-        } else {
-            sb.append("\n</InstanceLogFileNames>\n");
-
-        }
-        return sb.toString();
-    }
-
-    private String quote(String s) {
-        return "\"" + s + "\"";
+        return Response.ok(entity.toString(), type).build();
     }
 }

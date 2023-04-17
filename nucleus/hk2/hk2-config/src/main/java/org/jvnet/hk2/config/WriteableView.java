@@ -138,10 +138,6 @@ public class WriteableView implements InvocationHandler, Transactor, ConfigView 
             return ProxyHelper.invokeDefault(proxy, method, args);
         }
 
-        if (method.getAnnotation(DuckTyped.class) != null) {
-            return bean.invokeDuckMethod(method,proxy,args);
-        }
-
         ConfigModel.Property property = bean.model.toProperty(method);
         if (property == null) {
             throw new IllegalArgumentException("No corresponding property found for method: " + method);

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,9 +23,16 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
@@ -37,7 +45,10 @@ import org.glassfish.api.admin.CommandModel;
 import org.glassfish.api.logging.LogHelper;
 import org.glassfish.common.util.admin.GenericCommandModel;
 import org.glassfish.hk2.api.PerLookup;
-import org.jvnet.hk2.config.*;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigModel;
+import org.jvnet.hk2.config.Dom;
+import org.jvnet.hk2.config.DomDocument;
 
 /**
  * Generic list command implementation.
@@ -241,13 +252,7 @@ public class GenericListCommand extends GenericCrudCommand implements AdminComma
                     mci = new ColumnInfo();
                     mci.xmlName = cname;
                     mci.heading = cname.toUpperCase(Locale.ENGLISH);
-                    try {
-                        mci.duckGetter = targetModel.getDuckMethod(m);
-                    } catch (ClassNotFoundException ex) { // @todo Java SE 7 multicatch
-                        ConfigApiLoggerInfo.getLogger().log(Level.SEVERE, ConfigApiLoggerInfo.CANNOT_IDENTIFY_LIST_COL_GETTER, ex);
-                    } catch (NoSuchMethodException ex) {
-                        ConfigApiLoggerInfo.getLogger().log(Level.SEVERE, ConfigApiLoggerInfo.CANNOT_IDENTIFY_LIST_COL_GETTER, ex);
-                    }
+                    mci.getter = m;
                     cols.add(mci);
                 }
                 mci.lcAnn = lc;
@@ -334,25 +339,25 @@ public class GenericListCommand extends GenericCrudCommand implements AdminComma
         String xmlName;
         int order;
         ConfigModel.Property cprop;
-        Method duckGetter;
+        Method getter;
         ListingColumn lcAnn;
 
         private String getValue(ConfigBeanProxy bean) {
             if (cprop != null) {
                 return (String) cprop.get(Dom.unwrap(bean), String.class);
             }
-            if (duckGetter != null) {
+            if (getter != null) {
                 try {
-                    return (String) duckGetter.invoke(null, bean);
+                    return (String) getter.invoke(bean);
                 } catch (IllegalAccessException ex) {
                     LogHelper.log(ConfigApiLoggerInfo.getLogger(), Level.SEVERE, ConfigApiLoggerInfo.ERR_INVOKE_GETTER, ex,
-                            duckGetter.getName());
+                            getter.getName());
                 } catch (IllegalArgumentException ex) {
                     LogHelper.log(ConfigApiLoggerInfo.getLogger(), Level.SEVERE, ConfigApiLoggerInfo.ERR_INVOKE_GETTER, ex,
-                            duckGetter.getName());
+                            getter.getName());
                 } catch (InvocationTargetException ex) {
                     LogHelper.log(ConfigApiLoggerInfo.getLogger(), Level.SEVERE, ConfigApiLoggerInfo.ERR_INVOKE_GETTER, ex,
-                            duckGetter.getName());
+                            getter.getName());
                 }
             }
             return "";

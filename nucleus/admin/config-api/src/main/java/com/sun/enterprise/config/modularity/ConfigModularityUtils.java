@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -57,7 +58,6 @@ import org.jvnet.hk2.config.ConfigView;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.Dom;
 import org.jvnet.hk2.config.DomDocument;
-import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.IndentingXMLStreamWriter;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
@@ -179,7 +179,7 @@ public final class ConfigModularityUtils {
                         if (Collection.class.isAssignableFrom(m.getReturnType())) {
                             if (actualGenericParameter instanceof Class) {
                                 if (typeToSet.isAssignableFrom((Class) actualGenericParameter)) {
-                                    if ((m.getAnnotation(DuckTyped.class) != null)) {
+                                    if ((m.isDefault())) {
                                         return m;
                                     } else {
                                         Method deepM = findDeeperSuitableCollectionGetter(owner, typeToSet);
@@ -776,30 +776,12 @@ public final class ConfigModularityUtils {
         return null;
     }
 
-    public Class getDuckClass(Class configBeanType) {
-        Class duck;
-        final Class[] clz = configBeanType.getDeclaredClasses();
-        for (Class aClz : clz) {
-            duck = aClz;
-            if (duck.getSimpleName().equals("Duck")) {
-                return duck;
-            }
-        }
-        return null;
-    }
-
-    public Method getGetDefaultValuesMethod(Class configBeanType) {
-        Class duck = getDuckClass(configBeanType);
-        if (duck == null) {
-            return null;
-        }
-        Method m;
+    public Method getGetDefaultValuesMethod(Class<?> configBeanType) {
         try {
-            m = duck.getMethod("getDefaultValues", String.class);
+            return configBeanType.getMethod("getDefaultValues", String.class);
         } catch (Exception ex) {
             return null;
         }
-        return m;
     }
 
     public boolean deleteConfigurationForConfigBean(ConfigBeanProxy configBean, Collection col, ConfigBeanDefaultValue defaultValue) {

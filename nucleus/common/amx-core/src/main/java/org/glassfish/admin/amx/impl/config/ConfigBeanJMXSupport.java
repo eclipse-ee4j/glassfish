@@ -15,11 +15,13 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.glassfish.admin.amx.impl.config;
+
+import com.sun.enterprise.config.serverbeans.Domain;
+
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -35,6 +37,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+
 import javax.management.Descriptor;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanInfo;
@@ -48,16 +52,13 @@ import javax.management.openmbean.CompositeData;
 import javax.management.openmbean.CompositeDataSupport;
 import javax.management.openmbean.CompositeType;
 import javax.management.openmbean.OpenType;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import com.sun.enterprise.config.serverbeans.Domain;
+
 import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
-import static org.glassfish.external.amx.AMX.*;
 import org.glassfish.admin.amx.core.Util;
-import static org.glassfish.admin.amx.config.AMXConfigConstants.*;
 import org.glassfish.admin.amx.config.AMXConfigProxy;
+import org.glassfish.admin.amx.impl.util.InjectedValues;
+import org.glassfish.admin.amx.util.AMXLoggerInfo;
 import org.glassfish.admin.amx.util.ClassUtil;
 import org.glassfish.admin.amx.util.CollectionUtil;
 import org.glassfish.admin.amx.util.MapUtil;
@@ -78,11 +79,31 @@ import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.ConfigModel;
 import org.jvnet.hk2.config.DomDocument;
-import org.glassfish.admin.amx.impl.util.InjectedValues;
 
-import java.util.logging.Level;
-import org.glassfish.admin.amx.util.AMXLoggerInfo;
-
+import static org.glassfish.admin.amx.config.AMXConfigConstants.DESC_ANNOTATION_PREFIX;
+import static org.glassfish.admin.amx.config.AMXConfigConstants.DESC_CONFIG_PREFIX;
+import static org.glassfish.admin.amx.config.AMXConfigConstants.DESC_DATA_TYPE;
+import static org.glassfish.admin.amx.config.AMXConfigConstants.DESC_DEFAULT_VALUE;
+import static org.glassfish.admin.amx.config.AMXConfigConstants.DESC_ELEMENT_CLASS;
+import static org.glassfish.admin.amx.config.AMXConfigConstants.DESC_KEY;
+import static org.glassfish.admin.amx.config.AMXConfigConstants.DESC_KIND;
+import static org.glassfish.admin.amx.config.AMXConfigConstants.DESC_MAX;
+import static org.glassfish.admin.amx.config.AMXConfigConstants.DESC_MIN;
+import static org.glassfish.admin.amx.config.AMXConfigConstants.DESC_NOT_NULL;
+import static org.glassfish.admin.amx.config.AMXConfigConstants.DESC_PATTERN_REGEX;
+import static org.glassfish.admin.amx.config.AMXConfigConstants.DESC_REFERENCE;
+import static org.glassfish.admin.amx.config.AMXConfigConstants.DESC_REQUIRED;
+import static org.glassfish.admin.amx.config.AMXConfigConstants.DESC_UNITS;
+import static org.glassfish.admin.amx.config.AMXConfigConstants.DESC_VARIABLE_EXPANSION;
+import static org.glassfish.admin.amx.config.AMXConfigConstants.DESC_XML_NAME;
+import static org.glassfish.external.amx.AMX.ATTR_NAME;
+import static org.glassfish.external.amx.AMX.DESC_GENERIC_INTERFACE_NAME;
+import static org.glassfish.external.amx.AMX.DESC_GROUP;
+import static org.glassfish.external.amx.AMX.DESC_IS_SINGLETON;
+import static org.glassfish.external.amx.AMX.DESC_STD_IMMUTABLE_INFO;
+import static org.glassfish.external.amx.AMX.DESC_STD_INTERFACE_NAME;
+import static org.glassfish.external.amx.AMX.DESC_SUB_TYPES;
+import static org.glassfish.external.amx.AMX.DESC_SUPPORTS_ADOPTION;
 
 /**
  * Helps generate required JMX artifacts (MBeanInfo, etc) from a ConfigBean interface, as well
@@ -190,7 +211,7 @@ class ConfigBeanJMXSupport
             buf.append(type + DELIM);
         }
 
-        buf.append(NL + "}" + NL + "DuckTyped: {" + NL);
+        buf.append(NL + "}" + NL + "Default methods: {" + NL);
         for (final DefaultMethodInfo info : mDefaultMethodInfos)
         {
             buf.append(info + NL);
@@ -235,7 +256,6 @@ class ConfigBeanJMXSupport
             final Class<?>[] sig = candidate.signature();
             if (candidate.name().equals(name) && numTypes == sig.length)
             {
-                //debug( "Matched DuckTyped method: " + name );
                 if (isPerfectMatch(types, sig))
                 {
                     info = candidate;
@@ -694,7 +714,7 @@ class ConfigBeanJMXSupport
     }
 
     /**
-    DuckTyped methods are <em>always</em> exposed as operations, never as Attributes.
+     * Default methods are <em>always</em> exposed as operations, never as Attributes.
      */
     public MBeanOperationInfo defaultMethodToMBeanOperationInfo(final DefaultMethodInfo info)
     {

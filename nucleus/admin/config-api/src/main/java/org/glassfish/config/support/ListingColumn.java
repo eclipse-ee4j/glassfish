@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,6 @@
 
 package org.glassfish.config.support;
 
-import org.glassfish.api.I18n;
-import org.jvnet.hk2.config.GenerateServiceFromMethod;
-import org.jvnet.hk2.config.GeneratedServiceName;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -31,7 +28,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  *
  * This annotation works with the Listing annotation to provide additional information about columns in the output. The
  * annotation can be placed on any method that takes no arguments and returns a type that can be converted to a String,
- * including DuckTyped methods.
+ * including default methods.
  *
  * @author Tom Mueller
  */

@@ -46,7 +46,7 @@ public final class ConfigBeansUtilities {
     // dochez : this class needs to be killed, but I have no time to do it now
     // I am making it a singleton, will force its initialization early enough so
     // users can continue using the static method. Eventually all these methods will
-    // need to be moved to @DuckTyped methods on the interfaces directory.
+    // need to be moved to default methods on the interfaces directory.
     @Inject
     public ConfigBeansUtilities(Applications paramApps, Domain paramDomain) {
         apps = paramApps;

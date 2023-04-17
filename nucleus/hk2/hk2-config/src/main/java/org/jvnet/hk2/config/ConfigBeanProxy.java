@@ -33,7 +33,6 @@ import org.glassfish.hk2.api.Customizer;
  *
  * @author Kohsuke Kawaguchi
  * @see Dom#unwrap(ConfigBeanProxy)
- * @see DuckTyped
  * @see Element
  * @see Attribute
  */

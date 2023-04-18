@@ -104,14 +104,10 @@ public class ScatteredArchiveTest {
         archive.addCurrentClassPath(exclude);
 
         // THEN
-        try {
-            assertAll("classpath",
-                    () -> assertThat("Number of classpath elements " + archive.classpathElements,
-                            archive.classpathElements, hasSize(expectedElementsInClasspath))
-            );
-        } catch (AssertionError e) {
-            throw e;
-        }
+        assertAll("classpath",
+                () -> assertThat("Number of classpath elements " + archive.classpathElements,
+                        archive.classpathElements, hasSize(expectedElementsInClasspath))
+        );
     }
 
     private static String[] setCurrentClasspath(String classpath) {

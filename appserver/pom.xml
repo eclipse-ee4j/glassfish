@@ -98,7 +98,7 @@
         <!-- Jakarta Security + Authentication/Authorization -->
         <soteria.version>3.0.2</soteria.version>
         <exousia.version>2.1.0</exousia.version>
-        <nimbus.version>9.30</nimbus.version>
+        <nimbus.version>9.31</nimbus.version>
         <jcip.version>1.0.2</jcip.version>
 
         <!-- Jakarta Messaging -->

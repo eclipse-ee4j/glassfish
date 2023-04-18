@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,10 +17,6 @@
 
 package com.sun.enterprise.resource.pool;
 
-import java.util.Hashtable;
-
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.resource.ResourceHandle;
 import com.sun.enterprise.resource.ResourceSpec;
@@ -28,6 +24,10 @@ import com.sun.enterprise.resource.ResourceState;
 import com.sun.enterprise.resource.allocator.ResourceAllocator;
 
 import jakarta.transaction.Transaction;
+
+import java.util.Hashtable;
+
+import org.glassfish.resourcebase.resources.api.PoolInfo;
 
 /**
  * This resource pool is created when connection pooling is switched off Hence no pooling happens in this resource pool
@@ -37,7 +37,7 @@ import jakarta.transaction.Transaction;
  */
 public class UnpooledResource extends ConnectionPool {
 
-    private int poolSize;
+    private PoolSize poolSize;
 
     /** Creates a new instance of UnpooledResourcePool */
     public UnpooledResource(PoolInfo poolInfo, Hashtable env) throws PoolingException {
@@ -55,7 +55,7 @@ public class UnpooledResource extends ConnectionPool {
         }
 
         // Nothing needs to be done as pooling is disabled
-        poolSize = 0;
+        poolSize = new PoolSize(maxPoolSize);
         poolInitialized = true;
     }
 
@@ -72,25 +72,21 @@ public class UnpooledResource extends ConnectionPool {
 
     @Override
     protected ResourceHandle getUnenlistedResource(ResourceSpec spec, ResourceAllocator alloc, Transaction tran) throws PoolingException {
-        ResourceHandle handle = null;
 
-        if (incrementPoolSize()) {
-            try {
-                handle = createSingleResource(alloc);
-            } catch (PoolingException ex) {
-                decrementPoolSize();
-                throw ex;
-            }
-
-            ResourceState state = new ResourceState();
-            handle.setResourceState(state);
-            state.setEnlisted(false);
-            setResourceStateToBusy(handle);
-            return handle;
+        this.poolSize.increment();
+        final ResourceHandle handle;
+        try {
+            handle = createSingleResource(alloc);
+        } catch (PoolingException | RuntimeException ex) {
+            this.poolSize.decrement();
+            throw ex;
         }
 
-        throw new PoolingException(localStrings.getStringWithDefault("poolmgr.max.pool.size.reached",
-                "In-use connections equal max-pool-size therefore cannot allocate any more connections."));
+        ResourceState state = new ResourceState();
+        handle.setResourceState(state);
+        state.setEnlisted(false);
+        setResourceStateToBusy(handle);
+        return handle;
     }
 
     @Override
@@ -100,21 +96,7 @@ public class UnpooledResource extends ConnectionPool {
 
     @Override
     protected void freeResource(ResourceHandle resourceHandle) {
-        decrementPoolSize();
+        this.poolSize.decrement();
         deleteResource(resourceHandle);
-    }
-
-    private synchronized boolean incrementPoolSize() {
-        if (poolSize >= maxPoolSize) {
-            _logger.info("Fail as poolSize : " + poolSize);
-            return false;
-        }
-
-        poolSize++;
-        return true;
-    }
-
-    private synchronized void decrementPoolSize() {
-        poolSize--;
     }
 }

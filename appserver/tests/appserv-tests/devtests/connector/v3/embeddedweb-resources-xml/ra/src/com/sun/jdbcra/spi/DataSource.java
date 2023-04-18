@@ -79,9 +79,8 @@ public class DataSource implements javax.sql.DataSource, java.io.Serializable,
                 return (Connection) cm.allocateConnection(mcf,null);
             } catch (ResourceException re) {
 // This is temporary. This needs to be changed to SEVERE after TP
-            _logger.log(Level.WARNING, "jdbc.exc_get_conn", re.getMessage());
-            re.printStackTrace();
-                throw new SQLException (re.getMessage());
+                _logger.log(Level.WARNING, "Error allocating connection: [{0}]", re.getMessage());
+                throw new SQLException(re.getMessage(), re);
             }
     }
 
@@ -99,8 +98,8 @@ public class DataSource implements javax.sql.DataSource, java.io.Serializable,
                 return (Connection) cm.allocateConnection(mcf,info);
             } catch (ResourceException re) {
 // This is temporary. This needs to be changed to SEVERE after TP
-            _logger.log(Level.WARNING, "jdbc.exc_get_conn", re.getMessage());
-                throw new SQLException (re.getMessage());
+                _logger.log(Level.WARNING, "Error allocating connection: [{0}]", re.getMessage());
+                throw new SQLException(re.getMessage(), re);
             }
     }
 

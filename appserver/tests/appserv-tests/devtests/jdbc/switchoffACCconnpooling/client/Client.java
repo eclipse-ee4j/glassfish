@@ -486,9 +486,13 @@ public class Client {
 
         for(; i > 0; i--){
            try{
-                    con[i - 1].close();
+               Connection conn = con[i - 1];
+               if (conn != null) {
+                    conn.close();
+               }
            }catch(SQLException ex){
                 System.out.println("Unable to close connection");
+                ex.printStackTrace();
            }
         }
     }

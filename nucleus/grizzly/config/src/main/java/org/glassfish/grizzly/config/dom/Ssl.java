@@ -113,7 +113,7 @@ public interface Ssl extends ConfigBeanProxy, PropertyBag {
 
     void setKeyStoreType(String keyStoreType);
 
-    @Attribute(defaultValue= PASSWORD_PROVIDER)
+    @Attribute(defaultValue = PASSWORD_PROVIDER)
     String getKeyStorePasswordProvider();
 
     void setKeyStorePasswordProvider(String keyStorePasswordProvider);
@@ -246,7 +246,7 @@ public interface Ssl extends ConfigBeanProxy, PropertyBag {
 
     void setTrustStoreType(String trustStoreType);
 
-    @Attribute(defaultValue= PASSWORD_PROVIDER)
+    @Attribute(defaultValue = PASSWORD_PROVIDER)
     String getTrustStorePasswordProvider();
 
     void setTrustStorePasswordProvider(String passwordProvider);
@@ -300,7 +300,7 @@ public interface Ssl extends ConfigBeanProxy, PropertyBag {
     /**
      * Handshake mode
      */
-    @Attribute(defaultValue="" + HANDSHAKE_TIMEOUT_MILLIS, dataType = Long.class)
+    @Attribute(defaultValue ="" + HANDSHAKE_TIMEOUT_MILLIS, dataType = Long.class)
     String getHandshakeTimeoutMillis();
 
     void setHandshakeTimeoutMillis(String handshakeTimeout);

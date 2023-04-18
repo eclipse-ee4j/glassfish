@@ -19,18 +19,18 @@ package com.sun.enterprise.config.serverbeans;
 
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
-import java.beans.PropertyVetoException;
-
 import jakarta.inject.Inject;
+
+import java.beans.PropertyVetoException;
 
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.config.Named;
 import org.glassfish.config.support.CreationDecorator;
 import org.glassfish.config.support.CrudResolver;
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
@@ -71,7 +71,6 @@ public interface SecureAdminPrincipal extends ConfigBeanProxy {
         private SecureAdminHelper helper;
 
         @Param(name = "value", primary = true)
-        @SuppressWarnings("unused")
         private String value;
 
         @Param(optional = true, name = "alias", defaultValue = "false")

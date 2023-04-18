@@ -51,7 +51,7 @@ public interface PropertyBag {
      *
      * @return the property list
      */
-    @XmlElement(name="property")
+    @XmlElement(name = "property")
     @Element("property")
     List<Property> getProperty();
 

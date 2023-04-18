@@ -35,7 +35,13 @@ public interface SimpleExtensionThree extends SimpleConfigExtensionExtensionPoin
 
     static List<ConfigBeanDefaultValue> getDefaultValues(String runtimeType) {
         // decide what to do depending on the runtime...
-        ConfigBeanDefaultValue defaultValue = new ConfigBeanDefaultValue("domain", "some.class.name", "<xml-doc></xml-doc>", false, null);
+        ConfigBeanDefaultValue defaultValue =
+                new ConfigBeanDefaultValue(
+                        "domain",
+                        "some.class.name",
+                        "<xml-doc></xml-doc>",
+                        false,
+                        null);
         List<ConfigBeanDefaultValue> values = new ArrayList<>();
         values.add(defaultValue);
         return values;

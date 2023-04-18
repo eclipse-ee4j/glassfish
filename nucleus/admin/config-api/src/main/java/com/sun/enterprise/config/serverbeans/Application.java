@@ -55,9 +55,13 @@ import static java.util.logging.Logger.getAnonymousLogger;
 public interface Application extends ApplicationName, PropertyBag {
 
     String APP_LOCATION_PROP_NAME = "appLocation";
+
     String DEPLOYMENT_PLAN_LOCATION_PROP_NAME = "deploymentPlanLocation";
+
     String ARCHIVE_TYPE_PROP_NAME = "archiveType";
+
     String ALT_DD_LOCATION_PROP_NAME = "altDDLocation";
+
     String RUNTIME_ALT_DD_LOCATION_PROP_NAME = "runtimeAltDDLocation";
 
     /**
@@ -423,7 +427,6 @@ public interface Application extends ApplicationName, PropertyBag {
         return fileForProp(APP_LOCATION_PROP_NAME);
     }
 
-    @SuppressWarnings("unused")
     default File deploymentPlan() {
         return fileForProp(DEPLOYMENT_PLAN_LOCATION_PROP_NAME);
     }

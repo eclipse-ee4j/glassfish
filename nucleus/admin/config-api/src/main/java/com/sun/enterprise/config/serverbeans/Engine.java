@@ -95,7 +95,7 @@ public interface Engine extends ConfigBeanProxy, PropertyBag {
      * @return new instance of the specified type of ApplicationConfig
      * @throws TransactionFailure if an error occurred
      */
-    @SuppressWarnings({"unchecked", "unused"})
+    @SuppressWarnings("unchecked")
     default <T extends ApplicationConfig> T newApplicationConfig(Class<T> configType) throws TransactionFailure {
         return (T) ConfigSupport.apply(e -> {
                 T newChild = e.createChild(configType);

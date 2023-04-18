@@ -17,6 +17,11 @@
 
 package org.glassfish.admin.rest.utils;
 
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.SecureAdmin;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.security.ssl.SSLUtils;
+
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -37,14 +42,8 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 
-import org.glassfish.hk2.api.ServiceLocator;
-
 import org.glassfish.admin.rest.client.utils.MarshallingUtils;
-
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.SecureAdmin;
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.security.ssl.SSLUtils;
+import org.glassfish.hk2.api.ServiceLocator;
 
 /**
  * @author Mitesh Meswani

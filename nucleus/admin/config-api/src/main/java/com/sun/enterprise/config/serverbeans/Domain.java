@@ -47,8 +47,10 @@ import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.getLogger;
 import static java.util.logging.Level.WARNING;
 
 /**
- * Top level Domain Element that includes applications, resources, configs, servers, clusters and node-agents, load
- * balancer configurations and load balancers. node-agents and load balancers are SE/EE related entities only.
+ * Top level Domain Element that includes applications, resources, configs, servers, clusters
+ * and node-agents, load balancer configurations and load balancers.
+ *
+ * <p>Node-agents and load balancers are SE/EE related entities only.
  */
 @Configured
 public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag, ConfigLoader {
@@ -70,7 +72,6 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
      *
      * @param applicationRoot allowed object is {@link String}
      */
-    @SuppressWarnings("unused")
     void setApplicationRoot(String applicationRoot) throws PropertyVetoException;
 
     /**
@@ -89,7 +90,6 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
      *
      * @param logRoot allowed object is {@link String}
      */
-    @SuppressWarnings("unused")
     void setLogRoot(String logRoot) throws PropertyVetoException;
 
     /**
@@ -162,7 +162,6 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
      *
      * @param systemApplications allowed object is {@link SystemApplications}
      */
-    @SuppressWarnings("unused")
     void setSystemApplications(SystemApplications systemApplications) throws PropertyVetoException;
 
     /**
@@ -279,34 +278,43 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
     @PropertiesDesc(systemProperties = true, props = {
             @PropertyDesc(
                     name = "com.sun.aas.installRoot",
-                    description = "Operating system dependent. Path to the directory where the server is installed"),
+                    description = "Operating system dependent. Path to the directory where the server is installed"
+            ),
             @PropertyDesc(
                     name = "com.sun.aas.instanceRoot",
-                    description = "Operating system dependent. Path to the top level directory for a server instance"),
+                    description = "Operating system dependent. Path to the top level directory for a server instance"
+            ),
             @PropertyDesc(
                     name = "com.sun.aas.hostName",
-                    description = "Operating system dependent. Path to the name of the host (machine)"),
+                    description = "Operating system dependent. Path to the name of the host (machine)"
+            ),
             @PropertyDesc(
                     name = "com.sun.aas.javaRoot",
-                    description = "Operating system dependent. Path to the library directory for the Sun GlassFish Message Queue software"),
+                    description = "Operating system dependent. Path to the library directory for the Sun GlassFish Message Queue software"
+            ),
             @PropertyDesc(
                     name = "com.sun.aas.imqLib",
-                    description = "Operating system dependent. Path to the installation directory for the Java runtime"),
+                    description = "Operating system dependent. Path to the installation directory for the Java runtime"
+            ),
             @PropertyDesc(
                     name = "com.sun.aas.imqLib",
-                    description = "Operating system dependent. Path to the installation directory for the Java runtime"),
+                    description = "Operating system dependent. Path to the installation directory for the Java runtime"
+            ),
             @PropertyDesc(
                     name = "com.sun.aas.configName",
                     defaultValue = "server-config",
-                    description = "Name of the <config> used by a server instance"),
+                    description = "Name of the <config> used by a server instance"
+            ),
             @PropertyDesc(
                     name = "com.sun.aas.instanceName",
                     defaultValue = "server1",
-                    description = "Name of the server instance. Not used in the default configuration, but can be used to customize configuration"),
+                    description = "Name of the server instance. Not used in the default configuration, but can be used to customize configuration"
+            ),
             @PropertyDesc(
                     name = "com.sun.aas.domainName",
                     defaultValue = "domain1",
-                    description = "Name of the domain. Not used in the default configuration, but can be used to customize configuration")
+                    description = "Name of the domain. Not used in the default configuration, but can be used to customize configuration"
+            )
     })
     @Element
     List<SystemProperty> getSystemProperty();
@@ -361,7 +369,6 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
         return appRef;
     }
 
-    @SuppressWarnings("unused")
     default List<ApplicationRef> getApplicationRefsInServer(String serverName) {
         Server server = getServerNamed(serverName);
         if (server != null) {
@@ -411,7 +418,6 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
         return null;
     }
 
-    @SuppressWarnings("unused")
     default boolean isNamedSystemApplicationReferencedFrom(String appName, String serverName) {
         for (Application app : getSystemApplicationsReferencedFrom(serverName)) {
             if (app.getName().equals(appName)) {

@@ -26,6 +26,7 @@ import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
 import static org.objectweb.asm.Opcodes.ASM9;
 
 public class AttributeMethodVisitor extends EmptyVisitor {
+
     private final ClassDef def;
     private final String name;
     private final String type;
@@ -42,22 +43,21 @@ public class AttributeMethodVisitor extends EmptyVisitor {
 
     @Override
     public String toString() {
-        return "AttributeMethodVisitor{" + "def=" + def + ", name='" + name + '\'' + ", type='" + type + '\'' + ", defaultMethod=" + defaultMethod
-                + '}';
+        return "AttributeMethodVisitor{" + "def=" + def + ", name='" + name + '\'' + ", type='" + type + '\''
+                + ", defaultMethod=" + defaultMethod + '}';
     }
 
     /**
      * Visits an annotation of this method.
      *
      * @param desc the class descriptor of the annotation class.
-     * @param visible <tt>true</tt> if the annotation is visible at runtime.
+     * @param visible {@code true} if the annotation is visible at runtime.
      *
-     * @return a visitor to visit the annotation values, or <tt>null</tt> if this visitor is not interested in visiting this
-     * annotation.
+     * @return a visitor to visit the annotation values, or {@code null} if this visitor
+     * is not interested in visiting this annotation.
      */
     @Override
     public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-        AnnotationVisitor visitor = null;
         if ("Lorg/jvnet/hk2/config/Attribute;".equals(desc) || "Lorg/jvnet/hk2/config/Element;".equals(desc)) {
             try {
                 final Class<?> configurable = Thread.currentThread().getContextClassLoader().loadClass(def.getDef());
@@ -79,7 +79,7 @@ public class AttributeMethodVisitor extends EmptyVisitor {
                 throw new RuntimeException(e.getMessage(), e);
             }
         }
-        return visitor;
+        return null;
     }
 
     @Override

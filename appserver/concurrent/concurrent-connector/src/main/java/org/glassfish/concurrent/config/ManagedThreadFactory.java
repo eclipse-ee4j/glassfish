@@ -53,8 +53,7 @@ import org.jvnet.hk2.config.Configured;
 @ReferenceConstraint(skipDuringCreation = true, payload = ManagedThreadFactory.class)
 @UniqueResourceNameConstraint(message = "{resourcename.isnot.unique}", payload = ManagedThreadFactory.class)
 @CustomConfiguration(baseConfigurationFileName = "managed-thread-factory-conf.xml")
-public interface ManagedThreadFactory
-    extends ConfigBeanProxy, Resource, BindableResource, ConcurrencyResource, Payload {
+public interface ManagedThreadFactory extends ConfigBeanProxy, Resource, BindableResource, ConcurrencyResource, Payload {
 
     /**
      * Gets the value of the {@code threadPriority} property.

@@ -50,8 +50,8 @@ import org.jvnet.hk2.config.types.PropertyBag;
         @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-admin-object"),
         @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-admin-object")
 })
-@ResourceTypeOrder(deploymentOrder=ResourceDeploymentOrder.ADMIN_OBJECT_RESOURCE)
-@UniqueResourceNameConstraint(message="{resourcename.isnot.unique}", payload=AdminObjectResource.class)
+@ResourceTypeOrder(deploymentOrder = ResourceDeploymentOrder.ADMIN_OBJECT_RESOURCE)
+@UniqueResourceNameConstraint(message = "{resourcename.isnot.unique}", payload = AdminObjectResource.class)
 public interface AdminObjectResource extends ConfigBeanProxy, BindableResource, Resource, PropertyBag {
 
     /**
@@ -110,7 +110,7 @@ public interface AdminObjectResource extends ConfigBeanProxy, BindableResource, 
      *
      * @return possible object is {@link String}
      */
-    @Attribute (defaultValue="true",dataType=Boolean.class)
+    @Attribute (defaultValue = "true", dataType = Boolean.class)
     String getEnabled();
 
     /**
@@ -138,8 +138,8 @@ public interface AdminObjectResource extends ConfigBeanProxy, BindableResource, 
     /**
         Properties as per {@link PropertyBag}
      */
-    @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
-    @PropertiesDesc(props={})
+    @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props" )
+    @PropertiesDesc(props = {})
     @Element
     List<Property> getProperty();
 

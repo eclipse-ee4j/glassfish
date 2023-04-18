@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,13 +22,16 @@ import com.sun.enterprise.config.serverbeans.JavaConfig;
 import com.sun.enterprise.config.serverbeans.JvmOptionBag;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.i18n.StringManager;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
@@ -55,27 +59,28 @@ import org.jvnet.hk2.config.TransactionFailure;
  * @since GlassFish V3
  */
 
-@Service(name="create-jvm-options")   //implements the cli command by this "name"
+@Service(name = "create-jvm-options")   //implements the cli command by this "name"
 @PerLookup            //should be provided "per lookup of this class", not singleton
 @I18n("create.jvm.options")
 @ExecuteOn({RuntimeType.DAS, RuntimeType.INSTANCE})
-@TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
+@TargetType({CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER, CommandTarget.CONFIG})
 @UnknownOptionsAreOperands()
 public final class CreateJvmOptions implements AdminCommand, AdminCommandSecurity.Preauthorization {
 
-    @Param(name="target", optional=true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+    @Param(name = "target", optional = true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
     String target;
 
-    @Param(name="profiler", optional=true)
+    @Param(name = "profiler", optional = true)
     Boolean addToProfiler=false;
 
-    @Param(name="jvm_option_name", primary=true, separator=':')
+    @Param(name = "jvm_option_name", primary = true, separator = ':')
     List<String> jvmOptions;
 
     @Inject
     Target targetService;
 
-    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    @Inject
+    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     Config config;
 
     private static final StringManager lsm = StringManager.getManager(ListJvmOptions.class);

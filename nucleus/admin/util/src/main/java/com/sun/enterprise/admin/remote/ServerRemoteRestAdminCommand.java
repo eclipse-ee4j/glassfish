@@ -24,12 +24,13 @@ import com.sun.enterprise.config.serverbeans.SecureAdmin;
 import com.sun.enterprise.config.serverbeans.SecureAdminInternalUser;
 import com.sun.enterprise.security.ssl.SSLUtils;
 import com.sun.enterprise.security.store.DomainScopedPasswordAliasStore;
+
 import java.net.URLConnection;
 import java.util.logging.Logger;
+
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.security.services.impl.JCEKSDomainPasswordAliasStore;
 
 /**
  * RemoteAdminCommand which is sent from a server (DAS or instance).

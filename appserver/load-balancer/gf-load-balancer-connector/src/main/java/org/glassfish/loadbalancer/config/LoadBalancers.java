@@ -54,12 +54,12 @@ public interface LoadBalancers extends ConfigBeanProxy, DomainExtension {
      */
     @Element
     @Delete(
-            value="delete-http-lb",
-            resolver= TypeAndNameResolver.class,
-            decorator=LoadBalancer.DeleteDecorator.class,
-            i18n=@I18n("delete.http.lb.command")
+            value = "delete-http-lb",
+            resolver = TypeAndNameResolver.class,
+            decorator = LoadBalancer.DeleteDecorator.class,
+            i18n = @I18n("delete.http.lb.command")
     )
-    @Listing(value="list-http-lbs", i18n=@I18n("list.http.lbs.command"))
+    @Listing(value = "list-http-lbs", i18n = @I18n("list.http.lbs.command"))
     List<LoadBalancer> getLoadBalancer();
 
     /**

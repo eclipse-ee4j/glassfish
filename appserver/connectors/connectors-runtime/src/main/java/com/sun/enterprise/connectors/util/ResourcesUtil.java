@@ -64,16 +64,17 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 public class ResourcesUtil {
 
     static Logger _logger = LogDomains.getLogger(ResourcesUtil.class,LogDomains.RSR_LOGGER);
+
     static StringManager localStrings = StringManager.getManager(ResourcesUtil.class);
 
     static ServerContext sc_;
+
     private volatile static ResourcesUtil resourcesUtil;
+
 
     protected Domain domain;
     private Server server;
-
     private ConnectorRuntime runtime;
-
 
     private ResourcesUtil(){
     }

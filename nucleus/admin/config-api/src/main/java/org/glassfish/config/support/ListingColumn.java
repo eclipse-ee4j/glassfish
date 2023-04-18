@@ -26,9 +26,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * List command column annotation.
  *
- * This annotation works with the Listing annotation to provide additional information about columns in the output. The
- * annotation can be placed on any method that takes no arguments and returns a type that can be converted to a String,
- * including default methods.
+ * <p>>This annotation works with the Listing annotation to provide additional information about
+ * columns in the output. The annotation can be placed on any method that takes no arguments and
+ * returns a type that can be converted to a {@link String}, including default methods.
  *
  * @author Tom Mueller
  */
@@ -36,13 +36,14 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target(ElementType.METHOD)
 public @interface ListingColumn {
     /**
-     * Determines the order of the columns from left to right. The "key" attribute is assigned order value 0. Higher order
-     * values are for columns further to the right.
+     * Determines the order of the columns from left to right. The "key" attribute is assigned order value 0.
+     * Higher order values are for columns further to the right.
      */
     int order() default GenericListCommand.ColumnInfo.NONKEY_ORDER;
 
     /**
-     * Returns the header for the column. The calculate dvalue is the method name converted to XML form, e.g., getSomeAttr
+     * Returns the header for the column. The calculated value is the method name converted to XML form,
+     * e.g., getSomeAttr
      * is SOME-ATTR
      */
     String header() default "";

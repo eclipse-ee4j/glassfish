@@ -63,7 +63,6 @@ public interface RefContainer extends ConfigBeanProxy {
      *
      * @return list of {@link ApplicationRef#getRef()} retrieved from {@link #getApplicationRef()}
      */
-    @SuppressWarnings("unused")
     default List<String> getApplicationRefNames() {
         return getApplicationRef().stream().map(ApplicationRef::getRef).collect(toList());
     }

@@ -24,8 +24,8 @@ import java.beans.PropertyVetoException;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.config.support.CreationDecorator;
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
@@ -77,11 +77,9 @@ public interface SecureAdminInternalUser extends ConfigBeanProxy {
     class CrDecorator implements CreationDecorator<SecureAdminInternalUser> {
 
         @Param(primary = true)
-        @SuppressWarnings("unused")
         private String username;
 
         @Param
-        @SuppressWarnings("unused")
         private String passwordAlias;
 
         @Inject

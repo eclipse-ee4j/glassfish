@@ -17,12 +17,9 @@
 
 package org.glassfish.admingui.common.security;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.SecureAdmin;
+import com.sun.enterprise.security.SecurityServicesUtil;
 
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -32,6 +29,13 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedHashMap;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
@@ -47,21 +51,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-
-import org.glassfish.common.util.InputValidationUtil;
-import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
-
-import org.glassfish.hk2.api.ServiceLocator;
 
 import org.glassfish.admingui.common.util.GuiUtil;
 import org.glassfish.admingui.common.util.RestResponse;
 import org.glassfish.admingui.common.util.RestUtil;
+import org.glassfish.common.util.InputValidationUtil;
 import org.glassfish.grizzly.config.dom.NetworkListener;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.SecureAdmin;
-import com.sun.enterprise.security.SecurityServicesUtil;
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 
 /**
  * This class is responsible for providing the Authentication support needed by the admin console to both access the

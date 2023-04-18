@@ -21,12 +21,19 @@ import com.sun.enterprise.config.serverbeans.BindableResource;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.ResourcePoolReference;
 import com.sun.enterprise.config.serverbeans.customvalidators.ReferenceConstraint;
+
+import jakarta.validation.Payload;
+import jakarta.validation.constraints.NotNull;
+
+import java.beans.PropertyVetoException;
+import java.util.List;
+
 import org.glassfish.admin.cli.resources.ResourceConfigCreator;
+import org.glassfish.admin.cli.resources.UniqueResourceNameConstraint;
 import org.glassfish.api.admin.RestRedirect;
 import org.glassfish.api.admin.RestRedirects;
 import org.glassfish.api.admin.config.PropertiesDesc;
 import org.glassfish.quality.ToDo;
-import org.glassfish.admin.cli.resources.UniqueResourceNameConstraint;
 import org.glassfish.resourcebase.resources.ResourceTypeOrder;
 import org.glassfish.resourcebase.resources.ResourceDeploymentOrder;
 import org.jvnet.hk2.config.Attribute;
@@ -35,11 +42,6 @@ import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
-
-import jakarta.validation.Payload;
-import jakarta.validation.constraints.NotNull;
-import java.beans.PropertyVetoException;
-import java.util.List;
 
 /**
  *
@@ -51,7 +53,7 @@ import java.util.List;
         @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-connector-resource")
 })
 @ResourceTypeOrder(deploymentOrder = ResourceDeploymentOrder.CONNECTOR_RESOURCE)
-@UniqueResourceNameConstraint(message = "{resourcename.isnot.unique}", payload=ConnectorResource.class)
+@UniqueResourceNameConstraint(message = "{resourcename.isnot.unique}", payload = ConnectorResource.class)
 @ReferenceConstraint(skipDuringCreation = true, payload = ConnectorResource.class)
 public interface ConnectorResource extends ConfigBeanProxy, Resource, PropertyBag, BindableResource, Payload, ResourcePoolReference {
 
@@ -77,7 +79,7 @@ public interface ConnectorResource extends ConfigBeanProxy, Resource, PropertyBa
      *
      * @return possible object is {@link String}
      */
-    @Attribute (defaultValue = "true",dataType = Boolean.class)
+    @Attribute (defaultValue = "true", dataType = Boolean.class)
     String getEnabled();
 
     /**

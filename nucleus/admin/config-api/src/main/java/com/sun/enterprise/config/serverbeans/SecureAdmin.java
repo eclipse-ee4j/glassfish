@@ -52,26 +52,34 @@ public interface SecureAdmin extends ConfigBeanProxy {
     String ADMIN_ONE_TIME_AUTH_TOKEN_HEADER_NAME = "X-GlassFish-authToken";
 
     @Element
-    @Create(value = "enable-secure-admin-principal",
+    @Create(
+            value = "enable-secure-admin-principal",
             decorator = SecureAdminPrincipal.CrDecorator.class,
             i18n = @I18n("enable.secure.admin.principal.command"),
-            cluster = @ExecuteOn(value = {RuntimeType.DAS, RuntimeType.INSTANCE }))
-    @Delete(value = "disable-secure-admin-principal",
+            cluster = @ExecuteOn(value = {RuntimeType.DAS, RuntimeType.INSTANCE})
+    )
+    @Delete(
+            value = "disable-secure-admin-principal",
             resolver = SecureAdminPrincipal.Resolver.class,
             i18n = @I18n("disable.secure.admin.principal.command"),
-            cluster = @ExecuteOn(value = {RuntimeType.DAS, RuntimeType.INSTANCE }))
+            cluster = @ExecuteOn(value = {RuntimeType.DAS, RuntimeType.INSTANCE})
+    )
     @Listing(value = "list-secure-admin-principals", i18n = @I18n("list.secure.admin.principals.command"))
     List<SecureAdminPrincipal> getSecureAdminPrincipal();
 
     @Element
-    @Create(value = "enable-secure-admin-internal-user",
+    @Create(
+            value = "enable-secure-admin-internal-user",
             decorator = SecureAdminInternalUser.CrDecorator.class,
             i18n = @I18n("enable.secure.admin.internal.user.command"),
-            cluster = @ExecuteOn(value = {RuntimeType.DAS, RuntimeType.INSTANCE }))
-    @Delete(value = "disable-secure-admin-internal-user",
+            cluster = @ExecuteOn(value = {RuntimeType.DAS, RuntimeType.INSTANCE})
+    )
+    @Delete(
+            value = "disable-secure-admin-internal-user",
             resolver = TypeAndNameResolver.class,
             i18n = @I18n("disable.secure.admin.internal.user.command"),
-            cluster = @ExecuteOn(value = {RuntimeType.DAS, RuntimeType.INSTANCE }))
+            cluster = @ExecuteOn(value = {RuntimeType.DAS, RuntimeType.INSTANCE})
+    )
     @Listing(value = "list-secure-admin-internal-users", i18n = @I18n("list.secure.admin.internal.user.command"))
     List<SecureAdminInternalUser> getSecureAdminInternalUser();
 
@@ -154,7 +162,6 @@ public interface SecureAdmin extends ConfigBeanProxy {
         return !secureAdminInternalUsers(secureAdmin).isEmpty();
     }
 
-    @SuppressWarnings("unused")
     static List<SecureAdminPrincipal> secureAdminPrincipals(final SecureAdmin secureAdmin, final ServiceLocator habitat) {
         List<SecureAdminPrincipal> principals = List.of();
         if (secureAdmin != null) {

@@ -39,7 +39,6 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.config.PropertiesDesc;
@@ -49,7 +48,6 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.loadbalancer.config.customvalidators.RefConstraint;
 import org.glassfish.loadbalancer.config.customvalidators.RefValidator;
 import org.glassfish.quality.ToDo;
-
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;

@@ -20,11 +20,11 @@ package com.sun.enterprise.config.serverbeans;
 import java.beans.PropertyVetoException;
 import java.util.List;
 
-import org.jvnet.hk2.config.types.PropertyBag;
 import org.glassfish.api.admin.config.Named;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.Element;
+import org.jvnet.hk2.config.types.PropertyBag;
 
 /**
  * Tag Interface for any module

@@ -30,7 +30,6 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 
 import static org.glassfish.config.support.Constants.NAME_APP_REGEX;
 
-
 /**
  * References to applications deployed to the server instance
  */

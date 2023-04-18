@@ -27,6 +27,7 @@ import org.jvnet.hk2.config.Element;
 
 @Configured
 public interface Configs extends ConfigBeanProxy {
+
     /**
      * Gets the value of the {@code config} property.
      *

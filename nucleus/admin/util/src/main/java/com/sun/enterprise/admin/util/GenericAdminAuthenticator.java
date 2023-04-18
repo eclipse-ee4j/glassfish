@@ -17,23 +17,32 @@
 
 package com.sun.enterprise.admin.util;
 
-import com.sun.enterprise.config.serverbeans.SecureAdmin;
-import com.sun.enterprise.config.serverbeans.SecureAdminPrincipal;
-import com.sun.enterprise.security.auth.realm.file.FileRealmUser;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.security.auth.realm.file.FileRealm;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.config.serverbeans.AuthRealm;
 import com.sun.enterprise.config.serverbeans.AdminService;
+import com.sun.enterprise.config.serverbeans.AuthRealm;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.SecureAdmin;
+import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.security.SecurityContext;
+import com.sun.enterprise.security.auth.realm.file.FileRealm;
+import com.sun.enterprise.security.auth.realm.file.FileRealmUser;
+import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.net.NetUtils;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
 import java.io.File;
+import java.io.IOException;
+import java.rmi.server.RemoteServer;
+import java.rmi.server.ServerNotActiveException;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
+import javax.security.auth.login.LoginException;
+import javax.management.remote.JMXAuthenticator;
 
 import org.glassfish.api.container.Sniffer;
 import org.glassfish.common.util.admin.AuthTokenManager;
@@ -44,15 +53,6 @@ import org.jvnet.hk2.annotations.ContractsProvided;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import javax.security.auth.login.LoginException;
-import javax.security.auth.Subject;
-import javax.management.remote.JMXAuthenticator;
-import java.util.logging.Logger;
-import java.io.IOException;
-import java.rmi.server.RemoteServer;
-import java.rmi.server.ServerNotActiveException;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.security.common.Group;
 import org.glassfish.hk2.api.PostConstruct;

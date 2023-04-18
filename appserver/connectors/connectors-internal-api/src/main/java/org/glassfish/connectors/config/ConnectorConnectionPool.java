@@ -508,9 +508,9 @@ public interface ConnectorConnectionPool extends ConfigBeanProxy, Resource, Reso
      *
      * @return possible object is {@link String}
      */
-    @Attribute (defaultValue="0")
-    @Min(value=0)
-    @Max(value=Integer.MAX_VALUE)
+    @Attribute (defaultValue = "0")
+    @Min(value = 0)
+    @Max(value = Integer.MAX_VALUE)
     String getMaxConnectionUsageCount();
 
     /**

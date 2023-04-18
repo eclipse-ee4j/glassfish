@@ -40,7 +40,7 @@ public interface SecurityConfiguration extends ConfigBeanProxy {
     /**
      * Gets the {@code name} of the security service instance.
      */
-    @Attribute(required=true, key=true)
+    @Attribute(required = true, key = true)
     @NotNull
     String getName();
 

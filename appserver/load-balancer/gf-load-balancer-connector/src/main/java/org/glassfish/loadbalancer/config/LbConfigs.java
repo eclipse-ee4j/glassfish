@@ -54,15 +54,16 @@ public interface LbConfigs extends ConfigBeanProxy, DomainExtension {
      */
     @Element
     @Create(
-            value="create-http-lb-config",
-            decorator=LbConfig.Decorator.class,
-            cluster=@org.glassfish.api.admin.ExecuteOn(value = RuntimeType.DAS),
-            i18n=@I18n("create.http.lb.config.command")
+            value = "create-http-lb-config",
+            decorator = LbConfig.Decorator.class,
+            cluster = @org.glassfish.api.admin.ExecuteOn(value = RuntimeType.DAS),
+            i18n = @I18n("create.http.lb.config.command")
     )
-    @Delete(value="delete-http-lb-config",
-            resolver= TypeAndNameResolver.class,
-            decorator=LbConfig.DeleteDecorator.class,
-            i18n=@I18n("delete.http.lb.config.command")
+    @Delete(
+            value = "delete-http-lb-config",
+            resolver = TypeAndNameResolver.class,
+            decorator = LbConfig.DeleteDecorator.class,
+            i18n = @I18n("delete.http.lb.config.command")
     )
     List<LbConfig> getLbConfig();
 

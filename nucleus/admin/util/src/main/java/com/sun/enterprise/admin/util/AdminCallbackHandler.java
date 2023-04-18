@@ -19,6 +19,7 @@ package com.sun.enterprise.admin.util;
 
 import com.sun.enterprise.config.serverbeans.SecureAdmin;
 import com.sun.enterprise.universal.GFBase64Decoder;
+
 import java.io.IOException;
 import java.net.PasswordAuthentication;
 import java.security.Principal;
@@ -27,7 +28,13 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.security.auth.callback.*;
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.NameCallback;
+import javax.security.auth.callback.PasswordCallback;
+import javax.security.auth.callback.TextInputCallback;
+import javax.security.auth.callback.UnsupportedCallbackException;
+
 import org.glassfish.common.util.admin.AdminAuthenticator.AuthenticatorType;
 import org.glassfish.grizzly.http.Cookie;
 import org.glassfish.grizzly.http.server.Request;

@@ -19,9 +19,9 @@ package com.sun.enterprise.config.serverbeans;
 
 import java.util.List;
 
+import org.glassfish.api.admin.config.ApplicationName;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.Element;
-import org.glassfish.api.admin.config.ApplicationName;
 
 /**
  * Element describing the {@code system-applications} in {@code domain.xml}

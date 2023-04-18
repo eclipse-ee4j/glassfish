@@ -26,13 +26,12 @@ import java.util.List;
 
 import org.glassfish.api.admin.config.ConfigExtension;
 import org.glassfish.api.admin.config.PropertiesDesc;
-import org.jvnet.hk2.config.types.Property;
-import org.jvnet.hk2.config.types.PropertyBag;
 import org.glassfish.quality.ToDo;
 import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.Configured;
-
+import org.jvnet.hk2.config.Element;
+import org.jvnet.hk2.config.types.Property;
+import org.jvnet.hk2.config.types.PropertyBag;
 
 /**
  * Group-management-service(GMS) is an in-process service that provides cluster
@@ -90,10 +89,10 @@ public interface GroupManagementService extends PropertyBag, ConfigExtension {
     /**
      * Sets the value of the {@code groupDiscoveryTimeoutInMillis} property.
      *
-     * @param groupDiscoveryTimeoutInMillis allowed object is {@link String}
+     * @param groupDiscoveryTimeout allowed object is {@link String}
      * @since glassfish v3.1
      */
-    void setGroupDiscoveryTimeoutInMillis(String groupDiscoveryTimeoutInMillis) throws PropertyVetoException;
+    void setGroupDiscoveryTimeoutInMillis(String groupDiscoveryTimeout) throws PropertyVetoException;
 
     /**
      * Gets the value of the {@code fdProtocolMaxTries} property.

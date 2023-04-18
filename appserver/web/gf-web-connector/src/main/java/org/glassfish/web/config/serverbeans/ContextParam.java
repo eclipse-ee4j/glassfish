@@ -51,7 +51,7 @@ public interface ContextParam extends ConfigBeanProxy {
      *
      * @return parameter name
      */
-    @Element(required=true, key=true)
+    @Element(required = true, key = true)
     String getParamName();
 
     /**
@@ -76,7 +76,7 @@ public interface ContextParam extends ConfigBeanProxy {
      */
     void setParamValue(String paramValue);
 
-    @Attribute(dataType=Boolean.class, defaultValue="false")
+    @Attribute(dataType = Boolean.class, defaultValue = "false")
     String getIgnoreDescriptorItem();
 
     void setIgnoreDescriptorItem(String value);

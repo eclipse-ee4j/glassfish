@@ -48,14 +48,14 @@ import org.jvnet.hk2.config.types.PropertyBag;
  * JDBC javax.sql.(XA)DataSource resource definition.
  */
 @Configured
-@ResourceConfigCreator(commandName="create-jdbc-resource")
+@ResourceConfigCreator(commandName = "create-jdbc-resource")
 @RestRedirects({
         @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-jdbc-resource"),
         @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-jdbc-resource")
 })
-@ResourceTypeOrder(deploymentOrder=ResourceDeploymentOrder.JDBC_RESOURCE)
-@ReferenceConstraint(skipDuringCreation=true, payload=JdbcResource.class)
-@UniqueResourceNameConstraint(message="{resourcename.isnot.unique}", payload=JdbcResource.class)
+@ResourceTypeOrder(deploymentOrder = ResourceDeploymentOrder.JDBC_RESOURCE)
+@ReferenceConstraint(skipDuringCreation = true, payload = JdbcResource.class)
+@UniqueResourceNameConstraint(message = "{resourcename.isnot.unique}", payload = JdbcResource.class)
 public interface JdbcResource extends ConfigBeanProxy, Resource, PropertyBag, BindableResource, Payload, ResourcePoolReference {
 
     /**
@@ -66,8 +66,8 @@ public interface JdbcResource extends ConfigBeanProxy, Resource, PropertyBag, Bi
     @Override
     @Attribute
     @NotNull
-    @Param(name=name)
-    @ReferenceConstraint.RemoteKey(message="{resourceref.invalid.poolname}", type=JdbcConnectionPool.class)
+    @Param(name = name)
+    @ReferenceConstraint.RemoteKey(message = "{resourceref.invalid.poolname}", type = JdbcConnectionPool.class)
     String getPoolName();
 
     String name = "connectionpoolid";
@@ -78,7 +78,7 @@ public interface JdbcResource extends ConfigBeanProxy, Resource, PropertyBag, Bi
      * @return possible object is {@link String}
      */
     @Override
-    @Attribute (defaultValue="true", dataType=Boolean.class)
+    @Attribute(defaultValue = "true", dataType = Boolean.class)
     @Param
     String getEnabled();
 
@@ -110,8 +110,8 @@ public interface JdbcResource extends ConfigBeanProxy, Resource, PropertyBag, Bi
      * Properties as per {@link PropertyBag}
      */
     @Override
-    @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
-    @PropertiesDesc(props={})
+    @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props" )
+    @PropertiesDesc(props = {})
     @Element
     List<Property> getProperty();
 

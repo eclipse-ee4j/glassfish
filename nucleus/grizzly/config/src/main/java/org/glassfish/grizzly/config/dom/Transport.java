@@ -22,11 +22,11 @@ import jakarta.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.glassfish.grizzly.IOStrategy;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.types.PropertyBag;
-import org.glassfish.grizzly.IOStrategy;
 
 /**
  * Defines one specific transport and its properties.

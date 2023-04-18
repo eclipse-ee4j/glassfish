@@ -17,6 +17,16 @@
 
 package com.sun.enterprise.security.admin.cli;
 
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.SecureAdmin;
+import com.sun.enterprise.config.serverbeans.SecureAdminHelper;
+import com.sun.enterprise.config.serverbeans.SecureAdminHelper.SecureAdminCommandException;
+import com.sun.enterprise.config.serverbeans.SecureAdminPrincipal;
+import com.sun.enterprise.security.SecurityLoggerInfo;
+import com.sun.enterprise.security.ssl.SSLUtils;
+
+import jakarta.inject.Inject;
+
 import java.io.IOException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -36,16 +46,6 @@ import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.TransactionFailure;
-
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.SecureAdmin;
-import com.sun.enterprise.config.serverbeans.SecureAdminHelper;
-import com.sun.enterprise.config.serverbeans.SecureAdminHelper.SecureAdminCommandException;
-import com.sun.enterprise.config.serverbeans.SecureAdminPrincipal;
-import com.sun.enterprise.security.SecurityLoggerInfo;
-import com.sun.enterprise.security.ssl.SSLUtils;
-
-import jakarta.inject.Inject;
 
 /**
  * Records that secure admin is to be used and adjusts each admin listener configuration in the domain to use secure admin.

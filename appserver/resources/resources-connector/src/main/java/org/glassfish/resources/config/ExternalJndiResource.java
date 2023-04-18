@@ -101,7 +101,7 @@ public interface ExternalJndiResource extends ConfigBeanProxy, Resource, Propert
      * @return possible object is {@link String}
      */
     @Override
-    @Attribute (defaultValue = "true",dataType = Boolean.class)
+    @Attribute (defaultValue = "true", dataType = Boolean.class)
     String getEnabled();
 
     /**

@@ -192,7 +192,6 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
      *
      * @param monitoringService allowed object is {@link MonitoringService}
      */
-    @SuppressWarnings("unused")
     void setMonitoringService(MonitoringService monitoringService) throws PropertyVetoException;
 
     /**
@@ -270,7 +269,6 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
      *
      * @param groupManagementService allowed object is {@link GroupManagementService}
      */
-    @SuppressWarnings("unused")
     void setGroupManagementService(GroupManagementService groupManagementService) throws PropertyVetoException;
 
     /**
@@ -296,14 +294,14 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
             @PropertyDesc(name = "IIOP_LISTENER_PORT", defaultValue = "3700", dataType = Port.class),
             @PropertyDesc(name = "IIOP_SSL_LISTENER_PORT", defaultValue = "1060", dataType = Port.class),
             @PropertyDesc(name = "IIOP_SSL_MUTUALAUTH_PORT", defaultValue = "1061", dataType = Port.class),
-            @PropertyDesc(name = "JMX_SYSTEM_CONNECTOR_PORT", defaultValue = "8686", dataType = Port.class) })
+            @PropertyDesc(name = "JMX_SYSTEM_CONNECTOR_PORT", defaultValue = "8686", dataType = Port.class)
+    })
     @Element
     @Override
     List<SystemProperty> getSystemProperty();
 
     // Default methods for accessing the logging.properties file
 
-    @SuppressWarnings("unused")
     default Map<String, String> getLoggingProperties() {
         LoggingConfigImpl loggingConfig = getLoggingConfig();
 
@@ -315,7 +313,6 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
         return loggingProperties;
     }
 
-    @SuppressWarnings("unused")
     default String setLoggingProperty(String property, String value) {
         LoggingConfigImpl loggingConfig = getLoggingConfig();
 
@@ -327,7 +324,6 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
         return loggingProperty;
     }
 
-    @SuppressWarnings("unused")
     default Map<String, String> updateLoggingProperties(Map<String, String> properties) {
         LoggingConfigImpl loggingConfig = getLoggingConfig();
 

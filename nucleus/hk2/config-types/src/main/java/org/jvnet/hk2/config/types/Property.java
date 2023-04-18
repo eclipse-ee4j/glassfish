@@ -39,9 +39,9 @@ public interface Property extends ConfigBeanProxy  {
      *
      * @return possible object is {@link String}
      */
-    @XmlAttribute(required=true)
+    @XmlAttribute(required = true)
     @XmlID
-    @Attribute(required = true, key=true)
+    @Attribute(required = true, key = true)
     String getName();
 
     /**

@@ -100,7 +100,7 @@ public interface NetworkListener extends ConfigBeanProxy, PropertyBag {
      * A {@code port} to listen on.
      */
     @Attribute(required = true, dataType = Integer.class)
-    @Range(max=65535)
+    @Range(max = 65535)
     String getPort();
 
     void setPort(String port);

@@ -22,7 +22,6 @@ import com.sun.enterprise.config.serverbeans.customvalidators.JavaClassName;
 import jakarta.validation.constraints.NotNull;
 
 import java.beans.PropertyVetoException;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +44,7 @@ public interface LoginModuleConfig extends SecurityProviderConfig, PropertyBag {
     /**
      * Gets the class name of the LoginModule.
      */
-    @Attribute(required=true)
+    @Attribute(required = true)
     @NotNull
     @JavaClassName
     String getModuleClass();
@@ -55,7 +54,7 @@ public interface LoginModuleConfig extends SecurityProviderConfig, PropertyBag {
     /**
      * Gets the JAAS control flag of the LoginModule.
      */
-    @Attribute(required=true)
+    @Attribute(required = true)
     @NotNull
     String getControlFlag();
 

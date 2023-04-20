@@ -62,8 +62,8 @@ public class ScatteredArchiveTest {
                 "jakarta.jakarta-api.jar:path2:/some/folder/path3:somepath, path., somepath",
                 "'', '', ''"
     })
-    public void addCurrentClasspathUsingExcludes(String classpath, 
-            @ConvertWith(ConvertCSVToArrayOfStrings.class) String[] excludesPatterns, 
+    public void addCurrentClasspathUsingExcludes(String classpath,
+            @ConvertWith(ConvertCSVToArrayOfStrings.class) String[] excludesPatterns,
             @ConvertWith(ConvertCSVToListOfFiles.class) List<File> expectedFilesInClasspath) {
 
         // GIVEN
@@ -93,8 +93,8 @@ public class ScatteredArchiveTest {
         "'jakarta.jakarta-api.jar:path2:/some/folder/path3:somepath', '1,2', 'jakarta.jakarta-api.jar,somepath'",
         "'', '', ''"
     })
-    public void addCurrentClasspathUsingPredicate(String classpath, 
-            @ConvertWith(ConvertCSVToArrayOfStrings.class) String[] excludesIndexes, 
+    public void addCurrentClasspathUsingPredicate(String classpath,
+            @ConvertWith(ConvertCSVToArrayOfStrings.class) String[] excludesIndexes,
             @ConvertWith(ConvertCSVToListOfFiles.class) List<File> expectedFilesInClasspath) {
 
         // GIVEN
@@ -145,7 +145,7 @@ public class ScatteredArchiveTest {
             }
         }
     }
-    
+
     private static class ConvertCSVToListOfFiles extends ConvertCSVToArrayOfStrings implements ArgumentConverter {
 
         @Override
@@ -156,8 +156,8 @@ public class ScatteredArchiveTest {
                     .collect(Collectors.toList());
         }
 
-        
+
     }
-    
+
 
 }

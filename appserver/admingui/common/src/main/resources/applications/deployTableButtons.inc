@@ -35,7 +35,7 @@
                 getUIComponent(clientId="$pageSession{tableRowGroupId}", component=>$attribute{tableRowGroup});
                 getSelectedSingleMapRows(TableRowGroup="$attribute{tableRowGroup}" selectedRows=>$attribute{selectedRows});
                 gf.undeploy(selectedRows="${selectedRows}" );
-                gf.navigate(page="#{listPageLink}");
+                gf.redirect(page="#{listPageLink}");
             />
          </sun:button>
         <sun:button id="button2" text="$resource{i18n.button.Enable}" rendered="#{pageSession.onlyDASExist}" disabled="#{true}" primary="#{false}"

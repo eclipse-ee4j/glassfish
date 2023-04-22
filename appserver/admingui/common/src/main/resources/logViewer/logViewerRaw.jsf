@@ -21,7 +21,7 @@
 
 <ui:event type="initPage">
     initSessionAttributes();
-    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings");
     setResourceBundle(key="i18n" bundle="org.glassfish.admingui.core.Strings");
 </ui:event>
 
@@ -38,7 +38,7 @@
 <sun:html id="html2">
 <sun:head id="propertyhead" title="$resource{i18nc.logViewerRaw.PageTitle}" debug="false" parseOnLoad="false">
 	<h:outputScript name="faces.js" library="jakarta.faces" target="head" />
-    <sun:script url="/resource/common/js/adminjsf.js" />
+    <sun:script url="$resource{i18nc.adminjsf.url}" />
 </sun:head>
 <sun:body onLoad="javascript: logViewerRaw('/download/log/?contentSourceId=LogViewer&start=0&instanceName=#{pageSession.encodedInstanceName}&restUrl=' + encodeURIComponent('#{sessionScope.REST_URL}'))" id="body3">
 <sun:form id="propertyForm">

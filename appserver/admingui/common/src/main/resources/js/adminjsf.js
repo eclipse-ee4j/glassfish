@@ -19,7 +19,9 @@
  * Common utility
  */
 
-if (require) {
+/* Load dependencies eagerly to prevent issues with loading them asynchrnously later.
+ */    
+if (typeof(require) === typeof(Function)) {
     /* Don't load dependencies eagerly if require is not available. 
      * Allows using adminjsf without loading dojo for the require function,
      * in cases when only basic functionality is needed. For example in removeFrame.jsf.

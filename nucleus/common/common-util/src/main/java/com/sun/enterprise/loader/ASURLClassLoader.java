@@ -27,7 +27,6 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.instrument.ClassFileTransformer;
@@ -117,9 +116,6 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
      */
     private volatile String doneSnapshot;
 
-    /** streams opened by this loader */
-    private final List<SentinelInputStream> streams = Collections.synchronizedList(new ArrayList<>(16));
-
     private final ArrayList<ClassFileTransformer> transformers = new ArrayList<>(1);
 
     private final static StringManager sm = StringManager.getManager(ASURLClassLoader.class);
@@ -148,7 +144,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
     }
 
 
-    public boolean isDone() {
+    public boolean isClosed() {
         // method need not by 'synchronized' because 'doneCalled' is 'volatile'.
         return doneCalled;
     }
@@ -156,7 +152,11 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
 
     @Override
     public void preDestroy() {
-        done();
+        try {
+            close();
+        } catch(IOException ioe) {
+            _logger.log(INFO, CULoggerInfo.getString(CULoggerInfo.exceptionIO), ioe);
+        }
     }
 
 
@@ -169,11 +169,12 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
      * <li>race condition while checking 'doneCalled'
      * <li>only one caller should close the zip files,
      * <li>done should occur only once and set the flag when done.
-     * <li>shoudl not return 'true' when a previous thread might still
+     * <li>should not return 'true' when a previous thread might still
      * be in the process of executing the method.
      * </ol>
      */
-    public void done() {
+    @Override
+    public void close() throws IOException {
         // This works because 'doneCalled' is 'volatile'
         if (doneCalled) {
             return;
@@ -213,8 +214,6 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
                 u = null;
             }
 
-            closeOpenStreams();
-
             // clears out the tables
             // Clear all values. Because fields are 'final' (for thread safety), cannot null them
             this.urlSet.clear();
@@ -225,6 +224,8 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
                 this.notFoundClasses.clear();
             }
         }
+
+        super.close();
     }
 
 
@@ -829,19 +830,6 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
 
 
     @Override
-    public InputStream getResourceAsStream(final String name) {
-        InputStream stream = super.getResourceAsStream(name);
-        // Make sure not to wrap the stream if it already is a wrapper.
-        if (stream != null) {
-            if (!(stream instanceof SentinelInputStream)) {
-                stream = new SentinelInputStream(stream);
-            }
-        }
-        return stream;
-    }
-
-
-    @Override
     public Enumeration<URL> getResources(String name) throws IOException {
         final ResourceLocator locator = new ResourceLocator(this, getParentClassLoader(), true);
         return locator.getResources(name);
@@ -854,33 +842,6 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
             return getSystemClassLoader();
         }
         return parent;
-    }
-
-
-    /**
-     * Returns the vector of open streams; creates it if needed.
-     *
-     * @return Vector<SentinelInputStream> holding open streams
-     */
-    private Collection<SentinelInputStream> getStreams() {
-        return streams;
-    }
-
-
-    /**
-     * Closes any streams that remain open, logging a warning for each.
-     * <p>
-     * This method should be invoked when the loader will no longer be used
-     * and the app will no longer explicitly close any streams it may have opened.
-     * Must be synchnronized to (a) avoid race condition checking 'streams'.
-     */
-    private synchronized void closeOpenStreams() {
-        //copy is needed because closeWithWarning removes the instance from stream
-        List<SentinelInputStream> streamsCopy = new ArrayList<>(streams);
-        for (SentinelInputStream s : streamsCopy) {
-            s.closeWithWarning();
-        }
-        streams.clear();
     }
 
 
@@ -1177,88 +1138,6 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
     }
 
     /**
-     * Wraps all InputStreams returned by this class loader to report when
-     * a finalizer is run before the stream has been closed.  This helps
-     * to identify where locked files could arise.
-     * @author vtsyganok
-     * @author tjquinn
-     */
-    protected final class SentinelInputStream extends FilterInputStream {
-        private volatile boolean closed = false;
-        private volatile Throwable throwable;
-
-        /**
-         * Constructs new FilteredInputStream which reports InputStreams not closed properly.
-         * When the garbage collector runs the finalizer.  If the stream is still open this class will
-         * report a stack trace showing where the stream was opened.
-         *
-         * @param in - InputStream to be wrapped
-         */
-        protected SentinelInputStream(final InputStream in) {
-            super(in);
-            throwable = new Throwable();
-            getStreams().add(this);
-        }
-
-        /**
-         * Closes underlying input stream.
-         */
-        @Override
-        public void close() throws IOException {
-            _close();
-        }
-
-        /**
-         * Invoked by Garbage Collector. If underlying InputStream was not closed properly,
-         * the stack trace of the constructor will be logged!
-         *
-         * 'closed' is 'volatile', but it's a race condition to check it and how this code
-         * relates to _close() is unclear.
-         */
-        @Override
-        protected void finalize() throws Throwable {
-            closeWithWarning();
-            super.finalize();
-        }
-
-        private synchronized void _close() throws IOException {
-            if (closed) {
-                return;
-            }
-
-            // race condition with above check, but should have no harmful effects
-            closed = true;
-            throwable = null;
-            getStreams().remove(this);
-            super.close();
-        }
-
-        private void closeWithWarning() {
-            if (closed) {
-                return;
-            }
-
-            // stores the internal Throwable as it will be set to null in the _close method
-            Throwable localThrowable = this.throwable;
-
-            try {
-                _close();
-            } catch (IOException ioe) {
-                _logger.log(Level.WARNING, CULoggerInfo.exceptionClosingStream, ioe);
-            }
-
-            report(localThrowable);
-        }
-
-        /**
-         * Report "left-overs"!
-         */
-        private void report(Throwable localThrowable) {
-            _logger.log(Level.WARNING, CULoggerInfo.inputStreamFinalized, localThrowable);
-        }
-    }
-
-    /**
      * To properly close streams obtained through URL.getResource().getStream():
      * this opens the input stream on a JarFile that is already open as part
      * of the classloader, and returns a sentinel stream on it.
@@ -1314,7 +1193,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
             if (entry == null) {
                 throw new IOException("no entry called " + mName + " found in " + mRes.source);
             }
-            return new SentinelInputStream(mRes.zip.getInputStream(entry));
+            return mRes.zip.getInputStream(entry);
         }
     }
 

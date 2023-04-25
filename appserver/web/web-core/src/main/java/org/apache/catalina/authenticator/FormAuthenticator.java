@@ -19,6 +19,16 @@
 package org.apache.catalina.authenticator;
 
 import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
+import static org.apache.catalina.LogFacade.UNEXPECTED_ERROR_FORWARDING_TO_LOGIN_PAGE;
+import static org.apache.catalina.authenticator.Constants.FORM_ACTION;
+import static org.apache.catalina.authenticator.Constants.FORM_METHOD;
+import static org.apache.catalina.authenticator.Constants.FORM_PRINCIPAL_NOTE;
+import static org.apache.catalina.authenticator.Constants.FORM_REQUEST_NOTE;
+import static org.apache.catalina.authenticator.Constants.REQ_SSO_VERSION_NOTE;
+import static org.apache.catalina.authenticator.Constants.SESS_PASSWORD_NOTE;
+import static org.apache.catalina.authenticator.Constants.SESS_USERNAME_NOTE;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,11 +36,9 @@ import java.security.Principal;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Locale;
-import java.util.logging.Level;
 
 import org.apache.catalina.HttpRequest;
 import org.apache.catalina.HttpResponse;
-import org.apache.catalina.LogFacade;
 import org.apache.catalina.Realm;
 import org.apache.catalina.Session;
 import org.apache.catalina.deploy.LoginConfig;
@@ -70,7 +78,12 @@ public class FormAuthenticator extends AuthenticatorBase {
      */
     @Override
     public String getInfo() {
-        return (this.info);
+        return info;
+    }
+
+    @Override
+    protected String getAuthMethod() {
+        return HttpServletRequest.FORM_AUTH;
     }
 
     // ------------------------------------------------------- Public Methods
@@ -87,31 +100,33 @@ public class FormAuthenticator extends AuthenticatorBase {
      */
     @Override
     public boolean authenticate(HttpRequest request, HttpResponse response, LoginConfig config) throws IOException {
-
-        // References to objects we will need later
-        HttpServletRequest hreq = (HttpServletRequest) request.getRequest();
-        HttpServletResponse hres = (HttpServletResponse) response.getResponse();
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request.getRequest();
+        HttpServletResponse httpServletResponse = (HttpServletResponse) response.getResponse();
         Session session = null;
 
-        String contextPath = hreq.getContextPath();
+        String contextPath = httpServletRequest.getContextPath();
         String requestURI = request.getDecodedRequestURI();
+
         // Is this the action request from the login page?
-        boolean loginAction = requestURI.startsWith(contextPath) && requestURI.endsWith(Constants.FORM_ACTION);
+        boolean loginAction = requestURI.startsWith(contextPath) && requestURI.endsWith(FORM_ACTION);
 
         // Have we already authenticated someone?
-        Principal principal = hreq.getUserPrincipal();
+        Principal principal = httpServletRequest.getUserPrincipal();
+
         // Treat the first and any subsequent j_security_check requests the
         // same, by letting them fall through to the j_security_check
         // processing section of this method.
         if (principal != null && !loginAction) {
-            if (log.isLoggable(Level.FINE)) {
-                log.log(Level.FINE, neutralizeForLog("Already authenticated '" + principal.getName() + "'"));
+            if (log.isLoggable(FINE)) {
+                log.log(FINE, neutralizeForLog("Already authenticated '" + principal.getName() + "'"));
             }
+
             String ssoId = (String) request.getNote(Constants.REQ_SSOID_NOTE);
             if (ssoId != null) {
                 getSession(request, true);
             }
-            return (true);
+
+            return true;
         }
 
         // Have we authenticated this user before but have caching disabled?
@@ -124,22 +139,22 @@ public class FormAuthenticator extends AuthenticatorBase {
              * Do not log session if (log.isLoggable(Level.FINE)) log.log(Level.FINE, "Checking for reauthenticate in session " +
              * session);
              */
-            String username = (String) session.getNote(Constants.SESS_USERNAME_NOTE);
-            char[] password = (char[]) session.getNote(Constants.SESS_PASSWORD_NOTE);
+            String username = (String) session.getNote(SESS_USERNAME_NOTE);
+            char[] password = (char[]) session.getNote(SESS_PASSWORD_NOTE);
             if ((username != null) && (password != null)) {
-                if (log.isLoggable(Level.FINE)) {
-                    log.log(Level.FINE, neutralizeForLog("Reauthenticating username '" + username + "'"));
+                if (log.isLoggable(FINE)) {
+                    log.log(FINE, neutralizeForLog("Reauthenticating username '" + username + "'"));
                 }
                 principal = context.getRealm().authenticate(username, password);
                 if (principal != null) {
-                    session.setNote(Constants.FORM_PRINCIPAL_NOTE, principal);
+                    session.setNote(FORM_PRINCIPAL_NOTE, principal);
                     if (!matchRequest(request)) {
-                        register(request, response, principal, Constants.FORM_METHOD, username, password);
+                        register(request, response, principal, FORM_METHOD, username, password);
                         return (true);
                     }
                 }
-                if (log.isLoggable(Level.FINE)) {
-                    log.log(Level.FINE, "Reauthentication failed, proceed normally");
+                if (log.isLoggable(FINE)) {
+                    log.log(FINE, "Reauthentication failed, proceed normally");
                 }
             }
         }
@@ -148,28 +163,22 @@ public class FormAuthenticator extends AuthenticatorBase {
         // authentication? If so, forward the *original* request instead.
         if (matchRequest(request)) {
             session = getSession(request, true);
-            /*
-             * Do not log session if (log.isLoggable(Level.FINE)) { String msg = "Restore request from session '" +
-             * session.getIdInternal() + "'"; log.log(Level.FINE, msg); }
-             */
-            principal = (Principal) session.getNote(Constants.FORM_PRINCIPAL_NOTE);
-            register(request, response, principal, Constants.FORM_METHOD, (String) session.getNote(Constants.SESS_USERNAME_NOTE),
-                    (char[]) session.getNote(Constants.SESS_PASSWORD_NOTE));
+
+            principal = (Principal) session.getNote(FORM_PRINCIPAL_NOTE);
+            register(request, response, principal, FORM_METHOD, (String) session.getNote(SESS_USERNAME_NOTE),
+                    (char[]) session.getNote(SESS_PASSWORD_NOTE));
             String ssoId = (String) request.getNote(Constants.REQ_SSOID_NOTE);
             if (ssoId != null) {
                 associate(ssoId, getSsoVersion(request), session);
             }
+
             if (restoreRequest(request, session)) {
-                if (log.isLoggable(Level.FINE)) {
-                    log.log(Level.FINE, "Proceed to restored request");
-                }
-                return (true);
+                log.log(FINE, "Proceed to restored request");
+                return true;
             } else {
-                if (log.isLoggable(Level.FINE)) {
-                    log.log(Level.FINE, "Restore of original request failed");
-                }
-                hres.sendError(HttpServletResponse.SC_BAD_REQUEST);
-                return (false);
+                log.log(FINE, "Restore of original request failed");
+                httpServletResponse.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                return false;
             }
         }
 
@@ -182,61 +191,44 @@ public class FormAuthenticator extends AuthenticatorBase {
         // No -- Save this request and redirect to the form login page
         if (!loginAction) {
             session = getSession(request, true);
-            /*
-             * Do not log session if (log.isLoggable(Level.FINE)) { String msg = "Save request in session '" +
-             * session.getIdInternal() + "'"; log.log(Level.FINE, msg); }
-             */
+
             saveRequest(request, session);
 
-            // START Apache bug 36136: Refactor the login and error page forward
-            /*
-             * RequestDispatcher disp = context.getServletContext().getRequestDispatcher (config.getLoginPage()); try {
-             * disp.forward(hreq, hres); response.finishResponse(); } catch (Throwable t) {
-             * log.warn("Unexpected error forwarding to login page", t); }
-             */
             forwardToLoginPage(request, response, config);
-            // END Apache bug 36136: Refactor the login and error page forward
 
-            return (false);
+            return false;
         }
 
         // Yes -- Validate the specified credentials and redirect
         // to the error page if they are not correct
         Realm realm = context.getRealm();
-        String username = hreq.getParameter(Constants.FORM_USERNAME);
-        String pwd = hreq.getParameter(Constants.FORM_PASSWORD);
+        String username = httpServletRequest.getParameter(Constants.FORM_USERNAME);
+        String pwd = httpServletRequest.getParameter(Constants.FORM_PASSWORD);
         char[] password = ((pwd != null) ? pwd.toCharArray() : null);
 
-        if (log.isLoggable(Level.FINE)) {
-            log.log(Level.FINE, neutralizeForLog("Authenticating username '" + username + "'"));
+        if (log.isLoggable(FINE)) {
+            log.log(FINE, neutralizeForLog("Authenticating username '" + username + "'"));
         }
+
         principal = realm.authenticate(username, password);
         if (principal == null) {
-
-            // START Apache bug 36136: Refactor the login and error page forward
-            /*
-             * RequestDispatcher disp = context.getServletContext().getRequestDispatcher (config.getErrorPage()); try {
-             * disp.forward(hreq, hres); } catch (Throwable t) { log.warn("Unexpected error forwarding to error page", t); }
-             */
             forwardToErrorPage(request, response, config);
-            // END Apache bug 36136: Refactor the login and error page forward
-
-            return (false);
+            return false;
         }
 
         // Save the authenticated Principal in our session
-        if (log.isLoggable(Level.FINE)) {
-            log.log(Level.FINE, neutralizeForLog("Authentication of '" + username + "' was successful"));
+        if (log.isLoggable(FINE)) {
+            log.log(FINE, neutralizeForLog("Authentication of '" + username + "' was successful"));
         }
         if (session == null) {
             session = getSession(request, true);
         }
-        session.setNote(Constants.FORM_PRINCIPAL_NOTE, principal);
+        session.setNote(FORM_PRINCIPAL_NOTE, principal);
 
         // If we are not caching, save the username and password as well
         if (!cache) {
-            session.setNote(Constants.SESS_USERNAME_NOTE, username);
-            session.setNote(Constants.SESS_PASSWORD_NOTE, password);
+            session.setNote(SESS_USERNAME_NOTE, username);
+            session.setNote(SESS_PASSWORD_NOTE, password);
         }
 
         // Redirect the user to the original request URI (which will cause
@@ -249,31 +241,31 @@ public class FormAuthenticator extends AuthenticatorBase {
             // issued. In this case, assume that the original request has been
             // for the context root, and have the welcome page mechanism take
             // care of it
-            requestURI = hreq.getContextPath() + "/";
-            register(request, response, principal, Constants.FORM_METHOD, (String) session.getNote(Constants.SESS_USERNAME_NOTE),
-                    (char[]) session.getNote(Constants.SESS_PASSWORD_NOTE));
+            requestURI = httpServletRequest.getContextPath() + "/";
+
+            register(
+                request, response, principal,
+                FORM_METHOD,
+                (String) session.getNote(SESS_USERNAME_NOTE),
+                (char[]) session.getNote(SESS_PASSWORD_NOTE));
+
             String ssoId = (String) request.getNote(Constants.REQ_SSOID_NOTE);
             if (ssoId != null) {
                 associate(ssoId, getSsoVersion(request), session);
             }
         }
 
-        if (log.isLoggable(Level.FINE)) {
-            log.log(Level.FINE, neutralizeForLog("Redirecting to original '" + requestURI + "'"));
+        if (log.isLoggable(FINE)) {
+            log.log(FINE, neutralizeForLog("Redirecting to original '" + requestURI + "'"));
         }
 
-        hres.sendRedirect(hres.encodeRedirectURL(requestURI));
+        httpServletResponse.sendRedirect(httpServletResponse.encodeRedirectURL(requestURI));
 
-        return (false);
-
+        return false;
     }
+
 
     // ------------------------------------------------------ Protected Methods
-
-    @Override
-    protected String getAuthMethod() {
-        return HttpServletRequest.FORM_AUTH;
-    }
 
     /**
      * Does this request match the saved one (so that it must be the redirect we signaled after successful authentication?
@@ -281,7 +273,6 @@ public class FormAuthenticator extends AuthenticatorBase {
      * @param request The request to be verified
      */
     protected boolean matchRequest(HttpRequest request) {
-
         // Has a session been created?
         Session session = getSession(request, false);
         if (session == null) {
@@ -289,9 +280,9 @@ public class FormAuthenticator extends AuthenticatorBase {
         }
 
         // Is there a saved request?
-        SavedRequest sreq = (SavedRequest) session.getNote(Constants.FORM_REQUEST_NOTE);
+        SavedRequest sreq = (SavedRequest) session.getNote(FORM_REQUEST_NOTE);
         // Is there a saved principal?
-        if ((sreq == null) || (session.getNote(Constants.FORM_PRINCIPAL_NOTE) == null)) {
+        if ((sreq == null) || (session.getNote(FORM_PRINCIPAL_NOTE) == null)) {
             return (false);
         }
 
@@ -299,9 +290,10 @@ public class FormAuthenticator extends AuthenticatorBase {
         HttpServletRequest hreq = (HttpServletRequest) request.getRequest();
         String requestURI = hreq.getRequestURI();
         if (requestURI == null) {
-            return (false);
+            return false;
         }
-        return (requestURI.equals(sreq.getRequestURI()));
+
+        return requestURI.equals(sreq.getRequestURI());
 
     }
 
@@ -313,16 +305,15 @@ public class FormAuthenticator extends AuthenticatorBase {
      * @param session The session containing the saved information
      */
     protected boolean restoreRequest(HttpRequest request, Session session) throws IOException {
-
         // Retrieve and remove the SavedRequest object from our session
-        SavedRequest saved = (SavedRequest) session.getNote(Constants.FORM_REQUEST_NOTE);
+        SavedRequest saved = (SavedRequest) session.getNote(FORM_REQUEST_NOTE);
         /*
          * PWC 6463046: Do not remove the saved request: It will be needed again in case another j_security_check is sent. The
          * saved request will be purged when the session expires. session.removeNote(Constants.FORM_REQUEST_NOTE);
          */
-        session.removeNote(Constants.FORM_PRINCIPAL_NOTE);
+        session.removeNote(FORM_PRINCIPAL_NOTE);
         if (saved == null) {
-            return (false);
+            return false;
         }
 
         // Swallow any request body since we will be replacing it
@@ -388,7 +379,6 @@ public class FormAuthenticator extends AuthenticatorBase {
         request.setQueryString(saved.getQueryString());
 
         return true;
-
     }
 
     /**
@@ -399,12 +389,11 @@ public class FormAuthenticator extends AuthenticatorBase {
      * @param config Login configuration describing how authentication should be performed
      */
     protected void forwardToLoginPage(HttpRequest request, HttpResponse response, LoginConfig config) {
-
         if (isChangeSessionIdOnAuthentication() && getSession(request, false) != null) {
             request.changeSessionId();
         }
 
-        ServletContext sc = context.getServletContext();
+        ServletContext servletContext = context.getServletContext();
         try {
             String loginPage = config.getLoginPage();
             if (!request.getRequest().isSecure()) {
@@ -420,12 +409,12 @@ public class FormAuthenticator extends AuthenticatorBase {
                     }
                 }
             }
-            RequestDispatcher disp = sc.getRequestDispatcher(loginPage);
+            RequestDispatcher disp = servletContext.getRequestDispatcher(loginPage);
             disp.forward(request.getRequest(), response.getResponse());
             // NOTE: is finishResponse necessary or is it unnecessary after forward
             response.finishResponse();
         } catch (Throwable t) {
-            log.log(Level.WARNING, LogFacade.UNEXPECTED_ERROR_FORWARDING_TO_LOGIN_PAGE, t);
+            log.log(WARNING, UNEXPECTED_ERROR_FORWARDING_TO_LOGIN_PAGE, t);
         }
     }
 
@@ -437,7 +426,7 @@ public class FormAuthenticator extends AuthenticatorBase {
      * @param config Login configuration describing how authentication should be performed
      */
     protected void forwardToErrorPage(HttpRequest request, HttpResponse response, LoginConfig config) {
-        ServletContext sc = context.getServletContext();
+        ServletContext servletContext = context.getServletContext();
         try {
             String errorPage = config.getErrorPage();
             if (!request.getRequest().isSecure()) {
@@ -453,10 +442,12 @@ public class FormAuthenticator extends AuthenticatorBase {
                     }
                 }
             }
-            RequestDispatcher disp = sc.getRequestDispatcher(errorPage);
-            disp.forward(request.getRequest(), response.getResponse());
+
+            servletContext.getRequestDispatcher(errorPage)
+                          .forward(request.getRequest(), response.getResponse());
+
         } catch (Throwable t) {
-            log.log(Level.WARNING, LogFacade.UNEXPECTED_ERROR_FORWARDING_TO_LOGIN_PAGE, t);
+            log.log(WARNING, UNEXPECTED_ERROR_FORWARDING_TO_LOGIN_PAGE, t);
         }
     }
 
@@ -466,11 +457,7 @@ public class FormAuthenticator extends AuthenticatorBase {
      * @param request The request to be saved
      * @param session The session to contain the saved information
      */
-    // START Apache bug 36136: Refactor the login and error page forward
-    // private void saveRequest(HttpRequest request, Session session) {
     protected void saveRequest(HttpRequest request, Session session) throws IOException {
-        // END Apache bug 36136: Refactor the login and error page forward
-
         // Create and populate a SavedRequest object for this request
         HttpServletRequest hreq = (HttpServletRequest) request.getRequest();
         SavedRequest saved = new SavedRequest();
@@ -480,6 +467,7 @@ public class FormAuthenticator extends AuthenticatorBase {
                 saved.addCookie(element);
             }
         }
+
         Enumeration names = hreq.getHeaderNames();
         while (names.hasMoreElements()) {
             String name = (String) names.nextElement();
@@ -523,7 +511,7 @@ public class FormAuthenticator extends AuthenticatorBase {
         saved.setRequestURI(hreq.getRequestURI());
 
         // Stash the SavedRequest in our session for later use
-        session.setNote(Constants.FORM_REQUEST_NOTE, saved);
+        session.setNote(FORM_REQUEST_NOTE, saved);
     }
 
     /**
@@ -532,30 +520,28 @@ public class FormAuthenticator extends AuthenticatorBase {
      *
      * @param session Our current session
      */
-    // START Apache bug 36136: Refactor the login and error page forward
-    // private String savedRequestURL(Session session) {
     protected String savedRequestURL(Session session) {
-        // END Apache bug 36136: Refactor the login and error page forward
-
-        SavedRequest saved = (SavedRequest) session.getNote(Constants.FORM_REQUEST_NOTE);
+        SavedRequest saved = (SavedRequest) session.getNote(FORM_REQUEST_NOTE);
         if (saved == null) {
-            return (null);
+            return null;
         }
+
         StringBuilder sb = new StringBuilder(saved.getRequestURI());
         if (saved.getQueryString() != null) {
             sb.append('?');
             sb.append(saved.getQueryString());
         }
 
-        return (sb.toString());
+        return sb.toString();
     }
 
     private long getSsoVersion(HttpRequest request) {
         long ssoVersion = 0L;
-        Long ssoVersionObj = (Long) request.getNote(Constants.REQ_SSO_VERSION_NOTE);
+        Long ssoVersionObj = (Long) request.getNote(REQ_SSO_VERSION_NOTE);
         if (ssoVersionObj != null) {
             ssoVersion = ssoVersionObj.longValue();
         }
+
         return ssoVersion;
     }
 }

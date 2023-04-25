@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,11 +18,13 @@
 package org.glassfish.api.jdbc.validation;
 
 import com.sun.logging.LogDomains;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.api.jdbc.ConnectionValidation;
 
 /**
@@ -31,34 +34,16 @@ import org.glassfish.api.jdbc.ConnectionValidation;
  * @author Shalini M
  */
 public class DefaultConnectionValidation implements ConnectionValidation {
-    private static final String SQL = "SELECT '1'";
 
-    /**
-     * Check for validity of <code>java.sql.Connection</code>
-     *
-     * @param con       <code>java.sql.Connection</code>to be validated
-     * @throws SQLException if the connection is not valid
-     */
+    private static final Logger LOG = Logger.getLogger(LogDomains.RSR_LOGGER);
+
+    @Override
     public boolean isConnectionValid(Connection con) {
-        boolean isValid = false;
-        Statement stmt = null;
-        try {
-            stmt = con.createStatement();
-            isValid = stmt.execute(SQL);
+        try (Statement stmt = con.createStatement()) {
+            return stmt.execute("SELECT '1'");
         } catch (SQLException sqle) {
-            isValid = false;
-            if(Logger.getLogger(LogDomains.RSR_LOGGER).isLoggable(Level.FINEST)) {
-                Logger.getLogger(LogDomains.RSR_LOGGER).log(Level.FINEST,
-                    "connection_validation_exception", sqle);
-            }
-        } finally {
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (Exception ex) {
-                }
-            }
+            LOG.log(Level.WARNING, "Exception while validating connection!", sqle);
+            return false;
         }
-        return isValid;
     }
 }

@@ -55,12 +55,10 @@ import org.jvnet.hk2.annotations.Service;
 @Singleton
 public class ConnectorsClassLoaderUtil {
 
+    private static final Logger LOG = LogDomains.getLogger(ConnectorRuntime.class, LogDomains.RSR_LOGGER);
+
     @Inject
     private ClassLoaderHierarchy clh;
-
-    //private static List<ConnectorClassFinder> systemRARClassLoaders;
-
-    private final Logger _logger = LogDomains.getLogger(ConnectorRuntime.class, LogDomains.RSR_LOGGER);
 
     @Inject
     private ServerEnvironment env;
@@ -69,7 +67,7 @@ public class ConnectorsClassLoaderUtil {
     private ProcessEnvironment processEnv;
 
     @Inject
-    Events events;
+    private Events events;
 
 
     private volatile boolean rarsInitializedInEmbeddedServerMode;
@@ -94,25 +92,23 @@ public class ConnectorsClassLoaderUtil {
         return createRARClassLoader(parent, moduleDir, moduleName, appLibs);
     }
 
+
     private DelegatingClassLoader.ClassFinder getLibrariesClassLoader(final List<URI> appLibs)
-            throws ConnectorRuntimeException {
+        throws ConnectorRuntimeException {
         try {
-            PrivilegedExceptionAction<DelegatingClassLoader.ClassFinder> action = () -> clh.getAppLibClassFinder(appLibs);
+            PrivilegedExceptionAction<DelegatingClassLoader.ClassFinder> action = () -> clh
+                .getAppLibClassFinder(appLibs);
             return AccessController.doPrivileged(action);
         } catch (PrivilegedActionException e) {
-            _logger.log(Level.SEVERE, "error.creating.libraries.classloader", e);
-            ConnectorRuntimeException cre = new ConnectorRuntimeException(e.getMessage());
-            cre.initCause(e);
-            throw cre;
+            throw new ConnectorRuntimeException("Failed to create libraries classloader", e);
         }
     }
 
     private ConnectorClassFinder createRARClassLoader(final ClassLoader parent, String moduleDir,
-                                                      final String moduleName, List<URI> appLibs)
-            throws ConnectorRuntimeException{
+        final String moduleName, List<URI> appLibs) throws ConnectorRuntimeException {
         ConnectorClassFinder cl = null;
 
-        try{
+        try {
             final DelegatingClassLoader.ClassFinder librariesCL = getLibrariesClassLoader(appLibs);
             PrivilegedExceptionAction<ConnectorClassFinder> action = () -> {
                 final ConnectorClassFinder ccf = new ConnectorClassFinder(parent, moduleName, librariesCL);
@@ -121,8 +117,8 @@ public class ConnectorsClassLoaderUtil {
                         if (event.is(EventTypes.PREPARE_SHUTDOWN)) {
                             try {
                                 ccf.close();
-                            } catch(IOException ioe) {
-                                _logger.log(Level.WARNING, "error.closing.connector.classloader", ioe);
+                            } catch (IOException ioe) {
+                                LOG.log(Level.WARNING, "Could not close the " + ccf, ioe);
                             }
                         }
                     });
@@ -131,10 +127,7 @@ public class ConnectorsClassLoaderUtil {
             };
             cl = AccessController.doPrivileged(action);
         } catch (Exception ex) {
-            _logger.log(Level.SEVERE, "error.creating.connector.classloader", ex);
-            ConnectorRuntimeException cre = new ConnectorRuntimeException(ex.getMessage());
-            cre.initCause(ex);
-            throw cre;
+            throw new ConnectorRuntimeException("Failed to create connector classloader", ex);
         }
 
         File file = new File(moduleDir);

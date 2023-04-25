@@ -161,11 +161,9 @@ public class ClientCertificateLoginModule implements LoginModule {
             this.alias = aliasString[idx[0]];
             certificate = (X509Certificate) keyStore.getCertificate(alias);
 
-            // the authenticate should always return a true.
+            // The authenticate should always return a true.
             if (debug) {
-                if (_logger.isLoggable(FINE)) {
-                    _logger.log(FINE, "\t\t[ClientCertificateLoginModule] authentication succeeded");
-                }
+                _logger.log(FINE, "[ClientCertificateLoginModule] authentication succeeded");
             }
 
             succeeded = true;

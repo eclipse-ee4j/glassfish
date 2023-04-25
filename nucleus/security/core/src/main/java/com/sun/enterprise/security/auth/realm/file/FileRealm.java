@@ -142,7 +142,6 @@ public final class FileRealm extends IASRealm {
                 continue;
             }
 
-            // Skip it if no "file" property
             String file = authRealm.getPropertyValue("file");
             if (file == null) {
                 continue;

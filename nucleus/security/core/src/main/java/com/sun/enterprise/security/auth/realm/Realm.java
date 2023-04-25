@@ -63,10 +63,6 @@ public abstract class Realm implements Comparable {
 
     private String myName;
 
-    // Keep track of name of default realm. This is updated during startup
-    // using value from server.xml
-    // private static String defaultRealmName="default";
-
     // Keep a mapping from "default" to default realm (if no such named
     // realm is present) for the sake of all the hardcoded accesses to it.
     // This needs to be removed as part of RI security service cleanup.

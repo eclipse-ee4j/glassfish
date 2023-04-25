@@ -19,12 +19,21 @@
  * Common utility
  */
 
-require(['webui/suntheme/field']);
-require(['webui/suntheme/dropDown']);
-require(['webui/suntheme/upload']);
-require(['webui/suntheme/jumpDropDown']);
-require(['webui/suntheme/hyperlink']);
-require(['webui/suntheme/props']);
+/* Load dependencies eagerly to prevent issues with loading them asynchrnously later.
+ */    
+if (typeof(require) === typeof(Function)) {
+    /* Don't load dependencies eagerly if require is not available. 
+     * Allows using adminjsf without loading dojo for the require function,
+     * in cases when only basic functionality is needed. For example in removeFrame.jsf.
+     */
+
+    require(['webui/suntheme/field']);
+    require(['webui/suntheme/dropDown']);
+    require(['webui/suntheme/upload']);
+    require(['webui/suntheme/jumpDropDown']);
+    require(['webui/suntheme/hyperlink']);
+    require(['webui/suntheme/props']);
+}
 
 function checkPSWInCommon(secureAdminEnabled, id1, id2, alert1, alert2, confirmMessage) {
 	var ps1 = document.getElementById(id1); 

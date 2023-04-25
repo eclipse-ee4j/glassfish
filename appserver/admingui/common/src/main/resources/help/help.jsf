@@ -25,14 +25,15 @@
 	gf.navigate("#{requestScope.newVR}");
     }
     setResourceBundle(key="i18n" bundle="org.glassfish.admingui.core.Strings");
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings");
     getRequestValue(key="contextRef" value="#{pageSession.tempContextRef}" );
     urlencode(value="#{pageSession.tempContextRef}" encoding="UTF-8" result="#{pageSession.contextRef}");
 </ui:event>
 <sun:page>
 <sun:html>
     <sun:head title="$resource{i18n.helpWindowTitle}" debug="false" parseOnLoad="false">
-	<sun:link url="/resource/common/help/help.css" />
-	<sun:script url="/resource/common/js/adminjsf.js" />
+	<sun:link url="$resource{i18nc.help.css.url}" />
+	<sun:script url="$resource{i18nc.adminjsf.url}" />
 	<h:outputScript name="faces.js" library="jakarta.faces" target="head" />
     </sun:head>
     <sun:body id="bodyTag" style="display:none;" onLoad="admingui.help.fixTreeOnclick(document.getElementById('tocTree')); admingui.help.fixTreeOnclick(document.getElementById('indexTree')); admingui.help.loadHelpPageFromContextRef('#{pageSession.contextRef}', 'helpContent'); document.getElementById('bodyTag').style.display='block';">

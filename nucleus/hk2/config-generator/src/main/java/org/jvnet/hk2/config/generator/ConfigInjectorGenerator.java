@@ -297,7 +297,7 @@ public class ConfigInjectorGenerator extends AbstractProcessor {
                     }
                 }
 
-                for (TypeMirror it : clz.getInterfaces())
+                for (TypeMirror it : t.getInterfaces())
                     q.add((TypeElement) ((DeclaredType)it).asElement());
 
                 if (ElementKind.CLASS.equals(t.getKind())) {

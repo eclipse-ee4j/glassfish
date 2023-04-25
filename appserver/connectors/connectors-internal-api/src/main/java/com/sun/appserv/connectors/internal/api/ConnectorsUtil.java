@@ -80,6 +80,7 @@ import org.glassfish.resourcebase.resources.util.ResourceUtil;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
 
+import static com.sun.appserv.connectors.internal.api.ConnectorConstants.DEFAULT_RESOURCE_ADAPTER_SHUTDOWN_TIMEOUT;
 import static com.sun.appserv.connectors.internal.api.ConnectorConstants.JNDI_SUFFIX_VALUES;
 import static com.sun.enterprise.util.SystemPropertyConstants.SLASH;
 
@@ -432,7 +433,9 @@ public class ConnectorsUtil {
                         enabled = true;
                     }
                 } catch (NumberFormatException nfe) {
-                    LOG.log(Level.WARNING, "invalid.dynamic-reconfig.value", property.getValue());
+                    LOG.log(Level.WARNING,
+                        "Invalid value for property 'dynamic-reconfiguration-wait-timeout-in-seconds': {0}",
+                        property.getValue());
                 }
             }
         }
@@ -505,7 +508,7 @@ public class ConnectorsUtil {
             if (connectorService == null) {
                 // Connector service element is not specified in
                 // domain.xml and hence going with the default time-out
-                shutdownTimeout = ConnectorConstants.DEFAULT_RESOURCE_ADAPTER_SHUTDOWN_TIMEOUT;
+                shutdownTimeout = DEFAULT_RESOURCE_ADAPTER_SHUTDOWN_TIMEOUT;
                 if (LOG.isLoggable(Level.FINE)) {
                     LOG.log(Level.FINE, "Shutdown timeout set to " + shutdownTimeout + " through default");
                 }
@@ -516,9 +519,13 @@ public class ConnectorsUtil {
                 }
             }
         } catch (Exception e) {
-            LOG.log(Level.WARNING, "error_reading_connectorservice_elt", e);
+            LOG.log(Level.WARNING,
+                "Error reading Connector Service Element from domain.xml while trying"
+                    + " to get shutdown-timeout-in-seconds value. Continuing with the default shutdown timeout value "
+                    + DEFAULT_RESOURCE_ADAPTER_SHUTDOWN_TIMEOUT,
+                e);
             //Going ahead with the default timeout value
-            shutdownTimeout = ConnectorConstants.DEFAULT_RESOURCE_ADAPTER_SHUTDOWN_TIMEOUT;
+            shutdownTimeout = DEFAULT_RESOURCE_ADAPTER_SHUTDOWN_TIMEOUT;
         }
         return shutdownTimeout * 1000L;
     }
@@ -815,7 +822,7 @@ public class ConnectorsUtil {
                 FileUtils.copy(is, os, 0);
                 fa.closeEntry();
             } catch (IOException e) {
-                LOG.log(Level.SEVERE, "error.extracting.archive", new Object[] {rarName, e});
+                LOG.log(Level.SEVERE, "Exception while extracting RAR " + rarName + " from archive " + fileName, e);
                 return false;
             }
         } catch (IOException e) {

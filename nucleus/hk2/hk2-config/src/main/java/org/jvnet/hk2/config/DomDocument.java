@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation. All rights reserved.
  * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -183,9 +184,8 @@ public class DomDocument<T extends Dom> {
      *
      * @param intf a @Configured interface
      * @return List of all @Configured subclasses
-     * @throws ClassNotFoundException
      */
-    public synchronized List<ConfigModel> getAllModelsImplementing(Class intf) throws ClassNotFoundException {
+    public synchronized List<ConfigModel> getAllModelsImplementing(Class<?> intf) throws ClassNotFoundException {
         if (implementorsOf.size()==0) {
             initXRef();
         }
@@ -195,8 +195,6 @@ public class DomDocument<T extends Dom> {
     /**
      * probably a bit slow, calculates all the @Configured interfaces subclassing, useful
      * to find all possible subclasses of a type.
-     *
-     * @throws ClassNotFoundException
      */
     private void initXRef() throws ClassNotFoundException {
 
@@ -204,24 +202,31 @@ public class DomDocument<T extends Dom> {
         for (ServiceHandle<?> i : habitat.getAllServiceHandles(ConfigInjector.class)) {
             buildModel((ActiveDescriptor<? extends ConfigInjector>) i.getActiveDescriptor());
         }
+
         for (ConfigModel cm : models.values()) {
-            Class targetType = cm.classLoaderHolder.loadClass(cm.targetTypeName);
+            Class<?> targetType = cm.classLoaderHolder.loadClass(cm.targetTypeName);
+
+            Set<Class<?>> visited = new HashSet<>();
             do {
-                Class[] intfs = targetType.getInterfaces();
-                for (Class intf : intfs) {
-                    if (intf.isAnnotationPresent(Configured.class)) {
-                        addXRef(intf, cm);
+                Deque<Class<?>> interfaces = new ArrayDeque<>(Arrays.asList(targetType.getInterfaces()));
+                Class<?> intf;
+                while ((intf = interfaces.poll()) != null) {
+                    if (visited.add(intf)) {
+                        if (intf.isAnnotationPresent(Configured.class)) {
+                            addXRef(intf, cm);
+                        }
+                        interfaces.addAll(Arrays.asList(intf.getInterfaces()));
                     }
                 }
                 targetType = targetType.getSuperclass();
-            } while (targetType!=null);
+            } while (targetType != null);
         }
     }
 
-    private void addXRef(Class type, ConfigModel cm) {
+    private void addXRef(Class<?> type, ConfigModel cm) {
         List<ConfigModel> models = implementorsOf.getOne(type);
-        if (models==null) {
-            models= new ArrayList<ConfigModel>();
+        if (models == null) {
+            models = new ArrayList<>();
             implementorsOf.add(type, models);
         }
         models.add(cm);

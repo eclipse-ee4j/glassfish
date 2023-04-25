@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,8 +16,6 @@
  */
 
 package com.sun.enterprise.config.modularity;
-
-import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.*;
 
 import com.sun.enterprise.config.modularity.annotation.CustomConfiguration;
 import com.sun.enterprise.config.modularity.annotation.HasCustomizationTokens;
@@ -36,6 +35,33 @@ import com.sun.enterprise.config.serverbeans.SystemPropertyBag;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.util.LocalStringManager;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+
+import java.beans.PropertyVetoException;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Proxy;
+import java.lang.reflect.Type;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
 
 import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.api.admin.ServerEnvironment;
@@ -57,36 +83,19 @@ import org.jvnet.hk2.config.ConfigView;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.Dom;
 import org.jvnet.hk2.config.DomDocument;
-import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.IndentingXMLStreamWriter;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 
-import jakarta.inject.Inject;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamWriter;
-
-import java.beans.PropertyVetoException;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Proxy;
-import java.lang.reflect.Type;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.cannotGetDefaultConfig;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.cannotGetParentConfigBean;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.cannotParseDefaultDefaultConfig;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.cannotRemoveConfigBean;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.cannotSetConfigBean;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.cannotSetConfigBeanFor;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.getLogger;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.invalidPath;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.noMethodInReturnException;
 
 /**
  * Contains utility methods for zero-config
@@ -179,7 +188,7 @@ public final class ConfigModularityUtils {
                         if (Collection.class.isAssignableFrom(m.getReturnType())) {
                             if (actualGenericParameter instanceof Class) {
                                 if (typeToSet.isAssignableFrom((Class) actualGenericParameter)) {
-                                    if ((m.getAnnotation(DuckTyped.class) != null)) {
+                                    if ((m.isDefault())) {
                                         return m;
                                     } else {
                                         Method deepM = findDeeperSuitableCollectionGetter(owner, typeToSet);
@@ -776,30 +785,12 @@ public final class ConfigModularityUtils {
         return null;
     }
 
-    public Class getDuckClass(Class configBeanType) {
-        Class duck;
-        final Class[] clz = configBeanType.getDeclaredClasses();
-        for (Class aClz : clz) {
-            duck = aClz;
-            if (duck.getSimpleName().equals("Duck")) {
-                return duck;
-            }
-        }
-        return null;
-    }
-
-    public Method getGetDefaultValuesMethod(Class configBeanType) {
-        Class duck = getDuckClass(configBeanType);
-        if (duck == null) {
-            return null;
-        }
-        Method m;
+    public Method getGetDefaultValuesMethod(Class<?> configBeanType) {
         try {
-            m = duck.getMethod("getDefaultValues", String.class);
+            return configBeanType.getMethod("getDefaultValues", String.class);
         } catch (Exception ex) {
             return null;
         }
-        return m;
     }
 
     public boolean deleteConfigurationForConfigBean(ConfigBeanProxy configBean, Collection col, ConfigBeanDefaultValue defaultValue) {

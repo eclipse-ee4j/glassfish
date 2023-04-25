@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,6 +20,8 @@ package org.glassfish.resources.config;
 import com.sun.enterprise.config.serverbeans.BindableResource;
 import com.sun.enterprise.config.serverbeans.Resource;
 
+import jakarta.validation.constraints.NotNull;
+
 import java.beans.PropertyVetoException;
 import java.util.List;
 
@@ -31,136 +34,110 @@ import org.glassfish.resourcebase.resources.ResourceTypeOrder;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
 
-import jakarta.validation.constraints.NotNull;
-
 /**
- * Resource residing in an external JNDI repository
+ * Resource residing in an external JNDI repository.
  */
-
-/* @XmlType(name = "", propOrder = {
-    "description",
-    "property"
-}) */
-
 @Configured
-@ResourceConfigCreator(commandName="create-jndi-resource")
-@UniqueResourceNameConstraint(message="{resourcename.isnot.unique}", payload=ExternalJndiResource.class)
-@ResourceTypeOrder(deploymentOrder= ResourceDeploymentOrder.EXTERNALJNDI_RESOURCE)
-public interface ExternalJndiResource extends ConfigBeanProxy, Resource,
-        PropertyBag, BindableResource {
-
+@ResourceConfigCreator(commandName = "create-jndi-resource")
+@UniqueResourceNameConstraint(message = "{resourcename.isnot.unique}", payload = ExternalJndiResource.class)
+@ResourceTypeOrder(deploymentOrder = ResourceDeploymentOrder.EXTERNALJNDI_RESOURCE)
+public interface ExternalJndiResource extends ConfigBeanProxy, Resource, PropertyBag, BindableResource {
 
     /**
-     * Gets the value of the jndiLookupName property.
+     * Gets the value of the {@code jndiLookupName} property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     @NotNull
     String getJndiLookupName();
 
     /**
-     * Sets the value of the jndiLookupName property.
+     * Sets the value of the {@code jndiLookupName} property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param lookupName allowed object is {@link String}
      */
-    void setJndiLookupName(String value) throws PropertyVetoException;
+    void setJndiLookupName(String lookupName) throws PropertyVetoException;
 
     /**
-     * Gets the value of the resType property.
+     * Gets the value of the {@code resType} property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     @NotNull
     String getResType();
 
     /**
-     * Sets the value of the resType property.
+     * Sets the value of the {@code resType} property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param resType allowed object is {@link String}
      */
-    void setResType(String value) throws PropertyVetoException;
+    void setResType(String resType) throws PropertyVetoException;
 
     /**
-     * Gets the value of the factoryClass property.
+     * Gets the value of the {@code factoryClass} property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     @NotNull
     String getFactoryClass();
 
     /**
-     * Sets the value of the factoryClass property.
+     * Sets the value of the {@code factoryClass} property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param factoryClass allowed object is {@link String}
      */
-    void setFactoryClass(String value) throws PropertyVetoException;
+    void setFactoryClass(String factoryClass) throws PropertyVetoException;
 
     /**
-     * Gets the value of the enabled property.
+     * Gets the value of the {@code enabled} property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
     @Override
-    @Attribute (defaultValue="true",dataType=Boolean.class)
+    @Attribute (defaultValue = "true", dataType = Boolean.class)
     String getEnabled();
 
     /**
-     * Sets the value of the enabled property.
+     * Sets the value of the {@code enabled} property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param enabled allowed object is {@link String}
      */
     @Override
-    void setEnabled(String value) throws PropertyVetoException;
+    void setEnabled(String enabled) throws PropertyVetoException;
 
     /**
-     * Gets the value of the description property.
+     * Gets the value of the {@code description} property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     String getDescription();
 
     /**
-     * Sets the value of the description property.
+     * Sets the value of the {@code description} property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param description allowed object is {@link String}
      */
-    void setDescription(String value) throws PropertyVetoException;
+    void setDescription(String description) throws PropertyVetoException;
 
     /**
-     * Properties as per {@link PropertyBag}
+     * Properties as per .{@link PropertyBag}
      */
     @Override
-    @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
-    @PropertiesDesc(props={})
+    @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props" )
+    @PropertiesDesc(props = {})
     @Element
     List<Property> getProperty();
 
     @Override
-    @DuckTyped
-    String getIdentity();
-
-    class Duck {
-        public static String getIdentity(ExternalJndiResource resource){
-            return resource.getJndiName();
-        }
+    default String getIdentity() {
+        return getJndiName();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -43,53 +43,37 @@ import org.glassfish.config.support.datatypes.Port;
 import org.glassfish.grizzly.config.dom.NetworkConfig;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.hk2.utilities.BuilderHelper;
-import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.glassfish.quality.ToDo;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBean;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.ConfigExtensionMethod;
-import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.ConfigView;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.Element;
-import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
 
 import static org.glassfish.config.support.Constants.NAME_SERVER_REGEX;
+import static org.glassfish.hk2.utilities.BuilderHelper.createConstantDescriptor;
+import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.addOneDescriptor;
+import static org.jvnet.hk2.config.ConfigSupport.apply;
+import static org.jvnet.hk2.config.ConfigSupport.getImpl;
 
 /**
- * The configuration defines the configuration of a server instance that can be shared by other server instances. The
- * availability-service and are SE/EE only
+ * The configuration defines the configuration of a server instance that can be shared by other server instances.
+ * The availability-service and are SE/EE only
  */
-
-/* @XmlType(name = "", propOrder = {
-    "httpService",
-    "adminService",
-    "logService",
-    "securityService",
-    "monitoringService",
-    "diagnosticService",
-    "javaConfig",
-    "availabilityService",
-    "threadPools",
-    "groupManagementService",
-    "systemProperty",
-    "property"
-}) */
-
 @Configured
 @NotDuplicateTargetName(message = "{config.duplicate.name}", payload = Config.class)
 public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, ConfigLoader, ConfigBeanProxy, RefContainer {
     /**
      * Name of the configured object
      *
-     * @return name of the configured object FIXME: should set 'key=true'. See bugs 6039, 6040
+     * @return name of the configured object
+     * FIXME: should set 'key=true'. See bugs 6039, 6040
      */
     @NotNull
     @NotTargetKeyword(message = "{config.reserved.name}", payload = Config.class)
@@ -98,213 +82,209 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
     String getName();
 
     @Override
-    void setName(String value) throws PropertyVetoException;
+    void setName(String configName) throws PropertyVetoException;
 
     /**
-     * Gets the value of the dynamicReconfigurationEnabled property.
+     * Gets the value of the {@code dynamicReconfigurationEnabled} property.
      *
-     * When set to "true" then any changes to the system (e.g. applications deployed, resources created) will be
-     * automatically applied to the affected servers without a restart being required. When set to "false" such changes will
-     * only be picked up by the affected servers when each server restarts.
+     * <p>When set to {@code true} then any changes to the system (e.g. applications deployed, resources created)
+     * will be automatically applied to the affected servers without a restart being required. When set
+     * to {@code false} such changes will only be picked up by the affected servers when each server restarts.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
     String getDynamicReconfigurationEnabled();
 
     /**
-     * Sets the value of the dynamicReconfigurationEnabled property.
+     * Sets the value of the {@code dynamicReconfigurationEnabled} property.
      *
-     * @param value allowed object is {@link String }
+     * @param reconfigurationEnabled allowed object is {@link String}
      */
-    void setDynamicReconfigurationEnabled(String value) throws PropertyVetoException;
+    void setDynamicReconfigurationEnabled(String reconfigurationEnabled) throws PropertyVetoException;
 
     /**
-     * Gets the value of the networkConfig property.
+     * Gets the value of the {@code networkConfig} property.
      *
-     * @return possible object is {@link NetworkConfig }
+     * @return possible object is {@link NetworkConfig}
      */
     @Element(required = true)
     NetworkConfig getNetworkConfig();
 
     /**
-     * Sets the value of the networkConfig property.
+     * Sets the value of the {@code networkConfig} property.
      *
-     * @param value allowed object is {@link NetworkConfig }
+     * @param networkConfig allowed object is {@link NetworkConfig}
      */
-    void setNetworkConfig(NetworkConfig value) throws PropertyVetoException;
+    void setNetworkConfig(NetworkConfig networkConfig) throws PropertyVetoException;
 
     /**
-     * Gets the value of the httpService property.
+     * Gets the value of the {@code httpService} property.
      *
-     * @return possible object is {@link HttpService }
+     * @return possible object is {@link HttpService}
      */
     @Element(required = true)
     HttpService getHttpService();
 
     /**
-     * Sets the value of the httpService property.
+     * Sets the value of the {@code httpService} property.
      *
-     * @param value allowed object is {@link HttpService }
+     * @param httpService allowed object is {@link HttpService}
      */
-    void setHttpService(HttpService value) throws PropertyVetoException;
+    void setHttpService(HttpService httpService) throws PropertyVetoException;
 
     /**
-     * Gets the value of the adminService property.
+     * Gets the value of the {@code adminService} property.
      *
-     * @return possible object is {@link AdminService }
+     * @return possible object is {@link AdminService}
      */
     @Element(required = true)
     AdminService getAdminService();
 
     /**
-     * Sets the value of the adminService property.
+     * Sets the value of the {@code adminService} property.
      *
-     * @param value allowed object is {@link AdminService }
+     * @param adminService allowed object is {@link AdminService}
      */
-    void setAdminService(AdminService value) throws PropertyVetoException;
+    void setAdminService(AdminService adminService) throws PropertyVetoException;
 
     /**
-     * Gets the value of the logService property.
+     * Gets the value of the {@code logService} property.
      *
-     * @return possible object is {@link LogService }
+     * @return possible object is {@link LogService}
      */
     @Element(required = true)
     LogService getLogService();
 
     /**
-     * Sets the value of the logService property.
+     * Sets the value of the {@code logService} property.
      *
-     * @param value allowed object is {@link LogService }
+     * @param logService allowed object is {@link LogService}
      */
-    void setLogService(LogService value) throws PropertyVetoException;
+    void setLogService(LogService logService) throws PropertyVetoException;
 
     /**
-     * Gets the value of the securityService property.
+     * Gets the value of the {@code securityService} property.
      *
-     * @return possible object is {@link SecurityService }
+     * @return possible object is {@link SecurityService}
      */
     @Element(required = true)
     SecurityService getSecurityService();
 
     /**
-     * Sets the value of the securityService property.
+     * Sets the value of the {@code securityService} property.
      *
-     * @param value allowed object is {@link SecurityService }
+     * @param securityService allowed object is {@link SecurityService}
      */
-    void setSecurityService(SecurityService value) throws PropertyVetoException;
+    void setSecurityService(SecurityService securityService) throws PropertyVetoException;
 
     /**
-     * Gets the value of the monitoringService property.
+     * Gets the value of the {@code monitoringService} property.
      *
-     * @return possible object is {@link MonitoringService }
+     * @return possible object is {@link MonitoringService}
      */
     @Element()
     @NotNull
     MonitoringService getMonitoringService();
 
     /**
-     * Sets the value of the monitoringService property.
+     * Sets the value of the {@code monitoringService} property.
      *
-     * @param value allowed object is {@link MonitoringService }
+     * @param monitoringService allowed object is {@link MonitoringService}
      */
-    void setMonitoringService(MonitoringService value) throws PropertyVetoException;
+    void setMonitoringService(MonitoringService monitoringService) throws PropertyVetoException;
 
     /**
-     * Gets the value of the diagnosticService property.
+     * Gets the value of the {@code diagnosticService} property.
      *
-     * @return possible object is {@link DiagnosticService }
+     * @return possible object is {@link DiagnosticService}
      */
     @Element
     DiagnosticService getDiagnosticService();
 
     /**
-     * Sets the value of the diagnosticService property.
+     * Sets the value of the {@code diagnosticService} property.
      *
-     * @param value allowed object is {@link DiagnosticService }
+     * @param diagnosticService allowed object is {@link DiagnosticService}
      */
-    void setDiagnosticService(DiagnosticService value) throws PropertyVetoException;
+    void setDiagnosticService(DiagnosticService diagnosticService) throws PropertyVetoException;
 
     /**
-     * Gets the value of the javaConfig property.
+     * Gets the value of the {@code javaConfig} property.
      *
-     * @return possible object is {@link JavaConfig }
+     * @return possible object is {@link JavaConfig}
      */
     @Element(required = true)
     JavaConfig getJavaConfig();
 
     /**
-     * Sets the value of the javaConfig property.
+     * Sets the value of the {@code javaConfig} property.
      *
-     * @param value allowed object is {@link JavaConfig }
+     * @param javaConfig allowed object is {@link JavaConfig}
      */
-    void setJavaConfig(JavaConfig value) throws PropertyVetoException;
+    void setJavaConfig(JavaConfig javaConfig) throws PropertyVetoException;
 
     /**
-     * Gets the value of the availabilityService property.
+     * Gets the value of the {@code availabilityService} property.
      *
-     * @return possible object is {@link AvailabilityService }
+     * @return possible object is {@link AvailabilityService}
      */
     @Element
     @NotNull
     AvailabilityService getAvailabilityService();
 
     /**
-     * Sets the value of the availabilityService property.
+     * Sets the value of the {@code availabilityService} property.
      *
-     * @param value allowed object is {@link AvailabilityService }
+     * @param availabilityService allowed object is {@link AvailabilityService}
      */
-    void setAvailabilityService(AvailabilityService value) throws PropertyVetoException;
+    void setAvailabilityService(AvailabilityService availabilityService) throws PropertyVetoException;
 
     /**
-     * Gets the value of the threadPools property.
+     * Gets the value of the {@code threadPools} property.
      *
-     * @return possible object is {@link ThreadPools }
+     * @return possible object is {@link ThreadPools}
      */
     @Element(required = true)
     ThreadPools getThreadPools();
 
     /**
-     * Sets the value of the threadPools property.
+     * Sets the value of the {@code threadPools} property.
      *
-     * @param value allowed object is {@link ThreadPools }
+     * @param threadPools allowed object is {@link ThreadPools}
      */
-    void setThreadPools(ThreadPools value) throws PropertyVetoException;
+    void setThreadPools(ThreadPools threadPools) throws PropertyVetoException;
 
     /**
-     * Gets the value of the groupManagementService property.
+     * Gets the value of the {@code groupManagementService} property.
      *
-     * @return possible object is {@link GroupManagementService }
+     * @return possible object is {@link GroupManagementService}
      */
     @Element
     @NotNull
     GroupManagementService getGroupManagementService();
 
     /**
-     * Sets the value of the groupManagementService property.
+     * Sets the value of the {@code groupManagementService} property.
      *
-     * @param value allowed object is {@link GroupManagementService }
+     * @param groupManagementService allowed object is {@link GroupManagementService}
      */
-    void setGroupManagementService(GroupManagementService value) throws PropertyVetoException;
+    void setGroupManagementService(GroupManagementService groupManagementService) throws PropertyVetoException;
 
     /**
-     * Gets the value of the systemProperty property.
-     * <p/>
-     * <p/>
-     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the
-     * systemProperty property.
-     * <p/>
-     * <p/>
-     * For example, to add a new item, do as follows:
+     * Gets the value of the {@code systemProperty} property.
+     *
+     * <p>This accessor method returns a reference to the live list, not a snapshot. Therefore
+     * any modification you make to the returned list will be present inside the JAXB object.
+     * This is why there is not a {@code set} method for the {@code systemProperty} property.
+     *
+     * <p>For example, to add a new item, do as follows:
      *
      * <pre>
      * getSystemProperty().add(newItem);
      * </pre>
-     * <p/>
-     * <p/>
-     * <p/>
-     * Objects of the following type(s) are allowed in the list {@link SystemProperty }
+     *
+     * <p>Objects of the following type(s) are allowed in the list {@link SystemProperty }
      */
     @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Any more legal system properties?")
     @PropertiesDesc(systemProperties = true, props = {
@@ -314,206 +294,163 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
             @PropertyDesc(name = "IIOP_LISTENER_PORT", defaultValue = "3700", dataType = Port.class),
             @PropertyDesc(name = "IIOP_SSL_LISTENER_PORT", defaultValue = "1060", dataType = Port.class),
             @PropertyDesc(name = "IIOP_SSL_MUTUALAUTH_PORT", defaultValue = "1061", dataType = Port.class),
-            @PropertyDesc(name = "JMX_SYSTEM_CONNECTOR_PORT", defaultValue = "8686", dataType = Port.class) })
+            @PropertyDesc(name = "JMX_SYSTEM_CONNECTOR_PORT", defaultValue = "8686", dataType = Port.class)
+    })
     @Element
     @Override
     List<SystemProperty> getSystemProperty();
 
-    //DuckTyped for accessing the logging.properties file
+    // Default methods for accessing the logging.properties file
 
-    @DuckTyped
-    Map<String, String> getLoggingProperties();
+    default Map<String, String> getLoggingProperties() {
+        LoggingConfigImpl loggingConfig = getLoggingConfig();
 
-    @DuckTyped
-    String setLoggingProperty(String property, String value);
+        Map<String, String> loggingProperties = new HashMap<>();
+        try {
+            loggingProperties = loggingConfig.getLoggingProperties();
+        } catch (IOException ignored) {
+        }
+        return loggingProperties;
+    }
 
-    @DuckTyped
-    Map<String, String> updateLoggingProperties(Map<String, String> properties);
+    default String setLoggingProperty(String property, String value) {
+        LoggingConfigImpl loggingConfig = getLoggingConfig();
 
-    @DuckTyped
-    NetworkListener getAdminListener();
+        String loggingProperty = null;
+        try {
+            loggingProperty = loggingConfig.setLoggingProperty(property, value);
+        } catch (IOException ignored) {
+        }
+        return loggingProperty;
+    }
 
-    @DuckTyped
-    <T extends ConfigExtension> T createDefaultChildByType(Class<T> type);
+    default Map<String, String> updateLoggingProperties(Map<String, String> properties) {
+        LoggingConfigImpl loggingConfig = getLoggingConfig();
+
+        Map<String, String> loggingProperties = new HashMap<>();
+        try {
+            loggingProperties = loggingConfig.updateLoggingProperties(properties);
+        } catch (IOException ignored) {
+        }
+        return loggingProperties;
+    }
+
+    private LoggingConfigImpl getLoggingConfig() {
+        ConfigBean configBean = (ConfigBean) ((ConfigView) Proxy.getInvocationHandler(this)).getMasterView();
+        ServerEnvironmentImpl env = configBean.getHabitat().getService(ServerEnvironmentImpl.class);
+        LoggingConfigImpl loggingConfig = new LoggingConfigImpl();
+        loggingConfig.setupConfigDir(env.getConfigDirPath(), env.getLibPath());
+        return loggingConfig;
+    }
+
+    default NetworkListener getAdminListener() {
+        return ServerHelper.getAdminListener(this);
+    }
 
     /**
      * Return an extension configuration given the extension type.
      *
      * @param type type of the requested extension configuration
-     * @param <T> interface subclassing the ConfigExtension type
-     * @return a configuration proxy of type T or null if there is no such configuration with that type.
+     * @param <T> interface subclassing the {@link ConfigExtension} type
+     * @return a configuration proxy of type {@code T} or {@code null} if there is no such configuration with that type.
      */
     @ConfigExtensionMethod
     <T extends ConfigExtension> T getExtensionByType(Class<T> type);
 
     /**
-     * Add name as an index key for this Config and for the objects that are directly referenced by this Config. This
-     * includes all of the Config extensions.
+     * Add name as an index key for this {@link Config} and for the objects that are directly referenced
+     * by this {@link Config}. This includes all the {@link Config} extensions.
      *
-     * @param habitat ServiceLocator that contains this Config
-     * @param name name to use to identify the objects
+     * @param habitat {@link ServiceLocator} that contains this config
+     * @param name {@code name} to use to identify the objects
      */
-    @DuckTyped
-    void addIndex(ServiceLocator habitat, String name);
+    default void addIndex(ServiceLocator habitat, String name) {
+        addOneDescriptor(habitat, createConstantDescriptor(this, name, Config.class));
+
+        // directly referenced objects
+        ConfigBeanProxy[] directRef = {
+                getAdminService(),
+                getAvailabilityService(),
+                getDiagnosticService(),
+                getHttpService(),
+                getJavaConfig(),
+                getLogService(),
+                getNetworkConfig(),
+                getSecurityService(),
+                getThreadPools(),
+                getMonitoringService()
+        };
+
+        for (ConfigBeanProxy proxy : directRef) {
+            if (proxy != null) {
+                addOneDescriptor(habitat, createConstantDescriptor(proxy, name, getImpl(proxy).getProxyType()));
+            }
+        }
+
+        // containers
+        for (Container container : getContainers()) {
+            addOneDescriptor(habitat, createConstantDescriptor(container, name, getImpl(container).getProxyType()));
+        }
+    }
 
     /**
      * @param configBeanType The config bean type we want to check whether the configuration exists for it or not.
-     * @param <P> Type that extends the ConfigBeanProxy which is the type of class we accept as parameter
-     * @return true if configuration for the type exists in the target area of domain.xml and false if not.
+     * @param <P> Type that extends the {@link ConfigBeanProxy} which is the type of class we accept as parameter
+     * @return {@code true} if configuration for the type exists in the target area of {@code domain.xml} and {@code false} if not.
      */
-    @DuckTyped
-    <P extends ConfigExtension> boolean checkIfExtensionExists(Class<P> configBeanType);
-
-    @DuckTyped
-    ResourceRef getResourceRef(SimpleJndiName refName);
-
-    @DuckTyped
-    boolean isResourceRefExists(SimpleJndiName refName);
-
-    @DuckTyped
-    void createResourceRef(String enabled, SimpleJndiName refName) throws TransactionFailure;
-
-    @DuckTyped
-    void deleteResourceRef(SimpleJndiName refName) throws TransactionFailure;
-
-    @DuckTyped
-    boolean isDas();
-
-    class Duck {
-
-        public static boolean isDas(Config c) {
+    default <P extends ConfigExtension> boolean checkIfExtensionExists(Class<P> configBeanType) {
+        for (ConfigExtension extension : getExtensions()) {
             try {
-                String type = c.getAdminService().getType();
-
-                if (type != null && (type.equals("das") || type.equals("das-and-server"))) {
-                    return true;
-                }
-            } catch (Exception e) {
-                // fall through
-            }
-            return false;
-        }
-
-        public static String setLoggingProperty(Config c, String property, String value) {
-            ConfigBean cb = (ConfigBean) ((ConfigView) Proxy.getInvocationHandler(c)).getMasterView();
-            ServerEnvironmentImpl env = cb.getHabitat().getService(ServerEnvironmentImpl.class);
-            LoggingConfigImpl loggingConfig = new LoggingConfigImpl();
-            loggingConfig.setupConfigDir(env.getConfigDirPath(), env.getLibPath());
-
-            String prop = null;
-            try {
-                prop = loggingConfig.setLoggingProperty(property, value);
-            } catch (IOException ex) {
-            }
-            return prop;
-        }
-
-        public static Map<String, String> getLoggingProperties(Config c) {
-            ConfigBean cb = (ConfigBean) ((ConfigView) Proxy.getInvocationHandler(c)).getMasterView();
-            ServerEnvironmentImpl env = cb.getHabitat().getService(ServerEnvironmentImpl.class);
-            LoggingConfigImpl loggingConfig = new LoggingConfigImpl();
-            loggingConfig.setupConfigDir(env.getConfigDirPath(), env.getLibPath());
-
-            Map<String, String> map = new HashMap<>();
-            try {
-                map = loggingConfig.getLoggingProperties();
-            } catch (IOException ex) {
-            }
-            return map;
-        }
-
-        public static Map<String, String> updateLoggingProperties(Config c, Map<String, String> properties) {
-            ConfigBean cb = (ConfigBean) ((ConfigView) Proxy.getInvocationHandler(c)).getMasterView();
-            ServerEnvironmentImpl env = cb.getHabitat().getService(ServerEnvironmentImpl.class);
-            LoggingConfigImpl loggingConfig = new LoggingConfigImpl();
-            loggingConfig.setupConfigDir(env.getConfigDirPath(), env.getLibPath());
-
-            Map<String, String> map = new HashMap<>();
-            try {
-                map = loggingConfig.updateLoggingProperties(properties);
-            } catch (IOException ex) {
-            }
-            return map;
-        }
-
-        public static NetworkListener getAdminListener(Config c) {
-            return ServerHelper.getAdminListener(c);
-        }
-
-        public static void addIndex(Config c, ServiceLocator habitat, String name) {
-            ServiceLocatorUtilities.addOneDescriptor(habitat, BuilderHelper.createConstantDescriptor(c, name, Config.class));
-
-            // directly referenced objects
-            ConfigBeanProxy dirref[] = { c.getAdminService(), c.getAvailabilityService(), c.getDiagnosticService(), c.getHttpService(),
-                    c.getJavaConfig(), c.getLogService(), c.getNetworkConfig(), c.getSecurityService(), c.getThreadPools(),
-                    c.getMonitoringService(), };
-            for (ConfigBeanProxy cbp : dirref) {
-                if (cbp != null) {
-                    ServiceLocatorUtilities.addOneDescriptor(habitat,
-                            BuilderHelper.createConstantDescriptor(cbp, name, ConfigSupport.getImpl(cbp).getProxyType()));
-                }
-            }
-
-            // containers
-            for (Container extension : c.getContainers()) {
-                ServiceLocatorUtilities.addOneDescriptor(habitat,
-                        BuilderHelper.createConstantDescriptor(extension, name, ConfigSupport.getImpl(extension).getProxyType()));
+                configBeanType.cast(extension);
+                return true;
+            } catch (Exception ignored) {
+                // ignore, not the right type.
             }
         }
+        return false;
+    }
 
-        public static <P extends ConfigExtension> boolean checkIfExtensionExists(Config c, Class<P> configBeanType) {
-            for (ConfigExtension extension : c.getExtensions()) {
-                try {
-                    configBeanType.cast(extension);
-                    return true;
-                } catch (Exception e) {
-                    // ignore, not the right type.
-                }
-            }
-            return false;
-        }
-
-        public static void createResourceRef(Config config, final String enabled, final SimpleJndiName refName) throws TransactionFailure {
-            ConfigSupport.apply(new SingleConfigCode<Config>() {
-
-                @Override
-                public Object run(Config param) throws PropertyVetoException, TransactionFailure {
-
-                    ResourceRef newResourceRef = param.createChild(ResourceRef.class);
-                    newResourceRef.setEnabled(enabled);
-                    newResourceRef.setRef(refName.toString());
-                    param.getResourceRef().add(newResourceRef);
-                    return newResourceRef;
-                }
-            }, config);
-        }
-
-        public static ResourceRef getResourceRef(Config config, SimpleJndiName refName) {
-            for (ResourceRef ref : config.getResourceRef()) {
-                if (ref.getRef().equals(refName.toString())) {
-                    return ref;
-                }
-            }
-            return null;
-        }
-
-        public static boolean isResourceRefExists(Config config, SimpleJndiName refName) {
-            return getResourceRef(config, refName) != null;
-        }
-
-        public static void deleteResourceRef(Config config, SimpleJndiName refName) throws TransactionFailure {
-            final ResourceRef ref = getResourceRef(config, refName);
-            if (ref != null) {
-                ConfigSupport.apply(new SingleConfigCode<Config>() {
-
-                    @Override
-                    public Object run(Config param) {
-                        return param.getResourceRef().remove(ref);
-                    }
-                }, config);
+    default ResourceRef getResourceRef(SimpleJndiName refName) {
+        for (ResourceRef ref : getResourceRef()) {
+            if (ref.getRef().equals(refName.toString())) {
+                return ref;
             }
         }
+        return null;
+    }
 
+    default boolean isResourceRefExists(SimpleJndiName refName) {
+        return getResourceRef(refName) != null;
+    }
+
+    default void createResourceRef(String enabled, SimpleJndiName refName) throws TransactionFailure {
+        apply(param -> {
+            ResourceRef newResourceRef = param.createChild(ResourceRef.class);
+            newResourceRef.setEnabled(enabled);
+            newResourceRef.setRef(refName.toString());
+            param.getResourceRef().add(newResourceRef);
+            return newResourceRef;
+        }, this);
+    }
+
+    default void deleteResourceRef(SimpleJndiName refName) throws TransactionFailure {
+        final ResourceRef ref = getResourceRef(refName);
+        if (ref != null) {
+            apply(param -> param.getResourceRef().remove(ref), this);
+        }
+    }
+
+    default boolean isDas() {
+        try {
+            String type = getAdminService().getType();
+
+            if (type != null && (type.equals("das") || type.equals("das-and-server"))) {
+                return true;
+            }
+        } catch (Exception ignored) {
+            // fall through
+        }
+        return false;
     }
 
     /**

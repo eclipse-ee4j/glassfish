@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,11 @@
 
 package org.glassfish.web.plugin.common;
 
-import org.glassfish.web.config.serverbeans.WebModuleConfig;
-import org.glassfish.web.config.serverbeans.ContextParam;
 import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.Engine;
+
 import java.beans.PropertyVetoException;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
@@ -28,9 +29,11 @@ import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.RestEndpoint;
 import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.api.admin.RestParam;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.web.config.serverbeans.WebModuleConfig;
+import org.glassfish.web.config.serverbeans.ContextParam;
 
 import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
@@ -39,30 +42,30 @@ import org.jvnet.hk2.config.TransactionFailure;
  *
  * @author tjquinn
  */
-@Service(name="set-web-context-param")
+@Service(name = "set-web-context-param")
 @I18n("setWebContextParam.command")
 @PerLookup
 @RestEndpoints({
-    @RestEndpoint(configBean=Application.class,
-        opType=RestEndpoint.OpType.POST,
-        path="set-web-context-param",
-        description="set-web-context-param",
-        params={
-            @RestParam(name="id", value="$parent")
-        })
+        @RestEndpoint(
+                configBean = Application.class,
+                opType = RestEndpoint.OpType.POST,
+                path = "set-web-context-param",
+                description = "set-web-context-param",
+                params = {@RestParam(name = "id", value = "$parent")}
+        )
 })
 public class SetWebContextParamCommand extends WebModuleConfigCommand {
 
-    @Param(name="name")
+    @Param(name = "name")
     private String name;
 
-    @Param(name="value",optional=true)
+    @Param(name = "value", optional = true)
     private String value;
 
-    @Param(name="description", optional=true)
+    @Param(name = "description", optional = true)
     private String description;
 
-    @Param(name="ignoreDescriptorItem", optional=true)
+    @Param(name = "ignoreDescriptorItem", optional = true)
     private Boolean ignoreDescriptorItem;
 
     @Override
@@ -87,7 +90,7 @@ public class SetWebContextParamCommand extends WebModuleConfigCommand {
             final Boolean ignoreDescriptorItem,
             final ActionReport report) throws PropertyVetoException, TransactionFailure {
 
-        WebModuleConfig config = WebModuleConfig.Duck.webModuleConfig(owningEngine);
+        WebModuleConfig config = WebModuleConfig.webModuleConfig(owningEngine);
         if (config == null) {
             createContextParamOnNewWMC(owningEngine, paramName, paramValue,
                     description, ignoreDescriptorItem);

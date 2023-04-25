@@ -502,7 +502,7 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
             SecureAdmin secureAdmin = habitat.getService(SecureAdmin.class);
 
             URL url = new URL(
-                    (SecureAdmin.Util.isEnabled(secureAdmin) ? "https" : "http"),
+                    (SecureAdmin.isEnabled(secureAdmin) ? "https" : "http"),
                     nl.getAddress(),
                     Integer.parseInt(nl.getPort()),
                     "/management/domain");

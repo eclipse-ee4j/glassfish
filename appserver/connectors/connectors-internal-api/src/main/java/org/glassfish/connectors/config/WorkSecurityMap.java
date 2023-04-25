@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,7 +30,6 @@ import org.glassfish.resourcebase.resources.ResourceTypeOrder;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.Element;
 
 @Configured
@@ -40,44 +39,39 @@ public interface WorkSecurityMap extends ConfigBeanProxy, Resource {
     String PATTERN_RA_NAME = "[^',][^',\\\\]*";
 
     /**
-     * Gets the value of the enabled property.
+     * Gets the value of the {@code enabled} property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
     String getEnabled();
 
     /**
-     * Sets the value of the enabled property.
+     * Sets the value of the {@code enabled} property.
      *
-     * @param value allowed object is
-     *            {@link String }
+     * @param enabled allowed object is {@link String}
      */
-    void setEnabled(String value) throws PropertyVetoException;
+    void setEnabled(String enabled) throws PropertyVetoException;
 
     /**
-     * Gets the value of the description property.
+     * Gets the value of the {@code description} property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     String getDescription();
 
     /**
-     * Sets the value of the description property.
+     * Sets the value of the {@code description} property.
      *
-     * @param value allowed object is
-     *            {@link String }
+     * @param description allowed object is {@link String}
      */
-    void setDescription(String value) throws PropertyVetoException;
+    void setDescription(String description) throws PropertyVetoException;
 
     /**
-     * Gets the value of the ra name
+     * Gets the value of the ra name.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     @NotNull
@@ -85,15 +79,14 @@ public interface WorkSecurityMap extends ConfigBeanProxy, Resource {
     String getResourceAdapterName();
 
     /**
-     * Sets the value of the ra name
+     * Sets the value of the ra name.
      *
-     * @param value allowed object is
-     *            {@link String }
+     * @param name allowed object is {@link String}
      */
-    void setResourceAdapterName(String value) throws PropertyVetoException;
+    void setResourceAdapterName(String name) throws PropertyVetoException;
 
     /**
-     * Gets the group map
+     * Gets the group map.
      *
      * @return group map
      */
@@ -102,7 +95,7 @@ public interface WorkSecurityMap extends ConfigBeanProxy, Resource {
     List<GroupMap> getGroupMap();
 
     /**
-     * gets the principal map
+     * Gets the principal map
      *
      * @return principal map
      */
@@ -111,7 +104,7 @@ public interface WorkSecurityMap extends ConfigBeanProxy, Resource {
     List<PrincipalMap> getPrincipalMap();
 
     /**
-     * Name of the configured object
+     * Name of the configured object.
      *
      * @return name of the configured object
      */
@@ -120,16 +113,10 @@ public interface WorkSecurityMap extends ConfigBeanProxy, Resource {
     @NotNull
     String getName();
 
-    void setName(String value) throws PropertyVetoException;
+    void setName(String name) throws PropertyVetoException;
 
     @Override
-    @DuckTyped
-    String getIdentity();
-
-    class Duck {
-
-        public static String getIdentity(WorkSecurityMap wsm) {
-            return ("resource-adapter : " + wsm.getResourceAdapterName() + " : security-map : " + wsm.getName());
-        }
+    default String getIdentity() {
+        return ("resource-adapter : " + getResourceAdapterName() + " : security-map : " + getName());
     }
 }

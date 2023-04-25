@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,19 +17,18 @@
 
 package com.sun.enterprise.config.serverbeans;
 
-import java.beans.PropertyVetoException;
-import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 
 /**
  * Represents the {@literal <application-config>} child element of {@literal <application-ref>}.
- * <p>
- * The <code>type</code> attribute identifies the container type for which the application configuration customizations
- * apply.
- * <p>
- * Each different container type provides its own sub-interface of ApplicationConfig to reprsent the customizable parts
- * of its application config information. See WebAppConfig in web/webgui-plugin-common for an example.
+ *
+ * <p>The {@code type} attribute identifies the container type for which the application
+ * configuration customizations apply.
+ *
+ * <p>Each different container type provides its own sub-interface of ApplicationConfig to represent
+ * the customizable parts of its application config information. See WebAppConfig in web/webgui-plugin-common
+ * for an example.
  *
  * @author tjquinn
  */

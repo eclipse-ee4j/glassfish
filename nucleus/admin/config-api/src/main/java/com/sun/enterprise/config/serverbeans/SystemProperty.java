@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,24 +31,19 @@ import org.jvnet.hk2.config.Configured;
 import static org.glassfish.config.support.Constants.NAME_REGEX;
 
 /**
- * Syntax for supplying system properties as name value pairs
+ * Syntax for supplying system properties as name value pairs.
  */
-
-/* @XmlType(name = "", propOrder = {
-    "description"
-}) */
-
 @Configured
 @RestRedirects({
-    @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-system-properties"),
-    @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-system-property")
+        @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-system-properties"),
+        @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-system-property")
 })
 public interface SystemProperty extends ConfigBeanProxy {
 
     /**
-     * Gets the value of the name property.
+     * Gets the value of the {@code name} property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(key = true)
     @NotNull
@@ -56,41 +51,40 @@ public interface SystemProperty extends ConfigBeanProxy {
     String getName();
 
     /**
-     * Sets the value of the name property.
+     * Sets the value of the {@code name} property.
      *
-     * @param value allowed object is {@link String }
+     * @param name allowed object is {@link String}
      */
-    void setName(String value) throws PropertyVetoException;
+    void setName(String name) throws PropertyVetoException;
 
     /**
-     * Gets the value of the value property.
+     * Gets the value of the {@code value} property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     @NotNull
     String getValue();
 
     /**
-     * Sets the value of the value property.
+     * Sets the value of the {@code value} property.
      *
-     * @param value allowed object is {@link String }
+     * @param value allowed object is {@link String}
      */
     void setValue(String value) throws PropertyVetoException;
 
     /**
-     * Gets the value of the description property.
+     * Gets the value of the {@code description} property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     String getDescription();
 
     /**
-     * Sets the value of the description property.
+     * Sets the value of the {@code description} property.
      *
-     * @param value allowed object is {@link String }
+     * @param description allowed object is {@link String}
      */
-    void setDescription(String value) throws PropertyVetoException;
-
+    void setDescription(String description) throws PropertyVetoException;
 }

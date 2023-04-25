@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -64,8 +64,6 @@ public final class ConfigModel {
      * Legal child element names and how they should be handled
      */
     final Map<String,Property> elements = new HashMap<>();
-
-    final Map<Method,Method> duckMethods = new HashMap<>();
 
     /**
      * Cache to map methods to properties
@@ -210,37 +208,6 @@ public final class ConfigModel {
 
     public Map<String, List<String>> getMetadata() {
         return injector.getMetadata();
-    }
-
-    /**
-     * Obtains the duck method implementation from a method on the {@link ConfigBeanProxy}-derived interface.
-     */
-    public Method getDuckMethod(Method method) throws ClassNotFoundException, NoSuchMethodException {
-        synchronized (duckMethods) {
-            Method duckMethod = duckMethods.get(method);
-            if(duckMethod!=null) {
-                return duckMethod;
-            }
-
-            final Class<?> clz = method.getDeclaringClass();
-            ClassLoader cl = System.getSecurityManager()==null?clz.getClassLoader():
-                    AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
-                        @Override
-                        public ClassLoader run() {
-                            return clz.getClassLoader();
-                        }
-                    });
-            Class<?> duck = cl.loadClass(clz.getName() + "$Duck");
-
-            Class<?>[] types = method.getParameterTypes();
-            Class[] paramTypes = new Class[types.length+1];
-            System.arraycopy(types,0,paramTypes,1,types.length);
-            paramTypes[0] = clz;
-            duckMethod = duck.getMethod(method.getName(), paramTypes);
-            duckMethods.put(method,duckMethod);
-
-            return duckMethod;
-        }
     }
 
     /**

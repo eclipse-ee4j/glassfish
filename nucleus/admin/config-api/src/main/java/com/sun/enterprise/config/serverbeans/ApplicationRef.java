@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,106 +17,107 @@
 
 package com.sun.enterprise.config.serverbeans;
 
-import org.glassfish.api.Param;
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import static org.glassfish.config.support.Constants.NAME_APP_REGEX;
-
-import java.beans.PropertyVetoException;
 import jakarta.validation.Payload;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.NotNull;
 
+import java.beans.PropertyVetoException;
+
+import org.glassfish.api.Param;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+
+import static org.glassfish.config.support.Constants.NAME_APP_REGEX;
+
 /**
  * References to applications deployed to the server instance
  */
-
-/* @XmlType(name = "") */
-
 @Configured
 public interface ApplicationRef extends ConfigBeanProxy, Payload {
 
     /**
-     * Gets the value of the enabled property.
+     * Gets the value of the {@code enabled} property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
-    public String getEnabled();
+    String getEnabled();
 
     /**
-     * Sets the value of the enabled property.
+     * Sets the value of the {@code enabled} property.
      *
-     * @param value allowed object is {@link String }
+     * @param enabled allowed object is {@link String}
      */
     @Param(name = "enabled", optional = true, defaultValue = "true")
-    public void setEnabled(String value) throws PropertyVetoException;
+    void setEnabled(String enabled) throws PropertyVetoException;
 
     /**
-     * Gets the value of the virtualServers property.
+     * Gets the value of the {@code virtualServers} property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
-    public String getVirtualServers();
+    String getVirtualServers();
 
     /**
-     * Sets the value of the virtualServers property.
+     * Sets the value of the {@code virtualServers} property.
      *
-     * @param value allowed object is {@link String }
+     * @param virtualServers allowed object is {@link String}
      */
     @Param(name = "virtualservers", optional = true)
-    public void setVirtualServers(String value) throws PropertyVetoException;
+    void setVirtualServers(String virtualServers) throws PropertyVetoException;
 
     /**
-     * Gets the value of the lbEnabled property. A boolean flag that causes any and all load-balancers using this
-     * application to consider this application unavailable to them.
+     * Gets the value of the {@code lbEnabled} property. A boolean flag that causes
+     * any and all load-balancers using this application to consider this application
+     * unavailable to them.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
-    public String getLbEnabled();
+    String getLbEnabled();
 
     /**
-     * Sets the value of the lbEnabled property.
+     * Sets the value of the {@code lbEnabled} property.
      *
-     * @param value allowed object is {@link String }
+     * @param lbEnabled allowed object is {@link String}
      */
-    public void setLbEnabled(String value) throws PropertyVetoException;
+    void setLbEnabled(String lbEnabled) throws PropertyVetoException;
 
     /**
-     * Gets the value of the disableTimeoutInMinutes property. The time, in minutes, that it takes this application to reach
-     * a quiescent state after having been disabled
+     * Gets the value of the {@code disableTimeoutInMinutes} property. The time,
+     * in minutes, that it takes this application to reach a quiescent state after
+     * having been disabled.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "30")
-    public String getDisableTimeoutInMinutes();
+    String getDisableTimeoutInMinutes();
 
     /**
-     * Sets the value of the disableTimeoutInMinutes property.
+     * Sets the value of the {@code disableTimeoutInMinutes} property.
      *
-     * @param value allowed object is {@link String }
+     * @param disableTimeoutInMinutes allowed object is {@link String}
      */
-    public void setDisableTimeoutInMinutes(String value) throws PropertyVetoException;
+    void setDisableTimeoutInMinutes(String disableTimeoutInMinutes) throws PropertyVetoException;
 
     /**
-     * Gets the value of the ref property.
+     * Gets the value of the {@code ref} property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(key = true)
     @NotNull
     @Pattern(regexp = NAME_APP_REGEX, message = "{appref.invalid.name}", payload = ApplicationRef.class)
-    public String getRef();
+    String getRef();
 
     /**
-     * Sets the value of the ref property.
+     * Sets the value of the {@code ref} property.
      *
-     * @param value allowed object is {@link String }
+     * @param ref allowed object is {@link String}
      */
     @Param(name = "reference-name", primary = true)
-    public void setRef(String value) throws PropertyVetoException;
+    void setRef(String ref) throws PropertyVetoException;
 
 }

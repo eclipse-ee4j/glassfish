@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2016, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,13 +21,13 @@ import org.jvnet.hk2.annotations.Contract;
 
 /**
  * @author jwells
- *
  */
 @Contract
 public interface PropertyBagCustomizer {
-    public static final String DEFAULT_IMPLEMENTATION = "system default";
 
-    public Property getProperty(PropertyBag me, String name);
+    String DEFAULT_IMPLEMENTATION = "system default";
+
+    Property getProperty(PropertyBag propertyBag, String name);
 
     /**
      * Returns a property value if the bean has properties and one of its
@@ -35,11 +36,11 @@ public interface PropertyBagCustomizer {
      * @param name the property name requested
      * @return the property value or null if not found
      */
-    public String getPropertyValue(PropertyBag me, String name);
+    String getPropertyValue(PropertyBag propertyBag, String name);
 
     /**
      * Returns a property value if the bean has properties and one of its
-     * properties name is equal to the one passed. Otherwise return
+     * properties name is equal to the one passed. Otherwise, return
      * the default value.
      *
      * @param name the property name requested
@@ -47,5 +48,5 @@ public interface PropertyBagCustomizer {
      * of that name does not exist in this bag
      * @return the property value
      */
-    public String getPropertyValue(PropertyBag me, String name, String defaultValue);
+    String getPropertyValue(PropertyBag propertyBag, String name, String defaultValue);
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2016, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,50 +25,48 @@ import org.jvnet.hk2.annotations.Contract;
  */
 @Contract
 public interface ConfigBeanProxyCustomizer {
-    public static final String DEFAULT_IMPLEMENTATION = "system default";
 
     /**
      * Returns the parent element of this configuration element.
      *
-     * It is possible to return a not null parent while the parent knows nothing of this
-     * child element. This could happen when the child element was removed
+     * <p>It is possible to return a not {@code null} parent while the parent knows
+     * nothing of this child element. This could happen when the child element was removed
      * from the configuration tree, yet it's parent would not have been reset.
      *
      * @return the parent configuration node.
      */
-    public ConfigBeanProxy getParent(ConfigBeanProxy me);
+    ConfigBeanProxy getParent(ConfigBeanProxy proxy);
 
     /**
      * Returns the typed parent element of this configuration element.
      *
-     * It is possible to return a not null parent while the parent knows nothing of this
-     * child element. This could happen when the child element was removed
+     * <p>It is possible to return a not {@code null} parent while the parent knows
+     * nothing of this child element. This could happen when the child element was removed
      * from the configuration tree, yet it's parent would not have been reset.
      *
      * @param type parent's type
      * @return the parent configuration node.
      */
-    public ConfigBeanProxy getParent(ConfigBeanProxy me, Class<?> type);
+    ConfigBeanProxy getParent(ConfigBeanProxy proxy, Class<?> type);
 
     /**
      * Creates a child element of this configuration element
      *
      * @param type the child element type
      * @return the newly created child instance
-     * @throws TransactionFailure when called outside the boundaries of a transaction
      */
-    public ConfigBeanProxy createChild(ConfigBeanProxy me, Class<?> type);
+    ConfigBeanProxy createChild(ConfigBeanProxy proxy, Class<?> type);
 
 
     /**
      * Performs a deep copy of this configuration element and returns it.
-     * The parent of this configuration must be locked in a transaction and the newly created
-     * child will be automatically enrolled in the parent's transaction.
+     * The parent of this configuration must be locked in a transaction
+     * and the newly created child will be automatically enrolled in the
+     * parent's transaction.
      *
+     * @param proxy a configuration element to copy
      * @param parent the writable copy of the parent
      * @return a deep copy of itself.
-     * @throws TransactionFailure if the transaction cannot be completed.
      */
-    public ConfigBeanProxy deepCopy(ConfigBeanProxy me, ConfigBeanProxy parent);
-
+    ConfigBeanProxy deepCopy(ConfigBeanProxy proxy, ConfigBeanProxy parent);
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,69 +17,68 @@
 
 package com.sun.enterprise.config.serverbeans;
 
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Element;
-import org.jvnet.hk2.config.Configured;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 import java.beans.PropertyVetoException;
 import java.util.List;
 
+import org.glassfish.api.admin.config.ConfigExtension;
 import org.glassfish.api.admin.config.PropertiesDesc;
+import org.glassfish.quality.ToDo;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
-import org.glassfish.quality.ToDo;
-
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import org.glassfish.api.admin.config.ConfigExtension;
 
 /**
- * group-management-service(GMS) is an in-process service that provides cluster monitoring and group communication
- * services. GMS notifies registered modules in an application server instance when one or more members in the cluster
- * fail (become unreachable). GMS also provides the ability to send and receive messages between a group of processes.
- * GMS is a abstraction layer that plugs-in group communication technologies which rely on a configurable stack of
- * protocols. Each of these protocols has properties that can be changed for a given network and deployment topology.
- * These relevant configurable protocols are: failure-detection enables its members to periodically monitor other group
- * members to determine their availability in the group. group-discovery is used for discovery of group & its members.
- * failure-detection.verify-failure-timeout-in-millis verifies suspect instances by adding a verification layer to mark
- * a failure suspicion as a confirmed failure.
+ * Group-management-service(GMS) is an in-process service that provides cluster
+ * monitoring and group communication services. GMS notifies registered modules
+ * in an application server instance when one or more members in the cluster fail
+ * (become unreachable). GMS also provides the ability to send and receive messages
+ * between a group of processes. GMS is an abstraction layer that plugs-in group
+ * communication technologies which rely on a configurable stack of protocols.
+ * Each of these protocols has properties that can be changed for a given network
+ * and deployment topology. These relevant configurable protocols are:
  *
+ * <ul>
+ * <li>failure-detection enables its members to periodically monitor other group members
+ * to determine their availability in the group.</li>
+ * <li>group-discovery is used for discovery of group & its members.</li>
+ * <li>failure-detection.verify-failure-timeout-in-millis verifies suspect instances
+ * by adding a verification layer to mark a failure suspicion as a confirmed failure.</li>
+ * </ul>
  */
-
-/* @XmlType(name = "", propOrder = {
-    "property"
-}) */
-
 @Configured
-@SuppressWarnings({ "deprecation" })
 public interface GroupManagementService extends PropertyBag, ConfigExtension {
 
     /**
-     * Gets the value of the groupManagementService property.
+     * Gets the value of the {@code groupManagementService} property.
      *
-     * @return possible object is {@link GroupManagementService }
+     * @return possible object is {@link GroupManagementService}
      * @since glassfish v3.1
      */
-    @Element //(required=true)
+    @Element
     @NotNull
     FailureDetection getFailureDetection();
 
     /**
-     * Sets the value of the failureDetection property
+     * Sets the value of the {@code failureDetection} property.
      *
-     * @param value allowed object is {@link FailureDetection }
+     * @param failureDetection allowed object is {@link FailureDetection}
      * @since glassfish v3.1
      */
-    void setFailureDetection(FailureDetection value) throws PropertyVetoException;
+    void setFailureDetection(FailureDetection failureDetection) throws PropertyVetoException;
 
     /**
-     * Gets the value of the groupDiscoveryTimeoutInMillis property.
+     * Gets the value of the {@code groupDiscoveryTimeoutInMillis} property.
      *
-     * Amount of time in milliseconds that GMS waits for discovery of other members in this group. Must be a positive
-     * integer.
+     * <p>Amount of time in milliseconds that GMS waits for discovery of other members
+     * in this group. Must be a positive integer.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      * @since glassfish v3.1
      */
     @Attribute(defaultValue = "5000")
@@ -87,184 +87,148 @@ public interface GroupManagementService extends PropertyBag, ConfigExtension {
     String getGroupDiscoveryTimeoutInMillis();
 
     /**
-     * Sets the value of the groupDiscoveryTimeoutInMillis property.
+     * Sets the value of the {@code groupDiscoveryTimeoutInMillis} property.
      *
-     * @param value allowed object is {@link String }
+     * @param groupDiscoveryTimeout allowed object is {@link String}
      * @since glassfish v3.1
      */
-    void setGroupDiscoveryTimeoutInMillis(String value) throws PropertyVetoException;
+    void setGroupDiscoveryTimeoutInMillis(String groupDiscoveryTimeout) throws PropertyVetoException;
 
     /**
-     * Gets the value of the fdProtocolMaxTries property.
+     * Gets the value of the {@code fdProtocolMaxTries} property.
      *
-     * Maximum number of attempts to try before GMS confirms that a failure is suspected in the group. Must be a positive
-     * integer.
+     * <p>Maximum number of attempts to try before GMS confirms that a failure is suspected
+     * in the group. Must be a positive integer.
      *
-     * @return possible object is {@link String }
-     * @deprecate Replaced by {@link FailureDetection.getMaxMissedHeartbeats()}.
-     */
-    /*
-     * Moved to FailureDetection in v3.1.
-     * V2
+     * @return possible object is {@link String}
+     * @deprecated Replaced by {@link FailureDetection#getMaxMissedHeartbeats()}.
      */
     @Deprecated
     @Attribute
-    //@Attribute (defaultValue="3")
-    //@Min(value=1)
     String getFdProtocolMaxTries();
 
     /**
-     * Sets the value of the fdProtocolMaxTries property.
+     * Sets the value of the {@code fdProtocolMaxTries} property.
      *
-     * @param value allowed object is {@link String }
-     * @deprecate Replaced by {@link FailureDetection.setMaxMissedHeartbeats(String)}
-     */
-    /*
-     * Moved to FailureDetection in v3.1.
+     * @param fdProtocolMaxTries allowed object is {@link String}
+     * @deprecated Replaced by {@link FailureDetection#setMaxMissedHeartbeats(String)}
      */
     @Deprecated
-    void setFdProtocolMaxTries(String value) throws PropertyVetoException;
+    void setFdProtocolMaxTries(String fdProtocolMaxTries) throws PropertyVetoException;
 
     /**
-     * Gets the value of the fdProtocolTimeoutInMillis property.
+     * Gets the value of the {@code fdProtocolTimeoutInMillis} property.
      *
-     * Period of time between monitoring attempts to detect failure. Must be a positive integer.
+     * <p>Period of time between monitoring attempts to detect failure. Must be a positive integer.
      *
-     * @return possible object is {@link String }
-     * @deprecate Replaced by {@link FailureDetection.getHeartbeatFrequency()}.
-     */
-    /*
-     * Moved to FailureDetection in v3.1.
+     * @return possible object is {@link String}
+     * @deprecated Replaced by {@link FailureDetection#getHeartbeatFrequencyInMillis()}.
      */
     @Attribute
     @Deprecated
-    //@Attribute (defaultValue="2000")
-    //@Min(value=1000)
-    //@Max(value=120000)
     String getFdProtocolTimeoutInMillis();
 
     /**
-     * Sets the value of the fdProtocolTimeoutInMillis property.
+     * Sets the value of the {@code fdProtocolTimeoutInMillis} property.
      *
-     * @param value allowed object is {@link String }
-     * @deprecate Replaced by {@link FailureDetection.setHeartbeatFrequency(String)}.
-     */
-    /*
-     * Moved to FailureDetection in v3.1.
+     * @param fdProtocolTimeout allowed object is {@link String}
+     * @deprecated Replaced by {@link FailureDetection#setHeartbeatFrequencyInMillis(String)}.
      */
     @Deprecated
-    void setFdProtocolTimeoutInMillis(String value) throws PropertyVetoException;
+    void setFdProtocolTimeoutInMillis(String fdProtocolTimeout) throws PropertyVetoException;
 
     /**
-     * Gets the value of the mergeProtocolMaxIntervalInMillis property.
+     * Gets the value of the {@code mergeProtocolMaxIntervalInMillis} property.
      *
-     * Specifies the maximum amount of time to wait to collect sub-group information before performing a merge. Must be a
-     * positive integer.
+     * <p>Specifies the maximum amount of time to wait to collect subgroup information
+     * before performing a merge. Must be a positive integer.
      *
-     * @return possible object is {@link String }
-     * @deprecate
+     * @return possible object is {@link String}
+     * @deprecated
      */
-    //@Attribute (defaultValue="10000")
     @Deprecated
     @Attribute
-    //@Min(value=10000)
-    //@Max(value=15000)
     String getMergeProtocolMaxIntervalInMillis();
 
     /**
-     * Sets the value of the mergeProtocolMaxIntervalInMillis property.
+     * Sets the value of the {@code mergeProtocolMaxIntervalInMillis} property.
      *
-     * @param value allowed object is {@link String }
-     * @deprecate
+     * @param maxInterval allowed object is {@link String}
+     * @deprecated
      */
     /* Not needed by gms in v3.1, was not used in v2. */
     @Deprecated
-    void setMergeProtocolMaxIntervalInMillis(String value) throws PropertyVetoException;
+    void setMergeProtocolMaxIntervalInMillis(String maxInterval) throws PropertyVetoException;
 
     /**
-     * Gets the value of the mergeProtocolMinIntervalInMillis property.
+     * Gets the value of the {@code mergeProtocolMinIntervalInMillis} property.
      *
-     * Specifies the minimum amount of time to wait to collect sub-group information before performing a merge. Must be a
-     * positive integer
+     * <p>Specifies the minimum amount of time to wait to collect subgroup information
+     * before performing a merge. Must be a positive integer
      *
-     * @return possible object is {@link String }
-     * @deprecate
+     * @return possible object is {@link String}
+     * @deprecated
      */
     /* Not needed by gms in v3.1, was not used in v2. Remove default value.*/
     @Deprecated
     @Attribute
-    //@Attribute (defaultValue="5000")
-    //@Min(value=1000)
-    //@Max(value=10000)
     String getMergeProtocolMinIntervalInMillis();
 
     /**
-     * Sets the value of the mergeProtocolMinIntervalInMillis property.
+     * Sets the value of the {@code mergeProtocolMinIntervalInMillis} property.
      *
-     * @param value allowed object is {@link String }
-     * @deprecate
+     * @param minInterval allowed object is {@link String}
+     * @deprecated
      */
     @Deprecated
-    void setMergeProtocolMinIntervalInMillis(String value) throws PropertyVetoException;
+    void setMergeProtocolMinIntervalInMillis(String minInterval) throws PropertyVetoException;
 
     /**
-     * Gets the value of the pingProtocolTimeoutInMillis property.
+     * Gets the value of the {@code pingProtocolTimeoutInMillis} property.
      *
-     * Amount of time in milliseconds that GMS waits for discovery of other members in this group. Must be a positive
-     * integer.
+     * <p>Amount of time in milliseconds that GMS waits for discovery of other members
+     * in this group. Must be a positive integer.
      *
-     * @return possible object is {@link String }
-     * @deprecate
+     * @return possible object is {@link String}
+     * @deprecated
      * @see #getGroupDiscoveryTimeoutInMillis()
      */
     /* renamed in v3.1 */
     @Deprecated
     @Attribute
-    //@Attribute (defaultValue="5000")
-    //@Min(value=1000)
-    //@Max(value=120000)
     String getPingProtocolTimeoutInMillis();
 
     /**
-     * Sets the value of the pingProtocolTimeoutInMillis property.
+     * Sets the value of the {@code pingProtocolTimeoutInMillis} property.
      *
-     * @param value allowed object is {@link String }
-     * @deprecate
+     * @param pingProtocolTimeout allowed object is {@link String}
+     * @deprecated
      * @see #setGroupDiscoveryTimeoutInMillis(String)
      */
     /* renamed in v3.1 to GroupDiscoveryTimeoutInMillis */
     @Deprecated
-    void setPingProtocolTimeoutInMillis(String value) throws PropertyVetoException;
+    void setPingProtocolTimeoutInMillis(String pingProtocolTimeout) throws PropertyVetoException;
 
     /**
-     * Gets the value of the vsProtocolTimeoutInMillis property.
+     * Gets the value of the {@code vsProtocolTimeoutInMillis} property.
      *
-     * After this timeout a suspected failure is marked as verified. Must be a positive integer.
+     * <p>After this timeout a suspected failure is marked as verified. Must be a positive integer.
      *
-     * @return possible object is {@link String }
-     * @deprecate Replaced by {@link FailureDetection.getVerifyFailureWaittimeInMillis()}.
-     */
-    /*
-     * Moved to FailureDetection in v3.1.
-     * V2
+     * @return possible object is {@link String}
+     * @deprecated Replaced by {@link FailureDetection#getVerifyFailureWaittimeInMillis()}.
      */
     @Deprecated
     @Attribute
-    //@Attribute (defaultValue="1500")
-    //@Min(value=1500)
-    //@Max(value=120000)
     String getVsProtocolTimeoutInMillis();
 
     /**
-     * Sets the value of the vsProtocolTimeoutInMillis property.
+     * Sets the value of the {@code vsProtocolTimeoutInMillis} property.
      *
-     * @param value allowed object is {@link String }
-     * @deprecate Replaced by {@link FailureDetection.setVerifyFailureWaittimeInMillis(String)}.
-     */
-    /* Moved to FailureDetection in v3.1
+     * @param vsProtocolTimeout allowed object is {@link String}
+     * @deprecated Replaced by {@link FailureDetection#setVerifyFailureWaittimeInMillis(String)}.
      */
     @Deprecated
-    void setVsProtocolTimeoutInMillis(String value) throws PropertyVetoException;
+    void setVsProtocolTimeoutInMillis(String vsProtocolTimeout) throws PropertyVetoException;
 
     /**
      * Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}

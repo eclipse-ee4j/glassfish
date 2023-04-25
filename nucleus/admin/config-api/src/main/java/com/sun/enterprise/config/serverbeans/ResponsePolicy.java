@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,60 +26,60 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 
 /**
- * Used to define the authentication policy requirements associated with the response processing performed by an
- * authentication provider (i.e. when a client provider's ClientAuthModule.validateResponse() method is called or when a
- * server provider's erverAuthModule.secureResponse() method is called)
+ * Used to define the authentication policy requirements associated with the response
+ * processing performed by an authentication provider (i.e. when a client provider's
+ * {@code ClientAuthModule.validateResponse()} method is called or when a server provider's
+ * {@code ServerAuthModule.secureResponse()} method is called).
  */
-
-/* @XmlType(name = "") */
-
 @Configured
 public interface ResponsePolicy extends ConfigBeanProxy {
 
     String AUTH_RECIPIENT_TIMINGS = "(before-content|after-content)";
+
     String AUTH_SOURCES = "(sender|content|username-password)";
 
     /**
-     * Specifies the type of required authentication, either "sender" (user name and password) or
-     * "content" (digital signature).
-     * Defines a requirement for message layer sender authentication (e.g. username password) or
-     * content authentication (e.g. digital signature)
+     * Specifies the type of required authentication, either {@code sender}
+     * (user name and password) or {@code content} (digital signature).
      *
-     * @return possible object is {@link String }
+     * <p>Defines a requirement for message layer sender authentication
+     * (e.g. username password) or content authentication (e.g. digital signature)
+     *
+     * @return possible object is {@link String}
      */
     @Attribute
     @Pattern(regexp = AUTH_SOURCES, message = "Valid values: " + AUTH_SOURCES)
     String getAuthSource();
 
     /**
-     * Sets the value of the authSource property.
+     * Sets the value of the {@code authSource} property.
      *
-     * @param value allowed object is {@link String }
+     * @param authSource allowed object is {@link String}
      */
-    void setAuthSource(String value) throws PropertyVetoException;
+    void setAuthSource(String authSource) throws PropertyVetoException;
 
     /**
-     * Specifies whether recipient authentication occurs before or after content authentication. Allowed values are
-     * 'before-content' and 'after-content'.
+     * Specifies whether recipient authentication occurs before or after content authentication.
      *
-     * defines a requirement for message layer authentication of the reciever of a message to its sender (e.g. by XML
-     * encryption). before-content indicates that recipient authentication (e.g. encryption) is to occur before any content
-     * authentication (e.g. encrypt then sign) with respect to the target of the containing auth-policy. after-content
-     * indicates that recipient authentication (e.g. encryption) is to occur after any content authentication (e.g. sign
-     * then encrypt) with respect to the target of the containing auth-policy.
+     * <p>Allowed values are {@code before-content} and {@code after-content}.
      *
+     * <p>Defines a requirement for message layer authentication of the receiver of a message
+     * to its sender (e.g. by XML encryption). before-content indicates that recipient authentication
+     * (e.g. encryption) is to occur before any content authentication (e.g. encrypt then sign)
+     * with respect to the target of the containing auth-policy. after-content indicates that
+     * recipient authentication (e.g. encryption) is to occur after any content authentication
+     * (e.g. sign then encrypt) with respect to the target of the containing auth-policy.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     @Pattern(regexp = AUTH_RECIPIENT_TIMINGS, message = "Valid values: " + AUTH_RECIPIENT_TIMINGS)
     String getAuthRecipient();
 
     /**
-     * Sets the value of the authRecipient property.
+     * Sets the value of the {@code authRecipient} property.
      *
-     * @param value allowed object is {@link String }
+     * @param authRecipient allowed object is {@link String}
      */
-    void setAuthRecipient(String value) throws PropertyVetoException;
-
+    void setAuthRecipient(String authRecipient) throws PropertyVetoException;
 }

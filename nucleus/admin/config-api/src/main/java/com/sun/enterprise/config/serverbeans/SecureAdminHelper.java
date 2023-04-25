@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,15 +19,16 @@ package com.sun.enterprise.config.serverbeans;
 
 import java.io.IOException;
 import java.security.KeyStoreException;
+
 import org.jvnet.hk2.annotations.Contract;
 
-@Contract()
 /**
- * Definition of some utility behavior that needs to be invoked from config classes in admin/config-api but implemented
- * elsewhere (in a module with dependencies that we do not want to add to admin/config-api).
+ * Definition of some utility behavior that needs to be invoked from config classes in admin/config-api but
+ * implemented elsewhere (in a module with dependencies that we do not want to add to admin/config-api).
  *
  * @author Tim Quinn
  */
+@Contract()
 public interface SecureAdminHelper {
 
     /**
@@ -36,35 +38,35 @@ public interface SecureAdminHelper {
      * @param isAlias whether the value is an alias or the DN itself
      * @return the DN
      */
-    public String getDN(String value, boolean isAlias) throws IOException, KeyStoreException;
+    String getDN(String value, boolean isAlias) throws IOException, KeyStoreException;
 
     /**
-     * Makes sure that the specified username is an admin user and that the specified password alias exists. Note that
-     * implementations of this method should not make sure that the username and the password pointed to by the alias
-     * actually match a valid admin user in the admin realm. That check is done by the normal authorization logic when the
-     * username and the actual password are used.
+     * Makes sure that the specified username is an admin user and that the specified password
+     * alias exists. Note that implementations of this method should not make sure that
+     * the username and the password pointed to by the alias actually match a valid
+     * admin user in the admin realm. That check is done by the normal authorization logic
+     * when the username and the actual password are used.
      *
-     * @param username
-     * @param passwordAlias
-     * @throws Exception if eiher the username or the password alias is not valid
+     * @param username the username
+     * @param passwordAlias a password alias
      */
-    public void validateInternalUsernameAndPasswordAlias(String username, String passwordAlias);
+    void validateInternalUsernameAndPasswordAlias(String username, String passwordAlias);
 
     /**
      * Reports whether any admin user exists which has an empty password.
      *
-     * @return true if any admin user exists with an empty password; false otherwise
-     * @throws Exception
+     * @return {@code true} if any admin user exists with an empty password; {@code false} otherwise
+     * @throws Exception if an error occurred
      */
-    public boolean isAnyAdminUserWithoutPassword() throws Exception;
+    boolean isAnyAdminUserWithoutPassword() throws Exception;
 
     /**
      * An exception indicating a user-correctable error that occurred as a secure admin command executed.
-     * <p>
-     * The secure admin commands can detect such errors and report just the exception's message and not the exception as
-     * well (which would clutter the report back to the admin client).
+     *
+     * <p>The secure admin commands can detect such errors and report just the exception's message
+     * and not the exception as well (which would clutter the report back to the admin client).
      */
-    public class SecureAdminCommandException extends RuntimeException {
+    class SecureAdminCommandException extends RuntimeException {
 
         public SecureAdminCommandException(String message) {
             super(message);

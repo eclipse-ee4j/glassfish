@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,43 +20,35 @@ package org.glassfish.grizzly.config.dom;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.types.PropertyBag;
 
 /**
- * Defines single protocol filter in a sequence
+ * Defines single protocol filter in a sequence.
  */
 @Configured
 public interface ProtocolFilter extends ConfigBeanProxy, PropertyBag {
+
     /**
-     * Protocol filter name, which could be used as reference
+     * Protocol filter {@code name}, which could be used as reference.
      */
     @Attribute(key = true)
     String getName();
 
-    void setName(String value);
+    void setName(String name);
 
     /**
-     * Protocol filter implementation class
+     * Protocol filter implementation class.
      */
     @Attribute(required = true)
     String getClassname();
 
-    void setClassname(String value);
+    void setClassname(String classname);
 
-    @DuckTyped
-    Protocol findProtocol();
+    default Protocol findProtocol() {
+        return getParent().getParent();
+    }
 
-    @DuckTyped
-    ProtocolChain getParent();
-
-    class Duck {
-        public static Protocol findProtocol(ProtocolFilter filter) {
-            return filter.getParent().getParent();
-        }
-
-        public static ProtocolChain getParent(ProtocolFilter filter) {
-            return filter.getParent(ProtocolChain.class);
-        }
+    default ProtocolChain getParent() {
+        return getParent(ProtocolChain.class);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,36 +28,34 @@ import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 
-/* @XmlType(name = "") */
-
 @Configured
-@RestRedirects({ @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-resource-ref"),
-        @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-resource-ref") })
+@RestRedirects({
+        @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-resource-ref"),
+        @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-resource-ref")
+})
 public interface ResourceRef extends ConfigBeanProxy {
 
-    String PATTERN_REF = "[^':,][^':,]*";
+    String PATTERN_REF = "[^':,]+";
 
     /**
      * Determines whether the resource is active or ignored.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
     String getEnabled();
 
     /**
-     * Sets the value of the enabled property.
+     * Sets the value of the {@code enabled} property.
      *
-     * @param value allowed object is {@link String }
+     * @param enabled allowed object is {@link String}
      */
-    void setEnabled(String value) throws PropertyVetoException;
+    void setEnabled(String enabled) throws PropertyVetoException;
 
     /**
-     * References the name attribute of a resources, such as an
-     * {@link org.glassfish.connectors.config.JdbcResource} or
-     * {@link org.glassfish.connectors.config.JdbcConnectionPool}.
+     * References the name attribute of a resources.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(key = true)
     @NotNull
@@ -65,10 +63,9 @@ public interface ResourceRef extends ConfigBeanProxy {
     String getRef();
 
     /**
-     * Sets the value of the ref property.
+     * Sets the value of the {@code ref} property.
      *
-     * @param value allowed object is {@link String }
+     * @param ref allowed object is {@link String}
      */
-    void setRef(String value) throws PropertyVetoException;
-
+    void setRef(String ref) throws PropertyVetoException;
 }

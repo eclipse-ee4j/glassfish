@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,15 +18,15 @@
 package com.sun.enterprise.config.serverbeans;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.Element;
 
+import static java.util.stream.Collectors.toList;
+
 /**
- * An application or Resource reference container object.
+ * An {@link Application} or {@link Resource} reference container object.
  *
  * @author Jerome Dochez
  */
@@ -49,33 +49,21 @@ public interface RefContainer extends ConfigBeanProxy {
     @Element
     List<ApplicationRef> getApplicationRef();
 
-
     /**
      * Note: This method uses stream to process names, it is not just a getter.
      *
      * @return list of {@link ResourceRef#getRef()} retrieved from {@link #getResourceRef()}
      */
-    @DuckTyped
-    List<String> getResourceRefNames();
+    default List<String> getResourceRefNames() {
+        return getResourceRef().stream().map(ResourceRef::getRef).collect(toList());
+    }
 
     /**
      * Note: This method uses stream to process names, it is not just a getter.
      *
      * @return list of {@link ApplicationRef#getRef()} retrieved from {@link #getApplicationRef()}
      */
-    @DuckTyped
-    List<String> getApplicationRefNames();
-
-    public class Duck {
-
-        public static List<String> getResourceRefNames(RefContainer container) {
-            return container.getResourceRef().stream().map(ResourceRef::getRef).collect(Collectors.toList());
-        }
-
-
-        public static List<String> getApplicationRefNames(RefContainer container) {
-            return container.getApplicationRef().stream().map(ApplicationRef::getRef).collect(Collectors.toList());
-        }
-
+    default List<String> getApplicationRefNames() {
+        return getApplicationRef().stream().map(ApplicationRef::getRef).collect(toList());
     }
 }

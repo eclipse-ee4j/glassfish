@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,375 +17,338 @@
 
 package org.glassfish.loadbalancer.config;
 
-import org.glassfish.loadbalancer.config.customvalidators.RefConstraint;
-import org.glassfish.loadbalancer.config.customvalidators.RefValidator;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import java.beans.PropertyVetoException;
-
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Ref;
 import com.sun.enterprise.config.serverbeans.ServerRef;
 import com.sun.enterprise.config.serverbeans.ClusterRef;
+import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.validation.Payload;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+
+import java.beans.PropertyVetoException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
-
-import org.glassfish.config.support.*;
-import org.glassfish.quality.ToDo;
-
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
-import org.jvnet.hk2.config.*;
-import org.jvnet.hk2.config.types.Property;
-import org.jvnet.hk2.config.types.PropertyBag;
+import java.util.List;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.config.PropertiesDesc;
+import org.glassfish.config.support.CreationDecorator;
+import org.glassfish.config.support.DeletionDecorator;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.loadbalancer.config.customvalidators.RefConstraint;
+import org.glassfish.loadbalancer.config.customvalidators.RefValidator;
+import org.glassfish.quality.ToDo;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Element;
+import org.jvnet.hk2.config.RetryableException;
+import org.jvnet.hk2.config.Transaction;
+import org.jvnet.hk2.config.TransactionFailure;
+import org.jvnet.hk2.config.types.Property;
+import org.jvnet.hk2.config.types.PropertyBag;
 
-import jakarta.inject.Inject;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Pattern;
-import static org.glassfish.config.support.Constants.*;
-import jakarta.validation.Payload;
+import static org.glassfish.config.support.Constants.NAME_REGEX;
 
 /**
  *
  */
-
-/* @XmlType(name = "", propOrder = {
-    "clusterRefOrServerRef",
-    "property"
-}) */
-
 @Configured
-@RefConstraint(message="{ref.invalid}", payload= RefValidator.class)
+@RefConstraint(message = "{ref.invalid}", payload = RefValidator.class)
 public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
 
     String LAST_APPLIED_PROPERTY = "last-applied";
+
     String LAST_EXPORTED_PROPERTY = "last-exported";
 
     /**
-     * Gets the value of the name property.
+     * Gets the value of the {@code name} property.
      *
-     * Name of the load balancer configuration
+     * <p>Name of the load balancer configuration.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
-    @Attribute(key=true)
-    @Pattern(regexp=NAME_REGEX, message="{lbconfig.invalid.name}", payload=LbConfig.class)
+    @Attribute(key = true)
+    @Pattern(regexp = NAME_REGEX, message = "{lbconfig.invalid.name}", payload = LbConfig.class)
     @NotNull
     String getName();
 
     /**
-     * Sets the value of the name property.
+     * Sets the value of the {@code name} property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param name allowed object is {@link String}
      */
-    @Param (name = "name", primary=true)
-    void setName(String value) throws PropertyVetoException;
+    @Param (name = "name", primary = true)
+    void setName(String name) throws PropertyVetoException;
 
     /**
-     * Gets the value of the responseTimeoutInSeconds property.
+     * Gets the value of the {@code responseTimeoutInSeconds} property.
      *
-     * Period within which a server must return a response or otherwise it will
-     * be considered unhealthy. Default value is 60 seconds. Must be greater
-     * than or equal to 0. A value of 0 effectively turns off this check
-     * functionality, meaning the server will always be considered healthy
+     * <p>Period within which a server must return a response or otherwise it will
+     * be considered unhealthy. Default value is {@code 60} seconds. Must be greater
+     * than or equal to {@code 0}. A value of 0 effectively turns off this check
+     * functionality, meaning the server will always be considered healthy.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
-    @Attribute (defaultValue="60")
-    @Min(value=0)
+    @Attribute (defaultValue = "60")
+    @Min(value = 0)
     String getResponseTimeoutInSeconds();
 
     /**
-     * Sets the value of the responseTimeoutInSeconds property.
+     * Sets the value of the {@code responseTimeoutInSeconds} property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param responseTimeout allowed object is {@link String}
      */
-    @Param(name = "responsetimeout", optional=true)
-    void setResponseTimeoutInSeconds(String value) throws PropertyVetoException;
+    @Param(name = "responsetimeout", optional = true)
+    void setResponseTimeoutInSeconds(String responseTimeout) throws PropertyVetoException;
 
     /**
-     * Gets the value of the httpsRouting property.
+     * Gets the value of the {@code httpsRouting} property.
      *
-     * Boolean flag indicating how load-balancer will route https requests.
+     * <p>Boolean flag indicating how load-balancer will route https requests.
      * If true then an https request to the load-balancer will result in an
-     * https request to the server; if false then https requests to the
+     * https request to the server; if {@code false} then https requests to the
      * load-balancer result in http requests to the server.
-     * Default is to use http (i.e. value of false)
      *
-     * @return possible object is
-     *         {@link String }
+     * <p>Default is to use {@code http} (i.e. value of {@code false})
+     *
+     * @return possible object is {@link String}
      */
-    @Attribute (defaultValue="false",dataType=Boolean.class)
+    @Attribute (defaultValue = "false",dataType = Boolean.class)
     String getHttpsRouting();
 
     /**
-     * Sets the value of the httpsRouting property.
+     * Sets the value of the {@code httpsRouting} property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param httpsRouting allowed object is {@link String}
      */
-    @Param(name = "httpsrouting", optional=true)
-    void setHttpsRouting(String value) throws PropertyVetoException;
+    @Param(name = "httpsrouting", optional = true)
+    void setHttpsRouting(String httpsRouting) throws PropertyVetoException;
 
     /**
-     * Gets the value of the reloadPollIntervalInSeconds property.
+     * Gets the value of the {@code reloadPollIntervalInSeconds} property.
      *
-     * Maximum period, in seconds, that a change to the load balancer
+     * <p>Maximum period, in seconds, that a change to the load balancer
      * configuration file takes before it is detected by the load balancer and
      * the file reloaded. A value of 0 indicates that reloading is disabled.
-     * Default period is 1 minute (60 sec)
      *
-     * @return possible object is
-     *         {@link String }
+     * <p>Default period is {@code 1} minute (60 sec)
+     *
+     * @return possible object is {@link String}
      */
-    @Attribute (defaultValue="60")
+    @Attribute (defaultValue = "60")
     String getReloadPollIntervalInSeconds();
 
     /**
-     * Sets the value of the reloadPollIntervalInSeconds property.
+     * Sets the value of the {@code reloadPollIntervalInSeconds} property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param reloadPollInterval allowed object is {@link String}
      */
-    @Param(name = "reloadinterval", optional=true)
-    void setReloadPollIntervalInSeconds(String value) throws PropertyVetoException;
+    @Param(name = "reloadinterval", optional = true)
+    void setReloadPollIntervalInSeconds(String reloadPollInterval) throws PropertyVetoException;
 
     /**
-     * Gets the value of the monitoringEnabled property.
+     * Gets the value of the {@code monitoringEnabled} property.
      *
-     * Boolean flag that determines whether monitoring is switched on or not.
-     * Default is that monitoring is switched off (false)
+     * <p>Boolean flag that determines whether monitoring is switched on or not.
      *
-     * @return possible object is
-     *         {@link String }
+     * <p>Default is that monitoring is switched off ({@code false}).
+     *
+     * @return possible object is {@link String}
      */
-    @Attribute (defaultValue="false",dataType=Boolean.class)
+    @Attribute (defaultValue = "false",dataType = Boolean.class)
     String getMonitoringEnabled();
 
     /**
-     * Sets the value of the monitoringEnabled property.
+     * Sets the value of the {@code monitoringEnabled} property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param monitoringEnabled allowed object is {@link String}
      */
-    @Param(name = "monitor", optional=true)
-    void setMonitoringEnabled(String value) throws PropertyVetoException;
+    @Param(name = "monitor", optional = true)
+    void setMonitoringEnabled(String monitoringEnabled) throws PropertyVetoException;
 
     /**
-     * Gets the value of the routeCookieEnabled property.
+     * Gets the value of the {@code routeCookieEnabled} property.
      *
-     * Boolean flag that determines whether a route cookie is or is not enabled.
-     * Default is enabled (true).
+     * <p>Boolean flag that determines whether a route cookie is or is not enabled.
      *
-     * @return possible object is
-     *         {@link String }
+     * <p>Default is enabled ({@code true}).
+     *
+     * @return possible object is {@link String}
      */
-    @Attribute (defaultValue="true",dataType=Boolean.class)
+    @Attribute (defaultValue = "true",dataType = Boolean.class)
     String getRouteCookieEnabled();
 
     /**
-     * Sets the value of the routeCookieEnabled property.
+     * Sets the value of the {@code routeCookieEnabled} property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param routeCookieEnabled allowed object is {@link String}
      */
-    @Param(name = "routecookie", optional=true)
-    void setRouteCookieEnabled(String value) throws PropertyVetoException;
+    @Param(name = "routecookie", optional = true)
+    void setRouteCookieEnabled(String routeCookieEnabled) throws PropertyVetoException;
 
     /**
-     * Gets the value of the clusterRefOrServerRef property.
-     * <p/>
-     * <p/>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the clusterRefOrServerRef property.
-     * <p/>
-     * <p/>
-     * For example, to add a new item, do as follows:
+     * Gets the value of the {@code clusterRefOrServerRef} property.
+     *
+     * <p>This accessor method returns a reference to the live list, not a snapshot.
+     * Therefore any modification you make to the returned list will be present inside
+     * the JAXB object. This is why there is not a {@code set} method for
+     * the {@code clusterRefOrServerRef} property.
+     *
+     * <p>For example, to add a new item, do as follows:
+     *
      * <pre>
      *    getClusterRefOrServerRef().add(newItem);
      * </pre>
-     * <p/>
-     * <p/>
-     * <p/>
-     * Objects of the following type(s) are allowed in the list
-     * {@link ClusterRef }
-     * {@link ServerRef }
+     *
+     * <p>Objects of the following type(s) are allowed in the list:
+     * <ul>
+     * <li>{@link ClusterRef}</li>
+     * <li>{@link ServerRef}</li>
+     * </ul>
      */
     @Element("*")
     List<Ref> getClusterRefOrServerRef();
 
     /**
-        Properties as per {@link PropertyBag}
+     *  Properties as per {@link PropertyBag}.
      */
     @Override
-    @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
-    @PropertiesDesc(props={})
+    @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props" )
+    @PropertiesDesc(props = {})
     @Element
     List<Property> getProperty();
 
-    @DuckTyped
-    <T> List<T> getRefs(Class<T> type);
-
-    @DuckTyped
-    <T> T getRefByRef(Class<T> type, String ref);
-
-    @DuckTyped
-    Date getLastExported();
-
-    @DuckTyped
-    Date getLastApplied();
-
-    @DuckTyped
-    boolean setLastExported();
-
-    @DuckTyped
-    boolean setLastApplied();
-
-    public class Duck {
-        public static <T> List<T> getRefs(LbConfig lc, Class<T> type) {
-            List<T> refs = new ArrayList<T>();
-            for (Object r : lc.getClusterRefOrServerRef()) {
-                if (type.isInstance(r)) {
-                    refs.add(type.cast(r));
-                }
+    default <T> List<T> getRefs(Class<T> type) {
+        List<T> refs = new ArrayList<>();
+        for (Object ref : getClusterRefOrServerRef()) {
+            if (type.isInstance(ref)) {
+                refs.add(type.cast(ref));
             }
-            // you have to return an umodifiable list since this list
-            // is not the real list of elements as maintained by this config bean
-            return Collections.unmodifiableList(refs);
         }
+        // you have to return an unmodifiable list since this list
+        // is not the real list of elements as maintained by this config bean
+        return Collections.unmodifiableList(refs);
+    }
 
-        public static <T> T getRefByRef(LbConfig lc, Class<T> type, String ref) {
-            if (ref == null) {
-                return null;
-            }
-
-            for (Ref r : lc.getClusterRefOrServerRef())
-                if (type.isInstance(r) && r.getRef().equals(ref))
-                    return type.cast(r);
-
+    default <T> T getRefByRef(Class<T> type, String refName) {
+        if (refName == null) {
             return null;
         }
 
-        public static Date getLastExported(LbConfig lc) {
-            return getInternalPropertyValue(lc, LAST_EXPORTED_PROPERTY);
-        }
-
-        public static Date getLastApplied(LbConfig lc) {
-            return getInternalPropertyValue(lc, LAST_APPLIED_PROPERTY);
-        }
-
-        private static Date getInternalPropertyValue(LbConfig lc,
-                String propertyName) {
-            String propertyValue = lc.getPropertyValue(propertyName);
-            if(propertyValue == null){
-                return null;
+        for (Ref ref : getClusterRefOrServerRef()) {
+            if (type.isInstance(ref) && ref.getRef().equals(refName)) {
+                return type.cast(ref);
             }
-            return new Date(Long.parseLong(propertyValue));
         }
+        return null;
+    }
 
-        public static boolean setLastExported(LbConfig lc) {
-            return setInternalProperty(lc, LAST_EXPORTED_PROPERTY);
+    default Date getLastExported() {
+        return getInternalPropertyValue(LAST_EXPORTED_PROPERTY);
+    }
+
+    default Date getLastApplied() {
+        return getInternalPropertyValue(LAST_APPLIED_PROPERTY);
+    }
+
+    default boolean setLastExported() {
+        return setInternalProperty(LAST_EXPORTED_PROPERTY);
+    }
+
+    default boolean setLastApplied() {
+        return setInternalProperty(LAST_APPLIED_PROPERTY);
+    }
+
+    private Date getInternalPropertyValue(String propertyName) {
+        String propertyValue = getPropertyValue(propertyName);
+        if(propertyValue == null){
+            return null;
         }
+        return new Date(Long.parseLong(propertyValue));
+    }
 
-        public static boolean setLastApplied(LbConfig lc) {
-            return setInternalProperty(lc, LAST_APPLIED_PROPERTY);
-        }
-
-        private static boolean setInternalProperty(LbConfig lc,
-                String propertyName) {
-            Property property = lc.getProperty(propertyName);
-            Transaction transaction = new Transaction();
-            try {
-                if (property == null) {
-                    ConfigBeanProxy lcProxy = transaction.enroll(lc);
-                    property = lcProxy.createChild(Property.class);
-                    property.setName(propertyName);
-                    property.setValue(String.valueOf((new Date()).getTime()));
-                    ((LbConfig)lcProxy).getProperty().add(property);
-                } else {
-                    ConfigBeanProxy propertyProxy = transaction.enroll(property);
-                    ((Property)propertyProxy).setValue(String.valueOf(
-                            (new Date()).getTime()));
-                }
-                transaction.commit();
-            } catch (Exception ex) {
-                transaction.rollback();
-                Logger logger = LogDomains.getLogger(LbConfig.class,
-                        LogDomains.ADMIN_LOGGER);
-                LocalStringManagerImpl localStrings =
-                        new LocalStringManagerImpl(LbConfig.class);
-                String msg = localStrings.getLocalString(
-                        "UnableToSetPropertyInLbconfig",
-                        "Unable to set property {0} in lbconfig with name {1}",
-                        new String[]{propertyName, lc.getName()});
-                logger.log(Level.SEVERE, msg);
-                logger.log(Level.FINE, "Exception when trying to set property "
-                        + propertyName + " in lbconfig " + lc.getName(), ex);
-                return false;
+    private boolean setInternalProperty(String propertyName) {
+        Property property = getProperty(propertyName);
+        Transaction transaction = new Transaction();
+        try {
+            if (property == null) {
+                LbConfig lcProxy = transaction.enroll(this);
+                property = lcProxy.createChild(Property.class);
+                property.setName(propertyName);
+                property.setValue(String.valueOf((new Date()).getTime()));
+                lcProxy.getProperty().add(property);
+            } else {
+                Property propertyProxy = transaction.enroll(property);
+                propertyProxy.setValue(String.valueOf((new Date()).getTime()));
             }
-            return true;
+            transaction.commit();
+        } catch (Exception ex) {
+            transaction.rollback();
+            Logger logger = LogDomains.getLogger(LbConfig.class, LogDomains.ADMIN_LOGGER);
+            LocalStringManagerImpl localStrings = new LocalStringManagerImpl(LbConfig.class);
+            String msg = localStrings.getLocalString(
+                    "UnableToSetPropertyInLbconfig",
+                    "Unable to set property {0} in lbconfig with name {1}",
+                    propertyName, getName());
+            logger.log(Level.SEVERE, msg);
+            logger.log(Level.FINE, "Exception when trying to set property " + propertyName + " in lbconfig " + getName(), ex);
+            return false;
         }
-
+        return true;
     }
 
     @Service
     @PerLookup
     class Decorator implements CreationDecorator<LbConfig> {
 
-        @Param (name = "name", optional=true)
+        @Param (name = "name", optional = true)
         String config_name;
 
-        @Param(optional=true)
+        @Param(optional = true)
         String target;
 
-        @Param (optional=true, defaultValue="60")
+        @Param (optional = true, defaultValue = "60")
         String responsetimeout;
 
-        @Param (optional=true, defaultValue="false")
+        @Param (optional = true, defaultValue = "false")
         Boolean httpsrouting;
 
-        @Param (optional=true, defaultValue="60")
+        @Param (optional = true, defaultValue = "60")
         String reloadinterval;
 
-        @Param (optional=true, defaultValue="false")
+        @Param (optional = true, defaultValue = "false")
         Boolean monitor;
 
-        @Param (optional=true, defaultValue="true")
+        @Param (optional = true, defaultValue = "true")
         Boolean routecookie;
 
-        @Param(optional=true, name="property", separator=':')
+        @Param(optional = true, name = "property", separator = ':')
         Properties properties;
 
         @Inject
         Domain domain;
 
         /**
-         * Create lb-config entries
-         * tasks :
+         * Create lb-config entries.
+         *
+         * <p>Tasks :
          *      - ensures that it references an existing cluster
 
          * @param context administration command context
          * @param instance newly created configuration element
-         * @throws TransactionFailure
-         * @throws PropertyVetoException
          *
          */
         @Override
@@ -407,15 +371,11 @@ public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
             if (lbconfigs == null) {
                 Transaction transaction = new Transaction();
                 try {
-                    ConfigBeanProxy domainProxy = transaction.enroll(domain);
+                    Domain domainProxy = transaction.enroll(domain);
                     lbconfigs = domainProxy.createChild(LbConfigs.class);
-                    ((Domain) domainProxy).getExtensions().add(lbconfigs);
+                    domainProxy.getExtensions().add(lbconfigs);
                     transaction.commit();
-                } catch (TransactionFailure ex) {
-                    transaction.rollback();
-                    String msg = localStrings.getLocalString("LbConfigsCreationFailed", "Creation of parent element lb-configs failed");
-                    throw new TransactionFailure(msg, ex);
-                } catch (RetryableException ex) {
+                } catch (TransactionFailure | RetryableException ex) {
                     transaction.rollback();
                     String msg = localStrings.getLocalString("LbConfigsCreationFailed", "Creation of parent element lb-configs failed");
                     throw new TransactionFailure(msg, ex);
@@ -430,9 +390,9 @@ public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
             instance.setName(config_name);
             instance.setResponseTimeoutInSeconds(responsetimeout);
             instance.setReloadPollIntervalInSeconds(reloadinterval);
-            instance.setMonitoringEnabled(monitor==null ? null : monitor.toString());
-            instance.setRouteCookieEnabled(routecookie==null ? null : routecookie.toString());
-            instance.setHttpsRouting(httpsrouting==null ? null : httpsrouting.toString());
+            instance.setMonitoringEnabled(monitor == null ? null : monitor.toString());
+            instance.setRouteCookieEnabled(routecookie == null ? null : routecookie.toString());
+            instance.setHttpsRouting(httpsrouting == null ? null : httpsrouting.toString());
 
             // creates a reference to the target
             if (target != null) {
@@ -467,12 +427,12 @@ public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
     @Service
     @PerLookup
     class DeleteDecorator implements DeletionDecorator<LbConfigs, LbConfig> {
+
         @Inject
         private Domain domain;
 
         @Override
-        public void decorate(AdminCommandContext context, LbConfigs parent, LbConfig child)
-                throws PropertyVetoException, TransactionFailure {
+        public void decorate(AdminCommandContext context, LbConfigs parent, LbConfig child) throws TransactionFailure {
             Logger logger = LogDomains.getLogger(LbConfig.class, LogDomains.ADMIN_LOGGER);
             LocalStringManagerImpl localStrings = new LocalStringManagerImpl(LbConfig.class);
 

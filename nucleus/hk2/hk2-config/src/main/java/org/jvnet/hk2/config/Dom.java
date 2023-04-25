@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -1131,10 +1131,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
             }
         }
         if (method.isDefault()) {
-            throw new IllegalArgumentException("Default methods are not supported for proxies. Method: " + method);
-        }
-        if (method.getAnnotation(DuckTyped.class) != null) {
-            return invokeDuckMethod(method, proxy, args);
+            return ProxyHelper.invokeDefault(proxy, method, args);
         }
         if (method.getAnnotation(ConfigExtensionMethod.class) != null) {
             ConfigExtensionMethod cem = method.getAnnotation(ConfigExtensionMethod.class);
@@ -1166,37 +1163,8 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
     }
 
     /**
-     * Invoke the user defined static method in the nested "Duck" class so that
-     * the user can define convenience methods on the config beans.
-     */
-    Object invokeDuckMethod(Method method, Object proxy, Object[] args) throws Exception {
-        Method duckMethod = model.getDuckMethod(method);
-
-        Object[] duckArgs;
-        if(args==null) {
-            duckArgs = new Object[]{proxy};
-        } else {
-            duckArgs = new Object[args.length+1];
-            duckArgs[0] = proxy;
-            System.arraycopy(args,0,duckArgs,1,args.length);
-        }
-
-        try {
-            return duckMethod.invoke(null,duckArgs);
-        } catch (InvocationTargetException e) {
-            Throwable t = e.getTargetException();
-            if (t instanceof Exception) {
-                throw (Exception) t;
-            }
-            if (t instanceof Error) {
-                throw (Error) t;
-            }
-            throw e;
-        }
-    }
-    /**
-     * Invoke the user defined static method in the nested "Duck" class so that
-     * the user can define convenience methods on the config beans.
+     * Invoke the user defined static method so that the user can define convenience methods
+     * on the config beans.
      */
     <T extends ConfigBeanProxy> T invokeConfigExtensionMethod(ConfigExtensionHandler<T> handler, Dom dom,
                                                               Class<T> clazz, Object[] args) throws Exception {

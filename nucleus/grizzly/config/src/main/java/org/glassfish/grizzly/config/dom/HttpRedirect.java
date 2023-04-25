@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,37 +23,34 @@ import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.types.PropertyBag;
 
 /**
- * <p>
  * A {@link Protocol} which redirects an HTTP(S) request to a different location
  * using HTTP 302 redirection semantics.
- * </p>
  */
 @Configured
 public interface HttpRedirect extends ConfigBeanProxy, PropertyBag {
+
     int PORT = -1;
+
     boolean SECURE = false;
 
     /**
      * @return the network port the request should be redirected to.  If no
-     *         value was specified, the default of <code>-1</code> will be returned
+     *         value was specified, the default of {@code -1} will be returned
      *         which signifies a redirection to the same port the current request
      *         was made on
      */
     @Attribute(defaultValue = "" + PORT, dataType = Integer.class)
-    @Range(min=-1, max=65535)
+    @Range(min = -1, max = 65535)
     String getPort();
 
-    @SuppressWarnings({"UnusedDeclaration"})
     void setPort(String port);
 
     /**
-     * @return <code>true</code> will redirect the request using <code>HTTPS</code>
-     *         where as a value of <code>false</code> will use <code>HTTP</code>
+     * @return {@code true} will redirect the request using {@code HTTPS}
+     *         whereas a value of {@code false} will use {@code HTTP}.
      */
     @Attribute(defaultValue = "" + SECURE, dataType = Boolean.class)
     String getSecure();
 
-    @SuppressWarnings({"UnusedDeclaration"})
-    void setSecure(String value);
-
+    void setSecure(String secure);
 }

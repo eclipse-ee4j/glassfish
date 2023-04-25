@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,30 +19,31 @@ package com.sun.enterprise.config.modularity.tests;
 
 import com.sun.enterprise.config.modularity.annotation.CustomConfiguration;
 import com.sun.enterprise.config.modularity.customization.ConfigBeanDefaultValue;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
-import org.jvnet.hk2.config.types.PropertyBag;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.types.PropertyBag;
+
 /**
  * @author Masoud Kalali
  */
-
 @Configured
 @CustomConfiguration(baseConfigurationFileName = "simple-ext-type-one.xml", usesOnTheFlyConfigGeneration = true)
 public interface SimpleExtensionThree extends SimpleConfigExtensionExtensionPoint, PropertyBag {
-    @DuckTyped
-    public List<ConfigBeanDefaultValue> getDefaultValues(String runtimeType);
 
-    class Duck {
-        public static List<ConfigBeanDefaultValue> getDefaultValues( String runtimeType) {
-            //decide what to do depending on the runtime...
-            ConfigBeanDefaultValue defaultValue = new ConfigBeanDefaultValue("domain", "some.class.name", "<xml-doc></xml-doc>", false, null);
-            List<ConfigBeanDefaultValue> vals = new ArrayList<ConfigBeanDefaultValue>();
-            vals.add(defaultValue);
-            return vals;
-        }
+    static List<ConfigBeanDefaultValue> getDefaultValues(String runtimeType) {
+        // decide what to do depending on the runtime...
+        ConfigBeanDefaultValue defaultValue =
+                new ConfigBeanDefaultValue(
+                        "domain",
+                        "some.class.name",
+                        "<xml-doc></xml-doc>",
+                        false,
+                        null);
+        List<ConfigBeanDefaultValue> values = new ArrayList<>();
+        values.add(defaultValue);
+        return values;
     }
 }

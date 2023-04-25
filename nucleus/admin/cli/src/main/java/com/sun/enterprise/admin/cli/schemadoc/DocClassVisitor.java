@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,11 +19,19 @@ package com.sun.enterprise.admin.cli.schemadoc;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.objectweb.asm.*;
+
+import org.objectweb.asm.AnnotationVisitor;
+import org.objectweb.asm.Attribute;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.FieldVisitor;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.ModuleVisitor;
+import org.objectweb.asm.Opcodes;
 
 import static org.objectweb.asm.Opcodes.ASM9;
 
 public class DocClassVisitor extends ClassVisitor {
+
     private boolean hasConfiguredAnnotation = false;
     private String className;
     private List<String> interfaces;
@@ -38,7 +46,7 @@ public class DocClassVisitor extends ClassVisitor {
     @Override
     public void visit(int version, int access, String name, String signature, String superName, String[] intfs) {
         className = GenerateDomainSchema.toClassName(name);
-        interfaces = new ArrayList<String>();
+        interfaces = new ArrayList<>();
         for (String intf : intfs) {
             interfaces.add(GenerateDomainSchema.toClassName(intf));
         }
@@ -96,7 +104,7 @@ public class DocClassVisitor extends ClassVisitor {
         } catch (StringIndexOutOfBoundsException e) {
             throw new RuntimeException(e.getMessage());
         }
-        return name.startsWith("get") && type != null ? new AttributeMethodVisitor(classDef, name, type) : null;
+        return name.startsWith("get") && type != null ? new AttributeMethodVisitor(classDef, access, name, type) : null;
     }
 
     /**

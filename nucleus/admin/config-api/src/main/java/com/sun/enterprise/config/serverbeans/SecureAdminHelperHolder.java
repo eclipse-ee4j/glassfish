@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2023 Contributors to the Eclipse Foundation
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,28 +16,29 @@
 
 package com.sun.enterprise.config.serverbeans;
 
-import java.util.List;
+import org.glassfish.hk2.api.ServiceLocator;
 
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.Element;
+final class SecureAdminHelperHolder {
 
-/**
- *
- * @author Tim Quinn
- */
-@Configured
-public interface AppTenants extends ConfigBeanProxy {
+    private static final Object lock = new Object();
 
-    @Element
-    List<AppTenant> getAppTenant();
+    private static volatile SecureAdminHelper secureAdminHelper;
 
-    default AppTenant getAppTenant(String tenantName) {
-        for (AppTenant tenant : getAppTenant()) {
-            if (tenant.getTenant().equals(tenantName)) {
-                return tenant;
+    private SecureAdminHelperHolder() {
+        throw new AssertionError();
+    }
+
+    public static SecureAdminHelper getSecureAdminHelper(ServiceLocator habitat) {
+        // Double-checked locking
+        SecureAdminHelper localHelper = secureAdminHelper;
+        if (localHelper == null) {
+            synchronized (lock) {
+                localHelper = secureAdminHelper;
+                if (localHelper == null) {
+                    secureAdminHelper = localHelper = habitat.getService(SecureAdminHelper.class);
+                }
             }
         }
-        return null;
+        return localHelper;
     }
 }

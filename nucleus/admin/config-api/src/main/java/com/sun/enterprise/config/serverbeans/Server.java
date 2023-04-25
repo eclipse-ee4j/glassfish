@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -40,6 +40,7 @@ import jakarta.validation.constraints.Pattern;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,6 +58,7 @@ import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.config.support.CreationDecorator;
 import org.glassfish.config.support.DeletionDecorator;
 import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.quality.ToDo;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.Attribute;
@@ -64,9 +66,7 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.Dom;
-import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.Element;
-import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.Transaction;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
@@ -82,24 +82,23 @@ import static com.sun.enterprise.config.util.RegisterInstanceCommandParameters.P
 import static org.glassfish.config.support.Constants.NAME_SERVER_REGEX;
 
 /**
- * Jakarta EE Application Server Configuration
- * Each Application Server instance is a Jakarta EE compliant container.
+ * Jakarta EE Application Server Configuration.
+ *
+ * <p>Each Application Server instance is a Jakarta EE compliant container.
  * One server instance is specially designated as the Administration Server in SE/EE
  * User applications cannot be deployed to an Administration Server instance
  */
 @Configured
 @ConfigRefConstraint(message = "{configref.invalid}", payload = ConfigRefValidator.class)
-@SuppressWarnings("unused")
 @NotDuplicateTargetName(message = "{server.duplicate.name}", payload = Server.class)
 @ReferenceConstraint(skipDuringCreation = true, payload = Server.class)
-public interface Server
-    extends ConfigBeanProxy, PropertyBag, Named, SystemPropertyBag, ReferenceContainer, RefContainer, Payload {
+public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPropertyBag, ReferenceContainer, RefContainer, Payload {
 
     String lbEnabledSystemProperty = "org.glassfish.lb-enabled-default";
 
     @Param(name = OPERAND_NAME, primary = true)
     @Override
-    void setName(String value) throws PropertyVetoException;
+    void setName(String name) throws PropertyVetoException;
 
     @NotTargetKeyword(message = "{server.reserved.name}", payload = Server.class)
     @Pattern(regexp = NAME_SERVER_REGEX, message = "{server.invalid.name}", payload = Server.class)
@@ -107,11 +106,12 @@ public interface Server
     String getName();
 
     /**
-     * Gets the value of the configRef property.
-     * Points to a named config. Needed for stand-alone servers.
-     * If server instance is part of a cluster, then it points to the cluster config
+     * Gets the value of the {@code configRef} property.
      *
-     * @return possible object is {@link String }
+     * <p>Points to a named config. Needed for stand-alone servers.
+     * If server instance is part of a cluster, then it points to the cluster config.
+     *
+     * @return possible object is {@link String}
      */
     @Attribute
     @NotNull
@@ -121,93 +121,92 @@ public interface Server
     String getConfigRef();
 
     /**
-     * Sets the value of the configRef property.
+     * Sets the value of the {@code configRef} property.
      *
-     * @param value allowed object is {@link String }
+     * @param configRef allowed object is {@link String}
      * @throws PropertyVetoException if a listener vetoes the change
      */
     @Param(name = PARAM_CONFIG, optional = true)
-    void setConfigRef(String value) throws PropertyVetoException;
+    void setConfigRef(String configRef) throws PropertyVetoException;
 
     /**
-     * Gets the value of the nodeAgentRef property.
+     * Gets the value of the {@code nodeAgentRef} property.
      *
-     * SE/EE only. Specifies name of node agent where server instance is hosted
+     * <p>SE/EE only. Specifies name of node agent where server instance is hosted.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     @Deprecated
     String getNodeAgentRef();
 
     /**
-     * Sets the value of the nodeAgentRef property.
+     * Sets the value of the {@code nodeAgentRef} property.
      *
-     * @param value allowed object is {@link String }
+     * @param agentRef allowed object is {@link String}
      * @throws PropertyVetoException if a listener vetoes the change
      */
     @Deprecated
-    void setNodeAgentRef(String value) throws PropertyVetoException;
+    void setNodeAgentRef(String agentRef) throws PropertyVetoException;
 
     /**
-     * Sets the value of the node property.
+     * Sets the value of the {@code nodeRef} property.
      *
-     * @param value allowed object is {@link String }
+     * @param nodeRef allowed object is {@link String}
      * @throws PropertyVetoException if a listener vetoes the change
      */
     @Param(name = PARAM_NODE, optional = true)
-    void setNodeRef(String value) throws PropertyVetoException;
+    void setNodeRef(String nodeRef) throws PropertyVetoException;
 
     /**
-     * Gets the value of the node property.
+     * Gets the value of the {@code nodeRef} property.
      *
-     * SE/EE only. Specifies name of node agent where server instance is hosted
+     * <p>SE/EE only. Specifies name of node agent where server instance is hosted.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     String getNodeRef();
 
     /**
-     * Gets the value of the lbWeight property.
+     * Gets the value of the {@code lbWeight} property.
      *
-     * Each server instance in a cluster has a weight, which may be used to represent the relative processing capacity of
-     * that instance. Default weight is 100 for every instance. Weighted load balancing policies will use this weight while
-     * load balancing requests within the cluster. It is the responsibility of the administrator to set the relative weights
-     * correctly, keeping in mind deployed hardware capacity
+     * <p>Each server instance in a cluster has a weight, which may be used to represent
+     * the relative processing capacity of that instance. Default weight is {@code 100}
+     * for every instance. Weighted load balancing policies will use this weight while
+     * load balancing requests within the cluster. It is the responsibility of the
+     * administrator to set the relative weights correctly, keeping in mind deployed
+     * hardware capacity.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "100")
     @Min(value = 1)
     String getLbWeight();
 
     /**
-     * Sets the value of the lbWeight property.
+     * Sets the value of the {@code lbWeight} property.
      *
-     * @param value allowed object is {@link String }
+     * @param lbWeight allowed object is {@link String}
      * @throws PropertyVetoException if a listener vetoes the change
      */
-    void setLbWeight(String value) throws PropertyVetoException;
+    void setLbWeight(String lbWeight) throws PropertyVetoException;
 
     /**
-     * Gets the value of the systemProperty property.
-     * <p/>
-     * <p/>
-     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the
-     * systemProperty property.
-     * <p/>
-     * <p/>
-     * For example, to add a new item, do as follows:
+     * Gets the value of the {@code systemProperty} property.
+     *
+     * <p>This accessor method returns a reference to the live list, not a snapshot.
+     * Therefore any modification you make to the returned list will be present inside
+     * the JAXB object. This is why there is not a {@code set} method for the
+     * {@code systemProperty} property.
+     *
+     * <p>For example, to add a new item, do as follows:
      *
      * <pre>
      * getSystemProperty().add(newItem);
      * </pre>
-     * <p/>
-     * <p/>
-     * <p/>
-     * Objects of the following type(s) are allowed in the list {@link SystemProperty }
+     *
+     * <p>Objects of the following type(s) are allowed in the list {@link SystemProperty}
      */
     @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal system properties")
     @Element
@@ -225,24 +224,49 @@ public interface Server
     @Override
     List<Property> getProperty();
 
-    @DuckTyped
     @Override
-    String getReference();
+    default String getReference() {
+        return getConfigRef();
+    }
 
-    @DuckTyped
-    ResourceRef getResourceRef(SimpleJndiName name);
+    default ResourceRef getResourceRef(SimpleJndiName refName) {
+        for (ResourceRef resourceRef : getResourceRef()) {
+            if (resourceRef.getRef().equals(refName.toString())) {
+                return resourceRef;
+            }
+        }
+        return null;
+    }
 
-    @DuckTyped
-    boolean isResourceRefExists(SimpleJndiName refName);
+    default boolean isResourceRefExists(SimpleJndiName refName) {
+        return getResourceRef(refName) != null;
+    }
 
-    @DuckTyped
-    void deleteResourceRef(SimpleJndiName name) throws TransactionFailure;
+    default void deleteResourceRef(SimpleJndiName refName) throws TransactionFailure {
+        final ResourceRef resourceRef = getResourceRef(refName);
+        if (resourceRef != null) {
+            ConfigSupport.apply(param -> param.getResourceRef().remove(resourceRef), this);
+        }
+    }
 
-    @DuckTyped
-    void createResourceRef(String enabled, SimpleJndiName refName) throws TransactionFailure;
+    default void createResourceRef(String enabled, SimpleJndiName refName) throws TransactionFailure {
+        ConfigSupport.apply(param -> {
+            ResourceRef newResourceRef = param.createChild(ResourceRef.class);
+            newResourceRef.setEnabled(enabled);
+            newResourceRef.setRef(refName.toString());
+            param.getResourceRef().add(newResourceRef);
+            return newResourceRef;
+        }, this);
+    }
 
-    @DuckTyped
-    ApplicationRef getApplicationRef(String appName);
+    default ApplicationRef getApplicationRef(String appName) {
+        for (ApplicationRef appRef : getApplicationRef()) {
+            if (appRef.getRef().equals(appName)) {
+                return appRef;
+            }
+        }
+        return null;
+    }
 
     /**
      * Returns the cluster instance this instance is referenced in or null if there is no cluster referencing this server
@@ -250,186 +274,92 @@ public interface Server
      *
      * @return the cluster owning this instance or null if this is a standalone instance
      */
-    @DuckTyped
-    Cluster getCluster();
+    default Cluster getCluster() {
+        ServiceLocator habitat = Objects.requireNonNull(Dom.unwrap(this)).getHabitat();
+        Clusters clusters = habitat.getService(Clusters.class);
+        if (clusters != null) {
+            for (Cluster cluster : clusters.getCluster()) {
+                for (ServerRef serverRef : cluster.getServerRef()) {
+                    if (serverRef.getRef().equals(getName())) {
+                        return cluster;
+                    }
+                }
+            }
+        }
+        return null;
+    }
 
     // four trivial methods that ReferenceContainer's need to implement
-    @DuckTyped
     @Override
-    boolean isCluster();
+    default boolean isCluster() {
+        return false;
+    }
 
-    @DuckTyped
     @Override
-    boolean isServer();
+    default boolean isServer() {
+        return true;
+    }
 
-    @DuckTyped
     @Override
-    boolean isDas();
+    default boolean isDas() {
+        return "server".equals(getName());
+    }
 
-    @DuckTyped
     @Override
-    boolean isInstance();
+    default boolean isInstance() {
+        String name = getName();
+        return name != null && !name.equals("server");
+    }
 
-    @DuckTyped
-    String getAdminHost();
-
-    @DuckTyped
-    int getAdminPort();
-
-    @DuckTyped
-    Config getConfig();
-
-    @DuckTyped
-    boolean isRunning();
-
-    class Duck {
-
-        public static boolean isCluster(Server server) {
-            return false;
+    default String getAdminHost() {
+        try {
+            ServerHelper helper = new ServerHelper(this, getConfig());
+            return helper.getAdminHost();
+        } catch (Exception e) {
+            // drop through...
         }
+        return null;
+    }
 
-        public static boolean isServer(Server server) {
-            return true;
+    default int getAdminPort() {
+        try {
+            ServerHelper helper = new ServerHelper(this, getConfig());
+            return helper.getAdminPort();
+        } catch (Exception e) {
+            // drop through...
         }
+        return -1;
+    }
 
-        public static boolean isInstance(Server server) {
-            String name = (server == null) ? null : server.getName();
-            return name != null && !name.equals("server");
-        }
-
-        public static boolean isDas(Server server) {
-            String name = (server == null) ? null : server.getName();
-            return "server".equals(name);
-        }
-
-        public static Cluster getCluster(Server server) {
-            Dom serverDom = Dom.unwrap(server);
-            Clusters clusters = serverDom.getHabitat().getService(Clusters.class);
-            if (clusters != null) {
-                for (Cluster cluster : clusters.getCluster()) {
-                    for (ServerRef serverRef : cluster.getServerRef()) {
-                        if (serverRef.getRef().equals(server.getName())) {
-                            return cluster;
-                        }
-                    }
+    default Config getConfig() {
+        try {
+            ServiceLocator habitat = Objects.requireNonNull(Dom.unwrap(this)).getHabitat();
+            Configs configs = habitat.getService(Configs.class);
+            String configName = getReference();
+            for (Config config : configs.getConfig()) {
+                if (configName.equals(config.getName())) {
+                    return config;
                 }
             }
-            return null;
+        } catch (Exception e) {
+            // drop through...
         }
+        return null;
+    }
 
-        public static String getReference(Server server) {
-            return server.getConfigRef();
+    /**
+     * This is NOT a reliable test. It just checks if ANYTHING has setup shop on the host and port.
+     * I wanted to run RemoteAdminCommand but that is (inexplicably) in admin/util -- and we would
+     * have a circular dependency.
+     */
+    default boolean isRunning() {
+        try {
+            ServerHelper helper = new ServerHelper(this, getConfig());
+            return helper.isRunning();
+        } catch (Exception e) {
+            // drop through...
         }
-
-        public static ApplicationRef getApplicationRef(Server server, String appName) {
-            for (ApplicationRef appRef : server.getApplicationRef()) {
-                if (appRef.getRef().equals(appName)) {
-                    return appRef;
-                }
-            }
-            return null;
-        }
-
-        public static ResourceRef getResourceRef(Server server, SimpleJndiName refName) {
-            for (ResourceRef ref : server.getResourceRef()) {
-                if (ref.getRef().equals(refName.toString())) {
-                    return ref;
-                }
-            }
-            return null;
-        }
-
-        public static boolean isResourceRefExists(Server server, SimpleJndiName refName) {
-            return getResourceRef(server, refName) != null;
-        }
-
-        public static void deleteResourceRef(Server server, SimpleJndiName refName) throws TransactionFailure {
-            final ResourceRef ref = getResourceRef(server, refName);
-            if (ref != null) {
-                ConfigSupport.apply(new SingleConfigCode<Server>() {
-
-                    @Override
-                    public Object run(Server param) {
-                        return param.getResourceRef().remove(ref);
-                    }
-                }, server);
-            }
-        }
-
-        public static void createResourceRef(Server server, final String enabled, final SimpleJndiName refName) throws TransactionFailure {
-
-            ConfigSupport.apply(new SingleConfigCode<Server>() {
-
-                @Override
-                public Object run(Server param) throws PropertyVetoException, TransactionFailure {
-
-                    ResourceRef newResourceRef = param.createChild(ResourceRef.class);
-                    newResourceRef.setEnabled(enabled);
-                    newResourceRef.setRef(refName.toString());
-                    param.getResourceRef().add(newResourceRef);
-                    return newResourceRef;
-                }
-            }, server);
-        }
-
-        public static Config getConfig(Server server) {
-            try {
-                if (server == null) {
-                    return null;
-                }
-
-                Dom serverDom = Dom.unwrap(server);
-                Configs configs = serverDom.getHabitat().getService(Configs.class);
-                String configName = getReference(server);
-                Config theConfig = null;
-
-                for (Config config : configs.getConfig()) {
-                    if (configName.equals(config.getName())) {
-                        return config;
-                    }
-                }
-            } catch (Exception e) {
-                // drop through...
-            }
-            return null;
-        }
-
-        public static int getAdminPort(Server server) {
-            try {
-                ServerHelper helper = new ServerHelper(server, getConfig(server));
-                return helper.getAdminPort();
-            } catch (Exception e) {
-                // drop through...
-            }
-            return -1;
-        }
-
-        public static String getAdminHost(Server server) {
-            try {
-                ServerHelper helper = new ServerHelper(server, getConfig(server));
-                return helper.getAdminHost();
-            } catch (Exception e) {
-                // drop through...
-            }
-            return null;
-        }
-
-        /**
-         * this is NOT a reliable test. It just checks if ANYTHING has setup shop on the host and port. I wanted to run
-         * RemoteAdminCommand but that is (inexplicably) in admin/util -- and we would have a circular dependency
-         *
-         * @param server
-         * @return
-         */
-        public static boolean isRunning(Server server) {
-            try {
-                ServerHelper helper = new ServerHelper(server, getConfig(server));
-                return helper.isRunning();
-            } catch (Exception e) {
-                // drop through...
-            }
-            return false;
-        }
+        return false;
     }
 
     @Service
@@ -438,18 +368,25 @@ public interface Server
 
         @Param(name = PARAM_CLUSTER, optional = true)
         String clusterName;
+
         @Param(name = PARAM_NODE, optional = true)
         String node = null;
+
         @Param(name = PARAM_LBENABLED, optional = true)
         String lbEnabled = null;
+
         @Param(name = PARAM_CHECKPORTS, optional = true, defaultValue = "true")
         boolean checkPorts = true;
+
         @Param(name = PARAM_PORTBASE, optional = true)
         private String portBase;
+
         @Param(optional = true, defaultValue = "false", shortName = "t")
         public Boolean terse = false;
+
         @Inject
         Domain domain;
+
         @Inject
         private ServerEnvironment env;
 
@@ -496,7 +433,6 @@ public interface Server
                     throw new TransactionFailure(localStrings.getLocalString("Server.cannotSpecifyBothConfigAndCluster",
                             "A configuration name and cluster name cannot both be specified."));
                 }
-                boolean clusterExists = false;
 
                 if (clusters != null) {
                     for (Cluster cluster : clusters.getCluster()) {
@@ -504,7 +440,6 @@ public interface Server
                             ourCluster = cluster;
                             String configName = cluster.getConfigRef();
                             instance.setConfigRef(configName);
-                            clusterExists = true;
                             ourConfig = domain.getConfigNamed(configName);
                             break;
                         }
@@ -512,12 +447,13 @@ public interface Server
                 }
 
                 if (ourCluster == null) {
-                    throw new TransactionFailure(localStrings.getLocalString("noSuchCluster", "Cluster {0} does not exist.", clusterName));
+                    throw new TransactionFailure(
+                            localStrings.getLocalString("noSuchCluster", "Cluster {0} does not exist.", clusterName));
                 }
 
                 /*
                  * We are only setting this when the discovery uri list
-                 * is set to "generate." Otherwise the user must set this
+                 * is set to "generate." Otherwise, the user must set this
                  * properly to match the discovery uri list.
                  */
                 if (ourCluster.getProperty("GMS_DISCOVERY_URI_LIST") != null
@@ -627,7 +563,7 @@ public interface Server
             }
 
             for (Resource resource : domain.getResources().getResources()) {
-                if (Resource.Duck.copyToInstance(resource)) {
+                if (Resource.copyToInstance(resource)) {
                     String name = null;
                     if (resource instanceof BindableResource) {
                         name = ((BindableResource) resource).getJndiName();
@@ -676,7 +612,7 @@ public interface Server
                     String nodeHost = n.getNodeHost();
                     if (NetUtils.isThisHostLocal(nodeHost)) { // instance on same host as DAS
                         int dasAdminPort = domain.getServerNamed("server").getAdminPort();
-                        // Don't use the getAdminPort duck type method directly on the instance being created
+                        // Don't use the getAdminPort default method directly on the instance being created
                         int instanceAdminPort = new ServerHelper(instance, config).getAdminPort();
                         if (instanceAdminPort != -1 && dasAdminPort != -1) {
                             if (instanceAdminPort == dasAdminPort) {
@@ -744,20 +680,21 @@ public interface Server
 
         @Inject
         Configs configs;
+
         @Inject
         private Domain domain;
+
         @Inject
         private ServerEnvironment env;
 
         @Override
-        public void decorate(AdminCommandContext context, Servers parent, final Server child)
-                throws PropertyVetoException, TransactionFailure {
+        public void decorate(AdminCommandContext context, Servers parent, final Server child) throws PropertyVetoException, TransactionFailure {
             final Logger logger = ConfigApiLoggerInfo.getLogger();
             LocalStringManagerImpl localStrings = new LocalStringManagerImpl(Server.class);
             final ActionReport report = context.getActionReport();
             Transaction t = Transaction.getTransaction(parent);
             Cluster cluster = domain.getClusterForInstance(child.getName());
-            boolean isStandAlone = cluster == null ? true : false;
+            boolean isStandAlone = cluster == null;
 
             /* setup supplemental */
             if (!isStandAlone && env.isDas()) {

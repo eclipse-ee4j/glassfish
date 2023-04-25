@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,12 @@
 
 package org.glassfish.web.plugin.common;
 
-import org.glassfish.web.config.serverbeans.EnvEntry;
-import org.glassfish.web.config.serverbeans.WebModuleConfig;
 import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.Engine;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
@@ -29,9 +30,11 @@ import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.RestEndpoint;
 import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.api.admin.RestParam;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.web.config.serverbeans.EnvEntry;
+import org.glassfish.web.config.serverbeans.WebModuleConfig;
 
 import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
@@ -41,33 +44,33 @@ import org.jvnet.hk2.config.TransactionFailure;
  *
  * @author tjquinn
  */
-@Service(name="set-web-env-entry")
+@Service(name = "set-web-env-entry")
 @I18n("setWebEnvEntry.command")
 @PerLookup
 @RestEndpoints({
-    @RestEndpoint(configBean=Application.class,
-        opType=RestEndpoint.OpType.POST,
-        path="set-web-env-entry",
-        description="set-web-env-entry",
-        params={
-            @RestParam(name="id", value="$parent")
-        })
+        @RestEndpoint(
+            configBean = Application.class,
+            opType = RestEndpoint.OpType.POST,
+            path = "set-web-env-entry",
+            description = "set-web-env-entry",
+            params = {@RestParam(name = "id", value = "$parent")}
+        )
 })
 public class SetWebEnvEntryCommand extends WebEnvEntryCommand {
 
-    @Param(name="name")
+    @Param(name = "name")
     private String name;
 
-    @Param(name="value",optional=true)
+    @Param(name = "value", optional = true)
     private String value;
 
-    @Param(name="type",optional=true)
+    @Param(name = "type", optional = true)
     private String envEntryType;
 
-    @Param(name="description",optional=true)
+    @Param(name = "description", optional = true)
     private String description;
 
-    @Param(name="ignoreDescriptorItem", optional=true)
+    @Param(name = "ignoreDescriptorItem", optional = true)
     private Boolean ignoreDescriptorItem;
 
     @Override
@@ -95,7 +98,7 @@ public class SetWebEnvEntryCommand extends WebEnvEntryCommand {
             final String envEntryType,
             final ActionReport report) throws PropertyVetoException, TransactionFailure {
 
-        WebModuleConfig config = WebModuleConfig.Duck.webModuleConfig(owningEngine);
+        WebModuleConfig config = WebModuleConfig.webModuleConfig(owningEngine);
         if (config == null) {
             createEnvEntryOnNewWMC(owningEngine, name, value, envEntryType,
                     description, ignoreDescriptorItem);
@@ -199,7 +202,7 @@ public class SetWebEnvEntryCommand extends WebEnvEntryCommand {
                 throw new IllegalArgumentException(fmt);
             }
             try {
-                EnvEntry.Util.validateValue(candidateFinalType, candidateFinalValue);
+                EnvEntry.validateValue(candidateFinalType, candidateFinalValue);
             } catch (IllegalArgumentException ex) {
                 final String fmt = localStrings.getLocalString("valueTypeMismatch",
                         "Cannot assign value {0} to an env-entry of type {1}",

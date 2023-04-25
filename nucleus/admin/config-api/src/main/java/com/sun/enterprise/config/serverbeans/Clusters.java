@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,49 +17,55 @@
 
 package com.sun.enterprise.config.serverbeans;
 
+import java.util.List;
+
 import org.glassfish.api.I18n;
-import org.glassfish.config.support.*;
+import org.glassfish.config.support.Create;
+import org.glassfish.config.support.Delete;
+import org.glassfish.config.support.TypeAndNameResolver;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 
-import java.util.List;
-
 /**
- * Clusters configuration. Maintain a list of {@link Cluster} active configurations.
+ * Clusters configuration.
+ *
+ * <p>Maintain a list of {@link Cluster} active configurations.
  */
 @Configured
 public interface Clusters extends ConfigBeanProxy {
 
     /**
-     * Return the list of clusters currently configured
+     * Return the list of clusters currently configured.
      *
      * @return list of {@link Cluster }
      */
     @Element
-    @Create(value = "create-cluster", decorator = Cluster.Decorator.class, i18n = @I18n("create.cluster.command"))
-    @Delete(value = "delete-cluster", resolver = TypeAndNameResolver.class, decorator = Cluster.DeleteDecorator.class, i18n = @I18n("delete.cluster.command"))
-
-    public List<Cluster> getCluster();
+    @Create(
+            value = "create-cluster",
+            decorator = Cluster.Decorator.class,
+            i18n = @I18n("create.cluster.command")
+    )
+    @Delete(
+            value = "delete-cluster",
+            resolver = TypeAndNameResolver.class,
+            decorator = Cluster.DeleteDecorator.class,
+            i18n = @I18n("delete.cluster.command")
+    )
+    List<Cluster> getCluster();
 
     /**
-     * Return the cluster with the given name, or null if no such cluster exists.
+     * Return the cluster with the given {@code name}, or {@code null} if no such cluster exists.
      *
      * @param name the name of the cluster
      * @return the Cluster object, or null if no such server
      */
-    @DuckTyped
-    public Cluster getCluster(String name);
-
-    class Duck {
-        public static Cluster getCluster(Clusters clusters, String name) {
-            for (Cluster cluster : clusters.getCluster()) {
-                if (cluster.getName().equals(name)) {
-                    return cluster;
-                }
+    default Cluster getCluster(String name) {
+        for (Cluster cluster : getCluster()) {
+            if (cluster.getName().equals(name)) {
+                return cluster;
             }
-            return null;
         }
+        return null;
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,29 +17,22 @@
 
 package com.sun.enterprise.config.serverbeans;
 
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.Element;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.glassfish.api.admin.config.ApplicationName;
-
 import java.util.List;
 
-/**
- * Element describing the system-applications in domain.xml
- *
- */
+import org.glassfish.api.admin.config.ApplicationName;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Element;
 
+/**
+ * Element describing the {@code system-applications} in {@code domain.xml}
+ */
 @Configured
 public interface SystemApplications extends Applications {
 
     /**
-     * Gets the value of the
-     * lifecycleModuleOrJ2EeApplicationOrEjbModuleOrWebModuleOrConnectorModuleOrAppclientModuleOrMbeanOrExtensionModuleorApplication
-     * property. Objects of the following type(s) are allowed in the list {@link LifecycleModule } {@link J2eeApplication }
-     * {@link EjbModule } {@link WebModule } {@link ConnectorModule } {@link AppclientModule } {@link Mbean }
-     * {@link ExtensionModule } {@link Application }
+     * Gets the value of the {@code system-applications} property. Objects of the
+     * following type(s) are allowed in the list: {@link Application}.
      */
     @Element("*")
-    public List<ApplicationName> getModules();
-
+    List<ApplicationName> getModules();
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,21 +17,22 @@
 
 package org.glassfish.grizzly.config.dom;
 
+import java.util.List;
+
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.PropertyBag;
 
-import java.util.List;
-
 /**
- * Contains set of network-listener, which bind protocol to a specific endpoint to listen on
+ * Contains set of network-listener, which bind protocol to a specific endpoint to listen on.
  */
 @Configured
 public interface NetworkListeners extends ConfigBeanProxy, PropertyBag {
+
     /**
-     * Defines public thread-pool(s), which could be referenced within network-listener element(s)
+     * Defines public thread-pool(s), which could be referenced within network-listener
+     * element(s).
      */
     @Element
     List<ThreadPool> getThreadPool();
@@ -41,13 +43,7 @@ public interface NetworkListeners extends ConfigBeanProxy, PropertyBag {
     @Element
     List<NetworkListener> getNetworkListener();
 
-    @DuckTyped
-    NetworkConfig getParent();
-
-    class Duck {
-        public static NetworkConfig getParent(NetworkListeners listeners) {
-            return listeners.getParent(NetworkConfig.class);
-        }
-
+    default NetworkConfig getParent() {
+        return getParent(NetworkConfig.class);
     }
 }

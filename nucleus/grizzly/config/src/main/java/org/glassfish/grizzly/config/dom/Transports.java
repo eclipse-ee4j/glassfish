@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,35 +17,29 @@
 
 package org.glassfish.grizzly.config.dom;
 
+import java.util.List;
+
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.PropertyBag;
 
-import java.util.List;
-
 @Configured
 public interface Transports extends ConfigBeanProxy, PropertyBag {
+
     /**
-     * Defines public SelectionKey handler, which could be referenced within transport
+     * Defines public SelectionKey handler, which could be referenced within transport.
      */
     @Element
     List<SelectionKeyHandler> getSelectionKeyHandler();
 
     /**
-     * Defines the transports
+     * Defines the transports.
      */
     @Element
     List<Transport> getTransport();
 
-    @DuckTyped
-    NetworkConfig getParent();
-
-    class Duck {
-        public static NetworkConfig getParent(Transports transports) {
-            return transports.getParent(NetworkConfig.class);
-        }
-
+    default NetworkConfig getParent() {
+        return getParent(NetworkConfig.class);
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,12 +18,15 @@
 package com.sun.enterprise.security.auth.realm;
 
 /**
- * Exception thrown when an operation is invoked on a realm that does not support it. e.g. Invoking getGroups (username) is not
- * supported by a certificate realm.
+ * Exception thrown when an operation is invoked on a realm that does not support it. e.g. Invoking getGroups (username)
+ * is not supported by a certificate realm.
  *
  * @author Harpreet Singh
  */
 public class InvalidOperationException extends Exception {
+
+    private static final long serialVersionUID = 1L;
+
     /**
      * Constructs the exception, with descriptive information.
      *

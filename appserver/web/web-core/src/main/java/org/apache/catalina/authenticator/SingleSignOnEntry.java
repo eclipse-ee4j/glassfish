@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -17,15 +18,15 @@
 
 package org.apache.catalina.authenticator;
 
-import org.apache.catalina.LogFacade;
-import org.apache.catalina.Session;
-
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.Session;
 
 /**
  * A private class representing entries in the cache of authenticated users.
@@ -34,26 +35,23 @@ public class SingleSignOnEntry {
 
     private static final Logger log = LogFacade.getLogger();
 
-    protected String id = null;
+    protected String id;
 
-    protected String authType = null;
+    protected String authType;
 
-    protected Principal principal = null;
+    protected Principal principal;
 
-    protected Set<Session> sessions = new HashSet<Session>();
+    protected Set<Session> sessions = new HashSet<>();
 
-    protected String username = null;
+    protected String username;
 
-    protected String realmName = null;
+    protected String realmName;
 
     protected long lastAccessTime;
 
-    protected AtomicLong version = null;
+    protected AtomicLong version;
 
-    public SingleSignOnEntry(String id, long ver,
-                             Principal principal, String authType,
-                             String username, String realmName) {
-        super();
+    public SingleSignOnEntry(String id, long ver, Principal principal, String authType, String username, String realmName) {
         this.id = id;
         this.version = new AtomicLong(ver);
         this.principal = principal;
@@ -64,8 +62,7 @@ public class SingleSignOnEntry {
     }
 
     /**
-     * Adds the given session to this SingleSignOnEntry if it does not
-     * already exist.
+     * Adds the given session to this SingleSignOnEntry if it does not already exist.
      *
      * @return true if the session was added, false otherwise
      */
@@ -82,41 +79,36 @@ public class SingleSignOnEntry {
         sessions.remove(session);
     }
 
-
     /**
-     * Returns true if this SingleSignOnEntry does not have any sessions
-     * associated with it, and false otherwise.
+     * Returns true if this SingleSignOnEntry does not have any sessions associated with it, and false otherwise.
      *
-     * @return true if this SingleSignOnEntry does not have any sessions
-     * associated with it, and false otherwise
+     * @return true if this SingleSignOnEntry does not have any sessions associated with it, and false otherwise
      */
     public synchronized boolean isEmpty() {
         return (sessions.size() == 0);
     }
-
 
     /**
      * Expires all sessions associated with this SingleSignOnEntry
      *
      */
     public synchronized void expireSessions() {
-        for (Session session: sessions) {
+        for (Session session : sessions) {
             if (log.isLoggable(Level.FINE)) {
 
                 log.log(Level.FINE, " Invalidating session " + session);
             }
 
-            //6406580 START
+            // 6406580 START
             /*
-            // Invalidate this session
-            session.expire();
+             * // Invalidate this session session.expire();
              */
             // Invalidate this session
             // if it is not already invalid(ated)
-            if( (session).getIsValid() ) {
+            if ((session).getIsValid()) {
                 session.expire();
             }
-            //6406580 END
+            // 6406580 END
         }
     }
 
@@ -135,8 +127,7 @@ public class SingleSignOnEntry {
     }
 
     /**
-     * Gets the name of the authentication type originally used to authenticate
-     * the user associated with the SSO.
+     * Gets the name of the authentication type originally used to authenticate the user associated with the SSO.
      *
      * @return "BASIC", "CLIENT_CERT", "DIGEST", "FORM" or "NONE"
      */
@@ -145,16 +136,14 @@ public class SingleSignOnEntry {
     }
 
     /**
-     * Gets the <code>Principal</code> that has been authenticated by
-     * the SSO.
+     * Gets the <code>Principal</code> that has been authenticated by the SSO.
      */
     public Principal getPrincipal() {
         return principal;
     }
 
     /**
-     * Gets the username provided by the user as part of the authentication
-     * process.
+     * Gets the username provided by the user as part of the authentication process.
      */
     public String getUsername() {
         return username;

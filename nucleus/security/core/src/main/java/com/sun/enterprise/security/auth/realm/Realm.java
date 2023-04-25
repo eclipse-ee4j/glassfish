@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,9 @@
 
 package com.sun.enterprise.security.auth.realm;
 
+import static com.sun.enterprise.security.SecurityLoggerInfo.realmCreated;
+import static java.util.logging.Level.INFO;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -27,7 +31,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.external.probe.provider.PluginPoint;
@@ -58,12 +61,11 @@ public abstract class Realm implements Comparable {
 
     private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(Realm.class);
 
-    //    private static Hashtable loadedRealms = new Hashtable();
     private String myName;
 
     // Keep track of name of default realm. This is updated during startup
     // using value from server.xml
-    //    private static String defaultRealmName="default";
+    // private static String defaultRealmName="default";
 
     // Keep a mapping from "default" to default realm (if no such named
     // realm is present) for the sake of all the hardcoded accesses to it.
@@ -89,6 +91,13 @@ public abstract class Realm implements Comparable {
     protected static final Logger _logger = SecurityLoggerInfo.getLogger();
 
     /**
+     * The default constructor creates a realm which will later be initialized, either from properties or by deserializing.
+     */
+    protected Realm() {
+        ctxProps = new Properties();
+    }
+
+    /**
      * Returns the name of this realm.
      *
      * @return realm name.
@@ -102,8 +111,8 @@ public abstract class Realm implements Comparable {
     }
 
     /**
-     * Assigns the name of this realm, and stores it in the cache of realms. Used when initializing a newly created in-memory realm
-     * object; if the realm already has a name, there is no effect.
+     * Assigns the name of this realm, and stores it in the cache of realms. Used when initializing a newly created
+     * in-memory realm object; if the realm already has a name, there is no effect.
      *
      * @param name name to be assigned to this realm.
      */
@@ -111,45 +120,13 @@ public abstract class Realm implements Comparable {
         if (myName != null) {
             return;
         }
+
         myName = name;
     }
 
     /**
-     * Returns the name of this realm.
-     *
-     * @return name of realm.
-     */
-    @Override
-    public String toString() {
-        return myName;
-    }
-
-    /**
-     * Compares a realm to another. The comparison first considers the authentication type, so that realms supporting the same kind
-     * of user authentication are grouped together. Then it compares realm realm names. Realms compare "before" other kinds of
-     * objects (i.e. there's only a partial order defined, in the case that those other objects compare themselves "before" a realm
-     * object).
-     */
-    @Override
-    public int compareTo(Object realm) {
-        if (!(realm instanceof Realm)) {
-            return 1;
-        }
-
-        Realm r = (Realm) realm;
-        String str = r.getAuthType();
-        int temp;
-
-        if ((temp = getAuthType().compareTo(str)) != 0) {
-            return temp;
-        }
-
-        str = r.getName();
-        return getName().compareTo(str);
-    }
-
-    /**
-     * Instantiate a Realm with the given name and properties using the Class name given. This method is used by iAS and not RI.
+     * Instantiate a Realm with the given name and properties using the Class name given. This method is used by iAS and not
+     * RI.
      *
      * @param name Name of the new realm.
      * @param className Java Class name of the realm to create.
@@ -159,20 +136,21 @@ public abstract class Realm implements Comparable {
      *
      */
     public static synchronized Realm instantiate(String name, String className, Properties props) throws BadRealmException {
-        //Register the realm provider
+        // Register the realm provider
         registerRealmStatsProvier();
 
         Realm realmClass = _getInstance(name);
         if (realmClass == null) {
             realmClass = doInstantiate(name, className, props);
-            RealmsManager mgr = getRealmsManager();
-            mgr.putIntoLoadedRealms(name, realmClass);
+            getRealmsManager().putIntoLoadedRealms(name, realmClass);
         }
+
         return realmClass;
     }
 
     /**
-     * Instantiate a Realm with the given name and properties using the Class name given. This method is used by iAS and not RI.
+     * Instantiate a Realm with the given name and properties using the Class name given. This method is used by iAS and not
+     * RI.
      *
      * @param name Name of the new realm.
      * @param className Java Class name of the realm to create.
@@ -182,26 +160,17 @@ public abstract class Realm implements Comparable {
      * @throws BadRealmException If the requested realm cannot be instantiated.
      *
      */
-    public static synchronized Realm instantiate(String name, String className, Properties props, String configName)
-        throws BadRealmException {
-        //Register the realm provider
+    public static synchronized Realm instantiate(String name, String className, Properties props, String configName) throws BadRealmException {
+        // Register the realm provider
         registerRealmStatsProvier();
 
         Realm realmClass = _getInstance(configName, name);
         if (realmClass == null) {
             realmClass = doInstantiate(name, className, props);
-            RealmsManager mgr = getRealmsManager();
-            mgr.putIntoLoadedRealms(configName, name, realmClass);
+            getRealmsManager().putIntoLoadedRealms(configName, name, realmClass);
         }
+
         return realmClass;
-
-    }
-
-    private static void registerRealmStatsProvier() {
-        if (realmStatsProvier == null) {
-            getRealmStatsProvier();
-            StatsProviderManager.register("security", PluginPoint.SERVER, "security/realm", realmStatsProvier);
-        }
     }
 
     public static synchronized void getRealmStatsProvier() {
@@ -211,17 +180,15 @@ public abstract class Realm implements Comparable {
     }
 
     /**
-     * Instantiate a Realm with the given name, loading properties from the given file. This method is only used by RI and is not
-     * called anywhere in iAS. Note : this method stands unused in V3.1 but keeping it since it is a public method.
+     * Instantiate a Realm with the given name, loading properties from the given file. This method is only used by RI and
+     * is not called anywhere in iAS. Note : this method stands unused in V3.1 but keeping it since it is a public method.
      *
      * @deprecated
      * @param realmName Name of the new realm.
      * @param f File containing Properties for the new realm.
      */
     @Deprecated
-    public static synchronized Realm instantiate(String realmName, File f)
-        throws NoSuchRealmException, BadRealmException, FileNotFoundException {
-
+    public static synchronized Realm instantiate(String realmName, File f) throws NoSuchRealmException, BadRealmException, FileNotFoundException {
         if (!f.exists() || !f.isFile()) {
             throw new FileNotFoundException();
         }
@@ -260,106 +227,58 @@ public abstract class Realm implements Comparable {
     }
 
     /**
-     * Instantiates a Realm class of the given type and invokes its init()
-     *
-     */
-    private static synchronized Realm doInstantiate(String name, String className, Properties props) throws BadRealmException {
-
-        ServiceLocator habitat = Globals.getDefaultHabitat();
-        RealmsManager mgr = null;
-        try {
-            mgr = getRealmsManager();
-            Class realmClass = null;
-            //try a HK2 route first
-            Realm r = habitat.getService(Realm.class, name);
-            if (r == null) {
-                try {
-                    //TODO: workaround here. Once fixed in V3 we should be able to use
-                    //Context ClassLoader instead.
-                    ClassLoaderHierarchy hierarchy = habitat.getService(ClassLoaderHierarchy.class);
-                    realmClass = hierarchy.getCommonClassLoader().loadClass(className);
-                    Object obj = realmClass.newInstance();
-                    r = (Realm) obj;
-                } catch (ClassNotFoundException ex) {
-                    realmClass = Class.forName(className);
-                    Object obj = realmClass.newInstance();
-                    r = (Realm) obj;
-                }
-            }
-
-            r.setName(name);
-            r.init(props);
-            if (mgr == null) {
-                throw new BadRealmException("Unable to locate RealmsManager Service");
-            }
-            _logger.log(Level.INFO, SecurityLoggerInfo.realmCreated, new Object[] { name, className });
-            return r;
-
-        } catch (NoSuchRealmException ex) {
-            throw new BadRealmException(ex);
-        } catch (InstantiationException ex) {
-            throw new BadRealmException(ex);
-        } catch (IllegalAccessException ex) {
-            throw new BadRealmException(ex);
-        } catch (ClassNotFoundException ex) {
-            throw new BadRealmException(ex);
-        }
-    }
-
-    /**
-     * Replace a Realm instance. Can be used by a Realm subclass to replace a previously initialized instance of itself. Future
-     * getInstance requests will then obtain the new instance.
+     * Replace a Realm instance. Can be used by a Realm subclass to replace a previously initialized instance of itself.
+     * Future getInstance requests will then obtain the new instance.
      *
      * <P>
-     * Minimal error checking is done. The realm being replaced must already exist (instantiate() was previously called), the new
-     * instance must be fully initialized properly and it must of course be of the same class as the previous instance.
+     * Minimal error checking is done. The realm being replaced must already exist (instantiate() was previously called),
+     * the new instance must be fully initialized properly and it must of course be of the same class as the previous
+     * instance.
      *
      * @param realm The new realm instance.
      * @param name The (previously instantiated) name for this realm.
      *
      */
     protected static synchronized void updateInstance(Realm realm, String name) {
-        RealmsManager mgr = getRealmsManager();
-        if (mgr == null) {
-            throw new RuntimeException("Unable to locate RealmsManager Service");
-        }
+        RealmsManager realmsManager = getNonNullRealsManager();
 
-        Realm oldRealm = mgr.getFromLoadedRealms(name);
+        Realm oldRealm = realmsManager.getFromLoadedRealms(name);
         if (!oldRealm.getClass().equals(realm.getClass())) {
             // would never happen unless bug in realm subclass
             throw new Error("Incompatible class " + realm.getClass() + " in replacement realm " + name);
         }
         realm.setName(oldRealm.getName());
-        mgr.putIntoLoadedRealms(name, realm);
-        _logger.log(Level.INFO, SecurityLoggerInfo.realmUpdated, new Object[] { realm.getName() });
+        realmsManager.putIntoLoadedRealms(name, realm);
+
+        _logger.log(INFO, SecurityLoggerInfo.realmUpdated, new Object[] { realm.getName() });
     }
 
     /**
-     * Replace a Realm instance. Can be used by a Realm subclass to replace a previously initialized instance of itself. Future
-     * getInstance requests will then obtain the new instance.
+     * Replace a Realm instance. Can be used by a Realm subclass to replace a previously initialized instance of itself.
+     * Future getInstance requests will then obtain the new instance.
      *
      * <P>
-     * Minimal error checking is done. The realm being replaced must already exist (instantiate() was previously called), the new
-     * instance must be fully initialized properly and it must of course be of the same class as the previous instance.
+     * Minimal error checking is done. The realm being replaced must already exist (instantiate() was previously called),
+     * the new instance must be fully initialized properly and it must of course be of the same class as the previous
+     * instance.
      *
      * @param realm The new realm instance.
      * @param name The (previously instantiated) name for this realm.
      *
      */
     protected static synchronized void updateInstance(String configName, Realm realm, String name) {
-        RealmsManager mgr = getRealmsManager();
-        if (mgr == null) {
-            throw new RuntimeException("Unable to locate RealmsManager Service");
-        }
+        RealmsManager realmsManager = getNonNullRealsManager();
 
-        Realm oldRealm = mgr.getFromLoadedRealms(configName, name);
+        Realm oldRealm = realmsManager.getFromLoadedRealms(configName, name);
         if (!oldRealm.getClass().equals(realm.getClass())) {
             // would never happen unless bug in realm subclass
             throw new Error("Incompatible class " + realm.getClass() + " in replacement realm " + name);
         }
+
         realm.setName(oldRealm.getName());
-        mgr.putIntoLoadedRealms(configName, name, realm);
-        _logger.log(Level.INFO, SecurityLoggerInfo.realmUpdated, new Object[] { realm.getName() });
+        realmsManager.putIntoLoadedRealms(configName, name, realm);
+
+        _logger.log(INFO, SecurityLoggerInfo.realmUpdated, new Object[] { realm.getName() });
     }
 
     /**
@@ -380,12 +299,7 @@ public abstract class Realm implements Comparable {
      *
      */
     public static synchronized String getDefaultRealm() {
-        RealmsManager mgr = getRealmsManager();
-        if (mgr != null) {
-            return mgr.getDefaultRealmName();
-        } else {
-            throw new RuntimeException("Unable to locate RealmsManager Service");
-        }
+        return getNonNullRealsManager().getDefaultRealmName();
     }
 
     /**
@@ -395,13 +309,7 @@ public abstract class Realm implements Comparable {
      *
      */
     public static synchronized void setDefaultRealm(String realmName) {
-        //defaultRealmName = realmName;
-        RealmsManager mgr = getRealmsManager();
-        if (mgr != null) {
-            mgr.setDefaultRealmName(realmName);
-        } else {
-            throw new RuntimeException("Unable to locate RealmsManager Service");
-        }
+        getNonNullRealsManager().setDefaultRealmName(realmName);
     }
 
     /**
@@ -411,15 +319,12 @@ public abstract class Realm implements Comparable {
      * @exception NoSuchRealmException
      */
     public static synchronized void unloadInstance(String realmName) throws NoSuchRealmException {
-        //make sure instance exist
+        // make sure instance exist
         getInstance(realmName);
-        RealmsManager mgr = getRealmsManager();
-        if (mgr != null) {
-            mgr.removeFromLoadedRealms(realmName);
-        } else {
-            throw new RuntimeException("Unable to locate RealmsManager Service");
-        }
-        _logger.log(Level.INFO, SecurityLoggerInfo.realmDeleted, realmName);
+
+        getNonNullRealsManager().removeFromLoadedRealms(realmName);
+
+        _logger.log(INFO, SecurityLoggerInfo.realmDeleted, realmName);
     }
 
     /**
@@ -429,15 +334,9 @@ public abstract class Realm implements Comparable {
      * @exception NoSuchRealmException
      */
     public static synchronized void unloadInstance(String configName, String realmName) throws NoSuchRealmException {
-        //make sure instance exist
-        //getInstance(configName, realmName);
-        RealmsManager mgr = getRealmsManager();
-        if (mgr != null) {
-            mgr.removeFromLoadedRealms(configName, realmName);
-        } else {
-            throw new RuntimeException("Unable to locate RealmsManager Service");
-        }
-        _logger.log(Level.INFO, SecurityLoggerInfo.realmDeleted, realmName);
+        getNonNullRealsManager().removeFromLoadedRealms(configName, realmName);
+
+        _logger.log(INFO, SecurityLoggerInfo.realmDeleted, realmName);
     }
 
     /**
@@ -483,8 +382,8 @@ public abstract class Realm implements Comparable {
     }
 
     /**
-     * Returns the realm identified by the name which is passed as a parameter. This function knows about all the realms which exist;
-     * it is not possible to store (or create) one which is not accessible through this routine.
+     * Returns the realm identified by the name which is passed as a parameter. This function knows about all the realms
+     * which exist; it is not possible to store (or create) one which is not accessible through this routine.
      *
      * @param name identifies the realm
      * @return the requested realm
@@ -492,19 +391,18 @@ public abstract class Realm implements Comparable {
      * @exception BadRealmException if realm data structures are bad
      */
     public static synchronized Realm getInstance(String name) throws NoSuchRealmException {
-        Realm retval = _getInstance(name);
+        Realm instance = _getInstance(name);
 
-        if (retval == null) {
-            throw new NoSuchRealmException(
-                localStrings.getLocalString("realm.no_such_realm", name + " realm does not exist.", new Object[] { name }));
+        if (instance == null) {
+            throw new NoSuchRealmException(localStrings.getLocalString("realm.no_such_realm", name + " realm does not exist.", new Object[] { name }));
         }
 
-        return retval;
+        return instance;
     }
 
     /**
-     * Returns the realm identified by the name which is passed as a parameter. This function knows about all the realms which exist;
-     * it is not possible to store (or create) one which is not accessible through this routine.
+     * Returns the realm identified by the name which is passed as a parameter. This function knows about all the realms
+     * which exist; it is not possible to store (or create) one which is not accessible through this routine.
      *
      * @param name identifies the realm
      * @return the requested realm
@@ -512,46 +410,33 @@ public abstract class Realm implements Comparable {
      * @exception BadRealmException if realm data structures are bad
      */
     public static synchronized Realm getInstance(String configName, String name) throws NoSuchRealmException {
-        Realm retval = _getInstance(configName, name);
+        Realm instance = _getInstance(configName, name);
 
-        if (retval == null) {
-            throw new NoSuchRealmException(
-                localStrings.getLocalString("realm.no_such_realm", name + " realm does not exist.", new Object[] { name }));
+        if (instance == null) {
+            throw new NoSuchRealmException(localStrings.getLocalString("realm.no_such_realm", name + " realm does not exist.", new Object[] { name }));
         }
 
-        return retval;
+        return instance;
     }
 
     /**
-     * This is a private method for getting realm instance. If realm does not exist, then it will not return null rather than throw
-     * exception.
+     * Checks if the given realm name is loaded/valid.
      *
-     * @param name identifies the realm
-     * @return the requested realm
+     * @param String name of the realm to check.
+     * @return true if realm present, false otherwise.
      */
-    private static synchronized Realm _getInstance(String name) {
-        RealmsManager mgr = getRealmsManager();
-        if (mgr != null) {
-            return mgr._getInstance(name);
-        } else {
-            throw new RuntimeException("Unable to locate RealmsManager Service");
-        }
+    public static boolean isValidRealm(String name) {
+        return getNonNullRealsManager().isValidRealm(name);
     }
 
     /**
-     * This is a private method for getting realm instance. If realm does not exist, then it will not return null rather than throw
-     * exception.
+     * Checks if the given realm name is loaded/valid.
      *
-     * @param name identifies the realm
-     * @return the requested realm
+     * @param String name of the realm to check.
+     * @return true if realm present, false otherwise.
      */
-    private static synchronized Realm _getInstance(String configName, String name) {
-        RealmsManager mgr = getRealmsManager();
-        if (mgr != null) {
-            return mgr._getInstance(configName, name);
-        } else {
-            throw new RuntimeException("Unable to locate RealmsManager Service");
-        }
+    public static boolean isValidRealm(String configName, String name) {
+        return getNonNullRealsManager().isValidRealm(configName, name);
     }
 
     /**
@@ -559,24 +444,47 @@ public abstract class Realm implements Comparable {
      *
      * @return set of realm names
      */
-    public static synchronized Enumeration getRealmNames() {
-        RealmsManager mgr = getRealmsManager();
-        if (mgr != null) {
-            return mgr.getRealmNames();
-        }
-        throw new RuntimeException("Unable to locate RealmsManager Service");
+    public static synchronized Enumeration<String> getRealmNames() {
+        return getNonNullRealsManager().getRealmNames();
     }
 
     /**
-     * The default constructor creates a realm which will later be initialized, either from properties or by deserializing.
+     * Returns the name of this realm.
+     *
+     * @return name of realm.
      */
-    protected Realm() {
-        ctxProps = new Properties();
+    @Override
+    public String toString() {
+        return myName;
     }
 
     /**
-     * Initialize a realm with some properties. This can be used when instantiating realms from their descriptions. This method may
-     * only be called a single time.
+     * Compares a realm to another. The comparison first considers the authentication type, so that realms supporting the
+     * same kind of user authentication are grouped together. Then it compares realm realm names. Realms compare "before"
+     * other kinds of objects (i.e. there's only a partial order defined, in the case that those other objects compare
+     * themselves "before" a realm object).
+     */
+    @Override
+    public int compareTo(Object realm) {
+        if (!(realm instanceof Realm)) {
+            return 1;
+        }
+
+        Realm r = (Realm) realm;
+        String str = r.getAuthType();
+        int temp;
+
+        if ((temp = getAuthType().compareTo(str)) != 0) {
+            return temp;
+        }
+
+        str = r.getName();
+        return getName().compareTo(str);
+    }
+
+    /**
+     * Initialize a realm with some properties. This can be used when instantiating realms from their descriptions. This
+     * method may only be called a single time.
      *
      * @param props initialization parameters used by this realm.
      * @exception BadRealmException if the configuration parameters identify a corrupt realm
@@ -595,62 +503,19 @@ public abstract class Realm implements Comparable {
                 }
             }
         }
+
         String groupMapping = props.getProperty(PARAM_GROUP_MAPPING);
         if (groupMapping != null) {
             groupMapper = new GroupMapper();
             groupMapper.parse(groupMapping);
         }
+
         String defaultDigestAlgo = null;
         if (_getRealmsManager() != null) {
             defaultDigestAlgo = _getRealmsManager().getDefaultDigestAlgorithm();
         }
+
         this.defaultDigestAlgorithm = (defaultDigestAlgo == null) ? DEFAULT_DEF_DIG_ALGO_VAL : defaultDigestAlgo;
-    }
-
-    private static synchronized RealmsManager _getRealmsManager() {
-        if (realmsManager.get() == null) {
-            if (Globals.getDefaultHabitat() != null) {
-                realmsManager = new WeakReference<>(Globals.get(RealmsManager.class));
-            } else {
-                return null;
-            }
-        }
-        return realmsManager.get();
-    }
-
-    private static RealmsManager getRealmsManager() {
-        if (realmsManager.get() != null) {
-            return realmsManager.get();
-        }
-        return _getRealmsManager();
-    }
-
-    /**
-     * Checks if the given realm name is loaded/valid.
-     *
-     * @param String name of the realm to check.
-     * @return true if realm present, false otherwise.
-     */
-    public static boolean isValidRealm(String name) {
-        RealmsManager mgr = getRealmsManager();
-        if (mgr != null) {
-            return mgr.isValidRealm(name);
-        }
-        throw new RuntimeException("Unable to locate RealmsManager Service");
-    }
-
-    /**
-     * Checks if the given realm name is loaded/valid.
-     *
-     * @param String name of the realm to check.
-     * @return true if realm present, false otherwise.
-     */
-    public static boolean isValidRealm(String configName, String name) {
-        RealmsManager mgr = getRealmsManager();
-        if (mgr != null) {
-            return mgr.isValidRealm(configName, name);
-        }
-        throw new RuntimeException("Unable to locate RealmsManager Service");
     }
 
     /**
@@ -675,23 +540,135 @@ public abstract class Realm implements Comparable {
             }
             resultGroups = groupList.toArray(new String[groupList.size()]);
         }
+
         return resultGroups;
     }
 
-    protected ArrayList<String> getMappedGroupNames(String group) {
-        if (groupMapper != null) {
-            ArrayList<String> result = new ArrayList<>();
-            groupMapper.getMappedGroups(group, result);
-            return result;
+    protected List<String> getMappedGroupNames(String group) {
+        if (groupMapper == null) {
+            return null;
         }
-        return null;
+
+        List<String> mappedGroupNames = new ArrayList<>();
+        groupMapper.getMappedGroups(group, mappedGroupNames);
+
+        return mappedGroupNames;
     }
 
-    //---[ Abstract methods ]------------------------------------------------
+
+
+    // ### Private static methods
 
     /**
-     * Returns a short (preferably less than fifteen characters) description of the kind of authentication which is supported by this
-     * realm.
+     * Instantiates a Realm class of the given type and invokes its init()
+     *
+     */
+    private static synchronized Realm doInstantiate(String name, String className, Properties props) throws BadRealmException {
+        ServiceLocator serviceLocator = Globals.getDefaultBaseServiceLocator();
+
+        RealmsManager realmsManager = null;
+        try {
+            realmsManager = getRealmsManager();
+
+            // Try a HK2 route first
+            Realm realm = serviceLocator.getService(Realm.class, name);
+            if (realm == null) {
+                try {
+                    // TODO: workaround here. Once fixed in V3 we should be able to use
+                    // Context ClassLoader instead.
+                    realm = (Realm) serviceLocator.getService(ClassLoaderHierarchy.class)
+                                                  .getCommonClassLoader()
+                                                  .loadClass(className)
+                                                  .getDeclaredConstructor()
+                                                  .newInstance();
+
+                } catch (IllegalArgumentException | ReflectiveOperationException |  SecurityException ex) {
+                    realm = (Realm) Class.forName(className)
+                                         .getDeclaredConstructor()
+                                         .newInstance();
+                }
+            }
+
+            realm.setName(name);
+            realm.init(props);
+            if (realmsManager == null) {
+                throw new BadRealmException("Unable to locate RealmsManager Service");
+            }
+
+            _logger.log(INFO, realmCreated, new Object[] { name, className });
+
+            return realm;
+
+        } catch (NoSuchRealmException | ReflectiveOperationException ex) {
+            throw new BadRealmException(ex);
+        }
+    }
+
+    private static void registerRealmStatsProvier() {
+        if (realmStatsProvier == null) {
+            getRealmStatsProvier();
+            StatsProviderManager.register("security", PluginPoint.SERVER, "security/realm", realmStatsProvier);
+        }
+    }
+
+    /**
+     * This is a private method for getting realm instance. If realm does not exist, then it will not return null rather
+     * than throw exception.
+     *
+     * @param name identifies the realm
+     * @return the requested realm
+     */
+    private static synchronized Realm _getInstance(String name) {
+        return getNonNullRealsManager()._getInstance(name);
+    }
+
+    /**
+     * This is a private method for getting realm instance. If realm does not exist, then it will not return null rather
+     * than throw exception.
+     *
+     * @param name identifies the realm
+     * @return the requested realm
+     */
+    private static synchronized Realm _getInstance(String configName, String name) {
+        return getNonNullRealsManager()._getInstance(configName, name);
+    }
+
+    private static RealmsManager getNonNullRealsManager() {
+        RealmsManager realmsManager = getRealmsManager();
+        if (realmsManager == null) {
+            throw new RuntimeException("Unable to locate RealmsManager Service");
+        }
+
+        return realmsManager;
+    }
+
+    private static RealmsManager getRealmsManager() {
+        if (realmsManager.get() != null) {
+            return realmsManager.get();
+        }
+
+        return _getRealmsManager();
+    }
+
+    private static synchronized RealmsManager _getRealmsManager() {
+        if (realmsManager.get() == null) {
+            if (Globals.getDefaultHabitat() != null) {
+                realmsManager = new WeakReference<>(Globals.get(RealmsManager.class));
+            } else {
+                return null;
+            }
+        }
+
+        return realmsManager.get();
+    }
+
+
+
+    // ---[ Abstract methods ]------------------------------------------------
+
+    /**
+     * Returns a short (preferably less than fifteen characters) description of the kind of authentication which is
+     * supported by this realm.
      *
      * @return description of the kind of authentication that is directly supported by this realm.
      */
@@ -735,8 +712,8 @@ public abstract class Realm implements Comparable {
      *
      * @param username name of the user in this realm whose group listing is needed.
      * @return enumeration of group names (strings)
-     * @exception InvalidOperationException thrown if the realm does not support this operation - e.g. Certificate realm does not
-     * support this operation
+     * @exception InvalidOperationException thrown if the realm does not support this operation - e.g. Certificate realm
+     * does not support this operation
      */
     public abstract Enumeration<String> getGroupNames(String username) throws InvalidOperationException, NoSuchUserException;
 
@@ -753,7 +730,7 @@ public abstract class Realm implements Comparable {
      * @exception BadRealmException if realm data structures are bad
      */
     public void refresh(String configName) throws BadRealmException {
-        //do nothing
+        // do nothing
     }
 
     /**
@@ -780,17 +757,17 @@ public abstract class Realm implements Comparable {
      * Update data for an existing user. User must exist.
      *
      * @param name Current name of the user to update.
-     * @param newName New name to give this user. It can be the same as the original name. Otherwise it must be a new user name which
-     * does not already exist as a user.
-     * @param password Cleartext password for the user. If non-null the user password is changed to this value. If null, the original
-     * password is retained.
+     * @param newName New name to give this user. It can be the same as the original name. Otherwise it must be a new user
+     * name which does not already exist as a user.
+     * @param password Cleartext password for the user. If non-null the user password is changed to this value. If null, the
+     * original password is retained.
      * @param groupList List of groups to which user belongs.
+     *
      * @throws BadRealmException If there are problems adding user.
      * @throws NoSuchUserException If user does not exist.
      *
      */
-    public abstract void updateUser(String name, String newName, char[] password, String[] groups)
-        throws NoSuchUserException, BadRealmException, IASSecurityException;
+    public abstract void updateUser(String name, String newName, char[] password, String[] groups) throws NoSuchUserException, BadRealmException, IASSecurityException;
 
     /**
      * @return true if the realm implementation support User Management (add,remove,update user)

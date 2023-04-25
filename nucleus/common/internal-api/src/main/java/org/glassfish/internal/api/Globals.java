@@ -17,16 +17,16 @@
 
 package org.glassfish.internal.api;
 
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.runlevel.RunLevel;
+import org.jvnet.hk2.annotations.Service;
+
 import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.single.StaticModulesRegistry;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.hk2.runlevel.RunLevel;
-import org.jvnet.hk2.annotations.Service;
 
 /**
  * Very sensitive class, anything stored here cannot be garbage collected
@@ -37,7 +37,7 @@ import org.jvnet.hk2.annotations.Service;
 @Singleton
 public class Globals {
 
-    private static volatile ServiceLocator defaultHabitat;
+    private static volatile ServiceLocator defaultServiceLocator;
 
     private static Object staticLock = new Object();
 
@@ -46,55 +46,53 @@ public class Globals {
     private ConfigBeansUtilities utilities;
 
     @Inject
-    private Globals(ServiceLocator habitat) {
-        defaultHabitat = habitat;
+    private Globals(ServiceLocator serviceLocator) {
+        defaultServiceLocator = serviceLocator;
     }
 
     public static ServiceLocator getDefaultBaseServiceLocator() {
-            return getDefaultHabitat();
+        return getDefaultHabitat();
     }
 
     public static ServiceLocator getDefaultHabitat() {
-        return defaultHabitat;
+        return defaultServiceLocator;
     }
 
     public static <T> T get(Class<T> type) {
-        return defaultHabitat.getService(type);
+        return defaultServiceLocator.getService(type);
     }
 
     public static void setDefaultHabitat(final ServiceLocator habitat) {
-        defaultHabitat = habitat;
+        defaultServiceLocator = habitat;
     }
 
     public static ServiceLocator getStaticBaseServiceLocator() {
-            return getStaticHabitat();
+        return getStaticHabitat();
     }
 
     public static ServiceLocator getStaticHabitat() {
-        if (defaultHabitat == null) {
+        if (defaultServiceLocator == null) {
             synchronized (staticLock) {
-                if (defaultHabitat == null) {
+                if (defaultServiceLocator == null) {
                     ModulesRegistry modulesRegistry = new StaticModulesRegistry(Globals.class.getClassLoader());
-                    defaultHabitat = modulesRegistry.createServiceLocator("default");
+                    defaultServiceLocator = modulesRegistry.createServiceLocator("default");
                 }
             }
         }
 
-        return defaultHabitat;
+        return defaultServiceLocator;
     }
 
     /**
-     * The point of this service is to ensure that the Globals
-     * service is properly initialized by the RunLevelService
-     * at the InitRunLevel.  However, Globals itself must be
-     * of scope Singleton because it us used in contexts where
-     * the RunLevelService is not there
+     * The point of this service is to ensure that the Globals service is properly initialized by the RunLevelService at the
+     * InitRunLevel. However, Globals itself must be of scope Singleton because it us used in contexts where the
+     * RunLevelService is not there
      *
      * @author jwells
      *
      */
     @Service
-    @RunLevel(value=(InitRunLevel.VAL - 1), mode=RunLevel.RUNLEVEL_MODE_NON_VALIDATING)
+    @RunLevel(value = (InitRunLevel.VAL - 1), mode = RunLevel.RUNLEVEL_MODE_NON_VALIDATING)
     public static class GlobalsInitializer {
         @Inject
         private Globals globals;

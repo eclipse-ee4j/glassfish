@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -40,8 +40,8 @@ import com.sun.enterprise.util.i18n.StringManager;
 /**
  * Custom socket factory for ldaps (SSL).
  *
- * The comparator only works in JDK 1.6 onwards. Due to a bug in JDK 1.6 compare method invocation fails with a classcast
- * exception. The caller is trying to pass java.lang.String when it should have passed javax.net.SocketFactory
+ * The comparator only works in JDK 1.6 onwards. Due to a bug in JDK 1.6 compare method invocation fails with a
+ * classcast exception. The caller is trying to pass java.lang.String when it should have passed javax.net.SocketFactory
  *
  * @see com.sun.enterprise.security.auth.realm.ldap.LDAPRealm
  *

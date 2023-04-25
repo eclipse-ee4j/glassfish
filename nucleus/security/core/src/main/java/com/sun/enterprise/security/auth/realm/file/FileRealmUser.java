@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,12 +29,12 @@ import com.sun.enterprise.security.auth.realm.User;
 /**
  * Represents a FileRealm user.
  *
- *
  */
 public class FileRealmUser implements User {
-    FileRealmHelper.User user;
-    Hashtable attributes = new Hashtable();
-    String realm;
+
+    private FileRealmHelper.User user;
+    private Hashtable<String, Object> attributes = new Hashtable<>();
+    private String realm;
 
     /**
      * Constructor.
@@ -62,6 +63,7 @@ public class FileRealmUser implements User {
 
     /**
      * Return the requested attribute for the user.
+     *
      * <P>
      * Not really needed.
      *
@@ -74,11 +76,12 @@ public class FileRealmUser implements User {
 
     /**
      * Return the names of the supported attributes for this user.
+     *
      * <P>
      * Not really needed.
      */
     @Override
-    public Enumeration getAttributeNames() {
+    public Enumeration<String> getAttributeNames() {
         return attributes.keys();
     }
 

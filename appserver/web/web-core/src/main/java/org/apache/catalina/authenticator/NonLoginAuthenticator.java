@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -17,6 +18,8 @@
 
 package org.apache.catalina.authenticator;
 
+import java.io.IOException;
+import java.util.List;
 
 import org.apache.catalina.HttpRequest;
 import org.apache.catalina.HttpResponse;
@@ -24,24 +27,19 @@ import org.apache.catalina.deploy.LoginConfig;
 import org.apache.catalina.realm.GenericPrincipal;
 
 import jakarta.servlet.http.HttpServletRequest;
-import java.io.IOException;
-
 
 /**
- * An <b>Authenticator</b> and <b>Valve</b> implementation that checks
- * only security constraints not involving user authentication.
+ * An <b>Authenticator</b> and <b>Valve</b> implementation that checks only security constraints not involving user
+ * authentication.
  *
  * @author Craig R. McClanahan
  * @version $Revision: 1.4 $ $Date: 2007/03/05 20:42:26 $
  */
 
-public final class NonLoginAuthenticator
-    extends AuthenticatorBase {
-
+public final class NonLoginAuthenticator extends AuthenticatorBase {
 
     // ----------------------------------------------------- Instance Variables
 
-    //START SJSAS 6202703
     /**
      * Principal name of nonlogin principal.
      */
@@ -50,71 +48,51 @@ public final class NonLoginAuthenticator
     /**
      * A dummy principal that is set to request in authenticate method.
      */
-    private final GenericPrincipal NONLOGIN_PRINCIPAL =
-        new GenericPrincipal(NONLOGIN_PRINCIPAL_NAME, (char[]) null,
-                            (java.util.List<String>) null);
-    //END SJSAS 6202703
+    private final GenericPrincipal NONLOGIN_PRINCIPAL = new GenericPrincipal(NONLOGIN_PRINCIPAL_NAME, (char[]) null, (List<String>) null);
 
     /**
      * Descriptive information about this implementation.
      */
-    private static final String info =
-        "org.apache.catalina.authenticator.NonLoginAuthenticator/1.0";
-
+    private static final String info = "org.apache.catalina.authenticator.NonLoginAuthenticator/1.0";
 
     // ------------------------------------------------------------- Properties
-
 
     /**
      * Return descriptive information about this Valve implementation.
      */
     @Override
     public String getInfo() {
-
-        return (this.info);
-
+        return info;
     }
-
 
     // --------------------------------------------------------- Public Methods
 
-
     /**
-     * Authenticate the user making this request, based on the specified
-     * login configuration.  Return <code>true</code> if any specified
-     * constraint has been satisfied, or <code>false</code> if we have
-     * created a response challenge already.
+     * Authenticate the user making this request, based on the specified login configuration. Return <code>true</code> if
+     * any specified constraint has been satisfied, or <code>false</code> if we have created a response challenge already.
      *
      * @param request Request we are processing
      * @param response Response we are creating
-     * @param config Login configuration describing how authentication
-     * should be performed
+     * @param config Login configuration describing how authentication should be performed
      *
      * @exception IOException if an input/output error occurs
      */
     @Override
-    public boolean authenticate(HttpRequest request,
-                                HttpResponse response,
-                                LoginConfig config)
-        throws IOException {
-
-        if (debug >= 1)
+    public boolean authenticate(HttpRequest request, HttpResponse response, LoginConfig config) throws IOException {
+        if (debug >= 1) {
             log("User authentication is not required");
+        }
 
-        //START SJSAS 6202703
-        HttpServletRequest hreq = (HttpServletRequest) request.getRequest();
-        if (hreq.getUserPrincipal() == null) {
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request.getRequest();
+        if (httpServletRequest.getUserPrincipal() == null) {
             request.setUserPrincipal(NONLOGIN_PRINCIPAL);
         }
-        //END SJSAS 6202703
-        return (true);
 
-
+        return true;
     }
 
     /**
-     * Return the authentication method, which is vendor-specific and
-     * not defined by HttpServletRequest.
+     * Return the authentication method, which is vendor-specific and not defined by HttpServletRequest.
      */
     @Override
     protected String getAuthMethod() {

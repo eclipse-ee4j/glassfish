@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,6 +24,7 @@ import jakarta.validation.constraints.NotNull;
 import java.beans.PropertyVetoException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
@@ -184,7 +185,7 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
             String methodName = itr.next();
             if (name.equalsIgnoreCase(methodName.substring(3))) {
                 try {
-                    Method mthd = ModuleMonitoringLevels.class.getMethod(methodName, (Class[]) null);
+                    Method mthd = ModuleMonitoringLevels.class.getMethod(methodName, (Class<?>[]) null);
                     level = (String) mthd.invoke(getModuleMonitoringLevels(), (Object[]) null);
                 } catch (NoSuchMethodException nsme) {
                     Logger.getAnonymousLogger().log(Level.WARNING, nsme.getMessage(), nsme);
@@ -232,7 +233,7 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
             String methodName = itr.next();
             if (name.equalsIgnoreCase(methodName.substring(3))) {
                 try {
-                    Method mthd = ModuleMonitoringLevels.class.getMethod(methodName, new Class[] { java.lang.String.class });
+                    Method mthd = ModuleMonitoringLevels.class.getMethod(methodName, new Class<?>[] { java.lang.String.class });
                     Transaction tx = Transaction.getTransaction(this);
                     if (tx == null) {
                         throw new TransactionFailure(
@@ -270,7 +271,7 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
         ModuleMonitoringLevels mml = getModuleMonitoringLevels();
         for (String methodName : Util.getMethods) {
             try {
-                Method mthd = ModuleMonitoringLevels.class.getMethod(methodName, (Class[]) null);
+                Method mthd = ModuleMonitoringLevels.class.getMethod(methodName, (Class<?>[]) null);
                 String level = (String) mthd.invoke(mml, (Object[]) null);
                 rv = rv || !"OFF".equals(level);
             } catch (NoSuchMethodException nsme) {
@@ -291,9 +292,9 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
 
         private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(MonitoringService.class);
 
-        private static final List<String> getMethods = new ArrayList<>();
+        private static final List<String> getMethods = Collections.synchronizedList(new ArrayList<>());
 
-        private static final List<String> setMethods = new ArrayList<>();
+        private static final List<String> setMethods = Collections.synchronizedList(new ArrayList<>());
 
         private static void populateGetMethods() {
             // We need to use reflection to compare the given name with the

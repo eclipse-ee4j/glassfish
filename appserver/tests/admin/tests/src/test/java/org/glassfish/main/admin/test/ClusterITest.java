@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,10 +23,14 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.commons.lang3.StringUtils;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
+import org.glassfish.main.itest.tools.asadmin.AsadminResult;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -37,7 +41,13 @@ import org.junit.jupiter.api.TestMethodOrder;
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.startsWith;
 import static org.hamcrest.Matchers.stringContainsInOrder;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /**
@@ -115,7 +125,33 @@ public class ClusterITest {
     }
 
     @Test
-    @Order(5)
+    @Order(10)
+    public void retrieveCollectedLogFilesTest() throws IOException {
+        Assumptions.assumeTrue(INSTANCES_REACHABLE.get());
+
+        Path logDir = Files.createTempDirectory("log");
+
+        AsadminResult result = ASADMIN.exec(
+            "collect-log-files",
+            "--target", CLUSTER_NAME,
+            "--retrieve", logDir.toAbsolutePath().toString());
+        assertThat(result, asadminOK());
+
+        String path = StringUtils.substringBetween(result.getStdOut(), "Created Zip file under ", ".\n");
+        assertNotNull(path, () -> "zip file path parsed from " + result.getStdOut());
+
+        Path logFile = Path.of(path);
+        assertAll(
+            () -> assertThat(Files.size(logFile), greaterThan(2_000L)),
+            () -> assertThat(logFile.getFileName().toString(), allOf(startsWith("log"), endsWith(".zip")))
+        );
+
+        Files.deleteIfExists(logFile);
+        Files.deleteIfExists(logDir);
+    }
+
+    @Test
+    @Order(20)
     public void stopInstancesTest() {
         Assumptions.assumeTrue(INSTANCES_REACHABLE.get());
         assertThat(ASADMIN.exec("stop-local-instance", "--kill", INSTANCE_NAME_1), asadminOK());
@@ -123,7 +159,7 @@ public class ClusterITest {
     }
 
     @Test
-    @Order(6)
+    @Order(21)
     public void deleteInstancesTest() {
         Assumptions.assumeTrue(INSTANCES_REACHABLE.get());
         assertThat(ASADMIN.exec("delete-local-instance", INSTANCE_NAME_1), asadminOK());
@@ -131,15 +167,14 @@ public class ClusterITest {
     }
 
     @Test
-    @Order(7)
+    @Order(22)
     public void deleteClusterTest() {
         Assumptions.assumeTrue(INSTANCES_REACHABLE.get());
         assertThat(ASADMIN.exec("delete-cluster", CLUSTER_NAME), asadminOK());
     }
 
-
     /**
-     * This methods opens a connection to the given URL and
+     * These methods open a connection to the given URL and
      * returns the string that is returned from that URL.  This
      * is useful for simple servlet retrieval
      *

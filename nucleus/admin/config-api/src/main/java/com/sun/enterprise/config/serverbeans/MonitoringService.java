@@ -22,11 +22,12 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 import jakarta.validation.constraints.NotNull;
 
 import java.beans.PropertyVetoException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
@@ -165,8 +166,6 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
     }
 
     default String getMonitoringLevel(String moduleName) {
-        String level = null;
-
         // It is possible that the given module name might exist as
         // attribute of module-monitoring-levels or
         // as container-monitoring element provided for extensibility.
@@ -174,37 +173,22 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
         // Order of precedence is to first check module-monitoring-levels
         // then container-monitoring.
 
-        // module-monitoring-levels
-        Util.populateGetMethods();
-
         // strip - part from name
         String name = moduleName.replaceAll("-", "");
 
-        Iterator<String> itr = Util.getMethods.iterator();
-        while (itr.hasNext()) {
-            String methodName = itr.next();
-            if (name.equalsIgnoreCase(methodName.substring(3))) {
-                try {
-                    Method mthd = ModuleMonitoringLevels.class.getMethod(methodName, (Class<?>[]) null);
-                    level = (String) mthd.invoke(getModuleMonitoringLevels(), (Object[]) null);
-                } catch (NoSuchMethodException nsme) {
-                    Logger.getAnonymousLogger().log(Level.WARNING, nsme.getMessage(), nsme);
-                } catch (IllegalAccessException ile) {
-                    Logger.getAnonymousLogger().log(Level.WARNING, ile.getMessage(), ile);
-                } catch (java.lang.reflect.InvocationTargetException ite) {
-                    Logger.getAnonymousLogger().log(Level.WARNING, ite.getMessage(), ite);
-                }
-                break;
+        Method getter = GetterCache.methods.get(name.toLowerCase());
+        if (getter != null) {
+            try {
+                return  (String) getter.invoke(getModuleMonitoringLevels());
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                Logger.getAnonymousLogger().log(Level.WARNING, e.getMessage(), e);
             }
         }
 
-        if (level != null)
-            return level;
-
         // container-monitoring
-        for (ContainerMonitoring cm : getContainerMonitoring()) {
-            if (cm.getName().equals(moduleName)) {
-                return cm.getLevel();
+        for (ContainerMonitoring monitoring : getContainerMonitoring()) {
+            if (monitoring.getName().equals(moduleName)) {
+                return monitoring.getLevel();
             }
         }
 
@@ -220,114 +204,109 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
         // then container-monitoring.
 
         // module-monitoring-levels
-        boolean isLevelUpdated = false;
-
-        Util.populateSetMethods();
 
         // strip - part from name
         String name = moduleName.replaceAll("-", "");
 
-        Iterator<String> itr = Util.setMethods.iterator();
-
-        while (itr.hasNext()) {
-            String methodName = itr.next();
-            if (name.equalsIgnoreCase(methodName.substring(3))) {
-                try {
-                    Method mthd = ModuleMonitoringLevels.class.getMethod(methodName, new Class<?>[] { java.lang.String.class });
-                    Transaction tx = Transaction.getTransaction(this);
-                    if (tx == null) {
-                        throw new TransactionFailure(
-                                Util.localStrings.getLocalString("noTransaction", "Internal Error - Cannot obtain transaction object"));
-                    }
-                    ModuleMonitoringLevels mml = tx.enroll(getModuleMonitoringLevels());
-                    mthd.invoke(mml, level);
-                    isLevelUpdated = true;
-                } catch (NoSuchMethodException nsme) {
-                    Logger.getAnonymousLogger().log(Level.WARNING, nsme.getMessage(), nsme);
-                } catch (IllegalAccessException ile) {
-                    Logger.getAnonymousLogger().log(Level.WARNING, ile.getMessage(), ile);
-                } catch (java.lang.reflect.InvocationTargetException ite) {
-                    Logger.getAnonymousLogger().log(Level.WARNING, ite.getMessage(), ite);
+        Method setter = SetterCache.methods.get(name.toLowerCase());
+        if (setter != null) {
+            try {
+                Transaction tx = Transaction.getTransaction(this);
+                if (tx == null) {
+                    throw new TransactionFailure(
+                        LocalStringHolder.localStrings.getLocalString("noTransaction", "Internal Error - Cannot obtain transaction object"));
                 }
-                break;
+                ModuleMonitoringLevels monitoringLevels = tx.enroll(getModuleMonitoringLevels());
+                setter.invoke(monitoringLevels, level);
+                return true;
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                Logger.getAnonymousLogger().log(Level.WARNING, e.getMessage(), e);
             }
         }
 
-        if (!isLevelUpdated) {
-            // container-monitoring
-            for (ContainerMonitoring cm : getContainerMonitoring()) {
-                if (cm.getName().equals(name)) {
-                    cm.setLevel(level);
-                    isLevelUpdated = true;
-                }
+        // container-monitoring
+        for (ContainerMonitoring monitoring : getContainerMonitoring()) {
+            if (monitoring.getName().equals(moduleName)) {
+                monitoring.setLevel(level);
+                return true;
             }
         }
-        return isLevelUpdated;
+
+        return false;
     }
 
     default boolean isAnyModuleOn() {
-        boolean rv = false;
-        Util.populateGetMethods();
-        ModuleMonitoringLevels mml = getModuleMonitoringLevels();
-        for (String methodName : Util.getMethods) {
+        ModuleMonitoringLevels monitoringLevels = getModuleMonitoringLevels();
+        for (Method getter : GetterCache.methods.values()) {
             try {
-                Method mthd = ModuleMonitoringLevels.class.getMethod(methodName, (Class<?>[]) null);
-                String level = (String) mthd.invoke(mml, (Object[]) null);
-                rv = rv || !"OFF".equals(level);
-            } catch (NoSuchMethodException nsme) {
-                Logger.getAnonymousLogger().log(Level.WARNING, nsme.getMessage(), nsme);
-            } catch (IllegalAccessException ile) {
-                Logger.getAnonymousLogger().log(Level.WARNING, ile.getMessage(), ile);
-            } catch (java.lang.reflect.InvocationTargetException ite) {
-                Logger.getAnonymousLogger().log(Level.WARNING, ite.getMessage(), ite);
+                String level = (String) getter.invoke(monitoringLevels);
+                if (!"OFF".equals(level)) {
+                    return true;
+                }
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                Logger.getAnonymousLogger().log(Level.WARNING, e.getMessage(), e);
             }
         }
-        for (ContainerMonitoring cm : getContainerMonitoring()) {
-            rv = rv || !"OFF".equals(cm.getLevel());
+
+        for (ContainerMonitoring monitoring : getContainerMonitoring()) {
+            if (!"OFF".equals(monitoring.getLevel())) {
+                return true;
+            }
         }
-        return rv;
+
+        return false;
     }
 
-    class Util {
+    final class GetterCache {
+        // We need to use reflection to compare the given name with the
+        // getters of ModuleMonitoringLevel.
+        // For performance, the method names are cached when this is run first time.
+        private static final Map<String, Method> methods;
+
+        static {
+            Map<String, Method> getMethods = new HashMap<>();
+            for (Method method : ModuleMonitoringLevels.class.getDeclaredMethods()) {
+                String methodName = method.getName();
+                if (methodName.startsWith("get") && method.getReturnType().equals(String.class)) {
+                    getMethods.put(methodName.substring(3).toLowerCase(), method);
+                }
+            }
+            methods = Collections.unmodifiableMap(getMethods);
+        }
+
+        private GetterCache() {
+            throw new AssertionError();
+        }
+    }
+
+    final class SetterCache {
+        // We need to use reflection to compare the given name with the
+        // getters of ModuleMonitoringLevel.
+        // For performance, the method names are cached when this is run first time.
+        private static final Map<String, Method> methods;
+
+        static {
+            Map<String, Method> setMethods = new HashMap<>();
+            for (Method method : ModuleMonitoringLevels.class.getDeclaredMethods()) {
+                String methodName = method.getName();
+                if (methodName.startsWith("set")) {
+                    setMethods.put(methodName.substring(3).toLowerCase(), method);
+                }
+            }
+            methods = Collections.unmodifiableMap(setMethods);
+        }
+
+        private SetterCache() {
+            throw new AssertionError();
+        }
+    }
+
+    final class LocalStringHolder {
 
         private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(MonitoringService.class);
 
-        private static final List<String> getMethods = Collections.synchronizedList(new ArrayList<>());
-
-        private static final List<String> setMethods = Collections.synchronizedList(new ArrayList<>());
-
-        private static void populateGetMethods() {
-            // We need to use reflection to compare the given name with the
-            // getters of ModuleMonitoringLevel.
-            // For performance, the method names are cached when this is run first time.
-            synchronized (getMethods) {
-                if (getMethods.isEmpty()) {
-                    for (Method method : ModuleMonitoringLevels.class.getDeclaredMethods()) {
-                        // If it is a getter store it in the list
-                        String str = method.getName();
-                        if (str.startsWith("get") && method.getReturnType().equals(String.class)) {
-                            getMethods.add(str);
-                        }
-                    }
-                }
-            }
-        }
-
-        private static void populateSetMethods() {
-            // We need to use reflection to compare the given name with the
-            // getters of ModuleMonitoringLevel.
-            // For performance, the method names are cached when this is run first time.
-            synchronized (setMethods) {
-                if (setMethods.isEmpty()) {
-                    for (Method method : ModuleMonitoringLevels.class.getDeclaredMethods()) {
-                        // If it is a setter store it in the list
-                        String str = method.getName();
-                        if (str.startsWith("set")) {
-                            setMethods.add(str);
-                        }
-                    }
-                }
-            }
+        private LocalStringHolder() {
+            throw new AssertionError();
         }
     }
 }

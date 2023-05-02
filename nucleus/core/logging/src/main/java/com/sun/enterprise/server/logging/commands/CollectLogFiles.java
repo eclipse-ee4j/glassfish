@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -171,7 +171,7 @@ public class CollectLogFiles implements AdminCommand {
             }
 
             if (this.retrieve) {
-                retrieveFile(zipFile, context, getZipFilePath(), props, report);
+                retrieveFile(zipFile, getZipFilePath(), props, report);
                 report.setMessage(localStrings.getLocalString(
                         "collectlogfiles.instance.success", "Created Zip file under {0}.", retrieveFilePath + File.separator + new File(zipFile).getName()));
             } else {
@@ -243,7 +243,7 @@ public class CollectLogFiles implements AdminCommand {
             }
 
             if (this.retrieve) {
-                retrieveFile(zipFile, context, getZipFilePath(), props, report);
+                retrieveFile(zipFile, getZipFilePath(), props, report);
                 report.setMessage(localStrings.getLocalString(
                         "collectlogfiles.instance.success", "Created Zip file under {0}.", retrieveFilePath + File.separator + new File(zipFile).getName()));
             } else {
@@ -373,7 +373,7 @@ public class CollectLogFiles implements AdminCommand {
                 }
 
                 if (this.retrieve) {
-                    retrieveFile(zipFile, context, getZipFilePath(), props, report);
+                    retrieveFile(zipFile, getZipFilePath(), props, report);
                     report.setMessage(localStrings.getLocalString(
                             "collectlogfiles.cluster.success", "{0} Created Zip file under {1}.", finalMessage, retrieveFilePath + File.separator + new File(zipFile).getName()));
                 } else {
@@ -457,17 +457,11 @@ public class CollectLogFiles implements AdminCommand {
         return props;
     }
 
-    private void retrieveFile(String zipFileName, AdminCommandContext context,
-                              File tempDirectory, Properties props, ActionReport report) {
+    private void retrieveFile(String zipFileName, File tempDirectory, Properties props, ActionReport report) {
 
-        // Playing with outbound payload to attach zip file..
-        Payload.Outbound outboundPayload = context.getOutboundPayload();
+        // Playing with outbound payload to attach zip file.
         // GLASSFISH-17627: pass to DownloadServlet
-        boolean retrieveFiles = false;
-        if (outboundPayload == null) {
-            outboundPayload = PayloadImpl.Outbound.newInstance();
-            retrieveFiles = true;
-        }
+        Payload.Outbound outboundPayload = PayloadImpl.Outbound.newInstance();
 
         //code to files to output directory
         try {
@@ -494,36 +488,26 @@ public class CollectLogFiles implements AdminCommand {
                     file);
             }
 
-            if (retrieveFiles) {
-                File targetLocalFile = new File(retrieveFilePath); // CAUTION: file instead of dir
-                if (targetLocalFile.exists()) {
-                    throw new Exception("File exists");
-                }
+            File targetLocalFile = new File(retrieveFilePath, new File(zipFileName).getName()).getAbsoluteFile(); // CAUTION: file instead of dir
+            if (targetLocalFile.exists()) {
+                throw new Exception("File exists");
+            }
 
-                if (!targetLocalFile.getParentFile().exists()) {
-                    throw new Exception("Parent directory does not exist");
-                }
-                FileOutputStream targetStream = null;
-                try {
-                targetStream = new FileOutputStream(targetLocalFile);
+            if (!targetLocalFile.getParentFile().exists()) {
+                throw new Exception("Parent directory does not exist");
+            }
+
+            try (FileOutputStream targetStream = new FileOutputStream(targetLocalFile)) {
                 outboundPayload.writeTo(targetStream);
                 targetStream.flush();
-                } finally {
-                    if (targetStream != null) {
-                        targetStream.close();
-                    }
-                }
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             final String errorMsg = localStrings.getLocalString(
                     "collectlogfiles.copyingZip", "Error while copying zip file to {0}.", retrieveFilePath);
             report.setMessage(errorMsg);
             report.setFailureCause(ex);
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            return;
         }
-
     }
 
     public boolean deleteDir(File dir) {

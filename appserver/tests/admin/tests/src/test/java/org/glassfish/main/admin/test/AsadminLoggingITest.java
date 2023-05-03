@@ -66,9 +66,9 @@ public class AsadminLoggingITest {
     private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
 
     @BeforeAll
-    public static void fillUpLog() {
+    public static void fillUpServerLog() {
         // Fill up the server log.
-        AsadminResult result = ASADMIN.exec("restart-domain");
+        AsadminResult result = ASADMIN.exec(60_000, "restart-domain");
         assertThat(result, asadminOK());
     }
 

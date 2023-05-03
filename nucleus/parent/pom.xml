@@ -1181,18 +1181,6 @@
                 <configuration>
                     <dir>${project.build.outputDirectory}</dir>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>echo</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>echo</goal>
-                        </goals>
-                        <configuration>
-                            <message>Building in ${project.basedir} </message>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
 
             <plugin>

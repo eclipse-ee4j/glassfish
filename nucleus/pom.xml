@@ -25,14 +25,13 @@
         <groupId>org.glassfish.main</groupId>
         <artifactId>nucleus-parent</artifactId>
         <version>7.0.5-SNAPSHOT</version>
-        <relativePath>parent/pom.xml</relativePath>
+        <relativePath>parent</relativePath>
     </parent>
 
     <artifactId>glassfish-nucleus-parent</artifactId>
     <packaging>pom</packaging>
 
-    <name>GlassFish Nucleus Project</name>
-    <description>Glassfish Nucleus Project</description>
+    <name>GlassFish Nucleus Modules</name>
     <url>https://projects.eclipse.org/projects/ee4j.glassfish</url>
     <licenses>
         <license>

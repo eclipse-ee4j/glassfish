@@ -33,7 +33,7 @@
     <version>7.0.5-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>GlassFish Nucleus Parent Project</name>
+    <name>Nucleus Parent</name>
     <description>Glassfish Nucleus Parent Project</description>
     <url>https://projects.eclipse.org/projects/ee4j.glassfish</url>
     <licenses>

@@ -18,7 +18,6 @@
 # work around bug in 'bnd' and hk2 where wrongly exported hk2 version is chosen of tiger_types
 Import-Package: \
     org.glassfish.api.monitoring, \
-    org.jvnet.tiger_types;version=${project.version}, \
     *
 
 -exportcontents: \

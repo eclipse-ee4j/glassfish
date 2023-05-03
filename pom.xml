@@ -134,7 +134,6 @@
                 <module>qa</module>
                 <module>nucleus</module>
                 <module>appserver</module>
-                <module>nucleus/hk2/config-generator</module>
                 <module>docs</module>
                 <module>appserver/extras/embedded/common</module>
                 <module>appserver/tests/appserv-tests/util/reportbuilder</module>

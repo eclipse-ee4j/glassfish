@@ -95,7 +95,6 @@
         <jakarta.inject-api.version>2.0.1.MR</jakarta.inject-api.version>
         <hk2.version>3.0.4</hk2.version>
         <hk2.plugin.version>3.0.4</hk2.plugin.version>
-        <hk2.config-generator.version>2.5.0-b53</hk2.config-generator.version>
 
         <!-- Jakarta XML Binding -->
         <jakarta.xml.bind-api.version>4.0.0</jakarta.xml.bind-api.version>
@@ -267,6 +266,11 @@
                 <groupId>org.glassfish.hk2</groupId>
                 <artifactId>osgi-resource-locator</artifactId>
                 <version>${osgi-resource-locator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.main</groupId>
+                <artifactId>hk2-config-generator</artifactId>
+                <version>${project.version}</version>
             </dependency>
 
             <!-- Jakarta XML Binding -->
@@ -769,11 +773,6 @@
             <plugins>
                 <plugin>
                     <groupId>org.glassfish.hk2</groupId>
-                    <artifactId>config-generator</artifactId>
-                    <version>${hk2.config-generator.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.glassfish.hk2</groupId>
                     <artifactId>hk2-inhabitant-generator</artifactId>
                     <version>${hk2.plugin.version}</version>
                 </plugin>
@@ -1177,6 +1176,7 @@
             <plugin>
                 <groupId>org.glassfish.build</groupId>
                 <artifactId>glassfishbuild-maven-plugin</artifactId>
+                <!-- Adds support for glassfish-jar and it's customized lifecycle-->
                 <extensions>true</extensions>
                 <configuration>
                     <dir>${project.build.outputDirectory}</dir>
@@ -1340,6 +1340,15 @@
                     <dropVersionComponent>qualifier</dropVersionComponent>
                     <versionPropertyName>project.osgi.version</versionPropertyName>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>generate-osgi-version-property</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>compute-osgi-version</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>

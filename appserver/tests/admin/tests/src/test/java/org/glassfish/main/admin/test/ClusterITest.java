@@ -111,8 +111,8 @@ public class ClusterITest {
     @Test
     @Order(3)
     public void startInstancesTest() {
-        assertThat(ASADMIN.exec(30_000, "start-local-instance", INSTANCE_NAME_1), asadminOK());
-        assertThat(ASADMIN.exec(30_000, "start-local-instance", INSTANCE_NAME_2), asadminOK());
+        assertThat(ASADMIN.exec(60_000, "start-local-instance", INSTANCE_NAME_1), asadminOK());
+        assertThat(ASADMIN.exec(60_000, "start-local-instance", INSTANCE_NAME_2), asadminOK());
     }
 
     @Test

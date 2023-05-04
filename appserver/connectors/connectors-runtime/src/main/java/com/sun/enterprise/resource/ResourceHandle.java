@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,6 +19,7 @@ package com.sun.enterprise.resource;
 
 import static java.util.logging.Level.FINEST;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
 import javax.security.auth.Subject;
@@ -57,7 +58,7 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
     private int shareCount; // sharing within a component (XA only)
     private boolean supportsXAResource;
 
-    private volatile boolean busy;
+    private AtomicBoolean busy = new AtomicBoolean(false);
 
     private Subject subject;
 
@@ -350,12 +351,16 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
         ConnectorRuntime.getRuntime().getPoolManager().resourceEnlisted(transaction, this);
     }
 
-    public void setBusy(boolean isBusy) {
-        busy = isBusy;
+    public boolean isBusy() {
+        return busy.get();
     }
 
-    public boolean isBusy() {
-        return busy;
+    public void setBusy(boolean busy) {
+        this.busy.set(busy);
+    }
+
+    public boolean trySetBusy(boolean busy) {
+        return this.busy.compareAndSet(!busy, busy);
     }
 
     public boolean getDestroyByLeakTimeOut() {

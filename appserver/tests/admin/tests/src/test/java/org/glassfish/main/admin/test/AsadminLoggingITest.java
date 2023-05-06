@@ -174,6 +174,8 @@ public class AsadminLoggingITest {
             () -> assertThat(keys.get(keys.size() - 1), equalTo("systemRootLogger.level")),
             () -> assertThat(lines,
                 containsInRelativeOrder(
+                    // It was set to OFF in 7.0.3 via AdminUI; check for possible side effects
+                    "org.glassfish.main.jul.handler.GlassFishLogHandler.level=ALL",
                     "org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.limit.minutes=240",
                     "org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.maxArchiveFiles=100")),
             () -> {

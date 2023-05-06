@@ -36,7 +36,6 @@ import jakarta.inject.Singleton;
 
 import java.beans.PropertyChangeEvent;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.naming.NamingException;
@@ -61,6 +60,10 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.NotProcessed;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
+
 
 /**
  * ResourceManager lifecycle listener that listens to resource-manager startup and shutdown
@@ -71,6 +74,9 @@ import org.jvnet.hk2.config.UnprocessedChangeEvents;
 @Service
 @Singleton
 public class ConnectorResourceManagerLifecycleListener implements org.glassfish.resourcebase.resources.listener.ResourceManagerLifecycleListener, ConfigListener {
+
+    private static final Logger LOG = LogDomains.getLogger(ConnectorResourceManagerLifecycleListener.class,
+        LogDomains.RSR_LOGGER, false);
 
     @Inject
     private GlassfishNamingManager namingMgr;
@@ -107,8 +113,7 @@ public class ConnectorResourceManagerLifecycleListener implements org.glassfish.
     @Inject
     private InternalSystemAdministrator internalSystemAdministrator;
 
-    private static final Logger logger =
-            LogDomains.getLogger(ConnectorRuntime.class, LogDomains.RESOURCE_BUNDLE);
+
 
     private void bindConnectorDescriptors() {
         for(String rarName : ConnectorConstants.systemRarNames){
@@ -125,7 +130,7 @@ public class ConnectorResourceManagerLifecycleListener implements org.glassfish.
         try {
             namingMgr.publishObject(jndiName, proxy, true);
         } catch (NamingException e) {
-            logger.log(Level.WARNING,
+            LOG.log(WARNING,
                 "Unable to bind connector descriptor for resource-adapter " + rarName + " to JNDI name " + jndiName, e);
         }
     }
@@ -173,16 +178,14 @@ public class ConnectorResourceManagerLifecycleListener implements org.glassfish.
                 cr.cleanUpResourcesAndShutdownAllActiveRAs();
             }
         } else {
-            if(logger.isLoggable(Level.FINEST)) {
-                logger.finest("ConnectorRuntime not initialized, hence skipping " +
-                    "resource-adapters shutdown, resources, pools cleanup");
-            }
+            LOG.log(FINEST, "ConnectorRuntime not initialized, hence skipping resource-adapters"
+                + " shutdown, resources, pools cleanup");
         }
     }
 
     @Override
     public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
-            return ConfigSupport.sortAndDispatch(events, new ConfigChangeHandler(), logger);
+        return ConfigSupport.sortAndDispatch(events, new ConfigChangeHandler(), LOG);
     }
 
     class ConfigChangeHandler implements Changed {
@@ -263,9 +266,9 @@ public class ConnectorResourceManagerLifecycleListener implements org.glassfish.
                     params.add("DEFAULT", poolInfo.getName().toString());
                     invocation.parameters(params).execute();
                     if (report.getActionExitCode() == ActionReport.ExitCode.SUCCESS) {
-                        logger.log(Level.INFO, "The ping-connection-pool to {0} succeeded.", poolInfo);
+                        LOG.log(INFO, "The ping-connection-pool to {0} succeeded.", poolInfo);
                     } else {
-                        logger.log(Level.WARNING, "The ping-connection-pool to " + poolInfo + " failed.",
+                        LOG.log(WARNING, "The ping-connection-pool to " + poolInfo + " failed.",
                             report.getFailureCause());
                     }
                 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -17,18 +18,17 @@
 
 package org.apache.catalina;
 
-import org.apache.catalina.deploy.SecurityConstraint;
-import org.jvnet.hk2.annotations.Contract;
-
-import org.glassfish.hk2.api.PerLookup;
-
-import jakarta.servlet.http.HttpServletRequest;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.security.Principal;
 import java.security.cert.X509Certificate;
+
+import org.apache.catalina.deploy.SecurityConstraint;
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Contract;
+
 import jakarta.servlet.ServletContext;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
 /**
  * A <b>Realm</b> is a read-only facade for an underlying security realm
  * used to authenticate individual users, and identify the security roles
@@ -111,7 +111,7 @@ public interface Realm {
      * @param credentials Password or other credentials to use in
      *  authenticating this username
      */
-    public Principal authenticate(String username, char[] credentials);
+    public Principal authenticate(HttpRequest request, String username, char[] credentials);
 
 
     /**
@@ -140,7 +140,7 @@ public interface Realm {
      * @param certs Array of client certificates, with the first one in
      *  the array being the certificate of the client itself.
      */
-    public Principal authenticate(X509Certificate certs[]);
+    public Principal authenticate(HttpRequest request, X509Certificate certs[]);
 
     /**
      * Return the SecurityConstraints configured to guard the request URI for

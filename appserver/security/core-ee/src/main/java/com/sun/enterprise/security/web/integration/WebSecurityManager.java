@@ -17,29 +17,14 @@
 
 package com.sun.enterprise.security.web.integration;
 
-import com.sun.enterprise.config.serverbeans.ApplicationRef;
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.runtime.common.PrincipalNameDescriptor;
-import com.sun.enterprise.deployment.runtime.common.SecurityRoleMapping;
-import com.sun.enterprise.deployment.runtime.common.wls.SecurityRoleAssignment;
-import com.sun.enterprise.deployment.runtime.web.SunWebApp;
-import com.sun.enterprise.deployment.web.LoginConfiguration;
-import com.sun.enterprise.security.SecurityContext;
-import com.sun.enterprise.security.SecurityRoleMapperFactoryGen;
-import com.sun.enterprise.security.SecurityServicesUtil;
-import com.sun.enterprise.security.audit.AuditManager;
-import com.sun.enterprise.security.ee.CachedPermission;
-import com.sun.enterprise.security.ee.CachedPermissionImpl;
-import com.sun.enterprise.security.ee.PermissionCache;
-import com.sun.enterprise.security.ee.PermissionCacheFactory;
-import com.sun.enterprise.security.ee.SecurityUtil;
-import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
-
-import jakarta.security.jacc.PolicyContextException;
-import jakarta.security.jacc.WebResourcePermission;
-import jakarta.security.jacc.WebUserDataPermission;
-import jakarta.servlet.http.HttpServletRequest;
+import static com.sun.enterprise.security.authorize.PolicyContextHandlerImpl.HTTP_SERVLET_REQUEST;
+import static com.sun.enterprise.security.ee.PermissionCacheFactory.createPermissionCache;
+import static com.sun.enterprise.security.web.integration.GlassFishToExousiaConverter.getConstraintsFromBundle;
+import static com.sun.enterprise.security.web.integration.GlassFishToExousiaConverter.getSecurityRoleRefsFromBundle;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
+import static java.util.stream.Collectors.toSet;
+import static org.glassfish.api.web.Constants.ADMIN_VS;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -58,14 +43,31 @@ import org.glassfish.internal.api.ServerContext;
 import org.glassfish.security.common.Group;
 import org.glassfish.security.common.UserNameAndPassword;
 
-import static com.sun.enterprise.security.authorize.PolicyContextHandlerImpl.HTTP_SERVLET_REQUEST;
-import static com.sun.enterprise.security.ee.PermissionCacheFactory.createPermissionCache;
-import static com.sun.enterprise.security.web.integration.GlassFishToExousiaConverter.getConstraintsFromBundle;
-import static com.sun.enterprise.security.web.integration.GlassFishToExousiaConverter.getSecurityRoleRefsFromBundle;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.SEVERE;
-import static java.util.stream.Collectors.toSet;
-import static org.glassfish.api.web.Constants.ADMIN_VS;
+import com.sun.enterprise.config.serverbeans.ApplicationRef;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.runtime.common.PrincipalNameDescriptor;
+import com.sun.enterprise.deployment.runtime.common.SecurityRoleMapping;
+import com.sun.enterprise.deployment.runtime.common.wls.SecurityRoleAssignment;
+import com.sun.enterprise.deployment.runtime.web.SunWebApp;
+import com.sun.enterprise.deployment.web.LoginConfiguration;
+import com.sun.enterprise.security.SecurityContext;
+import com.sun.enterprise.security.SecurityRoleMapperFactoryGen;
+import com.sun.enterprise.security.SecurityServicesUtil;
+import com.sun.enterprise.security.audit.AuditManager;
+import com.sun.enterprise.security.authorize.PolicyContextHandlerImpl;
+import com.sun.enterprise.security.ee.CachedPermission;
+import com.sun.enterprise.security.ee.CachedPermissionImpl;
+import com.sun.enterprise.security.ee.PermissionCache;
+import com.sun.enterprise.security.ee.PermissionCacheFactory;
+import com.sun.enterprise.security.ee.SecurityUtil;
+import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
+
+import jakarta.security.jacc.PolicyContext;
+import jakarta.security.jacc.PolicyContextException;
+import jakarta.security.jacc.WebResourcePermission;
+import jakarta.security.jacc.WebUserDataPermission;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * The class implements the JSR 115 - JavaTM Authorization Contract for Containers. This class is a companion class of
@@ -294,6 +296,14 @@ public class WebSecurityManager {
         return isGranted;
     }
 
+    public void onLogin(HttpServletRequest httpServletRequest) {
+        setSecurityInfo(httpServletRequest);
+    }
+
+    public void onLogout() {
+        resetSecurityInfo();
+    }
+
     public boolean linkPolicy(String linkedContextId, boolean lastInService) {
         return authorizationService.linkPolicy(linkedContextId, lastInService);
     }
@@ -477,7 +487,7 @@ public class WebSecurityManager {
     }
 
     /**
-     * This is an private method for policy context handler data info
+     * This is a private method for policy context handler data info
      *
      * @param httpRequest
      */
@@ -486,6 +496,11 @@ public class WebSecurityManager {
             webSecurityManagerFactory.pcHandlerImpl.getHandlerData().setHttpServletRequest(httpRequest);
         }
         AuthorizationService.setThreadContextId(contextId);
+    }
+
+    private void resetSecurityInfo() {
+        PolicyContextHandlerImpl.getInstance().reset();
+        PolicyContext.setContextID(null);
     }
 
     /**

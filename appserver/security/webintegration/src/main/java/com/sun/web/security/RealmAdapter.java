@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, 2022 Contributors to the Eclipse Foundation.
+ * Copyright 2021, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -543,13 +543,12 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
      * @param the password.
      */
     @Override
-    public Principal authenticate(String username, char[] password) {
+    public Principal authenticate(HttpRequest request, String username, char[] password) {
         _logger.fine(() -> "Tomcat callback for authenticate user/password");
         _logger.fine(() -> "usename = " + username);
 
-        if (authenticate(username, password, null, null)) {
+        if (authenticate((HttpServletRequest) request, username, password, null, null)) {
             return new WebPrincipal(username, password, SecurityContext.getCurrent());
-
         }
 
         return null;
@@ -558,7 +557,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
     @Override
     public Principal authenticate(HttpServletRequest httpServletRequest) {
         DigestCredentials digestCredentials = generateDigestCredentials(httpServletRequest);
-        if (digestCredentials != null && authenticate(null, null, digestCredentials, null)) {
+        if (digestCredentials != null && authenticate(httpServletRequest, null, null, digestCredentials, null)) {
             return new WebPrincipal(digestCredentials.getUserName(), (char[]) null, SecurityContext.getCurrent());
         }
 
@@ -566,8 +565,8 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
     }
 
     @Override
-    public Principal authenticate(X509Certificate certificates[]) {
-        if (authenticate(null, null, null, certificates)) {
+    public Principal authenticate(HttpRequest request, X509Certificate certificates[]) {
+        if (authenticate((HttpServletRequest) request, null, null, null, certificates)) {
             return new WebPrincipal(certificates, SecurityContext.getCurrent());
         }
 
@@ -808,28 +807,35 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
         logout();
     }
 
+    @SuppressWarnings({ "removal", "deprecation" })
     @Override
     public void logout() {
         setSecurityContext(null);
-        AccessController.doPrivileged(new PrivilegedAction<Void>() {
-            @Override
-            public Void run() {
-                resetPolicyContext();
-                return null;
-            }
-        });
+
+        // Sets the security context for Jakarta Authorization
+        WebSecurityManager webSecurityManager = getWebSecurityManager(false);
+        if (webSecurityManager != null) {
+
+            AccessController.doPrivileged(new PrivilegedAction<Void>() {
+                @Override
+                public Void run() {
+                    webSecurityManager.onLogout();
+                    return null;
+                }
+            });
+        }
     }
 
     /*
      * IASRI 4688449 This method was only used by J2EEInstanceListener to set the security context prior to invocations by
      * re-authenticating a previously set WebPrincipal. This is now cached so no need.
      */
-    public boolean authenticate(WebPrincipal principal) {
+    public boolean authenticate(HttpServletRequest request, WebPrincipal principal) {
         if (principal.isUsingCertificate()) {
-            return authenticate(null, null, null, principal.getCertificates());
+            return authenticate(request, null, null, null, principal.getCertificates());
         }
 
-        return authenticate(principal.getName(), principal.getPassword(), null, null);
+        return authenticate(request, principal.getName(), principal.getPassword(), null, null);
     }
 
     /**
@@ -840,7 +846,8 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
      * @param the authentication method.
      * @param the authentication data.
      */
-    private boolean authenticate(String username, char[] password, DigestCredentials digestCredentials, X509Certificate[] certificates) {
+    @SuppressWarnings({ "removal", "deprecation" })
+    private boolean authenticate(HttpServletRequest request, String username, char[] password, DigestCredentials digestCredentials, X509Certificate[] certificates) {
         try {
             if (certificates != null) {
                 LoginContextDriver.doX500Login(generateX500Subject(certificates), moduleID);
@@ -850,6 +857,19 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
                 LoginContextDriver.login(username, password, realmName);
             }
             _logger.log(FINE, () -> "Web login succeeded for: " + SecurityContext.getCurrent().getCallerPrincipal());
+
+            WebSecurityManager webSecurityManager = getWebSecurityManager(false);
+
+            // Sets the security context for Jakarta Authorization
+            if (webSecurityManager != null) {
+                AccessController.doPrivileged(new PrivilegedAction<Void>() {
+                    @Override
+                    public Void run() {
+                        webSecurityManager.onLogin(request);
+                        return null;
+                    }
+                });
+            }
 
             return true;
         } catch (Exception le) {
@@ -1440,11 +1460,6 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
 
     private static String PROXY_AUTH_TYPE = "PLUGGABLE_PROVIDER";
 
-    private void resetPolicyContext() {
-        PolicyContextHandlerImpl.getInstance().reset();
-        PolicyContext.setContextID(null);
-    }
-
     // inner class extends AuthenticatorBase such that session registration
     // of webtier can be invoked by RealmAdapter after authentication
     // by authentication module.
@@ -1766,7 +1781,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
         }
     }
 
-    private Key findDigestKey(DigestAlgorithmParameter[] digestParameters) {
+    private Key findDigestKey(com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter[] digestParameters) {
         for (DigestAlgorithmParameter digestParameter : digestParameters) {
             if (A1.equals(digestParameter.getName()) && digestParameter instanceof Key) {
                 return (Key) digestParameter;

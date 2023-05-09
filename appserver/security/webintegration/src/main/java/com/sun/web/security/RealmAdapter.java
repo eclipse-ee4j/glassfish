@@ -1781,7 +1781,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
         }
     }
 
-    private Key findDigestKey(com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter[] digestParameters) {
+    private Key findDigestKey(DigestAlgorithmParameter[] digestParameters) {
         for (DigestAlgorithmParameter digestParameter : digestParameters) {
             if (A1.equals(digestParameter.getName()) && digestParameter instanceof Key) {
                 return (Key) digestParameter;

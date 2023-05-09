@@ -16,32 +16,34 @@
 
 package com.sun.enterprise.resource.pool.datastructure;
 
-import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.resource.ClientSecurityInfo;
 import com.sun.enterprise.resource.ResourceHandle;
+import com.sun.enterprise.resource.ResourceSpec;
 import com.sun.enterprise.resource.allocator.ResourceAllocator;
 import com.sun.enterprise.resource.pool.ResourceHandler;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import org.easymock.EasyMock;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.easymock.IExpectationSetters;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.Timeout.ThreadMode;
 import org.junit.jupiter.api.function.Executable;
 
+import static org.easymock.EasyMock.createMockBuilder;
 import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -51,47 +53,77 @@ public class RWLockDataStructureTest {
 
     private static final int TASK_COUNT = 1000;
 
+    private static final int THREAD_COUNT = 500;
 
-    @BeforeAll
-    public static void init() {
-        new ConnectorRuntime();
-    }
+    private static final int MAX_SIZE = TASK_COUNT;
 
-
-    @Test
-    @Timeout(value = 1, unit = TimeUnit.MINUTES, threadMode = ThreadMode.SEPARATE_THREAD)
+    @RepeatedTest(20)
+    @Timeout(value = 10, threadMode = ThreadMode.SEPARATE_THREAD)
     public void raceConditions() throws Exception {
 
         ResourceHandler handler = createNiceMock(ResourceHandler.class);
-        ResourceHandle handle = createNiceMock(ResourceHandle.class);
-        EasyMock.expect(handle.isBusy()).andReturn(Boolean.FALSE);
-        RWLockDataStructure dataStructure = new RWLockDataStructure(null, 100, handler, null);
         ResourceAllocator allocator = createNiceMock(ResourceAllocator.class);
-        EasyMock.expect(handler.createResource(allocator)).andReturn(handle);
-        EasyMock.expect(allocator.createResource()).andReturn(handle);
-        EasyMock.replay(allocator, handler, handle);
 
-        for (int i = 0; i < TASK_COUNT; i++) {
+        List<Object> mocks = new ArrayList<>(MAX_SIZE);
+        for (int i = 0; i < MAX_SIZE; i++) {
+            mocks.add(
+                // We use constructor to generate ResourceHandle mock
+                // because we depend on an internal state of this object.
+                createMockBuilder(ResourceHandle.class)
+                    .withConstructor(Object.class, ResourceSpec.class, ResourceAllocator.class, ClientSecurityInfo.class)
+                    // Actual constructor arguments does not matter
+                    .withArgs(null, null, null, null)
+                    .createNiceMock());
+        }
+
+        IExpectationSetters<ResourceHandle> handlerExpectation = expect(handler.createResource(allocator));
+        IExpectationSetters<ResourceHandle> allocatorExpectation = expect(allocator.createResource());
+        for (Object resource : mocks) {
+            handlerExpectation.andReturn((ResourceHandle) resource);
+            allocatorExpectation.andReturn((ResourceHandle) resource);
+        }
+        mocks.add(handler);
+        mocks.add(allocator);
+
+        replay(mocks.toArray());
+
+        RWLockDataStructure dataStructure = new RWLockDataStructure(null, MAX_SIZE, handler, null);
+
+        for (int i = 0; i < MAX_SIZE; i++) {
             // requires handler.createResource(allocator)
             dataStructure.addResource(allocator, 1);
         }
 
-        ExecutorService threadPool = Executors.newFixedThreadPool(500);
-        List<Callable<Void>> tasks = new ArrayList<>(TASK_COUNT);
+        ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_COUNT);
+        List<Callable<ResourceHandle>> tasks = new ArrayList<>(TASK_COUNT);
         for (int i = 0; i < TASK_COUNT; i++) {
             tasks.add(() -> {
                 ResourceHandle resource = dataStructure.getResource();
                 dataStructure.removeResource(resource);
-                return null;
+                return resource;
             });
         }
-        List<Future<Void>> futures = threadPool.invokeAll(tasks, 10, TimeUnit.SECONDS);
+        List<Future<ResourceHandle>> futures = threadPool.invokeAll(tasks);
+        // When executed without races, all returned ResourceHandles is not null
+        // and Resources List always empty. This is because we do pair getResource and
+        // removeResource calls.
+        // When race condition present, then in some cases we can meet some returned
+        // ResourceHandles is null AND Resources List is not empty.
         assertAll(
-            () -> assertTrue(futures.stream().allMatch(f -> f.isDone()), "All done."),
-            () -> assertFalse(futures.stream().anyMatch(f -> f.isCancelled()), "None cancelled."),
             () -> assertAll(futures.stream().map(f -> (Executable) f::get).collect(Collectors.toList())),
+            () -> assertTrue(futures.stream().allMatch(this::notNull)),
             () -> assertThat("Resources Size", dataStructure.getResourcesSize(), equalTo(0)),
             () -> assertThat("Free list size", dataStructure.getFreeListSize(), equalTo(0))
         );
+
+        threadPool.shutdownNow();
+    }
+
+    private boolean notNull(Future<?> future) {
+        try {
+            return future.get() != null;
+        } catch (InterruptedException | ExecutionException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }

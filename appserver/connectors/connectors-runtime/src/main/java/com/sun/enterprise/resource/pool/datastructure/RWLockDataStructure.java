@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,13 +30,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * ReadWriteLock based datastructure for pool
+ * ReadWriteLock based datastructure for pool.
  *
- * @deprecated Incorrect locking. Note: ListDataStructure uses synchronization, better, but slow.
  * @author Jagadish Ramu
  */
-@Deprecated
 public class RWLockDataStructure implements DataStructure {
+
     private static final Logger LOG = LogDomains.getLogger(RWLockDataStructure.class, LogDomains.RSR_LOGGER);
 
     private int maxSize;
@@ -69,9 +68,7 @@ public class RWLockDataStructure implements DataStructure {
                 numResAdded++;
             }
         } catch (Exception e) {
-            PoolingException pe = new PoolingException(e.getMessage());
-            pe.initCause(e);
-            throw pe;
+            throw new PoolingException(e.getMessage(), e);
         } finally {
             writeLock.unlock();
         }
@@ -82,40 +79,22 @@ public class RWLockDataStructure implements DataStructure {
     public ResourceHandle getResource() {
         readLock.lock();
         try {
-            // FIXME: masked concurrent modification exception. Collection may change when iterating.
-            for (int i = 0; i < resources.size(); i++) {
-                ResourceHandle h = resources.get(i);
-                if (!h.isBusy()) {
-                    readLock.unlock();
-                    writeLock.lock();
-                    try {
-                        if (!h.isBusy()) {
-                            h.setBusy(true);
-                            return h;
-                        } else {
-                            readLock.lock();
-                            continue;
-                        }
-                    } finally {
-                        writeLock.unlock();
+            for (ResourceHandle resource : resources) {
+                if (!resource.isBusy()) {
+                    if (resource.trySetBusy(true)) {
+                        return resource;
                     }
-                } else {
-                    continue;
                 }
             }
         } finally {
-            try {
-                readLock.unlock();
-            } catch ( Exception e) {
-                //ignore
-            }
+            readLock.unlock();
         }
         return null;
     }
 
     @Override
     public void removeResource(ResourceHandle resource) {
-        boolean removed = false;
+        boolean removed;
         writeLock.lock();
         try {
             removed = resources.remove(resource);
@@ -129,6 +108,7 @@ public class RWLockDataStructure implements DataStructure {
 
     @Override
     public void returnResource(ResourceHandle resource) {
+        // We use write lock to prevent an unnecessary resize
         writeLock.lock();
         try{
             resource.setBusy(false);
@@ -139,7 +119,7 @@ public class RWLockDataStructure implements DataStructure {
 
     @Override
     public int getFreeListSize() {
-        //inefficient implementation.
+        // inefficient implementation.
         int free = 0;
         readLock.lock();
         try{
@@ -163,10 +143,10 @@ public class RWLockDataStructure implements DataStructure {
                 handler.deleteResource(it.next());
                 it.remove();
             }
+            resources.clear();
         } finally {
             writeLock.unlock();
         }
-        resources.clear();
     }
 
     @Override

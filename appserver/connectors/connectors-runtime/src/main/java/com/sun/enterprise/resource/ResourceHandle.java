@@ -58,7 +58,7 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
     private int shareCount; // sharing within a component (XA only)
     private boolean supportsXAResource;
 
-    private AtomicBoolean busy = new AtomicBoolean(false);
+    private final AtomicBoolean busy = new AtomicBoolean(false);
 
     private Subject subject;
 

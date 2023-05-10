@@ -145,7 +145,7 @@ public class FormAuthenticator extends AuthenticatorBase {
                 if (log.isLoggable(FINE)) {
                     log.log(FINE, neutralizeForLog("Reauthenticating username '" + username + "'"));
                 }
-                principal = context.getRealm().authenticate(username, password);
+                principal = context.getRealm().authenticate(request, username, password);
                 if (principal != null) {
                     session.setNote(FORM_PRINCIPAL_NOTE, principal);
                     if (!matchRequest(request)) {
@@ -210,7 +210,7 @@ public class FormAuthenticator extends AuthenticatorBase {
             log.log(FINE, neutralizeForLog("Authenticating username '" + username + "'"));
         }
 
-        principal = realm.authenticate(username, password);
+        principal = realm.authenticate(request, username, password);
         if (principal == null) {
             forwardToErrorPage(request, response, config);
             return false;

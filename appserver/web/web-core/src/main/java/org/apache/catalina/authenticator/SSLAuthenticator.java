@@ -119,7 +119,7 @@ public class SSLAuthenticator extends AuthenticatorBase {
         }
 
         // Authenticate the specified certificate chain
-        callerPrincipal = context.getRealm().authenticate(certificates);
+        callerPrincipal = context.getRealm().authenticate(request, certificates);
         if (callerPrincipal == null) {
             if (debug >= 1) {
                 log("Realm.authenticate() returned false");

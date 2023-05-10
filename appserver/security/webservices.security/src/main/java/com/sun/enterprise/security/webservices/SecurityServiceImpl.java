@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -140,7 +140,7 @@ public class SecurityServiceImpl implements SecurityService {
             }
 
             RealmAdapter ra = new RealmAdapter(realmName, endpoint.getBundleDescriptor().getModuleID());
-            authenticated = ra.authenticate(webPrincipal);
+            authenticated = ra.authenticate(hreq, webPrincipal);
             if (authenticated) {
                 sendAuthenticationEvents(true, hreq.getRequestURI(), webPrincipal);
             } else {

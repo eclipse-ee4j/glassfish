@@ -731,7 +731,7 @@ public abstract class AuthenticatorBase extends ValveBase implements Authenticat
      * @throws ServletException
      */
     protected Principal doLogin(HttpRequest request, String username, char[] password) throws ServletException {
-        Principal callerPrincipal = context.getRealm().authenticate(username, password);
+        Principal callerPrincipal = context.getRealm().authenticate(request, username, password);
         if (callerPrincipal == null) {
             throw new ServletException(rb.getString(LOGIN_FAIL));
         }

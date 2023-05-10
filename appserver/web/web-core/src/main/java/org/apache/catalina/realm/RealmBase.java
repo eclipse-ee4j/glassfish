@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -18,18 +19,7 @@
 package org.apache.catalina.realm;
 
 import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-import org.apache.catalina.*;
-import org.apache.catalina.authenticator.AuthenticatorBase;
-import org.apache.catalina.connector.Response;
-import org.apache.catalina.core.StandardContext;
-import org.apache.catalina.deploy.LoginConfig;
-import org.apache.catalina.deploy.SecurityCollection;
-import org.apache.catalina.deploy.SecurityConstraint;
-import org.apache.catalina.util.*;
 
-import javax.management.ObjectName;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
@@ -40,13 +30,44 @@ import java.security.Principal;
 import java.security.cert.X509Certificate;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.management.ObjectName;
+
+import org.apache.catalina.Authenticator;
+import org.apache.catalina.Container;
+import org.apache.catalina.Context;
+import org.apache.catalina.Globals;
+import org.apache.catalina.HttpRequest;
+import org.apache.catalina.HttpResponse;
+import org.apache.catalina.Lifecycle;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.LifecycleListener;
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.Realm;
+import org.apache.catalina.authenticator.AuthenticatorBase;
+import org.apache.catalina.connector.Response;
+import org.apache.catalina.core.StandardContext;
+import org.apache.catalina.deploy.LoginConfig;
+import org.apache.catalina.deploy.SecurityCollection;
+import org.apache.catalina.deploy.SecurityConstraint;
+import org.apache.catalina.util.HexUtils;
+import org.apache.catalina.util.LifecycleSupport;
+
 import com.sun.enterprise.util.Utility;
+
 import jakarta.servlet.ServletContext;
 // END SJSWS 6324431
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Simple implementation of <b>Realm</b> that reads an XML file to configure
@@ -157,6 +178,7 @@ public abstract class RealmBase
     /**
      * Return the Container with which this Realm has been associated.
      */
+    @Override
     public Container getContainer() {
 
         return (container);
@@ -189,6 +211,7 @@ public abstract class RealmBase
      *
      * @param container The associated Container
      */
+    @Override
     public void setContainer(Container container) {
 
         Container oldContainer = this.container;
@@ -242,6 +265,7 @@ public abstract class RealmBase
      * the corresponding version number, in the format
      * <code>&lt;description&gt;/&lt;version&gt;</code>.
      */
+    @Override
     public String getInfo() {
 
         return info;
@@ -280,6 +304,7 @@ public abstract class RealmBase
      *
      * @param listener The listener to add
      */
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
 
         support.addPropertyChangeListener(listener);
@@ -295,7 +320,8 @@ public abstract class RealmBase
      * @param credentials Password or other credentials to use in
      *  authenticating this username
      */
-    public Principal authenticate(String username, char[] credentials) {
+    @Override
+    public Principal authenticate(HttpRequest request, String username, char[] credentials) {
 
         char[] serverCredentials = getPassword(username);
 
@@ -327,6 +353,7 @@ public abstract class RealmBase
      * @param md5a2 Second MD5 digest used to calculate the digest :
      * MD5(Method + ":" + uri)
      */
+    @Override
     public Principal authenticate(String username, char[] clientDigest,
                                   String nOnce, String nc, String cnonce,
                                   String qop, String realm,
@@ -417,7 +444,8 @@ public abstract class RealmBase
      * @param certs Array of client certificates, with the first one in
      *  the array being the certificate of the client itself.
      */
-    public Principal authenticate(X509Certificate certs[]) {
+    @Override
+    public Principal authenticate(HttpRequest request, X509Certificate certs[]) {
 
         if ((certs == null) || (certs.length < 1))
             return (null);
@@ -462,6 +490,7 @@ public abstract class RealmBase
      * @param request Request we are processing
      * @param context Context the Request is mapped to
      */
+    @Override
     public SecurityConstraint[] findSecurityConstraints(
             HttpRequest request, Context context) {
         return findSecurityConstraints(
@@ -481,6 +510,7 @@ public abstract class RealmBase
      * @return the security constraints configured by the given context
      * for the given request URI and method, or null
      */
+    @Override
     public SecurityConstraint[] findSecurityConstraints(
             String uri, String method, Context context) {
 
@@ -884,6 +914,7 @@ public abstract class RealmBase
      *
      * @exception IOException if an input/output error occurs
      */
+    @Override
     public boolean hasResourcePermission(HttpRequest request,
                                          HttpResponse response,
                                          SecurityConstraint []constraints,
@@ -975,6 +1006,7 @@ public abstract class RealmBase
      * @param principal Principal for whom the role is to be checked
      * @param role Security role to be checked
      */
+    @Override
     public boolean hasRole(HttpRequest request,
                            HttpResponse response,
                            Principal principal,
@@ -1000,6 +1032,7 @@ public abstract class RealmBase
      * @param ssoEnabled true if sso is enabled
      * @exception IOException if an input/output error occurs
      */
+    @Override
     public int preAuthenticateCheck(HttpRequest request,
                                     HttpResponse response,
                                     SecurityConstraint[] constraints,
@@ -1029,6 +1062,7 @@ public abstract class RealmBase
      * @param authenticator the current authenticator.
      * @exception IOException if an input/output error occurs
      */
+    @Override
     public boolean invokeAuthenticateDelegate(HttpRequest request,
                                               HttpResponse response,
                                               Context context,
@@ -1048,6 +1082,7 @@ public abstract class RealmBase
      * @param context The Context to which client of this class is attached.
      * @exception IOException if an input/output error occurs
      */
+    @Override
     public boolean invokePostAuthenticateDelegate(HttpRequest request,
                                               HttpResponse response,
                                               Context context)
@@ -1068,6 +1103,7 @@ public abstract class RealmBase
      * @param principal Principal for whom the role is to be checked
      * @param role Security role to be checked
      */
+    @Override
     public boolean hasRole(Principal principal, String role) {
 
         // Should be overridden in JAASRealm - to avoid pretty inefficient conversions
@@ -1110,6 +1146,7 @@ public abstract class RealmBase
      * processing should continue, or <code>false</code> if we have created
      * a response already
      */
+    @Override
     public boolean hasUserDataPermission(HttpRequest request,
                                          HttpResponse response,
                                          SecurityConstraint[] constraints)
@@ -1139,6 +1176,7 @@ public abstract class RealmBase
      * CONFIDENTIAL, and false if they are (in which case the given request
      * will have been redirected to HTTPS)
      */
+    @Override
     public boolean hasUserDataPermission(HttpRequest request,
                                          HttpResponse response,
                                          SecurityConstraint[] constraints,
@@ -1238,6 +1276,7 @@ public abstract class RealmBase
      *
      * @param listener The listener to remove
      */
+    @Override
     public void removePropertyChangeListener(PropertyChangeListener listener) {
 
         support.removePropertyChangeListener(listener);
@@ -1253,6 +1292,7 @@ public abstract class RealmBase
      *
      * @param listener The listener to add
      */
+    @Override
     public void addLifecycleListener(LifecycleListener listener) {
 
         lifecycle.addLifecycleListener(listener);
@@ -1264,6 +1304,7 @@ public abstract class RealmBase
      * Gets the (possibly empty) list of lifecycle listeners associated
      * with this Realm.
      */
+    @Override
     public List<LifecycleListener> findLifecycleListeners() {
         return lifecycle.findLifecycleListeners();
     }
@@ -1274,6 +1315,7 @@ public abstract class RealmBase
      *
      * @param listener The listener to remove
      */
+    @Override
     public void removeLifecycleListener(LifecycleListener listener) {
         lifecycle.removeLifecycleListener(listener);
     }
@@ -1287,6 +1329,7 @@ public abstract class RealmBase
      * @exception LifecycleException if this component detects a fatal error
      *  that prevents this component from being used
      */
+    @Override
     public void start() throws LifecycleException {
 
         // Validate and update our current component state
@@ -1322,6 +1365,7 @@ public abstract class RealmBase
      * @exception LifecycleException if this component detects a fatal error
      *  that needs to be reported
      */
+    @Override
     public void stop()
         throws LifecycleException {
 
@@ -1576,6 +1620,7 @@ public abstract class RealmBase
      * @param req The request object.
      * @return Alternate principal or null.
      */
+    @Override
     public Principal getAlternatePrincipal(HttpRequest req) {
         return null;
     }
@@ -1588,6 +1633,7 @@ public abstract class RealmBase
      * @param req The request object.
      * @return Alternate auth type or null.
      */
+    @Override
     public String getAlternateAuthType(HttpRequest req) {
         return null;
     }
@@ -1600,6 +1646,7 @@ public abstract class RealmBase
      *
      * @param name the name of the realm.
      */
+    @Override
     public void setRealmName(String name, String authMethod) {
         // DO NOTHING. PRIVATE EXTENSION
     }
@@ -1610,11 +1657,13 @@ public abstract class RealmBase
      *
      * @return realm name or null if not set.
      */
+    @Override
     public String getRealmName(){
         // DO NOTHING. PRIVATE EXTENSION
         return null;
     }
     // END IASRI 4856062,4918627,4874504
+    @Override
     public Principal authenticate(HttpServletRequest hreq) {
         throw new UnsupportedOperationException();
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,35 +23,9 @@ import com.sun.enterprise.config.modularity.GetSetModularityHelper;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.I18n;
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.AdminCommand;
-import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.api.admin.ExecuteOn;
-import org.glassfish.api.admin.FailurePolicy;
-import org.glassfish.api.admin.ParameterMap;
-import org.glassfish.api.admin.RuntimeType;
-import org.glassfish.api.admin.config.LegacyConfigurationUpgrade;
-import org.glassfish.internal.api.Target;
-
-import org.jvnet.hk2.annotations.Optional;
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.jvnet.hk2.config.ConfigBean;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.jvnet.hk2.config.ConfigModel;
-import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.Dom;
-import org.jvnet.hk2.config.SingleConfigCode;
-import org.jvnet.hk2.config.TransactionFailure;
-import org.jvnet.hk2.config.WriteableView;
-import org.jvnet.hk2.config.types.Property;
-import org.jvnet.tiger_types.Types;
 
 import jakarta.inject.Inject;
+
 import java.beans.PropertyVetoException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -65,11 +40,35 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.I18n;
+import org.glassfish.api.Param;
 import org.glassfish.api.admin.AccessRequired.AccessCheck;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.AdminCommandSecurity;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.FailurePolicy;
+import org.glassfish.api.admin.ParameterMap;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.admin.config.LegacyConfigurationUpgrade;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.Target;
+import org.jvnet.hk2.annotations.Optional;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.ConfigBean;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigModel;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.Dom;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
+import org.jvnet.hk2.config.WriteableView;
+import org.jvnet.hk2.config.tiger.Types;
+import org.jvnet.hk2.config.types.Property;
 
 /**
  * User: Jerome Dochez
@@ -82,6 +81,8 @@ import org.glassfish.api.admin.AdminCommandSecurity;
 @I18n("set")
 public class SetCommand extends V2DottedNameSupport implements AdminCommand, PostConstruct,
         AdminCommandSecurity.AccessCheckProvider, AdminCommandSecurity.Preauthorization {
+
+    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(SetCommand.class);
 
     @Inject
     ServiceLocator habitat;
@@ -103,16 +104,14 @@ public class SetCommand extends V2DottedNameSupport implements AdminCommand, Pos
 
     @Param(primary = true, multiple = true)
     String[] values;
-    final private static LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(SetCommand.class);
 
-    private HashMap<String, Integer> targetLevel = null;
+    private HashMap<String, Integer> targetLevel;
 
-    private final Collection<SetOperation> setOperations = new ArrayList<SetOperation>();
+    private final Collection<SetOperation> setOperations = new ArrayList<>();
 
     @Override
     public void postConstruct() {
-        targetLevel = new HashMap<String, Integer>();
+        targetLevel = new HashMap<>();
         targetLevel.put("applications", 0);
         targetLevel.put("system-applications", 0);
         targetLevel.put("resources", 0);
@@ -140,7 +139,7 @@ public class SetCommand extends V2DottedNameSupport implements AdminCommand, Pos
 
     @Override
     public Collection<? extends AccessCheck> getAccessChecks() {
-        final Collection<AccessCheck> accessChecks = new ArrayList<AccessCheck>();
+        final Collection<AccessCheck> accessChecks = new ArrayList<>();
         for (SetOperation op : setOperations) {
             accessChecks.add(new AccessCheck(op.getResourceName(), "update"));
         }
@@ -207,7 +206,7 @@ public class SetCommand extends V2DottedNameSupport implements AdminCommand, Pos
             boolean applyOverrideRules;
 
             private Map<Dom, String> findDottedNames(TreeNode[] parentNodes, String pattern) {
-                Map<Dom, String> dottedNames = new HashMap<Dom, String>();
+                Map<Dom, String> dottedNames = new HashMap<>();
                 this.applyOverrideRules = false;
                 if (lookAtSubNodes) {
                     for (TreeNode parentNode : parentNodes) {
@@ -268,7 +267,7 @@ public class SetCommand extends V2DottedNameSupport implements AdminCommand, Pos
                     return true;
                 }
                 // create and set the property
-                Map<String, String> attributes = new HashMap<String, String>();
+                Map<String, String> attributes = new HashMap<>();
                 attributes.put("value", value);
                 attributes.put("name", attrName);
                 try {
@@ -380,7 +379,7 @@ public class SetCommand extends V2DottedNameSupport implements AdminCommand, Pos
             boolean setElementSuccess = false;
             boolean delPropertySuccess = false;
             boolean delProperty = false;
-            Map<String, String> attrChanges = new HashMap<String, String>();
+            Map<String, String> attrChanges = new HashMap<>();
             if (isProperty) {
                 ctx.attrName = "value";
                 if ((value == null) || (value.length() == 0)) {
@@ -585,8 +584,10 @@ public class SetCommand extends V2DottedNameSupport implements AdminCommand, Pos
                 WriteableView writeableParent = (WriteableView)Proxy.getInvocationHandler(param);
 
                 StringTokenizer st = new StringTokenizer(values, ",");
-                List<String> valList = new ArrayList<String>();
-                while (st.hasMoreTokens()) valList.add(st.nextToken());
+                List<String> valList = new ArrayList<>();
+                while (st.hasMoreTokens()) {
+                    valList.add(st.nextToken());
+                }
 
                 ConfigBean bean = writeableParent.getMasterView();
                 for (Method m : writeableParent.getProxyType().getMethods()) {
@@ -627,9 +628,13 @@ public class SetCommand extends V2DottedNameSupport implements AdminCommand, Pos
      * methods (set, get, etc.) must be marked as deprecated.
      */
     private boolean isDeprecatedAttr(Dom dom, String name) {
-        if (dom == null || dom.model == null || name == null) return false;
+        if (dom == null || dom.model == null || name == null) {
+            return false;
+        }
         Class t = dom.getProxyType();
-        if (t == null) return false;
+        if (t == null) {
+            return false;
+        }
         for (Method m : t.getDeclaredMethods()) {
             ConfigModel.Property p = dom.model.toProperty(m);
             if (p != null && name.equals(p.xmlName())) {
@@ -637,7 +642,7 @@ public class SetCommand extends V2DottedNameSupport implements AdminCommand, Pos
             }
         }
         for (Field f : t.getDeclaredFields()) {
-            if (name.equals(dom.model.camelCaseToXML(f.getName()))) {
+            if (name.equals(ConfigModel.camelCaseToXML(f.getName()))) {
                 return f.isAnnotationPresent(Deprecated.class);
             }
         }
@@ -648,8 +653,9 @@ public class SetCommand extends V2DottedNameSupport implements AdminCommand, Pos
         StringTokenizer token = new StringTokenizer(name, ".");
         String target = null;
         for (int j = 0; j < index; j++) {
-            if (token.hasMoreTokens())
+            if (token.hasMoreTokens()) {
                 target = token.nextToken();
+            }
         }
         return target;
     }
@@ -673,8 +679,9 @@ public class SetCommand extends V2DottedNameSupport implements AdminCommand, Pos
             int dotIdx = tName.indexOf('.');
             String firstElementOfName = dotIdx != -1 ? tName.substring(0, dotIdx) : tName;
             Integer targetElementLocation = targetLevel.get(firstElementOfName);
-            if (targetElementLocation == null)
+            if (targetElementLocation == null) {
                 targetElementLocation = 1;
+            }
             if (targetElementLocation == 0) {
                 if ("resources".equals(firstElementOfName)) {
                     replicationInstances = targetService.getAllInstances();
@@ -704,8 +711,9 @@ public class SetCommand extends V2DottedNameSupport implements AdminCommand, Pos
             params.set("DEFAULT", targetName + "=" + value);
             ActionReport.ExitCode ret = ClusterOperationUtil.replicateCommand("set", FailurePolicy.Error,
                     FailurePolicy.Warn, FailurePolicy.Ignore, replicationInstances, context, params, habitat);
-            if (ret.equals(ActionReport.ExitCode.FAILURE))
+            if (ret.equals(ActionReport.ExitCode.FAILURE)) {
                 return false;
+            }
         }
         return true;
     }
@@ -754,8 +762,9 @@ public class SetCommand extends V2DottedNameSupport implements AdminCommand, Pos
                              Exception ex) {
         context.getActionReport().setActionExitCode(
                 ActionReport.ExitCode.FAILURE);
-        if (ex != null)
+        if (ex != null) {
             context.getActionReport().setFailureCause(ex);
+        }
         context.getActionReport().setMessage(msg);
     }
 

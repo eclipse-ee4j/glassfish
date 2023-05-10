@@ -115,6 +115,33 @@
         </resources>
         <plugins>
             <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-test-hk2-config</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                        <configuration>
+                            <annotationProcessorPaths>
+                                <path>
+                                    <groupId>org.glassfish.main</groupId>
+                                    <artifactId>hk2-config-generator</artifactId>
+                                    <version>${project.version}</version>
+                                </path>
+                            </annotationProcessorPaths>
+                            <annotationProcessors>
+                                <annotationProcessor>org.jvnet.hk2.config.generator.ConfigInjectorGenerator</annotationProcessor>
+                            </annotationProcessors>
+                            <proc>only</proc>
+                            <generatedTestSourcesDirectory>${project.build.directory}/generated-test-sources/hk2-config-generator</generatedTestSourcesDirectory>
+                            <createMissingPackageInfoClass>false</createMissingPackageInfoClass>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <enableAssertions>false</enableAssertions>

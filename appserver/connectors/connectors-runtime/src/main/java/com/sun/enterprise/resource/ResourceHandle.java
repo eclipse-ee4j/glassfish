@@ -17,14 +17,6 @@
 
 package com.sun.enterprise.resource;
 
-import static java.util.logging.Level.FINEST;
-
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Logger;
-
-import javax.security.auth.Subject;
-import javax.transaction.xa.XAResource;
-
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.resource.allocator.LocalTxConnectorAllocator;
@@ -33,30 +25,42 @@ import com.sun.enterprise.transaction.spi.TransactionalResource;
 import com.sun.logging.LogDomains;
 
 import jakarta.resource.spi.ConnectionEventListener;
+import jakarta.resource.spi.DissociatableManagedConnection;
+import jakarta.resource.spi.LazyEnlistableManagedConnection;
 import jakarta.transaction.Transaction;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
+import javax.transaction.xa.XAResource;
+
+import static java.util.logging.Level.FINEST;
+
 /**
- * ResourceHandle encapsulates a resource connection. Equality on the handle is based on the id field
+ * ResourceHandle encapsulates a resource connection.
+ *
+ * <p>Equality on the handle is based on the id field.
  *
  * @author Tony Ng
  */
 public class ResourceHandle implements com.sun.appserv.connectors.internal.api.ResourceHandle, TransactionalResource {
 
-    private static Logger logger = LogDomains.getLogger(ResourceHandle.class, LogDomains.RSR_LOGGER);
+    private static final Logger logger = LogDomains.getLogger(ResourceHandle.class, LogDomains.RSR_LOGGER);
 
     // unique ID for resource handles
     static private long idSequence;
 
-    private long id;
-    private ClientSecurityInfo info;
-    private Object resource; // represents MC
+    private final long id;
+    private final ClientSecurityInfo info;
+    private final Object resource; // represents MC
     private ResourceSpec spec;
-    private XAResource xares;
+    private XAResource xaRes;
     private Object userConnection; // represents connection-handle to user
-    private ResourceAllocator resourceAllocator;
+    private final ResourceAllocator resourceAllocator;
     private Object instance; // the component instance holding this resource
     private int shareCount; // sharing within a component (XA only)
-    private boolean supportsXAResource;
+    private final boolean supportsXAResource;
 
     private final AtomicBoolean busy = new AtomicBoolean(false);
 
@@ -99,11 +103,11 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
             supportsXAResource = true;
         }
 
-        if (resource instanceof jakarta.resource.spi.LazyEnlistableManagedConnection) {
+        if (resource instanceof LazyEnlistableManagedConnection) {
             supportsLazyEnlistment_ = true;
         }
 
-        if (resource instanceof jakarta.resource.spi.DissociatableManagedConnection) {
+        if (resource instanceof DissociatableManagedConnection) {
             supportsLazyAssoc_ = true;
         }
     }
@@ -117,8 +121,9 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
     }
 
     /**
-     * To check whether lazy enlistment is suspended or not.<br>
-     * If true, TM will not do enlist/lazy enlist.
+     * To check whether lazy enlistment is suspended or not.
+     *
+     * <p>If {@code true}, TM will not do enlist/lazy enlist.
      *
      * @return boolean
      */
@@ -137,7 +142,7 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
     }
 
     /**
-     * To check if the resourceHandle is marked for leak reclaim or not. <br>
+     * To check if the resourceHandle is marked for leak reclaim or not.
      *
      * @return boolean
      */
@@ -172,7 +177,7 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
 
     @Override
     public XAResource getXAResource() {
-        return xares;
+        return xaRes;
     }
 
     public Object getUserConnection() {
@@ -209,15 +214,14 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
                 // all XA interactions - Don't wrap XAResourceWrapper if it is
                 // already wrapped
                 if ((xaRes instanceof XAResourceWrapper) || (xaRes instanceof ConnectorXAResource)) {
-                    this.xares = xaRes;
+                    this.xaRes = xaRes;
                 } else {
-                    this.xares = new XAResourceWrapper(xaRes);
+                    this.xaRes = new XAResourceWrapper(xaRes);
                 }
             } else {
-                this.xares = xaRes;
+                this.xaRes = xaRes;
             }
         }
-
     }
 
     // For XA-capable connections, multiple connections within a

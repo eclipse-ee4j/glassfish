@@ -714,11 +714,14 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
     // utility method to get web security anager.
     // will log warning if the manager is not found in the factory, and
     // logNull is true.
+    // Note: webSecurityManagerFactory can be null the very questionable SOAP code just
+    // instantiates a RealmAdapter
     public WebSecurityManager getWebSecurityManager(boolean logNull) {
-        if (webSecurityManager == null) {
+        if (webSecurityManager == null && webSecurityManagerFactory != null) {
             synchronized (this) {
                 webSecurityManager = webSecurityManagerFactory.getManager(contextId);
             }
+
             if (webSecurityManager == null && logNull) {
                 _logger.log(WARNING, "realmAdapter.noWebSecMgr", contextId);
             }

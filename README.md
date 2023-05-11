@@ -9,6 +9,16 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
+## April 27, 2023 -- Eclipse GlassFish 7.0.4 Available
+
+We are pleased to announce the release today of Eclipse GlassFish 7.0.4.
+
+The main features of this release are important bug fixes for things like a class loader leak, and again several fixes in the admin console such as the ability to upload a war file. 
+
+A new feature for ScatteredArchive has been added to GlassFsih Embedded.
+
+Download links are available from the [GlassFish Download page](download.md).
+
 ## March 30, 2023 -- Eclipse GlassFish 7.0.3 Available
 
 We are pleased to announce the release today of Eclipse GlassFish 7.0.3. 

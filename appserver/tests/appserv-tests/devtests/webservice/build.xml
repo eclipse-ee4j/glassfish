@@ -29,20 +29,26 @@
     &commonBuild;
     &reporting;
 
-    <target name="all">
+    <target name="all" xmlns:if="ant:if" xmlns:unless="ant:unless">
+    	<echo message="@@## Running webservice developer tests ##@@" />
+        <echo unless:set="env.webservice" message="@@## Set environment variable 'webservice' to name of single test dir to run only that one. ##@@${line.separator}" />
+        <echo if:set="env.webservice" message="@@## environment variable 'webservice' set. Running only ${env.webservice}  ##@@${line.separator}" />
+    	
         <delete file="${env.APS_HOME}/test_results.html"/>
         <delete file="${env.APS_HOME}/test_resultsValid.xml"/>
         <delete file="${env.APS_HOME}/test_results.xml"/>
         <delete dir="${env.APS_HOME}/build/module"/>
-        <record name="webservice.output" action="start" />
-        <delete dir="${env.APS_HOME}/build/module"/>
-        <ant dir="filter_urlhandling" target="all"/>
-        <!--ant dir="security" target="all"/-->
-        <ant dir="annotations" target="all"/>
-        <ant dir="ejb_annotations" target="all"/>
-        <ant dir="gf_dd/endpoint_address_uri" target="all"/>
-        <record name="webservice.output" action="stop" />
-        <antcall target="report"/>
+        
+    	<record name="webservice.output" action="start" />
+        
+    	<run-webservice-test path="filter_urlhandling"/>
+    	<run-webservice-test path="annotations"/>
+    	<run-webservice-test path="ejb_annotations"/>
+        <run-webservice-test path="gf_dd/endpoint_address_uri"/>
+        
+    	<record name="webservice.output" action="stop" />
+        
+    	<antcall target="report"/>
         <antcall target="dev-report"/>
     </target>
 
@@ -66,5 +72,32 @@
                         ant xsdany (Executes the xsdany tests)
         </echo>
     </target>
+	
+	<macrodef name="run-webservice-test" xmlns:if="ant:if" xmlns:unless="ant:unless">
+	        <attribute name="path" />
+	        <sequential>
+	            <local name="do-run-test" />
+	            <condition property="do-run-test" else="false">
+	                <or>
+	                    <equals arg1="${env.webservice}" arg2="@{path}" />
+	                    <not>
+	                        <isset property="env.webservice" />
+	                    </not>
+	                </or>
+	            </condition>
+
+	            <sequential if:true="${do-run-test}">
+	                <local name="absolute.path" />
+	                <property name="absolute.path" location="@{path}" />
+	                <echo message="${line.separator}" />
+	                <echo message=" *************************" />
+	                <echo message=" * Running @{path} " />
+	                <echo message=" * Path: ${absolute.path} " />
+	                <echo message=" *************************" />
+	                <echo message="${line.separator}" />
+	                <ant dir="@{path}" target="all" />
+	            </sequential>
+	        </sequential>
+	    </macrodef>
 
 </project>

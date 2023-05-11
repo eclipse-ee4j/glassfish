@@ -21,44 +21,78 @@
 ]>
 
 <project name="webservice ejb annotations" default="all" basedir=".">
-    <target name="all">
-        <ant dir="noname" target="all"/>
-        <ant dir="nointf" target="all"/>
-        <ant dir="security" target="all"/>
-        <ant dir="provider" target="all" />
-        <ant dir="oneway" target="all"/>
-        <ant dir="wsctxtinterceptor" target="all"/>
-        <ant dir="ejbclient" target="all"/>
-        <ant dir="msgctxt" target="all"/>
-        <ant dir="asyncejbclient" target="all"/>
-        <ant dir="serviceejbclient" target="all"/>
-        <ant dir="portejbclient" target="all"/>
-        <ant dir="localremoteejbwebservice" target="all"/>
-        <ant dir="libdependent" target="all"/>
-        <ant dir="messagectxt" target="all"/>
-        <ant dir="singleton" target="all"/>
-        <ant dir="msgctxinterceptor" target="all"/>
-        <ant dir="ejbwebservicesinwar" target="all"/>
-        <ant dir="ejbwebservicesinwar-2" target="all"/>
-        <ant dir="ejbwebservicesinwar-3" target="all"/>
-        <ant dir="ejbwebservicesinwar-sessioncontext" target="all"/>
-        <ant dir="ejbwebservicesinwar-interceptor" target="all"/>
-        <ant dir="ejbservletwebservicesinwar" target="all"/>
-        <ant dir="async" target="all"/>
-        <ant dir="bigint" target="all"/>
-        <ant dir="libdependent" target="all"/>
-        <ant dir="libdependent-2" target="all"/>
-        <ant dir="svchandler" target="all"/>
-        <ant dir="wsctxt" target="all"/>
-        <ant dir="sessionctx" target="all"/>
-        <ant dir="wsnameejbname" target="all"/>
-        <ant dir="dependencynoinjection" target="all"/>
-        <ant dir="exception" target="all"/>
-        <ant dir="methodinjection" target="all"/>
-        <ant dir="invalidmethodinjection" target="all"/>
-        <ant dir="portdependencynoinjection" target="all"/>
-        <ant dir="portfieldinjection" target="all"/>
-        <ant dir="portmethodinjection" target="all"/>
-        <ant dir="wsRef-webservice-features" target="all"/>
+    <target name="all" xmlns:if="ant:if" xmlns:unless="ant:unless">
+    	<property environment="env" />
+
+        <echo message="@@## Running webservice ejb annotations developer tests ##@@" />
+        <echo unless:set="env.ejb_annotations" message="@@## Set environment variable 'ejb_annotations' to name of single test dir to run only that one. ##@@${line.separator}" />
+        <echo if:set="env.ejb_annotations" message="@@## environment variable 'ejb_annotations' set. Running only ${env.ejb_annotations}  ##@@${line.separator}" />
+
+    	
+        <run-ejb_annotations-test path="noname" />
+    	<run-ejb_annotations-test path="nointf" />
+    	<run-ejb_annotations-test path="security" />
+        <run-ejb_annotations-test path="provider"  />
+        <run-ejb_annotations-test path="oneway" />
+        <run-ejb_annotations-test path="wsctxtinterceptor" />
+        <run-ejb_annotations-test path="ejbclient" />
+        <run-ejb_annotations-test path="msgctxt" />
+        <run-ejb_annotations-test path="asyncejbclient" />
+        <run-ejb_annotations-test path="serviceejbclient" />
+        <run-ejb_annotations-test path="portejbclient" />
+        <run-ejb_annotations-test path="localremoteejbwebservice" />
+        <run-ejb_annotations-test path="libdependent" />
+        <run-ejb_annotations-test path="messagectxt" />
+        <run-ejb_annotations-test path="singleton" />
+        <run-ejb_annotations-test path="msgctxinterceptor" />
+        <run-ejb_annotations-test path="ejbwebservicesinwar" />
+        <run-ejb_annotations-test path="ejbwebservicesinwar-2" />
+        <run-ejb_annotations-test path="ejbwebservicesinwar-3" />
+        <run-ejb_annotations-test path="ejbwebservicesinwar-sessioncontext" />
+        <run-ejb_annotations-test path="ejbwebservicesinwar-interceptor" />
+        <run-ejb_annotations-test path="ejbservletwebservicesinwar" />
+        <run-ejb_annotations-test path="async" />
+        <run-ejb_annotations-test path="bigint" />
+        <run-ejb_annotations-test path="libdependent" />
+        <run-ejb_annotations-test path="libdependent-2" />
+        <run-ejb_annotations-test path="svchandler" />
+        <run-ejb_annotations-test path="wsctxt" />
+        <run-ejb_annotations-test path="sessionctx" />
+        <run-ejb_annotations-test path="wsnameejbname" />
+        <run-ejb_annotations-test path="dependencynoinjection" />
+        <run-ejb_annotations-test path="exception" />
+        <run-ejb_annotations-test path="methodinjection" />
+        <run-ejb_annotations-test path="invalidmethodinjection" />
+        <run-ejb_annotations-test path="portdependencynoinjection" />
+        <run-ejb_annotations-test path="portfieldinjection" />
+        <run-ejb_annotations-test path="portmethodinjection" />
+        <run-ejb_annotations-test path="wsRef-webservice-features" />
     </target>
+	
+	<macrodef name="run-ejb_annotations-test" xmlns:if="ant:if" xmlns:unless="ant:unless">
+        <attribute name="path" />
+        <sequential>
+            <local name="do-run-test" />
+            <condition property="do-run-test" else="false">
+                <or>
+                    <equals arg1="${env.ejb_annotations}" arg2="@{path}" />
+                    <not>
+                        <isset property="env.ejb_annotations" />
+                    </not>
+                </or>
+            </condition>
+
+            <sequential if:true="${do-run-test}">
+                <local name="absolute.path" />
+                <property name="absolute.path" location="@{path}" />
+                <echo message="${line.separator}" />
+                <echo message=" *************************" />
+                <echo message=" * Running @{path} " />
+                <echo message=" * Path: ${absolute.path} " />
+                <echo message=" *************************" />
+                <echo message="${line.separator}" />
+                <ant dir="@{path}" target="all" />
+            </sequential>
+        </sequential>
+    </macrodef>
 </project>

@@ -138,7 +138,7 @@ public class GenericPrincipal implements Principal {
      */
     public boolean hasRole(String role) {
         if ("*".equals(role)) { // Special 2.4 role meaning everyone
-        	return true;
+            return true;
         }
 
         if (role == null) {

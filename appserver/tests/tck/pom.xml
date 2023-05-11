@@ -43,6 +43,7 @@
         <module>faces</module>
         <module>pages</module>
         <module>pages_tags</module>
+        <module>servlet</module>
         <module>authentication</module>
         <module>authorization</module>
         <module>cdi</module>

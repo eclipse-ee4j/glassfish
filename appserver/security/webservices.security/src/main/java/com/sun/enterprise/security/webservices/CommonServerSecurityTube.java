@@ -43,7 +43,7 @@ import com.sun.xml.ws.api.pipe.helper.AbstractFilterTubeImpl;
 
 
 /**
- * This pipe is used to do 196 security
+ * This pipe is used to do Jakarta Authentication security
  */
 public class CommonServerSecurityTube extends AbstractFilterTubeImpl {
 
@@ -79,6 +79,7 @@ public class CommonServerSecurityTube extends AbstractFilterTubeImpl {
     /**
      * This method is called once in server side and at most one in client side.
      */
+    @Override
     public void preDestroy() {
         helper.disable();
         /**
@@ -158,6 +159,7 @@ public class CommonServerSecurityTube extends AbstractFilterTubeImpl {
                             final Tube next = super.next;
                             NextAction action = (NextAction) Subject.doAsPrivileged(clientSubject, new PrivilegedExceptionAction() {
 
+                                @Override
                                 public Object run() throws Exception {
                                     // proceed to invoke the endpoint
                                     return doInvoke(next, validatedRequest);

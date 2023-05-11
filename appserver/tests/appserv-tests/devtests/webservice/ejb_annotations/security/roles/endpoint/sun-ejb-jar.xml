@@ -19,19 +19,20 @@
 -->
 
 <sun-ejb-jar>
-  <security-role-mapping>
-    <role-name>webservicetester</role-name>
-    <principal-name>webservicetester</principal-name>
-  </security-role-mapping>
-  <enterprise-beans>
-    <ejb>
-      <ejb-name>HelloImpl</ejb-name>
-      <webservice-endpoint>
-        <port-component-name>HelloImpl</port-component-name>
-        <login-config>
-          <auth-method>BASIC</auth-method>
-        </login-config>
-      </webservice-endpoint>
-    </ejb>
-   </enterprise-beans>
+    <security-role-mapping>
+        <role-name>webservicetester</role-name>
+        <principal-name>webservicetester</principal-name>
+    </security-role-mapping>
+    
+    <enterprise-beans>
+        <ejb>
+            <ejb-name>HelloImpl</ejb-name>
+            <webservice-endpoint>
+                <port-component-name>HelloImpl</port-component-name>
+                <login-config>
+                    <auth-method>BASIC</auth-method>
+                </login-config>
+            </webservice-endpoint>
+        </ejb>
+    </enterprise-beans>
 </sun-ejb-jar>

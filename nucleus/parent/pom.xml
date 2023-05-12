@@ -105,12 +105,12 @@
         <jersey.version>3.1.1</jersey.version>
 
         <!-- Jakarta Mail -->
-        <jakarta.mail-api.version>2.1.1</jakarta.mail-api.version>
-        <angus.mail.version>2.0.1</angus.mail.version>
+        <jakarta.mail-api.version>2.1.2</jakarta.mail-api.version>
+        <angus.mail.version>2.0.2</angus.mail.version>
 
         <!-- Jakarta Activation -->
-        <activation.version>2.1.1</activation.version>
-        <angus.activation.version>2.0.0</angus.activation.version>
+        <activation.version>2.1.2</activation.version>
+        <angus.activation.version>2.0.1</angus.activation.version>
 
         <!-- Jakarta Annotations -->
         <jakarta.annotation-api.version>2.1.1</jakarta.annotation-api.version>

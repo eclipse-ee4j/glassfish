@@ -63,22 +63,23 @@ public class WebServicesDelegateImpl implements WebServicesDelegate {
     private static final String DEFAULT_WEBSERVICES_PROVIDER = "com.sun.xml.wss.provider.wsit.WSITAuthConfigProvider";
 
     @Override
-    public MessageSecurityBindingDescriptor getBinding(ServiceReferenceDescriptor svcRef, Map properties) {
+    public MessageSecurityBindingDescriptor getBinding(ServiceReferenceDescriptor serviceReferenceDescriptor, Map properties) {
         MessageSecurityBindingDescriptor binding = null;
-        WSDLPort p = (WSDLPort) properties.get("WSDL_MODEL");
+        WSDLPort port = (WSDLPort) properties.get("WSDL_MODEL");
         QName portName = null;
-        if (p != null) {
-            portName = p.getName();
+        if (port != null) {
+            portName = port.getName();
         }
+
         if (portName != null) {
-            ServiceRefPortInfo i = svcRef.getPortInfoByPort(portName);
-            if (i != null) {
-                binding = i.getMessageSecurityBinding();
+            ServiceRefPortInfo portInfo = serviceReferenceDescriptor.getPortInfoByPort(portName);
+            if (portInfo != null) {
+                binding = portInfo.getMessageSecurityBinding();
             }
         }
+
         return binding;
     }
-
 
     @Override
     public void removeListener(AuthConfigRegistrationWrapper listener) {
@@ -86,50 +87,44 @@ public class WebServicesDelegateImpl implements WebServicesDelegate {
         ClientPipeCloser.getInstance().removeListenerWrapper(listener);
     }
 
-
     @Override
     public String getDefaultWebServicesProvider() {
         return DEFAULT_WEBSERVICES_PROVIDER;
     }
 
-
     @Override
     public String getAuthContextID(MessageInfo messageInfo) {
-        // make this more efficient by operating on packet
-        String rvalue = null;
-        if (messageInfo instanceof PacketMessageInfo) {
-            PacketMessageInfo pmi = (PacketMessageInfo) messageInfo;
-            Packet p = pmi.getRequestPacket();
-            if (p != null) {
-                Message m = p.getMessage();
-                if (m != null) {
-                    WSDLPort port = (WSDLPort) messageInfo.getMap().get("WSDL_MODEL");
-                    if (port != null) {
-                        WSDLBoundOperation w = m.getOperation(port);
-                        if (w != null) {
-                            QName n = w.getName();
-                            if (n != null) {
-                                rvalue = n.getLocalPart();
-                            }
+        if (!(messageInfo instanceof PacketMessageInfo)) {
+            return getOpName((SOAPMessage) messageInfo.getRequestMessage());
+        }
+
+        // Make this more efficient by operating on packet
+        String authContextID = null;
+        PacketMessageInfo pmi = (PacketMessageInfo) messageInfo;
+
+        Packet requestPacket = pmi.getRequestPacket();
+        if (requestPacket != null) {
+            Message message = requestPacket.getMessage();
+            if (message != null) {
+                WSDLPort port = (WSDLPort) messageInfo.getMap().get("WSDL_MODEL");
+                if (port != null) {
+                    WSDLBoundOperation boundOperation = message.getOperation(port);
+                    if (boundOperation != null) {
+                        QName name = boundOperation.getName();
+                        if (name != null) {
+                            authContextID = name.getLocalPart();
                         }
                     }
                 }
             }
-            return rvalue;
-        } else {
-            // make this more efficient by operating on packet
-            return getOpName((SOAPMessage) messageInfo.getRequestMessage());
         }
 
+        return authContextID;
     }
-
 
     @Override
     public AuthParam newSOAPAuthParam(MessageInfo messageInfo) {
-        return new SOAPAuthParam(
-            (SOAPMessage) messageInfo.getRequestMessage(),
-            (SOAPMessage) messageInfo.getResponseMessage()
-        );
+        return new SOAPAuthParam((SOAPMessage) messageInfo.getRequestMessage(), (SOAPMessage) messageInfo.getResponseMessage());
     }
 
     private String getOpName(SOAPMessage message) {
@@ -137,37 +132,37 @@ public class WebServicesDelegateImpl implements WebServicesDelegate {
             return null;
         }
 
-        String rvalue = null;
+        String opName = null;
 
-        // first look for a SOAPAction header.
+        // First look for a SOAPAction header.
         // this is what .net uses to identify the operation
 
         MimeHeaders headers = message.getMimeHeaders();
         if (headers != null) {
             String[] actions = headers.getHeader("SOAPAction");
             if (actions != null && actions.length > 0) {
-                rvalue = actions[0];
-                if (rvalue != null && rvalue.equals("\"\"")) {
-                    rvalue = null;
+                opName = actions[0];
+                if (opName != null && opName.equals("\"\"")) {
+                    opName = null;
                 }
             }
         }
 
-        // if that doesn't work then we default to trying the name
+        // If that doesn't work then we default to trying the name
         // of the first child element of the SOAP envelope.
 
-        if (rvalue == null) {
+        if (opName == null) {
             Name name = getName(message);
             if (name != null) {
-                rvalue = name.getLocalName();
+                opName = name.getLocalName();
             }
         }
 
-        return rvalue;
+        return opName;
     }
 
     private Name getName(SOAPMessage message) {
-        Name rvalue = null;
+        Name name = null;
         SOAPPart soap = message.getSOAPPart();
         if (soap != null) {
             try {
@@ -179,40 +174,22 @@ public class WebServicesDelegateImpl implements WebServicesDelegate {
                         while (it.hasNext()) {
                             Object o = it.next();
                             if (o instanceof SOAPElement) {
-                                rvalue = ((SOAPElement) o).getElementName();
+                                name = ((SOAPElement) o).getElementName();
                                 break;
                             }
                         }
                     }
                 }
             } catch (SOAPException se) {
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "WSS: Unable to get SOAP envelope",
-                            se);
-                }
+                _logger.log(Level.FINE, "WSS: Unable to get SOAP envelope", se);
             }
         }
-        return rvalue;
+
+        return name;
     }
 
     @Override
     public Object getSOAPMessage(ComponentInvocation inv) {
-        /*V3 commented getting this from EJBPolicyContextDelegate instead
-         * currently getting this from EjbPolicyContextDelegate which might be OK
-        SOAPMessage soapMessage = null;
-        MessageContext msgContext = inv.messageContext;
-
-            if (msgContext != null) {
-                if (msgContext instanceof SOAPMessageContext) {
-            SOAPMessageContext smc =
-                            (SOAPMessageContext) msgContext;
-            soapMessage = smc.getMessage();
-                }
-        } else {
-                soapMessage = inv.getSOAPMessage();
-            }
-
-        return soapMessage;*/
         return null;
     }
 

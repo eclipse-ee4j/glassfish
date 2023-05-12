@@ -17,132 +17,119 @@
 
 package org.apache.catalina.realm;
 
-
-import org.apache.catalina.Realm;
-
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.catalina.Realm;
 
 /**
- * Generic implementation of <strong>java.security.Principal</strong> that
- * is available for use by <code>Realm</code> implementations.
+ * Generic implementation of <strong>java.security.Principal</strong> that is available for use by <code>Realm</code>
+ * implementations.
  *
  * @author Craig R. McClanahan
  * @version $Revision: 1.2 $ $Date: 2005/12/08 01:27:52 $
  */
-
 public class GenericPrincipal implements Principal {
-
-
-    // ----------------------------------------------------------- Constructors
-
-
-    /**
-     * Construct a new Principal, associated with the specified Realm, for the
-     * specified username and password.
-     *
-     * @param realm The Realm that owns this Principal
-     * @param name The username of the user represented by this Principal
-     * @param password Credentials used to authenticate this user
-     */
-    public GenericPrincipal(Realm realm, String name, char[] password) {
-
-        this(realm, name, password, null);
-
-    }
-
-
-    /**
-     * Construct a new Principal, associated with the specified Realm, for the
-     * specified username and password, with the specified role names
-     * (as Strings).
-     *
-     * @param realm The Realm that owns this principal
-     * @param name The username of the user represented by this Principal
-     * @param password Credentials used to authenticate this user
-     * @param roles List of roles (must be Strings) possessed by this user
-     */
-    public GenericPrincipal(Realm realm, String name, char[] password,
-                            List<String> roles) {
-
-        super();
-        this.realm = realm;
-        this.name = name;
-        this.password = ((password != null)? ((char[])password.clone()) : null);
-        if (roles != null) {
-            this.roles = new String[roles.size()];
-            this.roles = roles.toArray(this.roles);
-            if (this.roles.length > 0)
-                Arrays.sort(this.roles);
-        }
-    }
-
-    public GenericPrincipal(String name, char[] password,
-                            List<String> roles) {
-
-        super();
-        this.name = name;
-        this.password = ((password != null)? ((char[])password.clone()) : null);
-        if (roles != null) {
-            this.roles = new String[roles.size()];
-            this.roles = roles.toArray(this.roles);
-            if (this.roles.length > 0)
-                Arrays.sort(this.roles);
-        }
-    }
-
-    // ------------------------------------------------------------- Properties
-
 
     /**
      * The username of the user represented by this Principal.
      */
-    protected String name = null;
-
-    public String getName() {
-        return (this.name);
-    }
-
-
-    /**
-     * The authentication credentials for the user represented by
-     * this Principal.
-     */
-    protected char[] password = null;
-
-    public char[] getPassword() {
-        return ((this.password != null)? ((char[])this.password.clone()) : null);
-    }
-
+    protected String name;
 
     /**
      * The Realm with which this Principal is associated.
      */
-    protected Realm realm = null;
+    protected Realm realm;
 
-    public Realm getRealm() {
-        return (this.realm);
-    }
-
-    void setRealm( Realm realm ) {
-        this.realm=realm;
-    }
-
+    /**
+     * The authentication credentials for the user represented by this Principal.
+     */
+    protected char[] password;
 
     /**
      * The set of roles associated with this user.
      */
     protected String roles[] = new String[0];
 
-    public String[] getRoles() {
-        return (this.roles);
+
+
+    // ----------------------------------------------------------- Constructors
+
+    /**
+     * Construct a new Principal, associated with the specified Realm, for the specified username and password.
+     *
+     * @param realm The Realm that owns this Principal
+     * @param name The username of the user represented by this Principal
+     * @param password Credentials used to authenticate this user
+     */
+    public GenericPrincipal(Realm realm, String name, char[] password) {
+        this(realm, name, password, null);
     }
 
+    /**
+     * Construct a new Principal, associated with the specified Realm, for the specified username and password, with the
+     * specified role names (as Strings).
+     *
+     * @param realm The Realm that owns this principal
+     * @param name The username of the user represented by this Principal
+     * @param password Credentials used to authenticate this user
+     * @param roles List of roles (must be Strings) possessed by this user
+     */
+    public GenericPrincipal(Realm realm, String name, char[] password, List<String> roles) {
+        super();
+
+        this.realm = realm;
+        this.name = name;
+        this.password = ((password != null) ? ((char[]) password.clone()) : null);
+        if (roles != null) {
+            this.roles = new String[roles.size()];
+            this.roles = roles.toArray(this.roles);
+            if (this.roles.length > 0) {
+                Arrays.sort(this.roles);
+            }
+        }
+    }
+
+    public GenericPrincipal(String name, char[] password, List<String> roles) {
+        super();
+
+        this.name = name;
+        this.password = ((password != null) ? ((char[]) password.clone()) : null);
+        if (roles != null) {
+            this.roles = new String[roles.size()];
+            this.roles = roles.toArray(this.roles);
+            if (this.roles.length > 0) {
+                Arrays.sort(this.roles);
+            }
+        }
+    }
+
+    // ------------------------------------------------------------- Properties
+
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    public char[] getPassword() {
+        return (this.password != null) ? ((char[]) this.password.clone()) : null;
+    }
+
+    public Realm getRealm() {
+        return realm;
+    }
+
+    void setRealm(Realm realm) {
+        this.realm = realm;
+    }
+
+    public String[] getRoles() {
+        return roles;
+    }
 
     // --------------------------------------------------------- Public Methods
-
 
     /**
      * Does the user represented by this Principal possess the specified role?
@@ -150,32 +137,31 @@ public class GenericPrincipal implements Principal {
      * @param role Role to be tested
      */
     public boolean hasRole(String role) {
-
-        if("*".equals(role)) // Special 2.4 role meaning everyone
+        if ("*".equals(role)) { // Special 2.4 role meaning everyone
             return true;
-        if (role == null)
-            return (false);
-        return (Arrays.binarySearch(roles, role) >= 0);
+        }
 
+        if (role == null) {
+            return false;
+        }
+
+        return Arrays.binarySearch(roles, role) >= 0;
     }
 
-
     /**
-     * Return a String representation of this object, which exposes only
-     * information that should be public.
+     * Return a String representation of this object, which exposes only information that should be public.
      */
+    @Override
     public String toString() {
-
         StringBuilder sb = new StringBuilder("GenericPrincipal[");
         sb.append(this.name);
         sb.append("(");
-        for( int i=0;i<roles.length; i++ ) {
-            sb.append( roles[i]).append(",");
+        for (String role : roles) {
+            sb.append(role).append(",");
         }
         sb.append(")]");
-        return (sb.toString());
 
+        return sb.toString();
     }
-
 
 }

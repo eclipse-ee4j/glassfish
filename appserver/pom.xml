@@ -124,9 +124,9 @@
         <jakarta.ejb-api.version>4.0.1</jakarta.ejb-api.version>
 
         <!-- Jakarta JSON -->
-        <jakarta.jsonp-api.version>2.1.1</jakarta.jsonp-api.version>
-        <parsson.version>1.1.1</parsson.version>
-        <parsson-media.version>1.1.1</parsson-media.version>
+        <jakarta.jsonp-api.version>2.1.2</jakarta.jsonp-api.version>
+        <parsson.version>1.1.2</parsson.version>
+        <parsson-media.version>1.1.2</parsson-media.version>
         <jakarta.json.bind-api.version>3.0.0</jakarta.json.bind-api.version>
         <yasson.version>3.0.3</yasson.version>
 

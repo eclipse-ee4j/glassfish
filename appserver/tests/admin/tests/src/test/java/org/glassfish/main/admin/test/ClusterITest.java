@@ -42,8 +42,10 @@ import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.startsWith;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -151,6 +153,21 @@ public class ClusterITest {
     }
 
     @Test
+    @Order(11)
+    public void collectLogFilesFromInstanceTest() {
+        Assumptions.assumeTrue(INSTANCES_REACHABLE.get());
+
+        AsadminResult result = ASADMIN.exec("collect-log-files", "--target", INSTANCE_NAME_1);
+        assertAll(
+            () -> assertThat(result, not(asadminOK())),
+            () -> assertThat(result.getStdOut(), containsString("Command collect-log-files failed")),
+            () -> assertThat(result.getStdErr(), containsString(
+                    "The collect-log-files command is not allowed on target " + INSTANCE_NAME_1
+                    + " because it is part of cluster " + CLUSTER_NAME))
+        );
+    }
+
+    @Test
     @Order(20)
     public void stopInstancesTest() {
         Assumptions.assumeTrue(INSTANCES_REACHABLE.get());
@@ -186,7 +203,7 @@ public class ClusterITest {
         URLConnection urlc = openConnection(urlstr);
         try (
             BufferedReader ir = new BufferedReader(new InputStreamReader(urlc.getInputStream(), ISO_8859_1));
-            StringWriter ow = new StringWriter();
+            StringWriter ow = new StringWriter()
         ) {
             String line;
             while ((line = ir.readLine()) != null) {

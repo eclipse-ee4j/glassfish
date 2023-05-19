@@ -395,7 +395,7 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
     }
 
     default boolean isVirtual() {
-        return getExtensionsByType(VirtualMachineExtension.class).isEmpty();
+        return !getExtensionsByType(VirtualMachineExtension.class).isEmpty();
     }
 
     default ApplicationRef getApplicationRef(String appName) {

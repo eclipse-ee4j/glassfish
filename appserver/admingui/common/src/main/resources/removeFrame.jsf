@@ -16,12 +16,12 @@
 
 -->
 <!initPage
-    setResourceBundle(key="i18n" bundle="org.glassfish.admingui.core.Strings");
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings");
 />
 <f:verbatim>
 <html>
 <head>
-    <script type="text/javascript" src="#{request.contextPath}$resource{i18n.adminjsf.URL}" ></script>
+    <script type="text/javascript" src="#{request.contextPath}$resource{i18nc.adminjsf.url}" ></script>
     <script type="text/javascript">
 	function redirectToQS() {
 	    var loc = window.location.href;

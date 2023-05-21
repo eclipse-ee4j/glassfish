@@ -16,24 +16,13 @@
 
 package com.sun.enterprise.v3.server;
 
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.config.serverbeans.ApplicationRef;
-import com.sun.enterprise.config.serverbeans.Applications;
-import com.sun.enterprise.config.serverbeans.Cluster;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.config.serverbeans.ServerTags;
-import com.sun.enterprise.module.bootstrap.StartupContext;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.v3.common.HTMLActionReporter;
 import java.beans.PropertyChangeEvent;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.deployment.UndeployCommandParameters;
@@ -48,6 +37,20 @@ import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.TransactionListener;
 import org.jvnet.hk2.config.Transactions;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
+
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.ApplicationRef;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.ServerTags;
+import com.sun.enterprise.module.bootstrap.StartupContext;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.v3.common.HTMLActionReporter;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 @Service
 @RunLevel(PostStartupRunLevel.VAL)
@@ -80,6 +83,7 @@ public class ApplicationConfigListener implements TransactionListener, PostConst
 
     private final static String UPGRADE_PARAM = "-upgrade";
 
+    @Override
     public void transactionCommited( final List<PropertyChangeEvent> changes) {
         boolean isUpdatingAttribute = true;
         for (PropertyChangeEvent event : changes) {
@@ -122,7 +126,7 @@ public class ApplicationConfigListener implements TransactionListener, PostConst
                 if (oldValue != null && newValue != null &&
                     oldValue instanceof String &&
                     newValue instanceof String &&
-                    !((String)oldValue).equals((String)newValue)) {
+                    !((String)oldValue).equals(newValue)) {
                     // if it's an attribute change of the application
                     // element or application-ref element
                     Object parent = event.getSource();
@@ -151,10 +155,12 @@ public class ApplicationConfigListener implements TransactionListener, PostConst
         }
     }
 
+    @Override
     public void unprocessedTransactedEvents(
         List<UnprocessedChangeEvents> changes) {
     }
 
+    @Override
     public void postConstruct() {
         Properties arguments = startupContext.getArguments();
         if (arguments != null) {
@@ -225,12 +231,8 @@ public class ApplicationConfigListener implements TransactionListener, PostConst
         ApplicationRef appRef = domain.getApplicationRefInServer(server.getName(), appName);
         // if the application does not exist or application is not referenced
         // by the current server instance, do not load
-        if (app == null || appRef == null) {
-            return;
-        }
-
         // if the application is not in enable state, do not load
-        if (!deployment.isAppEnabled(app)) {
+        if (app == null || appRef == null || !deployment.isAppEnabled(app)) {
             return;
         }
 

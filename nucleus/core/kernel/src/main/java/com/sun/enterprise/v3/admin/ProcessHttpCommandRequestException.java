@@ -19,7 +19,8 @@ package com.sun.enterprise.v3.admin;
 import org.glassfish.api.ActionReport;
 import org.glassfish.grizzly.http.util.HttpStatus;
 
-/** Inform, that HttpCommandExecution has problem. Must change status code.
+/**
+ * Inform, that HttpCommandExecution has problem. Must change status code.
  *
  * @author mmares
  */
@@ -29,9 +30,7 @@ public class ProcessHttpCommandRequestException extends Exception {
     private HttpStatus responseStatus = HttpStatus.OK_200;
 
     /**
-     * Constructs an instance of
-     * <code>InvalidPreconditionException</code> with the specified detail
-     * message.
+     * Constructs an instance of <code>InvalidPreconditionException</code> with the specified detail message.
      *
      * @param report Report with result
      */
@@ -40,9 +39,7 @@ public class ProcessHttpCommandRequestException extends Exception {
     }
 
     /**
-     * Constructs an instance of
-     * <code>InvalidPreconditionException</code> with the specified detail
-     * message.
+     * Constructs an instance of <code>InvalidPreconditionException</code> with the specified detail message.
      *
      * @param responseStatus HttpResponse status code
      */
@@ -51,9 +48,7 @@ public class ProcessHttpCommandRequestException extends Exception {
     }
 
     /**
-     * Constructs an instance of
-     * <code>InvalidPreconditionException</code> with the specified detail
-     * message.
+     * Constructs an instance of <code>InvalidPreconditionException</code> with the specified detail message.
      *
      * @param report Report with result
      * @param responseStatus HttpResponse status code
@@ -73,6 +68,5 @@ public class ProcessHttpCommandRequestException extends Exception {
     public HttpStatus getResponseStatus() {
         return responseStatus;
     }
-
 
 }

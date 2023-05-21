@@ -16,42 +16,40 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.config.serverbeans.Domain;
-import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Inject;
-
-import jakarta.inject.Singleton;
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.I18n;
+import org.glassfish.api.admin.AccessRequired;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.CommandLock;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.I18n;
-import com.sun.enterprise.module.ModulesRegistry;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.jvnet.hk2.annotations.Service;
+
+import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.module.HK2Module;
 import com.sun.enterprise.module.ModuleState;
+import com.sun.enterprise.module.ModulesRegistry;
 
-import java.net.URI;
-import org.glassfish.api.admin.*;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
  * List the modules available to this instance and their status
  */
-@Service(name="list-modules")
-@Singleton        // no per-execution state
+@Service(name = "list-modules")
+@Singleton // no per-execution state
 @CommandLock(CommandLock.LockType.NONE)
 @I18n("list.modules.command")
 @RestEndpoints({
-    @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET,
-        path="list-modules",
-        description="list-modules")
-})
-@AccessRequired(resource="domain", action="dump")
+        @RestEndpoint(configBean = Domain.class, opType = RestEndpoint.OpType.GET, path = "list-modules", description = "list-modules") })
+@AccessRequired(resource = "domain", action = "dump")
 public class ListModulesCommand implements AdminCommand {
 
     @Inject
     ModulesRegistry registry;
 
+    @Override
     public void execute(AdminCommandContext context) {
 
         ActionReport report = context.getActionReport();
@@ -66,21 +64,21 @@ public class ListModulesCommand implements AdminCommand {
         // first started :
 
         for (HK2Module m : registry.getModules()) {
-            if (m.getState()== ModuleState.READY) {
+            if (m.getState() == ModuleState.READY) {
                 sb.append(m).append("\n");
             }
         }
         sb.append("\n");
         // then resolved
         for (HK2Module m : registry.getModules()) {
-            if (m.getState()== ModuleState.RESOLVED) {
+            if (m.getState() == ModuleState.RESOLVED) {
                 sb.append(m).append("\n");
             }
         }
         sb.append("\n");
         // finally installed
         for (HK2Module m : registry.getModules()) {
-            if (m.getState()!= ModuleState.READY && m.getState()!=ModuleState.RESOLVED) {
+            if (m.getState() != ModuleState.READY && m.getState() != ModuleState.RESOLVED) {
                 sb.append(m).append("\n");
             }
         }

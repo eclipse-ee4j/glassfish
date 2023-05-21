@@ -16,59 +16,90 @@
 
 package com.sun.enterprise.v3.admin;
 
-import java.io.*;
 import static com.sun.enterprise.util.StringUtils.ok;
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.JavaConfig;
-import java.util.Properties;
-import org.glassfish.internal.api.Globals;
-import com.sun.enterprise.util.SystemPropertyConstants;
-import com.sun.enterprise.util.OS;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.Param;
-import java.util.logging.Level;
+import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
+
+import java.io.File;
+import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
+import java.lang.management.RuntimeMXBean;
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
-import java.lang.management.RuntimeMXBean;
-import java.lang.management.OperatingSystemMXBean;
-import java.lang.management.ManagementFactory;
-import com.sun.enterprise.module.bootstrap.StartupContext;
+import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.glassfish.api.admin.*;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.AccessRequired;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.CommandLock;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.config.support.*;
+import org.glassfish.config.support.CommandTarget;
+import org.glassfish.config.support.TargetType;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.Service;
+
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.JavaConfig;
+import com.sun.enterprise.module.bootstrap.StartupContext;
+import com.sun.enterprise.util.OS;
+import com.sun.enterprise.util.SystemPropertyConstants;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-import org.glassfish.hk2.api.PerLookup;
-import org.jvnet.hk2.config.types.Property;
-import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
-
 /**
  * https://glassfish.dev.java.net/issues/show_bug.cgi?id=12483
+ *
  * @author Byron Nevins
  * @author Ludovic Champenois
  */
 @Service(name = "_get-runtime-info")
 @PerLookup
 @CommandLock(CommandLock.LockType.NONE)
-@ExecuteOn({RuntimeType.INSTANCE})
-@TargetType({CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTERED_INSTANCE})
+@ExecuteOn({ RuntimeType.INSTANCE })
+@TargetType({ CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTERED_INSTANCE })
 @RestEndpoints({
-    @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET,
-        path="get-runtime-info",
-        description="Get Runtime Info")
-})
-@AccessRequired(resource="domain", action="read")
+    @RestEndpoint(
+        configBean = Domain.class,
+        opType = RestEndpoint.OpType.GET,
+        path = "get-runtime-info",
+        description = "Get Runtime Info") })
+@AccessRequired(resource = "domain", action = "read")
 public class RuntimeInfo implements AdminCommand {
+
+    @Inject
+    ServerEnvironment env;
+
+    @Inject
+    private StartupContext startupContext;
+
+    @Inject
+    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    private Config config;
+
+    @Param(name = "target", optional = true, defaultValue = SystemPropertyConstants.SERVER_NAME)
+    String target;
+
+    private boolean jpdaEnabled;
+    private boolean javaEnabledOnCmd;
+    private JavaConfig javaConfig;
+    private ActionReport report;
+    private ActionReport.MessagePart top;
+    private Logger logger;
+    private StringBuilder reportMessage = new StringBuilder();
+
+    private boolean restartable;
+
     public RuntimeInfo() {
     }
 
@@ -78,13 +109,13 @@ public class RuntimeInfo implements AdminCommand {
         report.setActionExitCode(SUCCESS);
         top = report.getTopMessagePart();
         logger = context.getLogger();
-        javaEnabledOnCmd = Boolean.parseBoolean(ctx.getArguments().getProperty("-debug"));
+        javaEnabledOnCmd = Boolean.parseBoolean(startupContext.getArguments().getProperty("-debug"));
         javaConfig = config.getJavaConfig();
         jpdaEnabled = javaEnabledOnCmd || Boolean.parseBoolean(javaConfig.getDebugEnabled());
         int debugPort = parsePort(javaConfig.getDebugOptions());
         top.addProperty("debug", Boolean.toString(jpdaEnabled));
         top.addProperty("debugPort", Integer.toString(debugPort));
-        final OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+        final OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
 
         top.addProperty("os.arch", osBean.getArch());
         top.addProperty("os.name", osBean.getName());
@@ -93,23 +124,22 @@ public class RuntimeInfo implements AdminCommand {
 
         // getTotalPhysicalMemorySize is from com.sun.management.OperatingSystemMXBean and cannot easily access it via OSGi
         // also if we are not on a sun jdk, we will not return this attribute.
-        if ( !OS.isAix()) {
+        if (!OS.isAix()) {
             try {
                 final Method jm = osBean.getClass().getMethod("getTotalPhysicalMemorySize");
-                AccessController.doPrivileged(
-                        new PrivilegedExceptionAction() {
-                            public Object run() throws Exception {
-                                if (!jm.isAccessible()) {
-                                    jm.setAccessible(true);
-                                }
-                                return null;
-                            }
-                        });
+                AccessController.doPrivileged(new PrivilegedExceptionAction() {
+                    @Override
+                    public Object run() throws Exception {
+                        if (!jm.isAccessible()) {
+                            jm.setAccessible(true);
+                        }
+                        return null;
+                    }
+                });
 
                 top.addProperty("totalPhysicalMemorySize", "" + jm.invoke(osBean));
 
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 logger.log(Level.SEVERE, null, ex);
             }
 
@@ -129,8 +159,7 @@ public class RuntimeInfo implements AdminCommand {
         try {
             Class.forName("com.sun.tracing.ProviderFactory");
             top.addProperty("dtrace", "true");
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             top.addProperty("dtrace", "false");
         }
     }
@@ -139,26 +168,22 @@ public class RuntimeInfo implements AdminCommand {
         try {
             String name = env.getInstanceRoot().getName();
             top.addProperty("domain_name", name);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             // ignore
         }
     }
 
     /**
-     * March 11 2011 -- See JIRA 16197
-     * Say the user started the server with a passwordfile arg.  After they started it
-     * they deleted the password file. If we don't do anything special restart-server
-     * will take down the server -- but it will not startup again.  The user will have no clue why.
-     * We can NOT tell the user directly because the restart server command is asynchronous
-     * (@Async annotation).
-     * So -- this method was added as a pre-flight check.  The client restart commands
-     * should run this command and check the restartable flag to make sure
-     * the restart doesn't fail because of a missing password file.
+     * March 11 2011 -- See JIRA 16197 Say the user started the server with a passwordfile arg. After they started it they
+     * deleted the password file. If we don't do anything special restart-server will take down the server -- but it will
+     * not startup again. The user will have no clue why. We can NOT tell the user directly because the restart server
+     * command is asynchronous (@Async annotation). So -- this method was added as a pre-flight check. The client restart
+     * commands should run this command and check the restartable flag to make sure the restart doesn't fail because of a
+     * missing password file.
      */
     private void setRestartable() {
-        // false positive is MUCH better than false negative.  Err on the side of
-        // trying to restart if in doubt.  No harm can result from that.
+        // false positive is MUCH better than false negative. Err on the side of
+        // trying to restart if in doubt. No harm can result from that.
         restartable = true;
         String passwordFile = null;
 
@@ -178,15 +203,14 @@ public class RuntimeInfo implements AdminCommand {
                     }
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // nothing to do, but I'll do this anyway because I'm paranoid
             restartable = true;
         }
 
         if (ok(passwordFile)) {
             // the --passwordfile is here -- so it had best point to a file that
-            // exists and can be read!  In all other cases -- restartable is true
+            // exists and can be read! In all other cases -- restartable is true
             File pwf = new File(passwordFile);
             restartable = pwf.canRead();
         }
@@ -194,7 +218,7 @@ public class RuntimeInfo implements AdminCommand {
     }
 
     private int parsePort(String s) {
-        //"-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9009"
+        // "-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9009"
         int port = -1;
         String[] ss = s.split(",");
 
@@ -202,8 +226,7 @@ public class RuntimeInfo implements AdminCommand {
             if (sub.startsWith("address=")) {
                 try {
                     port = Integer.parseInt(sub.substring(8));
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     port = -1;
                 }
                 break;
@@ -211,21 +234,6 @@ public class RuntimeInfo implements AdminCommand {
         }
         return port;
     }
-    @Inject
-    ServerEnvironment env;
-    @Inject
-    private StartupContext ctx;
-    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
-    private Config config;
-    @Param(name = "target", optional = true, defaultValue = SystemPropertyConstants.SERVER_NAME)
-    String target;
-    private boolean jpdaEnabled;
-    private boolean javaEnabledOnCmd;
-    private JavaConfig javaConfig;
-    private ActionReport report;
-    private ActionReport.MessagePart top;
-    private Logger logger;
-    private StringBuilder reportMessage = new StringBuilder();
 
-    private boolean restartable;
+
 }

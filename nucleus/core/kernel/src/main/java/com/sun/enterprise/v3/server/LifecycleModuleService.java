@@ -25,9 +25,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-
 import org.glassfish.api.FutureProvider;
 import org.glassfish.api.StartupRunLevel;
 import org.glassfish.api.admin.ServerEnvironment;
@@ -49,6 +46,9 @@ import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.util.Result;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * Support class to assist in firing LifecycleEvent notifications to
@@ -80,6 +80,7 @@ public class LifecycleModuleService implements PreDestroy, PostConstruct, EventL
 
     List<Future<Result<Thread>>> futures = new ArrayList();
 
+    @Override
     public void postConstruct() {
         events.register(this);
         try {
@@ -89,6 +90,7 @@ public class LifecycleModuleService implements PreDestroy, PostConstruct, EventL
         }
     }
 
+    @Override
     public void preDestroy() {
         try {
             onTermination();
@@ -97,10 +99,12 @@ public class LifecycleModuleService implements PreDestroy, PostConstruct, EventL
         }
     }
 
+    @Override
     public List<Future<Result<Thread>>> getFutures() {
         return futures;
     }
 
+    @Override
     public void event(Event event) {
         try {
             if (event.is(EventTypes.SERVER_STARTUP)) {
@@ -117,7 +121,7 @@ public class LifecycleModuleService implements PreDestroy, PostConstruct, EventL
 
     private void onInitialization() throws ServerLifecycleException {
         List<Application> applications = apps.getApplications();
-        List<Application> lcms = new ArrayList<Application>();;
+        List<Application> lcms = new ArrayList<>();
         for (Application app : applications) {
             if (Boolean.valueOf(app.getDeployProperties().getProperty
                 (ServerTags.IS_LIFECYCLE))) {
@@ -192,6 +196,7 @@ public class LifecycleModuleService implements PreDestroy, PostConstruct, EventL
          // set the common class loader as the thread context class loader
         java.security.AccessController.doPrivileged(
             new java.security.PrivilegedAction() {
+                @Override
                 public Object run() {
                     Thread.currentThread().setContextClassLoader(c);
                     return null;
@@ -218,8 +223,9 @@ public class LifecycleModuleService implements PreDestroy, PostConstruct, EventL
     private void initialize()
                             throws ServerLifecycleException {
 
-        if (listeners.isEmpty())
+        if (listeners.isEmpty()) {
             return;
+        }
 
         final ClassLoader cl = Thread.currentThread().getContextClassLoader();
         for(Iterator iter = listeners.iterator(); iter.hasNext();) {
@@ -232,8 +238,9 @@ public class LifecycleModuleService implements PreDestroy, PostConstruct, EventL
 
     private void onStartup() throws ServerLifecycleException {
 
-        if (listeners.isEmpty())
+        if (listeners.isEmpty()) {
             return;
+        }
 
         final ClassLoader cl = Thread.currentThread().getContextClassLoader();
         for(Iterator iter = listeners.iterator(); iter.hasNext();) {
@@ -246,8 +253,9 @@ public class LifecycleModuleService implements PreDestroy, PostConstruct, EventL
 
     private void onReady() throws ServerLifecycleException {
 
-        if (listeners.isEmpty())
+        if (listeners.isEmpty()) {
             return;
+        }
 
         final ClassLoader cl = Thread.currentThread().getContextClassLoader();
         for(Iterator iter = listeners.iterator(); iter.hasNext();) {
@@ -260,8 +268,9 @@ public class LifecycleModuleService implements PreDestroy, PostConstruct, EventL
 
     private void onShutdown() throws ServerLifecycleException {
 
-        if (listeners.isEmpty())
+        if (listeners.isEmpty()) {
             return;
+        }
 
         final ClassLoader cl = Thread.currentThread().getContextClassLoader();
         for(Iterator iter = listeners.iterator(); iter.hasNext();) {
@@ -274,8 +283,9 @@ public class LifecycleModuleService implements PreDestroy, PostConstruct, EventL
 
     private void onTermination() throws ServerLifecycleException {
 
-        if (listeners.isEmpty())
+        if (listeners.isEmpty()) {
             return;
+        }
 
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
         for(Iterator iter = listeners.iterator(); iter.hasNext();) {

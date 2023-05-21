@@ -23,7 +23,7 @@ import com.sun.enterprise.web.WebModule;
 import com.sun.enterprise.web.WebModuleDecorator;
 
 /**
- * {@link WebModuleDecorator} that inserts {@link J2EEInstanceListener}.
+ * {@link WebModuleDecorator} that inserts {@link EEInstanceListener}.
  *
  * <p>
  * TODO: this implementation of the extension point shouldn't belong to the webtier. AFAIK, this should live somewhere
@@ -32,9 +32,9 @@ import com.sun.enterprise.web.WebModuleDecorator;
  * @author Kohsuke Kawaguchi
  */
 @Service
-public class DecoratorForJ2EEInstanceListener implements WebModuleDecorator {
+public class DecoratorForEEInstanceListener implements WebModuleDecorator {
     @Override
     public void decorate(WebModule module) {
-        module.addInstanceListener(new J2EEInstanceListener());
+        module.addInstanceListener(new EEInstanceListener());
     }
 }

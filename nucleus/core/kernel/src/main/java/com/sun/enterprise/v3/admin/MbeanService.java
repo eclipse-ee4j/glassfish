@@ -19,7 +19,6 @@ package com.sun.enterprise.v3.admin;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.inject.Inject;
 import javax.management.InstanceNotFoundException;
 
 import org.glassfish.api.StartupRunLevel;
@@ -34,8 +33,10 @@ import org.jvnet.hk2.annotations.Service;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
 
+import jakarta.inject.Inject;
+
 @Service
-@RunLevel(mode=RunLevel.RUNLEVEL_MODE_NON_VALIDATING, value=StartupRunLevel.VAL)
+@RunLevel(mode = RunLevel.RUNLEVEL_MODE_NON_VALIDATING, value = StartupRunLevel.VAL)
 public class MbeanService {
 
     @Inject
@@ -49,24 +50,26 @@ public class MbeanService {
     @Inject
     private ServerEnvironment env;
 
-
     public static MbeanService getInstance() {
-        if (habitat == null)
+        if (habitat == null) {
             return null;
+        }
         return habitat.getService(MbeanService.class);
     }
 
     public String getHost(String instance) throws InstanceNotFoundException {
         Server s = domain.getServerNamed(instance);
-        if (s == null)
+        if (s == null) {
             throw new InstanceNotFoundException();
+        }
         return s.getAdminHost();
     }
 
     public String getJMXPort(String instance) throws InstanceNotFoundException {
         Server s = domain.getServerNamed(instance);
-        if (s == null)
+        if (s == null) {
             throw new InstanceNotFoundException();
+        }
         return new PropertyResolver(domain, instance).getPropertyValue("JMX_SYSTEM_CONNECTOR_PORT");
     }
 
@@ -93,9 +96,10 @@ public class MbeanService {
     }
 
     private List<String> convertList(List<Server> servers) {
-        List<String> serverStrings = new ArrayList<String>();
-        for (Server svr : servers)
+        List<String> serverStrings = new ArrayList<>();
+        for (Server svr : servers) {
             serverStrings.add(svr.getName());
+        }
         return serverStrings;
     }
 

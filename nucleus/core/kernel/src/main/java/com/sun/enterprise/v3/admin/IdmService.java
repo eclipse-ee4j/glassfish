@@ -16,37 +16,35 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.glassfish.bootstrap.StartupContextUtil;
-import com.sun.enterprise.module.bootstrap.StartupContext;
-import com.sun.enterprise.security.store.IdentityManagement;
-import com.sun.enterprise.security.store.PasswordAdapter;
-import org.glassfish.hk2.runlevel.RunLevel;
-import org.glassfish.internal.api.InitRunLevel;
-import org.glassfish.security.common.MasterPassword;
-import org.glassfish.server.ServerEnvironmentImpl;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-
-import org.jvnet.hk2.annotations.Optional;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PostConstruct;
-import jakarta.inject.Singleton;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.logging.Logger;
+
 import org.glassfish.api.admin.PasswordAliasStore;
+import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.glassfish.security.services.impl.JCEKSPasswordAliasStore;
+import org.glassfish.server.ServerEnvironmentImpl;
+import org.jvnet.hk2.annotations.Service;
 
-/** An implementation of the @link {IdentityManagement} that manages the password needs of the server.
- *  This implementation consults the Java KeyStore and assumes that the stores are available in server's
- *  configuration area.
+import com.sun.enterprise.glassfish.bootstrap.StartupContextUtil;
+import com.sun.enterprise.module.bootstrap.StartupContext;
+import com.sun.enterprise.security.store.IdentityManagement;
+
+import jakarta.inject.Inject;
+
+/**
+ * An implementation of the @link {IdentityManagement} that manages the password needs of the server. This
+ * implementation consults the Java KeyStore and assumes that the stores are available in server's configuration area.
+ * 
  * @author &#2325;&#2375;&#2342;&#2366;&#2352 (km@dev.java.net)
  */
-@Service(name="jks-based")
+@Service(name = "jks-based")
 public class IdmService implements PostConstruct, IdentityManagement {
 
     private final Logger logger = Logger.getAnonymousLogger();
@@ -59,12 +57,13 @@ public class IdmService implements PostConstruct, IdentityManagement {
 
     private char[] masterPassword;
 
-    private static final String FIXED_KEY = "master-password"; //the fixed key for master-password file
-    private static final String PASSWORDFILE_OPTION_TO_ASMAIN = "-passwordfile"; //note single hyphen, in line with other args to ASMain!
-    private static final String STDIN_OPTION_TO_ASMAIN        = "-read-stdin"; //note single hyphen, in line with other args to ASMain!
+    private static final String FIXED_KEY = "master-password"; // the fixed key for master-password file
+    private static final String PASSWORDFILE_OPTION_TO_ASMAIN = "-passwordfile"; // note single hyphen, in line with other args to ASMain!
+    private static final String STDIN_OPTION_TO_ASMAIN = "-read-stdin"; // note single hyphen, in line with other args to ASMain!
 
     private static final String MP_PROPERTY = "AS_ADMIN_MASTERPASSWORD";
 
+    @Override
     public void postConstruct() {
         boolean success;
         boolean readStdin = sc.getArguments().containsKey(STDIN_OPTION_TO_ASMAIN);
@@ -77,7 +76,7 @@ public class IdmService implements PostConstruct, IdentityManagement {
             }
         }
         if (!success) {
-            masterPassword = "changeit".toCharArray(); //the default;
+            masterPassword = "changeit".toCharArray(); // the default;
         }
     }
 
@@ -92,10 +91,12 @@ public class IdmService implements PostConstruct, IdentityManagement {
         try {
             File mp = env.getMasterPasswordFile();
             if (!mp.isFile()) {
-                logger.fine("The JCEKS file: " + mp.getAbsolutePath() + " does not exist, master password was not saved on disk during domain creation");
+                logger.fine("The JCEKS file: " + mp.getAbsolutePath()
+                        + " does not exist, master password was not saved on disk during domain creation");
                 return false;
             }
-            final PasswordAliasStore masterPasswordAliasStore = JCEKSPasswordAliasStore.newInstance(mp.getAbsolutePath(), FIXED_KEY.toCharArray());
+            final PasswordAliasStore masterPasswordAliasStore = JCEKSPasswordAliasStore.newInstance(mp.getAbsolutePath(),
+                    FIXED_KEY.toCharArray());
             char[] mpChars = masterPasswordAliasStore.get(FIXED_KEY);
             if (mpChars == null) {
                 return false;
@@ -116,16 +117,16 @@ public class IdmService implements PostConstruct, IdentityManagement {
             int index = 0;
             for (String arg : args) {
                 if (PASSWORDFILE_OPTION_TO_ASMAIN.equals(arg)) {
-                    if (index == (args.length-1)) {  //-passwordfile is the last argument
+                    if (index == (args.length - 1)) { // -passwordfile is the last argument
                         logger.warning(KernelLoggerInfo.optionButNoArg);
                         return false;
                     }
-                    pwf = new File(args[index+1]);
+                    pwf = new File(args[index + 1]);
                     return readPasswordFile(pwf);
                 }
                 index++;
             }
-            //no -passwordfile found
+            // no -passwordfile found
             return false;
         } catch (Exception ex) {
             String s = "Something wrong with given password file: ";
@@ -141,18 +142,21 @@ public class IdmService implements PostConstruct, IdentityManagement {
         try {
             br = new BufferedReader(new FileReader(pwf));
             p.load(br);
-            if (p.getProperty(MP_PROPERTY) == null)
+            if (p.getProperty(MP_PROPERTY) == null) {
                 return false;
-            masterPassword = p.getProperty(MP_PROPERTY).toCharArray();  //this would stay in memory, so this needs some security audit, frankly
+            }
+            masterPassword = p.getProperty(MP_PROPERTY).toCharArray(); // this would stay in memory, so this needs some security audit,
+                                                                       // frankly
             return true;
         } catch (IOException e) {
             logger.fine("Passwordfile: " + pwf.getAbsolutePath() + " (a simple property file) could not be processed, ignoring ...");
             return false;
         } finally {
             try {
-                if (br != null)
+                if (br != null) {
                     br.close();
-            } catch(Exception e) {
+                }
+            } catch (Exception e) {
                 // ignore, I know
             }
         }
@@ -168,15 +172,16 @@ public class IdmService implements PostConstruct, IdentityManagement {
                 if (ind == -1) {
                     return false; // this means stdin isn't behaving. That's bad and shouldn't happen.
                 }
-                masterPassword = s.substring(MP_PROPERTY.length() + 1).toCharArray(); //begIndex is that of "AS_ADMIN_MASTERPASSWORD=; consider trailing '='
+                masterPassword = s.substring(MP_PROPERTY.length() + 1).toCharArray(); // begIndex is that of "AS_ADMIN_MASTERPASSWORD=;
+                                                                                      // consider trailing '='
             }
             // We don't want reveal the master password in the logs.
-            //logger.fine("******************* Password from stdin: " + new String(masterPassword));
+            // logger.fine("******************* Password from stdin: " + new String(masterPassword));
             if (masterPassword == null) {
                 return false;
             }
             return true;
-        } catch(Exception e) {
+        } catch (Exception e) {
             logger.fine("Stdin isn't behaving, ignoring it ..." + e.getMessage());
             return false;
         }

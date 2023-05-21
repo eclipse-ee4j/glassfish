@@ -17,28 +17,6 @@
 package com.sun.enterprise.v3.services.impl;
 
 import java.beans.PropertyChangeEvent;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.grizzly.config.dom.NetworkListener;
-import org.glassfish.grizzly.config.dom.Http;
-import org.glassfish.grizzly.config.dom.Protocol;
-import org.glassfish.grizzly.config.dom.Ssl;
-import org.glassfish.grizzly.config.dom.ThreadPool;
-import org.glassfish.grizzly.config.dom.Transport;
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.SystemProperty;
-
-import org.jvnet.hk2.config.Changed;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.jvnet.hk2.config.ConfigListener;
-import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.NotProcessed;
-import org.jvnet.hk2.config.UnprocessedChangeEvents;
-
-import com.sun.enterprise.config.serverbeans.VirtualServer;
-import com.sun.enterprise.util.Result;
-import org.glassfish.grizzly.config.dom.FileCache;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,10 +25,31 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.grizzly.config.GrizzlyListener;
+import org.glassfish.grizzly.config.dom.FileCache;
+import org.glassfish.grizzly.config.dom.Http;
 import org.glassfish.grizzly.config.dom.NetworkConfig;
+import org.glassfish.grizzly.config.dom.NetworkListener;
+import org.glassfish.grizzly.config.dom.Protocol;
+import org.glassfish.grizzly.config.dom.Ssl;
+import org.glassfish.grizzly.config.dom.ThreadPool;
+import org.glassfish.grizzly.config.dom.Transport;
 import org.glassfish.grizzly.impl.FutureImpl;
 import org.glassfish.grizzly.impl.SafeFutureImpl;
+import org.jvnet.hk2.config.Changed;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigListener;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.NotProcessed;
+import org.jvnet.hk2.config.UnprocessedChangeEvents;
+
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.SystemProperty;
+import com.sun.enterprise.config.serverbeans.VirtualServer;
+import com.sun.enterprise.util.Result;
 
 /**
  * Grizzly dynamic configuration handler
@@ -65,7 +64,7 @@ public class DynamicConfigListener implements ConfigListener {
     private static final int RECONFIG_LOCK_TIMEOUT_SEC = 30;
     private static final ReentrantLock reconfigLock = new ReentrantLock();
     private static final Map<Integer, FutureImpl> reconfigByPortLock =
-            new HashMap<Integer, FutureImpl>();
+            new HashMap<>();
 
     public DynamicConfigListener(final Config parent, final Logger logger) {
         config = parent;
@@ -167,7 +166,7 @@ public class DynamicConfigListener implements ConfigListener {
                             if (proxy != null) {
                                 GrizzlyListener netListener = proxy.getUnderlyingListener();
                                 netListener.processDynamicConfigurationChange(
-                                        grizzlyService.getHabitat(), changedProperties);
+                                        grizzlyService.getServiceLocator(), changedProperties);
                                 return null;
                             }
                         }
@@ -315,7 +314,7 @@ public class DynamicConfigListener implements ConfigListener {
                     logger.log(Level.FINEST, "Release reconfig lock, set result: {0}",
                             future);
                 }
-                future.result(new Result<Thread>(Thread.currentThread()));
+                future.result(new Result<>(Thread.currentThread()));
             }
         } finally {
             reconfigLock.unlock();

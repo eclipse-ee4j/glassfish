@@ -16,11 +16,12 @@
 
 package com.sun.enterprise.v3.admin;
 
+import org.glassfish.internal.api.Target;
+import org.jvnet.hk2.config.types.Property;
+
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.SystemPropertyBag;
-import org.glassfish.internal.api.Target;
-import org.jvnet.hk2.config.types.Property;
 
 /**
  *
@@ -28,32 +29,33 @@ import org.jvnet.hk2.config.types.Property;
  */
 public class CLIUtil {
 
-    static Config chooseConfig(final Target targetService,
-            Config config,
-            final String target) {
+    static Config chooseConfig(final Target targetService, Config config, final String target) {
         Config targetConfig = targetService.getConfig(target);
         if (targetConfig != null) {
             config = targetConfig;
         }
+
         return config;
     }
 
     static SystemPropertyBag chooseTarget(final Domain domain, final String target) {
-        SystemPropertyBag spb = null;
+        SystemPropertyBag systemPropertyBag = null;
+
         Property domainProp = domain.getProperty("administrative.domain.name");
         String domainName = domainProp.getValue();
         if ("domain".equals(target) || target.equals(domainName)) {
-            spb = domain;
+            systemPropertyBag = domain;
         } else {
-            spb = domain.getConfigNamed(target);
-            if (spb == null) {
-                spb = domain.getClusterNamed(target);
+            systemPropertyBag = domain.getConfigNamed(target);
+            if (systemPropertyBag == null) {
+                systemPropertyBag = domain.getClusterNamed(target);
             }
-            if (spb == null) {
-                spb = domain.getServerNamed(target);
+            if (systemPropertyBag == null) {
+                systemPropertyBag = domain.getServerNamed(target);
             }
         }
-        return spb;
+
+        return systemPropertyBag;
     }
 
 }

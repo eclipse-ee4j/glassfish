@@ -16,42 +16,61 @@
 
 package com.sun.enterprise.v3.server;
 
-import com.sun.enterprise.module.bootstrap.ModuleStartup;
-import com.sun.enterprise.module.bootstrap.StartupContext;
-import com.sun.enterprise.v3.common.DoNothingActionReporter;
-import com.sun.enterprise.config.serverbeans.Applications;
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.config.serverbeans.ServerTags;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.util.io.FileUtils;
-import com.sun.enterprise.util.StringUtils;
-import com.sun.enterprise.deploy.shared.ArchiveFactory;
-import org.glassfish.hk2.api.IterableProvider;
-import org.jvnet.hk2.annotations.Optional;
-import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
+import java.beans.PropertyVetoException;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.jvnet.hk2.config.*;
+import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
-import org.glassfish.api.ActionReport;
 import org.glassfish.deployment.common.DeploymentProperties;
-import org.glassfish.internal.api.*;
-
-import java.util.*;
-import java.util.jar.*;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import java.net.URISyntaxException;
-import java.net.URI;
-import java.io.*;
-import java.beans.PropertyVetoException;
+import org.glassfish.hk2.api.IterableProvider;
+import org.glassfish.internal.api.DomainUpgrade;
+import org.glassfish.internal.api.InternalSystemAdministrator;
 import org.glassfish.kernel.KernelLoggerInfo;
+import org.jvnet.hk2.annotations.Optional;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigCode;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
+
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.ServerTags;
+import com.sun.enterprise.deploy.shared.ArchiveFactory;
+import com.sun.enterprise.module.bootstrap.ModuleStartup;
+import com.sun.enterprise.module.bootstrap.StartupContext;
+import com.sun.enterprise.util.StringUtils;
+import com.sun.enterprise.util.io.FileUtils;
+import com.sun.enterprise.v3.common.DoNothingActionReporter;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * Very simple ModuleStartup that basically force an immediate shutdown.
@@ -106,14 +125,16 @@ public class UpgradeStartup implements ModuleStartup {
 
     private final static String SIGNATURE_TYPES_PARAM = "-signatureTypes";
 
-    private List<String> sigTypeList = new ArrayList<String>();
+    private List<String> sigTypeList = new ArrayList<>();
 
+    @Override
     public void setStartupContext(StartupContext startupContext) {
         appservStartup.setStartupContext(startupContext);
     }
 
     // do nothing, just return, at the time the upgrade service has
     // run correctly.
+    @Override
     public void start() {
 
         // we need to disable all the applications before starting server
@@ -121,8 +142,8 @@ public class UpgradeStartup implements ModuleStartup {
         // store the list of previous enabled applications
         // so we can reset these applications back to enabled after
         // redeployment
-        List<Application> enabledApps = new ArrayList<Application>();
-        List<String> enabledAppNames = new ArrayList<String>();
+        List<Application> enabledApps = new ArrayList<>();
+        List<String> enabledAppNames = new ArrayList<>();
 
         for (Application app : domain.getApplications().getApplications()) {
             logger.log(Level.INFO, "app " + app.getName() + " is " + app.getEnabled() + " resulting in " + Boolean.parseBoolean(app.getEnabled()));
@@ -136,6 +157,7 @@ public class UpgradeStartup implements ModuleStartup {
         if (enabledApps.size()>0) {
             try  {
                 ConfigSupport.apply(new ConfigCode() {
+                    @Override
                     public Object run(ConfigBeanProxy... configBeanProxies) throws PropertyVetoException, TransactionFailure {
                         for (ConfigBeanProxy proxy : configBeanProxies) {
                             Application app = (Application) proxy;
@@ -179,6 +201,7 @@ public class UpgradeStartup implements ModuleStartup {
                     logger.log(Level.INFO, "Enabling application " + app.getName());
                     try {
                         ConfigSupport.apply(new SingleConfigCode<Application>() {
+                            @Override
                             public Object run(Application param) throws PropertyVetoException, TransactionFailure {
                                 if (!Boolean.parseBoolean(param.getEnabled())) {
                                     param.setEnabled(Boolean.TRUE.toString());
@@ -211,6 +234,7 @@ public class UpgradeStartup implements ModuleStartup {
 
     }
 
+    @Override
     public void stop() {
         appservStartup.stop();
     }
@@ -379,8 +403,8 @@ public class UpgradeStartup implements ModuleStartup {
         WritableArchive target = archiveFactory.createArchive("jar", tempEar);
 
         Collection<String> directoryEntries = source.getDirectories();
-        List<String> subModuleEntries = new ArrayList<String>();
-        List<String> entriesToExclude = new ArrayList<String>();
+        List<String> subModuleEntries = new ArrayList<>();
+        List<String> entriesToExclude = new ArrayList<>();
 
         // first put all the sub module jars to the target archive
         for (String directoryEntry : directoryEntries) {

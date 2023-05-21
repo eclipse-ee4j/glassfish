@@ -16,30 +16,33 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import java.io.File;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
-import jakarta.inject.Inject;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Marshaller;
-import jakarta.xml.bind.Unmarshaller;
+
 import org.glassfish.api.admin.progress.JobInfo;
 import org.glassfish.api.admin.progress.JobInfos;
 import org.glassfish.api.admin.progress.JobPersistence;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.jvnet.hk2.annotations.Service;
 
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.Unmarshaller;
 
 /**
  * This service persists information for managed jobs to the file
+ * 
  * @author Bhakti Mehta
  */
-@Service(name="job-persistence")
+@Service(name = "job-persistence")
 public class JobPersistenceService implements JobPersistence {
 
-    protected Marshaller jaxbMarshaller ;
+    protected Marshaller jaxbMarshaller;
 
     protected Unmarshaller jaxbUnmarshaller;
 
@@ -52,16 +55,15 @@ public class JobPersistenceService implements JobPersistence {
 
     protected final static Logger logger = KernelLoggerInfo.getLogger();
 
+    protected static final LocalStringManagerImpl adminStrings = new LocalStringManagerImpl(JobPersistenceService.class);
 
-    protected static final LocalStringManagerImpl adminStrings =
-            new LocalStringManagerImpl(JobPersistenceService.class);
     @Override
-    public  void persist(Object obj) {
-        JobInfo jobInfo = (JobInfo)obj;
+    public void persist(Object obj) {
+        JobInfo jobInfo = (JobInfo) obj;
 
         jobInfos = jobManager.getCompletedJobs(jobManager.getJobsFile());
 
-        doPersist(jobInfos,jobInfo);
+        doPersist(jobInfos, jobInfo);
 
     }
 
@@ -78,21 +80,19 @@ public class JobPersistenceService implements JobPersistence {
                 jaxbMarshaller = jaxbContext.createMarshaller();
                 jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-                CopyOnWriteArrayList<JobInfo> jobList = new CopyOnWriteArrayList<JobInfo>(jobInfos.getJobInfoList());
+                CopyOnWriteArrayList<JobInfo> jobList = new CopyOnWriteArrayList<>(jobInfos.getJobInfoList());
                 jobInfos.setJobInfoList(jobList);
                 jobList.add(jobInfo);
                 jaxbMarshaller.marshal(jobInfos, file);
-                jobManager.addToCompletedJobs(new CompletedJob(jobInfo.jobId,jobInfo.commandCompletionDate,jobInfo.getJobsFile()));
+                jobManager.addToCompletedJobs(new CompletedJob(jobInfo.jobId, jobInfo.commandCompletionDate, jobInfo.getJobsFile()));
                 jobManager.purgeJob(jobInfo.jobId);
 
             } catch (JAXBException e) {
-                throw new RuntimeException(adminStrings.getLocalString("error.persisting.jobs","Error while persisting jobs",jobInfo.jobId,e.getLocalizedMessage()),e);
+                throw new RuntimeException(adminStrings.getLocalString("error.persisting.jobs", "Error while persisting jobs",
+                        jobInfo.jobId, e.getLocalizedMessage()), e);
 
             }
         }
     }
-
-
-
 
 }

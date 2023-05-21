@@ -17,13 +17,17 @@
 
 package com.sun.enterprise.v3.services.impl;
 
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
+import static org.glassfish.kernel.KernelLoggerInfo.exceptionMapper;
+import static org.glassfish.kernel.KernelLoggerInfo.exceptionMapper2;
+
 import java.io.CharConversionException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.concurrent.Callable;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.container.Adapter;
@@ -46,43 +50,40 @@ import org.glassfish.grizzly.http.util.MimeType;
 import org.glassfish.internal.grizzly.ContextMapper;
 import org.glassfish.kernel.KernelLoggerInfo;
 
-import static java.util.logging.Level.WARNING;
-
 /**
- * Container's mapper which maps {@link ByteBuffer} bytes representation to an  {@link HttpHandler}, {@link
- * ApplicationContainer} and ProtocolFilter chain. The mapping result is stored inside {@link MappingData} which
+ * Container's mapper which maps {@link ByteBuffer} bytes representation to an {@link HttpHandler},
+ * {@link ApplicationContainer} and ProtocolFilter chain. The mapping result is stored inside {@link MappingData} which
  * is eventually shared with the CoyoteAdapter, which is the entry point with the Catalina Servlet Container.
  *
  * @author Jeanfrancois Arcand
  * @author Alexey Stashok
  */
-@SuppressWarnings({"NonPrivateFieldAccessedInSynchronizedContext"})
+@SuppressWarnings({ "NonPrivateFieldAccessedInSynchronizedContext" })
 public class ContainerMapper extends ADBAwareHttpHandler {
 
     private static final Logger LOGGER = KernelLoggerInfo.getLogger();
-    private final static String ROOT = "";
-    private ContextMapper mapper;
-    private final GrizzlyListener listener;
-    private String defaultHostName = "server";
-    private final GrizzlyService grizzlyService;
-    protected final static Note<MappingData> MAPPING_DATA =
-            Request.<MappingData>createNote("MappingData");
+    private static final String ROOT = "";
+
+    private static final AfterServiceListener afterServiceListener = new AfterServiceListenerImpl();
+    protected static final Note<MappingData> MAPPING_DATA = Request.<MappingData>createNote("MappingData");
+
     // Make sure this value is always aligned with {@link org.apache.catalina.connector.CoyoteAdapter}
     // (@see org.apache.catalina.connector.CoyoteAdapter)
-    private final static Note<DataChunk> DATA_CHUNK =
-            Request.<DataChunk>createNote("DataChunk");
+    private static final Note<DataChunk> DATA_CHUNK = Request.<DataChunk>createNote("DataChunk");
+
+    private final GrizzlyListener listener;
+    private final GrizzlyService grizzlyService;
     private final ReentrantReadWriteLock mapperLock;
 
+    private ContextMapper mapper;
+    private String defaultHostName = "server";
 
-    private static final AfterServiceListener afterServiceListener =
-            new AfterServiceListenerImpl();
     /**
      * Are we running multiple {@ Adapter} or {@link HttpHandlerChain}
      */
     private boolean mapMultipleAdapter;
 
-    public ContainerMapper(final GrizzlyService service,
-            final GrizzlyListener grizzlyListener) {
+    public ContainerMapper(final GrizzlyService service, final GrizzlyListener grizzlyListener) {
         listener = grizzlyListener;
         grizzlyService = service;
         mapperLock = service.obtainMapperLock();
@@ -119,10 +120,8 @@ public class ContainerMapper extends ADBAwareHttpHandler {
 
         try {
             mapper.setDefaultHostName(defaultHostName);
-            mapper.addHost(defaultHostName, new String[]{}, null);
-            mapper.addContext(defaultHostName, ROOT,
-                    new ContextRootInfo(this, null),
-                    new String[]{"index.html", "index.htm"}, null);
+            mapper.addHost(defaultHostName, new String[] {}, null);
+            mapper.addContext(defaultHostName, ROOT, new ContextRootInfo(this, null), new String[] { "index.html", "index.htm" }, null);
             // Container deployed have the right to override the default setting.
             Mapper.setAllowReplacement(true);
         } finally {
@@ -150,20 +149,20 @@ public class ContainerMapper extends ADBAwareHttpHandler {
 
     private void logAndSendError(final Request request, final Response response, Exception ex) {
         if (LOGGER.isLoggable(WARNING)) {
-            final Object url = toUrlForLogging(request);
-            LogHelper.log(LOGGER, WARNING, KernelLoggerInfo.exceptionMapper, ex, url);
+            LogHelper.log(LOGGER, WARNING, exceptionMapper, ex, toUrlForLogging(request));
         }
+
         if (response.getResponse() == null) {
             LOGGER.log(WARNING, "Response is not set in {0}, there's nothing we can do now.", response);
             return;
         }
+
         try {
             response.sendError(500);
         } catch (Exception ex2) {
-            LOGGER.log(WARNING, KernelLoggerInfo.exceptionMapper2, ex2);
+            LOGGER.log(WARNING, exceptionMapper2, ex2);
         }
     }
-
 
     private Object toUrlForLogging(final Request request) {
         try {
@@ -173,9 +172,7 @@ public class ContainerMapper extends ADBAwareHttpHandler {
         }
     }
 
-
-    private Callable lookupHandler(final Request request, final Response response)
-        throws CharConversionException, Exception {
+    private Callable lookupHandler(final Request request, final Response response) throws CharConversionException, Exception {
 
         MappingData mappingData;
         mapperLock.readLock().lock();
@@ -188,15 +185,14 @@ public class ContainerMapper extends ADBAwareHttpHandler {
                 final HttpHandler httpHandler = mapper.getHttpHandler();
                 if (httpHandler != null) {
                     request.setNote(MAPPING_DATA, null);
-//                    httpHandler.service(request, response);
-//                    return;
-                    return new HttpHandlerCallable(httpHandler,
-                            request, response);
+                    return new HttpHandlerCallable(httpHandler, request, response);
                 }
             }
 
-            final DataChunk decodedURI = request.getRequest()
-                    .getRequestURIRef().getDecodedRequestURIBC(isAllowEncodedSlash());
+            final DataChunk decodedURI =
+                request.getRequest()
+                       .getRequestURIRef()
+                       .getDecodedRequestURIBC(isAllowEncodedSlash());
 
             mappingData = request.getNote(MAPPING_DATA);
             if (mappingData == null) {
@@ -205,14 +201,14 @@ public class ContainerMapper extends ADBAwareHttpHandler {
             } else {
                 mappingData.recycle();
             }
+
             HttpHandler httpHandler;
 
             final CharChunk decodedURICC = decodedURI.getCharChunk();
             final int semicolon = decodedURICC.indexOf(';', 0);
 
             // Map the request without any trailling.
-            httpHandler = mapUriWithSemicolon(request, decodedURI,
-                    semicolon, mappingData);
+            httpHandler = mapUriWithSemicolon(request, decodedURI, semicolon, mappingData);
             if (httpHandler == null || httpHandler instanceof ContainerMapper) {
                 String ext = decodedURI.toString();
                 String type = "";
@@ -224,36 +220,31 @@ public class ContainerMapper extends ADBAwareHttpHandler {
                 if (!MimeType.contains(type) && !"/".equals(ext)) {
                     initializeFileURLPattern(ext);
                     mappingData.recycle();
-                    httpHandler = mapUriWithSemicolon(request, decodedURI,
-                            semicolon, mappingData);
+                    httpHandler = mapUriWithSemicolon(request, decodedURI, semicolon, mappingData);
                 } else {
-//                    super.service(request, response);
-//                    return;
                     return new SuperCallable(request, response);
                 }
             }
 
-            if (LOGGER.isLoggable(Level.FINE)) {
-                LOGGER.log(Level.FINE, "Request: {0} was mapped to Adapter: {1}",
-                        new Object[]{decodedURI.toString(), httpHandler});
+            if (LOGGER.isLoggable(FINE)) {
+                LOGGER.log(FINE, "Request: {0} was mapped to Adapter: {1}", new Object[] { decodedURI.toString(), httpHandler });
             }
 
             // The Adapter used for servicing static pages doesn't decode the
             // request by default, hence do not pass the undecoded request.
             if (httpHandler == null || httpHandler instanceof ContainerMapper) {
-//                super.service(request, response);
                 return new SuperCallable(request, response);
-            } else {
-//                httpHandler.service(request, response);
-                return new HttpHandlerCallable(httpHandler, request, response);
             }
+
+            return new HttpHandlerCallable(httpHandler, request, response);
+
         } finally {
             mapperLock.readLock().unlock();
         }
     }
 
     private void initializeFileURLPattern(String ext) {
-        for (Sniffer sniffer : grizzlyService.getHabitat().<Sniffer>getAllServices(Sniffer.class)) {
+        for (Sniffer sniffer : grizzlyService.getServiceLocator().getAllServices(Sniffer.class)) {
             boolean match = false;
             if (sniffer.getURLPatterns() != null) {
 
@@ -266,17 +257,16 @@ public class ContainerMapper extends ADBAwareHttpHandler {
 
                 HttpHandler httpHandler;
                 if (match) {
-                    httpHandler = grizzlyService.getHabitat().getService(SnifferAdapter.class);
+                    httpHandler = grizzlyService.getServiceLocator().getService(SnifferAdapter.class);
                     ((SnifferAdapter) httpHandler).initialize(sniffer, this);
-                    ContextRootInfo c = new ContextRootInfo(httpHandler, null);
+                    ContextRootInfo contextRootInfo = new ContextRootInfo(httpHandler, null);
 
                     mapperLock.readLock().unlock();
                     mapperLock.writeLock().lock();
                     try {
                         for (String pattern : sniffer.getURLPatterns()) {
                             for (String host : grizzlyService.hosts) {
-                                mapper.addWrapper(host, ROOT, pattern, c,
-                                        "*.jsp".equals(pattern) || "*.jspx".equals(pattern));
+                                mapper.addWrapper(host, ROOT, pattern, contextRootInfo, "*.jsp".equals(pattern) || "*.jspx".equals(pattern));
                             }
                         }
                     } finally {
@@ -291,21 +281,18 @@ public class ContainerMapper extends ADBAwareHttpHandler {
     }
 
     /**
-     * Maps the decodedURI to the corresponding Adapter, considering that URI
-     * may have a semicolon with extra data followed, which shouldn't be a part
-     * of mapping process.
+     * Maps the decodedURI to the corresponding Adapter, considering that URI may have a semicolon with extra data followed,
+     * which shouldn't be a part of mapping process.
      *
      * @param req HTTP request
      * @param decodedURI URI
-     * @param semicolonPos semicolon position. Might be <tt>0</tt> if position wasn't resolved yet (so it will be resolved in the method), or <tt>-1</tt> if there is no semicolon in the URI.
+     * @param semicolonPos semicolon position. Might be <tt>0</tt> if position wasn't resolved yet (so it will be resolved
+     * in the method), or <tt>-1</tt> if there is no semicolon in the URI.
      * @param mappingData
      * @return
      * @throws Exception
      */
-    final HttpHandler mapUriWithSemicolon(final Request req,
-            final DataChunk decodedURI, int semicolonPos,
-            final MappingData mappingData) throws Exception {
-
+    final HttpHandler mapUriWithSemicolon(final Request req, final DataChunk decodedURI, int semicolonPos, final MappingData mappingData) throws Exception {
         mapperLock.readLock().lock();
 
         try {
@@ -330,7 +317,6 @@ public class ContainerMapper extends ADBAwareHttpHandler {
                 localDecodedURI.duplicate(decodedURI);
             }
 
-
             try {
                 return map(req, localDecodedURI, mappingData);
             } finally {
@@ -342,12 +328,11 @@ public class ContainerMapper extends ADBAwareHttpHandler {
         }
     }
 
-    HttpHandler map(final Request req, final DataChunk decodedURI,
-            MappingData mappingData) throws Exception {
-
+    HttpHandler map(final Request req, final DataChunk decodedURI, MappingData mappingData) throws Exception {
         if (mappingData == null) {
             mappingData = req.getNote(MAPPING_DATA);
         }
+
         // Map the request to its Adapter/Container and also it's Servlet if
         // the request is targetted to the CoyoteAdapter.
         mapper.map(req.getRequest().serverName(), decodedURI, mappingData);
@@ -355,62 +340,54 @@ public class ContainerMapper extends ADBAwareHttpHandler {
         updatePaths(req, mappingData);
 
         ContextRootInfo contextRootInfo;
-        if (mappingData.context != null && (mappingData.context instanceof ContextRootInfo
-                || mappingData.wrapper instanceof ContextRootInfo)) {
+        if (mappingData.context != null && (mappingData.context instanceof ContextRootInfo || mappingData.wrapper instanceof ContextRootInfo)) {
             if (mappingData.wrapper != null) {
                 contextRootInfo = (ContextRootInfo) mappingData.wrapper;
             } else {
                 contextRootInfo = (ContextRootInfo) mappingData.context;
             }
+
             return contextRootInfo.getHttpHandler();
-        } else if (mappingData.context != null &&
-                "com.sun.enterprise.web.WebModule".equals(mappingData.context.getClass().getName())) {
+        } else if (mappingData.context != null && "com.sun.enterprise.web.WebModule".equals(mappingData.context.getClass().getName())) {
             return mapper.getHttpHandler();
         }
+
         return null;
     }
 
-    public void register(String contextRoot, Collection<String> vs, HttpHandler httpService,
-            ApplicationContainer container) {
-
-        if (LOGGER.isLoggable(Level.FINE)) {
-            LOGGER.log(Level.FINE, "MAPPER({0}) REGISTER contextRoot: {1} adapter: {2} container: {3} port: {4}",
-                    new Object[]{this, contextRoot, httpService, container, String.valueOf(listener.getPort())});
+    public void register(String contextRoot, Collection<String> hostNames, HttpHandler httpService, ApplicationContainer container) {
+        if (LOGGER.isLoggable(FINE)) {
+            LOGGER.log(FINE, "MAPPER({0}) REGISTER contextRoot: {1} adapter: {2} container: {3} port: {4}",
+                    new Object[] { this, contextRoot, httpService, container, String.valueOf(listener.getPort()) });
         }
 
         mapMultipleAdapter = true;
-        ContextRootInfo c = new ContextRootInfo(httpService, container);
-        for (String host : vs) {
-            mapper.addContext(host, contextRoot, c, new String[0], null);
-            /*
-            if (adapter instanceof StaticResourcesAdapter) {
-            mapper.addWrapper(host, ctx, wrapper, c);
-            }
-             */
+        ContextRootInfo contextRootInfo = new ContextRootInfo(httpService, container);
+        for (String hostName : hostNames) {
+            mapper.addContext(hostName, contextRoot, contextRootInfo, new String[0], null);
         }
     }
 
     public void unregister(String contextRoot) {
-        if (LOGGER.isLoggable(Level.FINE)) {
-            LOGGER.log(Level.FINE, "MAPPER({0}) UNREGISTER contextRoot: {1}",
-                    new Object[]{this, contextRoot});
+        if (LOGGER.isLoggable(FINE)) {
+            LOGGER.log(FINE, "MAPPER({0}) UNREGISTER contextRoot: {1}", new Object[] { this, contextRoot });
         }
+
         for (String host : grizzlyService.hosts) {
             mapper.removeContext(host, contextRoot);
         }
     }
 
     public void register(final Endpoint endpoint) {
-        if (LOGGER.isLoggable(Level.FINE)) {
-            LOGGER.log(Level.FINE, "MAPPER({0}) REGISTER endpoint: {1}",
-                    new Object[]{this, endpoint});
+        if (LOGGER.isLoggable(FINE)) {
+            LOGGER.log(FINE, "MAPPER({0}) REGISTER endpoint: {1}", new Object[] { this, endpoint });
         }
 
         mapMultipleAdapter = true;
         final String contextRoot = endpoint.getContextRoot();
-        final Collection<String> vs = endpoint.getVirtualServers();
+        final Collection<String> virtualServerNames = endpoint.getVirtualServers();
 
-        ContextRootInfo c = new ContextRootInfo(new ContextRootInfo.Holder() {
+        ContextRootInfo contextRootInfo = new ContextRootInfo(new ContextRootInfo.Holder() {
             @Override
             public HttpHandler getHttpHandler() {
                 return endpoint.getEndpointHandler();
@@ -422,13 +399,8 @@ public class ContainerMapper extends ADBAwareHttpHandler {
             }
         });
 
-        for (String host : vs) {
-            mapper.addContext(host, contextRoot, c, new String[0], null);
-            /*
-            if (adapter instanceof StaticResourcesAdapter) {
-            mapper.addWrapper(host, ctx, wrapper, c);
-            }
-             */
+        for (String hostName : virtualServerNames) {
+            mapper.addContext(hostName, contextRoot, contextRootInfo, new String[0], null);
         }
     }
 
@@ -436,13 +408,13 @@ public class ContainerMapper extends ADBAwareHttpHandler {
         unregister(endpoint.getContextRoot());
     }
 
-    private final static class HttpHandlerCallable implements Callable {
+    private final static class HttpHandlerCallable implements Callable<Object> {
+
         private final HttpHandler httpHandler;
         private final Request request;
         private final Response response;
 
-        public HttpHandlerCallable(final HttpHandler httpHandler,
-                final Request request, final Response response) {
+        public HttpHandlerCallable(final HttpHandler httpHandler, final Request request, final Response response) {
             this.httpHandler = httpHandler;
             this.request = request;
             this.response = response;
@@ -455,7 +427,8 @@ public class ContainerMapper extends ADBAwareHttpHandler {
         }
     }
 
-    private final class SuperCallable implements Callable {
+    private final class SuperCallable implements Callable<Object> {
+
         final Request req;
         final Response res;
 

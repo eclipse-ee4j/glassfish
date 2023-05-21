@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Result;
@@ -30,11 +31,11 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.jvnet.hk2.annotations.Service;
 
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Represents the action report as XML like this:

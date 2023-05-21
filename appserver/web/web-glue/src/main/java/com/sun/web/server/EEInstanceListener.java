@@ -80,7 +80,7 @@ import jakarta.servlet.http.HttpServletResponse;
  * @author Vivek Nagar
  * @author Tony Ng
  */
-public final class J2EEInstanceListener implements InstanceListener {
+public final class EEInstanceListener implements InstanceListener {
 
     private static final Logger _logger = LogFacade.getLogger();
     private static final ResourceBundle _rb = _logger.getResourceBundle();
@@ -94,7 +94,7 @@ public final class J2EEInstanceListener implements InstanceListener {
 
     private boolean initialized;
 
-    public J2EEInstanceListener() {
+    public EEInstanceListener() {
     }
 
     @Override
@@ -163,43 +163,10 @@ public final class J2EEInstanceListener implements InstanceListener {
 
             ServletRequest request = event.getRequest();
             if (request instanceof HttpServletRequest) {
-
                 HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-                HttpServletRequest baseHttpServletRequest = httpServletRequest;
 
                 Principal principal = httpServletRequest.getUserPrincipal();
-                Principal basePrincipal = principal;
-
-                boolean wrapped = false;
-
-                while (principal != null) {
-                    if (baseHttpServletRequest instanceof ServletRequestWrapper) {
-                        // unwarp any wrappers to find the base object
-                        ServletRequest servletRequest = ((ServletRequestWrapper) baseHttpServletRequest).getRequest();
-
-                        if (servletRequest instanceof HttpServletRequest) {
-                            baseHttpServletRequest = (HttpServletRequest) servletRequest;
-                            wrapped = true;
-                            continue;
-                        }
-                    }
-
-                    if (wrapped) {
-                        basePrincipal = baseHttpServletRequest.getUserPrincipal();
-                    }
-
-                    else if (baseHttpServletRequest instanceof RequestFacade) {
-                        // Try to avoid the getUnWrappedCoyoteRequest call
-                        // when we can identify see we have the exact class.
-                        if (baseHttpServletRequest.getClass() != RequestFacade.class) {
-                            basePrincipal = ((RequestFacade) baseHttpServletRequest).getUnwrappedCoyoteRequest().getUserPrincipal();
-                        }
-                    } else {
-                        basePrincipal = baseHttpServletRequest.getUserPrincipal();
-                    }
-
-                    break;
-                }
+                Principal basePrincipal = getBasePrincipal(httpServletRequest, principal);
 
                 if (principal != null && principal == basePrincipal && principal.getClass().getName().equals(WEB_PRINCIPAL_CLASS)) {
                     securityContext.setSecurityContextWithPrincipal(principal);
@@ -217,7 +184,7 @@ public final class J2EEInstanceListener implements InstanceListener {
 
         ComponentInvocation componentInvocation;
         if (eventType == InstanceEvent.EventType.BEFORE_INIT_EVENT) {
-            // The servletName is not avilable from servlet instance before servlet init.
+            // The servletName is not available from servlet instance before servlet init.
             // We have to pass the servletName to ComponentInvocation so it can be retrieved
             // in RealmAdapter.getServletName().
             componentInvocation = new WebComponentInvocation(webModule, instance, event.getWrapper().getName());
@@ -237,12 +204,49 @@ public final class J2EEInstanceListener implements InstanceListener {
                 }
             }
         } catch (Exception ex) {
-            invocationManager.postInvoke(componentInvocation); // See CR 6920895
+            invocationManager.postInvoke(componentInvocation);
 
             throw new RuntimeException(
                 format(_rb.getString(EXCEPTION_DURING_HANDLE_EVENT), new Object[] { eventType, webModule }),
                 ex);
         }
+    }
+
+    private Principal getBasePrincipal(HttpServletRequest baseHttpServletRequest, Principal principal) {
+        Principal basePrincipal = principal;
+
+        boolean wrapped = false;
+
+        while (principal != null) {
+            if (baseHttpServletRequest instanceof ServletRequestWrapper) {
+                // Unwrap any wrappers to find the base object
+                ServletRequest servletRequest = ((ServletRequestWrapper) baseHttpServletRequest).getRequest();
+
+                if (servletRequest instanceof HttpServletRequest) {
+                    baseHttpServletRequest = (HttpServletRequest) servletRequest;
+                    wrapped = true;
+                    continue;
+                }
+            }
+
+            if (wrapped) {
+                basePrincipal = baseHttpServletRequest.getUserPrincipal();
+            }
+
+            else if (baseHttpServletRequest instanceof RequestFacade) {
+                // Try to avoid the getUnWrappedCoyoteRequest call
+                // when we can identify see we have the exact class.
+                if (baseHttpServletRequest.getClass() != RequestFacade.class) {
+                    basePrincipal = ((RequestFacade) baseHttpServletRequest).getUnwrappedCoyoteRequest().getUserPrincipal();
+                }
+            } else {
+                basePrincipal = baseHttpServletRequest.getUserPrincipal();
+            }
+
+            break;
+        }
+
+        return basePrincipal;
     }
 
     private Principal getCurrentCallerPrincipal() {

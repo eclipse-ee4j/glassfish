@@ -17,11 +17,6 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.module.ModulesRegistry;
-
-import jakarta.inject.Inject;
-
 import org.glassfish.api.Async;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
@@ -34,14 +29,17 @@ import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.module.ModulesRegistry;
+
+import jakarta.inject.Inject;
 
 /**
- * For non-verbose mode:
- * Stop this server, spawn a new JVM that will wait for this JVM to die.  The new JVM then starts the server again.
+ * For non-verbose mode: Stop this server, spawn a new JVM that will wait for this JVM to die. The new JVM then starts
+ * the server again.
  *
- * For verbose mode:
- * We want the asadmin console itself to do the respawning -- so just return a 10 from
- * System.exit().  This tells asadmin to restart.
+ * For verbose mode: We want the asadmin console itself to do the respawning -- so just return a 10 from System.exit().
+ * This tells asadmin to restart.
  *
  * @author Byron Nevins
  */
@@ -50,17 +48,13 @@ import org.jvnet.hk2.annotations.Service;
 @Async
 @I18n("restart.domain.command")
 @RestEndpoints({
-    @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST,
-        path="restart-domain",
-        description="restart-domain")
-})
-@AccessRequired(resource="domain", action={"stop","start"})
+        @RestEndpoint(configBean = Domain.class, opType = RestEndpoint.OpType.POST, path = "restart-domain", description = "restart-domain") })
+@AccessRequired(resource = "domain", action = { "stop", "start" })
 public class RestartDomainCommand extends RestartServer implements AdminCommand {
 
     @Inject
     private ModulesRegistry registry;
-    // no default value!  We use the Boolean as a tri-state.
+    // no default value! We use the Boolean as a tri-state.
     @Param(name = "debug", optional = true)
     private String debug;
     @Inject
@@ -78,8 +72,7 @@ public class RestartDomainCommand extends RestartServer implements AdminCommand 
     /**
      * Restart of the application server :
      *
-     * All running services are stopped.
-     * LookupManager is flushed.
+     * All running services are stopped. LookupManager is flushed.
      *
      * Client code that started us should notice the return value of 10 and restart us.
      */

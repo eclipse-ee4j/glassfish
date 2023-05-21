@@ -83,7 +83,7 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
 
     @Override
     public void stop() throws IOException {
-        ServiceLocator locator = grizzlyService.getHabitat();
+        ServiceLocator locator = grizzlyService.getServiceLocator();
         IndexedFilter removeFilter = BuilderHelper.createNameAndContractFilter(Mapper.class.getName(),
                 (address.toString() + port));
 
@@ -143,7 +143,7 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
             VirtualServer vs = null;
             String webAppRootPath = null;
 
-            final Collection<VirtualServer> list = grizzlyService.getHabitat().getAllServices(VirtualServer.class);
+            final Collection<VirtualServer> list = grizzlyService.getServiceLocator().getAllServices(VirtualServer.class);
             final String vsName = http.getDefaultVirtualServer();
             for (final VirtualServer virtualServer : list) {
                 if (virtualServer.getId().equals(vsName)) {
@@ -180,7 +180,7 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
             aad.addContractType(Mapper.class);
             aad.setName(address.toString() + port);
 
-            ServiceLocatorUtilities.addOneDescriptor(grizzlyService.getHabitat(), aad);
+            ServiceLocatorUtilities.addOneDescriptor(grizzlyService.getServiceLocator(), aad);
             super.configureHttpProtocol(habitat, networkListener, http, filterChainBuilder, securityEnabled);
             final Protocol protocol = http.getParent();
             for (NetworkListener listener : protocol.findNetworkListeners()) {

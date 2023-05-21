@@ -16,16 +16,19 @@
 
 package com.sun.enterprise.v3.common;
 
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import static com.sun.enterprise.util.StringUtils.ok;
-import java.util.*;
-import org.jvnet.hk2.annotations.Service;
-
-import org.glassfish.hk2.api.PerLookup;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
+
+import com.sun.enterprise.util.LocalStringManagerImpl;
 
 /**
  *
@@ -65,9 +68,9 @@ public class PlainTextActionReporter extends ActionReporter {
             LocalStringManagerImpl localStrings = new LocalStringManagerImpl(PlainTextActionReporter.class);
             writer.print(localStrings.getLocalString("get.mon.no.data", "No monitoring data to report."));
             writer.print("\n"); // forces an error to manifest constructor
-        }
-        else
+        } else {
             writer.print(outs);
+        }
 
         writer.flush();
     }
@@ -101,21 +104,24 @@ public class PlainTextActionReporter extends ActionReporter {
         appendMessage(message);
     }
 
+    @Override
     public final String getMessage() {
         return sb.toString();
     }
 
     @Override
     public void getCombinedMessages(ActionReporter aReport, StringBuilder out) {
-        if(aReport == null || !(aReport instanceof PlainTextActionReporter) )
+        if(aReport == null || !(aReport instanceof PlainTextActionReporter) ) {
             throw new RuntimeException("Internal Error: Sub reports are different types than parent report.");
+        }
         // guaranteed safe above.
         PlainTextActionReporter ptr = (PlainTextActionReporter) aReport;
         String s = ptr.getOutputData();
 
         if (ok(s)) {
-            if (out.length() > 0)
+            if (out.length() > 0) {
                 out.append('\n');
+            }
 
             out.append(s);
         }
@@ -126,10 +132,11 @@ public class PlainTextActionReporter extends ActionReporter {
     }
 
     private String getOutputData() {
-        if (superSimple(topMessage))
+        if (superSimple(topMessage)) {
             return simpleGetOutputData();
-        else
+        } else {
             return notSoSimpleGetOutputData();
+        }
     }
 
     private boolean superSimple(MessagePart part) {
@@ -149,8 +156,9 @@ public class PlainTextActionReporter extends ActionReporter {
         String tm = topMessage.getMessage();
         String body = sb.toString();
 
-        if (ok(tm) && !ok(body))
+        if (ok(tm) && !ok(body)) {
             body = tm;
+        }
 
         if (ok(body)) {
             out.append(body);

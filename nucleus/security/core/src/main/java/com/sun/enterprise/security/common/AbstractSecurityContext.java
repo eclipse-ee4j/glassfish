@@ -16,6 +16,7 @@
 
 package com.sun.enterprise.security.common;
 
+import java.io.Serializable;
 import java.security.Principal;
 
 import javax.security.auth.Subject;
@@ -23,19 +24,25 @@ import javax.security.auth.Subject;
 import com.sun.enterprise.security.integration.AppServSecurityContext;
 
 /**
- * This base class defines the methods that Security Context should exhibit. There are two places where a derived class are used.
- * They are on the appclient side and ejb side. The derived classes can use thread local storage to store the security contexts.
+ * This base class defines the methods that Security Context should exhibit. There are two places where a derived class
+ * are used. They are on the appclient side and ejb side. The derived classes can use thread local storage to store the
+ * security contexts.
  *
  * @author Harpreet Singh
  */
-public abstract class AbstractSecurityContext implements AppServSecurityContext, java.io.Serializable {
-    // the principal that this security context represents.
-    protected Principal initiator = null;
-    protected Subject subject = null;
+public abstract class AbstractSecurityContext implements AppServSecurityContext, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
-     * This method should be implemented by the subclasses to return the caller principal. This information may be redundant since
-     * the same information can be inferred by inspecting the Credentials of the caller.
+     * The principal that this security context represents
+     */
+    protected Principal initiator;
+    protected Subject subject;
+
+    /**
+     * This method should be implemented by the subclasses to return the caller principal. This information may be redundant
+     * since the same information can be inferred by inspecting the Credentials of the caller.
      *
      * @return The caller Principal.
      */

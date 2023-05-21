@@ -16,11 +16,14 @@
 
 package com.sun.enterprise.security;
 
+import static com.sun.enterprise.security.common.Util.writeConfigFileToTempDir;
+import static java.util.logging.Level.INFO;
+import static org.glassfish.api.event.EventTypes.SERVER_SHUTDOWN;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.event.EventListener;
-import org.glassfish.api.event.EventTypes;
 import org.glassfish.api.event.Events;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.PreDestroy;
@@ -38,8 +41,8 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
- * This class extends default implementation of ServerLifecycle interface. It provides security initialization and setup for the
- * server.
+ * This class extends default implementation of ServerLifecycle interface. It provides security initialization and setup
+ * for the server.
  *
  * @author Shing Wai Chan
  */
@@ -47,17 +50,19 @@ import jakarta.inject.Singleton;
 @Singleton
 public class SecurityLifecycle implements PostConstruct, PreDestroy {
 
-    @Inject
-    private ServerContext sc;
+    private static final Logger _logger = SecurityLoggerInfo.getLogger();
 
-    //@Inject
-    //private RealmConfig realmConfig;
+    private static final String SYS_PROP_LOGIN_CONF = "java.security.auth.login.config";
+    private static final String SYS_PROP_JAVA_SEC_POLICY = "java.security.policy";
+
+    @Inject
+    private ServerContext serverContext;
 
     @Inject
     private PolicyLoader policyLoader;
 
     @Inject
-    private SecurityServicesUtil secServUtil;
+    private SecurityServicesUtil securityServicesUtil;
 
     @Inject
     private Util util;
@@ -69,7 +74,7 @@ public class SecurityLifecycle implements PostConstruct, PreDestroy {
     private SecurityConfigListener configListener;
 
     @Inject
-    private ServiceLocator habitat;
+    private ServiceLocator serviceLocator;
 
     @Inject
     private RealmsManager realmsManager;
@@ -78,30 +83,25 @@ public class SecurityLifecycle implements PostConstruct, PreDestroy {
     @Optional
     private ContainerSecurityLifecycle eeSecLifecycle;
 
-    private EventListener listener = null;
+    private EventListener listener;
 
-    private static final String SYS_PROP_LOGIN_CONF = "java.security.auth.login.config";
-    private static final String SYS_PROP_JAVA_SEC_POLICY = "java.security.policy";
-
-    private static final Logger _logger = SecurityLoggerInfo.getLogger();
 
     public SecurityLifecycle() {
         try {
-
             if (Util.isEmbeddedServer()) {
-                //If the user-defined login.conf/server.policy are set as system properties, then they are given priority
+                // If the user-defined login.conf/server.policy are set as system properties, then they are given priority
                 if (System.getProperty(SYS_PROP_LOGIN_CONF) == null) {
-                    System.setProperty(SYS_PROP_LOGIN_CONF, Util.writeConfigFileToTempDir("login.conf").getAbsolutePath());
+                    System.setProperty(SYS_PROP_LOGIN_CONF, writeConfigFileToTempDir("login.conf").getAbsolutePath());
                 }
                 if (System.getProperty(SYS_PROP_JAVA_SEC_POLICY) == null) {
-                    System.setProperty(SYS_PROP_JAVA_SEC_POLICY, Util.writeConfigFileToTempDir("server.policy").getAbsolutePath());
+                    System.setProperty(SYS_PROP_JAVA_SEC_POLICY, writeConfigFileToTempDir("server.policy").getAbsolutePath());
                 }
             }
 
             // security manager is set here so that it can be accessed from
             // other lifecycles, like PEWebContainer
             java.lang.SecurityManager secMgr = System.getSecurityManager();
-            if (_logger.isLoggable(Level.INFO)) {
+            if (_logger.isLoggable(INFO)) {
                 if (secMgr != null) {
                     _logger.info(SecurityLoggerInfo.secMgrEnabled);
                 } else {
@@ -116,87 +116,59 @@ public class SecurityLifecycle implements PostConstruct, PreDestroy {
 
     // override default
     public void onInitialization() {
-
         try {
-            if (_logger.isLoggable(Level.INFO)) {
-                _logger.log(Level.INFO, SecurityLoggerInfo.secServiceStartupEnter);
-            }
+            _logger.log(INFO, SecurityLoggerInfo.secServiceStartupEnter);
 
-            //TODO:V3 LoginContextDriver has a static variable dependency on BaseAuditManager
-            //And since LoginContextDriver has too many static methods that use BaseAuditManager
-            //we have to make this workaround here.
-            //Commenting this since this is being handles in LoginContextDriver
-            //    LoginContextDriver.AUDIT_MANAGER = secServUtil.getAuditManager();
+            // TODO:V3 LoginContextDriver has a static variable dependency on BaseAuditManager
+            // And since LoginContextDriver has too many static methods that use BaseAuditManager
+            // we have to make this workaround here.
 
-            //replaced with SharedSecureRandom API
-            //secServUtil.initSecureSeed();
-
-            // jacc
-            //registerPolicyHandlers();
-            // assert(policyLoader != null);
+            // Init Jakarta Authorization
             policyLoader.loadPolicy();
 
             realmsManager.createRealms();
-            // start the audit mechanism
-            AuditManager auditManager = secServUtil.getAuditManager();
+
+            // Start the audit mechanism
+            AuditManager auditManager = securityServicesUtil.getAuditManager();
             auditManager.loadAuditModules();
 
-            //Audit the server started event
+            // Audit the server started event
             auditManager.serverStarted();
 
             // initRoleMapperFactory is in J2EEServer.java and not moved to here
             // this is because a DummyRoleMapperFactory is register due
             // to invocation of ConnectorRuntime.createActiveResourceAdapter
             // initRoleMapperFactory is called after it
-            //initRoleMapperFactory();
+            // initRoleMapperFactory();
 
-            if (_logger.isLoggable(Level.INFO)) {
-                _logger.log(Level.INFO, SecurityLoggerInfo.secServiceStartupExit);
-            }
+            _logger.log(INFO, SecurityLoggerInfo.secServiceStartupExit);
 
         } catch (Exception ex) {
             throw new SecurityLifecycleException(ex);
         }
     }
 
-    /*    private void registerPolicyHandlers()
-            throws jakarta.security.jacc.PolicyContextException {
-        PolicyContextHandler pch = PolicyContextHandlerImpl.getInstance();
-        PolicyContext.registerHandler(PolicyContextHandlerImpl.ENTERPRISE_BEAN,
-            pch, true);
-        PolicyContext.registerHandler(PolicyContextHandlerImpl.SUBJECT, pch, true);
-        PolicyContext.registerHandler(PolicyContextHandlerImpl.EJB_ARGUMENTS,
-            pch, true);
-        *//*V3 Commented: PolicyContext.registerHandler(PolicyContextHandlerImpl.SOAP_MESSAGE,
-             pch, true);
-           *//*
-              PolicyContext.registerHandler(PolicyContextHandlerImpl.HTTP_SERVLET_REQUEST,
-               pch, true);
-              PolicyContext.registerHandler(PolicyContextHandlerImpl.REUSE, pch, true);
-              }*/
-
     @Override
     public void postConstruct() {
         onInitialization();
         listener = new AuditServerShutdownListener();
-        Events events = habitat.getService(Events.class);
+        Events events = serviceLocator.getService(Events.class);
         events.register(listener);
-
     }
 
     @Override
     public void preDestroy() {
-        //DO Nothing ?
-        //TODO:V3 need to see if something needs cleanup
+        // DO Nothing ?
+        // TODO:V3 need to see if something needs cleanup
 
     }
 
-    //To audit the server shutdown event
+    // To audit the server shutdown event
     public class AuditServerShutdownListener implements EventListener {
         @Override
-        public void event(Event event) {
-            if (EventTypes.SERVER_SHUTDOWN.equals(event.type())) {
-                secServUtil.getAuditManager().serverShutdown();
+        public void event(Event<?> event) {
+            if (SERVER_SHUTDOWN.equals(event.type())) {
+                securityServicesUtil.getAuditManager().serverShutdown();
             }
         }
     }

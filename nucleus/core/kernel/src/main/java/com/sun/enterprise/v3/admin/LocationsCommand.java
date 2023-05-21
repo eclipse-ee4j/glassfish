@@ -17,12 +17,6 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.glassfish.bootstrap.StartupContextUtil;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 
@@ -38,21 +32,23 @@ import org.glassfish.internal.config.UnprocessedConfigListener;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
 
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.glassfish.bootstrap.StartupContextUtil;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 /**
  * Locations command to indicate where this server is installed.
+ * 
  * @author Jerome Dochez
  */
-@Service(name="__locations")
+@Service(name = "__locations")
 @Singleton
 @CommandLock(CommandLock.LockType.NONE)
 @I18n("locations.command")
 @RestEndpoints({
-    @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET,
-        path="locations",
-        description="Location",
-        useForAuthorization=true)
-})
+        @RestEndpoint(configBean = Domain.class, opType = RestEndpoint.OpType.GET, path = "locations", description = "Location", useForAuthorization = true) })
 public class LocationsCommand implements AdminCommand {
 
     @Inject
@@ -71,9 +67,9 @@ public class LocationsCommand implements AdminCommand {
         mp.addProperty("Domain-Root", env.getInstanceRoot().getAbsolutePath());
         mp.addProperty("Instance-Root", env.getInstanceRoot().getAbsolutePath());
         mp.addProperty("Config-Dir", env.getConfigDirPath().getAbsolutePath());
-        mp.addProperty("Uptime", ""+getUptime());
+        mp.addProperty("Uptime", "" + getUptime());
         mp.addProperty("Pid", Long.toString(ProcessHandle.current().pid()));
-        mp.addProperty("Restart-Required", ""+ucl.serverRequiresRestart());
+        mp.addProperty("Restart-Required", "" + ucl.serverRequiresRestart());
     }
 
     private long getUptime() {

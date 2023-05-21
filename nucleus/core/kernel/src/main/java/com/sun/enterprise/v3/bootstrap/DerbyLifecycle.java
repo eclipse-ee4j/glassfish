@@ -25,11 +25,12 @@
 
 package com.sun.enterprise.v3.bootstrap;
 
-import com.sun.enterprise.module.LifecyclePolicy;
+import java.util.logging.Level;
+
 import com.sun.enterprise.module.HK2Module;
+import com.sun.enterprise.module.LifecyclePolicy;
 import com.sun.enterprise.module.ModuleState;
 import com.sun.enterprise.module.common_impl.LogHelper;
-import java.util.logging.Level;
 
 /**
  *
@@ -47,11 +48,13 @@ public class DerbyLifecycle implements LifecyclePolicy {
      * or set up access to resources
      * @param module the module instance
      */
+    @Override
     public void start(HK2Module module) {
 
         try {
             final HK2Module myModule = module;
             Thread thread = new Thread() {
+                @Override
                 public void run() {
                     try {
                         try {
@@ -84,6 +87,7 @@ public class DerbyLifecycle implements LifecyclePolicy {
      * free all the module resources and returned to a {@link ModuleState#NEW NEW} state.
      * @param module the module instance
      */
+    @Override
     public void stop(HK2Module module) {
 
     }

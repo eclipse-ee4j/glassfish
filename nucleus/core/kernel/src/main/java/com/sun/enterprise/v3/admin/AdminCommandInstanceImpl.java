@@ -16,26 +16,28 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.admin.event.AdminCommandEventBrokerImpl;
-import com.sun.enterprise.admin.remote.AdminCommandStateImpl;
+import java.io.File;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.Date;
+import java.util.List;
+
+import javax.security.auth.Subject;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.ExitCode;
 import org.glassfish.api.admin.AdminCommandEventBroker;
-import org.glassfish.api.admin.Job;
 import org.glassfish.api.admin.CommandProgress;
+import org.glassfish.api.admin.Job;
+import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.Payload;
 import org.glassfish.api.admin.progress.JobInfo;
 import org.glassfish.api.admin.progress.JobPersistence;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.security.services.common.SubjectUtil;
 
-import javax.security.auth.Subject;
-import java.io.File;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.util.Date;
-import java.util.List;
-import org.glassfish.api.admin.ParameterMap;
+import com.sun.enterprise.admin.event.AdminCommandEventBrokerImpl;
+import com.sun.enterprise.admin.remote.AdminCommandStateImpl;
 
 /** Represents running (or finished) command instance.
  *
@@ -47,8 +49,6 @@ import org.glassfish.api.admin.ParameterMap;
 public class AdminCommandInstanceImpl extends AdminCommandStateImpl implements Job {
 
     private static final long serialVersionUID = 1L;
-
-//    private final static LocalStringManagerImpl adminStrings = new LocalStringManagerImpl(AdminCommandInstanceImpl.class);
 
     private CommandProgress commandProgress;
     private transient Payload.Outbound payload;
@@ -145,6 +145,7 @@ public class AdminCommandInstanceImpl extends AdminCommandStateImpl implements J
         if (commandProgress != null && report != null && report.getActionExitCode() == ExitCode.SUCCESS) {
             commandProgress.complete();
         }
+
         super.actionReport = report;
         this.payload = outbound;
         this.completionDate = System.currentTimeMillis();

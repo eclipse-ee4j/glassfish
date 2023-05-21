@@ -16,41 +16,41 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.I18n;
+import org.glassfish.api.admin.AccessRequired;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandLock;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.container.Sniffer;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.data.EngineInfo;
 import org.glassfish.internal.data.ContainerRegistry;
-import com.sun.enterprise.module.HK2Module;
-import com.sun.enterprise.module.ModulesRegistry;
+import org.glassfish.internal.data.EngineInfo;
+import org.jvnet.hk2.annotations.Service;
+
 import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.Applications;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Engine;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.I18n;
-import org.glassfish.api.admin.*;
-import org.glassfish.api.container.Sniffer;
-import jakarta.inject.Inject;
-import org.jvnet.hk2.annotations.Service;
+import com.sun.enterprise.module.HK2Module;
+import com.sun.enterprise.module.ModulesRegistry;
+import com.sun.enterprise.util.LocalStringManagerImpl;
 
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
- * This admin command list the containers currentely running within that
- * Glassfish instance
+ * This admin command list the containers currentely running within that Glassfish instance
  */
-@Service(name="list-containers")
-@Singleton        // no per-execution state
+@Service(name = "list-containers")
+@Singleton // no per-execution state
 @CommandLock(CommandLock.LockType.NONE)
 @I18n("list.containers.command")
 @RestEndpoints({
-    @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET,
-        path="list-containers",
-        description="list-containers")
-})
-@AccessRequired(resource="domain", action="read")
+        @RestEndpoint(configBean = Domain.class, opType = RestEndpoint.OpType.GET, path = "list-containers", description = "list-containers") })
+@AccessRequired(resource = "domain", action = "read")
 public class ListContainersCommand implements AdminCommand {
 
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListContainersCommand.class);
@@ -67,6 +67,7 @@ public class ListContainersCommand implements AdminCommand {
     @Inject
     Applications applications;
 
+    @Override
     public void execute(AdminCommandContext context) {
 
         ActionReport report = context.getActionReport();
@@ -78,46 +79,41 @@ public class ListContainersCommand implements AdminCommand {
         top.setChildrenType(localStrings.getLocalString("container", "Container"));
 
         Iterable<? extends Sniffer> sniffers = habitat.getAllServices(Sniffer.class);
-        if (sniffers ==null) {
-            top.setMessage(localStrings.getLocalString("list.containers.nocontainer",
-                    "No container currently configured"));
+        if (sniffers == null) {
+            top.setMessage(localStrings.getLocalString("list.containers.nocontainer", "No container currently configured"));
         } else {
             for (Sniffer sniffer : sniffers) {
                 ActionReport.MessagePart container = top.addChild();
                 container.setMessage(sniffer.getModuleType());
-                container.addProperty(localStrings.getLocalString("contractprovider", "ContractProvider"),
-                        sniffer.getModuleType());
+                container.addProperty(localStrings.getLocalString("contractprovider", "ContractProvider"), sniffer.getModuleType());
                 EngineInfo engineInfo = containerRegistry.getContainer(sniffer.getModuleType());
 
                 if (engineInfo != null) {
-                    container.addProperty(
-                            localStrings.getLocalString("status", "Status"),
+                    container.addProperty(localStrings.getLocalString("status", "Status"),
                             localStrings.getLocalString("started", "Started"));
                     HK2Module connectorModule = modulesRegistry.find(engineInfo.getSniffer().getClass());
                     container.addProperty(localStrings.getLocalString("connector", "Connector"),
-                            connectorModule.getModuleDefinition().getName() +
-                            ":" + connectorModule.getModuleDefinition().getVersion());
+                            connectorModule.getModuleDefinition().getName() + ":" + connectorModule.getModuleDefinition().getVersion());
                     container.addProperty(localStrings.getLocalString("implementation", "Implementation"),
                             engineInfo.getContainer().getClass().toString());
                     boolean atLeastOne = false;
                     for (Application app : applications.getApplications()) {
                         for (com.sun.enterprise.config.serverbeans.Module module : app.getModule()) {
                             Engine engine = module.getEngine(engineInfo.getSniffer().getModuleType());
-                            if (engine!=null) {
+                            if (engine != null) {
                                 if (!atLeastOne) {
-                                    atLeastOne=true;
-                                    container.setChildrenType(localStrings.getLocalString("list.containers.listapps",
-                                            "Applications deployed"));
+                                    atLeastOne = true;
+                                    container.setChildrenType(
+                                            localStrings.getLocalString("list.containers.listapps", "Applications deployed"));
 
                                 }
                                 container.addChild().setMessage(app.getName());
                             }
                         }
 
-
                     }
                     if (!atLeastOne) {
-                       container.addProperty("Status", "Not Started");
+                        container.addProperty("Status", "Not Started");
                     }
                 }
             }

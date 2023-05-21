@@ -16,16 +16,11 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.SystemProperty;
-import com.sun.enterprise.config.serverbeans.SystemPropertyBag;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.SystemPropertyConstants;
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
-import jakarta.inject.Inject;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
@@ -44,6 +39,14 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.Transaction;
 import org.jvnet.hk2.config.TransactionFailure;
+
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.SystemProperty;
+import com.sun.enterprise.config.serverbeans.SystemPropertyBag;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
 
 /**
  * Create System Properties Command
@@ -64,8 +67,7 @@ import org.jvnet.hk2.config.TransactionFailure;
 @TargetType(value={CommandTarget.CLUSTER,
 CommandTarget.CONFIG, CommandTarget.DAS, CommandTarget.DOMAIN, CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTERED_INSTANCE})
 @I18n("create.system.properties")
-public class CreateSystemProperties implements AdminCommand, AdminCommandSecurity.Preauthorization,
-        AdminCommandSecurity.AccessCheckProvider {
+public class CreateSystemProperties implements AdminCommand, AdminCommandSecurity.Preauthorization, AdminCommandSecurity.AccessCheckProvider {
 
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CreateSystemProperties.class);
 
@@ -83,6 +85,7 @@ public class CreateSystemProperties implements AdminCommand, AdminCommandSecurit
     @Override
     public boolean preAuthorization(AdminCommandContext context) {
         spb = CLIUtil.chooseTarget(domain, target);
+
         if (spb == null) {
             final ActionReport report = context.getActionReport();
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
@@ -91,12 +94,13 @@ public class CreateSystemProperties implements AdminCommand, AdminCommandSecurit
             report.setMessage(msg);
             return false;
         }
+
         return true;
     }
 
     @Override
     public Collection<? extends AccessCheck> getAccessChecks() {
-        final Collection<AccessCheck> result = new ArrayList<AccessCheck>();
+        final Collection<AccessCheck> result = new ArrayList<>();
         result.add(new AccessCheck(AccessRequired.Util.resourceNameFromConfigBeanProxy(spb), "update"));
         return result;
     }

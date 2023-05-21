@@ -16,94 +16,108 @@
 
 package com.sun.enterprise.v3.admin;
 
-import java.util.*;
+import static java.util.logging.Level.FINE;
+import static org.glassfish.api.ActionReport.ExitCode.FAILURE;
+import static org.glassfish.api.admin.AccessRequired.Util.resourceNameFromDom;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
-import com.sun.enterprise.config.modularity.ConfigModularityUtils;
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.AccessRequired.AccessCheck;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.AdminCommandSecurity;
+import org.glassfish.api.admin.CommandLock;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.flashlight.MonitoringRuntimeDataRegistry;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.Target;
+import org.glassfish.kernel.KernelLoggerInfo;
+import org.jvnet.hk2.annotations.Optional;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.Dom;
+import org.jvnet.hk2.config.types.Property;
+
 import com.sun.enterprise.config.modularity.GetSetModularityHelper;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.v3.common.PropsFileActionReporter;
-import java.util.logging.Level;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
-import org.glassfish.flashlight.MonitoringRuntimeDataRegistry;
-import org.glassfish.internal.api.Target;
+
 import jakarta.inject.Inject;
-import org.glassfish.api.admin.AccessRequired.AccessCheck;
-
-import org.jvnet.hk2.annotations.Optional;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.kernel.KernelLoggerInfo;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.jvnet.hk2.config.Dom;
-import org.jvnet.hk2.config.types.Property;
-
 
 /**
- * User: Jerome Dochez
- * Date: Jul 10, 2008
- * Time: 12:17:26 AM
+ * User: Jerome Dochez Date: Jul 10, 2008 Time: 12:17:26 AM
  */
 @Service(name = "get")
 @PerLookup
 @CommandLock(CommandLock.LockType.NONE)
-@ExecuteOn({RuntimeType.DAS, RuntimeType.INSTANCE})
-@RestEndpoints({
-    @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET,
-        path="get",
-        description="Get")
-})
-public class GetCommand extends V2DottedNameSupport implements AdminCommand,
-        AdminCommandSecurity.Preauthorization,
-        AdminCommandSecurity.AccessCheckProvider {
+@ExecuteOn({ RuntimeType.DAS, RuntimeType.INSTANCE })
+@RestEndpoints({ @RestEndpoint(configBean = Domain.class, opType = RestEndpoint.OpType.GET, path = "get", description = "Get") })
+public class GetCommand extends V2DottedNameSupport
+        implements AdminCommand, AdminCommandSecurity.Preauthorization, AdminCommandSecurity.AccessCheckProvider {
+
+    final static private LocalStringManagerImpl localStrings = new LocalStringManagerImpl(GetCommand.class);
+
     @Inject
-    private MonitoringReporter mr;
+    private MonitoringReporter monitoringReporter;
+
     @Inject
     private Domain domain;
+
     @Inject
     private ServerEnvironment serverEnv;
+
     @Inject
     private Target targetService;
+
     @Inject
-    private ServiceLocator habitat;
+    private ServiceLocator serviceLocator;
+
     @Param(optional = true, defaultValue = "false", shortName = "m")
     private Boolean monitor;
+
     @Param(optional = true, defaultValue = "false", shortName = "c")
     private Boolean aggregateDataOnly;
+
     @Param(primary = true)
     private String pattern;
-    @Inject @Optional
+
+    @Inject
+    @Optional
     private MonitoringRuntimeDataRegistry mrdr;
-    final private static LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(GetCommand.class);
-
-    private ActionReport report;
-
-    private List<Map.Entry> matchingNodesSorted;
-
-    private String prefix;
 
     @Inject
     @Optional
     GetSetModularityHelper modularityHelper;
 
+    private ActionReport report;
+    private List<Entry<Dom, String>> matchingNodesSorted;
+    private String prefix;
+
     @Override
     public boolean preAuthorization(AdminCommandContext context) {
         if (monitor) {
             return preAuthorizationForMonitoring(context);
-        } else {
-            return preAuthorizationForNonMonitoring(context);
         }
+
+        return preAuthorizationForNonMonitoring(context);
     }
 
     private boolean preAuthorizationForMonitoring(final AdminCommandContext context) {
-        mr.prepareGet(context, pattern, aggregateDataOnly);
+        monitoringReporter.prepareGet(context, pattern, aggregateDataOnly);
         return true;
     }
 
@@ -114,8 +128,7 @@ public class GetCommand extends V2DottedNameSupport implements AdminCommand,
         try {
             PropsFileActionReporter reporter = (PropsFileActionReporter) report;
             reporter.useMainChildrenAttribute(true);
-        }
-        catch (ClassCastException e) {
+        } catch (ClassCastException e) {
             // ignore this is not a manifest output.
         }
 
@@ -126,31 +139,27 @@ public class GetCommand extends V2DottedNameSupport implements AdminCommand,
     @Override
     public Collection<? extends AccessCheck> getAccessChecks() {
         if (monitor) {
-            return mr.getAccessChecksForGet();
-        } else {
-            return getAccessChecksForNonMonitoring();
+            return monitoringReporter.getAccessChecksForGet();
         }
+
+        return getAccessChecksForNonMonitoring();
     }
 
     private Collection<? extends AccessCheck> getAccessChecksForNonMonitoring() {
-        final Collection<AccessCheck> accessChecks = new ArrayList<AccessCheck>();
-        for (Map.Entry entry : matchingNodesSorted) {
-            accessChecks.add(new AccessCheck(AccessRequired.Util.resourceNameFromDom((Dom)entry.getKey()), "read"));
+        final Collection<AccessCheck> accessChecks = new ArrayList<>();
+        for (Entry<Dom, String> entry : matchingNodesSorted) {
+            accessChecks.add(new AccessCheck(resourceNameFromDom(entry.getKey()), "read"));
         }
+
         return accessChecks;
     }
 
     @Override
     public void execute(AdminCommandContext context) {
-
         if (monitor) {
             getMonitorAttributes(context);
-            //String old = report.getMessage();
-            //String append = "\nXXXXXXXXX\n" + mr.toString();
-            //report.setMessage(old == null ? append : old + append);
             return;
         }
-
 
         boolean foundMatch = false;
         for (Map.Entry<Dom, String> node : matchingNodesSorted) {
@@ -163,11 +172,10 @@ public class GetCommand extends V2DottedNameSupport implements AdminCommand,
                     part.setMessage(prefix + node.getValue() + "=" + node.getKey().attribute("value"));
                     foundMatch = true;
                 }
-            }
-            else {
+            } else {
                 Map<String, String> attributes = getNodeAttributes(node.getKey(), pattern);
                 TreeMap<String, String> attributesSorted = new TreeMap(attributes);
-                for (Map.Entry<String, String> name : attributesSorted.entrySet()) {
+                for (Entry<String, String> name : attributesSorted.entrySet()) {
                     String finalDottedName = node.getValue() + "." + name.getKey();
                     if (matches(finalDottedName, pattern)) {
                         ActionReport.MessagePart part = report.getTopMessagePart().addChild();
@@ -178,9 +186,9 @@ public class GetCommand extends V2DottedNameSupport implements AdminCommand,
                 }
             }
         }
+
         if (!foundMatch) {
-            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            //report.setMessage("No object found matching " + pattern);
+            report.setActionExitCode(FAILURE);
             report.setMessage(localStrings.getLocalString("admin.get.path.notfound", "Dotted name path {0} not found.", prefix + pattern));
 
         }
@@ -189,42 +197,43 @@ public class GetCommand extends V2DottedNameSupport implements AdminCommand,
     private void getMonitorAttributes(AdminCommandContext ctxt) {
 
         Logger l = KernelLoggerInfo.getLogger();
-        if (l.isLoggable(Level.FINE)) {
-            l.log(Level.FINE, "Get Command: {0}", mr.toString());
+        if (l.isLoggable(FINE)) {
+            l.log(FINE, "Get Command: {0}", monitoringReporter.toString());
         }
-        mr.execute();
+        monitoringReporter.execute();
     }
 
-    private List<Map.Entry> findSortedMatchingNodes() {
-
+    private List<Entry<Dom, String>> findSortedMatchingNodes() {
         if (!monitor) {
             if (modularityHelper != null) {
                 modularityHelper.getLocationForDottedName(pattern);
             }
         }
-        // check for logging patterns
+
+        // Check for logging patterns
         if (pattern.contains(".log-service")) {
-            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            report.setMessage(localStrings.getLocalString("admin.get.invalid.logservice.command", "For getting log levels/attributes use list-log-levels/list-log-attributes command."));
+            report.setActionExitCode(FAILURE);
+            report.setMessage(localStrings.getLocalString("admin.get.invalid.logservice.command",
+                    "For getting log levels/attributes use list-log-levels/list-log-attributes command."));
             return null;
         }
 
-        //check for incomplete dotted name
+        // Check for incomplete dotted name
         if (!pattern.equals("*")) {
             if (pattern.lastIndexOf(".") == -1 || pattern.lastIndexOf(".") == (pattern.length() - 1)) {
-                report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-                //report.setMessage("Missing expected dotted name part");
+                report.setActionExitCode(FAILURE);
+                // report.setMessage("Missing expected dotted name part");
                 report.setMessage(localStrings.getLocalString("missing.dotted.name", "Missing expected dotted name part"));
                 return null;
             }
         }
 
-        // first let's get the parent for this pattern.
+        // First let's get the parent for this pattern.
         TreeNode[] parentNodes = getAliasedParent(domain, pattern);
 
-        // reset the pattern.
+        // Reset the pattern.
         prefix = "";
-        if(!pattern.startsWith(parentNodes[0].relativeName)) {
+        if (!pattern.startsWith(parentNodes[0].relativeName)) {
             prefix = pattern.substring(0, pattern.indexOf(parentNodes[0].relativeName));
             pattern = parentNodes[0].relativeName;
         } else {
@@ -232,13 +241,14 @@ public class GetCommand extends V2DottedNameSupport implements AdminCommand,
         }
 
         Map<Dom, String> matchingNodes;
-        Map<Dom, String> dottedNames = new HashMap<Dom, String>();
+        Map<Dom, String> dottedNames = new HashMap<>();
         for (TreeNode parentNode : parentNodes) {
             dottedNames.putAll(getAllDottedNodes(parentNode.node));
             if (parentNode.name.equals("")) {
                 dottedNames.put(parentNode.node, "domain");
             }
         }
+
         matchingNodes = getMatchingNodes(dottedNames, pattern);
         if (matchingNodes.isEmpty() && pattern.lastIndexOf('.') != -1) {
             // it's possible the user is just looking for an attribute, let's remove the
@@ -246,16 +256,13 @@ public class GetCommand extends V2DottedNameSupport implements AdminCommand,
             matchingNodes = getMatchingNodes(dottedNames, pattern.substring(0, pattern.lastIndexOf(".")));
         }
 
-        //No matches found - report the failure and return
+        // No matches found - report the failure and return
         if (matchingNodes.isEmpty()) {
-            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            //report.setMessage("Dotted name path \"" + prefix + pattern + "\" not found.");
+            report.setActionExitCode(FAILURE);
             report.setMessage(localStrings.getLocalString("admin.get.path.notfound", "Dotted name path {0} not found.", prefix + pattern));
             return null;
         }
 
-        List<Map.Entry> result = sortNodesByDottedName(matchingNodes);
-        result = applyOverrideRules(result);
-        return result;
+        return applyOverrideRules(sortNodesByDottedName(matchingNodes));
     }
 }

@@ -16,12 +16,12 @@
 
 package com.sun.enterprise.v3.server;
 
-import org.glassfish.hk2.api.Factory;
-import org.jvnet.hk2.annotations.Service;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.Executors;
+import org.glassfish.hk2.api.Factory;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Factory to create the scheduled executor service
@@ -37,6 +37,7 @@ public class ScheduledExecutorServiceFactory implements Factory<ScheduledExecuto
     @Override
     public ScheduledExecutorService provide() {
         return Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
+            @Override
             public Thread newThread(Runnable r) {
                     Thread t = Executors.defaultThreadFactory().newThread(r);
                     t.setDaemon(true);

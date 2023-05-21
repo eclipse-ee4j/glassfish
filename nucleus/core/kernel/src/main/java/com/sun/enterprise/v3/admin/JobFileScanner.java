@@ -16,36 +16,38 @@
 
 package com.sun.enterprise.v3.admin;
 
+import java.io.File;
+import java.util.Collection;
+import java.util.HashSet;
+
 import org.glassfish.api.admin.JobLocator;
-import jakarta.inject.Singleton;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 
 import jakarta.inject.Inject;
-import java.io.File;
-import java.util.Collection;
-import java.util.HashSet;
+import jakarta.inject.Singleton;
 
 /**
  * This service will scan for all jobs.xml
+ * 
  * @author Bhakti Mehta
  */
-@Service (name="job-filescanner")
+@Service(name = "job-filescanner")
 @Singleton
 public class JobFileScanner implements PostConstruct {
 
     @Inject
     private ServiceLocator serviceLocator;
 
-    HashSet<File> persistedJobFiles ;
+    HashSet<File> persistedJobFiles;
 
     @Override
     public void postConstruct() {
 
         Collection<JobLocator> services = serviceLocator.getAllServices(JobLocator.class);
-        persistedJobFiles = new HashSet<File>() ;
-        for (JobLocator locator: services) {
+        persistedJobFiles = new HashSet<>();
+        for (JobLocator locator : services) {
             persistedJobFiles.addAll(locator.locateJobXmlFiles());
         }
     }

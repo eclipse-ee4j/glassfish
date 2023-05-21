@@ -16,20 +16,21 @@
 
 package com.sun.enterprise.v3.server;
 
-import com.sun.enterprise.config.serverbeans.*;
-import com.sun.enterprise.deploy.shared.ArchiveFactory;
-import com.sun.enterprise.util.io.FileUtils;
-import com.sun.enterprise.v3.common.HTMLActionReporter;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.inject.Provider;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.StartupRunLevel;
 import org.glassfish.api.admin.ServerEnvironment;
@@ -55,11 +56,32 @@ import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
 import org.glassfish.internal.data.ContainerRegistry;
 import org.glassfish.internal.data.EngineInfo;
-import org.glassfish.internal.deployment.*;
+import org.glassfish.internal.deployment.ApplicationOrderInfo;
+import org.glassfish.internal.deployment.Deployment;
+import org.glassfish.internal.deployment.DeploymentOrder;
+import org.glassfish.internal.deployment.DeploymentTracing;
+import org.glassfish.internal.deployment.ExtendedDeploymentContext;
+import org.glassfish.internal.deployment.SnifferManager;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.glassfish.security.services.impl.AuthenticationServiceImpl;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
+
+import com.sun.enterprise.config.serverbeans.AppTenant;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.ApplicationRef;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.ServerTags;
+import com.sun.enterprise.config.serverbeans.SystemApplications;
+import com.sun.enterprise.deploy.shared.ArchiveFactory;
+import com.sun.enterprise.util.io.FileUtils;
+import com.sun.enterprise.v3.common.HTMLActionReporter;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Provider;
 
 /**
  * This service is responsible for loading all deployed applications...
@@ -121,7 +143,7 @@ public class ApplicationLoaderService implements org.glassfish.hk2.api.PreDestro
 
     private String deploymentTracingEnabled = null;
 
-    private Map<String,Integer> appOrderInfoMap = new HashMap<String, Integer>();
+    private Map<String,Integer> appOrderInfoMap = new HashMap<>();
     private int appOrder = 0;
 
     /**
@@ -131,6 +153,7 @@ public class ApplicationLoaderService implements org.glassfish.hk2.api.PreDestro
      * Get a Deployer capable for each application found
      * Invoke the deployer load() method for each application.
      */
+    @Override
     public void postConstruct() {
 
         assert env!=null;
@@ -257,6 +280,7 @@ public class ApplicationLoaderService implements org.glassfish.hk2.api.PreDestro
                         File tmpDir = new File(path);
                         tmpDir.deleteOnExit();
                         events.register(new org.glassfish.api.event.EventListener() {
+                            @Override
                             public void event(Event event) {
                                 if (event.is(EventTypes.SERVER_SHUTDOWN)) {
                                     if (tmpFile.exists()) {
@@ -298,7 +322,7 @@ public class ApplicationLoaderService implements org.glassfish.hk2.api.PreDestro
                 }
             }
         }
-        events.send(new Event<DeploymentContext>(Deployment.ALL_APPLICATIONS_PROCESSED, null));
+        events.send(new Event<>(Deployment.ALL_APPLICATIONS_PROCESSED, null));
 
     }
 
@@ -410,6 +434,7 @@ public class ApplicationLoaderService implements org.glassfish.hk2.api.PreDestro
     }
 
 
+    @Override
     public String toString() {
         return "Application Loader";
     }
@@ -417,12 +442,13 @@ public class ApplicationLoaderService implements org.glassfish.hk2.api.PreDestro
     /**
      * Stopped all loaded applications
      */
+    @Override
     public void preDestroy() {
 
 
         // stop all running applications including user and system applications
         // which are registered in the domain.xml
-        List<Application> allApplications = new ArrayList<Application>();
+        List<Application> allApplications = new ArrayList<>();
 
         List<Application> standaloneAdapters =
             applications.getApplicationsWithSnifferType(ServerTags.CONNECTOR, true);
@@ -448,7 +474,7 @@ public class ApplicationLoaderService implements org.glassfish.hk2.api.PreDestro
 
         // now stop the applications which are not registered in the
         // domain.xml like timer service application
-        Set<String> allAppNames = new HashSet<String>();
+        Set<String> allAppNames = new HashSet<>();
         allAppNames.addAll(appRegistry.getAllApplicationNames());
         for (String appName : allAppNames) {
             ApplicationInfo appInfo = appRegistry.get(appName);

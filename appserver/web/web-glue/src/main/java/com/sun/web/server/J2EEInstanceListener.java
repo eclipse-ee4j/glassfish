@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2023 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -203,7 +203,7 @@ public final class J2EEInstanceListener implements InstanceListener {
 
                 if (principal != null && principal == basePrincipal && principal.getClass().getName().equals(WEB_PRINCIPAL_CLASS)) {
                     securityContext.setSecurityContextWithPrincipal(principal);
-                } else if (principal != basePrincipal) {
+                } else if (principal != basePrincipal && principal != getCurrentCallerPrincipal()) {
 
                     // The wrapper has overridden getUserPrincipal
                     // reject the request if the wrapper does not have
@@ -212,7 +212,6 @@ public final class J2EEInstanceListener implements InstanceListener {
                     checkObjectForDoAsPermission(httpServletRequest);
                     securityContext.setSecurityContextWithPrincipal(principal);
                 }
-
             }
         }
 
@@ -246,7 +245,14 @@ public final class J2EEInstanceListener implements InstanceListener {
         }
     }
 
+    private Principal getCurrentCallerPrincipal() {
+        AppServSecurityContext currentSecurityContext = securityContext.getCurrentSecurityContext();
+        if (currentSecurityContext == null) {
+            return null;
+        }
 
+        return currentSecurityContext.getCallerPrincipal();
+    }
 
     private static void checkObjectForDoAsPermission(final Object o) throws AccessControlException {
         if (System.getSecurityManager() != null) {

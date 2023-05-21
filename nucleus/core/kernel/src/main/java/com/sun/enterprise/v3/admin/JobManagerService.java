@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
@@ -86,36 +87,35 @@ import jakarta.xml.bind.Unmarshaller;
 @Singleton
 public class JobManagerService implements JobManager, PostConstruct, EventListener {
 
+    private final static Logger logger = KernelLoggerInfo.getLogger();
+    protected static final LocalStringManagerImpl adminStrings = new LocalStringManagerImpl(JobManagerService.class);
     private static final String CHECKPOINT_MAINDATA = "MAINCMD";
+    private static final int MAX_SIZE = 65535;
+
+    private ManagedJobConfig managedJobConfig;
+    private final ConcurrentHashMap<String, Job> jobRegistry = new ConcurrentHashMap<>();
+    private final AtomicInteger lastId = new AtomicInteger(0);
+
+    // This will store the data related to completed jobs so that unique ids
+    // can be generated for new jobs. This is populated lazily the first
+    // time the JobManagerService is created, it will scan the
+    // jobs.xml and load the information in memory
+    private final ConcurrentHashMap<String, CompletedJob> completedJobsInfo = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, CheckpointFilename> retryableJobsInfo = new ConcurrentHashMap<>();
+    private final String JOBS_FILE = "jobs.xml";
+
+    private ExecutorService pool;
+    protected JAXBContext jaxbContext;
+    protected File jobsFile;
 
     @Inject
     private Domain domain;
-
-    private ManagedJobConfig managedJobConfig;
-
-    private static final int MAX_SIZE = 65535;
-
-    private final ConcurrentHashMap<String, Job> jobRegistry = new ConcurrentHashMap<>();
-
-    private final AtomicInteger lastId = new AtomicInteger(0);
-
-    protected static final LocalStringManagerImpl adminStrings = new LocalStringManagerImpl(JobManagerService.class);
-
-    private final static Logger logger = KernelLoggerInfo.getLogger();
-
-    private ExecutorService pool;
 
     @Inject
     private ExecutorServiceFactory executorFactory;
 
     @Inject
     private ServerEnvironment serverEnvironment;
-
-    private final String JOBS_FILE = "jobs.xml";
-
-    protected JAXBContext jaxbContext;
-
-    protected File jobsFile;
 
     @Inject
     private ServiceLocator serviceLocator;
@@ -132,21 +132,13 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
     @Inject
     CommandRunnerImpl commandRunner;
 
-    // This will store the data related to completed jobs so that unique ids
-    // can be generated for new jobs. This is populated lazily the first
-    // time the JobManagerService is created, it will scan the
-    // jobs.xml and load the information in memory
-    private final ConcurrentHashMap<String, CompletedJob> completedJobsInfo = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<String, CheckpointFilename> retryableJobsInfo = new ConcurrentHashMap<>();
-
     /**
      * This will return a new id which is unused
-     * 
+     *
      * @return
      */
     @Override
     public synchronized String getNewId() {
-
         int nextId = lastId.incrementAndGet();
         if (nextId > MAX_SIZE) {
             reset();
@@ -179,7 +171,7 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
 
     /**
      * This method will return if the id is in use
-     * 
+     *
      * @param id
      * @return true if id is in use
      */
@@ -189,7 +181,7 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
 
     /**
      * This adds the jobs
-     * 
+     *
      * @param job
      * @throws IllegalArgumentException
      */
@@ -212,7 +204,7 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
 
     /**
      * This returns all the jobs in the registry
-     * 
+     *
      * @return The iterator of jobs
      */
     @Override
@@ -222,7 +214,7 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
 
     /**
      * This will return a job associated with the id
-     * 
+     *
      * @param id The job whose id matches
      * @return
      */
@@ -233,7 +225,7 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
 
     /**
      * This will return a list of jobs which have crossed the JOBS_RETENTION_PERIOD and need to be purged
-     * 
+     *
      * @return list of jobs to be purged
      */
     public ArrayList<JobInfo> getExpiredJobs(File file) {
@@ -277,7 +269,7 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
 
     /**
      * This will remove the job from the registry
-     * 
+     *
      * @param id The job id of the job to be removed
      */
     @Override
@@ -305,7 +297,7 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
 
     /**
      * This will load the jobs which have already completed and persisted in the jobs.xml
-     * 
+     *
      * @return JobsInfos which contains information about completed jobs
      */
     @Override
@@ -331,7 +323,7 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
 
     /**
      * This method looks for the completed jobs and purges a job which is marked with the jobId
-     * 
+     *
      * @param jobId the job to purge
      * @return the new list of completed jobs
      */
@@ -383,7 +375,7 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
 
         pool = executorFactory.provide();
 
-        HashSet<File> persistedJobFiles = jobFileScanner.getJobFiles();
+        Set<File> persistedJobFiles = jobFileScanner.getJobFiles();
         persistedJobFiles.add(jobsFile);
 
         // Check if there are jobs.xml files which have completed jobs so that

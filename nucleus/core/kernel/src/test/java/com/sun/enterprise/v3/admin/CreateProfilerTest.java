@@ -66,12 +66,16 @@ public class CreateProfilerTest {
 
     @Inject
     private ServiceLocator locator;
+
     @Inject
     private Logger logger;
+
     @Inject
     private MockGenerator mockGenerator;
+
     @Inject
     private JavaConfig javaConfig;
+
     @Inject
     private CommandRunnerImpl commandRunner;
 

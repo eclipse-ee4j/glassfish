@@ -19,6 +19,7 @@ package com.sun.enterprise.v3.admin;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.glassfish.api.admin.JobLocator;
 import org.glassfish.hk2.api.PostConstruct;
@@ -30,7 +31,7 @@ import jakarta.inject.Singleton;
 
 /**
  * This service will scan for all jobs.xml
- * 
+ *
  * @author Bhakti Mehta
  */
 @Service(name = "job-filescanner")
@@ -40,11 +41,10 @@ public class JobFileScanner implements PostConstruct {
     @Inject
     private ServiceLocator serviceLocator;
 
-    HashSet<File> persistedJobFiles;
+    Set<File> persistedJobFiles;
 
     @Override
     public void postConstruct() {
-
         Collection<JobLocator> services = serviceLocator.getAllServices(JobLocator.class);
         persistedJobFiles = new HashSet<>();
         for (JobLocator locator : services) {
@@ -52,7 +52,7 @@ public class JobFileScanner implements PostConstruct {
         }
     }
 
-    public HashSet<File> getJobFiles() {
+    public Set<File> getJobFiles() {
         return persistedJobFiles;
     }
 }

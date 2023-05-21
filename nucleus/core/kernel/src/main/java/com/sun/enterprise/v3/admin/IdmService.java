@@ -41,7 +41,7 @@ import jakarta.inject.Inject;
 /**
  * An implementation of the @link {IdentityManagement} that manages the password needs of the server. This
  * implementation consults the Java KeyStore and assumes that the stores are available in server's configuration area.
- * 
+ *
  * @author &#2325;&#2375;&#2342;&#2366;&#2352 (km@dev.java.net)
  */
 @Service(name = "jks-based")

@@ -36,26 +36,22 @@ import jakarta.xml.bind.Unmarshaller;
 
 /**
  * This service persists information for managed jobs to the file
- * 
+ *
  * @author Bhakti Mehta
  */
 @Service(name = "job-persistence")
 public class JobPersistenceService implements JobPersistence {
 
+    protected static final Logger logger = KernelLoggerInfo.getLogger();
+    protected static final LocalStringManagerImpl adminStrings = new LocalStringManagerImpl(JobPersistenceService.class);
+
     protected Marshaller jaxbMarshaller;
-
     protected Unmarshaller jaxbUnmarshaller;
-
     protected JobInfos jobInfos;
+    protected JAXBContext jaxbContext;
 
     @Inject
     private JobManagerService jobManager;
-
-    protected JAXBContext jaxbContext;
-
-    protected final static Logger logger = KernelLoggerInfo.getLogger();
-
-    protected static final LocalStringManagerImpl adminStrings = new LocalStringManagerImpl(JobPersistenceService.class);
 
     @Override
     public void persist(Object obj) {

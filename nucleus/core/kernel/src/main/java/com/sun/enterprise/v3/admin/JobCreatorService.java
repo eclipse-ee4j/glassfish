@@ -28,7 +28,7 @@ import jakarta.inject.Inject;
 
 /**
  * This service implements the <code>JobCreator</code> and is used for creating Jobs
- * 
+ *
  * @author Bhakti Mehta
  */
 @Service(name = "job-creator")
@@ -40,7 +40,6 @@ public class JobCreatorService implements JobCreator {
     @Inject
     JobManagerService jobManagerService;
 
-    private static final String JOBS_FILE = "jobs.xml";
 
     /**
      * This will create a new job with the name of command and a new unused id for the job
@@ -59,6 +58,7 @@ public class JobCreatorService implements JobCreator {
         } else {
             job = new AdminCommandInstanceImpl(name, scope, subject, false, parameters);
         }
+
         return job;
     }
 

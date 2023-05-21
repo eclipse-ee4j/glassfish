@@ -17,14 +17,12 @@
 
 package com.sun.enterprise.v3.server;
 
-
 import com.sun.appserv.server.util.Version;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.module.single.StaticModulesRegistry;
 import com.sun.enterprise.util.Result;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -69,6 +67,14 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 
+import static java.util.Collections.singletonList;
+import static org.glassfish.api.admin.ServerEnvironment.Status.starting;
+import static org.glassfish.api.event.EventTypes.PREPARE_SHUTDOWN;
+import static org.glassfish.api.event.EventTypes.SERVER_READY;
+import static org.glassfish.api.event.EventTypes.SERVER_SHUTDOWN;
+import static org.glassfish.api.event.EventTypes.SERVER_STARTUP;
+import static org.glassfish.hk2.runlevel.RunLevel.RUNLEVEL_MODE_META_TAG;
+import static org.glassfish.hk2.runlevel.RunLevel.RUNLEVEL_VAL_META_TAG;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
@@ -77,12 +83,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
 /**
  * AppServerStartup tests.
  * <p>
- * If test failed, look into logs, because exceptions are not thrown outside the
- * {@link AppServerStartup} implementation.
+ * If test failed, look into logs, because exceptions are not thrown outside the {@link AppServerStartup}
+ * implementation.
  *
  * @author Tom Beerbower
  */
@@ -91,27 +96,25 @@ public class AppServerStartupTest {
     /**
      * The AppServerStartup instance to test.
      */
-    private AppServerStartup as;
+    private AppServerStartup appServerStartup;
 
     /**
      * The test results.
      */
     private static Results results;
 
-
     /**
      * Map of exceptions to be thrown from the postConstruct.
      */
-    private static Map<Class, RuntimeException> mapPostConstructExceptions;
+    private static Map<Class<?>, RuntimeException> mapPostConstructExceptions;
 
     /**
-     * List of {@link Future}s returned from {@link FutureProvider#getFutures()} by the Startup
-     * services during progression to the start up run level.
+     * List of {@link Future}s returned from {@link FutureProvider#getFutures()} by the Startup services during progression
+     * to the start up run level.
      */
     private static List<TestFuture> listFutures;
 
     private ServiceLocator testLocator;
-
 
     /**
      * Reset the results prior to each test.
@@ -143,8 +146,8 @@ public class AppServerStartupTest {
         config.bind(BuilderHelper.link(RunLevelControllerImpl.class).to(RunLevelController.class).build());
 
         config.addUnbindFilter(BuilderHelper.createContractFilter(RunLevelContext.class.getName()));
-        config.bind(BuilderHelper.link(RunLevelContext.class).named(RunLevelContext.CONTEXT_NAME).to(Context.class)
-            .in(Singleton.class).build());
+        config.bind(BuilderHelper.link(RunLevelContext.class).named(RunLevelContext.CONTEXT_NAME).to(Context.class).in(Singleton.class)
+                .build());
 
         config.addUnbindFilter(BuilderHelper.createContractFilter(AsyncRunLevelContext.class.getName()));
         config.bind(BuilderHelper.link(AsyncRunLevelContext.class).in(Singleton.class).build());
@@ -166,15 +169,15 @@ public class AppServerStartupTest {
         bindService(config, APIExporterImpl.class);
         config.commit();
 
-        as = testLocator.getService(AppServerStartup.class);
-        assertNotNull(as);
+        appServerStartup = testLocator.getService(AppServerStartup.class);
+        assertNotNull(appServerStartup);
 
         mapPostConstructExceptions = new HashMap<>();
         listFutures = new LinkedList<>();
-        results = new Results(as.runLevelController);
+        results = new Results(appServerStartup.runLevelController);
 
-        as.events.register(results);
-        assertEquals(ServerEnvironment.Status.starting, as.env.getStatus());
+        appServerStartup.events.register(results);
+        assertEquals(starting, appServerStartup.serverEnvironment.getStatus());
     }
 
     /**
@@ -182,15 +185,16 @@ public class AppServerStartupTest {
      */
     @AfterEach
     public void afterTest() {
-        if (as != null) {
-            // force a stop to ensure that the services are released
-            if (as.runLevelController.getCurrentRunLevel() > 0) {
-                as.env.setStatus(ServerEnvironment.Status.started);
-                as.stop();
+        if (appServerStartup != null) {
+            // Force a stop to ensure that the services are released
+            if (appServerStartup.runLevelController.getCurrentRunLevel() > 0) {
+                appServerStartup.serverEnvironment.setStatus(ServerEnvironment.Status.started);
+                appServerStartup.stop();
             }
 
-            as.events.unregister(results);
+            appServerStartup.events.unregister(results);
         }
+
         results = null;
         listFutures = null;
         mapPostConstructExceptions = null;
@@ -199,26 +203,24 @@ public class AppServerStartupTest {
         testLocator = null;
     }
 
-
     /**
-     * Call the {@link AppServerStartup#run} method and make sure that
-     * the run level services are constructed and destroyed at the proper
-     * run levels.
+     * Call the {@link AppServerStartup#run} method and make sure that the run level services are constructed and destroyed
+     * at the proper run levels.
      */
     @Test
     public void testRunLevelServices() {
-        // create the list of Futures returned from TestStartupService
+        // Create the list of Futures returned from TestStartupService
         listFutures.add(new TestFuture());
         listFutures.add(new TestFuture());
         listFutures.add(new TestFuture());
 
         testRunAppServerStartup();
 
-        assertEquals(ServerEnvironment.Status.started, as.env.getStatus());
+        assertEquals(ServerEnvironment.Status.started, appServerStartup.serverEnvironment.getStatus());
 
         assertThat(results.getListEvents(), hasSize(2));
-        assertEquals(EventTypes.SERVER_STARTUP, results.getListEvents().get(0));
-        assertEquals(EventTypes.SERVER_READY, results.getListEvents().get(1));
+        assertEquals(SERVER_STARTUP, results.getListEvents().get(0));
+        assertEquals(SERVER_READY, results.getListEvents().get(1));
 
         // assert that the run level services have been constructed
         assertTrue(results.isConstructed(TestInitRunLevelService.class, InitRunLevel.VAL));
@@ -226,12 +228,12 @@ public class AppServerStartupTest {
         assertTrue(results.isConstructed(TestStartupRunLevelService.class, StartupRunLevel.VAL));
         assertTrue(results.isConstructed(TestPostStartupRunLevelService.class, PostStartupRunLevel.VAL));
 
-        as.stop();
-        assertEquals(ServerEnvironment.Status.stopped, as.env.getStatus());
+        appServerStartup.stop();
+        assertEquals(ServerEnvironment.Status.stopped, appServerStartup.serverEnvironment.getStatus());
 
         assertThat(results.getListEvents(), hasSize(4));
-        assertEquals(EventTypes.PREPARE_SHUTDOWN, results.getListEvents().get(2));
-        assertEquals(EventTypes.SERVER_SHUTDOWN, results.getListEvents().get(3));
+        assertEquals(PREPARE_SHUTDOWN, results.getListEvents().get(2));
+        assertEquals(SERVER_SHUTDOWN, results.getListEvents().get(3));
 
         // assert that the run level services have been destroyed
         assertTrue(results.isDestroyed(TestPostStartupRunLevelService.class, PostStartupRunLevel.VAL));
@@ -241,16 +243,15 @@ public class AppServerStartupTest {
     }
 
     /**
-     * Test the {@link AppServerStartup#run} method with an exception thrown from an init
-     * service that should cause a failure during init.  Make sure that the init run level
-     * services are constructed at the proper run levels.
+     * Test the {@link AppServerStartup#run} method with an exception thrown from an init service that should cause a
+     * failure during init. Make sure that the init run level services are constructed at the proper run levels.
      */
     @Test
     public void testRunLevelServicesWithInitException() {
         testRunLevelServicesWithException(TestInitRunLevelService.class);
 
         // make sure that the server has not been started
-        assertEquals(ServerEnvironment.Status.starting, as.env.getStatus());
+        assertEquals(starting, appServerStartup.serverEnvironment.getStatus());
 
         // assert that the run level services have been constructed
         assertTrue(results.isConstructed(TestInitRunLevelService.class, InitRunLevel.VAL));
@@ -261,37 +262,37 @@ public class AppServerStartupTest {
     }
 
     /**
-     * Test the {@link AppServerStartup#run} method with an exception thrown from a startup
-     * service that should cause a failure during startup.  Make sure that the init and
-     * startup run level services are constructed at the proper run levels.
+     * Test the {@link AppServerStartup#run} method with an exception thrown from a startup service that should cause a
+     * failure during startup. Make sure that the init and startup run level services are constructed at the proper run
+     * levels.
      */
     @Test
     public void testRunLevelServicesWithStartupException() {
         testRunLevelServicesWithException(TestStartupService.class);
 
         // make sure that the server has not been started
-        assertEquals(ServerEnvironment.Status.starting, as.env.getStatus());
+        assertEquals(starting, appServerStartup.serverEnvironment.getStatus());
 
-        assertTrue(results.getListEvents().contains(EventTypes.SERVER_SHUTDOWN));
+        assertTrue(results.getListEvents().contains(SERVER_SHUTDOWN));
 
         // assert that the run level services have been constructed
         assertTrue(results.isConstructed(TestInitRunLevelService.class, InitRunLevel.VAL));
         assertTrue(results.isConstructed(TestStartupService.class, StartupRunLevel.VAL));
         assertTrue(results.isConstructed(TestStartupRunLevelService.class, StartupRunLevel.VAL));
+
         // assert that the post-startup service is not constructed since shutdown occurs during startup
         assertFalse(results.isConstructed(TestPostStartupRunLevelService.class));
     }
 
     /**
-     * Test the {@link AppServerStartup#run} method with an exception thrown from a
-     * post-startup service that should cause a failure during post-startup.  Make sure
-     * that the run level services are constructed at the proper run levels.
+     * Test the {@link AppServerStartup#run} method with an exception thrown from a post-startup service that should cause a
+     * failure during post-startup. Make sure that the run level services are constructed at the proper run levels.
      */
     @Test
     public void testRunLevelServicesWithPostStartupException() {
         testRunLevelServicesWithException(TestPostStartupRunLevelService.class);
 
-        assertEquals(ServerEnvironment.Status.started, as.env.getStatus());
+        assertEquals(ServerEnvironment.Status.started, appServerStartup.serverEnvironment.getStatus());
 
         // assert that the run level services have been constructed
         assertTrue(results.isConstructed(TestInitRunLevelService.class, InitRunLevel.VAL));
@@ -301,10 +302,9 @@ public class AppServerStartupTest {
     }
 
     /**
-     * Test the {@link AppServerStartup#run} method with an exception thrown from a
-     * {@link Future} should cause a failed result during startup.  Make sure that the init
-     * and startup run level services are constructed at the proper run levels.  Also ensure
-     * that the failed {@link Future} causes a shutdown.
+     * Test the {@link AppServerStartup#run} method with an exception thrown from a {@link Future} should cause a failed
+     * result during startup. Make sure that the init and startup run level services are constructed at the proper run
+     * levels. Also ensure that the failed {@link Future} causes a shutdown.
      */
     @Test
     public void testRunLevelServicesWithFuturesException() {
@@ -317,31 +317,32 @@ public class AppServerStartupTest {
         testRunAppServerStartup();
 
         // make sure that the server has not been started
-        assertEquals(ServerEnvironment.Status.starting, as.env.getStatus());
+        assertEquals(starting, appServerStartup.serverEnvironment.getStatus());
 
-        assertThat(results.getListEvents(), hasItem(EventTypes.SERVER_SHUTDOWN));
+        assertThat(results.getListEvents(), hasItem(SERVER_SHUTDOWN));
 
         // assert that the run level services have been constructed
         assertTrue(results.isConstructed(TestInitRunLevelService.class, InitRunLevel.VAL));
         assertTrue(results.isConstructed(TestStartupService.class, StartupRunLevel.VAL));
         assertTrue(results.isConstructed(TestStartupRunLevelService.class, StartupRunLevel.VAL));
+
         // assert that the post-startup service is not constructed since shutdown occurs during startup
         assertFalse(results.isConstructed(TestPostStartupRunLevelService.class));
     }
 
-
     private void bindService(DynamicConfiguration configurator, Class<?> service) {
         final DescriptorBuilder descriptorBuilder = BuilderHelper.link(service);
 
-        final RunLevel rla = service.getAnnotation(RunLevel.class);
-        if (rla != null) {
-            descriptorBuilder.to(RunLevel.class).
-                    has(RunLevel.RUNLEVEL_VAL_META_TAG, Collections.singletonList(((Integer) rla.value()).toString())).
-                    has(RunLevel.RUNLEVEL_MODE_META_TAG, Collections.singletonList(((Integer) rla.mode()).toString()));
+        final RunLevel runLevel = service.getAnnotation(RunLevel.class);
+        if (runLevel != null) {
+            descriptorBuilder.to(RunLevel.class)
+                    .has(RUNLEVEL_VAL_META_TAG, singletonList(((Integer) runLevel.value()).toString()))
+                    .has(RUNLEVEL_MODE_META_TAG, singletonList(((Integer) runLevel.mode()).toString()));
 
             descriptorBuilder.in(RunLevel.class);
         }
-        Class clazz = service;
+
+        Class<?> clazz = service;
         while (clazz != null) {
             Class<?>[] interfaces = clazz.getInterfaces();
             for (Class<?> element : interfaces) {
@@ -359,22 +360,21 @@ public class AppServerStartupTest {
     }
 
     /**
-     * Helper method to call {@link AppServerStartup#run()}.  Sets up an exception
-     * to be thrown from {@link PostConstruct#postConstruct()} of the given class.
+     * Helper method to call {@link AppServerStartup#run()}. Sets up an exception to be thrown from
+     * {@link PostConstruct#postConstruct()} of the given class.
      *
      * @param badServiceClass the service class that the exception will be thrown from
      */
     private void testRunLevelServicesWithException(Class badServiceClass) {
         // set an exception to be thrown from TestStartupService.postConstruct()
         mapPostConstructExceptions.put(badServiceClass,
-            new RuntimeException("Exception from " + badServiceClass.getSimpleName() + ".postConstruct"));
+                new RuntimeException("Exception from " + badServiceClass.getSimpleName() + ".postConstruct"));
 
         // create the list of Futures returned from TestStartupService
         listFutures.add(new TestFuture());
 
         testRunAppServerStartup();
     }
-
 
     /**
      * Helper method to run the app server after asserting that the results are clean.
@@ -386,9 +386,8 @@ public class AppServerStartupTest {
         assertFalse(results.isConstructed(TestStartupRunLevelService.class));
         assertFalse(results.isConstructed(TestPostStartupRunLevelService.class));
 
-        as.run();
+        appServerStartup.run();
     }
-
 
     /**
      * Test results
@@ -397,12 +396,12 @@ public class AppServerStartupTest {
         /**
          * Map of constructed run level services to run levels.
          */
-        private final Map<Class, Integer> mapConstructedLevels = new HashMap<>();
+        private final Map<Class<?>, Integer> mapConstructedLevels = new HashMap<>();
 
         /**
          * Map of destroyed run level services to run levels.
          */
-        private final Map<Class, Integer> mapDestroyedLevels = new HashMap<>();
+        private final Map<Class<?>, Integer> mapDestroyedLevels = new HashMap<>();
 
         /**
          * List of server events.
@@ -412,34 +411,35 @@ public class AppServerStartupTest {
         /**
          * The run level service.
          */
-        private final RunLevelController rls;
+        private final RunLevelController RunLevelController
+        ;
 
         public Results(RunLevelController rls) {
-            this.rls = rls;
+            this.RunLevelController = rls;
         }
 
-        public void recordConstruction(Class cl) {
-            mapConstructedLevels.put(cl, rls.getCurrentProceeding().getProposedLevel());
+        public void recordConstruction(Class<?> cl) {
+            mapConstructedLevels.put(cl, RunLevelController.getCurrentProceeding().getProposedLevel());
         }
 
-        public void recordDestruction(Class cl) {
-            mapDestroyedLevels.put(cl, rls.getCurrentRunLevel() + 1);
+        public void recordDestruction(Class<?> cl) {
+            mapDestroyedLevels.put(cl, RunLevelController.getCurrentRunLevel() + 1);
         }
 
-        public boolean isConstructed(Class cl) {
+        public boolean isConstructed(Class<?> cl) {
             return mapConstructedLevels.keySet().contains(cl);
         }
 
-        public boolean isConstructed(Class cl, Integer runLevel) {
+        public boolean isConstructed(Class<?> cl, Integer runLevel) {
             Integer recLevel = mapConstructedLevels.get(cl);
             return recLevel != null && recLevel.equals(runLevel);
         }
 
-        public boolean isDestroyed(Class cl) {
+        public boolean isDestroyed(Class<?> cl) {
             return mapDestroyedLevels.keySet().contains(cl);
         }
 
-        public boolean isDestroyed(Class cl, Integer runLevel) {
+        public boolean isDestroyed(Class<?> cl, Integer runLevel) {
             Integer recLevel = mapDestroyedLevels.get(cl);
             return recLevel != null && recLevel.equals(runLevel);
         }
@@ -454,12 +454,10 @@ public class AppServerStartupTest {
         }
     }
 
-
     // ----- test services inner classes -------------------------------------
 
     /**
-     * Abstract service that will update the test results from
-     * {@link PostConstruct#postConstruct()}.
+     * Abstract service that will update the test results from {@link PostConstruct#postConstruct()}.
      */
     public static abstract class TestService implements PostConstruct, PreDestroy {
         @Override
@@ -519,7 +517,6 @@ public class AppServerStartupTest {
     public static class TestPostStartupRunLevelService extends TestService {
     }
 
-
     // ----- TestSystemTasks inner classes -----------------------------------
 
     /**
@@ -531,7 +528,6 @@ public class AppServerStartupTest {
             // do nothing.
         }
     }
-
 
     // ----- TestModulesRegistry inner classes -------------------------------
 
@@ -545,12 +541,10 @@ public class AppServerStartupTest {
         }
     }
 
-
     // ----- TestFuture inner classes ----------------------------------------
 
     /**
-     * Future implementation used for test Startup implementations that
-     * also implement {@link FutureProvider}.
+     * Future implementation used for test Startup implementations that also implement {@link FutureProvider}.
      */
     public static class TestFuture implements Future<Result<Thread>> {
 
@@ -587,17 +581,14 @@ public class AppServerStartupTest {
         @Override
         public Result<Thread> get() throws InterruptedException, ExecutionException {
 
-            Result<Thread> result = resultException == null ?
-                    new Result<>(Thread.currentThread()) :
-                    new Result<>(resultException);
+            Result<Thread> result = resultException == null ? new Result<>(Thread.currentThread()) : new Result<>(resultException);
             done = true;
 
             return result;
         }
 
         @Override
-        public Result<Thread> get(long l, TimeUnit timeUnit)
-                throws InterruptedException, ExecutionException, TimeoutException {
+        public Result<Thread> get(long l, TimeUnit timeUnit) throws InterruptedException, ExecutionException, TimeoutException {
             return get();
         }
     }

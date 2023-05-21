@@ -17,6 +17,8 @@
 
 package com.sun.enterprise.v3.admin;
 
+import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
+
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 
@@ -40,7 +42,7 @@ import jakarta.inject.Singleton;
 
 /**
  * Locations command to indicate where this server is installed.
- * 
+ *
  * @author Jerome Dochez
  */
 @Service(name = "__locations")
@@ -48,11 +50,15 @@ import jakarta.inject.Singleton;
 @CommandLock(CommandLock.LockType.NONE)
 @I18n("locations.command")
 @RestEndpoints({
-        @RestEndpoint(configBean = Domain.class, opType = RestEndpoint.OpType.GET, path = "locations", description = "Location", useForAuthorization = true) })
+    @RestEndpoint(
+        configBean = Domain.class,
+        opType = RestEndpoint.OpType.GET,
+        path = "locations",
+        description = "Location", useForAuthorization = true) })
 public class LocationsCommand implements AdminCommand {
 
     @Inject
-    ServerEnvironmentImpl env;
+    ServerEnvironmentImpl serverEnvironment;
 
     @Inject
     private UnprocessedConfigListener ucl;
@@ -60,16 +66,17 @@ public class LocationsCommand implements AdminCommand {
     @Override
     public void execute(AdminCommandContext context) {
         ActionReport report = context.getActionReport();
-        report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
-        report.setMessage(env.getInstanceRoot().getAbsolutePath().replace('\\', '/'));
-        MessagePart mp = report.getTopMessagePart();
-        mp.addProperty("Base-Root", StartupContextUtil.getInstallRoot(env.getStartupContext()).getAbsolutePath());
-        mp.addProperty("Domain-Root", env.getInstanceRoot().getAbsolutePath());
-        mp.addProperty("Instance-Root", env.getInstanceRoot().getAbsolutePath());
-        mp.addProperty("Config-Dir", env.getConfigDirPath().getAbsolutePath());
-        mp.addProperty("Uptime", "" + getUptime());
-        mp.addProperty("Pid", Long.toString(ProcessHandle.current().pid()));
-        mp.addProperty("Restart-Required", "" + ucl.serverRequiresRestart());
+        report.setActionExitCode(SUCCESS);
+        report.setMessage(serverEnvironment.getInstanceRoot().getAbsolutePath().replace('\\', '/'));
+
+        MessagePart messagePart = report.getTopMessagePart();
+        messagePart.addProperty("Base-Root", StartupContextUtil.getInstallRoot(serverEnvironment.getStartupContext()).getAbsolutePath());
+        messagePart.addProperty("Domain-Root", serverEnvironment.getInstanceRoot().getAbsolutePath());
+        messagePart.addProperty("Instance-Root", serverEnvironment.getInstanceRoot().getAbsolutePath());
+        messagePart.addProperty("Config-Dir", serverEnvironment.getConfigDirPath().getAbsolutePath());
+        messagePart.addProperty("Uptime", "" + getUptime());
+        messagePart.addProperty("Pid", Long.toString(ProcessHandle.current().pid()));
+        messagePart.addProperty("Restart-Required", "" + ucl.serverRequiresRestart());
     }
 
     private long getUptime() {
@@ -81,9 +88,10 @@ public class LocationsCommand implements AdminCommand {
         }
 
         if (totalTime_ms <= 0) {
-            long start = env.getStartupContext().getCreationTime();
+            long start = serverEnvironment.getStartupContext().getCreationTime();
             totalTime_ms = System.currentTimeMillis() - start;
         }
+
         return totalTime_ms;
     }
 }

@@ -81,7 +81,6 @@
                             <finalName>classes</finalName>
                             <attach>false</attach>
                             <appendAssemblyId>false</appendAssemblyId>
-                            <useProjectArtifact>false</useProjectArtifact>
                         </configuration>
                     </execution>
                 </executions>

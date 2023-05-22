@@ -171,7 +171,6 @@
                         <finalName>${stage.dir.name}</finalName>
                         <attach>false</attach>
                         <appendAssemblyId>false</appendAssemblyId>
-                        <useProjectArtifact>false</useProjectArtifact>
                     </configuration>
                 </plugin>
                 <plugin>

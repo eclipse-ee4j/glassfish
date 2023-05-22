@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023, 2023 Contributors to the Eclipse Foundation. All rights reserved.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,6 +20,9 @@ package com.sun.enterprise.admin.util;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.SecureAdmin;
 import com.sun.enterprise.config.serverbeans.SecureAdminPrincipal;
+
+import java.io.Serial;
+import java.io.Serializable;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -200,7 +204,11 @@ public class AdminLoginModule implements LoginModule {
         subject.getPublicCredentials().removeAll(subjectToAssemble.getPublicCredentials());
     }
 
-    static class PrincipalCallback implements Callback {
+    static class PrincipalCallback implements Callback, Serializable {
+
+        @Serial
+        private static final long serialVersionUID = 1L;
+
         private Principal p;
 
         public void setPrincipal(final Principal p) {

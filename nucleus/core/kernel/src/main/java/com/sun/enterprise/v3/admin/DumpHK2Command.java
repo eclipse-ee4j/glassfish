@@ -16,24 +16,25 @@
 
 package com.sun.enterprise.v3.admin;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.ActionReport.ExitCode;
+import org.glassfish.api.admin.AccessRequired;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
+
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.universal.collections.ManifestUtils;
 import com.sun.enterprise.v3.common.PropsFileActionReporter;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.ActionReport.ExitCode;
-import org.glassfish.api.admin.AdminCommand;
-import org.glassfish.api.admin.AdminCommandContext;
 
-import org.jvnet.hk2.annotations.Service;
 import jakarta.inject.Inject;
-
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import org.glassfish.api.admin.AccessRequired;
-import org.glassfish.api.admin.RestEndpoint;
-import org.glassfish.api.admin.RestEndpoints;
-import org.glassfish.hk2.api.PerLookup;
 
 /**
  * Dumps the currently configured HK2 modules and their contents.
@@ -44,19 +45,20 @@ import org.glassfish.hk2.api.PerLookup;
  * @author Kohsuke Kawaguchi
  */
 @PerLookup
-@Service(name="_dump-hk2")
+@Service(name = "_dump-hk2")
 @RestEndpoints({
-    @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST,
-        path="_dump-hk2",
-        description="_dump-hk2")
-})
-@AccessRequired(resource="domain", action="dump")
+        @RestEndpoint(
+            configBean = Domain.class,
+            opType = RestEndpoint.OpType.POST,
+            path = "_dump-hk2",
+            description = "_dump-hk2") })
+@AccessRequired(resource = "domain", action = "dump")
 public class DumpHK2Command implements AdminCommand {
 
     @Inject
     ModulesRegistry modulesRegistry;
 
+    @Override
     public void execute(AdminCommandContext context) {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -69,9 +71,9 @@ public class DumpHK2Command implements AdminCommand {
 
         // the proper way to do this is to check the user-agent of the caller,
         // but I can't access that -- so I'll just check the type of the
-        // ActionReport.  If we are sending back to CLI then linefeeds will
-        // cause problems.  Manifest.write() is OK but Manifest.read() explodes!
-        if(report instanceof PropsFileActionReporter) {
+        // ActionReport. If we are sending back to CLI then linefeeds will
+        // cause problems. Manifest.write() is OK but Manifest.read() explodes!
+        if (report instanceof PropsFileActionReporter) {
             msg = ManifestUtils.encode(msg);
         }
         report.setMessage(msg);

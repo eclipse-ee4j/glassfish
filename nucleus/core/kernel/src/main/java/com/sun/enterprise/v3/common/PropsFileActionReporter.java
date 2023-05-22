@@ -16,19 +16,20 @@
 
 package com.sun.enterprise.v3.common;
 
-import com.sun.enterprise.util.StringUtils;
-import java.io.UnsupportedEncodingException;
-import java.util.*;
-import org.jvnet.hk2.annotations.Service;
-
-import org.glassfish.hk2.api.PerLookup;
-
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.jar.Manifest;
-import java.util.jar.Attributes;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
+
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
+
+import com.sun.enterprise.util.StringUtils;
 
 /**
  * Action reporter to a manifest file
@@ -93,13 +94,15 @@ public class PropsFileActionReporter extends ActionReporter {
                 }
                 String newPrefix = (prefix == null ? cm : prefix + "." + cm);
 
-                if(keys == null)
+                if(keys == null) {
                     keys = new StringBuilder();
-                else
+                } else {
                     keys.append(';');
+                }
 
-                if(newPrefix != null)
+                if(newPrefix != null) {
                     keys.append(newPrefix);
+                }
 
                 Attributes childAttr = new Attributes();
                 m.getEntries().put(newPrefix, childAttr);
@@ -211,6 +214,6 @@ public class PropsFileActionReporter extends ActionReporter {
         return m;
     }
     private boolean useMainChildrenAttr = false;
-    private Set<String> fixedNames = new TreeSet<String>();
+    private Set<String> fixedNames = new TreeSet<>();
     private static final int LONGEST = 62;
 }

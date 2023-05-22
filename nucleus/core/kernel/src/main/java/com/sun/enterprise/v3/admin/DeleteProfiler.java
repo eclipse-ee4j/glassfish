@@ -16,70 +16,69 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.config.serverbeans.Config;
+import java.beans.PropertyVetoException;
 
-import org.glassfish.api.admin.AdminCommand;
-import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.api.admin.ExecuteOn;
-import org.glassfish.api.admin.RuntimeType;
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.config.support.TargetType;
-import org.glassfish.config.support.CommandTarget;
-import org.glassfish.internal.api.Target;
+import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
-import org.glassfish.api.ActionReport;
+import org.glassfish.api.admin.AccessRequired;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.AdminCommandSecurity;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.config.support.CommandTarget;
+import org.glassfish.config.support.TargetType;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.internal.api.Target;
 import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
+
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.JavaConfig;
+import com.sun.enterprise.config.serverbeans.Profiler;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.util.SystemPropertyConstants;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-import org.glassfish.hk2.api.PerLookup;
-import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.SingleConfigCode;
-import org.jvnet.hk2.config.TransactionFailure;
-import com.sun.enterprise.config.serverbeans.JavaConfig;
-import com.sun.enterprise.config.serverbeans.Profiler;
-import com.sun.enterprise.config.serverbeans.SystemPropertyBag;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.SystemPropertyConstants;
-
-import java.beans.PropertyVetoException;
-import java.util.ArrayList;
-import java.util.Collection;
-import org.glassfish.api.admin.*;
-
 /**
-* Delete JDBC Resource command
-*
-*/
-@Service(name="delete-profiler")
+ * Delete JDBC Resource command
+ *
+ */
+@Service(name = "delete-profiler")
 @PerLookup
 @I18n("delete.profiler")
-@ExecuteOn({RuntimeType.DAS, RuntimeType.INSTANCE})
-@TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
+@ExecuteOn({ RuntimeType.DAS, RuntimeType.INSTANCE })
+@TargetType({ CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER, CommandTarget.CONFIG })
 @RestEndpoints({
-    @RestEndpoint(configBean=Profiler.class,
-        opType=RestEndpoint.OpType.DELETE,
-        path="delete-profiler",
-        description="Delete Profiler")
-})
+    @RestEndpoint(
+        configBean = Profiler.class,
+        opType = RestEndpoint.OpType.DELETE,
+        path = "delete-profiler",
+        description = "Delete Profiler") })
 public class DeleteProfiler implements AdminCommand, AdminCommandSecurity.Preauthorization {
 
-   final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeleteProfiler.class);
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeleteProfiler.class);
 
-    @Param(name="target", optional=true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+    @Param(name = "target", optional = true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
     String target;
 
     @Inject
     Target targetService;
 
-    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    @Inject
+    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     Config config;
 
     @AccessRequired.To("update")
     private JavaConfig javaConfig;
-
 
     @Override
     public boolean preAuthorization(AdminCommandContext context) {
@@ -89,32 +88,35 @@ public class DeleteProfiler implements AdminCommand, AdminCommandSecurity.Preaut
     }
 
     /**
-    * Executes the command with the command parameters passed as Properties
-    * where the keys are the paramter names and the values the parameter values
-    *
-    * @param context information
-    */
-   public void execute(AdminCommandContext context) {
+     * Executes the command with the command parameters passed as Properties where the keys are the paramter names and the
+     * values the parameter values
+     *
+     * @param context information
+     */
+    @Override
+    public void execute(AdminCommandContext context) {
 
         final ActionReport report = context.getActionReport();
         try {
-           ConfigSupport.apply(new SingleConfigCode<JavaConfig>() {
-               public Object run(JavaConfig param) throws PropertyVetoException, TransactionFailure {
-                   if (param.getProfiler() != null) {
-                       param.setProfiler(null);
-                       report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
+            ConfigSupport.apply(new SingleConfigCode<JavaConfig>() {
+                @Override
+                public Object run(JavaConfig param) throws PropertyVetoException, TransactionFailure {
+                    if (param.getProfiler() != null) {
+                        param.setProfiler(null);
+                        report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
                         return param;
-                   }
-                   // not found
-                   report.setMessage(localStrings.getLocalString("delete.profiler.notfound", "delete failed, profiler not found"));
-                   report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+                    }
+
+                    // not found
+                    report.setMessage(localStrings.getLocalString("delete.profiler.notfound", "delete failed, profiler not found"));
+                    report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                     return null;
-               }
-           }, javaConfig);
-       } catch(TransactionFailure e) {
-           report.setMessage(localStrings.getLocalString("delete.profiler.fail", "delete failed "));
-           report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-           report.setFailureCause(e);
-       }
-   }
+                }
+            }, javaConfig);
+        } catch (TransactionFailure e) {
+            report.setMessage(localStrings.getLocalString("delete.profiler.fail", "delete failed "));
+            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+            report.setFailureCause(e);
+        }
+    }
 }

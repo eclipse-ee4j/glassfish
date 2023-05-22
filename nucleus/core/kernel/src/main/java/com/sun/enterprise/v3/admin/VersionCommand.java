@@ -17,10 +17,6 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.appserv.server.util.Version;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
 import java.util.Properties;
 
 import org.glassfish.api.ActionReport;
@@ -35,22 +31,21 @@ import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
+import com.sun.appserv.server.util.Version;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
 /**
  * Return the version and build number
  *
  * @author Jerome Dochez
  */
-@Service(name="version")
+@Service(name = "version")
 @PerLookup
 @CommandLock(CommandLock.LockType.NONE)
 @I18n("version.command")
 @RestEndpoints({
-    @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET,
-        path="version",
-        description="version",
-        useForAuthorization=true)
-})
+        @RestEndpoint(configBean = Domain.class, opType = RestEndpoint.OpType.GET, path = "version", description = "version", useForAuthorization = true) })
 public class VersionCommand implements AdminCommand {
 
     private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(VersionCommand.class);
@@ -58,13 +53,12 @@ public class VersionCommand implements AdminCommand {
     @Param(optional = true, defaultValue = "false", shortName = "v")
     Boolean verbose;
 
-
     @Override
     public void execute(AdminCommandContext context) {
         String msg;
         if (verbose) {
             msg = I18N.getLocalString("version.verbose", "{0}, JRE version {1}", Version.getProductIdInfo(),
-                System.getProperty("java.version"));
+                    System.getProperty("java.version"));
         } else {
             msg = I18N.getLocalString("version", "{0}", Version.getProductIdInfo());
         }

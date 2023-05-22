@@ -16,37 +16,41 @@
 
 package com.sun.enterprise.v3.server;
 
-import org.glassfish.internal.api.ClassLoaderHierarchy;
-import jakarta.inject.Inject;
-
-import org.jvnet.hk2.annotations.Optional;
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.hk2.utilities.BuilderHelper;
-import org.jvnet.hk2.config.TranslationException;
-import org.jvnet.hk2.config.VariableResolver;
-import org.glassfish.internal.api.DelegatingClassLoader;
-import org.glassfish.internal.api.ConnectorClassLoaderService;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.api.deployment.DeploymentContext;
-import com.sun.enterprise.module.HK2Module;
-
-import java.net.URI;
-import java.net.MalformedURLException;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.jar.Manifest;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.jar.Manifest;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import com.sun.enterprise.module.*;
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.utilities.BuilderHelper;
+import org.glassfish.internal.api.ClassLoaderHierarchy;
+import org.glassfish.internal.api.ConnectorClassLoaderService;
+import org.glassfish.internal.api.DelegatingClassLoader;
+import org.jvnet.hk2.annotations.Optional;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.TranslationException;
+import org.jvnet.hk2.config.VariableResolver;
+
+import com.sun.enterprise.module.HK2Module;
+import com.sun.enterprise.module.ManifestConstants;
+import com.sun.enterprise.module.ModuleDefinition;
+import com.sun.enterprise.module.ModulesRegistry;
+import com.sun.enterprise.module.Repository;
+import com.sun.enterprise.module.ResolveError;
 import com.sun.enterprise.module.common_impl.DirectoryBasedRepository;
 import com.sun.enterprise.module.common_impl.Tokenizer;
+
+import jakarta.inject.Inject;
 
 
 /**
@@ -75,24 +79,29 @@ public class ClassLoaderHierarchyImpl implements ClassLoaderHierarchy {
 
     SystemVariableResolver resolver = new SystemVariableResolver();
 
+    @Override
     public ClassLoader getAPIClassLoader() {
         return apiCLS.getAPIClassLoader();
     }
 
+    @Override
     public ClassLoader getCommonClassLoader() {
         return commonCLS.getCommonClassLoader();
     }
 
+    @Override
     public String getCommonClassPath() {
         return commonCLS.getCommonClassPath();
     }
 
+    @Override
     public DelegatingClassLoader getConnectorClassLoader(String application) {
         // For distributions where connector module (connector CL) is not available, use empty classloader with parent
         if(connectorCLS != null){
             return connectorCLS.getConnectorClassLoader(application);
         }else{
             return AccessController.doPrivileged(new PrivilegedAction<DelegatingClassLoader>() {
+                @Override
                 public DelegatingClassLoader run() {
                     return new DelegatingClassLoader(commonCLS.getCommonClassLoader());
                 }
@@ -100,10 +109,12 @@ public class ClassLoaderHierarchyImpl implements ClassLoaderHierarchy {
         }
     }
 
+    @Override
     public ClassLoader getAppLibClassLoader(String application, List<URI> libURIs) throws MalformedURLException {
         return applibCLS.getAppLibClassLoader(application, libURIs);
     }
 
+    @Override
     public DelegatingClassLoader.ClassFinder getAppLibClassFinder(List<URI> libURIs) throws MalformedURLException {
         return applibCLS.getAppLibClassFinder(libURIs);
     }
@@ -122,11 +133,12 @@ public class ClassLoaderHierarchyImpl implements ClassLoaderHierarchy {
      * @return class loader capable of loading public APIs identified by the deployers
      * @throws ResolveError if one of the deployer's public API module is not found.
      */
+    @Override
     public ClassLoader createApplicationParentCL(ClassLoader parent, DeploymentContext context)
         throws ResolveError {
 
         final ReadableArchive source = context.getSource();
-        List<ModuleDefinition> defs = new ArrayList<ModuleDefinition>();
+        List<ModuleDefinition> defs = new ArrayList<>();
 
         // now let's see if the application is requesting any module imports
         Manifest m=null;
@@ -218,6 +230,7 @@ public class ClassLoaderHierarchyImpl implements ClassLoaderHierarchy {
             super();
         }
 
+        @Override
         protected String getVariableValue(final String varName) throws TranslationException {
             String result = null;
 

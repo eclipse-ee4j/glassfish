@@ -17,24 +17,19 @@
 
 package com.sun.enterprise.v3.server;
 
-import com.sun.enterprise.config.serverbeans.AppTenant;
-import com.sun.enterprise.config.serverbeans.AppTenants;
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.config.serverbeans.ApplicationConfig;
-import com.sun.enterprise.config.serverbeans.ApplicationRef;
-import com.sun.enterprise.config.serverbeans.Applications;
-import com.sun.enterprise.config.serverbeans.Cluster;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.Engine;
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.config.serverbeans.ServerTags;
-import com.sun.enterprise.deploy.shared.ArchiveFactory;
-import com.sun.enterprise.deploy.shared.FileArchive;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.inject.Singleton;
+import static com.sun.enterprise.config.serverbeans.ServerTags.IS_COMPOSITE;
+import static com.sun.enterprise.util.Utility.isEmpty;
+import static java.util.Collections.emptyList;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+import static org.glassfish.api.admin.ServerEnvironment.DEFAULT_INSTANCE_NAME;
+import static org.glassfish.deployment.common.DeploymentProperties.ALT_DD;
+import static org.glassfish.deployment.common.DeploymentProperties.RUNTIME_ALT_DD;
+import static org.glassfish.deployment.common.DeploymentProperties.SKIP_SCAN_EXTERNAL_LIB;
+import static org.glassfish.deployment.common.DeploymentUtils.getVirtualServers;
+import static org.glassfish.kernel.KernelLoggerInfo.inconsistentLifecycleState;
 
 import java.beans.PropertyVetoException;
 import java.io.BufferedInputStream;
@@ -132,19 +127,24 @@ import org.jvnet.hk2.config.Transaction;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
-import static com.sun.enterprise.config.serverbeans.ServerTags.IS_COMPOSITE;
-import static com.sun.enterprise.util.Utility.isEmpty;
-import static java.util.Collections.emptyList;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
-import static org.glassfish.api.admin.ServerEnvironment.DEFAULT_INSTANCE_NAME;
-import static org.glassfish.deployment.common.DeploymentProperties.ALT_DD;
-import static org.glassfish.deployment.common.DeploymentProperties.RUNTIME_ALT_DD;
-import static org.glassfish.deployment.common.DeploymentProperties.SKIP_SCAN_EXTERNAL_LIB;
-import static org.glassfish.deployment.common.DeploymentUtils.getVirtualServers;
-import static org.glassfish.kernel.KernelLoggerInfo.inconsistentLifecycleState;
+import com.sun.enterprise.config.serverbeans.AppTenant;
+import com.sun.enterprise.config.serverbeans.AppTenants;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.ApplicationConfig;
+import com.sun.enterprise.config.serverbeans.ApplicationRef;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Engine;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.ServerTags;
+import com.sun.enterprise.deploy.shared.ArchiveFactory;
+import com.sun.enterprise.deploy.shared.FileArchive;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 
 /**
  * Application Loader is providing useful methods to load applications
@@ -2133,13 +2133,9 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
     @Override
     public ExtendedDeploymentContext disable(UndeployCommandParameters commandParams, Application app, ApplicationInfo appInfo,
             ActionReport report, Logger logger) throws Exception {
-        if (appInfo == null) {
-            return null;
-        }
-
         // if it's not on DAS and the application is not loaded, do not unload
         // when it's on DAS, there is some necessary clean up we need to do
-        if (!env.isDas() && !appInfo.isLoaded()) {
+        if ((appInfo == null) || (!env.isDas() && !appInfo.isLoaded())) {
             return null;
         }
 

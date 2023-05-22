@@ -17,8 +17,6 @@
 package com.sun.enterprise.v3.common;
 
 
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import org.glassfish.api.ActionReport;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +27,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import org.glassfish.api.ActionReport;
+
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
 /**
  * Superclass for common ActionReport extension.
  *
@@ -38,7 +40,7 @@ public abstract class ActionReporter extends ActionReport {
 
     protected Throwable exception = null;
     protected String actionDescription = null;
-    protected List<ActionReporter> subActions = new ArrayList<ActionReporter>();
+    protected List<ActionReporter> subActions = new ArrayList<>();
     protected ExitCode exitCode = ExitCode.SUCCESS;
     protected MessagePart topMessage = new MessagePart();
     protected String contentType = "text/html";
@@ -144,8 +146,9 @@ public abstract class ActionReporter extends ActionReport {
     @Override
     public void setMessage(InputStream in) {
         try {
-            if(in == null)
+            if(in == null) {
                 throw new NullPointerException("Internal Error - null InputStream");
+            }
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             copyStream(in, baos);
@@ -196,8 +199,9 @@ public abstract class ActionReporter extends ActionReport {
      * @param sb StringBuilder instance that contains all the messages
      */
     public void getCombinedMessages(ActionReporter aReport, StringBuilder sb) {
-        if (aReport == null || sb == null)
+        if (aReport == null || sb == null) {
             return;
+        }
         String mainMsg = ""; //this is the message related to the topMessage
         String failMsg; //this is the message related to failure cause
         // Other code in the server may write something like report.setMessage(exception.getMessage())
@@ -213,13 +217,17 @@ public abstract class ActionReporter extends ActionReport {
                 LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ActionReporter.class);
                 format = localStrings.getLocalString("flag.message.as.failure", "Failure: {0}");
             }
-            if (sb.length() > 0) sb.append(EOL_MARKER);
+            if (sb.length() > 0) {
+                sb.append(EOL_MARKER);
+            }
             sb.append(MessageFormat.format(format,mainMsg));
         }
         if (aReport.getFailureCause() != null && aReport.getFailureCause().getMessage() != null && aReport.getFailureCause().getMessage().length() != 0) {
             failMsg = aReport.getFailureCause().getMessage();
             if (!failMsg.equals(mainMsg)) {
-                if (sb.length() > 0) sb.append(EOL_MARKER);
+                if (sb.length() > 0) {
+                    sb.append(EOL_MARKER);
+                }
                 sb.append(failMsg);
             }
         }
@@ -247,7 +255,7 @@ public abstract class ActionReporter extends ActionReport {
         if (null != ar.exitCode && ar.exitCode.equals(value)) {
             return true;
         }
-        Queue<ActionReporter> q = new LinkedList<ActionReporter>();
+        Queue<ActionReporter> q = new LinkedList<>();
         q.addAll(ar.subActions);
         while (!q.isEmpty()) {
             ActionReporter lar = q.remove();

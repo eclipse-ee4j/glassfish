@@ -830,7 +830,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
     }
 
     /*
-     * IASRI 4688449 This method was only used by J2EEInstanceListener to set the security context prior to invocations by
+     * IASRI 4688449 This method was only used by EEInstanceListener to set the security context prior to invocations by
      * re-authenticating a previously set WebPrincipal. This is now cached so no need.
      */
     public boolean authenticate(HttpServletRequest request, WebPrincipal principal) {

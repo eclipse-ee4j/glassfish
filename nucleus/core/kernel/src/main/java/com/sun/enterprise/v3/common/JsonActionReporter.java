@@ -16,17 +16,16 @@
 
 package com.sun.enterprise.v3.common;
 
-import org.jvnet.hk2.annotations.Service;
-
-import org.glassfish.hk2.api.PerLookup;
-
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Writes command output to a json stream
@@ -73,7 +72,7 @@ public class JsonActionReporter extends ActionReporter {
         writeProperties(part.getProps(), writer);
         boolean first = true;
         for (MessagePart child : part.getChildren()) {
-            if (first == true) {
+            if (first) {
                 writer.println(", " + quote("result") + " : [");
             } else {
                 writer.println(",");
@@ -83,7 +82,7 @@ public class JsonActionReporter extends ActionReporter {
             write(child, writer);
 
         }
-        if (first == false) { //close the array
+        if (!first) { //close the array
 
             writer.println("]");
         }

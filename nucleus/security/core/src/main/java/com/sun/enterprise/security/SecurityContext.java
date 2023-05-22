@@ -23,15 +23,19 @@ import com.sun.enterprise.security.common.AbstractSecurityContext;
 import com.sun.enterprise.security.common.AppservAccessController;
 import com.sun.enterprise.security.integration.AppServSecurityContext;
 
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINER;
+import static java.util.logging.Level.SEVERE;
+
 import java.security.AccessController;
 import java.security.Principal;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedExceptionAction;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.security.auth.AuthPermission;
 import javax.security.auth.Subject;
 
 import org.glassfish.api.admin.ServerEnvironment;
@@ -41,15 +45,14 @@ import org.glassfish.security.common.UserNameAndPassword;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * This class that extends AbstractSecurityContext that gets stored in Thread Local Storage. If the current thread creates child
- * threads, the SecurityContext stored in the current thread is automatically propagated to the child threads.
+ * This class that extends AbstractSecurityContext that gets stored in Thread Local Storage. If the current thread
+ * creates child threads, the SecurityContext stored in the current thread is automatically propagated to the child
+ * threads.
  *
  * This class is used on the server side to represent the security context.
  *
- * Class is a concept introduced in JDK1.0.
- * Thread is a concept introduced in JDK1.0.
- * Principal is a concept introduced in JDK1.1.
- * Thread Local Storage is a concept introduced in JDK1.2.
+ * Class is a concept introduced in JDK1.0. Thread is a concept introduced in JDK1.0. Principal is a concept introduced
+ * in JDK1.1. Thread Local Storage is a concept introduced in JDK1.2.
  *
  * @see java.lang.ThreadLocal
  * @see java.lang.InheritableThreadLocal
@@ -64,44 +67,46 @@ public class SecurityContext extends AbstractSecurityContext {
     private static final long serialVersionUID = 1L;
     private static final Logger _logger = SecurityLoggerInfo.getLogger();
 
-    private static InheritableThreadLocal<SecurityContext> currentSecCtx = new InheritableThreadLocal<>();
+    private static InheritableThreadLocal<SecurityContext> currentSecurityContext = new InheritableThreadLocal<>();
     private static SecurityContext defaultSecurityContext = generateDefaultSecurityContext();
 
-    private static javax.security.auth.AuthPermission doAsPrivilegedPerm = new javax.security.auth.AuthPermission("doAsPrivileged");
+    private static AuthPermission doAsPrivilegedPerm = new AuthPermission("doAsPrivileged");
 
     // Did the client log in as or did the server generate the context
     private boolean serverGeneratedSecurityContext;
 
     private Principal sessionPrincipal;
 
-    /* This creates a new SecurityContext object.
-     * Note: that the docs for Subject state that the internal sets
-     * (eg. the principal set) cannot be modified unless the caller
-     * has the modifyPrincipals AuthPermission. That said, there may
-     * be some value to setting the Subject read only.
-     * Note: changing the principals in the embedded subject (after
-     * construction will likely cause problem in the principal set
-     * keyed HashMaps of EJBSecurityManager.
+    /*
+     * This creates a new SecurityContext object. Note: that the docs for Subject state that the internal sets (eg. the
+     * principal set) cannot be modified unless the caller has the modifyPrincipals AuthPermission. That said, there may be
+     * some value to setting the Subject read only. Note: changing the principals in the embedded subject (after
+     * construction will likely cause problem in the principal set keyed HashMaps of EJBSecurityManager.
+     *
      * @param username The name of the user/caller principal.
+     *
      * @param subject contains the authenticated principals and credential.
      */
     public SecurityContext(String userName, Subject subject) {
-        Subject s = subject;
-        if (s == null) {
-            s = new Subject();
+        Subject nonNullSubject = subject;
+        if (nonNullSubject == null) {
+            nonNullSubject = new Subject();
             _logger.warning(SecurityLoggerInfo.nullSubjectWarning);
         }
+
         this.initiator = new UserNameAndPassword(userName);
-        final Subject sub = s;
+        final Subject finalSubject = nonNullSubject;
         PrivilegedAction<Subject> action = () -> {
-            sub.getPrincipals().add(initiator);
-            return sub;
+            finalSubject.getPrincipals().add(initiator);
+            return finalSubject;
         };
+
         this.subject = AppservAccessController.doPrivileged(action);
     }
 
     /**
-     * Create a SecurityContext with given subject having DistinguishedPrincipalCredential. This is used for JMAC environment.
+     * Create a SecurityContext with given subject having DistinguishedPrincipalCredential. This is used for JMAC
+     * environment.
      *
      * @param subject
      */
@@ -111,27 +116,30 @@ public class SecurityContext extends AbstractSecurityContext {
             _logger.warning(SecurityLoggerInfo.nullSubjectWarning);
         }
 
-        final Subject fsub = subject;
+        final Subject finalSubject = subject;
         this.subject = subject;
         this.initiator = AppservAccessController.doPrivileged(new PrivilegedAction<>() {
             @Override
             public Principal run() {
-                Principal prin = null;
-                for (Object obj : fsub.getPublicCredentials()) {
-                    if (obj instanceof DistinguishedPrincipalCredential) {
-                        DistinguishedPrincipalCredential dpc = (DistinguishedPrincipalCredential) obj;
-                        prin = dpc.getPrincipal();
+                Principal principal = null;
+
+                for (Object publicCredential : finalSubject.getPublicCredentials()) {
+                    if (publicCredential instanceof DistinguishedPrincipalCredential) {
+                        DistinguishedPrincipalCredential distinguishedPrincipalCredential = (DistinguishedPrincipalCredential) publicCredential;
+                        principal = distinguishedPrincipalCredential.getPrincipal();
                         break;
                     }
                 }
+
                 // for old auth module
-                if (prin == null) {
-                    Iterator<Principal> prinIter = fsub.getPrincipals().iterator();
+                if (principal == null) {
+                    Iterator<Principal> prinIter = finalSubject.getPrincipals().iterator();
                     if (prinIter.hasNext()) {
-                        prin = prinIter.next();
+                        principal = prinIter.next();
                     }
                 }
-                return prin;
+
+                return principal;
             }
         });
 
@@ -145,31 +153,35 @@ public class SecurityContext extends AbstractSecurityContext {
     }
 
     public SecurityContext(String userName, Subject subject, String realm) {
-        Subject s = subject;
-        if (s == null) {
-            s = new Subject();
+        Subject nonNullSubject = subject;
+        if (nonNullSubject == null) {
+            nonNullSubject = new Subject();
             _logger.warning(SecurityLoggerInfo.nullSubjectWarning);
         }
-        PrincipalGroupFactory factory = Globals.getDefaultHabitat().getService(PrincipalGroupFactory.class);
+
+        PrincipalGroupFactory factory = Globals.get(PrincipalGroupFactory.class);
         if (factory != null) {
             this.initiator = factory.getPrincipalInstance(userName, realm);
         }
-        final Subject sub = s;
+
+        final Subject finalSubject = nonNullSubject;
         this.subject = AppservAccessController.doPrivileged(new PrivilegedAction<>() {
             @Override
             public Subject run() {
-                sub.getPrincipals().add(initiator);
-                return sub;
+                finalSubject.getPrincipals().add(initiator);
+                return finalSubject;
             }
         });
     }
 
     public SecurityContext() {
-        _logger.log(Level.FINE, "Default CTOR of SecurityContext called");
+        _logger.log(FINE, "Default CTOR of SecurityContext called");
         this.subject = new Subject();
-        // delay assignment of caller principal until it is requested
+
+        // Delay assignment of caller principal until it is requested
         this.initiator = null;
         this.setServerGeneratedCredentials();
+
         // read only is only done for guest logins.
         AppservAccessController.doPrivileged(new PrivilegedAction<Void>() {
             @Override
@@ -184,25 +196,26 @@ public class SecurityContext extends AbstractSecurityContext {
      * Initialize the SecurityContext and handle the unauthenticated principal case
      */
     public static SecurityContext init() {
-        SecurityContext sc = currentSecCtx.get();
-        if (sc == null) {
-            // there is no current security context...
-            sc = defaultSecurityContext;
+        SecurityContext securityContext = currentSecurityContext.get();
+        if (securityContext == null) {
+            // There is no current security context.
+            securityContext = defaultSecurityContext;
         }
-        return sc;
+
+        return securityContext;
     }
 
     public static SecurityContext getDefaultSecurityContext() {
-        //unauthen. Security Context.
+        // Unauthenticated Security Context.
         return defaultSecurityContext;
     }
 
     public static Subject getDefaultSubject() {
-        //Subject of unauthen. Security Context.
+        // Subject of unauthenticated Security Context.
         return defaultSecurityContext.subject;
     }
 
-    // get caller principal of unauthenticated Security Context
+    // Get caller principal of unauthenticated Security Context
     public static Principal getDefaultCallerPrincipal() {
         synchronized (SecurityContext.class) {
             if (defaultSecurityContext.initiator == null) {
@@ -212,7 +225,7 @@ public class SecurityContext extends AbstractSecurityContext {
                         @Override
                         public String run() throws Exception {
                             SecurityService securityService = SecurityServicesUtil.getInstance().getHabitat()
-                                .getService(SecurityService.class, ServerEnvironment.DEFAULT_INSTANCE_NAME);
+                                    .getService(SecurityService.class, ServerEnvironment.DEFAULT_INSTANCE_NAME);
                             if (securityService == null) {
                                 return null;
                             }
@@ -220,7 +233,7 @@ public class SecurityContext extends AbstractSecurityContext {
                         }
                     });
                 } catch (Exception e) {
-                    _logger.log(Level.SEVERE, SecurityLoggerInfo.defaultUserLoginError, e);
+                    _logger.log(SEVERE, SecurityLoggerInfo.defaultUserLoginError, e);
                 } finally {
                     if (guestUser == null) {
                         guestUser = "ANONYMOUS";
@@ -229,6 +242,7 @@ public class SecurityContext extends AbstractSecurityContext {
                 defaultSecurityContext.initiator = new UserNameAndPassword(guestUser);
             }
         }
+
         return defaultSecurityContext.initiator;
     }
 
@@ -242,50 +256,54 @@ public class SecurityContext extends AbstractSecurityContext {
                     }
                 });
             } catch (Exception e) {
-                _logger.log(Level.SEVERE, SecurityLoggerInfo.defaultSecurityContextError, e);
+                _logger.log(SEVERE, SecurityLoggerInfo.defaultSecurityContextError, e);
             }
         }
+
         return null;
     }
 
     /**
      * No need to unmarshall the unauthenticated principal....
      */
-    public static void reset(SecurityContext sc) {
-        setCurrent(sc);
+    public static void reset(SecurityContext securityContext) {
+        setCurrent(securityContext);
     }
-
 
     /**
      * This method gets the SecurityContext stored in the Thread Local Store (TLS) of the current thread.
      *
-     * @return The current Security Context stored in TLS. It returns null if SecurityContext could
-     *         not be found in the current thread.
+     * @return The current Security Context stored in TLS. It returns null if SecurityContext could not be found in the
+     * current thread.
      */
     public static SecurityContext getCurrent() {
-        SecurityContext sc = currentSecCtx.get();
-        if (sc == null) {
-            sc = defaultSecurityContext;
+        SecurityContext securityContext = currentSecurityContext.get();
+        if (securityContext == null) {
+            securityContext = defaultSecurityContext;
         }
-        return sc;
+
+        return securityContext;
     }
 
     /**
      * This method sets the SecurityContext stored in the TLS.
      *
-     * @param sc The Security Context that should be stored in TLS. This public static method needs to be protected such that it can
-     * only be called by container code. Otherwise it can be called by application code to set its subject (which the EJB security
-     * manager will use to create a domain combiner, and then everything the ejb does will be run as the corresponding subject.
+     * @param securityContext The Security Context that should be stored in TLS. This public static method needs to be protected such
+     * that it can only be called by container code. Otherwise it can be called by application code to set its subject
+     * (which the EJB security manager will use to create a domain combiner, and then everything the ejb does will be run as
+     * the corresponding subject.
      */
-    public static void setCurrent(SecurityContext sc) {
-        if (sc == null || sc == defaultSecurityContext) {
-            currentSecCtx.set(sc);
+    public static void setCurrent(SecurityContext securityContext) {
+        if (securityContext == null || securityContext == defaultSecurityContext) {
+            currentSecurityContext.set(securityContext);
             return;
         }
-        SecurityContext current = currentSecCtx.get();
-        if (sc == current) {
+
+        SecurityContext current = currentSecurityContext.get();
+        if (securityContext == current) {
             return;
         }
+
         boolean permitted = false;
         try {
             java.lang.SecurityManager sm = System.getSecurityManager();
@@ -295,13 +313,13 @@ public class SecurityContext extends AbstractSecurityContext {
             }
             permitted = true;
         } catch (java.lang.SecurityException se) {
-            _logger.log(Level.SEVERE, SecurityLoggerInfo.securityContextPermissionError, se);
+            _logger.log(SEVERE, SecurityLoggerInfo.securityContextPermissionError, se);
         } catch (Throwable t) {
-            _logger.log(Level.SEVERE, SecurityLoggerInfo.securityContextUnexpectedError, t);
+            _logger.log(SEVERE, SecurityLoggerInfo.securityContextUnexpectedError, t);
         }
 
         if (permitted) {
-            currentSecCtx.set(sc);
+            currentSecurityContext.set(securityContext);
         } else {
             _logger.severe(SecurityLoggerInfo.securityContextNotChangedError);
         }
@@ -309,7 +327,7 @@ public class SecurityContext extends AbstractSecurityContext {
 
     public static void setUnauthenticatedContext() {
         _logger.entering(SecurityContext.class.getName(), "setCurrentSecurityContext");
-        currentSecCtx.set(defaultSecurityContext);
+        currentSecurityContext.set(defaultSecurityContext);
     }
 
     public boolean didServerGenerateCredentials() {
@@ -321,8 +339,8 @@ public class SecurityContext extends AbstractSecurityContext {
     }
 
     /**
-     * This method returns the caller principal. This information may be redundant since the same information can be inferred by
-     * inspecting the Credentials of the caller.
+     * This method returns the caller principal. This information may be redundant since the same information can be
+     * inferred by inspecting the Credentials of the caller.
      *
      * @return The caller Principal.
      */
@@ -359,33 +377,38 @@ public class SecurityContext extends AbstractSecurityContext {
 
     @Override
     public AppServSecurityContext newInstance(String userName, Subject subject, String realm) {
-        if (_logger.isLoggable(Level.FINER)) {
-            _logger.entering(getClass().getName(), "newInstance", new Object[] {userName, subject, realm});
+        if (_logger.isLoggable(FINER)) {
+            _logger.entering(getClass().getName(), "newInstance", new Object[] { userName, subject, realm });
         }
+
         return new SecurityContext(userName, subject, realm);
     }
 
     @Override
     public AppServSecurityContext newInstance(String userName, Subject subject) {
-        if (_logger.isLoggable(Level.FINER)) {
-            _logger.entering(getClass().getName(), "newInstance", new Object[] {userName, subject});
+        if (_logger.isLoggable(FINER)) {
+            _logger.entering(getClass().getName(), "newInstance", new Object[] { userName, subject });
         }
+
         return new SecurityContext(userName, subject);
     }
 
     @Override
     public void setCurrentSecurityContext(AppServSecurityContext context) {
-        if (_logger.isLoggable(Level.FINER)) {
+        if (_logger.isLoggable(FINER)) {
             _logger.entering(getClass().getName(), "setCurrentSecurityContext", context);
         }
+
         if (context == null) {
             setCurrent(null);
             return;
         }
+
         if (context instanceof SecurityContext) {
             setCurrent((SecurityContext) context);
             return;
         }
+
         throw new IllegalArgumentException("Expected SecurityContext, found " + context);
     }
 
@@ -405,7 +428,7 @@ public class SecurityContext extends AbstractSecurityContext {
         setCurrent(ctx);
     }
 
-    //Moved from J2EEInstanceListener.java
+    // Moved from J2EEInstanceListener.java
     private SecurityContext getSecurityContextForPrincipal(final Principal p) {
         if (p == null) {
             return null;

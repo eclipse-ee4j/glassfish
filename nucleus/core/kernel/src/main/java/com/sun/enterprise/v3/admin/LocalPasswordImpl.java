@@ -16,24 +16,28 @@
 
 package com.sun.enterprise.v3.admin;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.security.SecureRandom;
-import java.util.logging.*;
-import jakarta.inject.Inject;
-import org.glassfish.api.admin.ServerEnvironment;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.runlevel.RunLevel;
-import org.glassfish.internal.api.*;
+import org.glassfish.internal.api.InitRunLevel;
+import org.glassfish.internal.api.LocalPassword;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.jvnet.hk2.annotations.Service;
 
+import jakarta.inject.Inject;
+
 /**
- * Manage a local password, which is a cryptographically secure random number
- * stored in a file with permissions that only allow the owner to read it.
- * A new local password is generated each time the server starts.  The
- * asadmin client can use it to authenticate when executing local commands,
- * such as stop-domain, without the user needing to supply a password.
+ * Manage a local password, which is a cryptographically secure random number stored in a file with permissions that
+ * only allow the owner to read it. A new local password is generated each time the server starts. The asadmin client
+ * can use it to authenticate when executing local commands, such as stop-domain, without the user needing to supply a
+ * password.
  *
  * @author Bill Shannon
  */
@@ -48,59 +52,49 @@ public class LocalPasswordImpl implements PostConstruct, LocalPassword {
 
     private static final String LOCAL_PASSWORD_FILE = "local-password";
     private static final int PASSWORD_BYTES = 20;
-    private static final char[] hex = {
-        '0', '1', '2', '3', '4', '5', '6', '7',
-        '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
-    };
+    private static final char[] hex = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
     private static final Logger logger = KernelLoggerInfo.getLogger();
 
     /**
      * Generate a local password and save it in the local-password file.
      */
+    @Override
     public void postConstruct() {
         logger.fine("Generating local password");
         SecureRandom random = new SecureRandom();
         byte[] pwd = new byte[PASSWORD_BYTES];
         random.nextBytes(pwd);
         password = toHex(pwd);
-        File localPasswordFile =
-            new File(env.getConfigDirPath(), LOCAL_PASSWORD_FILE);
+        File localPasswordFile = new File(env.getConfigDirPath(), LOCAL_PASSWORD_FILE);
         PrintWriter w = null;
         try {
             if (localPasswordFile.exists()) {
                 if (!localPasswordFile.delete()) {
-                    logger.log(Level.WARNING, KernelLoggerInfo.cantDeletePasswordFile,
-                                    localPasswordFile.toString());
+                    logger.log(Level.WARNING, KernelLoggerInfo.cantDeletePasswordFile, localPasswordFile.toString());
                     // if we can't make sure it's our file, don't write it
                     return;
                 }
             }
             if (!localPasswordFile.createNewFile()) {
-                logger.log(Level.WARNING, KernelLoggerInfo.cantCreatePasswordFile,
-                                localPasswordFile.toString());
+                logger.log(Level.WARNING, KernelLoggerInfo.cantCreatePasswordFile, localPasswordFile.toString());
                 // if we can't make sure it's our file, don't write it
                 return;
             }
 
             /*
-             * XXX - There's a security hole here.
-             * Between the time the file is created and the permissions
-             * are changed to prevent others from opening it, someone
-             * else could open it and wait for the data to be written.
-             * Java needs the ability to create a file that's readable
-             * only by the owner; coming in JDK 7.
+             * XXX - There's a security hole here. Between the time the file is created and the permissions are changed to prevent
+             * others from opening it, someone else could open it and wait for the data to be written. Java needs the ability to
+             * create a file that's readable only by the owner; coming in JDK 7.
              *
-             * The setReadable(false, false) call will fail on Windows.
-             * we ignore the failures on all platforms - this is a best
-             * effort.  The above calls ensured that the file is our
-             * file, so the following is the best we can do on all
-             * operating systems.
+             * The setReadable(false, false) call will fail on Windows. we ignore the failures on all platforms - this is a best
+             * effort. The above calls ensured that the file is our file, so the following is the best we can do on all operating
+             * systems.
              */
             localPasswordFile.setWritable(false, false); // take from all
-            localPasswordFile.setWritable(true, true);   // owner only
+            localPasswordFile.setWritable(true, true); // owner only
             localPasswordFile.setReadable(false, false); // take from all
-            localPasswordFile.setReadable(true, true);   // owner only
+            localPasswordFile.setReadable(true, true); // owner only
 
             w = new PrintWriter(localPasswordFile);
             w.println(password);
@@ -108,14 +102,16 @@ public class LocalPasswordImpl implements PostConstruct, LocalPassword {
             // ignore errors
             logger.log(Level.FINE, "Exception writing local password file", ex);
         } finally {
-            if (w != null)
+            if (w != null) {
                 w.close();
+            }
         }
     }
 
     /**
      * Is the given password the local password?
      */
+    @Override
     public boolean isLocalPassword(String p) {
         return password != null && password.equals(p);
     }
@@ -123,6 +119,7 @@ public class LocalPasswordImpl implements PostConstruct, LocalPassword {
     /**
      * Get the local password.
      */
+    @Override
     public String getLocalPassword() {
         return password;
     }

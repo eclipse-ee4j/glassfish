@@ -16,14 +16,14 @@
 
 package com.sun.enterprise.v3.server;
 
-import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
 import javax.xml.stream.XMLInputFactory;
 
 import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
  * Allow people to inject {@link XMLInputFactory} via {@link Inject}.

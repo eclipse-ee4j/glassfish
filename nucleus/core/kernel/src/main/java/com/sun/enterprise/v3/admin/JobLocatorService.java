@@ -16,28 +16,28 @@
 
 package com.sun.enterprise.v3.admin;
 
+import java.io.File;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.glassfish.api.admin.JobLocator;
 import org.jvnet.hk2.annotations.Service;
 
-import java.io.File;
-import java.util.*;
-
 /**
- * This service will look for completed jobs from the jobs.xml
- * files and load the information
+ * This service will look for completed jobs from the jobs.xml files and load the information
  *
  * @author Bhakti Mehta
  */
 @Service(name = "job-locator")
 public class JobLocatorService implements JobLocator {
 
-    protected Set<File> jobFiles = (Set<File>) Collections.synchronizedSet(new HashSet<File>());
+    protected Set<File> jobFiles = Collections.synchronizedSet(new HashSet<File>());
 
     @Override
     public Set<File> locateJobXmlFiles() {
         return jobFiles;
     }
-
 
     public void addFile(File file) {
         jobFiles.add(file);

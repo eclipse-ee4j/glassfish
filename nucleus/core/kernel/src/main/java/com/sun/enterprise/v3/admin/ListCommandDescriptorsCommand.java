@@ -16,10 +16,13 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.universal.collections.ManifestUtils;
 import java.lang.reflect.Field;
-import java.util.*;
-import jakarta.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
@@ -30,16 +33,20 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 
+import com.sun.enterprise.universal.collections.ManifestUtils;
+
+import jakarta.inject.Inject;
+
 /**
  * Create data structures that describe the command.
  *
  * @author Jerome Dochez
  *
  */
-@Service(name="_list-descriptors")
+@Service(name = "_list-descriptors")
 @PerLookup
 @I18n("list.commands")
-@AccessRequired(resource="domain", action="dump")
+@AccessRequired(resource = "domain", action = "dump")
 public class ListCommandDescriptorsCommand implements AdminCommand {
     @Inject
     ServiceLocator habitat;
@@ -55,7 +62,7 @@ public class ListCommandDescriptorsCommand implements AdminCommand {
         ActionReport report = context.getActionReport();
         StringBuilder sb = new StringBuilder();
         sb.append("ALL COMMANDS: ").append(EOL);
-        for(CLICommand cli : cliCmds) {
+        for (CLICommand cli : cliCmds) {
             sb.append(cli.toString()).append(EOL);
         }
         report.setMessage(sb.toString());
@@ -65,19 +72,20 @@ public class ListCommandDescriptorsCommand implements AdminCommand {
     private CLICommand reflect(AdminCommand cmd) {
         CLICommand cliCmd = new CLICommand(cmd);
 
-        for (Field f : cmd.getClass().getDeclaredFields()) {
-            final Param param = f.getAnnotation(Param.class);
-            if (param==null)
+        for (Field field : cmd.getClass().getDeclaredFields()) {
+            final Param param = field.getAnnotation(Param.class);
+            if (param == null) {
                 continue;
+            }
 
-            Option option = new Option(param, f);
+            Option option = new Option(param, field);
             cliCmd.options.add(option);
         }
         return cliCmd;
     }
 
     private void setAdminCommands() {
-        adminCmds = new ArrayList<AdminCommand>();
+        adminCmds = new ArrayList<>();
         for (AdminCommand command : habitat.<AdminCommand>getAllServices(AdminCommand.class)) {
             adminCmds.add(command);
         }
@@ -95,8 +103,7 @@ public class ListCommandDescriptorsCommand implements AdminCommand {
 
                 return name1.compareTo(name2);
             }
-        }
-        );
+        });
     }
 
     private static boolean ok(String s) {
@@ -104,7 +111,7 @@ public class ListCommandDescriptorsCommand implements AdminCommand {
     }
 
     private List<AdminCommand> adminCmds;
-    private List<CLICommand> cliCmds = new LinkedList<CLICommand>();
+    private List<CLICommand> cliCmds = new LinkedList<>();
     private final static String EOL = ManifestUtils.EOL_TOKEN;
 
     private static class CLICommand {
@@ -120,7 +127,7 @@ public class ListCommandDescriptorsCommand implements AdminCommand {
             sb.append("CLI Command: name=").append(name);
             sb.append(" class=").append(adminCommand.getClass().getName()).append(EOL);
 
-            for(Option opt : options) {
+            for (Option opt : options) {
                 sb.append(opt.toString()).append(EOL);
             }
             return sb.toString();
@@ -128,14 +135,15 @@ public class ListCommandDescriptorsCommand implements AdminCommand {
 
         AdminCommand adminCommand;
         String name;
-        List<Option> options = new LinkedList<Option>();
+        List<Option> options = new LinkedList<>();
     }
+
     private static class Option {
         Option(Param p, Field f) {
             final Class<?> ftype = f.getType();
             name = p.name();
 
-            if(!ok(name)) {
+            if (!ok(name)) {
                 name = f.getName();
             }
 
@@ -144,14 +152,11 @@ public class ListCommandDescriptorsCommand implements AdminCommand {
             defaultValue = p.defaultValue();
             type = ftype;
         }
+
         @Override
         public String toString() {
-            String s = "   Option:" +
-                    " name=" + name +
-                    " required=" + required +
-                    " operand=" + operand +
-                    " defaultValue=" + defaultValue +
-                    " type=" + type.getName();
+            String s = "   Option:" + " name=" + name + " required=" + required + " operand=" + operand + " defaultValue=" + defaultValue
+                    + " type=" + type.getName();
             return s;
         }
 

@@ -16,45 +16,51 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.admin.util.ClusterOperationUtil;
-import com.sun.enterprise.config.serverbeans.Server;
-import org.glassfish.api.admin.*;
+import static com.sun.enterprise.admin.util.ClusterOperationUtil.replicateCommand;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.ActionReport.ExitCode;
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.AccessRequired;
+import org.glassfish.api.admin.AccessRequired.AccessCheck;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.AdminCommandSecurity;
+import org.glassfish.api.admin.CommandLock;
+import org.glassfish.api.admin.FailurePolicy;
+import org.glassfish.api.admin.ParameterMap;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.flashlight.MonitoringRuntimeDataRegistry;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Target;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Inject;
-
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.config.Dom;
-import org.glassfish.api.Param;
-import org.glassfish.api.ActionReport;
-
-import java.util.Map;
-import java.util.HashMap;
-
-import java.util.*;
-
-import com.sun.enterprise.v3.common.PropsFileActionReporter;
-import org.glassfish.api.ActionReport.ExitCode;
-import org.glassfish.flashlight.MonitoringRuntimeDataRegistry;
 
 import com.sun.enterprise.config.serverbeans.Domain;
-import org.glassfish.api.admin.AccessRequired.AccessCheck;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.v3.common.PropsFileActionReporter;
+
+import jakarta.inject.Inject;
 
 /**
- * User: Jerome Dochez
- * Date: Jul 12, 2008
- * Time: 1:27:53 AM
+ * User: Jerome Dochez Date: Jul 12, 2008 Time: 1:27:53 AM
  */
-@Service(name="list")
+@Service(name = "list")
 @PerLookup
 @CommandLock(CommandLock.LockType.NONE)
-public class ListCommand extends V2DottedNameSupport implements AdminCommand,
-        AdminCommandSecurity.Preauthorization, AdminCommandSecurity.AccessCheckProvider {
+public class ListCommand extends V2DottedNameSupport implements AdminCommand, AdminCommandSecurity.Preauthorization, AdminCommandSecurity.AccessCheckProvider {
 
     @Inject
-    private MonitoringReporter mr;
+    private MonitoringReporter monitoringReporter;
 
     @Inject
     Domain domain;
@@ -66,52 +72,54 @@ public class ListCommand extends V2DottedNameSupport implements AdminCommand,
     Target targetService;
 
     @Inject
-    ServiceLocator habitat;
+    ServiceLocator serviceLocator;
 
-    //How to define short option name?
-    @Param(name="MoniTor", optional=true, defaultValue="false", shortName="m", alias="Mon")
+    // How to define short option name?
+    @Param(name = "MoniTor", optional = true, defaultValue = "false", shortName = "m", alias = "Mon")
     Boolean monitor;
 
     @Param(primary = true)
-    String pattern="";
+    String pattern = "";
 
-    @Inject @Optional
-    private MonitoringRuntimeDataRegistry mrdr;
+    @Inject
+    @Optional
+    private MonitoringRuntimeDataRegistry monitoringRuntimeDataRegistry;
 
     private Map<Dom, String> matchingNodes;
-
     private TreeNode[] parentNodes;
 
     @Override
     public boolean preAuthorization(AdminCommandContext context) {
         if (monitor) {
             return preAuthorizationForMonitoring(context);
-        } else {
-            return preAuthorizationForNonMonitoring(context);
         }
+
+        return preAuthorizationForNonMonitoring(context);
     }
 
     private boolean preAuthorizationForMonitoring(final AdminCommandContext context) {
-        mr.prepareList(context, pattern);
+        monitoringReporter.prepareList(context, pattern);
         return true;
     }
 
     private boolean preAuthorizationForNonMonitoring(final AdminCommandContext context) {
-        // first let's get the parent for this pattern.
+        // First let's get the parent for this pattern.
         parentNodes = getAliasedParent(domain, pattern);
-        Map<Dom, String> dottedNames =  new HashMap<Dom, String>();
+        Map<Dom, String> dottedNames = new HashMap<>();
         for (TreeNode parentNode : parentNodes) {
-               dottedNames.putAll(getAllDottedNodes(parentNode.node));
+            dottedNames.putAll(getAllDottedNodes(parentNode.node));
         }
-        // reset the pattern.
+
+        // Reset the pattern.
         pattern = parentNodes[0].relativeName;
 
         matchingNodes = getMatchingNodes(dottedNames, pattern);
-        if (matchingNodes.isEmpty() && pattern.lastIndexOf('.')!=-1) {
+        if (matchingNodes.isEmpty() && pattern.lastIndexOf('.') != -1) {
             // it's possible the user is just looking for an attribute, let's remove the
             // last element from the pattern.
             matchingNodes = getMatchingNodes(dottedNames, pattern.substring(0, pattern.lastIndexOf(".")));
         }
+
         return true;
     }
 
@@ -119,32 +127,33 @@ public class ListCommand extends V2DottedNameSupport implements AdminCommand,
     public Collection<? extends AccessCheck> getAccessChecks() {
         if (monitor) {
             return getAccessChecksForMonitoring();
-        } else {
-            return getAccessChecksForNonMonitoring();
         }
+
+        return getAccessChecksForNonMonitoring();
     }
 
     private Collection<? extends AccessCheck> getAccessChecksForMonitoring() {
-        return mr.getAccessChecksForList();
+        return monitoringReporter.getAccessChecksForList();
     }
 
     private Collection<? extends AccessCheck> getAccessChecksForNonMonitoring() {
-        final Collection<AccessCheck> accessChecks = new ArrayList<AccessCheck>();
-        for (Map.Entry<Dom,String> entry : matchingNodes.entrySet()) {
-            accessChecks.add(new AccessCheck(AccessRequired.Util.resourceNameFromDom((Dom)entry.getKey()), "read"));
+        final Collection<AccessCheck> accessChecks = new ArrayList<>();
+        for (Entry<Dom, String> entry : matchingNodes.entrySet()) {
+            accessChecks.add(new AccessCheck(AccessRequired.Util.resourceNameFromDom(entry.getKey()), "read"));
         }
+
         return accessChecks;
     }
 
+    @Override
     public void execute(AdminCommandContext context) {
-
         ActionReport report = context.getActionReport();
 
         /* Issue 5918 Used in ManifestManager to keep output sorted */
         try {
             PropsFileActionReporter reporter = (PropsFileActionReporter) report;
             reporter.useMainChildrenAttribute(true);
-        } catch(ClassCastException e) {
+        } catch (ClassCastException e) {
             // ignore, this is not a manifest output
         }
 
@@ -153,8 +162,8 @@ public class ListCommand extends V2DottedNameSupport implements AdminCommand,
             return;
         }
 
-        List<Map.Entry> matchingNodesSorted = sortNodesByDottedName(matchingNodes);
-        for (Map.Entry<Dom, String> node : matchingNodesSorted) {
+        List<Entry<Dom, String>> matchingNodesSorted = sortNodesByDottedName(matchingNodes);
+        for (Entry<Dom, String> node : matchingNodesSorted) {
             ActionReport.MessagePart part = report.getTopMessagePart().addChild();
             part.setChildrenType("DottedName");
             if (parentNodes[0].name.isEmpty()) {
@@ -166,7 +175,7 @@ public class ListCommand extends V2DottedNameSupport implements AdminCommand,
     }
 
     private void listMonitorElements(AdminCommandContext ctxt) {
-        mr.execute();
+        monitoringReporter.execute();
     }
 
     public void callInstance(ActionReport report, AdminCommandContext context, String targetName) {
@@ -175,9 +184,10 @@ public class ListCommand extends V2DottedNameSupport implements AdminCommand,
             paramMap.set("MoniTor", "true");
             paramMap.set("DEFAULT", pattern);
             List<Server> targetList = targetService.getInstances(targetName);
-            ClusterOperationUtil.replicateCommand("list", FailurePolicy.Error, FailurePolicy.Warn,
-                    FailurePolicy.Ignore, targetList, context, paramMap, habitat);
-        } catch(Exception ex) {
+
+            replicateCommand("list", FailurePolicy.Error, FailurePolicy.Warn, FailurePolicy.Ignore, targetList, context, paramMap,
+                    serviceLocator);
+        } catch (Exception ex) {
             report.setActionExitCode(ExitCode.FAILURE);
             report.setMessage("Failure while trying get details from instance " + targetName);
         }

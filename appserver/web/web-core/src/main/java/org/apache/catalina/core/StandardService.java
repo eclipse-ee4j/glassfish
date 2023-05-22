@@ -17,80 +17,84 @@
 
 package org.apache.catalina.core;
 
-
-import org.apache.catalina.*;
-import org.apache.catalina.util.LifecycleSupport;
 import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-import javax.management.NotificationBroadcasterSupport;
-import javax.management.ObjectName;
+import static java.text.MessageFormat.format;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static org.apache.catalina.LogFacade.ERROR_REGISTER_SERVICE_EXCEPTION;
+import static org.apache.catalina.LogFacade.FAILED_SERVICE_INIT_EXCEPTION;
+import static org.apache.catalina.LogFacade.SERVICE_STARTED;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.management.NotificationBroadcasterSupport;
+import javax.management.ObjectName;
+
+import org.apache.catalina.Connector;
+import org.apache.catalina.Container;
+import org.apache.catalina.Engine;
+import org.apache.catalina.Lifecycle;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.LifecycleListener;
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.Server;
+import org.apache.catalina.ServerFactory;
+import org.apache.catalina.Service;
+import org.apache.catalina.util.LifecycleSupport;
 
 /**
- * Standard implementation of the <code>Service</code> interface.  The
- * associated Container is generally an instance of Engine, but this is
- * not required.
+ * Standard implementation of the <code>Service</code> interface. The associated Container is generally an instance of
+ * Engine, but this is not required.
  *
  * @author Craig R. McClanahan
  */
 
-public class StandardService
-        implements Lifecycle, Service
- {
+public class StandardService implements Lifecycle, Service {
 
-     private static final Logger log = LogFacade.getLogger();
-     private static final ResourceBundle rb = log.getResourceBundle();
+    private static final Logger log = LogFacade.getLogger();
+    private static final ResourceBundle rb = log.getResourceBundle();
 
     // ----------------------------------------------------- Instance Variables
-
 
     /**
      * Descriptive information about this component implementation.
      */
-    private static final String info =
-        "org.apache.catalina.core.StandardService/1.0";
-
+    private static final String info = "org.apache.catalina.core.StandardService/1.0";
 
     /**
      * The name of this service.
      */
-    private String name = null;
-
+    private String name;
 
     /**
      * The lifecycle event support for this component.
      */
     private LifecycleSupport lifecycle = new LifecycleSupport(this);
 
-
     /**
      * The <code>Server</code> that owns this Service, if any.
      */
-    private Server server = null;
+    private Server server;
 
     /**
      * Has this component been started?
      */
-    private boolean started = false;
-
+    private boolean started;
 
     /**
      * The debugging detail level for this component.
      */
     protected int debug = 0;
 
-
     /**
      * The property change support for this component.
      */
     protected PropertyChangeSupport support = new PropertyChangeSupport(this);
-
 
     /**
      * The set of Connectors associated with this Service.
@@ -100,77 +104,76 @@ public class StandardService
     protected final Object connectorsMonitor = new Object();
 
     /**
-     * The Container associated with this Service. (In the case of the
-     * org.apache.catalina.startup.Embedded subclass, this holds the most
-     * recently added Engine.)
+     * The Container associated with this Service. (In the case of the org.apache.catalina.startup.Embedded subclass, this
+     * holds the most recently added Engine.)
      */
-    protected Container container = null;
-
+    protected Container container;
 
     /**
      * Has this component been initialized?
      */
-    protected boolean initialized = false;
+    protected boolean initialized;
 
     /**
-     * The broadcaster that sends j2ee notifications.
+     * The broadcaster that sends EE notifications.
      */
-    private NotificationBroadcasterSupport broadcaster = null;
+    private NotificationBroadcasterSupport broadcaster;
 
+    protected String domain;
+    protected ObjectName oname;
 
     // ----------------------------------------------------------- Constructors
 
-     /**
-      * Construct a default instance of this class.
-      */
+    /**
+     * Construct a default instance of this class.
+     */
 
-     public StandardService() {
-         this.broadcaster = new NotificationBroadcasterSupport();
-     }
-
+    public StandardService() {
+        this.broadcaster = new NotificationBroadcasterSupport();
+    }
 
     // ------------------------------------------------------------- Properties
 
-
     /**
-     * Return the <code>Container</code> that handles requests for all
-     * <code>Connectors</code> associated with this Service.
+     * Return the <code>Container</code> that handles requests for all <code>Connectors</code> associated with this Service.
      */
+    @Override
     public Container getContainer() {
-
-        return (this.container);
-
+        return  container;
     }
 
-
     /**
-     * Set the <code>Container</code> that handles requests for all
-     * <code>Connectors</code> associated with this Service.
+     * Set the <code>Container</code> that handles requests for all <code>Connectors</code> associated with this Service.
      *
      * @param container The new Container
      */
+    @Override
     public void setContainer(Container container) {
-
         Container oldContainer = this.container;
-        if ((oldContainer != null) && (oldContainer instanceof Engine))
+        if ((oldContainer != null) && (oldContainer instanceof Engine)) {
             ((Engine) oldContainer).setService(null);
+        }
+
         this.container = container;
-        if (this.container instanceof Engine)
+        if (this.container instanceof Engine) {
             ((Engine) this.container).setService(this);
-        if (started && (this.container != null) &&
-            (this.container instanceof Lifecycle)) {
+        }
+
+        if (started && (this.container != null) && (this.container instanceof Lifecycle)) {
             try {
                 ((Lifecycle) this.container).start();
             } catch (LifecycleException e) {
                 // Ignore
             }
         }
+
         synchronized (connectorsMonitor) {
-            for (int i = 0; i < connectors.length; i++)
-                connectors[i].setContainer(this.container);
+            for (Connector connector : connectors) {
+                connector.setContainer(this.container);
+            }
         }
-        if (started && (oldContainer != null) &&
-            (oldContainer instanceof Lifecycle)) {
+
+        if (started && (oldContainer != null) && (oldContainer instanceof Lifecycle)) {
             try {
                 ((Lifecycle) oldContainer).stop();
             } catch (LifecycleException e) {
@@ -184,22 +187,19 @@ public class StandardService
     }
 
     public ObjectName getContainerName() {
-        if( container instanceof ContainerBase ) {
-            return ((ContainerBase)container).getJmxName();
+        if (container instanceof ContainerBase) {
+            return ((ContainerBase) container).getJmxName();
         }
+
         return null;
     }
-
 
     /**
      * Return the debugging detail level of this component.
      */
     public int getDebug() {
-
-        return (this.debug);
-
+        return debug;
     }
-
 
     /**
      * Set the debugging detail level of this component.
@@ -207,102 +207,84 @@ public class StandardService
      * @param debug The new debugging detail level
      */
     public void setDebug(int debug) {
-
         int oldDebug = this.debug;
         this.debug = debug;
-        support.firePropertyChange("debug", Integer.valueOf(oldDebug),
-                                   Integer.valueOf(this.debug));
+        support.firePropertyChange("debug", Integer.valueOf(oldDebug), Integer.valueOf(this.debug));
     }
-
 
     /**
-     * Return descriptive information about this Service implementation and
-     * the corresponding version number, in the format
+     * Return descriptive information about this Service implementation and the corresponding version number, in the format
      * <code>&lt;description&gt;/&lt;version&gt;</code>.
      */
+    @Override
     public String getInfo() {
-
-        return (this.info);
-
+        return info;
     }
-
 
     /**
      * Return the name of this Service.
      */
+    @Override
     public String getName() {
-
-        return (this.name);
-
+        return name;
     }
-
 
     /**
      * Set the name of this Service.
      *
      * @param name The new service name
      */
+    @Override
     public void setName(String name) {
-
         this.name = name;
-
     }
-
 
     /**
      * Return the <code>Server</code> with which we are associated (if any).
      */
+    @Override
     public Server getServer() {
-
-        return (this.server);
-
+        return server;
     }
-
 
     /**
      * Set the <code>Server</code> with which we are associated (if any).
      *
      * @param server The server that owns this Service
      */
+    @Override
     public void setServer(Server server) {
-
         this.server = server;
-
     }
 
-     /**
-      * Return the <code>NotificationBroadcasterSupport</code> that sends notification for this Service.
-      */
-     public NotificationBroadcasterSupport getBroadcaster() {
+    /**
+     * Return the <code>NotificationBroadcasterSupport</code> that sends notification for this Service.
+     */
+    @Override
+    public NotificationBroadcasterSupport getBroadcaster() {
+        return broadcaster;
+    }
 
-         return broadcaster;
+    /**
+     * Set the <code>NotificationBroadcasterSupport</code> that sends notification for this Service
+     *
+     * @param broadcaster The new NotificationBroadcasterSupport
+     */
 
-     }
-
-     /**
-      * Set the <code>NotificationBroadcasterSupport</code> that sends notification for this Service
-      *
-      * @param broadcaster The new NotificationBroadcasterSupport
-      */
-
-     public void setBroadcaster(NotificationBroadcasterSupport broadcaster) {
-
-         this.broadcaster = broadcaster;
-
-     }
-
+    @Override
+    public void setBroadcaster(NotificationBroadcasterSupport broadcaster) {
+        this.broadcaster = broadcaster;
+    }
 
     // --------------------------------------------------------- Public Methods
 
-
     /**
-     * Add a new Connector to the set of defined Connectors, and associate it
-     * with this Service's Container.
+     * Add a new Connector to the set of defined Connectors, and associate it with this Service's Container.
      *
      * @param connector The Connector to be added
      */
+    @Override
     public void addConnector(Connector connector) {
-
         synchronized (connectorsMonitor) {
             connector.setContainer(this.container);
             connector.setService(this);
@@ -315,7 +297,7 @@ public class StandardService
                 try {
                     connector.initialize();
                 } catch (LifecycleException e) {
-                    log.log(Level.SEVERE, "Connector.initialize", e);
+                    log.log(SEVERE, "Connector.initialize", e);
                 }
             }
 
@@ -323,7 +305,7 @@ public class StandardService
                 try {
                     ((Lifecycle) connector).start();
                 } catch (LifecycleException e) {
-                    log.log(Level.SEVERE, "Connector.start", e);
+                    log.log(SEVERE, "Connector.start", e);
                 }
             }
 
@@ -334,16 +316,8 @@ public class StandardService
     }
 
     public ObjectName[] getConnectorNames() {
-        ObjectName results[] = new ObjectName[connectors.length];
-        for( int i=0; i<results.length; i++ ) {
-            // if it's a coyote connector
-            //if( connectors[i] instanceof CoyoteConnector ) {
-            //    results[i]=((CoyoteConnector)connectors[i]).getJmxName();
-            //}
-        }
-        return results;
+        return new ObjectName[connectors.length];
     }
-
 
     /**
      * Add a property change listener to this component.
@@ -351,49 +325,39 @@ public class StandardService
      * @param listener The listener to add
      */
     public void addPropertyChangeListener(PropertyChangeListener listener) {
-
         support.addPropertyChangeListener(listener);
-
     }
-
 
     /**
      * Find and return the set of Connectors associated with this Service.
      */
+    @Override
     public Connector[] findConnectors() {
-
         return (connectors);
-
     }
-
 
     /**
      * Find and return the Connector associated with this Service and Connector name.
      */
     public Connector findConnector(String name) {
-
         for (Connector connector : connectors) {
             if (connector.getName().equals(name)) {
                 return connector;
             }
         }
+
         return null;
 
     }
 
-
     /**
-     * Remove the specified Connector from the set associated from this
-     * Service.  The removed Connector will also be disassociated from our
-     * Container.
+     * Remove the specified Connector from the set associated from this Service. The removed Connector will also be
+     * disassociated from our Container.
      *
      * @param connector The Connector to be removed
      */
-    // START SJSAS 6231069
-    //public void removeConnector(Connector connector) {
-    public void removeConnector(Connector connector) throws LifecycleException{
-    // END SJSAS 6231069
-
+    @Override
+    public void removeConnector(Connector connector) throws LifecycleException {
         synchronized (connectorsMonitor) {
             int j = -1;
             for (int i = 0; i < connectors.length; i++) {
@@ -403,38 +367,25 @@ public class StandardService
                 }
             }
 
-            if (j < 0)
+            if (j < 0) {
                 return;
+            }
 
-            // START SJSAS 6231069
-            /*if (started && (connectors[j] instanceof Lifecycle)) {
-                try {
-                   ((Lifecycle) connectors[j]).stop();
-               } catch (LifecycleException e) {
-                   log.error("Connector.stop", e);
-               }
-            }*/
             ((Lifecycle) connectors[j]).stop();
-            // END SJSAS 6231069
 
-            // START SJSAS 6231069
-            /*connectors[j].setContainer(null);
-            connector.setService(null);*/
-            // END SJSAS 6231069
             int k = 0;
             Connector results[] = new Connector[connectors.length - 1];
             for (int i = 0; i < connectors.length; i++) {
-                if (i != j)
+                if (i != j) {
                     results[k++] = connectors[i];
+                }
             }
             connectors = results;
 
             // Report this property change to interested listeners
             support.firePropertyChange("connector", connector, null);
         }
-
     }
-
 
     /**
      * Remove a property change listener from this component.
@@ -442,84 +393,73 @@ public class StandardService
      * @param listener The listener to remove
      */
     public void removePropertyChangeListener(PropertyChangeListener listener) {
-
         support.removePropertyChangeListener(listener);
-
     }
-
 
     /**
      * Return a String representation of this component.
      */
+    @Override
     public String toString() {
-
         StringBuilder sb = new StringBuilder("StandardService[");
         sb.append(getName());
         sb.append("]");
-        return (sb.toString());
-
+        return sb.toString();
     }
 
-
     // ------------------------------------------------------ Lifecycle Methods
-
 
     /**
      * Add a LifecycleEvent listener to this component.
      *
      * @param listener The listener to add
      */
+    @Override
     public void addLifecycleListener(LifecycleListener listener) {
         lifecycle.addLifecycleListener(listener);
     }
 
-
     /**
-     * Gets the (possibly empty) list of lifecycle listeners
-     * associated with this StandardService.
+     * Gets the (possibly empty) list of lifecycle listeners associated with this StandardService.
      */
+    @Override
     public List<LifecycleListener> findLifecycleListeners() {
         return lifecycle.findLifecycleListeners();
     }
-
 
     /**
      * Remove a LifecycleEvent listener from this component.
      *
      * @param listener The listener to remove
      */
+    @Override
     public void removeLifecycleListener(LifecycleListener listener) {
         lifecycle.removeLifecycleListener(listener);
     }
 
-
     /**
-     * Prepare for the beginning of active use of the public methods of this
-     * component.  This method should be called before any of the public
-     * methods of this component are utilized.  It should also send a
-     * LifecycleEvent of type START_EVENT to any registered listeners.
+     * Prepare for the beginning of active use of the public methods of this component. This method should be called before
+     * any of the public methods of this component are utilized. It should also send a LifecycleEvent of type START_EVENT to
+     * any registered listeners.
      *
-     * @exception LifecycleException if this component detects a fatal error
-     *  that prevents this component from being used
+     * @exception LifecycleException if this component detects a fatal error that prevents this component from being used
      */
+    @Override
     public void start() throws LifecycleException {
-
         // Validate and update our current component state
         if (started) {
-            if (log.isLoggable(Level.INFO)) {
-                log.log(Level.INFO, LogFacade.SERVICE_STARTED);
-            }
+            log.log(INFO, SERVICE_STARTED);
         }
 
-        if( ! initialized )
+        if (!initialized) {
             init();
+        }
 
         // Notify our interested LifecycleListeners
         lifecycle.fireLifecycleEvent(BEFORE_START_EVENT, null);
 
-        if (log.isLoggable(Level.INFO)) {
-            log.log(Level.INFO, LogFacade.STARTING_SERVICE, this.name);
-        }
+        log.log(INFO, LogFacade.STARTING_SERVICE, this.name);
+
         lifecycle.fireLifecycleEvent(START_EVENT, null);
         started = true;
 
@@ -534,29 +474,26 @@ public class StandardService
 
         // Start our defined Connectors second
         synchronized (connectorsMonitor) {
-            for (int i = 0; i < connectors.length; i++) {
-                if (connectors[i] instanceof Lifecycle)
-                    ((Lifecycle) connectors[i]).start();
+            for (Connector connector : connectors) {
+                if (connector instanceof Lifecycle) {
+                    ((Lifecycle) connector).start();
+                }
             }
         }
 
         // Notify our interested LifecycleListeners
         lifecycle.fireLifecycleEvent(AFTER_START_EVENT, null);
-
     }
 
-
     /**
-     * Gracefully terminate the active use of the public methods of this
-     * component.  This method should be the last one called on a given
-     * instance of this component.  It should also send a LifecycleEvent
-     * of type STOP_EVENT to any registered listeners.
+     * Gracefully terminate the active use of the public methods of this component. This method should be the last one
+     * called on a given instance of this component. It should also send a LifecycleEvent of type STOP_EVENT to any
+     * registered listeners.
      *
-     * @exception LifecycleException if this component detects a fatal error
-     *  that needs to be reported
+     * @exception LifecycleException if this component detects a fatal error that needs to be reported
      */
+    @Override
     public void stop() throws LifecycleException {
-
         // Validate and update our current component state
         if (!started) {
             return;
@@ -567,16 +504,17 @@ public class StandardService
 
         lifecycle.fireLifecycleEvent(STOP_EVENT, null);
 
-        if (log.isLoggable(Level.INFO)) {
-            log.log(Level.INFO, LogFacade.STOPPING_SERVICE, neutralizeForLog(this.name));
+        if (log.isLoggable(INFO)) {
+            log.log(INFO, LogFacade.STOPPING_SERVICE, neutralizeForLog(this.name));
         }
         started = false;
 
         // Stop our defined Connectors first
         synchronized (connectorsMonitor) {
-            for (int i = 0; i < connectors.length; i++) {
-                if (connectors[i] instanceof Lifecycle)
-                    ((Lifecycle) connectors[i]).stop();
+            for (Connector connector : connectors) {
+                if (connector instanceof Lifecycle) {
+                    ((Lifecycle) connector).stop();
+                }
             }
         }
 
@@ -591,76 +529,66 @@ public class StandardService
 
         // Notify our interested LifecycleListeners
         lifecycle.fireLifecycleEvent(AFTER_STOP_EVENT, null);
-
     }
 
-
     /**
-     * Invoke a pre-startup initialization. This is used to allow connectors
-     * to bind to restricted ports under Unix operating environments.
+     * Invoke a pre-startup initialization. This is used to allow connectors to bind to restricted ports under Unix
+     * operating environments.
      */
-    public void initialize()
-            throws LifecycleException
-    {
+    @Override
+    public void initialize() throws LifecycleException {
         // Service shouldn't be used with embedded, so it doesn't matter
         if (initialized) {
-            if (log.isLoggable(Level.INFO)) {
-                log.log(Level.INFO, LogFacade.SERVICE_HAS_BEEN_INIT);
+            if (log.isLoggable(INFO)) {
+                log.log(INFO, LogFacade.SERVICE_HAS_BEEN_INIT);
             }
             return;
         }
         initialized = true;
 
-        if( oname==null ) {
+        if (oname == null) {
             try {
                 // Hack - Server should be deprecated...
-                Container engine=this.getContainer();
-                domain=engine.getName();
-                oname=new ObjectName(domain + ":type=Service,serviceName="+name);
+                domain = getContainer().getName();
+                oname = new ObjectName(domain + ":type=Service,serviceName=" + name);
             } catch (Exception e) {
-                String msg = MessageFormat.format(rb.getString(LogFacade.ERROR_REGISTER_SERVICE_EXCEPTION), neutralizeForLog(domain));
-                log.log(Level.SEVERE, msg, e);
+                log.log(SEVERE, format(rb.getString(ERROR_REGISTER_SERVICE_EXCEPTION), neutralizeForLog(domain)), e);
             }
 
-
         }
-        if( server==null ) {
+
+        if (server == null) {
             // Register with the server
             // HACK: ServerFactory should be removed...
-
             ServerFactory.getServer().addService(this);
         }
 
-
         // Initialize our defined Connectors
         synchronized (connectorsMonitor) {
-                for (int i = 0; i < connectors.length; i++) {
-                    connectors[i].initialize();
-                }
+            for (Connector connector : connectors) {
+                connector.initialize();
+            }
         }
     }
 
     public void destroy() throws LifecycleException {
-        if( started ) stop();
+        if (started) {
+            stop();
+        }
+
         // unregister should be here probably
-        // START CR 6368091
         if (initialized) {
             initialized = false;
         }
-        // END CR 6368091
     }
 
     public void init() {
         try {
             initialize();
-        } catch( Throwable t ) {
-            String msg = MessageFormat.format(rb.getString(LogFacade.FAILED_SERVICE_INIT_EXCEPTION), neutralizeForLog(domain));
-            log.log(Level.SEVERE, msg, t);
+        } catch (Throwable t) {
+            log.log(SEVERE, format(rb.getString(FAILED_SERVICE_INIT_EXCEPTION), neutralizeForLog(domain)), t);
         }
     }
-
-    protected String domain;
-    protected ObjectName oname;
 
     public ObjectName getObjectName() {
         return oname;

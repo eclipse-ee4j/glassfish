@@ -17,7 +17,7 @@
 package com.sun.enterprise.security;
 
 /**
- * acts as a security context proxy
+ * Acts as a security context proxy
  */
 public interface SecurityContextProxy {
     SecurityContext getSecurityContext();

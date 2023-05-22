@@ -23,6 +23,7 @@ package com.sun.enterprise.security.auth;
  */
 
 public class AuthenticationStatusImpl implements AuthenticationStatus {
+
     private String realmName; // Name of the Realm
     private String authMethod; // Method used for Authentication.
     private String principalName; // String form of the Principal.
@@ -87,8 +88,8 @@ public class AuthenticationStatusImpl implements AuthenticationStatus {
     /**
      * This method returns the "method" used to perform authentication
      *
-     * @return A java.lang.String representation of the method used. In passphrase based authentication it returns the string
-     * "password".
+     * @return A java.lang.String representation of the method used. In passphrase based authentication it returns the
+     * string "password".
      */
     public String getAuthMethod() {
         return authMethod;

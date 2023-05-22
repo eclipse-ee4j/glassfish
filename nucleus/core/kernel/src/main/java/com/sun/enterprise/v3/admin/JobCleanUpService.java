@@ -16,9 +16,19 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.ManagedJobConfig;
-import com.sun.enterprise.util.LocalStringManagerImpl;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.logging.Level.FINE;
+
+import java.beans.PropertyChangeEvent;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
+import java.util.logging.Logger;
+
 import org.glassfish.api.StartupRunLevel;
 import org.glassfish.api.admin.progress.JobInfo;
 import org.glassfish.hk2.api.PostConstruct;
@@ -33,22 +43,22 @@ import org.jvnet.hk2.config.NotProcessed;
 import org.jvnet.hk2.config.ObservableBean;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.ManagedJobConfig;
+
 import jakarta.inject.Inject;
-import java.beans.PropertyChangeEvent;
-import java.io.File;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * This is an hk2 service which will clear all expired and inactive jobs
+ *
  * @author Bhakti Mehta
  */
-@Service(name="job-cleanup")
-@RunLevel(value= StartupRunLevel.VAL)
-public class JobCleanUpService implements PostConstruct,ConfigListener {
+@Service(name = "job-cleanup")
+@RunLevel(value = StartupRunLevel.VAL)
+public class JobCleanUpService implements PostConstruct, ConfigListener {
+
+    private final static Logger logger = KernelLoggerInfo.getLogger();
 
     @Inject
     JobManagerService jobManagerService;
@@ -57,26 +67,16 @@ public class JobCleanUpService implements PostConstruct,ConfigListener {
     Domain domain;
 
     private ManagedJobConfig managedJobConfig;
-
-    private final static Logger logger = KernelLoggerInfo.getLogger();
-
     private ScheduledExecutorService scheduler;
-
-
-    private static final LocalStringManagerImpl adminStrings =
-            new LocalStringManagerImpl(JobCleanUpService.class);
-
-
 
     @Override
     public void postConstruct() {
-        logger.log(Level.FINE,KernelLoggerInfo.initializingJobCleanup);
+        logger.log(FINE, KernelLoggerInfo.initializingJobCleanup);
 
         managedJobConfig = domain.getExtensionByType(ManagedJobConfig.class);
         ObservableBean bean = (ObservableBean) ConfigSupport.getImpl(managedJobConfig);
         logger.fine(KernelLoggerInfo.initializingManagedConfigBean);
         bean.addListener(this);
-
 
         scheduler = Executors.newScheduledThreadPool(10, new ThreadFactory() {
             @Override
@@ -87,36 +87,30 @@ public class JobCleanUpService implements PostConstruct,ConfigListener {
             }
         });
 
-
         scheduleCleanUp();
     }
-
 
     /**
      * This will schedule a cleanup of expired jobs based on configurable values
      */
     private void scheduleCleanUp() {
-
-
         logger.fine(KernelLoggerInfo.schedulingCleanup);
-        //default values to 20 minutes for delayBetweenRuns and initialDelay
+
+        // default values to 20 minutes for delayBetweenRuns and initialDelay
         long delayBetweenRuns = 1200000;
         long initialDelay = 1200000;
 
         delayBetweenRuns = jobManagerService.convert(managedJobConfig.getPollInterval());
         initialDelay = jobManagerService.convert(managedJobConfig.getInitialDelay());
 
-
-        ScheduledFuture<?> cleanupFuture = scheduler.scheduleAtFixedRate(new JobCleanUpTask(),initialDelay,delayBetweenRuns,TimeUnit.MILLISECONDS);
-
+        scheduler.scheduleAtFixedRate(new JobCleanUpTask(), initialDelay, delayBetweenRuns, MILLISECONDS);
     }
 
     /**
-     * This method is notified for any changes in job-inactivity-limit or
-     * job-retention-period or persist, initial-delay or poll-interval option in
-     * ManagedJobConfig. Any change results
-     * in the job cleanup service to change the behaviour
-     * being updated.
+     * This method is notified for any changes in job-inactivity-limit or job-retention-period or persist, initial-delay or
+     * poll-interval option in ManagedJobConfig. Any change results in the job cleanup service to change the behaviour being
+     * updated.
+     *
      * @param events the configuration change events.
      * @return the unprocessed change events.
      */
@@ -125,28 +119,23 @@ public class JobCleanUpService implements PostConstruct,ConfigListener {
         return ConfigSupport.sortAndDispatch(events, new PropertyChangeHandler(), logger);
     }
 
-
-    private  final class JobCleanUpTask implements Runnable {
+    private final class JobCleanUpTask implements Runnable {
+        @Override
         public void run() {
             try {
-                //This can have data  when server starts up  initially or as jobs complete
-                ConcurrentHashMap<String,CompletedJob> completedJobsMap = jobManagerService.getCompletedJobsInfo();
+                // This can have data when server starts up initially or as jobs complete
+                ConcurrentHashMap<String, CompletedJob> completedJobsMap = jobManagerService.getCompletedJobsInfo();
 
-                Iterator<CompletedJob> completedJobs = new HashSet<CompletedJob>(completedJobsMap.values()).iterator();
-                while (completedJobs.hasNext()   ) {
-                    CompletedJob completedJob = completedJobs.next();
-
-                    logger.log(Level.FINE,KernelLoggerInfo.cleaningJob, new Object[]{completedJob.getId()});
+                for (CompletedJob completedJob : new HashSet<>(completedJobsMap.values())) {
+                    logger.log(FINE, KernelLoggerInfo.cleaningJob, new Object[] { completedJob.getId() });
 
                     cleanUpExpiredJobs(completedJob.getJobsFile());
                 }
-            } catch (Exception e ) {
-                throw new RuntimeException(KernelLoggerInfo.exceptionCleaningJobs,e);
+            } catch (Exception e) {
+                throw new RuntimeException(KernelLoggerInfo.exceptionCleaningJobs, e);
             }
 
         }
-
-
     }
 
     /**
@@ -154,41 +143,41 @@ public class JobCleanUpService implements PostConstruct,ConfigListener {
      */
     private void cleanUpExpiredJobs(File file) {
         ArrayList<JobInfo> expiredJobs = jobManagerService.getExpiredJobs(file);
-        if (expiredJobs.size() > 0 ) {
-            for (JobInfo job: expiredJobs) {
-                //remove from Job registy
+        if (expiredJobs.size() > 0) {
+            for (JobInfo job : expiredJobs) {
+                // remove from Job registy
                 jobManagerService.purgeJob(job.jobId);
-                //remove from jobs.xml file
-                jobManagerService.purgeCompletedJobForId(job.jobId,file);
-                //remove from local cache for completed jobs
+
+                // remove from jobs.xml file
+                jobManagerService.purgeCompletedJobForId(job.jobId, file);
+
+                // remove from local cache for completed jobs
                 jobManagerService.removeFromCompletedJobs(job.jobId);
-                if(logger.isLoggable(Level.FINE)) {
-                    logger.log(Level.FINE,KernelLoggerInfo.cleaningJob, job.jobId);
-                }
+
+                logger.log(FINE, KernelLoggerInfo.cleaningJob, job.jobId);
             }
         }
 
     }
 
-
     class PropertyChangeHandler implements Changed {
 
         @Override
         public <T extends ConfigBeanProxy> NotProcessed changed(TYPE type, Class<T> changedType, T changedInstance) {
-            NotProcessed np = null;
+            NotProcessed notProcessed = null;
             switch (type) {
-                case CHANGE:
-                    if(logger.isLoggable(Level.FINE)) {
+            case CHANGE:
+                if (logger.isLoggable(FINE)) {
 
-                       logger.log(Level.FINE, KernelLoggerInfo.changeManagedJobConfig, new Object[]{
-                               changedType.getName()
-                       ,changedInstance.toString()});
-                    }
-                    np = handleChangeEvent(changedInstance);
-                    break;
-                default:
+                    logger.log(FINE, KernelLoggerInfo.changeManagedJobConfig,
+                            new Object[] { changedType.getName(), changedInstance.toString() });
+                }
+                notProcessed = handleChangeEvent(changedInstance);
+                break;
+            default:
             }
-            return np;
+
+            return notProcessed;
         }
 
         private <T extends ConfigBeanProxy> NotProcessed handleChangeEvent(T instance) {
@@ -197,6 +186,3 @@ public class JobCleanUpService implements PostConstruct,ConfigListener {
         }
     }
 }
-
-
-

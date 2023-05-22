@@ -17,29 +17,8 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.admin.event.AdminCommandEventBrokerImpl;
-import com.sun.enterprise.admin.util.CachedCommandModel;
-import com.sun.enterprise.admin.util.ClusterOperationUtil;
-import com.sun.enterprise.admin.util.CommandSecurityChecker;
-import com.sun.enterprise.admin.util.InstanceStateService;
-import com.sun.enterprise.config.serverbeans.Cluster;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.universal.collections.ManifestUtils;
-import com.sun.enterprise.universal.glassfish.AdminCommandResponse;
-import com.sun.enterprise.util.AnnotationUtil;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.StringUtils;
-import com.sun.enterprise.v3.common.XMLContentActionReporter;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.inject.Scope;
-import jakarta.inject.Singleton;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorContext;
-import jakarta.validation.ValidatorFactory;
+import static com.sun.enterprise.util.Utility.isEmpty;
+import static java.util.logging.Level.SEVERE;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -74,10 +53,36 @@ import javax.security.auth.Subject;
 import org.glassfish.admin.payload.PayloadFilesManager;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.AdminCommandContextImpl;
+import org.glassfish.api.admin.AdminCommandEventBroker;
 import org.glassfish.api.admin.AdminCommandEventBroker.AdminCommandListener;
+import org.glassfish.api.admin.AdminCommandLock;
+import org.glassfish.api.admin.AdminCommandLockException;
+import org.glassfish.api.admin.AdminCommandLockTimeoutException;
+import org.glassfish.api.admin.AdminCommandState;
+import org.glassfish.api.admin.ClusterExecutor;
+import org.glassfish.api.admin.CommandModel;
+import org.glassfish.api.admin.CommandModelProvider;
+import org.glassfish.api.admin.CommandParameters;
+import org.glassfish.api.admin.CommandRunner;
+import org.glassfish.api.admin.CommandSupport;
+import org.glassfish.api.admin.FailurePolicy;
+import org.glassfish.api.admin.Job;
+import org.glassfish.api.admin.JobCreator;
+import org.glassfish.api.admin.JobManager;
+import org.glassfish.api.admin.ManagedJob;
+import org.glassfish.api.admin.ParameterMap;
+import org.glassfish.api.admin.Payload;
 import org.glassfish.api.admin.ProcessEnvironment;
+import org.glassfish.api.admin.ProgressStatus;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.admin.Supplemental;
+import org.glassfish.api.admin.SupplementalCommandExecutor;
 import org.glassfish.api.admin.SupplementalCommandExecutor.SupplementalCommand;
+import org.glassfish.api.admin.WrappedAdminCommand;
 import org.glassfish.api.logging.LogHelper;
 import org.glassfish.common.util.admin.CommandModelImpl;
 import org.glassfish.common.util.admin.ManPageFinder;
@@ -99,6 +104,31 @@ import org.jvnet.hk2.config.InjectionResolver;
 import org.jvnet.hk2.config.MessageInterpolatorImpl;
 import org.jvnet.hk2.config.UnsatisfiedDependencyException;
 
+import com.sun.enterprise.admin.event.AdminCommandEventBrokerImpl;
+import com.sun.enterprise.admin.util.CachedCommandModel;
+import com.sun.enterprise.admin.util.ClusterOperationUtil;
+import com.sun.enterprise.admin.util.CommandSecurityChecker;
+import com.sun.enterprise.admin.util.InstanceStateService;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.universal.collections.ManifestUtils;
+import com.sun.enterprise.universal.glassfish.AdminCommandResponse;
+import com.sun.enterprise.util.AnnotationUtil;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.util.StringUtils;
+import com.sun.enterprise.util.Utility;
+import com.sun.enterprise.v3.common.XMLContentActionReporter;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Scope;
+import jakarta.inject.Singleton;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorContext;
+import jakarta.validation.ValidatorFactory;
+
 /**
  * Encapsulates the logic needed to execute a server-side command (for example,
  * a descendant of AdminCommand) including injection of argument values into the
@@ -112,33 +142,41 @@ import org.jvnet.hk2.config.UnsatisfiedDependencyException;
 public class CommandRunnerImpl implements CommandRunner {
 
     private static final Logger logger = KernelLoggerInfo.getLogger();
+
+    private static final LocalStringManagerImpl adminStrings = new LocalStringManagerImpl(CommandRunnerImpl.class);
+    private static volatile Validator beanValidator;
+
     // This is used only for backword compatibility with old behavior
     private static final String OLD_PASSWORD_PARAM_PREFIX = "AS_ADMIN_";
 
     private static final InjectionManager injectionMgr = new InjectionManager();
+
     @Inject
-    private ServiceLocator habitat;
+    private ServiceLocator serviceLocator;
+
     @Inject
-    private ServerContext sc;
+    private ServerContext serverContext;
+
     @Inject
     private Domain domain;
+
     @Inject
-    private ServerEnvironment serverEnv;
+    private ServerEnvironment serverEnvironment;
+
     @Inject
-    private ProcessEnvironment processEnv;
+    private ProcessEnvironment processEnvironment;
+
     @Inject
-    private InstanceStateService state;
+    private InstanceStateService instanceStateService;
+
     @Inject
     private AdminCommandLock adminLock;
+
     @Inject @Named("SupplementalCommandExecutorImpl")
     SupplementalCommandExecutor supplementalExecutor;
 
-
     @Inject
     private CommandSecurityChecker commandSecurityChecker;
-
-    private static final LocalStringManagerImpl adminStrings = new LocalStringManagerImpl(CommandRunnerImpl.class);
-    private static volatile Validator beanValidator = null;
 
     /**
      * Returns an initialized ActionReport instance for the passed type or
@@ -149,7 +187,7 @@ public class CommandRunnerImpl implements CommandRunner {
      */
     @Override
     public ActionReport getActionReport(String name) {
-        return habitat.getService(ActionReport.class, name);
+        return serviceLocator.getService(ActionReport.class, name);
     }
 
     /**
@@ -178,36 +216,39 @@ public class CommandRunnerImpl implements CommandRunner {
         AdminCommand command;
         try {
             String commandServiceName = (scope != null) ? scope + commandName : commandName;
-            command = habitat.getService(AdminCommand.class, commandServiceName);
+            command = serviceLocator.getService(AdminCommand.class, commandServiceName);
         } catch (MultiException e) {
-            LogHelper.log(logger, Level.SEVERE, KernelLoggerInfo.cantInstantiateCommand, e, commandName);
+            LogHelper.log(logger, SEVERE, KernelLoggerInfo.cantInstantiateCommand, e, commandName);
             return null;
         }
+
         return command == null ? null : getModel(command);
     }
 
     @Override
     public boolean validateCommandModelETag(AdminCommand command, String eTag) {
         if (command == null) {
-            return true; //Everithing is ok for unexisting command
+            return true; // Everything is ok for non-existing command
         }
-        if (eTag == null || eTag.isEmpty()) {
+
+        if (isEmpty(eTag)) {
             return false;
         }
-        CommandModel model = getModel(command);
-        return validateCommandModelETag(model, eTag);
+
+        return validateCommandModelETag(getModel(command), eTag);
     }
 
     @Override
     public boolean validateCommandModelETag(CommandModel model, String eTag) {
         if (model == null) {
-            return true; //Unexisting model => it is ok (but weard in fact)
+            return true; // Non-existing model => it is ok (but weird in fact)
         }
-        if (eTag == null || eTag.isEmpty()) {
+
+        if (isEmpty(eTag)) {
             return false;
         }
-        String actualETag = CachedCommandModel.computeETag(model);
-        return eTag.equals(actualETag);
+
+        return eTag.equals(CachedCommandModel.computeETag(model));
     }
 
     /**
@@ -226,11 +267,10 @@ public class CommandRunnerImpl implements CommandRunner {
 
 
     private static Class<? extends Annotation> getScope(Class<?> onMe) {
-        for (Annotation anno : onMe.getAnnotations()) {
-            if (anno.annotationType().isAnnotationPresent(Scope.class)) {
-                return anno.annotationType();
+        for (Annotation annotation : onMe.getAnnotations()) {
+            if (annotation.annotationType().isAnnotationPresent(Scope.class)) {
+                return annotation.annotationType();
             }
-
         }
 
         return null;
@@ -250,10 +290,11 @@ public class CommandRunnerImpl implements CommandRunner {
         AdminCommand command = null;
         String commandServiceName = scope == null ? commandName : scope + commandName;
         try {
-            command = habitat.getService(AdminCommand.class, commandServiceName);
+            command = serviceLocator.getService(AdminCommand.class, commandServiceName);
         } catch (MultiException e) {
             report.setFailureCause(e);
         }
+
         if (command == null) {
             String msg;
 
@@ -263,7 +304,7 @@ public class CommandRunnerImpl implements CommandRunner {
             } else {
                 // this means either a non-existent command or
                 // an ill-formed command
-                if (habitat.getServiceHandle(AdminCommand.class, commandServiceName) == null) {
+                if (serviceLocator.getServiceHandle(AdminCommand.class, commandServiceName) == null) {
                     // somehow it's in habitat
                     msg = adminStrings.getLocalString("adapter.command.notfound", "Command {0} not found", commandName);
                 } else {
@@ -369,6 +410,7 @@ public class CommandRunnerImpl implements CommandRunner {
                     break;
                 }
             }
+
             String errorMsg;
             final String usage = getUsageText(model);
             if (paramModel != null) {
@@ -429,7 +471,7 @@ public class CommandRunnerImpl implements CommandRunner {
                 exception = e;
             }
 
-            logger.log(Level.SEVERE, KernelLoggerInfo.invocationException, exception);
+            logger.log(SEVERE, KernelLoggerInfo.invocationException, exception);
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setMessage(exception.getMessage());
             report.setFailureCause(exception);
@@ -446,6 +488,7 @@ public class CommandRunnerImpl implements CommandRunner {
         if (beanValidator != null) {
             return;
         }
+
         ClassLoader cl = System.getSecurityManager() == null ? Thread.currentThread().getContextClassLoader()
             : AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
 
@@ -478,13 +521,16 @@ public class CommandRunnerImpl implements CommandRunner {
         boolean addc = false;
         String violationMsg = adminStrings.getLocalString("commandrunner.unacceptableBV.reason",
                 "on parameter [ {1} ] violation reason [ {0} ]");
-        for (ConstraintViolation cv : constraintViolations) {
+
+        for (ConstraintViolation constraintViolation : constraintViolations) {
             if (addc) {
                 msg.append(", ");
             }
-            msg.append(MessageFormat.format(violationMsg, cv.getMessage(), cv.getPropertyPath()));
+
+            msg.append(MessageFormat.format(violationMsg, constraintViolation.getMessage(), constraintViolation.getPropertyPath()));
             addc = true;
         }
+
         throw new UnacceptableValueException(msg.toString());
     }
 
@@ -495,12 +541,7 @@ public class CommandRunnerImpl implements CommandRunner {
      * @param command the command service to execute
      * @param context the AdminCommandcontext that has the payload and report
      */
-    private ActionReport doCommand(
-            final CommandModel model,
-            final AdminCommand command,
-            final AdminCommandContext context,
-            final CommandRunnerProgressHelper progressHelper) {
-
+    private ActionReport doCommand(final CommandModel model, final AdminCommand command, final AdminCommandContext context, final CommandRunnerProgressHelper progressHelper) {
         ActionReport report = context.getActionReport();
         report.setActionDescription(model.getCommandName() + " AdminCommand");
 
@@ -508,7 +549,7 @@ public class CommandRunnerImpl implements CommandRunner {
         // the command. See issue #5596
         final Thread thread = Thread.currentThread();
         final ClassLoader origCL = thread.getContextClassLoader();
-        final ClassLoader ccl = sc.getCommonClassLoader();
+        final ClassLoader ccl = serverContext.getCommonClassLoader();
 
         AdminCommand wrappedCommand = new WrappedAdminCommand(command) {
             @Override
@@ -540,7 +581,7 @@ public class CommandRunnerImpl implements CommandRunner {
         };
 
         // look for other wrappers using CommandAspect annotation
-        final AdminCommand otherWrappedCommand = CommandSupport.createWrappers(habitat, model, wrappedCommand, report);
+        final AdminCommand otherWrappedCommand = CommandSupport.createWrappers(serviceLocator, model, wrappedCommand, report);
 
         try {
             Subject.doAs(context.getSubject(),
@@ -564,7 +605,7 @@ public class CommandRunnerImpl implements CommandRunner {
                     });
 
         } catch (Throwable e) {
-            logger.log(Level.SEVERE, KernelLoggerInfo.invocationException, e);
+            logger.log(SEVERE, KernelLoggerInfo.invocationException, e);
             report.setMessage(e.toString());
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setFailureCause(e);
@@ -614,15 +655,10 @@ public class CommandRunnerImpl implements CommandRunner {
             final String paramName =
                     pModel.getName().toLowerCase(Locale.ENGLISH);
             // skip "hidden" options
-            if (paramName.startsWith("_")) {
-                continue;
-            }
+
             // do not want to display password as an option
-            if (param.password()) {
-                continue;
-            }
             // do not want to display obsolete options
-            if (param.obsolete()) {
+            if (paramName.startsWith("_") || param.password() || param.obsolete()) {
                 continue;
             }
             final boolean optional = param.optional();
@@ -685,66 +721,75 @@ public class CommandRunnerImpl implements CommandRunner {
         BufferedReader manPage = getManPage(model.getCommandName(), model);
         if (manPage != null) {
             return manPage;
-        } else {
-            StringBuilder hlp = new StringBuilder(256);
-            StringBuilder part = new StringBuilder(64);
-            hlp.append("NAME").append(ManifestUtils.EOL);
-            part.append(model.getCommandName());
-            String description = model.getLocalizedDescription();
-            if (ok(description)) {
-                part.append(" - ").append(model.getLocalizedDescription());
-            }
-            hlp.append(formatGeneratedManPagePart(part.toString(), 5, 65)).append(ManifestUtils.EOL);
-            //Usage
-            hlp.append(ManifestUtils.EOL).append("SYNOPSIS").append(ManifestUtils.EOL);
-            hlp.append(formatGeneratedManPagePart(getUsageText(model), 5, 65));
-            //Options
-            hlp.append(ManifestUtils.EOL).append(ManifestUtils.EOL);
-            hlp.append("OPTIONS").append(ManifestUtils.EOL);
-            CommandModel.ParamModel operand = null;
-            for (CommandModel.ParamModel paramModel : model.getParameters()) {
-                Param param = paramModel.getParam();
-                if (param == null || paramModel.getName().startsWith("_") ||
-                        param.password() || param.obsolete()) {
-                    continue;
-                }
-                if (param.primary()) {
-                    operand = paramModel;
-                    continue;
-                }
-                hlp.append("     --").append(paramModel.getName().toLowerCase(Locale.ENGLISH));
-                hlp.append(ManifestUtils.EOL);
-                if (ok(param.shortName())) {
-                    hlp.append("      -").append(param.shortName().toLowerCase(Locale.ENGLISH));
-                    hlp.append(ManifestUtils.EOL);
-                }
-                String descr = paramModel.getLocalizedDescription();
-                if (ok(descr)) {
-                    hlp.append(formatGeneratedManPagePart(descr, 9, 65));
-                }
-                hlp.append(ManifestUtils.EOL);
-            }
-            //Operand
-            if (operand != null) {
-                hlp.append("OPERANDS").append(ManifestUtils.EOL);
-                hlp.append("     ").append(operand.getName().toLowerCase(Locale.ENGLISH));
-                hlp.append(ManifestUtils.EOL);
-                String descr = operand.getLocalizedDescription();
-                if (ok(descr)) {
-                    hlp.append(formatGeneratedManPagePart(descr, 9, 65));
-                }
-            }
-            return new BufferedReader(new StringReader(hlp.toString()));
         }
+
+        StringBuilder hlp = new StringBuilder(256);
+        StringBuilder part = new StringBuilder(64);
+        hlp.append("NAME").append(ManifestUtils.EOL);
+        part.append(model.getCommandName());
+        String description = model.getLocalizedDescription();
+        if (ok(description)) {
+            part.append(" - ").append(model.getLocalizedDescription());
+        }
+
+        hlp.append(formatGeneratedManPagePart(part.toString(), 5, 65)).append(ManifestUtils.EOL);
+
+        // Usage
+        hlp.append(ManifestUtils.EOL).append("SYNOPSIS").append(ManifestUtils.EOL);
+        hlp.append(formatGeneratedManPagePart(getUsageText(model), 5, 65));
+
+        // Options
+        hlp.append(ManifestUtils.EOL).append(ManifestUtils.EOL);
+        hlp.append("OPTIONS").append(ManifestUtils.EOL);
+
+        CommandModel.ParamModel operand = null;
+        for (CommandModel.ParamModel paramModel : model.getParameters()) {
+            Param param = paramModel.getParam();
+            if (param == null || paramModel.getName().startsWith("_") ||
+                    param.password() || param.obsolete()) {
+                continue;
+            }
+            if (param.primary()) {
+                operand = paramModel;
+                continue;
+            }
+            hlp.append("     --").append(paramModel.getName().toLowerCase(Locale.ENGLISH));
+            hlp.append(ManifestUtils.EOL);
+            if (ok(param.shortName())) {
+                hlp.append("      -").append(param.shortName().toLowerCase(Locale.ENGLISH));
+                hlp.append(ManifestUtils.EOL);
+            }
+            String descr = paramModel.getLocalizedDescription();
+            if (ok(descr)) {
+                hlp.append(formatGeneratedManPagePart(descr, 9, 65));
+            }
+            hlp.append(ManifestUtils.EOL);
+        }
+
+        // Operand
+        if (operand != null) {
+            hlp.append("OPERANDS").append(ManifestUtils.EOL);
+            hlp.append("     ").append(operand.getName().toLowerCase(Locale.ENGLISH));
+            hlp.append(ManifestUtils.EOL);
+            String descr = operand.getLocalizedDescription();
+            if (ok(descr)) {
+                hlp.append(formatGeneratedManPagePart(descr, 9, 65));
+            }
+        }
+
+        return new BufferedReader(new StringReader(hlp.toString()));
+
     }
 
     private String formatGeneratedManPagePart(String part, int prefix, int lineLength) {
         if (part == null) {
             return null;
         }
+
         if (prefix < 0) {
             prefix = 0;
         }
+
         //Prepare prefix
         StringBuilder sb = new StringBuilder(prefix);
         for (int i = 0; i < prefix; i++) {
@@ -788,11 +833,11 @@ public class CommandRunnerImpl implements CommandRunner {
                 counter = 0;
             }
         }
+
         return result.toString();
     }
 
     public void getHelp(AdminCommand command, ActionReport report) {
-
         CommandModel model = getModel(command);
         report.setActionDescription(model.getCommandName() + " help");
 
@@ -823,10 +868,10 @@ public class CommandRunnerImpl implements CommandRunner {
      * @param model the CommandModel describing the command
      * @param report        the (assumed to be) XMLContentActionReporter
      */
-    private void getMetadata(AdminCommand command, CommandModel model,
-            ActionReport report) {
+    private void getMetadata(AdminCommand command, CommandModel model, ActionReport report) {
         ActionReport.MessagePart top = report.getTopMessagePart();
         ActionReport.MessagePart cmd = top.addChild();
+
         // <command name="name">
         cmd.setChildrenType("command");
         cmd.addProperty("name", model.getCommandName());
@@ -838,6 +883,7 @@ public class CommandRunnerImpl implements CommandRunner {
             cmd.addProperty("usage", usage);
         }
         CommandModel.ParamModel primary = null;
+
         // for each parameter add
         // <option name="name" type="type" short="s" default="default"
         //   acceptable-values="list"/>
@@ -919,8 +965,7 @@ public class CommandRunnerImpl implements CommandRunner {
     /**
      * Return an InputStream for the man page for the named command.
      */
-    public static BufferedReader getManPage(String commandName,
-            CommandModel model) {
+    public static BufferedReader getManPage(String commandName, CommandModel model) {
         Class clazz = model.getCommandClass();
         if (clazz == null) {
             return null;
@@ -929,23 +974,16 @@ public class CommandRunnerImpl implements CommandRunner {
                 Locale.getDefault(), clazz.getClassLoader(), logger);
     }
 
-    private void addParamUsage(
-            ActionReport report,
-            CommandModel.ParamModel model) {
+    private void addParamUsage(ActionReport report, CommandModel.ParamModel model) {
         Param param = model.getParam();
         if (param != null) {
             // this is a param.
             String paramName = model.getName().toLowerCase(Locale.ENGLISH);
             // skip "hidden" options
-            if (paramName.startsWith("_")) {
-                return;
-            }
+
             // do not want to display password in the usage
-            if (param.password()) {
-                return;
-            }
             // do not want to display obsolete options
-            if (param.obsolete()) {
+            if (paramName.startsWith("_") || param.password() || param.obsolete()) {
                 return;
             }
             if (param.primary()) {
@@ -972,8 +1010,7 @@ public class CommandRunnerImpl implements CommandRunner {
      * @param parameters parameters from URL
      *
      */
-    static void validateParameters(final CommandModel model,
-            final ParameterMap parameters) throws MultiException {
+    static void validateParameters(final CommandModel model, final ParameterMap parameters) throws MultiException {
 
         ParameterMap adds = null; // renamed password parameters
 
@@ -983,12 +1020,8 @@ public class CommandRunnerImpl implements CommandRunner {
             String key = entry.getKey();
 
             // to do, we should validate meta-options differently.
-            if (key.equals("DEFAULT")) {
-                continue;
-            }
-
             // help and Xhelp are meta-options that are handled specially
-            if (key.equals("help") || key.equals("Xhelp") || key.equals("notify")) {
+            if (key.equals("DEFAULT") || key.equals("help") || key.equals("Xhelp") || key.equals("notify")) {
                 continue;
             }
 
@@ -1018,6 +1051,7 @@ public class CommandRunnerImpl implements CommandRunner {
                 throw new MultiException(new IllegalArgumentException(" Invalid option: " + key));
             }
         }
+
         parameters.mergeAll(adds);
     }
 
@@ -1198,7 +1232,7 @@ public class CommandRunnerImpl implements CommandRunner {
 
                     }
 
-                    logger.log(Level.SEVERE, KernelLoggerInfo.invocationException, exception);
+                    logger.log(SEVERE, KernelLoggerInfo.invocationException, exception);
                     report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                     report.setMessage(exception.getMessage());
                     report.setFailureCause(exception);
@@ -1217,7 +1251,7 @@ public class CommandRunnerImpl implements CommandRunner {
                     return;
                 }
 
-                CommandSupport.init(habitat, command, context, job);
+                CommandSupport.init(serviceLocator, command, context, job);
 
                 /*
                  * Now that parameters have been injected into the command object,
@@ -1304,28 +1338,15 @@ public class CommandRunnerImpl implements CommandRunner {
                 logger.fine(adminStrings.getLocalString("dynamicreconfiguration.diagnostics.target",
                         "@ExecuteOn parsing and default settings done; Current target is {0}", targetName));
 
-                if (serverEnv.isDas()) {
-
-                    //Do not replicate this command if it has @ExecuteOn(RuntimeType.SINGLE_INSTANCE)
-                    //and the user is authorized to execute on DAS
-                    // TODO add authorization check
-                    /*if (runtimeTypes.contains(RuntimeType.SINGLE_INSTANCE)) {
-                        //If authorization fails
-                        report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-                        report.setMessage(adminStrings.getLocalString("commandrunner.executor.das.unallowed",
-                                "Not authorized to execute command {0} on DAS"
-                                        , model.getCommandName()));
-                        progressHelper.complete(context);
-                        return;
-                    }*/
-
+                if (serverEnvironment.isDas()) {
                     // Check if the command allows this target type; first read the annotation
                     //TODO : See is @TargetType can also be moved to the CommandModel
 
                     if (tgtTypeAnnotation != null) {
                         targetTypesAllowed.addAll(Arrays.asList(tgtTypeAnnotation.value()));
                     }
-                    //If not @TargetType, default it
+
+                    // If not @TargetType, default it
                     if (targetTypesAllowed.isEmpty()) {
                         targetTypesAllowed.add(CommandTarget.DAS);
                         targetTypesAllowed.add(CommandTarget.STANDALONE_INSTANCE);
@@ -1338,8 +1359,7 @@ public class CommandRunnerImpl implements CommandRunner {
                     // do not always have to be run on DAS followed by applicable instances
                     // will have @ExecuteOn(RuntimeType.INSTANCE) and they have to be run on DAS
                     // ONLY if the target is "server"
-                    if (CommandTarget.DAS.isValid(habitat, targetName)
-                            && !runtimeTypes.contains(RuntimeType.DAS)) {
+                    if (CommandTarget.DAS.isValid(serviceLocator, targetName) && !runtimeTypes.contains(RuntimeType.DAS)) {
                         runtimeTypes.add(RuntimeType.DAS);
                     }
 
@@ -1350,7 +1370,7 @@ public class CommandRunnerImpl implements CommandRunner {
 
                     // Check if the target is valid
                     //Is there a server or a cluster or a config with given name ?
-                    if ((!CommandTarget.DOMAIN.isValid(habitat, targetName))
+                    if ((!CommandTarget.DOMAIN.isValid(serviceLocator, targetName))
                             && (domain.getServerNamed(targetName) == null)
                             && (domain.getClusterNamed(targetName) == null)
                             && (domain.getConfigNamed(targetName) == null)) {
@@ -1359,11 +1379,12 @@ public class CommandRunnerImpl implements CommandRunner {
                                 "Unable to find a valid target with name {0}", targetName));
                         return;
                     }
-                    //Does this command allow this target type
+
+                    // Does this command allow this target type
                     boolean isTargetValidType = false;
                     Iterator<CommandTarget> it = targetTypesAllowed.iterator();
                     while (it.hasNext()) {
-                        if (it.next().isValid(habitat, targetName)) {
+                        if (it.next().isValid(serviceLocator, targetName)) {
                             isTargetValidType = true;
                             break;
                         }
@@ -1380,9 +1401,10 @@ public class CommandRunnerImpl implements CommandRunner {
                                 targetName, model.getCommandName(), validTypes.toString()));
                         return;
                     }
-                    //If target is a clustered instance and the allowed types does not allow operations on clustered
-                    //instance, return error
-                    if ((CommandTarget.CLUSTERED_INSTANCE.isValid(habitat, targetName))
+
+                    // If target is a clustered instance and the allowed types does not allow operations on clustered
+                    // instance, return error
+                    if ((CommandTarget.CLUSTERED_INSTANCE.isValid(serviceLocator, targetName))
                             && (!targetTypesAllowed.contains(CommandTarget.CLUSTERED_INSTANCE))) {
                         Cluster c = domain.getClusterForInstance(targetName);
                         report.setActionExitCode(ActionReport.ExitCode.FAILURE);
@@ -1447,10 +1469,10 @@ public class CommandRunnerImpl implements CommandRunner {
 
                     //Run main command if it is applicable for this instance type
                     if ((runtimeTypes.contains(RuntimeType.ALL))
-                            || (serverEnv.isDas() &&
-                                (CommandTarget.DOMAIN.isValid(habitat, targetName) || runtimeTypes.contains(RuntimeType.DAS)))
+                            || (serverEnvironment.isDas() &&
+                                (CommandTarget.DOMAIN.isValid(serviceLocator, targetName) || runtimeTypes.contains(RuntimeType.DAS)))
                             || runtimeTypes.contains(RuntimeType.SINGLE_INSTANCE)
-                            || (serverEnv.isInstance() && runtimeTypes.contains(RuntimeType.INSTANCE))) {
+                            || (serverEnvironment.isInstance() && runtimeTypes.contains(RuntimeType.INSTANCE))) {
                         logger.fine(adminStrings.getLocalString("dynamicreconfiguration.diagnostics.maincommand",
                                 "Command execution stage 3 : Calling main command implementation for {0}", inv.name()));
                         report = doCommand(model, command, context, progressHelper);
@@ -1501,13 +1523,13 @@ public class CommandRunnerImpl implements CommandRunner {
                     report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 } finally {
                     // command is done, release the lock
-                    if (lock != null && lockTimedOut == false) {
+                    if (lock != null && !lockTimedOut) {
                         lock.unlock();
                     }
                 }
 
             } catch (Exception ex) {
-                logger.log(Level.SEVERE, KernelLoggerInfo.invocationException, ex);
+                logger.log(SEVERE, KernelLoggerInfo.invocationException, ex);
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 report.setMessage(ex.getMessage());
                 report.setFailureCause(ex);
@@ -1525,7 +1547,7 @@ public class CommandRunnerImpl implements CommandRunner {
              * Action report returned to the caller.
              */
 
-            if (processEnv.getProcessType().isEmbedded()) {
+            if (processEnvironment.getProcessType().isEmbedded()) {
                 return;
             }
             if (preSupplementalReturn == ActionReport.ExitCode.WARNING
@@ -1534,7 +1556,7 @@ public class CommandRunnerImpl implements CommandRunner {
             }
             if (doReplication
                     && (!FailurePolicy.applyFailurePolicy(fp, report.getActionExitCode()).equals(ActionReport.ExitCode.FAILURE))
-                    && (serverEnv.isDas())
+                    && (serverEnvironment.isDas())
                     && (runtimeTypes.contains(RuntimeType.INSTANCE) || runtimeTypes.contains(RuntimeType.ALL))) {
                 logger.fine(adminStrings.getLocalString("dynamicreconfiguration.diagnostics.startreplication",
                         "Command execution stages completed on DAS; Starting replication on remote instances"));
@@ -1542,9 +1564,9 @@ public class CommandRunnerImpl implements CommandRunner {
                 // This try-catch block is a fix for 13838
                 try {
                     if (model.getClusteringAttributes() != null && model.getClusteringAttributes().executor() != null) {
-                        executor = habitat.getService(model.getClusteringAttributes().executor());
+                        executor = serviceLocator.getService(model.getClusteringAttributes().executor());
                     } else {
-                        executor = habitat.getService(ClusterExecutor.class, "GlassFishClusterExecutor");
+                        executor = serviceLocator.getService(ClusterExecutor.class, "GlassFishClusterExecutor");
                     }
                 } catch (UnsatisfiedDependencyException usdepex) {
                     logger.log(Level.WARNING, KernelLoggerInfo.cantGetClusterExecutor, usdepex);
@@ -1582,10 +1604,10 @@ public class CommandRunnerImpl implements CommandRunner {
             } else {
                 //TODO : Is there a better way of doing this ? Got to look into it
                 if ("_register-instance".equals(model.getCommandName())) {
-                    state.addServerToStateService(parameters.getOne("DEFAULT"));
+                    instanceStateService.addServerToStateService(parameters.getOne("DEFAULT"));
                 }
                 if ("_unregister-instance".equals(model.getCommandName())) {
-                    state.removeInstanceFromStateService(parameters.getOne("DEFAULT"));
+                    instanceStateService.removeInstanceFromStateService(parameters.getOne("DEFAULT"));
                 }
             }
         } finally {
@@ -1751,7 +1773,7 @@ public class CommandRunnerImpl implements CommandRunner {
             }
             ((AdminCommandInstanceImpl) job).setEventBroker(eventBroker);
             ((AdminCommandInstanceImpl) job).setState(revert ? AdminCommandState.State.REVERTING : AdminCommandState.State.RUNNING_RETRYABLE);
-            JobManager jobManager = habitat.getService(JobManagerService.class);
+            JobManager jobManager = serviceLocator.getService(JobManagerService.class);
             jobManager.registerJob(job);
             //command
             AdminCommand command = checkpoint.getCommand();
@@ -1767,7 +1789,7 @@ public class CommandRunnerImpl implements CommandRunner {
             if (progressStatusChild != null) {
                 progressStatusChild.complete();
             }
-            CommandSupport.done(habitat, command, job);
+            CommandSupport.done(serviceLocator, command, job);
         }
 
         @Override
@@ -1799,11 +1821,11 @@ public class CommandRunnerImpl implements CommandRunner {
             JobCreator jobCreator = null;
             JobManager jobManager = null;
 
-            jobCreator = habitat.getService(JobCreator.class,scope+"job-creator");
-            jobManager = habitat.getService(JobManagerService.class);
+            jobCreator = serviceLocator.getService(JobCreator.class,scope+"job-creator");
+            jobManager = serviceLocator.getService(JobManagerService.class);
 
             if (jobCreator == null ) {
-                jobCreator = habitat.getService(JobCreatorService.class);
+                jobCreator = serviceLocator.getService(JobCreatorService.class);
 
             }
 
@@ -1827,7 +1849,7 @@ public class CommandRunnerImpl implements CommandRunner {
             if (progressStatusChild != null) {
                 progressStatusChild.complete();
             }
-            CommandSupport.done(habitat, command, job, isNotify);
+            CommandSupport.done(serviceLocator, command, job, isNotify);
         }
     }
 
@@ -1970,10 +1992,7 @@ public class CommandRunnerImpl implements CommandRunner {
 
         @Override
         public boolean equals(Object obj) {
-            if (obj == null) {
-                return false;
-            }
-            if (getClass() != obj.getClass()) {
+            if ((obj == null) || (getClass() != obj.getClass())) {
                 return false;
             }
             final NameCommandClassPair other = (NameCommandClassPair) obj;

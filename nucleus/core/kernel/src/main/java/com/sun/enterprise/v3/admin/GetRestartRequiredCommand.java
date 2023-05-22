@@ -16,26 +16,30 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.config.serverbeans.Domain;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import org.glassfish.api.admin.AdminCommand;
-import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.api.admin.CommandLock;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
-import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Inject;
-
+import org.glassfish.api.admin.AccessRequired;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandLock;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.internal.config.UnprocessedConfigListener;
+import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.UnprocessedChangeEvent;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
-import org.glassfish.internal.config.UnprocessedConfigListener;
+
+import com.sun.enterprise.config.serverbeans.Domain;
+
+import jakarta.inject.Inject;
 
 /**
  * Return the "restart required" flag.
@@ -47,12 +51,8 @@ import org.glassfish.internal.config.UnprocessedConfigListener;
 @CommandLock(CommandLock.LockType.NONE)
 @I18n("get.restart.required.command")
 @RestEndpoints({
-    @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET,
-        path="_get-restart-required",
-        description="Restart Reasons")
-})
-@AccessRequired(resource="domain", action="dump")
+        @RestEndpoint(configBean = Domain.class, opType = RestEndpoint.OpType.GET, path = "_get-restart-required", description = "Restart Reasons") })
+@AccessRequired(resource = "domain", action = "dump")
 public class GetRestartRequiredCommand implements AdminCommand {
     @Param(optional = true)
     private boolean why;
@@ -60,16 +60,17 @@ public class GetRestartRequiredCommand implements AdminCommand {
     @Inject
     private UnprocessedConfigListener ucl;
 
+    @Override
     public void execute(AdminCommandContext context) {
         ActionReport report = context.getActionReport();
         report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
         ActionReport.MessagePart mp = report.getTopMessagePart();
 
         Properties extraProperties = new Properties();
-        Map<String, Object> entity = new HashMap<String, Object>();
+        Map<String, Object> entity = new HashMap<>();
         mp.setMessage(Boolean.toString(ucl.serverRequiresRestart()));
         entity.put("restartRequired", Boolean.toString(ucl.serverRequiresRestart()));
-        List<String> unprocessedChanges = new ArrayList<String>();
+        List<String> unprocessedChanges = new ArrayList<>();
 
         for (UnprocessedChangeEvents es : ucl.getUnprocessedChangeEvents()) {
             for (UnprocessedChangeEvent e : es.getUnprocessed()) {
@@ -84,6 +85,6 @@ public class GetRestartRequiredCommand implements AdminCommand {
             entity.put("unprocessedChanges", unprocessedChanges);
         }
         extraProperties.put("entity", entity);
-        ((ActionReport) report).setExtraProperties(extraProperties);
+        report.setExtraProperties(extraProperties);
     }
 }

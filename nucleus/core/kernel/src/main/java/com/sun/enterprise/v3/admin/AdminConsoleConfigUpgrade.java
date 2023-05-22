@@ -17,15 +17,7 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.Configs;
-import com.sun.enterprise.config.serverbeans.MessageSecurityConfig;
-import com.sun.enterprise.config.serverbeans.ProviderConfig;
-import com.sun.enterprise.config.serverbeans.RequestPolicy;
-import com.sun.enterprise.config.serverbeans.ResponsePolicy;
-import com.sun.enterprise.config.serverbeans.SecurityService;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
+import static java.util.logging.Level.WARNING;
 
 import java.beans.PropertyVetoException;
 import java.util.List;
@@ -41,6 +33,17 @@ import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Configs;
+import com.sun.enterprise.config.serverbeans.MessageSecurityConfig;
+import com.sun.enterprise.config.serverbeans.ProviderConfig;
+import com.sun.enterprise.config.serverbeans.RequestPolicy;
+import com.sun.enterprise.config.serverbeans.ResponsePolicy;
+import com.sun.enterprise.config.serverbeans.SecurityService;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
 /**
  * Adds the needed message-security-config information to domain.xml
  * during an upgrade from a v2.X server. For more information see:
@@ -54,11 +57,8 @@ public class AdminConsoleConfigUpgrade implements ConfigurationUpgrade, PostCons
     private static final String AUTH_LAYER = "HttpServlet";
     private static final String PROVIDER_TYPE = "server";
     private static final String PROVIDER_ID = "GFConsoleAuthModule";
-    private static final String CLASS_NAME =
-        "org.glassfish.admingui.common.security.AdminConsoleAuthModule";
+    private static final String CLASS_NAME = "org.glassfish.admingui.common.security.AdminConsoleAuthModule";
     private static final String AUTH_SOURCE = "sender";
-    private static final String AUTH_URL_VAL_TEMPLATE =
-        "http://localhost:%s/management/sessions";
     public static final String DEFAULT_ADMIN_PORT = "4848";
     private static final String LOGIN_PAGE_PROP = "loginPage";
     private static final String LOGIN_PAGE_VAL = "/login.jsf";
@@ -79,10 +79,10 @@ public class AdminConsoleConfigUpgrade implements ConfigurationUpgrade, PostCons
     public void postConstruct() {
         Config config = configs.getConfigByName("server-config");
         if (config != null) {
-            SecurityService s = config.getSecurityService();
-            if (s != null) {
+            SecurityService securityService = config.getSecurityService();
+            if (securityService != null) {
                 try {
-                    ConfigSupport.apply(new AdminConsoleConfigCode(), s);
+                    ConfigSupport.apply(new AdminConsoleConfigCode(), securityService);
                 } catch (TransactionFailure tf) {
                     LOG.log(Level.SEVERE, "Could not upgrade security service for admin console.", tf);
                 }
@@ -90,8 +90,7 @@ public class AdminConsoleConfigUpgrade implements ConfigurationUpgrade, PostCons
         }
     }
 
-    static private class AdminConsoleConfigCode
-        implements SingleConfigCode<SecurityService> {
+    static private class AdminConsoleConfigCode implements SingleConfigCode<SecurityService> {
 
         @Override
         public Object run(SecurityService service)
@@ -110,8 +109,7 @@ public class AdminConsoleConfigUpgrade implements ConfigurationUpgrade, PostCons
             }
 
             // create/add message-security-config
-            MessageSecurityConfig msConfig =
-                service.createChild(MessageSecurityConfig.class);
+            MessageSecurityConfig msConfig = service.createChild(MessageSecurityConfig.class);
             msConfig.setAuthLayer(AUTH_LAYER);
             service.getMessageSecurityConfig().add(msConfig);
 
@@ -134,7 +132,7 @@ public class AdminConsoleConfigUpgrade implements ConfigurationUpgrade, PostCons
             // get admin port property from config
             Config parent = service.getParent(Config.class);
             if (parent.getAdminListener() == null) {
-                LOG.log(Level.WARNING, "Couldn't get admin port from config {0}. Using default {1}",
+                LOG.log(WARNING, "Couldn't get admin port from config {0}. Using default {1}",
                     new Object[] {parent.getName(), DEFAULT_ADMIN_PORT});
             }
 

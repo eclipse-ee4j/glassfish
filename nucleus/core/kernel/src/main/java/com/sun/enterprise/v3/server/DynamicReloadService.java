@@ -16,8 +16,10 @@
 
 package com.sun.enterprise.v3.server;
 
-import com.sun.enterprise.config.serverbeans.Applications;
-import com.sun.enterprise.config.serverbeans.DasConfig;
+import static java.util.Arrays.asList;
+import static java.util.logging.Level.SEVERE;
+import static org.glassfish.kernel.KernelLoggerInfo.exceptionDRS;
+
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,18 +29,21 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.glassfish.hk2.runlevel.RunLevel;
-import org.glassfish.internal.api.PostStartupRunLevel;
-import jakarta.inject.Inject;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.PreDestroy;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.runlevel.RunLevel;
+import org.glassfish.internal.api.PostStartupRunLevel;
 import org.glassfish.kernel.KernelLoggerInfo;
+import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigListener;
 import org.jvnet.hk2.config.UnprocessedChangeEvent;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
+
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.DasConfig;
+
+import jakarta.inject.Inject;
 
 /**
  * A service wrapper around the dynamic reload processor.
@@ -72,13 +77,14 @@ public class DynamicReloadService implements ConfigListener, PostConstruct, PreD
 
     private static final String DEFAULT_POLL_INTERVAL_IN_SECONDS = "2";
 
-    private static final List<String> configPropertyNames = Arrays.asList(
-            "dynamic-reload-enabled", "dynamic-reload-poll-interval-in-seconds"
-            );
+    private static final List<String> configPropertyNames = asList(
+            "dynamic-reload-enabled",
+            "dynamic-reload-poll-interval-in-seconds");
 
     public DynamicReloadService() {
     }
 
+    @Override
     public void postConstruct() {
         logger = KernelLoggerInfo.getLogger();
         /*
@@ -101,11 +107,12 @@ public class DynamicReloadService implements ConfigListener, PostConstruct, PreD
             }
             logger.fine("[Reloader] Service start-up complete");
         } catch (Exception e) {
-            logger.log(Level.SEVERE, KernelLoggerInfo.exceptionDRS, e);
+            logger.log(SEVERE, exceptionDRS, e);
         }
 
     }
 
+    @Override
     public void preDestroy() {
         stop();
     }
@@ -180,6 +187,7 @@ public class DynamicReloadService implements ConfigListener, PostConstruct, PreD
         start(pollIntervalInSeconds);
     }
 
+    @Override
     public synchronized UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
         /*
          * Deal with any changes to the DasConfig that might affect whether
@@ -189,7 +197,7 @@ public class DynamicReloadService implements ConfigListener, PostConstruct, PreD
          */
 
         /* Record any events we tried to process but could not. */
-        List<UnprocessedChangeEvent> unprocessedEvents = new ArrayList<UnprocessedChangeEvent>();
+        List<UnprocessedChangeEvent> unprocessedEvents = new ArrayList<>();
 
         Boolean newEnabled = null;
         Integer newPollIntervalInSeconds = null;
@@ -235,6 +243,6 @@ public class DynamicReloadService implements ConfigListener, PostConstruct, PreD
                 reschedule(newPollIntervalInSeconds);
             }
         }
-        return (unprocessedEvents.size() > 0) ? new UnprocessedChangeEvents(unprocessedEvents) : null;
+        return unprocessedEvents.size() > 0 ? new UnprocessedChangeEvents(unprocessedEvents) : null;
     }
 }

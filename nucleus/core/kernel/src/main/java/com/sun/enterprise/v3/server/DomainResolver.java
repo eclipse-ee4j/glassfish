@@ -16,16 +16,16 @@
 
 package com.sun.enterprise.v3.server;
 
-
-import com.sun.enterprise.module.common_impl.LogHelper;
-
-import java.io.File;
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.logging.Level;
+
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
+
+import com.sun.enterprise.module.common_impl.LogHelper;
 
 /**
  * DTD resolver used when parsing the domain.xml and resolve to local DTD copies
@@ -33,9 +33,9 @@ import org.xml.sax.InputSource;
  * @author Jerome Dochez
  * @Deprecated
  */
-
 @Deprecated
-public class   DomainResolver implements EntityResolver {
+public class DomainResolver implements EntityResolver {
+    @Override
     public InputSource resolveEntity(String publicId, String systemId) {
 
         if (systemId.startsWith("http://www.sun.com/software/appserver/")) {
@@ -47,7 +47,7 @@ public class   DomainResolver implements EntityResolver {
             if (f.exists()) {
                 try {
                     return new InputSource(new BufferedInputStream(new FileInputStream(f)));
-                } catch(IOException e) {
+                } catch (IOException e) {
                     LogHelper.getDefaultLogger().log(Level.SEVERE, "Exception while getting " + fileName + " : ", e);
                     return null;
                 }
@@ -55,8 +55,6 @@ public class   DomainResolver implements EntityResolver {
                 System.out.println("Cannot find " + f.getAbsolutePath());
                 return null;
             }
-            //MyReader reader = new MyReader();
-            //return new InputSource(reader);
         } else {
             // use the default behaviour
             return null;

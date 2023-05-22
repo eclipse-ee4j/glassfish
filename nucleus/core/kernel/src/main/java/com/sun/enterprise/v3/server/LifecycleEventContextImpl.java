@@ -16,12 +16,15 @@
 
 package com.sun.enterprise.v3.server;
 
-import com.sun.appserv.server.LifecycleEventContext;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.naming.InitialContext;
+
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.kernel.KernelLoggerInfo;
+
+import com.sun.appserv.server.LifecycleEventContext;
 
 public class LifecycleEventContextImpl implements LifecycleEventContext {
 
@@ -39,6 +42,7 @@ public class LifecycleEventContextImpl implements LifecycleEventContext {
     /**
      * Get the server command-line arguments
      */
+    @Override
     public String[] getCmdLineArgs() {
         return ctx.getCmdLineArgs();
     }
@@ -46,6 +50,7 @@ public class LifecycleEventContextImpl implements LifecycleEventContext {
     /**
      * Get server installation root
      */
+    @Override
     public String getInstallRoot() {
         return ctx.getInstallRoot().getPath();
     }
@@ -53,6 +58,7 @@ public class LifecycleEventContextImpl implements LifecycleEventContext {
     /**
      * Get the server instance name
      */
+    @Override
     public String getInstanceName() {
         return ctx.getInstanceName();
     }
@@ -60,6 +66,7 @@ public class LifecycleEventContextImpl implements LifecycleEventContext {
     /**
      * Get the initial naming context.
      */
+    @Override
     public InitialContext getInitialContext() {
         return ctx.getInitialContext();
     }
@@ -70,6 +77,7 @@ public class LifecycleEventContextImpl implements LifecycleEventContext {
      * @param message a <code>String</code> specifying the
      *            message to be written to the log file
      */
+    @Override
     public void log(String message) {
         logger.info(message);
     }
@@ -84,6 +92,7 @@ public class LifecycleEventContextImpl implements LifecycleEventContext {
      * @param throwable the <code>Throwable</code> error
      *            or exception
      */
+    @Override
     public void log(String message, Throwable throwable) {
         logger.log(Level.INFO, message, throwable);
     }

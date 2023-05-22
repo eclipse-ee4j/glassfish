@@ -16,49 +16,50 @@
 
 package com.sun.enterprise.v3.admin;
 
+import javax.security.auth.Subject;
+
 import org.glassfish.api.admin.Job;
 import org.glassfish.api.admin.JobCreator;
+import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.jvnet.hk2.annotations.Service;
 
 import jakarta.inject.Inject;
-import javax.security.auth.Subject;
-import java.io.File;
-import org.glassfish.api.admin.ParameterMap;
 
 /**
- * This service implements the <code>JobCreator</code> and is
- * used for creating Jobs
+ * This service implements the <code>JobCreator</code> and is used for creating Jobs
+ *
  * @author Bhakti Mehta
  */
-@Service (name="job-creator")
-public class JobCreatorService  implements JobCreator {
+@Service(name = "job-creator")
+public class JobCreatorService implements JobCreator {
 
     @Inject
     private ServerEnvironment serverEnvironment;
 
-    @Inject JobManagerService jobManagerService;
+    @Inject
+    JobManagerService jobManagerService;
 
-    private static final String JOBS_FILE = "jobs.xml";
+
     /**
      * This will create a new job with the name of command and a new unused id for the job
      *
      *
      * @param scope The scope of the command or null if there is no scope
-     * @param name  The name of the command
-     * @return   a newly created job
+     * @param name The name of the command
+     * @return a newly created job
      */
     @Override
     public Job createJob(String id, String scope, String name, Subject subject, boolean isManagedJob, ParameterMap parameters) {
         AdminCommandInstanceImpl job = null;
         if (isManagedJob) {
-            job =  new AdminCommandInstanceImpl(id, name, scope, subject, true, parameters);
+            job = new AdminCommandInstanceImpl(id, name, scope, subject, true, parameters);
             job.setJobsFile(jobManagerService.jobsFile);
         } else {
-            job =  new AdminCommandInstanceImpl(name, scope, subject, false, parameters);
+            job = new AdminCommandInstanceImpl(name, scope, subject, false, parameters);
         }
+
         return job;
     }
-
 
 }

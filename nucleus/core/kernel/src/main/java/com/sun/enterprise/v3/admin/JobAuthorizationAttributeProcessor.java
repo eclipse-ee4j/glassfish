@@ -19,14 +19,17 @@ package com.sun.enterprise.v3.admin;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
+
 import javax.security.auth.Subject;
+
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AuthorizationPreprocessor;
 import org.glassfish.api.admin.Job;
 import org.glassfish.api.admin.progress.JobInfo;
 import org.jvnet.hk2.annotations.Service;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
  * Attaches a user attribute to job resources for authorization.
@@ -49,15 +52,14 @@ public class JobAuthorizationAttributeProcessor implements AuthorizationPreproce
     private JobManagerService jobManager;
 
     @Override
-    public void describeAuthorization(Subject subject, String resourceName, String action, AdminCommand command, Map<String, Object> context, Map<String, String> subjectAttributes, Map<String, String> resourceAttributes, Map<String, String> actionAttributes) {
+    public void describeAuthorization(Subject subject, String resourceName, String action, AdminCommand command,
+            Map<String, Object> context, Map<String, String> subjectAttributes, Map<String, String> resourceAttributes,
+            Map<String, String> actionAttributes) {
         final Matcher m = JOB_PATTERN.matcher(resourceName);
-        if ( ! m.matches()) {
-            return;
-        }
-        if (m.groupCount() == 0) {
+        if (!m.matches() || (m.groupCount() == 0)) {
             /*
-             * The resource name pattern did not match for including a job ID,
-             * so we will not be able to attach a user attribute to the resource.
+             * The resource name pattern did not match for including a job ID, so we will not be able to attach a user attribute to
+             * the resource.
              */
             return;
         }
@@ -66,19 +68,18 @@ public class JobAuthorizationAttributeProcessor implements AuthorizationPreproce
         String userID = null;
 
         /*
-         * This logic might run before any validation in the command has run,
-         * in which case the job ID would be invalid and the job manager and/or
-         * the completed jobs store might not know about the job.
+         * This logic might run before any validation in the command has run, in which case the job ID would be invalid and the
+         * job manager and/or the completed jobs store might not know about the job.
          */
         if (job != null && job.getSubjectUsernames().size() > 0) {
             userID = job.getSubjectUsernames().get(0);
         } else {
             if (jobManager.getCompletedJobs(jobManager.getJobsFile()) != null) {
-                    final JobInfo jobInfo = (JobInfo) jobManager.getCompletedJobForId(jobID);
-                    if (jobInfo != null) {
-                        userID = jobInfo.user;
-                    }
+                final JobInfo jobInfo = jobManager.getCompletedJobForId(jobID);
+                if (jobInfo != null) {
+                    userID = jobInfo.user;
                 }
+            }
         }
 
         if (userID != null) {

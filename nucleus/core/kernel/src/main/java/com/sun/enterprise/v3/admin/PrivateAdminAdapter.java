@@ -16,10 +16,9 @@
 
 package com.sun.enterprise.v3.admin;
 
-import org.glassfish.internal.api.Privacy;
+import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.internal.api.Private;
 import org.glassfish.internal.api.Visibility;
-import org.glassfish.api.admin.AdminCommand;
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -30,18 +29,20 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 public class PrivateAdminAdapter extends AdminAdapter {
 
-    public final static String VS_NAME="__private_asadmin";
+    public final static String VS_NAME = "__private_asadmin";
     public final static String PREFIX_URI = "/" + VS_NAME;
 
     public PrivateAdminAdapter() {
         super(Private.class);
     }
 
+    @Override
     protected boolean validatePrivacy(AdminCommand command) {
         Visibility visibility = command.getClass().getAnnotation(Visibility.class);
-        return (visibility==null?false:visibility.value().equals(Private.class));
+        return (visibility == null ? false : visibility.value().equals(Private.class));
     }
 
+    @Override
     public String getContextRoot() {
         return PREFIX_URI;
     }

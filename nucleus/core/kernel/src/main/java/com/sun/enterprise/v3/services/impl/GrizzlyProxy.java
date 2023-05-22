@@ -82,7 +82,7 @@ public class GrizzlyProxy implements NetworkProxy {
         address = initAddress(networkListener);
         grizzlyListener = createGrizzlyListener(networkListener);
 
-        grizzlyListener.configure(grizzlyService.getHabitat(), networkListener);
+        grizzlyListener.configure(grizzlyService.getServiceLocator(), networkListener);
     }
 
     int initPort(final NetworkListener networkListener) {

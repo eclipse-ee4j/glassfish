@@ -17,11 +17,6 @@
 
 package com.sun.enterprise.v3.server;
 
-import com.sun.enterprise.module.bootstrap.StartupContext;
-import com.sun.enterprise.util.SystemPropertyConstants;
-
-import jakarta.inject.Inject;
-
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -42,6 +37,11 @@ import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.jvnet.hk2.annotations.Service;
+
+import com.sun.enterprise.module.bootstrap.StartupContext;
+import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
 
 /**
  * This class is responsible for setting up Common Class Loader. As the

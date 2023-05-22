@@ -16,9 +16,34 @@
 
 package com.sun.enterprise.v3.admin;
 
+import static org.glassfish.api.ActionReport.ExitCode.FAILURE;
+import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
+
 import java.beans.PropertyVetoException;
 import java.util.Map;
 import java.util.Properties;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.I18n;
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.AccessRequired;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.AdminCommandSecurity;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.config.support.CommandTarget;
+import org.glassfish.config.support.TargetType;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.internal.api.Target;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
+import org.jvnet.hk2.config.types.Property;
 
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.JavaConfig;
@@ -26,24 +51,8 @@ import com.sun.enterprise.config.serverbeans.Profiler;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
 
-import org.jvnet.hk2.config.types.Property;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.I18n;
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
-import org.glassfish.config.support.TargetType;
-import org.glassfish.config.support.CommandTarget;
-import org.glassfish.internal.api.Target;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
-import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.SingleConfigCode;
-import org.jvnet.hk2.config.TransactionFailure;
 
 /**
  * Create Profiler Command
@@ -98,14 +107,13 @@ public class CreateProfiler implements AdminCommand, AdminCommandSecurity.Preaut
         return true;
     }
 
-
-
     /**
      * Executes the command with the command parameters passed as Properties
      * where the keys are the paramter names and the values the parameter values
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
@@ -121,6 +129,7 @@ public class CreateProfiler implements AdminCommand, AdminCommandSecurity.Preaut
         try {
             ConfigSupport.apply(new SingleConfigCode<JavaConfig>() {
 
+                @Override
                 public Object run(JavaConfig param) throws PropertyVetoException, TransactionFailure {
                     Profiler newProfiler = param.createChild(Profiler.class);
                     newProfiler.setName(name);
@@ -142,9 +151,10 @@ public class CreateProfiler implements AdminCommand, AdminCommandSecurity.Preaut
 
         } catch(TransactionFailure e) {
             report.setMessage(localStrings.getLocalString("create.profiler.fail", "{0} create failed ", name));
-            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+            report.setActionExitCode(FAILURE);
             report.setFailureCause(e);
         }
-        report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
+
+        report.setActionExitCode(SUCCESS);
     }
 }

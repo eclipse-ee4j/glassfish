@@ -33,21 +33,21 @@ public interface AuthenticationStatus extends java.io.Serializable {
      *
      * @return An integer value indicating the status of the authentication
      */
-    public int getStatus();
+    int getStatus();
 
     /**
-     * This is the value returned by the Authenticator when the status is AUTH_CONTINUE. This data should give an indication to the
-     * client on what else it should send to the server to complete the authentication.
+     * This is the value returned by the Authenticator when the status is AUTH_CONTINUE. This data should give an indication
+     * to the client on what else it should send to the server to complete the authentication.
      *
      * @return An array of bytes indicating the additional information needed to complete the authentication.
      */
-    public byte[] getContinuationData();
+    byte[] getContinuationData();
 
     /**
-     * This is the value returned by the Authenticator when the status is AUTH_CONTINUE. This data should give an indication to the
-     * client on specific authentication it needs to adopt to continue on with the authentication.
+     * This is the value returned by the Authenticator when the status is AUTH_CONTINUE. This data should give an indication
+     * to the client on specific authentication it needs to adopt to continue on with the authentication.
      *
      * @return An array of bytes indicating the authentication specific information needed to complete the authentication.
      */
-    public byte[] getAuthSpecificData();
+    byte[] getAuthSpecificData();
 }

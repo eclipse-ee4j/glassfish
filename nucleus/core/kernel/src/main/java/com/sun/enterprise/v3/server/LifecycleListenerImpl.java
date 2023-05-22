@@ -18,9 +18,9 @@ package com.sun.enterprise.v3.server;
 
 import java.util.Properties;
 
-import com.sun.appserv.server.LifecycleListener;
 import com.sun.appserv.server.LifecycleEvent;
 import com.sun.appserv.server.LifecycleEventContext;
+import com.sun.appserv.server.LifecycleListener;
 import com.sun.appserv.server.ServerLifecycleException;
 
 /**
@@ -46,6 +46,7 @@ public class LifecycleListenerImpl implements LifecycleListener {
      *  Set<code>is-failure-fatal</code>in server.xml to <code>true</code> for
      *  fatal conditions.
      */
+    @Override
     public void handleEvent(LifecycleEvent event) throws ServerLifecycleException {
         LifecycleEventContext ctx = event.getLifecycleEventContext();
 

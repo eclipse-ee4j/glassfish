@@ -29,7 +29,7 @@ import java.util.Properties;
 
 public interface PrincipalMapper {
 
-    public void initialize(Properties props);
+    void initialize(Properties props);
 
     /**
      *
@@ -38,5 +38,5 @@ public interface PrincipalMapper {
      * @param assrtId P-Asserted-Identity values.
      * @return P-Asserted-Identity values in a format understood by the container.
      */
-    public Principal[] mapIdentity(Principal[] assrtId);
+    Principal[] mapIdentity(Principal[] assrtId);
 }

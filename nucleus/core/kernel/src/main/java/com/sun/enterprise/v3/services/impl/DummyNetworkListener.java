@@ -16,24 +16,25 @@
 
 package com.sun.enterprise.v3.services.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.NetworkListeners;
 import org.glassfish.grizzly.config.dom.Protocol;
 import org.glassfish.grizzly.config.dom.ThreadPool;
 import org.glassfish.grizzly.config.dom.Transport;
-import java.util.ArrayList;
-import java.util.List;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
 /**
- * This is a dummy implementation of the NetworkListener interface. This is used to create a fake
- * network-listener elements. This is used only to support lazyInit attribute of iiop and jms services through the
- * light weight listener. Ultimately, these services will move to their own network-listener
- * element in domain.xml (at which point we have to get rid of this fake object). But till the time IIOP and JMS
- * service elements in domain.xml can move to use network-listener element, we will create this "fake network-listener"
- * which in turn will help start light weight listener for these services.
+ * This is a dummy implementation of the NetworkListener interface. This is used to create a fake network-listener
+ * elements. This is used only to support lazyInit attribute of iiop and jms services through the light weight listener.
+ * Ultimately, these services will move to their own network-listener element in domain.xml (at which point we have to
+ * get rid of this fake object). But till the time IIOP and JMS service elements in domain.xml can move to use
+ * network-listener element, we will create this "fake network-listener" which in turn will help start light weight
+ * listener for these services.
  */
 public class DummyNetworkListener implements NetworkListener {
     private String address = "0.0.0.0";
@@ -46,7 +47,7 @@ public class DummyNetworkListener implements NetworkListener {
     private String transport;
     private String jkEnabled;
     private String jkConfigurationFile;
-    private final List<Property> properties = new ArrayList<Property>();
+    private final List<Property> properties = new ArrayList<>();
 
     public DummyNetworkListener() {
     }
@@ -151,7 +152,8 @@ public class DummyNetworkListener implements NetworkListener {
         this.jkConfigurationFile = jkConfigurationFile;
     }
 
-    public void injectedInto(Object target){}
+    public void injectedInto(Object target) {
+    }
 
     @Override
     public <T extends ConfigBeanProxy> T createChild(Class<T> type) throws TransactionFailure {
@@ -205,9 +207,11 @@ public class DummyNetworkListener implements NetworkListener {
 
     @Override
     public Property getProperty(String name) {
-        if (name == null) return null;
+        if (name == null) {
+            return null;
+        }
 
-        for(Property property : properties) {
+        for (Property property : properties) {
             if (name.equals(property.getName())) {
                 return property;
             }
@@ -248,7 +252,7 @@ public class DummyNetworkListener implements NetworkListener {
     @Override
     public Property removeProperty(String string) {
         final Property prop = getProperty(name);
-        if(prop == null){
+        if (prop == null) {
             return null;
         }
         return removeProperty(prop);

@@ -16,17 +16,25 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.admin.progress.CommandProgressImpl;
-import com.sun.enterprise.admin.progress.ProgressStatusClient;
-import java.lang.annotation.Annotation;
 import java.util.UUID;
-import org.glassfish.api.admin.*;
+
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.AdminCommandContextForInstance;
+import org.glassfish.api.admin.AdminCommandEventBroker;
 import org.glassfish.api.admin.CommandProgress;
+import org.glassfish.api.admin.Job;
+import org.glassfish.api.admin.Progress;
+import org.glassfish.api.admin.ProgressProvider;
+import org.glassfish.api.admin.ProgressStatus;
 import org.glassfish.api.admin.SupplementalCommandExecutor.SupplementalCommand;
 import org.glassfish.api.admin.progress.ProgressStatusBase;
 import org.glassfish.api.admin.progress.ProgressStatusEvent;
 import org.glassfish.api.admin.progress.ProgressStatusMirroringImpl;
 import org.glassfish.config.support.GenericCrudCommand;
+
+import com.sun.enterprise.admin.progress.CommandProgressImpl;
+import com.sun.enterprise.admin.progress.ProgressStatusClient;
 
 /** Helper class for {@code ProgressStatus} manipulation during
  * {@code CommandRunner} execution.<br/><br/>
@@ -139,6 +147,7 @@ class CommandRunnerProgressHelper {
         if (progressForMainCommand != null) {
             return new AdminCommandContextForInstance(context, progressForMainCommand);
         }
+
         if (commandProgress != null) {
             if (replicationCount > 0) {
                 commandProgress.setTotalStepCount(replicationCount + 1);
@@ -149,6 +158,7 @@ class CommandRunnerProgressHelper {
             }
             return new AdminCommandContextForInstance(context, progressForMainCommand);
         }
+
         return context;
     }
 

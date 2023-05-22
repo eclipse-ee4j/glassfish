@@ -21,7 +21,6 @@ import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.SecureAdmin;
 import com.sun.enterprise.config.serverbeans.SecureAdminPrincipal;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -206,7 +205,6 @@ public class AdminLoginModule implements LoginModule {
 
     static class PrincipalCallback implements Callback, Serializable {
 
-        @Serial
         private static final long serialVersionUID = 1L;
 
         private Principal p;

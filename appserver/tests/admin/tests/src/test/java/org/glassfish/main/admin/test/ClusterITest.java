@@ -14,10 +14,10 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package org.glassfish.main.admin.test;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
@@ -48,6 +48,10 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.startsWith;
 import static org.hamcrest.Matchers.stringContainsInOrder;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
+import org.jboss.shrinkwrap.api.exporter.ZipExporter;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -73,7 +77,6 @@ public class ClusterITest {
     private static final AtomicBoolean INSTANCES_REACHABLE = new AtomicBoolean();
     private static final AtomicBoolean APP_DEPLOYED = new AtomicBoolean();
 
-
     @AfterAll
     public static void cleanup() {
         ASADMIN.exec("stop-local-instance", "--kill", INSTANCE_NAME_1);
@@ -89,8 +92,7 @@ public class ClusterITest {
     @Test
     @Order(2)
     public void deployAppToClusterTest() {
-        String warFile = GlassFishTestEnvironment.getTargetDirectory()
-                .toPath().resolve(TEST_WAR_LOCATION).resolve(TEST_WAR_FILENAME).toString();
+        String warFile = getWar().getAbsolutePath();
         assertThat(ASADMIN.exec("deploy", "--target", CLUSTER_NAME, "--name", TEST_APP_NAME, "--contextroot", TEST_APP_NAME,
                 warFile), asadminOK());
     }
@@ -99,30 +101,29 @@ public class ClusterITest {
     @Order(3)
     public void createInstancesTest() {
         assertThat(
-            ASADMIN.exec("create-local-instance", "--cluster", CLUSTER_NAME, "--systemproperties",
-                   "HTTP_LISTENER_PORT=" + PORT1
-                + ":HTTP_SSL_LISTENER_PORT=18181"
-                + ":IIOP_SSL_LISTENER_PORT=13800"
-                + ":IIOP_LISTENER_PORT=13700"
-                + ":JMX_SYSTEM_CONNECTOR_PORT=17676"
-                + ":IIOP_SSL_MUTUALAUTH_PORT=13801"
-                + ":JMS_PROVIDER_PORT=18686"
-                + ":ASADMIN_LISTENER_PORT=14848",
-                INSTANCE_NAME_1), asadminOK());
+                ASADMIN.exec("create-local-instance", "--cluster", CLUSTER_NAME, "--systemproperties",
+                        "HTTP_LISTENER_PORT=" + PORT1
+                        + ":HTTP_SSL_LISTENER_PORT=18181"
+                        + ":IIOP_SSL_LISTENER_PORT=13800"
+                        + ":IIOP_LISTENER_PORT=13700"
+                        + ":JMX_SYSTEM_CONNECTOR_PORT=17676"
+                        + ":IIOP_SSL_MUTUALAUTH_PORT=13801"
+                        + ":JMS_PROVIDER_PORT=18686"
+                        + ":ASADMIN_LISTENER_PORT=14848",
+                        INSTANCE_NAME_1), asadminOK());
 
         assertThat(
-            ASADMIN.exec("create-local-instance", "--cluster", CLUSTER_NAME, "--systemproperties",
-                   "HTTP_LISTENER_PORT=" + PORT2
-                + ":HTTP_SSL_LISTENER_PORT=28181"
-                + ":IIOP_SSL_LISTENER_PORT=23800"
-                + ":IIOP_LISTENER_PORT=23700"
-                + ":JMX_SYSTEM_CONNECTOR_PORT=27676"
-                + ":IIOP_SSL_MUTUALAUTH_PORT=23801"
-                + ":JMS_PROVIDER_PORT=28686"
-                + ":ASADMIN_LISTENER_PORT=24848",
-                INSTANCE_NAME_2), asadminOK());
+                ASADMIN.exec("create-local-instance", "--cluster", CLUSTER_NAME, "--systemproperties",
+                        "HTTP_LISTENER_PORT=" + PORT2
+                        + ":HTTP_SSL_LISTENER_PORT=28181"
+                        + ":IIOP_SSL_LISTENER_PORT=23800"
+                        + ":IIOP_LISTENER_PORT=23700"
+                        + ":JMX_SYSTEM_CONNECTOR_PORT=27676"
+                        + ":IIOP_SSL_MUTUALAUTH_PORT=23801"
+                        + ":JMS_PROVIDER_PORT=28686"
+                        + ":ASADMIN_LISTENER_PORT=24848",
+                        INSTANCE_NAME_2), asadminOK());
     }
-
 
     @Test
     @Order(4)
@@ -159,9 +160,9 @@ public class ClusterITest {
         Path logDir = Files.createTempDirectory("log");
 
         AsadminResult result = ASADMIN.exec(
-            "collect-log-files",
-            "--target", CLUSTER_NAME,
-            "--retrieve", logDir.toAbsolutePath().toString());
+                "collect-log-files",
+                "--target", CLUSTER_NAME,
+                "--retrieve", logDir.toAbsolutePath().toString());
         assertThat(result, asadminOK());
 
         String path = StringUtils.substringBetween(result.getStdOut(), "Created Zip file under ", ".\n");
@@ -169,8 +170,8 @@ public class ClusterITest {
 
         Path logFile = Path.of(path);
         assertAll(
-            () -> assertThat(Files.size(logFile), greaterThan(2_000L)),
-            () -> assertThat(logFile.getFileName().toString(), allOf(startsWith("log"), endsWith(".zip")))
+                () -> assertThat(Files.size(logFile), greaterThan(2_000L)),
+                () -> assertThat(logFile.getFileName().toString(), allOf(startsWith("log"), endsWith(".zip")))
         );
 
         Files.deleteIfExists(logFile);
@@ -184,11 +185,11 @@ public class ClusterITest {
 
         AsadminResult result = ASADMIN.exec("collect-log-files", "--target", INSTANCE_NAME_1);
         assertAll(
-            () -> assertThat(result, not(asadminOK())),
-            () -> assertThat(result.getStdOut(), containsString("Command collect-log-files failed")),
-            () -> assertThat(result.getStdErr(), containsString(
-                    "The collect-log-files command is not allowed on target " + INSTANCE_NAME_1
-                    + " because it is part of cluster " + CLUSTER_NAME))
+                () -> assertThat(result, not(asadminOK())),
+                () -> assertThat(result.getStdOut(), containsString("Command collect-log-files failed")),
+                () -> assertThat(result.getStdErr(), containsString(
+                        "The collect-log-files command is not allowed on target " + INSTANCE_NAME_1
+                        + " because it is part of cluster " + CLUSTER_NAME))
         );
     }
 
@@ -222,20 +223,16 @@ public class ClusterITest {
     }
 
     /**
-     * These methods open a connection to the given URL and
-     * returns the string that is returned from that URL.  This
-     * is useful for simple servlet retrieval
+     * These methods open a connection to the given URL and returns the string that is returned from that URL. This is
+     * useful for simple servlet retrieval
      *
      * @param urlstr The URL to connect to
-     * @return The string returned from that URL, or empty
-     * string if there was a problem contacting the URL
+     * @return The string returned from that URL, or empty string if there was a problem contacting the URL
      */
     private static String getURL(String urlstr) {
         URLConnection urlc = openConnection(urlstr);
         try (
-            BufferedReader ir = new BufferedReader(new InputStreamReader(urlc.getInputStream(), ISO_8859_1));
-            StringWriter ow = new StringWriter()
-        ) {
+                BufferedReader ir = new BufferedReader(new InputStreamReader(urlc.getInputStream(), ISO_8859_1)); StringWriter ow = new StringWriter()) {
             String line;
             while ((line = ir.readLine()) != null) {
                 ow.write(line);
@@ -254,4 +251,28 @@ public class ClusterITest {
             throw new IllegalArgumentException(e);
         }
     }
+
+    protected static File getWar() {
+        final WebArchive war = ShrinkWrap.create(WebArchive.class)
+                .addAsWebResource(
+                        new StringAsset(
+                                "<html>\n"
+                                + "    <head>\n"
+                                + "        <title>Simple test app</title>\n"
+                                + "        <meta charset=\"UTF-8\">\n"
+                                + "    </head>\n"
+                                + "    <body>\n"
+                                + "        <div>Simple test app</div>\n"
+                                + "    </body>\n"
+                                + "</html>"),
+                        "index.html");
+        try {
+            File tempFile = File.createTempFile(TEST_APP_NAME, ".war");
+            war.as(ZipExporter.class).exportTo(tempFile, true);
+            return tempFile;
+        } catch (IOException e) {
+            throw new IllegalStateException("WAR file creation failed for app " + TEST_APP_NAME, e);
+        }
+    }
+
 }

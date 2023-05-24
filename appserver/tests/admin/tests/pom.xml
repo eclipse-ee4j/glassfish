@@ -141,28 +141,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>test-app-for-ClusterITest</id>
-                        <phase>process-test-classes</phase>
-                        <goals>
-                            <goal>war</goal>
-                        </goals>
-                        <configuration>
-                            <primaryArtifact>false</primaryArtifact>
-                            <classifier>clusterit</classifier>
-                            <failOnMissingWebXml>false</failOnMissingWebXml>
-                            <packagingIncludes>index.html</packagingIncludes>
-                            <warSourceDirectory>${basedir}/src/main/webapp/clusterit</warSourceDirectory>
-                            <outputDirectory>${project.build.directory}/testapps</outputDirectory>
-                            <webappDirectory>${project.build.directory}/testapps/${project.build.finalName}-clusterit</webappDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 </project>

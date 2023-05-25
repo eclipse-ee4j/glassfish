@@ -83,6 +83,7 @@ import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.INFO;
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.Logger.Level.WARNING;
+import static java.lang.ThreadLocal.withInitial;
 import static org.glassfish.web.loader.LogFacade.UNABLE_TO_LOAD_CLASS;
 import static org.glassfish.web.loader.LogFacade.UNSUPPORTED_VERSION;
 import static org.glassfish.web.loader.LogFacade.getString;
@@ -156,6 +157,9 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     );
     private static final Set<String> DELEGATED_RESOURCE_PATHS = DELEGATED_PACKAGES.stream()
         .map(PACKAGE_TO_PATH).collect(Collectors.toUnmodifiableSet());
+
+    /** Bytecode preprocessing flag. */
+    private static final ThreadLocal<Boolean> BYTECODE_PREPROCESSING = withInitial(() -> false);
 
     /** Instance of the SecurityManager installed. */
     private static final SecurityManager SECURITY_MANAGER = System.getSecurityManager();
@@ -580,9 +584,18 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
                         // the content of entry in case bytecode preprocessing takes place.
                         byte[] binaryContent = entry.binaryContent;
                         if (!byteCodePreprocessors.isEmpty()) {
-                            String classFilePath = toClassFilePath(name);
-                            for (BytecodePreprocessor preprocessor : byteCodePreprocessors) {
-                                binaryContent = preprocessor.preprocess(classFilePath, binaryContent);
+                            // If bytecode preprocessing already started, we skip all classes,
+                            // loaded by a preprocessors to prevent recursive transformation.
+                            if (!BYTECODE_PREPROCESSING.get()) {
+                                BYTECODE_PREPROCESSING.set(true);
+                                try {
+                                    String classFilePath = toClassFilePath(name);
+                                    for (BytecodePreprocessor preprocessor : byteCodePreprocessors) {
+                                        binaryContent = preprocessor.preprocess(classFilePath, binaryContent);
+                                    }
+                                } finally {
+                                    BYTECODE_PREPROCESSING.set(false);
+                                }
                             }
                         }
                         clazz = defineClass(name, binaryContent, 0, binaryContent.length, codeSource);

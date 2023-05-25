@@ -587,6 +587,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
                             // If bytecode preprocessing already started, we skip all classes,
                             // loaded by a preprocessors to prevent recursive transformation.
                             if (!BYTECODE_PREPROCESSING.get()) {
+                                LOG.log(TRACE, "Transforming {0}", name);
+
                                 BYTECODE_PREPROCESSING.set(true);
                                 try {
                                     String classFilePath = toClassFilePath(name);

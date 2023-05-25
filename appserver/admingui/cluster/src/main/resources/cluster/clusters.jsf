@@ -146,17 +146,24 @@
         <foreach key="instance" list="#{requestScope.listOfInstances}">
             <event>
             <!beforeEncode
-                setAttribute(key="tmp" value="#{instance}");
-                gf.listInstances(optionKeys={"id"} optionValues={"$attribute{tmp}"}, statusMap="#{requestScope.statusMap}");
-                setAttribute(key="status" value="#{requestScope.statusMap['$attribute{tmp}']}");
+                setAttribute(key="instanceName" value="#{instance}");
+                gf.listInstances(optionKeys={"id", "nostatus"} optionValues={"$attribute{instanceName}", "true"}, statusMap="#{requestScope.statusMap}");
+                setAttribute(key="status" value="UNKNOWN");
                 setAttribute(key="statusString" value="$resource{i18nc.status.image.$attribute{status}}  &nbsp;  $resource{i18nc.status.$attribute{status}}");
+                if (#{not empty requestScope.statusMap['$attribute{instanceName}']}) {
+                    setAttribute(key="status" value="#{requestScope.statusMap['$attribute{instanceName}']}");
+                    setAttribute(key="statusString" value="$resource{i18nc.status.image.$attribute{status}}  &nbsp;  $resource{i18nc.status.$attribute{status}}");
+                }
             />
             </event>
             "<tr>
             "<td>
             <sun:hyperlink id="iLink" url="#{request.contextPath}/cluster/cluster/clusterInstanceEdit.jsf?clusterName=#{pageSession.clusterName}&instanceName=#{instance}" text="#{instance}" />
-            "</td> <td>
+            "</td> <td class="status">
              <staticText id="colStopped" value="#{requestScope.statusString}" />
+            <f:verbatim>
+                <span class="instance-name" data-instancename="#{instance}"/>
+            </f:verbatim>
             "</td>
             "</tr>
         </foreach>
@@ -171,6 +178,23 @@
     </sun:form>
 #include "/common/shared/changeButtonsJS.inc"
 
+<sun:script>
+    <f:verbatim>
+        function fetchStatusesOfInstances(tableIdPrefix) {
+            const statusCells = document.querySelectorAll("[id='" + tableIdPrefix + "clustersTable'] tr td.status");
+            statusCells.forEach(e => {
+                const instName = e.querySelector("span.instance-name").attributes["data-instancename"].value;
+                admingui.ajax.get("#{request.contextPath}/shared/instanceStatus.jsf?instanceName=" + instName, "", (req) => {
+                e.innerHTML = req.responseText;
+                });
+            });
+        }
+
+        fetchStatusesOfInstances("propertyForm:");
+    </f:verbatim>
+
+</sun:script>
+        
 </define>
 </composition>
 

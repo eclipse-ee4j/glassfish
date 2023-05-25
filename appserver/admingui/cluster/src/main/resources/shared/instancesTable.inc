@@ -54,14 +54,35 @@
     <sun:tableColumn headerText="$resource{i18ncs.common.NodeCol}" sort="node" rowHeader="$boolean{false}" id="col5">
         <sun:hyperlink id="nodeAgentlink" text="#{td.value.nodeRef}"  url="#{request.contextPath}/cluster/node/nodeEdit.jsf?nodeName=#{td.value.nodeRef}" />
     </sun:tableColumn>
-    <sun:tableColumn headerText="$resource{i18n.common.Status}"  rowHeader="$boolean{false}" id="col6">
-        <staticText id="statusCol" value="#{requestScope.statusString}" >
+    <sun:tableColumn headerText="$resource{i18n.common.Status}"  rowHeader="$boolean{false}" id="col6" styleClass="status">
+        <staticText id="statusCol" value="#{requestScope.statusString}">
             <!beforeEncode
                 mapGet(Map="#{pageSession.instanceStatusMap}" Key="#{td.value.name}" Value="#{requestScope.status}")
-                setAttribute(key="statusString" value="$resource{i18nc.status.image.$attribute{status}}  &nbsp; $resource{i18nc.status.$attribute{status}}");
+                setAttribute(key="statusString" value="$resource{i18nc.status.image.UNKNOWN}  &nbsp; $resource{i18nc.status.UNKNOWN}");
+                if ( #{not empty requestScope.status} ) {
+                    setAttribute(key="statusString" value="$resource{i18nc.status.image.$attribute{status}}  &nbsp; $resource{i18nc.status.$attribute{status}}");
+                }
             />
         </staticText>
+        <f:verbatim>
+            <span class="instance-name" data-instancename="#{td.value.name}"/>
+        </f:verbatim>
     </sun:tableColumn>
 </sun:tableRowGroup>
 
 </sun:table>
+
+<sun:script>
+    <f:verbatim>
+        function fetchStatusesOfInstances(tableIdPrefix) {
+            const statusCells = document.querySelectorAll("[id='" + tableIdPrefix + "instancesTable'] tr td.status");
+            statusCells.forEach(e => {
+                const instName = e.querySelector("span.instance-name").attributes["data-instancename"].value;
+                admingui.ajax.get("#{request.contextPath}/shared/instanceStatus.jsf?instanceName=" + instName, "", (req) => {
+                e.innerHTML = req.responseText;
+                });
+            });
+        }
+    </f:verbatim>
+
+</sun:script>

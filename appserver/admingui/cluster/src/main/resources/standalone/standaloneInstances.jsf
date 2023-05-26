@@ -44,6 +44,7 @@
         setPageSessionAttribute(key="childType" value="server");
         createMap(result="#{requestScope.listInstanceAttrMap}");
         mapPut(map="#{requestScope.listInstanceAttrMap}" key="standaloneonly" value="true")
+        mapPut(map="#{requestScope.listInstanceAttrMap}" key="nostatus" value="true")
         gfr.getInstancesStatus();
         gf.getMapKeys(Map="#{pageSession.instanceStatusMap}" Keys="#{pageSession.standalone}");
         gf.getChildList(parentEndpoint="#{pageSession.parentUrl}", childType="#{pageSession.childType}",
@@ -67,6 +68,13 @@
 <sun:hidden id="helpKey" value="$resource{help_cluster.standaloneInstances}" />
     </sun:form>
 #include "/common/shared/changeButtonsJS.inc"
+
+
+    <sun:script>
+	<f:verbatim>
+            fetchStatusesOfInstances("propertyForm:");
+        </f:verbatim>
+    </sun:script>
 
 </define>
 </composition>

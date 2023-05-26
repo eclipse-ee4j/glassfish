@@ -49,6 +49,7 @@
         createMap(result="#{requestScope.listInstanceAttrMap}");
         setPageSessionAttribute(key="clusterInstancesPage" value="#{true}" )
         mapPut(map="#{requestScope.listInstanceAttrMap}" key="whichtarget" value="#{pageSession.encodedClusterName}")
+        mapPut(map="#{requestScope.listInstanceAttrMap}" key="nostatus" value="true")
         gfr.getInstancesStatus();
         gf.getMapKeys(Map="#{pageSession.instanceStatusMap}" Keys="#{pageSession.instancesName}");
         gf.getChildList(parentEndpoint="#{pageSession.parentUrl}", childType="#{pageSession.childType}", includeList="#{pageSession.instancesName}", result="#{requestScope.listOfRows}");
@@ -72,6 +73,12 @@
 <sun:hidden id="helpKey" value="$resource{help_cluster.clusterInstances}" />
     </sun:form>
 #include "/common/shared/changeButtonsJS.inc"
+
+    <sun:script>
+	<f:verbatim>
+            fetchStatusesOfInstances("propertyForm:");
+        </f:verbatim>
+    </sun:script>
 
 </define>
 </composition>

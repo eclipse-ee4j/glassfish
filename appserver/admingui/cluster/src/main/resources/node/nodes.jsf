@@ -131,7 +131,7 @@
             <foreach key="instance" list="#{requestScope.instanceList}">
                 <event>
                 <!beforeEncode
-                    setAttribute(key="status" value="UNKNOWN");
+                    setAttribute(key="status" value="PROGRESS");
                     if (#{not empty requestScope.statusMap[ '${instance}']}) {
                         setAttribute(key="status" value="#{requestScope.statusMap[ '${instance}']}");
                     }

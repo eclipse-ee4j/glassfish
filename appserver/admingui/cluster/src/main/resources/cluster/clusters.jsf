@@ -148,7 +148,7 @@
             <!beforeEncode
                 setAttribute(key="instanceName" value="#{instance}");
                 gf.listInstances(optionKeys={"id", "nostatus"} optionValues={"$attribute{instanceName}", "true"}, statusMap="#{requestScope.statusMap}");
-                setAttribute(key="status" value="UNKNOWN");
+                setAttribute(key="status" value="PROGRESS");
                 setAttribute(key="statusString" value="$resource{i18nc.status.image.$attribute{status}}  &nbsp;  $resource{i18nc.status.$attribute{status}}");
                 if (#{not empty requestScope.statusMap['$attribute{instanceName}']}) {
                     setAttribute(key="status" value="#{requestScope.statusMap['$attribute{instanceName}']}");

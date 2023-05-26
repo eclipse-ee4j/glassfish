@@ -58,7 +58,7 @@
         <staticText id="statusCol" value="#{requestScope.statusString}">
             <!beforeEncode
                 mapGet(Map="#{pageSession.instanceStatusMap}" Key="#{td.value.name}" Value="#{requestScope.status}")
-                setAttribute(key="statusString" value="$resource{i18nc.status.image.UNKNOWN}  &nbsp; $resource{i18nc.status.UNKNOWN}");
+                setAttribute(key="statusString" value="$resource{i18nc.status.image.PROGRESS}  &nbsp; $resource{i18nc.status.PROGRESS}");
                 if ( #{not empty requestScope.status} ) {
                     setAttribute(key="statusString" value="$resource{i18nc.status.image.$attribute{status}}  &nbsp; $resource{i18nc.status.$attribute{status}}");
                 }

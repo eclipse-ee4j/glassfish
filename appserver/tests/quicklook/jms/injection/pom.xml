@@ -28,7 +28,7 @@
     <artifactId>injection_quicklook</artifactId>
     <name>Glassfish JMS Injection Quicklook</name>
     <packaging>jar</packaging>
-    <version>7.0.5</version>
+    <version>7.0.6-SNAPSHOT</version>
     <description>This pom describes how to run QuickLook tests on the Glassfish Bundle</description>
 
     <build>

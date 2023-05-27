@@ -22,7 +22,7 @@
     <parent>
       <groupId>org.glassfish.main.osgi-platforms</groupId>
       <artifactId>osgi-platforms</artifactId>
-      <version>7.0.5-SNAPSHOT</version>
+      <version>7.0.5</version>
     </parent>
 
     <artifactId>felix</artifactId>

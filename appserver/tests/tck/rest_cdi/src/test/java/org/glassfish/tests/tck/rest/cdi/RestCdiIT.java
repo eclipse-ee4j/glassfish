@@ -18,6 +18,7 @@ package org.glassfish.tests.tck.rest.cdi;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 import static java.lang.System.getProperty;
 import static java.util.logging.Level.INFO;
+import static org.jboss.shrinkwrap.api.ShrinkWrap.create;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -32,15 +33,11 @@ import org.jboss.arquillian.junit5.ArquillianExtension;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.Response;
-import static org.jboss.shrinkwrap.api.ShrinkWrap.create;
 @ExtendWith(ArquillianExtension.class)
 @RunAsClient
 public class RestCdiIT {
@@ -50,8 +47,6 @@ public class RestCdiIT {
     @ArquillianResource
     private URL baseUrl;
 
-    private Client client;
-
     @Deployment(testable = false)
     public static WebArchive createDeployment() {
         var webArchive = create(ZipImporter.class, getProperty("finalName") + ".war")
@@ -60,16 +55,6 @@ public class RestCdiIT {
 
         LOGGER.log(INFO, "webArchive content: {0}", webArchive.toString(true));
         return webArchive;
-    }
-
-    @BeforeEach
-    public void before() throws Exception {
-        client = ClientBuilder.newClient();
-    }
-
-    @AfterEach
-    public void after() throws Exception {
-        client.close();
     }
 
     @Test

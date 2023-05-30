@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -91,6 +91,7 @@ import static org.jboss.weld.bootstrap.spi.BeanDiscoveryMode.NONE;
 public class DeploymentImpl implements CDI11Deployment {
 
     private static final Logger LOG = CDILoggerInfo.getLogger();
+    private static final String IS_EMBEDDED_EJB_CONTAINER = "org.glassfish.ejb.embedded.active";
 
     // Keep track of our BDAs for this deployment
     private List<RootBeanDeploymentArchive> rarRootBdas;
@@ -190,7 +191,16 @@ public class DeploymentImpl implements CDI11Deployment {
             }
         }
 
-        BeanDeploymentArchive extensionBeanDeploymentArchive = extensionBDAMap.get(beanClass.getClassLoader());
+        ClassLoader classLoaderKey = null;
+        if (System.getProperty(IS_EMBEDDED_EJB_CONTAINER) != null) {
+            // In the embedded EJB container, all extension classes go to the same BDA.
+            // This is needed since we don't have separate class loaders per archive there.
+            classLoaderKey = this.getClass().getClassLoader();
+        } else {
+            classLoaderKey = beanClass.getClassLoader();
+        }
+
+        BeanDeploymentArchive extensionBeanDeploymentArchive = extensionBDAMap.get(classLoaderKey);
         if (extensionBeanDeploymentArchive != null) {
             return extensionBeanDeploymentArchive;
         }

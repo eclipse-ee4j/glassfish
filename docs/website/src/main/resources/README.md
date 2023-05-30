@@ -11,7 +11,7 @@ sponsored by the Eclipse Foundation.
 
 ## May 30, 2023 -- Eclipse GlassFish 7.0.5 Available
 
-We are pleased to announce the release today of Eclipse GlassFish 7.0.4.
+We are pleased to announce the release today of Eclipse GlassFish 7.0.5.
 
 The main features of this release are a number of important bug fixes such as one in deployment-time recursive bytecode, resetting the security context if a principal has not changed, and several fixes in clustering.
 

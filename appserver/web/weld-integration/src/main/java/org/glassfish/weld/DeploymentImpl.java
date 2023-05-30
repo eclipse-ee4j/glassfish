@@ -17,31 +17,12 @@
 
 package org.glassfish.weld;
 
-import static com.sun.enterprise.util.Utility.isAnyEmpty;
-import static com.sun.enterprise.util.Utility.isAnyNull;
-import static com.sun.enterprise.util.Utility.isEmpty;
-import static java.lang.System.getSecurityManager;
-import static java.security.AccessController.doPrivileged;
-import static java.util.Collections.emptyList;
-import static java.util.logging.Level.FINE;
-import static java.util.stream.Collectors.toList;
-import static org.glassfish.cdi.CDILoggerInfo.CREATING_DEPLOYMENT_ARCHIVE;
-import static org.glassfish.cdi.CDILoggerInfo.EXCEPTION_SCANNING_JARS;
-import static org.glassfish.cdi.CDILoggerInfo.GET_BEAN_DEPLOYMENT_ARCHIVES;
-import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE;
-import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE_ADD_NEW_BDA_TO_ROOTS;
-import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE_ADD_TO_EXISTING;
-import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE_CHECKING;
-import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE_CHECKING_SUBBDA;
-import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE_CREATE_NEW_BDA;
-import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE_RETURNING_NEWLY_CREATED_BDA;
-import static org.glassfish.deployment.common.InstalledLibrariesResolver.getInstalledLibraries;
-import static org.glassfish.weld.WeldDeployer.WELD_BOOTSTRAP;
-import static org.glassfish.weld.connector.WeldUtils.JAR_SUFFIX;
-import static org.glassfish.weld.connector.WeldUtils.META_INF_BEANS_XML;
-import static org.glassfish.weld.connector.WeldUtils.SEPARATOR_CHAR;
-import static org.glassfish.weld.connector.WeldUtils.isImplicitBeanArchive;
-import static org.jboss.weld.bootstrap.spi.BeanDiscoveryMode.NONE;
+import com.sun.enterprise.deploy.shared.ArchiveFactory;
+import com.sun.enterprise.deployment.EjbDescriptor;
+
+import jakarta.enterprise.inject.build.compatible.spi.BuildCompatibleExtension;
+import jakarta.enterprise.inject.build.compatible.spi.SkipIfPortableExtensionPresent;
+import jakarta.enterprise.inject.spi.Extension;
 
 import java.io.IOException;
 import java.net.URI;
@@ -78,12 +59,31 @@ import org.jboss.weld.bootstrap.spi.Metadata;
 import org.jboss.weld.bootstrap.spi.helpers.MetadataImpl;
 import org.jboss.weld.lite.extension.translator.LiteExtensionTranslator;
 
-import com.sun.enterprise.deploy.shared.ArchiveFactory;
-import com.sun.enterprise.deployment.EjbDescriptor;
-
-import jakarta.enterprise.inject.build.compatible.spi.BuildCompatibleExtension;
-import jakarta.enterprise.inject.build.compatible.spi.SkipIfPortableExtensionPresent;
-import jakarta.enterprise.inject.spi.Extension;
+import static com.sun.enterprise.util.Utility.isAnyEmpty;
+import static com.sun.enterprise.util.Utility.isAnyNull;
+import static com.sun.enterprise.util.Utility.isEmpty;
+import static java.lang.System.getSecurityManager;
+import static java.security.AccessController.doPrivileged;
+import static java.util.Collections.emptyList;
+import static java.util.logging.Level.FINE;
+import static java.util.stream.Collectors.toList;
+import static org.glassfish.cdi.CDILoggerInfo.CREATING_DEPLOYMENT_ARCHIVE;
+import static org.glassfish.cdi.CDILoggerInfo.EXCEPTION_SCANNING_JARS;
+import static org.glassfish.cdi.CDILoggerInfo.GET_BEAN_DEPLOYMENT_ARCHIVES;
+import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE;
+import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE_ADD_NEW_BDA_TO_ROOTS;
+import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE_ADD_TO_EXISTING;
+import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE_CHECKING;
+import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE_CHECKING_SUBBDA;
+import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE_CREATE_NEW_BDA;
+import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE_RETURNING_NEWLY_CREATED_BDA;
+import static org.glassfish.deployment.common.InstalledLibrariesResolver.getInstalledLibraries;
+import static org.glassfish.weld.WeldDeployer.WELD_BOOTSTRAP;
+import static org.glassfish.weld.connector.WeldUtils.JAR_SUFFIX;
+import static org.glassfish.weld.connector.WeldUtils.META_INF_BEANS_XML;
+import static org.glassfish.weld.connector.WeldUtils.SEPARATOR_CHAR;
+import static org.glassfish.weld.connector.WeldUtils.isImplicitBeanArchive;
+import static org.jboss.weld.bootstrap.spi.BeanDiscoveryMode.NONE;
 
 /**
  * Represents a deployment of a CDI (Weld) application.

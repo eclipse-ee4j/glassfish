@@ -76,10 +76,9 @@
 		<antcall target="report" />
 	</target>
 
-
 	<target name="ejb_group_embedded">
-		<ant dir="ejb32/embedded" target="all" />
-		<ant dir="ejb31/embedded" target="all" />
+		<run-ejb-test path="ejb32/embedded" target="all" />
+		<run-ejb-test path="ejb31/embedded" target="all" />
 		<antcall target="report" />
 	</target>
 
@@ -100,54 +99,54 @@
 	</target>
 
 	<target name="test-lite">
-		<ant dir="ejb32" target="lite" />
-		<ant dir="ejb31" target="lite" />
+		<run-ejb-test path="ejb32" target="lite" />
+		<run-ejb-test path="ejb31" target="lite" />
 	</target>
 
 	<target name="test-all">
-		<ant dir="stubs" target="all" />
-		<ant dir="txprop" target="all" />
-		<ant dir="ejbc" target="all" />
-		<ant dir="ejb30" target="all" />
+		<run-ejb-test path="stubs" target="all" />
+		<run-ejb-test path="txprop" target="all" />
+		<run-ejb-test path="ejbc" target="all" />
+		<run-ejb-test path="ejb30" target="all" />
 
-		<ant dir="mdb" target="all" />
-		<ant dir="cli" target="all" />
-		<ant dir="timer" target="all" />
-		<ant dir="bmp" target="all" />
+		<run-ejb-test path="mdb" target="all" />
+		<run-ejb-test path="cli" target="all" />
+		<run-ejb-test path="timer" target="all" />
+		<run-ejb-test path="bmp" target="all" />
 
-		<ant dir="cmp" target="all" />
-		<ant dir="sfsb" target="all" />
-		<ant dir="allowedmethods" target="all" />
-		<ant dir="jms" target="all" />
-		<ant dir="ejb32" target="all" />
-		<ant dir="ejb31" target="all" />
+		<run-ejb-test path="cmp" target="all" />
+		<run-ejb-test path="sfsb" target="all" />
+		<run-ejb-test path="allowedmethods" target="all" />
+		<run-ejb-test path="jms" target="all" />
+		<run-ejb-test path="ejb32" target="all" />
+		<run-ejb-test path="ejb31" target="all" />
 
 		<!-- ejb31 must be the last set of tests because embedded test might stop database -->
-		<ant dir="ejb32/embedded" target="all" />
-		<ant dir="ejb31/embedded" target="all" />
+		<run-ejb-test path="ejb32/embedded" target="all" />
+		<run-ejb-test path="ejb31/embedded" target="all" />
 	</target>
 
 	<target name="test-group-1">
-		<ant dir="stubs" target="all" />
-		<ant dir="txprop" target="all" />
-		<ant dir="ejbc" target="all" />
-		<ant dir="ejb30" target="all" />
+		<run-ejb-test path="stubs" target="all" />
+		<run-ejb-test path="txprop" target="all" />
+		<run-ejb-test path="ejbc" target="all" />
+		<run-ejb-test path="ejb30" target="all" />
 	</target>
 
 	<target name="test-group-2">
-		<ant dir="mdb" target="all" />
-		<ant dir="cli" target="all" />
-		<ant dir="timer" target="all" />
-		<ant dir="bmp" target="all" />
+		<run-ejb-test path="mdb" target="all" />
+		<run-ejb-test path="cli" target="all" />
+		<run-ejb-test path="timer" target="all" />
+		<run-ejb-test path="bmp" target="all" />
 	</target>
 
 	<target name="test-group-3">
-		<ant dir="cmp" target="all" />
-		<ant dir="sfsb" target="all" />
-		<ant dir="allowedmethods" target="all" />
-		<ant dir="jms" target="all" />
-		<ant dir="ejb32" target="all" />
-		<ant dir="ejb31" target="all" />
+		<run-ejb-test path="cmp" target="all" />
+		<run-ejb-test path="sfsb" target="all" />
+		<run-ejb-test path="allowedmethods" target="all" />
+		<run-ejb-test path="jms" target="all" />
+		<run-ejb-test path="ejb32" target="all" />
+		<run-ejb-test path="ejb31" target="all" />
 	</target>
 
 	<target name="unsetup">
@@ -158,12 +157,12 @@
 	</target>
 
 	<target name="orb_integration">
-		<ant dir="ejb30" target="clientview" />
-		<ant dir="ejb30" target="hello" />
-		<ant dir="ejbc" target="all" />
-		<ant dir="txprop" target="all" />
-		<ant dir="stubs" target="all" />
-		<ant dir="bmp" target="txtests" />
+		<run-ejb-test path="ejb30" target="clientview" />
+		<run-ejb-test path="ejb30" target="hello" />
+		<run-ejb-test path="ejbc" target="all" />
+		<run-ejb-test path="txprop" target="all" />
+		<run-ejb-test path="stubs" target="all" />
+		<run-ejb-test path="bmp" target="txtests" />
 	</target>
 
 	<target name="start-database" depends="init-common">
@@ -303,4 +302,32 @@
                         ant ejb31 (Executes the ejb31 tests)
         </echo>
 	</target>
+	
+	<macrodef name="run-ejb-test" xmlns:if="ant:if" xmlns:unless="ant:unless">
+        <attribute name="path" />
+        <attribute name="target" />
+        <sequential>
+            <local name="do-run-test" />
+            <condition property="do-run-test" else="false">
+                <or>
+                    <equals arg1="${env.ejb}" arg2="@{path}" />
+                    <not>
+                        <isset property="env.ejb" />
+                    </not>
+                </or>
+            </condition>
+
+            <sequential if:true="${do-run-test}">
+                <local name="absolute.path" />
+                <property name="absolute.path" location="@{path}" />
+                <echo message="${line.separator} ${line.separator}" />
+                <echo message=" **************************************************" />
+                <echo message=" * Running @{path} " />
+                <echo message=" * Path: ${absolute.path} " />
+                <echo message=" **************************************************" />
+                <echo message="${line.separator} ${line.separator}" />
+                <ant dir="@{path}" target="@{target}" />
+            </sequential>
+        </sequential>
+    </macrodef>
 </project>

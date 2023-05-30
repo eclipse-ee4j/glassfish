@@ -102,7 +102,7 @@
         </java>
     </target>
 
-    <target name="run_dir" depends="init-common">
+    <target name="run_dir" depends="init-common" xmlns:if="ant:if" xmlns:unless="ant:unless">
        <mkdir dir="${assemble.dir}/other"/>
        <unzip src="${assemble.dir}/${appname}-other.jar" dest="${assemble.dir}/other"/>
        <java  fork="on"
@@ -111,6 +111,7 @@
               classname="${se.client}">
            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
            <jvmarg value="--add-opens=java.naming/javax.naming.spi=ALL-UNNAMED" />
+           <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:9009" if:set="env.GLASSFISH_SUSPEND" />
 <!--
            <jvmarg value="-Dorg.glassfish.ejb.embedded.keep-temporary-files=true"/>
 -->

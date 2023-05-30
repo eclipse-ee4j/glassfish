@@ -130,7 +130,7 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
                         _logger.info("[EJBContainerProviderImpl] Error cleaning up..." + t1);
                     }
                     container = null;
-                    System.setProperty(IS_EJB_CONTAINER, null);
+                    System.clearProperty(IS_EJB_CONTAINER);
                 }
             }
         }

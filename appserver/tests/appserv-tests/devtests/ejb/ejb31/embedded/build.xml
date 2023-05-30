@@ -100,92 +100,92 @@
 
     <target name="basic">
         <record name="basic.output" action="start" />
-            <ant dir="basic" target="all"/>
+            <run-ejb31-embedded-test path="basic" target="all"/>
         <record name="basic.output" action="stop" />
     </target>
 
     <target name="testclose">
         <record name="testclose.output" action="start" />
-            <ant dir="testclose" target="all"/>
+            <run-ejb31-embedded-test path="testclose" target="all"/>
         <record name="testclose.output" action="stop" />
     </target>
 
     <target name="twomodules">
         <record name="twomodules.output" action="start" />
-            <ant dir="twomodules" target="all"/>
+            <run-ejb31-embedded-test path="twomodules" target="all"/>
         <record name="twomodules.output" action="stop" />
     </target>
 
     <target name="timertest">
         <record name="timertest.output" action="start" />
         <echo>Running timertest target ${timer.test.type} </echo>
-            <ant dir="timertest" target="${timer.test.type}"/>
+            <run-ejb31-embedded-test path="timertest" target="${timer.test.type}"/>
         <record name="timertest.output" action="stop" />
     </target>
 
     <target name="modulewithlibs">
         <record name="modulewithlibs.output" action="start" />
-            <ant dir="modulewithlibs" target="all"/>
+            <run-ejb31-embedded-test path="modulewithlibs" target="all"/>
         <record name="modulewithlibs.output" action="stop" />
     </target>
 
     <target name="modulewithappname">
         <record name="modulewithappname.output" action="start" />
-            <ant dir="modulewithappname" target="all"/>
+            <run-ejb31-embedded-test path="modulewithappname" target="all"/>
         <record name="modulewithappname.output" action="stop" />
     </target>
 
     <target name="twomoduleswithlibs">
         <record name="twomoduleswithlibs.output" action="start" />
-            <ant dir="twomoduleswithlibs" target="all"/>
+            <run-ejb31-embedded-test path="twomoduleswithlibs" target="all"/>
         <record name="twomoduleswithlibs.output" action="stop" />
     </target>
 
     <target name="ejbinwar">
         <record name="ejbinwar.output" action="start" />
-            <ant dir="ejbinwar" target="all"/>
+            <run-ejb31-embedded-test path="ejbinwar" target="all"/>
         <record name="ejbinwar.output" action="stop" />
     </target>
 
     <target name="ejbandwar">
         <record name="ejbandwar.output" action="start" />
-            <ant dir="ejbandwar" target="all"/>
+            <run-ejb31-embedded-test path="ejbandwar" target="all"/>
         <record name="ejbandwar.output" action="stop" />
     </target>
 
     <target name="skipjar">
         <record name="skipjar.output" action="start" />
-            <ant dir="skipjar" target="all"/>
+            <run-ejb31-embedded-test path="skipjar" target="all"/>
         <record name="skipjar.output" action="stop" />
     </target>
 
     <target name="twocontainers">
         <record name="twocontainers.output" action="start" />
-            <ant dir="twocontainers" target="all"/>
+            <run-ejb31-embedded-test path="twocontainers" target="all"/>
         <record name="twocontainers.output" action="stop" />
     </target>
 
     <target name="embedasync">
         <record name="embedasync.output" action="start" />
-            <ant dir="embedasync" target="all"/>
+            <run-ejb31-embedded-test path="embedasync" target="all"/>
         <record name="embedasync.output" action="stop" />
     </target>
 
     <target name="jaxrs">
         <record name="jaxrs.output" action="start" />
-            <ant dir="jaxrs" target="all"/>
+            <run-ejb31-embedded-test path="jaxrs" target="all"/>
         <record name="jaxrs.output" action="stop" />
     </target>
 
     <target name="mdb">
         <record name="mdb.output" action="start" />
-            <ant dir="mdb" target="all"/>
+            <run-ejb31-embedded-test path="mdb" target="all"/>
         <record name="mdb.output" action="stop" />
     </target>
 
     <target name="remote">
         <record name="remote.output" action="start" />
-            <ant dir="remote" target="all"/>
+            <run-ejb31-embedded-test path="remote" target="all"/>
         <record name="remote.output" action="stop" />
     </target>
 
@@ -195,4 +195,32 @@
                         ant all (Executes all the ejb-ejb31-embedded tests)
         </echo>
     </target>
+	
+	<macrodef name="run-ejb31-embedded-test" xmlns:if="ant:if" xmlns:unless="ant:unless">
+	        <attribute name="path" />
+	        <attribute name="target" />
+	        <sequential>
+	            <local name="do-run-test" />
+	            <condition property="do-run-test" else="false">
+	                <or>
+	                    <equals arg1="${env.ejb31_embedded}" arg2="@{path}" />
+	                    <not>
+	                        <isset property="env.ejb31_embedded" />
+	                    </not>
+	                </or>
+	            </condition>
+
+	            <sequential if:true="${do-run-test}">
+	                <local name="absolute.path" />
+	                <property name="absolute.path" location="@{path}" />
+	                <echo message="${line.separator} ${line.separator}" />
+	                <echo message=" **************************************************" />
+	                <echo message=" * Running @{path} " />
+	                <echo message=" * Path: ${absolute.path} " />
+	                <echo message=" **************************************************" />
+	                <echo message="${line.separator} ${line.separator}" />
+	                <ant dir="@{path}" target="@{target}" />
+	            </sequential>
+	        </sequential>
+	    </macrodef>
 </project>

@@ -81,13 +81,14 @@
         <antcall target="run_se"/>
     </target>
 
-    <target name="run_se" depends="init-common">
+    <target name="run_se" depends="init-common" xmlns:if="ant:if" xmlns:unless="ant:unless">
        <echo message="Running with ${embedded.classpath} in classpath"/>
        <java  fork="on"
               failonerror="true"
               classpath="${assemble.dir}/${appname}-all.jar:${assemble.dir}/${appname}-pu.jar:${embedded.classpath}"
               classname="${se.client}">
            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
+           <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:9009" if:set="env.GLASSFISH_SUSPEND" />
            <arg line="${appname}-all"/>
         </java>
     </target>

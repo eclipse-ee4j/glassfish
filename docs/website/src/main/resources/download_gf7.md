@@ -1,5 +1,25 @@
 # Eclipse GlassFish 7.x Downloads
 
+### GlassFish 7.0.5
+
+GlassFish 7.0.5 is a final release, containing final Jakarta EE 10 APIs. It compiles and runs on JDK 11 to JDK 20. MicroProfile support requires JDK 17 or higher.
+
+The main features of this release are a number of important bug fixes such as one in deployment-time recursive bytecode, resetting the security context if a principal has not changed, and several fixes in clustering.
+
+Jakarta EE components have been updated for Mail, JSON Processing, and REST. Auxiliary components such as Jackson and Commons IO have also been updated to their latest version.
+
+Download:
+
+* [Eclipse GlassFish 7.0.5, Jakarta EE Platform, 10](https://download.eclipse.org/ee4j/glassfish/glassfish-7.0.5.zip)
+* [Eclipse GlassFish 7.0.5, Jakarta EE Web Profile, 10](https://download.eclipse.org/ee4j/glassfish/web-7.0.5.zip)
+* [Eclipse GlassFish Embedded 7.0.5, Jakarta EE Full Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-all/7.0.5/jar)
+* [Eclipse GlassFish Embedded 7.0.5, Jakarta EE Web Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-web/7.0.5/jar)
+
+More details:
+
+* [Eclipse GlassFish 7.0.4 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.4)
+* [Jakarte EE Platform Specification Project](https://eclipse-ee4j.github.io/jakartaee-platform/) for more info about Jakarta EE 10
+
 ### GlassFish 7.0.4
 
 GlassFish 7.0.4 is a final release, containing final Jakarta EE 10 APIs. It compiles and runs on JDK 11 to JDK 20. MicroProfile support requires JDK 17 or higher.

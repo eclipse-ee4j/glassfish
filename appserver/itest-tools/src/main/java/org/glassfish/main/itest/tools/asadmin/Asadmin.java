@@ -160,7 +160,7 @@ public class Asadmin {
         processManager.setTimeoutMsec(timeout);
         processManager.setEcho(false);
         if (LOG.isLoggable(Level.FINEST)) {
-            processManager.setEnvironment(new String[] {"AS_TRACE=true"});
+            processManager.setEnvironment("AS_TRACE","true");
         }
 
         int exitCode;

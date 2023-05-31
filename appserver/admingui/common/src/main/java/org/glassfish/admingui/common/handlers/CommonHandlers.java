@@ -47,6 +47,7 @@ import org.glassfish.admingui.common.util.RestUtil;
 import org.glassfish.admingui.common.util.TargetUtil;
 
 import com.sun.enterprise.config.serverbeans.ServerTags;
+import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.jsftemplating.annotation.Handler;
 import com.sun.jsftemplating.annotation.HandlerInput;
 import com.sun.jsftemplating.annotation.HandlerOutput;
@@ -817,6 +818,14 @@ public class CommonHandlers {
         return result;
     }
 
+    @Handler(id = "getDefaultAdminTimeout",
+            output = {
+                @HandlerOutput(name = "result", type = String.class)
+            })
+    public static void getDefaultAdminTimeout(HandlerContext handlerCtx) {
+        String result = SystemPropertyConstants.getDefaultAdminTimeout().toString();
+        handlerCtx.setOutputValue("result", result);
+    }
 
     /**
      * If the bare attribute is found in the query string and the value is "true",

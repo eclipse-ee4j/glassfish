@@ -246,7 +246,8 @@ public final class InstanceInfo {
             map.set("type", "terse");
             InstanceCommandExecutor ice =
                     new InstanceCommandExecutor(habitat, "__locations", FailurePolicy.Error, FailurePolicy.Error,
-                    svr, host, port, logger, map, aReport, aResult);
+                            svr, host, port, logger, map, aReport, aResult);
+            ice.setConnectTimeout(timeoutInMsec);
             return stateService.submitJob(svr, ice, aResult);
             /*
             String ret = rac.executeCommand(map).trim();

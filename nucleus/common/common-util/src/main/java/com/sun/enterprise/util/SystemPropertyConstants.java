@@ -201,6 +201,9 @@ public class SystemPropertyConstants {
     public static final String DEFAULT_ADMIN_USER = "admin";
     public static final String DEFAULT_ADMIN_PASSWORD = "";
 
+    public static final String DEFAULT_ADMIN_TIMEOUT_PROPERTY = "org.glassfish.admin.timeout";
+    private static final int DEFAULT_ADMIN_TIMEOUT_VALUE = 5000;
+
     private static final StringManager sm = StringManager.getManager(SystemPropertyConstants.class);
 
     public static final String OPEN = "${";
@@ -318,5 +321,19 @@ public class SystemPropertyConstants {
      */
     public static final String getComponentName() {
         return new File(System.getProperty(INSTALL_ROOT_PROPERTY)).getName();
+    }
+
+    /**
+     * Returns the default timeout in milliseconds used in some Admin commands.
+     *
+     * @return The value of the system property {@link SystemPropertyConstants#DEFAULT_ADMIN_TIMEOUT_PROPERTY} or the
+     * value {@link SystemPropertyConstants#DEFAULT_ADMIN_TIMEOUT_VALUE} if the system property not set.
+     */
+    public static final Integer getDefaultAdminTimeout() {
+        final Integer result = Integer.getInteger(DEFAULT_ADMIN_TIMEOUT_PROPERTY);
+        if (result == null) {
+            return DEFAULT_ADMIN_TIMEOUT_VALUE;
+        }
+        return result;
     }
 }

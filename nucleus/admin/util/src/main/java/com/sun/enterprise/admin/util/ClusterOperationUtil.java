@@ -20,11 +20,13 @@ import com.sun.enterprise.admin.remote.RemoteRestAdminCommand;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.util.SystemPropertyConstants;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.glassfish.api.ActionReport;
@@ -32,7 +34,6 @@ import org.glassfish.api.admin.*;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Target;
-import org.glassfish.logging.annotation.LogMessageInfo;
 
 /**
  *
@@ -151,15 +152,16 @@ public class ClusterOperationUtil {
                 //TODO: Remove this if after only one remote admin call method will be choosen
                 Future<InstanceCommandResult> f;
                 if (useRest()) {
-                    InstanceRestCommandExecutor ice = new InstanceRestCommandExecutor(habitat, commandName, failPolicy, offlinePolicy, svr,
+                    InstanceRestCommandExecutor irce = new InstanceRestCommandExecutor(habitat, commandName, failPolicy, offlinePolicy, svr,
                             host, port, logger, parameters, aReport, aResult);
-                    if (CommandTarget.DAS.isValid(habitat, ice.getServer().getName())) {
+                    if (CommandTarget.DAS.isValid(habitat, irce.getServer().getName())) {
                         continue;
                     }
                     if (intermediateDownloadDir != null) {
-                        ice.setFileOutputDirectory(new File(intermediateDownloadDir, ice.getServer().getName()));
+                        irce.setFileOutputDirectory(new File(intermediateDownloadDir, irce.getServer().getName()));
                     }
-                    f = instanceState.submitJob(svr, ice, aResult);
+                    setConnectionTimeout(irce::setConnectTimeout, parameters);
+                    f = instanceState.submitJob(svr, irce, aResult);
                 } else {
                     logger.log(Level.FINEST, "replicateCommand(): Use traditional way for replication - {0}", commandName);
                     InstanceCommandExecutor ice = new InstanceCommandExecutor(habitat, commandName, failPolicy, offlinePolicy, svr, host,
@@ -170,6 +172,7 @@ public class ClusterOperationUtil {
                     if (intermediateDownloadDir != null) {
                         ice.setFileOutputDirectory(new File(intermediateDownloadDir, ice.getServer().getName()));
                     }
+                    setConnectionTimeout(ice::setConnectTimeout, parameters);
                     f = instanceState.submitJob(svr, ice, aResult);
                 }
                 if (f == null) {
@@ -254,6 +257,21 @@ public class ClusterOperationUtil {
             }
         }
         return returnValue;
+    }
+
+    private static void setConnectionTimeout(Consumer<Integer> applyTimeout, ParameterMap parameters) {
+        applyTimeout.accept(SystemPropertyConstants.getDefaultAdminTimeout());
+        final String timeoutKey = "timeoutmsec";
+        if (parameters.containsKey(timeoutKey) && !parameters.get(timeoutKey).isEmpty()) {
+            try {
+                applyTimeout.accept(Integer.parseInt(parameters.get(timeoutKey).get(0)));
+            } catch (Exception e) {
+                logger.fine(() -> "Failed to set timeout from the " + timeoutKey
+                        + " parameter. The value " + parameters.get(timeoutKey)
+                        + " raised an exception: " + e.getMessage());
+                // ignore and keep the default
+            }
+        }
     }
 
     public static ActionReport.ExitCode replicateCommand(String commandName, FailurePolicy failPolicy, FailurePolicy offlinePolicy,

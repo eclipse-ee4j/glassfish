@@ -73,7 +73,7 @@
         </antcall>
     </target>
 
-    <target name="run_se" depends="init-common">
+    <target name="run_se" depends="init-common" xmlns:if="ant:if" xmlns:unless="ant:unless">
        <echo message="Running with ${embedded.classpath} in classpath"/>
        <java  fork="on"
               failonerror="true"
@@ -81,6 +81,7 @@
               classname="${se.client}">
            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
            <jvmarg value="--add-opens=java.naming/javax.naming.spi=ALL-UNNAMED" />
+           <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:9009" if:set="env.GLASSFISH_SUSPEND" />
            <arg line="${jndiroot}"/>
            <arg line="${persistent}"/>
         </java>

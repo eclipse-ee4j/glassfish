@@ -17,7 +17,7 @@
 ## Eclipse GlassFish Documentation and User Guides
 
 * [Current release (7.0.0)](docs#current)
-* [Development version (7.0.5-SNAPSHOT)](docs#development)
+* [Development version (7.0.6-SNAPSHOT)](docs#development)
 * [5.1.0 release](docs#5.1.0)
 
 ## Eclipse Open MQ Documentation

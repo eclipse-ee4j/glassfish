@@ -159,9 +159,9 @@
         <omnifaces-jwt-auth.version>2.0.1</omnifaces-jwt-auth.version>
 
         <!-- Admin console components -->
-        <jsftemplating.version>4.0.1</jsftemplating.version>
+        <jsftemplating.version>4.0.2</jsftemplating.version>
         <jsf-ext.version>0.2</jsf-ext.version>
-        <woodstock.version>6.0.0</woodstock.version>
+        <woodstock.version>6.0.1</woodstock.version>
         <woodstock-dataprovider.version>1.0</woodstock-dataprovider.version>
         <woodstock-dojo-ajax-nodemo.version>1.12.4</woodstock-dojo-ajax-nodemo.version>
         <woodstock-json.version>2.0</woodstock-json.version>

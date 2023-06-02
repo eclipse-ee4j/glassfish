@@ -49,7 +49,10 @@
    output = #{pageSession.runningInstances}
 -->
 <handler id="gfr.getListOfRunningInstances">
-    gf.restRequest(endpoint="#{sessionScope.REST_URL}/list-instances",  method="get", result="#{requestScope.results}");
+    getDefaultAdminTimeout(result="#{requestScope.adminTimeout}");
+    createMap(result="#{requestScope.listInstanceAttrMap}");
+    mapPut(map="#{requestScope.listInstanceAttrMap}" key="timeoutmsec" value="#{requestScope.adminTimeout}" );
+    gf.restRequest(endpoint="#{sessionScope.REST_URL}/list-instances",  attrs="#{requestScope.listInstanceAttrMap}", method="get", result="#{requestScope.results}");
     listAdd(value="server", result="#{pageSession.runningInstances}");
     foreach (var="instance", list="#{requestScope.results.data.extraProperties.instanceList}") {
         if ('!(#{instance.status} = NOT_RUNNING)') {
@@ -64,6 +67,10 @@
    output:  #{pageSession.instanceList}
  -->
 <handler id="gfr.getListOfInstances">
+    if ("#{requestScope.listInstanceAttrMap} = ${null}") {
+        createMap(result="#{requestScope.listInstanceAttrMap}");
+    }
+    mapPut(map="#{requestScope.listInstanceAttrMap}" key="nostatus" value="true" );
     gf.restRequest(endpoint="#{sessionScope.REST_URL}/list-instances",  attrs="#{requestScope.listInstanceAttrMap}" method="get", result="#{requestScope.result}");
     setPageSessionAttribute(key="instanceList" value={});
     foreach (var="instance", list="#{requestScope.result.data.extraProperties.instanceList}") {

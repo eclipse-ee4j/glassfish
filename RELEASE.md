@@ -42,7 +42,10 @@ In this example we assume 7.0.3.
     - click [Build] button 
 23. Create the release on Github: https://github.com/eclipse-ee4j/glassfish/releases click "draft a new release"
 24. Create the release on Eclipse: https://projects.eclipse.org/projects/ee4j.glassfish click "create a new release"
-25. Create the release on Glassfish.org: do a PR for updating the website in [`docs/website/src/main/resources` in the **master** branch](https://github.com/eclipse-ee4j/glassfish/tree/master/docs/website/src/main/resources):
-    - in `download_gf7.md`, create a section for the new version at the top, based on the previous version. Update the info based on the release notes in github, e.g. https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.3
-    - in `download.md`, replace information in the "Eclipse GlassFish 7.x" section at the top with info for the new version in `download_gf7.md`
-    - in `README.md`, add a new piece into "Latest News", with the date of the release in Github, based on the info in `download.md`
+25. Create the release on Glassfish.org. Do a PR for the **master** branch with: 
+    -  an update for the website in [`docs/website/src/main/resources`](https://github.com/eclipse-ee4j/glassfish/tree/master/docs/website/src/main/resources):
+        - in `download_gf7.md`, create a section for the new version at the top, based on the previous version. Update the info based on the release notes in github, e.g. https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.3
+        - in `download.md`, replace information in the "Eclipse GlassFish 7.x" section at the top with info for the new version in `download_gf7.md`
+        - in `README.md`, add a new piece into "Latest News", with the date of the release in Github, based on the info in `download.md`
+    - with an update for the docs:
+        - Update the property `glassfish.version.7x` with the released version in [docs/pom.xml](https://github.com/eclipse-ee4j/glassfish/blob/master/docs/pom.xml)

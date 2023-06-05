@@ -31,6 +31,7 @@ import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
 import org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher;
 import org.hamcrest.collection.IsEmptyCollection;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
@@ -47,6 +48,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class OSGiCommandsITest {
 
     private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
+
+    @BeforeAll
+    public static void waitOsgiReady() throws Exception {
+        for (int i = 0; i < 5; i++) {
+            AsadminResult result = ASADMIN.exec("osgi", "lb");
+            if (!result.isError()) {
+                return;
+            }
+            Thread.sleep(1000);
+        }
+    }
 
     @Test
     public void basicOsgiCmd() {

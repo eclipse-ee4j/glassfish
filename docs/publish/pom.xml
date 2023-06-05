@@ -130,7 +130,7 @@
                                         <artifactItem>
                                             <groupId>org.glassfish.docs</groupId>
                                             <artifactId>distribution</artifactId>
-                                            <version>${glassfish.version.7x.artifact}</version>
+                                            <version>${glassfish.version.7x}</version>
                                             <outputDirectory>
                                                 ${docs.7x.dir}
                                             </outputDirectory>

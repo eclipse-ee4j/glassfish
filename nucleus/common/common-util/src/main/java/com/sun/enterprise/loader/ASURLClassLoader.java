@@ -71,7 +71,6 @@ import org.glassfish.api.deployment.InstrumentableClassLoader;
 import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.PreDestroy;
 
-import static java.lang.ThreadLocal.withInitial;
 import static java.util.logging.Level.INFO;
 
 /**
@@ -117,9 +116,6 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
     private volatile String doneSnapshot;
 
     private final ArrayList<ClassFileTransformer> transformers = new ArrayList<>(1);
-
-    /** Bytecode transformation flag */
-    private static final ThreadLocal<Boolean> BYTECODE_TRANSFORMATION = withInitial(() -> false);
 
     private final static StringManager sm = StringManager.getManager(ASURLClassLoader.class);
 
@@ -365,7 +361,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
 
     @Override
     public void addTransformer(ClassFileTransformer transformer) {
-        transformers.add(transformer);
+        transformers.add(new ReentrantClassFileTransformer(transformer));
     }
 
 
@@ -700,24 +696,16 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
             @SuppressWarnings("unchecked")
             final List<ClassFileTransformer> xformers = (ArrayList<ClassFileTransformer>) transformers.clone();
             if (!xformers.isEmpty()) {
-                // Do not transform classes loaded by a transformers itself
-                if (!BYTECODE_TRANSFORMATION.get()) {
-                    BYTECODE_TRANSFORMATION.set(true);
-                    try {
-                        for (final ClassFileTransformer transformer : xformers) {
-                            // see javadocs of transform().
-                            // It expects class name as java/lang/Object
-                            // as opposed to java.lang.Object
-                            final String internalClassName = name.replace('.', '/');
-                            final byte[] transformedBytes = transformer.transform(this, internalClassName, null,
-                                    classData.pd, classData.getClassBytes());
-                            if (transformedBytes != null) { // null indicates no transformation
-                                _logger.log(INFO, CULoggerInfo.actuallyTransformed, name);
-                                classData.setClassBytes(transformedBytes);
-                            }
-                        }
-                    } finally {
-                        BYTECODE_TRANSFORMATION.set(false);
+                for (final ClassFileTransformer transformer : xformers) {
+                    // see javadocs of transform().
+                    // It expects class name as java/lang/Object
+                    // as opposed to java.lang.Object
+                    final String internalClassName = name.replace('.', '/');
+                    final byte[] transformedBytes = transformer.transform(this, internalClassName, null,
+                            classData.pd, classData.getClassBytes());
+                    if (transformedBytes != null) { // null indicates no transformation
+                        _logger.log(INFO, CULoggerInfo.actuallyTransformed, name);
+                        classData.setClassBytes(transformedBytes);
                     }
                 }
             }
@@ -1370,6 +1358,36 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
         @Override
         protected Enumeration<URL> findResources(String name) throws IOException {
             return delegate.findResources(name);
+        }
+    }
+
+    private static class ReentrantClassFileTransformer implements ClassFileTransformer {
+
+        private final ThreadLocal<Boolean> bytecodeTransforming = new ThreadLocal<>();
+
+        private final ClassFileTransformer transformer;
+
+        private ReentrantClassFileTransformer(ClassFileTransformer transformer) {
+            this.transformer = transformer;
+        }
+
+        @Override
+        public byte[] transform(ClassLoader loader,
+                                String className,
+                                Class<?> classBeingRedefined,
+                                ProtectionDomain protectionDomain,
+                                byte[] classfileBuffer) throws IllegalClassFormatException {
+            // Skip if the transformation is in progress
+            if (bytecodeTransforming.get() != null) {
+                return classfileBuffer;
+            }
+
+            bytecodeTransforming.set(true);
+            try {
+                return transformer.transform(loader, className, classBeingRedefined, protectionDomain, classfileBuffer);
+            } finally {
+                bytecodeTransforming.remove();
+            }
         }
     }
 }

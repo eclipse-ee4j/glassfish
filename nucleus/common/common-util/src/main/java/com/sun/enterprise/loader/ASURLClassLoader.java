@@ -704,7 +704,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
                     final byte[] transformedBytes = transformer.transform(this, internalClassName, null,
                             classData.pd, classData.getClassBytes());
                     if (transformedBytes != null) { // null indicates no transformation
-                        _logger.log(INFO, CULoggerInfo.actuallyTransformed, name);
+                        _logger.log(Level.FINE, CULoggerInfo.actuallyTransformed, name);
                         classData.setClassBytes(transformedBytes);
                     }
                 }

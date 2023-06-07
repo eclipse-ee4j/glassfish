@@ -83,7 +83,6 @@ import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.INFO;
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.Logger.Level.WARNING;
-import static java.lang.ThreadLocal.withInitial;
 import static org.glassfish.web.loader.LogFacade.UNABLE_TO_LOAD_CLASS;
 import static org.glassfish.web.loader.LogFacade.UNSUPPORTED_VERSION;
 import static org.glassfish.web.loader.LogFacade.getString;
@@ -157,9 +156,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     );
     private static final Set<String> DELEGATED_RESOURCE_PATHS = DELEGATED_PACKAGES.stream()
         .map(PACKAGE_TO_PATH).collect(Collectors.toUnmodifiableSet());
-
-    /** Bytecode preprocessing flag. */
-    private static final ThreadLocal<Boolean> BYTECODE_PREPROCESSING = withInitial(() -> false);
 
     /** Instance of the SecurityManager installed. */
     private static final SecurityManager SECURITY_MANAGER = System.getSecurityManager();
@@ -584,20 +580,9 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
                         // the content of entry in case bytecode preprocessing takes place.
                         byte[] binaryContent = entry.binaryContent;
                         if (!byteCodePreprocessors.isEmpty()) {
-                            // If bytecode preprocessing already started, we skip all classes,
-                            // loaded by a preprocessors to prevent recursive transformation.
-                            if (!BYTECODE_PREPROCESSING.get()) {
-                                LOG.log(TRACE, "Transforming {0}", name);
-
-                                BYTECODE_PREPROCESSING.set(true);
-                                try {
-                                    String classFilePath = toClassFilePath(name);
-                                    for (BytecodePreprocessor preprocessor : byteCodePreprocessors) {
-                                        binaryContent = preprocessor.preprocess(classFilePath, binaryContent);
-                                    }
-                                } finally {
-                                    BYTECODE_PREPROCESSING.set(false);
-                                }
+                            String classFilePath = toClassFilePath(name);
+                            for (BytecodePreprocessor preprocessor : byteCodePreprocessors) {
+                                binaryContent = preprocessor.preprocess(classFilePath, binaryContent);
                             }
                         }
                         clazz = defineClass(name, binaryContent, 0, binaryContent.length, codeSource);
@@ -1620,6 +1605,9 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
     private static class WebappBytecodePreprocessor implements BytecodePreprocessor {
 
+        /** Bytecode preprocessing flag */
+        private final ThreadLocal<Boolean> bytecodePreprocessing = new ThreadLocal<>();
+
         private final ClassFileTransformer transformer;
         private final WebappClassLoader classLoader;
 
@@ -1637,9 +1625,16 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
         @Override
         public byte[] preprocess(String resourceName, byte[] classBytes) {
+            // Skip preprocessing if already in progress
+            if (bytecodePreprocessing.get() != null) {
+                return classBytes;
+            }
+
+            bytecodePreprocessing.set(true);
             try {
                 // convert java/lang/Object.class to java/lang/Object (6 chars).
                 String classname = resourceName.substring(0, resourceName.length() - 6);
+                LOG.log(TRACE, "Transforming {0}", classname);
                 byte[] newBytes = transformer.transform(classLoader, classname, null, null, classBytes);
                 // ClassFileTransformer returns null if no transformation
                 // took place, where as ByteCodePreprocessor is expected
@@ -1647,6 +1642,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
                 return newBytes == null ? classBytes : newBytes;
             } catch (IllegalClassFormatException e) {
                 throw new IllegalStateException("Could not preprocess " + resourceName, e);
+            } finally {
+                bytecodePreprocessing.remove();
             }
         }
     }

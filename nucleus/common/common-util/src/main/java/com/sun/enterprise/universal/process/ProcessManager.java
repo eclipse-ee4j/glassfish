@@ -42,11 +42,10 @@ import java.util.concurrent.TimeUnit;
  * @since JDK 1.4
  * @author bnevins 2005
  */
-@Deprecated
-public final class ProcessManager {
+public class ProcessManager {
     private static final Logger LOG = System.getLogger(ProcessManager.class.getName());
 
-    private final ProcessBuilder builder;
+    protected final ProcessBuilder builder;
     private final StringBuffer sb_out;
     private final StringBuffer sb_err;
     private int timeout;

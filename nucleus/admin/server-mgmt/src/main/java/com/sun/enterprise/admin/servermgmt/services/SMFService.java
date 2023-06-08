@@ -20,7 +20,6 @@ package com.sun.enterprise.admin.servermgmt.services;
 import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.universal.process.ProcessManager;
 import com.sun.enterprise.util.OS;
-import com.sun.enterprise.util.ProcessExecutor;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.enterprise.util.io.FileUtils;
@@ -400,11 +399,11 @@ public final class SMFService extends ServiceAdapter {
         }
         try {
             final String[] cmd = new String[] { path2Auths, user };
-            ProcessExecutor pe = new ProcessExecutor(cmd);
-            pe.setExecutionRetentionFlag(true);
-            pe.execute();
-            auths.append(pe.getLastExecutionOutput());
-            final StringTokenizer st = new StringTokenizer(pe.getLastExecutionOutput(), at);
+            ProcessManager pm = new ProcessManager(cmd);
+            pm.setTimeoutMsec(600 * 1000);
+            pm.execute();
+            auths.append(pm.getStdout());
+            final StringTokenizer st = new StringTokenizer(pm.getStdout(), at);
             while (st.hasMoreTokens()) {
                 String t = st.nextToken();
                 t = t.trim();
@@ -423,9 +422,9 @@ public final class SMFService extends ServiceAdapter {
         boolean exists = false;
         try {
             final String[] cmd = new String[] { "/usr/bin/svcs", sn };
-            ProcessExecutor pe = new ProcessExecutor(cmd);
-            pe.setExecutionRetentionFlag(true);
-            pe.execute();
+            ProcessManager pm = new ProcessManager(cmd);
+            pm.setTimeoutMsec(600 * 1000);
+            pm.execute();
             exists = true;
         } catch (final Exception e) {
             //returns a non-zero status -- the service does not exist, status is already set
@@ -462,8 +461,9 @@ public final class SMFService extends ServiceAdapter {
 
     private void validateService() throws Exception {
         final String[] cmda = new String[] { SMFService.SVCCFG, "validate", getManifestFilePath() };
-        final ProcessExecutor pe = new ProcessExecutor(cmda);
-        pe.execute();
+        final ProcessManager pm = new ProcessManager(cmda);
+        pm.setTimeoutMsec(600 * 1000);
+        pm.execute();
         if (info.trace) {
             printOut("Validated the SMF Service: " + info.fqsn + " using: " + SMFService.SVCCFG);
         }
@@ -471,13 +471,13 @@ public final class SMFService extends ServiceAdapter {
 
     private boolean importService() throws Exception {
         final String[] cmda = new String[] { SMFService.SVCCFG, "import", getManifestFilePath() };
-        final ProcessExecutor pe = new ProcessExecutor(cmda);
-
+        final ProcessManager pm = new ProcessManager(cmda);
+        pm.setTimeoutMsec(600 * 1000);
         if (info.dryRun) {
             cleanupManifest();
         }
         else {
-            pe.execute(); //throws ExecException in case of an error
+            pm.execute(); //throws ExecException in case of an error
         }
 
         if (info.trace) {

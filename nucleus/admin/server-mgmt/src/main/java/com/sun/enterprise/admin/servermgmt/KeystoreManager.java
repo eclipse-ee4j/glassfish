@@ -38,10 +38,10 @@ import java.util.regex.Pattern;
 import com.sun.enterprise.admin.servermgmt.pe.PEFileLayout;
 import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
 import com.sun.enterprise.universal.io.SmartFile;
+import com.sun.enterprise.universal.process.ProcessManager;
+import com.sun.enterprise.universal.process.ProcessManagerException;
 import com.sun.enterprise.universal.process.ProcessUtils;
-import com.sun.enterprise.util.ExecException;
 import com.sun.enterprise.util.OS;
-import com.sun.enterprise.util.ProcessExecutor;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.enterprise.util.net.NetUtils;
@@ -86,46 +86,47 @@ public class KeystoreManager {
         KEYTOOL_CMD = nonFinalKeyTool;
     }
 
-    protected static class KeytoolExecutor extends ProcessExecutor {
+    protected static class KeytoolExecutor extends ProcessManager {
 
-        public KeytoolExecutor(String[] args, long timeoutInSeconds) {
-            super(args, timeoutInSeconds);
-            setExecutionRetentionFlag(true);
+        public KeytoolExecutor(String[] args, int timeoutInSeconds) {
+            super(args);
+            setTimeoutMsec(timeoutInSeconds * 1000);
             addKeytoolCommand();
         }
 
-        public KeytoolExecutor(String[] args, long timeoutInSeconds, String[] inputLines) {
-            super(args, timeoutInSeconds, inputLines);
-            setExecutionRetentionFlag(true);
+        public KeytoolExecutor(String[] args, int timeoutInSeconds, String[] inputLines) {
+            super(args);
+            setTimeoutMsec(timeoutInSeconds * 1000);
+            setStdinLines(Arrays.asList(inputLines));
             addKeytoolCommand();
         }
 
         // We must override this message so that the stdout appears in the exec exception.
         // Keytool seems to output errors to stdout.
-        @Override
         protected String getExceptionMessage() {
-            return getLatestOutput(mOutFile) + " " + getFileBuffer(mErrFile);
+            return getStdout() + " " + getStderr();
         }
 
         private void addKeytoolCommand() {
+            String[] mCmdStrings = builder.command().toArray(new String[0]);
             if (!mCmdStrings[0].equals(KEYTOOL_CMD)) {
                 String[] newArgs = new String[mCmdStrings.length + 1];
                 newArgs[0] = KEYTOOL_CMD;
                 System.arraycopy(mCmdStrings, 0, newArgs, 1, mCmdStrings.length);
                 mCmdStrings = newArgs;
+                builder.command(Arrays.asList(mCmdStrings));
             }
         }
 
         public void execute(String keystoreErrorMsg, File keystoreName) throws RepositoryException {
             try {
-                super.execute();
-                if (getProcessExitValue() != 0) {
+                if (super.execute() != 0) {
                     throw new RepositoryException(
-                            _strMgr.getString(keystoreErrorMsg, keystoreName) + getLastExecutionError() + " " + getLastExecutionOutput());
+                            _strMgr.getString(keystoreErrorMsg, keystoreName) + getStderr() + " " + getStdout());
                 }
-            } catch (ExecException ex) {
+            } catch (ProcessManagerException ex) {
                 throw new RepositoryException(
-                        _strMgr.getString(keystoreErrorMsg, keystoreName) + getLastExecutionError() + " " + getLastExecutionOutput(), ex);
+                        _strMgr.getString(keystoreErrorMsg, keystoreName) + getStderr() + " " + getStdout(), ex);
             }
         }
     }

@@ -175,7 +175,7 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.external</groupId>
+            <groupId>com.github.mwiede</groupId>
             <artifactId>jsch</artifactId>
             <optional>true</optional>
         </dependency>

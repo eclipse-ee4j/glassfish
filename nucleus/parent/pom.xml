@@ -138,7 +138,7 @@
 
         <commons-io.version>2.12.0</commons-io.version>
         <jboss.logging.annotation.version>2.2.1.Final</jboss.logging.annotation.version>
-        <jboss.logging.version>3.5.0.Final</jboss.logging.version>
+        <jboss.logging.version>3.5.1.Final</jboss.logging.version>
         <javassist.version>3.29.2-GA</javassist.version>
         <asm.version>9.5</asm.version>
         <jsch.version>0.1.56</jsch.version>
@@ -860,7 +860,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0-M9</version>
+                    <version>3.1.2</version>
                     <configuration>
                         <environmentVariables>
                             <LANG>en</LANG>
@@ -883,7 +883,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.0.0-M9</version>
+                    <version>3.1.2</version>
                     <configuration>
                         <environmentVariables>
                             <LANG>en</LANG>
@@ -919,7 +919,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-report-plugin</artifactId>
-                    <version>3.0.0-M9</version>
+                    <version>3.1.2</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-checkstyle-plugin</artifactId>
@@ -1546,7 +1546,7 @@
             <id>jacoco</id>
             <properties>
                 <jacoco.report.outputDirectory>${project.build.directory}/jacoco</jacoco.report.outputDirectory>
-                <jacoco.version>0.8.8</jacoco.version>
+                <jacoco.version>0.8.10</jacoco.version>
                 <maven.test.failure.ignore>true</maven.test.failure.ignore>
                 <surefire.argLine>${maven.test.jvmoptions} @{argLine}</surefire.argLine>
             </properties>

@@ -793,7 +793,7 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>5.1.8</version>
+                    <version>5.1.9</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -852,7 +852,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.2.1</version>
+                    <version>3.3.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
@@ -974,7 +974,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>3.0.0-M7</version>
+                    <version>3.0.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
@@ -986,7 +986,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>3.6.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
@@ -1074,7 +1074,7 @@
                         <dateFormatTimeZone>UTC</dateFormatTimeZone>
                         <commitIdGenerationMode>full</commitIdGenerationMode>
                         <includeOnlyProperties>
-                            <includeOnlyProperty>git.branch</includeOnlyProperty>
+                            <!--includeOnlyProperty>git.branch</includeOnlyProperty--><!-- not reproducible -->
                             <includeOnlyProperty>git.build.time</includeOnlyProperty>
                             <includeOnlyProperty>git.commit.id.abbrev</includeOnlyProperty>
                             <includeOnlyProperty>git.commit.id.full</includeOnlyProperty>
@@ -1233,6 +1233,7 @@
                 <artifactId>hk2-inhabitant-generator</artifactId>
                 <configuration>
                     <supportedProjectTypes>jar,ejb,war,glassfish-jar</supportedProjectTypes>
+                    <includeDate>false</includeDate><!-- requires 3.0.5 to benefit from https://github.com/eclipse-ee4j/glassfish-hk2/pull/821 -->
                 </configuration>
             </plugin>
 

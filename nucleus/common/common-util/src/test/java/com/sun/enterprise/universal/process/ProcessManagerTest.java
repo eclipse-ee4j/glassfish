@@ -38,7 +38,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.condition.OS.WINDOWS;
 
 /**
- *
  * @author bnevins
  */
 public class ProcessManagerTest {

@@ -30,6 +30,7 @@ import java.lang.System.Logger.Level;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /**
@@ -211,7 +212,7 @@ public class ProcessManager {
         private final BufferedReader reader;
         private final StringBuilder sb;
         private final boolean echo;
-        private boolean stop;
+        private final AtomicBoolean stop = new AtomicBoolean();
 
         ReaderThread(InputStream stream, boolean echo, String threadName) {
             setName(threadName);
@@ -228,7 +229,7 @@ public class ProcessManager {
                     String line;
                     if (reader.ready()) {
                         line = reader.readLine();
-                    } else if (stop) {
+                    } else if (stop.getAcquire()) {
                         break;
                     } else {
                         Thread.yield();
@@ -260,7 +261,7 @@ public class ProcessManager {
          * @return the final output of the process.
          */
         public String finish() {
-            stop = true;
+            stop.setRelease(true);
             try {
                 join(10000L);
             } catch (InterruptedException ex) {

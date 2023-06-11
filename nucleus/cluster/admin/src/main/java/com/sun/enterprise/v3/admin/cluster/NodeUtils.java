@@ -428,8 +428,7 @@ public class NodeUtils {
      */
     void runAdminCommandOnNode(Node node, List<String> command,
             AdminCommandContext context, String firstErrorMessage,
-            String humanCommand, StringBuilder output,
-            boolean waitForReaderThreads) {
+            String humanCommand, StringBuilder output) {
 
         ActionReport report = context.getActionReport();
         boolean failure = true;
@@ -502,13 +501,6 @@ public class NodeUtils {
 
 
         return;
-    }
-
-    void runAdminCommandOnNode(Node node, List<String> command,
-            AdminCommandContext context, String firstErrorMessage,
-            String humanCommand, StringBuilder output) {
-
-        runAdminCommandOnNode(node, command, context, firstErrorMessage, humanCommand, output);
     }
 
     private RemoteType parseType(ParameterMap map) throws CommandValidationException {

@@ -94,7 +94,7 @@
         <!-- Jakarta Inject -->
         <jakarta.inject-api.version>2.0.1.MR</jakarta.inject-api.version>
         <hk2.version>3.0.4</hk2.version>
-        <hk2.plugin.version>3.0.4</hk2.plugin.version>
+        <hk2.plugin.version>3.0.4</hk2.plugin.version><!-- requires 3.0.5 to benefit from https://github.com/eclipse-ee4j/glassfish-hk2/pull/821 -->
 
         <!-- Jakarta XML Binding -->
         <jakarta.xml.bind-api.version>4.0.0</jakarta.xml.bind-api.version>
@@ -839,7 +839,7 @@
                     <groupId>org.glassfish.build</groupId>
                     <artifactId>glassfishbuild-maven-plugin</artifactId>
                     <!-- Don't use 3.2.28, FeatureSetsDependenciesMojo is broken. 3.3.0 is fixed, but not released yet. -->
-                    <version>3.2.27</version>
+                    <version>3.2.27</version><!-- requires 3.3.0 to benefit from https://github.com/eclipse-ee4j/glassfish-build-maven-plugin/pull/116 -->
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
@@ -1074,7 +1074,7 @@
                         <dateFormatTimeZone>UTC</dateFormatTimeZone>
                         <commitIdGenerationMode>full</commitIdGenerationMode>
                         <includeOnlyProperties>
-                            <!--includeOnlyProperty>git.branch</includeOnlyProperty--><!-- not reproducible -->
+                            <includeOnlyProperty>git.branch</includeOnlyProperty>
                             <includeOnlyProperty>git.build.time</includeOnlyProperty>
                             <includeOnlyProperty>git.commit.id.abbrev</includeOnlyProperty>
                             <includeOnlyProperty>git.commit.id.full</includeOnlyProperty>
@@ -1233,7 +1233,7 @@
                 <artifactId>hk2-inhabitant-generator</artifactId>
                 <configuration>
                     <supportedProjectTypes>jar,ejb,war,glassfish-jar</supportedProjectTypes>
-                    <includeDate>false</includeDate><!-- requires 3.0.5 to benefit from https://github.com/eclipse-ee4j/glassfish-hk2/pull/821 -->
+                    <includeDate>false</includeDate>
                 </configuration>
             </plugin>
 

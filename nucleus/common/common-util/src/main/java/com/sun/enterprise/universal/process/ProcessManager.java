@@ -33,8 +33,8 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
- * ProcessManager.java
  * Use this class for painless process spawning.
+ * <p>
  * This class was originally written to be compatible with JDK 1.4, using Runtime.exec(),
  * but has been refactored to use ProcessBuilder for better control and configurability.
  *
@@ -50,7 +50,6 @@ public class ProcessManager {
     private int timeout;
     private boolean echo = true;
     private String[] stdinLines;
-    private boolean waitForReaderThreads = true;
 
     public ProcessManager(String... cmds) {
         builder = new ProcessBuilder(cmds);
@@ -84,12 +83,9 @@ public class ProcessManager {
         }
     }
 
-    public void waitForReaderThreads(boolean b) {
-        waitForReaderThreads = b;
-    }
 
-
-    /** Should the output of the process be echoed to stdout?
+    /**
+     * Should the output of the process be echoed to stdout?
      *
      * @param newEcho
      */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -100,18 +100,6 @@ public class NodeRunner {
             UnsupportedOperationException,
             IllegalArgumentException {
 
-        return runAdminCommandOnNode(node, output, false, args, context);
-    }
-
-    public int runAdminCommandOnNode(Node node, StringBuilder output,
-            boolean waitForReaderThreads,
-            List<String> args,
-            AdminCommandContext context) throws
-            SSHCommandExecutionException,
-            ProcessManagerException,
-            UnsupportedOperationException,
-            IllegalArgumentException {
-
 
         if (node == null) {
             throw new IllegalArgumentException("Node is null");
@@ -123,16 +111,13 @@ public class NodeRunner {
         args.add(0, "--interactive=false");            // No prompting!
 
         if (node.isLocal()) {
-            return runAdminCommandOnLocalNode(node, output, waitForReaderThreads,
-                    args, stdinLines);
-        }
-        else {
+            return runAdminCommandOnLocalNode(node, output, args, stdinLines);
+        } else {
             return runAdminCommandOnRemoteNode(node, output, args, stdinLines);
         }
     }
 
     private int runAdminCommandOnLocalNode(Node node, StringBuilder output,
-            boolean waitForReaderThreads,
             List<String> args,
             List<String> stdinLines) throws
             ProcessManagerException {
@@ -159,8 +144,6 @@ public class NodeRunner {
         ProcessManager pm = new ProcessManager(fullcommand);
         pm.setStdinLines(stdinLines);
 
-        // XXX should not need this after fix for 12777, but we seem to
-        pm.waitForReaderThreads(waitForReaderThreads);
         int exitValue = pm.execute();  // blocks until command is complete
 
         String stdout = pm.getStdout();
@@ -213,23 +196,5 @@ public class NodeRunner {
         }
 
         return fullCommand.toString();
-    }
-
-    /* hack TODO do not know how to get int status back from Windows
-     */
-    private int determineStatus(List<String> args, StringBuilder output) {
-        if (isDeleteFS(args) && output.toString().indexOf("UTIL6046") >= 0) {
-            return 1;
-        }
-        return 0;
-    }
-
-    private boolean isDeleteFS(List<String> args) {
-        for (String arg : args) {
-            if ("_delete-instance-filesystem".equals(arg)) {
-                return true;
-            }
-        }
-        return false;
     }
 }

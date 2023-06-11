@@ -936,8 +936,6 @@ The meaning of each keyword-value pair is as follows:
   Specifies an abbreviated form of the product name without any release information.
 `product.version=2023.02.24`::
   Returns the product version. It should follow standard form `major.minor.patch[-suffix]`
-`product.build.git.branch=experimental`::
-  Specifies the git branch, used for the build.
 `product.build.git.commit=ec1ce24934f0bb174333a9886b58a0d2f9e52b44`::
   Specifies the git commit, used for the build.
 `product.build.timestamp=2023-02-27T11:09:42Z`::
@@ -956,7 +954,6 @@ The abbreviated product name is `GF`.
 product.name=Eclipse GlassFish
 product.name.short=GF
 product.version=7.0.3-SNAPSHOT
-product.build.git.branch=master
 product.build.git.commit=93176e2555176091c8522e43d1d32a0a30652d4a
 product.build.timestamp=2023-02-27T11:09:42Z
 

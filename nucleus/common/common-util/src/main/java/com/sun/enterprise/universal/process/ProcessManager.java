@@ -108,13 +108,12 @@ public class ProcessManager {
         ReaderThread threadOut = new ReaderThread(process.getInputStream(), echo, "stdout");
         threadOut.start();
         try {
-            writeStdin(process);
-            await(process);
             try {
-                return process.exitValue();
-            } catch (IllegalThreadStateException tse) {
-                // this means that the process is still running...
-                throw new ProcessManagerTimeoutException("Process is still running.", tse);
+                writeStdin(process);
+                return await(process);
+            } finally {
+                stderr = threadErr.finish(1000L);
+                stdout = threadOut.finish(1000L);
             }
         } catch (ProcessManagerException pme) {
             throw pme;
@@ -122,18 +121,10 @@ public class ProcessManager {
             throw new ProcessManagerException(e);
         } finally {
             destroy(process);
-            // Always wait for reader threads -- unless the boolean flag is false.
-            // note that this won't block when there was a timeout because the process
-            // has been forcibly destroyed above.
-            stderr = threadErr.finish();
-            stdout = threadOut.finish();
         }
     }
 
     private void destroy(Process process) {
-        if (process == null) {
-            return;
-        }
         process.destroy();
         // Wait for a while to let the process stop
         try {
@@ -165,7 +156,7 @@ public class ProcessManager {
 
 
     private void writeStdin(Process process) throws ProcessManagerException {
-        if (stdinLines == null || stdinLines.length <= 0) {
+        if (stdinLines == null || stdinLines.length == 0) {
             return;
         }
         if (process == null) {
@@ -183,28 +174,14 @@ public class ProcessManager {
     }
 
 
-    private void await(Process process) throws InterruptedException, ProcessManagerException {
-        if (timeout <= 0) {
-            waitForever(process);
-        } else {
-            waitAwhile(process);
+    private int await(Process process) throws InterruptedException, ProcessManagerException {
+        if (timeout > 0) {
+            if (process.waitFor(timeout, TimeUnit.MILLISECONDS)) {
+                return process.exitValue();
+            }
+            throw new ProcessManagerTimeoutException("Process is still running, timeout " + timeout + " ms exceeded.");
         }
-    }
-
-
-    private void waitForever(Process process) throws InterruptedException, ProcessManagerException {
-        if (process == null) {
-            throw new ProcessManagerException("Parameter process was null.");
-        }
-        process.waitFor();
-    }
-
-
-    private void waitAwhile(Process process) throws InterruptedException, ProcessManagerException {
-        if (process == null) {
-            throw new ProcessManagerException("Parameter process was null.");
-        }
-        process.waitFor(timeout, TimeUnit.MILLISECONDS);
+        return process.waitFor();
     }
 
 
@@ -256,14 +233,14 @@ public class ProcessManager {
         /**
          * Asks the thread to finish it's job and waits until the thread dies.
          * <p>
-         * The maximal time for the waiting is 10 seconds.
+         * @param timeout The maximal time for the waiting.
          *
          * @return the final output of the process.
          */
-        public String finish() {
+        public String finish(long timeout) {
             stop.setRelease(true);
             try {
-                join(10000L);
+                join(timeout);
             } catch (InterruptedException ex) {
                 // nothing to do
             }

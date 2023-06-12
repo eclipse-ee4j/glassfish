@@ -82,7 +82,7 @@ public class StartInstanceCommand implements AdminCommand {
     private String instanceName;
 
     @Param(optional = true, defaultValue = "normal", acceptableValues="none, normal, full")
-    private final String sync="normal";
+    private String sync="normal";
 
     @Param(optional = true, defaultValue = "false")
     private boolean debug;

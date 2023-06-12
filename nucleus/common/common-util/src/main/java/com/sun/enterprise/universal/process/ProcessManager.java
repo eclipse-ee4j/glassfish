@@ -79,8 +79,7 @@ public class ProcessManager {
 
     public void setStdinLines(List<String> list) {
         if (list != null && !list.isEmpty()) {
-            stdinLines = new String[list.size()];
-            stdinLines = list.toArray(stdinLines);
+            stdinLines = list.toArray(String[]::new);
         }
     }
 
@@ -120,7 +119,9 @@ public class ProcessManager {
         } catch (Exception e) {
             throw new ProcessManagerException(e);
         } finally {
-            destroy(process);
+            if (process.isAlive()) {
+                destroy(process);
+            }
         }
     }
 
@@ -164,7 +165,7 @@ public class ProcessManager {
         }
         try (PrintWriter pipe = new PrintWriter(new BufferedWriter(new OutputStreamWriter(process.getOutputStream())))) {
             for (String stdinLine : stdinLines) {
-                LOG.log(Level.DEBUG, "InputLine -->" + stdinLine + "<--");
+                LOG.log(Level.DEBUG, "InputLine --> {0} <--", stdinLine);
                 pipe.println(stdinLine);
                 pipe.flush();
             }

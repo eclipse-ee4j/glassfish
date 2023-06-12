@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,32 +17,36 @@
 
 package com.sun.enterprise.v3.admin.cluster;
 
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.Node;
+import com.sun.enterprise.config.serverbeans.Nodes;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.Servers;
 import com.sun.enterprise.util.StringUtils;
-import java.util.logging.Logger;
 
-import com.sun.enterprise.util.SystemPropertyConstants;
-import com.sun.enterprise.util.OS;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.I18n;
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
 import jakarta.inject.Inject;
-
-import org.jvnet.hk2.annotations.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.I18n;
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandLock;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RestParam;
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
-
-import com.sun.enterprise.config.serverbeans.Node;
+import org.jvnet.hk2.annotations.Service;
 
 
 /**
- * AdminCommand to start the instance
- * server.
+ * AdminCommand to start the instance server.
+ * <p>
  * If this is DAS -- we call the instance
  * If this is an instance we start it
  *
@@ -96,7 +101,7 @@ public class StartInstanceCommand implements AdminCommand {
     private String nodeHost;
     private Server instance;
 
-    private static final String NL = System.getProperty("line.separator");
+    private static final String NL = System.lineSeparator();
 
     /**
      * restart-instance needs to try to start the instance from scratch if it is not
@@ -196,7 +201,7 @@ public class StartInstanceCommand implements AdminCommand {
 
     private void startInstance(AdminCommandContext ctx) {
         NodeUtils nodeUtils = new NodeUtils(habitat, logger);
-        ArrayList<String> command = new ArrayList<String>();
+        ArrayList<String> command = new ArrayList<>();
         String humanCommand = null;
 
         command.add("start-local-instance");
@@ -228,16 +233,8 @@ public class StartInstanceCommand implements AdminCommand {
 
         StringBuilder output = new StringBuilder();
 
-        // There is a problem on Windows waiting for IO to complete on a
-        // child process which runs a long running grandchild. See IT 12777.
-        boolean waitForReaderThreads = true;
-        if (OS.isWindows()) {
-            waitForReaderThreads = false;
-        }
-
         // Run the command on the node and handle errors.
-        nodeUtils.runAdminCommandOnNode(node, command, ctx, firstErrorMessage,
-                humanCommand, output, waitForReaderThreads);
+        nodeUtils.runAdminCommandOnNode(node, command, ctx, firstErrorMessage, humanCommand, output);
 
         ActionReport report = ctx.getActionReport();
         if (report.getActionExitCode() == ActionReport.ExitCode.SUCCESS) {
@@ -257,8 +254,9 @@ public class StartInstanceCommand implements AdminCommand {
         int counter = 0;  // 120 seconds
 
         while (++counter < 240) {
-            if (instance.isRunning())
+            if (instance.isRunning()) {
                 return null;
+            }
 
             try {
                 Thread.sleep(500);

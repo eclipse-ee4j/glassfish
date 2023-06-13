@@ -42,7 +42,6 @@ public class Version {
     private static final String KEY_PRODUCT_NAME_ABBREVIATION = "product.name.abbreviation";
     private static final String KEY_PRODUCT_VERSION = "product.version";
     private static final String KEY_GIT_COMMIT = "product.build.git.commit";
-    private static final String KEY_BUILD_TIMESTAMP = "product.build.timestamp";
     private static final String KEY_BASED_ON = "based.on";
 
     private static final String KEY_ADMIN_COMMAND_NAME = "admin.command.name";
@@ -62,7 +61,6 @@ public class Version {
     private static final int VERSION_PATCH;
 
     private static final String COMMIT;
-    private static final Instant BUILD_TIMESTAMP;
 
     static {
         PRODUCT_NAME = getProperty(KEY_PRODUCT_NAME, "GlassFish");
@@ -106,8 +104,6 @@ public class Version {
         VERSION_RELEASE = Integer.toString(VERSION_MAJOR) + '.' + Integer.toString(VERSION_MINOR) + '.'
             + Integer.toString(VERSION_PATCH);
         COMMIT = getProperty(KEY_GIT_COMMIT, null);
-        String timestamp = getProperty(KEY_BUILD_TIMESTAMP, null);
-        BUILD_TIMESTAMP = timestamp == null ? null : Instant.parse(timestamp);
     }
 
 
@@ -137,12 +133,12 @@ public class Version {
     /**
      * @return
      *         <pre>
-     * Eclipse GlassFish 7.0.0-SNAPSHOT (commit: 93176e2555176091c8522e43d1d32a0a30652d4a, timestamp: 2023-02-24T18:24:00Z)
+     * Eclipse GlassFish 7.0.0-SNAPSHOT (commit: 93176e2555176091c8522e43d1d32a0a30652d4a)
      *         </pre>
      */
     public static String getProductIdInfo() {
         return getProductName() + " " + getVersion() + " (commit: " + COMMIT
-            + ", timestamp: " + BUILD_TIMESTAMP + ")";
+            + ")";
     }
 
     /**

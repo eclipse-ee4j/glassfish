@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,7 +36,6 @@ import com.sun.enterprise.util.OS;
 //import jakarta.jms.JMSException;
 
 import com.sun.enterprise.util.SystemPropertyConstants;
-//import com.sun.enterprise.util.ExecException;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.zip.ZipFile;
@@ -696,7 +695,7 @@ public class RepositoryManager extends MasterPasswordFileManager {
     protected String[] getInteractiveOptions(String user, String password, String masterPassword, HashMap<Object, Object> extraPasswords) {
         int numKeys = extraPasswords == null ? 0 : extraPasswords.size();
         String[] options = new String[3 + numKeys];
-        // set interativeOptions for security to hand to starting process from ProcessExecutor
+        // set interativeOptions for security to hand to starting process from ProcessManager
         options[0] = user;
         options[1] = password;
         options[2] = masterPassword;

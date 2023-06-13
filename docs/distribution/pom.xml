@@ -36,6 +36,15 @@
         <maven.site.skip>true</maven.site.skip>
     </properties>
 
+    <profiles>
+        <profile>
+            <id>release-phase2</id>
+            <properties>
+                <maven.deploy.skip>false</maven.deploy.skip>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <plugin>

@@ -109,6 +109,7 @@
                 <module>qa</module>
                 <module>nucleus</module>
                 <module>appserver</module>
+                <module>docs</module>
             </modules>
         </profile>
         <profile>

@@ -204,7 +204,7 @@ public class Asadmin {
             result = new AsadminResult(args[0], exitCode, processManager.getStdout(), stdErr);
         }
         if (!result.getStdOut().isEmpty()) {
-            System.out.print(result.getStdOut());
+            System.out.println(result.getStdOut());
         }
         if (!result.getStdErr().isEmpty()) {
             System.err.println(result.getStdErr());

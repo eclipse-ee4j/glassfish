@@ -41,7 +41,6 @@ public class Version {
     private static final String KEY_PRODUCT_NAME = "product.name";
     private static final String KEY_PRODUCT_NAME_ABBREVIATION = "product.name.abbreviation";
     private static final String KEY_PRODUCT_VERSION = "product.version";
-    private static final String KEY_GIT_BRANCH = "product.build.git.branch";
     private static final String KEY_GIT_COMMIT = "product.build.git.commit";
     private static final String KEY_BUILD_TIMESTAMP = "product.build.timestamp";
     private static final String KEY_BASED_ON = "based.on";
@@ -62,7 +61,6 @@ public class Version {
     private static final int VERSION_MINOR;
     private static final int VERSION_PATCH;
 
-    private static final String GIT_BRANCH;
     private static final String COMMIT;
     private static final Instant BUILD_TIMESTAMP;
 
@@ -107,7 +105,6 @@ public class Version {
         }
         VERSION_RELEASE = Integer.toString(VERSION_MAJOR) + '.' + Integer.toString(VERSION_MINOR) + '.'
             + Integer.toString(VERSION_PATCH);
-        GIT_BRANCH = getProperty(KEY_GIT_BRANCH, null);
         COMMIT = getProperty(KEY_GIT_COMMIT, null);
         String timestamp = getProperty(KEY_BUILD_TIMESTAMP, null);
         BUILD_TIMESTAMP = timestamp == null ? null : Instant.parse(timestamp);
@@ -144,7 +141,7 @@ public class Version {
      *         </pre>
      */
     public static String getProductIdInfo() {
-        return getProductName() + " " + getVersion() + " (branch: " + GIT_BRANCH + ", commit: " + COMMIT
+        return getProductName() + " " + getVersion() + " (commit: " + COMMIT
             + ", timestamp: " + BUILD_TIMESTAMP + ")";
     }
 

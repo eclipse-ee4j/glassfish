@@ -1074,11 +1074,8 @@
                         <dateFormatTimeZone>UTC</dateFormatTimeZone>
                         <commitIdGenerationMode>full</commitIdGenerationMode>
                         <includeOnlyProperties>
-                            <includeOnlyProperty>git.branch</includeOnlyProperty>
                             <includeOnlyProperty>git.build.time</includeOnlyProperty>
-                            <includeOnlyProperty>git.commit.id.abbrev</includeOnlyProperty>
                             <includeOnlyProperty>git.commit.id.full</includeOnlyProperty>
-                            <includeOnlyProperty>git.closest.tag.commit.count</includeOnlyProperty>
                         </includeOnlyProperties>
                     </configuration>
                 </plugin>

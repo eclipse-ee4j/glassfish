@@ -72,12 +72,10 @@ public class AsadminVersionITest {
 
     private void checkOutput(String output) throws MultipleFailuresError {
         assertThat(output,
-            stringContainsInOrder("Version = Eclipse GlassFish ", " (branch: ", ", commit: ", ", timestamp: "));
-        String branch = StringUtils.substringBetween(output, "branch: ", ",");
+            stringContainsInOrder("Version = Eclipse GlassFish ", "commit: ", ", timestamp: "));
         String commit = StringUtils.substringBetween(output, "commit: ", ",");
         String timestamp = StringUtils.substringBetween(output, ", timestamp: ", ")");
         assertAll(
-            () -> assertThat(branch, matchesPattern("[^\\ ]+")),
             () -> assertThat(commit, matchesPattern("[a-f0-9]+")),
             () -> assertDoesNotThrow(() -> Instant.parse(timestamp))
         );

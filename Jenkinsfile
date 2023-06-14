@@ -194,7 +194,7 @@ spec:
             ls -la ${WORKSPACE}/bundles
           '''
         }
-        archiveArtifacts artifacts: 'bundles/*.zip'
+        archiveArtifacts artifacts: 'bundles/*.zip', onlyIfSuccessful: true
         stash includes: 'bundles/*', name: 'build-bundles'
       }
     }
@@ -209,8 +209,12 @@ spec:
             '''
           }
         }
-        archiveArtifacts artifacts: "**/server.log"
-        junit testResults: '**/*-reports/*.xml', allowEmptyResults: false
+      }
+      post {
+        always {
+          archiveArtifacts artifacts: "**/server.log", onlyIfSuccessful: false
+          junit testResults: '**/*-reports/*.xml', allowEmptyResults: false
+        }
       }
     }
     stage('ant-tests') {

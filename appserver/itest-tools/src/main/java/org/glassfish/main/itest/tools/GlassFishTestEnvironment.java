@@ -37,8 +37,8 @@ import java.util.logging.Logger;
 import org.glassfish.admin.rest.client.ClientWrapper;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.itest.tools.asadmin.AsadminResult;
-import org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher;
 
+import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
@@ -62,6 +62,7 @@ public class GlassFishTestEnvironment {
     private static final File PASSWORD_FILE_FOR_UPDATE = findPasswordFile("password_update.txt");
     private static final File PASSWORD_FILE = findPasswordFile("password.txt");
 
+    private static final int ASADMIN_START_DOMAIN_TIMEOUT = 30_000;
 
     static {
         LOG.log(Level.INFO, "Using basedir: {0}", BASEDIR);
@@ -71,8 +72,16 @@ public class GlassFishTestEnvironment {
             getAsadmin().exec(10_000, "stop-domain", "--kill", "--force");
         });
         Runtime.getRuntime().addShutdownHook(hook);
-        assertThat(getAsadmin().exec(30_000, "start-domain", "--debug"), AsadminResultMatcher.asadminOK());
+        Asadmin asadmin = getAsadmin().withEnv(ADMIN_USER, ADMIN_PASSWORD);
+        if (System.getenv("AS_START_TIMEOUT") == null) {
+            // AS_START_TIMEOUT for the detection that "the server is running!"
+            // START_DOMAIN_TIMEOUT for us waiting for the end of the asadmin start-domain process.
+            asadmin.withEnv("AS_START_TIMEOUT", Integer.toString(ASADMIN_START_DOMAIN_TIMEOUT - 5000));
+        }
+        // This is the absolutely first start - if it fails, all other starts will fail too.
+        assertThat(asadmin.exec(ASADMIN_START_DOMAIN_TIMEOUT, "start-domain", "--debug"), asadminOK());
     }
+
 
     /**
      * @return {@link Asadmin} command api for tests.

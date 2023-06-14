@@ -19,6 +19,19 @@ import com.jcraft.jsch.JSch;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 
+/* JSCH triggers a lot of unimportant messages, which have a lower level than issued by JSCH
+  For example, for a single SSH connection, it triggers 1 WARNING about adding a host to the list of known hosts,
+  47 INFO messages, and 6 DEBUG messages. Therefore we decrease their level to match their real severity.
+
+  The log levels from JSCH are mapped to these levels in GlassFish:
+
+  JSCH DEBUG level -> TRACE level in GlassFish
+  JSCH INFO level -> DEBUG level in GlassFish
+  JSCH WARN level -> INFO level in GlassFish
+  JSCH ERROR level -> WARNING level in GlassFish
+  JSCH FATAL level -> ERROR/SEVERE level in GlassFish
+
+ */
 public class JavaSystemJschLogger implements com.jcraft.jsch.Logger {
 
     private final Logger logger;

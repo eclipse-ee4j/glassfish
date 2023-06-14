@@ -89,6 +89,7 @@ public class ProcessManagerTest {
     @DisabledOnOs(WINDOWS)
     void testCommandExecution() {
         ProcessManager pm = new ProcessManager("sh", "-c", "echo hello; sleep 1");
+        pm.setEcho(false);
         int exitCode = assertDoesNotThrow(pm::execute);
         assertAll(
                 () -> assertEquals(0, exitCode),
@@ -102,6 +103,7 @@ public class ProcessManagerTest {
     void testSetEnvironment() {
         String value = String.valueOf(System.currentTimeMillis());
         ProcessManager pm = new ProcessManager("sh", "-c", "echo ${PM_TEST_ENV_VAR}; sleep 1");
+        pm.setEcho(false);
         pm.setEnvironment("PM_TEST_ENV_VAR", value);
         int exitCode = assertDoesNotThrow(pm::execute);
         assertAll(
@@ -117,6 +119,7 @@ public class ProcessManagerTest {
         List<String> inputLines = Arrays.asList("line1", "line2", "line3");
         String expectedOutput = String.join("\n", inputLines) + "\n";
         ProcessManager pm = new ProcessManager("cat");
+        pm.setEcho(false);
         pm.setStdinLines(inputLines);
         int exitCode = assertDoesNotThrow(pm::execute);
         assertAll(

@@ -1074,7 +1074,6 @@
                         <dateFormatTimeZone>UTC</dateFormatTimeZone>
                         <commitIdGenerationMode>full</commitIdGenerationMode>
                         <includeOnlyProperties>
-                            <includeOnlyProperty>git.build.time</includeOnlyProperty>
                             <includeOnlyProperty>git.commit.id.full</includeOnlyProperty>
                         </includeOnlyProperties>
                     </configuration>

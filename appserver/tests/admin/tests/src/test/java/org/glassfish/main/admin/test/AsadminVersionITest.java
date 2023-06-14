@@ -33,7 +33,6 @@ import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadmi
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.hamcrest.Matchers.stringContainsInOrder;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 /**
@@ -72,12 +71,8 @@ public class AsadminVersionITest {
 
     private void checkOutput(String output) throws MultipleFailuresError {
         assertThat(output,
-            stringContainsInOrder("Version = Eclipse GlassFish ", "commit: ", ", timestamp: "));
-        String commit = StringUtils.substringBetween(output, "commit: ", ",");
-        String timestamp = StringUtils.substringBetween(output, ", timestamp: ", ")");
-        assertAll(
-            () -> assertThat(commit, matchesPattern("[a-f0-9]+")),
-            () -> assertDoesNotThrow(() -> Instant.parse(timestamp))
-        );
+            stringContainsInOrder("Version = Eclipse GlassFish ", "commit: "));
+        String commit = StringUtils.substringBetween(output, "commit: ", ")");
+        assertThat(commit, matchesPattern("[a-f0-9]+"));
     }
 }

@@ -119,6 +119,10 @@
                                     basedir="${patches}/microprofile-rest-client-api" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/microprofile-rest-client-api.jar"
                                 />
+                                <jarupdate 
+                                    basedir="${patches}/jaxb-osgi" includes="META-INF/MANIFEST.MF"
+                                    destfile="${glassfish.modules}/jaxb-osgi.jar"
+                                />
                             </target>
                         </configuration>
                     </execution>

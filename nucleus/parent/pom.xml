@@ -98,7 +98,7 @@
 
         <!-- Jakarta XML Binding -->
         <jakarta.xml.bind-api.version>4.0.0</jakarta.xml.bind-api.version>
-        <jakarta.jaxb-impl.version>4.0.2</jakarta.jaxb-impl.version>
+        <jakarta.jaxb-impl.version>4.0.3</jakarta.jaxb-impl.version>
 
         <!-- Jakarta REST -->
         <jakarta.rest-api.version>3.1.0</jakarta.rest-api.version>

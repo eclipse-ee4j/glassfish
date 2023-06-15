@@ -33,7 +33,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.glassfish.external</groupId>
+            <groupId>com.github.mwiede</groupId>
             <artifactId>jsch</artifactId>
         </dependency>
         <dependency>

@@ -34,20 +34,16 @@ start_as_main_process () {
 
       else
         # Filter the command
-        #   - remove 1st line,
-        #   - remove line with -read-stdin to prevent waiting for master password in stdin
-        #   - remove last line
+        #   - remove 1st line (Dump of JVM Invocation line...)
+        #   - remove line with "-read-stdin" and the following line with "true"
+        #     to prevent waiting for master password in stdin
+        #   - remove last line (Command executed successfully)
 
         COMMAND=("${COMMAND[@]:1}")
         unset 'COMMAND[-1]'
-        for i in "${!COMMAND[@]}"; do
-            if [[ ${COMMAND[i]} = "-read-stdin" ]]; then
-                unset 'COMMAND[i]'
-            fi
-        done
 
         # Execute the command to start GlassFish
-        exec "${COMMAND[@]}"
+        echo "${COMMAND[@]}"
     fi
 
 }

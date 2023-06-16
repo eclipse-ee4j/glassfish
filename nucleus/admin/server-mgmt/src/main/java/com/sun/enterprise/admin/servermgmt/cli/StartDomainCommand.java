@@ -143,7 +143,18 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
                 logger.fine(Strings.get("dry_run_msg"));
                 List<String> cmd = glassFishLauncher.getCommandLine();
                 StringBuilder sb = new StringBuilder();
+                boolean skipLine = false;
                 for (String s : cmd) {
+                    if (s.equals("-read-stdin")) {
+                        // Don't print this option as it's not needed to run the server
+                        // Also skip the next line with "true", which is related to this option
+                        skipLine = true;
+                        continue;
+                    }
+                    if (skipLine) {
+                        skipLine = false;
+                        continue;
+                    }
                     sb.append(s);
                     sb.append('\n');
                 }

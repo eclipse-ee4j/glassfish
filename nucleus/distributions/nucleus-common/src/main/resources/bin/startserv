@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
 #
@@ -16,6 +16,43 @@
 #
 
 AS_INSTALL=`dirname "$0"`/..
-AS_INSTALL_LIB="$AS_INSTALL/modules"
+AS_INSTALL_LIB="$AS_INSTALL/lib"
 
-exec java -jar "$AS_INSTALL_LIB/admin-cli.jar" start-domain --verbose "$@"
+start_as_main_process () {
+    local COMMAND
+
+    # Execute start-domain --dry-run and store the output line by line into an array.
+    # If it fails, the array will contain a single element FAILED
+    readarray -t COMMAND < <(java -jar "$AS_INSTALL_LIB/client/appserver-cli.jar" start-domain --dry-run "$@" 2> /dev/null || echo -e 'FAILED' )
+
+    # If asadmin command failed, we execute it again to show the output to the user and exit
+    # If all OK, we filter and execute the command
+    if [ "${COMMAND[1]}" = FAILED ]
+      then
+
+        java -jar "$AS_INSTALL_LIB/client/appserver-cli.jar" start-domain --dry-run "$@"
+
+      else
+        # Filter the command
+        #   - remove 1st line,
+        #   - remove line with -read-stdin to prevent waiting for master password in stdin
+        #   - remove last line
+
+        COMMAND=("${COMMAND[@]:1}")
+        unset 'COMMAND[-1]'
+        for i in "${!COMMAND[@]}"; do
+            if [[ ${COMMAND[i]} = "-read-stdin" ]]; then
+                unset 'COMMAND[i]'
+            fi
+        done
+
+        # Execute the command to start GlassFish
+        exec "${COMMAND[@]}"
+    fi
+
+}
+
+start_as_main_process "$@"
+
+# Alternatively, run the following:
+# exec java -jar "$AS_INSTALL_LIB/client/appserver-cli.jar" start-domain --verbose "$@"

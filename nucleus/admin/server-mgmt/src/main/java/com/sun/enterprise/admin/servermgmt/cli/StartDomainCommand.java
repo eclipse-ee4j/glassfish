@@ -51,6 +51,9 @@ import static com.sun.enterprise.admin.cli.CLIConstants.WALL_CLOCK_START_PROP;
 import static java.util.logging.Level.FINER;
 import static org.glassfish.api.admin.RuntimeType.DAS;
 
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 /**
  * The start-domain command.
  *
@@ -142,23 +145,15 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
             if (dry_run) {
                 logger.fine(Strings.get("dry_run_msg"));
                 List<String> cmd = glassFishLauncher.getCommandLine();
-                StringBuilder sb = new StringBuilder();
-                boolean skipLine = false;
-                for (String s : cmd) {
-                    if (s.equals("-read-stdin")) {
-                        // Don't print this option as it's not needed to run the server
+                int indexOfReadStdin = cmd.indexOf("-read-stdin");
+                String cmdToLog = IntStream.range(0, cmd.size())
+                        // Don't print -read-stdin option as it's not needed to run the server
                         // Also skip the next line with "true", which is related to this option
-                        skipLine = true;
-                        continue;
-                    }
-                    if (skipLine) {
-                        skipLine = false;
-                        continue;
-                    }
-                    sb.append(s);
-                    sb.append('\n');
-                }
-                logger.info(sb.toString());
+                        .filter(index -> index < indexOfReadStdin || index > indexOfReadStdin + 1)
+                        .mapToObj(cmd::get)
+                        .collect(Collectors.joining("\n"))
+                        + "\n";
+                logger.info(cmdToLog);
                 return SUCCESS;
             }
 

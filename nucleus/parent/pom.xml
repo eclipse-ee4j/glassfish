@@ -1487,6 +1487,14 @@
             </properties>
         </profile>
         <profile>
+            <id>fastest</id>
+            <properties>
+                <checkstyle.skip>true</checkstyle.skip>
+                <maven.javadoc.skip>true</maven.javadoc.skip>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
+        </profile>
+        <profile>
             <id>source</id>
             <build>
                 <plugins>

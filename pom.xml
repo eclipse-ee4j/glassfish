@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2022 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation. All rights reserved.
     Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -112,6 +112,22 @@
                 <module>docs</module>
             </modules>
         </profile>
+        
+        <!-- Ommits a variety of things in order to get the fastest build of a basic full glassfish server -->
+        <profile>
+            <id>fastest</id>
+            <properties>
+                <checkstyle.skip>true</checkstyle.skip>
+                <maven.javadoc.skip>true</maven.javadoc.skip>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
+            <modules>
+                <module>qa</module>
+                <module>nucleus</module>
+                <module>appserver</module>
+            </modules>
+        </profile>
+        
         <profile>
             <!--
                 RE profile for release purposes.

@@ -21,3 +21,4 @@ Bundle-Activator: org.glassfish.uberjar.activator.UberJarGlassFishActivator
 Main-Class: org.glassfish.uberjar.UberJarMain
 
 Bundle-SymbolicName: org.glassfish.uberjar.activator
+Bundle-Version: ${project.osgi.version}

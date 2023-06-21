@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,9 +19,9 @@ package org.glassfish.appclient.server.core.jws;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
 
 /**
  * Abstracts the OSGi configuration information so it can be served easily
@@ -42,21 +43,7 @@ class LoaderConfigContent {
     }
 
     private String loadContent(final URI configFileURI) throws FileNotFoundException, IOException {
-        final File configFile = new File(configFileURI);
-        final FileReader fr = new FileReader(configFile);
-        final StringBuilder sb = new StringBuilder();
-        int charsRead;
-
-        final char[] buffer = new char[1024];
-        try {
-            while ( (charsRead = fr.read(buffer)) != -1) {
-                final String input = new String(buffer, 0, charsRead);
-                sb.append(Util.toXMLEscapedInclAmp(input));
-            }
-            return sb.toString();
-        } finally {
-            fr.close();
-        }
+        return Files.readString(new File(configFileURI).toPath());
     }
 
     private URI configFileURI(final File installDir) {

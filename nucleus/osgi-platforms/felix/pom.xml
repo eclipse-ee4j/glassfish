@@ -32,6 +32,22 @@
     <description>This is a distribution fragement, distributed as part of nucleus-base</description>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>config/osgi.properties</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>config/osgi.properties</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -47,19 +63,27 @@
                                 <artifactItem>
                                     <groupId>org.apache.felix</groupId>
                                     <artifactId>org.apache.felix.main</artifactId>
-                                    <outputDirectory>${project.build.OutputDirectory}/osgi/felix/bin</outputDirectory>
+                                    <outputDirectory>${project.build.outputDirectory}/osgi/felix/bin</outputDirectory>
                                     <destFileName>felix.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.apache.felix</groupId>
                                     <artifactId>org.apache.felix.bundlerepository</artifactId>
                                     <type>jar</type>
-                                    <outputDirectory>${project.build.OutputDirectory}/modules</outputDirectory>
+                                    <outputDirectory>${project.build.outputDirectory}/modules</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <delimiters>
+                        <delimiter>@</delimiter>
+                    </delimiters>
+                </configuration>
             </plugin>
         </plugins>
     </build>

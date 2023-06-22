@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2022 Contributors to the Eclipse Foundation. All rights reserved.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -116,10 +116,6 @@
                                 <jarupdate 
                                     basedir="${patches}/jersey-hk2" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/jersey-hk2.jar"
-                                />
-                                <jarupdate 
-                                    basedir="${patches}/jaxb-osgi" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/jaxb-osgi.jar"
                                 />
                             </target>
                         </configuration>

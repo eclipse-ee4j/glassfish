@@ -204,6 +204,8 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        
+        <!-- See https://github.com/jakartaee/cdi-tck/issues/474
         <dependency>
             <groupId>org.glassfish.jersey.ext.cdi</groupId>
             <artifactId>jersey-cdi-rs-inject</artifactId>
@@ -214,6 +216,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        -->
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-servlet</artifactId>

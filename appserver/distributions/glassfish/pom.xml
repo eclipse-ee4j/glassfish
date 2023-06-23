@@ -82,7 +82,7 @@
                     </execution>
                 </executions>
             </plugin>
-            
+
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
@@ -95,7 +95,7 @@
                         <configuration>
                             <target>
                                 <macrodef name="jarupdate">
-                                    <attribute name="basedir"/> 
+                                    <attribute name="basedir"/>
                                     <attribute name="includes"/>
                                     <attribute name="destfile"/>
                                     <sequential>
@@ -106,22 +106,18 @@
                                         <zip update="true" basedir="@{basedir}" includes="@{includes}" destfile="@{destfile}" />
                                     </sequential>
                                 </macrodef>
-                                
-                                <jarupdate 
+
+                                <jarupdate
                                     basedir="${patches}/xmlsec" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/xmlsec.jar"
                                 />
-                                <jarupdate 
+                                <jarupdate
                                     basedir="${patches}/microprofile-jwt-auth-api" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/microprofile-jwt-auth-api.jar"
                                 />
                                 <jarupdate
                                     basedir="${patches}/microprofile-rest-client-api" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/microprofile-rest-client-api.jar"
-                                />
-                                <jarupdate 
-                                    basedir="${patches}/jaxb-osgi" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/jaxb-osgi.jar"
                                 />
                             </target>
                         </configuration>

@@ -38,5 +38,5 @@ DynamicImport-Package: *
 # simple-glassfish-api/osgi.bundle. That's the source of truth.
 # Also note that, those embeddable packages use semantic versioning.
 -exportcontents: \
-    org.glassfish.embeddable.*; version=3.1.1, \
+    org.glassfish.embeddable.*; version=${project.osgi.version}, \
     com.sun.enterprise.glassfish.bootstrap; version=${project.osgi.version}

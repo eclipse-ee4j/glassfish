@@ -44,6 +44,7 @@ import static com.sun.enterprise.module.bootstrap.ArgumentManager.argsToMap;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
+import static org.osgi.framework.Constants.FRAMEWORK_STORAGE;
 
 /**
  * Utility class used by bootstrap module.
@@ -555,7 +556,7 @@ public class MainHelper {
         platformConf.putAll(ctx);
         Util.substVars(platformConf);
         // Starting with GlassFish 3.1.2, we allow user to overrride values specified in OSGi config file by
-        // corresponding values as set via System propereties. There are two properties that we must always read
+        // corresponding values as set via System properties. There are two properties that we must always read
         // from OSGi config file. They are felix.fileinstall.dir and felix.fileinstall.log.level, as their values have
         // changed incompatibly from 3.1 to 3.1.1, but we are not able to change domain.xml in 3.1.1 for
         // compatibility reasons.
@@ -739,8 +740,7 @@ public class MainHelper {
             // So, we can't use ${GlassFish_Platform} to generically set the cache dir.
             // Hence, we set it here.
             Properties platformConfig = super.readPlatformConfiguration();
-            platformConfig.setProperty(org.osgi.framework.Constants.FRAMEWORK_STORAGE,
-                                       new File(domainDir, "osgi-cache/felix/").getAbsolutePath());
+            platformConfig.setProperty(FRAMEWORK_STORAGE, new File(domainDir, "osgi-cache/felix/").getAbsolutePath());
             return platformConfig;
         }
 
@@ -783,8 +783,7 @@ public class MainHelper {
             // So, we can't use ${GlassFish_Platform} to generically set the cache dir.
             // Hence, we set it here.
             Properties platformConfig = super.readPlatformConfiguration();
-            platformConfig.setProperty(org.osgi.framework.Constants.FRAMEWORK_STORAGE,
-                                       new File(domainDir, "osgi-cache/equinox/").getAbsolutePath());
+            platformConfig.setProperty(FRAMEWORK_STORAGE, new File(domainDir, "osgi-cache/equinox/").getAbsolutePath());
             return platformConfig;
         }
     }
@@ -821,8 +820,8 @@ public class MainHelper {
             // So, we can't use ${GlassFish_Platform} to generically set the cache dir.
             // Hence, we set it here.
             Properties platformConfig = super.readPlatformConfiguration();
-            platformConfig.setProperty(org.osgi.framework.Constants.FRAMEWORK_STORAGE,
-                                       new File(domainDir, "osgi-cache/knopflerfish/").getAbsolutePath());
+            platformConfig.setProperty(FRAMEWORK_STORAGE,
+                new File(domainDir, "osgi-cache/knopflerfish/").getAbsolutePath());
             return platformConfig;
         }
     }

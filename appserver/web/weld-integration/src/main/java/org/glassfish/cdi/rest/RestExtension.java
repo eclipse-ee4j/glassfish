@@ -48,13 +48,13 @@ import jakarta.ws.rs.sse.Sse;
  * This class is partially copied from <code>org.glassfish.jersey.ext.cdi1x.inject.internal.InjectExtension</code> to work around
  * https://github.com/jakartaee/cdi-tck/issues/474. Once 474 is addressed, we can return to adding :jersey-cdi-rs-inject to the
  * featureset pom again.
- * 
- * 
+ *
+ *
  * <p>
  * A utility class that makes sure {@code @Inject} can be used instead of {@code @Context} for the Jakarta REST API
  * classes and interfaces, such as for {@code Configuration}, or {@code Providers}.
  * </p>
- * 
+ *
  * <p>
  * Note that {@code ContextResolver} can be injected using {@code @Context}, but the Jakarta REST specification does not
  * require the implementation to be capable of doing so. Since {@code ContextResolver} is parametrized type, the
@@ -63,13 +63,13 @@ import jakarta.ws.rs.sse.Sse;
  */
 @SuppressWarnings("unused")
 public class RestExtension implements Extension {
-    
-    private static final LazyValue<Set<Class<?>>> REST_BOUND_INJECTABLES = Values.lazy((Value<Set<Class<?>>>) 
+
+    private static final LazyValue<Set<Class<?>>> REST_BOUND_INJECTABLES = Values.lazy((Value<Set<Class<?>>>)
             () -> sumNonJerseyBoundInjectables());
 
     private void processAnnotatedType(@Observes ProcessAnnotatedType<?> processAnnotatedType, BeanManager beanManager) {
         final Class<?> baseClass = (Class<?>) processAnnotatedType.getAnnotatedType().getBaseType();
-        
+
         if (Application.class.isAssignableFrom(baseClass) && Configuration.class.isAssignableFrom(baseClass)) {
             if (!baseClass.isAnnotationPresent(Alternative.class)) {
                 processAnnotatedType.veto(); // Filter bean annotated ResourceConfig

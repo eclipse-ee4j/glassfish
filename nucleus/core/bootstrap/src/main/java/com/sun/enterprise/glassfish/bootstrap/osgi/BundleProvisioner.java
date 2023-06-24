@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,15 +18,10 @@
 package com.sun.enterprise.glassfish.bootstrap.osgi;
 
 import com.sun.enterprise.glassfish.bootstrap.LogFacade;
-import com.sun.enterprise.glassfish.bootstrap.Util;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -37,7 +32,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.ServiceLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,8 +39,6 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.ServiceReference;
-import org.osgi.framework.launch.Framework;
-import org.osgi.framework.launch.FrameworkFactory;
 import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgi.service.startlevel.StartLevel;
 
@@ -145,11 +137,10 @@ public class BundleProvisioner {
     public BundleProvisioner(BundleContext bundleContext, Customizer customizer) {
         this.bundleContext = bundleContext;
         this.customizer = customizer;
-        final ServiceReference reference =
-                getBundleContext().getServiceReference(StartLevel.class.getName());
-        sl = StartLevel.class.cast(
-                getBundleContext().getService(reference));
+        ServiceReference<StartLevel> reference = getBundleContext().getServiceReference(StartLevel.class);
+        sl = getBundleContext().getService(reference);
     }
+
 
     public BundleContext getBundleContext() {
         return bundleContext;
@@ -206,11 +197,10 @@ public class BundleProvisioner {
         for (URI uri : getAutoStartLocations()) {
             Bundle bundle = getBundle(new Jar(uri));
             if (bundle == null) {
-                logger.log(Level.WARNING, LogFacade.CANT_START_BUNDLE, new Object[]{uri});
+                logger.log(Level.WARNING, LogFacade.CANT_START_BUNDLE, uri);
                 continue;
-            } else {
-                startBundle(bundle);
             }
+            startBundle(bundle);
         }
     }
 
@@ -223,8 +213,7 @@ public class BundleProvisioner {
         if (!isFragment(bundle)) {
             try {
                 bundle.start(customizer.getStartOptions());
-                logger.logp(Level.FINE, "BundleProvisioner", "startBundle", "Started bundle = {0}",
-                        new Object[]{bundle});
+                logger.logp(Level.FINE, "BundleProvisioner", "startBundle", "Started bundle = {0}", bundle);
             } catch (BundleException e) {
                 LogFacade.log(logger,
                         Level.WARNING,
@@ -403,7 +392,7 @@ public class BundleProvisioner {
                     String directiveName = s.substring(0, idx).trim();
                     if (directiveName.equals("extension") && s.substring(idx + 2).trim().equals("framework")) {
                         logger.logp(Level.FINE, "BundleProvisioner", "isSystemBundleFragment",
-                                "{0} is a framework extension bundle", new Object[]{bundle});
+                            "{0} is a framework extension bundle", bundle);
                         return true;
                     }
                 }
@@ -419,40 +408,26 @@ public class BundleProvisioner {
      * @return
      */
     private boolean isFragment(Bundle bundle) {
-        final ServiceReference reference =
-                getBundleContext().getServiceReference(PackageAdmin.class.getName());
-        PackageAdmin pa = PackageAdmin.class.cast(
-                getBundleContext().getService(reference));
-        return (pa.getBundleType(bundle) == PackageAdmin.BUNDLE_TYPE_FRAGMENT);
+        final ServiceReference<PackageAdmin> reference = getBundleContext().getServiceReference(PackageAdmin.class);
+        PackageAdmin pa = getBundleContext().getService(reference);
+        return pa.getBundleType(bundle) == PackageAdmin.BUNDLE_TYPE_FRAGMENT;
     }
 
     private int install(Collection<Jar> jars) {
         for (Jar jar : jars) {
-            try {
-                final InputStream is = jar.getURI().toURL().openStream();
-                try {
-                    Bundle b = getBundleContext().installBundle(makeLocation(jar), is);
-                    Integer startLevel = getStartLevel(jar);
-                    if (startLevel != null) { // if specified, set it
-                        getStartLevelService().setBundleStartLevel(b, startLevel);
-                    }
-                    noOfInstalledBundles++;
-                    addBundle(new Jar(b));
-                    logger.logp(Level.FINE, "BundleProvisioner", "install",
-                            "Installed bundle {0} from {1} ",
-                            new Object[]{b.getBundleId(), jar.getURI()});
-                } finally {
-                    try {
-                        is.close();
-                    } catch (IOException e) {
-                    }
+            try (InputStream is = jar.getURI().toURL().openStream()) {
+                Bundle b = getBundleContext().installBundle(makeLocation(jar), is);
+                Integer startLevel = getStartLevel(jar);
+                // if specified, set it
+                if (startLevel != null) {
+                    getStartLevelService().setInitialBundleStartLevel(startLevel);
                 }
+                noOfInstalledBundles++;
+                addBundle(new Jar(b));
+                logger.logp(Level.FINE, "BundleProvisioner", "install", "Installed bundle {0} from {1} ",
+                    new Object[] {b.getBundleId(), jar.getURI()});
             } catch (Exception e) {
-                LogFacade.log(logger,
-                        Level.WARNING,
-                        LogFacade.INSTALL_FAILED,
-                        e,
-                        jar.getURI());
+                LogFacade.log(logger, Level.WARNING, LogFacade.INSTALL_FAILED, e, jar.getURI());
             }
         }
         return noOfInstalledBundles;
@@ -470,10 +445,8 @@ public class BundleProvisioner {
      * Refresh packages
      */
     public void refresh() {
-        final ServiceReference reference =
-                getBundleContext().getServiceReference(PackageAdmin.class.getName());
-        PackageAdmin pa = PackageAdmin.class.cast(
-                getBundleContext().getService(reference));
+        final ServiceReference<PackageAdmin> reference = getBundleContext().getServiceReference(PackageAdmin.class);
+        PackageAdmin pa = getBundleContext().getService(reference);
         pa.refreshPackages(null); // null to refresh any bundle that's obsolete
         getBundleContext().ungetService(reference);
     }
@@ -597,8 +570,7 @@ public class BundleProvisioner {
                                 startLevels.put(uri, startLevel);
                             }
                         }
-                    }
-                    catch (NumberFormatException ex) {
+                    } catch (NumberFormatException ex) {
                         System.err.println("Invalid property: " + key);
                     }
 
@@ -638,8 +610,7 @@ public class BundleProvisioner {
                         uris.add(uri);
                     }
                 } catch (URISyntaxException e) {
-                    LogFacade.log(logger,
-                            Level.WARNING, LogFacade.ENTRY_SKIPPED_DUE_TO, e, s);
+                    LogFacade.log(logger, Level.WARNING, LogFacade.ENTRY_SKIPPED_DUE_TO, e, s);
                 }
             }
             return uris;
@@ -648,11 +619,7 @@ public class BundleProvisioner {
         @Override
         public int getStartOptions() {
             String s = config.getProperty(Constants.AUTO_START_OPTIONS_PROP);
-            if (s != null) {
-                return Integer.parseInt(s);
-            } else {
-                return Bundle.START_ACTIVATION_POLICY;
-            }
+            return s == null ? Bundle.START_ACTIVATION_POLICY : Integer.parseInt(s);
         }
 
         @Override
@@ -704,12 +671,11 @@ public class BundleProvisioner {
                 // jar.getURI is null means we could not parse the location
                 // as a meaningful URI. We can't do any meaningful processing for this bundle.
                 return false;
-            } else {
-                for (URI configuredLocation : getConfiguredAutoInstallLocations()) {
-                    final String otherLocationAsString = configuredLocation.toString();
-                    if (uri.toString().regionMatches(0, otherLocationAsString, 0, otherLocationAsString.length())) {
-                        return true;
-                    }
+            }
+            for (URI configuredLocation : getConfiguredAutoInstallLocations()) {
+                final String otherLocationAsString = configuredLocation.toString();
+                if (uri.toString().regionMatches(0, otherLocationAsString, 0, otherLocationAsString.length())) {
+                    return true;
                 }
             }
             return false;
@@ -725,62 +691,6 @@ public class BundleProvisioner {
         }
     }
 
-    /**
-     * A simple main method to test this class
-     *
-     * @param args
-     */
-    public static void main(String[] args) throws Exception {
-        logger.log(Level.INFO, LogFacade.STARTING_BUNDLEPROVISIONER);
-        Properties props = new Properties();
-        props.load(new FileInputStream(args[0]));
-        Util.substVars(props);
-        PrintStream out = new PrintStream(new FileOutputStream(args[1], true));
-        long t0 = System.currentTimeMillis();
-        Framework f = null;
-        Map<String, String> mm = new HashMap<>();
-        props.putAll(mm);
-        for (FrameworkFactory ff : ServiceLoader.load(FrameworkFactory.class)) {
-            f = ff.newFramework(mm);
-            System.out.println("framework = " + f);
-            break;
-        }
-        if (f == null) {
-            throw new RuntimeException("no OSGi framework in classpath");
-        }
-        long t1 = System.currentTimeMillis();
-        logger.log(Level.INFO, LogFacade.OSGI_LOCATE_TIME, (t1-t0));
-        f.init();
-        long t2 = System.currentTimeMillis();
-        logger.log(Level.INFO, LogFacade.OSGI_INIT_TIME, (t2-t1));
-        BundleProvisioner bundleProvisioner = createBundleProvisioner(f.getBundleContext(), props);
-        bundleProvisioner.installBundles();
-        long t3 = System.currentTimeMillis();
-        logger.log(Level.INFO, LogFacade.BUNDLE_INSTALLATION_TIME, (t3-t2));
-        int installed = bundleProvisioner.getNoOfInstalledBundles();
-        int updated = bundleProvisioner.getNoOfUpdatedBundles();
-        int uninstalled = bundleProvisioner.getNoOfUninstalledBundles();
-        System.out.printf("installed = %d, updated = %d, uninstalled = %d\n", installed, updated, uninstalled);
-        if (bundleProvisioner.hasAnyThingChanged()) {
-            System.out.println("Refreshing framework");
-            bundleProvisioner.refresh();
-        }
-        bundleProvisioner.startBundles();
-        f.start();
-        long t4 = System.currentTimeMillis();
-        logger.log(Level.INFO, LogFacade.BUNDLE_STARTING_TIME, (t4-t3));
-        logger.log(Level.INFO, LogFacade.TOTAL_START_TIME, (t4-t0));
-        if (args.length == 3 && args[2].equalsIgnoreCase("wait-before-stopping")) {
-            System.out.println("Hit enter to continue");
-            System.in.read(); //
-        }
-        f.stop();
-        f.waitForStop(0);
-        long t5 = System.currentTimeMillis();
-        logger.log(Level.INFO, LogFacade.BUNDLE_STOP_TIME, (t5 - t4));
-        logger.log(Level.INFO, LogFacade.TOTAL_TIME, (t5-t0));
-        out.printf("%d,%d,%d,%d,%d,%d,%d\n", t1-t0, t2-t1, t3-t2, t4-t3, t4-t0, t5-t4, t5-t0);
-    }
 
     static BundleProvisioner createBundleProvisioner(BundleContext bctx, Properties props) {
         Class<? extends BundleProvisioner> clazz = Boolean

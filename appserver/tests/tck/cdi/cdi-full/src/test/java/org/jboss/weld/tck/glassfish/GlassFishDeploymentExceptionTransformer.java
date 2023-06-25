@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -35,6 +35,7 @@ import jakarta.enterprise.inject.spi.DeploymentException;
 public class GlassFishDeploymentExceptionTransformer implements DeploymentExceptionTransformer {
 
     private static final String[] DEPLOYMENT_EXCEPTION_FRAGMENTS = new String[] {
+            "Only normal scopes can be passivating",
             "org.jboss.weld.exceptions.DeploymentException",
             "org.jboss.weld.exceptions.UnserializableDependencyException",
             "org.jboss.weld.exceptions.InconsistentSpecializationException",
@@ -67,10 +68,10 @@ public class GlassFishDeploymentExceptionTransformer implements DeploymentExcept
             return root;
         }
         if (isFragmentFound(DEPLOYMENT_EXCEPTION_FRAGMENTS, root)) {
-            return new DeploymentException(root);
+            return new DeploymentException(root.getMessage());
         }
         if (isFragmentFound(DEFINITION_EXCEPTION_FRAGMENTS, root)) {
-            return new DefinitionException(root);
+            return new DefinitionException(root.getMessage());
         }
         return throwable;
     }

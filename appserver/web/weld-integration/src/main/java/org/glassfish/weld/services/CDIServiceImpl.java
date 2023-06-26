@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2023 Contributors to Eclipse Foundation.
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -72,6 +72,7 @@ import org.glassfish.weld.connector.WeldUtils;
 import org.jboss.weld.bootstrap.WeldBootstrap;
 import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
 import org.jboss.weld.contexts.WeldCreationalContext;
+import org.jboss.weld.manager.BeanManagerImpl;
 import org.jboss.weld.manager.api.WeldInjectionTarget;
 import org.jboss.weld.manager.api.WeldManager;
 import org.jvnet.hk2.annotations.Service;
@@ -379,9 +380,19 @@ public class CDIServiceImpl implements CDIService {
         // This happens when @Interceptor or @InterceptorBinding is used.
         Interceptor interceptor = findEjbInterceptor(interceptorClass, ejbInterceptors);
         if (interceptor != null) {
-            // using the ejb's creationalContext so we don't have to do any cleanup.
-            // the cleanup will be handled by weld when it clean's up the ejb.
-            Object instance = beanManager.getReference(interceptor, interceptorClass, creationalContext);
+            // Using the ejb's creationalContext so we don't have to do any cleanup.
+            // the cleanup will be handled by weld when it cleans up the ejb.
+
+            Object instance = null;
+            if (beanManager instanceof BeanManagerImpl) {
+                // Since Weld 5.1.1 the default beanManager.getReference method doesn't create a creational context
+                // for the Interceptor.
+                BeanManagerImpl beanManagerImpl = (BeanManagerImpl) beanManager;
+                instance = beanManagerImpl.getReference(interceptor, interceptorClass, creationalContext, false);
+            } else {
+                instance = beanManager.getReference(interceptor, interceptorClass, creationalContext);
+            }
+
             return (T) instance;
         }
 

@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.admin</groupId>
         <artifactId>rest-service-parent</artifactId>
-        <version>7.0.6-SNAPSHOT</version>
+        <version>7.0.6</version>
     </parent>
 
     <artifactId>rest-service</artifactId>

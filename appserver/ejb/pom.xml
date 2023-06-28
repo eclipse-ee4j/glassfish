@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-parent</artifactId>
-        <version>7.0.6-SNAPSHOT</version>
+        <version>7.0.6</version>
     </parent>
 
     <groupId>org.glassfish.main.ejb</groupId>

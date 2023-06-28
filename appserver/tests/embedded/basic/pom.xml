@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.glassfish.tests.embedded</groupId>
     <artifactId>basic</artifactId>
-    <version>7.0.6-SNAPSHOT</version>
+    <version>7.0.6</version>
     <packaging>pom</packaging>
     <name>Basic tests for testing org.glassfish.embeddable APIs</name>
     <modules>

@@ -9,6 +9,16 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
+## June 29, 2023 -- Eclipse GlassFish 7.0.6 Available
+
+We are very happy to present the release today of Eclipse GlassFish 7.0.6.
+
+The main features of this release are the newly added support of the MicroProfile REST Client and a new way to start GlassFish, which is a preparation for Docker images that will run GlassFish in the foreground in a single JVM process to save memory consumed by Docker containers.
+
+This release also contains the usual amount of fixes, and a number of important component updates. Specifically the EclipseLink and Soteria updates fix important bugs (see their release notes).
+
+Download links are available from the [GlassFish Download page](download.md).
+
 ## May 30, 2023 -- Eclipse GlassFish 7.0.5 Available
 
 We are pleased to announce the release today of Eclipse GlassFish 7.0.5.

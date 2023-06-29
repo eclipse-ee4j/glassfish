@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.glassfish.tests.embedded</groupId>
     <artifactId>mysql</artifactId>
-    <version>7.0.6-SNAPSHOT</version>
+    <version>7.0.7-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>Simple web application which uses mysql as database</name>
     <build>
@@ -65,7 +65,7 @@
         <dependency>
             <groupId>org.glassfish.main.extras</groupId>
             <artifactId>glassfish-embedded-all</artifactId>
-            <version>7.0.6-SNAPSHOT</version>
+            <version>7.0.7-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>

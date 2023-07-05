@@ -1,5 +1,6 @@
 <!--
 
+    Copyright (c) 2023 Contributors to the Eclipse Foundation
     Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -49,6 +50,9 @@
         }
         if ("#{pageSession.Name}&(#{pageSession.myOption}=text)") {
             setPageSessionAttribute(key="nameDropDown" value="#{pageSession.Name}");
+            if ("!#{pageSession.tableList}") {
+                createList(result="#{pageSession.tableList}" size="0");
+            }
         }
         if ("!#{pageSession.Name}&(#{pageSession.myOption}=dropdown)") {
         if (#{sessionScope._jms_exist}){
@@ -67,17 +71,17 @@
         }
     />
     </event>
-            <sun:form id="propertyForm">
+    <sun:form id="propertyForm">
 #include "/common/shared/alertMsg_1.inc"
 
-    <sun:title id="propertyContentPage" title="$resource{i18njca.resourceAdapterConfig.newPageTitle}" helpText="$resource{i18njca.resourceAdapterConfig.newPageTitleHelp}">
+        <sun:title id="propertyContentPage" title="$resource{i18njca.resourceAdapterConfig.newPageTitle}" helpText="$resource{i18njca.resourceAdapterConfig.newPageTitleHelp}">
 #include "/jca/resourceAdapterConfigButtons.inc"
-    </sun:title>
+        </sun:title>
 #include "/jca/resourceAdapterConfigAttr.inc"
 #include "/common/resourceNode/confidentialPropsTable.inc"
 
-	<sun:hidden id="helpKey" value="$resource{help_jca.resourceAdapterConfigNew}" />
-            </sun:form>
+        <sun:hidden id="helpKey" value="$resource{help_jca.resourceAdapterConfigNew}" />
+    </sun:form>
 <f:verbatim>
 <script type="text/javascript">
 

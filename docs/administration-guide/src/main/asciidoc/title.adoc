@@ -11,7 +11,7 @@ next=preface.adoc
 
 Administration Guide
 
-Release 7, {status}
+Release 7
 
 Contributed 2018 - 2022
 

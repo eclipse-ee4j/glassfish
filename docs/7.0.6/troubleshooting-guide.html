@@ -1,0 +1,2388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.17">
+<title>Eclipse GlassFish Troubleshooting Guide, Release 7</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="./asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="./coderay-asciidoctor.css">
+</head>
+<body class="article toc2 toc-left">
+<div id="header">
+<h1>Eclipse GlassFish Troubleshooting Guide, Release 7</h1>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#eclipse-glassfish-server">Eclipse GlassFish</a></li>
+<li><a href="#preface">Preface</a>
+<ul class="sectlevel2">
+<li><a href="#glassfish-server-documentation-set">Eclipse GlassFish Documentation Set</a></li>
+<li><a href="#related-documentation">Related Documentation</a></li>
+<li><a href="#typographic-conventions">Typographic Conventions</a></li>
+<li><a href="#symbol-conventions">Symbol Conventions</a></li>
+<li><a href="#default-paths-and-file-names">Default Paths and File Names</a></li>
+</ul>
+</li>
+<li><a href="#overview-of-glassfish-server-open-source-edition-troubleshooting">1 Overview of Eclipse GlassFish Troubleshooting</a>
+<ul class="sectlevel2">
+<li><a href="#identifying-the-problem">Identifying the Problem</a>
+<ul class="sectlevel3">
+<li><a href="#first-steps">First Steps</a></li>
+<li><a href="#gathering-information">Gathering Information</a></li>
+<li><a href="#examining-log-files">Examining Log Files</a></li>
+<li><a href="#monitoring-the-system">Monitoring the System</a></li>
+</ul>
+</li>
+<li><a href="#troubleshooting-tools">Troubleshooting Tools</a>
+<ul class="sectlevel3">
+<li><a href="#operating-system-utilities">Operating System Utilities</a></li>
+<li><a href="#stack-traces-and-thread-dumps">Stack Traces and Thread Dumps</a></li>
+<li><a href="#visualvm">VisualVM</a></li>
+<li><a href="#jvm-command-line-tools">JVM Command-Line Tools</a></li>
+</ul>
+</li>
+<li><a href="#where-to-go-for-more-information">Where to Go for More Information</a></li>
+</ul>
+</li>
+<li><a href="#specific-issues">2 Specific Issues</a>
+<ul class="sectlevel2">
+<li><a href="#cannot-access-local-server-httplocalhost8080">Cannot Access Local Server (<code>http://localhost:8080</code>)</a>
+<ul class="sectlevel3">
+<li><a href="#did-the-server-start">Did the Server Start?</a></li>
+<li><a href="#was-the-server-started-at-the-expected-port">Was the Server Started at the Expected Port?</a></li>
+<li><a href="#is-a-personal-firewall-enabled">Is a Personal Firewall Enabled?</a></li>
+</ul>
+</li>
+<li><a href="#cannot-access-remote-server">Cannot Access Remote Server</a>
+<ul class="sectlevel3">
+<li><a href="#is-the-server-available-locally">Is the Server Available Locally?</a></li>
+<li><a href="#is-the-proxy-setting-causing-a-problem">Is the Proxy Setting Causing a Problem?</a></li>
+</ul>
+</li>
+<li><a href="#cannot-access-the-administration-console">Cannot Access the Administration Console</a>
+<ul class="sectlevel3">
+<li><a href="#is-the-application-server-running">Is the Application Server Running?</a></li>
+<li><a href="#is-the-administration-console-running-on-the-expected-port">Is the Administration Console Running on the Expected Port?</a></li>
+</ul>
+</li>
+<li><a href="#cannot-access-a-server-application">Cannot Access a Server Application</a>
+<ul class="sectlevel3">
+<li><a href="#is-the-application-server-running-1">Is the Application Server Running?</a></li>
+<li><a href="#was-application-deployment-successful">Was Application Deployment Successful?</a></li>
+</ul>
+</li>
+<li><a href="#administrator-user-name-or-password-not-known">Administrator User Name or Password Not Known</a></li>
+<li><a href="#experience-issues-related-to-the-jdk">Experience Issues Related to the JDK</a>
+<ul class="sectlevel3">
+<li><a href="#description-8">Description</a></li>
+<li><a href="#solution-6">Solution</a></li>
+</ul>
+</li>
+<li><a href="#server-will-not-start-on-windows-port-conflict">Server Will Not Start on Windows (Port Conflict)</a>
+<ul class="sectlevel3">
+<li><a href="#is-another-application-running-on-the-servers-port">Is Another Application Running on the Server&#8217;s Port?</a></li>
+<li><a href="#has-an-ungraceful-shutdown-occurred-on-a-previously-running-server">Has an Ungraceful Shutdown Occurred on a Previously Running Server?</a></li>
+</ul>
+</li>
+<li><a href="#glassfish-server-fails-to-start-in-an-opensolaris-zone">Eclipse GlassFish Fails to Start in an OpenSolaris Zone</a>
+<ul class="sectlevel3">
+<li><a href="#description-9">Description</a></li>
+<li><a href="#resolution-to-enable-glassfish-server-to-run-in-an-opensolaris-zone">Resolution: To Enable Eclipse GlassFish to Run in an OpenSolaris Zone</a></li>
+</ul>
+</li>
+<li><a href="#two-server-instances-bind-to-same-port-on-windows">Two Server Instances Bind to Same Port on Windows</a>
+<ul class="sectlevel3">
+<li><a href="#description-10">Description</a></li>
+<li><a href="#solution-7">Solution</a></li>
+</ul>
+</li>
+<li><a href="#cannot-produce-a-jvm-thread-dump-after-server-crash">Cannot Produce a JVM Thread Dump After Server Crash</a>
+<ul class="sectlevel3">
+<li><a href="#description-11">Description</a></li>
+<li><a href="#solution-8">Solution</a></li>
+</ul>
+</li>
+<li><a href="#issues-related-to-applications">Issues Related to Applications</a>
+<ul class="sectlevel3">
+<li><a href="#cannot-undeploy-or-redeploy-application-with-open-streams-to-jar-files-windows">Cannot Undeploy or Redeploy Application With Open Streams to <code>jar</code> Files (Windows)</a></li>
+<li><a href="#maxpermgen-exception"><code>MaxPermGen</code> Exception</a></li>
+</ul>
+</li>
+<li><a href="#issues-related-to-asadmin">Issues Related to <code>asadmin</code></a>
+<ul class="sectlevel3">
+<li><a href="#asadmin-start-domain-command-fails"><code>asadmin</code> <code>start-domain</code> Command Fails</a></li>
+<li><a href="#cannot-stop-domain-using-asadmin-stop-domain">Cannot Stop Domain Using <code>asadmin</code> <code>stop-domain</code></a></li>
+</ul>
+</li>
+<li><a href="#issues-related-to-installation">Issues Related to Installation</a>
+<ul class="sectlevel3">
+<li><a href="#installation-hangs-during-update-tool-configuration">Installation Hangs During Update Tool Configuration</a></li>
+<li><a href="#glassfish-server-components-not-removed-during-uninstallation">Eclipse GlassFish Components Not Removed During Uninstallation</a></li>
+</ul>
+</li>
+<li><a href="#issues-related-to-security">Issues Related to Security</a>
+<ul class="sectlevel3">
+<li><a href="#java-security-accesscontrolexception-access-denied-error"><code>java.security.AccessControlException</code>: Access Denied Error</a></li>
+<li><a href="#mutual-authentication-not-working-with-the-application-client">Mutual Authentication Not Working With the Application Client</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#frequently-asked-questions">3 Frequently Asked Questions</a>
+<ul class="sectlevel2">
+<li><a href="#administration-faqs">Administration FAQs</a>
+<ul class="sectlevel3">
+<li><a href="#which-asadmin-commands-are-supported">Which <code>asadmin</code> Commands are Supported?</a></li>
+</ul>
+</li>
+<li><a href="#application-faqs">Application FAQs</a>
+<ul class="sectlevel3">
+<li><a href="#how-do-i-debug-applications">How Do I Debug Applications?</a></li>
+<li><a href="#how-do-i-change-application-permissions">How Do I Change Application Permissions?</a></li>
+<li><a href="#what-are-the-restrictions-and-optimizations-for-session-beans">What Are the Restrictions and Optimizations for Session Beans?</a></li>
+</ul>
+</li>
+<li><a href="#eclipse-faqs">Eclipse FAQs</a>
+<ul class="sectlevel3">
+<li><a href="#where-can-i-find-more-information-about-eclipse-and-glassfish-server-integration">Where Can I Find More Information About Eclipse and Eclipse GlassFish Integration?</a></li>
+</ul>
+</li>
+<li><a href="#extensibility-faqs">Extensibility FAQs</a>
+<ul class="sectlevel3">
+<li><a href="#how-do-i-develop-add-on-components">How Do I Develop Add-On Components?</a></li>
+<li><a href="#how-do-i-add-containers">How Do I Add Containers?</a></li>
+<li><a href="#how-do-i-extend-the-administration-console">How Do I Extend the Administration Console?</a></li>
+</ul>
+</li>
+<li><a href="#java-persistence-faqs">Java Persistence FAQs</a>
+<ul class="sectlevel3">
+<li><a href="#what-are-the-restrictions-and-optimizations-for-the-java-persistence-api">What Are the Restrictions and Optimizations for the Java Persistence API?</a></li>
+</ul>
+</li>
+<li><a href="#update-tool-faqs">Update Tool FAQs</a>
+<ul class="sectlevel3">
+<li><a href="#how-do-i-use-update-tool-to-extend-my-glassfish-server-installation">How Do I Use Update Tool to Extend My Eclipse GlassFish Installation?</a></li>
+<li><a href="#how-do-i-turn-off-the-notifier">How Do I Turn Off the Notifier?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="eclipse-glassfish-server"><a class="anchor" href="#eclipse-glassfish-server"></a>Eclipse GlassFish</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Troubleshooting Guide</p>
+</div>
+<div class="paragraph">
+<p>Release 7</p>
+</div>
+<div class="paragraph">
+<p>Contributed 2018 - 2022</p>
+</div>
+<div class="paragraph">
+<p>This guide describes common problems that you might encounter when using
+Eclipse GlassFish and how to solve them.</p>
+</div>
+<hr>
+<div class="paragraph">
+<p>Eclipse GlassFish Troubleshooting Guide, Release 7</p>
+</div>
+<div class="paragraph">
+<p>Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.</p>
+</div>
+<div class="paragraph">
+<p>This program and the accompanying materials are made available under the
+terms of the Eclipse Public License v. 2.0, which is available at
+<a href="http://www.eclipse.org/legal/epl-2.0" class="bare">http://www.eclipse.org/legal/epl-2.0</a>.</p>
+</div>
+<div class="paragraph">
+<p>SPDX-License-Identifier: EPL-2.0</p>
+</div>
+<div class="paragraph">
+<p>Oracle and Java are registered trademarks of Oracle and/or its
+affiliates. Other names may be trademarks of their respective owners.</p>
+</div>
+<div class="paragraph">
+<p>Intel and Intel Xeon are trademarks or registered trademarks of Intel
+Corporation. All SPARC trademarks are used under license and are
+trademarks or registered trademarks of SPARC International, Inc. AMD,
+Opteron, the AMD logo, and the AMD Opteron logo are trademarks or
+registered trademarks of Advanced Micro Devices. UNIX is a registered
+trademark of The Open Group.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="data:image/png;base64,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" alt="Eclipse Logo"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="preface"><a class="anchor" href="#preface"></a>Preface</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This documentation is part of the Java Enterprise Edition contribution
+to the Eclipse Foundation and is not intended for use in relation to
+Java Enterprise Edition or Orace GlassFish. The documentation is in the
+process of being revised to reflect the new Jakarta EE branding.
+Additional changes will be made as requirements and procedures evolve
+for Jakarta EE. Where applicable, references to Jakarta EE or Java
+Enterprise Edition should be considered references to Jakarta EE.</p>
+</div>
+<div class="paragraph">
+<p>Please see the Title page for additional license information.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This guide describes common problems that you might encounter when using
+Eclipse GlassFish and how to solve them.</p>
+</div>
+<div class="paragraph">
+<p>This preface contains information about and conventions for the entire
+Eclipse GlassFish (Eclipse GlassFish) documentation set.</p>
+</div>
+<div class="paragraph">
+<p>Eclipse GlassFish 7 is developed through the GlassFish project
+open-source community at <a href="https://github.com/eclipse-ee4j/glassfish" class="bare">https://github.com/eclipse-ee4j/glassfish</a>.
+The GlassFish project provides a structured process for developing the
+Eclipse GlassFish platform that makes the new features of the Jakarta EE
+platform available faster, while maintaining the most important feature
+of Jakarta EE: compatibility. It enables Java developers to access the
+Eclipse GlassFish source code and to contribute to the development of the
+Eclipse GlassFish.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#glassfish-server-documentation-set">Eclipse GlassFish Documentation Set</a></p>
+</li>
+<li>
+<p><a href="#related-documentation">Related Documentation</a></p>
+</li>
+<li>
+<p><a href="#typographic-conventions">Typographic Conventions</a></p>
+</li>
+<li>
+<p><a href="#symbol-conventions">Symbol Conventions</a></p>
+</li>
+<li>
+<p><a href="#default-paths-and-file-names">Default Paths and File Names</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="glassfish-server-documentation-set"><a class="anchor" href="#glassfish-server-documentation-set"></a>Eclipse GlassFish Documentation Set</h3>
+<div class="paragraph">
+<p>The Eclipse GlassFish documentation set describes deployment planning and
+system installation. For an introduction to Eclipse GlassFish, refer to
+the books in the order in which they are listed in the following table.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 70%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Book Title</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="release-notes.html#GSRLN">Release Notes</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides late-breaking information about
+the software and the documentation and includes a comprehensive,
+table-based summary of the supported hardware, operating system, Java
+Development Kit (JDK), and database drivers.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="quick-start-guide.html#GSQSG">Quick Start Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to get started with the Eclipse GlassFish product.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="installation-guide.html#GSING">Installation Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to install the software and its components.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="upgrade-guide.html#GSUPG">Upgrade Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to upgrade to the latest version of Eclipse GlassFish.
+This guide also describes differences between adjacent product releases and configuration
+options that can result in incompatibility with the product specifications.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="deployment-planning-guide.html#GSPLG">Deployment Planning Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to build a production deployment of Eclipse GlassFish that meets the requirements of
+your system and enterprise.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="administration-guide.html#GSADG">Administration Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to configure, monitor, and manage Eclipse GlassFish subsystems and components
+from the command line by using the <a href="reference-manual.html#asadmin"><code>asadmin</code>(1M)</a> utility.
+Instructions for performing these tasks from the Administration Console are provided
+in the Administration Console online help.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="security-guide.html#GSSCG">Security Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides instructions for configuring and administering Eclipse GlassFish security.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="application-deployment-guide.html#GSDPG">Application Deployment Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to assemble and deploy applications to the Eclipse GlassFish and provides information
+about deployment descriptors.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="application-development-guide.html#GSDVG">Application Development Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to create and implement Java Platform, Enterprise Edition (Jakarta EE platform)
+applications that are intended to run on the Eclipse GlassFish.
+These applications follow the open Java standards model for Jakarta EE components
+and application programmer interfaces (APIs).
+This guide provides information about developer tools, security, and debugging.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="add-on-component-development-guide.html#GSACG">Add-On Component Development Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to use published interfaces of Eclipse GlassFish to develop add-on components
+for Eclipse GlassFish.
+This document explains how to perform only those tasks that ensure that the add-on component
+is suitable for Eclipse GlassFish.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="embedded-server-guide.html#GSESG">Embedded Server Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to run applications in embedded Eclipse GlassFish and to develop applications
+in which Eclipse GlassFish is embedded.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="ha-administration-guide.html#GSHAG">High Availability Administration Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to configure Eclipse GlassFish to provide higher availability and
+scalability through failover and load balancing.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="performance-tuning-guide.html#GSPTG">Performance Tuning Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to optimize the performance of Eclipse GlassFish.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="troubleshooting-guide.html#GSTSG">Troubleshooting Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Describes common problems that you might encounter when using Eclipse GlassFish and explains how to solve them.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="error-messages-reference.html#GSEMR">Error Message Reference</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Describes error messages that you might encounter when using Eclipse GlassFish.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="reference-manual.html#GSRFM">Reference Manual</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides reference information in man page format for Eclipse GlassFish administration commands, utility
+commands, and related concepts.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-release-notes/toc.html">Message Queue Release Notes</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Describes new features, compatibility issues, and existing bugs for Open Message Queue.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-tech-over/toc.html">Message Queue Technical Overview</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides an introduction to the technology, concepts, architecture, capabilities, and features of
+the Message Queue messaging service.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-admin-guide/toc.html">Message Queue Administration Guide</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to set up and manage a Message Queue messaging system.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-dev-guide-jmx/toc.html">Message Queue Developer&#8217;s Guide for JMX Clients</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Describes the application programming interface in Message Queue for
+programmatically configuring and monitoring Message Queue resources in
+conformance with the Java Management Extensions (JMX).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-dev-guide-java/toc.html">Message Queue Developer&#8217;s Guide for Java Clients</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides information about concepts and procedures for developing Java messaging
+applications (Java clients) that work with Eclipse GlassFish.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://eclipse-ee4j.github.io/openmq/guides//mq-dev-guide-c/toc.html">Message Queue Developer&#8217;s Guide for C Clients</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides programming and reference information for developers working with
+Message Queue who want to use the C language binding to the Message
+Queue messaging service to send, receive, and process Message Queue messages.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="related-documentation"><a class="anchor" href="#related-documentation"></a>Related Documentation</h3>
+<div class="paragraph">
+<p>The following tutorials explain how to develop Jakarta EE applications:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/eclipse-ee4j/jakartaee-firstcup-examples">
+Your First Cup: An Introduction to the Jakarta EE Platform</a>.
+For beginning Jakarta EE programmers, this short tutorial explains the entire
+process for developing a simple enterprise application.
+The sample application is a web application that consists of a component that is
+based on the Enterprise JavaBeans specification, a JAX-RS web service,
+and a JavaServer Faces component for the web front end.</p>
+</li>
+<li>
+<p><a href="https://eclipse-ee4j.github.io/jakartaee-tutorial">The Jakarta EE Tutorial</a>.
+This comprehensive tutorial explains how to use Jakarta EE platform technologies
+and APIs to develop Jakarta EE applications.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Javadoc tool reference documentation for packages that are provided with
+Eclipse GlassFish is available as follows.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The Jakarta EE specifications and API specification is
+located at <a href="https://jakarta.ee/specifications/" class="bare">https://jakarta.ee/specifications/</a>.</p>
+</li>
+<li>
+<p>The API specification for Eclipse GlassFish 7, including Jakarta EE
+platform packages and nonplatform packages that are specific to the
+Eclipse GlassFish product, is located at
+<a href="https://glassfish.org/docs/" class="bare">https://glassfish.org/docs/</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For information about creating enterprise applications in the NetBeans
+Integrated Development Environment (IDE), see the
+<a href="https://netbeans.apache.org/kb/docs/java-ee.html">
+NetBeans Documentation, Training &amp; Support page</a>.</p>
+</div>
+<div class="paragraph">
+<p>For information about the Derby database for use with
+the Eclipse GlassFish, see the <a href="https://db.apache.org/derby/index.html">Derby page</a>.</p>
+</div>
+<div class="paragraph">
+<p>The Jakarta EE Samples project is a collection of sample applications that
+demonstrate a broad range of Jakarta EE technologies. The Jakarta EE Samples
+are bundled with the Jakarta EE Software Development Kit (SDK) and are also
+available from the repository
+(<code><a href="https://github.com/eclipse-ee4j/glassfish-samples" class="bare">https://github.com/eclipse-ee4j/glassfish-samples</a></code>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="typographic-conventions"><a class="anchor" href="#typographic-conventions"></a>Typographic Conventions</h3>
+<div class="paragraph">
+<p>The following table describes the typographic changes that are used in
+this book.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14%;">
+<col style="width: 37%;">
+<col style="width: 49%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Typeface</th>
+<th class="tableblock halign-left valign-top">Meaning</th>
+<th class="tableblock halign-left valign-top">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AaBbCc123</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The names of commands, files, and directories, and onscreen computer output</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Edit your <code>.login</code> file.</p>
+<p class="tableblock">Use <code>ls</code> <code>a</code> to list all files.</p>
+<p class="tableblock"><code>machine_name% you have mail.</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AaBbCc123</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">What you type, contrasted with onscreen computer output</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>machine_name%</code> <code>su</code></p>
+<p class="tableblock"><code>Password:</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AaBbCc123</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A placeholder to be replaced with a real name or value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The command to remove a file is <code>rm</code> filename.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AaBbCc123</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Book titles, new terms, and terms to be emphasized (note that some emphasized items appear bold online)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Read Chapter 6 in the User&#8217;s Guide.</p>
+<p class="tableblock">A cache is a copy that is stored locally.</p>
+<p class="tableblock">Do not save the file.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="symbol-conventions"><a class="anchor" href="#symbol-conventions"></a>Symbol Conventions</h3>
+<div class="paragraph">
+<p>The following table explains symbols that might be used in this book.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 26%;">
+<col style="width: 28%;">
+<col style="width: 36%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Symbol</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Example</th>
+<th class="tableblock halign-left valign-top">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[ ]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Contains optional arguments and command options.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ls [-l]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>-l</code> option is not required.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{ | }</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Contains a set of choices for a required command option.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-d {y|n}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>-d</code> option requires that you use either the <code>y</code> argument or the <code>n</code> argument.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>${ }</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates a variable reference.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>${com.sun.javaRoot}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">References the value of the <code>com.sun.javaRoot</code> variable.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Joins simultaneous multiple keystrokes.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Control-A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Press the Control key while you press the A key.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>+</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Joins consecutive multiple keystrokes.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ctrl+A+N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Press the Control key, release it, and then press the subsequent keys.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates menu item selection in a graphical user interface.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">File &gt; New &gt; Templates</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">From the File menu, choose New. From the New submenu, choose Templates.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="default-paths-and-file-names"><a class="anchor" href="#default-paths-and-file-names"></a>Default Paths and File Names</h3>
+<div class="paragraph">
+<p>The following table describes the default paths and file names that are
+used in this book.</p>
+</div>
+<table class="tableblock frame-all grid-all fit-content stretch">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Placeholder</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">as-install</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Represents the base installation directory for Eclipse GlassFish.
+In configuration files, as-install is represented as follows:
+<code>${com.sun.aas.installRoot}</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Installations on the Oracle Solaris operating system, Linux operating
+system, and Mac OS operating system:</p>
+<div class="paragraph">
+<p>user&#8217;s-home-directory<code>/glassfish7/glassfish</code></p>
+</div>
+</li>
+<li>
+<p>Installations on the Windows operating system:</p>
+<div class="paragraph">
+<p>SystemDrive<code>:\glassfish7\glassfish</code></p>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">as-install-parent</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents the parent of the base installation directory for Eclipse GlassFish.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Installations on the Oracle Solaris operating system, Linux operating
+system, and Mac operating system:</p>
+<div class="paragraph">
+<p>user&#8217;s-home-directory<code>/glassfish7</code></p>
+</div>
+</li>
+<li>
+<p>Installations on the Windows operating system:</p>
+<div class="paragraph">
+<p>SystemDrive<code>:\glassfish7</code></p>
+</div>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-root-dir</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents the directory in which a domain is created by default.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">as-install<code>/domains/</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-dir</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents the directory in which a domain&#8217;s configuration is stored.
+In configuration files, domain-dir is represented as follows:
+<code>${com.sun.aas.instanceRoot}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-root-dir/domain-name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">instance-dir</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents the directory for a server instance.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">domain-dir/instance-name</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="overview-of-glassfish-server-open-source-edition-troubleshooting"><a class="anchor" href="#overview-of-glassfish-server-open-source-edition-troubleshooting"></a>1 Overview of Eclipse GlassFish Troubleshooting</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter describes some of the tools, methods, and resources
+available for troubleshooting Eclipse GlassFish.
+Guidelines for evaluating and investigating a problem are provided.</p>
+</div>
+<div class="paragraph">
+<p>This chapter contains the following sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#identifying-the-problem">Identifying the Problem</a></p>
+</li>
+<li>
+<p><a href="#troubleshooting-tools">Troubleshooting Tools</a></p>
+</li>
+<li>
+<p><a href="#where-to-go-for-more-information">Where to Go for More Information</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="identifying-the-problem"><a class="anchor" href="#identifying-the-problem"></a>Identifying the Problem</h3>
+<div class="paragraph">
+<p>Application servers are typically deployed in complex operating
+environments and involve many technologies, products, and tools.
+Understanding and diagnosing problems in enterprise software with many
+components performing many tasks can be a challenge. This section
+describes how to get started , and contains the following topics:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#first-steps">First Steps</a></p>
+</li>
+<li>
+<p><a href="#gathering-information">Gathering Information</a></p>
+</li>
+<li>
+<p><a href="#examining-log-files">Examining Log Files</a></p>
+</li>
+<li>
+<p><a href="#monitoring-the-system">Monitoring the System</a></p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="first-steps"><a class="anchor" href="#first-steps"></a>First Steps</h4>
+<div class="paragraph">
+<p>Sometimes the most obvious solutions are overlooked. As you begin your
+investigation, try the following steps first.</p>
+</div>
+<div class="sect4">
+<h5 id="verify-system-requirements-and-configuration"><a class="anchor" href="#verify-system-requirements-and-configuration"></a>Verify System Requirements and Configuration</h5>
+<div class="paragraph">
+<p>Ensure that your system meets the requirements listed in
+"<a href="release-notes.html#hardware-and-software-requirements">Hardware and Software Requirements</a>"
+in Eclipse GlassFish Release Notes.
+Problems are likely to arise if you attempt to install on a platform that
+is not supported or on a system that in some other way does not meet release requirements.
+Also see "<a href="release-notes.html#GSRLN00253">Known Issues</a>"
+in Eclipse GlassFish Release Notes for known issues related to installation.</p>
+</div>
+<div class="paragraph">
+<p>Eclipse GlassFish requires JDK release 11 or newer.
+If necessary, download and install the required JDK software.</p>
+</div>
+<div class="paragraph">
+<p>On Solaris, Linux, and Windows systems, JDK software is available from the
+<a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">
+Java SE downloads page</a>
+(<code><a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html" class="bare">http://www.oracle.com/technetwork/java/javase/downloads/index.html</a></code>).</p>
+</div>
+<div class="paragraph">
+<p>For Mac OS X systems, Eclipse GlassFish uses the JDK
+that is part of the Macintosh operating system. If necessary, obtain the
+required JDK version from the <a href="http://support.apple.com/downloads/">Mac OS
+X Updates site</a> (<code><a href="http://support.apple.com/downloads/" class="bare">http://support.apple.com/downloads/</a></code>).</p>
+</div>
+<div class="paragraph">
+<p>Also ensure that the <code>JAVA_HOME</code> environment variable on your system
+points to the JDK installation directory and not the Java Runtime
+Environment (JRE) software.</p>
+</div>
+<div class="paragraph">
+<p>Set <code>JAVA_HOME</code> and <code>$JAVA_HOME/bin</code> in the <code>PATH</code> to point to the
+supported JDK version.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="review-known-issues"><a class="anchor" href="#review-known-issues"></a>Review Known Issues</h5>
+<div class="paragraph">
+<p>Your problem might be related to a known issue for the release. Refer to
+the <a href="release-notes.html#GSRLN">Eclipse GlassFish Release Notes</a> for
+the latest information regarding known issues and possible workarounds.
+Also search the GlassFish issues at
+<code><a href="https://github.com/eclipse-ee4j/glassfish/issues" class="bare">https://github.com/eclipse-ee4j/glassfish/issues</a></code>.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="search-the-product-documentation"><a class="anchor" href="#search-the-product-documentation"></a>Search the Product Documentation</h5>
+<div class="paragraph">
+<p>Eclipse GlassFish includes complete product
+documentation. Search the documentation to see if your problem is
+addressed. See <a href="#glassfish-server-documentation-set">Eclipse GlassFish Documentation Set</a>
+for the books in the documentation set and a description of their contents.
+Also see the Administration Console online help for detailed
+information about performing administrative tasks using the graphical interface.</p>
+</div>
+<div class="paragraph">
+<p>The following books will be especially helpful for troubleshooting:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="release-notes.html#GSRLN">Eclipse GlassFish Release Notes</a>,
+which provides the latest information regarding known issues and possible workarounds.</p>
+</li>
+<li>
+<p><a href="error-messages-reference.html#GSEMR">
+Eclipse GlassFish Error Message Reference</a>,
+which lists error messages you might encounter when using Eclipse GlassFish.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Use the product documentation to learn more about Eclipse GlassFish. The more you know about the product the easier it might
+be to figure out why something isn&#8217;t working.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="search-the-glassfish-mailing-lists-and-forums"><a class="anchor" href="#search-the-glassfish-mailing-lists-and-forums"></a>Search the GlassFish Mailing Lists and Forums</h5>
+<div class="paragraph">
+<p>Lists and forums are extremely helpful resources, and are accessed as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>GlassFish mailing lists: <code><a href="https://accounts.eclipse.org/mailing-list/glassfish-dev" class="bare">https://accounts.eclipse.org/mailing-list/glassfish-dev</a></code></p>
+</li>
+<li>
+<p>GlassFish user forum: <code><a href="https://www.eclipse.org/forums/index.php/f/419/" class="bare">https://www.eclipse.org/forums/index.php/f/419/</a></code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="gathering-information"><a class="anchor" href="#gathering-information"></a>Gathering Information</h4>
+<div class="paragraph">
+<p>Troubleshooting and analysis require information. The more information
+you have the easier it is to classify a problem and search for its
+solution. Detailed information will also be necessary should you need to
+contact others for support, either through a community mailing list or
+through more formal Sun support channels.</p>
+</div>
+<div class="paragraph">
+<p>As you continue your investigation, consider the following questions.</p>
+</div>
+<div class="sect4">
+<h5 id="when-does-the-problem-occur"><a class="anchor" href="#when-does-the-problem-occur"></a>When Does the Problem Occur?</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>What do the logs show? What kind of error message are you getting? For
+more information about logs, see <a href="#examining-log-files">Examining Log Files</a>. Logs
+are a good place to start your troubleshooting.</p>
+</li>
+<li>
+<p>What are you trying to do when the problem occurs and how are you
+doing it? What is the sequence of events?</p>
+</li>
+<li>
+<p>Does the problem occur every time you perform the same type of
+operation, or does it seem random? Can you reproduce the issue?</p>
+</li>
+<li>
+<p>Have other events or problems occurred that could possibly be related,
+such as web sessions closing early, exceptions being thrown in your own
+application logic, components not being correctly deployed or
+undeployed?</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="what-is-your-environment"><a class="anchor" href="#what-is-your-environment"></a>What Is Your Environment?</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>What version of Eclipse GlassFish are you using?
+What operating system and version? What JDK version? Many problems are
+caused simply because system requirements for the release are not met.
+Refer to the <a href="release-notes.html#GSRLN">Eclipse GlassFish Release
+Notes</a> for the latest information regarding system requirements, and
+make sure your system meets those requirements.</p>
+</li>
+<li>
+<p>What resources does your system have, such as memory, disk, and swap
+space? If system memory is an issue, look for ways to optimize your
+configuration and consider taking other actions such as adding memory or
+decreasing system load.</p>
+</li>
+<li>
+<p>Have any patches been applied? If so, what are the product and
+operating system patch numbers?</p>
+</li>
+<li>
+<p>What other products and technologies are installed and being used in
+the installation?</p>
+</li>
+<li>
+<p>How many application servers, web servers, and directory servers are
+installed? What are the products and versions?</p>
+</li>
+<li>
+<p>How is the web server connected to Eclipse GlassFish? On the same system?</p>
+</li>
+<li>
+<p>How is Eclipse GlassFish connected to the directory
+server?</p>
+</li>
+<li>
+<p>What JDBC driver is being used to access the database?</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="what-is-your-system-configuration"><a class="anchor" href="#what-is-your-system-configuration"></a>What Is Your System Configuration?</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>What are your settings?</p>
+</li>
+<li>
+<p>On which port is Eclipse GlassFish configured — the
+default or something else?</p>
+</li>
+<li>
+<p>What defaults were changed during installation and what are the
+values?</p>
+</li>
+<li>
+<p>What other settings were changed from the defaults and what are their
+values?</p>
+</li>
+<li>
+<p>What are the parameters related to JVM heap, stack, and garbage
+collection set to?</p>
+</li>
+<li>
+<p>What are the JVM options?</p>
+</li>
+<li>
+<p>What is the permgen size? <code>OutOfMemoryError:PermGen space</code> errors are
+common and indicate that you need to increase the permanent generation
+space available.</p>
+</li>
+<li>
+<p>Is SSL enabled?</p>
+</li>
+<li>
+<p>What are your network settings (proxy, firewall, and so on)? What
+happens if you disable your firewall and attempt the task?</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="what-is-different"><a class="anchor" href="#what-is-different"></a>What Is Different?</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>What is different that could have provoked the problem or triggered
+the event? Was something new added or changed? Have any new applications
+been deployed? If changes have been made recently, consider backing them
+out and seeing what happens — does the problem still occur?</p>
+</li>
+<li>
+<p>Was the feature or functionality working correctly at one time? If so,
+what changed or happened between then and now?</p>
+</li>
+<li>
+<p>Is this working on another system? If so, what is different about that
+environment?</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="examining-log-files"><a class="anchor" href="#examining-log-files"></a>Examining Log Files</h4>
+<div class="paragraph">
+<p>Logging is one of your most important troubleshooting tools. It is the
+process by which Eclipse GlassFish captures data
+about events that occur during server operation, such as configuration
+errors, security failures, or server malfunction. This data is recorded
+in log files, and is usually your first source of information when
+Enterprise Server problems occur. The primary purpose of log files is to
+provide troubleshooting information. Analyzing the log files can help
+determine the health of the server and identify problem areas.</p>
+</div>
+<div class="paragraph">
+<p>By default, log information for each Eclipse GlassFish server instance is captured in a <code>server.log</code> file. That is,
+each instance, including the domain administration server (DAS), has an
+individual log file. By default, the log file for the DAS is located in
+domain-dir<code>/logs</code>, and the log file for each instance is located in
+instance-dir``/logs`.</p>
+</div>
+<div class="paragraph">
+<p>In addition, for domains that use clustering, Eclipse GlassFish captures log information for each cluster instance in a
+<code>cluster.log</code> file. By default, the <code>cluster.log</code> file is also located
+in instance-dir<code>/logs</code>.</p>
+</div>
+<div class="paragraph">
+<p>Oracle recommends using the Administration Console to view logging
+information. However, you can open a log file in a text editor and
+search for the module or message in which you are interested. Eclipse GlassFish also lets you collect log files into a ZIP
+file, which provides a convenient means to collect and view the log
+files for an instance or a domain even when it is not running.</p>
+</div>
+<div class="paragraph">
+<p>You configure the Logging Service by setting attributes in the
+<code>logging.properties</code> file. Each server, configuration, instance, and
+cluster in the Eclipse GlassFish domain has an
+individual <code>logging.properties</code> file. The root directory in which these
+<code>logging.properties</code> files are located is the same directory as for the
+<code>domain.xml</code> file, typically domain-dir/<code>config</code>. The default target
+when configuring logging attributes is the DAS. However, you can
+optionally target a specific server, instance, or cluster. You can also
+target a configuration that is shared by one or more instances or
+clusters. The Logging Service can also be configured using the
+Administration Console.</p>
+</div>
+<div class="paragraph">
+<p>Log levels such as <code>SEVERE</code>, <code>WARNING</code>, <code>INFO</code>, <code>CONFIG</code>, and others can
+be set to provide different types and amounts of information. The
+default setting is <code>INFO</code>. Each Eclipse GlassFish
+module has its own logger, and each logger has its own namespace. Log
+levels can be set globally for all loggers, or individually for
+module-specific loggers.</p>
+</div>
+<div class="paragraph">
+<p>For information about using the Administration Console log viewer and
+logging functions, see the Administration Console online help. For
+information about using the command line for logging functions, see
+"<a href="administration-guide.html#administering-the-logging-service">Administering the Logging Service</a>" in Eclipse GlassFish Administration Guide.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="monitoring-the-system"><a class="anchor" href="#monitoring-the-system"></a>Monitoring the System</h4>
+<div class="paragraph">
+<p>Monitoring is another helpful tool. It is the process of reviewing the
+statistics of a system to improve performance or solve problems. By
+monitoring the state of various components and services deployed in
+Eclipse GlassFish you can identify performance
+bottlenecks, predict failures, perform root cause analysis, and ensure
+that everything is functioning as expected. For more information about
+monitoring, including JConsole information, see
+"<a href="administration-guide.html#administering-the-monitoring-service">Administering the Monitoring Service</a>" in Eclipse GlassFish Administration Guide.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="troubleshooting-tools"><a class="anchor" href="#troubleshooting-tools"></a>Troubleshooting Tools</h3>
+<div class="paragraph">
+<p>Several tools are available that can be used to collect information for
+troubleshooting purposes. This section provides basic information about
+some of them, and includes the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#operating-system-utilities">Operating System Utilities</a></p>
+</li>
+<li>
+<p><a href="#stack-traces-and-thread-dumps">Stack Traces and Thread Dumps</a></p>
+</li>
+<li>
+<p><a href="#visualvm">VisualVM</a></p>
+</li>
+<li>
+<p><a href="#jvm-command-line-tools">JVM Command-Line Tools</a></p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="operating-system-utilities"><a class="anchor" href="#operating-system-utilities"></a>Operating System Utilities</h4>
+<div class="paragraph">
+<p>Operating system utilities, such as <code>pkginfo</code> and <code>showrev</code> on Solaris
+and <code>rpm</code> on Linux, are helpful in gathering system information.</p>
+</div>
+<div class="paragraph">
+<p>The <code>ps -ef</code> command provides helpful information about processes that
+are running, including their process identification numbers (PIDs).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="stack-traces-and-thread-dumps"><a class="anchor" href="#stack-traces-and-thread-dumps"></a>Stack Traces and Thread Dumps</h4>
+<div class="paragraph">
+<p>A stack trace is a user-friendly snapshot of the threads and monitors in
+a Virtual Machine for the Java platform (Java Virtual Machine or JVM
+machine). A thread dump shows what every thread in a JVM is doing at a
+given time and is useful in debugging. When the application server
+freezes, hangs, or becomes sluggish for no apparent reason, you should
+generate and analyze a thread dump.</p>
+</div>
+<div class="paragraph">
+<p>This section explains how to obtain a thread dump for Eclipse GlassFish. More information about analyzing the information
+contained in a thread dump can be found in
+"<a href="http://java.sun.com/developer/technicalArticles/Programming/Stacktrace">An
+Introduction to Java Stack Traces</a>"
+(<code><a href="http://java.sun.com/developer/technicalArticles/Programming/Stacktrace" class="bare">http://java.sun.com/developer/technicalArticles/Programming/Stacktrace</a></code>).</p>
+</div>
+<div class="sect4">
+<h5 id="to-obtain-a-server-thread-dump"><a class="anchor" href="#to-obtain-a-server-thread-dump"></a>To Obtain a Server Thread Dump</h5>
+<div class="paragraph">
+<p>Type the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin generate-jvm-report --type=thread</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p><a href="reference-manual.html#generate-jvm-report"><code>generate-jvm-report</code>(1)</a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="visualvm"><a class="anchor" href="#visualvm"></a>VisualVM</h4>
+<div class="paragraph">
+<p>VisualVM is a Java troubleshooting tool that uses various technologies
+such as <code>jvmstat</code>, JMX, and Attach API to access monitored applications.
+VisualVM is a tool for visualizing data sources and by default
+visualizes the following types: applications, hosts, snapshots, core
+dumps, heap dumps, and thread dumps. These data sources are visualized
+in VisualVM so that they can be monitored for the purposes of analysis,
+management, and troubleshooting. VisualVM is commonly used to detect
+memory leaks.</p>
+</div>
+<div class="paragraph">
+<p>VisualVM has a GlassFish plugin that enhances monitoring of hosted
+applications by adding specialized overview, a tab for monitoring the
+HTTP Service, and the ability to visually select and monitor any of the
+deployed web applications. You can experiment with VisualVM
+troubleshooting capabilities, but note that various features depend on
+the Java versions used in the client and server. Depending on your
+configuration, you might only get parts of the VisualVM features. For
+more information about VisualVM, see <code><a href="http://visualvm.java.net" class="bare">http://visualvm.java.net</a></code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="jvm-command-line-tools"><a class="anchor" href="#jvm-command-line-tools"></a>JVM Command-Line Tools</h4>
+<div class="paragraph">
+<p>JVM command-line tools can be used to provide valuable information about
+hung Java processes or Java core dumps. These tools include the
+following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>jstack</code>: Prints Java stack traces of Java threads for a given Java
+process or core file or a remote debug server.</p>
+</li>
+<li>
+<p><code>jinfo</code>: Prints Java configuration information for a given Java
+process or core file or a remote debug server.</p>
+</li>
+<li>
+<p><code>jmap</code>: Prints shared object memory maps or heap memory details for a
+given process or core file or a remote debug server.</p>
+</li>
+<li>
+<p><code>jsadebugd</code>: Attaches to a Java process or core file and acts as a
+debug server. Remote clients such as <code>jstack</code>, <code>jmap</code>, and <code>jinfo</code> can
+attach to the server using Java Remote Invocation Method (RMI).</p>
+</li>
+<li>
+<p><code>jhat</code>: Enables Java heap dumps to be browsed using a web browser.</p>
+</li>
+<li>
+<p><code>jstat</code>: Displays performance statistics for an instrumented HotSpot JVM.</p>
+</li>
+<li>
+<p><code>jps</code>: Lists the instrumented HotSpot JVMs on the target system</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="where-to-go-for-more-information"><a class="anchor" href="#where-to-go-for-more-information"></a>Where to Go for More Information</h3>
+<div class="paragraph">
+<p>These resources were mentioned throughout this chapter and are provided
+again here for easy reference.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Release Notes: <a href="release-notes.html#GSRLN">Eclipse GlassFish
+Release Notes</a></p>
+</li>
+<li>
+<p>Error messages: <a href="error-messages-reference.html#GSEMR">Eclipse GlassFish Error
+Message Reference</a></p>
+</li>
+<li>
+<p>Mailing lists and forums: See <a href="#search-the-glassfish-mailing-lists-and-forums">Search the GlassFish Mailing
+Lists and Forums</a> for details about accessing lists and forums.</p>
+</li>
+<li>
+<p>GlassFish community site: <code><a href="http://glassfish.java.net/" class="bare">http://glassfish.java.net/</a></code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="specific-issues"><a class="anchor" href="#specific-issues"></a>2 Specific Issues</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter lists problems that you might encounter when using Eclipse GlassFish 7. The following topics are addressed:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#cannot-access-local-server-httplocalhost8080">Cannot Access Local Server (<code><a href="http://localhost:8080" class="bare">http://localhost:8080</a></code>)</a></p>
+</li>
+<li>
+<p><a href="#cannot-access-remote-server">Cannot Access Remote Server</a></p>
+</li>
+<li>
+<p><a href="#cannot-access-the-administration-console">Cannot Access the Administration Console</a></p>
+</li>
+<li>
+<p><a href="#cannot-access-a-server-application">Cannot Access a Server Application</a></p>
+</li>
+<li>
+<p><a href="#administrator-user-name-or-password-not-known">Administrator User Name or Password Not Known</a></p>
+</li>
+<li>
+<p><a href="#experience-issues-related-to-the-jdk">Experience Issues Related to the JDK</a></p>
+</li>
+<li>
+<p><a href="#server-will-not-start-on-windows-port-conflict">Server Will Not Start on Windows (Port Conflict)</a></p>
+</li>
+<li>
+<p><a href="#glassfish-server-fails-to-start-in-an-opensolaris-zone">Eclipse GlassFish Fails to Start in an OpenSolaris Zone</a></p>
+</li>
+<li>
+<p><a href="#two-server-instances-bind-to-same-port-on-windows">Two Server Instances Bind to Same Port on Windows</a></p>
+</li>
+<li>
+<p><a href="#cannot-produce-a-jvm-thread-dump-after-server-crash">Cannot Produce a JVM Thread Dump After Server Crash</a></p>
+</li>
+<li>
+<p><a href="#issues-related-to-applications">Issues Related to Applications</a></p>
+</li>
+<li>
+<p><a href="#issues-related-to-asadmin">Issues Related to <code>asadmin</code></a></p>
+</li>
+<li>
+<p><a href="#issues-related-to-installation">Issues Related to Installation</a></p>
+</li>
+<li>
+<p><a href="#issues-related-to-security">Issues Related to Security</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="cannot-access-local-server-httplocalhost8080"><a class="anchor" href="#cannot-access-local-server-httplocalhost8080"></a>Cannot Access Local Server (<code><a href="http://localhost:8080" class="bare">http://localhost:8080</a></code>)</h3>
+<div class="paragraph">
+<p>When this error occurs, check the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#did-the-server-start">Did the Server Start?</a></p>
+</li>
+<li>
+<p><a href="#was-the-server-started-at-the-expected-port">Was the Server Started at the Expected Port?</a></p>
+</li>
+<li>
+<p><a href="#is-a-personal-firewall-enabled">Is a Personal Firewall Enabled?</a></p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="did-the-server-start"><a class="anchor" href="#did-the-server-start"></a>Did the Server Start?</h4>
+<div class="sect4">
+<h5 id="description"><a class="anchor" href="#description"></a>Description</h5>
+<div class="paragraph">
+<p>If the console window is still open, the expected message indicates that
+the default domain was started successfully.</p>
+</div>
+<div class="paragraph">
+<p>If the console window is already closed, check for messages in the log
+file. This is the default location:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>domain-dir/logs/server.log</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If startup was successful, the expected message is similar to that on
+the console, and appears at the end of the log file.</p>
+</div>
+<div class="paragraph">
+<p>For more information about starting a domain, see
+"<a href="administration-guide.html#starting-and-stopping-a-domain">
+Starting and Stopping a Domain</a>"
+in Eclipse GlassFish Administration Guide.
+To easily determine if a domain is running, use the <code>asadmin list-domains</code> command.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="was-the-server-started-at-the-expected-port"><a class="anchor" href="#was-the-server-started-at-the-expected-port"></a>Was the Server Started at the Expected Port?</h4>
+<div class="sect4">
+<h5 id="description-1"><a class="anchor" href="#description-1"></a>Description</h5>
+<div class="paragraph">
+<p>The server might be running at a different port number than expected,
+either because it was intentionally installed there, or because another
+server was already running on the default port when the server was
+installed.</p>
+</div>
+<div id="to-determine-which-port-number-the-server-is-using" class="paragraph">
+<p>To Determine Which Port Number the Server Is Using</p>
+</div>
+<div class="paragraph">
+<p>Follow this procedure.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Examine the server&#8217;s configuration file:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>domain-dir/config/domain.xml</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Find the <code>network-listener</code> element.</p>
+</li>
+<li>
+<p>Inspect the value of the <code>port</code> attribute.</p>
+<div class="paragraph">
+<p>Be sure to enter the correct port number when invoking the server.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The server&#8217;s default port number is <code>8080</code>, however, there are a number
+of ways in which the expected value can change:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A different port number was specified during installation.</p>
+</li>
+<li>
+<p>A previous installation exists.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="is-a-personal-firewall-enabled"><a class="anchor" href="#is-a-personal-firewall-enabled"></a>Is a Personal Firewall Enabled?</h4>
+<div class="paragraph">
+<p>Issues might result when personal firewalls are enabled. Disable your
+personal firewall and see if the server access problem still exists.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cannot-access-remote-server"><a class="anchor" href="#cannot-access-remote-server"></a>Cannot Access Remote Server</h3>
+<div class="paragraph">
+<p>When attempting to open the start page of Eclipse GlassFish, the initial
+screen does not appear.</p>
+</div>
+<div class="paragraph">
+<p>When this error occurs, check the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#is-the-server-available-locally">Is the Server Available Locally?</a></p>
+</li>
+<li>
+<p><a href="#is-the-proxy-setting-causing-a-problem">Is the Proxy Setting Causing a Problem?</a></p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="is-the-server-available-locally"><a class="anchor" href="#is-the-server-available-locally"></a>Is the Server Available Locally?</h4>
+<div class="sect4">
+<h5 id="description-2"><a class="anchor" href="#description-2"></a>Description</h5>
+<div class="paragraph">
+<p>If the server cannot be accessed from the web, but it is running
+locally, then the server is actually running.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="solution"><a class="anchor" href="#solution"></a>Solution</h5>
+<div class="paragraph">
+<p>Verify that the server is running locally.</p>
+</div>
+<div id="to-verify-that-the-server-is-running-locally" class="paragraph">
+<p>To Verify That the Server Is Running Locally</p>
+</div>
+<div class="paragraph">
+<p>Follow this procedure.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Log on to the host where the server is running.</p>
+</li>
+<li>
+<p>Go to the local web page. For example, if <code>8080</code> is the default port, go to:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>http://localhost:8080/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the start page does appear, the web connection is encountering a
+problem that prevents accessing the server remotely. If the start page
+does not appear, see <a href="#did-the-server-start">Did the Server Start?</a>.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="is-the-proxy-setting-causing-a-problem"><a class="anchor" href="#is-the-proxy-setting-causing-a-problem"></a>Is the Proxy Setting Causing a Problem?</h4>
+<div class="sect4">
+<h5 id="description-3"><a class="anchor" href="#description-3"></a>Description</h5>
+<div class="paragraph">
+<p>The server should be accessible directly from the host on which it is
+running (<code>localhost</code>); for example, using the default port <code>8080</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>http://localhost:8080/</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="solution-1"><a class="anchor" href="#solution-1"></a>Solution</h5>
+<div class="paragraph">
+<p>A server instance running on <code>localhost</code> might not be accessible if the
+server host machine is connected to the web through a proxy. To solve
+this problem, do one of the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Set the browser to bypass the proxy server when accessing <code>localhost</code>.
+Refer to the browser&#8217;s help system for information about how to do this.</p>
+</li>
+<li>
+<p>Use the fully-qualified host name or IP address of your system; for example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>http://myhost.mydomain.com:8080/</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create an entry in the system&#8217;s hosts file (for example, pointing
+<code>127.0.0.1</code> to <code>localhost</code>; <code>127.0.0.1</code> is not proxied).</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>To determine the host name for the <code>localhost</code> machine, type <code>hostname</code> at the command prompt.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cannot-access-the-administration-console"><a class="anchor" href="#cannot-access-the-administration-console"></a>Cannot Access the Administration Console</h3>
+<div class="paragraph">
+<p>The Administration Console provides a graphical interface for
+administrative functions. If the Administration Console is not
+accessible, check the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#is-the-application-server-running">Is the Application Server Running?</a></p>
+</li>
+<li>
+<p><a href="#is-the-administration-console-running-on-the-expected-port">Is the Administration Console Running on the Expected
+Port?</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For more information about the Administration Console, see
+"<a href="administration-guide.html#administration-console">Administration Console</a>" in Eclipse GlassFish Administration Guide.</p>
+</div>
+<div class="sect3">
+<h4 id="is-the-application-server-running"><a class="anchor" href="#is-the-application-server-running"></a>Is the Application Server Running?</h4>
+<div class="sect4">
+<h5 id="description-4"><a class="anchor" href="#description-4"></a>Description</h5>
+<div class="paragraph">
+<p>The server must be running before the Administration Console can be
+accessed.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="solution-2"><a class="anchor" href="#solution-2"></a>Solution</h5>
+<div class="paragraph">
+<p>Review the information in <a href="#did-the-server-start">Did the Server Start?</a> to
+determine if the server is running.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="is-the-administration-console-running-on-the-expected-port"><a class="anchor" href="#is-the-administration-console-running-on-the-expected-port"></a>Is the Administration Console Running on the Expected Port?</h4>
+<div class="sect4">
+<h5 id="description-5"><a class="anchor" href="#description-5"></a>Description</h5>
+<div class="paragraph">
+<p>The default port number for the Administration Console is <code>4848</code>.
+However, it could be running on a different port number than expected,
+either because it was intentionally installed there, or because that
+port was in use when the server was started.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="solution-3"><a class="anchor" href="#solution-3"></a>Solution</h5>
+<div class="paragraph">
+<p>Refer to <a href="#was-the-server-started-at-the-expected-port">Was the Server Started at the Expected Port?</a> for
+guidelines on verifying the port on which the Administration Console is
+running. Be sure to enter the correct port number and HTTP protocol when
+invoking the Administration Console.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cannot-access-a-server-application"><a class="anchor" href="#cannot-access-a-server-application"></a>Cannot Access a Server Application</h3>
+<div class="paragraph">
+<p>If a particular application cannot be accessed through Eclipse GlassFish,
+check the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#is-the-application-server-running-1">Is the Application Server Running?</a></p>
+</li>
+<li>
+<p><a href="#was-application-deployment-successful">Was Application Deployment Successful?</a></p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="is-the-application-server-running-1"><a class="anchor" href="#is-the-application-server-running-1"></a>Is the Application Server Running?</h4>
+<div class="sect4">
+<h5 id="description-6"><a class="anchor" href="#description-6"></a>Description</h5>
+<div class="paragraph">
+<p>If Eclipse GlassFish is not running, applications are not accessible.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="solution-4"><a class="anchor" href="#solution-4"></a>Solution</h5>
+<div class="paragraph">
+<p>Review the information in <a href="#did-the-server-start">Did the Server Start?</a> to
+determine if the server is running. The server must be running before a
+server application can be accessed.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="was-application-deployment-successful"><a class="anchor" href="#was-application-deployment-successful"></a>Was Application Deployment Successful?</h4>
+<div class="sect4">
+<h5 id="description-7"><a class="anchor" href="#description-7"></a>Description</h5>
+<div class="paragraph">
+<p>An application must be successfully deployed before it can be accessed.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="solution-5"><a class="anchor" href="#solution-5"></a>Solution</h5>
+<div class="paragraph">
+<p>Verify that the application was successfully deployed. There are several
+ways to do this:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Check the server&#8217;s log file for related entries:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>domain-dir/server.log</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Use the <code>asadmin list-applications</code> command to determine which
+applications are deployed.</p>
+</li>
+<li>
+<p>View the Applications page in the Administration Console, accessed by
+clicking the Applications node.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For more information about deploying applications, see
+"<a href="application-deployment-guide.html#deploying-applications">Deploying Applications</a>" in Eclipse GlassFish Application Deployment Guide. Also see the Administration
+Console online help.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="administrator-user-name-or-password-not-known"><a class="anchor" href="#administrator-user-name-or-password-not-known"></a>Administrator User Name or Password Not Known</h3>
+<div class="paragraph">
+<p>If you have forgotten the administrator user name, you can find it by
+inspecting the domain-dir`/config/admin-keyfile` file, where domain-dir
+is the directory for the domain. In the default domain, <code>domain1</code>, the
+file to inspect is domain-dir`/config/admin-keyfile`. For a different
+domain, substitute its name in the path.</p>
+</div>
+<div class="paragraph">
+<p>If you have forgotten the administrator password, one solution is to
+create a new domain with the admin username and password that you want,
+then copy the entry from the <code>config/admin-keyfile</code> file in that new
+domain to the other domain.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="experience-issues-related-to-the-jdk"><a class="anchor" href="#experience-issues-related-to-the-jdk"></a>Experience Issues Related to the JDK</h3>
+<div class="sect3">
+<h4 id="description-8"><a class="anchor" href="#description-8"></a>Description</h4>
+<div class="paragraph">
+<p>You experience JDK-related issues in a variety of circumstances.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="solution-6"><a class="anchor" href="#solution-6"></a>Solution</h4>
+<div class="paragraph">
+<p>Eclipse GlassFish 7 requires JDK 11, so check your system for that dependency.</p>
+</div>
+<div class="paragraph">
+<p>Ensure that the required JDK software is installed and that the
+<code>JAVA_HOME</code> environment variable points to the JDK installation
+directory, not the Java Runtime Environment (JRE) software.</p>
+</div>
+<div class="paragraph">
+<p>Set <code>JAVA_HOME</code> and <code>$JAVA_HOME/bin</code> in the <code>PATH</code> to point to the
+supported JDK version.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="server-will-not-start-on-windows-port-conflict"><a class="anchor" href="#server-will-not-start-on-windows-port-conflict"></a>Server Will Not Start on Windows (Port Conflict)</h3>
+<div class="paragraph">
+<p>If a message similar to the following is displayed when starting
+Eclipse GlassFish on Microsoft Windows, a server port conflict has
+occurred:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>Address already in use</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This error occurs when another application is running on the Eclipse GlassFish port (default <code>8080</code>), or because a previous instance of
+Eclipse GlassFish did not shut down cleanly.</p>
+</div>
+<div class="paragraph">
+<p>You might also check the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#is-another-application-running-on-the-servers-port">Is Another Application Running on the Server&#8217;s Port?</a></p>
+</li>
+<li>
+<p><a href="#has-an-ungraceful-shutdown-occurred-on-a-previously-running-server">Has an Ungraceful Shutdown Occurred on a Previously Running Server?</a></p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="is-another-application-running-on-the-servers-port"><a class="anchor" href="#is-another-application-running-on-the-servers-port"></a>Is Another Application Running on the Server&#8217;s Port?</h4>
+<div class="paragraph">
+<p>If another application is using the server&#8217;s port, stop the other
+application, then restart Eclipse GlassFish.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="has-an-ungraceful-shutdown-occurred-on-a-previously-running-server"><a class="anchor" href="#has-an-ungraceful-shutdown-occurred-on-a-previously-running-server"></a>Has an Ungraceful Shutdown Occurred on a Previously Running Server?</h4>
+<div class="paragraph">
+<p>Use the <code>asadmin stop-domain</code> command to stop the server, or explicitly
+kill the Java process and then restart Eclipse GlassFish.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="glassfish-server-fails-to-start-in-an-opensolaris-zone"><a class="anchor" href="#glassfish-server-fails-to-start-in-an-opensolaris-zone"></a>Eclipse GlassFish Fails to Start in an OpenSolaris Zone</h3>
+<div class="sect3">
+<h4 id="description-9"><a class="anchor" href="#description-9"></a>Description</h4>
+<div class="paragraph">
+<p>If Eclipse GlassFish is installed in an OpenSolaris zone, an attempt to
+start a domain might fail with the following error message:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>Waiting for DAS to start ..Error starting domain: domain.
+The server exited prematurely with exit code 6.
+Before it died, it produced the following output:
+
+UTF ERROR [&quot;../../../src/solaris/instrument/EncodingSupport_md.c&quot;:66]:
+Failed to complete iconv_open() setup</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The failure occurs because, by default, an OpenSolaris zone is installed
+without language and encoding support, which Eclipse GlassFish requires.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="resolution-to-enable-glassfish-server-to-run-in-an-opensolaris-zone"><a class="anchor" href="#resolution-to-enable-glassfish-server-to-run-in-an-opensolaris-zone"></a>Resolution: To Enable Eclipse GlassFish to Run in an OpenSolaris Zone</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install the package that provides language and encoding support for
+your locale.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>$ pkg install package-name</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">package-name</dt>
+<dd>
+<p>The name of the package that provides language and encoding support
+for your locale. For example, the name of the package that provides
+language and encoding support for the US English locale is
+<code>SUNWlang-enUS</code>.</p>
+</dd>
+</dl>
+</div>
+</li>
+<li>
+<p>Set the <code>LANG</code> environment variable to the code for your locale.</p>
+<div class="paragraph">
+<p>For example, if your locale is US English, set the <code>LANG</code> environment
+variable to <code>en_US.UTF-8</code>.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="two-server-instances-bind-to-same-port-on-windows"><a class="anchor" href="#two-server-instances-bind-to-same-port-on-windows"></a>Two Server Instances Bind to Same Port on Windows</h3>
+<div class="sect3">
+<h4 id="description-10"><a class="anchor" href="#description-10"></a>Description</h4>
+<div class="paragraph">
+<p>This problem occurs on Windows XP systems with Eclipse GlassFish
+software, and is due to a known Windows security flaw rather than a
+problem with Eclipse GlassFish itself.</p>
+</div>
+<div class="paragraph">
+<p>The problem occurs when two or more instances of Eclipse GlassFish are
+created using the same port number for the <code>instanceport</code> option; for
+example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin create-domain -adminport 5001 options -instanceport 6001 domain
+asadmin create-domain -adminport 5002 options -instanceport 6001 domain</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When the two domains are started on a UNIX or Linux system, a port
+conflict error is thrown and the second instance fails to start.
+However, when the two domains are started on Windows XP, no error is
+thrown, both server instances start, but only the first instance is
+accessible at the specified port. When that first server instance is
+subsequently shut down, the second instance then becomes accessible.
+Moreover, when both instances are running, the Windows <code>netstat</code> command
+only reports the first instance.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="solution-7"><a class="anchor" href="#solution-7"></a>Solution</h4>
+<div class="paragraph">
+<p>Be sure to use unique port numbers for all server instances on Windows
+systems.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="cannot-produce-a-jvm-thread-dump-after-server-crash"><a class="anchor" href="#cannot-produce-a-jvm-thread-dump-after-server-crash"></a>Cannot Produce a JVM Thread Dump After Server Crash</h3>
+<div class="sect3">
+<h4 id="description-11"><a class="anchor" href="#description-11"></a>Description</h4>
+<div class="paragraph">
+<p>If Eclipse GlassFish crashes, the server dumps a core file and, by
+default, restarts with the <code>-Xrs</code> flag, which prevents the dump of a JVM
+thread dump.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="solution-8"><a class="anchor" href="#solution-8"></a>Solution</h4>
+<div class="sect4">
+<h5 id="to-obtain-a-server-thread-dump-specific-issues"><a class="anchor" href="#to-obtain-a-server-thread-dump-specific-issues"></a>To Obtain a Server Thread Dump</h5>
+<div class="paragraph">
+<p>Type the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin generate-jvm-report --type=thread</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p><a href="reference-manual.html#generate-jvm-report"><code>generate-jvm-report</code>(1)</a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="issues-related-to-applications"><a class="anchor" href="#issues-related-to-applications"></a>Issues Related to Applications</h3>
+<div class="sect3">
+<h4 id="cannot-undeploy-or-redeploy-application-with-open-streams-to-jar-files-windows"><a class="anchor" href="#cannot-undeploy-or-redeploy-application-with-open-streams-to-jar-files-windows"></a>Cannot Undeploy or Redeploy Application With Open Streams to <code>jar</code> Files (Windows)</h4>
+<div class="sect4">
+<h5 id="description-12"><a class="anchor" href="#description-12"></a>Description</h5>
+<div class="paragraph">
+<p>On Windows systems, after running an application, subsequent attempts to
+undeploy it or redeploy it throw exceptions about the server being
+unable to delete a file or rename a directory.</p>
+</div>
+<div class="paragraph">
+<p>On Windows systems, an application may use <code>getClass().getResource</code> or
+<code>getResourceAsStream</code> methods to locate a resource inside the
+application, particularly in <code>jar</code> files that are in the application or
+accessible to it. If the streams remain open, subsequent attempts to
+redeploy or undeploy the application can fail. In addition, the Java
+runtime by default caches streams to <code>jar</code> files for performance
+reasons.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="solution-9"><a class="anchor" href="#solution-9"></a>Solution</h5>
+<div class="paragraph">
+<p>Be sure to close streams opened by your applications. Also, if an
+application needs to be redeployed or undeployed repeatedly, and also
+needs to obtain a resource from a <code>jar</code> file using <code>getResource</code> or
+<code>getResourceAsStream</code>, consider using <code>getClass().getResource</code>, which
+returns a URL object, then invoke the <code>url.setUseCaches</code> method to turn
+off caching for that <code>jar</code> file, and use <code>url.getInputStream()</code> to
+obtain the stream.</p>
+</div>
+<div class="paragraph">
+<p>Although turning off caching for access to the <code>jar</code> file can slow
+performance, this approach does allow the application to be undeployed
+or redeployed. Note also that if the <code>getClass().getResourceAsStream</code>
+method is used instead, then the <code>jar</code> file in which the resource is
+located is cached (this is the default Java runtime setting) and remains
+open until the server is stopped.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="maxpermgen-exception"><a class="anchor" href="#maxpermgen-exception"></a><code>MaxPermGen</code> Exception</h4>
+<div class="sect4">
+<h5 id="description-13"><a class="anchor" href="#description-13"></a>Description</h5>
+<div class="paragraph">
+<p>Application servers such as Eclipse GlassFish allow you to redeploy an
+application without restarting the server. Simply make the change in
+your source code, compile the source, and redeploy the application.</p>
+</div>
+<div class="paragraph">
+<p>Each application is loaded using its own classloader. When you undeploy
+an application, its classloader is discarded with all the classes it
+loaded and is garbage collected sooner or later. However, if there&#8217;s a
+reference from outside an application to an object in the application
+loaded by the application&#8217;s classloader, that object can&#8217;t be garbage
+collected. The reference holds the object in memory.</p>
+</div>
+<div class="paragraph">
+<p>The memory in the Virtual Machine is divided into a number of regions.
+One of these regions is <code>PermGen</code>. It&#8217;s an area of memory used to (among
+other things) load class files. The size of this memory region is fixed;
+it does not change when the VM is running. You can specify the size of
+this region with a command line switch: <code>-XX:MaxPermSize</code>. Setting the
+<code>-Xmx</code> parameter does not help: this parameter only specifies the total
+heap size and does not affect the size of the <code>PermGen</code> region.</p>
+</div>
+<div class="paragraph">
+<p>If you keep loading new classes that can&#8217;t be garbage collected because
+of references to them from outside the application, the VM runs out of
+space in the <code>PermGen</code> region, even if there&#8217;s plenty of memory
+available. This is called a classloader leak. The resulting exception is
+<code>java.lang.OutOfMemoryError: PermGen space</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <code>java.lang.String.intern()</code> method also allocates memory in the
+<code>PermGen</code> region. If your application uses this method with strings and
+holds references to these strings, thereby making garbage collection
+impossible, your application may cause the same <code>PermGen space</code>
+exception.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="solution-10"><a class="anchor" href="#solution-10"></a>Solution</h5>
+<div class="paragraph">
+<p>Classloader leaks are difficult to diagnose. Most profilers list leaked
+objects but don&#8217;t highlight the ones causing classloader leaks. Most
+profilers also stop tracing as soon as they reach a class object or
+classloader.</p>
+</div>
+<div class="paragraph">
+<p>One diagnostic approach involves undeploying the application and
+triggering a memory dump using the JDK 11 <code>jcmd</code> tool.
+The simplest analysis is to list all instances of <code>java.lang.Class</code>
+and look for class objects that have many instances.
+This is a sign that the class has been loaded
+multiple times without being garbage collected.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="https://www.eclipse.org/openj9/docs/tool_jcmd/" class="bare">https://www.eclipse.org/openj9/docs/tool_jcmd/</a> for more information.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="issues-related-to-asadmin"><a class="anchor" href="#issues-related-to-asadmin"></a>Issues Related to <code>asadmin</code></h3>
+<div class="sect3">
+<h4 id="asadmin-start-domain-command-fails"><a class="anchor" href="#asadmin-start-domain-command-fails"></a><code>asadmin</code> <code>start-domain</code> Command Fails</h4>
+<div class="paragraph">
+<p>The command <code>asadmin start-domain</code> fails with the following error:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>There is more than one domain...</code></pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="description-14"><a class="anchor" href="#description-14"></a>Description</h5>
+<div class="paragraph">
+<p>When issued with no arguments, the command <code>asadmin start-domain</code> fails.</p>
+</div>
+<div class="paragraph">
+<p>This error occurs when there is more than one domain in the domains
+directory, none of them is named <code>domain1,</code> and no domain is specified
+with the <code>start-domain</code> command.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="solution-11"><a class="anchor" href="#solution-11"></a>Solution</h5>
+<div class="paragraph">
+<p>Specify the domain when issuing the <code>start-domain</code> command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin start-domain domain-name</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin start-domain mycustomdomain</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="cannot-stop-domain-using-asadmin-stop-domain"><a class="anchor" href="#cannot-stop-domain-using-asadmin-stop-domain"></a>Cannot Stop Domain Using <code>asadmin</code> <code>stop-domain</code></h4>
+<div class="sect4">
+<h5 id="description-15"><a class="anchor" href="#description-15"></a>Description</h5>
+<div class="paragraph">
+<p>You cannot stop the domain using the <code>asadmin</code> <code>stop-domain</code> command.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="solution-12"><a class="anchor" href="#solution-12"></a>Solution</h5>
+<div class="paragraph">
+<p>Look for error messages that display in the console when you issue the command.</p>
+</div>
+<div class="paragraph">
+<p>Search the <code>server.log</code> file for error messages related to your
+inability to stop the domain.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="issues-related-to-installation"><a class="anchor" href="#issues-related-to-installation"></a>Issues Related to Installation</h3>
+<div class="sect3">
+<h4 id="installation-hangs-during-update-tool-configuration"><a class="anchor" href="#installation-hangs-during-update-tool-configuration"></a>Installation Hangs During Update Tool Configuration</h4>
+<div class="sect4">
+<h5 id="description-16"><a class="anchor" href="#description-16"></a>Description</h5>
+<div class="paragraph">
+<p>Installation hangs more than five minutes during Update Tool configuration.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="solution-13"><a class="anchor" href="#solution-13"></a>Solution</h5>
+<div class="paragraph">
+<p>Cancel the installation and run the installation program again, but this
+time deselect the Install Update Tool check box. Update Tool can be
+installed later from as-install<code>/bin/</code>. For more information about
+Update Tool, see "<a href="administration-guide.html#GSADG00701">Update Tool</a>"
+in Eclipse GlassFish Administration Guide. For general information about
+Eclipse GlassFishinstallation, see the <a href="installation-guide.html#GSING">
+Eclipse GlassFish Installation Guide</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Update Tool differs from Upgrade Tool, which is used to migrate the
+configuration and deployed applications from an earlier version of
+Eclipse GlassFish to the current version.
+For more information about Upgrade Tool and upgrading, see the
+<a href="upgrade-guide.html#GSUPG">Eclipse GlassFish Upgrade Guide</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="glassfish-server-components-not-removed-during-uninstallation"><a class="anchor" href="#glassfish-server-components-not-removed-during-uninstallation"></a>Eclipse GlassFish Components Not Removed During Uninstallation</h4>
+<div class="sect4">
+<h5 id="description-17"><a class="anchor" href="#description-17"></a>Description</h5>
+<div class="paragraph">
+<p>Not all Eclipse GlassFish directories are automatically removed by the
+uninstallation program. Some directories and files remain after
+uninstalling.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="solution-14"><a class="anchor" href="#solution-14"></a>Solution</h5>
+<div class="paragraph">
+<p>Examine the remaining directories and remove any files or directories
+that you do not want, including hidden directories prefixed with a dot.
+It is safe to remove uninstallation and installation log files after you
+have examined them.</p>
+</div>
+<div class="paragraph">
+<p>For information related to uninstallation, see
+"<a href="installation-guide.html#uninstalling-glassfish">Uninstalling GlassFish</a>"
+in Eclipse GlassFish Installation Guide.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="issues-related-to-security"><a class="anchor" href="#issues-related-to-security"></a>Issues Related to Security</h3>
+<div class="paragraph">
+<p><a id="GSTSG00203"></a><a id="java.security.accesscontrolexception-access-denied-error"></a></p>
+</div>
+<div class="sect3">
+<h4 id="java-security-accesscontrolexception-access-denied-error"><a class="anchor" href="#java-security-accesscontrolexception-access-denied-error"></a><code>java.security.AccessControlException</code>: Access Denied Error</h4>
+<div class="sect4">
+<h5 id="description-18"><a class="anchor" href="#description-18"></a>Description</h5>
+<div class="paragraph">
+<p>The following error occurs from an application client, or appears in the
+<code>server.log</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>java.security.AccessControlException: access denied
+(java.util.PropertyPermission name write...)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There is a permissions issue in the policy files. Either the
+<code>client.policy</code> file for the application client or the <code>server.policy</code>
+file for server side components does not have permission to set the
+property.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="solution-15"><a class="anchor" href="#solution-15"></a>Solution</h5>
+<div class="paragraph">
+<p>Add the permission in <code>client.policy</code> (for the application client), or
+in <code>server.policy</code> (for web modules) for the application that needs to
+set the property. By default, applications only have read permission for
+properties.</p>
+</div>
+<div class="paragraph">
+<p>For example, to grant read/write permission for all files in the
+codebase directory, add or append the following to <code>client.policy</code> or
+<code>server.policy</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>grant codeBase &quot;file:/.../build/sparc_SunOS/sec/-&quot; {
+   permission java.util.PropertyPermission &quot;*&quot;, &quot;read,write&quot;;
+ };</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="mutual-authentication-not-working-with-the-application-client"><a class="anchor" href="#mutual-authentication-not-working-with-the-application-client"></a>Mutual Authentication Not Working With the Application Client</h4>
+<div class="sect4">
+<h5 id="description-19"><a class="anchor" href="#description-19"></a>Description</h5>
+<div class="paragraph">
+<p>This failure can occur when the keystore and truststore properties are
+not set properly.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="solution-16"><a class="anchor" href="#solution-16"></a>Solution</h5>
+<div class="paragraph">
+<p>Set the following properties on the JVM:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>javax.net.ssl.keyStore=
+&lt;keystore-file-path&gt;;javax.net.ssl.trustStore=&lt;truststore-file-path&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To use the application client, set the environment variable <code>VMARGS</code> to
+the following value:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>-Djavax.net.ssl.keyStore=${admin.domain.dir}/${admin.domain}/config/keystore.jks
+-Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.jks</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="frequently-asked-questions"><a class="anchor" href="#frequently-asked-questions"></a>3 Frequently Asked Questions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter lists a few of the Frequently Asked Questions (FAQs)
+related to Eclipse GlassFish 7. For the latest FAQs, see the
+GlassFish wiki at
+<code><a href="http://wikis.sun.com/display/GlassFish/GlassFishFAQIndex" class="bare">http://wikis.sun.com/display/GlassFish/GlassFishFAQIndex</a></code>.</p>
+</div>
+<div class="paragraph">
+<p>This chapter contains the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#administration-faqs">Administration FAQs</a></p>
+</li>
+<li>
+<p><a href="#application-faqs">Application FAQs</a></p>
+</li>
+<li>
+<p><a href="#eclipse-faqs">Eclipse FAQs</a></p>
+</li>
+<li>
+<p><a href="#extensibility-faqs">Extensibility FAQs</a></p>
+</li>
+<li>
+<p><a href="#java-persistence-faqs">Java Persistence FAQs</a></p>
+</li>
+<li>
+<p><a href="#update-tool-faqs">Update Tool FAQs</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="administration-faqs"><a class="anchor" href="#administration-faqs"></a>Administration FAQs</h3>
+<div class="sect3">
+<h4 id="which-asadmin-commands-are-supported"><a class="anchor" href="#which-asadmin-commands-are-supported"></a>Which <code>asadmin</code> Commands are Supported?</h4>
+<div class="paragraph">
+<p>Use <code>asadmin</code> <code>list-commands</code> to determine which commands are supported
+and available for use. For related information, see
+"<a href="administration-guide.html#asadmin-subcommands">Subcommands for the asadmin Utility</a>" in Eclipse GlassFish Administration Guide.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="application-faqs"><a class="anchor" href="#application-faqs"></a>Application FAQs</h3>
+<div class="sect3">
+<h4 id="how-do-i-debug-applications"><a class="anchor" href="#how-do-i-debug-applications"></a>How Do I Debug Applications?</h4>
+<div class="paragraph">
+<p>See "<a href="application-development-guide.html#debugging-applications">Debugging Applications</a>" in Eclipse GlassFish Application Development Guide.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="how-do-i-change-application-permissions"><a class="anchor" href="#how-do-i-change-application-permissions"></a>How Do I Change Application Permissions?</h4>
+<div class="paragraph">
+<p>See "<a href="application-development-guide.html#changing-permissions-for-an-application">Changing Permissions for an Application</a>" in
+Eclipse GlassFish Application Development Guide.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="what-are-the-restrictions-and-optimizations-for-session-beans"><a class="anchor" href="#what-are-the-restrictions-and-optimizations-for-session-beans"></a>What Are the Restrictions and Optimizations for Session Beans?</h4>
+<div class="paragraph">
+<p>See "<a href="application-development-guide.html#session-bean-restrictions-and-optimizations">Session Bean Restrictions and Optimizations</a>" in
+Eclipse GlassFish Application Development Guide.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="eclipse-faqs"><a class="anchor" href="#eclipse-faqs"></a>Eclipse FAQs</h3>
+<div class="sect3">
+<h4 id="where-can-i-find-more-information-about-eclipse-and-glassfish-server-integration"><a class="anchor" href="#where-can-i-find-more-information-about-eclipse-and-glassfish-server-integration"></a>Where Can I Find More Information About Eclipse and Eclipse GlassFish Integration?</h4>
+<div class="paragraph">
+<p>Eclipse is a development environment that provides a framework, tools,
+and runtime for deploying and managing software. The GlassFish plugin
+for Eclipse provides important changes to better support Eclipse GlassFish and to provide optimal redeployment of web applications. For more
+information, see the GlassFish Plugins page:
+<code><a href="http://glassfishplugins.java.net" class="bare">http://glassfishplugins.java.net</a></code>.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="extensibility-faqs"><a class="anchor" href="#extensibility-faqs"></a>Extensibility FAQs</h3>
+<div class="sect3">
+<h4 id="how-do-i-develop-add-on-components"><a class="anchor" href="#how-do-i-develop-add-on-components"></a>How Do I Develop Add-On Components?</h4>
+<div class="paragraph">
+<p>See the <a href="add-on-component-development-guide.html#GSACG">Eclipse GlassFish Add-On
+Component Development Guide</a> for complete details.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="how-do-i-add-containers"><a class="anchor" href="#how-do-i-add-containers"></a>How Do I Add Containers?</h4>
+<div class="paragraph">
+<p>Eclipse GlassFish has a highly modular architecture that enables you to
+add new types of containers that handle many application types, not just
+Jakarta EE. Eclipse GlassFish defines a service provider interface (SPI),
+which container developers implement. The Eclipse GlassFish framework
+then invokes the container&#8217;s implementation of the SPI to detect,
+deploy, and manage applications of the new type.</p>
+</div>
+<div class="paragraph">
+<p>For more information, see "<a href="add-on-component-development-guide.html#adding-container-capabilities">Adding Container
+Capabilities</a>" in Eclipse GlassFish Add-On Component
+Development Guide.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="how-do-i-extend-the-administration-console"><a class="anchor" href="#how-do-i-extend-the-administration-console"></a>How Do I Extend the Administration Console?</h4>
+<div class="paragraph">
+<p>See "<a href="add-on-component-development-guide.html#extending-the-administration-console">Extending the Administration Console</a>" in
+Eclipse GlassFish Add-On Component Development Guide.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="java-persistence-faqs"><a class="anchor" href="#java-persistence-faqs"></a>Java Persistence FAQs</h3>
+<div class="sect3">
+<h4 id="what-are-the-restrictions-and-optimizations-for-the-java-persistence-api"><a class="anchor" href="#what-are-the-restrictions-and-optimizations-for-the-java-persistence-api"></a>What Are the Restrictions and Optimizations for the Java Persistence API?</h4>
+<div class="paragraph">
+<p>See "<a href="application-development-guide.html#restrictions-and-optimizations">Restrictions and Optimizations</a>" in Eclipse GlassFish Application Development Guide.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="update-tool-faqs"><a class="anchor" href="#update-tool-faqs"></a>Update Tool FAQs</h3>
+<div class="sect3">
+<h4 id="how-do-i-use-update-tool-to-extend-my-glassfish-server-installation"><a class="anchor" href="#how-do-i-use-update-tool-to-extend-my-glassfish-server-installation"></a>How Do I Use Update Tool to Extend My Eclipse GlassFish Installation?</h4>
+<div class="paragraph">
+<p>Enterprise Server provides an administrative tool called Update Tool
+that enables you to install updates and add-on components to your
+existing Enterprise Server installation.</p>
+</div>
+<div class="paragraph">
+<p>Update Tool can be accessed as a standalone graphical tool from the
+command line (using the <code>updatetool</code> command from
+as-install-parent<code>/bin</code>), or as a browser-based graphical tool from the
+Administration Console (using the Update Tool node). For more
+information about Update Tool, see "<a href="administration-guide.html#GSADG00701">Update Tool</a>" in
+Eclipse GlassFish Administration Guide.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>To update or remove installed components, you must use the standalone
+graphical Update Tool, not the Administration Console Update Tool.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>A command-line interface is also available for Update Tool. This
+interface uses the <code>pkg</code> command and enables you to perform most of the
+tasks provided by the standalone graphical version. For more information
+about the <code>pkg</code> command, see "<a href="administration-guide.html#GSADG00014">Extending and Updating
+Eclipse GlassFish</a>" in Eclipse GlassFish
+Administration Guide.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Update Tool differs from Upgrade Tool, which is used to migrate the
+configuration and deployed applications from an earlier version of
+Eclipse GlassFish to the current version. For more information about
+Upgrade Tool and upgrading, see the <a href="upgrade-guide.html#GSUPG">Eclipse GlassFish Upgrade Guide</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="how-do-i-turn-off-the-notifier"><a class="anchor" href="#how-do-i-turn-off-the-notifier"></a>How Do I Turn Off the Notifier?</h4>
+<div class="paragraph">
+<p>Update Tool provides automatic notifications of available updates after
+installation. These notifications can be turned off if desired.</p>
+</div>
+<div class="sect4">
+<h5 id="to-turn-off-the-notifier"><a class="anchor" href="#to-turn-off-the-notifier"></a>To Turn Off the Notifier</h5>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Launch the standalone graphical tool using the <code>updatetool</code> command:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>as-install-parent/bin/updatetool</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Click Preferences.</p>
+</li>
+<li>
+<p>Click the Updates tab.</p>
+</li>
+<li>
+<p>Deselect Automatically Check for Updates and click OK.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2023-06-28 11:25:06 UTC
+</div>
+</div>
+</body>
+</html>

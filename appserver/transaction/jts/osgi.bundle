@@ -31,6 +31,6 @@ Import-Package: \
                         com.sun.corba.ee.spi.orbutil.closure;resolution:=optional, \
                         com.sun.corba.ee.spi.presentation.rmi;resolution:=optional, \
                         com.sun.corba.ee.spi.resolver;resolution:=optional, \
-                        com.sun.enterprise.transaction;password=GlassFish, \
+                        com.sun.enterprise.transaction, \
                         *
 

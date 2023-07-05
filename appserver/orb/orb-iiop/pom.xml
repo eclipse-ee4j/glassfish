@@ -127,4 +127,22 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <!-- The value is trimmed, but word spacing is kept!!! -->
+                            <ORB-Class-Provider>
+                                org.glassfish.enterprise.iiop.impl.PEORBConfigurator org.glassfish.enterprise.iiop.impl.GlassFishORBInitializer
+                            </ORB-Class-Provider>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

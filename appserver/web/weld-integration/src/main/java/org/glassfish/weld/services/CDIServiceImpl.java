@@ -383,17 +383,7 @@ public class CDIServiceImpl implements CDIService {
             // Using the ejb's creationalContext so we don't have to do any cleanup.
             // the cleanup will be handled by weld when it cleans up the ejb.
 
-            Object instance = null;
-            if (beanManager instanceof BeanManagerImpl) {
-                // Since Weld 5.1.1 the default beanManager.getReference method doesn't create a creational context
-                // for the Interceptor.
-                BeanManagerImpl beanManagerImpl = (BeanManagerImpl) beanManager;
-                instance = beanManagerImpl.getReference(interceptor, interceptorClass, creationalContext, false);
-            } else {
-                instance = beanManager.getReference(interceptor, interceptorClass, creationalContext);
-            }
-
-            return (T) instance;
+            return (T) beanManager.getReference(interceptor, interceptorClass, creationalContext);
         }
 
         // Check to see if the interceptor was defined as a Bean.

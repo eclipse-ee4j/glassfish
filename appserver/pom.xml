@@ -159,7 +159,7 @@
         <omnifaces-jwt-auth.version>2.0.1</omnifaces-jwt-auth.version>
 
         <!-- MicroProfile REST Client -->
-        <microprofile.rest-client.version>3.0</microprofile.rest-client.version>
+        <microprofile.rest-client.version>3.0.1</microprofile.rest-client.version>
         <reactive-streams.version>1.0.4</reactive-streams.version>
 
         <!-- Admin console components -->

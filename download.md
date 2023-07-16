@@ -10,8 +10,8 @@ This release also contains the usual amount of fixes, and a number of important 
 
 Download:
 
-* [Eclipse GlassFish 7.0.6, Jakarta EE Platform, 10](https://download.eclipse.org/ee4j/glassfish/glassfish-7.0.6.zip)
-* [Eclipse GlassFish 7.0.6, Jakarta EE Web Profile, 10](https://download.eclipse.org/ee4j/glassfish/web-7.0.6.zip)
+* [Eclipse GlassFish 7.0.6, Jakarta EE Platform, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-7.0.6.zip)
+* [Eclipse GlassFish 7.0.6, Jakarta EE Web Profile, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-7.0.6.zip)
 * [Eclipse GlassFish Embedded 7.0.6, Jakarta EE Full Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-all/7.0.6/jar)
 * [Eclipse GlassFish Embedded 7.0.6, Jakarta EE Web Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-web/7.0.6/jar)
 

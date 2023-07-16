@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,13 +15,23 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.apache.jsp.jsp;
+// The package name is important - the name is used as a default when compiling JSP files.
+// Therefore also the JSP file must have the same name (without _jsp suffix).
+// Test is testing redeployments.
+package org.apache.jsp.reload;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.jsp.*;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.jsp.JspFactory;
+import jakarta.servlet.jsp.JspWriter;
+import jakarta.servlet.jsp.PageContext;
+import jakarta.servlet.jsp.SkipPageException;
 
-public final class test_jsp extends org.glassfish.wasp.runtime.HttpJspBase implements org.glassfish.wasp.runtime.JspSourceDependent {
+public final class JspReloadGeneratedServletIfUpdated_jsp extends org.glassfish.wasp.runtime.HttpJspBase implements org.glassfish.wasp.runtime.JspSourceDependent {
 
     private static final JspFactory _jspxFactory = JspFactory.getDefaultFactory();
 
@@ -28,10 +39,12 @@ public final class test_jsp extends org.glassfish.wasp.runtime.HttpJspBase imple
 
     private org.glassfish.jsp.api.ResourceInjector _jspx_resourceInjector;
 
+    @Override
     public java.util.List<String> getDependants() {
         return _jspx_dependants;
     }
 
+    @Override
     public void _jspService(HttpServletRequest request, HttpServletResponse response) throws java.io.IOException, ServletException {
 
         PageContext pageContext = null;
@@ -53,19 +66,21 @@ public final class test_jsp extends org.glassfish.wasp.runtime.HttpJspBase imple
             session = pageContext.getSession();
             out = pageContext.getOut();
             _jspx_out = out;
-            _jspx_resourceInjector = (org.glassfish.jsp.api.ResourceInjector) 
+            _jspx_resourceInjector = (org.glassfish.jsp.api.ResourceInjector)
                 application.getAttribute("com.sun.appserv.jsp.resource.injector");
 
             out.write("This is my UPDATED output\n\n");
         } catch (Throwable t) {
             if (!(t instanceof SkipPageException)) {
                 out = _jspx_out;
-                if (out != null && out.getBufferSize() != 0)
+                if (out != null && out.getBufferSize() != 0) {
                     out.clearBuffer();
-                if (_jspx_page_context != null)
+                }
+                if (_jspx_page_context != null) {
                     _jspx_page_context.handlePageException(t);
-                else
+                } else {
                     throw new ServletException(t);
+                }
             }
         } finally {
             _jspxFactory.releasePageContext(_jspx_page_context);

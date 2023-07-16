@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -49,7 +49,7 @@ import static org.glassfish.common.util.ObjectInputOutputStreamFactoryFactory.ge
 public class NamingUtilsImpl implements NamingUtils {
 
     @LogMessageInfo(
-        message = "Exception in NamingManagerImpl copyMutableObject(): {0}",
+        message = "Exception in NamingUtilsImpl copyMutableObject(): {0}",
         cause = "Problem with serialising or deserialising of the object",
         action = "Check the class hierarchy to see if all the classes are Serializable.")
     public static final String EXCEPTION_COPY_MUTABLE = "AS-NAMING-00006";
@@ -102,9 +102,8 @@ public class NamingUtilsImpl implements NamingUtils {
                 return (T) AccessController.doPrivileged((PrivilegedExceptionAction<Object>) ois::readObject);
             }
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, EXCEPTION_COPY_MUTABLE, ex);
-            RuntimeException re = new RuntimeException("Cant copy Serializable object:", ex);
-            throw re;
+            logger.log(Level.SEVERE, EXCEPTION_COPY_MUTABLE, obj);
+            throw new RuntimeException("Cant copy Serializable object " + obj, ex);
         }
     }
 }

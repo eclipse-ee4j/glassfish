@@ -236,10 +236,7 @@
                             org.objectweb.asm,
                             org.objectweb.asm.commons
                         </DynamicImport-Package>
-                        <Export-Package>
-                            com.sun.enterprise.v3.services.impl;version="${project.osgi.version}",
-                            *
-                        </Export-Package>
+                        <Export-Package>*</Export-Package>
                     </instructions>
                 </configuration>
             </plugin>

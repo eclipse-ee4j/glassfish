@@ -20,3 +20,10 @@
                         com.sun.enterprise.naming.spi; \
                         com.sun.enterprise.naming.util; version=${project.osgi.version}
 
+Import-Package: \
+                        org.omg.CORBA;resolution:=optional, \
+                        org.omg.CORBA.portable;resolution:=optional, \
+                        org.omg.CORBA_2_3.portable;resolution:=optional, \
+                        javax.rmi.CORBA;resolution:=optional, \
+                        com.sun.corba.ee.impl.presentation.rmi.codegen;resolution:=optional, \
+                        *

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,9 +17,8 @@
 
 package org.glassfish.weld;
 
-import static org.glassfish.weld.util.Util.initializeWeldSingletonProvider;
-
 import org.jboss.weld.bootstrap.api.SingletonProvider;
+import org.jboss.weld.bootstrap.api.helpers.TCCLSingletonProvider;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
@@ -46,7 +45,7 @@ public class WeldActivator implements BundleActivator {
 
     @Override
     public void start(BundleContext context) throws Exception {
-        initializeWeldSingletonProvider();
+        ACLSingletonProvider.initializeSingletonProvider();
     }
 
 
@@ -54,5 +53,4 @@ public class WeldActivator implements BundleActivator {
     public void stop(BundleContext context) throws Exception {
         SingletonProvider.reset();
     }
-
 }

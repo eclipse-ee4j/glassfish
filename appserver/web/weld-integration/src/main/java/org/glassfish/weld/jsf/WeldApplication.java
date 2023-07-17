@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2023 Contributors to Eclipse Foundation.
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,12 +17,6 @@
 
 package org.glassfish.weld.jsf;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-
-import org.glassfish.wasp.runtime.JspApplicationContextImpl;
-import org.glassfish.weld.util.Util;
-
 import jakarta.el.ELManager;
 import jakarta.el.ExpressionFactory;
 import jakarta.enterprise.inject.spi.BeanManager;
@@ -31,6 +25,11 @@ import jakarta.faces.application.ApplicationWrapper;
 import jakarta.faces.context.FacesContext;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.jsp.JspFactory;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import org.glassfish.wasp.runtime.JspApplicationContextImpl;
 
 public class WeldApplication extends ApplicationWrapper {
 
@@ -41,7 +40,7 @@ public class WeldApplication extends ApplicationWrapper {
 
         BeanManager beanManager = getBeanManager();
         if (beanManager != null) {
-            application.addELContextListener(Util.newInstance("org.jboss.weld.module.web.el.WeldELContextListener"));
+            application.addELContextListener(newInstance("org.jboss.weld.module.web.el.WeldELContextListener"));
             application.addELResolver(beanManager.getELResolver());
 
             expressionFactory = beanManager.wrapExpressionFactory(ELManager.getExpressionFactory());
@@ -74,6 +73,26 @@ public class WeldApplication extends ApplicationWrapper {
             return InitialContext.doLookup("java:comp/BeanManager");
         } catch (NamingException e) {
             return null;
+        }
+    }
+
+    private <T> T newInstance(String className) {
+        try {
+            return (T) classForName(className).getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            throw new IllegalArgumentException(
+                "Cannot instantiate instance of " + className + " with no-argument constructor", e);
+        }
+    }
+
+    private <T> Class<T> classForName(String name) {
+        try {
+            if (Thread.currentThread().getContextClassLoader() != null) {
+                return (Class<T>) Thread.currentThread().getContextClassLoader().loadClass(name);
+            }
+            return (Class<T>) Class.forName(name);
+        } catch (ClassNotFoundException | NoClassDefFoundError e) {
+            throw new IllegalArgumentException("Cannot load class for " + name, e);
         }
     }
 }

@@ -1,0 +1,64 @@
+---
+---
+
+/*
+ * Copyright (c) 2018 Eclipse Foundation, Inc.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+*/
+
+@import 'jekyll-theme-eclipsefdn';
+
+.top-nav { 
+  background-color: #f4f4f4; 
+}
+
+.top-nav ul {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+
+.top-nav a:visited {
+    color: #3f7b96;
+}
+
+.top-nav ul li { 
+    list-style: none; 
+    text-transform: uppercase;
+    font-size: 150%;
+  }
+  
+.top-nav ul li p { 
+    text-transform: none;
+    font-size: 60%;
+  }
+  
+.top-nav ul li.icon a::before { 
+    content: ' ';
+    background-size:contain;
+    height: 1em;
+    width: 1em;
+    display: inline-block;
+    margin-right: 0.5em;
+}
+
+.top-nav ul li.icon.download a::before {
+    background-image: url('../../img/download.svg');
+}
+
+.top-nav ul li.icon.documentation a::before {
+    background-image: url('../../img/book.svg');
+}
+
+.top-nav ul li.icon.contributing a::before {
+  background-image: url('../../img/people-line.svg');
+}
+
+.top-nav ul li.icon.support a::before {
+    background-image: url('../../img/life-ring.svg');
+}

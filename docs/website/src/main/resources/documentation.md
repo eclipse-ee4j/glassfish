@@ -1,4 +1,4 @@
-# GlassFish Documentation
+# Eclipse GlassFish Documentation
 
 ## Eclipse GlassFish Documentation and User Guides
 

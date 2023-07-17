@@ -155,7 +155,6 @@
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
 
         <easymock.version>4.3</easymock.version>
-        <jacoco.version>0.8.10</jacoco.version>
         <jmockit.version>1.49</jmockit.version>
         <junit.version>5.9.2</junit.version>
         <jmh.version>1.36</jmh.version>

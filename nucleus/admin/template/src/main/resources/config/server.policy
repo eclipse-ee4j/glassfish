@@ -134,3 +134,8 @@ grant codeBase "jrt:/jdk.compiler" {
 grant {
     permission java.lang.RuntimePermission "accessClassInPackage.jdk.internal.misc";
 };
+
+// Following grant block is required for using WSToolsObjectFactory (jsr109 WSDL parsing) on JDK 21
+grant {
+    permission java.lang.RuntimePermission "getenv.JDK_JAVAC_OPTIONS";
+};

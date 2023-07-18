@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -75,7 +75,6 @@ import org.glassfish.weld.services.NonModuleInjectionServices;
 import org.glassfish.weld.services.ProxyServicesImpl;
 import org.glassfish.weld.services.SecurityServicesImpl;
 import org.glassfish.weld.services.TransactionServicesImpl;
-import org.glassfish.weld.util.Util;
 import org.jboss.weld.bootstrap.WeldBootstrap;
 import org.jboss.weld.bootstrap.api.ServiceRegistry;
 import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
@@ -165,8 +164,9 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
 
     static {
         try {
-            Util.initializeWeldSingletonProvider();
-        } catch (Throwable ignore) {
+            ACLSingletonProvider.initializeSingletonProvider();
+        } catch (RuntimeException ignore) {
+            LOG.log(FINEST, "The singleton provider was already initialized, I am ignoring the exception.", ignore);
         }
     }
 

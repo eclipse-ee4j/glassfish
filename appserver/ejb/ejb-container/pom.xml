@@ -255,6 +255,7 @@
                             org.glassfish.ejb.deployment.descriptor,
                             org.glassfish.ejb.deployment.descriptor.runtime
                         </Export-Package>
+                        <DynamicImport-Package>org.glassfish.flashlight.provider</DynamicImport-Package>
                         <!-- These packages are not required and unavailable in glassfish-web distribution -->
                         <Import-Package>
                             jakarta.xml.soap;resolution:=optional,

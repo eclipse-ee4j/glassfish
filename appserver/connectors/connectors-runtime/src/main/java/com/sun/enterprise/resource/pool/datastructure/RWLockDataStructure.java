@@ -24,7 +24,7 @@ import com.sun.enterprise.resource.pool.ResourceHandler;
 import com.sun.logging.LogDomains;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Arrays;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,18 +38,18 @@ public class RWLockDataStructure implements DataStructure {
 
     private static final Logger LOG = LogDomains.getLogger(RWLockDataStructure.class, LogDomains.RSR_LOGGER);
 
-    private int maxSize;
-
-    private final ResourceHandler handler;
-    private final ArrayList<ResourceHandle> resources;
-
     private final ReentrantReadWriteLock reentrantLock = new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock.ReadLock readLock = reentrantLock.readLock();
     private final ReentrantReadWriteLock.WriteLock writeLock = reentrantLock.writeLock();
 
+    private final ResourceHandler handler;
+    private ResourceHandle[] resources;
+    private int size;
+
+    private int maxSize;
 
     public RWLockDataStructure(String parameters, int maxSize, ResourceHandler handler, String strategyClass) {
-        this.resources = new ArrayList<>(maxSize);
+        this.resources = new ResourceHandle[maxSize];
         this.handler = handler;
         this.maxSize = maxSize;
         LOG.log(Level.FINEST, "pool.datastructure.rwlockds.init");
@@ -62,9 +62,13 @@ public class RWLockDataStructure implements DataStructure {
         writeLock.lock();
         //for now, coarser lock. finer lock needs "resources.size() < maxSize()" once more.
         try {
-            for (int i = 0; i < count && resources.size() < maxSize; i++) {
+            for (int i = 0; i < count && size < maxSize; i++) {
+                if (resources.length < maxSize) {
+                    resources = Arrays.copyOf(resources, maxSize);
+                }
                 ResourceHandle handle = handler.createResource(allocator);
-                resources.add(handle);
+                handle.setIndex(size);
+                resources[size++] = handle;
                 numResAdded++;
             }
         } catch (Exception e) {
@@ -79,7 +83,8 @@ public class RWLockDataStructure implements DataStructure {
     public ResourceHandle getResource() {
         readLock.lock();
         try {
-            for (ResourceHandle resource : resources) {
+            for (int i = 0; i < size; i++) {
+                ResourceHandle resource = resources[i];
                 if (!resource.isBusy()) {
                     if (resource.trySetBusy(true)) {
                         return resource;
@@ -94,10 +99,24 @@ public class RWLockDataStructure implements DataStructure {
 
     @Override
     public void removeResource(ResourceHandle resource) {
-        boolean removed;
+        boolean removed = false;
         writeLock.lock();
         try {
-            removed = resources.remove(resource);
+            int removeIndex = resource.getIndex();
+            if (removeIndex >= 0 && removeIndex < size) {
+                if (resources[removeIndex] == resource) {
+                    int lastIndex = size - 1;
+                    if (removeIndex < lastIndex) {
+                        // Move last resource in place of removed
+                        ResourceHandle lastResource = resources[lastIndex];
+                        lastResource.setIndex(removeIndex);
+                        resources[removeIndex] = lastResource;
+                    }
+                    resources[lastIndex] = null;
+                    size = lastIndex;
+                    removed = true;
+                }
+            }
         } finally {
             writeLock.unlock();
         }
@@ -123,7 +142,8 @@ public class RWLockDataStructure implements DataStructure {
         int free = 0;
         readLock.lock();
         try{
-            for (ResourceHandle rh : resources) {
+            for (int i = 0; i < size; i++) {
+                ResourceHandle rh = resources[i];
                 if(!rh.isBusy()){
                     free++;
                 }
@@ -136,22 +156,25 @@ public class RWLockDataStructure implements DataStructure {
 
     @Override
     public void removeAll() {
+        ResourceHandle[] resourcesToRemove;
+
         writeLock.lock();
         try {
-            Iterator<ResourceHandle> it = resources.iterator();
-            while (it.hasNext()) {
-                handler.deleteResource(it.next());
-                it.remove();
-            }
-            resources.clear();
+            resourcesToRemove = Arrays.copyOf(resources, size);
+            Arrays.fill(resources, null);
+            size = 0;
         } finally {
             writeLock.unlock();
+        }
+
+        for (ResourceHandle resourceToRemove : resourcesToRemove) {
+            handler.deleteResource(resourceToRemove);
         }
     }
 
     @Override
     public int getResourcesSize() {
-        return resources.size();
+        return size;
     }
 
     @Override

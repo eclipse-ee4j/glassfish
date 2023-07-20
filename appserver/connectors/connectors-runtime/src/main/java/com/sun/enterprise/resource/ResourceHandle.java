@@ -78,6 +78,7 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
     private long lastValidated; // holds the latest time at which the connection was validated.
     private int usageCount; // holds the no. of times the handle(connection) is used so far.
     private int partition;
+    private int index;
     private boolean isDestroyByLeakTimeOut;
     private boolean connectionErrorOccurred;
 
@@ -335,6 +336,14 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
 
     public void setPartition(int partition) {
         this.partition = partition;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     @Override

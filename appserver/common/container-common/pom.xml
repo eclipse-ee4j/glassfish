@@ -138,6 +138,13 @@
                 <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
                     <instructions>
+                        <DynamicImport-Package>
+                            com.sun.enterprise.security,
+                            com.sun.enterprise.security.auth.login,
+                            com.sun.enterprise.security.auth.realm,
+                            com.sun.enterprise.security.auth.realm.file,
+                            com.sun.enterprise.security.ssl
+                        </DynamicImport-Package>
                         <Export-Package>*</Export-Package>
                     </instructions>
                 </configuration>

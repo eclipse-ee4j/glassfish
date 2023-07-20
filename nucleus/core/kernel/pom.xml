@@ -236,7 +236,17 @@
                             org.objectweb.asm,
                             org.objectweb.asm.commons
                         </DynamicImport-Package>
-                        <Export-Package>*</Export-Package>
+                        <Export-Package>
+                            com.sun.enterprise.v3.admin,
+                            com.sun.enterprise.v3.admin.adapter,
+                            com.sun.enterprise.v3.admin.commands,
+                            com.sun.enterprise.v3.bootstrap,
+                            com.sun.enterprise.v3.common,
+                            com.sun.enterprise.v3.server,
+                            com.sun.enterprise.v3.services.impl,
+                            org.glassfish.kernel.embedded,
+                            org.glassfish.kernel.event
+                        </Export-Package>
                     </instructions>
                 </configuration>
             </plugin>

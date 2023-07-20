@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,8 +17,9 @@
 
 package com.sun.web.security;
 
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.SEVERE;
+import com.sun.enterprise.security.ssl.J2EEKeyManager;
+import com.sun.enterprise.security.ssl.SSLUtils;
+import com.sun.logging.LogDomains;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -36,9 +37,8 @@ import org.apache.catalina.net.ServerSocketFactory;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.security.common.SharedSecureRandomImpl;
 
-import com.sun.enterprise.security.ssl.J2EEKeyManager;
-import com.sun.enterprise.security.ssl.SSLUtils;
-import com.sun.logging.LogDomains;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.SEVERE;
 
 /**
  * SSL server socket factory.
@@ -49,7 +49,7 @@ import com.sun.logging.LogDomains;
  */
 public class SSLSocketFactory implements ServerSocketFactory {
 
-    static Logger _logger = LogDomains.getLogger(SSLSocketFactory.class, LogDomains.WEB_LOGGER);
+    static Logger _logger = Logger.getLogger(SSLSocketFactory.class.getName(), WebSecurityResourceBundle.BUNDLE_NAME);
 
     private static final boolean clientAuth = false;
 
@@ -80,11 +80,11 @@ public class SSLSocketFactory implements ServerSocketFactory {
             cipherSuites = factory.getSupportedCipherSuites();
 
             for (String cipherSuite : cipherSuites) {
-                _logger.log(FINEST, () -> "Suite: " + cipherSuite);
+                _logger.log(FINEST, "Suite: {0}", cipherSuite);
             }
 
         } catch (Exception e) {
-            _logger.log(SEVERE, "web_security.excep_sslsockfact", e.getMessage());
+            _logger.log(SEVERE, "Could not initialize the SSL Socket Factory!", e);
         }
     }
 

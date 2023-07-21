@@ -25,6 +25,7 @@ import com.sun.logging.LogDomains;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,6 +42,7 @@ public class RWLockDataStructure implements DataStructure {
     private final ReentrantReadWriteLock reentrantLock = new ReentrantReadWriteLock();
     private final ReentrantReadWriteLock.ReadLock readLock = reentrantLock.readLock();
     private final ReentrantReadWriteLock.WriteLock writeLock = reentrantLock.writeLock();
+    private final PoolSemaphore poolSemaphore;
 
     private final ResourceHandler handler;
     private ResourceHandle[] resources;
@@ -49,9 +51,11 @@ public class RWLockDataStructure implements DataStructure {
     private int maxSize;
 
     public RWLockDataStructure(String parameters, int maxSize, ResourceHandler handler, String strategyClass) {
+        this.poolSemaphore = new PoolSemaphore(maxSize);
         this.resources = new ResourceHandle[maxSize];
         this.handler = handler;
         this.maxSize = maxSize;
+
         LOG.log(Level.FINEST, "pool.datastructure.rwlockds.init");
     }
 
@@ -59,22 +63,23 @@ public class RWLockDataStructure implements DataStructure {
     @Override
     public int addResource(ResourceAllocator allocator, int count) throws PoolingException {
         int numResAdded = 0;
-        writeLock.lock();
-        //for now, coarser lock. finer lock needs "resources.size() < maxSize()" once more.
-        try {
-            for (int i = 0; i < count && size < maxSize; i++) {
-                if (resources.length < maxSize) {
-                    resources = Arrays.copyOf(resources, maxSize);
+        for (int i = 0; i < count; i++) {
+            if (poolSemaphore.tryAcquire()) {
+                writeLock.lock();
+                try {
+                    if (resources.length < maxSize) {
+                        resources = Arrays.copyOf(resources, maxSize);
+                    }
+                    ResourceHandle resource = handler.createResource(allocator);
+                    resource.setIndex(size);
+                    resources[size++] = resource;
+                    numResAdded++;
+                } catch (Exception e) {
+                    throw new PoolingException(e.getMessage(), e);
+                } finally {
+                    writeLock.unlock();
                 }
-                ResourceHandle handle = handler.createResource(allocator);
-                handle.setIndex(size);
-                resources[size++] = handle;
-                numResAdded++;
             }
-        } catch (Exception e) {
-            throw new PoolingException(e.getMessage(), e);
-        } finally {
-            writeLock.unlock();
         }
         return numResAdded;
     }
@@ -105,6 +110,8 @@ public class RWLockDataStructure implements DataStructure {
             int removeIndex = resource.getIndex();
             if (removeIndex >= 0 && removeIndex < size) {
                 if (resources[removeIndex] == resource) {
+                    poolSemaphore.release();
+
                     int lastIndex = size - 1;
                     if (removeIndex < lastIndex) {
                         // Move last resource in place of removed
@@ -160,6 +167,8 @@ public class RWLockDataStructure implements DataStructure {
 
         writeLock.lock();
         try {
+            poolSemaphore.release(size);
+
             resourcesToRemove = Arrays.copyOf(resources, size);
             Arrays.fill(resources, null);
             size = 0;
@@ -178,12 +187,41 @@ public class RWLockDataStructure implements DataStructure {
     }
 
     @Override
-    public void setMaxSize(int maxSize) {
-        this.maxSize = maxSize;
+    public synchronized void setMaxSize(int newMaxSize) {
+        int permits = newMaxSize - maxSize;
+
+        switch (Integer.signum(permits)) {
+            case 1:
+                poolSemaphore.release(permits);
+                break;
+            case -1:
+                poolSemaphore.reducePermits(Math.abs(permits));
+                break;
+            default:
+                return;
+        }
+
+        this.maxSize = newMaxSize;
     }
 
     @Override
     public ArrayList<ResourceHandle> getAllResources() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /**
+     * Semaphore whose available permits change according to the
+     * changes in max-pool-size via a reconfiguration.
+     */
+    private static final class PoolSemaphore extends Semaphore {
+
+        public PoolSemaphore(int permits) {
+            super(permits);
+        }
+
+        @Override
+        protected void reducePermits(int reduction) {
+            super.reducePermits(reduction);
+        }
     }
 }

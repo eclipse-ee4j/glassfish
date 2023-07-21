@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +18,9 @@
 package com.sun.jaspic.config.factory;
 
 import com.sun.jaspic.config.helper.JASPICLogManager;
+
+import jakarta.security.auth.message.config.AuthConfigFactory.RegistrationContext;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -31,8 +35,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jakarta.security.auth.message.config.AuthConfigFactory.RegistrationContext;
-
 
 /**
  * Used by GFServerConfigProvider to parse the configuration file. If
@@ -44,8 +46,7 @@ import jakarta.security.auth.message.config.AuthConfigFactory.RegistrationContex
  */
 public final class RegStoreFileParser {
 
-    private static final Logger logger =
-            Logger.getLogger(JASPICLogManager.JASPIC_LOGGER, JASPICLogManager.RES_BUNDLE);
+    private static final Logger LOG = Logger.getLogger(JASPICLogManager.LOGGER, JASPICLogManager.BUNDLE);
 
     private static final String SEP = ":";
     private static final String CON_ENTRY = "con-entry";
@@ -58,7 +59,7 @@ public final class RegStoreFileParser {
 
     private final File confFile;
     private List<EntryInfo> entries;
-    private List<EntryInfo> defaultEntries;
+    private final List<EntryInfo> defaultEntries;
 
     /*
      * Loads the configuration file from the given filename.
@@ -68,31 +69,15 @@ public final class RegStoreFileParser {
      */
     public RegStoreFileParser(String pathParent, String pathChild,List<EntryInfo> defaultEntries) {
         confFile = new File(pathParent, pathChild);
-        this.defaultEntries = defaultEntries == null ? new ArrayList<EntryInfo>() : defaultEntries;
+        this.defaultEntries = defaultEntries == null ? new ArrayList<>() : defaultEntries;
         try {
             loadEntries();
-        } catch (IOException ioe) {
-            logWarningDefault(ioe);
-        } catch (IllegalArgumentException iae) {
-            logWarningDefault(iae);
+        } catch (IOException | IllegalArgumentException e) {
+            LOG.log(Level.WARNING, JASPICLogManager.MSG_COULD_NOT_READ_AUTH_CFG, e);
         }
     }
 
-    private void logWarningUpdated(Exception exception) {
-        if (logger.isLoggable(Level.WARNING)) {
-            logger.log(Level.WARNING,
-                "jmac.factory_could_not_persist", exception.toString());
-        }
-    }
-
-    private void logWarningDefault(Exception exception) {
-        if (logger.isLoggable(Level.WARNING)) {
-            logger.log(Level.WARNING,
-                "jmac.factory_could_not_read", exception.toString());
-        }
-    }
-
-    /*
+    /**
      * Returns the in-memory list of entries.
      * MUST Hold exclusive lock on calling factory while processing entries
      */
@@ -100,7 +85,7 @@ public final class RegStoreFileParser {
         return entries;
     }
 
-    /*
+    /**
      * Adds the provider to the entry list if it is not already
      * present, creates the configuration file if necessary, and
      * writes the entries to the file.
@@ -110,14 +95,14 @@ public final class RegStoreFileParser {
             if (checkAndAddToList(className, ctx, properties)) {
                 try {
                     writeEntries();
-                } catch (IOException ioe) {
-                    logWarningUpdated(ioe);
+                } catch (IOException e) {
+                    LOG.log(Level.WARNING, JASPICLogManager.MSG_CANNOT_PERSIST_PROVIDERS, e);
                 }
             }
         }
     }
 
-    /*
+    /**
      * Removes the provider from the entry list if it is already
      * present, creates the configuration file if necessary, and
      * writes the entries to the file.
@@ -127,14 +112,14 @@ public final class RegStoreFileParser {
             if (checkAndRemoveFromList(ctx)) {
                 try {
                     writeEntries();
-                } catch (IOException ioe) {
-                    logWarningUpdated(ioe);
+                } catch (IOException e) {
+                    LOG.log(Level.WARNING, JASPICLogManager.MSG_CANNOT_PERSIST_PROVIDERS, e);
                 }
             }
         }
     }
 
-    /*
+    /**
      * If this entry does not exist, this method stores it in
      * the entries list and returns true to indicate that the
      * configuration file should be written.
@@ -165,7 +150,7 @@ public final class RegStoreFileParser {
         return true;
     }
 
-    /*
+    /**
      * If this registration context does not exist, this method
      * returns false. Otherwise it removes the entry and returns
      * true to indicate that the configuration file should be written.
@@ -202,7 +187,7 @@ public final class RegStoreFileParser {
         return retValue;
     }
 
-    /*
+    /**
      * Used to find a matching registration entry in the 'entries'
      * list without including registration contexts. If there is not
      * a matching entry, return null.
@@ -216,15 +201,13 @@ public final class RegStoreFileParser {
         return null;
     }
 
-    /*
+    /**
      * This method overwrites the existing file with the
      * current entries.
      */
     private void writeEntries() throws IOException {
-        if (confFile.exists() && !confFile.canWrite()
-                && logger.isLoggable(Level.WARNING)) {
-            logger.log(Level.WARNING, "jmac.factory_cannot_write_file",
-                    confFile.getPath());
+        if (confFile.exists() && !confFile.canWrite()) {
+            LOG.log(Level.WARNING, JASPICLogManager.MSG_CANNOT_WRITE_PROVIDERS_TO_FILE, confFile);
         }
         clearExistingFile();
         PrintWriter out = new PrintWriter(confFile);
@@ -239,7 +222,7 @@ public final class RegStoreFileParser {
         out.close();
     }
 
-    /*
+    /**
      * Writes constructor entry output of the form:
      * <pre>
      * con-entry {
@@ -265,7 +248,7 @@ public final class RegStoreFileParser {
         out.println(INDENT[--i] + "}");
     }
 
-    /*
+    /**
      * Write registration entry output of the form:
      * <pre>
      * reg-entry {
@@ -308,22 +291,21 @@ public final class RegStoreFileParser {
             }
         }
         if (newCreation) {
-            logger.log(Level.INFO, "jmac.factory_creating_conf_file",
-                    confFile.getPath());
+            LOG.log(Level.INFO, JASPICLogManager.MSG_CREATING_JMAC_FILE, confFile);
         }
         if (!confFile.createNewFile()) {
             throw new IOException();
         }
     }
 
-    /*
+    /**
      * Called from the constructor. This is the only time
      * the file is read, though it is written when new
      * entries are stored or deleted.
      */
     private void loadEntries() throws IOException {
         synchronized (confFile) {
-            entries = new ArrayList<EntryInfo>();
+            entries = new ArrayList<>();
             if (confFile.exists()) {
                 try (BufferedReader reader = new BufferedReader(new FileReader(confFile))) {
                     String line = reader.readLine();
@@ -338,12 +320,7 @@ public final class RegStoreFileParser {
                     }
                 }
             } else {
-                if (logger.isLoggable(Level.FINER)) {
-                    logger.log(Level.FINER, "jmac.factory_file_not_found",
-                            confFile.getParent() + File.pathSeparator
-                            + confFile.getPath());
-
-                }
+                LOG.log(Level.FINER, JASPICLogManager.MSG_FILE_NOT_EXIST, confFile);
                 for (EntryInfo e : defaultEntries) {
                     entries.add(new EntryInfo(e));
                 }
@@ -361,7 +338,7 @@ public final class RegStoreFileParser {
         return new EntryInfo(className, properties);
     }
 
-    /*
+    /**
      * Properties must be of the form "key:value." While the key
      * String cannot contain a ":" character, the value can. The
      * line will be broken into key and value based on the first
@@ -378,7 +355,7 @@ public final class RegStoreFileParser {
         if ("}".equals(line)) {
             return null;
         }
-        Map<String, String> properties = new HashMap<String, String>();
+        Map<String, String> properties = new HashMap<>();
         while (!"}".equals(line)) {
             properties.put(line.substring(0, line.indexOf(SEP)),
                 line.substring(line.indexOf(SEP) + 1, line.length()));
@@ -394,7 +371,7 @@ public final class RegStoreFileParser {
         String className = null;
         Map<String, String> properties = null;
         List<RegistrationContext> ctxs =
-            new ArrayList<RegistrationContext>();
+            new ArrayList<>();
         String line = reader.readLine();
         if(line != null) {
             line = line.trim();

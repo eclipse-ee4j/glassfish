@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +19,7 @@ package com.sun.jaspic.config.jaas;
 
 import com.sun.jaspic.config.helper.JASPICLogManager;
 import com.sun.security.auth.login.ConfigFile;
+
 import java.lang.reflect.Field;
 import java.net.URI;
 import java.security.AccessController;
@@ -27,6 +29,7 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.security.auth.login.AppConfigurationEntry;
 
 /**
@@ -35,8 +38,8 @@ import javax.security.auth.login.AppConfigurationEntry;
  */
 public class ExtendedConfigFile extends ConfigFile {
 
-    private static final Logger logger =
-            Logger.getLogger(JASPICLogManager.JASPIC_LOGGER, JASPICLogManager.RES_BUNDLE);
+    private static final Logger LOG = Logger.getLogger(JASPICLogManager.LOGGER, JASPICLogManager.BUNDLE);
+
     //may be more than one delegate for a given jaas config file
 
     public ExtendedConfigFile() {
@@ -74,7 +77,7 @@ public class ExtendedConfigFile extends ConfigFile {
                             Field field = ConfigFile.class.getDeclaredField("configuration");
                             field.setAccessible(true);
                             map = (HashMap) field.get(ExtendedConfigFile.this);
-                            return (Set<String>) map.keySet();
+                            return map.keySet();
                         }
                     });
 
@@ -107,9 +110,7 @@ public class ExtendedConfigFile extends ConfigFile {
                                         }
                                     }
                                 } catch (Throwable t) {
-                                    String msg = "skipping unloadable class: "
-                                            + clazz + " of entry: " + id;
-                                    logger.log(Level.WARNING, msg);
+                                    LOG.log(Level.WARNING, "Skipping unloadable class: " + clazz + " of entry: " + id);
                                 }
                             }
                             if (!hasAuthModule) {

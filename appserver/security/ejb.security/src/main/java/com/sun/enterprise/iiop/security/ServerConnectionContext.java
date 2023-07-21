@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,12 @@
 
 package com.sun.enterprise.iiop.security;
 
-import java.io.*;
+import java.io.Serializable;
 import java.net.Socket;
 
 public final class ServerConnectionContext implements Serializable {
-    private transient Socket socket = null;
+    private static final long serialVersionUID = 1L;
+    private transient Socket socket;
 
     /**
      * Default constructor.
@@ -49,6 +51,7 @@ public final class ServerConnectionContext implements Serializable {
         socket = s;
     }
 
+    @Override
     public String toString() {
         String s = "Socket=" + socket;
         return s;

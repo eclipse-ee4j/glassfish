@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,28 @@
 
 package com.sun.enterprise.iiop.security;
 
-public class SecurityMechanismException extends java.lang.Exception {
+public class SecurityMechanismException extends Exception {
+
+    private static final long serialVersionUID = -5784851953003530376L;
+
+
     /**
      * Constructs the exception with the specified detail message.
      *
-     * @param the detail message.
+     * @param msg detail message.
      */
     public SecurityMechanismException(String msg) {
         super(msg);
     }
 
+
+    /**
+     * Constructs the exception with the specified detail message.
+     *
+     * @param msg the detail message.
+     * @param cause
+     */
+    public SecurityMechanismException(String msg, Exception cause) {
+        super(msg, cause);
+    }
 }

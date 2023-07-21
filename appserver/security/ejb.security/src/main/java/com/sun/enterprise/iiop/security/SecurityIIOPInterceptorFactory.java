@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,37 +18,35 @@
 package com.sun.enterprise.iiop.security;
 
 import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.enterprise.iiop.api.IIOPInterceptorFactory;
-
 import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Singleton;
 import org.omg.CORBA.ORB;
 import org.omg.IOP.Codec;
 import org.omg.PortableInterceptor.ClientRequestInterceptor;
 import org.omg.PortableInterceptor.IORInterceptor;
 import org.omg.PortableInterceptor.ORBInitInfo;
-import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;
 import org.omg.PortableInterceptor.ServerRequestInterceptor;
+import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;
 
-import jakarta.inject.Inject;
+import static com.sun.logging.LogDomains.SECURITY_LOGGER;
 
 /**
- *
  * @author Kumar
  */
 @Service(name = "ServerSecurityInterceptorFactory")
 @Singleton
 public class SecurityIIOPInterceptorFactory implements IIOPInterceptorFactory {
 
-    private static Logger _logger = null;
+    private static final Logger LOG = LogDomains.getLogger(SecurityIIOPInterceptorFactory.class, SECURITY_LOGGER, false);
     final String interceptorFactory = System.getProperty(AlternateSecurityInterceptorFactory.SEC_INTEROP_INTFACTORY_PROP);
-
-    static {
-        _logger = LogDomains.getLogger(SecurityIIOPInterceptorFactory.class, LogDomains.SECURITY_LOGGER);
-    }
     private ClientRequestInterceptor creq;
     private ServerRequestInterceptor sreq;
     private SecIORInterceptor sior;
@@ -58,6 +57,7 @@ public class SecurityIIOPInterceptorFactory implements IIOPInterceptorFactory {
     private AlternateSecurityInterceptorFactory altSecFactory;
 
     // are we supposed to add the interceptor and then return or just return an instance ?.
+    @Override
     public ClientRequestInterceptor createClientRequestInterceptor(ORBInitInfo info, Codec codec) {
         if (!penv.getProcessType().isServer()) {
             return null;
@@ -69,6 +69,7 @@ public class SecurityIIOPInterceptorFactory implements IIOPInterceptorFactory {
         return ret;
     }
 
+    @Override
     public ServerRequestInterceptor createServerRequestInterceptor(ORBInitInfo info, Codec codec) {
         ServerRequestInterceptor ret = null;
         try {
@@ -88,7 +89,6 @@ public class SecurityIIOPInterceptorFactory implements IIOPInterceptorFactory {
             }
 
         } catch (DuplicateName ex) {
-            _logger.log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex);
         }
         return ret;
@@ -100,16 +100,15 @@ public class SecurityIIOPInterceptorFactory implements IIOPInterceptorFactory {
             if (AlternateSecurityInterceptorFactory.class.isAssignableFrom(clazz) && !clazz.isInterface()) {
                 altSecFactory = (AlternateSecurityInterceptorFactory) clazz.newInstance();
                 return true;
-            } else {
-                _logger.log(Level.INFO,
-                        "Not a valid factory class: " + interceptorFactory + ". Must implement " + AlternateSecurityInterceptorFactory.class.getName());
             }
+            LOG.log(Level.INFO, "Not a valid factory class: {0}. Must implement {1}",
+                new Object[] {interceptorFactory, AlternateSecurityInterceptorFactory.class});
         } catch (ClassNotFoundException ex) {
-            _logger.log(Level.INFO, "Interceptor Factory class " + interceptorFactory + " not loaded: ", ex);
+            LOG.log(Level.INFO, "Interceptor Factory class " + interceptorFactory + " not loaded: ", ex);
         } catch (InstantiationException ex) {
-            _logger.log(Level.INFO, "Interceptor Factory class " + interceptorFactory + " not loaded: ", ex);
+            LOG.log(Level.INFO, "Interceptor Factory class " + interceptorFactory + " not loaded: ", ex);
         } catch (IllegalAccessException ex) {
-            _logger.log(Level.INFO, "Interceptor Factory class " + interceptorFactory + " not loaded: ", ex);
+            LOG.log(Level.INFO, "Interceptor Factory class " + interceptorFactory + " not loaded: ", ex);
         }
         return false;
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,13 +18,24 @@
 package com.sun.enterprise.iiop.security;
 
 public class InvalidMechanismException extends java.lang.Exception {
+    private static final long serialVersionUID = -6255666219857904986L;
+
     /**
      * Constructs the exception with the specified detail message.
      *
-     * @param the detail message.
+     * @param msg the detail message.
      */
     public InvalidMechanismException(String msg) {
         super(msg);
     }
 
+    /**
+     * Constructs the exception with the specified detail message.
+     *
+     * @param msg the detail message.
+     * @param cause
+     */
+    public InvalidMechanismException(String msg, Exception cause) {
+        super(msg, cause);
+    }
 }

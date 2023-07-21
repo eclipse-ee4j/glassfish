@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,8 +21,10 @@ import com.sun.corba.ee.org.omg.CSI.MTCompleteEstablishContext;
 import com.sun.corba.ee.org.omg.CSI.MTContextError;
 import com.sun.corba.ee.org.omg.CSI.MTEstablishContext;
 import com.sun.corba.ee.org.omg.CSI.MTMessageInContext;
-import java.util.logging.*;
-import com.sun.logging.*;
+import com.sun.logging.LogDomains;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class contains the utility methods for dealing with service contexts.
@@ -29,66 +32,42 @@ import com.sun.logging.*;
  * @author: Sekhar Vajjhala
  *
  */
-
 public class SvcContextUtils {
 
-    private static java.util.logging.Logger _logger = null;
-    static {
-        _logger = LogDomains.getLogger(SvcContextUtils.class, LogDomains.SECURITY_LOGGER);
-    }
+    private static final Logger LOG = LogDomains.getLogger(SvcContextUtils.class, LogDomains.SECURITY_LOGGER, false);
+
     /**
      * Define minor codes for errors specified in section 4.5, "ContextError Values and Exceptions"
      *
      * Currently only MessageInContextMinor code is defined since this is the only used by the security interceptors.
      */
-
     public static final int MessageInContextMinor = 4;
 
-    /**
-     * Hard code the value of 15 for SecurityAttributeService until it is defined in IOP.idl. sc.context_id =
-     * SecurityAttributeService.value;
-     */
-    private static final int SECURITY_ATTRIBUTE_SERVICE_ID = 15;
 
     /**
      * Define mnemonic strings for SAS message types for debugging purposes.
      */
-
     private static final String EstablishContextName = "EstablishContext";
     private static final String CompleteEstablishName = "CompleteEstablishContext";
     private static final String MessageInContextName = "MessageInContext";
     private static final String ContextErrorName = "ContextError";
 
     /**
-     * returns a mnemonic name for the message type based on the SASContextBody union discriminant
+     * @return a mnemonic name for the message type based on the SASContextBody union discriminant
      */
-
     public static String getMsgname(short discr) {
-
-        String name = null;
-
         switch (discr) {
-
-        case MTEstablishContext.value:
-            name = EstablishContextName;
-            break;
-
-        case MTContextError.value:
-            name = ContextErrorName;
-            break;
-
-        case MTCompleteEstablishContext.value:
-            name = CompleteEstablishName;
-            break;
-
-        case MTMessageInContext.value:
-            name = MessageInContextName;
-            break;
-
-        default:
-            _logger.log(Level.SEVERE, "iiop.unknown_msgtype");
-            break;
+            case MTEstablishContext.value:
+                return EstablishContextName;
+            case MTContextError.value:
+                return ContextErrorName;
+            case MTCompleteEstablishContext.value:
+                return CompleteEstablishName;
+            case MTMessageInContext.value:
+                return MessageInContextName;
+            default:
+                LOG.log(Level.SEVERE, "Invalid message type {0}, returning null.", discr);
+                return null;
         }
-        return name;
     }
 }

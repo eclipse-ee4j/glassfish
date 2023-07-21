@@ -174,5 +174,21 @@
                 </includes>
             </resource>
         </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Export-Package>
+                            org.glassfish.enterprise.iiop.api,
+                            org.glassfish.enterprise.iiop.spi,
+                            org.glassfish.enterprise.iiop.util,
+                            org.glassfish.orb.admin.config.handler
+                        </Export-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>

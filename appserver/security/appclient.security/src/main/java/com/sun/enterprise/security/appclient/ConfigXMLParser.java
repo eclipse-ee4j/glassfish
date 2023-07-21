@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,19 +17,28 @@
 
 package com.sun.enterprise.security.appclient;
 
-import static java.util.regex.Matcher.quoteReplacement;
+import com.sun.enterprise.security.common.Util;
+import com.sun.enterprise.security.jmac.AuthMessagePolicy;
+import com.sun.enterprise.security.jmac.config.ConfigParser;
+import com.sun.enterprise.security.jmac.config.GFServerConfigProvider;
+import com.sun.enterprise.security.jmac.config.GFServerConfigProvider.InterceptEntry;
+
+import jakarta.security.auth.message.MessagePolicy;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,29 +50,21 @@ import org.glassfish.appclient.client.acc.config.RequestPolicy;
 import org.glassfish.appclient.client.acc.config.ResponsePolicy;
 import org.glassfish.internal.api.Globals;
 
-import com.sun.enterprise.security.common.Util;
-import com.sun.enterprise.security.jmac.AuthMessagePolicy;
-import com.sun.enterprise.security.jmac.config.ConfigParser;
-import com.sun.enterprise.security.jmac.config.GFServerConfigProvider;
-import com.sun.logging.LogDomains;
-
-import jakarta.security.auth.message.MessagePolicy;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Unmarshaller;
+import static java.util.regex.Matcher.quoteReplacement;
 
 /**
  * Parser for message-security-config in glassfish-acc.xml
  */
 public class ConfigXMLParser implements ConfigParser {
-    private static Logger _logger = LogDomains.getLogger(ConfigXMLParser.class, LogDomains.SECURITY_LOGGER);
 
-    private static Pattern PROPERTY_PATTERN = Pattern.compile("\\$\\{\\{(.*?)}}|\\$\\{(.*?)}");
+    private static final Logger LOG = System.getLogger(ConfigXMLParser.class.getName());
+
+    private static final Pattern PROPERTY_PATTERN = Pattern.compile("\\$\\{\\{(.*?)}}|\\$\\{(.*?)}");
 
     // configuration info
-    private final Map configMap = new HashMap();
+    private final Map<String, InterceptEntry> configMap = new HashMap<>();
     private final Set<String> layersWithDefault = new HashSet<>();
-    private List<MessageSecurityConfig> msgSecConfigs = null;
+    private List<MessageSecurityConfig> msgSecConfigs;
     private static final String ACC_XML = "glassfish-acc.xml.url";
 
     public ConfigXMLParser() throws IOException {
@@ -76,7 +77,7 @@ public class ConfigXMLParser implements ConfigParser {
         }
     }
 
-    private void processClientConfigContext(Map newConfig) throws IOException {
+    private void processClientConfigContext(Map<String, InterceptEntry> newConfig) throws IOException {
         // auth-layer
         String intercept = null;
 
@@ -93,7 +94,7 @@ public class ConfigXMLParser implements ConfigParser {
     }
 
     @Override
-    public Map getConfigMap() {
+    public Map<String, InterceptEntry> getConfigMap() {
         return configMap;
     }
 
@@ -102,7 +103,9 @@ public class ConfigXMLParser implements ConfigParser {
         return layersWithDefault;
     }
 
-    private String parseInterceptEntry(MessageSecurityConfig msgConfig, Map newConfig) throws IOException {
+
+    private String parseInterceptEntry(MessageSecurityConfig msgConfig, Map<String, InterceptEntry> newConfig)
+        throws IOException {
         String intercept = null;
         String defaultServerID = null;
         String defaultClientID = null;
@@ -111,18 +114,16 @@ public class ConfigXMLParser implements ConfigParser {
         defaultServerID = clientMsgSecConfig.getDefaultProvider();
         defaultClientID = clientMsgSecConfig.getDefaultClientProvider();
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.fine("Intercept Entry: " + "\n    intercept: " + intercept + "\n    defaultServerID: " + defaultServerID
-                    + "\n    defaultClientID:  " + defaultClientID);
-        }
+        LOG.log(Level.DEBUG, "Intercept Entry:\n intercept: {0}\n defaultServerID: {1}\n defaultClientID: {2}",
+            intercept, defaultServerID, defaultClientID);
 
         if (defaultServerID != null || defaultClientID != null) {
             layersWithDefault.add(intercept);
         }
 
-        GFServerConfigProvider.InterceptEntry intEntry = (GFServerConfigProvider.InterceptEntry) newConfig.get(intercept);
+        GFServerConfigProvider.InterceptEntry intEntry = newConfig.get(intercept);
         if (intEntry != null) {
-            throw new IOException("found multiple MessageSecurityConfig " + "entries with the same auth-layer");
+            throw new IOException("found multiple MessageSecurityConfig entries with the same auth-layer");
         }
 
         // create new intercept entry
@@ -132,7 +133,8 @@ public class ConfigXMLParser implements ConfigParser {
     }
 
     // duplicate implementation for clientbeans config
-    private void parseIDEntry(ProviderConfig pConfig, Map newConfig, String intercept) throws IOException {
+    private void parseIDEntry(ProviderConfig pConfig, Map<String, InterceptEntry> newConfig, String intercept)
+        throws IOException {
         String id = pConfig.getProviderId();
         String type = pConfig.getProviderType();
         String moduleClass = pConfig.getClassName();
@@ -141,7 +143,7 @@ public class ConfigXMLParser implements ConfigParser {
 
         // get the module options
 
-        Map<String, String> options = new HashMap();
+        Map<String, String> options = new HashMap<>();
         List<Property> props = pConfig.getProperty();
         for (Property prop : props) {
             try {
@@ -149,28 +151,29 @@ public class ConfigXMLParser implements ConfigParser {
             } catch (IllegalStateException ee) {
                 // log warning and give the provider a chance to
                 // interpret value itself.
-                _logger.warning("jmac.unexpandedproperty");
+                LOG.log(Level.WARNING,
+                    "SEC1200: Unable to expand provider property value, unexpanded value passed to provider.");
                 options.put(prop.getName(), prop.getValue());
             }
         }
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.fine("ID Entry: " + "\n    module class: " + moduleClass + "\n    id: " + id + "\n    type: " + type
-                    + "\n    request policy: " + requestPolicy + "\n    response policy: " + responsePolicy + "\n    options: " + options);
-        }
+        LOG.log(Level.DEBUG,
+            "ID Entry: \n module class: {0}\n id: {1}\n type: {2}\n"
+                + " request policy: {3}\n response policy: {4}\n options: {5}",
+            moduleClass, id, type, requestPolicy, responsePolicy, options);
 
         // create ID entry
 
-        GFServerConfigProvider.IDEntry idEntry = new GFServerConfigProvider.IDEntry(type, moduleClass, requestPolicy, responsePolicy,
-                options);
+        GFServerConfigProvider.IDEntry idEntry = new GFServerConfigProvider.IDEntry(type, moduleClass, requestPolicy,
+            responsePolicy, options);
 
-        GFServerConfigProvider.InterceptEntry intEntry = (GFServerConfigProvider.InterceptEntry) newConfig.get(intercept);
+        GFServerConfigProvider.InterceptEntry intEntry = newConfig.get(intercept);
         if (intEntry == null) {
             throw new IOException("intercept entry for " + intercept + " must be specified before ID entries");
         }
 
         if (intEntry.getIdMap() == null) {
-            intEntry.setIdMap(new HashMap());
+            intEntry.setIdMap(new HashMap<>());
         }
 
         // map id to Intercept
@@ -233,7 +236,7 @@ public class ConfigXMLParser implements ConfigParser {
                 ClientContainer cc = (ClientContainer) u.unmarshal(is);
                 msgconfigs = cc.getMessageSecurityConfig();
             } catch (JAXBException ex) {
-                _logger.log(Level.SEVERE, null, ex);
+                LOG.log(Level.ERROR, "Failed to parse glassfish-acc.xml", ex);
             }
         } else {
             Util util = Util.getInstance();

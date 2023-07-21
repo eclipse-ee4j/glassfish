@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,8 +20,6 @@ package com.sun.enterprise.security.jmac.config;
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
 import com.sun.enterprise.deployment.runtime.web.SunWebApp;
 
-// types to support backward compatability of pre-standard 196 auth modules
-
 import com.sun.enterprise.security.jauth.AuthParam;
 import com.sun.enterprise.security.jauth.AuthPolicy;
 import com.sun.enterprise.security.jauth.FailureException;
@@ -31,7 +29,6 @@ import com.sun.enterprise.security.jmac.AuthMessagePolicy;
 import com.sun.enterprise.security.jmac.WebServicesDelegate;
 import com.sun.logging.LogDomains;
 
-// jsr 196 interface types
 import jakarta.security.auth.message.AuthException;
 import jakarta.security.auth.message.AuthStatus;
 import jakarta.security.auth.message.MessageInfo;
@@ -295,7 +292,7 @@ public class GFServerConfigProvider implements AuthConfigProvider {
         // look up the DD's provider ID in the module config
 
         IDEntry idEntry = null;
-        if (id == null || (idEntry = (IDEntry) intEntry.idMap.get(id)) == null) {
+        if (id == null || (idEntry = intEntry.idMap.get(id)) == null) {
 
             // either the DD did not specify a provider ID,
             // or the DD-specified provider ID was not found
@@ -315,7 +312,7 @@ public class GFServerConfigProvider implements AuthConfigProvider {
                 defaultID = intEntry.defaultServerID;
             }
 
-            idEntry = (IDEntry) intEntry.idMap.get(defaultID);
+            idEntry = intEntry.idMap.get(defaultID);
             if (idEntry == null) {
 
                 // did not find a default provider ID
@@ -459,19 +456,19 @@ public class GFServerConfigProvider implements AuthConfigProvider {
     public static class InterceptEntry {
         String defaultClientID;
         String defaultServerID;
-        HashMap idMap;
+        HashMap<String, IDEntry> idMap;
 
-        public InterceptEntry(String defaultClientID, String defaultServerID, HashMap idMap) {
+        public InterceptEntry(String defaultClientID, String defaultServerID, HashMap<String, IDEntry> idMap) {
             this.defaultClientID = defaultClientID;
             this.defaultServerID = defaultServerID;
             this.idMap = idMap;
         }
 
-        public HashMap getIdMap() {
+        public HashMap<String, IDEntry> getIdMap() {
             return idMap;
         }
 
-        public void setIdMap(HashMap map) {
+        public void setIdMap(HashMap<String, IDEntry> map) {
             idMap = map;
         }
 

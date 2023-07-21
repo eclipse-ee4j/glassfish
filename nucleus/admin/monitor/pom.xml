@@ -102,6 +102,25 @@
             <plugin>
                 <artifactId>maven-site-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Export-Package>
+                            com.sun.enterprise.admin.monitor.jndi,
+                            com.sun.enterprise.admin.monitor.util,
+                            com.sun.enterprise.management.support,
+                            org.glassfish.admin.monitor,
+                            org.glassfish.admin.monitor.cli,
+                            org.glassfish.flashlight.annotations,
+                            org.glassfish.flashlight.datatree.factory,
+                            org.glassfish.flashlight.statistics,
+                            org.glassfish.flashlight.statistics.factory
+                        </Export-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

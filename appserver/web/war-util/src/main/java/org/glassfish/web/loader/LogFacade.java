@@ -123,18 +123,6 @@ public class LogFacade {
     public static final String CHECK_THREAD_LOCALS_FOR_LEAKS = PREFIX + "00016";
 
     @LogMessageInfo(
-            message = "Failed to find class sun.rmi.transport.Target to clear context class loader"
-                + " for web application [{0}]. This is expected on non-Sun JVMs.",
-            level = "INFO")
-    public static final String CLEAR_RMI_INFO = PREFIX + "00017";
-
-    @LogMessageInfo(
-            message = "Failed to clear context class loader referenced from sun.rmi.transport."
-                + " Target for web application [{0}]",
-            level = "WARNING")
-    public static final String CLEAR_RMI_FAIL = PREFIX + "00018";
-
-    @LogMessageInfo(
             message = "Illegal JAR entry detected with name {0}",
             level = "INFO")
     public static final String ILLEGAL_JAR_PATH = PREFIX + "00021";

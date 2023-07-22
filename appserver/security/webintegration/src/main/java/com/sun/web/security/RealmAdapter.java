@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,7 +32,6 @@ import com.sun.enterprise.security.auth.digest.impl.HttpAlgorithmParameterImpl;
 import com.sun.enterprise.security.auth.digest.impl.NestedDigestAlgoParamImpl;
 import com.sun.enterprise.security.auth.login.DigestCredentials;
 import com.sun.enterprise.security.auth.login.LoginContextDriver;
-import com.sun.enterprise.security.authorize.PolicyContextHandlerImpl;
 import com.sun.enterprise.security.integration.RealmInitializer;
 import com.sun.enterprise.security.jmac.config.HttpServletConstants;
 import com.sun.enterprise.security.jmac.config.HttpServletHelper;
@@ -40,7 +39,6 @@ import com.sun.enterprise.security.web.integration.WebPrincipal;
 import com.sun.enterprise.security.web.integration.WebSecurityManager;
 import com.sun.enterprise.security.web.integration.WebSecurityManagerFactory;
 import com.sun.enterprise.util.net.NetUtils;
-import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -49,7 +47,6 @@ import jakarta.security.auth.message.AuthException;
 import jakarta.security.auth.message.AuthStatus;
 import jakarta.security.auth.message.MessageInfo;
 import jakarta.security.auth.message.config.ServerAuthContext;
-import jakarta.security.jacc.PolicyContext;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServlet;
@@ -111,7 +108,11 @@ import static com.sun.enterprise.security.auth.digest.impl.DigestParameterGenera
 import static com.sun.enterprise.security.web.integration.WebSecurityManager.getContextID;
 import static com.sun.enterprise.util.Utility.isAnyNull;
 import static com.sun.enterprise.util.Utility.isEmpty;
-import static com.sun.logging.LogDomains.WEB_LOGGER;
+import static com.sun.web.security.WebSecurityResourceBundle.BUNDLE_NAME;
+import static com.sun.web.security.WebSecurityResourceBundle.MSG_FORBIDDEN;
+import static com.sun.web.security.WebSecurityResourceBundle.MSG_INVALID_REQUEST;
+import static com.sun.web.security.WebSecurityResourceBundle.MSG_MISSING_HOST_HEADER;
+import static com.sun.web.security.WebSecurityResourceBundle.MSG_NO_WEB_SECURITY_MGR;
 import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN;
 import static jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
@@ -146,7 +147,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
     public static final String BASIC = "BASIC";
     public static final String FORM = "FORM";
 
-    private static final Logger _logger = LogDomains.getLogger(RealmAdapter.class, WEB_LOGGER);
+    private static final Logger _logger = Logger.getLogger(RealmAdapter.class.getName(), BUNDLE_NAME);
     private static final ResourceBundle resourceBundle = _logger.getResourceBundle();
 
     private static final String SERVER_AUTH_CONTEXT = "__jakarta.security.auth.message.ServerAuthContext";
@@ -362,8 +363,9 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
         } catch (IllegalArgumentException e) {
             // end the request after getting IllegalArgumentException while checking
             // user data permission
-            _logger.log(WARNING, e, () -> resourceBundle.getString("realmAdapter.badRequestWithId"));
-            ((HttpServletResponse) response.getResponse()).sendError(SC_BAD_REQUEST, resourceBundle.getString("realmAdapter.badRequest"));
+            _logger.log(WARNING, MSG_INVALID_REQUEST, e);
+            ((HttpServletResponse) response.getResponse()).sendError(SC_BAD_REQUEST,
+                resourceBundle.getString(MSG_INVALID_REQUEST));
             return false;
         }
 
@@ -381,7 +383,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
         }
 
         if (isGranted == 0) {
-            ((HttpServletResponse) response.getResponse()).sendError(SC_FORBIDDEN, resourceBundle.getString("realmBase.forbidden"));
+            ((HttpServletResponse) response.getResponse()).sendError(SC_FORBIDDEN, resourceBundle.getString(MSG_FORBIDDEN));
             return false;
         }
 
@@ -422,10 +424,9 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
         } catch (IOException iex) {
             throw iex;
         } catch (Throwable ex) {
-            _logger.log(SEVERE, ex, () -> "web_server.excep_authenticate_realmadapter");
+            _logger.log(SEVERE, "Authentication passed, but authorization failed.", ex);
             ((HttpServletResponse) response.getResponse()).sendError(SC_SERVICE_UNAVAILABLE);
-            response.setDetailMessage(resourceBundle.getString("realmBase.forbidden"));
-
+            response.setDetailMessage(resourceBundle.getString(MSG_FORBIDDEN));
             return AUTHENTICATED_NOT_AUTHORIZED;
         }
 
@@ -446,7 +447,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
 
         if (isRequestAuthenticated(request)) {
             ((HttpServletResponse) response.getResponse()).sendError(SC_FORBIDDEN);
-            response.setDetailMessage(resourceBundle.getString("realmBase.forbidden"));
+            response.setDetailMessage(resourceBundle.getString(MSG_FORBIDDEN));
             return AUTHENTICATED_NOT_AUTHORIZED;
         }
 
@@ -579,8 +580,8 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
      *
      * @param request Request we are processing
      * @param response Response we are creating
-     * @param constraint Security constraint we are enforcing
-     * @param The Context to which client of this class is attached.
+     * @param constraints Security constraint we are enforcing
+     * @param context Context to which client of this class is attached.
      *
      * @exception IOException if an input/output error occurs
      */
@@ -593,9 +594,9 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
         } catch (IOException iex) {
             throw iex;
         } catch (Throwable ex) {
-            _logger.log(SEVERE, ex, () -> "web_server.excep_authenticate_realmadapter");
+            _logger.log(SEVERE, "Authentication passed, but authorization failed.", ex);
             ((HttpServletResponse) response.getResponse()).sendError(SC_SERVICE_UNAVAILABLE);
-            response.setDetailMessage(resourceBundle.getString("realmBase.forbidden"));
+            response.setDetailMessage(resourceBundle.getString(MSG_FORBIDDEN));
 
             return isGranted;
         }
@@ -605,7 +606,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
         }
 
         ((HttpServletResponse) response.getResponse()).sendError(SC_FORBIDDEN);
-        response.setDetailMessage(resourceBundle.getString("realmBase.forbidden"));
+        response.setDetailMessage(resourceBundle.getString(MSG_FORBIDDEN));
 
         // invoking secureResponse
         invokePostAuthenticateDelegate(request, response, context);
@@ -723,7 +724,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
             }
 
             if (webSecurityManager == null && logNull) {
-                _logger.log(WARNING, "realmAdapter.noWebSecMgr", contextId);
+                _logger.log(WARNING, MSG_NO_WEB_SECURITY_MGR, contextId);
             }
         }
 
@@ -1056,15 +1057,15 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
      * @return Principal for the user username HERCULES:add
      */
     public Principal createFailOveredPrincipal(String username) {
-        _logger.log(FINEST, () -> "IN createFailOveredPrincipal (" + username + ")");
+        _logger.log(FINEST, "IN createFailOveredPrincipal ({0})", username);
         loginForRunAs(username);
 
         // set the appropriate security context
         SecurityContext securityContext = SecurityContext.getCurrent();
-        _logger.log(FINE, () -> "Security context is " + securityContext);
+        _logger.log(FINE, "Security context is {0}", securityContext);
 
         Principal principal = new WebPrincipal(username, (char[]) null, securityContext);
-        _logger.log(INFO, () -> "Principal created for FailOvered user " + principal);
+        _logger.log(INFO, "Principal created for FailOvered user {0}", principal);
 
         return principal;
     }
@@ -1161,7 +1162,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
             }
         }
         if (hostPort == null) {
-            throw new ProtocolException(resourceBundle.getString("missing_http_header.host"));
+            throw new ProtocolException(resourceBundle.getString(MSG_MISSING_HOST_HEADER));
         }
 
         // If the port in the Header is empty (it refers to the default port), which is
@@ -1461,7 +1462,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
         return p;
     }
 
-    private static String PROXY_AUTH_TYPE = "PLUGGABLE_PROVIDER";
+    private static final String PROXY_AUTH_TYPE = "PLUGGABLE_PROVIDER";
 
     // inner class extends AuthenticatorBase such that session registration
     // of webtier can be invoked by RealmAdapter after authentication
@@ -1564,8 +1565,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
                 websecurityProbeProvider.policyCreationEvent(contextId);
             }
         } catch (Exception ce) {
-            _logger.log(SEVERE, "policy.configure", ce);
-            throw new RuntimeException(ce);
+            throw new RuntimeException("Policy configuration failed!", ce);
         }
     }
 

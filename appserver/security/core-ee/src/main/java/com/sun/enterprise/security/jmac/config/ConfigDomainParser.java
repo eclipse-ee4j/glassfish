@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,19 @@
 
 package com.sun.enterprise.security.jmac.config;
 
-import static java.util.regex.Matcher.quoteReplacement;
+import com.sun.enterprise.config.serverbeans.MessageSecurityConfig;
+import com.sun.enterprise.config.serverbeans.ProviderConfig;
+import com.sun.enterprise.config.serverbeans.RequestPolicy;
+import com.sun.enterprise.config.serverbeans.ResponsePolicy;
+import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.security.jmac.AuthMessagePolicy;
+import com.sun.logging.LogDomains;
+
+import jakarta.security.auth.message.MessagePolicy;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,31 +42,20 @@ import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.config.types.Property;
 
-import com.sun.enterprise.config.serverbeans.MessageSecurityConfig;
-import com.sun.enterprise.config.serverbeans.ProviderConfig;
-import com.sun.enterprise.config.serverbeans.RequestPolicy;
-import com.sun.enterprise.config.serverbeans.ResponsePolicy;
-import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.security.jmac.AuthMessagePolicy;
-import com.sun.logging.LogDomains;
-
-import jakarta.security.auth.message.MessagePolicy;
+import static java.util.regex.Matcher.quoteReplacement;
 
 /**
  * Parser for message-security-config in domain.xml
  */
 public class ConfigDomainParser implements ConfigParser {
 
-    private static Logger _logger = null;
-    static {
-        _logger = LogDomains.getLogger(ConfigDomainParser.class, LogDomains.SECURITY_LOGGER);
-    }
+    private static final Logger _logger = LogDomains.getLogger(ConfigDomainParser.class, LogDomains.SECURITY_LOGGER);
 
-    private static Pattern PROPERTY_PATTERN = Pattern.compile("\\$\\{\\{(.*?)}}|\\$\\{(.*?)}");
+    private static final Pattern PROPERTY_PATTERN = Pattern.compile("\\$\\{\\{(.*?)}}|\\$\\{(.*?)}");
 
     // configuration info
-    private Map configMap = new HashMap();
-    private Set<String> layersWithDefault = new HashSet<>();
+    private final Map configMap = new HashMap();
+    private final Set<String> layersWithDefault = new HashSet<>();
 
     public ConfigDomainParser() throws IOException {
     }
@@ -82,11 +79,9 @@ public class ConfigDomainParser implements ConfigParser {
 
         if (configList != null) {
 
-            Iterator<MessageSecurityConfig> cit = configList.iterator();
+            for (MessageSecurityConfig next : configList) {
 
-            while (cit.hasNext()) {
 
-                MessageSecurityConfig next = cit.next();
 
                 // single message-security-config for each auth-layer
                 // auth-layer is synonymous with intercept
@@ -97,11 +92,8 @@ public class ConfigDomainParser implements ConfigParser {
 
                 if (provList != null) {
 
-                    Iterator<ProviderConfig> pit = provList.iterator();
+                    for (ProviderConfig provider : provList) {
 
-                    while (pit.hasNext()) {
-
-                        ProviderConfig provider = pit.next();
                         parseIDEntry(provider, newConfig, intercept);
                     }
                 }
@@ -168,20 +160,15 @@ public class ConfigDomainParser implements ConfigParser {
 
         if (pList != null) {
 
-            Iterator<Property> pit = pList.iterator();
-
-            while (pit.hasNext()) {
-
-                Property property = pit.next();
+            for (Property property : pList) {
 
                 try {
                     options.put(property.getName(), expand(property.getValue()));
                 } catch (IllegalStateException ee) {
                     // log warning and give the provider a chance to
                     // interpret value itself.
-                    if (_logger.isLoggable(Level.FINE)) {
-                        _logger.log(Level.FINE, "jmac.unexpandedproperty");
-                    }
+                    _logger.log(Level.FINE,
+                        "SEC1200: Unable to expand provider property value, unexpanded value passed to provider.");
                     options.put(property.getName(), property.getValue());
                 }
             }

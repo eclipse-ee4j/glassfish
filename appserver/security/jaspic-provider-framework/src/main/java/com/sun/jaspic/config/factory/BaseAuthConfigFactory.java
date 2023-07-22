@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +17,15 @@
 
 package com.sun.jaspic.config.factory;
 
+import com.sun.jaspic.config.factory.singlemodule.DefaultAuthConfigProvider;
+import com.sun.jaspic.config.helper.JASPICLogManager;
+
+import jakarta.security.auth.message.config.AuthConfigFactory;
+import jakarta.security.auth.message.config.AuthConfigProvider;
+import jakarta.security.auth.message.config.RegistrationListener;
+import jakarta.security.auth.message.module.ServerAuthModule;
+import jakarta.servlet.ServletContext;
+
 import java.lang.reflect.Constructor;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -33,15 +42,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.sun.jaspic.config.factory.singlemodule.DefaultAuthConfigProvider;
-import com.sun.jaspic.config.helper.JASPICLogManager;
-
-import jakarta.security.auth.message.config.AuthConfigFactory;
-import jakarta.security.auth.message.config.AuthConfigProvider;
-import jakarta.security.auth.message.config.RegistrationListener;
-import jakarta.security.auth.message.module.ServerAuthModule;
-import jakarta.servlet.ServletContext;
-
 
 /**
  * This class implements methods in the abstract class AuthConfigFactory.
@@ -49,7 +49,7 @@ import jakarta.servlet.ServletContext;
  */
 public abstract class BaseAuthConfigFactory extends AuthConfigFactory {
 
-    private static final Logger logger = Logger.getLogger(JASPICLogManager.JASPIC_LOGGER, JASPICLogManager.RES_BUNDLE);
+    private static final Logger LOG = Logger.getLogger(JASPICLogManager.LOGGER, JASPICLogManager.BUNDLE);
 
     private static final String CONTEXT_REGISTRATION_ID = "org.glassfish.security.message.registrationId";
 
@@ -555,10 +555,7 @@ public abstract class BaseAuthConfigFactory extends AuthConfigFactory {
                 Constructor<AuthConfigProvider> constr = c.getConstructor(Map.class, AuthConfigFactory.class);
                 provider = constr.newInstance(new Object[] {properties, factory});
             } catch (Throwable t) {
-                Throwable cause = t.getCause();
-                logger.log(Level.WARNING,
-                        "jmac.factory_unable_to_load_provider",
-                        new Object[]{ className, t.toString(), (cause == null ? "cannot determine" : cause.toString())});
+                LOG.log(Level.WARNING, JASPICLogManager.MSG_UNABLE_LOAD_PROVIDER + className , t);
             }
         }
         return provider;
@@ -681,10 +678,7 @@ public abstract class BaseAuthConfigFactory extends AuthConfigFactory {
                 }
             }
         } catch (Exception e) {
-            if (logger.isLoggable(Level.WARNING)) {
-                logger.log(Level.WARNING,
-                        "jmac.factory_auth_config_loader_failure", e);
-            }
+            LOG.log(Level.WARNING, JASPICLogManager.MSG_LOADER_FAILURE, e);
         }
     }
 
@@ -792,7 +786,7 @@ public abstract class BaseAuthConfigFactory extends AuthConfigFactory {
         for (String listenerID : listenerRegistrations) {
             if (regIdImplies(regisID, listenerID)) {
                 if (!effectedListeners.containsKey(listenerID)) {
-                    effectedListeners.put(listenerID, new ArrayList<RegistrationListener>());
+                    effectedListeners.put(listenerID, new ArrayList<>());
                 }
                 effectedListeners.get(listenerID).addAll(id2RegisListenersMap.remove(listenerID));
             }

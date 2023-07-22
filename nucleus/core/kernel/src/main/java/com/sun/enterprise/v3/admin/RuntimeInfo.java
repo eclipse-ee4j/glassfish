@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,15 @@
 
 package com.sun.enterprise.v3.admin;
 
-import static com.sun.enterprise.util.StringUtils.ok;
-import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.JavaConfig;
+import com.sun.enterprise.module.bootstrap.StartupContext;
+import com.sun.enterprise.util.OS;
+import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import java.io.File;
 import java.lang.management.ManagementFactory;
@@ -47,15 +55,8 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.JavaConfig;
-import com.sun.enterprise.module.bootstrap.StartupContext;
-import com.sun.enterprise.util.OS;
-import com.sun.enterprise.util.SystemPropertyConstants;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
+import static com.sun.enterprise.util.StringUtils.ok;
+import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
 
 /**
  * https://glassfish.dev.java.net/issues/show_bug.cgi?id=12483
@@ -96,7 +97,7 @@ public class RuntimeInfo implements AdminCommand {
     private ActionReport report;
     private ActionReport.MessagePart top;
     private Logger logger;
-    private StringBuilder reportMessage = new StringBuilder();
+    private final StringBuilder reportMessage = new StringBuilder();
 
     private boolean restartable;
 
@@ -147,21 +148,11 @@ public class RuntimeInfo implements AdminCommand {
         RuntimeMXBean rmxb = ManagementFactory.getRuntimeMXBean();
         top.addProperty("startTimeMillis", "" + rmxb.getStartTime());
         top.addProperty("pid", "" + rmxb.getName());
-        checkDtrace();
         setDasName();
         top.addProperty("java.vm.name", System.getProperty("java.vm.name"));
         setRestartable();
         reportMessage.append(Strings.get("runtime.info.debug", jpdaEnabled ? "enabled" : "not enabled"));
         report.setMessage(reportMessage.toString());
-    }
-
-    private void checkDtrace() {
-        try {
-            Class.forName("com.sun.tracing.ProviderFactory");
-            top.addProperty("dtrace", "true");
-        } catch (Exception ex) {
-            top.addProperty("dtrace", "false");
-        }
     }
 
     private void setDasName() {

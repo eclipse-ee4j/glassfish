@@ -62,8 +62,6 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
     private int shareCount; // sharing within a component (XA only)
     private final boolean supportsXAResource;
 
-    private final AtomicBoolean busy = new AtomicBoolean(false);
-
     private Subject subject;
 
     private ResourceState state;
@@ -362,18 +360,6 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
     @Override
     public void enlistedInTransaction(Transaction transaction) throws IllegalStateException {
         ConnectorRuntime.getRuntime().getPoolManager().resourceEnlisted(transaction, this);
-    }
-
-    public boolean isBusy() {
-        return busy.get();
-    }
-
-    public void setBusy(boolean busy) {
-        this.busy.set(busy);
-    }
-
-    public boolean trySetBusy(boolean busy) {
-        return this.busy.compareAndSet(!busy, busy);
     }
 
     public boolean getDestroyByLeakTimeOut() {

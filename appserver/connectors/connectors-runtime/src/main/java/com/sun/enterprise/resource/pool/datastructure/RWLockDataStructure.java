@@ -73,7 +73,13 @@ public class RWLockDataStructure implements DataStructure {
                 break;
             }
 
-            ResourceHandle resource = handler.createResource(allocator);
+            ResourceHandle resource;
+            try {
+                resource = handler.createResource(allocator);
+            } catch (Exception e) {
+                availableResources.release();
+                throw new PoolingException(e.getMessage(), e);
+            }
 
             long stamp = lock.tryOptimisticRead();
             try {

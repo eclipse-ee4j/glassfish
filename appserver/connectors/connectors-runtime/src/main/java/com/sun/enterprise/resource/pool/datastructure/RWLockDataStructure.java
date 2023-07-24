@@ -166,7 +166,15 @@ public class RWLockDataStructure implements DataStructure {
                     continue;
                 }
 
+                int currentSize = size;
                 int removeIndex = resource.getIndex();
+                if (!lock.validate(stamp)) {
+                    continue;
+                }
+
+                if (removeIndex >= currentSize) {
+                    break;
+                }
 
                 ResourceHandle currentResource = resources[removeIndex];
                 if (!lock.validate(stamp)) {
@@ -184,7 +192,7 @@ public class RWLockDataStructure implements DataStructure {
 
                 availableResources.release();
 
-                int lastIndex = size - 1;
+                int lastIndex = currentSize - 1;
                 if (removeIndex < lastIndex) {
                     // Move last resource in place of removed
                     ResourceHandle lastResource = resources[lastIndex];
@@ -219,7 +227,15 @@ public class RWLockDataStructure implements DataStructure {
                     continue;
                 }
 
+                int currentSize = size;
                 int returnIndex = resource.getIndex();
+                if (!lock.validate(stamp)) {
+                    continue;
+                }
+
+                if (returnIndex >= currentSize) {
+                    break;
+                }
 
                 ResourceHandle currentResource = resources[returnIndex];
                 if (!lock.validate(stamp)) {
@@ -272,21 +288,24 @@ public class RWLockDataStructure implements DataStructure {
     @Override
     public void removeAll() {
         ResourceHandle[] resourcesToRemove;
+        int currentSize;
 
         long stamp = lock.writeLock();
         try {
-            availableResources.release(size);
-            resourcesToRemove = Arrays.copyOf(resources, size);
-            Arrays.fill(resources, 0, size, null);
-            useMask.clear(0, size);
+            currentSize = size;
+            availableResources.release(currentSize);
+            resourcesToRemove = resources;
+            resources = new ResourceHandle[maxSize];
+            useMask.clear(0, currentSize);
             size = 0;
         } finally {
             lock.unlockWrite(stamp);
         }
 
-        for (ResourceHandle resourceToRemove : resourcesToRemove) {
-            handler.deleteResource(resourceToRemove);
+        for (int i = 0; i < currentSize; i++) {
+            handler.deleteResource(resourcesToRemove[i]);
         }
+        Arrays.fill(resourcesToRemove, 0, currentSize, null);
     }
 
     @Override

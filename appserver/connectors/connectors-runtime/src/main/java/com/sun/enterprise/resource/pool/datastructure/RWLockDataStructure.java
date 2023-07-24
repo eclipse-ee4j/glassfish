@@ -23,9 +23,9 @@ import com.sun.enterprise.resource.allocator.ResourceAllocator;
 import com.sun.enterprise.resource.pool.ResourceHandler;
 import com.sun.logging.LogDomains;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
+import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.StampedLock;
 import java.util.logging.Level;
@@ -331,8 +331,26 @@ public class RWLockDataStructure implements DataStructure {
     }
 
     @Override
-    public ArrayList<ResourceHandle> getAllResources() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public List<ResourceHandle> getAllResources() {
+        long stamp = lock.tryOptimisticRead();
+        try {
+            for (;; stamp = lock.readLock()) {
+                if (stamp == 0L) {
+                    continue;
+                }
+
+                ResourceHandle[] allResources = Arrays.copyOf(resources, size);
+                if (!lock.validate(stamp)) {
+                    continue;
+                }
+
+                return Arrays.asList(allResources);
+            }
+        } finally {
+            if (StampedLock.isReadLockStamp(stamp)) {
+                lock.unlockRead(stamp);
+            }
+        }
     }
 
     /**

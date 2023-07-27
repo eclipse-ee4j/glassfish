@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,14 +17,16 @@
 
 package com.sun.enterprise.resource.pool.datastructure;
 
-import java.util.ArrayList;
-import java.util.concurrent.Semaphore;
-
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.resource.ResourceHandle;
 import com.sun.enterprise.resource.allocator.ResourceAllocator;
 import com.sun.enterprise.resource.pool.ResourceHandler;
 import com.sun.enterprise.resource.pool.datastructure.strategy.ResourceSelectionStrategy;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Semaphore;
+
 
 /**
  * List based datastructure that can be used by connection pool <br>
@@ -216,7 +218,7 @@ public class ListDataStructure implements DataStructure {
      * {@inheritDoc}
      */
     @Override
-    public ArrayList<ResourceHandle> getAllResources() {
+    public List<ResourceHandle> getAllResources() {
         return this.resources;
     }
 

@@ -21,7 +21,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.glassfish.quicklook</groupId>
     <artifactId>rest</artifactId>
-    <version>7.0.7</version>
+    <version>7.0.8-SNAPSHOT</version>
     <name>REST API Quicklook Tests</name>
     <packaging>jar</packaging>
     <parent>

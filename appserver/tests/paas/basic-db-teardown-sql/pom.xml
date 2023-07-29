@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.glassfish.tests.paas</groupId>
     <artifactId>basic-db-teardown-sql</artifactId>
-    <version>7.0.7-SNAPSHOT</version>
+    <version>7.0.8-SNAPSHOT</version>
     <name>Basic DB Tear down SQL PaaS sample</name>
     <packaging>war</packaging>
     <build>

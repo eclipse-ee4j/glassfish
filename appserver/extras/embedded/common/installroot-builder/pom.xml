@@ -23,7 +23,7 @@
   <parent>
     <groupId>org.glassfish.main.extras</groupId>
     <artifactId>glassfish-embedded-common</artifactId>
-    <version>7.0.7-SNAPSHOT</version>
+    <version>7.0.8-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 

@@ -33,6 +33,26 @@
 
     <name>GlassFish UberJar Activator</name>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi.core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.core</groupId>
+            <artifactId>glassfish</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.common</groupId>
+            <artifactId>simple-glassfish-api</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -69,26 +89,18 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Bundle-Activator>org.glassfish.uberjar.activator.UberJarGlassFishActivator</Bundle-Activator>
+                        <Bundle-SymbolicName>org.glassfish.uberjar.activator</Bundle-SymbolicName>
+                        <Export-Package>org.glassfish.embeddable</Export-Package>
+                        <Main-Class>org.glassfish.uberjar.UberJarMain</Main-Class>
+                    </instructions>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.osgi</groupId>
-            <artifactId>osgi.core</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.core</groupId>
-            <artifactId>glassfish</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.common</groupId>
-            <artifactId>simple-glassfish-api</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
 </project>

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,25 @@
 
 package org.glassfish.ha.store.adapter.file;
 
-import org.glassfish.ha.store.api.*;
-
-import java.io.*;
-
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Map;
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.ha.store.api.BackingStore;
+import org.glassfish.ha.store.api.BackingStoreConfiguration;
+import org.glassfish.ha.store.api.BackingStoreException;
+import org.glassfish.ha.store.api.BackingStoreFactory;
 
 /**
  * An implementation of BackingStore that uses file system to
@@ -90,6 +104,7 @@ public class FileBackingStore<K extends Serializable, V extends Serializable>
         this.factory = factory;
     }
 
+    @Override
     public BackingStoreFactory getBackingStoreFactory() {
         return factory;
     }
@@ -123,6 +138,7 @@ public class FileBackingStore<K extends Serializable, V extends Serializable>
         return value;
     }
 
+    @Override
     public void remove(K sessionKey) {
         remove(sessionKey.toString());
     }
@@ -151,8 +167,8 @@ public class FileBackingStore<K extends Serializable, V extends Serializable>
             if (fileNames == null) {
                 return;
             }
-            for (int i = 0; i < fileNames.length; i++) {
-                remove(fileNames[i]);
+            for (String fileName : fileNames) {
+                remove(fileName);
             }
 
             if (baseDir.delete() == false) {
@@ -170,11 +186,13 @@ public class FileBackingStore<K extends Serializable, V extends Serializable>
         }
     }
 
+    @Override
     public int removeExpired() {
         return removeExpired(defaultMaxIdleTimeoutInSeconds * 1000L);
     }
 
     //TODO: deprecate after next shoal integration
+    @Override
     public int removeExpired(long idleForMillis) {
         long threshold = System.currentTimeMillis() - idleForMillis;
         int expiredSessions = 0;
@@ -248,6 +266,7 @@ public class FileBackingStore<K extends Serializable, V extends Serializable>
         updateTimestamp(k, timeStamp);
     }
 
+    @Override
     public void updateTimestamp(K sessionKey, long time)
             throws BackingStoreException {
         if (logger.isLoggable(TRACE_LEVEL)) {
@@ -292,6 +311,7 @@ public class FileBackingStore<K extends Serializable, V extends Serializable>
         } else {
             success = (Boolean) java.security.AccessController.doPrivileged(
                     new java.security.PrivilegedAction() {
+                        @Override
                         public java.lang.Object run() {
                             return Boolean.valueOf(file.delete());
                         }
@@ -403,12 +423,16 @@ public class FileBackingStore<K extends Serializable, V extends Serializable>
             throw new BackingStoreException(errMsg, ex);
         } finally {
             try {
-                if (bos != null) bos.close();
+                if (bos != null) {
+                    bos.close();
+                }
             } catch (Exception ex) {
                 logger.log(Level.FINE, "Error while closing buffered output stream", ex);
             }
             try {
-                if (fos != null) fos.close();
+                if (fos != null) {
+                    fos.close();
+                }
             } catch (Exception ex) {
                 logger.log(Level.FINE, "Error while closing file output stream", ex);
             }

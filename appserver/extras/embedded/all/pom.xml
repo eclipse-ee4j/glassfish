@@ -1432,6 +1432,11 @@
             <artifactId>nimbus-jose-jwt</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.omnifaces</groupId>
+            <artifactId>eleos</artifactId>
+            <optional>true</optional>
+        </dependency>
 
         <dependency>
             <groupId>jakarta.validation</groupId>

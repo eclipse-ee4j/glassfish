@@ -1076,6 +1076,11 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>org.omnifaces</groupId>
+            <artifactId>eleos</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>jakarta.security.enterprise</groupId>
             <artifactId>jakarta.security.enterprise-api</artifactId>
             <optional>true</optional>

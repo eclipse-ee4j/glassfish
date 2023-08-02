@@ -140,6 +140,20 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Export-Package>
+                            com.sun.jdo.spi.persistence.support.sqlstore,
+                            com.sun.jdo.spi.persistence.support.sqlstore.ejb,
+                            com.sun.jdo.spi.persistence.support.sqlstore.query.jqlc,
+                            com.sun.jdo.spi.persistence.support.sqlstore.utility
+                        </Export-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

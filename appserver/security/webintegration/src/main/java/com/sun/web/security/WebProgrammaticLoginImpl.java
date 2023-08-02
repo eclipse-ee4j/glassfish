@@ -39,7 +39,6 @@ import org.apache.catalina.connector.Request;
 import org.apache.catalina.connector.RequestFacade;
 import org.jvnet.hk2.annotations.Service;
 
-import static com.sun.web.security.WebSecurityResourceBundle.BUNDLE_NAME;
 import static java.util.logging.Level.FINE;
 
 /**

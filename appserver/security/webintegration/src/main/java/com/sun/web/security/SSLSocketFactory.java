@@ -19,7 +19,6 @@ package com.sun.web.security;
 
 import com.sun.enterprise.security.ssl.J2EEKeyManager;
 import com.sun.enterprise.security.ssl.SSLUtils;
-import com.sun.logging.LogDomains;
 
 import java.io.IOException;
 import java.net.InetAddress;

@@ -123,10 +123,23 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <archive>
-                    <manifestEntries>
-                      <probe-provider-class-names>com.sun.enterprise.connectors.work.monitor.WorkManagementProbeProvider</probe-provider-class-names>
-                    </manifestEntries>
+                        <manifestEntries>
+<probe-provider-class-names>com.sun.enterprise.connectors.work.monitor.WorkManagementProbeProvider</probe-provider-class-names>
+                        </manifestEntries>
                     </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                         <DynamicImport-Package>org.glassfish.flashlight.provider</DynamicImport-Package>
+                         <Export-Package>
+                            com.sun.enterprise.connectors.work,
+                            com.sun.enterprise.connectors.work.context
+                        </Export-Package>
+                    </instructions>
                 </configuration>
             </plugin>
         </plugins>

@@ -227,10 +227,35 @@
         </resources>
         <plugins>
             <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <DynamicImport-Package>
+                            org.glassfish.flashlight.provider,
+                            org.objectweb.asm,
+                            org.objectweb.asm.commons
+                        </DynamicImport-Package>
+                        <Export-Package>
+                            com.sun.enterprise.v3.admin,
+                            com.sun.enterprise.v3.admin.adapter,
+                            com.sun.enterprise.v3.admin.commands,
+                            com.sun.enterprise.v3.bootstrap,
+                            com.sun.enterprise.v3.common,
+                            com.sun.enterprise.v3.server,
+                            com.sun.enterprise.v3.services.impl,
+                            org.glassfish.kernel.embedded,
+                            org.glassfish.kernel.event
+                        </Export-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+            <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <archive>
                         <manifestEntries>
+                            <!-- Don't split to lines, the plugin uses it with spaces!' -->
                             <probe-provider-class-names>com.sun.enterprise.v3.services.impl.monitor.probes.ThreadPoolProbeProvider,com.sun.enterprise.v3.services.impl.monitor.probes.FileCacheProbeProvider,com.sun.enterprise.v3.services.impl.monitor.probes.KeepAliveProbeProvider,com.sun.enterprise.v3.services.impl.monitor.probes.ConnectionQueueProbeProvider</probe-provider-class-names>
                         </manifestEntries>
                     </archive>

@@ -61,4 +61,24 @@
             <artifactId>hamcrest</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Export-Package>
+                            com.sun.jaspic.config.delegate,
+                            com.sun.jaspic.config.factory,
+                            com.sun.jaspic.config.helper,
+                            com.sun.jaspic.config.jaas,
+                            com.sun.jaspic.config.servlet
+                        </Export-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

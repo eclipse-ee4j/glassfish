@@ -16,7 +16,21 @@
 
 package com.sun.enterprise.security.appclient;
 
-import com.sun.enterprise.security.ee.J2EESecurityManager;
+import java.lang.System.Logger;
+import java.util.List;
+import java.util.logging.Level;
+
+import javax.security.auth.Subject;
+import javax.security.auth.callback.CallbackHandler;
+
+import org.glassfish.appclient.client.acc.config.MessageSecurityConfig;
+import org.glassfish.appclient.client.acc.config.Security;
+import org.glassfish.appclient.client.acc.config.Ssl;
+import org.glassfish.appclient.client.acc.config.TargetServer;
+import org.glassfish.enterprise.iiop.api.IIOPSSLUtil;
+import org.jvnet.hk2.annotations.Service;
+import org.omnifaces.eleos.config.factory.file.AuthConfigFileFactory;
+
 import com.sun.enterprise.security.SecurityServicesUtil;
 import com.sun.enterprise.security.UsernamePasswordStore;
 import com.sun.enterprise.security.appclient.integration.AppClientSecurityInfo;
@@ -25,23 +39,12 @@ import com.sun.enterprise.security.auth.login.LoginContextDriver;
 import com.sun.enterprise.security.common.ClientSecurityContext;
 import com.sun.enterprise.security.common.SecurityConstants;
 import com.sun.enterprise.security.common.Util;
+import com.sun.enterprise.security.ee.J2EESecurityManager;
 import com.sun.enterprise.security.integration.AppClientSSL;
 import com.sun.enterprise.security.ssl.SSLUtils;
-import com.sun.logging.LogDomains;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import jakarta.inject.Inject;
-import javax.security.auth.Subject;
-import javax.security.auth.callback.CallbackHandler;
 import jakarta.security.auth.message.config.AuthConfigFactory;
-import org.glassfish.appclient.client.acc.config.MessageSecurityConfig;
-import org.glassfish.appclient.client.acc.config.Security;
-import org.glassfish.appclient.client.acc.config.Ssl;
-import org.glassfish.appclient.client.acc.config.TargetServer;
-import org.jvnet.hk2.annotations.Service;
-import org.omnifaces.eleos.config.factory.file.AuthConfigFileFactory;
-import org.glassfish.enterprise.iiop.api.IIOPSSLUtil;
 
 /**
  *
@@ -50,10 +53,7 @@ import org.glassfish.enterprise.iiop.api.IIOPSSLUtil;
 @Service
 public class AppClientSecurityInfoImpl implements AppClientSecurityInfo {
 
-    private static Logger _logger=null;
-    static {
-        _logger=LogDomains.getLogger(AppClientSecurityInfoImpl.class, LogDomains.SECURITY_LOGGER);
-    }
+    private static final Logger LOG = System.getLogger(AppClientSecurityInfoImpl.class.getName());
 
     private static final String DEFAULT_PARSER_CLASS = "com.sun.enterprise.security.appclient.ConfigXMLParser";
 

@@ -23,13 +23,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,12 +42,10 @@ import org.glassfish.appclient.client.acc.config.ResponsePolicy;
 import org.glassfish.internal.api.Globals;
 import org.omnifaces.eleos.config.factory.ConfigParser;
 import org.omnifaces.eleos.config.helper.AuthMessagePolicy;
-import org.omnifaces.eleos.config.module.configprovider.GFServerConfigProvider;
 import org.omnifaces.eleos.data.AuthModuleConfig;
 import org.omnifaces.eleos.data.AuthModulesLayerConfig;
 
 import com.sun.enterprise.security.common.Util;
-import com.sun.logging.LogDomains;
 
 import jakarta.security.auth.message.MessagePolicy;
 import jakarta.xml.bind.JAXBContext;
@@ -58,7 +56,7 @@ import jakarta.xml.bind.Unmarshaller;
  * Parser for message-security-config in glassfish-acc.xml
  */
 public class ConfigXMLParser implements ConfigParser {
-    private static Logger _logger = LogDomains.getLogger(ConfigXMLParser.class, LogDomains.SECURITY_LOGGER);
+    private static final Logger LOG = System.getLogger(ConfigXMLParser.class.getName());
 
     private static Pattern PROPERTY_PATTERN = Pattern.compile("\\$\\{\\{(.*?)}}|\\$\\{(.*?)}");
 

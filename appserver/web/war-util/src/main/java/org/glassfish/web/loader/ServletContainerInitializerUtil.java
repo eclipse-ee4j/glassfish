@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,6 +39,9 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static java.lang.Runtime.version;
+import static java.util.zip.ZipFile.OPEN_READ;
 
 /**
  * Utility class - contains util methods used for implementation of
@@ -243,13 +247,14 @@ public class ServletContainerInitializerUtil {
                     URLClassLoader ucl = (URLClassLoader) cl;
                     for(URL u : ucl.getURLs()) {
                         String path = u.getPath();
+                        File file = new File(path);
                         try {
                             if(path.endsWith(".jar")) {
-                                JarFile jf = new JarFile(path);
+                                JarFile jf = new JarFile(file, true, OPEN_READ, version());
                                 try {
-                                    Enumeration<JarEntry> entries = jf.entries();
-                                    while(entries.hasMoreElements()) {
-                                        JarEntry anEntry = entries.nextElement();
+                                    Iterator<JarEntry> entries = jf.versionedStream().iterator();
+                                    while(entries.hasNext()) {
+                                        JarEntry anEntry = entries.next();
                                         if(anEntry.isDirectory()) {
                                             continue;
                                         }
@@ -285,7 +290,6 @@ public class ServletContainerInitializerUtil {
                                     jf.close();
                                 }
                             } else {
-                                File file = new File(path);
                                 if (file.exists()) {
                                     if (file.isDirectory()) {
                                         scanDirectory(file, classInfo);

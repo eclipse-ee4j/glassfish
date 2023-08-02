@@ -27,7 +27,7 @@ import java.lang.System.Logger;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -39,10 +39,12 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import static java.lang.Runtime.version;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.Logger.Level.WARNING;
 import static java.util.concurrent.Executors.newScheduledThreadPool;
+import static java.util.zip.ZipFile.OPEN_READ;
 import static org.glassfish.web.loader.LogFacade.getString;
 
 /**
@@ -212,7 +214,7 @@ class JarFileManager implements Closeable {
                     continue;
                 }
                 try {
-                    jarResource.jarFile = new JarFile(jarResource.file);
+                    jarResource.jarFile = new JarFile(jarResource.file, true, OPEN_READ, version());
                 } catch (IOException e) {
                     LOG.log(DEBUG, "Failed to open JAR", e);
                     lastJarFileAccess = 0L;
@@ -274,9 +276,9 @@ class JarFileManager implements Closeable {
 
     private static void extractResource(JarFile jarFile, File loaderDir, String pathPrefix) {
         LOG.log(DEBUG, "extractResource(jarFile={0}, loaderDir={1}, pathPrefix={2})", jarFile, loaderDir, pathPrefix);
-        Enumeration<JarEntry> jarEntries = jarFile.entries();
-        while (jarEntries.hasMoreElements()) {
-            JarEntry jarEntry = jarEntries.nextElement();
+        Iterator<JarEntry> jarEntries = jarFile.versionedStream().iterator();
+        while (jarEntries.hasNext()) {
+            JarEntry jarEntry = jarEntries.next();
             if (!jarEntry.isDirectory() && !jarEntry.getName().endsWith(".class")) {
                 File resourceFile = new File(loaderDir, jarEntry.getName());
                 try {

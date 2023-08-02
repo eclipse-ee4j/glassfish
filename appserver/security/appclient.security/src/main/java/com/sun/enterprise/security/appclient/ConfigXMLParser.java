@@ -40,11 +40,13 @@ import org.glassfish.appclient.client.acc.config.ProviderConfig;
 import org.glassfish.appclient.client.acc.config.RequestPolicy;
 import org.glassfish.appclient.client.acc.config.ResponsePolicy;
 import org.glassfish.internal.api.Globals;
+import org.omnifaces.eleos.config.factory.ConfigParser;
+import org.omnifaces.eleos.config.helper.AuthMessagePolicy;
+import org.omnifaces.eleos.config.module.configprovider.GFServerConfigProvider;
+import org.omnifaces.eleos.data.AuthModuleConfig;
+import org.omnifaces.eleos.data.AuthModulesLayerConfig;
 
 import com.sun.enterprise.security.common.Util;
-import com.sun.enterprise.security.jmac.AuthMessagePolicy;
-import com.sun.enterprise.security.jmac.config.ConfigParser;
-import com.sun.enterprise.security.jmac.config.GFServerConfigProvider;
 import com.sun.logging.LogDomains;
 
 import jakarta.security.auth.message.MessagePolicy;
@@ -93,7 +95,7 @@ public class ConfigXMLParser implements ConfigParser {
     }
 
     @Override
-    public Map getConfigMap() {
+    public Map getAuthModuleLayers() {
         return configMap;
     }
 
@@ -120,13 +122,13 @@ public class ConfigXMLParser implements ConfigParser {
             layersWithDefault.add(intercept);
         }
 
-        GFServerConfigProvider.InterceptEntry intEntry = (GFServerConfigProvider.InterceptEntry) newConfig.get(intercept);
+        AuthModulesLayerConfig intEntry = (AuthModulesLayerConfig) newConfig.get(intercept);
         if (intEntry != null) {
             throw new IOException("found multiple MessageSecurityConfig " + "entries with the same auth-layer");
         }
 
         // create new intercept entry
-        intEntry = new GFServerConfigProvider.InterceptEntry(defaultClientID, defaultServerID, null);
+        intEntry = new AuthModulesLayerConfig(defaultClientID, defaultServerID, null);
         newConfig.put(intercept, intEntry);
         return intercept;
     }
@@ -141,7 +143,7 @@ public class ConfigXMLParser implements ConfigParser {
 
         // get the module options
 
-        Map<String, String> options = new HashMap();
+        Map<String, Object> options = new HashMap<>();
         List<Property> props = pConfig.getProperty();
         for (Property prop : props) {
             try {
@@ -161,20 +163,20 @@ public class ConfigXMLParser implements ConfigParser {
 
         // create ID entry
 
-        GFServerConfigProvider.IDEntry idEntry = new GFServerConfigProvider.IDEntry(type, moduleClass, requestPolicy, responsePolicy,
+        AuthModuleConfig idEntry = new AuthModuleConfig(type, moduleClass, requestPolicy, responsePolicy,
                 options);
 
-        GFServerConfigProvider.InterceptEntry intEntry = (GFServerConfigProvider.InterceptEntry) newConfig.get(intercept);
+        AuthModulesLayerConfig intEntry = (AuthModulesLayerConfig) newConfig.get(intercept);
         if (intEntry == null) {
             throw new IOException("intercept entry for " + intercept + " must be specified before ID entries");
         }
 
-        if (intEntry.getIdMap() == null) {
+        if (intEntry.getAuthModules() == null) {
             intEntry.setIdMap(new HashMap());
         }
 
         // map id to Intercept
-        intEntry.getIdMap().put(id, idEntry);
+        intEntry.getAuthModules().put(id, idEntry);
     }
 
     private String expand(String rawProperty) {

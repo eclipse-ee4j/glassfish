@@ -31,6 +31,8 @@ import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
+import org.omnifaces.eleos.config.helper.BaseCallbackHandler;
+
 import com.sun.enterprise.security.SecurityServicesUtil;
 import com.sun.enterprise.security.UsernamePasswordStore;
 
@@ -48,7 +50,7 @@ import jakarta.security.auth.message.callback.TrustStoreCallback;
  * @author Harpreet Singh
  * @author Shing Wai Chan
  */
-final class ClientContainerCallbackHandler extends BaseContainerCallbackHandler {
+final class ClientContainerCallbackHandler extends BaseCallbackHandler {
 
     private static final String LOGIN_NAME = "j2eelogin.name";
     private static final String LOGIN_PASSWORD = "j2eelogin.password";

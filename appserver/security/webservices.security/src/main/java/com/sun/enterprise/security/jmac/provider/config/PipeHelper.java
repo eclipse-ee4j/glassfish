@@ -40,6 +40,9 @@ import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.WebServiceEndpoint;
 import org.glassfish.deployment.common.ModuleDescriptor;
+import org.omnifaces.eleos.config.factory.ConfigParser;
+import org.omnifaces.eleos.config.module.configprovider.GFServerConfigProvider;
+import org.omnifaces.eleos.services.BaseAuthenticationService;
 
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
 
@@ -54,8 +57,6 @@ import com.sun.enterprise.security.common.ClientSecurityContext;
 import com.sun.enterprise.security.jmac.AuthMessagePolicy;
 import com.sun.enterprise.security.webservices.PipeConstants;
 //TODO: replace the one below with the one above later
-import com.sun.enterprise.security.jmac.config.ConfigHelper;
-import com.sun.enterprise.security.jmac.config.GFServerConfigProvider;
 import com.sun.enterprise.security.jmac.config.HandlerContext;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.io.FileUtils;
@@ -80,7 +81,7 @@ import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 
 
-public class PipeHelper extends ConfigHelper {
+public class PipeHelper extends BaseAuthenticationService {
 
     private AppServerAuditManager auditManager = null;
     // AuditManagerFactory.getAuditManagerInstance();
@@ -94,7 +95,7 @@ public class PipeHelper extends ConfigHelper {
     private EJBPolicyContextDelegate ejbDelegate = null;
 
     public PipeHelper(String layer, Map map, CallbackHandler cbh) {
-        init(layer, getAppCtxt(map), map, cbh);
+        init(layer, getAppCtxt(map),map, cbh, null);
 
         this.isEjbEndpoint = processSunDeploymentDescriptor();
         this.seiModel = (SEIModel) map.get(PipeConstants.SEI_MODEL);
@@ -367,7 +368,8 @@ public class PipeHelper extends ConfigHelper {
     }
 
 
-    @Override
+    // TODO
+    // @Override
     protected HandlerContext getHandlerContext(Map map) {
         String realmName = null;
         WebServiceEndpoint wSE = (WebServiceEndpoint) map.get(PipeConstants.SERVICE_ENDPOINT);
@@ -393,7 +395,7 @@ public class PipeHelper extends ConfigHelper {
 
     private boolean processSunDeploymentDescriptor() {
 
-        if (factory == null) {
+        if (authConfigFactory == null) {
             return false;
         }
 
@@ -402,11 +404,11 @@ public class PipeHelper extends ConfigHelper {
 
         if (binding != null) {
             if (!hasExactMatchAuthProvider()) {
-                String jmacProviderRegisID = factory.registerConfigProvider(
-                    new GFServerConfigProvider(null, null),
-                    layer, appCtxt,
+                String jmacProviderRegisID = authConfigFactory.registerConfigProvider(
+                    new GFServerConfigProvider((ConfigParser)null, null),
+                    messageLayer, appContextId,
                     "GF AuthConfigProvider bound by Sun Specific Descriptor");
-                this.setJmacProviderRegisID(jmacProviderRegisID);
+                this.setRegistrationId(jmacProviderRegisID);
             }
         }
 

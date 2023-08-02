@@ -353,6 +353,16 @@ public class LoginContextDriver {
         }
     }
 
+    public static void jmacLogin(Subject subject, Principal callerPrincipal, String realmName) throws LoginException {
+        if (CertificateRealm.AUTH_TYPE.equals(realmName)) {
+            if (callerPrincipal instanceof X500Principal) {
+                LoginContextDriver.jmacLogin(subject, (X500Principal) callerPrincipal);
+            }
+        } else if (!callerPrincipal.equals(SecurityContext.getDefaultCallerPrincipal())) {
+            LoginContextDriver.jmacLogin(subject, callerPrincipal.getName(), realmName);
+        }
+    }
+
     /**
      * Performs login for JMAC security. The difference between this method and others is that it just verifies whether the login
      * will succeed in the given realm. It does not set the result of the authentication in the appserver runtime environment A

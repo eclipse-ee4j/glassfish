@@ -25,7 +25,6 @@ import com.sun.xml.ws.api.pipe.ClientPipeAssemblerContext;
 import com.sun.xml.ws.policy.PolicyMap;
 
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
-import com.sun.enterprise.security.jmac.config.ConfigHelper.AuthConfigRegistrationWrapper;
 import com.sun.istack.NotNull;
 import com.sun.xml.ws.api.pipe.Tube;
 
@@ -60,7 +59,7 @@ public class ClientPipeCreator extends ClientPipelineHook {
         propBag.put(PipeConstants.CONTAINER,ctxt.getContainer());
         propBag.put(PipeConstants.ASSEMBLER_CONTEXT, ctxt);
         ClientSecurityPipe ret = new ClientSecurityPipe(propBag, tail);
-        AuthConfigRegistrationWrapper listenerWrapper = ClientPipeCloser.getInstance().lookupListenerWrapper(svcRef);
+        org.omnifaces.eleos.services.AuthConfigRegistrationWrapper listenerWrapper = ClientPipeCloser.getInstance().lookupListenerWrapper(svcRef);
         //there is a 1-1 mapping between Service_Ref and a ListenerWrapper
         if (listenerWrapper != null) {
             //override the listener that was created by the ConfigHelper CTOR :if one was already registered

@@ -26,7 +26,6 @@ import com.sun.enterprise.deployment.runtime.common.MessageSecurityDescriptor;
 import com.sun.enterprise.deployment.runtime.common.ProtectionDescriptor;
 import com.sun.enterprise.deployment.runtime.web.SunWebApp;
 import com.sun.enterprise.security.common.AppservAccessController;
-import com.sun.enterprise.security.jmac.config.HttpServletConstants;
 
 import jakarta.security.auth.message.MessagePolicy;
 import jakarta.security.auth.message.MessagePolicy.ProtectionPolicy;
@@ -42,22 +41,19 @@ import javax.security.auth.callback.CallbackHandler;
 
 import org.glassfish.internal.api.Globals;
 
-import static com.sun.enterprise.security.jmac.config.GFServerConfigProvider.SOAP;
+import static org.omnifaces.eleos.config.helper.HttpServletConstants.SOAP;
 
 /**
  * Utility class for JMAC appserver implementation.
  */
 public class AuthMessagePolicy {
 
-    private static final String SENDER = "sender";
-    private static final String CONTENT = "content";
-    private static final String BEFORE_CONTENT = "before-content";
+    public static final String WEB_BUNDLE = "WEB_BUNDLE";
+
     private static final String HANDLER_CLASS_PROPERTY = "security.jmac.config.ConfigHelper.CallbackHandler";
     private static final String DEFAULT_HANDLER_CLASS = "com.sun.enterprise.security.jmac.callback.ContainerCallbackHandler";
 
     // for HttpServlet profile
-    private static final MessagePolicy MANDATORY_POLICY = getMessagePolicy(SENDER, null, true);
-    private static final MessagePolicy OPTIONAL_POLICY = getMessagePolicy(SENDER, null, false);
 
     private static String handlerClassName;
 
@@ -96,80 +92,12 @@ public class AuthMessagePolicy {
         return null;
     }
 
-    public static MessagePolicy getMessagePolicy(String authSource, String authRecipient) {
-        boolean sourceSender = SENDER.equals(authSource);
-        boolean sourceContent = CONTENT.equals(authSource);
-        boolean recipientAuth = authRecipient != null;
-        boolean mandatory = sourceSender || sourceContent || recipientAuth;
-        return getMessagePolicy(authSource, authRecipient, mandatory);
-    }
-
-    public static MessagePolicy getMessagePolicy(String authSource, String authRecipient, boolean mandatory) {
-
-        boolean sourceSender = SENDER.equals(authSource);
-        boolean sourceContent = CONTENT.equals(authSource);
-        boolean recipientAuth = authRecipient != null;
-        boolean beforeContent = BEFORE_CONTENT.equals(authRecipient);
-
-        List<TargetPolicy> targetPolicies = new ArrayList<>();
-        if (recipientAuth && beforeContent) {
-            targetPolicies.add(new TargetPolicy(null, new ProtectionPolicy() {
-                @Override
-                public String getID() {
-                    return ProtectionPolicy.AUTHENTICATE_RECIPIENT;
-                }
-            }));
-            if (sourceSender) {
-                targetPolicies.add(new TargetPolicy(null, new ProtectionPolicy() {
-                    @Override
-                    public String getID() {
-                        return ProtectionPolicy.AUTHENTICATE_SENDER;
-                    }
-                }));
-            } else if (sourceContent) {
-                targetPolicies.add(new TargetPolicy(null, new ProtectionPolicy() {
-                    @Override
-                    public String getID() {
-                        return ProtectionPolicy.AUTHENTICATE_CONTENT;
-                    }
-                }));
-            }
-        } else {
-            if (sourceSender) {
-                targetPolicies.add(new TargetPolicy(null, new ProtectionPolicy() {
-                    @Override
-                    public String getID() {
-                        return ProtectionPolicy.AUTHENTICATE_SENDER;
-                    }
-                }));
-            } else if (sourceContent) {
-                targetPolicies.add(new TargetPolicy(null, new ProtectionPolicy() {
-                    @Override
-                    public String getID() {
-                        return ProtectionPolicy.AUTHENTICATE_CONTENT;
-                    }
-                }));
-            }
-
-            if (recipientAuth) {
-                targetPolicies.add(new TargetPolicy(null, new ProtectionPolicy() {
-                    @Override
-                    public String getID() {
-                        return ProtectionPolicy.AUTHENTICATE_RECIPIENT;
-                    }
-                }));
-            }
-        }
-
-        return new MessagePolicy(targetPolicies.toArray(new TargetPolicy[targetPolicies.size()]), mandatory);
-    }
-
     public static MessagePolicy getMessagePolicy(ProtectionDescriptor pd) {
         MessagePolicy messagePolicy = null;
         if (pd != null) {
             String source = pd.getAttributeValue(ProtectionDescriptor.AUTH_SOURCE);
             String recipient = pd.getAttributeValue(ProtectionDescriptor.AUTH_RECIPIENT);
-            messagePolicy = getMessagePolicy(source, recipient);
+            messagePolicy = org.omnifaces.eleos.config.helper.AuthMessagePolicy.getMessagePolicy(source, recipient);
         }
         return messagePolicy;
     }
@@ -270,7 +198,7 @@ public class AuthMessagePolicy {
             return null;
         }
 
-        WebBundleDescriptor webBundle = (WebBundleDescriptor) properties.get(HttpServletConstants.WEB_BUNDLE);
+        WebBundleDescriptor webBundle = (WebBundleDescriptor) properties.get(WEB_BUNDLE);
         return webBundle.getSunDescriptor();
     }
 
@@ -279,15 +207,10 @@ public class AuthMessagePolicy {
         if (sunWebApp != null) {
             providerID = sunWebApp.getAttributeValue(SunWebApp.HTTPSERVLET_SECURITY_PROVIDER);
         }
+
         return providerID;
     }
 
-    public static MessagePolicy[] getHttpServletPolicies(String authContextID) {
-        if (Boolean.valueOf(authContextID)) {
-            return new MessagePolicy[] { MANDATORY_POLICY, null };
-        }
-        return new MessagePolicy[] { OPTIONAL_POLICY, null };
-    }
 
     public static CallbackHandler getDefaultCallbackHandler() {
         // get the default handler class

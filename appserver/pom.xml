@@ -267,6 +267,11 @@
                 <version>${exousia.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.omnifaces</groupId>
+                <artifactId>eleos</artifactId>
+                <version>3.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
                 <groupId>com.nimbusds</groupId>
                 <artifactId>nimbus-jose-jwt</artifactId>
                 <version>${nimbus.version}</version>

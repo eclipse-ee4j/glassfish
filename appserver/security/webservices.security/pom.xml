@@ -140,5 +140,10 @@
             <groupId>jakarta.authorization</groupId>
             <artifactId>jakarta.authorization-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.omnifaces</groupId>
+            <artifactId>eleos</artifactId>
+        </dependency>
+        
     </dependencies>
 </project>

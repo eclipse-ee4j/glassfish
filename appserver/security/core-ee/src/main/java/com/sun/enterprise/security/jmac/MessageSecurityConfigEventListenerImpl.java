@@ -17,14 +17,6 @@
 
 package com.sun.enterprise.security.jmac;
 
-import com.sun.enterprise.config.serverbeans.MessageSecurityConfig;
-import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.security.jmac.config.GFServerConfigProvider;
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-
 import java.beans.PropertyChangeEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,6 +31,13 @@ import org.jvnet.hk2.config.ConfigListener;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.NotProcessed;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
+
+import com.sun.enterprise.config.serverbeans.MessageSecurityConfig;
+import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * Listener class to handle admin message-security-config element events.
@@ -59,7 +58,7 @@ public class MessageSecurityConfigEventListenerImpl implements ConfigListener {
     public <T extends ConfigBeanProxy> NotProcessed handleUpdate(T instance) {
         LOG.log(Level.FINE, "MessageSecurityConfigEventListenerImpl - handleUpdate called");
         if (instance instanceof MessageSecurityConfig) {
-            GFServerConfigProvider.loadConfigContext(service);
+            // GFServerConfigProvider.loadConfigContext(service);
             return null;
         }
         return new NotProcessed("unimplemented: unknown instance: " + instance.getClass().getName());
@@ -68,7 +67,7 @@ public class MessageSecurityConfigEventListenerImpl implements ConfigListener {
     public <T extends ConfigBeanProxy> NotProcessed handleDelete(T instance) {
         LOG.log(Level.FINE, "MessageSecurityConfigEventListenerImpl - handleDelete called");
         if (instance instanceof MessageSecurityConfig) {
-            GFServerConfigProvider.loadConfigContext(service);
+            // GFServerConfigProvider.loadConfigContext(service);
             return null;
         }
         return new NotProcessed("unimplemented: unknown instance: " + instance.getClass().getName());
@@ -77,7 +76,7 @@ public class MessageSecurityConfigEventListenerImpl implements ConfigListener {
     public <T extends ConfigBeanProxy> NotProcessed handleCreate(T instance) {
         LOG.log(Level.FINE, "MessageSecurityConfigEventListenerImpl - handleCreate called");
         if (instance instanceof MessageSecurityConfig) {
-            GFServerConfigProvider.loadConfigContext(service);
+            // GFServerConfigProvider.loadConfigContext(service);
             return null;
         }
         return new NotProcessed("unimplemented: unknown instance: " + instance.getClass().getName());

@@ -29,8 +29,10 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.AppConfigurationEntry;
 
-import com.sun.enterprise.security.jmac.config.ConfigParser;
-import com.sun.enterprise.security.jmac.config.GFServerConfigProvider;
+import org.omnifaces.eleos.config.factory.ConfigParser;
+import org.omnifaces.eleos.data.AuthModuleConfig;
+import org.omnifaces.eleos.data.AuthModulesLayerConfig;
+
 import com.sun.logging.LogDomains;
 
 /**
@@ -48,15 +50,15 @@ class ConfigFile extends AuthConfig {
     private String parserClassName;
 
     // parser
-    private ConfigParser parser;
+    private org.omnifaces.eleos.config.factory.ConfigParser parser;
 
     // package private for ConfigFileParser
     static final String CLIENT = "client";
     static final String SERVER = "server";
 
-    private static final String DEFAULT_HANDLER_CLASS = "com.sun.enterprise.security.jmac.callback.ContainerCallbackHandler";
+    private static final String DEFAULT_HANDLER_CLASS = "com.sun.enterprise.security.jmac.ContainerCallbackHandler";
 
-    private static final String DEFAULT_PARSER_CLASS = "com.sun.enterprise.security.jmac.config.ConfigDomainParser";
+    private static final String DEFAULT_PARSER_CLASS = "com.sun.enterprise.security.jmac.ConfigDomainParser";
 
     private static final Logger logger = LogDomains.getLogger(ConfigFile.class, LogDomains.SECURITY_LOGGER);
 
@@ -152,7 +154,7 @@ class ConfigFile extends AuthConfig {
         Map configMap;
 
         synchronized (parser) {
-            configMap = parser.getConfigMap();
+            configMap = parser.getAuthModuleLayers();
         }
 
         if (configMap == null) {
@@ -161,8 +163,8 @@ class ConfigFile extends AuthConfig {
 
         // get the module config info for this intercept
 
-        GFServerConfigProvider.InterceptEntry intEntry = (GFServerConfigProvider.InterceptEntry) configMap.get(intercept);
-        if (intEntry == null || intEntry.getIdMap() == null) {
+        AuthModulesLayerConfig intEntry = (AuthModulesLayerConfig) configMap.get(intercept);
+        if (intEntry == null || intEntry.getAuthModules() == null) {
             if (logger != null && logger.isLoggable(Level.FINE)) {
                 logger.fine("module config has no IDs configured for [" + intercept + "]");
             }
@@ -171,8 +173,8 @@ class ConfigFile extends AuthConfig {
 
         // look up the DD's provider ID in the module config
 
-        GFServerConfigProvider.IDEntry idEntry = null;
-        if (id == null || (idEntry = (GFServerConfigProvider.IDEntry) intEntry.getIdMap().get(id)) == null) {
+        AuthModuleConfig idEntry = null;
+        if (id == null || (idEntry = intEntry.getAuthModules().get(id)) == null) {
 
             // either the DD did not specify a provider ID,
             // or the DD-specified provider ID was not found
@@ -187,12 +189,12 @@ class ConfigFile extends AuthConfig {
 
             String defaultID;
             if (CLIENT.equals(type)) {
-                defaultID = intEntry.getDefaultClientID();
+                defaultID = intEntry.getDefaultClientModuleId();
             } else {
-                defaultID = intEntry.getDefaultServerID();
+                defaultID = intEntry.getDefaultServerModuleId();
             }
 
-            idEntry = (GFServerConfigProvider.IDEntry) intEntry.getIdMap().get(defaultID);
+            idEntry = intEntry.getAuthModules().get(defaultID);
             if (idEntry == null) {
 
                 // did not find a default provider ID
@@ -200,6 +202,7 @@ class ConfigFile extends AuthConfig {
                 if (logger != null && logger.isLoggable(Level.FINE)) {
                     logger.fine("no default config ID for [" + intercept + "]");
                 }
+
                 return null;
             }
         }
@@ -263,17 +266,16 @@ class ConfigFile extends AuthConfig {
      *
      * XXX custom file that can be used in place of [domain|sun-acc].xml
      */
-    private static ConfigParser loadParser(String className) throws IOException {
+    private static org.omnifaces.eleos.config.factory.ConfigParser loadParser(String className) throws IOException {
         try {
 
             final String finalClassName = className;
             final ClassLoader finalLoader = AuthConfig.getClassLoader();
 
-            return (ConfigParser) java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
+            return java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction<org.omnifaces.eleos.config.factory.ConfigParser>() {
                 @Override
-                public Object run() throws Exception {
-                    Class c = Class.forName(finalClassName, true, finalLoader);
-                    return c.newInstance();
+                public org.omnifaces.eleos.config.factory.ConfigParser run() throws Exception {
+                    return (org.omnifaces.eleos.config.factory.ConfigParser) Class.forName(finalClassName, true, finalLoader).newInstance();
                 }
             });
         } catch (java.security.PrivilegedActionException pae) {

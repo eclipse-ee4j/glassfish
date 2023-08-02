@@ -25,7 +25,6 @@ import com.sun.enterprise.security.auth.login.LoginContextDriver;
 import com.sun.enterprise.security.common.ClientSecurityContext;
 import com.sun.enterprise.security.common.SecurityConstants;
 import com.sun.enterprise.security.common.Util;
-import com.sun.enterprise.security.jmac.config.GFAuthConfigFactory;
 import com.sun.enterprise.security.integration.AppClientSSL;
 import com.sun.enterprise.security.ssl.SSLUtils;
 import com.sun.logging.LogDomains;
@@ -41,6 +40,7 @@ import org.glassfish.appclient.client.acc.config.Security;
 import org.glassfish.appclient.client.acc.config.Ssl;
 import org.glassfish.appclient.client.acc.config.TargetServer;
 import org.jvnet.hk2.annotations.Service;
+import org.omnifaces.eleos.config.factory.file.AuthConfigFileFactory;
 import org.glassfish.enterprise.iiop.api.IIOPSSLUtil;
 
 /**
@@ -120,7 +120,7 @@ public class AppClientSecurityInfoImpl implements AppClientSecurityInfo {
             if (defaultFactory == null) {
                 java.security.Security.setProperty
                     (AuthConfigFactory.DEFAULT_FACTORY_SECURITY_PROPERTY,
-                     GFAuthConfigFactory.class.getName());
+                        AuthConfigFileFactory.class.getName());
             }
 
         } catch (Exception e) {

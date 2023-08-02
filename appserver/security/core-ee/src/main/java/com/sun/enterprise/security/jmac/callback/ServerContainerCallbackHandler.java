@@ -27,6 +27,8 @@ import java.io.IOException;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
+import org.omnifaces.eleos.config.helper.BaseCallbackHandler;
+
 import jakarta.security.auth.message.callback.CallerPrincipalCallback;
 import jakarta.security.auth.message.callback.CertStoreCallback;
 import jakarta.security.auth.message.callback.GroupPrincipalCallback;
@@ -41,10 +43,7 @@ import jakarta.security.auth.message.callback.TrustStoreCallback;
  * @author Harpreet Singh
  * @author Shing Wai Chan
  */
-final class ServerContainerCallbackHandler extends BaseContainerCallbackHandler {
-
-    ServerContainerCallbackHandler() {
-    }
+final class ServerContainerCallbackHandler extends BaseCallbackHandler {
 
     @Override
     protected void handleSupportedCallbacks(Callback[] callbacks) throws IOException, UnsupportedCallbackException {

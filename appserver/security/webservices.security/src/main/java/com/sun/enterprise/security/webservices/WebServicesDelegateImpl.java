@@ -21,7 +21,6 @@ import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
 import com.sun.enterprise.security.jauth.AuthParam;
 import com.sun.enterprise.security.jmac.WebServicesDelegate;
-import com.sun.enterprise.security.jmac.config.ConfigHelper.AuthConfigRegistrationWrapper;
 import com.sun.enterprise.security.jmac.provider.PacketMessageInfo;
 import com.sun.enterprise.security.jmac.provider.SOAPAuthParam;
 import com.sun.xml.ws.api.message.Message;
@@ -38,6 +37,7 @@ import javax.xml.namespace.QName;
 
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.jvnet.hk2.annotations.Service;
+import org.omnifaces.eleos.services.AuthConfigRegistrationWrapper;
 
 import jakarta.inject.Singleton;
 import jakarta.security.auth.message.MessageInfo;

@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.security.jmac.config;
+package com.sun.enterprise.security.jmac;
 
 import static java.util.regex.Matcher.quoteReplacement;
 
@@ -33,13 +33,15 @@ import java.util.regex.Pattern;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.config.types.Property;
+import org.omnifaces.eleos.config.factory.ConfigParser;
+import org.omnifaces.eleos.data.AuthModuleConfig;
+import org.omnifaces.eleos.data.AuthModulesLayerConfig;
 
 import com.sun.enterprise.config.serverbeans.MessageSecurityConfig;
 import com.sun.enterprise.config.serverbeans.ProviderConfig;
 import com.sun.enterprise.config.serverbeans.RequestPolicy;
 import com.sun.enterprise.config.serverbeans.ResponsePolicy;
 import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.security.jmac.AuthMessagePolicy;
 import com.sun.logging.LogDomains;
 
 import jakarta.security.auth.message.MessagePolicy;
@@ -57,7 +59,7 @@ public class ConfigDomainParser implements ConfigParser {
     private static Pattern PROPERTY_PATTERN = Pattern.compile("\\$\\{\\{(.*?)}}|\\$\\{(.*?)}");
 
     // configuration info
-    private Map configMap = new HashMap();
+    private Map<String, AuthModulesLayerConfig>  configMap = new HashMap<>();
     private Set<String> layersWithDefault = new HashSet<>();
 
     public ConfigDomainParser() throws IOException {
@@ -71,13 +73,20 @@ public class ConfigDomainParser implements ConfigParser {
 
         if (service instanceof SecurityService) {
             processServerConfig((SecurityService) service, configMap);
-        } /*
-           * else { throw new IOException("invalid configBean type passed to parser"); }
-           */
+        }
+    }
+
+    @Override
+    public Map<String, AuthModulesLayerConfig> getAuthModuleLayers() {
+        return configMap;
+    }
+
+    @Override
+    public Set<String> getLayersWithDefault() {
+        return layersWithDefault;
     }
 
     private void processServerConfig(SecurityService service, Map newConfig) throws IOException {
-
         List<MessageSecurityConfig> configList = service.getMessageSecurityConfig();
 
         if (configList != null) {
@@ -109,25 +118,12 @@ public class ConfigDomainParser implements ConfigParser {
         }
     }
 
-    @Override
-    public Map getConfigMap() {
-        return configMap;
-    }
 
-    @Override
-    public Set<String> getLayersWithDefault() {
-        return layersWithDefault;
-    }
 
     private String parseInterceptEntry(MessageSecurityConfig msgConfig, Map newConfig) throws IOException {
-
-        String intercept = null;
-        String defaultServerID = null;
-        String defaultClientID = null;
-
-        intercept = msgConfig.getAuthLayer();
-        defaultServerID = msgConfig.getDefaultProvider();
-        defaultClientID = msgConfig.getDefaultClientProvider();
+        String intercept = msgConfig.getAuthLayer();
+        String defaultServerID = msgConfig.getDefaultProvider();
+        String defaultClientID = msgConfig.getDefaultClientProvider();
 
         if (_logger.isLoggable(Level.FINE)) {
             _logger.fine("Intercept Entry: " + "\n    intercept: " + intercept + "\n    defaultServerID: " + defaultServerID
@@ -138,15 +134,15 @@ public class ConfigDomainParser implements ConfigParser {
             layersWithDefault.add(intercept);
         }
 
-        GFServerConfigProvider.InterceptEntry intEntry = (GFServerConfigProvider.InterceptEntry) newConfig.get(intercept);
-
+        AuthModulesLayerConfig intEntry = (AuthModulesLayerConfig) newConfig.get(intercept);
         if (intEntry != null) {
             throw new IOException("found multiple MessageSecurityConfig " + "entries with the same auth-layer");
         }
 
-        // create new intercept entry
-        intEntry = new GFServerConfigProvider.InterceptEntry(defaultClientID, defaultServerID, null);
+        // Create new intercept entry
+        intEntry = new AuthModulesLayerConfig(defaultClientID, defaultServerID, null);
         newConfig.put(intercept, intEntry);
+
         return intercept;
     }
 
@@ -193,20 +189,20 @@ public class ConfigDomainParser implements ConfigParser {
         }
 
         // create ID entry
-        GFServerConfigProvider.IDEntry idEntry = new GFServerConfigProvider.IDEntry(type, moduleClass, requestPolicy, responsePolicy,
+        AuthModuleConfig idEntry = new AuthModuleConfig(type, moduleClass, requestPolicy, responsePolicy,
                 options);
 
-        GFServerConfigProvider.InterceptEntry intEntry = (GFServerConfigProvider.InterceptEntry) newConfig.get(intercept);
+        AuthModulesLayerConfig intEntry = (AuthModulesLayerConfig) newConfig.get(intercept);
         if (intEntry == null) {
             throw new IOException("intercept entry for " + intercept + " must be specified before ID entries");
         }
 
-        if (intEntry.idMap == null) {
-            intEntry.idMap = new HashMap();
+        if (intEntry.getAuthModules() == null) {
+            intEntry.setIdMap(new HashMap());
         }
 
         // map id to Intercept
-        intEntry.idMap.put(id, idEntry);
+        intEntry.getAuthModules().put(id, idEntry);
     }
 
     private String expand(String rawProperty) {
@@ -234,25 +230,23 @@ public class ConfigDomainParser implements ConfigParser {
     }
 
     private MessagePolicy parsePolicy(RequestPolicy policy) {
-
         if (policy == null) {
             return null;
         }
 
         String authSource = policy.getAuthSource();
         String authRecipient = policy.getAuthRecipient();
-        return AuthMessagePolicy.getMessagePolicy(authSource, authRecipient);
+        return org.omnifaces.eleos.config.helper.AuthMessagePolicy.getMessagePolicy(authSource, authRecipient);
     }
 
     private MessagePolicy parsePolicy(ResponsePolicy policy) {
-
         if (policy == null) {
             return null;
         }
 
         String authSource = policy.getAuthSource();
         String authRecipient = policy.getAuthRecipient();
-        return AuthMessagePolicy.getMessagePolicy(authSource, authRecipient);
+        return org.omnifaces.eleos.config.helper.AuthMessagePolicy.getMessagePolicy(authSource, authRecipient);
     }
 
 }

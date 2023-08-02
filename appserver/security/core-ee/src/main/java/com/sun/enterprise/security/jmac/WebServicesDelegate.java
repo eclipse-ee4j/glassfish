@@ -20,11 +20,11 @@ import java.util.Map;
 
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.jvnet.hk2.annotations.Contract;
+import org.omnifaces.eleos.services.AuthConfigRegistrationWrapper;
 
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
 import com.sun.enterprise.security.jauth.AuthParam;
-import com.sun.enterprise.security.jmac.config.ConfigHelper;
 
 import jakarta.security.auth.message.MessageInfo;
 
@@ -49,10 +49,10 @@ public interface WebServicesDelegate {
      *
      * @param listener
      */
-    void removeListener(ConfigHelper.AuthConfigRegistrationWrapper listener);
+    void removeListener(AuthConfigRegistrationWrapper listener);
 
     /**
-     * @return the classname of the Default JSR 196 WebServices Security Provider (A.k.a Metro Security Provider)
+     * @return the classname of the Default Jakarta Authentication WebServices Security Provider (A.k.a Metro Security Provider)
      */
     String getDefaultWebServicesProvider();
 

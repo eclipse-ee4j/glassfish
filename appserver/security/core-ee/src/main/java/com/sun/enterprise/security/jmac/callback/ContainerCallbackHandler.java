@@ -72,10 +72,8 @@ public final class ContainerCallbackHandler implements CallbackHandler, Callback
                 return fRealmName;
             }
         };
-        ((BaseContainerCallbackHandler) handler).setHandlerContext(handlerContext);
+        // TODO
+        // ((BaseContainerCallbackHandler) handler).setHandlerContext(handlerContext);
     }
 
-    /*
-     * private boolean isAppclientContainer() { return SecurityServicesUtil.getInstance().isACC(); }
-     */
 }

@@ -17,19 +17,20 @@
 
 package com.sun.enterprise.security.ee;
 
+import static jakarta.security.auth.message.config.AuthConfigFactory.DEFAULT_FACTORY_SECURITY_PROPERTY;
+import static java.util.logging.Level.WARNING;
+
 import java.security.Security;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.hk2.api.PostConstruct;
 import org.jvnet.hk2.annotations.Service;
+import org.omnifaces.eleos.config.factory.file.AuthConfigFileFactory;
 
 import com.sun.enterprise.security.ContainerSecurityLifecycle;
-import com.sun.enterprise.security.jmac.config.GFAuthConfigFactory;
 import com.sun.logging.LogDomains;
 
 import jakarta.inject.Singleton;
-import jakarta.security.auth.message.config.AuthConfigFactory;
 
 /**
  * @author vbkumarjayanti
@@ -41,35 +42,38 @@ public class JavaEESecurityLifecycle implements ContainerSecurityLifecycle, Post
     private static final Logger LOG = LogDomains.getLogger(JavaEESecurityLifecycle.class, LogDomains.SECURITY_LOGGER, false);
 
     @Override
-    public void onInitialization() {
-        java.lang.SecurityManager secMgr = System.getSecurityManager();
-        // TODO: need someway to not override the SecMgr if the EmbeddedServer was
-        // run with a different non-default SM.
-        // right now there seems no way to find out if the SM is the VM's default SM.
-        if (secMgr != null && !J2EESecurityManager.class.equals(secMgr.getClass())) {
-            J2EESecurityManager mgr = new J2EESecurityManager();
-            try {
-                System.setSecurityManager(mgr);
-            } catch (SecurityException ex) {
-                LOG.log(Level.WARNING, "Could not override SecurityManager");
-            }
-        }
-        initializeJMAC();
-    }
-
-    private void initializeJMAC() {
-
-        // define default factory if it is not already defined
-        // factory will be constructed on first getFactory call.
-
-        String defaultFactory = Security.getProperty(AuthConfigFactory.DEFAULT_FACTORY_SECURITY_PROPERTY);
-        if (defaultFactory == null) {
-            Security.setProperty(AuthConfigFactory.DEFAULT_FACTORY_SECURITY_PROPERTY, GFAuthConfigFactory.class.getName());
-        }
-    }
-
-    @Override
     public void postConstruct() {
         onInitialization();
     }
+
+    @Override
+    public void onInitialization() {
+        SecurityManager securityManager = System.getSecurityManager();
+
+        // TODO: need someway to not override the SecMgr if the EmbeddedServer was
+        // run with a different non-default SM.
+        // right now there seems no way to find out if the SM is the VM's default SM.
+        if (securityManager != null && !J2EESecurityManager.class.equals(securityManager.getClass())) {
+            try {
+                System.setSecurityManager(new J2EESecurityManager());
+            } catch (SecurityException ex) {
+                LOG.log(WARNING, "Could not override SecurityManager");
+            }
+        }
+
+        initializeJakartaAuthentication();
+    }
+
+    private void initializeJakartaAuthentication() {
+
+        // Define default factory if it is not already defined.
+        // The factory will be constructed on first getFactory call.
+
+        String defaultFactory = Security.getProperty(DEFAULT_FACTORY_SECURITY_PROPERTY);
+        if (defaultFactory == null) {
+            Security.setProperty(DEFAULT_FACTORY_SECURITY_PROPERTY, AuthConfigFileFactory.class.getName());
+        }
+    }
+
+
 }

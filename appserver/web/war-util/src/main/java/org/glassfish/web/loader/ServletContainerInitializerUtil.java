@@ -17,14 +17,9 @@
 
 package org.glassfish.web.loader;
 
-import org.glassfish.common.util.GlassfishUrlClassLoader;
-import org.glassfish.deployment.common.ClassDependencyBuilder;
-import org.glassfish.hk2.classmodel.reflect.*;
-
 import jakarta.servlet.ServletContainerInitializer;
 import jakarta.servlet.annotation.HandlesTypes;
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -40,31 +35,45 @@ import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.common.util.GlassfishUrlClassLoader;
+import org.glassfish.deployment.common.ClassDependencyBuilder;
+import org.glassfish.hk2.classmodel.reflect.AnnotatedElement;
+import org.glassfish.hk2.classmodel.reflect.AnnotationType;
+import org.glassfish.hk2.classmodel.reflect.ClassModel;
+import org.glassfish.hk2.classmodel.reflect.InterfaceModel;
+import org.glassfish.hk2.classmodel.reflect.Member;
+import org.glassfish.hk2.classmodel.reflect.Parameter;
+import org.glassfish.hk2.classmodel.reflect.Type;
+import org.glassfish.hk2.classmodel.reflect.Types;
+
 import static java.lang.Runtime.version;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
 import static java.util.zip.ZipFile.OPEN_READ;
+import static org.glassfish.web.loader.LogFacade.*;
 
 /**
  * Utility class - contains util methods used for implementation of
- * pluggable Shared Library features
+ * pluggable Shared Library features.
  *
  *  @author Vijay Ramachandran
  */
 public class ServletContainerInitializerUtil {
 
-    private static final Logger log = LogFacade.getLogger();
+    private static final Logger LOG = LogFacade.getLogger();
 
-    private static final ResourceBundle rb = log.getResourceBundle();
+    private static final ResourceBundle rb = LOG.getResourceBundle();
 
     public interface LogContext {
 
         default Level getNonCriticalClassloadingErrorLogLevel() {
-            return Level.WARNING;
+            return WARNING;
         }
     }
 
     /**
      * Given a class loader, check for ServletContainerInitializer
-     * implementations in any JAR file in the classpath
+     * implementations in any JAR file in the classpath.
      *
      * @param cl The ClassLoader to be used to find JAR files
      *
@@ -81,10 +90,8 @@ public class ServletContainerInitializerUtil {
          * loader's URL
          */
         if((absoluteOrderingList != null) && !hasOthers) {
-            if(!(cl instanceof URLClassLoader)) {
-                log.log(Level.WARNING,
-                        LogFacade.WRONG_CLASSLOADER_TYPE,
-                        cl.getClass().getCanonicalName());
+            if (!(cl instanceof URLClassLoader)) {
+                LOG.log(WARNING, WRONG_CLASSLOADER_TYPE, cl.getClass().getCanonicalName());
                 return null;
             }
             final URLClassLoader webAppCl = (URLClassLoader) cl;
@@ -129,7 +136,7 @@ public class ServletContainerInitializerUtil {
 
     /**
      * Builds a mapping of classes to the list of ServletContainerInitializers
-     * interested in them
+     * interested in them.
      *
      * @param initializers an Iterable over all ServletContainerInitializers
      * that need to be considered
@@ -148,34 +155,31 @@ public class ServletContainerInitializerUtil {
         // Build a list of the classes / annotations in which the
         // initializers are interested
         for (ServletContainerInitializer sc : initializers) {
-            if(interestList == null) {
+            if (interestList == null) {
                 interestList = new HashMap<>();
             }
             Class<? extends ServletContainerInitializer> sciClass = sc.getClass();
             HandlesTypes ann = sciClass.getAnnotation(HandlesTypes.class);
-            if(ann == null) {
+            if (ann == null) {
                 // This initializer does not contain @HandlesTypes
                 // This means it should always be called for all web apps
                 // So map it with a special token
                 List<Class<? extends ServletContainerInitializer>> currentInitializerList =
                         interestList.get(ServletContainerInitializerUtil.class);
-                if(currentInitializerList == null) {
-                    List<Class<? extends ServletContainerInitializer>> arr =
-                            new ArrayList<>();
+                if (currentInitializerList == null) {
+                    List<Class<? extends ServletContainerInitializer>> arr = new ArrayList<>();
                     arr.add(sciClass);
                     interestList.put(ServletContainerInitializerUtil.class, arr);
                 } else {
                     currentInitializerList.add(sciClass);
                 }
             } else {
-                Class[] interestedClasses = ann.value();
-                if( (interestedClasses != null) && (interestedClasses.length != 0) ) {
-                    for(Class c : interestedClasses) {
-                        List<Class<? extends ServletContainerInitializer>> currentInitializerList =
-                                interestList.get(c);
-                        if(currentInitializerList == null) {
-                            List<Class<? extends ServletContainerInitializer>> arr =
-                                    new ArrayList<>();
+                Class<?>[] interestedClasses = ann.value();
+                if (interestedClasses != null) {
+                    for (Class<?> c : interestedClasses) {
+                        List<Class<? extends ServletContainerInitializer>> currentInitializerList = interestList.get(c);
+                        if (currentInitializerList == null) {
+                            List<Class<? extends ServletContainerInitializer>> arr = new ArrayList<>();
                             arr.add(sciClass);
                             interestList.put(c, arr);
                         } else {
@@ -190,11 +194,10 @@ public class ServletContainerInitializerUtil {
     }
 
     /**
-     * Given an interestlist that was built above, and a class loader, scan the entire web app's classes and libraries
-     * looking for classes that extend/implement/use the annotations of a class present in the interest list
+     * Given an interestList that was built above, and a class loader, scan the entire web app's classes and libraries
+     * looking for classes that extend/implement/use the annotations of a class present in the interest list.
      *
-     * @param initializers Iterable over all ServletContainerInitializers that
-     * were discovered
+     * @param initializers Iterable over all ServletContainerInitializers that were discovered
      * @param interestList The interestList built by the previous util method
      * @param cl The classloader to be used to load classes in WAR
      * @return Map&lt;Class&lt;? extends ServletContainerInitializer&gt;, Set&lt;Class&lt;?&gt;&gt;&gt;
@@ -221,7 +224,7 @@ public class ServletContainerInitializerUtil {
             initializerList = new HashMap<>();
             List<Class<? extends ServletContainerInitializer>> initializersWithoutHandleTypes =
                     interestList.get(ServletContainerInitializerUtil.class);
-            for(Class<? extends ServletContainerInitializer> c : initializersWithoutHandleTypes) {
+            for (Class<? extends ServletContainerInitializer> c : initializersWithoutHandleTypes) {
                 initializerList.put(c, null);
             }
         }
@@ -230,12 +233,12 @@ public class ServletContainerInitializerUtil {
          * Now scan every class in this app's WEB-INF/classes and WEB-INF/lib
          * to see if any class uses the annotation or extends/implements a
          * class in our interest list.
-         * Do this scanning only if we have ServletContainerinitializers that
+         * Do this scanning only if we have ServletContainerInitializers that
          * have expressed specific interest
          */
         if( (interestList.keySet().size() > 1) ||
-            ((interestList.keySet().size() == 1) &&
-                    (!interestList.containsKey(ServletContainerInitializerUtil.class)))) {
+                ((interestList.keySet().size() == 1) &&
+                (!interestList.containsKey(ServletContainerInitializerUtil.class)))) {
             /*
              * Create an instance of ClassDependencyBuilder that looks at the byte code and keeps
              * the information for every class in this app
@@ -245,66 +248,37 @@ public class ServletContainerInitializerUtil {
                 ClassDependencyBuilder classInfo = new ClassDependencyBuilder();
                 if (cl instanceof URLClassLoader) {
                     URLClassLoader ucl = (URLClassLoader) cl;
-                    for(URL u : ucl.getURLs()) {
+                    for (URL u : ucl.getURLs()) {
                         String path = u.getPath();
                         File file = new File(path);
                         try {
-                            if(path.endsWith(".jar")) {
-                                JarFile jf = new JarFile(file, true, OPEN_READ, version());
-                                try {
-                                    Iterator<JarEntry> entries = jf.versionedStream().iterator();
-                                    while(entries.hasNext()) {
+                            if (path.endsWith(".jar")) {
+                                try (JarFile jarFile = new JarFile(file, true, OPEN_READ, version())){
+                                    Iterator<JarEntry> entries = jarFile.versionedStream()
+                                            .filter(jarEntry -> !jarEntry.isDirectory() && jarEntry.getName().endsWith(".class")).iterator();
+                                    while (entries.hasNext()) {
                                         JarEntry anEntry = entries.next();
-                                        if(anEntry.isDirectory()) {
-                                            continue;
-                                        }
-                                        if(!anEntry.getName().endsWith(".class")) {
-                                            continue;
-                                        }
-                                        InputStream jarInputStream = null;
-                                        try {
-                                            jarInputStream = jf.getInputStream(anEntry);
-                                            int size = (int) anEntry.getSize();
-                                            byte[] classData = new byte[size];
-                                            for(int bytesRead = 0; bytesRead < size;) {
-                                                int r2 = jarInputStream.read(classData, bytesRead, size - bytesRead);
-                                                bytesRead += r2;
-                                            }
-                                            classInfo.loadClassData(classData);
+                                        try (InputStream jarInputStream = jarFile.getInputStream(anEntry)) {
+                                            classInfo.loadClassData(jarInputStream.readAllBytes());
                                         } catch (Throwable t) {
-                                            if (log.isLoggable(Level.FINE)) {
-                                                log.log(Level.FINE,
-                                                    LogFacade.CLASS_LOADING_ERROR,
-                                                    new Object[] {
-                                                        anEntry.getName(),
-                                                        t.toString()});
-                                            }
-                                            continue;
-                                        } finally {
-                                            if(jarInputStream != null) {
-                                                jarInputStream.close();
+                                            if (LOG.isLoggable(FINE)) {
+                                                LOG.log(FINE, CLASS_LOADING_ERROR, new Object[] {anEntry.getName(), t.toString()});
                                             }
                                         }
                                     }
-                                } finally {
-                                    jf.close();
                                 }
                             } else {
                                 if (file.exists()) {
                                     if (file.isDirectory()) {
                                         scanDirectory(file, classInfo);
                                     } else {
-                                        log.log(Level.WARNING,
-                                            LogFacade.INVALID_URL_CLASS_LOADER_PATH,
-                                            path);
+                                        LOG.log(WARNING, INVALID_URL_CLASS_LOADER_PATH, path);
                                     }
                                 }
                             }
-                        } catch(IOException ioex) {
-                            String msg = rb.getString(LogFacade.IO_ERROR);
-                            msg = MessageFormat.format(msg,
-                                new Object[] { path });
-                            log.log(Level.SEVERE, msg, ioex);
+                        } catch (IOException ioex) {
+                            String msg = MessageFormat.format(rb.getString(IO_ERROR), path);
+                            LOG.log(Level.SEVERE, msg, ioex);
                             return null;
                         }
                     }
@@ -331,24 +305,22 @@ public class ServletContainerInitializerUtil {
     }
 
     /**
-     * Checks if a given JAR file is to be excluded while searching for ServletContainerInitializer implementations
+     * Checks if a given JAR file is to be excluded while searching for ServletContainerInitializer implementations.
+     *
      * @param jarName the JAR file
      * @param webFragmentMap fragment information from deployment desc
      * @param absoluteOrderingList give ordering list
      * @return true if the given JAR file is NOT present in the absolute ordering list
      */
     private static boolean isFragmentMissingFromAbsoluteOrdering(
-           String jarName, Map<String, String> webFragmentMap,
-           List<Object> absoluteOrderingList) {
-        return (webFragmentMap != null &&
-            absoluteOrderingList != null &&
-            !absoluteOrderingList.contains(
-                webFragmentMap.get(jarName)));
+           String jarName, Map<String, String> webFragmentMap, List<Object> absoluteOrderingList) {
+        return (webFragmentMap != null && absoluteOrderingList != null &&
+            !absoluteOrderingList.contains(webFragmentMap.get(jarName)));
    }
 
     /**
-     * Given a directory, scan all sub directories looking for classes and
-     * build the interest list
+     * Given a directory, scan all subdirectories looking for classes and
+     * build the interest list.
      *
      * @param dir the directory to be scanned
      * @param classInfo the ClassDependencyBuilder that holds info on all classes
@@ -359,43 +331,24 @@ public class ServletContainerInitializerUtil {
             if (file.isFile()) {
                 String fileName = file.getPath();
                 if (fileName.endsWith(".class")) {
-                    try {
-                        InputStream is = null;
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        try {
-                            is = new BufferedInputStream(new FileInputStream(fileName));
-                            byte[] bs = new byte[2048];
-                            int size = -1;
-                            while ((size = is.read(bs)) >= 0) {
-                                baos.write(bs, 0, size);
-                            }
-                            classInfo.loadClassData(baos.toByteArray());
-                        } finally {
-                            if (is != null) {
-                                is.close();
-                            }
-                            baos.close();
-                        }
+                    try (InputStream fileStream = new FileInputStream(fileName)) {
+                        classInfo.loadClassData(fileStream.readAllBytes());
                     } catch (Throwable t) {
-                        if (log.isLoggable(Level.WARNING)) {
-                            log.log(Level.WARNING,
-                                LogFacade.CLASS_LOADING_ERROR,
-                                new Object[] {fileName, t.toString()});
+                        if (LOG.isLoggable(WARNING)) {
+                            LOG.log(WARNING, CLASS_LOADING_ERROR, new Object[] {fileName, t.toString()});
                         }
-                        continue;
                     }
                 }
             } else {
                 scanDirectory(file, classInfo);
             }
         }
-        return;
     }
 
     /**
      * Given the interestList, checks in the Types metadata if a given class
      * uses any of the annotations, subclasses any of the type; If so, builds
-     * the initializer list
+     * the initializer list.
      *
      */
     private static Map<Class<? extends ServletContainerInitializer>, Set<Class<?>>> checkAgainstInterestList(
@@ -404,34 +357,31 @@ public class ServletContainerInitializerUtil {
                                 Map<Class<? extends ServletContainerInitializer>, Set<Class<?>>> initializerList,
                                 ClassLoader cl, LogContext logContext) {
 
-        if (classInfo==null) {
+        if (classInfo == null) {
             return initializerList;
         }
-        for (Map.Entry<Class<?>, List<Class<? extends ServletContainerInitializer>>> e:
-                interestList.entrySet()) {
-
+        for (Map.Entry<Class<?>, List<Class<? extends ServletContainerInitializer>>> e : interestList.entrySet()) {
             Class<?> c = e.getKey();
             Type type = classInfo.getBy(c.getName());
-            if (type==null) {
+            if (type == null) {
                 continue;
             }
 
             Set<Class<?>> resultSet = new HashSet<>();
             if (type instanceof AnnotationType) {
-                for (AnnotatedElement ae : ((AnnotationType) type).allAnnotatedTypes()) {
-                    if (ae instanceof Member) {
-                        ae = ((Member) ae).getDeclaringType();
-                    } else if (ae instanceof Parameter) {
-                        ae = ((Parameter) ae).getMethod().getDeclaringType();
+                for (AnnotatedElement element : ((AnnotationType) type).allAnnotatedTypes()) {
+                    if (element instanceof Member) {
+                        element = ((Member) element).getDeclaringType();
+                    } else if (element instanceof Parameter) {
+                        element = ((Parameter) element).getMethod().getDeclaringType();
                     }
-                    if (ae instanceof Type) {
+                    if (element instanceof Type) {
                         try {
-                            resultSet.add(cl.loadClass(ae.getName()));
+                            resultSet.add(cl.loadClass(element.getName()));
                         } catch (Throwable t) {
-                            if (log.isLoggable(logContext.getNonCriticalClassloadingErrorLogLevel())) {
-                                log.log(logContext.getNonCriticalClassloadingErrorLogLevel(),
-                                    LogFacade.CLASS_LOADING_ERROR,
-                                    new Object[] {ae.getName(), t.toString()});
+                            if (LOG.isLoggable(logContext.getNonCriticalClassloadingErrorLogLevel())) {
+                                LOG.log(logContext.getNonCriticalClassloadingErrorLogLevel(),
+                                    CLASS_LOADING_ERROR, new Object[] {element.getName(), t.toString()});
                             }
                         }
                     }
@@ -447,21 +397,20 @@ public class ServletContainerInitializerUtil {
                     try {
                         resultSet.add(cl.loadClass(classModel.getName()));
                     } catch (Throwable t) {
-                        if (log.isLoggable(logContext.getNonCriticalClassloadingErrorLogLevel())) {
-                            log.log(logContext.getNonCriticalClassloadingErrorLogLevel(),
-                                LogFacade.CLASS_LOADING_ERROR,
-                                new Object[] {classModel.getName(), t.toString()});
+                        if (LOG.isLoggable(logContext.getNonCriticalClassloadingErrorLogLevel())) {
+                            LOG.log(logContext.getNonCriticalClassloadingErrorLogLevel(),
+                                CLASS_LOADING_ERROR, new Object[] {classModel.getName(), t.toString()});
                         }
                     }
                 }
             }
-            if(initializerList == null) {
+            if (initializerList == null) {
                 initializerList = new HashMap<>();
             }
             List<Class<? extends ServletContainerInitializer>> containerInitializers = e.getValue();
-            for(Class<? extends ServletContainerInitializer> initializer : containerInitializers) {
+            for (Class<? extends ServletContainerInitializer> initializer : containerInitializers) {
                 Set<Class<?>> classSet = initializerList.get(initializer);
-                if(classSet == null) {
+                if (classSet == null) {
                     classSet = new HashSet<>();
                 }
                 classSet.addAll(resultSet);
@@ -487,33 +436,30 @@ public class ServletContainerInitializerUtil {
                                 Map<Class<?>, List<Class<? extends ServletContainerInitializer>>> interestList,
                                 Map<Class<? extends ServletContainerInitializer>, Set<Class<?>>> initializerList,
                                 ClassLoader cl, LogContext logContext) {
-        for(Map.Entry<Class<?>, List<Class<? extends ServletContainerInitializer>>> e :
-                interestList.entrySet()) {
-
+        for(Map.Entry<Class<?>, List<Class<? extends ServletContainerInitializer>>> e : interestList.entrySet()) {
             Class<?> c = e.getKey();
             Set<String> resultFromClassInfo = classInfo.computeResult(c.getName());
-            if(resultFromClassInfo.isEmpty()) {
+            if (resultFromClassInfo.isEmpty()) {
                 continue;
             }
             Set<Class<?>> resultSet = new HashSet<>();
             for (String string : resultFromClassInfo) {
                 String className = string.replace('/', '.');
                 try {
-                    Class aClass = cl.loadClass(className);
+                    Class<?> aClass = cl.loadClass(className);
                     resultSet.add(aClass);
                 } catch (Throwable t) {
-                    if (log.isLoggable(logContext.getNonCriticalClassloadingErrorLogLevel())) {
-                        log.log(logContext.getNonCriticalClassloadingErrorLogLevel(),
-                            LogFacade.CLASS_LOADING_ERROR,
-                            new Object[] {className, t.toString()});
+                    if (LOG.isLoggable(logContext.getNonCriticalClassloadingErrorLogLevel())) {
+                        LOG.log(logContext.getNonCriticalClassloadingErrorLogLevel(),
+                            CLASS_LOADING_ERROR, new Object[] {className, t.toString()});
                     }
                 }
             }
-            if(initializerList == null) {
+            if (initializerList == null) {
                 initializerList = new HashMap<>();
             }
             List<Class<? extends ServletContainerInitializer>> containerInitializers = e.getValue();
-            for(Class<? extends ServletContainerInitializer> initializer : containerInitializers) {
+            for (Class<? extends ServletContainerInitializer> initializer : containerInitializers) {
                 Set<Class<?>> classSet = initializerList.get(initializer);
                 if(classSet == null) {
                     classSet = new HashSet<>();

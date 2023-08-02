@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,31 +19,35 @@ package com.sun.enterprise.iiop.security;
 
 import com.sun.enterprise.common.iiop.security.GSSUtilsContract;
 
+import jakarta.inject.Singleton;
+
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.Oid;
 import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Singleton;
 
 /**
- *
  * @author Kumar
  */
 @Service
 @Singleton
 public class GSSUtilsService implements GSSUtilsContract {
 
+    @Override
     public String dumpHex(byte[] octets) {
         return GSSUtils.dumpHex(octets);
     }
 
+    @Override
     public byte[] importName(Oid oid, byte[] externalName) throws GSSException {
         return GSSUtils.importName(oid, externalName);
     }
 
+    @Override
     public byte[] createExportedName(Oid oid, byte[] extName) throws GSSException {
         return GSSUtils.createExportedName(oid, extName);
     }
 
+    @Override
     public Oid GSSUP_MECH_OID() {
         return GSSUtils.GSSUP_MECH_OID;
     }

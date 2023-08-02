@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,60 @@
 
 package com.sun.enterprise.iiop.security;
 
+import com.sun.corba.ee.org.omg.CSI.CompleteEstablishContext;
+import com.sun.corba.ee.org.omg.CSI.ContextError;
+import com.sun.corba.ee.org.omg.CSI.EstablishContext;
+import com.sun.corba.ee.org.omg.CSI.GSS_NT_ExportedNameHelper;
+import com.sun.corba.ee.org.omg.CSI.ITTAbsent;
+import com.sun.corba.ee.org.omg.CSI.ITTAnonymous;
+import com.sun.corba.ee.org.omg.CSI.ITTDistinguishedName;
+import com.sun.corba.ee.org.omg.CSI.ITTPrincipalName;
+import com.sun.corba.ee.org.omg.CSI.ITTX509CertChain;
+import com.sun.corba.ee.org.omg.CSI.IdentityToken;
+import com.sun.corba.ee.org.omg.CSI.MTEstablishContext;
+import com.sun.corba.ee.org.omg.CSI.MTMessageInContext;
+import com.sun.corba.ee.org.omg.CSI.SASContextBody;
+import com.sun.corba.ee.org.omg.CSI.SASContextBodyHelper;
+import com.sun.corba.ee.org.omg.CSI.X501DistinguishedNameHelper;
+import com.sun.corba.ee.org.omg.CSI.X509CertificateChainHelper;
+import com.sun.corba.ee.spi.legacy.connection.Connection;
+import com.sun.corba.ee.spi.legacy.interceptor.RequestInfoExt;
+import com.sun.enterprise.common.iiop.security.AnonCredential;
+import com.sun.enterprise.common.iiop.security.GSSUPName;
+import com.sun.enterprise.common.iiop.security.SecurityContext;
+import com.sun.enterprise.security.auth.login.common.PasswordCredential;
+import com.sun.enterprise.security.auth.login.common.X509CertificateCredential;
+import com.sun.logging.LogDomains;
+
+import java.io.ByteArrayInputStream;
+import java.net.Socket;
+import java.security.PrivilegedAction;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
+import javax.security.auth.x500.X500Principal;
+
+import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
+import org.omg.CORBA.Any;
+import org.omg.CORBA.NO_PERMISSION;
+import org.omg.CORBA.ORB;
+import org.omg.IOP.Codec;
+import org.omg.IOP.ServiceContext;
+import org.omg.PortableInterceptor.ForwardRequest;
+import org.omg.PortableInterceptor.ServerRequestInfo;
+import org.omg.PortableInterceptor.ServerRequestInterceptor;
+
+import static com.sun.logging.LogDomains.SECURITY_LOGGER;
+
 /**
+ * Security server request interceptor
+ * <p>
  * This class is a server side request interceptor for CSIV2.
  * It is used to send and receive the service context in a
  * a service context element in the service context list in
@@ -24,54 +78,11 @@ package com.sun.enterprise.iiop.security;
  *
  * @author: Nithya Subramanian
  */
-
-import com.sun.enterprise.common.iiop.security.SecurityContext;
-import org.omg.CORBA.*;
-import org.omg.PortableInterceptor.*;
-import org.omg.IOP.*;
-
-import java.security.cert.CertPath;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
-
-/* Import classes generated from CSIV2 idl files */
-import com.sun.corba.ee.org.omg.CSI.*;
-import com.sun.corba.ee.spi.legacy.connection.Connection;
-import com.sun.corba.ee.spi.legacy.interceptor.RequestInfoExt;
-import com.sun.enterprise.common.iiop.security.AnonCredential;
-import com.sun.enterprise.common.iiop.security.GSSUPName;
-
-import javax.security.auth.*;
-import javax.security.auth.x500.X500Principal;
-
-import com.sun.enterprise.security.auth.login.common.PasswordCredential;
-import com.sun.enterprise.security.auth.login.common.X509CertificateCredential;
-
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
-import com.sun.logging.LogDomains;
-
-import java.io.ByteArrayInputStream;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.logging.*;
-import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
-
-/*
- * Security server request interceptor
- */
-
 public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject implements ServerRequestInterceptor {
 
-    private static java.util.logging.Logger _logger = null;
-    static {
-        _logger = LogDomains.getLogger(SecServerRequestInterceptor.class, LogDomains.SECURITY_LOGGER);
-    }
-    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(SecServerRequestInterceptor.class);
-    private InheritableThreadLocal counterForCalls = new InheritableThreadLocal();
+    private static final Logger LOG = LogDomains.getLogger(SecServerRequestInterceptor.class, SECURITY_LOGGER);
+
+    private final InheritableThreadLocal counterForCalls = new InheritableThreadLocal();
 
     /**
      * Hard code the value of 15 for SecurityAttributeService until it is defined in IOP.idl. sc.context_id =
@@ -84,17 +95,16 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
 
     public static final String SERVER_CONNECTION_CONTEXT = "ServerConnContext";
 
-    /* used when inserting into service context field */
+    /** used when inserting into service context field */
     private static final boolean NO_REPLACE = false;
 
-    /* name of interceptor used for logging purposes (name + "::") */
-    private String prname;
-    private String name;
-    private Codec codec;
-    // private ORB orb;
-    private SecurityContextUtil secContextUtil = null;
-    private GlassFishORBHelper orbHelper;
-    private SecurityMechanismSelector smSelector = null;
+    /** name of interceptor used for logging purposes (name + "::") */
+    private final String prname;
+    private final String name;
+    private final Codec codec;
+    private final SecurityContextUtil secContextUtil;
+    private final GlassFishORBHelper orbHelper;
+    private final SecurityMechanismSelector smSelector;
 
     // Not required
     // SecurityService secsvc = null; // Security Service
@@ -107,6 +117,7 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
         smSelector = Lookups.getSecurityMechanismSelector();
     }
 
+    @Override
     public String name() {
         return name;
     }
@@ -114,8 +125,6 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
     /**
      * Create a ContextError message. This is currently designed to work only for the GSSUP mechanism.
      */
-
-    /* Create a ContexError Message */
     private SASContextBody createContextError(int status) {
         /**
          * CSIV2 SPEC NOTE:
@@ -126,14 +135,13 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
         return createContextError(1, status);
     }
 
-    /*
+    /**
      * create a context error with the specified major and minor status
      */
     private SASContextBody createContextError(int major, int minor) {
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Creating ContextError message: major code = " + major + "minor code= " + minor);
-        }
+        LOG.log(Level.FINE, "Creating ContextError message: major code: {0}, minor code: {1} ",
+            new Object[] {major, minor});
         byte error_token[] = {};
         ContextError ce = new ContextError(0, /* stateless client id */
                 major, // major
@@ -153,9 +161,7 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
          *
          * Check CSIV2 spec to make sure that there is no final_context_token for GSSUP mechanism
          */
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Creating CompleteEstablishContext message");
-        }
+        LOG.log(Level.FINE, "Creating CompleteEstablishContext message");
         byte[] final_context_token = {};
         CompleteEstablishContext cec = new CompleteEstablishContext(0, // stateless client id
                 false, // for stateless
@@ -179,7 +185,7 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
         try {
             cdr_encoded_saselm = codec.encode_value(a);
         } catch (Exception e) {
-            _logger.log(Level.SEVERE, "iiop.encode_exception", e);
+            LOG.log(Level.SEVERE, "Could not encode Any object.", e);
         }
         sc = new ServiceContext();
         sc.context_id = SECURITY_ATTRIBUTE_SERVICE_ID;
@@ -202,117 +208,94 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
 
         switch (idtok.discriminator()) {
 
-        case ITTAbsent.value:
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Identity token type is Absent");
-            }
-            sc.identcls = null;
-            break;
+            case ITTAbsent.value:
+                LOG.log(Level.FINE, "Identity token type is Absent");
+                sc.identcls = null;
+                break;
 
-        case ITTAnonymous.value:
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Identity token type is Anonymous");
-                _logger.log(Level.FINE, "Adding AnonyCredential to subject's PublicCredentials");
-            }
-            sc.subject.getPublicCredentials().add(new AnonCredential());
-            sc.identcls = AnonCredential.class;
-            break;
+            case ITTAnonymous.value:
+                LOG.log(Level.FINE, "Identity token type is Anonymous");
+                LOG.log(Level.FINE, "Adding AnonyCredential to subject's PublicCredentials");
+                sc.subject.getPublicCredentials().add(new AnonCredential());
+                sc.identcls = AnonCredential.class;
+                break;
 
-        case ITTDistinguishedName.value:
-            /* Construct a X500Principal */
+            case ITTDistinguishedName.value:
+                /* Construct a X500Principal */
 
-            derenc = idtok.dn();
-            /* Issue 5766: Decode CDR encoding if necessary */
-            if (isCDR(derenc)) {
-                any = codec.decode_value(derenc, X501DistinguishedNameHelper.type());
+                derenc = idtok.dn();
+                /* Issue 5766: Decode CDR encoding if necessary */
+                if (isCDR(derenc)) {
+                    any = codec.decode_value(derenc, X501DistinguishedNameHelper.type());
 
-                /* Extract CDR encoding */
-                derenc = X501DistinguishedNameHelper.extract(any);
-            }
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Create an X500Principal object from identity token");
-            }
-            X500Principal xname = new X500Principal(derenc);
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Identity to be asserted is " + xname.toString());
-                _logger.log(Level.FINE, "Adding X500Principal to subject's PublicCredentials");
-            }
-            sc.subject.getPublicCredentials().add(xname);
-            sc.identcls = X500Principal.class;
-            break;
+                    /* Extract CDR encoding */
+                    derenc = X501DistinguishedNameHelper.extract(any);
+                }
+                LOG.log(Level.FINE, "Create an X500Principal object from identity token");
+                X500Principal xname = new X500Principal(derenc);
+                LOG.log(Level.FINE, "Identity to be asserted is {0}", xname);
+                LOG.log(Level.FINE, "Adding X500Principal to subject's PublicCredentials");
+                sc.subject.getPublicCredentials().add(xname);
+                sc.identcls = X500Principal.class;
+                break;
 
-        case ITTX509CertChain.value:
-            /* Construct a X509CertificateChain */
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Identity token type is a X509 Certificate Chain");
-            }
-            derenc = idtok.certificate_chain();
-            /* Issue 5766: Decode CDR encoding if necessary */
-            if (isCDR(derenc)) {
-                /* Decode CDR encoding */
-                any = codec.decode_value(derenc, X509CertificateChainHelper.type());
+            case ITTX509CertChain.value:
+                /* Construct a X509CertificateChain */
+                LOG.log(Level.FINE, "Identity token type is a X509 Certificate Chain");
+                derenc = idtok.certificate_chain();
+                /* Issue 5766: Decode CDR encoding if necessary */
+                if (isCDR(derenc)) {
+                    /* Decode CDR encoding */
+                    any = codec.decode_value(derenc, X509CertificateChainHelper.type());
 
-                /* Extract DER encoding */
-                derenc = X509CertificateChainHelper.extract(any);
-            }
+                    /* Extract DER encoding */
+                    derenc = X509CertificateChainHelper.extract(any);
+                }
 
-            List<? extends Certificate> certificates = CertificateFactory.getInstance("X.509")
+                List<? extends Certificate> certificates = CertificateFactory.getInstance("X.509")
                     .generateCertPath(new ByteArrayInputStream(derenc))
                     .getCertificates();
 
-            X509Certificate[] certchain = new X509Certificate[certificates.size()];
+                X509Certificate[] certchain = new X509Certificate[certificates.size()];
 
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Contents of X509 Certificate chain:");
-            }
-            for (int i = 0; i < certchain.length; i++) {
-                certchain[i] = (X509Certificate) certificates.get(i);
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "    " + certchain[i].getSubjectX500Principal().getName());
+                LOG.log(Level.FINE, "Contents of X509 Certificate chain:");
+                for (int i = 0; i < certchain.length; i++) {
+                    X509Certificate certificate = (X509Certificate) certificates.get(i);
+                    certchain[i] = certificate;
+                    LOG.log(Level.FINE, "Added certificate to the chain: {0}",
+                        certificate.getSubjectX500Principal().getName());
                 }
-            }
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Creating a X509CertificateCredential object from certchain");
-            }
-            /**
-             * The alias field in the X509CertificateCredential is currently ignored by the RI. So it is set to "dummy".
-             *
-             */
-            X509CertificateCredential cred = new X509CertificateCredential(certchain, certchain[0].getSubjectX500Principal().getName(), "default");
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Adding X509CertificateCredential to subject's PublicCredentials");
-            }
-            sc.subject.getPublicCredentials().add(cred);
-            sc.identcls = X509CertificateCredential.class;
-            break;
+                LOG.log(Level.FINE, "Creating a X509CertificateCredential object from certchain");
+                // The alias field in the X509CertificateCredential is currently ignored by the RI. So it is set to "dummy".
+                X509CertificateCredential cred = new X509CertificateCredential(certchain, certchain[0].getSubjectX500Principal().getName(), "default");
+                LOG.log(Level.FINE, "Adding X509CertificateCredential to subject's PublicCredentials");
+                sc.subject.getPublicCredentials().add(cred);
+                sc.identcls = X509CertificateCredential.class;
+                break;
 
-        case ITTPrincipalName.value:
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Identity token type is GSS Exported Name");
-            }
-            byte[] expname = idtok.principal_name();
-            /* Issue 5766: Decode CDR encoding if necessary */
-            if (isCDR(expname)) {
-                /* Decode CDR encoding */
-                any = codec.decode_value(expname, GSS_NT_ExportedNameHelper.type());
+            case ITTPrincipalName.value:
+                LOG.log(Level.FINE, "Identity token type is GSS Exported Name");
+                byte[] expname = idtok.principal_name();
+                /* Issue 5766: Decode CDR encoding if necessary */
+                if (isCDR(expname)) {
+                    /* Decode CDR encoding */
+                    any = codec.decode_value(expname, GSS_NT_ExportedNameHelper.type());
 
-                expname = GSS_NT_ExportedNameHelper.extract(any);
-            }
-            if (!GSSUtils.verifyMechOID(GSSUtils.GSSUP_MECH_OID, expname)) {
-                throw new SecurityException(
-                        localStrings.getLocalString("secserverreqinterceptor.err_unknown_idassert_type", "Unknown identity assertion type."));
-            }
+                    expname = GSS_NT_ExportedNameHelper.extract(any);
+                }
+                if (!GSSUtils.verifyMechOID(GSSUtils.GSSUP_MECH_OID, expname)) {
+                    throw new SecurityException("Unknown identity assertion type: " + expname);
+                }
 
-            GSSUPName gssname = new GSSUPName(expname);
+                GSSUPName gssname = new GSSUPName(expname);
 
-            sc.subject.getPublicCredentials().add(gssname);
-            sc.identcls = GSSUPName.class;
-            _logger.log(Level.FINE, "Adding GSSUPName credential to subject");
-            break;
+                sc.subject.getPublicCredentials().add(gssname);
+                sc.identcls = GSSUPName.class;
+                LOG.log(Level.FINE, "Adding GSSUPName credential to subject");
+                break;
 
-        default:
-            _logger.log(Level.SEVERE, "iiop.unknown_identity");
-            throw new SecurityException(localStrings.getLocalString("secserverreqinterceptor.err_unknown_idassert_type", "Unknown identity assertion type."));
+            default:
+                throw new SecurityException("Unknown identity assertion type: " + idtok.discriminator());
         }
     }
 
@@ -335,30 +318,25 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
      * This method currently only works for PasswordCredential tokens.
      */
     private void createAuthCred(SecurityContext sc, byte[] authtok, ORB orb) throws Exception {
-        _logger.log(Level.FINE, "Constructing a PasswordCredential from client authentication token");
+        LOG.log(Level.FINE, "Constructing a PasswordCredential from client authentication token");
         /* create a GSSUPToken from the authentication token */
         GSSUPToken tok = GSSUPToken.getServerSideInstance(orb, codec, authtok);
 
         final PasswordCredential pwdcred = tok.getPwdcred();
         final SecurityContext fsc = sc;
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Password credential = " + pwdcred.toString());
-            _logger.log(Level.FINE, "Adding PasswordCredential to subject's PrivateCredentials");
-        }
-        java.security.AccessController.doPrivileged(new java.security.PrivilegedAction() {
-            public java.lang.Object run() {
-                fsc.subject.getPrivateCredentials().add(pwdcred);
-                return null;
-            }
-        });
+        LOG.log(Level.FINE, "Password credential = {0}", pwdcred);
+        LOG.log(Level.FINE, "Adding PasswordCredential to subject's PrivateCredentials");
+        PrivilegedAction<Void> action = () -> {
+            fsc.subject.getPrivateCredentials().add(pwdcred);
+            return null;
+        };
+        java.security.AccessController.doPrivileged(action);
         sc = fsc;
         sc.authcls = PasswordCredential.class;
     }
 
     private void handle_null_service_context(ServerRequestInfo ri, ORB orb) {
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "No SAS context element found in service context list for operation: " + ri.operation());
-        }
+        LOG.log(Level.FINE, "No SAS context element found in service context list for operation: {0}", ri.operation());
         ServiceContext sc = null;
         int secStatus = secContextUtil.setSecurityContext(null, ri.object_id(), ri.operation(), getServerSocket());
 
@@ -366,22 +344,19 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
             SASContextBody sasctxbody = createContextError(INVALID_MECHANISM_MAJOR, INVALID_MECHANISM_MINOR);
             sc = createSvcContext(sasctxbody, orb);
             ri.add_reply_service_context(sc, NO_REPLACE);
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "SecServerRequestInterceptor.receive_request: NO_PERMISSION");
-            }
+            LOG.log(Level.FINE, "SecServerRequestInterceptor.receive_request: NO_PERMISSION");
             throw new NO_PERMISSION();
         }
     }
 
+    @Override
     public void receive_request(ServerRequestInfo ri) throws ForwardRequest {
         SecurityContext seccontext = null; // SecurityContext to be sent
         ServiceContext sc = null; // service context
         int status = 0;
         boolean raise_no_perm = false;
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "++++ Entered " + prname + "receive_request");
-        }
+        LOG.log(Level.FINE, "Entered {0} receive_request", prname);
 
         // secsvc = Csiv2Manager.getSecurityService();
         ORB orb = orbHelper.getORB();
@@ -397,27 +372,21 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
             return;
         }
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Received a non null SAS context element");
-        }
+        LOG.log(Level.FINE, "Received a non null SAS context element");
         /* Decode the service context field */
         Any SasAny;
         try {
             SasAny = codec.decode_value(sc.context_data, SASContextBodyHelper.type());
         } catch (Exception e) {
-            _logger.log(Level.SEVERE, "iiop.decode_exception", e);
-            throw new SecurityException(localStrings.getLocalString("secserverreqinterceptor.err_cdr_decode", "CDR Decoding error for SAS context element."));
+            throw new SecurityException("CDR Decoding error for SAS context element.", e);
         }
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Successfully decoded CDR encoded SAS context element.");
-        }
+        LOG.log(Level.FINE, "Successfully decoded CDR encoded SAS context element.");
         SASContextBody sasctxbody = SASContextBodyHelper.extract(SasAny);
 
         short sasdiscr = sasctxbody.discriminator();
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "SAS context element is a/an " + SvcContextUtils.getMsgname(sasdiscr) + " message");
-        }
+        LOG.log(Level.FINE, "SAS context element is a/an {0} message", SvcContextUtils.getMsgname(sasdiscr));
+
         /* Check message type received */
 
         /**
@@ -433,9 +402,9 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
         if (sasdiscr == MTMessageInContext.value) {
             sasctxbody = createContextError(SvcContextUtils.MessageInContextMinor);
             sc = createSvcContext(sasctxbody, orb);
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Adding ContextError message to service context list");
-                _logger.log(Level.FINE, "SecurityContext set to null");
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "Adding ContextError message to service context list");
+                LOG.log(Level.FINE, "SecurityContext set to null");
             }
             ri.add_reply_service_context(sc, NO_REPLACE);
             // no need to set the security context
@@ -455,9 +424,7 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
          */
 
         if (sasdiscr != MTEstablishContext.value) {
-            _logger.log(Level.SEVERE, "iiop.not_establishcontext_msg");
-            throw new SecurityException(
-                    localStrings.getLocalString("secserverreqinterceptor.err_not_ec_msg", "Received message not an EstablishContext message."));
+            throw new SecurityException("Received message not an EstablishContext message, but: " + sasdiscr);
         }
 
         EstablishContext ec = sasctxbody.establish_msg();
@@ -467,45 +434,33 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
 
         try {
             if (ec.client_authentication_token.length != 0) {
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "Message contains Client Authentication Token");
-                }
+                LOG.log(Level.FINE, "Message contains Client Authentication Token");
                 createAuthCred(seccontext, ec.client_authentication_token, orb);
             }
         } catch (Exception e) {
-            _logger.log(Level.SEVERE, "iiop.authentication_exception", e);
-            throw new SecurityException(
-                    localStrings.getLocalString("secsercverreqinterceptor.err_cred_create", "Error while creating a JAAS subject credential."));
-
+            throw new SecurityException("Error while creating a JAAS subject credential.", e);
         }
 
         try {
             if (ec.identity_token != null) {
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "Message contains an Identity Token");
-                }
+                LOG.log(Level.FINE, "Message contains an Identity Token");
                 createIdCred(seccontext, ec.identity_token);
             }
         } catch (SecurityException secex) {
-            _logger.log(Level.SEVERE, "iiop.security_exception", secex);
+            LOG.log(Level.SEVERE, "Could not create an identity for an identity token.", secex);
             sasctxbody = createContextError(INVALID_MECHANISM_MAJOR, INVALID_MECHANISM_MINOR);
             sc = createSvcContext(sasctxbody, orb);
             ri.add_reply_service_context(sc, NO_REPLACE);
             throw new NO_PERMISSION();
         } catch (Exception e) {
-            _logger.log(Level.SEVERE, "iiop.generic_exception", e);
-            throw new SecurityException(
-                    localStrings.getLocalString("secsercverreqinterceptor.err_cred_create", "Error while creating a JAAS subject credential."));
+            throw new SecurityException("Error while creating a JAAS subject credential.", e);
 
         }
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Invoking setSecurityContext() to set security context");
-        }
+        LOG.log(Level.FINE, "Invoking setSecurityContext() to set security context");
         status = secContextUtil.setSecurityContext(seccontext, ri.object_id(), ri.operation(), getServerSocket());
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "setSecurityContext() returned status code " + status);
-        }
+        LOG.log(Level.FINE, "setSecurityContext() returned status code {0}", status);
+
         /**
          * CSIV2 SPEC NOTE:
          *
@@ -514,26 +469,18 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
          * CompleteEstablishContext message is sent back. If validation fails, a ContextError must be sent back.
          */
         if (status == SecurityContextUtil.STATUS_FAILED) {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "setSecurityContext() returned STATUS_FAILED");
-            }
+            LOG.log(Level.FINE, "setSecurityContext() returned STATUS_FAILED");
             sasctxbody = createContextError(status);
             sc = createSvcContext(sasctxbody, orb);
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Adding ContextError message to service context list");
-            }
+            LOG.log(Level.FINE, "Adding ContextError message to service context list");
             ri.add_reply_service_context(sc, NO_REPLACE);
             throw new NO_PERMISSION();
         }
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "setSecurityContext() returned SUCCESS");
-        }
+        LOG.log(Level.FINE, "setSecurityContext() returned SUCCESS");
         sasctxbody = createCompleteEstablishContext(status);
         sc = createSvcContext(sasctxbody, orb);
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Adding CompleteEstablisContext message to service context list");
-        }
+        LOG.log(Level.FINE, "Adding CompleteEstablisContext message to service context list");
         ri.add_reply_service_context(sc, NO_REPLACE);
     }
 
@@ -541,6 +488,7 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
      * This method is keeping a track of when to unset the security context Currently with the re-use of the threads made by
      * the orb the security context does not get unset. This method determines when to unset the security context
      */
+    @Override
     public void receive_request_service_contexts(ServerRequestInfo ri) throws ForwardRequest {
         // cannot set this in receive_request due to the PI flow control
         // semantics. e.g. if receive_req for some other PI throws an
@@ -566,10 +514,8 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
         ServerConnectionContext scc = null;
         if (c != null) {
             s = c.getSocket();
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "RECEIVED request on connection: " + c);
-                _logger.log(Level.FINE, "Socket =" + s);
-            }
+            LOG.log(Level.FINE, "RECEIVED request on connection: {0}", c);
+            LOG.log(Level.FINE, "Socket = {0}", s);
             scc = new ServerConnectionContext(s);
         } else {
             scc = new ServerConnectionContext();
@@ -577,31 +523,35 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
         setServerConnectionContext(scc);
     }
 
+    @Override
     public void send_reply(ServerRequestInfo ri) {
         unsetSecurityContext();
     }
 
+    @Override
     public void send_exception(ServerRequestInfo ri) throws ForwardRequest {
         unsetSecurityContext();
     }
 
+    @Override
     public void send_other(ServerRequestInfo ri) throws ForwardRequest {
         unsetSecurityContext();
     }
 
+    @Override
     public void destroy() {
     }
 
     private void unsetSecurityContext() {
         try {
             Counter cntr = (Counter) counterForCalls.get();
-            if (cntr == null) { // sanity check
+            // sanity check
+            if (cntr == null) {
                 cntr = new Counter(1);
             }
             cntr.decrement();
             if (cntr.count == 0) {
                 SecurityContextUtil.unsetSecurityContext(isLocal());
-
             }
         } finally {
             ConnectionExecutionContext.removeClientThreadID();
@@ -643,7 +593,7 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
 
 class Counter {
 
-    public int count = 0;
+    public int count;
 
     public Counter(int count) {
         this.count = count;

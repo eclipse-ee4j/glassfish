@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.glassfish.tests.paas</groupId>
     <artifactId>service_metadata.provision_using_specified_template</artifactId>
-    <version>7.0.7-SNAPSHOT</version>
+    <version>7.0.8-SNAPSHOT</version>
     <name>Provision service(s) using specified template</name>
     <packaging>war</packaging>
     <build>

@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.admin</groupId>
         <artifactId>rest-service-parent</artifactId>
-        <version>7.0.7-SNAPSHOT</version>
+        <version>7.0.8-SNAPSHOT</version>
     </parent>
 
     <artifactId>gf-restadmin-connector</artifactId>
@@ -52,27 +52,14 @@
     <build>
         <plugins>
             <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
-                    <skip>true</skip>
+                    <instructions>
+                        <DynamicImport-Package>org.glassfish.api.admin.config</DynamicImport-Package>
+                    </instructions>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>rest-devtest</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <skip>false</skip>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

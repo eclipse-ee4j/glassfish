@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.core</groupId>
         <artifactId>nucleus-core</artifactId>
-        <version>7.0.7-SNAPSHOT</version>
+        <version>7.0.8-SNAPSHOT</version>
     </parent>
 
     <artifactId>glassfish</artifactId>
@@ -102,6 +102,11 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.main</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -120,31 +125,31 @@
                 </configuration>
             </plugin>
 
-            <!-- We package simple-glassfish-api classes in this bundle for embedded scenario, we expect user to just bootstrap
-                the runtime by installing glassfish.jar alone. -->
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>unpack</id>
+                        <id>copy-osgi-artifacts-for-tests</id>
                         <goals>
-                            <goal>unpack</goal>
+                            <goal>copy-dependencies</goal>
                         </goals>
+                        <phase>generate-test-resources</phase>
                         <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.glassfish.main.common</groupId>
-                                    <artifactId>simple-glassfish-api</artifactId>
-                                    <version>${project.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>false</overWrite>
-                                    <outputDirectory>${project.build.directory}/classes</outputDirectory>
-                                    <excludes>META-INF/**</excludes>
-                                </artifactItem>
-                            </artifactItems>
+                            <includeArtifactIds>org.apache.felix.main,simple-glassfish-api,glassfish-jul-extension</includeArtifactIds>
+                            <outputDirectory>${project.build.directory}/test-osgi</outputDirectory>
+                            <stripVersion>true</stripVersion>
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Bundle-Activator>com.sun.enterprise.glassfish.bootstrap.osgi.GlassFishMainActivator</Bundle-Activator>
+                    </instructions>
+                </configuration>
             </plugin>
         </plugins>
     </build>

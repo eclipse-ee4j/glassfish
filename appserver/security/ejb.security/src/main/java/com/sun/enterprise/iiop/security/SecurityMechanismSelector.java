@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,69 +18,78 @@
 package com.sun.enterprise.iiop.security;
 
 import com.sun.corba.ee.org.omg.CSI.ITTAnonymous;
+import com.sun.corba.ee.org.omg.CSI.ITTDistinguishedName;
 import com.sun.corba.ee.org.omg.CSI.ITTPrincipalName;
 import com.sun.corba.ee.org.omg.CSI.ITTX509CertChain;
-import com.sun.corba.ee.org.omg.CSI.ITTDistinguishedName;
-import com.sun.enterprise.common.iiop.security.AnonCredential;
-import com.sun.enterprise.common.iiop.security.GSSUPName;
-import com.sun.enterprise.common.iiop.security.SecurityContext;
-
-import java.net.Socket;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ArrayList;
-
-import java.security.PrivilegedAction;
-import java.security.AccessController;
-import javax.security.auth.Subject;
-import javax.security.auth.x500.X500Principal;
-
-import java.security.cert.X509Certificate;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocket;
-// GSS Related Functionality
-
-import com.sun.enterprise.deployment.EjbDescriptor;
-import com.sun.enterprise.deployment.EjbIORConfigurationDescriptor;
-import org.omg.CORBA.ORB;
-import com.sun.enterprise.security.auth.login.common.PasswordCredential;
-import com.sun.enterprise.security.auth.login.common.X509CertificateCredential;
-
-import com.sun.enterprise.util.Utility;
+import com.sun.corba.ee.org.omg.CSIIOP.AS_ContextSec;
+import com.sun.corba.ee.org.omg.CSIIOP.CompoundSecMech;
+import com.sun.corba.ee.org.omg.CSIIOP.Confidentiality;
+import com.sun.corba.ee.org.omg.CSIIOP.DelegationByClient;
+import com.sun.corba.ee.org.omg.CSIIOP.EstablishTrustInClient;
+import com.sun.corba.ee.org.omg.CSIIOP.EstablishTrustInTarget;
+import com.sun.corba.ee.org.omg.CSIIOP.IdentityAssertion;
+import com.sun.corba.ee.org.omg.CSIIOP.Integrity;
+import com.sun.corba.ee.org.omg.CSIIOP.SAS_ContextSec;
+import com.sun.corba.ee.org.omg.CSIIOP.TLS_SEC_TRANS;
+import com.sun.corba.ee.org.omg.CSIIOP.TransportAddress;
 import com.sun.corba.ee.spi.ior.IOR;
 import com.sun.corba.ee.spi.ior.iiop.IIOPAddress;
 import com.sun.corba.ee.spi.ior.iiop.IIOPProfileTemplate;
 import com.sun.corba.ee.spi.transport.SocketInfo;
-import com.sun.corba.ee.org.omg.CSIIOP.*;
-import org.ietf.jgss.Oid;
-import java.util.Enumeration;
+import com.sun.enterprise.common.iiop.security.AnonCredential;
+import com.sun.enterprise.common.iiop.security.GSSUPName;
+import com.sun.enterprise.common.iiop.security.SecurityContext;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.EjbIORConfigurationDescriptor;
 import com.sun.enterprise.security.SecurityServicesUtil;
 import com.sun.enterprise.security.auth.login.LoginContextDriver;
 import com.sun.enterprise.security.auth.login.common.LoginException;
+import com.sun.enterprise.security.auth.login.common.PasswordCredential;
+import com.sun.enterprise.security.auth.login.common.X509CertificateCredential;
 import com.sun.enterprise.security.auth.realm.Realm;
 import com.sun.enterprise.security.common.ClientSecurityContext;
 import com.sun.enterprise.security.common.SecurityConstants;
 import com.sun.enterprise.security.ssl.SSLUtils;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.util.Utility;
+import com.sun.logging.LogDomains;
 
-import java.util.logging.*;
-import com.sun.logging.*;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
+import java.net.Socket;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocket;
+import javax.security.auth.Subject;
+import javax.security.auth.x500.X500Principal;
+
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.admin.ProcessEnvironment.ProcessType;
 import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 import org.glassfish.enterprise.iiop.api.ProtocolManager;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.hk2.api.PostConstruct;
-import jakarta.inject.Singleton;
+import org.glassfish.internal.api.ORBLocator;
+import org.ietf.jgss.Oid;
+import org.jvnet.hk2.annotations.Service;
+import org.omg.CORBA.ORB;
 
-import jakarta.inject.Inject;
+import static com.sun.logging.LogDomains.SECURITY_LOGGER;
 
 /**
  * This class is responsible for making various decisions for selecting security information to be sent in the IIOP
@@ -95,24 +105,24 @@ import jakarta.inject.Inject;
 @Singleton
 public final class SecurityMechanismSelector implements PostConstruct {
 
-    private static final java.util.logging.Logger _logger = LogDomains.getLogger(SecurityMechanismSelector.class, LogDomains.SECURITY_LOGGER);
+    private static final Logger LOG = LogDomains.getLogger(SecurityMechanismSelector.class, SECURITY_LOGGER, false);
 
     public static final String CLIENT_CONNECTION_CONTEXT = "ClientConnContext";
     // public static final String SERVER_CONNECTION_CONTEXT = "ServerConnContext";
 
-    private Set<EjbIORConfigurationDescriptor> corbaIORDescSet = null;
-    private boolean sslRequired = false;
+    private Set<EjbIORConfigurationDescriptor> corbaIORDescSet;
+    private boolean sslRequired;
 
     // List of hosts trusted by the client for sending passwords to.
     // Also, list of hosts trusted by the server for accepting propagated
     // identities.
     // private static String[] serverTrustedHosts = null;
 
-    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(SecServerRequestInterceptor.class);
-
-    // A reference to POAProtocolMgr will be obtained dynamically
-    // and set if not null. So set it to null here.
-    private ProtocolManager protocolMgr = null;
+    /**
+     * A reference to POAProtocolMgr will be obtained dynamically
+     * and set if not null. So set it to null here.
+     */
+    private ProtocolManager protocolMgr;
 
     @Inject
     private SSLUtils sslUtils;
@@ -120,8 +130,8 @@ public final class SecurityMechanismSelector implements PostConstruct {
     private GlassFishORBHelper orbHelper;
 
     // private CompoundSecMech mechanism = null;
-    private ORB orb = null;
-    private CSIV2TaggedComponentInfo ctc = null;
+    private ORB orb;
+    private CSIV2TaggedComponentInfo ctc;
 
     @Inject
     private InvocationManager invMgr;
@@ -135,27 +145,28 @@ public final class SecurityMechanismSelector implements PostConstruct {
     public SecurityMechanismSelector() {
     }
 
+    @Override
     public void postConstruct() {
         try {
             orbHelper = Lookups.getGlassFishORBHelper();
             // Initialize client security config
-            String s = (orbHelper.getCSIv2Props()).getProperty(GlassFishORBHelper.ORB_SSL_CLIENT_REQUIRED);
+            String s = (orbHelper.getCSIv2Props()).getProperty(ORBLocator.ORB_SSL_CLIENT_REQUIRED);
             if (s != null && s.equals("true")) {
                 sslRequired = true;
             }
 
             // initialize corbaIORDescSet with security config for CORBA objects
-            corbaIORDescSet = new HashSet<EjbIORConfigurationDescriptor>();
+            corbaIORDescSet = new HashSet<>();
             EjbIORConfigurationDescriptor iorDesc = new EjbIORConfigurationDescriptor();
             EjbIORConfigurationDescriptor iorDesc2 = new EjbIORConfigurationDescriptor();
-            String serverSslReqd = (orbHelper.getCSIv2Props()).getProperty(GlassFishORBHelper.ORB_SSL_SERVER_REQUIRED);
+            String serverSslReqd = (orbHelper.getCSIv2Props()).getProperty(ORBLocator.ORB_SSL_SERVER_REQUIRED);
             if (serverSslReqd != null && serverSslReqd.equals("true")) {
                 iorDesc.setIntegrity(EjbIORConfigurationDescriptor.REQUIRED);
                 iorDesc.setConfidentiality(EjbIORConfigurationDescriptor.REQUIRED);
                 iorDesc2.setIntegrity(EjbIORConfigurationDescriptor.REQUIRED);
                 iorDesc2.setConfidentiality(EjbIORConfigurationDescriptor.REQUIRED);
             }
-            String clientAuthReq = (orbHelper.getCSIv2Props()).getProperty(GlassFishORBHelper.ORB_CLIENT_AUTH_REQUIRED);
+            String clientAuthReq = (orbHelper.getCSIv2Props()).getProperty(ORBLocator.ORB_CLIENT_AUTH_REQUIRED);
             if (clientAuthReq != null && clientAuthReq.equals("true")) {
                 // Need auth either by SSL or username-password.
                 // This sets SSL clientauth to required.
@@ -167,7 +178,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
             getCorbaIORDescSet().add(iorDesc);
 
         } catch (Exception e) {
-            _logger.log(Level.SEVERE, "iiop.Exception", e);
+            LOG.log(Level.SEVERE, "IIOP1005: An exception has occured in the ejb security initialization.", e);
         }
     }
 
@@ -221,9 +232,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
          * If target requires any of Integrity, Confidentiality or EstablishTrustInClient, then SSL is used.
          */
         if (isSet(targetRequires, Integrity.value) || isSet(targetRequires, Confidentiality.value) || isSet(targetRequires, EstablishTrustInClient.value)) {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Target requires SSL");
-            }
+            LOG.log(Level.FINE, "Target requires SSL");
             ctx.setSSLUsed(true);
             String type = "SSL";
             if (isSet(targetRequires, EstablishTrustInClient.value)) {
@@ -239,24 +248,17 @@ public final class SecurityMechanismSelector implements PostConstruct {
             return info;
         } else if (isSet(targetSupports, Integrity.value) || isSet(targetSupports, Confidentiality.value)
                 || isSet(targetSupports, EstablishTrustInClient.value)) {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Target supports SSL");
-            }
-
-            if (isSslRequired()) {
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "Client is configured to require SSL for the target");
-                }
-
-                ctx.setSSLUsed(true);
-                short sslport = ssl.addresses[0].port;
-                String host_name = ssl.addresses[0].host_name;
-                int ssl_port = Utility.shortToInt(sslport);
-                info = IORToSocketInfoImpl.createSocketInfo("SecurityMechanismSelector3", "SSL", host_name, ssl_port);
-                return info;
-            } else {
+            LOG.log(Level.FINE, "Target supports SSL");
+            if (!isSslRequired()) {
                 return null;
             }
+            LOG.log(Level.FINE, "Client is configured to require SSL for the target");
+            ctx.setSSLUsed(true);
+            short sslport = ssl.addresses[0].port;
+            String host_name = ssl.addresses[0].host_name;
+            int ssl_port = Utility.shortToInt(sslport);
+            info = IORToSocketInfoImpl.createSocketInfo("SecurityMechanismSelector3", "SSL", host_name, ssl_port);
+            return info;
         } else if (isSslRequired()) {
             throw new RuntimeException("SSL required by client but not supported by server.");
         } else {
@@ -308,7 +310,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
                 SocketInfo info = IORToSocketInfoImpl.createSocketInfo("SecurityMechanismSelector1", "SSL", addr.getHost(),
                         orbHelper.getORBPort(orbHelper.getORB()));
                 // SocketInfo[] sInfos = new SocketInfo[]{info};
-                List<SocketInfo> sInfos = new ArrayList<SocketInfo>();
+                List<SocketInfo> sInfos = new ArrayList<>();
                 sInfos.add(info);
                 return sInfos;
             } else {
@@ -323,9 +325,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
          * If target requires any of Integrity, Confidentiality or EstablishTrustInClient, then SSL is used.
          */
         if (isSet(targetRequires, Integrity.value) || isSet(targetRequires, Confidentiality.value) || isSet(targetRequires, EstablishTrustInClient.value)) {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Target requires SSL");
-            }
+            LOG.log(Level.FINE, "Target requires SSL");
             ctx.setSSLUsed(true);
             String type = "SSL";
             if (isSet(targetRequires, EstablishTrustInClient.value)) {
@@ -333,11 +333,11 @@ public final class SecurityMechanismSelector implements PostConstruct {
                 ctx.setSSLClientAuthenticationOccurred(true);
             }
             // SocketInfo[] socketInfos = new SocketInfo[ssl.addresses.size];
-            List<SocketInfo> socketInfos = new ArrayList<SocketInfo>();
-            for (int addressIndex = 0; addressIndex < ssl.addresses.length; addressIndex++) {
-                short sslport = ssl.addresses[addressIndex].port;
+            List<SocketInfo> socketInfos = new ArrayList<>();
+            for (TransportAddress element : ssl.addresses) {
+                short sslport = element.port;
                 int ssl_port = Utility.shortToInt(sslport);
-                String host_name = ssl.addresses[addressIndex].host_name;
+                String host_name = element.host_name;
 
                 SocketInfo sInfo = IORToSocketInfoImpl.createSocketInfo("SecurityMechanismSelector2", type, host_name, ssl_port);
                 socketInfos.add(sInfo);
@@ -345,30 +345,23 @@ public final class SecurityMechanismSelector implements PostConstruct {
             return socketInfos;
         } else if (isSet(targetSupports, Integrity.value) || isSet(targetSupports, Confidentiality.value)
                 || isSet(targetSupports, EstablishTrustInClient.value)) {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Target supports SSL");
-            }
-
-            if (isSslRequired()) {
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "Client is configured to require SSL for the target");
-                }
-
-                ctx.setSSLUsed(true);
-                // SocketInfo[] socketInfos = new SocketInfo[ssl.addresses.size];
-                List<SocketInfo> socketInfos = new ArrayList<SocketInfo>();
-                for (int addressIndex = 0; addressIndex < ssl.addresses.length; addressIndex++) {
-                    short sslport = ssl.addresses[addressIndex].port;
-                    int ssl_port = Utility.shortToInt(sslport);
-                    String host_name = ssl.addresses[addressIndex].host_name;
-
-                    SocketInfo sInfo = IORToSocketInfoImpl.createSocketInfo("SecurityMechanismSelector3", "SSL", host_name, ssl_port);
-                    socketInfos.add(sInfo);
-                }
-                return socketInfos;
-            } else {
+            LOG.log(Level.FINE, "Target supports SSL");
+            if (!isSslRequired()) {
                 return null;
             }
+            LOG.log(Level.FINE, "Client is configured to require SSL for the target");
+            ctx.setSSLUsed(true);
+            // SocketInfo[] socketInfos = new SocketInfo[ssl.addresses.size];
+            List<SocketInfo> socketInfos = new ArrayList<>();
+            for (TransportAddress element : ssl.addresses) {
+                short sslport = element.port;
+                int ssl_port = Utility.shortToInt(sslport);
+                String host_name = element.host_name;
+
+                SocketInfo sInfo = IORToSocketInfoImpl.createSocketInfo("SecurityMechanismSelector3", "SSL", host_name, ssl_port);
+                socketInfos.add(sInfo);
+            }
+            return socketInfos;
         } else if (isSslRequired()) {
             throw new RuntimeException("SSL required by client but not supported by server.");
         } else {
@@ -386,7 +379,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
         ConnectionContext cc = new ConnectionContext();
         // print CSIv2 mechanism definition in IOR
         if (traceIORs()) {
-            _logger.info("\nCSIv2 Mechanism List:" + getSecurityMechanismString(ctc, ior));
+            LOG.info("\nCSIv2 Mechanism List: " + getSecurityMechanismString(ctc, ior));
         }
 
         getSSLPort(ior, cc);
@@ -405,9 +398,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
             return context;
         }
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "SSL used:" + sslUsed + " SSL Mutual auth:" + clientAuthOccurred);
-        }
+        LOG.log(Level.FINE, "SSL used: {0}, SSL Mutual auth: {1}", new Object[] {sslUsed, clientAuthOccurred});
         ComponentInvocation ci = null;
         /*
          * // BEGIN IASRI# 4646060 ci = invMgr.getCurrentInvocation(); if (ci == null) { // END IASRI# 4646060 return null; }
@@ -466,8 +457,8 @@ public final class SecurityMechanismSelector implements PostConstruct {
             return false;
         }
 
-        for (int i = 0; i < mechanisms.length; i++) {
-            if (Arrays.equals(mechSupported, mechanisms[i])) {
+        for (byte[] mechanism : mechanisms) {
+            if (Arrays.equals(mechSupported, mechanism)) {
                 return true;
             }
         }
@@ -478,10 +469,11 @@ public final class SecurityMechanismSelector implements PostConstruct {
         int ident_token = sas.supported_identity_types;
         // the identity token matches atleast one of the types we support
         int value = ident_token & CSIV2TaggedComponentInfo.SUPPORTED_IDENTITY_TOKEN_TYPES;
-        if (value != 0)
+        if (value != 0) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
     /**
@@ -503,9 +495,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
 
             ctx = getUsernameAndPassword(ci, mechanism);
 
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Sending Username/Password");
-            }
+            LOG.log(Level.FINE, "Sending Username/Password");
         } else {
             return null;
         }
@@ -528,32 +518,25 @@ public final class SecurityMechanismSelector implements PostConstruct {
         }
         AS_ContextSec asContext = mechanism.as_context_mech;
         SAS_ContextSec sasContext = mechanism.sas_context_mech;
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "SAS CONTEXT's target_requires=" + sasContext.target_requires);
-            _logger.log(Level.FINE, "SAS CONTEXT's target_supports=" + sasContext.target_supports);
-        }
+        LOG.log(Level.FINE, "SAS CONTEXT's target_requires={0}", sasContext.target_requires);
+        LOG.log(Level.FINE, "SAS CONTEXT's target_supports={1}", sasContext.target_supports);
 
         if (isSet(asContext.target_requires, EstablishTrustInClient.value)) {
             ctx = getUsernameAndPassword(ci, mechanism);
-            if (ctx.authcls == null) { // run as mode cannot send password
-                String errmsg = localStrings.getLocalString("securitymechansimselector.runas_cannot_propagate_username_password",
-                        "Cannot propagate username/password required by target when using run as identity");
-
-                _logger.log(Level.SEVERE, "iiop.runas_error", errmsg);
-                throw new SecurityMechanismException(errmsg);
+            if (ctx.authcls == null) {
+                // run as mode cannot send password
+                throw new SecurityMechanismException(
+                    "Cannot propagate username/password required by target when using run as identity");
             }
         } else if (isSet(sasContext.target_supports, IdentityAssertion.value) || isSet(sasContext.target_requires, IdentityAssertion.value)) {
             // called from the client side. thus before getting the identity. check the
             // mechanisms and the identity token supported
             if (!isIdentityTypeSupported(sasContext)) {
-                String errmsg = localStrings.getLocalString("securitymechanismselector.invalid_identity_type", "The given identity token is unsupported.");
-                throw new InvalidIdentityTokenException(errmsg);
+                throw new InvalidIdentityTokenException("The given identity token is unsupported.");
             }
             if (sasContext.target_supports == IdentityAssertion.value) {
                 if (!isMechanismSupported(sasContext)) {
-                    String errmsg = localStrings.getLocalString("securitymechanismselector.invalid_mechanism", "The given mechanism type is unsupported.");
-                    _logger.log(Level.SEVERE, "iiop.unsupported_type_error", errmsg);
-                    throw new InvalidMechanismException(errmsg);
+                    throw new InvalidMechanismException("The given mechanism type is unsupported.");
                 }
             }
 
@@ -636,9 +619,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
                     return null;
                 }
                 s = sc.getSubject();
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "SUBJECT:" + s);
-                }
+                LOG.log(Level.FINE, "SUBJECT: {0}", s);
             } else {
                 // Object obj = ci.getContainerContext();
                 // if(obj instanceof AppContainer) {
@@ -661,17 +642,13 @@ public final class SecurityMechanismSelector implements PostConstruct {
             final Subject sub = s;
             ctx.subject = s;
             // determining if run-as has been used
-            Set<PasswordCredential> privateCredSet = AccessController.doPrivileged(new PrivilegedAction<Set>() {
-
-                public Set run() {
-                    return sub.getPrivateCredentials(PasswordCredential.class);
-                }
-            });
-            if (privateCredSet.isEmpty()) { // this is runas case dont set
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "no private credential run as mode");
-                }
-                ctx.authcls = null; // the auth class
+            PrivilegedAction<Set<PasswordCredential>> action = () -> sub.getPrivateCredentials(PasswordCredential.class);
+            Set<PasswordCredential> privateCredSet = AccessController.doPrivileged(action);
+            // this is runas case dont set
+            if (privateCredSet.isEmpty()) {
+                LOG.log(Level.FINE, "No private credential run as mode");
+                // the auth class
+                ctx.authcls = null;
                 ctx.identcls = GSSUPName.class;
 
             } else {
@@ -687,15 +664,14 @@ public final class SecurityMechanismSelector implements PostConstruct {
                     _realm = GSSUtils.importName(GSSUtils.GSSUP_MECH_OID, target_name);
                 }
                 final String realm_name = new String(_realm);
-                final Iterator it = privateCredSet.iterator();
+                final Iterator<PasswordCredential> it = privateCredSet.iterator();
                 for (; it.hasNext();) {
-                    AccessController.doPrivileged(new PrivilegedAction<Object>() {
-                        public java.lang.Object run() {
-                            PasswordCredential pc = (PasswordCredential) it.next();
-                            pc.setRealm(realm_name);
-                            return null;
-                        }
-                    });
+                    PrivilegedAction<Void> action2 = () -> {
+                        PasswordCredential pc = it.next();
+                        pc.setRealm(realm_name);
+                        return null;
+                    };
+                    AccessController.doPrivileged(action2);
                 }
                 ctx.authcls = PasswordCredential.class;
             }
@@ -703,7 +679,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
         } catch (LoginException le) {
             throw le;
         } catch (Exception e) {
-            _logger.log(Level.SEVERE, "iiop.user_password_exception", e);
+            LOG.log(Level.SEVERE, "IIOP1001: Exception getting username and password", e);
             return null;
         }
     }
@@ -714,9 +690,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
      * @return the security context.
      */
     private SecurityContext getIdentity() throws SecurityMechanismException {
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Getting PRINCIPAL/DN from TLS");
-        }
+        LOG.log(Level.FINE, "Getting PRINCIPAL/DN from TLS");
 
         SecurityContext ctx = new SecurityContext();
         final SecurityContext sCtx = ctx;
@@ -727,15 +701,14 @@ public final class SecurityMechanismSelector implements PostConstruct {
             // a default guest/guest123 was created
             sCtx.identcls = AnonCredential.class;
 
-            AccessController.doPrivileged(new PrivilegedAction<Object>() {
-                public java.lang.Object run() {
-                    // remove all the public and private credentials
-                    Subject sub = new Subject();
-                    sCtx.subject = sub;
-                    sCtx.subject.getPublicCredentials().add(new AnonCredential());
-                    return null;
-                }
-            });
+            PrivilegedAction<Void> action = () -> {
+                // remove all the public and private credentials
+                Subject sub = new Subject();
+                sCtx.subject = sub;
+                sCtx.subject.getPublicCredentials().add(new AnonCredential());
+                return null;
+            };
+            AccessController.doPrivileged(action);
             return sCtx;
         }
 
@@ -744,47 +717,42 @@ public final class SecurityMechanismSelector implements PostConstruct {
 
         // Figure out the credential class
         final Subject sub = s;
-        Set<PasswordCredential> credSet = AccessController.doPrivileged(new PrivilegedAction<Set>() {
-            public Set run() {
-                return sub.getPrivateCredentials(PasswordCredential.class);
-            }
-        });
+        PrivilegedAction<Set<PasswordCredential>> action = () -> sub.getPrivateCredentials(PasswordCredential.class);
+        Set<PasswordCredential> credSet = AccessController.doPrivileged(action);
         if (credSet.size() == 1) {
             ctx.identcls = GSSUPName.class;
-            final Set cs = credSet;
-            Subject subj = AccessController.doPrivileged(new PrivilegedAction<Subject>() {
-                public Subject run() {
-                    Subject ss = new Subject();
-                    Iterator<PasswordCredential> iter = cs.iterator();
-                    PasswordCredential pc = iter.next();
-                    GSSUPName gssname = new GSSUPName(pc.getUser(), pc.getRealm());
-                    ss.getPublicCredentials().add(gssname);
-                    return ss;
-                }
-            });
+            final Set<PasswordCredential> cs = credSet;
+            PrivilegedAction<Subject> action2 = () -> {
+                Subject ss = new Subject();
+                Iterator<PasswordCredential> iter = cs.iterator();
+                PasswordCredential pc = iter.next();
+                GSSUPName gssname = new GSSUPName(pc.getUser(), pc.getRealm());
+                ss.getPublicCredentials().add(gssname);
+                return ss;
+            };
+            Subject subj = AccessController.doPrivileged(action2);
             ctx.subject = subj;
             return ctx;
         }
 
-        Set pubCredSet = s.getPublicCredentials();
+        Set<?> pubCredSet = s.getPublicCredentials();
         if (pubCredSet.size() != 1) {
-            _logger.log(Level.SEVERE, "iiop.principal_error");
+            LOG.log(Level.SEVERE, "IIOP1002: Principal propagation: Cannot find principal information in subject");
             return null;
-        } else {
-            Iterator credIter = pubCredSet.iterator();
-            if (credIter.hasNext()) {
-                Object o = credIter.next();
-                if (o instanceof GSSUPName) {
-                    ctx.identcls = GSSUPName.class;
-                } else if (o instanceof X500Principal) {
-                    ctx.identcls = X500Principal.class;
-                } else {
-                    ctx.identcls = X509CertificateCredential.class;
-                }
+        }
+        Iterator<?> credIter = pubCredSet.iterator();
+        if (credIter.hasNext()) {
+            Object o = credIter.next();
+            if (o instanceof GSSUPName) {
+                ctx.identcls = GSSUPName.class;
+            } else if (o instanceof X500Principal) {
+                ctx.identcls = X500Principal.class;
             } else {
-                _logger.log(Level.SEVERE, "iiop.credential_error");
-                return null;
+                ctx.identcls = X509CertificateCredential.class;
             }
+        } else {
+            LOG.log(Level.SEVERE, "IIOP1003: Principal propagation: Cannot find credential information in subject.");
+            return null;
         }
         return ctx;
     }
@@ -793,8 +761,8 @@ public final class SecurityMechanismSelector implements PostConstruct {
         com.sun.enterprise.security.SecurityContext sc = null;
         sc = com.sun.enterprise.security.SecurityContext.getCurrent();
         if (sc == null) {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, " SETTING GUEST ---");
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, " SETTING GUEST ---");
             }
             sc = com.sun.enterprise.security.SecurityContext.init();
         }
@@ -805,8 +773,8 @@ public final class SecurityMechanismSelector implements PostConstruct {
         if (s == null) {
             throw new SecurityMechanismException("Could not find " + " subject information in the security context.");
         }
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Subject in security current:" + s);
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Subject in security current:" + s);
         }
         return s;
     }
@@ -828,8 +796,8 @@ public final class SecurityMechanismSelector implements PostConstruct {
             return null;
         }
         CompoundSecMech mech = null;
-        for (int i = 0; i < mechList.length; i++) {
-            mech = mechList[i];
+        for (CompoundSecMech element : mechList) {
+            mech = element;
             boolean useMech = useMechanism(mech);
             if (useMech) {
                 return mech;
@@ -884,12 +852,14 @@ public final class SecurityMechanismSelector implements PostConstruct {
 
         final Subject sub = subj;
         final Set<PasswordCredential> credset = AccessController.doPrivileged(new PrivilegedAction<Set>() {
+            @Override
             public Set run() {
                 return sub.getPrivateCredentials(PasswordCredential.class);
             }
         });
         if (credset.size() == 1) {
             tgt_name = AccessController.doPrivileged(new PrivilegedAction<byte[]>() {
+                @Override
                 public byte[] run() {
                     Iterator<PasswordCredential> iter = credset.iterator();
                     PasswordCredential pc = iter.next();
@@ -902,8 +872,8 @@ public final class SecurityMechanismSelector implements PostConstruct {
 
     private boolean evaluate_client_conformance_ssl(EjbIORConfigurationDescriptor iordesc, boolean ssl_used, X509Certificate[] certchain) {
         try {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "SecurityMechanismSelector.evaluate_client_conformance_ssl->:");
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "SecurityMechanismSelector.evaluate_client_conformance_ssl->:");
             }
 
             boolean ssl_required = false;
@@ -927,15 +897,17 @@ public final class SecurityMechanismSelector implements PostConstruct {
             ssl_target_supports = this.getCtc().getTargetSupports(iordesc);
 
             if (isSet(ssl_target_requires, Integrity.value) || isSet(ssl_target_requires, Confidentiality.value)
-                    || isSet(ssl_target_requires, EstablishTrustInClient.value))
+                    || isSet(ssl_target_requires, EstablishTrustInClient.value)) {
                 ssl_required = true;
-            else
+            } else {
                 ssl_required = false;
+            }
 
-            if (ssl_target_supports != 0)
+            if (ssl_target_supports != 0) {
                 ssl_supported = true;
-            else
+            } else {
                 ssl_supported = false;
+            }
 
             /*
              * Check for conformance for using SSL usage.
@@ -946,8 +918,8 @@ public final class SecurityMechanismSelector implements PostConstruct {
              * b. if SSL was not used, then the target must not require it either. The target may or may not support SSL (it is
              * irrelevant).
              */
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE,
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE,
                         "SecurityMechanismSelector.evaluate_client_conformance_ssl:" + " " + isSet(ssl_target_requires, Integrity.value) + " "
                                 + isSet(ssl_target_requires, Confidentiality.value) + " " + isSet(ssl_target_requires, EstablishTrustInClient.value) + " "
                                 + ssl_required + " " + ssl_supported + " " + ssl_used);
@@ -955,10 +927,14 @@ public final class SecurityMechanismSelector implements PostConstruct {
 
             if (ssl_used) {
                 if (!(ssl_required || ssl_supported))
+                 {
                     return false; // security mechanism did not match
+                }
             } else {
                 if (ssl_required)
+                 {
                     return false; // security mechanism did not match
+                }
             }
 
             /*
@@ -971,27 +947,31 @@ public final class SecurityMechanismSelector implements PostConstruct {
              * target may or may not support SSL client authentication (it is irrelevant).
              */
 
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "SecurityMechanismSelector.evaluate_client_conformance_ssl:" + " "
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "SecurityMechanismSelector.evaluate_client_conformance_ssl:" + " "
                         + isSet(ssl_target_requires, EstablishTrustInClient.value) + " " + isSet(ssl_target_supports, EstablishTrustInClient.value));
             }
 
             if (certchain != null) {
                 if (!(isSet(ssl_target_requires, EstablishTrustInClient.value) || isSet(ssl_target_supports, EstablishTrustInClient.value)))
+                 {
                     return false; // security mechanism did not match
+                }
             } else {
                 if (isSet(ssl_target_requires, EstablishTrustInClient.value))
+                 {
                     return false; // security mechanism did not match
+                }
             }
 
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "SecurityMechanismSelector.evaluate_client_conformance_ssl: true");
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "SecurityMechanismSelector.evaluate_client_conformance_ssl: true");
             }
 
             return true; // mechanism matched
         } finally {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "SecurityMechanismSelector.evaluate_client_conformance_ssl<-:");
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "SecurityMechanismSelector.evaluate_client_conformance_ssl<-:");
             }
         }
     }
@@ -1010,8 +990,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
         try {
             ascontext = this.getCtc().createASContextSec(iordesc, realmName);
         } catch (Exception e) {
-            _logger.log(Level.SEVERE, "iiop.createcontextsec_exception", e);
-
+            LOG.log(Level.SEVERE, "IIOP1000: Exception creating ASContext", e);
             return false;
         }
 
@@ -1027,10 +1006,11 @@ public final class SecurityMechanismSelector implements PostConstruct {
          *
          *************************************************************************/
 
-        if ((ctx != null) && (ctx.authcls != null) && (ctx.subject != null))
+        if ((ctx != null) && (ctx.authcls != null) && (ctx.subject != null)) {
             client_authenticated = true;
-        else
+        } else {
             client_authenticated = false;
+        }
 
         if (client_authenticated) {
             if (!(isSet(ascontext.target_requires, EstablishTrustInClient.value) || isSet(ascontext.target_supports, EstablishTrustInClient.value))) {
@@ -1043,10 +1023,11 @@ public final class SecurityMechanismSelector implements PostConstruct {
             if (ascontext.target_name.length != client_tgtname.length) {
                 return false; // mechanism did not match.
             }
-            for (int i = 0; i < ascontext.target_name.length; i++)
+            for (int i = 0; i < ascontext.target_name.length; i++) {
                 if (ascontext.target_name[i] != client_tgtname[i]) {
                     return false; // mechanism did not match
                 }
+            }
         } else {
             if (isSet(ascontext.target_requires, EstablishTrustInClient.value)) {
                 return false; // no mechanism match.
@@ -1070,18 +1051,20 @@ public final class SecurityMechanismSelector implements PostConstruct {
         try {
             sascontext = this.getCtc().createSASContextSec(iordesc);
         } catch (Exception e) {
-            _logger.log(Level.SEVERE, "iiop.createcontextsec_exception", e);
+            LOG.log(Level.SEVERE, "Failed to create SAS_ContextSec", e);
             return false;
         }
 
-        if ((ctx != null) && (ctx.identcls != null) && (ctx.subject != null))
+        if ((ctx != null) && (ctx.identcls != null) && (ctx.subject != null)) {
             caller_propagated = true;
-        else
+        } else {
             caller_propagated = false;
+        }
 
         if (caller_propagated) {
-            if (!isSet(sascontext.target_supports, IdentityAssertion.value))
+            if (!isSet(sascontext.target_supports, IdentityAssertion.value)) {
                 return false; // target does not support IdentityAssertion
+            }
 
             /*
              * There is no need further checking here since SecServerRequestInterceptor code filters out the following: a.
@@ -1112,17 +1095,20 @@ public final class SecurityMechanismSelector implements PostConstruct {
         // if object_id is null then nothing to evaluate. This is a sanity
         // check - for the object_id should never be null.
 
-        if (object_id == null)
+        if (object_id == null) {
             return true;
+        }
 
-        if (protocolMgr == null)
+        if (protocolMgr == null) {
             protocolMgr = orbHelper.getProtocolManager();
+        }
 
         // Check to make sure protocolMgr is not null.
         // This could happen during server initialization or if this call
         // is on a callback object in the client VM.
-        if (protocolMgr == null)
+        if (protocolMgr == null) {
             return true;
+        }
 
         EjbDescriptor ejbDesc = protocolMgr.getEjbDescriptor(object_id);
 
@@ -1135,33 +1121,28 @@ public final class SecurityMechanismSelector implements PostConstruct {
             iorDescSet = getCorbaIORDescSet();
         }
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "SecurityMechanismSelector.evaluate_client_conformance: iorDescSet: " + iorDescSet);
-        }
+        LOG.log(Level.FINE, "SecurityMechanismSelector.evaluate_client_conformance: iorDescSet: {0}", iorDescSet);
 
         /*
          * if there are no IORConfigurationDescriptors configured, then no security policy is configured. So consider the client
          * to be conformant.
          */
-        if (iorDescSet.isEmpty())
+        if (iorDescSet.isEmpty()) {
             return true;
+        }
 
         // go through each EjbIORConfigurationDescriptor trying to find
         // a find a CompoundSecMechanism that matches client's actions.
         boolean checkSkipped = false;
-        for (Iterator itr = iorDescSet.iterator(); itr.hasNext();) {
-            EjbIORConfigurationDescriptor iorDesc = (EjbIORConfigurationDescriptor) itr.next();
+        for (Object element : iorDescSet) {
+            EjbIORConfigurationDescriptor iorDesc = (EjbIORConfigurationDescriptor) element;
             if (skip_client_conformance(iorDesc)) {
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "SecurityMechanismSelector.evaluate_client_conformance: skip_client_conformance");
-                }
+                LOG.log(Level.FINE, "skip_client_conformance");
                 checkSkipped = true;
                 continue;
             }
             if (!evaluate_client_conformance_ssl(iorDesc, ssl_used, certchain)) {
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "SecurityMechanismSelector.evaluate_client_conformance: evaluate_client_conformance_ssl");
-                }
+                LOG.log(Level.FINE, "evaluate_client_conformance_ssl");
                 checkSkipped = false;
                 continue;
             }
@@ -1176,23 +1157,20 @@ public final class SecurityMechanismSelector implements PostConstruct {
                 realmName = "default";
             }
             if (!evaluate_client_conformance_ascontext(ctx, iorDesc, realmName)) {
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "SecurityMechanismSelector.evaluate_client_conformance: evaluate_client_conformance_ascontext");
-                }
+                LOG.log(Level.FINE, "evaluate_client_conformance_ascontext");
                 checkSkipped = false;
                 continue;
             }
             if (!evaluate_client_conformance_sascontext(ctx, iorDesc)) {
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "SecurityMechanismSelector.evaluate_client_conformance: evaluate_client_conformance_sascontext");
-                }
+                LOG.log(Level.FINE, " evaluate_client_conformance_sascontext");
                 checkSkipped = false;
                 continue;
             }
             return true; // security policy matched.
         }
-        if (checkSkipped)
+        if (checkSkipped) {
             return true;
+        }
         return false; // No matching security policy found
     }
 
@@ -1252,9 +1230,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
             try {
                 certChain = (X509Certificate[]) sslSession.getPeerCertificates();
             } catch (Exception e) {
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "iiop.cannot_get_peercert", e);
-                }
+                LOG.log(Level.FINE, "Cannot retrieve peer certificates", e);
             }
         }
 
@@ -1265,13 +1241,13 @@ public final class SecurityMechanismSelector implements PostConstruct {
         // XXX: Workaround for non-null connection object ri for local invocation.
         // if (socket == null && ctx == null)
         Long ClientID = ConnectionExecutionContext.readClientThreadID();
-        if (ClientID != null && ClientID == Thread.currentThread().getId() && ctx == null)
+        if (ClientID != null && ClientID == Thread.currentThread().getId() && ctx == null) {
             return null;
+        }
 
         if (evaluate_client_conformance(ctx, object_id, ssl_used, certChain) == false) {
-            String msg = "Trust evaluation failed because ";
-            msg = msg + "client does not conform to configured security policies";
-            throw new SecurityMechanismException(msg);
+            throw new SecurityMechanismException(
+                "Trust evaluation failed because client does not conform to configured security policies");
         }
 
         if (ctx == null) {
@@ -1283,17 +1259,16 @@ public final class SecurityMechanismSelector implements PostConstruct {
                 // Note: if the target object is not an EJB,
                 // no security ctx is needed.
                 return null;
-            } else {
-                // Set the transport principal in subject and
-                // return the X500Principal class
-                ssc = new SecurityContext();
-                X500Principal x500principal = certChain[0].getSubjectX500Principal();
-                ssc.subject = new Subject();
-                ssc.subject.getPublicCredentials().add(x500principal);
-                ssc.identcls = X500Principal.class;
-                ssc.authcls = null;
-                return ssc;
             }
+            // Set the transport principal in subject and
+            // return the X500Principal class
+            ssc = new SecurityContext();
+            X500Principal x500principal = certChain[0].getSubjectX500Principal();
+            ssc.subject = new Subject();
+            ssc.subject.getPublicCredentials().add(x500principal);
+            ssc.identcls = X500Principal.class;
+            ssc.authcls = null;
+            return ssc;
         } else {
             ssc = ctx;
         }
@@ -1304,12 +1279,13 @@ public final class SecurityMechanismSelector implements PostConstruct {
         ssc.authcls = null;
         ssc.identcls = null;
 
-        if (identCls != null)
+        if (identCls != null) {
             ssc.identcls = identCls;
-        else if (authCls != null)
+        } else if (authCls != null) {
             ssc.authcls = authCls;
-        else
+        } else {
             ssc.identcls = AnonCredential.class;
+        }
 
         return ssc;
     }
@@ -1346,7 +1322,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
     private static final Hashtable<Integer, String> assocOptions;
 
     static {
-        assocOptions = new Hashtable<Integer, String>();
+        assocOptions = new Hashtable<>();
         assocOptions.put(Integer.valueOf(Integrity.value), "Integrity");
         assocOptions.put(Integer.valueOf(Confidentiality.value), "Confidentiality");
         assocOptions.put(Integer.valueOf(EstablishTrustInTarget.value), "EstablishTrustInTarget");
@@ -1358,7 +1334,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
     private static final Hashtable<Integer, String> identityTokenTypes;
 
     static {
-        identityTokenTypes = new Hashtable<Integer, String>();
+        identityTokenTypes = new Hashtable<>();
         identityTokenTypes.put(Integer.valueOf(ITTAnonymous.value), "Anonymous");
         identityTokenTypes.put(Integer.valueOf(ITTPrincipalName.value), "PrincipalName");
         identityTokenTypes.put(Integer.valueOf(ITTX509CertChain.value), "X509CertChain");
@@ -1497,8 +1473,9 @@ public final class SecurityMechanismSelector implements PostConstruct {
             }
             b.append("\n\n");
         } catch (Exception e) {
-            e.printStackTrace();
-            return ("Unexpected exception during IOR tracing - unset Property: " + traceIORsProperty);
+            String msg = "Unexpected exception during IOR tracing - unset Property: " + traceIORsProperty;
+            LOG.log(Level.SEVERE, msg, e);
+            return msg;
         }
         return b.toString();
     }

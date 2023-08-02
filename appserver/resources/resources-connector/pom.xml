@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.resources</groupId>
         <artifactId>resources</artifactId>
-        <version>7.0.7-SNAPSHOT</version>
+        <version>7.0.8-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -126,5 +126,24 @@
                 <directory>src/main/resources</directory>
             </resource>
         </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Export-Package>
+                             org.glassfish.resources.admin.cli,
+                             org.glassfish.resources.api,
+                             org.glassfish.resources.config,
+                             org.glassfish.resources.custom.factory,
+                             org.glassfish.resources.listener,
+                             org.glassfish.resources.naming,
+                             org.glassfish.resources.util
+                        </Export-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>

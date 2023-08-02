@@ -23,35 +23,44 @@ import com.sun.enterprise.resource.allocator.ResourceAllocator;
 import com.sun.enterprise.resource.pool.ResourceHandler;
 import com.sun.logging.LogDomains;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.List;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.StampedLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * ReadWriteLock based datastructure for pool.
+ * Optimistic read-write lock based datastructure for pool.
+ *
+ * <p><strong>Warning:</strong> Do not replace {@code for} loops with the {@code foreach} loops
+ * because we do not reduce internal array size after resources removal for performance reason.
  *
  * @author Jagadish Ramu
+ * @author Alexander Pincuk
  */
 public class RWLockDataStructure implements DataStructure {
 
     private static final Logger LOG = LogDomains.getLogger(RWLockDataStructure.class, LogDomains.RSR_LOGGER);
 
-    private int maxSize;
+    private final StampedLock lock = new StampedLock();
+    private final DataStructureSemaphore availableResources;
 
     private final ResourceHandler handler;
-    private final ArrayList<ResourceHandle> resources;
+    private final BitSet useMask;
+    private ResourceHandle[] resources;
+    private int size;
 
-    private final ReentrantReadWriteLock reentrantLock = new ReentrantReadWriteLock();
-    private final ReentrantReadWriteLock.ReadLock readLock = reentrantLock.readLock();
-    private final ReentrantReadWriteLock.WriteLock writeLock = reentrantLock.writeLock();
-
+    private volatile int maxSize;
 
     public RWLockDataStructure(String parameters, int maxSize, ResourceHandler handler, String strategyClass) {
-        this.resources = new ArrayList<>(maxSize);
+        this.availableResources = new DataStructureSemaphore(maxSize);
+        this.useMask = new BitSet(maxSize);
+        this.resources = new ResourceHandle[maxSize];
         this.handler = handler;
         this.maxSize = maxSize;
+
         LOG.log(Level.FINEST, "pool.datastructure.rwlockds.init");
     }
 
@@ -59,108 +68,323 @@ public class RWLockDataStructure implements DataStructure {
     @Override
     public int addResource(ResourceAllocator allocator, int count) throws PoolingException {
         int numResAdded = 0;
-        writeLock.lock();
-        //for now, coarser lock. finer lock needs "resources.size() < maxSize()" once more.
-        try {
-            for (int i = 0; i < count && resources.size() < maxSize; i++) {
-                ResourceHandle handle = handler.createResource(allocator);
-                resources.add(handle);
-                numResAdded++;
+        for (int i = 0; i < count; i++) {
+            if (!availableResources.tryAcquire()) {
+                break;
             }
-        } catch (Exception e) {
-            throw new PoolingException(e.getMessage(), e);
-        } finally {
-            writeLock.unlock();
+
+            ResourceHandle resource;
+            try {
+                resource = handler.createResource(allocator);
+            } catch (Exception e) {
+                availableResources.release();
+                throw new PoolingException(e.getMessage(), e);
+            }
+
+            long stamp = lock.tryOptimisticRead();
+            try {
+                for (;; stamp = lock.writeLock()) {
+                    if (stamp == 0L) {
+                        continue;
+                    }
+
+                    int currentLength = resources.length;
+                    int currentMaxSize = maxSize;
+
+                    ResourceHandle[] newResources = null;
+                    if (currentLength < currentMaxSize) {
+                        newResources = Arrays.copyOf(resources, currentMaxSize);
+                    }
+
+                    resource.setIndex(size);
+
+                    stamp = lock.tryConvertToWriteLock(stamp);
+                    if (stamp == 0L) {
+                        continue;
+                    }
+
+                    if (newResources != null) {
+                        resources = newResources;
+                    }
+                    resources[size++] = resource;
+
+                    break;
+                }
+            } finally {
+                if (StampedLock.isWriteLockStamp(stamp)) {
+                    lock.unlockWrite(stamp);
+                }
+            }
+            numResAdded++;
         }
         return numResAdded;
     }
 
     @Override
     public ResourceHandle getResource() {
-        readLock.lock();
+        long stamp = lock.tryOptimisticRead();
         try {
-            for (ResourceHandle resource : resources) {
-                if (!resource.isBusy()) {
-                    if (resource.trySetBusy(true)) {
-                        return resource;
-                    }
+            for (;; stamp = lock.writeLock()) {
+                if (stamp == 0L) {
+                    continue;
                 }
+
+                int index = useMask.nextClearBit(0);
+                int currentSize = size;
+                if (!lock.validate(stamp)) {
+                    continue;
+                }
+
+                if (index >= currentSize) {
+                    return null;
+                }
+
+                stamp = lock.tryConvertToWriteLock(stamp);
+                if (stamp == 0L) {
+                    continue;
+                }
+
+                useMask.set(index);
+
+                return resources[index];
             }
         } finally {
-            readLock.unlock();
+            if (StampedLock.isWriteLockStamp(stamp)) {
+                lock.unlockWrite(stamp);
+            }
         }
-        return null;
     }
 
     @Override
     public void removeResource(ResourceHandle resource) {
-        boolean removed;
-        writeLock.lock();
+        boolean removed = false;
+
+        long stamp = lock.tryOptimisticRead();
         try {
-            removed = resources.remove(resource);
+            for (;; stamp = lock.writeLock()) {
+                if (stamp == 0L) {
+                    continue;
+                }
+
+                int currentSize = size;
+                int removeIndex = resource.getIndex();
+                if (!lock.validate(stamp)) {
+                    continue;
+                }
+
+                if (removeIndex >= currentSize) {
+                    break;
+                }
+
+                ResourceHandle currentResource = resources[removeIndex];
+                if (!lock.validate(stamp)) {
+                    continue;
+                }
+
+                if (currentResource != resource) {
+                    break;
+                }
+
+                stamp = lock.tryConvertToWriteLock(stamp);
+                if (stamp == 0L) {
+                    continue;
+                }
+
+                availableResources.release();
+
+                int lastIndex = currentSize - 1;
+                if (removeIndex < lastIndex) {
+                    // Move last resource in place of removed
+                    ResourceHandle lastResource = resources[lastIndex];
+                    lastResource.setIndex(removeIndex);
+                    resources[removeIndex] = lastResource;
+                    useMask.set(removeIndex, useMask.get(lastIndex));
+                }
+                resources[lastIndex] = null;
+                useMask.clear(lastIndex);
+                size = lastIndex;
+                removed = true;
+
+                break;
+            }
         } finally {
-            writeLock.unlock();
+            if (StampedLock.isWriteLockStamp(stamp)) {
+                lock.unlockWrite(stamp);
+            }
         }
-        if(removed) {
+
+        if (removed) {
             handler.deleteResource(resource);
         }
     }
 
     @Override
     public void returnResource(ResourceHandle resource) {
-        // We use write lock to prevent an unnecessary resize
-        writeLock.lock();
-        try{
-            resource.setBusy(false);
-        }finally{
-            writeLock.unlock();
+        long stamp = lock.tryOptimisticRead();
+        try {
+            for (;; stamp = lock.writeLock()) {
+                if (stamp == 0L) {
+                    continue;
+                }
+
+                int currentSize = size;
+                int returnIndex = resource.getIndex();
+                if (!lock.validate(stamp)) {
+                    continue;
+                }
+
+                if (returnIndex >= currentSize) {
+                    break;
+                }
+
+                ResourceHandle currentResource = resources[returnIndex];
+                if (!lock.validate(stamp)) {
+                    continue;
+                }
+
+                if (currentResource != resource) {
+                    break;
+                }
+
+                stamp = lock.tryConvertToWriteLock(stamp);
+                if (stamp == 0L) {
+                    continue;
+                }
+
+                useMask.clear(returnIndex);
+
+                break;
+            }
+        } finally {
+            if (StampedLock.isWriteLockStamp(stamp)) {
+                lock.unlockWrite(stamp);
+            }
         }
     }
 
     @Override
     public int getFreeListSize() {
-        // inefficient implementation.
-        int free = 0;
-        readLock.lock();
-        try{
-            for (ResourceHandle rh : resources) {
-                if(!rh.isBusy()){
-                    free++;
+        long stamp = lock.tryOptimisticRead();
+        try {
+            for (;; stamp = lock.readLock()) {
+                if (stamp == 0L) {
+                    continue;
                 }
+
+                int freeListSize = size - useMask.cardinality();
+                if (!lock.validate(stamp)) {
+                    continue;
+                }
+
+                return freeListSize;
             }
-        }finally{
-            readLock.unlock();
+        } finally {
+            if (StampedLock.isReadLockStamp(stamp)) {
+                lock.unlockRead(stamp);
+            }
         }
-        return free;
     }
 
     @Override
     public void removeAll() {
-        writeLock.lock();
+        ResourceHandle[] resourcesToRemove;
+        int currentSize;
+
+        long stamp = lock.writeLock();
         try {
-            Iterator<ResourceHandle> it = resources.iterator();
-            while (it.hasNext()) {
-                handler.deleteResource(it.next());
-                it.remove();
-            }
-            resources.clear();
+            currentSize = size;
+            availableResources.release(currentSize);
+            resourcesToRemove = resources;
+            resources = new ResourceHandle[maxSize];
+            useMask.clear(0, currentSize);
+            size = 0;
         } finally {
-            writeLock.unlock();
+            lock.unlockWrite(stamp);
         }
+
+        for (int i = 0; i < currentSize; i++) {
+            handler.deleteResource(resourcesToRemove[i]);
+        }
+        Arrays.fill(resourcesToRemove, 0, currentSize, null);
     }
 
     @Override
     public int getResourcesSize() {
-        return resources.size();
+        long stamp = lock.tryOptimisticRead();
+        try {
+            for (;; stamp = lock.readLock()) {
+                if (stamp == 0L) {
+                    continue;
+                }
+
+                int currentSize = size;
+                if (!lock.validate(stamp)) {
+                    continue;
+                }
+
+                return currentSize;
+            }
+        } finally {
+            if (StampedLock.isReadLockStamp(stamp)) {
+                lock.unlockRead(stamp);
+            }
+        }
     }
 
     @Override
-    public void setMaxSize(int maxSize) {
-        this.maxSize = maxSize;
+    public synchronized void setMaxSize(int newMaxSize) {
+        int permits = newMaxSize - maxSize;
+
+        switch (Integer.signum(permits)) {
+            case 1:
+                availableResources.release(permits);
+                break;
+            case -1:
+                availableResources.reducePermits(Math.abs(permits));
+                break;
+            default:
+                return;
+        }
+
+        this.maxSize = newMaxSize;
     }
 
     @Override
-    public ArrayList<ResourceHandle> getAllResources() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public List<ResourceHandle> getAllResources() {
+        long stamp = lock.tryOptimisticRead();
+        try {
+            for (;; stamp = lock.readLock()) {
+                if (stamp == 0L) {
+                    continue;
+                }
+
+                ResourceHandle[] allResources = Arrays.copyOf(resources, size);
+                if (!lock.validate(stamp)) {
+                    continue;
+                }
+
+                return Arrays.asList(allResources);
+            }
+        } finally {
+            if (StampedLock.isReadLockStamp(stamp)) {
+                lock.unlockRead(stamp);
+            }
+        }
+    }
+
+    /**
+     * Semaphore whose available permits change according to the
+     * changes in max-pool-size via a reconfiguration.
+     */
+    private static final class DataStructureSemaphore extends Semaphore {
+
+        public DataStructureSemaphore(int permits) {
+            super(permits);
+        }
+
+        @Override
+        protected void reducePermits(int reduction) {
+            super.reducePermits(reduction);
+        }
     }
 }

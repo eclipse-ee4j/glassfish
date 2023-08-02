@@ -62,8 +62,6 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
     private int shareCount; // sharing within a component (XA only)
     private final boolean supportsXAResource;
 
-    private final AtomicBoolean busy = new AtomicBoolean(false);
-
     private Subject subject;
 
     private ResourceState state;
@@ -78,6 +76,7 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
     private long lastValidated; // holds the latest time at which the connection was validated.
     private int usageCount; // holds the no. of times the handle(connection) is used so far.
     private int partition;
+    private int index;
     private boolean isDestroyByLeakTimeOut;
     private boolean connectionErrorOccurred;
 
@@ -337,6 +336,14 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
         this.partition = partition;
     }
 
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
     @Override
     public String getName() {
         return spec.getResourceId();
@@ -353,18 +360,6 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
     @Override
     public void enlistedInTransaction(Transaction transaction) throws IllegalStateException {
         ConnectorRuntime.getRuntime().getPoolManager().resourceEnlisted(transaction, this);
-    }
-
-    public boolean isBusy() {
-        return busy.get();
-    }
-
-    public void setBusy(boolean busy) {
-        this.busy.set(busy);
-    }
-
-    public boolean trySetBusy(boolean busy) {
-        return this.busy.compareAndSet(!busy, busy);
     }
 
     public boolean getDestroyByLeakTimeOut() {

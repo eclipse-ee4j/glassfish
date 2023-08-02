@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,37 +17,32 @@
 
 package com.sun.enterprise.iiop.security;
 
-import org.glassfish.orb.admin.config.IiopListener;
-import java.util.logging.*;
-import java.util.List;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.logging.LogDomains;
 
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.enterprise.iiop.util.IIOPUtils;
+import org.glassfish.gms.bootstrap.GMSAdapter;
+import org.glassfish.gms.bootstrap.GMSAdapterService;
+import org.glassfish.orb.admin.config.IiopListener;
+import org.omg.CORBA.ORB;
 import org.omg.IOP.Codec;
 import org.omg.IOP.TaggedComponent;
 import org.omg.PortableInterceptor.IORInfo;
 
-import com.sun.logging.*;
-import com.sun.enterprise.deployment.EjbDescriptor;
-//import com.sun.enterprise.util.ORBManager;
-//import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
-import org.glassfish.enterprise.iiop.util.IIOPUtils;
-import org.glassfish.gms.bootstrap.GMSAdapter;
-import org.glassfish.gms.bootstrap.GMSAdapterService;
-import org.omg.CORBA.ORB;
-
 public class SecIORInterceptor extends org.omg.CORBA.LocalObject implements org.omg.PortableInterceptor.IORInterceptor {
 
-    private static Logger _logger = null;
+    private static final Logger LOG = LogDomains.getLogger(SecIORInterceptor.class, LogDomains.SECURITY_LOGGER, false);
 
-    static {
-        _logger = LogDomains.getLogger(SecIORInterceptor.class, LogDomains.SECURITY_LOGGER);
-    }
-
-    private Codec codec;
-    private GMSAdapterService gmsAdapterService;
+    private final Codec codec;
+    private final GMSAdapterService gmsAdapterService;
     private GMSAdapter gmsAdapter;
 
     // private GlassFishORBHelper helper = null;
-    private ORB orb;
+    private final ORB orb;
 
     public SecIORInterceptor(Codec c, ORB orb) {
         codec = c;
@@ -59,33 +55,34 @@ public class SecIORInterceptor extends org.omg.CORBA.LocalObject implements org.
         }
     }
 
+    @Override
     public void destroy() {
     }
 
+    @Override
     public String name() {
         return "SecIORInterceptor";
     }
 
     // Note: this is called for all remote refs created from this ORB,
     // including EJBs and COSNaming objects.
+    @Override
     public void establish_components(IORInfo iorInfo) {
         try {
-            _logger.log(Level.FINE, "SecIORInterceptor.establish_components->:");
+            LOG.log(Level.FINE, "SecIORInterceptor.establish_components->:");
             // EjbDescriptor desc = CSIV2TaggedComponentInfo.getEjbDescriptor( iorInfo ) ;
             addCSIv2Components(iorInfo);
         } catch (Exception e) {
-            _logger.log(Level.WARNING, "Exception in establish_components", e);
+            LOG.log(Level.WARNING, "Exception in establish_components", e);
         } finally {
-            _logger.log(Level.FINE, "SecIORInterceptor.establish_components<-:");
+            LOG.log(Level.FINE, "SecIORInterceptor.establish_components<-:");
         }
     }
 
     private void addCSIv2Components(IORInfo iorInfo) {
         EjbDescriptor desc = null;
         try {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, ".addCSIv2Components->: " + " " + iorInfo);
-            }
+            LOG.log(Level.FINE, ".addCSIv2Components->: {0}", iorInfo);
 
             if (gmsAdapter != null) {
 
@@ -97,9 +94,7 @@ public class SecIORInterceptor extends org.omg.CORBA.LocalObject implements org.
                 return;
             }
 
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, ".addCSIv2Components ");
-            }
+            LOG.log(Level.FINE, ".addCSIv2Components ");
 
             // ORB orb = helper.getORB();
             int sslMutualAuthPort = getServerPort("SSL_MUTUALAUTH");
@@ -110,9 +105,7 @@ public class SecIORInterceptor extends org.omg.CORBA.LocalObject implements org.
 //            _logger.log(Level.FINE,"UnknownType exception", ute);
 //    }
 
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, ".addCSIv2Components: sslMutualAuthPort: " + sslMutualAuthPort);
-            }
+            LOG.log(Level.FINE, ".addCSIv2Components: sslMutualAuthPort: {0}", sslMutualAuthPort);
 
             CSIV2TaggedComponentInfo ctc = new CSIV2TaggedComponentInfo(orb, sslMutualAuthPort);
             desc = ctc.getEjbDescriptor(iorInfo);
@@ -125,9 +118,7 @@ public class SecIORInterceptor extends org.omg.CORBA.LocalObject implements org.
 //    } catch (com.sun.corba.ee.spi.legacy.interceptor.UnknownType ute) {
 //            _logger.log(Level.FINE,"UnknownType exception", ute);
 //    }
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, ".addCSIv2Components: sslport: " + sslport);
-            }
+            LOG.log(Level.FINE, ".addCSIv2Components: sslport: {0}", sslport);
 
             TaggedComponent csiv2Comp = null;
             if (desc != null) {
@@ -140,9 +131,7 @@ public class SecIORInterceptor extends org.omg.CORBA.LocalObject implements org.
             iorInfo.add_ior_component(csiv2Comp);
 
         } finally {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, ".addCSIv2Components<-: " + " " + iorInfo + " " + desc);
-            }
+            LOG.log(Level.FINE, ".addCSIv2Components<-: {0} {1}", new Object[] {iorInfo, desc});
         }
     }
 

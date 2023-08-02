@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.persistence.cmp</groupId>
         <artifactId>cmp</artifactId>
-        <version>7.0.7-SNAPSHOT</version>
+        <version>7.0.8-SNAPSHOT</version>
     </parent>
 
     <artifactId>cmp-support-ejb</artifactId>
@@ -126,6 +126,29 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <!--
+                        com.sun.jdo.spi.persistence.support.ejb.cmp and com.sun.jdo.spi.persistence.support.ejb.ejbc
+                        are exported because classes from these packages need to be visible to generated
+                        *ConcreteImpl classes.
+
+                        com.sun.jdo.spi.persistence.support.ejb.codegen.CMPDeployerImpl is referred from EJBDeployer.
+                        However, the package need not be exported because the class is looked up through habitat
+                        which uses bundle.loadClass() bypassing OSGI com.sun.jdo.spi.persistence.support.ejb.ejbqlc
+                        is needed by verifier.
+                        -->
+                        <Export-Package>
+                            com.sun.jdo.spi.persistence.support.ejb.cmp,
+                            com.sun.jdo.spi.persistence.support.ejb.ejbc,
+                            com.sun.jdo.spi.persistence.support.ejb.ejbqlc
+                        </Export-Package>
+                    </instructions>
+                </configuration>
             </plugin>
         </plugins>
     </build>

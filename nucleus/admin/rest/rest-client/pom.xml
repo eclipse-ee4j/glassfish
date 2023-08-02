@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.admin</groupId>
         <artifactId>rest-service-parent</artifactId>
-        <version>7.0.7-SNAPSHOT</version>
+        <version>7.0.8-SNAPSHOT</version>
     </parent>
 
     <artifactId>rest-client</artifactId>
@@ -55,4 +55,32 @@
             <artifactId>jersey-media-multipart</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <DynamicImport-Package>
+                            com.sun.enterprise.security,
+                            com.sun.enterprise.security.auth.login,
+                            com.sun.enterprise.security.auth.realm,
+                            com.sun.enterprise.security.ssl,
+                            com.sun.enterprise.server.logging.logviewer.backend,
+                            jakarta.ws.rs,
+                            jakarta.ws.rs.core,
+                            jakarta.ws.rs.ext,
+                            org.glassfish.external.statistics,
+                            org.glassfish.external.statistics.impl,
+                            org.glassfish.flashlight,
+                            org.glassfish.flashlight.datatree
+                        </DynamicImport-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

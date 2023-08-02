@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.extras</groupId>
         <artifactId>extras</artifactId>
-        <version>7.0.7-SNAPSHOT</version>
+        <version>7.0.8-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -580,12 +580,6 @@
         <dependency>
             <groupId>org.glassfish.main.loadbalancer</groupId>
             <artifactId>gf-load-balancer-connector</artifactId>
-            <version>${project.version}</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.security</groupId>
-            <artifactId>jaspic.provider.framework</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>

@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.concurrent</groupId>
         <artifactId>concurrent</artifactId>
-        <version>7.0.7-SNAPSHOT</version>
+        <version>7.0.8-SNAPSHOT</version>
     </parent>
 
     <artifactId>concurrent-impl</artifactId>
@@ -119,4 +119,22 @@
             <artifactId>hamcrest</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Export-Package>
+                            org.glassfish.concurrent.admin,
+                            org.glassfish.concurrent.runtime,
+                            org.glassfish.concurrent.runtime.deployer
+                        </Export-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

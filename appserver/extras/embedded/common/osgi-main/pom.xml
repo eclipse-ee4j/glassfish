@@ -24,7 +24,7 @@
   <parent>
     <groupId>org.glassfish.main.extras</groupId>
     <artifactId>glassfish-embedded-common</artifactId>
-    <version>7.0.7-SNAPSHOT</version>
+    <version>7.0.8-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -40,4 +40,18 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Bundle-Activator>org.glassfish.uberjar.osgimain.Main</Bundle-Activator>
+                        <Bundle-SymbolicName>org.glassfish.uberjar.osgi-main</Bundle-SymbolicName>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

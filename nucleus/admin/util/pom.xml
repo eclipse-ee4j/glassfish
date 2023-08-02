@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.admin</groupId>
         <artifactId>nucleus-admin</artifactId>
-        <version>7.0.7-SNAPSHOT</version>
+        <version>7.0.8-SNAPSHOT</version>
     </parent>
 
     <artifactId>admin-util</artifactId>
@@ -158,7 +158,6 @@
                 </excludes>
             </resource>
         </resources>
-
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -171,5 +170,31 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Export-Package>
+                            com.sun.enterprise.admin.commands,
+                            com.sun.enterprise.admin.event,
+                            com.sun.enterprise.admin.progress,
+                            com.sun.enterprise.admin.remote,
+                            com.sun.enterprise.admin.util,
+                            com.sun.enterprise.admin.util.cache,
+                            com.sun.enterprise.admin.util.jmx,
+                            com.sun.enterprise.admin.util.proxy,
+                            com.sun.enterprise.admin.remote.reader,
+                            com.sun.enterprise.admin.remote.sse,
+                            com.sun.enterprise.admin.remote.writer,
+                            com.sun.enterprise.admin.util.test,
+                            org.glassfish.admin.cli.resources
+                        </Export-Package>
+                        <DynamicImport-Package>com.sun.enterprise.security.ssl</DynamicImport-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>

@@ -16,9 +16,12 @@
 
 package com.sun.enterprise.security.appclient;
 
+import static jakarta.security.auth.message.config.AuthConfigFactory.DEFAULT_FACTORY_SECURITY_PROPERTY;
+import static java.lang.System.Logger.Level.DEBUG;
+
 import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.List;
-import java.util.logging.Level;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
@@ -44,7 +47,6 @@ import com.sun.enterprise.security.integration.AppClientSSL;
 import com.sun.enterprise.security.ssl.SSLUtils;
 
 import jakarta.inject.Inject;
-import jakarta.security.auth.message.config.AuthConfigFactory;
 
 /**
  *
@@ -98,13 +100,7 @@ public class AppClientSecurityInfoImpl implements AppClientSecurityInfo {
             J2EESecurityManager mgr = new J2EESecurityManager();
             System.setSecurityManager(mgr);
         }
-        if (_logger.isLoggable(Level.FINE)) {
-            if (secMgr != null) {
-                _logger.fine("acc.secmgron");
-            } else {
-                _logger.fine("acc.secmgroff");
-            }
-        }
+        LOG.log(DEBUG, "SEC9002: ACC: Security Manager is {0}", secMgr);
 
         //set the parser to ConfigXMLParser
         System.setProperty("config.parser", DEFAULT_PARSER_CLASS);
@@ -113,18 +109,16 @@ public class AppClientSecurityInfoImpl implements AppClientSecurityInfo {
             /* setup jsr 196 factory
              * define default factory if it is not already defined
              */
-            String defaultFactory = java.security.Security.getProperty
-            (AuthConfigFactory.DEFAULT_FACTORY_SECURITY_PROPERTY);
-                _logger.fine("AuthConfigFactory obtained from java.security.Security.getProperty(\"authconfigprovider.factory\") :"
-                        + ((defaultFactory != null) ? defaultFactory : "NULL"));
+            String defaultFactory = java.security.Security.getProperty(DEFAULT_FACTORY_SECURITY_PROPERTY);
+            LOG.log(Level.DEBUG,
+                "AuthConfigFactory obtained from java.security.Security.getProperty(\"authconfigprovider.factory\"): {0}",
+                defaultFactory);
             if (defaultFactory == null) {
-                java.security.Security.setProperty
-                    (AuthConfigFactory.DEFAULT_FACTORY_SECURITY_PROPERTY,
+                java.security.Security.setProperty(DEFAULT_FACTORY_SECURITY_PROPERTY,
                         AuthConfigFileFactory.class.getName());
             }
-
         } catch (Exception e) {
-            _logger.log(Level.WARNING, "main.jmac_default_factory");
+            LOG.log(Level.WARNING, "SEC9001: ACC: Error in initializing JSR 196 Default Factory", e);
         }
 
         //TODO:V3 LoginContextDriver has a static variable dependency on AuditManager
@@ -189,13 +183,13 @@ public class AppClientSecurityInfoImpl implements AppClientSecurityInfo {
             // first one will be used.
             Security security = tServer.getSecurity();
             if (security == null) {
-                _logger.fine("No Security input set in ClientContainer.xml");
+                LOG.log(Level.DEBUG, "No Security input set in ClientContainer.xml");
                 // do nothing
                 return;
             }
             Ssl ssl = security.getSsl();
             if (ssl == null) {
-                _logger.fine("No SSL input set in ClientContainer.xml");
+                LOG.log(Level.DEBUG, "No SSL input set in ClientContainer.xml");
                 // do nothing
                 return;
 
@@ -205,7 +199,7 @@ public class AppClientSecurityInfoImpl implements AppClientSecurityInfo {
             sslUtils.setAppclientSsl(convert(ssl));
             this.appClientSSLUtil.setAppClientSSL(convert(ssl));
         } catch (Exception ex) {
-
+            LOG.log(Level.ERROR, "setSSLData failed.", ex);
         }
     }
 

@@ -24,12 +24,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -111,10 +111,8 @@ public class ConfigXMLParser implements ConfigParser {
         defaultServerID = clientMsgSecConfig.getDefaultProvider();
         defaultClientID = clientMsgSecConfig.getDefaultClientProvider();
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.fine("Intercept Entry: " + "\n    intercept: " + intercept + "\n    defaultServerID: " + defaultServerID
-                    + "\n    defaultClientID:  " + defaultClientID);
-        }
+        LOG.log(Level.DEBUG, "Intercept Entry:\n intercept: {0}\n defaultServerID: {1}\n defaultClientID: {2}",
+                intercept, defaultServerID, defaultClientID);
 
         if (defaultServerID != null || defaultClientID != null) {
             layersWithDefault.add(intercept);
@@ -149,15 +147,16 @@ public class ConfigXMLParser implements ConfigParser {
             } catch (IllegalStateException ee) {
                 // log warning and give the provider a chance to
                 // interpret value itself.
-                _logger.warning("jmac.unexpandedproperty");
+                LOG.log(Level.WARNING,
+                        "SEC1200: Unable to expand provider property value, unexpanded value passed to provider.");
                 options.put(prop.getName(), prop.getValue());
             }
         }
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.fine("ID Entry: " + "\n    module class: " + moduleClass + "\n    id: " + id + "\n    type: " + type
-                    + "\n    request policy: " + requestPolicy + "\n    response policy: " + responsePolicy + "\n    options: " + options);
-        }
+        LOG.log(Level.DEBUG,
+                "ID Entry: \n module class: {0}\n id: {1}\n type: {2}\n"
+                    + " request policy: {3}\n response policy: {4}\n options: {5}",
+                moduleClass, id, type, requestPolicy, responsePolicy, options);
 
         // create ID entry
 
@@ -233,7 +232,7 @@ public class ConfigXMLParser implements ConfigParser {
                 ClientContainer cc = (ClientContainer) u.unmarshal(is);
                 msgconfigs = cc.getMessageSecurityConfig();
             } catch (JAXBException ex) {
-                _logger.log(Level.SEVERE, null, ex);
+                LOG.log(Level.ERROR, "Failed to parse glassfish-acc.xml", ex);
             }
         } else {
             Util util = Util.getInstance();

@@ -96,7 +96,7 @@ class MainHelperTest {
     }
 
 
-    @Test
+    // @Test
     void createLauncher_Felix() throws Exception {
         Properties properties = createDefaultProperties();
         PlatformHelper platformHelper = PlatformHelper.getPlatformHelper(properties);

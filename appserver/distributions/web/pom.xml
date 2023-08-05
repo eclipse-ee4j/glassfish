@@ -32,108 +32,120 @@
 
     <name>Glassfish Web Profile Distribution</name>
 
-    <properties>
-        <glassfish.modules>${project.build.directory}/stage/glassfish7/glassfish/modules</glassfish.modules>
-        <patches>${basedir}/src/main/patches</patches>
-    </properties>
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.glassfish.main.featuresets</groupId>
-            <artifactId>web</artifactId>
-            <version>${project.version}</version>
-            <type>pom</type>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.extras</groupId>
-            <artifactId>glassfish-embedded-shell</artifactId>
-            <version>${project.version}</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.extras</groupId>
-            <artifactId>glassfish-embedded-static-shell</artifactId>
-            <version>${project.version}</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.distributions</groupId>
-            <artifactId>glassfish-common</artifactId>
-            <version>${project.version}</version>
-            <type>zip</type>
-            <optional>true</optional>
-        </dependency>
+            <properties>
+                <glassfish.modules>${project.build.directory}/stage/glassfish7/glassfish/modules</glassfish.modules>
+                <patches>${basedir}/src/main/patches</patches>
+            </properties>
 
-        <dependency>
-            <groupId>jakarta.servlet</groupId>
-            <artifactId>jakarta.servlet-api</artifactId>
-            <scope>test</scope>
-            <optional>true</optional>
-        </dependency>
-    </dependencies>
+            <dependencies>
+                <dependency>
+                    <groupId>org.glassfish.main.featuresets</groupId>
+                    <artifactId>web</artifactId>
+                    <version>${project.version}</version>
+                    <type>pom</type>
+                    <optional>true</optional>
+                </dependency>
+                <dependency>
+                    <groupId>org.glassfish.main.extras</groupId>
+                    <artifactId>glassfish-embedded-shell</artifactId>
+                    <version>${project.version}</version>
+                    <optional>true</optional>
+                </dependency>
+                <dependency>
+                    <groupId>org.glassfish.main.extras</groupId>
+                    <artifactId>glassfish-embedded-static-shell</artifactId>
+                    <version>${project.version}</version>
+                    <optional>true</optional>
+                </dependency>
+                <dependency>
+                    <groupId>org.glassfish.main.distributions</groupId>
+                    <artifactId>glassfish-common</artifactId>
+                    <version>${project.version}</version>
+                    <type>zip</type>
+                    <optional>true</optional>
+                </dependency>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.glassfish.build</groupId>
-                <artifactId>glassfishbuild-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>create-domain</id>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <phase>process-resources</phase>
-                    </execution>
-                </executions>
-            </plugin>
+                <dependency>
+                    <groupId>jakarta.servlet</groupId>
+                    <artifactId>jakarta.servlet-api</artifactId>
+                    <scope>test</scope>
+                    <optional>true</optional>
+                </dependency>
+            </dependencies>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.glassfish.build</groupId>
+                        <artifactId>glassfishbuild-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>create-domain</id>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <phase>process-resources</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
             
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>do stuff</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <macrodef name="jarupdate">
-                                    <attribute name="basedir"/> 
-                                    <attribute name="includes"/>
-                                    <attribute name="destfile"/>
-                                    <sequential>
-                                        <zip destfile="@{destfile}.tmp">
-                                            <zipfileset src="@{destfile}" excludes="@{includes}"/>
-                                        </zip>
-                                        <move file="@{destfile}.tmp" tofile="@{destfile}" />
-                                        <zip update="true" basedir="@{basedir}" includes="@{includes}" destfile="@{destfile}" />
-                                    </sequential>
-                                </macrodef>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>do stuff</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <macrodef name="jarupdate">
+                                            <attribute name="basedir"/>
+                                            <attribute name="includes"/>
+                                            <attribute name="destfile"/>
+                                            <sequential>
+                                                <zip destfile="@{destfile}.tmp">
+                                                    <zipfileset src="@{destfile}" excludes="@{includes}"/>
+                                                </zip>
+                                                <move file="@{destfile}.tmp" tofile="@{destfile}" />
+                                                <zip update="true" basedir="@{basedir}" includes="@{includes}" destfile="@{destfile}" />
+                                            </sequential>
+                                        </macrodef>
                             
-                                <jarupdate 
-                                    basedir="${patches}/jersey-hk2" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/jersey-hk2.jar"
-                                />
-                            </target>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+                                        <jarupdate
+                                            basedir="${patches}/jersey-hk2" includes="META-INF/MANIFEST.MF"
+                                            destfile="${glassfish.modules}/jersey-hk2.jar"
+                                        />
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
 
-            <plugin>
-                <groupId>org.glassfish.build</groupId>
-                <artifactId>spec-version-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check-distribution</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+                    <plugin>
+                        <groupId>org.glassfish.build</groupId>
+                        <artifactId>spec-version-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>check-distribution</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>noweb</id>
+        </profile>
+    </profiles>
 </project>

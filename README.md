@@ -32,6 +32,13 @@ The Zip distributions can be found on following paths:
 * `mvn clean install -Pfast` - Building all distribution artifacts, running just unit tests, QA and integration tests excluded. Typical time: 3 minutes.
 * `mvn clean install -Pfastest` - Building all distribution artifacts, excluded all QA and testing. Typical time: 1.5 minutes.
 
+You can also skip building specific distributions with the following profiles:
+
+* `noextras` profile - skips building extra artifacts, e.g. GlassFish Embedded artifacts
+* `noweb` profile - skips building GlassFish Server Web distribution
+
+For example, the following command will build only the GlassFish main distribution without QA and testing, with no Web and extra (GlassFish Embedded) artifacts: `mvn clean install -Pfastest,noweb,noextras`
+
 You can use also some maven optimizations, ie. using `-T4C` to allow parallel build.
 
 If you want to see more logs you can use the `-Dtest.logLevel=FINEST` option set to an appropriate log level.

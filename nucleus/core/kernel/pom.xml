@@ -231,7 +231,9 @@
                 <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
                     <instructions>
+                        <!-- GlassfishRoleMapper is sometimes located via kernel's classloader' -->
                         <DynamicImport-Package>
+                            com.sun.enterprise.security.web.integration,
                             org.glassfish.flashlight.provider,
                             org.objectweb.asm,
                             org.objectweb.asm.commons

@@ -48,6 +48,7 @@ import org.glassfish.hk2.classmodel.reflect.Types;
 
 import static java.lang.Runtime.version;
 import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 import static java.util.zip.ZipFile.OPEN_READ;
 import static org.glassfish.web.loader.LogFacade.*;
@@ -278,7 +279,7 @@ public class ServletContainerInitializerUtil {
                             }
                         } catch (IOException ioex) {
                             String msg = MessageFormat.format(rb.getString(IO_ERROR), path);
-                            LOG.log(Level.SEVERE, msg, ioex);
+                            LOG.log(SEVERE, msg, ioex);
                             return null;
                         }
                     }

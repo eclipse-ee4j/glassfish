@@ -45,6 +45,9 @@ import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.Logger.Level.WARNING;
 import static java.util.concurrent.Executors.newScheduledThreadPool;
 import static java.util.zip.ZipFile.OPEN_READ;
+import static org.glassfish.web.loader.LogFacade.ILLEGAL_JAR_PATH;
+import static org.glassfish.web.loader.LogFacade.UNABLE_TO_CREATE;
+import static org.glassfish.web.loader.LogFacade.VALIDATION_ERROR_JAR_PATH;
 import static org.glassfish.web.loader.LogFacade.getString;
 
 /**
@@ -277,14 +280,14 @@ class JarFileManager implements Closeable {
             File resourceFile = new File(loaderDir, jarEntry.getName());
             try {
                 if (!resourceFile.getCanonicalPath().startsWith(pathPrefix)) {
-                    throw new IllegalArgumentException(getString(LogFacade.ILLEGAL_JAR_PATH, jarEntry.getName()));
+                    throw new IllegalArgumentException(getString(ILLEGAL_JAR_PATH, jarEntry.getName()));
                 }
             } catch (IOException ioe) {
                 throw new IllegalArgumentException(
-                    getString(LogFacade.VALIDATION_ERROR_JAR_PATH, jarEntry.getName()), ioe);
+                    getString(VALIDATION_ERROR_JAR_PATH, jarEntry.getName()), ioe);
             }
             if (!FileUtils.mkdirsMaybe(resourceFile.getParentFile())) {
-                LOG.log(WARNING, LogFacade.UNABLE_TO_CREATE, resourceFile.getParentFile());
+                LOG.log(WARNING, UNABLE_TO_CREATE, resourceFile.getParentFile());
             }
 
             try (InputStream is = jarFile.getInputStream(jarEntry);
@@ -353,5 +356,4 @@ class JarFileManager implements Closeable {
             return thread;
         }
     }
-
 }

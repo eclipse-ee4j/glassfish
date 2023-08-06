@@ -169,11 +169,12 @@ import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.ServletSecurity;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpUpgradeHandler;
+import org.glassfish.internal.api.WithDeploymentContext;
 
 /**
  * Class representing a web module for use by the Application Server.
  */
-public class WebModule extends PwcWebModule implements Context {
+public class WebModule extends PwcWebModule implements Context, WithDeploymentContext {
 
 
     private static final Logger logger = LogFacade.getLogger();
@@ -264,6 +265,11 @@ public class WebModule extends PwcWebModule implements Context {
         this.adHocPipeline.setBasic(new AdHocContextValve(this));
 
         notifyContainerListeners = false;
+    }
+
+    @Override
+    public DeploymentContext getDeploymentContext() {
+        return getWebModuleConfig().getDeploymentContext();
     }
 
     /**

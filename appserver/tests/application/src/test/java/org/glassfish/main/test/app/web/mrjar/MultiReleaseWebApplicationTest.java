@@ -63,7 +63,7 @@ public class MultiReleaseWebApplicationTest extends MultiReleaseTestBase{
             try {
                 Files.deleteIfExists(warFile.toPath());
             } catch (IOException e) {
-                LOG.log(WARNING, "An error occurred while delete file {0}", warFile.getAbsolutePath());
+                LOG.log(WARNING, "An error occurred while remove temporary file " + warFile.getAbsolutePath(), e);
             }
 
         }

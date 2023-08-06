@@ -250,14 +250,14 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
      */
     private boolean isApplicationEnabled(String appId) {
         if (appId == null) {
-            // we don't know the application name yet, it is starting.
-            return true;
+            return false;
         }
         Application app = applications.getApplication(appId);
         if (app != null) {
             return deployment.isAppEnabled(app);
         }
-        return false;
+        // we know the application name but don't have an application yet, it is starting.
+        return true;
     }
 
 

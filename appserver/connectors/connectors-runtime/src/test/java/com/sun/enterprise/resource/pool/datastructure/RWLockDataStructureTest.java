@@ -119,7 +119,7 @@ public class RWLockDataStructureTest {
         List<Future<Integer>> futures = threadPool.invokeAll(tasks);
         assertAll(
             () -> assertAll(futures.stream().map(f -> (Executable) f::get).collect(Collectors.toList())),
-            () -> assertThat(futures.stream().collect(Collectors.summingInt(this::getResult)), equalTo(taskCount)),
+            () -> assertThat(futures.stream().mapToInt(this::getResult).sum(), equalTo(taskCount)),
             () -> assertThat("Resources Size", dataStructure.getResourcesSize(), equalTo(taskCount)),
             () -> assertThat("Free List Size", dataStructure.getFreeListSize(), equalTo(taskCount))
         );
@@ -201,7 +201,7 @@ public class RWLockDataStructureTest {
 
         List<Future<ResourceHandle>> futures = threadPool.invokeAll(tasks);
         assertAll(
-            () -> assertAll(futures.stream().map(f -> (Executable) f::get).toList()),
+            () -> assertAll(futures.stream().map(f -> (Executable) f::get).collect(Collectors.toList())),
             () -> assertThat("Resources Size", dataStructure.getResourcesSize(), equalTo(RESOURCE_COUNT)),
             () -> assertThat("Free List Size", dataStructure.getFreeListSize(), equalTo(0))
         );

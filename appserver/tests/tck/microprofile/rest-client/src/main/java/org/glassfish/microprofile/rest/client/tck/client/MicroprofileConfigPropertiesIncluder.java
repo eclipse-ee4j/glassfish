@@ -16,18 +16,25 @@
 
 package org.glassfish.microprofile.rest.client.tck.client;
 
+import java.util.Optional;
+
 import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
 import org.jboss.arquillian.test.spi.TestClass;
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 import static java.lang.String.format;
 import static java.lang.System.Logger.Level.INFO;
+import static org.jboss.shrinkwrap.api.ArchivePath.SEPARATOR;
 
 public class MicroprofileConfigPropertiesIncluder implements ApplicationArchiveProcessor {
 
     private static final System.Logger LOG = System.getLogger(MicroprofileConfigPropertiesIncluder.class.getName());
+
+    private static final String MP_CONFIG_PROPERTIES_PATH =
+            format("WEB-INF%sclasses%sMETA-INF%smicroprofile-config.properties", SEPARATOR, SEPARATOR, SEPARATOR);
 
     @Override
     public void process(Archive<?> archive, TestClass testClass) {
@@ -37,7 +44,19 @@ public class MicroprofileConfigPropertiesIncluder implements ApplicationArchiveP
             return;
         }
         final WebArchive webArchive = (WebArchive) archive;
-        webArchive.addAsManifestResource(EmptyAsset.INSTANCE, "microprofile-config.properties");
-        LOG.log(INFO, () -> format("Adding microprofile-config.properties to archive [%s]", archive.getName()));
+        Optional<Node> node = findMPConfigProperties(webArchive);
+        if (node.isEmpty()) {
+            webArchive.add(EmptyAsset.INSTANCE, MP_CONFIG_PROPERTIES_PATH);
+            LOG.log(INFO, () -> format("Adding microprofile-config.properties to archive [%s]", webArchive.getName()));
+        }
+    }
+
+    private static Optional<Node> findMPConfigProperties(WebArchive archive) {
+        final Node node = archive.get(MP_CONFIG_PROPERTIES_PATH);
+        if (node != null) {
+            LOG.log(INFO, () -> format("Discovered microprofile-config.properties at path [%s]", node.getPath()));
+            return Optional.of(node);
+        }
+        return Optional.empty();
     }
 }

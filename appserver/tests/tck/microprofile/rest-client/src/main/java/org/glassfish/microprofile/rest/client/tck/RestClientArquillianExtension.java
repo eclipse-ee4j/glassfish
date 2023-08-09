@@ -16,16 +16,28 @@
 
 package org.glassfish.microprofile.rest.client.tck;
 
+import org.glassfish.microprofile.rest.client.tck.client.BeansXmlTransformer;
 import org.glassfish.microprofile.rest.client.tck.client.MicroprofileConfigPropertiesIncluder;
 import org.glassfish.microprofile.rest.client.tck.client.WireMockLibraryIncluder;
 import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
 import org.jboss.arquillian.core.spi.LoadableExtension;
 
+import static java.lang.System.Logger.Level.INFO;
+
 public class RestClientArquillianExtension implements LoadableExtension {
+
+    private static final System.Logger LOG = System.getLogger(RestClientArquillianExtension.class.getName());
 
     @Override
     public void register(ExtensionBuilder extensionBuilder) {
+
+        LOG.log(INFO, "Client Arquillian extension registered");
+
+        extensionBuilder.service(ApplicationArchiveProcessor.class, BeansXmlTransformer.class);
         extensionBuilder.service(ApplicationArchiveProcessor.class, MicroprofileConfigPropertiesIncluder.class);
         extensionBuilder.service(ApplicationArchiveProcessor.class, WireMockLibraryIncluder.class);
+
+        // Register class as an Arquillian event observer
+        extensionBuilder.observer(BeansXmlTransformer.class);
     }
 }

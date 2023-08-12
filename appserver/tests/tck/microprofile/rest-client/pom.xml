@@ -73,7 +73,7 @@
             <plugin>
                 <groupId>uk.co.automatictester</groupId>
                 <artifactId>wiremock-maven-plugin</artifactId>
-                <version>7.2.0</version>
+                <version>7.3.0</version>
                 <configuration>
                     <dir>${project.build.directory}/classes</dir>
                     <params>--port=8765 --verbose</params>
@@ -94,6 +94,13 @@
                         </goals>
                     </execution>
                 </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.commons</groupId>
+                        <artifactId>commons-lang3</artifactId>
+                        <version>3.13.0</version>
+                    </dependency>
+                </dependencies>
             </plugin>
 
             <plugin>

@@ -73,9 +73,9 @@
 
         <!-- Arquillian -->
         <dependency>
-            <groupId>org.jboss.arquillian.container</groupId>
-            <artifactId>arquillian-glassfish-managed-6</artifactId>
-            <version>1.0.0.Alpha1</version>
+            <groupId>org.omnifaces.arquillian</groupId>
+            <artifactId>arquillian-glassfish-server-managed</artifactId>
+            <version>1.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>

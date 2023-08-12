@@ -52,8 +52,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.microprofile.config</groupId>
-            <artifactId>microprofile-config-api</artifactId>
+            <groupId>jakarta.interceptor</groupId>
+            <artifactId>jakarta.interceptor-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -117,8 +117,6 @@
                     <systemPropertyVariables>
                         <!-- A workaround for the ConfigKeyForMultipleInterfacesTest -->
                         <org.omnifaces.arquillian.prependDeploySequence>true</org.omnifaces.arquillian.prependDeploySequence>
-                        <glassfish.home>${glassfish.home}</glassfish.home>
-                        <glassfish.maxHeapSize>2048m</glassfish.maxHeapSize>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

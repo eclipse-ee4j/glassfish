@@ -52,6 +52,11 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>org.jboss.weld</groupId>
+                <artifactId>weld-core-impl</artifactId>
+                <version>${weld.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -62,13 +67,6 @@
             <version>${glassfish.version}</version>
             <type>zip</type>
             <scope>test</scope>
-        </dependency>
-
-        <!-- Required dependencies for Arquillian deployments -->
-        <dependency>
-            <groupId>org.jboss.weld</groupId>
-            <artifactId>weld-core-impl</artifactId>
-            <version>${weld.version}</version>
         </dependency>
 
         <!-- Arquillian -->

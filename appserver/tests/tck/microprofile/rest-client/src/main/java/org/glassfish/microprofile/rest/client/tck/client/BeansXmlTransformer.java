@@ -25,7 +25,6 @@ import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArch
 import org.jboss.arquillian.core.api.annotation.Observes;
 import org.jboss.arquillian.test.spi.TestClass;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.api.asset.UrlAsset;
@@ -42,12 +41,9 @@ public class BeansXmlTransformer implements ApplicationArchiveProcessor {
 
     private static final System.Logger LOG = System.getLogger(BeansXmlTransformer.class.getName());
 
-    private static final String LIB_DIR_PATH = format("WEB-INF%slib", ArchivePath.SEPARATOR);
+    private static final String LIB_DIR_PATH = "/WEB-INF/lib";
 
-    private static final String[] BEANS_XML_PATHS = {
-        format("/META-INF%sbeans.xml", ArchivePath.SEPARATOR),
-        format("/WEB-INF%sbeans.xml", ArchivePath.SEPARATOR),
-    };
+    private static final String[] BEANS_XML_PATHS = {"/META-INF/beans.xml", "/WEB-INF/beans.xml"};
 
     private final URL beansXmlResource;
 

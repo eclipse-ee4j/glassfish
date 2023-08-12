@@ -27,14 +27,12 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 import static java.lang.String.format;
 import static java.lang.System.Logger.Level.INFO;
-import static org.jboss.shrinkwrap.api.ArchivePath.SEPARATOR;
 
 public class MicroprofileConfigPropertiesIncluder implements ApplicationArchiveProcessor {
 
     private static final System.Logger LOG = System.getLogger(MicroprofileConfigPropertiesIncluder.class.getName());
 
-    private static final String MP_CONFIG_PROPERTIES_PATH =
-            format("WEB-INF%sclasses%sMETA-INF%smicroprofile-config.properties", SEPARATOR, SEPARATOR, SEPARATOR);
+    private static final String MP_CONFIG_PROPERTIES_PATH = "/WEB-INF/classes/META-INF/microprofile-config.properties";
 
     @Override
     public void process(Archive<?> archive, TestClass testClass) {

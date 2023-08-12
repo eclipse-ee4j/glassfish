@@ -23,13 +23,6 @@
         <packages>
             <package name="org.eclipse.microprofile.rest.client.tck.*" />
         </packages>
-        <classes>
-            <class name="org.eclipse.microprofile.rest.client.tck.cditests.ConfigKeyForMultipleInterfacesTest">
-                <methods>
-                    <exclude name="testConfigKeyUsedForUri" />
-                </methods>
-            </class>
-        </classes>
     </test>
 
 </suite>

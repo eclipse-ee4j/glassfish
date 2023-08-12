@@ -115,6 +115,8 @@
 
                     <!-- System Properties -->
                     <systemPropertyVariables>
+                        <!-- A workaround for the ConfigKeyForMultipleInterfacesTest -->
+                        <org.omnifaces.arquillian.prependDeploySequence>true</org.omnifaces.arquillian.prependDeploySequence>
                         <glassfish.home>${glassfish.home}</glassfish.home>
                         <glassfish.maxHeapSize>2048m</glassfish.maxHeapSize>
                     </systemPropertyVariables>

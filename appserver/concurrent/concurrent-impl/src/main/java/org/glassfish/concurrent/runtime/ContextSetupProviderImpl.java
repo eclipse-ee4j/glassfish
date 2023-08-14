@@ -149,11 +149,18 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
             resetSecurityContext = SecurityContext.getCurrent();
             SecurityContext.setCurrent(invocationCtx.getSecurityContext());
         }
-        if (invocation != null) {
-            // Each invocation needs a ResourceTableKey that returns a unique hashCode for TransactionManager
-            invocation.setResourceTableKey(new PairKey(invocation.getInstance(), Thread.currentThread()));
-            invocationManager.preInvoke(invocation);
+
+        if (setup.isUnchanged(JNDI) || (!setup.isPropagated(JNDI) && !setup.isClear(JNDI))) {
+            ComponentInvocation currentInvocation = invocationManager.getCurrentInvocation();
+            if (currentInvocation != null) {
+                invocation = currentInvocation;
+            }
         }
+
+        // Each invocation needs a ResourceTableKey that returns a unique hashCode for TransactionManager
+        invocation.setResourceTableKey(new PairKey(invocation.getInstance(), Thread.currentThread()));
+        invocationManager.preInvoke(invocation);
+
         // Ensure that there is no existing transaction in the current thread
         if (transactionManager != null && setup.isClear(StandardContextType.WorkArea)) {
             transactionManager.clearThreadTx();
@@ -237,10 +244,7 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
         if (setup.isClear(JNDI)) {
             return new ComponentInvocation();
         }
-        if (setup.isPropagated(JNDI)) {
-            return cloneComponentInvocation(currentInvocation);
-        }
-        return null;
+        return cloneComponentInvocation(currentInvocation);
     }
 
 

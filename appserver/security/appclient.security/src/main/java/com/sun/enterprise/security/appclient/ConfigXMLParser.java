@@ -66,7 +66,7 @@ public class ConfigXMLParser implements ConfigParser {
     private List<MessageSecurityConfig> msgSecConfigs = null;
     private static final String ACC_XML = "glassfish-acc.xml.url";
 
-    public ConfigXMLParser() throws IOException {
+    public ConfigXMLParser() {
     }
 
     public void initialize(List<MessageSecurityConfig> msgConfigs) throws IOException {
@@ -81,7 +81,7 @@ public class ConfigXMLParser implements ConfigParser {
         String intercept = null;
 
         List<MessageSecurityConfig> msgConfigs = this.msgSecConfigs;
-        assert (msgConfigs != null);
+
         for (MessageSecurityConfig config : msgConfigs) {
             intercept = parseInterceptEntry(config, newConfig);
             List<ProviderConfig> pConfigs = config.getProviderConfig();
@@ -111,8 +111,8 @@ public class ConfigXMLParser implements ConfigParser {
         defaultServerID = clientMsgSecConfig.getDefaultProvider();
         defaultClientID = clientMsgSecConfig.getDefaultClientProvider();
 
-        LOG.log(Level.DEBUG, "Intercept Entry:\n intercept: {0}\n defaultServerID: {1}\n defaultClientID: {2}",
-                intercept, defaultServerID, defaultClientID);
+        LOG.log(Level.DEBUG, "Intercept Entry:\n intercept: {0}\n defaultServerID: {1}\n defaultClientID: {2}", intercept, defaultServerID,
+                defaultClientID);
 
         if (defaultServerID != null || defaultClientID != null) {
             layersWithDefault.add(intercept);
@@ -147,21 +147,18 @@ public class ConfigXMLParser implements ConfigParser {
             } catch (IllegalStateException ee) {
                 // log warning and give the provider a chance to
                 // interpret value itself.
-                LOG.log(Level.WARNING,
-                        "SEC1200: Unable to expand provider property value, unexpanded value passed to provider.");
+                LOG.log(Level.WARNING, "SEC1200: Unable to expand provider property value, unexpanded value passed to provider.");
                 options.put(prop.getName(), prop.getValue());
             }
         }
 
         LOG.log(Level.DEBUG,
-                "ID Entry: \n module class: {0}\n id: {1}\n type: {2}\n"
-                    + " request policy: {3}\n response policy: {4}\n options: {5}",
+                "ID Entry: \n module class: {0}\n id: {1}\n type: {2}\n" + " request policy: {3}\n response policy: {4}\n options: {5}",
                 moduleClass, id, type, requestPolicy, responsePolicy, options);
 
         // create ID entry
 
-        AuthModuleConfig idEntry = new AuthModuleConfig(type, moduleClass, requestPolicy, responsePolicy,
-                options);
+        AuthModuleConfig idEntry = new AuthModuleConfig(type, moduleClass, requestPolicy, responsePolicy, options);
 
         AuthModulesLayerConfig intEntry = (AuthModulesLayerConfig) newConfig.get(intercept);
         if (intEntry == null) {
@@ -224,6 +221,7 @@ public class ConfigXMLParser implements ConfigParser {
     @Override
     public void initialize(Object config) throws IOException {
         String sun_acc = System.getProperty(ACC_XML, "glassfish-acc.xml");
+
         List<MessageSecurityConfig> msgconfigs = null;
         if (Globals.getDefaultHabitat() == null && sun_acc != null && new File(sun_acc).exists()) {
             try (InputStream is = new FileInputStream(sun_acc)) {
@@ -236,7 +234,6 @@ public class ConfigXMLParser implements ConfigParser {
             }
         } else {
             Util util = Util.getInstance();
-            assert (util != null);
             msgconfigs = (List<MessageSecurityConfig>) util.getAppClientMsgSecConfigs();
         }
 

@@ -17,19 +17,9 @@
 
 package com.sun.enterprise.security.jmac;
 
-import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
-import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.WebServiceEndpoint;
-import com.sun.enterprise.deployment.runtime.common.MessageDescriptor;
-import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
-import com.sun.enterprise.deployment.runtime.common.MessageSecurityDescriptor;
-import com.sun.enterprise.deployment.runtime.common.ProtectionDescriptor;
-import com.sun.enterprise.deployment.runtime.web.SunWebApp;
-import com.sun.enterprise.security.common.AppservAccessController;
-
-import jakarta.security.auth.message.MessagePolicy;
-import jakarta.security.auth.message.MessagePolicy.ProtectionPolicy;
-import jakarta.security.auth.message.MessagePolicy.TargetPolicy;
+import static com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor.AUTH_LAYER;
+import static com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor.PROVIDER_ID;
+import static org.omnifaces.eleos.config.helper.HttpServletConstants.SOAP;
 
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
@@ -41,10 +31,20 @@ import javax.security.auth.callback.CallbackHandler;
 
 import org.glassfish.internal.api.Globals;
 
-import static org.omnifaces.eleos.config.helper.HttpServletConstants.SOAP;
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.WebServiceEndpoint;
+import com.sun.enterprise.deployment.runtime.common.MessageDescriptor;
+import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
+import com.sun.enterprise.deployment.runtime.common.MessageSecurityDescriptor;
+import com.sun.enterprise.deployment.runtime.common.ProtectionDescriptor;
+import com.sun.enterprise.deployment.runtime.web.SunWebApp;
+import com.sun.enterprise.security.common.AppservAccessController;
+
+import jakarta.security.auth.message.MessagePolicy;
 
 /**
- * Utility class for JMAC appserver implementation.
+ * Utility class for Jakarta Authentication appserver implementation.
  */
 public class AuthMessagePolicy {
 
@@ -60,30 +60,29 @@ public class AuthMessagePolicy {
     private AuthMessagePolicy() {
     }
 
-    public static MessageSecurityBindingDescriptor getMessageSecurityBinding(String layer, Map properties) {
-
+    public static MessageSecurityBindingDescriptor getMessageSecurityBinding(String layer, Map<String, Object> properties) {
         if (properties == null) {
             return null;
         }
 
         MessageSecurityBindingDescriptor binding = null;
 
-        WebServiceEndpoint e = (WebServiceEndpoint) properties.get("SERVICE_ENDPOINT");
+        WebServiceEndpoint webServiceEndpoint = (WebServiceEndpoint) properties.get("SERVICE_ENDPOINT");
 
-        if (e != null) {
-            binding = e.getMessageSecurityBinding();
+        if (webServiceEndpoint != null) {
+            binding = webServiceEndpoint.getMessageSecurityBinding();
         } else {
-            ServiceReferenceDescriptor s = (ServiceReferenceDescriptor) properties.get("SERVICE_REF");
-            if (s != null) {
+            ServiceReferenceDescriptor serviceReferenceDescriptor = (ServiceReferenceDescriptor) properties.get("SERVICE_REF");
+            if (serviceReferenceDescriptor != null) {
                 WebServicesDelegate delegate = Globals.get(WebServicesDelegate.class);
                 if (delegate != null) {
-                    binding = delegate.getBinding(s, properties);
+                    binding = delegate.getBinding(serviceReferenceDescriptor, properties);
                 }
             }
         }
 
         if (binding != null) {
-            String bindingLayer = binding.getAttributeValue(MessageSecurityBindingDescriptor.AUTH_LAYER);
+            String bindingLayer = binding.getValue(AUTH_LAYER);
             if (bindingLayer == null || layer.equals(bindingLayer)) {
                 return binding;
             }
@@ -99,28 +98,29 @@ public class AuthMessagePolicy {
             String recipient = pd.getAttributeValue(ProtectionDescriptor.AUTH_RECIPIENT);
             messagePolicy = org.omnifaces.eleos.config.helper.AuthMessagePolicy.getMessagePolicy(source, recipient);
         }
+
         return messagePolicy;
     }
 
     public static String getProviderID(MessageSecurityBindingDescriptor binding) {
-        String providerID = null;
-        if (binding != null) {
-            String layer = binding.getAttributeValue(MessageSecurityBindingDescriptor.AUTH_LAYER);
-            if (SOAP.equals(layer)) {
-                providerID = binding.getAttributeValue(MessageSecurityBindingDescriptor.PROVIDER_ID);
-            }
+        if (binding == null) {
+            return null;
         }
-        return providerID;
+
+        if (!SOAP.equals(binding.getValue(AUTH_LAYER))) {
+            return null;
+        }
+
+        return binding.getValue(PROVIDER_ID);
     }
 
     public static MessagePolicy[] getSOAPPolicies(MessageSecurityBindingDescriptor binding, String operation, boolean onePolicy) {
-
         MessagePolicy requestPolicy = null;
         MessagePolicy responsePolicy = null;
 
         if (binding != null) {
             ArrayList<MessageSecurityDescriptor> msgSecDescs = null;
-            String layer = binding.getAttributeValue(MessageSecurityBindingDescriptor.AUTH_LAYER);
+            String layer = binding.getValue(AUTH_LAYER);
             if (SOAP.equals(layer)) {
                 msgSecDescs = binding.getMessageSecurityDescriptors();
             }
@@ -166,7 +166,7 @@ public class AuthMessagePolicy {
         boolean onePolicy = true;
         List<MessageSecurityDescriptor> msgSecDescs = null;
         if (binding != null) {
-            String layer = binding.getAttributeValue(MessageSecurityBindingDescriptor.AUTH_LAYER);
+            String layer = binding.getAttributeValue(AUTH_LAYER);
             if (SOAP.equals(layer)) {
                 msgSecDescs = binding.getMessageSecurityDescriptors();
             }

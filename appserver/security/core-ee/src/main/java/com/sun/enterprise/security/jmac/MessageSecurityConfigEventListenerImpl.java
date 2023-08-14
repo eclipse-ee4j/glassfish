@@ -17,8 +17,9 @@
 
 package com.sun.enterprise.security.jmac;
 
+import static java.util.logging.Level.FINE;
+
 import java.beans.PropertyChangeEvent;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.StartupRunLevel;
@@ -55,61 +56,40 @@ public class MessageSecurityConfigEventListenerImpl implements ConfigListener {
     @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private SecurityService service;
 
-    public <T extends ConfigBeanProxy> NotProcessed handleUpdate(T instance) {
-        LOG.log(Level.FINE, "MessageSecurityConfigEventListenerImpl - handleUpdate called");
-        if (instance instanceof MessageSecurityConfig) {
-            // GFServerConfigProvider.loadConfigContext(service);
-            return null;
-        }
-        return new NotProcessed("unimplemented: unknown instance: " + instance.getClass().getName());
-    }
-
-    public <T extends ConfigBeanProxy> NotProcessed handleDelete(T instance) {
-        LOG.log(Level.FINE, "MessageSecurityConfigEventListenerImpl - handleDelete called");
-        if (instance instanceof MessageSecurityConfig) {
-            // GFServerConfigProvider.loadConfigContext(service);
-            return null;
-        }
-        return new NotProcessed("unimplemented: unknown instance: " + instance.getClass().getName());
-    }
-
-    public <T extends ConfigBeanProxy> NotProcessed handleCreate(T instance) {
-        LOG.log(Level.FINE, "MessageSecurityConfigEventListenerImpl - handleCreate called");
-        if (instance instanceof MessageSecurityConfig) {
-            // GFServerConfigProvider.loadConfigContext(service);
-            return null;
-        }
-        return new NotProcessed("unimplemented: unknown instance: " + instance.getClass().getName());
-    }
-
     @Override
     public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
-        Changed notificationTarget = new Changed() {
-
+        ConfigSupport.sortAndDispatch(events, new Changed() {
             @Override
             public <T extends ConfigBeanProxy> NotProcessed changed(TYPE type, Class<T> changedType, T changedInstance) {
                 switch (type) {
                     case ADD:
-                        if (LOG.isLoggable(Level.FINE)) {
-                            LOG.log(Level.FINE, "A new " + changedType.getName() + " was added: " + changedInstance);
-                        }
-                        return handleCreate(changedInstance);
+                        LOG.log(FINE, () -> "A new " + changedType.getName() + " was added: " + changedInstance);
+                        return handle(changedInstance);
+
                     case CHANGE:
-                        if (LOG.isLoggable(Level.FINE)) {
-                            LOG.fine("A " + changedType.getName() + " was changed: " + changedInstance);
-                        }
-                        return handleUpdate(changedInstance);
+                        LOG.log(FINE, () -> "A " + changedType.getName() + " was changed: " + changedInstance);
+                        return handle(changedInstance);
+
                     case REMOVE:
-                        if (LOG.isLoggable(Level.FINE)) {
-                            LOG.fine("A " + changedType.getName() + " was removed: " + changedInstance);
-                        }
-                        return handleDelete(changedInstance);
+                        LOG.log(FINE, () -> "A " + changedType.getName() + " was removed: " + changedInstance);
+                        return handle(changedInstance);
+
                     default:
                         return null;
                 }
             }
-        };
-        ConfigSupport.sortAndDispatch(events, notificationTarget, LOG);
+        }, LOG);
+
         return null;
     }
+
+    private <T extends ConfigBeanProxy> NotProcessed handle(T instance) {
+        if (instance instanceof MessageSecurityConfig) {
+            // GFServerConfigProvider.loadConfigContext(service);
+            return null;
+        }
+        return new NotProcessed("unimplemented: unknown instance: " + instance.getClass().getName());
+    }
+
+
 }

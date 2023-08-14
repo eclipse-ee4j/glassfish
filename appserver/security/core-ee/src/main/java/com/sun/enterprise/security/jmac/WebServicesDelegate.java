@@ -29,8 +29,10 @@ import com.sun.enterprise.security.jauth.AuthParam;
 import jakarta.security.auth.message.MessageInfo;
 
 /**
- * A Delegate Interface for handling WebServices Specific Security and JSR 196 Providers This insulates the GF
- * Web-Bundle from any WebServices Dependencies.
+ * A Delegate Interface for handling WebServices Specific Security and Jakarta Authentication config provider.
+ *
+ * <p>
+ * This insulates the GlassFish Web-Bundle from any WebServices Dependencies.
  *
  * @author kumar.jayanti
  */

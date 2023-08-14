@@ -40,6 +40,7 @@ import com.sun.enterprise.security.integration.RealmInitializer;
 import com.sun.enterprise.security.jmac.AuthMessagePolicy;
 import com.sun.enterprise.security.jmac.ConfigDomainParser;
 import com.sun.enterprise.security.jmac.callback.ContainerCallbackHandler;
+import com.sun.enterprise.security.jmac.callback.ServerContainerCallbackHandler;
 
 import org.omnifaces.eleos.config.helper.Caller;
 import org.omnifaces.eleos.config.helper.CallerPrincipal;
@@ -1312,7 +1313,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
      * This must be invoked after virtualServer is set.
      * @throws IOException
      */
-    private BaseAuthenticationService getAuthenticationService(final ServletContext servletContext) throws IOException {
+    private BaseAuthenticationService createAuthenticationService(final ServletContext servletContext) throws IOException {
         Map<String, Object> properties = new HashMap<>();
 
         String policyContextId = WebSecurityManager.getContextID(webBundleDescriptor);
@@ -1320,6 +1321,9 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
            properties.put(POLICY_CONTEXT, policyContextId);
         }
 
+        // "authModuleId" (HttpServletSecurityProvider) is a GlassFish proprietary mechanism where a
+        // Jakarta Authentication module gets assigned an ID in the proprietary config of GlassFish (domain.xml).
+        // This ID is then used in glassfish-web.xml to indicate that a war wants to use that authentication module.
         String authModuleId =
             AuthMessagePolicy.getProviderID(
                 AuthMessagePolicy.getSunWebApp(Map.of(
@@ -1335,7 +1339,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
             appContextId,
             properties,
             new ConfigDomainParser(),
-            new ContainerCallbackHandler());
+            new ServerContainerCallbackHandler(realmName));
     }
 
     /**
@@ -1865,10 +1869,17 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
         }
 
         try {
-            this.authenticationService = getAuthenticationService(servletContext);
+            this.authenticationService = createAuthenticationService(servletContext);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+
+    /**
+     * @return the authenticationService
+     */
+    public BaseAuthenticationService getAuthenticationService() {
+        return authenticationService;
     }
 
     @Override

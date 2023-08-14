@@ -29,6 +29,9 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 
 import org.omnifaces.eleos.config.helper.BaseCallbackHandler;
 
+import com.sun.enterprise.security.auth.login.LoginContextDriver;
+import com.sun.enterprise.security.auth.login.common.LoginException;
+
 import jakarta.security.auth.message.callback.CallerPrincipalCallback;
 import jakarta.security.auth.message.callback.CertStoreCallback;
 import jakarta.security.auth.message.callback.GroupPrincipalCallback;
@@ -43,7 +46,15 @@ import jakarta.security.auth.message.callback.TrustStoreCallback;
  * @author Harpreet Singh
  * @author Shing Wai Chan
  */
-final class ServerContainerCallbackHandler extends BaseCallbackHandler {
+final public class ServerContainerCallbackHandler extends BaseCallbackHandler {
+
+    private String realmName;
+
+    public ServerContainerCallbackHandler() {}
+
+    public ServerContainerCallbackHandler(String realmName) {
+        this.realmName = realmName;
+    }
 
     @Override
     protected void handleSupportedCallbacks(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
@@ -63,5 +74,30 @@ final class ServerContainerCallbackHandler extends BaseCallbackHandler {
             isSupported = true;
         }
         return isSupported;
+    }
+
+    @Override
+    protected void processPasswordValidation(PasswordValidationCallback pwdCallback) {
+        String username = pwdCallback.getUsername();
+        char[] password = pwdCallback.getPassword();
+
+        try {
+            LoginContextDriver.jmacLogin(pwdCallback.getSubject(), username, password, realmName);
+            ditchPassword(password);
+
+            pwdCallback.setResult(true);
+        } catch (LoginException le) {
+            // Login failed
+            pwdCallback.setResult(false);
+        }
+    }
+
+    private void ditchPassword(char[] passwd) {
+     // Explicitly ditch the password
+        if (passwd != null) {
+            for (int i = 0; i < passwd.length; i++) {
+                passwd[i] = ' ';
+            }
+        }
     }
 }

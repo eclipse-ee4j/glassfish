@@ -62,7 +62,7 @@ public class ConfigDomainParser implements ConfigParser {
     private Map<String, AuthModulesLayerConfig>  configMap = new HashMap<>();
     private Set<String> layersWithDefault = new HashSet<>();
 
-    public ConfigDomainParser() throws IOException {
+    public ConfigDomainParser() {
     }
 
     @Override
@@ -100,18 +100,13 @@ public class ConfigDomainParser implements ConfigParser {
                 // single message-security-config for each auth-layer
                 // auth-layer is synonymous with intercept
 
-                String intercept = parseInterceptEntry(next, newConfig);
+                String authLayer = parseInterceptEntry(next, newConfig);
 
-                List<ProviderConfig> provList = next.getProviderConfig();
+                List<ProviderConfig> providers = next.getProviderConfig();
 
-                if (provList != null) {
-
-                    Iterator<ProviderConfig> pit = provList.iterator();
-
-                    while (pit.hasNext()) {
-
-                        ProviderConfig provider = pit.next();
-                        parseIDEntry(provider, newConfig, intercept);
+                if (providers != null) {
+                    for (ProviderConfig provider : providers) {
+                        parseIDEntry(provider, newConfig, authLayer);
                     }
                 }
             }
@@ -120,30 +115,30 @@ public class ConfigDomainParser implements ConfigParser {
 
 
 
-    private String parseInterceptEntry(MessageSecurityConfig msgConfig, Map newConfig) throws IOException {
-        String intercept = msgConfig.getAuthLayer();
+    private String parseInterceptEntry(MessageSecurityConfig msgConfig, Map<String, Object> newConfig) throws IOException {
+        String authLayer = msgConfig.getAuthLayer();
         String defaultServerID = msgConfig.getDefaultProvider();
         String defaultClientID = msgConfig.getDefaultClientProvider();
 
         if (_logger.isLoggable(Level.FINE)) {
-            _logger.fine("Intercept Entry: " + "\n    intercept: " + intercept + "\n    defaultServerID: " + defaultServerID
+            _logger.fine("Intercept Entry: " + "\n    intercept: " + authLayer + "\n    defaultServerID: " + defaultServerID
                     + "\n    defaultClientID:  " + defaultClientID);
         }
 
         if (defaultServerID != null || defaultClientID != null) {
-            layersWithDefault.add(intercept);
+            layersWithDefault.add(authLayer);
         }
 
-        AuthModulesLayerConfig intEntry = (AuthModulesLayerConfig) newConfig.get(intercept);
-        if (intEntry != null) {
+        AuthModulesLayerConfig authModulesLayerConfig = (AuthModulesLayerConfig) newConfig.get(authLayer);
+        if (authModulesLayerConfig != null) {
             throw new IOException("found multiple MessageSecurityConfig " + "entries with the same auth-layer");
         }
 
         // Create new intercept entry
-        intEntry = new AuthModulesLayerConfig(defaultClientID, defaultServerID, null);
-        newConfig.put(intercept, intEntry);
+        authModulesLayerConfig = new AuthModulesLayerConfig(defaultClientID, defaultServerID, null);
+        newConfig.put(authLayer, authModulesLayerConfig);
 
-        return intercept;
+        return authLayer;
     }
 
     private void parseIDEntry(ProviderConfig pConfig, Map newConfig, String intercept) throws IOException {

@@ -19,6 +19,8 @@ package com.sun.enterprise.security.jmac.provider.config;
 import com.sun.xml.ws.api.server.WSEndpoint;
 import java.net.URL;
 import java.util.Map;
+import java.util.function.Function;
+
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
 import jakarta.security.auth.message.AuthException;
@@ -29,10 +31,6 @@ import jakarta.security.auth.message.config.ClientAuthContext;
 import jakarta.security.auth.message.config.ServerAuthConfig;
 import jakarta.security.auth.message.config.ServerAuthContext;
 import jakarta.xml.ws.WebServiceException;
-//import com.sun.ejb.Container;
-//import com.sun.ejb.Invocation;
-//import com.sun.enterprise.InvocationManager;
-//import com.sun.enterprise.Switch;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
@@ -40,23 +38,24 @@ import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.WebServiceEndpoint;
 import org.glassfish.deployment.common.ModuleDescriptor;
-import org.omnifaces.eleos.config.factory.ConfigParser;
+import org.glassfish.internal.api.Globals;
 import org.omnifaces.eleos.config.module.configprovider.GFServerConfigProvider;
 import org.omnifaces.eleos.services.BaseAuthenticationService;
 
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
 
 import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
-//import com.sun.enterprise.security.audit.AuditManagerFactory;
 import com.sun.enterprise.security.SecurityContext;
 import com.sun.enterprise.security.SecurityServicesUtil;
+import com.sun.enterprise.security.appclient.ConfigXMLParser;
 import com.sun.enterprise.security.audit.AuditManager;
 import com.sun.enterprise.security.ee.authorize.EJBPolicyContextDelegate;
 import com.sun.enterprise.security.common.AppservAccessController;
 import com.sun.enterprise.security.common.ClientSecurityContext;
 import com.sun.enterprise.security.jmac.AuthMessagePolicy;
+import com.sun.enterprise.security.jmac.ConfigDomainParser;
+import com.sun.enterprise.security.jmac.WebServicesDelegate;
 import com.sun.enterprise.security.webservices.PipeConstants;
-//TODO: replace the one below with the one above later
 import com.sun.enterprise.security.jmac.config.HandlerContext;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.io.FileUtils;
@@ -70,170 +69,182 @@ import com.sun.xml.ws.api.WSBinding;
 import com.sun.xml.ws.api.message.Message;
 
 import com.sun.xml.ws.api.model.JavaMethod;
+
+import static com.sun.enterprise.security.webservices.PipeConstants.BINDING;
+import static com.sun.enterprise.security.webservices.PipeConstants.CLIENT_SUBJECT;
+import static com.sun.enterprise.security.webservices.PipeConstants.ENDPOINT;
+import static com.sun.enterprise.security.webservices.PipeConstants.ENDPOINT_ADDRESS;
+import static com.sun.enterprise.security.webservices.PipeConstants.POLICY;
+import static com.sun.enterprise.security.webservices.PipeConstants.SEI_MODEL;
+import static com.sun.enterprise.security.webservices.PipeConstants.SERVICE_ENDPOINT;
+import static com.sun.enterprise.security.webservices.PipeConstants.SERVICE_REF;
+import static com.sun.enterprise.security.webservices.PipeConstants.SOAP_LAYER;
+import static com.sun.enterprise.security.webservices.PipeConstants.WSDL_MODEL;
+import static jakarta.xml.ws.handler.MessageContext.SERVLET_REQUEST;
+
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.xml.bind.UnmarshalException;
-import jakarta.xml.ws.handler.MessageContext;
+
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 
-
 public class PipeHelper extends BaseAuthenticationService {
 
-    private AppServerAuditManager auditManager = null;
-    // AuditManagerFactory.getAuditManagerInstance();
+    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(PipeConstants.class);
 
-    protected static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(PipeConstants.class);
-
+    private AppServerAuditManager auditManager;
     private boolean isEjbEndpoint;
     private SEIModel seiModel;
     private SOAPVersion soapVersion;
-    private InvocationManager invManager = null;
-    private EJBPolicyContextDelegate ejbDelegate = null;
+    private InvocationManager invocationManager;
+    private EJBPolicyContextDelegate ejbDelegate;
 
-    public PipeHelper(String layer, Map map, CallbackHandler cbh) {
-        init(layer, getAppCtxt(map),map, cbh, null);
+    public PipeHelper(String layer, Map<String, Object> map, CallbackHandler callbackHandler) {
+        init(layer, getAppCtxt(map), map, callbackHandler, null);
 
         this.isEjbEndpoint = processSunDeploymentDescriptor();
-        this.seiModel = (SEIModel) map.get(PipeConstants.SEI_MODEL);
-        WSBinding binding = (WSBinding) map.get(PipeConstants.BINDING);
+        this.seiModel = (SEIModel) map.get(SEI_MODEL);
+
+        WSBinding binding = (WSBinding) map.get(BINDING);
         if (binding == null) {
-            WSEndpoint endPoint = (WSEndpoint) map.get(PipeConstants.ENDPOINT);
+            WSEndpoint<?> endPoint = (WSEndpoint<?>) map.get(ENDPOINT);
             if (endPoint != null) {
                 binding = endPoint.getBinding();
             }
         }
-        this.soapVersion = (binding != null) ? binding.getSOAPVersion() : SOAPVersion.SOAP_11;
-        AuditManager am = (SecurityServicesUtil.getInstance() != null)
-            ? SecurityServicesUtil.getInstance().getAuditManager()
-            : null;
-        auditManager = (am != null && (am instanceof AppServerAuditManager))
-            ? (AppServerAuditManager) am
-            : new AppServerAuditManager();// workaround for standalone clients where no habitat
-        invManager = (SecurityServicesUtil.getInstance() != null)
-            ? SecurityServicesUtil.getInstance().getHabitat().<InvocationManager> getService(InvocationManager.class)
-            : null;
+
+        this.soapVersion = binding != null
+                ? binding.getSOAPVersion()
+                : SOAPVersion.SOAP_11;
+
+        AuditManager auditManager = SecurityServicesUtil.getInstance() != null
+                ? SecurityServicesUtil.getInstance().getAuditManager()
+                : null;
+
+        this.auditManager = auditManager != null && auditManager instanceof AppServerAuditManager
+                ? (AppServerAuditManager) auditManager
+                : new AppServerAuditManager();// workaround for standalone clients where no habitat
+
+        this.invocationManager = SecurityServicesUtil.getInstance() != null
+                ? SecurityServicesUtil.getInstance().getHabitat().getService(InvocationManager.class)
+                : null;
 
         this.ejbDelegate = new EJBPolicyContextDelegate();
     }
 
-
     @Override
-    public ClientAuthContext getClientAuthContext(MessageInfo info, Subject s) throws AuthException {
-        ClientAuthConfig c = (ClientAuthConfig) getAuthConfig(false);
-        if (c != null) {
-            addModel(info, map);
-            return c.getAuthContext(c.getAuthContextID(info), s, map);
+    public ClientAuthContext getClientAuthContext(MessageInfo messageInfo, Subject subject) throws AuthException {
+        ClientAuthConfig clientAuthConfig = (ClientAuthConfig) getAuthConfig(false);
+        if (clientAuthConfig == null) {
+            return null;
         }
-        return null;
+
+        addModel(messageInfo, map);
+
+        return clientAuthConfig.getAuthContext(clientAuthConfig.getAuthContextID(messageInfo), subject, map);
     }
 
-
     @Override
-    public ServerAuthContext getServerAuthContext(MessageInfo info, Subject s) throws AuthException {
-        ServerAuthConfig c = (ServerAuthConfig) getAuthConfig(true);
-        if (c != null) {
-            addModel(info, map);
-            addPolicy(info, map);
-            return c.getAuthContext(c.getAuthContextID(info), s, map);
+    public ServerAuthContext getServerAuthContext(MessageInfo messageInfo, Subject subject) throws AuthException {
+        ServerAuthConfig serverAuthConfig = (ServerAuthConfig) getAuthConfig(true);
+        if (serverAuthConfig == null) {
+            return null;
         }
-        return null;
+
+        addModel(messageInfo, map);
+        addPolicy(messageInfo, map);
+
+        return serverAuthConfig.getAuthContext(serverAuthConfig.getAuthContextID(messageInfo), subject, map);
+    }
+
+    private static boolean isACC() {
+        return SecurityServicesUtil.getInstance() == null || SecurityServicesUtil.getInstance().isACC();
     }
 
     public static Subject getClientSubject() {
+        Subject subject = null;
 
-        Subject s = null;
-
-        if ((SecurityServicesUtil.getInstance() == null) || SecurityServicesUtil.getInstance().isACC()) {
-            ClientSecurityContext sc = ClientSecurityContext.getCurrent();
-            if (sc != null) {
-                s = sc.getSubject();
+        if (isACC()) {
+            ClientSecurityContext clientSecurityContext = ClientSecurityContext.getCurrent();
+            if (clientSecurityContext != null) {
+                subject = clientSecurityContext.getSubject();
             }
-            if (s == null) {
-                s = Subject.getSubject(AccessController.getContext());
+            if (subject == null) {
+                subject = Subject.getSubject(AccessController.getContext());
             }
         } else {
-            SecurityContext sc = SecurityContext.getCurrent();
-            if (sc != null && !sc.didServerGenerateCredentials()) {
-                // make sure we don't use default unauthenticated subject,
+            SecurityContext securityContext = SecurityContext.getCurrent();
+            if (securityContext != null && !securityContext.didServerGenerateCredentials()) {
+                // Make sure we don't use default unauthenticated subject,
                 // so that module cannot change this important (constant)
                 // subject.
-                s = sc.getSubject();
+                subject = securityContext.getSubject();
             }
         }
 
-        if (s == null) {
-            s = new Subject();
+        if (subject == null) {
+            subject = new Subject();
         }
 
-        return s;
+        return subject;
     }
 
-    public void getSessionToken(Map m,
-        MessageInfo info,
-        Subject s) throws AuthException {
-        ClientAuthConfig c = (ClientAuthConfig) getAuthConfig(false);
-        if (c != null) {
-            m.putAll(map);
-            addModel(info, map);
-            c.getAuthContext(c.getAuthContextID(info),s,m);
+    public void getSessionToken(Map<String, Object> properties, MessageInfo messageInfo, Subject subject) throws AuthException {
+        ClientAuthConfig clientAuthConfig = (ClientAuthConfig) getAuthConfig(false);
+        if (clientAuthConfig != null) {
+            properties.putAll(map);
+            addModel(messageInfo, map);
+            clientAuthConfig.getAuthContext(clientAuthConfig.getAuthContextID(messageInfo), subject, properties);
         }
     }
 
     public void authorize(Packet request) throws Exception {
+        // SecurityContext constructor should set initiator to unathenticated if Subject is null or empty
+        Subject subject = (Subject) request.invocationProperties.get(CLIENT_SUBJECT);
 
-        // SecurityContext constructor should set initiator to
-        // unathenticated if Subject is null or empty
-        Subject s = (Subject) request.invocationProperties.get(PipeConstants.CLIENT_SUBJECT);
-
-        if (s == null || (s.getPrincipals().isEmpty() && s.getPublicCredentials().isEmpty())) {
+        if (subject == null || (subject.getPrincipals().isEmpty() && subject.getPublicCredentials().isEmpty())) {
             SecurityContext.setUnauthenticatedContext();
         } else {
-            SecurityContext sC = new SecurityContext(s);
-            SecurityContext.setCurrent(sC);
+            SecurityContext.setCurrent(new SecurityContext(subject));
         }
 
-        // we should try to replace this endpoint specific
-        // authorization check with a generic web service message check
-        // and move the endpoint specific check down stream
+        // We should try to replace this endpoint specific authorisation check with a generic web service
+        // message check and move the endpoint specific check down stream
 
         if (isEjbEndpoint) {
-            if (invManager == null){
+            if (invocationManager == null) {
                 throw new RuntimeException(localStrings.getLocalString("enterprise.webservice.noEjbInvocationManager",
-                    "Cannot validate request : invocation manager null for EJB WebService"));
+                        "Cannot validate request : invocation manager null for EJB WebService"));
             }
-            ComponentInvocation inv = invManager.getCurrentInvocation();
-            // one need to copy message here, otherwise the message may be
-            // consumed
+
+            ComponentInvocation currentInvocation = invocationManager.getCurrentInvocation();
+
+            // One need to copy message here, otherwise the message may be consumed
             if (ejbDelegate != null) {
-                ejbDelegate.setSOAPMessage(request.getMessage(), inv);
+                ejbDelegate.setSOAPMessage(request.getMessage(), currentInvocation);
             }
-            Exception ie;
-            Method m = null;
+
+            Method targetMethod = null;
             if (seiModel != null) {
                 JavaMethod jm = request.getMessage().getMethod(seiModel);
-                m = (jm != null) ? jm.getMethod() : null;
+                targetMethod = (jm != null) ? jm.getMethod() : null;
             } else { // WebServiceProvider
 
-                WebServiceEndpoint endpoint = (WebServiceEndpoint) map.get(PipeConstants.SERVICE_ENDPOINT);
+                WebServiceEndpoint endpoint = (WebServiceEndpoint) map.get(SERVICE_ENDPOINT);
                 EjbDescriptor ejbDescriptor = endpoint.getEjbComponentImpl();
                 if (ejbDescriptor != null) {
                     final String ejbImplClassName = ejbDescriptor.getEjbImplClassName();
                     if (ejbImplClassName != null) {
                         try {
-                            m = (Method) AppservAccessController.doPrivileged(new PrivilegedExceptionAction() {
-
+                            targetMethod = (Method) AppservAccessController.doPrivileged(new PrivilegedExceptionAction<>() {
                                 @Override
                                 public Object run() throws Exception {
-                                    ClassLoader loader =
-                                        Thread.currentThread().getContextClassLoader();
-                                    Class clazz =
-                                        Class.forName(ejbImplClassName, true, loader);
-                                    return clazz.getMethod("invoke",
-                                        new Class[]{Object.class                                            });
+                                    return Class.forName(ejbImplClassName, true, Thread.currentThread().getContextClassLoader())
+                                                .getMethod("invoke", new Class[] { Object.class });
                                 }
                             });
                         } catch (PrivilegedActionException pae) {
@@ -243,79 +254,60 @@ public class PipeHelper extends BaseAuthenticationService {
                 }
 
             }
-            if (m != null) {
+            if (targetMethod != null) {
                 if (ejbDelegate != null) {
                     try {
-                        if (!ejbDelegate.authorize(inv, m)) {
+                        if (!ejbDelegate.authorize(currentInvocation, targetMethod)) {
                             throw new Exception(localStrings.getLocalString("enterprise.webservice.methodNotAuth",
-                                "Client not authorized for invocation of {0}",
-                                new Object[]{m}));
+                                    "Client not authorized for invocation of {0}", new Object[] { targetMethod }));
                         }
                     } catch (UnmarshalException e) {
-                        String errorMsg = localStrings.getLocalString("enterprise.webservice.errorUnMarshalMethod",
-                            "Error unmarshalling method for ejb {0}",
-                            new Object[]{ejbName()});
-                        ie = new UnmarshalException(errorMsg);
-                        ie.initCause(e);
-                        throw ie;
+                        throw new UnmarshalException(localStrings.getLocalString("enterprise.webservice.errorUnMarshalMethod",
+                                "Error unmarshalling method for ejb {0}", new Object[] { ejbName() }), e);
                     } catch (Exception e) {
-                        ie = new Exception(localStrings.getLocalString("enterprise.webservice.methodNotAuth",
-                            "Client not authorized for invocation of {0}",
-                            new Object[]{m}));
-                        ie.initCause(e);
-                        throw ie;
+                        throw new Exception(localStrings.getLocalString("enterprise.webservice.methodNotAuth",
+                                "Client not authorized for invocation of {0}", new Object[] { targetMethod }), e);
                     }
-
                 }
             }
         }
     }
 
     public void auditInvocation(Packet request, AuthStatus status) {
-
         if (auditManager.isAuditOn()) {
             String uri = null;
-            if (!isEjbEndpoint && request != null &&
-                request.supports(MessageContext.SERVLET_REQUEST)) {
-                HttpServletRequest httpServletRequest =
-                    (HttpServletRequest)request.get(
-                        MessageContext.SERVLET_REQUEST);
+            if (!isEjbEndpoint && request != null && request.supports(SERVLET_REQUEST)) {
+                HttpServletRequest httpServletRequest = (HttpServletRequest) request.get(SERVLET_REQUEST);
                 uri = httpServletRequest.getRequestURI();
             }
+
             String endpointName = null;
             if (map != null) {
-                WebServiceEndpoint endpoint = (WebServiceEndpoint)
-                    map.get(PipeConstants.SERVICE_ENDPOINT);
+                WebServiceEndpoint endpoint = (WebServiceEndpoint) map.get(SERVICE_ENDPOINT);
                 if (endpoint != null) {
                     endpointName = endpoint.getEndpointName();
                 }
             }
+
             if (endpointName == null) {
                 endpointName = "(no endpoint)";
             }
 
             if (isEjbEndpoint) {
-                auditManager.ejbAsWebServiceInvocation(
-                    endpointName, AuthStatus.SUCCESS.equals(status));
+                auditManager.ejbAsWebServiceInvocation(endpointName, AuthStatus.SUCCESS.equals(status));
             } else {
-                auditManager.webServiceInvocation(
-                    ((uri==null) ? "(no uri)" : uri),
-                    endpointName, AuthStatus.SUCCESS.equals(status));
+                auditManager.webServiceInvocation(((uri == null) ? "(no uri)" : uri), endpointName, AuthStatus.SUCCESS.equals(status));
             }
         }
     }
 
     public Object getModelName() {
-        WSDLPort wsdlModel = (WSDLPort) getProperty(PipeConstants.WSDL_MODEL);
+        WSDLPort wsdlModel = (WSDLPort) getProperty(WSDL_MODEL);
         return (wsdlModel == null ? "unknown" : wsdlModel.getName());
     }
 
-    @Deprecated // should be unused, but left for compilation
-    public void  addModelAndPolicy(Packet request) {
-    }
-
     // always returns response with embedded fault
-    //public static Packet makeFaultResponse(Packet response, Throwable t) {
+    // public static Packet makeFaultResponse(Packet response, Throwable t) {
     public Packet makeFaultResponse(Packet response, Throwable t) {
         // wrap throwable in WebServiceException, if necessary
         if (!(t instanceof WebServiceException)) {
@@ -331,16 +323,17 @@ public class PipeHelper extends BaseAuthenticationService {
         } catch (Exception e) {
             response = new Packet();
         }
+
         return response.createResponse(Messages.create(t, this.soapVersion));
     }
 
     public boolean isTwoWay(boolean twoWayIsDefault, Packet request) {
         boolean twoWay = twoWayIsDefault;
-        Message m = request.getMessage();
-        if (m != null) {
-            WSDLPort wsdlModel = (WSDLPort) getProperty(PipeConstants.WSDL_MODEL);
+        Message requestMessage = request.getMessage();
+        if (requestMessage != null) {
+            WSDLPort wsdlModel = (WSDLPort) getProperty(WSDL_MODEL);
             if (wsdlModel != null) {
-                twoWay = (m.isOneWay(wsdlModel) ? false : true);
+                twoWay = requestMessage.isOneWay(wsdlModel) ? false : true;
             }
         }
         return twoWay;
@@ -354,25 +347,25 @@ public class PipeHelper extends BaseAuthenticationService {
         } catch (Exception e) {
             // exception is consumed, and twoWay is assumed
         }
+
         if (twoWay) {
             return makeFaultResponse(response, t);
-        } else {
-            return new Packet();
         }
-    }
 
+        return new Packet();
+    }
 
     @Override
     public void disable() {
         listenerWrapper.disableWithRefCount();
     }
 
-
     // TODO
     // @Override
     protected HandlerContext getHandlerContext(Map map) {
         String realmName = null;
-        WebServiceEndpoint wSE = (WebServiceEndpoint) map.get(PipeConstants.SERVICE_ENDPOINT);
+
+        WebServiceEndpoint wSE = (WebServiceEndpoint) map.get(SERVICE_ENDPOINT);
         if (wSE != null) {
             Application app = wSE.getBundleDescriptor().getApplication();
             if (app != null) {
@@ -394,83 +387,96 @@ public class PipeHelper extends BaseAuthenticationService {
     }
 
     private boolean processSunDeploymentDescriptor() {
-
         if (authConfigFactory == null) {
             return false;
         }
 
-        MessageSecurityBindingDescriptor binding
-            = AuthMessagePolicy.getMessageSecurityBinding(PipeConstants.SOAP_LAYER,map);
+        MessageSecurityBindingDescriptor binding = AuthMessagePolicy.getMessageSecurityBinding(SOAP_LAYER, map);
+
+        Function<MessageInfo, String> authContextIdGenerator =
+            e -> Globals.get(WebServicesDelegate.class).getAuthContextID(e);
+
+        String authModuleId = AuthMessagePolicy.getProviderID(binding);
+
+        map.put("authContextIdGenerator", authContextIdGenerator);
+        if (authModuleId != null) {
+            map.put("authModuleId", authModuleId);
+        }
 
         if (binding != null) {
             if (!hasExactMatchAuthProvider()) {
                 String jmacProviderRegisID = authConfigFactory.registerConfigProvider(
-                    new GFServerConfigProvider((ConfigParser)null, null),
-                    messageLayer, appContextId,
-                    "GF AuthConfigProvider bound by Sun Specific Descriptor");
-                this.setRegistrationId(jmacProviderRegisID);
+                        new GFServerConfigProvider(
+                            map,
+                            isACC()? new ConfigXMLParser() : new ConfigDomainParser(),
+                            authConfigFactory),
+                        messageLayer, appContextId,
+                        "GF AuthConfigProvider bound by Sun Specific Descriptor");
+
+                setRegistrationId(jmacProviderRegisID);
             }
         }
 
-        WebServiceEndpoint e = (WebServiceEndpoint) map.get(PipeConstants.SERVICE_ENDPOINT);
-        return (e == null ? false : e.implementedByEjbComponent());
+        WebServiceEndpoint webServiceEndpoint = (WebServiceEndpoint) map.get(SERVICE_ENDPOINT);
+        return webServiceEndpoint == null ? false : webServiceEndpoint.implementedByEjbComponent();
     }
 
     private static String getAppCtxt(Map map) {
-        String rvalue;
-        WebServiceEndpoint wse = (WebServiceEndpoint) map.get(PipeConstants.SERVICE_ENDPOINT);
-        // endpoint
-        if (wse != null) {
-            rvalue = getServerName(wse) + " " + getEndpointURI(wse);
-            // client reference
-        } else {
-            ServiceReferenceDescriptor srd = (ServiceReferenceDescriptor) map.get(PipeConstants.SERVICE_REF);
+        WebServiceEndpoint webServiceEndpoint = (WebServiceEndpoint) map.get(SERVICE_ENDPOINT);
 
-            rvalue = getClientModuleID(srd) + " " + getRefName(srd, map);
+        // Endpoint
+        if (webServiceEndpoint != null) {
+            return getServerName(webServiceEndpoint) + " " + getEndpointURI(webServiceEndpoint);
         }
-        return rvalue;
+
+        // Client reference
+        ServiceReferenceDescriptor serviceReferenceDescriptor = (ServiceReferenceDescriptor) map.get(SERVICE_REF);
+
+        return getClientModuleID(serviceReferenceDescriptor) + " " + getRefName(serviceReferenceDescriptor, map);
     }
 
     private static String getServerName(WebServiceEndpoint wse) {
-        //XXX FIX ME: need to lookup real hostname
+        // XXX FIX ME: need to lookup real hostname
         String hostname = "localhost";
         return hostname;
     }
 
-    private static String getRefName(ServiceReferenceDescriptor srd, Map map) {
+    private static String getRefName(ServiceReferenceDescriptor serviceReferenceDescriptor, Map map) {
         String name = null;
-        if (srd != null) {
-            name = srd.getName();
+        if (serviceReferenceDescriptor != null) {
+            name = serviceReferenceDescriptor.getName();
         }
+
         if (name == null) {
-            EndpointAddress ea = (EndpointAddress) map.get(PipeConstants.ENDPOINT_ADDRESS);
-            if (ea != null) {
-                URL url = ea.getURL();
+            EndpointAddress endpointAddress = (EndpointAddress) map.get(ENDPOINT_ADDRESS);
+            if (endpointAddress != null) {
+                URL url = endpointAddress.getURL();
                 if (url != null) {
                     name = url.toString();
                 }
             }
         }
+
         if (name == null) {
             name = "#default-ref-name#";
         }
+
         return name;
     }
 
-    private static String getEndpointURI(WebServiceEndpoint wse) {
-
+    private static String getEndpointURI(WebServiceEndpoint webServiceEndpoint) {
         String uri = "#default-endpoint-context#";
 
-        if (wse != null) {
-            uri = wse.getEndpointAddressUri();
+        if (webServiceEndpoint != null) {
+            uri = webServiceEndpoint.getEndpointAddressUri();
             if (uri != null && (!uri.startsWith("/"))) {
                 uri = "/" + uri;
             }
 
-            if (wse.implementedByWebComponent()) {
-                WebBundleDescriptor wbd = (WebBundleDescriptor) wse.getBundleDescriptor();
-                if (wbd != null) {
-                    String contextRoot = wbd.getContextRoot();
+            if (webServiceEndpoint.implementedByWebComponent()) {
+                WebBundleDescriptor webBundleDescriptor = (WebBundleDescriptor) webServiceEndpoint.getBundleDescriptor();
+                if (webBundleDescriptor != null) {
+                    String contextRoot = webBundleDescriptor.getContextRoot();
                     if (contextRoot != null) {
                         if (!contextRoot.startsWith("/")) {
                             contextRoot = "/" + contextRoot;
@@ -480,53 +486,52 @@ public class PipeHelper extends BaseAuthenticationService {
                 }
             }
         }
+
         return uri;
     }
 
-    private static String getClientModuleID(ServiceReferenceDescriptor srd) {
+    private static String getClientModuleID(ServiceReferenceDescriptor serviceReferenceDescriptor) {
+        String clientModuleID = "#default-client-context#";
 
-        String rvalue = "#default-client-context#";
+        if (serviceReferenceDescriptor != null) {
+            ModuleDescriptor moduleDescriptor = null;
+            BundleDescriptor bundleDescriptor = serviceReferenceDescriptor.getBundleDescriptor();
 
-        if (srd != null) {
-            ModuleDescriptor md = null;
-            BundleDescriptor bd = srd.getBundleDescriptor();
-
-            if (bd != null) {
-                md = bd.getModuleDescriptor();
+            if (bundleDescriptor != null) {
+                moduleDescriptor = bundleDescriptor.getModuleDescriptor();
             }
 
-            Application a = (bd == null) ? null : bd.getApplication();
-            if (a != null) {
-                if (a.isVirtual()) {
-                    rvalue = a.getRegistrationName();
-                } else if (md != null) {
-                    rvalue = FileUtils.makeFriendlyFilename(md.getArchiveUri());
+            Application application = bundleDescriptor == null ? null : bundleDescriptor.getApplication();
+            if (application != null) {
+                if (application.isVirtual()) {
+                    clientModuleID = application.getRegistrationName();
+                } else if (moduleDescriptor != null) {
+                    clientModuleID = FileUtils.makeFriendlyFilename(moduleDescriptor.getArchiveUri());
                 }
-            } else if (md != null) {
-                rvalue = FileUtils.makeFriendlyFilename(md.getArchiveUri());
+            } else if (moduleDescriptor != null) {
+                clientModuleID = FileUtils.makeFriendlyFilename(moduleDescriptor.getArchiveUri());
             }
         }
 
-        return rvalue;
+        return clientModuleID;
     }
 
     private static void addModel(MessageInfo info, Map map) {
-        Object model = map.get(PipeConstants.WSDL_MODEL);
+        Object model = map.get(WSDL_MODEL);
         if (model != null) {
-            info.getMap().put(PipeConstants.WSDL_MODEL,model);
+            info.getMap().put(WSDL_MODEL, model);
         }
     }
 
     private static void addPolicy(MessageInfo info, Map map) {
-        Object pol = map.get(PipeConstants.POLICY);
+        Object pol = map.get(POLICY);
         if (pol != null) {
-            info.getMap().put(PipeConstants.POLICY,pol);
+            info.getMap().put(POLICY, pol);
         }
     }
 
-
     private String ejbName() {
-        WebServiceEndpoint wSE = (WebServiceEndpoint) getProperty(PipeConstants.SERVICE_ENDPOINT);
+        WebServiceEndpoint wSE = (WebServiceEndpoint) getProperty(SERVICE_ENDPOINT);
         return (wSE == null ? "unknown" : wSE.getEjbComponentImpl().getName());
     }
 }

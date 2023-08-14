@@ -23,8 +23,9 @@ import com.sun.enterprise.iiop.security.SecClientRequestInterceptor;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import static java.lang.System.Logger.Level.ERROR;
+
 import java.lang.System.Logger;
-import java.lang.System.Logger.Level;
 
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.enterprise.iiop.api.IIOPInterceptorFactory;
@@ -39,32 +40,32 @@ import static com.sun.enterprise.iiop.security.AlternateSecurityInterceptorFacto
 /**
  * @author Kumar
  */
-@Service(name="ClientSecurityInterceptorFactory")
+@Service(name = "ClientSecurityInterceptorFactory")
 @Singleton
 public class AppclientIIOPInterceptorFactory implements IIOPInterceptorFactory {
 
     private static final Logger LOG = System.getLogger(AppclientIIOPInterceptorFactory.class.getName());
-
     private static final String FACTORY = System.getProperty(SEC_INTEROP_INTFACTORY_PROP);
 
-    private ClientRequestInterceptor creq;
+    private ClientRequestInterceptor clientRequestInterceptor;
+
     @Inject
-    private ProcessEnvironment penv;
+    private ProcessEnvironment processEnvironment;
 
     private AlternateSecurityInterceptorFactory altSecFactory;
 
-    // are we supposed to add the interceptor and then return or just return an instance ?.
+    // Are we supposed to add the interceptor and then return or just return an instance?
     @Override
     public ClientRequestInterceptor createClientRequestInterceptor(ORBInitInfo info, Codec codec) {
-        if (penv.getProcessType().isServer()) {
+        if (processEnvironment.getProcessType().isServer()) {
             return null;
         }
-        if (altSecFactory != null ||
-                (FACTORY != null && createAlternateSecurityInterceptorFactory())) {
+
+        if (altSecFactory != null || (FACTORY != null && createAlternateSecurityInterceptorFactory())) {
             return altSecFactory.getClientRequestInterceptor(codec);
         }
-        ClientRequestInterceptor ret = getClientInterceptorInstance(codec);
-        return ret;
+
+        return getClientInterceptorInstance(codec);
     }
 
     @Override
@@ -75,24 +76,25 @@ public class AppclientIIOPInterceptorFactory implements IIOPInterceptorFactory {
     private synchronized boolean createAlternateSecurityInterceptorFactory() {
         try {
             Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(FACTORY);
-            if (AlternateSecurityInterceptorFactory.class.isAssignableFrom(clazz) &&
-                    !clazz.isInterface()) {
+            if (AlternateSecurityInterceptorFactory.class.isAssignableFrom(clazz) && !clazz.isInterface()) {
                 altSecFactory = (AlternateSecurityInterceptorFactory) clazz.getDeclaredConstructor().newInstance();
                 return true;
             }
-            LOG.log(Level.ERROR, "Not a valid factory class: {0}. Must implement {1}", FACTORY,
-                AlternateSecurityInterceptorFactory.class);
+
+            LOG.log(ERROR, "Not a valid factory class: {0}. Must implement {1}", FACTORY, AlternateSecurityInterceptorFactory.class);
         } catch (ReflectiveOperationException ex) {
-            LOG.log(Level.ERROR, "Interceptor Factory class " + FACTORY + " not loaded: ", ex);
+            LOG.log(ERROR, "Interceptor Factory class " + FACTORY + " not loaded: ", ex);
         }
+
         return false;
     }
 
     private synchronized ClientRequestInterceptor getClientInterceptorInstance(Codec codec) {
-        if (creq == null) {
-            creq = new SecClientRequestInterceptor("SecClientRequestInterceptor", codec);
+        if (clientRequestInterceptor == null) {
+            clientRequestInterceptor = new SecClientRequestInterceptor("SecClientRequestInterceptor", codec);
         }
-        return creq;
+
+        return clientRequestInterceptor;
     }
 
 }

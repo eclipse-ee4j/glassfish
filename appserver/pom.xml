@@ -269,7 +269,7 @@
             <dependency>
                 <groupId>org.omnifaces</groupId>
                 <artifactId>eleos</artifactId>
-                <version>3.0.1</version>
+                <version>3.0.2</version>
             </dependency>
             <dependency>
                 <groupId>com.nimbusds</groupId>

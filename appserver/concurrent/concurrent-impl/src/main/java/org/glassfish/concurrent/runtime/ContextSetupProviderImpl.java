@@ -250,7 +250,12 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
      */
     private boolean isApplicationEnabled(String appId) {
         if (appId == null) {
-            return false;
+            /* FIXME: appId is null in concurrent tasks because app context isn't propagated 
+              and is empty by default. 
+            This should be fixed: either propagate an application context if there's no current context,
+            or set up a proper app context when the concurrent task is submitted.
+             */
+            return true;
         }
         Application app = applications.getApplication(appId);
         if (app != null) {

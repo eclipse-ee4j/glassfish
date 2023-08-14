@@ -36,8 +36,9 @@ public class TestHandler implements SOAPHandler<SOAPMessageContext> {
 
     public boolean handleMessage(SOAPMessageContext context) {
         System.out.println("Calling client handler");
+        
         try {
-            boolean outbound = (Boolean)context.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
+            boolean outbound = (Boolean) context.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
             String prefix;
             if (outbound) {
                 prefix = "OutboundHandler ";
@@ -46,14 +47,13 @@ public class TestHandler implements SOAPHandler<SOAPMessageContext> {
                 prefix = "InboundHandler ";
                 System.out.println("Calling inbound client handler");
             }
-            SOAPMessage message = context.getMessage();
-            SOAPBody body = message.getSOAPBody();
-            SOAPElement paramElement =
-                (SOAPElement) body.getFirstChild().getFirstChild();
+            
+            SOAPElement paramElement = (SOAPElement) context.getMessage().getSOAPBody().getFirstChild().getFirstChild();
             paramElement.setValue(prefix + paramElement.getValue());
         } catch (SOAPException e) {
             e.printStackTrace();
         }
+        
         return true;
     }
 

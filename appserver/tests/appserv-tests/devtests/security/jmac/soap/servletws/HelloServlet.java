@@ -18,8 +18,9 @@ package com.sun.s1asdev.security.jmac.soap.servletws;
 
 import jakarta.jws.WebService;
 
-@WebService(targetNamespace="http://servletws.soap.jmac.security.s1asdev.sun.com", serviceName="JmacSoapServletService")
+@WebService(targetNamespace = "http://servletws.soap.jmac.security.s1asdev.sun.com", serviceName = "JmacSoapServletService")
 public class HelloServlet {
+    
     public String hello(String who) {
         String message = "HelloServlet " + who;
         System.out.println(message);

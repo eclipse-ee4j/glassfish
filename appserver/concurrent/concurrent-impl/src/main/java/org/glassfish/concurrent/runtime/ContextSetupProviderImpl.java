@@ -131,9 +131,7 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
         ComponentInvocation invocation = invocationCtx.getInvocation();
         final String appName = invocation == null ? null : invocation.getAppName();
 
-        if (!isApplicationEnabled(appName)) {
-            throw new IllegalStateException("Module " + appName + " is disabled");
-        }
+        verifyApplicationEnabled(appName);
 
         final ClassLoader resetClassLoader;
         if (invocationCtx.getContextClassLoader() != null) {
@@ -153,6 +151,9 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
         if (setup.isUnchanged(JNDI) || (!setup.isPropagated(JNDI) && !setup.isClear(JNDI))) {
             ComponentInvocation currentInvocation = invocationManager.getCurrentInvocation();
             if (currentInvocation != null) {
+                if (currentInvocation.getAppName() == null) {
+                    currentInvocation.setAppName(invocation.getAppName());
+                }
                 invocation = currentInvocation;
             }
         }
@@ -242,7 +243,7 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
             return null;
         }
         if (setup.isClear(JNDI)) {
-            return new ComponentInvocation();
+            return new ComponentInvocation(null, null, null, currentInvocation.getAppName(), null);
         }
         return cloneComponentInvocation(currentInvocation);
     }
@@ -252,16 +253,19 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
      * Check whether the application component submitting the task is still running.
      * Throw IllegalStateException if not.
      */
-    private boolean isApplicationEnabled(String appId) {
+    private void verifyApplicationEnabled(String appId) {
         if (appId == null) {
-            // we don't know the application name yet, it is starting.
-            return true;
+            IllegalStateException ex = new IllegalStateException("The appId is null");
+            LOG.log(Level.WARNING, "Context handle not in valid state. Do not run the task. " + ex.getMessage(), ex);
+            throw ex;
         }
         Application app = applications.getApplication(appId);
-        if (app != null) {
-            return deployment.isAppEnabled(app);
+        if (app != null && !deployment.isAppEnabled(app)) {
+            IllegalStateException ex = new IllegalStateException("Module " + appId + " is disabled");
+            LOG.log(Level.WARNING, "Context handle not in valid state. Do not run the task. " + ex.getMessage(), ex);
+            throw ex;
         }
-        return false;
+        // if we know the application name but don't have an application yet, it is starting, and thus enabled
     }
 
 

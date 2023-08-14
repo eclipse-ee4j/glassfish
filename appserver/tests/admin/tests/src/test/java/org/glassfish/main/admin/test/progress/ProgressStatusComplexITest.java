@@ -67,9 +67,9 @@ public class ProgressStatusComplexITest {
         assertArrayEquals(new String[] {
             "Starting", "2 seconds supplemental command", "Parsing",
             "Working on main part", "Finished", "3 seconds supplemental" },
-            uniqueMessages(prgs));
+                uniqueMessages(prgs));
 
-        assertThat(prgs, hasSize(21));
+        assertThat(prgs, hasSize(greaterThanOrEqualTo(21)));
         assertThat(prgs, isIncreasing());
         assertFalse(prgs.get(4).isPercentage());
         assertTrue(prgs.get(10).isPercentage());

@@ -27,14 +27,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTALL_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTANCE_ROOT_PROP_NAME;
 import static com.sun.enterprise.glassfish.bootstrap.Constants.PLATFORM_PROPERTY_KEY;
+import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.osgi.framework.Constants.FRAMEWORK_SYSTEMPACKAGES;
@@ -110,10 +113,14 @@ class MainHelperTest {
         Class<?> clazz = loader.loadClass("org.osgi.framework.Bundle");
         assertNotNull(clazz);
         String osgiPackages = cfg.getProperty(FRAMEWORK_SYSTEMPACKAGES);
-        assertThat(osgiPackages,
-            stringContainsInOrder("org.osgi.framework;version=\"1.10\"", "com.sun.jarsigner,", "java.lang,",
-                "java.util.concurrent.locks,", "javax.xml.crypto.dom,", "org.w3c.dom.traversal,"));
-        assertThat(osgiPackages, not(stringContainsInOrder(".hk2.")));
+        assertAll(
+            () -> assertThat(osgiPackages,
+                stringContainsInOrder("org.osgi.framework;version=\"1.10\"", "java.lang,",
+                    "java.util.concurrent.locks,", "javax.xml.crypto.dom,", "org.w3c.dom.traversal,")),
+            () -> assertThat(osgiPackages, not(stringContainsInOrder(".hk2."))),
+            () -> assertThat(osgiPackages, anyOf(stringContainsInOrder("com.sun.jarsigner"),
+                stringContainsInOrder("jdk.security.jarsigner")))
+        );
     }
 
 

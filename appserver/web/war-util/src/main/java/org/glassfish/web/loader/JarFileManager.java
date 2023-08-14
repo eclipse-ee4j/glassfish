@@ -27,7 +27,7 @@ import java.lang.System.Logger;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -39,10 +39,15 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import static java.lang.Runtime.version;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.Logger.Level.WARNING;
 import static java.util.concurrent.Executors.newScheduledThreadPool;
+import static java.util.zip.ZipFile.OPEN_READ;
+import static org.glassfish.web.loader.LogFacade.ILLEGAL_JAR_PATH;
+import static org.glassfish.web.loader.LogFacade.UNABLE_TO_CREATE;
+import static org.glassfish.web.loader.LogFacade.VALIDATION_ERROR_JAR_PATH;
 import static org.glassfish.web.loader.LogFacade.getString;
 
 /**
@@ -62,6 +67,8 @@ class JarFileManager implements Closeable {
 
     private final ScheduledExecutorService scheduler = newScheduledThreadPool(1, new JarFileManagerThreadFactory());
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
+    private final Lock readLock = lock.readLock();
+    private final Lock writeLock = lock.writeLock();
 
     private volatile long lastJarFileAccess;
     private ScheduledFuture<?> unusedJarsCheck;
@@ -70,9 +77,8 @@ class JarFileManager implements Closeable {
 
 
     void addJarFile(File file) {
-        Lock writeLock = lock.writeLock();
+        writeLock.lock();
         try {
-            writeLock.lock();
             files.add(new JarResource(file));
         } finally {
             writeLock.unlock();
@@ -87,9 +93,8 @@ class JarFileManager implements Closeable {
         if (!isJarsOpen() && !openJARs()) {
             return null;
         }
-        Lock readLock = lock.readLock();
+        readLock.lock();
         try {
-            readLock.lock();
             lastJarFileAccess = System.currentTimeMillis();
             return files.stream().map(r -> r.jarFile).toArray(JarFile[]::new);
         } finally {
@@ -99,9 +104,8 @@ class JarFileManager implements Closeable {
 
 
     File[] getJarRealFiles() {
-        Lock readLock = lock.readLock();
+        readLock.lock();
         try {
-            readLock.lock();
             return files.stream().map(r -> r.file).toArray(File[]::new);
         } finally {
             readLock.unlock();
@@ -120,9 +124,8 @@ class JarFileManager implements Closeable {
         if (!isJarsOpen() && !openJARs()) {
             return null;
         }
-        final Lock readLock = lock.readLock();
+        readLock.lock();
         try {
-            readLock.lock();
             lastJarFileAccess = System.currentTimeMillis();
             for (JarResource jarResource : files) {
                 final JarFile jarFile = jarResource.jarFile;
@@ -157,9 +160,8 @@ class JarFileManager implements Closeable {
         if (resourcesExtracted) {
             return;
         }
-        Lock readLock = lock.readLock();
+        readLock.lock();
         try {
-            readLock.lock();
             for (JarResource jarResource : files) {
                 extractResource(jarResource.jarFile, loaderDir, canonicalLoaderDir);
             }
@@ -175,9 +177,8 @@ class JarFileManager implements Closeable {
      */
     void closeJarFiles() {
         LOG.log(DEBUG, "closeJarFiles()");
-        Lock writeLock = lock.writeLock();
+        writeLock.lock();
         try {
-            writeLock.lock();
             lastJarFileAccess = 0L;
             closeJarFiles(files);
         } finally {
@@ -200,9 +201,8 @@ class JarFileManager implements Closeable {
      */
     private boolean openJARs() {
         LOG.log(DEBUG, "openJARs()");
-        Lock writeLock = lock.writeLock();
+        writeLock.lock();
         try {
-            writeLock.lock();
             if (isJarsOpen()) {
                 return true;
             }
@@ -212,7 +212,7 @@ class JarFileManager implements Closeable {
                     continue;
                 }
                 try {
-                    jarResource.jarFile = new JarFile(jarResource.file);
+                    jarResource.jarFile = new JarFile(jarResource.file, true, OPEN_READ, version());
                 } catch (IOException e) {
                     LOG.log(DEBUG, "Failed to open JAR", e);
                     lastJarFileAccess = 0L;
@@ -235,8 +235,7 @@ class JarFileManager implements Closeable {
     }
 
 
-    private ResourceEntry createResourceEntry(String name, File file, JarFile jarFile, JarEntry jarEntry,
-        String entryPath) {
+    private ResourceEntry createResourceEntry(String name, File file, JarFile jarFile, JarEntry jarEntry, String entryPath) {
         final URL codeBase;
         try {
             codeBase = file.getCanonicalFile().toURI().toURL();
@@ -274,29 +273,28 @@ class JarFileManager implements Closeable {
 
     private static void extractResource(JarFile jarFile, File loaderDir, String pathPrefix) {
         LOG.log(DEBUG, "extractResource(jarFile={0}, loaderDir={1}, pathPrefix={2})", jarFile, loaderDir, pathPrefix);
-        Enumeration<JarEntry> jarEntries = jarFile.entries();
-        while (jarEntries.hasMoreElements()) {
-            JarEntry jarEntry = jarEntries.nextElement();
-            if (!jarEntry.isDirectory() && !jarEntry.getName().endsWith(".class")) {
-                File resourceFile = new File(loaderDir, jarEntry.getName());
-                try {
-                    if (!resourceFile.getCanonicalPath().startsWith(pathPrefix)) {
-                        throw new IllegalArgumentException(getString(LogFacade.ILLEGAL_JAR_PATH, jarEntry.getName()));
-                    }
-                } catch (IOException ioe) {
-                    throw new IllegalArgumentException(
-                        getString(LogFacade.VALIDATION_ERROR_JAR_PATH, jarEntry.getName()), ioe);
+        Iterator<JarEntry> jarEntries = jarFile.versionedStream()
+                .filter(jarEntry -> !jarEntry.isDirectory() && !jarEntry.getName().endsWith(".class")).iterator();
+        while (jarEntries.hasNext()) {
+            JarEntry jarEntry = jarEntries.next();
+            File resourceFile = new File(loaderDir, jarEntry.getName());
+            try {
+                if (!resourceFile.getCanonicalPath().startsWith(pathPrefix)) {
+                    throw new IllegalArgumentException(getString(ILLEGAL_JAR_PATH, jarEntry.getName()));
                 }
-                if (!FileUtils.mkdirsMaybe(resourceFile.getParentFile())) {
-                    LOG.log(WARNING, LogFacade.UNABLE_TO_CREATE, resourceFile.getParentFile());
-                }
+            } catch (IOException ioe) {
+                throw new IllegalArgumentException(
+                    getString(VALIDATION_ERROR_JAR_PATH, jarEntry.getName()), ioe);
+            }
+            if (!FileUtils.mkdirsMaybe(resourceFile.getParentFile())) {
+                LOG.log(WARNING, UNABLE_TO_CREATE, resourceFile.getParentFile());
+            }
 
-                try (InputStream is = jarFile.getInputStream(jarEntry);
-                    FileOutputStream os = new FileOutputStream(resourceFile)) {
-                    FileUtils.copy(is, os, Long.MAX_VALUE);
-                } catch (IOException e) {
-                    LOG.log(DEBUG, "Failed to copy entry " + jarEntry, e);
-                }
+            try (InputStream is = jarFile.getInputStream(jarEntry);
+                FileOutputStream os = new FileOutputStream(resourceFile)) {
+                FileUtils.copy(is, os, Long.MAX_VALUE);
+            } catch (IOException e) {
+                LOG.log(DEBUG, "Failed to copy entry " + jarEntry, e);
             }
         }
     }
@@ -358,5 +356,4 @@ class JarFileManager implements Closeable {
             return thread;
         }
     }
-
 }

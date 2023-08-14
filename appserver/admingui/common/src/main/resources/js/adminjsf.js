@@ -40,7 +40,7 @@ function checkPSWInCommon(secureAdminEnabled, id1, id2, alert1, alert2, confirmM
 	var ps2 =  document.getElementById(id2); 
    
     if (secureAdminEnabled) {
-        if ( (ps1==null || ps1=='') && (ps2==null || ps2=='')) {
+        if ( (ps1==null || ps1.value=='') && (ps2==null || ps2.value=='')) {
             return showAlert(alert1);
         }
     }

@@ -39,6 +39,7 @@ import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.security.auth.message.config.AuthConfigFactory;
 
 /**
  * Listener class to handle admin message-security-config element events.
@@ -54,7 +55,7 @@ public class MessageSecurityConfigEventListenerImpl implements ConfigListener {
 
     @Inject
     @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
-    private SecurityService service;
+    private SecurityService service; // required to be injected to register MessageSecurityConfigEventListenerImpl as an listener
 
     @Override
     public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
@@ -85,11 +86,11 @@ public class MessageSecurityConfigEventListenerImpl implements ConfigListener {
 
     private <T extends ConfigBeanProxy> NotProcessed handle(T instance) {
         if (instance instanceof MessageSecurityConfig) {
-            // GFServerConfigProvider.loadConfigContext(service);
+            AuthConfigFactory.getFactory().refresh();
             return null;
         }
+
         return new NotProcessed("unimplemented: unknown instance: " + instance.getClass().getName());
     }
-
 
 }

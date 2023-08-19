@@ -48,7 +48,7 @@
             <dependency>
                 <groupId>org.jboss.arquillian</groupId>
                 <artifactId>arquillian-bom</artifactId>
-                <version>1.7.0.Alpha13</version>
+                <version>1.7.1.Final</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -78,8 +78,8 @@
         </dependency>
         <dependency>
             <groupId>org.omnifaces.arquillian</groupId>
-            <artifactId>glassfish-client-ee9</artifactId>
-            <version>1.0</version>
+            <artifactId>glassfish-client-ee10</artifactId>
+            <version>1.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>

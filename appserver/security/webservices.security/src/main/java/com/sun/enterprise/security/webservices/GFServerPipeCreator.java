@@ -21,11 +21,11 @@ import static com.sun.xml.ws.policy.PolicyMap.createWsdlEndpointScopeKey;
 import static com.sun.xml.ws.policy.PolicyMap.createWsdlOperationScopeKey;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.jvnet.hk2.annotations.Service;
 
 import com.sun.enterprise.deployment.WebServiceEndpoint;
-import com.sun.enterprise.util.Utility;
 import com.sun.xml.ws.api.model.SEIModel;
 import com.sun.xml.ws.api.model.wsdl.WSDLBoundOperation;
 import com.sun.xml.ws.api.model.wsdl.WSDLPort;
@@ -40,8 +40,8 @@ import com.sun.xml.wss.provider.wsit.PipeConstants;
 import jakarta.inject.Singleton;
 
 /**
- * This is used by JAXWSContainer to return proper Jakarta Authentication security and app server monitoring pipes to the
- * StandAlonePipeAssembler and TangoPipeAssembler
+ * This is used by JAXWSContainer to return proper Jakarta Authentication security and app server monitoring pipes to
+ * the StandAlonePipeAssembler and TangoPipeAssembler
  */
 @Service
 @Singleton
@@ -60,18 +60,18 @@ public class GFServerPipeCreator extends org.glassfish.webservices.ServerPipeCre
     }
 
     @Override
-    public Pipe createSecurityPipe(PolicyMap map, SEIModel sei, WSDLPort port, WSEndpoint owner, Pipe tail) {
+    public Pipe createSecurityPipe(PolicyMap policyMap, SEIModel sei, WSDLPort port, WSEndpoint owner, Pipe tail) {
 
-        HashMap props = new HashMap();
+        Map<String, Object> props = new HashMap<>();
 
-        props.put(PipeConstants.POLICY, map);
+        props.put(PipeConstants.POLICY, policyMap);
         props.put(PipeConstants.SEI_MODEL, sei);
         props.put(PipeConstants.WSDL_MODEL, port);
         props.put(PipeConstants.ENDPOINT, owner);
         props.put(PipeConstants.SERVICE_ENDPOINT, endpoint);
         props.put(PipeConstants.NEXT_PIPE, tail);
         props.put(PipeConstants.CONTAINER, owner.getContainer());
-        if (isSecurityEnabled(map, port)) {
+        if (isSecurityEnabled(policyMap, port)) {
             endpoint.setSecurePipeline();
         }
 
@@ -94,13 +94,16 @@ public class GFServerPipeCreator extends org.glassfish.webservices.ServerPipeCre
         }
 
         try {
-            Policy policy = policyMap.getEndpointEffectivePolicy(createWsdlEndpointScopeKey(wsdlPort.getOwner().getName(), wsdlPort.getName()));
+            Policy policy =
+                policyMap.getEndpointEffectivePolicy(
+                    createWsdlEndpointScopeKey(wsdlPort.getOwner().getName(), wsdlPort.getName()));
+
             if (isSecured(policy)) {
                 return true;
             }
 
-            for (WSDLBoundOperation wbo : wsdlPort.getBinding().getBindingOperations()) {
-                PolicyMapKey operationKey = createWsdlOperationScopeKey(wsdlPort.getOwner().getName(), wsdlPort.getName(), wbo.getName());
+            for (WSDLBoundOperation operation : wsdlPort.getBinding().getBindingOperations()) {
+                PolicyMapKey operationKey = createWsdlOperationScopeKey(wsdlPort.getOwner().getName(), wsdlPort.getName(), operation.getName());
 
                 policy = policyMap.getOperationEffectivePolicy(operationKey);
                 if (isSecured(policy)) {

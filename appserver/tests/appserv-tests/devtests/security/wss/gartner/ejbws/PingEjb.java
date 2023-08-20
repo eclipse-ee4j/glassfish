@@ -20,7 +20,7 @@ import jakarta.jws.WebService;
 import jakarta.ejb.Stateless;
 
 @Stateless
-@WebService(targetNamespace="http://gartner.wss.security.s1asdev.sun.com")
+@WebService(targetNamespace = "http://gartner.wss.security.s1asdev.sun.com")
 public class PingEjb {
     private static String id = "Sun Java System Application Server 9 - (EJB Endpoint) ";
 

@@ -19,6 +19,7 @@ package com.sun.enterprise.security.jmac.provider.config;
 import com.sun.xml.ws.api.server.WSEndpoint;
 import java.net.URL;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import javax.security.auth.Subject;
@@ -26,6 +27,7 @@ import javax.security.auth.callback.CallbackHandler;
 import jakarta.security.auth.message.AuthException;
 import jakarta.security.auth.message.AuthStatus;
 import jakarta.security.auth.message.MessageInfo;
+import jakarta.security.auth.message.MessagePolicy;
 import jakarta.security.auth.message.config.ClientAuthConfig;
 import jakarta.security.auth.message.config.ClientAuthContext;
 import jakarta.security.auth.message.config.ServerAuthConfig;
@@ -396,9 +398,16 @@ public class PipeHelper extends BaseAuthenticationService {
         Function<MessageInfo, String> authContextIdGenerator =
             e -> Globals.get(WebServicesDelegate.class).getAuthContextID(e);
 
+        BiFunction<String, Map<String, Object>, MessagePolicy[]> soapPolicyGenerator =
+                (authContextId, properties) -> AuthMessagePolicy.getSOAPPolicies(
+                       AuthMessagePolicy.getMessageSecurityBinding("SOAP", properties),
+                       authContextId, true);
+
         String authModuleId = AuthMessagePolicy.getProviderID(binding);
 
         map.put("authContextIdGenerator", authContextIdGenerator);
+        map.put("soapPolicyGenerator", soapPolicyGenerator);
+
         if (authModuleId != null) {
             map.put("authModuleId", authModuleId);
         }

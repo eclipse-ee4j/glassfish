@@ -16,6 +16,8 @@
 
 package com.sun.enterprise.security.ssl;
 
+import static java.util.logging.Level.FINE;
+
 import java.net.Socket;
 import java.security.Principal;
 import java.security.PrivateKey;
@@ -54,19 +56,19 @@ import com.sun.enterprise.security.ssl.manager.UnifiedX509KeyManager;
  * @author Vivek Nagar
  * @author Harpreet Singh
  */
-public final class J2EEKeyManager /*implements X509KeyManager */ extends X509ExtendedKeyManager {
+public final class J2EEKeyManager extends X509ExtendedKeyManager {
 
     private static final Logger _logger = SecurityLoggerInfo.getLogger();
 
-    private X509KeyManager mgr = null; // delegate
+    private X509KeyManager x509KeyManager; // delegate
 
-    private String alias = null;
+    private String alias;
 
-    private Map<String, X509KeyManager> tokenName2MgrMap = null;
-    private boolean supportTokenAlias = false;
+    private Map<String, X509KeyManager> tokenName2MgrMap ;
+    private boolean supportTokenAlias;
 
     public J2EEKeyManager(X509KeyManager mgr, String alias) {
-        this.mgr = mgr;
+        this.x509KeyManager = mgr;
         this.alias = alias;
 
         if (mgr instanceof UnifiedX509KeyManager) {
@@ -86,7 +88,7 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
 
     @Override
     public String chooseEngineClientAlias(String[] keyType, Principal[] issuers, SSLEngine engine) {
-        return mgr.chooseClientAlias(keyType, issuers, null);
+        return x509KeyManager.chooseClientAlias(keyType, issuers, null);
     }
 
     @Override
@@ -109,26 +111,15 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
         String clientAlias = null;
 
         if (this.alias == null) {
-            //InvocationManager im = Switch.getSwitch().getInvocationManager();
-            //if (im == null) {
             if (Util.getInstance().isNotServerOrACC()) {
                 // standalone client
-                clientAlias = mgr.chooseClientAlias(keyType, issuers, socket);
+                clientAlias = x509KeyManager.chooseClientAlias(keyType, issuers, socket);
             } else {
-                //ComponentInvocation ci = im.getCurrentInvocation();
-                //if (ci == null) {       // 4646060
-                //    throw new InvocationException();
-                //}
-                //Object containerContext = ci.getContainerContext();
-                //if(containerContext != null &&
-                //(containerContext instanceof AppContainer)) {
                 if (Util.getInstance().isACC()) {
                     ClientSecurityContext ctx = ClientSecurityContext.getCurrent();
                     Subject s = ctx.getSubject();
                     if (s == null) {
-                        // pass the handler and do the login
-                        //TODO V3: LoginContextDriver.doClientLogin(AppContainer.CERTIFICATE,
-                        //AppContainer.getCallbackHandler());
+                        // Pass the handler and do the login
                         doClientLogin(SecurityConstants.CERTIFICATE, Util.getInstance().getCallbackHandler());
                         s = ctx.getSubject();
                     }
@@ -146,9 +137,11 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
         } else {
             clientAlias = this.alias;
         }
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Choose client Alias :{0}", clientAlias);
+
+        if (_logger.isLoggable(FINE)) {
+            _logger.log(FINE, "Choose client Alias :{0}", clientAlias);
         }
+
         return clientAlias;
     }
 
@@ -163,16 +156,17 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
      */
     @Override
     public String chooseServerAlias(String keyType, Principal[] issuers, Socket socket) {
-
         String serverAlias = null;
         if (this.alias != null) {
             serverAlias = this.alias;
         } else {
-            serverAlias = mgr.chooseServerAlias(keyType, issuers, socket);
+            serverAlias = x509KeyManager.chooseServerAlias(keyType, issuers, socket);
         }
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Choosing server alias :{0}", serverAlias);
+
+        if (_logger.isLoggable(FINE)) {
+            _logger.log(FINE, "Choosing server alias :{0}", serverAlias);
         }
+
         return serverAlias;
     }
 
@@ -184,16 +178,15 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
      */
     @Override
     public X509Certificate[] getCertificateChain(String alias) {
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Getting certificate chain");
-        }
+        _logger.log(FINE, "Getting certificate chain");
+
         X509KeyManager keyMgr = getManagerFromToken(alias);
         if (keyMgr != null) {
             String aliasName = alias.substring(alias.indexOf(':') + 1);
             return keyMgr.getCertificateChain(aliasName);
-        } else {
-            return mgr.getCertificateChain(alias);
         }
+
+        return x509KeyManager.getCertificateChain(alias);
     }
 
     /**
@@ -205,10 +198,10 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
      */
     @Override
     public String[] getClientAliases(String keyType, Principal[] issuers) {
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Getting client aliases");
+        if (_logger.isLoggable(FINE)) {
+            _logger.log(FINE, "Getting client aliases");
         }
-        return mgr.getClientAliases(keyType, issuers);
+        return x509KeyManager.getClientAliases(keyType, issuers);
     }
 
     /**
@@ -220,10 +213,10 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
      */
     @Override
     public String[] getServerAliases(String keyType, Principal[] issuers) {
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Getting server aliases");
+        if (_logger.isLoggable(FINE)) {
+            _logger.log(FINE, "Getting server aliases");
         }
-        return mgr.getServerAliases(keyType, issuers);
+        return x509KeyManager.getServerAliases(keyType, issuers);
     }
 
     /**
@@ -234,15 +227,15 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
      */
     @Override
     public PrivateKey getPrivateKey(String alias) {
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Getting private key for alias:{0}", alias);
+        if (_logger.isLoggable(FINE)) {
+            _logger.log(FINE, "Getting private key for alias:{0}", alias);
         }
         X509KeyManager keyMgr = getManagerFromToken(alias);
         if (keyMgr != null) {
             String aliasName = alias.substring(alias.indexOf(':') + 1);
             return keyMgr.getPrivateKey(aliasName);
         } else {
-            return mgr.getPrivateKey(alias);
+            return x509KeyManager.getPrivateKey(alias);
         }
     }
 
@@ -362,7 +355,7 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
     private static void postClientAuth(Subject subject, Class<?> clazz) {
         final Class<?> clas = clazz;
         final Subject fs = subject;
-        Set credset = (Set) AppservAccessController.doPrivileged(new PrivilegedAction<Set>() {
+        Set credset = AppservAccessController.doPrivileged(new PrivilegedAction<Set>() {
             @Override
             public Set run() {
                 if (_logger.isLoggable(Level.FINEST)) {
@@ -401,6 +394,7 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
                     String realm = p.getRealm();
                     _logger.log(Level.FINEST, "In LCD cert-login::{0} realm :{1}", new Object[] { user, realm });
                 }
+
                 setClientSecurityContext(user, fs);
                 return;
             }
@@ -415,9 +409,7 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
      * @param Credentials the credentials that the server associated with it
      */
     private static void setClientSecurityContext(String username, Subject subject) {
-
-        ClientSecurityContext securityContext = new ClientSecurityContext(username, subject);
-        ClientSecurityContext.setCurrent(securityContext);
+        ClientSecurityContext.setCurrent(new ClientSecurityContext(username, subject));
     }
 
 }

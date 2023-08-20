@@ -22,8 +22,7 @@ import jakarta.xml.ws.BindingProvider;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class PingClient {
-    private static SimpleReporterAdapter stat =
-            new SimpleReporterAdapter("appserv-tests");
+    private static SimpleReporterAdapter stat = new SimpleReporterAdapter("appserv-tests");
 
     @WebServiceRef
     private static PingEjbService ejbService;
@@ -39,10 +38,8 @@ public class PingClient {
         try {
             PingEjb pingEjbPort = ejbService.getPingEjbPort();
 
-            ((BindingProvider)pingEjbPort).getRequestContext().put(
-                BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-                "http://" + host + ":" + port +
-                "/PingEjbService/PingEjb?WSDL");
+            ((BindingProvider) pingEjbPort).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
+                    "http://" + host + ":" + port + "/PingEjbService/PingEjb?WSDL");
 
             String result = pingEjbPort.ping("Hello");
             if (result == null || result.indexOf("Sun") == -1) {
@@ -50,7 +47,7 @@ public class PingClient {
                 stat.addStatus("JWSS Ejb Ping", stat.FAIL);
             }
             stat.addStatus("JWSS Ejb Ping", stat.PASS);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             stat.addStatus("JWSS Ejb Ping", stat.FAIL);
         }
@@ -58,10 +55,8 @@ public class PingClient {
         try {
             PingServlet pingServletPort = servletService.getPingServletPort();
 
-            ((BindingProvider)pingServletPort).getRequestContext().put(
-                BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-                "http://" + host + ":" + port +
-                "/security-wss-gartner-web/PingServletService?WSDL");
+            ((BindingProvider) pingServletPort).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
+                    "http://" + host + ":" + port + "/security-wss-gartner-web/PingServletService?WSDL");
 
             String result = pingServletPort.ping("Hello");
             if (result == null || result.indexOf("Sun") == -1) {
@@ -69,10 +64,11 @@ public class PingClient {
                 stat.addStatus("JWSS Servlet Ping", stat.FAIL);
             }
             stat.addStatus("JWSS Servlet Ping", stat.PASS);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             stat.addStatus("JWSS Servlet Ping", stat.FAIL);
         }
+        
         stat.printSummary("security-wss-ping");
     }
 }

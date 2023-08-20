@@ -23,10 +23,11 @@ import static org.omnifaces.eleos.config.factory.file.AuthConfigFileFactory.DEFA
 
 import java.security.Provider;
 import java.security.Security;
+import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.logging.Logger;
 
-import org.glassfish.config.support.DomainXml;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.Service;
@@ -34,12 +35,14 @@ import org.omnifaces.eleos.config.factory.file.AuthConfigFileFactory;
 import org.omnifaces.eleos.config.module.configprovider.GFServerConfigProvider;
 
 import com.sun.enterprise.security.ContainerSecurityLifecycle;
+import com.sun.enterprise.security.jmac.AuthMessagePolicy;
 import com.sun.enterprise.security.jmac.ConfigDomainParser;
 import com.sun.enterprise.security.jmac.WebServicesDelegate;
 import com.sun.logging.LogDomains;
 
 import jakarta.inject.Singleton;
 import jakarta.security.auth.message.MessageInfo;
+import jakarta.security.auth.message.MessagePolicy;
 
 /**
  * @author vbkumarjayanti
@@ -98,10 +101,16 @@ public class JavaEESecurityLifecycle implements ContainerSecurityLifecycle, Post
         Function<MessageInfo, String> authContextIdGenerator =
                 e -> Globals.get(WebServicesDelegate.class).getAuthContextID(e);
 
+        BiFunction<String, Map<String, Object>, MessagePolicy[]> soapPolicyGenerator =
+                (authContextId, properties) -> AuthMessagePolicy.getSOAPPolicies(
+                       AuthMessagePolicy.getMessageSecurityBinding("SOAP", properties),
+                       authContextId, true);
+
         Provider provider = new Provider("EleosProvider", "1.0", "") {
             private static final long serialVersionUID = 1L;
         };
         provider.put("authContextIdGenerator", authContextIdGenerator);
+        provider.put("soapPolicyGenerator", soapPolicyGenerator);
 
         Security.addProvider(provider);
 

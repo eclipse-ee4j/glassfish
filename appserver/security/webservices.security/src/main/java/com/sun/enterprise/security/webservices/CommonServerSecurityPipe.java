@@ -29,6 +29,7 @@ import java.util.logging.Logger;
 
 import javax.security.auth.Subject;
 
+import com.sun.enterprise.security.jmac.callback.ServerContainerCallbackHandler;
 import com.sun.enterprise.security.jmac.provider.PacketMapMessageInfo;
 import com.sun.enterprise.security.jmac.provider.PacketMessageInfo;
 import com.sun.enterprise.security.jmac.provider.config.PipeHelper;
@@ -46,6 +47,7 @@ import jakarta.xml.ws.WebServiceException;
 /**
  * This pipe is used to do Jakarta Authentication security
  */
+@SuppressWarnings("deprecation")
 public class CommonServerSecurityPipe extends AbstractFilterPipeImpl {
 
     protected static final Logger _logger = LogUtils.getLogger();
@@ -57,17 +59,17 @@ public class CommonServerSecurityPipe extends AbstractFilterPipeImpl {
 
     private PipeHelper helper;
 
-    public CommonServerSecurityPipe(Map props, final Pipe next, boolean isHttpBinding) {
+    public CommonServerSecurityPipe(Map<String, Object> props, final Pipe next, boolean isHttpBinding) {
         super(next);
         props.put(PipeConstants.SECURITY_PIPE, this);
-        this.helper = new PipeHelper(PipeConstants.SOAP_LAYER, props, null);
+        this.helper = new PipeHelper(PipeConstants.SOAP_LAYER, props, new ServerContainerCallbackHandler());
         this.isHttpBinding = isHttpBinding;
     }
 
     protected CommonServerSecurityPipe(CommonServerSecurityPipe that, PipeCloner cloner) {
         super(that, cloner);
-        // we can share the helper for all pipes so that the remove
-        // registration (in server side) can be done properly
+        // We can share the helper for all pipes so that the remove registration (in server side) can be
+        // done properly
         this.helper = that.helper;
         this.isHttpBinding = that.isHttpBinding;
     }
@@ -83,6 +85,7 @@ public class CommonServerSecurityPipe extends AbstractFilterPipeImpl {
             Packet request = new Packet();
             PacketMessageInfo messageInfo = new PacketMapMessageInfo(request, new Packet());
             Subject subject = new Subject();
+
             ServerAuthContext serverAuthContext = helper.getServerAuthContext(messageInfo, subject);
             if (serverAuthContext != null && WSIT_SERVER_AUTH_CONTEXT.equals(serverAuthContext.getClass().getName())) {
                 serverAuthContext.cleanSubject(messageInfo, subject);
@@ -176,9 +179,9 @@ public class CommonServerSecurityPipe extends AbstractFilterPipeImpl {
                     }
                 } else {
                     try {
-                        response = (Packet) Subject.doAsPrivileged(clientSubject, new PrivilegedExceptionAction() {
+                        response = Subject.doAsPrivileged(clientSubject, new PrivilegedExceptionAction<Packet>() {
                             @Override
-                            public Object run() throws Exception {
+                            public Packet run() throws Exception {
                                 // proceed to invoke the endpoint
                                 return next.process(validatedRequest);
                             }
@@ -191,7 +194,7 @@ public class CommonServerSecurityPipe extends AbstractFilterPipeImpl {
                 }
             }
 
-            // pipes are not supposed to return a null response packet
+            // Pipes are not supposed to return a null response packet
             if (response == null) {
                 WebServiceException wse = new WebServiceException(localStrings.getLocalString("enterprise.webservice.nullResponsePacket",
                         "Invocation of Service {0} returned null response packet", new Object[] { helper.getModelName() }));
@@ -210,7 +213,7 @@ public class CommonServerSecurityPipe extends AbstractFilterPipeImpl {
             // ValidateRequest did not return success
             _logger.log(FINE, "ws.status_validate_request", status);
 
-            // even for one-way mep, may return response with non-empty message
+            // Even for one-way mep, may return response with non-empty message
             response = info.getResponsePacket();
         }
 

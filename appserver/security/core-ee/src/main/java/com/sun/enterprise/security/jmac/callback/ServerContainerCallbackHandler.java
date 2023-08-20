@@ -27,8 +27,6 @@ import java.io.IOException;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
-import org.omnifaces.eleos.config.helper.BaseCallbackHandler;
-
 import com.sun.enterprise.security.auth.login.LoginContextDriver;
 import com.sun.enterprise.security.auth.login.common.LoginException;
 
@@ -46,7 +44,7 @@ import jakarta.security.auth.message.callback.TrustStoreCallback;
  * @author Harpreet Singh
  * @author Shing Wai Chan
  */
-final public class ServerContainerCallbackHandler extends BaseCallbackHandler {
+final public class ServerContainerCallbackHandler extends GlassFishBaseCallbackHandler {
 
     private String realmName;
 
@@ -93,7 +91,7 @@ final public class ServerContainerCallbackHandler extends BaseCallbackHandler {
     }
 
     private void ditchPassword(char[] passwd) {
-     // Explicitly ditch the password
+        // Explicitly ditch the password
         if (passwd != null) {
             for (int i = 0; i < passwd.length; i++) {
                 passwd[i] = ' ';

@@ -66,6 +66,11 @@ archive_bundles(){
   cp nucleus/distributions/nucleus/target/*.zip ${WORKSPACE}/bundles
 }
 
+archive_embedded(){
+  mkdir -p ${WORKSPACE}/embedded
+  cp appserver/extras/embedded/all/target/*.jar ${WORKSPACE}/embedded
+}
+
 dev_build(){
   mvn -U clean install -Pstaging,fastest -T2C ${MVN_EXTRA}
 }

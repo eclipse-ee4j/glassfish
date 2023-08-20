@@ -69,6 +69,7 @@ archive_bundles(){
 archive_embedded(){
   mkdir -p ${WORKSPACE}/embedded
   cp appserver/extras/embedded/all/target/*.jar ${WORKSPACE}/embedded
+  cp appserver/extras/embedded/web/target/*.jar ${WORKSPACE}/embedded
 }
 
 dev_build(){

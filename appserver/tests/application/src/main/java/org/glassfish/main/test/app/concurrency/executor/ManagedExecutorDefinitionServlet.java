@@ -94,7 +94,7 @@ public class ManagedExecutorDefinitionServlet extends HttpServlet {
                     "Completation stage that is supplied to copy must not be modified by the ManagedExecutorService.");
             }
 
-            final String result = stage3.get(1000, TimeUnit.SECONDS);
+            final String result = stage3.get(10, TimeUnit.SECONDS);
             if ("StringContext propagated; IntContext unchanged".equals(result)) {
                 return;
             }

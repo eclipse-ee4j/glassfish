@@ -22,12 +22,15 @@ import jakarta.servlet.annotation.ServletSecurity;
 import jakarta.servlet.annotation.ServletSecurity.EmptyRoleSemantic;
 import jakarta.servlet.annotation.WebServlet;
 
-
-@WebServlet(urlPatterns = {"/Example3b/*"})
-@ServletSecurity(value = @HttpConstraint(EmptyRoleSemantic.PERMIT),
-                 httpMethodConstraints = {
-                   @HttpMethodConstraint(value = "GET", rolesAllowed = "users"),
-                   @HttpMethodConstraint(value = "POST", rolesAllowed = "users")
-                 })
+@WebServlet(urlPatterns = { "/Example3b/*" })
+@ServletSecurity(value = 
+    @HttpConstraint(EmptyRoleSemantic.PERMIT), 
+    httpMethodConstraints = {
+        @HttpMethodConstraint(
+            value = "GET", 
+            rolesAllowed = "users"), 
+        @HttpMethodConstraint(
+            value = "POST", 
+            rolesAllowed = "users") })
 public class Example3b extends BaseServlet {
 }

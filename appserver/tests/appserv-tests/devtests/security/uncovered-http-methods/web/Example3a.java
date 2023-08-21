@@ -20,10 +20,12 @@ import jakarta.servlet.annotation.HttpMethodConstraint;
 import jakarta.servlet.annotation.ServletSecurity;
 import jakarta.servlet.annotation.WebServlet;
 
-@WebServlet(urlPatterns = {"/Example3a"})
-@ServletSecurity(httpMethodConstraints = {
-                   @HttpMethodConstraint(value = "GET"),
-                   @HttpMethodConstraint(value = "POST")
-                 })
+@WebServlet(urlPatterns = { "/Example3a" })
+@ServletSecurity(
+    httpMethodConstraints = { 
+        @HttpMethodConstraint(
+            value = "GET"), 
+        @HttpMethodConstraint
+            (value = "POST") })
 public class Example3a extends BaseServlet {
 }

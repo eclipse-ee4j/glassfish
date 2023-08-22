@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.main.test.app.web.mrjar;
+package org.glassfish.main.test.app.mrjar.servlet;
 
 import jakarta.servlet.ServletContainerInitializer;
 
@@ -24,8 +24,8 @@ import java.net.HttpURLConnection;
 import java.nio.file.Files;
 
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
+import org.glassfish.main.test.app.mrjar.MultiReleaseTestBase;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.jupiter.api.AfterAll;
@@ -55,8 +55,6 @@ public class MultiReleaseServletContainerInitializerTest extends MultiReleaseTes
     private static final String CONTEXT_ROOT = "/" + APP_NAME;
 
     private static final String SCE_LIB_FILE_NAME = "scelib.jar";
-
-    private static final String WAR_FILE_NAME = APP_NAME + ".war";
 
     @BeforeAll
     public static void deploy() throws IOException {
@@ -126,10 +124,8 @@ public class MultiReleaseServletContainerInitializerTest extends MultiReleaseTes
             .addAsLibrary(mrLib)
             .addAsLibrary(sceLib);
 
-        File tmpDir = Files.createTempDirectory(APP_NAME).toFile();
-        File warFile = new File(tmpDir, WAR_FILE_NAME);
-        webArchive.as(ZipExporter.class).exportTo(warFile, true);
-        tmpDir.deleteOnExit();
-        return warFile;
+        LOG.log(INFO, webArchive.toString(true));
+
+        return createFileFor(webArchive, APP_NAME);
     }
 }

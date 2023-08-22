@@ -57,11 +57,9 @@ import jakarta.inject.Inject;
 public class AppClientSecurityInfoImpl implements AppClientSecurityInfo {
 
     private static final Logger LOG = System.getLogger(AppClientSecurityInfoImpl.class.getName());
-
     private static final String DEFAULT_PARSER_CLASS = "com.sun.enterprise.security.appclient.ConfigXMLParser";
 
     private CallbackHandler callbackHandler;
-    private CredentialType appclientCredentialType;
     boolean isJWS;
     boolean useGUIAuth;
     private List<TargetServer> targetServers;
@@ -71,20 +69,20 @@ public class AppClientSecurityInfoImpl implements AppClientSecurityInfo {
     protected SSLUtils sslUtils;
 
     @Inject
-    private SecurityServicesUtil secServUtil;
+    private SecurityServicesUtil securityServicesUtil;
+
     @Inject
     private Util util;
+
     @Inject
     private IIOPSSLUtil appClientSSLUtil;
 
     @Override
-    public void initializeSecurity(List<TargetServer> tServers, List<MessageSecurityConfig> configs, CallbackHandler handler,
-            CredentialType credType, String username, char[] password, boolean isJWS, boolean useGUIAuth) {
+    public void initializeSecurity(List<TargetServer> tServers, List<MessageSecurityConfig> configs, CallbackHandler handler, String username, char[] password, boolean isJWS, boolean useGUIAuth) {
 
         // Security init
         this.isJWS = isJWS;
         this.useGUIAuth = useGUIAuth;
-        this.appclientCredentialType = credType;
         if (handler != null) {
             this.callbackHandler = handler;
         } else {
@@ -107,12 +105,13 @@ public class AppClientSecurityInfoImpl implements AppClientSecurityInfo {
         try {
             // Setup Jakarta Authentication factory define default factory if it is not already defined
             String defaultFactory = java.security.Security.getProperty(DEFAULT_FACTORY_SECURITY_PROPERTY);
-            LOG.log(DEBUG, "AuthConfigFactory obtained from java.security.Security.getProperty(\"authconfigprovider.factory\"): {0}", defaultFactory);
+            LOG.log(DEBUG, "AuthConfigFactory obtained from java.security.Security.getProperty(\"authconfigprovider.factory\"): {0}",
+                    defaultFactory);
             if (defaultFactory == null) {
                 java.security.Security.setProperty(DEFAULT_FACTORY_SECURITY_PROPERTY, AuthConfigFileFactory.class.getName());
             }
         } catch (Exception e) {
-            LOG.log(WARNING, "SEC9001: ACC: Error in initializing JSR 196 Default Factory", e);
+            LOG.log(WARNING, "SEC9001: ACC: Error in initializing Jakarta Authentication Default Factory", e);
         }
 
         setSSLData(getTargetServers());
@@ -120,23 +119,22 @@ public class AppClientSecurityInfoImpl implements AppClientSecurityInfo {
             UsernamePasswordStore.set(username, password);
         }
 
-        // Why am i setting both? (narrator: a question that would remain unanswered forever)
-        secServUtil.setCallbackHandler(callbackHandler);
+        securityServicesUtil.setCallbackHandler(callbackHandler);
         util.setCallbackHandler(callbackHandler);
     }
 
     @Override
     public int getCredentialEncoding(CredentialType type) {
         switch (type) {
-            case USERNAME_PASSWORD:
-                return SecurityConstants.USERNAME_PASSWORD;
-            case CERTIFICATE:
-                return SecurityConstants.CERTIFICATE;
-            case ALL:
-                return SecurityConstants.ALL;
-            default:
-                throw new RuntimeException("Unknown CredentialType");
-            }
+        case USERNAME_PASSWORD:
+            return SecurityConstants.USERNAME_PASSWORD;
+        case CERTIFICATE:
+            return SecurityConstants.CERTIFICATE;
+        case ALL:
+            return SecurityConstants.ALL;
+        default:
+            throw new RuntimeException("Unknown CredentialType");
+        }
     }
 
     @Override

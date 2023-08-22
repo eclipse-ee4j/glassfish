@@ -43,14 +43,12 @@ public interface AppClientSecurityInfo {
      *
      * @param tServers the Appclient Configuration Object
      * @param handler the CallbackHandler
-     * @param appclientCredType The CredentialType of the Appclient
      * @param username the static username if any was configured
      * @param password the static password if any was configured
      * @Param isJWS set to true if it is Java WebStart client
      * @Param useGUIAuth flag when set to true indicates the use of GUI Authentication
      */
-    void initializeSecurity(List<TargetServer> tServers, List<MessageSecurityConfig> msgSecConfigs, CallbackHandler handler,
-            CredentialType appclientCredType, String username, char[] password, boolean isJWS, boolean useGUIAuth);
+    void initializeSecurity(List<TargetServer> tServers, List<MessageSecurityConfig> msgSecConfigs, CallbackHandler handler, String username, char[] password, boolean isJWS, boolean useGUIAuth);
 
     /**
      * @param type the credential type

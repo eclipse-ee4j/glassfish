@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.main.test.app.web.mrjar;
+package org.glassfish.main.test.app.mrjar.webapp;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,8 +22,8 @@ import java.net.HttpURLConnection;
 import java.nio.file.Files;
 
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
+import org.glassfish.main.test.app.mrjar.MultiReleaseTestBase;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.jupiter.api.AfterAll;
@@ -44,15 +44,13 @@ import static org.junit.jupiter.api.condition.JRE.JAVA_17;
 import static org.objectweb.asm.Opcodes.V11;
 import static org.objectweb.asm.Opcodes.V17;
 
-public class MultiReleaseWebApplicationTest extends MultiReleaseTestBase{
+public class MultiReleaseWebApplicationTest extends MultiReleaseTestBase {
 
     private static final System.Logger LOG = System.getLogger(MultiReleaseWebApplicationTest.class.getName());
 
     private static final String APP_NAME = "mrwebapp";
 
     private static final String CONTEXT_ROOT = "/" + APP_NAME;
-
-    private static final String APP_FILE_NAME = APP_NAME + ".war";
 
     @BeforeAll
     public static void deploy() throws IOException {
@@ -65,7 +63,6 @@ public class MultiReleaseWebApplicationTest extends MultiReleaseTestBase{
             } catch (IOException e) {
                 LOG.log(WARNING, "An error occurred while remove temporary file " + warFile.getAbsolutePath(), e);
             }
-
         }
     }
 
@@ -118,10 +115,8 @@ public class MultiReleaseWebApplicationTest extends MultiReleaseTestBase{
             .addClass(MultiReleaseResource.class)
             .addClass(MultiReleaseApplication.class);
 
-        File tmpDir = Files.createTempDirectory(APP_NAME).toFile();
-        File warFile = new File(tmpDir, APP_FILE_NAME);
-        webArchive.as(ZipExporter.class).exportTo(warFile, true);
-        tmpDir.deleteOnExit();
-        return warFile;
+        LOG.log(INFO, webArchive.toString(true));
+
+        return createFileFor(webArchive, APP_NAME);
     }
 }

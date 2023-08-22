@@ -14,14 +14,18 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.main.test.app.web.mrjar;
+package org.glassfish.main.test.app.mrjar.webapp;
 
-public interface Version {
+import jakarta.ws.rs.ApplicationPath;
+import jakarta.ws.rs.core.Application;
 
-    /**
-     * Returns implementation class file version.
-     *
-     * @return class file version
-     */
-    String getVersion();
+import java.util.Set;
+
+@ApplicationPath("")
+public class MultiReleaseApplication extends Application {
+
+    @Override
+    public Set<Class<?>> getClasses() {
+        return Set.of(MultiReleaseResource.class);
+    }
 }

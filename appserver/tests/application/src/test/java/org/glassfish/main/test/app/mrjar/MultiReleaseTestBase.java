@@ -14,24 +14,29 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.main.test.app.web.mrjar;
+package org.glassfish.main.test.app.mrjar;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.nio.file.Files;
+import java.util.jar.Manifest;
 
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
+import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
+import org.jboss.shrinkwrap.api.exporter.ZipExporter;
+import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
-
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.util.jar.Manifest;
 
 import static java.util.jar.Attributes.Name.MANIFEST_VERSION;
 import static java.util.jar.Attributes.Name.MULTI_RELEASE;
@@ -52,14 +57,9 @@ public class MultiReleaseTestBase {
     protected static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
 
     protected String readResponse(HttpURLConnection connection) throws Exception {
-        StringBuilder response = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
+        try (InputStream in = connection.getInputStream()) {
+            return new String(in.readAllBytes()).trim();
         }
-        return response.toString();
     }
 
     protected static JavaArchive createMultiReleaseLibrary() throws IOException {
@@ -69,6 +69,24 @@ public class MultiReleaseTestBase {
             .add(generateVersionClass(V1_8), packageJarEntryFor(VersionImpl.class, V1_8), classFileNameFor(VersionImpl.class))
             .add(generateVersionClass(V11), packageJarEntryFor(VersionImpl.class, V11), classFileNameFor(VersionImpl.class))
             .add(generateVersionClass(V17), packageJarEntryFor(VersionImpl.class, V17), classFileNameFor(VersionImpl.class));
+    }
+
+    protected static File createFileFor(Archive<?> archive, String applicationName) throws IOException {
+        File tempDir = Files.createTempDirectory(applicationName).toFile();
+        File archiveFile = new File(tempDir, applicationName + extensionFor(archive));
+        archive.as(ZipExporter.class).exportTo(archiveFile, true);
+        tempDir.deleteOnExit();
+        return archiveFile;
+    }
+
+    private static String extensionFor(Archive<?> archive) {
+        if (archive instanceof EnterpriseArchive) {
+            return ".ear";
+        } else if (archive instanceof WebArchive) {
+            return ".war";
+        } else {
+            return ".jar";
+        }
     }
 
     private static String classFileNameFor(Class<?> c) {

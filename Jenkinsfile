@@ -189,12 +189,15 @@ spec:
             # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
             mvn -B -e clean install -Pfastest,staging -T4C
             ./gfbuild.sh archive_bundles
+            ./gfbuild.sh archive_embedded
             mvn -B -e clean
             tar -c -C ${WORKSPACE}/appserver/tests common_test.sh gftest.sh appserv-tests quicklook | gzip --fast > ${WORKSPACE}/bundles/appserv_tests.tar.gz
             ls -la ${WORKSPACE}/bundles
+            ls -la ${WORKSPACE}/embedded
           '''
         }
         archiveArtifacts artifacts: 'bundles/*.zip', onlyIfSuccessful: true
+        archiveArtifacts artifacts: 'embedded/*', onlyIfSuccessful: true
         stash includes: 'bundles/*', name: 'build-bundles'
       }
     }

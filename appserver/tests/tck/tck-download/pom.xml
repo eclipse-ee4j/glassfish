@@ -35,6 +35,7 @@
         <module>jakarta-ant-based-tck</module>
         <module>jakarta-rest-tck</module>
         <module>jakarta-faces-tck</module>
+        <module>jakarta-connectors-tck</module>
         <module>jakarta-pages-tck</module>
         <module>jakarta-pages-tags-tck</module>
         <module>jakarta-servlet-tck</module>

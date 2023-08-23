@@ -9,6 +9,17 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
+## July 29, 2023 -- Eclipse GlassFish 7.0.7 Available
+
+Another month, another new version of Eclipse GlassFish 7.0.7 released today.
+
+This release prepares GlassFish for the upcoming JDK 21; it compiles and passes all internal tests using OpenJDK 21ea33. Several TCKs passed on JDK 21 as well, but the TCK as a whole is not JDK 21 compatible yet. 
+
+This release also adds support for MicroProfile JWT 2.1, and has many components updated to their latest version. Several issues have again been fixed in the Admin Console. An important bug regarding Enterprise Beans method generation has been fixed, as has a remote access issue for Enterprise Beans.
+
+Download links are available from the [GlassFish Download page](download.md).
+
+
 ## June 29, 2023 -- Eclipse GlassFish 7.0.6 Available
 
 We are very happy to present the release today of Eclipse GlassFish 7.0.6.

@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.glassfish.main.tests.tck</groupId>
+        <artifactId>tck</artifactId>
+        <version>7.0.8-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>glassfish-external-tck-connectors</artifactId>
+    <packaging>pom</packaging>
+
+    <name>TCK: Connectors</name>
+
+    <properties>
+        <ant.home>${project.build.directory}/apache-ant-${ant.version}</ant.home>
+        <ant.zip.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip</ant.zip.url>
+
+        <tck.home>${project.build.directory}/connectors-tck</tck.home>
+        <tck.tests.home>${tck.home}/src/com/sun/ts/tests/connector</tck.tests.home>
+
+        <glassfish.home>${project.build.directory}/glassfish7</glassfish.home>
+        <glassfish.version>${project.version}</glassfish.version>
+        <glassfish.asadmin>${glassfish.home}/glassfish/bin/asadmin</glassfish.asadmin>
+
+        <jacoco.includes>org/glassfish/**\:com/sun/enterprise/**</jacoco.includes>
+
+        <port.admin>14848</port.admin>
+        <port.derby>11527</port.derby>
+        <port.http>18080</port.http>
+        <port.https>18181</port.https>
+        <port.jms>17676</port.jms>
+        <port.jmx>18686</port.jmx>
+        <port.orb>13700</port.orb>
+        <port.orb.mutual>13920</port.orb.mutual>
+        <port.orb.ssl>13820</port.orb.ssl>
+        <port.harness.log>12000</port.harness.log>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.main.distributions</groupId>
+            <artifactId>glassfish</artifactId>
+            <version>${glassfish.version}</version>
+            <type>zip</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.tests.tck</groupId>
+            <artifactId>jakarta-connectors-tck</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>download-ant</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <skip>${skipITs}</skip>
+                    <url>${ant.zip.url}</url>
+                    <unpack>true</unpack>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <configuration>
+                    <skip>${skipITs}</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>unpack-glassfish</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeArtifactIds>glassfish</includeArtifactIds>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>unpack-tck</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeArtifactIds>jakarta-connectors-tck</includeArtifactIds>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.ant</groupId>
+                        <artifactId>ant</artifactId>
+                        <version>${ant.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>ant-contrib</groupId>
+                        <artifactId>ant-contrib</artifactId>
+                        <version>1.0b3</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>ant</groupId>
+                                <artifactId>ant</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <skip>${skipITs}</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>prepare-tck-and-glassfish</id>
+                        <phase>pre-integration-test</phase>
+                        <configuration>
+                            <target xmlns:if="ant:if" xmlns:unless="ant:unless">
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
+                                         classpathref="maven.plugin.classpath" />
+
+                               <macrodef name="tck-setting">
+                                    <attribute name="key" /> <attribute name="value" />
+                                    <sequential>
+                                      <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
+                                        match="@{key}=.*" replace="@{key}=@{value}" />
+                                    </sequential>
+                                </macrodef>
+
+                                <macrodef name="tck-add">
+                                    <attribute name="key" /> <attribute name="value" />
+                                    <sequential>
+                                        <concat append="true" destfile="${tck.home}/bin/ts.jte">@{key}=@{value}${line.separator}</concat>
+                                    </sequential>
+                                </macrodef>
+
+                                <!-- Change configuration -->
+                                
+                                <tck-setting key="connector.home" value="${glassfish.home}/glassfish"/>
+                                <tck-setting key="harness.log.traceflag" value="true"/>
+                                <tck-setting key="s1as.jvm.options" value="-Dj2eelogin.name=${user}:-Dj2eelogin.password=${password}"/>
+
+                                <tck-setting key="webServerHost" value="localhost"/>
+                                <tck-setting key="webServerPort" value="${port.http}"/>
+                                <tck-setting key="securedWebServicePort" value="${port.https}"/>
+                                <tck-setting key="s1as.admin.port" value="${port.admin}"/>
+                                <tck-setting key="glassfish.admin.port" value="${port.admin}"/>
+                                <tck-setting key="orb.host" value="localhost"/>
+                                <tck-setting key="orb.port" value="${port.orb}"/>
+                                <tck-setting key="database.port" value="${port.derby}"/>
+                                <tck-setting key="harness.log.port" value="${port.harness.log}"/>
+
+                                <tck-setting key="report.dir" value="${tck.home}/connectorsreport/connectors"/>
+                                <tck-setting key="work.dir" value="${tck.home}/connectorswork/connectors"/>
+                                
+                                <replace file="${tck.home}/bin/ts.jte">
+                                  <replacetoken><![CDATA[-XX\\\:MaxPermSize=512m:]]></replacetoken>
+                                  <replacevalue><![CDATA[]]></replacevalue>
+                                </replace>
+
+                                <limit maxwait="60">
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                        <arg value="delete-domain"/>
+                                        <arg value="domain1" />
+                                    </exec>
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                        <arg value="create-domain"/>
+                                        <arg value="--domainproperties=domain.adminPort=${port.admin}:domain.instancePort=${port.http}:http.ssl.port=${port.https}:jms.port=${port.jms}:domain.jmxPort=${port.jmx}:orb.listener.port=${port.orb}:orb.ssl.port=${port.orb.ssl}:orb.mutualauth.port=${port.orb.mutual}" />
+                                        <arg value="--user=admin" />
+                                        <arg value="--nopassword" />
+                                        <arg value="domain1" />
+                                    </exec>
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                        <arg value="start-domain"/>
+                                    </exec>
+
+                                    <if>
+                                        <isset property="jacoco.version" />
+                                        <then>
+                                            <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                                <arg value="create-jvm-options" />
+                                                <arg value="--port=${port.admin}" />
+                                                <arg value="&quot;-javaagent\:${settings.localRepository}/org/jacoco/org.jacoco.agent/${jacoco.version}/org.jacoco.agent-${jacoco.version}-runtime.jar=destfile=${project.build.directory}/jacoco-it.exec,includes=${jacoco.includes}&quot;" />
+                                            </exec>
+                                        </then>
+                                    </if>
+                                    
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                        <arg value="create-jvm-options" />
+                                        <arg value="--port=${port.admin}" />
+                                        <arg value="&quot;-Djava.security.manager&quot;" />
+                                    </exec>
+                                    
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                        <arg value="stop-domain"/>
+                                        <arg value="domain1"/>
+                                    </exec>
+                                </limit>
+                                
+                                <mkdir dir="${tck.home}/connectorsreport"/>
+                                <mkdir dir="${tck.home}/connectorsreport/connectors"/>
+
+                                <replace file="${tck.home}/bin/xml/ts.top.import.xml">
+                                  <replacetoken><![CDATA[<jvmarg value="-Xmx512m"/>]]></replacetoken>
+                                  <replacevalue><![CDATA[<jvmarg value="-Xmx512m"/>
+                                <jvmarg value="-Djavatest.security.noSecurityManager=true"/>]]></replacevalue>
+                                </replace>
+
+                                <replace file="${tck.home}/bin/xml/ts.top.import.xml" if:set="tck.suspend" >
+                                  <replacetoken><![CDATA[<jvmarg value="-Xmx512m"/>]]></replacetoken>
+                                  <replacevalue><![CDATA[<jvmarg value="-Xmx512m"/>
+                                <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=9010"/>]]></replacevalue>
+                                </replace>
+                                
+                                <replace file="${tck.home}/bin/xml/ts.top.import.xml" unless:set="tck.suspend" >
+                                  <replacetoken><![CDATA[<jvmarg value="-Xmx512m"/>
+                                <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=9010"/>]]></replacetoken>
+                                  <replacevalue><![CDATA[<jvmarg value="-Xmx512m"/>]]></replacevalue>
+                                </replace>
+                                
+                                
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+
+                    <execution>
+                        <id>configure-tck-tests</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target xmlns:if="ant:if" xmlns:unless="ant:unless">
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
+                                         classpathref="maven.plugin.classpath" />
+                                <limit maxwait="60">
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                        <arg value="start-domain"/>
+                                    </exec>
+                                </limit>
+
+                                <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin">
+                                    <arg value="config.vi"  />
+                                </exec>
+                                
+                                <!-- Deploy single test -->
+                                <sequential if:set="run.test" >
+                                    <dirname property="test.dir" file="${tck.home}/src/${run.test}"/>
+                                    <echo>Deploying from ${test.dir}</echo>
+                                    
+                                    <exec executable="${ant.home}/bin/ant" dir="${test.dir}">
+                                        <arg value="deploy"  />
+                                    </exec>
+                                </sequential>
+                                
+                                <!-- Deploy all tests -->
+                                <sequential unless:set="run.test" >
+                                    <exec executable="${ant.home}/bin/ant" dir="${tck.tests.home}">
+                                        <arg value="deploy.all"  />
+                                    </exec>
+                                </sequential>
+                            </target>
+                        </configuration>
+                    </execution>
+
+
+                     <execution>
+                        <id>run-tck-tests</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target xmlns:if="ant:if" xmlns:unless="ant:unless">
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
+                                         classpathref="maven.plugin.classpath" />
+                                         
+                                <echo level="info" message="Start running all tests" />
+                                <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin" resultproperty="testResult">
+                                    <arg value="-Dmultiple.tests=${run.test}" if:set="run.test" />
+                                    <arg value="runclient.nobinaryfinder" if:set="run.test" />
+                                    <arg value="run.all" unless:set="run.test" />
+                                    <env key="LC_ALL" value="C" />
+                                </exec>
+
+                                <if>
+                                    <not>
+                                        <equals arg1="${testResult}" arg2="0" />
+                                    </not>
+                                    <then>
+                                        <echo message="Running tests failed." />
+                                        <loadfile property="contents" srcFile="${glassfish.home}/glassfish/domains/domain1/logs/server.log" />
+                                        <echo message="${contents}" />
+                                    </then>
+                                </if>
+
+                                <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                    <arg value="stop-domain" />
+                                </exec>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

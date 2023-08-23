@@ -29,14 +29,20 @@ fi
 
 start_as_main_process () {
     local COMMAND
+    local ASADMIN_JAR="$AS_INSTALL_LIB/client/appserver-cli.jar"
+
+    if [[ "$@" == "--help" ]] || [[ "$@" == "--help=true" ]] || [[ "$@" == "-?" ]]; then
+      exec java -jar "$ASADMIN_JAR" start-domain --help
+    fi
 
     # Execute start-domain --dry-run and store the output line by line into an array.
     # If it fails, the array will contain a single element FAILED
-    readarray -t COMMAND < <(java -jar "$AS_INSTALL_LIB/client/appserver-cli.jar" start-domain --dry-run "$@" 2> /dev/null || echo -e 'FAILED' )
+    readarray -t COMMAND < <(java -jar "$ASADMIN_JAR" start-domain --dry-run "$@" 2> /dev/null || echo -e 'FAILED' )
 
-    # If asadmin command failed, we execute it again to show the output to the user and exit
+    # If asadmin command failed (last item is FAILED), we execute it again to show 
+    #   the output to the user and exit
     # If all OK, we filter and execute the command
-    if [ "${COMMAND[1]}" = FAILED ]
+    if [ "${COMMAND[-1]}" = FAILED ]
       then
 
         "$JAVA" -jar "$AS_INSTALL_LIB/client/appserver-cli.jar" start-domain --dry-run "$@"

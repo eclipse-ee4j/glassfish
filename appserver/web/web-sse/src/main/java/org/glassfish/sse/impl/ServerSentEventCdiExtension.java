@@ -44,6 +44,7 @@ import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.InjectionPoint;
 import jakarta.enterprise.inject.spi.ProcessAnnotatedType;
+import jakarta.enterprise.inject.spi.WithAnnotations;
 import jakarta.enterprise.util.AnnotationLiteral;
 
 /**
@@ -174,7 +175,7 @@ public class ServerSentEventCdiExtension implements Extension {
         }
     }
 
-    <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> pat, BeanManager beanManager) {
+    <T> void processAnnotatedType(@Observes @WithAnnotations(ServerSentEvent.class) ProcessAnnotatedType<T> pat, BeanManager beanManager) {
         if (LOGGER.isLoggable(FINE)) {
             LOGGER.fine("scanning type: " + pat.getAnnotatedType().getJavaClass().getName());
         }

@@ -67,7 +67,7 @@ public class RestExtension implements Extension {
     private static final LazyValue<Set<Class<?>>> REST_BOUND_INJECTABLES = Values.lazy((Value<Set<Class<?>>>)
             () -> sumNonJerseyBoundInjectables());
 
-    private void processAnnotatedType(@Observes ProcessAnnotatedType<?> processAnnotatedType, BeanManager beanManager) {
+    private void processAnnotatedType(@Observes ProcessAnnotatedType<? extends Application> processAnnotatedType, BeanManager beanManager) {
         final Class<?> baseClass = (Class<?>) processAnnotatedType.getAnnotatedType().getBaseType();
 
         if (Application.class.isAssignableFrom(baseClass) && Configuration.class.isAssignableFrom(baseClass)) {

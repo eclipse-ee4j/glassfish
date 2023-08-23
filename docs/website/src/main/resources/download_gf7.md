@@ -1,5 +1,26 @@
 # Eclipse GlassFish 7.x Downloads
 
+### GlassFish 7.0.7
+
+GlassFish 7.0.7 is a final release, containing final Jakarta EE 10 APIs. It compiles and runs on JDK 11 to JDK 21ea33. MicroProfile support requires JDK 17 or higher.
+
+This release prepares GlassFish for the upcoming JDK 21; it compiles and passes all internal tests using OpenJDK 21ea33. Several TCKs passed on JDK 21 as well, but the TCK as a whole is not JDK 21 compatible yet. 
+
+This release also adds support for MicroProfile JWT 2.1, and has many components updated to their latest version. Several issues have again been fixed in the Admin Console. An important bug regarding Enterprise Beans method generation has been fixed, as has a remote access issue for Enterprise Beans.
+
+Download:
+
+* [Eclipse GlassFish 7.0.7, Jakarta EE Platform, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-7.0.7.zip)
+* [Eclipse GlassFish 7.0.7, Jakarta EE Web Profile, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-7.0.7.zip)
+* [Eclipse GlassFish Embedded 7.0.7, Jakarta EE Full Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-all/7.0.7/jar)
+* [Eclipse GlassFish Embedded 7.0.7, Jakarta EE Web Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-web/7.0.7/jar)
+
+More details:
+
+* [Eclipse GlassFish 7.0.7 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.7)
+* [Jakarte EE Platform Specification Project](https://jakartaee.github.io/jakartaee-platform/) for more info about Jakarta EE 10
+
+
 ### GlassFish 7.0.6
 
 GlassFish 7.0.6 is a final release, containing final Jakarta EE 10 APIs. It compiles and runs on JDK 11 to JDK 20. MicroProfile support requires JDK 17 or higher.
@@ -18,7 +39,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.6 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.6)
-* [Jakarte EE Platform Specification Project](https://eclipse-ee4j.github.io/jakartaee-platform/) for more info about Jakarta EE 10
+* [Jakarte EE Platform Specification Project](https://jakartaee.github.io/jakartaee-platform/) for more info about Jakarta EE 10
 
 
 ### GlassFish 7.0.5
@@ -39,7 +60,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.5 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.5)
-* [Jakarte EE Platform Specification Project](https://eclipse-ee4j.github.io/jakartaee-platform/) for more info about Jakarta EE 10
+* [Jakarte EE Platform Specification Project](https://jakartaee.github.io/jakartaee-platform/) for more info about Jakarta EE 10
 
 
 ### GlassFish 7.0.4
@@ -60,7 +81,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.4 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.4)
-* [Jakarte EE Platform Specification Project](https://eclipse-ee4j.github.io/jakartaee-platform/) for more info about Jakarta EE 10
+* [Jakarte EE Platform Specification Project](https://jakartaee.github.io/jakartaee-platform/) for more info about Jakarta EE 10
 
 
 ### GlassFish 7.0.3
@@ -77,7 +98,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.3 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.3)
-* [Jakarte EE Platform Specification Project](https://eclipse-ee4j.github.io/jakartaee-platform/) for more info about Jakarta EE 10
+* [Jakarte EE Platform Specification Project](https://jakartaee.github.io/jakartaee-platform/) for more info about Jakarta EE 10
 
 
 ### GlassFish 7.0.2
@@ -94,7 +115,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.2 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.2)
-* [Jakarte EE Platform Specification Project](https://eclipse-ee4j.github.io/jakartaee-platform/) for more info about Jakarta EE 10
+* [Jakarte EE Platform Specification Project](https://jakartaee.github.io/jakartaee-platform/) for more info about Jakarta EE 10
 
 
 ### GlassFish 7.0.1
@@ -111,7 +132,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.1 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.1)
-* [Jakarte EE Platform Specification Project](https://eclipse-ee4j.github.io/jakartaee-platform/) for more info about Jakarta EE 10
+* [Jakarte EE Platform Specification Project](https://jakartaee.github.io/jakartaee-platform/) for more info about Jakarta EE 10
 
 
 ### GlassFish 7.0.0
@@ -128,4 +149,4 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.0 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.0)
-* [Jakarte EE Platform Specification Project](https://eclipse-ee4j.github.io/jakartaee-platform/) for more info about Jakarta EE 10
+* [Jakarte EE Platform Specification Project](https://jakartaee.github.io/jakartaee-platform/) for more info about Jakarta EE 10

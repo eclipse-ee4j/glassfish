@@ -156,8 +156,8 @@
 
         <easymock.version>4.3</easymock.version>
         <jmockit.version>1.49</jmockit.version>
-        <junit.version>5.9.2</junit.version>
-        <jmh.version>1.36</jmh.version>
+        <junit.version>5.10.0</junit.version>
+        <jmh.version>1.37</jmh.version>
         <osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -949,7 +949,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>10.12.1</version>
+                            <version>10.12.2</version>
                         </dependency>
                     </dependencies>
                     <executions>

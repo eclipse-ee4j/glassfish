@@ -124,7 +124,11 @@ class FilteringClassLoader extends ClassLoader {
         try (InputStream stream = manifestURL.openStream()) {
             return new Manifest(stream);
         } catch (final IOException e) {
-            LOG.log(Level.WARNING, "Could not read manifest at " + manifestURL, e);
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.WARNING, "Could not read manifest at " + manifestURL, e);
+            } else {
+                LOG.log(Level.WARNING, "Could not read manifest. " + e.getMessage());
+            }
             return null;
         }
     }

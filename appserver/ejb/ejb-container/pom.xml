@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.ejb</groupId>
         <artifactId>ejb</artifactId>
-        <version>7.0.8</version>
+        <version>7.0.9-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

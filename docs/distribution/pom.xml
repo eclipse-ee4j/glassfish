@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.docs</groupId>
         <artifactId>docs</artifactId>
-        <version>7.0.8-SNAPSHOT</version>
+        <version>7.0.8</version>
     </parent>
     <artifactId>distribution</artifactId>
     <packaging>jar</packaging>

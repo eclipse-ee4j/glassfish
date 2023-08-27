@@ -37,7 +37,7 @@
         <dependency>
             <groupId>org.glassfish.main.web</groupId>
             <artifactId>web-sse</artifactId>
-            <version>7.0.8-SNAPSHOT</version>
+            <version>7.0.8</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

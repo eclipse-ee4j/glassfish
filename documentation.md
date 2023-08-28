@@ -37,7 +37,7 @@
 
 ### Documentation for other GlassFish versions
 
-* [Development version (7.0.8-SNAPSHOT)](docs#development)
+* [Development version (7.0.9-SNAPSHOT)](docs#development)
 * [5.1.0 release](docs#5.1.0)
 
 ## Jakarta EE Documentation

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -239,6 +239,7 @@ public final class ClassGenerator {
         if (anchorClass == null || loader.getParent() == null || loader.getClass() == ASURLClassLoader.class) {
             return false;
         }
-        return Objects.equals(targetPackageName, anchorClass.getPackageName());
+        // Use MethodHandles.Lookup only if the anchor run-time Package defined by CL.
+        return Objects.equals(anchorClass.getPackage(), loader.getDefinedPackage(targetPackageName));
     }
 }

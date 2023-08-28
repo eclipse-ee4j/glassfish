@@ -11,7 +11,7 @@ sponsored by the Eclipse Foundation.
 
 ## August 28, 2023 -- Eclipse GlassFish 7.0.8 Available
 
-The entire GlassFish is happy to present you another great GlassFish release.
+The entire GlassFish team is happy to present you another great GlassFish release.
 
 Download links are available from the [GlassFish Download page](download.md).
 

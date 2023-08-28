@@ -9,6 +9,16 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
+## August 28, 2023 -- Eclipse GlassFish 7.0.8 Available
+
+The entire GlassFish team is happy to present you another great GlassFish release.
+
+Download links are available from the [GlassFish Download page](download.md).
+
+This release fixes multi-jar compatibility in GlassFish and does further preparations for JDK 21. It includes various component updates among which those for CDI, Faces, and JSON. Test coverage is improved by adding the TCKs for REST Client and Connectors. Finally, various CDI extensions have been optimised to reduce excessive and unnecessary calls to them.
+
+Download links are available from the [GlassFish Download page](download.md).
+
 ## July 29, 2023 -- Eclipse GlassFish 7.0.7 Available
 
 Another month, another new version of Eclipse GlassFish 7.0.7 released today.

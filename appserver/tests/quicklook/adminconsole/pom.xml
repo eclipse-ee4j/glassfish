@@ -21,7 +21,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.glassfish.quicklook</groupId>
     <artifactId>adminconsole</artifactId>
-    <version>7.0.8-SNAPSHOT</version>
+    <version>7.0.9-SNAPSHOT</version>
     <name>Admin Console Quicklook Tests</name>
     <packaging>jar</packaging>
     <parent>
@@ -101,7 +101,7 @@
         <dependency>
             <groupId>org.glassfish.common</groupId>
             <artifactId>amx-core</artifactId>
-            <version>7.0.8-SNAPSHOT</version>
+            <version>7.0.9-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

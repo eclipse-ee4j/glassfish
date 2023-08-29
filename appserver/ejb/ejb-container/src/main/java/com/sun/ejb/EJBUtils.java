@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,7 +19,6 @@ package com.sun.ejb;
 
 import com.sun.ejb.codegen.AsmSerializableBeanGenerator;
 import com.sun.ejb.codegen.EjbClassGeneratorFactory;
-import com.sun.ejb.codegen.Generator;
 import com.sun.ejb.codegen.GeneratorException;
 import com.sun.ejb.codegen.Remote30WrapperGenerator;
 import com.sun.ejb.codegen.RemoteGenerator;
@@ -50,6 +49,9 @@ import javax.rmi.PortableRemoteObject;
 
 import org.glassfish.api.naming.SimpleJndiName;
 
+import static com.sun.ejb.codegen.Generator.getBaseName;
+import static com.sun.ejb.codegen.Generator.getFullClassName;
+import static com.sun.ejb.codegen.Generator.getPackageName;
 import static java.util.logging.Level.FINE;
 
 /**
@@ -156,10 +158,10 @@ public class EJBUtils {
      * @param ejbClassName full class name
      */
     public static String getGeneratedOptionalInterfaceName(String ejbClassName) {
-        String packageName = Generator.getPackageName(ejbClassName);
-        String simpleName = Generator.getBaseName(ejbClassName);
+        String packageName = getPackageName(ejbClassName);
+        String simpleName = getBaseName(ejbClassName);
         String optionalIntfName = "__EJB31_Generated__" + simpleName + "__Intf__";
-        return packageName == null ? optionalIntfName : packageName + "." + optionalIntfName;
+        return getFullClassName(packageName, optionalIntfName);
     }
 
 

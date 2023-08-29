@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021-2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -71,7 +71,7 @@ public final class Remote30WrapperGenerator extends Generator {
         final String packageName = getPackageName(businessIntf);
         final String simpleName = getBaseName(businessIntf);
         final String generatedSimpleName = "_" + simpleName + "_Wrapper";
-        return packageName == null ? generatedSimpleName : packageName + "." + generatedSimpleName;
+        return getFullClassName(packageName, generatedSimpleName);
     }
 
     /**

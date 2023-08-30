@@ -38,7 +38,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.rmi.Remote;
+import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.security.PrivilegedExceptionAction;
 import java.util.Collection;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -56,28 +59,22 @@ import static java.util.logging.Level.FINE;
 
 /**
  * A handy class with static utility methods.
- *
- * Note that much of this code has to execute in the client so
- * it needs to be careful about which server-only resources it
- * uses and in which code paths.
+ * <p>
+ * Note that much of this code has to execute in the client, so it needs
+ * to be careful about which server-only resources it uses and in which code paths.
  *
  */
 public class EJBUtils {
 
-    //
-    private static final Logger _logger =
-            LogDomains.getLogger(EJBUtils.class, LogDomains.EJB_LOGGER);
-
+    private static final Logger _logger = LogDomains.getLogger(EJBUtils.class, LogDomains.EJB_LOGGER);
 
     // Internal property to force generated ejb container classes to
-    // be created during deployment time instead of dynamically.  Note that
-    // this property does *not* cover RMI-IIOP stub generation.
+    // be created during deployment time instead of dynamically.
+    // Note that this property does *not* cover RMI-IIOP stub generation.
     // See IASEJBC.java for more details.
     private static final String EJB_USE_STATIC_CODEGEN_PROP = "com.sun.ejb.UseStaticCodegen";
 
     private static final String REMOTE30_HOME_JNDI_SUFFIX = "__3_x_Internal_RemoteBusinessHome__";
-
-    private static Boolean ejbUseStaticCodegen_;
 
     // Separator between simple and fully-qualified portable ejb global JNDI names
     private static final String PORTABLE_JNDI_NAME_SEP = "!";
@@ -85,14 +82,14 @@ public class EJBUtils {
     // Separator between simple and fully-qualified glassfish-specific JNDI names
     private static final String GLASSFISH_JNDI_NAME_SEP = "#";
 
+    private static Boolean ejbUseStaticCodegen_;
+
     /**
-     * Utility methods for serializing EJBs, primary keys and
-     * container-managed fields, all of which may include Remote EJB
-     * references,
-     * Local refs, JNDI Contexts etc which are not Serializable.
+     * Utility methods for serializing EJBs, primary keys and container-managed fields,
+     * all of which may include Remote EJB references, Local refs, JNDI Contexts etc.
+     * which are not Serializable.
      * This is not used for normal RMI-IIOP serialization.
-     * It has boolean replaceObject control, whether to call replaceObject
-     * or not
+     * It has boolean replaceObject control, whether to call replaceObject or not.
      */
     public static final byte[] serializeObject(Object obj, boolean replaceObject) throws IOException {
         return EjbContainerUtilImpl.getInstance().getJavaEEIOUtils().serializeObject(obj, replaceObject);
@@ -105,10 +102,9 @@ public class EJBUtils {
 
 
     /**
-     * Utility method for deserializing EJBs, primary keys and
-     * container-managed fields, all of which may include Remote
-     * EJB references,
-     * Local refs, JNDI Contexts etc which are not Serializable.
+     * Utility method for deserializing EJBs, primary keys and container-managed fields,
+     * all of which may include Remote EJB references, Local refs, JNDI Contexts etc.
+     * which are not Serializable.
      */
     public static final Object deserializeObject(byte[] data, ClassLoader loader, boolean resolveObject)
         throws Exception {
@@ -124,18 +120,13 @@ public class EJBUtils {
     public static boolean useStaticCodegen() {
         synchronized (EJBUtils.class) {
             if (ejbUseStaticCodegen_ == null) {
-                String ejbStaticCodegenProp = null;
+                String ejbStaticCodegenProp;
                 if (System.getSecurityManager() == null) {
                     ejbStaticCodegenProp = System.getProperty(EJB_USE_STATIC_CODEGEN_PROP);
                 } else {
-                    ejbStaticCodegenProp = (String) java.security.AccessController
-                        .doPrivileged(new java.security.PrivilegedAction() {
-
-                            @Override
-                            public java.lang.Object run() {
-                                return System.getProperty(EJB_USE_STATIC_CODEGEN_PROP);
-                            }
-                        });
+                    ejbStaticCodegenProp = AccessController.doPrivileged(
+                        (PrivilegedAction<String>) () -> System.getProperty(EJB_USE_STATIC_CODEGEN_PROP)
+                    );
                 }
 
                 boolean useStaticCodegen = ((ejbStaticCodegenProp != null)
@@ -148,7 +139,7 @@ public class EJBUtils {
             }
         }
 
-        return ejbUseStaticCodegen_.booleanValue();
+        return ejbUseStaticCodegen_;
     }
 
 
@@ -178,7 +169,7 @@ public class EJBUtils {
      * internally.  Of course, this is based on the assumption that the
      * internal name is generated in a way that will not clash with a
      * separate top-level physical jndi-name chosen by the developer.
-     *
+     * <p>
      * Note that it's better to delay this final jndi name translation as
      * much as possible and do it right before the NamingManager lookup,
      * as opposed to changing the jndi-name within the descriptor objects
@@ -244,7 +235,7 @@ public class EJBUtils {
                 }
             }
         } else {
-            // EJB 2.x Remote  Home
+            // EJB 2.x Remote Home
             // Only in the portable global case, convert to a fully-qualified name
             if (jndiName.isJavaGlobal()) {
                 returnValue = checkFullyQualifiedJndiName(jndiName, portableFullyQualifiedPortion);
@@ -312,8 +303,7 @@ public class EJBUtils {
     }
 
 
-    public static Class loadGeneratedSerializableClass(final ClassLoader loader, final Class<?> originalClass)
-        throws Exception {
+    public static Class<?> loadGeneratedSerializableClass(final ClassLoader loader, final Class<?> originalClass) {
         final String generatedClassName = AsmSerializableBeanGenerator
             .getGeneratedSerializableClassName(originalClass.getName());
         try {
@@ -333,10 +323,10 @@ public class EJBUtils {
 
 
     /**
-     * @param appClassLoader - used to verify existence of classes and for generating too.
-     * @param businessInterfaceName - this class must exist
+     * @param appClassLoader used to verify existence of classes and for generating too.
+     * @param businessInterfaceName this class must exist
      * @return full class name of the generated remote interface
-     * @throws Exception
+     * @throws Exception if an error occurred while loading class
      */
     public static Class<?> loadGeneratedRemoteBusinessClasses(ClassLoader appClassLoader, String businessInterfaceName)
         throws Exception {
@@ -361,20 +351,19 @@ public class EJBUtils {
 
 
     public static RemoteBusinessWrapperBase createRemoteBusinessObject(
-        String businessInterface,
-        java.rmi.Remote delegate) throws Exception {
+        String businessInterface, Remote delegate) throws Exception {
         ClassLoader appClassLoader = getBusinessIntfClassLoader(businessInterface);
         return createRemoteBusinessObject(appClassLoader, businessInterface, delegate);
     }
 
 
     public static RemoteBusinessWrapperBase createRemoteBusinessObject(
-        ClassLoader loader, String businessInterface, java.rmi.Remote delegate) throws Exception {
+        ClassLoader loader, String businessInterface, Remote delegate) throws Exception {
         String wrapperClassName = Remote30WrapperGenerator.getGeneratedRemoteWrapperName(businessInterface);
-        Class clientWrapperClass = loader.loadClass(wrapperClassName);
-        Constructor[] ctors = clientWrapperClass.getConstructors();
-        Constructor ctor = null;
-        for (Constructor next : ctors) {
+        Class<?> clientWrapperClass = loader.loadClass(wrapperClassName);
+        Constructor<?>[] ctors = clientWrapperClass.getConstructors();
+        Constructor<?> ctor = null;
+        for (Constructor<?> next : ctors) {
             if (next.getParameterTypes().length > 0) {
                 ctor = next;
                 break;
@@ -398,19 +387,19 @@ public class EJBUtils {
                 ClassLoader cl = Thread.currentThread().getContextClassLoader();
                 return cl == null ? ClassLoader.getSystemClassLoader() : cl;
             };
-            contextLoader = java.security.AccessController.doPrivileged(action);
+            contextLoader = AccessController.doPrivileged(action);
         }
 
         final Class<?> businessInterfaceClass = contextLoader.loadClass(businessInterface);
         if (System.getSecurityManager() == null) {
             return businessInterfaceClass.getClassLoader();
         }
-        PrivilegedAction<ClassLoader> action = () -> businessInterfaceClass.getClassLoader();
-        return java.security.AccessController.doPrivileged(action);
+        PrivilegedAction<ClassLoader> action = businessInterfaceClass::getClassLoader;
+        return AccessController.doPrivileged(action);
     }
 
 
-    // warning: accessed by reflection (AsmSerializableBeanGenerator)
+    // Warning: accessed by reflection (AsmSerializableBeanGenerator)
     public static void serializeObjectFields(Object instance, ObjectOutputStream oos) throws IOException {
         serializeObjectFields(instance, oos, true);
     }
@@ -420,38 +409,34 @@ public class EJBUtils {
     public static void serializeObjectFields(Object instance, ObjectOutputStream oos, boolean usesSuperClass)
         throws IOException {
 
-        Class clazz = (usesSuperClass)? instance.getClass().getSuperclass() : instance.getClass();
-        final ObjectOutputStream objOutStream = oos;
+        Class<?> clazz = (usesSuperClass) ? instance.getClass().getSuperclass() : instance.getClass();
 
         // Write out list of fields eligible for serialization in sorted order.
         for (Field next : getSerializationFields(clazz)) {
 
             final Field nextField = next;
             final Object theInstance = instance;
-                Object value = null;
+            Object value = null;
             try {
-                if(System.getSecurityManager() == null) {
-                    if( !nextField.isAccessible() ) {
+                if (System.getSecurityManager() == null) {
+                    if (!nextField.isAccessible()) {
                         nextField.setAccessible(true);
                     }
                     value = nextField.get(theInstance);
                 } else {
-                    value = java.security.AccessController.doPrivileged(
-                            new java.security.PrivilegedExceptionAction() {
-                        @Override
-                        public java.lang.Object run() throws Exception {
-                            if( !nextField.isAccessible() ) {
+                    value = AccessController.doPrivileged(
+                        (PrivilegedExceptionAction<Object>) () -> {
+                            if (!nextField.isAccessible()) {
                                 nextField.setAccessible(true);
                             }
                             return nextField.get(theInstance);
-                        }
-                    });
+                        });
                 }
-                if( _logger.isLoggable(FINE) ) {
+                if (_logger.isLoggable(FINE)) {
                     _logger.log(FINE, "=====> Serializing field: " + nextField);
                 }
 
-                objOutStream.writeObject(value);
+                oos.writeObject(value);
             } catch (Throwable t) {
                 if (_logger.isLoggable(FINE)) {
                     _logger.log(FINE,
@@ -464,16 +449,16 @@ public class EJBUtils {
         }
     }
 
-    // note: accessed by reflection!
+    // Note: accessed by reflection!
     public static void deserializeObjectFields(Object instance, ObjectInputStream ois) throws IOException {
         deserializeObjectFields(instance, ois, null, true);
     }
 
-    // note: accessed by reflection!
+    // Note: accessed by reflection!
     public static void deserializeObjectFields(Object instance, ObjectInputStream ois, Object replaceValue,
         boolean usesSuperClass) throws IOException {
-        Class clazz = (usesSuperClass)? instance.getClass().getSuperclass() : instance.getClass();
-        if( _logger.isLoggable(FINE) ) {
+        Class<?> clazz = (usesSuperClass) ? instance.getClass().getSuperclass() : instance.getClass();
+        if (_logger.isLoggable(FINE)) {
             _logger.log(FINE, "=====> Deserializing class: " + clazz);
             if (replaceValue != null) {
                 _logger.log(FINE, "=====> Replace requested for value: " + replaceValue.getClass());
@@ -483,19 +468,19 @@ public class EJBUtils {
         // Use helper method to get sorted list of fields eligible
         // for deserialization.  This ensures that we correctly match
         // serialized state with its corresponding field.
-        for(Field next : getSerializationFields(clazz)) {
+        for (Field next : getSerializationFields(clazz)) {
 
             try {
 
                 final Field nextField = next;
-                if( _logger.isLoggable(FINE) ) {
+                if (_logger.isLoggable(FINE)) {
                     _logger.log(FINE, "=====> Deserializing field: " + nextField);
                 }
 
                 // Read value from the stream even if it is to be replaced to adjust the pointers
                 Object value = ois.readObject();
                 if (replaceValue != null && nextField.getType().isAssignableFrom(replaceValue.getClass())) {
-                    if( _logger.isLoggable(FINE) ) {
+                    if (_logger.isLoggable(FINE)) {
                         _logger.log(FINE, "=====> Replacing field: " + nextField);
                     }
 
@@ -504,44 +489,36 @@ public class EJBUtils {
                 final Object newValue = value;
                 final Object theInstance = instance;
 
-                if(System.getSecurityManager() == null) {
-                    if( !nextField.isAccessible() ) {
+                if (System.getSecurityManager() == null) {
+                    if (!nextField.isAccessible()) {
                         nextField.setAccessible(true);
                     }
                     nextField.set(theInstance, newValue);
                 } else {
-                    java.security.AccessController.doPrivileged(
-                            new java.security.PrivilegedExceptionAction() {
-                        @Override
-                        public java.lang.Object run() throws Exception {
-                            if( !nextField.isAccessible() ) {
+                    AccessController.doPrivileged(
+                        (PrivilegedExceptionAction<Void>) () -> {
+                            if (!nextField.isAccessible()) {
                                 nextField.setAccessible(true);
                             }
                             nextField.set(theInstance, newValue);
                             return null;
-                        }
-                    });
+                        });
                 }
             } catch(Throwable t) {
-                IOException ioe = new IOException();
-                Throwable cause = (t instanceof InvocationTargetException) ?
-                    ((InvocationTargetException)t).getCause() : t;
-                ioe.initCause( cause );
-                throw ioe;
+                throw new IOException(t instanceof InvocationTargetException ? t.getCause() : t);
             }
         }
     }
 
-    private static Collection<Field> getSerializationFields(Class clazz) {
+    private static Collection<Field> getSerializationFields(Class<?> clazz) {
 
         Field[] fields = clazz.getDeclaredFields();
 
         SortedMap<String, Field> sortedMap = new TreeMap<>();
 
-        for(Field next : fields) {
-
+        for (Field next : fields) {
             int modifiers = next.getModifiers();
-            if( Modifier.isStatic(modifiers) ||
+            if (Modifier.isStatic(modifiers) ||
                 Modifier.isTransient(modifiers) ) {
                 continue;
             }
@@ -550,10 +527,8 @@ public class EJBUtils {
             // so sorting on field name is sufficient.  We use natural ordering
             // of field name java.lang.String object.
             sortedMap.put(next.getName(), next);
-
         }
 
         return sortedMap.values();
     }
-
 }

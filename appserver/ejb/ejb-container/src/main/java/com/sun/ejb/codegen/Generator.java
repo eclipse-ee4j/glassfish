@@ -45,6 +45,7 @@ import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._package;
  * The base class for all code generators.
  */
 public abstract class Generator {
+
     private static final Logger LOG = Logger.getLogger(Generator.class.getName());
 
     private static final String DEFAULT_PACKAGE_NAME = "";
@@ -99,7 +100,7 @@ public abstract class Generator {
      * which change between JDK versions.
      *
      * @return {@link Class}
-     * @throws IllegalAccessException
+     * @throws IllegalAccessException if a reflective access error occurred
      */
     public Class<?> generate() throws IllegalAccessException {
         final String packageName = getPackageName();
@@ -205,7 +206,7 @@ public abstract class Generator {
                 nodups.add(method);
             }
         }
-        return nodups.toArray(new Method[nodups.size()]);
+        return nodups.toArray(new Method[0]);
     }
 
 

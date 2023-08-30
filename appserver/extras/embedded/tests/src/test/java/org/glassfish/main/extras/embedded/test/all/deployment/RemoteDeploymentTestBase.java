@@ -16,6 +16,10 @@
 
 package org.glassfish.main.extras.embedded.test.all.deployment;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
@@ -31,10 +35,6 @@ import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 
 import static java.lang.String.format;
 import static org.glassfish.tests.utils.ServerUtils.getFreePort;

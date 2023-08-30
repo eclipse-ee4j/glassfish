@@ -139,7 +139,7 @@ public class ServiceInterfaceGenerator extends Generator {
     }
 
 
-    private static Method[] calculateMethods(Class sib, Method[] initialList) {
+    private static Method[] calculateMethods(Class<?> sib, Method[] initialList) {
         // we start by assuming the @WebMethod was NOT used on this class
         boolean webMethodAnnotationUsed = false;
         List<Method> list = new ArrayList<>();
@@ -159,6 +159,6 @@ public class ServiceInterfaceGenerator extends Generator {
                 }
             }
         }
-        return list.toArray(new Method[list.size()]);
+        return list.toArray(new Method[0]);
     }
 }

@@ -42,7 +42,7 @@ import static org.glassfish.tests.utils.ServerUtils.runCommand;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class RemoteDeploymentTestBase {
+public class RemoteDeploymentITestBase {
 
     private static final String LOOKUP_STRING =
         "java:global/%s/RemoteBean!org.glassfish.main.extras.embedded.test.app.ejb.RemoteInterface";

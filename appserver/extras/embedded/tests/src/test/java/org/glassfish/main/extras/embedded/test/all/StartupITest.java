@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * @author David Matejcek
  */
-public class StartupTest {
+public class StartupITest {
 
     private static final String WEBAPP_NAME = TestServlet.class.getSimpleName() + "WebApp";
     private static final int HTTP_PORT = ServerUtils.getFreePort();

@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.main.extras.embedded.test.all.deployment.ear;
+package org.glassfish.main.extras.embedded.test.all.deployment.webapp;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,12 +24,10 @@ import javax.naming.NamingException;
 
 import org.glassfish.embeddable.Deployer;
 import org.glassfish.embeddable.GlassFishException;
-import org.glassfish.main.extras.embedded.test.all.deployment.RemoteDeploymentTestBase;
+import org.glassfish.main.extras.embedded.test.all.deployment.RemoteDeploymentITestBase;
 import org.glassfish.main.extras.embedded.test.app.ejb.RemoteBean;
 import org.glassfish.main.extras.embedded.test.app.ejb.RemoteInterface;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.jupiter.api.Test;
@@ -39,30 +37,26 @@ import static java.lang.System.Logger.Level.WARNING;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class RemoteEarDeploymentTest extends RemoteDeploymentTestBase {
+public class RemoteWebAppDeploymentITest extends RemoteDeploymentITestBase {
 
-    private static final System.Logger LOG = System.getLogger(RemoteEarDeploymentTest.class.getName());
+    private static final System.Logger LOG = System.getLogger(RemoteWebAppDeploymentITest.class.getName());
 
-    private static final String APP_NAME = "RemoteEar";
-
-    private static final String WAR_MODULE_NAME = "RemoteWar";
-
-    private static final String WAR_FILE_NAME = WAR_MODULE_NAME + ".war";
+    private static final String APP_NAME = "RemoteWebApp";
 
     private static final String LIB_FILE_NAME = "RemoteLib.jar";
 
     @Test
     public void testDeployAndUndeployApplication() throws GlassFishException, IOException, NamingException {
         Deployer deployer = glassfish.getDeployer();
-        File ejbFile = createDeployment();
+        File warFile = createDeployment();
         try {
-            assertThat(deployer.deploy(ejbFile), equalTo(APP_NAME));
-            assertThat(getResult(APP_NAME, WAR_MODULE_NAME), equalTo(Runtime.version().toString()));
+            assertThat(deployer.deploy(warFile), equalTo(APP_NAME));
+            assertThat(getResult(APP_NAME), equalTo(Runtime.version().toString()));
         } finally {
             try {
-                Files.deleteIfExists(ejbFile.toPath());
-            } catch (IOException e) {
-                LOG.log(WARNING, "An error occurred while remove temp file " + ejbFile.getAbsolutePath(), e);
+                Files.deleteIfExists(warFile.toPath());
+            } catch (IOException e){
+                LOG.log(WARNING, "An error occurred while remove temp file " + warFile.getAbsolutePath(), e);
             }
             deployer.undeploy(APP_NAME);
         }
@@ -72,16 +66,12 @@ public class RemoteEarDeploymentTest extends RemoteDeploymentTestBase {
         JavaArchive javaArchive = ShrinkWrap.create(JavaArchive.class, LIB_FILE_NAME)
             .addClass(RemoteInterface.class);
 
-        WebArchive webArchive = ShrinkWrap.create(WebArchive.class, WAR_FILE_NAME)
+        WebArchive webArchive = ShrinkWrap.create(WebArchive.class)
             .addClass(RemoteBean.class)
-            .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+            .addAsLibrary(javaArchive);
 
-        EnterpriseArchive enterpriseArchive = ShrinkWrap.create(EnterpriseArchive.class)
-            .addAsLibrary(javaArchive)
-            .addAsModule(webArchive);
+        LOG.log(INFO, webArchive.toString(true));
 
-        LOG.log(INFO, enterpriseArchive.toString(true));
-
-        return createFileFor(enterpriseArchive, APP_NAME);
+        return createFileFor(webArchive, APP_NAME);
     }
 }

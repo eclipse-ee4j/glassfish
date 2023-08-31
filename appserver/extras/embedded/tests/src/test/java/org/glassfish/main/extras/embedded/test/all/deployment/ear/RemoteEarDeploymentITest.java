@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.main.extras.embedded.test.all.deployment.ejb;
+package org.glassfish.main.extras.embedded.test.all.deployment.ear;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,11 +24,14 @@ import javax.naming.NamingException;
 
 import org.glassfish.embeddable.Deployer;
 import org.glassfish.embeddable.GlassFishException;
-import org.glassfish.main.extras.embedded.test.all.deployment.RemoteDeploymentTestBase;
+import org.glassfish.main.extras.embedded.test.all.deployment.RemoteDeploymentITestBase;
 import org.glassfish.main.extras.embedded.test.app.ejb.RemoteBean;
 import org.glassfish.main.extras.embedded.test.app.ejb.RemoteInterface;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.jupiter.api.Test;
 
 import static java.lang.System.Logger.Level.INFO;
@@ -36,11 +39,17 @@ import static java.lang.System.Logger.Level.WARNING;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class RemoteEjbJarDeploymentTest extends RemoteDeploymentTestBase {
+public class RemoteEarDeploymentITest extends RemoteDeploymentITestBase {
 
-    private static final System.Logger LOG = System.getLogger(RemoteEjbJarDeploymentTest.class.getName());
+    private static final System.Logger LOG = System.getLogger(RemoteEarDeploymentITest.class.getName());
 
-    private static final String APP_NAME = "RemoteEjbJar";
+    private static final String APP_NAME = "RemoteEar";
+
+    private static final String WAR_MODULE_NAME = "RemoteWar";
+
+    private static final String WAR_FILE_NAME = WAR_MODULE_NAME + ".war";
+
+    private static final String LIB_FILE_NAME = "RemoteLib.jar";
 
     @Test
     public void testDeployAndUndeployApplication() throws GlassFishException, IOException, NamingException {
@@ -48,7 +57,7 @@ public class RemoteEjbJarDeploymentTest extends RemoteDeploymentTestBase {
         File ejbFile = createDeployment();
         try {
             assertThat(deployer.deploy(ejbFile), equalTo(APP_NAME));
-            assertThat(getResult(APP_NAME), equalTo(Runtime.version().toString()));
+            assertThat(getResult(APP_NAME, WAR_MODULE_NAME), equalTo(Runtime.version().toString()));
         } finally {
             try {
                 Files.deleteIfExists(ejbFile.toPath());
@@ -60,12 +69,19 @@ public class RemoteEjbJarDeploymentTest extends RemoteDeploymentTestBase {
     }
 
     private File createDeployment() throws IOException {
-        JavaArchive ejbArchive = ShrinkWrap.create(JavaArchive.class)
-            .addClass(RemoteInterface.class)
-            .addClass(RemoteBean.class);
+        JavaArchive javaArchive = ShrinkWrap.create(JavaArchive.class, LIB_FILE_NAME)
+            .addClass(RemoteInterface.class);
 
-        LOG.log(INFO, ejbArchive.toString(true));
+        WebArchive webArchive = ShrinkWrap.create(WebArchive.class, WAR_FILE_NAME)
+            .addClass(RemoteBean.class)
+            .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 
-        return createFileFor(ejbArchive, APP_NAME);
+        EnterpriseArchive enterpriseArchive = ShrinkWrap.create(EnterpriseArchive.class)
+            .addAsLibrary(javaArchive)
+            .addAsModule(webArchive);
+
+        LOG.log(INFO, enterpriseArchive.toString(true));
+
+        return createFileFor(enterpriseArchive, APP_NAME);
     }
 }

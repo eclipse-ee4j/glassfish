@@ -206,7 +206,7 @@ public abstract class Generator {
                 nodups.add(method);
             }
         }
-        return nodups.toArray(new Method[0]);
+        return nodups.toArray(Method[]::new);
     }
 
 

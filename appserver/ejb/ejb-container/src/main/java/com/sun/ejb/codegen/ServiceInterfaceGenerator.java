@@ -159,6 +159,6 @@ public class ServiceInterfaceGenerator extends Generator {
                 }
             }
         }
-        return list.toArray(new Method[0]);
+        return list.toArray(Method[]::new);
     }
 }

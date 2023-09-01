@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,7 @@
 
 package org.glassfish.weld;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.Runtime.Version;
@@ -35,8 +36,6 @@ import java.util.stream.Collectors;
 import static java.util.Collections.enumeration;
 import static java.util.stream.StreamSupport.stream;
 
-import java.io.FileNotFoundException;
-
 /**
  * This classloader filters out extensions which are incompatible with current environment.
  *
@@ -49,7 +48,7 @@ class FilteringClassLoader extends ClassLoader {
     private static final Pattern PATTERN_OSGI_EE_JAVA = Pattern.compile("\\(&\\(osgi.ee=JavaSE\\)\\(version=(.+)\\)\\)");
     private static final Version JDK17 = Version.parse("17");
 
-    public FilteringClassLoader(ClassLoader parent) {
+    FilteringClassLoader(ClassLoader parent) {
         super(parent);
         LOG.log(Level.FINEST, "Parent: {0}", parent);
     }
@@ -96,21 +95,10 @@ class FilteringClassLoader extends ClassLoader {
      */
     private boolean isCompatible(final URL extensionUrl) {
         final URL manifestURL = toManifestURL(extensionUrl);
-        final Manifest manifest;
-
-        try {
-            manifest = loadManifest(manifestURL);
-        } catch (final IOException e) {
-            if (e instanceof FileNotFoundException) {
-                LOG.log(Level.FINE, e, () -> "Manifest doesn't exist at " + manifestURL
-                        + ". Assuming the extension " + extensionUrl + " is compatible with the current JDK");
-            } else {
-                LOG.log(Level.SEVERE, "Could not read manifest at " + manifestURL
-                        + ". Assuming the extension " + extensionUrl + " is compatible with the current JDK", e);
-            }
+        final Manifest manifest = loadManifest(manifestURL);
+        if (manifest == null) {
             return true;
         }
-
         final Version requiredMinVersion = getRequiredMinimalJavaVersion(manifest.getMainAttributes());
         if (requiredMinVersion == null) {
             return true;
@@ -131,13 +119,27 @@ class FilteringClassLoader extends ClassLoader {
 
     /**
      * @param manifestURL
-     * @return {@link Manifest} from the URL
-     * @throws FileNotFoundException If the manifest file doesn't exist
-     * @throws IOException If the manifest file cannot be read
+     * @return {@link Manifest} or null if there's no such file or cannot be read.
      */
-    private Manifest loadManifest(final URL manifestURL) throws IOException {
-        try (InputStream stream = manifestURL.openStream()) {
+    private Manifest loadManifest(final URL manifestURL) {
+        try (InputStream stream = openStream(manifestURL)) {
+            if (stream == null) {
+                return null;
+            }
             return new Manifest(stream);
+        } catch (final IOException e) {
+            LOG.log(Level.WARNING, "Could not read manifest at " + manifestURL, e);
+            return null;
+        }
+    }
+
+
+    private InputStream openStream(final URL manifestURL) throws IOException {
+        try {
+            return manifestURL.openStream();
+        } catch (final FileNotFoundException e) {
+            LOG.log(Level.FINEST, "The manifest is not present at " + manifestURL, e);
+            return null;
         }
     }
 

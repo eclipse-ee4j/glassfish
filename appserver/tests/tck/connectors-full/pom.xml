@@ -324,6 +324,18 @@
                                                 torefid="deploy.archive.set"/>
                                 </ant>
                                 
+                                <!-- Restart GlassFish in debug mode if so requested -->
+                                <sequential if:set="glassfish.suspend">
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                        <arg value="stop-domain" />
+                                    </exec>
+                                    <echo message="Starting GlassFish in suspended mode, waiting on port 9009" />
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                        <arg value="start-domain"/>
+                                        <arg value="--suspend" if:set="glassfish.suspend"/>
+                                    </exec>
+                                </sequential>
+                                
                             </target>
                         </configuration>
                     </execution>

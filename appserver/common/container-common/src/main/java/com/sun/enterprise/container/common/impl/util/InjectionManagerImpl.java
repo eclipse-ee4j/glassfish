@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,6 +32,7 @@ import jakarta.inject.Inject;
 
 import java.lang.System.Logger;
 import java.lang.reflect.Field;
+import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -53,7 +54,6 @@ import org.jvnet.hk2.annotations.Service;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.TRACE;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT_ENV;
-
 
 /**
  * Implementation of InjectionManager.
@@ -587,8 +587,8 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
             java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
                 @Override
                 public java.lang.Object run() throws Exception {
-                    if (!lifecycleMethod.isAccessible()) {
-                        lifecycleMethod.setAccessible(true);
+                    if (!lifecycleMethod.trySetAccessible()) {
+                        throw new InaccessibleObjectException("Unable to make accessible: " + lifecycleMethod);
                     }
                     lifecycleMethod.invoke(instance);
                     return null;
@@ -617,8 +617,8 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
                 java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
                     @Override
                     public java.lang.Object run() throws Exception {
-                        if (!finalF.isAccessible()) {
-                            finalF.setAccessible(true);
+                        if (!finalF.trySetAccessible()) {
+                            throw new InaccessibleObjectException("Unable to make accessible: " + finalF);
                         }
                         return null;
                     }
@@ -657,8 +657,8 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
                     java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
                         @Override
                         public java.lang.Object run() throws Exception {
-                            if (!finalM.isAccessible()) {
-                                finalM.setAccessible(true);
+                            if (!finalM.trySetAccessible()) {
+                                throw new InaccessibleObjectException("Unable to make accessible: " + finalM);
                             }
                             return null;
                         }

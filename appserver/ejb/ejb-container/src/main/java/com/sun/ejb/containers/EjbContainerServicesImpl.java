@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,6 +25,7 @@ import jakarta.ejb.EJBException;
 import jakarta.ejb.NoSuchEJBException;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.Proxy;
 import java.util.HashSet;
 import java.util.Set;
@@ -199,8 +200,8 @@ public class EjbContainerServicesImpl implements EjbContainerServices {
                         java.security.AccessController.doPrivileged(
                         new java.security.PrivilegedExceptionAction() {
                             public java.lang.Object run() throws Exception {
-                                if( !finalF.isAccessible() ) {
-                                    finalF.setAccessible(true);
+                                if (!finalF.trySetAccessible()) {
+                                    throw new InaccessibleObjectException("Unable to make accessible: " + finalF);
                                 }
                                 return null;
                             }

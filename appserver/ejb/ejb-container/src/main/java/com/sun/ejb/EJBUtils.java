@@ -35,6 +35,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -419,15 +420,15 @@ public class EJBUtils {
             Object value = null;
             try {
                 if (System.getSecurityManager() == null) {
-                    if (!nextField.isAccessible()) {
-                        nextField.setAccessible(true);
+                    if (!nextField.trySetAccessible()) {
+                        throw new InaccessibleObjectException("Unable to make accessible: " + nextField);
                     }
                     value = nextField.get(theInstance);
                 } else {
                     value = AccessController.doPrivileged(
                         (PrivilegedExceptionAction<Object>) () -> {
-                            if (!nextField.isAccessible()) {
-                                nextField.setAccessible(true);
+                            if (!nextField.trySetAccessible()) {
+                                throw new InaccessibleObjectException("Unable to make accessible: " + nextField);
                             }
                             return nextField.get(theInstance);
                         });
@@ -490,15 +491,15 @@ public class EJBUtils {
                 final Object theInstance = instance;
 
                 if (System.getSecurityManager() == null) {
-                    if (!nextField.isAccessible()) {
-                        nextField.setAccessible(true);
+                    if (!nextField.trySetAccessible()) {
+                        throw new InaccessibleObjectException("Unable to make accessible: " + nextField);
                     }
                     nextField.set(theInstance, newValue);
                 } else {
                     AccessController.doPrivileged(
                         (PrivilegedExceptionAction<Void>) () -> {
-                            if (!nextField.isAccessible()) {
-                                nextField.setAccessible(true);
+                            if (!nextField.trySetAccessible()) {
+                                throw new InaccessibleObjectException("Unable to make accessible: " + nextField);
                             }
                             nextField.set(theInstance, newValue);
                             return null;

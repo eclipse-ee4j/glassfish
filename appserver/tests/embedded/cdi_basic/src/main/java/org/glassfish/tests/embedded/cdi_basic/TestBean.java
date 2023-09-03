@@ -17,6 +17,9 @@
 package org.glassfish.tests.embedded.cdi_basic;
 
 //Simple TestBean to test CDI.
+import jakarta.enterprise.context.Dependent;
+
 //This bean implements Serializable as it needs to be placed into a Stateful Bean
+@Dependent
 public class TestBean
 {}

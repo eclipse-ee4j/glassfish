@@ -16,6 +16,7 @@
 
 package org.glassfish.tests.embedded.cdi_basic;
 
+import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -31,8 +32,11 @@ import java.io.PrintWriter;
         urlPatterns = "/BasicCDITestServlet")
 public class BasicCDITestServlet extends HttpServlet {
 
-    @jakarta.inject.Inject TestBean tb;
-    @jakarta.inject.Inject TestRequestScopedBean trsb;
+    @Inject
+    TestBean tb;
+
+    @Inject
+    TestRequestScopedBean trsb;
 
     @Override
     protected void doGet(HttpServletRequest httpServletRequest,

@@ -20,30 +20,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.glassfish.tests.embedded</groupId>
+        <artifactId>basic</artifactId>
+        <version>7.0.9-SNAPSHOT</version>
+    </parent>
+
     <groupId>org.glassfish.tests.embedded.basic</groupId>
     <artifactId>lifecycle</artifactId>
-    <version>7.0.9-SNAPSHOT</version>
     <name>Test newGlassFish(), start(), stop(), dispose() lifecyle operations</name>
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.1</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.4.2</version>
-                <configuration>
-                    <forkCount>1</forkCount>
-                    <reuseForks>false</reuseForks>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
     <profiles>
         <profile>
             <id>run-with-uber-jar</id>
@@ -57,8 +43,8 @@
                     <version>${project.version}</version>
                 </dependency>
                 <dependency>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
+                    <groupId>org.junit.jupiter</groupId>
+                    <artifactId>junit-jupiter-engine</artifactId>
                 </dependency>
             </dependencies>
         </profile>
@@ -72,8 +58,8 @@
             </activation>
             <dependencies>
                 <dependency>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
+                    <groupId>org.junit.jupiter</groupId>
+                    <artifactId>junit-jupiter-engine</artifactId>
                 </dependency>
                 <dependency>
                     <groupId>org.glassfish.main.extras</groupId>

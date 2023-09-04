@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,8 +23,8 @@ import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.tests.embedded.ejb.remoteejb.RemoteEJBInf;
 import org.glassfish.tests.embedded.ejb.remoteejb.SampleEjb;
 import org.glassfish.tests.embedded.ejb.remoteejb.TimerEjb;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.naming.InitialContext;
 import java.io.File;
@@ -60,7 +61,7 @@ public class EJBTest {
         System.out.println("Looking up SampleEJB.");
         SampleEjb sampleEjb = (SampleEjb) ic.lookup("java:global/remoteejb/SampleEjb");
         System.out.println("Invoking SampleEjb [" + sampleEjb + "]");
-        Assert.assertEquals(sampleEjb.saySomething(), "Hello World");
+        Assertions.assertEquals(sampleEjb.saySomething(), "Hello World");
         System.out.println("SampleEjb tested successfully");
 
         System.out.println("Looking up TimerEjb.");
@@ -70,7 +71,7 @@ public class EJBTest {
         System.out.println("Verifying TimerEjb [" + timerEjb + "]");
         Thread.sleep(4000);
         boolean result = timerEjb.verifyTimer();
-        Assert.assertTrue(result);
+        Assertions.assertTrue(result);
         System.out.println("TimerEJB tested successfully.");
 
 
@@ -80,7 +81,7 @@ public class EJBTest {
 //            Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
             RemoteEJBInf remoteEjb = (RemoteEJBInf) ic.lookup("java:global/remoteejb/RemoteEJB");
             System.out.println("Invoking RemoteEJB [" + remoteEjb + "]");
-            Assert.assertEquals(remoteEjb.sayHi(), "Hi Bhavani");
+            Assertions.assertEquals(remoteEjb.sayHi(), "Hi Bhavani");
             System.out.println("RemoteEjb tested successfully");
 //        } finally {
 //            Thread.currentThread().setContextClassLoader(oldCL);

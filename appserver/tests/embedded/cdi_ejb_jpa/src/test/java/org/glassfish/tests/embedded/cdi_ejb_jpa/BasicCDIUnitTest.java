@@ -43,7 +43,9 @@ import org.junit.jupiter.api.Assertions;
  * @author bhavanishankar@dev.java.net
  */
 
-public class BasicCDITest{
+public class BasicCDIUnitTest {
+
+    private static final String PROJECT_DIR = System.getProperty("project.directory");
 
     @Test
     public void test() throws Exception {
@@ -55,9 +57,9 @@ public class BasicCDITest{
 
         // Test Scattered Web Archive
         ScatteredArchive sa = new ScatteredArchive("cdi_ejb_jpa",
-                ScatteredArchive.Type.WAR, new File("src/main/webapp"));
-        sa.addClassPath(new File("target/classes"));
-        sa.addClassPath(new File("src/main/resources"));
+                ScatteredArchive.Type.WAR, new File(PROJECT_DIR, "src/main/webapp"));
+        sa.addClassPath(new File(PROJECT_DIR, "target/classes"));
+        sa.addClassPath(new File(PROJECT_DIR, "src/main/resources"));
         URI warURI = sa.toURI();
         printContents(warURI);
 

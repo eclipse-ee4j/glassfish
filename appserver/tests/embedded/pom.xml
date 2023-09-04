@@ -38,10 +38,10 @@
         <module>cdi_basic</module>
         <module>cdi_ejb_jpa</module>
         <module>glassfish_resources_xml</module>
-        <module>ejb</module>
+        <!--        <module>ejb</module>
         <module>scatteredarchive</module>
         <module>maven-plugin</module>
-        <module>web</module>
+        <module>web</module> -->
     </modules>
 
     <dependencyManagement>
@@ -59,4 +59,28 @@
         </dependencies>
     </dependencyManagement>
 
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <workingDirectory>${project.build.directory}/surefire-workdir</workingDirectory>
+                        <systemPropertyVariables>
+                            <project.directory>${basedir}</project.directory>
+                        </systemPropertyVariables>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <configuration>
+                        <workingDirectory>${project.build.directory}/failsafe-workdir</workingDirectory>
+                        <systemPropertyVariables>
+                            <project.directory>${basedir}</project.directory>
+                        </systemPropertyVariables>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

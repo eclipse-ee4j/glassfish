@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.HttpURLConnection;
+import org.hamcrest.CoreMatchers;
 
 public class WebTest {
 
@@ -46,7 +47,7 @@ public class WebTest {
             out.writeByte(1);
             int responseCode=  urlConnection.getResponseCode();
             System.out.println("responseCode: " + responseCode);
-            Assert.assertTrue(urlConnection.getResponseCode()==404);
+            Assert.assertThat(urlConnection.getResponseCode(), CoreMatchers.is(404));
         }
    }
 

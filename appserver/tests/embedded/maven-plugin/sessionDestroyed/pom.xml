@@ -38,7 +38,7 @@
                 <executions>
                     <execution>
                         <id>start</id>
-                        <phase>integration-test</phase>
+                        <phase>pre-integration-test</phase>
                         <goals>
                             <goal>start</goal>
                             <goal>deploy</goal>

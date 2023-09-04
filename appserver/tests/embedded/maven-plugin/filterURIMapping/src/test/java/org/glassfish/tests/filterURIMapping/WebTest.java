@@ -14,19 +14,15 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.tests.sessionDestroyed;
+package org.glassfish.tests.filterURIMapping;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
 

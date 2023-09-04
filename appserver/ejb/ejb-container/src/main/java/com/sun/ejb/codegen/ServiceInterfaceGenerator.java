@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021-2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -54,14 +54,14 @@ public class ServiceInterfaceGenerator extends Generator {
      * descriptor and class loader.
      *
      * @param loader {@link ClassLoader} owning generated classes
-     * @param ejbClass
+     * @param ejbClass the wrapped class
      */
     public ServiceInterfaceGenerator(final ClassLoader loader, final Class<?> ejbClass) {
         super(loader);
         this.ejbClass = ejbClass;
         packageName = getPackageName(ejbClass.getName());
         serviceIntfSimpleName = getServiceIntfName(ejbClass);
-        serviceIntfName = (packageName == null ? "" : packageName + ".") + serviceIntfSimpleName;
+        serviceIntfName = getFullClassName(packageName, serviceIntfSimpleName);
         intfMethods = calculateMethods(ejbClass, removeRedundantMethods(ejbClass.getMethods()));
 
         // NOTE : no need to remove ejb object methods because EJBObject
@@ -139,7 +139,7 @@ public class ServiceInterfaceGenerator extends Generator {
     }
 
 
-    private static Method[] calculateMethods(Class sib, Method[] initialList) {
+    private static Method[] calculateMethods(Class<?> sib, Method[] initialList) {
         // we start by assuming the @WebMethod was NOT used on this class
         boolean webMethodAnnotationUsed = false;
         List<Method> list = new ArrayList<>();
@@ -159,6 +159,6 @@ public class ServiceInterfaceGenerator extends Generator {
                 }
             }
         }
-        return list.toArray(new Method[list.size()]);
+        return list.toArray(Method[]::new);
     }
 }

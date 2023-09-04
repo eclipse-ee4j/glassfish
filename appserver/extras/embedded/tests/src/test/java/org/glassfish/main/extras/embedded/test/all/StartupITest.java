@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,10 +14,11 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.main.extras.embedded.all;
+package org.glassfish.main.extras.embedded.test.all;
 
 import java.io.File;
 import java.net.URL;
+
 import org.glassfish.embeddable.BootstrapProperties;
 import org.glassfish.embeddable.Deployer;
 import org.glassfish.embeddable.GlassFish;
@@ -36,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * @author David Matejcek
  */
-public class StartupTest {
+public class StartupITest {
 
     private static final String WEBAPP_NAME = TestServlet.class.getSimpleName() + "WebApp";
     private static final int HTTP_PORT = ServerUtils.getFreePort();

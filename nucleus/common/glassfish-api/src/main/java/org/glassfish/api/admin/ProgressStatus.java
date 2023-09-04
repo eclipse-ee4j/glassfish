@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -169,14 +170,14 @@ import java.io.Serializable;
  * The allocatedSteps parameter represents the subset of steps from the parent's allocation that will be given to the
  * child to complete.
  *
- * @see org.glassfish.api.Progress
+ * @see Progress
  * @author mmares
  */
 public interface ProgressStatus extends Serializable {
 
     /**
      * Number of steps necessary to complete the operation. Value is used to determine percentage of work completed. This
-     * method can be used to override the totalStepCount if it was established via the {@link org.glassfish.api.Progress}
+     * method can be used to override the totalStepCount if it was established via the {@link Progress}
      * annotation. The total step count is used as the denominator for computing the completion percentage as reported in
      * the command's progress output: {@code percent complete = current step count / total step count * 100} Note the above
      * formula is a bit more complex when child ProgressStatus objects are in use.
@@ -186,7 +187,7 @@ public interface ProgressStatus extends Serializable {
      * <p>
      * If the total step count is not set then a completion percentage will not be available.
      * <p>
-     * It can be also set during injection using {@code totalStepCount} parameter in {@link org.glassfish.api.Progress}
+     * It can be also set during injection using {@code totalStepCount} parameter in {@link Progress}
      * annotation.
      *
      * @param totalStepCount non-negative value defines denominator for the percentage computation
@@ -316,6 +317,7 @@ public interface ProgressStatus extends Serializable {
      * @param name to be associated with the child ProgressStatus. This name appears in the progress sent to the client. If
      * the name is an empty string a name for this child will not be included in the message.
      * @param allocatedSteps the number of progress steps the parent is allocating to the child.
+     * @return ProgressStatus of the child
      */
     ProgressStatus createChild(String name, int allocatedSteps);
 
@@ -334,11 +336,12 @@ public interface ProgressStatus extends Serializable {
      * <p>
      *
      * @param allocatedSteps the number of progress steps the parent is allocating to the child.
+     * @return ProgressStatus of the child
      */
     ProgressStatus createChild(int allocatedSteps);
 
     /**
-     * Id is unique for any ProgressStatuses. It is mainly used for remote communication.
+     * @return Id is unique for any ProgressStatuses. It is mainly used for remote communication.
      */
     String getId();
 

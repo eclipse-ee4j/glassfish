@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021-2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -45,7 +45,10 @@ import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._package;
  * The base class for all code generators.
  */
 public abstract class Generator {
+
     private static final Logger LOG = Logger.getLogger(Generator.class.getName());
+
+    private static final String DEFAULT_PACKAGE_NAME = "";
 
     private final ClassLoader loader;
 
@@ -58,7 +61,7 @@ public abstract class Generator {
     }
 
     /**
-     * @return the name of the package of the generated class. Can be null.
+     * @return the name of the package of the generated class.
      */
     protected abstract String getPackageName();
 
@@ -97,13 +100,14 @@ public abstract class Generator {
      * which change between JDK versions.
      *
      * @return {@link Class}
-     * @throws IllegalAccessException
+     * @throws IllegalAccessException if a reflective access error occurred
      */
     public Class<?> generate() throws IllegalAccessException {
-        if (getPackageName() == null) {
+        final String packageName = getPackageName();
+        if (DEFAULT_PACKAGE_NAME.equals(packageName)) {
             _package();
         } else {
-            _package(getPackageName());
+            _package(packageName);
         }
         final ImportList imports = Wrapper._import();
         defineClassBody();
@@ -129,11 +133,11 @@ public abstract class Generator {
 
 
     /**
-     * @return the package name or null.
+     * @return the package name.
      */
     public static String getPackageName(final String fullClassName) {
         final int dot = fullClassName.lastIndexOf('.');
-        return dot == -1 ? null : fullClassName.substring(0, dot);
+        return dot == -1 ? DEFAULT_PACKAGE_NAME : fullClassName.substring(0, dot);
     }
 
     /**
@@ -144,6 +148,19 @@ public abstract class Generator {
         return dot == -1 ? fullClassName : fullClassName.substring(dot + 1);
     }
 
+    /**
+     * Returns full qualified class name.
+     *
+     * @param packageName the package name
+     * @param baseName the base (simple) class name
+     * @return the full qualified class name
+     */
+    public static String getFullClassName(final String packageName, final String baseName) {
+        if (DEFAULT_PACKAGE_NAME.equals(packageName)) {
+            return baseName;
+        }
+        return packageName + "." + baseName;
+    }
 
     /**
      * Remove duplicates from method array.
@@ -154,7 +171,7 @@ public abstract class Generator {
      * requires that the superclass/intf method have a superset of the
      * exceptions in the derived method).
      *
-     * @param methods
+     * @param methods the methods array without duplicates
      * @return methods which can be generated in an interface
      */
     protected Method[] removeRedundantMethods(final Method[] methods) {
@@ -189,7 +206,7 @@ public abstract class Generator {
                 nodups.add(method);
             }
         }
-        return nodups.toArray(new Method[nodups.size()]);
+        return nodups.toArray(Method[]::new);
     }
 
 

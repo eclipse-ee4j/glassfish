@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -79,6 +79,7 @@ import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.rmi.Remote;
@@ -417,8 +418,8 @@ public final class StatefulSessionContainer
         // can have any access modifier so make sure we have permission
         // to invoke it.
         PrivilegedExceptionAction<Void> action = () -> {
-            if (!methodAccessible.isAccessible()) {
-                methodAccessible.setAccessible(true);
+            if (!methodAccessible.trySetAccessible()) {
+                throw new InaccessibleObjectException("Unable to make accessible: " + methodAccessible);
             }
             return null;
         };

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,17 +17,31 @@
 
 package com.sun.enterprise.container.common.impl.managedbean;
 
-import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.POST_CONSTRUCT;
-import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.PRE_DESTROY;
-import static java.security.AccessController.doPrivileged;
-import static java.util.Collections.synchronizedMap;
-import static java.util.logging.Level.FINE;
-import static org.glassfish.internal.deployment.Deployment.APPLICATION_LOADED;
-import static org.glassfish.internal.deployment.Deployment.APPLICATION_UNLOADED;
-import static org.glassfish.internal.deployment.Deployment.DEPLOYMENT_FAILURE;
+import com.sun.enterprise.container.common.spi.CDIService;
+import com.sun.enterprise.container.common.spi.CDIService.CDIInjectionContext;
+import com.sun.enterprise.container.common.spi.InterceptorInvoker;
+import com.sun.enterprise.container.common.spi.JavaEEInterceptorBuilder;
+import com.sun.enterprise.container.common.spi.JavaEEInterceptorBuilderFactory;
+import com.sun.enterprise.container.common.spi.ManagedBeanManager;
+import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
+import com.sun.enterprise.container.common.spi.util.InjectionManager;
+import com.sun.enterprise.container.common.spi.util.InterceptorInfo;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.ApplicationClientDescriptor;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.InterceptorDescriptor;
+import com.sun.enterprise.deployment.JndiNameEnvironment;
+import com.sun.enterprise.deployment.ManagedBeanDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
@@ -53,27 +67,14 @@ import org.glassfish.internal.api.PostStartupRunLevel;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.container.common.spi.CDIService;
-import com.sun.enterprise.container.common.spi.CDIService.CDIInjectionContext;
-import com.sun.enterprise.container.common.spi.InterceptorInvoker;
-import com.sun.enterprise.container.common.spi.JavaEEInterceptorBuilder;
-import com.sun.enterprise.container.common.spi.JavaEEInterceptorBuilderFactory;
-import com.sun.enterprise.container.common.spi.ManagedBeanManager;
-import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
-import com.sun.enterprise.container.common.spi.util.InjectionManager;
-import com.sun.enterprise.container.common.spi.util.InterceptorInfo;
-import com.sun.enterprise.deployment.Application;
-import com.sun.enterprise.deployment.ApplicationClientDescriptor;
-import com.sun.enterprise.deployment.BundleDescriptor;
-import com.sun.enterprise.deployment.EjbBundleDescriptor;
-import com.sun.enterprise.deployment.EjbDescriptor;
-import com.sun.enterprise.deployment.InterceptorDescriptor;
-import com.sun.enterprise.deployment.JndiNameEnvironment;
-import com.sun.enterprise.deployment.ManagedBeanDescriptor;
-import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
+import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.POST_CONSTRUCT;
+import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.PRE_DESTROY;
+import static java.security.AccessController.doPrivileged;
+import static java.util.Collections.synchronizedMap;
+import static java.util.logging.Level.FINE;
+import static org.glassfish.internal.deployment.Deployment.APPLICATION_LOADED;
+import static org.glassfish.internal.deployment.Deployment.APPLICATION_UNLOADED;
+import static org.glassfish.internal.deployment.Deployment.DEPLOYMENT_FAILURE;
 
 /**
  */
@@ -576,8 +577,8 @@ public class ManagedBeanManagerImpl implements ManagedBeanManager, PostConstruct
                 doPrivileged(new java.security.PrivilegedExceptionAction<Object>() {
                     @Override
                     public Object run() throws Exception {
-                        if (!proxyField.isAccessible()) {
-                            proxyField.setAccessible(true);
+                        if (!proxyField.trySetAccessible()) {
+                            throw new InaccessibleObjectException("Unable to make accessible: " + proxyField);
                         }
                         return null;
                     }

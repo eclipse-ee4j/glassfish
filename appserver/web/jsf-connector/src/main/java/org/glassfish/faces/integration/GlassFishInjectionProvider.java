@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,9 +17,24 @@
 
 package org.glassfish.faces.integration;
 
-import static java.security.AccessController.doPrivileged;
-import static java.util.logging.Level.FINE;
+import com.sun.enterprise.container.common.spi.CDIService;
+import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
+import com.sun.enterprise.container.common.spi.util.InjectionException;
+import com.sun.enterprise.container.common.spi.util.InjectionManager;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.InjectionInfo;
+import com.sun.enterprise.deployment.JndiNameEnvironment;
+import com.sun.enterprise.web.Constants;
+import com.sun.faces.config.WebConfiguration;
+import com.sun.faces.spi.AnnotationScanner;
+import com.sun.faces.spi.DiscoverableInjectionProvider;
+import com.sun.faces.spi.HighAvailabilityEnabler;
+import com.sun.faces.spi.InjectionProviderException;
+import com.sun.faces.util.FacesLogger;
 
+import jakarta.servlet.ServletContext;
+
+import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -39,22 +54,8 @@ import org.glassfish.hk2.classmodel.reflect.AnnotationModel;
 import org.glassfish.hk2.classmodel.reflect.Type;
 import org.glassfish.hk2.classmodel.reflect.Types;
 
-import com.sun.enterprise.container.common.spi.CDIService;
-import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
-import com.sun.enterprise.container.common.spi.util.InjectionException;
-import com.sun.enterprise.container.common.spi.util.InjectionManager;
-import com.sun.enterprise.deployment.BundleDescriptor;
-import com.sun.enterprise.deployment.InjectionInfo;
-import com.sun.enterprise.deployment.JndiNameEnvironment;
-import com.sun.enterprise.web.Constants;
-import com.sun.faces.config.WebConfiguration;
-import com.sun.faces.spi.AnnotationScanner;
-import com.sun.faces.spi.DiscoverableInjectionProvider;
-import com.sun.faces.spi.HighAvailabilityEnabler;
-import com.sun.faces.spi.InjectionProviderException;
-import com.sun.faces.util.FacesLogger;
-
-import jakarta.servlet.ServletContext;
+import static java.security.AccessController.doPrivileged;
+import static java.util.logging.Level.FINE;
 
 /**
  * <p>
@@ -338,8 +339,8 @@ public class GlassFishInjectionProvider extends DiscoverableInjectionProvider im
             doPrivileged(new java.security.PrivilegedExceptionAction<Object>() {
                 @Override
                 public java.lang.Object run() throws Exception {
-                    if (!lifecycleMethod.isAccessible()) {
-                        lifecycleMethod.setAccessible(true);
+                    if (!lifecycleMethod.trySetAccessible()) {
+                        throw new InaccessibleObjectException("Unable to make accessible: " + lifecycleMethod);
                     }
                     lifecycleMethod.invoke(instance);
                     return null;

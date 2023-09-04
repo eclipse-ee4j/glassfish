@@ -58,6 +58,9 @@ appserver/tests/appserv-tests/devtests/webservice/ejb_annotations/security/roles
 appserver/tests/appserv-tests/devtests/webservice/security/*.cer
 appserver/tests/appserv-tests/devtests/webservice/security/*.jks
 
+/appserver/tests/embedded/cdi_ejb_jpa/sun-appserv-samples/
+/appserver/tests/embedded/cdi_ejb_jpa/derby.log
+
 appserver/tests/appserv-tests/temppwd
 
 opendj-*.zip

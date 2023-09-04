@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,16 +17,14 @@
 
 package org.glassfish.tests.embedded.cdi_ejb_jpa;
 
-import junit.framework.Assert;
 import org.glassfish.embeddable.Deployer;
 import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishProperties;
 import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.embeddable.archive.ScatteredArchive;
-import org.glassfish.embeddable.archive.ScatteredEnterpriseArchive;
 import org.glassfish.embeddable.web.HttpListener;
 import org.glassfish.embeddable.web.WebContainer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,6 +37,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import org.junit.jupiter.api.Assertions;
 
 /**
  * @author bhavanishankar@dev.java.net
@@ -65,7 +65,7 @@ public class BasicCDITest{
         Deployer deployer = glassfish.getDeployer();
         String appname = deployer.deploy(warURI);
         System.out.println("Deployed [" + appname + "]");
-        Assert.assertEquals(appname, "cdi_ejb_jpa");
+        Assertions.assertEquals(appname, "cdi_ejb_jpa");
 
         // Now create a http listener and access the app.
         WebContainer webcontainer = glassfish.getService(WebContainer.class);
@@ -97,7 +97,7 @@ public class BasicCDITest{
                 found = true;
             }
         }
-        Assert.assertTrue(found);
+        Assertions.assertTrue(found);
         System.out.println("\n***** SUCCESS **** Found [" + result + "] in the response.*****\n");
     }
 

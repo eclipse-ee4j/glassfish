@@ -36,7 +36,7 @@
 
     <build>
         <testSourceDirectory>${basedir}/src/test/java</testSourceDirectory>
-        <!--<testOutputDirectory>${basedir}/target/classes/WEB-INF/classes</testOutputDirectory>-->
+        <testOutputDirectory>${basedir}/target/classes/WEB-INF/classes</testOutputDirectory>
         <finalName>embedded-webapi-tests</finalName>
         <plugins>
             <plugin>
@@ -50,7 +50,7 @@
                         </goals>
                         <configuration>
                             <primaryArtifact>false</primaryArtifact>
-                            <packagingExcludes>WEB-INF/lib/*</packagingExcludes>
+                            <packagingExcludes>WEB-INF/lib/**,WEB-INF/classes/WEB-INF/**</packagingExcludes>
                             <webappDirectory>${project.build.directory}/${project.build.finalName}-testapp</webappDirectory>
                             <classifier>testapp</classifier>
                         </configuration>

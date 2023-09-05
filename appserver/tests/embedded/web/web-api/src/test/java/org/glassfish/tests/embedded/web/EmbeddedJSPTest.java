@@ -47,7 +47,7 @@ public class EmbeddedJSPTest {
 
         Deployer deployer = glassfish.getDeployer();
 
-        path = new File(TestConfiguration.PROJECT_DIR, "src/main/resources/embedded-webapi-tests.war");
+        path = new File(TestConfiguration.PROJECT_DIR, "target/embedded-webapi-tests-testapp.war");
 
         String name = null;
 

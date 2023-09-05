@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,8 +23,6 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Level;
-import org.apache.catalina.logger.SystemOutLogger;
-import org.glassfish.api.deployment.DeployCommandParameters;
 import java.util.ArrayList;
 import java.util.List;
 import org.glassfish.embeddable.*;
@@ -79,7 +78,7 @@ public class EmbeddedWebAPITest {
         for (WebListener listener : embedded.getWebListeners())
             System.out.println("Web listener "+listener.getId()+" "+listener.getPort());
 
-        File f = new File("target/classes");
+        File f = new File(TestConfiguration.PROJECT_DIR, "target/classes");
         String virtualServerId = "embedded-server";
         VirtualServer vs = (VirtualServer)
                 embedded.createVirtualServer(virtualServerId, f);

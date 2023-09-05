@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,8 +23,6 @@ import java.security.*;
 import java.security.cert.X509Certificate;
 import javax.net.ssl.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 
 import org.glassfish.embeddable.*;
@@ -56,7 +55,7 @@ public class EmbeddedAddHttpsListenerTest {
         System.out.println("Starting Web "+embedded);
         embedded.setLogLevel(Level.INFO);
         WebContainerConfig config = new WebContainerConfig();
-        root = new File("target/classes");
+        root = new File(TestConfiguration.PROJECT_DIR, "target/classes");
         config.setDocRootDir(root);
         config.setListings(true);
         config.setPort(8080);

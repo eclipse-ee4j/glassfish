@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -72,7 +73,7 @@ public class EmbeddedCreateVirtualServerTest {
         WebListener[] webListeners = new HttpListener[1];
         webListeners[0] = testListener;
 
-        File f = new File("target/classes");
+        File f = new File(TestConfiguration.PROJECT_DIR, "target/classes");
         String virtualServerId = "embedded-server";
         VirtualServer virtualServer = (VirtualServer)
                 embedded.createVirtualServer(virtualServerId, f, webListeners);
@@ -90,7 +91,7 @@ public class EmbeddedCreateVirtualServerTest {
         VirtualServer vs = embedded.getVirtualServer(virtualServerId);
         Assert.assertEquals(virtualServerId,vs.getID());
 
-        File docRoot = new File("target/classes");
+        File docRoot = new File(TestConfiguration.PROJECT_DIR, "target/classes");
         Context context = (Context) embedded.createContext(docRoot);
         vs.addContext(context, contextRoot);
 

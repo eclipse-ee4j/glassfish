@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,7 +24,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Level;
 import java.util.ArrayList;
-import java.util.List;
 import org.glassfish.embeddable.*;
 import org.glassfish.embeddable.web.*;
 import org.glassfish.embeddable.web.config.*;
@@ -54,7 +54,7 @@ public class EmbeddedWebTest {
         embedded = glassfish.getService(WebContainer.class);
         System.out.println("================ EmbeddedWeb Test");
         System.out.println("Starting Web "+embedded);
-        root = new File("target/classes");
+        root = new File(TestConfiguration.PROJECT_DIR, "target/classes");
         configure();
 
     }

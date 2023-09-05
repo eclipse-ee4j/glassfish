@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,15 +23,10 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Level;
-import java.util.ArrayList;
-import java.util.List;
-import jakarta.servlet.Servlet;
-import jakarta.servlet.ServletRegistration;
 import org.glassfish.embeddable.*;
 import org.glassfish.embeddable.web.*;
 import org.glassfish.embeddable.web.config.*;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -56,7 +52,7 @@ public class EmbeddedSetConfigurationTest {
         embedded.setLogLevel(Level.INFO);
         WebContainerConfig config = new WebContainerConfig();
         config.setListings(true);
-        root = new File("target/classes");
+        root = new File(TestConfiguration.PROJECT_DIR, "target/classes");
         config.setDocRootDir(root);
         config.setPort(8080);
         config.setHostNames("localhost");

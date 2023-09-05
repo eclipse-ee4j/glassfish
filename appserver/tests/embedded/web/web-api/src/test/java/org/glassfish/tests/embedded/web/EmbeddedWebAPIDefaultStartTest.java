@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,15 +20,11 @@ package org.glassfish.tests.embedded.web;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.File;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.logging.Level;
 import java.util.ArrayList;
 import java.util.List;
 import java.net.URL;
 import java.net.URLConnection;
-import org.apache.catalina.logger.SystemOutLogger;
-import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.embeddable.*;
 import org.glassfish.embeddable.web.*;
 import org.junit.AfterClass;

@@ -24,7 +24,6 @@
         <groupId>org.glassfish.tests</groupId>
         <artifactId>embedded-web-war</artifactId>
         <version>7.0.9-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>org.glassfish.tests.embedded-web-war</groupId>
@@ -33,26 +32,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.1</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.4.2</version>
-                <configuration>
-                    <systemProperties>
-                        <property>
-                            <name>buildDir</name>
-                            <value>${project.build.outputDirectory}</value>
-                        </property>
-                    </systemProperties>
-                </configuration>
-            </plugin>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
@@ -65,7 +44,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.glassfish.distributions</groupId>
+                                    <groupId>org.glassfish.main.distributions</groupId>
                                     <artifactId>web</artifactId>
                                     <version>${project.version}</version>
                                     <type>zip</type>
@@ -75,14 +54,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.4.2</version>
-                <configuration>
-                    <forkCount>1</forkCount>
-                    <reuseForks>false</reuseForks>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 
@@ -90,70 +61,72 @@
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>${servlet-api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.extras</groupId>
+            <groupId>org.glassfish.main.extras</groupId>
             <artifactId>glassfish-embedded-web</artifactId>
-            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.extras</groupId>
+            <groupId>org.glassfish.main.extras</groupId>
             <artifactId>glassfish-embedded-shell</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.core</groupId>
+            <groupId>org.glassfish.main.core</groupId>
             <artifactId>kernel</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.glassfish.security</groupId>
+<!--        <dependency>
+            <groupId>org.glassfish.main.security</groupId>
             <artifactId>inmemory.jacc.provider</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
+        </dependency>-->
+        <dependency>
+            <groupId>org.glassfish.main.admin</groupId>
+            <artifactId>config-api</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.admin</groupId>
-            <artifactId>config-api</artifactId>
+            <groupId>org.glassfish.main.grizzly</groupId>
+            <artifactId>grizzly-config</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.web</groupId>
+            <groupId>org.glassfish.main.web</groupId>
             <artifactId>webtier-all</artifactId>
             <type>pom</type>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.transaction</groupId>
+            <groupId>org.glassfish.main.transaction</groupId>
             <artifactId>jta</artifactId>
-            <version>7.0.9-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>org.glassfish.web</groupId>
             <artifactId>web-embed-impl</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
-        </dependency>
+        </dependency>-->
 
         <dependency>
           <groupId>org.glassfish</groupId>
           <artifactId>jakarta.faces</artifactId>
-          <version>2.3.9</version>
-            <scope>test</scope>
+          <scope>test</scope>
         </dependency>
 
    </dependencies>

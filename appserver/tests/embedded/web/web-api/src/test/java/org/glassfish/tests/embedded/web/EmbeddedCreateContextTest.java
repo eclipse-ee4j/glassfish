@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,12 +23,9 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Level;
-import java.util.ArrayList;
-import java.util.List;
 import org.glassfish.embeddable.*;
 import org.glassfish.embeddable.web.*;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -60,7 +58,7 @@ public class EmbeddedCreateContextTest {
         listener.setId("embedded-listener-1");
         embedded.addWebListener(listener);
 
-        File docRoot = new File("target/classes");
+        File docRoot = new File(TestConfiguration.PROJECT_DIR, "target/classes");
         Context context = (Context) embedded.createContext(docRoot, contextRoot, null);
 
         URL servlet = new URL("http://localhost:8080/"+contextRoot+"/hello");

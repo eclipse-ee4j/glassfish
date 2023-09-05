@@ -24,7 +24,6 @@
         <groupId>org.glassfish.tests</groupId>
         <artifactId>embedded-web-war</artifactId>
         <version>7.0.9-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>org.glassfish.tests.embedded-web-war</groupId>
@@ -36,7 +35,6 @@
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>${servlet-api.version}</version>
             <scope>provided</scope>
         </dependency>
    </dependencies>

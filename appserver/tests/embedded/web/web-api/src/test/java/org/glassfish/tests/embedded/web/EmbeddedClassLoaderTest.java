@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,6 +16,9 @@
  */
 
 package org.glassfish.tests.embedded.web;
+
+import static org.hamcrest.CoreMatchers.both;
+import static org.hamcrest.CoreMatchers.containsString;
 
 import java.io.*;
 import java.net.URL;
@@ -43,12 +47,12 @@ public class EmbeddedClassLoaderTest {
 
         glassfish = GlassFishRuntime.bootstrap().newGlassFish();
         glassfish.start();
-        root = new File("target/classes");
+        root = new File(TestConfiguration.PROJECT_DIR, "target/classes");
 
         wc = glassfish.getService(WebContainer.class);
         wc.setLogLevel(Level.INFO);
         WebContainerConfig config = new WebContainerConfig();
-        root = new File("target/classes");
+        root = new File(TestConfiguration.PROJECT_DIR, "target/classes");
         config.setDocRootDir(root);
         config.setListings(true);
         config.setPort(8080);
@@ -71,37 +75,36 @@ public class EmbeddedClassLoaderTest {
     @Test
     public void test() throws Exception {
         URL[] urls = new URL[1];
-        urls[0] = (new File("src/main/resources/toto.jar")).toURI().toURL();
+        urls[0] = (new File(TestConfiguration.PROJECT_DIR, "src/main/resources/toto.jar")).toURI().toURL();
         URLClassLoader classLoader = new URLClassLoader(urls, EmbeddedClassLoaderTest.class.getClassLoader());
         loadA(classLoader);
 
         Thread.currentThread().setContextClassLoader(classLoader);
 
-        File path = new File("src/main/resources/embedded-webapi-tests.war");
+        File path = new File(TestConfiguration.PROJECT_DIR, "target/embedded-webapi-tests.war");
 
         Context context = wc.createContext(path, classLoader);
-        wc.addContext(context, contextRoot);
 
-        URL servlet = new URL("http://localhost:8080/test/testgf");
-        URLConnection yc = servlet.openConnection();
-        BufferedReader in = new BufferedReader(
-                                new InputStreamReader(
-                                yc.getInputStream()));
+        try {
+            wc.addContext(context, contextRoot);
 
-        StringBuilder sb = new StringBuilder();
-        String inputLine;
-        while ((inputLine = in.readLine()) != null){
-            sb.append(inputLine);
+            URL servlet = new URL("http://localhost:8080/test/testgf");
+            URLConnection yc = servlet.openConnection();
+            StringBuilder sb = new StringBuilder();
+
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()))) {
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    sb.append(inputLine);
+                }
+            }
+
+            Assert.assertThat(sb.toString(),
+                    both(containsString("Class TestCacaoList loaded successfully from listener"))
+                            .and(containsString("Class TestCacaoList loaded successfully from servlet")));
+        } finally {
+            wc.removeContext(context);
         }
-
-        boolean success = sb.toString().contains("Class TestCacaoList loaded successfully from listener");
-        if (success) {
-            success = sb.toString().contains("Class TestCacaoList loaded successfully from servlet");
-        }
-        Assert.assertTrue(success);
-        in.close();
-
-        wc.removeContext(context);
     }
 
     @AfterClass

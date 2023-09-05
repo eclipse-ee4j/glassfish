@@ -48,6 +48,12 @@
                         <goals>
                             <goal>war</goal>
                         </goals>
+                        <configuration>
+                            <primaryArtifact>false</primaryArtifact>
+                            <packagingExcludes>WEB-INF/lib/*</packagingExcludes>
+                            <webappDirectory>${project.build.directory}/${project.build.finalName}-testapp</webappDirectory>
+                            <classifier>testapp</classifier>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

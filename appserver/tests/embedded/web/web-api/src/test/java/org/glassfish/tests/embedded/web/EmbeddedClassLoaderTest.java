@@ -81,7 +81,7 @@ public class EmbeddedClassLoaderTest {
 
         Thread.currentThread().setContextClassLoader(classLoader);
 
-        File path = new File(TestConfiguration.PROJECT_DIR, "target/embedded-webapi-tests.war");
+        File path = new File(TestConfiguration.PROJECT_DIR, "target/embedded-webapi-tests-testapp.war");
 
         Context context = wc.createContext(path, classLoader);
 

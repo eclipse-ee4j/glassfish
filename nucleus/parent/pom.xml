@@ -68,7 +68,21 @@
         <system>IssueTracker</system>
         <url>https://github.com/eclipse-ee4j/glassfish/issues</url>
     </issueManagement>
-
+    <!-- FIXME: Remove before merge! -->
+    <repositories>
+        <repository>
+            <id>omnifish-snapshots</id>
+            <name>OmniFish Snapshots</name>
+            <url>https://repository.omnifish.ee/repository/snapshots</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
     <properties>
         <!-- Jakarta Expression Language -->
         <jakarta.el-api.version>5.0.1</jakarta.el-api.version>

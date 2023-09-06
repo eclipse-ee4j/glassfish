@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2023 Contributors to the Eclipse Foundation.
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,12 +14,25 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.tests.embedded.cdi_basic;
+package org.glassfish.main.test.app.persistence.transform.webapp;
 
-//Simple RequestScoped TestBean to test CDI.
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceUnit;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Response;
 
-//This bean implements Serializable as it needs to be placed into a Stateful Bean
-@RequestScoped
-public class TestRequestScopedBean
-{}
+@Path("/")
+public class ClassTransformerResource {
+
+    @PersistenceUnit(unitName = "transformPU")
+    private EntityManagerFactory persistenceUnit;
+
+    @GET
+    public Response getResponse() {
+        if (persistenceUnit.createEntityManager() == null) {
+            return Response.serverError().build();
+        }
+        return Response.ok().build();
+    }
+}

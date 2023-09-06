@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,18 +15,16 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.tests.embedded.cdi_basic;
+package org.glassfish.tests.embedded.cdi_ejb_jpa;
 
-import junit.framework.Assert;
 import org.glassfish.embeddable.Deployer;
 import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishProperties;
 import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.embeddable.archive.ScatteredArchive;
-import org.glassfish.embeddable.archive.ScatteredEnterpriseArchive;
 import org.glassfish.embeddable.web.HttpListener;
 import org.glassfish.embeddable.web.WebContainer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,12 +37,15 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import org.junit.jupiter.api.Assertions;
 
 /**
  * @author bhavanishankar@dev.java.net
  */
 
-public class BasicCDITest{
+public class BasicCDIUnitTest {
+
+    private static final String PROJECT_DIR = System.getProperty("project.directory");
 
     @Test
     public void test() throws Exception {
@@ -54,10 +56,10 @@ public class BasicCDITest{
         glassfish.start();
 
         // Test Scattered Web Archive
-        ScatteredArchive sa = new ScatteredArchive("cdi_basic",
-                ScatteredArchive.Type.WAR, new File("src/main/webapp"));
-        sa.addClassPath(new File("target/classes"));
-        sa.addClassPath(new File("src/main/resources"));
+        ScatteredArchive sa = new ScatteredArchive("cdi_ejb_jpa",
+                ScatteredArchive.Type.WAR, new File(PROJECT_DIR, "src/main/webapp"));
+        sa.addClassPath(new File(PROJECT_DIR, "target/classes"));
+        sa.addClassPath(new File(PROJECT_DIR, "src/main/resources"));
         URI warURI = sa.toURI();
         printContents(warURI);
 
@@ -65,7 +67,7 @@ public class BasicCDITest{
         Deployer deployer = glassfish.getDeployer();
         String appname = deployer.deploy(warURI);
         System.out.println("Deployed [" + appname + "]");
-        Assert.assertEquals(appname, "cdi_basic");
+        Assertions.assertEquals(appname, "cdi_ejb_jpa");
 
         // Now create a http listener and access the app.
         WebContainer webcontainer = glassfish.getService(WebContainer.class);
@@ -74,7 +76,7 @@ public class BasicCDITest{
         listener.setPort(9090);
         webcontainer.addWebListener(listener);
 
-        get("http://localhost:8080/cdi_basic/BasicCDITestServlet",
+        get("http://localhost:8080/cdi_ejb_jpa/BasicCDITestServlet",
                 "All CDI beans have been injected.");
 
         deployer.undeploy(appname);
@@ -97,7 +99,7 @@ public class BasicCDITest{
                 found = true;
             }
         }
-        Assert.assertTrue(found);
+        Assertions.assertTrue(found);
         System.out.println("\n***** SUCCESS **** Found [" + result + "] in the response.*****\n");
     }
 

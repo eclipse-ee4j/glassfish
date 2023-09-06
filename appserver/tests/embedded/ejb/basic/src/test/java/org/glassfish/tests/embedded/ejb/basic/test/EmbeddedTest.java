@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,8 +22,8 @@ import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.tests.embedded.ejb.basic.SampleEjb;
 import org.glassfish.tests.embedded.ejb.basic.TimerEjb;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.naming.InitialContext;
 import java.io.File;
@@ -36,14 +37,6 @@ import java.net.URI;
  */
 public class EmbeddedTest {
 
-/*
-    public static void main(String[] args) {
-        EmbeddedTest test = new EmbeddedTest();
-        System.setProperty("basedir", System.getProperty());
-        test.test();
-    }
-*/
-
     @Test
     public void test() throws Exception {
         GlassFish glassfish = GlassFishRuntime.bootstrap().newGlassFish();
@@ -51,7 +44,7 @@ public class EmbeddedTest {
 
 
         Deployer deployer = glassfish.getDeployer();
-        URI uri = new File(System.getProperty("user.dir"), "target/classes").toURI();
+        URI uri = new File(System.getProperty("project.directory"), "target/classes").toURI();
         System.out.println("Deploying [" + uri + "]");
         deployer.deploy(uri);
 
@@ -60,7 +53,7 @@ public class EmbeddedTest {
         System.out.println("Looking up SampleEJB.");
         SampleEjb sampleEjb = (SampleEjb) ic.lookup("java:global/classes/SampleEjb");
         System.out.println("Invoking SampleEjb [" + sampleEjb + "]");
-        Assert.assertEquals(sampleEjb.saySomething(), "Hello World");
+        Assertions.assertEquals(sampleEjb.saySomething(), "Hello World");
         System.out.println("SampleEjb tested successfully");
 
         System.out.println("Looking up TimerEjb.");
@@ -70,7 +63,7 @@ public class EmbeddedTest {
         System.out.println("Verifying TimerEjb [" + timerEjb + "]");
         Thread.sleep(4000);
         boolean result = timerEjb.verifyTimer();
-        Assert.assertTrue(result);
+        Assertions.assertTrue(result);
         System.out.println("TimerEJB tested successfully.");
 
         glassfish.stop();

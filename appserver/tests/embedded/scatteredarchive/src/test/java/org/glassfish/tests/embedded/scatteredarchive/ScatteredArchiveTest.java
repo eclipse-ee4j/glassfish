@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,7 @@
 
 package org.glassfish.tests.embedded.scatteredarchive;
 
-import junit.framework.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.glassfish.embeddable.Deployer;
 import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishProperties;
@@ -25,7 +26,7 @@ import org.glassfish.embeddable.archive.ScatteredArchive;
 import org.glassfish.embeddable.archive.ScatteredEnterpriseArchive;
 import org.glassfish.embeddable.web.HttpListener;
 import org.glassfish.embeddable.web.WebContainer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -45,6 +46,8 @@ import java.util.jar.JarFile;
 
 public class ScatteredArchiveTest {
 
+    private static final String PROJECT_DIR = System.getProperty("project.directory");
+
     @Test
     public void test() throws Exception {
 
@@ -55,9 +58,9 @@ public class ScatteredArchiveTest {
 
         // Test Scattered Web Archive
         ScatteredArchive sa = new ScatteredArchive("scatteredarchive",
-                ScatteredArchive.Type.WAR, new File("src/main/webapp"));
-        sa.addClassPath(new File("target/classes"));
-        sa.addClassPath(new File("src/main/resources"));
+                ScatteredArchive.Type.WAR, new File(PROJECT_DIR, "src/main/webapp"));
+        sa.addClassPath(new File(PROJECT_DIR, "target/classes"));
+        sa.addClassPath(new File(PROJECT_DIR, "src/main/resources"));
         URI warURI = sa.toURI();
         printContents(warURI);
 
@@ -65,7 +68,7 @@ public class ScatteredArchiveTest {
         Deployer deployer = glassfish.getDeployer();
         String appname = deployer.deploy(warURI);
         System.out.println("Deployed [" + appname + "]");
-        Assert.assertEquals(appname, "scatteredarchive");
+        Assertions.assertEquals(appname, "scatteredarchive");
 
         // Now create a http listener and access the app.
         WebContainer webcontainer = glassfish.getService(WebContainer.class);
@@ -85,24 +88,24 @@ public class ScatteredArchiveTest {
         // Test Scattered RA
         ScatteredArchive rar = new ScatteredArchive("scatteredra",
                 ScatteredArchive.Type.RAR);
-        rar.addClassPath(new File("target/classes"));
-        rar.addMetadata(new File("src/main/config/ra.xml"));
+        rar.addClassPath(new File(PROJECT_DIR, "target/classes"));
+        rar.addMetadata(new File(PROJECT_DIR, "src/main/config/ra.xml"));
         URI rarURI = rar.toURI();
         printContents(rarURI);
         appname = deployer.deploy(rarURI);
         System.out.println("Deployed RAR [" + appname + "]");
-        Assert.assertEquals(appname, "scatteredra");
+        Assertions.assertEquals(appname, "scatteredra");
 
         // Test Scattered Enterprise Archive.
         ScatteredEnterpriseArchive ear = new ScatteredEnterpriseArchive("sear");
         ear.addArchive(warURI, "sa.war");
         ear.addArchive(rarURI);
-        ear.addMetadata(new File("src/main/config/application.xml"));
+        ear.addMetadata(new File(PROJECT_DIR, "src/main/config/application.xml"));
         URI earURI = ear.toURI();
         printContents(earURI);
         appname = deployer.deploy(earURI);
         System.out.println("Deployed [" + appname + "]");
-        Assert.assertEquals(appname, "sear");
+        Assertions.assertEquals(appname, "sear");
 
         get("http://localhost:9090/satest", "Hi, my name is Bhavani. What's yours?");
         get("http://localhost:9090/satest/ScatteredArchiveTestServlet",
@@ -128,7 +131,7 @@ public class ScatteredArchiveTest {
                 found = true;
             }
         }
-        Assert.assertTrue(found);
+        Assertions.assertTrue(found);
         System.out.println("\n***** SUCCESS **** Found [" + result + "] in the response.*****\n");
     }
 

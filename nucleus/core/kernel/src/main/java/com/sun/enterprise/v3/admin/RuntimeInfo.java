@@ -31,6 +31,7 @@ import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.lang.management.RuntimeMXBean;
+import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
@@ -131,8 +132,8 @@ public class RuntimeInfo implements AdminCommand {
                 AccessController.doPrivileged(new PrivilegedExceptionAction() {
                     @Override
                     public Object run() throws Exception {
-                        if (!jm.isAccessible()) {
-                            jm.setAccessible(true);
+                        if (!jm.trySetAccessible()) {
+                            throw new InaccessibleObjectException("Unable to make accessible: " + jm);
                         }
                         return null;
                     }

@@ -62,5 +62,3 @@ appserver/tests/appserv-tests/temppwd
 
 opendj-*.zip
 /opendj/
-/appserver/tests/tck/concurrency/ConcurrentTCK*.log
-/appserver/tests/tck/concurrency/ConcurrentTCK*.log.lck

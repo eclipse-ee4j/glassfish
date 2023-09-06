@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,7 @@
 
 package org.glassfish.tests.embedded.cdi_basic;
 
+import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -31,8 +33,11 @@ import java.io.PrintWriter;
         urlPatterns = "/BasicCDITestServlet")
 public class BasicCDITestServlet extends HttpServlet {
 
-    @jakarta.inject.Inject TestBean tb;
-    @jakarta.inject.Inject TestRequestScopedBean trsb;
+    @Inject
+    TestBean tb;
+
+    @Inject
+    TestRequestScopedBean trsb;
 
     @Override
     protected void doGet(HttpServletRequest httpServletRequest,

@@ -1580,10 +1580,21 @@
         </dependency>
 
         <!-- We cannot unpack dependency from zip file, so we need classes from the jar file -->
-        <!-- Do we need derbyshared and derbytools here? Not included now. -->
         <dependency>
             <groupId>org.apache.derby</groupId>
             <artifactId>derby</artifactId>
+            <version>${derby.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derbytools</artifactId>
+            <version>${derby.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derbyshared</artifactId>
             <version>${derby.version}</version>
             <optional>true</optional>
         </dependency>

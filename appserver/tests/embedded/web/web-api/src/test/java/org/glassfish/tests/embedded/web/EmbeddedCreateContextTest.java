@@ -25,9 +25,9 @@ import java.net.URLConnection;
 import java.util.logging.Level;
 import org.glassfish.embeddable.*;
 import org.glassfish.embeddable.web.*;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests WebContainer#createContext
@@ -40,7 +40,7 @@ public class EmbeddedCreateContextTest {
     static WebContainer embedded;
     static String contextRoot = "test";
 
-    @BeforeClass
+    @BeforeAll
     public static void setupServer() throws GlassFishException {
         glassfish = GlassFishRuntime.bootstrap().newGlassFish();
         glassfish.start();
@@ -75,7 +75,7 @@ public class EmbeddedCreateContextTest {
         in.close();
     }
 
-    @AfterClass
+    @AfterAll
     public static void shutdownServer() throws GlassFishException {
         System.out.println("Stopping server " + glassfish);
         if (glassfish != null) {

@@ -26,10 +26,10 @@ import java.util.logging.Level;
 import org.glassfish.embeddable.*;
 import org.glassfish.embeddable.web.*;
 import org.glassfish.embeddable.web.config.*;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests WebContainer#createContext
@@ -43,7 +43,7 @@ public class EmbeddedAddContextTest {
     static File root;
     static String contextRoot = "test";
 
-    @BeforeClass
+    @BeforeAll
     public static void setupServer() throws GlassFishException {
         glassfish = GlassFishRuntime.bootstrap().newGlassFish();
         glassfish.start();
@@ -67,8 +67,8 @@ public class EmbeddedAddContextTest {
         embedded.addContext(context, contextRoot);
 
         VirtualServer vs = embedded.getVirtualServer("server");
-        Assert.assertEquals("server", vs.getID());
-        Assert.assertEquals("/"+contextRoot, vs.getContext(contextRoot).getPath());
+        Assertions.assertEquals("server", vs.getID());
+        Assertions.assertEquals("/" + contextRoot, vs.getContext(contextRoot).getPath());
         boolean containsContext = false;
         for (Context ctx : vs.getContexts()) {
             System.out.println("Context found "+ctx.getPath());
@@ -76,7 +76,7 @@ public class EmbeddedAddContextTest {
                 containsContext = true;
             }
         }
-        Assert.assertTrue(containsContext);
+        Assertions.assertTrue(containsContext);
 
         URL servlet = new URL("http://localhost:8080/"+contextRoot+"/hello");
         URLConnection yc = servlet.openConnection();
@@ -94,7 +94,7 @@ public class EmbeddedAddContextTest {
         embedded.removeContext(context);
     }
 
-    @AfterClass
+    @AfterAll
     public static void shutdownServer() throws GlassFishException {
         System.out.println("Stopping server " + glassfish);
         if (glassfish != null) {

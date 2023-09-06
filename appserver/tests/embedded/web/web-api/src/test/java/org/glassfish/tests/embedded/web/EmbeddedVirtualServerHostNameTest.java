@@ -25,10 +25,10 @@ import java.net.URLConnection;
 import org.glassfish.embeddable.*;
 import org.glassfish.embeddable.web.*;
 import org.glassfish.embeddable.web.config.*;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for VirtualServerConfig#setHostNames
@@ -42,7 +42,7 @@ public class EmbeddedVirtualServerHostNameTest {
     static String contextRoot = "host";
     static int newPort = 9090;
 
-    @BeforeClass
+    @BeforeAll
     public static void setupServer() throws GlassFishException {
 
         GlassFishRuntime runtime = GlassFishRuntime.bootstrap();
@@ -67,7 +67,7 @@ public class EmbeddedVirtualServerHostNameTest {
         embedded.addVirtualServer(virtualServer);
 
         VirtualServer vs = embedded.getVirtualServer(virtualServerId);
-        Assert.assertEquals(virtualServerId,vs.getID());
+        Assertions.assertEquals(virtualServerId,vs.getID());
 
         Context context = (Context) embedded.createContext(root);
         embedded.addContext(context, contextRoot);
@@ -83,11 +83,11 @@ public class EmbeddedVirtualServerHostNameTest {
         }
         in.close();
         System.out.println(inputLine);
-        Assert.assertEquals("Hello World!", sb.toString());
+        Assertions.assertEquals("Hello World!", sb.toString());
 
     }
 
-    @AfterClass
+    @AfterAll
     public static void shutdownServer() throws GlassFishException {
         System.out.println("Stopping server " + glassfish);
         if (glassfish != null) {

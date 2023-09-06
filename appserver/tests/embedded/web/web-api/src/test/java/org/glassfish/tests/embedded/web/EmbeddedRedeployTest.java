@@ -26,10 +26,10 @@ import java.util.logging.Level;
 import org.glassfish.embeddable.*;
 import org.glassfish.embeddable.web.*;
 import org.glassfish.embeddable.web.config.*;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests redeploy scenario
@@ -43,7 +43,7 @@ public class EmbeddedRedeployTest {
     static File root;
     static String contextRoot = "/embedded-redeploy";
 
-    @BeforeClass
+    @BeforeAll
     public static void setupServer() throws GlassFishException {
         glassfish = GlassFishRuntime.bootstrap().newGlassFish();
         glassfish.start();
@@ -68,19 +68,19 @@ public class EmbeddedRedeployTest {
 
         VirtualServer vs = embedded.getVirtualServer("server");
         String path = vs.getContext(contextRoot).getPath();
-        Assert.assertEquals(path, contextRoot);
+        Assertions.assertEquals(path, contextRoot);
         invoke();
 
         embedded.removeContext(context);
-        Assert.assertNull(vs.getContext(contextRoot));
+        Assertions.assertNull(vs.getContext(contextRoot));
 
         embedded.addContext(context, contextRoot);
-        Assert.assertEquals(path, contextRoot);
+        Assertions.assertEquals(path, contextRoot);
 
         invoke();
 
         embedded.removeContext(context);
-        Assert.assertNull(vs.getContext(contextRoot));
+        Assertions.assertNull(vs.getContext(contextRoot));
 
     }
 
@@ -100,7 +100,7 @@ public class EmbeddedRedeployTest {
         in.close();
     }
 
-    @AfterClass
+    @AfterAll
     public static void shutdownServer() throws GlassFishException {
         System.out.println("Stopping server " + glassfish);
         if (glassfish != null) {

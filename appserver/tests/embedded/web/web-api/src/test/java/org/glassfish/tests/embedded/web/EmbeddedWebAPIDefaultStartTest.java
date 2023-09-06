@@ -27,10 +27,10 @@ import java.net.URL;
 import java.net.URLConnection;
 import org.glassfish.embeddable.*;
 import org.glassfish.embeddable.web.*;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests WebContainer#start correctly starts the server with default 8080 port
@@ -43,7 +43,7 @@ public class EmbeddedWebAPIDefaultStartTest {
     static GlassFish glassfish;
     static WebContainer embedded;
 
-    @BeforeClass
+    @BeforeAll
     public static void setupServer() throws GlassFishException {
         glassfish = GlassFishRuntime.bootstrap().newGlassFish();
         glassfish.start();
@@ -62,7 +62,7 @@ public class EmbeddedWebAPIDefaultStartTest {
         embedded.addWebListener(httpListener);
 
         List<WebListener> listenerList = new ArrayList(embedded.getWebListeners());
-        Assert.assertTrue(listenerList.size()==1);
+        Assertions.assertTrue(listenerList.size()==1);
         for (WebListener listener : embedded.getWebListeners())
             System.out.println("Web listener "+listener.getId()+" "+listener.getPort());
 
@@ -88,7 +88,7 @@ public class EmbeddedWebAPIDefaultStartTest {
 
         System.out.println("Deployed " + appName);
 
-        Assert.assertTrue(appName != null);
+        Assertions.assertTrue(appName != null);
 
         URL servlet = new URL("http://localhost:8080/classes/hello");
         URLConnection yc = servlet.openConnection();
@@ -100,7 +100,7 @@ public class EmbeddedWebAPIDefaultStartTest {
         }
         in.close();
         System.out.println(inputLine);
-        Assert.assertEquals("Hello World!", sb.toString());
+        Assertions.assertEquals("Hello World!", sb.toString());
 
         Thread.sleep(1000);
 
@@ -108,7 +108,7 @@ public class EmbeddedWebAPIDefaultStartTest {
             deployer.undeploy(appName);
     }
 
-    @AfterClass
+    @AfterAll
     public static void shutdownServer() throws GlassFishException {
         System.out.println("Stopping server " + glassfish);
         if (glassfish != null) {

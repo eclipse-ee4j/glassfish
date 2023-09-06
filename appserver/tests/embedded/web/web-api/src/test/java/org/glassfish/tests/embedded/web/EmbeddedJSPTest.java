@@ -19,10 +19,10 @@ package org.glassfish.tests.embedded.web;
 
 import java.io.File;
 import org.glassfish.embeddable.*;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -33,7 +33,7 @@ public class EmbeddedJSPTest {
     static GlassFish glassfish;
     static File path;
 
-    @BeforeClass
+    @BeforeAll
     public static void setupServer() throws GlassFishException {
         GlassFishProperties gp = new GlassFishProperties();
         gp.setPort("http-listener", 8080);
@@ -63,7 +63,7 @@ public class EmbeddedJSPTest {
 
         System.out.println("Deployed " + appName);
 
-        Assert.assertTrue(appName != null);
+        Assertions.assertTrue(appName != null);
 
         /*
         URL servlet = new URL("http://localhost:8080/hellojsp/index.jsp");
@@ -84,7 +84,7 @@ public class EmbeddedJSPTest {
         System.out.println("Undeployed "+appName);
     }
 
-    @AfterClass
+    @AfterAll
     public static void shutdownServer() throws GlassFishException {
         System.out.println("Stopping server " + glassfish);
         if (glassfish != null) {

@@ -29,11 +29,11 @@ import java.util.logging.Level;
 import org.glassfish.embeddable.*;
 import org.glassfish.embeddable.web.*;
 import org.glassfish.embeddable.web.config.*;
+import org.hamcrest.MatcherAssert;
 
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class EmbeddedClassLoaderTest {
 
@@ -42,7 +42,7 @@ public class EmbeddedClassLoaderTest {
     static WebContainer wc;
     static File root;
 
-    @BeforeClass
+    @BeforeAll
     public static void setupServer() throws GlassFishException {
 
         glassfish = GlassFishRuntime.bootstrap().newGlassFish();
@@ -99,7 +99,7 @@ public class EmbeddedClassLoaderTest {
                 }
             }
 
-            Assert.assertThat(sb.toString(),
+            MatcherAssert.assertThat(sb.toString(),
                     both(containsString("Class TestCacaoList loaded successfully from listener"))
                             .and(containsString("Class TestCacaoList loaded successfully from servlet")));
         } finally {
@@ -107,7 +107,7 @@ public class EmbeddedClassLoaderTest {
         }
     }
 
-    @AfterClass
+    @AfterAll
     public static void shutdownServer() throws GlassFishException {
         System.out.println("Stopping server " + glassfish);
         if (glassfish != null) {

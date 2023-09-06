@@ -27,10 +27,10 @@ import jakarta.servlet.ServletRegistration;
 import org.glassfish.embeddable.*;
 import org.glassfish.embeddable.web.*;
 import org.glassfish.embeddable.web.config.*;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for Context#addServlet, embedded.createVirtualServer
@@ -45,7 +45,7 @@ public class EmbeddedAddServletTest {
     static String vsname = "test-server";
     static String contextRoot = "test";
 
-    @BeforeClass
+    @BeforeAll
     public static void setupServer() throws GlassFishException {
         glassfish = GlassFishRuntime.bootstrap().newGlassFish();
         glassfish.start();
@@ -82,7 +82,7 @@ public class EmbeddedAddServletTest {
                 testvs=true;
             }
         }
-        Assert.assertTrue(testvs);
+        Assertions.assertTrue(testvs);
         Context context = (Context) embedded.createContext(root);
         ServletRegistration sr = context.addServlet("NewServlet", "org.glassfish.tests.embedded.web.NewServlet");
         sr.addMapping(new String[] {"/newservlet"});
@@ -104,7 +104,7 @@ public class EmbeddedAddServletTest {
 
      }
 
-    @AfterClass
+    @AfterAll
     public static void shutdownServer() throws GlassFishException {
         System.out.println("Stopping server " + glassfish);
         if (glassfish != null) {

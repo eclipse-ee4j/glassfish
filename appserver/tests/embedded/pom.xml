@@ -41,7 +41,8 @@
         <module>ejb</module>
         <module>scatteredarchive</module>
         <module>maven-plugin</module>
-        <!--<module>web</module> -->
+        <module>web</module>
+        <module>utils</module>
     </modules>
 
     <dependencyManagement>
@@ -68,6 +69,7 @@
                         <workingDirectory>${project.build.directory}/surefire-workdir</workingDirectory>
                         <systemPropertyVariables>
                             <project.directory>${basedir}</project.directory>
+                            <buildDir>${project.build.directory}/surefire-workdir</buildDir>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>
@@ -77,6 +79,7 @@
                         <workingDirectory>${project.build.directory}/failsafe-workdir</workingDirectory>
                         <systemPropertyVariables>
                             <project.directory>${basedir}</project.directory>
+                            <buildDir>${project.build.directory}/failsafe-workdir</buildDir>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>

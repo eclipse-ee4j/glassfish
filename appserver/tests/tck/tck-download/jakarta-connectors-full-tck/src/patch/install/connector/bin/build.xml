@@ -1,0 +1,286 @@
+<!--
+
+    Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<project name="TS top level" default="usage">
+<!-- Do NOT load ts.jte.  It's already loaded by TSBuildListener
+    Besides properties in bin/ts.jte, the following properties are also 
+    defined by TSBuildListener:
+    ts.home
+    class.dir: defined as ${ts.home}/classes
+    vehicle.dir: defined as com/sun/ts/tests/common/vehicle
+    dist.dir: defined as ${ts.home}/dist
+
+    IMPORTANT NOTES TO BE AWARE OF:
+    1.  The standalone connector TCK has various deployment differences then the 
+        connector tests which are bundled in the CTS TCK.  Because of this,
+        there will be differences between the two and they are not interchangeable.
+        Standalone Connector TCK can not assume a JavaEE environment.
+
+    2.  The xml/impl/glassfish/config.vi.xml file is a
+        RI specific deployment file and will need to be customized for each
+        different VI.
+
+    3.  the .WAR files which live in the dist/com/.../connector sub dirs do NOT
+        have the WEB-INF/sun-web files in them.  The WEB-INF/sun-web files get
+        added at deployment time.  This means that if you try to manually deploy
+        a dist/com/..../connector/*.war file (without using the provided ant targerts)
+        then you may need to ensure that it has the WEB-INF/sun-web.xml files in it first.
+
+    4.  the various connector foo_web.war.sun-web.xml files contain variables 
+        that get dynamically replaced by the ant targets at deployment time.
+        This means that "rauser1"  will appear in the foo_web.war.sun-web.xml files
+        in the src directory AND even in dist dir BUT at deployment time, the
+        values should get replaced with corresponding values from ts.jte and the
+        respective archive file should be updated with the new foo_web.war.sun-web.xml.
+
+ -->
+
+
+    <!-- IMPORTS -->
+    <import file="xml/ts.top.import.xml" optional="true"/>
+    <import file="../../../bin/xml/ts.top.import.xml" optional="true"/>
+    
+    <import file="xml/impl/${impl.vi}/deploy.xml" optional="true"/>
+    <import file="../../../bin/xml/impl/${impl.vi}/deploy.xml" optional="true"/>
+
+
+
+    <property name="webServerHome" value="${connector.home}"/>
+    <property name="all.test.dir"   
+              value="com/sun/ts/tests/connector/localTx/workmgt,
+                        com/sun/ts/tests/connector/localTx/security,
+                        com/sun/ts/tests/connector/localTx/lifecycle,
+                        com/sun/ts/tests/connector/localTx/event,
+                        com/sun/ts/tests/connector/localTx/connection,
+                        com/sun/ts/tests/connector/localTx/transinflow,
+                        com/sun/ts/tests/connector/localTx/msginflow,
+                        com/sun/ts/tests/connector/localTx/workcontext,
+                        com/sun/ts/tests/connector/noTx/workmgt,
+                        com/sun/ts/tests/connector/noTx/security,
+                        com/sun/ts/tests/connector/noTx/lifecycle,
+                        com/sun/ts/tests/connector/noTx/event,
+                        com/sun/ts/tests/connector/noTx/connection,
+                        com/sun/ts/tests/connector/xa/workmgt,
+                        com/sun/ts/tests/connector/xa/security,
+                        com/sun/ts/tests/connector/xa/lifecycle,
+                        com/sun/ts/tests/connector/xa/event,
+                        com/sun/ts/tests/connector/xa/connection,
+                        com/sun/ts/tests/connector/annotations,
+						com/sun/ts/tests/connector/permissiondd,
+                        com/sun/ts/tests/connector/connManager,
+                        com/sun/ts/tests/signaturetest/connector"/>
+
+    <property name="other.java.files"
+              value="com/sun/ts/tests/common/vehicle/web,
+                     com/sun/ts/tests/common/vehicle/customvehicle,
+                     com/sun/ts/tests/common/vehicle/servlet,
+                     com/sun/ts/tests/common/vehicle/connectorservlet,
+                     com/sun/ts/tests/common/connector/whitebox"/>
+
+    <target name="build.all.tests" >
+        <elementappend original="${all.test.dir}" suffix="**/*.java" property="all.java.file"/>
+
+        <echo message="Test Dirs:${all.test.dir}"/>
+        <echo message="Compiling:${all.java.file}"/>
+        <echo message="Compiling:${other.java.files}"/>
+
+        <ts.javac  includes="${all.java.file}, ${other.java.files}"
+                   excludes="com/sun/ts/tests/common/vehicle/ejb**/**"
+                   memoryInitialSize="100m"
+                   deprecation="off"/>
+
+        <dosubdirs srcdir="${ts.home}/src" 
+                   includes="${all.test.dir}, ${other.java.files}"  
+                   excludes="com/sun/ts/tests/common/vehicle/ejb**/**"
+                   todo="package" />
+    </target>
+
+
+    <!-- 
+          This is a convenience target that can be used to build a jar file which
+          contaiins all connector tests.  This might be desired for the case where 
+          cconnector (standalone tck) tests are being run in a custom vehicle/container.
+    -->
+    <target name="build.custom.vehicle.tests.jar" >
+        <if>
+            <not>
+                <available file="${dist.dir}/com/sun/ts/tests/common/connector/whitebox/whitebox.jar"/>
+            </not>
+        <then>
+               <antcall target="build.all.tests"/> 
+        </then>
+        </if>
+
+        <jar update="true"
+             jarfile="${ts.home}/dist/com/sun/ts/tests/connector/customVehicleTestClients.jar">
+             <zipfileset dir="${class.dir}"
+                         includes="com/sun/ts/tests/connector/**"/>
+        </jar>
+    </target>
+
+    <target name="clean.custom.vehicle.tests.jar" >
+        <delete failonerror="false" file="${ts.home}/dist/com/sun/ts/tests/connector/customVehicleTestClients.jar"/>
+    </target>
+
+    <target name="translatepath">
+        <translatepath propname="connector.home"/>
+        <translatepath propname="s1as.java.endorsed.dirs"/> 
+        <translatepath propname="ri.java.endorsed.dirs"/>
+    </target>
+   
+
+    <!--
+         convenience target that ultimately calls:  build.all.jars and build.all.tests
+     -->
+    <target name="build" >
+        <ant antfile="${common.bin.dir}/xml/ts.top.import.xml" target="build.all"/>
+    </target>
+
+
+    <target name="gui" depends="init, check.java.options, no.java.options, translatepath"> 
+        <ant antfile="${common.bin.dir}/xml/ts.top.import.xml"
+             target="gui"/>
+    </target>
+
+
+    <!-- this deploys all .rar files -->
+    <target name="deploy.all.rars">
+        <ant antfile="${common.bin.dir}/xml/impl/${impl.vi}/connector.xml"
+             target="deploy.all.rars"/>
+    </target>
+
+    <!-- this undeploys all .rar files -->
+    <target name="undeploy.all.rars">
+        <ant antfile="${common.bin.dir}/xml/impl/${impl.vi}/connector.xml"
+             target="undeploy.all.rars"/>
+    </target>
+
+
+    <!--
+         this deploys all rars, creates connection resources and connection pools
+      -->
+    <target name="setup.all.rars.and.pools">
+        <ant antfile="${common.bin.dir}/xml/impl/${impl.vi}/connector.xml"
+             target="setup.all.rars.and.pools"/>
+    </target>
+
+    <!--
+         this undeploys all rars, deletes connection resources and connection pools
+      -->
+    <target name="undeploy.all.rars.and.pools">
+        <ant antfile="${common.bin.dir}/xml/impl/${impl.vi}/connector.xml"
+             target="undeploy.all.rars.and.pools"/>
+    </target>
+
+
+    <target name="create-connection-pools">
+        <ant antfile="${common.bin.dir}/xml/impl/${impl.vi}/connector.xml"
+             target="create-connection-pools"/>
+    </target>
+    
+    <target name="delete-connection-pools">
+        <ant antfile="${common.bin.dir}/xml/impl/${impl.vi}/connector.xml"
+             target="delete-connection-pools"/>
+    </target>
+
+    <target name="create-connection-resources">
+        <ant antfile="${common.bin.dir}/xml/impl/${impl.vi}/connector.xml"
+             target="create-connection-resources"/>
+    </target>
+    
+    <target name="delete-connection-resources">
+        <ant antfile="${common.bin.dir}/xml/impl/${impl.vi}/connector.xml"
+             target="delete-connection-resources"/>
+    </target>
+
+
+    <target name="config.vi">
+        <record name="config_vi.log" action="start"/>
+
+        <touch file="tssql.stmt"/>
+
+        <ant antfile="config.vi.xml" dir="${bin.dir}/xml/impl/${impl.vi}" target="config.vi"/>
+
+        <ant antfile="s1as.xml" dir="${common.bin.dir}/xml/impl/${impl.vi}" target="restart.server"/>
+
+        <ant antfile="config.vi.xml" dir="${bin.dir}/xml/impl/${impl.vi}" target="vi.perms"/>
+        <record name="config_vi.log" action="stop"/>
+    </target>
+
+    <target name="clean.vi">
+        <ant antfile="config.vi.xml" dir="${bin.dir}/xml/impl/${impl.vi}" target="clean.vi"/>
+        <ant antfile="${common.bin.dir}/xml/s1as.xml" target="restart.server"/>
+    </target>
+
+    <target name="restart.vi">
+        <ant antfile="${common.bin.dir}/xml/impl/${impl.vi}/s1as.xml" target="restart.server"/>
+    </target>
+
+
+    <!-- Tasks for managing ts specific jar.  These automatically call 
+         the pkg target in the src/com/sun/ts/lib/build.xml file  
+    -->
+    <!-- ts specific jar (in this case connector.jar) will be created in ts.home/lib. -->
+
+   <property name="lib.jar" value = "${ts.home}/lib/connector.jar"/>
+   <property name="install.lib.dir" value = "${ts.home}/install/jakartaee/lib"/>
+   
+    <target name="tslib.clean" depends="init">
+      <delete failonerror="false">
+          <fileset dir="${class.dir}">
+                <include name="${lib.pkg.dir}/deliverable/connector/**"/>
+                <include name="${lib.pkg.dir}/deliverable/deploy/**"/>
+                <include name="${lib.pkg.dir}/deliverable/tck/*.class"/>
+          </fileset>
+      </delete>
+      <delete failonerror="false" file="${ts.home}/lib/connector.jar"/>
+      <delete failonerror="false" file="${install.lib.dir}/connector.jar"/>
+    </target>
+
+    <target name="tslib.compile" depends="tslib.clean, bind.dtds">
+        <echo message="basedir = ${basedir}"/>
+        <ts.javac includes="${lib.pkg.dir}/deliverable/*,
+                            ${lib.pkg.dir}/deliverable/connector/**,
+                            ${lib.pkg.dir}/deliverable/deploy/**,
+                            ${lib.pkg.dir}/deliverable/tck/**,
+                            ${lib.pkg.dir}/porting/**,
+                            ${lib.pkg.dir}/implementation/sun/common/**,
+                            ${lib.pkg.dir}/implementation/sun/connector/**,
+                            ${lib.pkg.dir}/tests/jdbc/CS_Procs.java"
+                   excludes="${lib.pkg.dir}/porting/TSJMS*.java">
+        <classpath>
+            <pathelement path="${ts.lib.classpath}" />
+        </classpath>	
+        </ts.javac>
+    </target>
+
+    <target name="tslib" depends="tslib.compile">
+        <tstamp/>
+        <delete failonerror="true" file="${ts.home}/lib/connector.jar"/>
+        <ts.lib.jar>
+            <include name="${lib.pkg.dir}/deliverable/tck/**"/>
+            <include name="${lib.pkg.dir}/deliverable/connector/**"/>
+            <include name="${lib.pkg.dir}/deliverable/cts/**"/>
+            <include name="${lib.pkg.dir}/implementation/sun/common/**"/>
+            <include name="${lib.pkg.dir}/implementation/sun/connector/**"/>
+            <include name="${lib.pkg.dir}/porting/**"/>
+        </ts.lib.jar>
+    </target>
+
+</project>
+

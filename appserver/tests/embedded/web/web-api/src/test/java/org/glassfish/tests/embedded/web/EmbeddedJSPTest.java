@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,23 +17,12 @@
 
 package org.glassfish.tests.embedded.web;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.File;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.logging.Level;
-import java.util.ArrayList;
-import java.util.List;
-import java.net.URL;
-import java.net.URLConnection;
-import org.apache.catalina.logger.SystemOutLogger;
-import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.embeddable.*;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -43,7 +33,7 @@ public class EmbeddedJSPTest {
     static GlassFish glassfish;
     static File path;
 
-    @BeforeClass
+    @BeforeAll
     public static void setupServer() throws GlassFishException {
         GlassFishProperties gp = new GlassFishProperties();
         gp.setPort("http-listener", 8080);
@@ -57,7 +47,7 @@ public class EmbeddedJSPTest {
 
         Deployer deployer = glassfish.getDeployer();
 
-        path = new File("src/main/resources/embedded-webapi-tests.war");
+        path = new File(TestConfiguration.PROJECT_DIR, "target/embedded-webapi-tests-testapp.war");
 
         String name = null;
 
@@ -73,7 +63,7 @@ public class EmbeddedJSPTest {
 
         System.out.println("Deployed " + appName);
 
-        Assert.assertTrue(appName != null);
+        Assertions.assertTrue(appName != null);
 
         /*
         URL servlet = new URL("http://localhost:8080/hellojsp/index.jsp");
@@ -94,7 +84,7 @@ public class EmbeddedJSPTest {
         System.out.println("Undeployed "+appName);
     }
 
-    @AfterClass
+    @AfterAll
     public static void shutdownServer() throws GlassFishException {
         System.out.println("Stopping server " + glassfish);
         if (glassfish != null) {

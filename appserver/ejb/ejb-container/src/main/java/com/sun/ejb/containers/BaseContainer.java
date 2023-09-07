@@ -97,6 +97,7 @@ import jakarta.transaction.Transaction;
 import jakarta.transaction.UserTransaction;
 
 import java.io.Serializable;
+import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -1952,13 +1953,13 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
         final Method ejbTimeoutAccessible = method;
         if (System.getSecurityManager() == null) {
-            if (!ejbTimeoutAccessible.isAccessible()) {
-                ejbTimeoutAccessible.setAccessible(true);
+            if (!ejbTimeoutAccessible.trySetAccessible()) {
+                throw new InaccessibleObjectException("Unable to make accessible: " + ejbTimeoutAccessible);
             }
         } else {
             PrivilegedExceptionAction<Void> action = () -> {
-                if (!ejbTimeoutAccessible.isAccessible()) {
-                    ejbTimeoutAccessible.setAccessible(true);
+                if (!ejbTimeoutAccessible.trySetAccessible()) {
+                    throw new InaccessibleObjectException("Unable to make accessible: " + ejbTimeoutAccessible);
                 }
                 return null;
             };

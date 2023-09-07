@@ -35,13 +35,6 @@ import java.net.URI;
  */
 public class EJBTest {
 
-    /*
-        public static void main(String[] args) {
-            EmbeddedTest test = new EmbeddedTest();
-            System.setProperty("basedir", System.getProperty());
-            test.test();
-        }
-    */
     GlassFish glassfish;
 
     @Test
@@ -52,7 +45,7 @@ public class EJBTest {
 
 
         Deployer deployer = glassfish.getDeployer();
-        URI uri = new File(System.getProperty("user.dir"), "target/remoteejb.jar").toURI();
+        URI uri = new File(System.getProperty("project.directory"), "target/remoteejb.jar").toURI();
         System.out.println("Deploying [" + uri + "]");
         deployer.deploy(uri);
 

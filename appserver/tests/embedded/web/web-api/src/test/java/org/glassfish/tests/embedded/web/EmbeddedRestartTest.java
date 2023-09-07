@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,12 +22,11 @@ import java.io.InputStreamReader;
 import java.io.File;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.logging.Level;
 import org.glassfish.embeddable.*;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests GlassFish restart
@@ -38,7 +38,7 @@ public class EmbeddedRestartTest {
     static GlassFish glassfish;
     static String contextRoot = "test";
 
-    @BeforeClass
+    @BeforeAll
     public static void setupServer() throws GlassFishException {
         GlassFishProperties gp = new GlassFishProperties();
         gp.setPort("http-listener", 8080);
@@ -76,7 +76,7 @@ public class EmbeddedRestartTest {
 
         System.out.println("Deployed " + appName);
 
-        Assert.assertTrue(appName != null);
+        Assertions.assertTrue(appName != null);
 
         URL servlet = new URL("http://localhost:8080/"+contextRoot+"/hello");
         URLConnection yc = servlet.openConnection();
@@ -88,14 +88,14 @@ public class EmbeddedRestartTest {
         }
         in.close();
         System.out.println(inputLine);
-        Assert.assertEquals("Hello World!", sb.toString());
+        Assertions.assertEquals("Hello World!", sb.toString());
 
         System.out.println("Undeploying "+appName);
         if (appName!=null)
             deployer.undeploy(appName);
      }
 
-    @AfterClass
+    @AfterAll
     public static void shutdownServer() throws GlassFishException {
         System.out.println("Stopping server " + glassfish);
         if (glassfish != null) {

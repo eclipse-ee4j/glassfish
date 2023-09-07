@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,16 +16,15 @@
  */
 package org.glassfish.tests.standalonewar;
 
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class WebTest {
 
@@ -33,7 +33,7 @@ public class WebTest {
 
     private String contextPath = "test";
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws IOException {
     }
 
@@ -63,7 +63,7 @@ public class WebTest {
                 }
             }
         }
-        Assert.assertThat(count, CoreMatchers.is(3));
+        MatcherAssert.assertThat(count, CoreMatchers.is(3));
     }
 
 }

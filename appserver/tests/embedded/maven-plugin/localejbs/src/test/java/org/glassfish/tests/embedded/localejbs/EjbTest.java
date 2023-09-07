@@ -17,7 +17,7 @@
 
 package org.glassfish.tests.embedded.localejbs;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.net.HttpURLConnection;
 import java.net.URL;

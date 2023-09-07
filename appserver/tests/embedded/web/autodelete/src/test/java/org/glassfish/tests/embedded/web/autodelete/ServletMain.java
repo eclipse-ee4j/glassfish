@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,7 +22,6 @@ import org.junit.Assert;
 import org.glassfish.internal.embedded.*;
 import org.glassfish.api.deployment.*;
 
-import javax.naming.*;
 import java.io.*;
 import java.util.*;
 
@@ -35,6 +35,8 @@ import com.gargoylesoftware.htmlunit.*;
  * To change this template use File | Settings | File Templates.
  */
 public class ServletMain {
+
+    private static final String PROJECT_DIR = System.getProperty("project.directory");
 
     public static void main(String[] args) {
         ServletMain test = new ServletMain();
@@ -56,7 +58,7 @@ public class ServletMain {
 
         Server server = new Server.Builder("web").embeddedFileSystem(efsb.build()).build();
         try {
-            File f = new File(System.getProperty("basedir"));
+            File f = new File(PROJECT_DIR);
             f = new File(f, "target");
             f = new File(f, "classes");
             ScatteredArchive.Builder builder = new ScatteredArchive.Builder("hello", f);

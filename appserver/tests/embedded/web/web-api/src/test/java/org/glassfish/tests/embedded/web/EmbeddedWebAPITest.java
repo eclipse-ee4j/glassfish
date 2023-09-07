@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,17 +23,15 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Level;
-import org.apache.catalina.logger.SystemOutLogger;
-import org.glassfish.api.deployment.DeployCommandParameters;
 import java.util.ArrayList;
 import java.util.List;
 import org.glassfish.embeddable.*;
 import org.glassfish.embeddable.web.*;
 import org.glassfish.embeddable.web.config.*;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests creating a port using WebContainer#createWeblistener & WebListener#setPort.
@@ -46,7 +45,7 @@ public class EmbeddedWebAPITest {
     static WebContainer embedded;
     static String contextRoot = "test";
 
-    @BeforeClass
+    @BeforeAll
     public static void setupServer() throws GlassFishException {
         glassfish = GlassFishRuntime.bootstrap().newGlassFish();
         glassfish.start();
@@ -65,7 +64,7 @@ public class EmbeddedWebAPITest {
         embedded.addWebListener(httpListener);
 
         List<WebListener> listenerList = new ArrayList(embedded.getWebListeners());
-        Assert.assertTrue(listenerList.size()==1);
+        Assertions.assertTrue(listenerList.size()==1);
         for (WebListener listener : embedded.getWebListeners())
             System.out.println("Web listener "+listener.getId()+" "+listener.getPort());
 
@@ -75,11 +74,11 @@ public class EmbeddedWebAPITest {
 
         listenerList = new ArrayList(embedded.getWebListeners());
         System.out.println("Network listener size after creation " + listenerList.size());
-        Assert.assertTrue(listenerList.size()==2);
+        Assertions.assertTrue(listenerList.size()==2);
         for (WebListener listener : embedded.getWebListeners())
             System.out.println("Web listener "+listener.getId()+" "+listener.getPort());
 
-        File f = new File("target/classes");
+        File f = new File(TestConfiguration.PROJECT_DIR, "target/classes");
         String virtualServerId = "embedded-server";
         VirtualServer vs = (VirtualServer)
                 embedded.createVirtualServer(virtualServerId, f);
@@ -89,7 +88,7 @@ public class EmbeddedWebAPITest {
         embedded.addVirtualServer(vs);
 
         vs = embedded.getVirtualServer(virtualServerId);
-        Assert.assertEquals(virtualServerId,vs.getID());
+        Assertions.assertEquals(virtualServerId,vs.getID());
 
         //Context context = (Context) embedded.createContext(root, null);
         //defaultVirtualServer.addContext(context, "");
@@ -116,7 +115,7 @@ public class EmbeddedWebAPITest {
 
         System.out.println("Deployed " + appName);
 
-        Assert.assertTrue(appName != null);
+        Assertions.assertTrue(appName != null);
 
         URL servlet = new URL("http://localhost:8080/"+contextRoot+"/hello");
         URLConnection yc = servlet.openConnection();
@@ -128,13 +127,13 @@ public class EmbeddedWebAPITest {
         }
         in.close();
         System.out.println(inputLine);
-        Assert.assertEquals("Hello World!", sb.toString());
+        Assertions.assertEquals("Hello World!", sb.toString());
 
         embedded.removeWebListener(testListener);
 
         listenerList = new ArrayList(embedded.getWebListeners());
         System.out.println("Network listener size after creation " + listenerList.size());
-        Assert.assertTrue(listenerList.size()==1);
+        Assertions.assertTrue(listenerList.size()==1);
         for (WebListener listener : embedded.getWebListeners())
             System.out.println("Web listener "+listener.getId()+" "+listener.getPort());
 
@@ -144,7 +143,7 @@ public class EmbeddedWebAPITest {
             deployer.undeploy(appName);
      }
 
-    @AfterClass
+    @AfterAll
     public static void shutdownServer() throws GlassFishException {
         System.out.println("Stopping server " + glassfish);
         if (glassfish != null) {

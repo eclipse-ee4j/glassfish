@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +18,6 @@
 package org.glassfish.tests.webapi;
 
 import java.io.IOException;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -46,7 +46,7 @@ public class TestServlet
     String msg_servlet = null;
     try
     {
-      Class c = Class.forName("TestCacaoList");
+        Class c = Class.forName("org.glassfish.tests.embedded.web.TestCacaoList");
       msg_servlet = "Class TestCacaoList loaded successfully from servlet";
       System.out.println(msg_servlet);
     }

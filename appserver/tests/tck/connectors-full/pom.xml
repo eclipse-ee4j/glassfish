@@ -26,7 +26,7 @@
         <version>7.0.9-SNAPSHOT</version>
     </parent>
 
-    <artifactId>glassfish-external-tck-connectors</artifactId>
+    <artifactId>glassfish-external-tck-connectors-full</artifactId>
     <packaging>pom</packaging>
 
     <name>TCK: Connectors</name>
@@ -66,7 +66,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.tests.tck</groupId>
-            <artifactId>jakarta-connectors-tck</artifactId>
+            <artifactId>jakarta-connectors-full-tck</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
         </dependency>
@@ -118,7 +118,7 @@
                             <goal>unpack-dependencies</goal>
                         </goals>
                         <configuration>
-                            <includeArtifactIds>jakarta-connectors-tck</includeArtifactIds>
+                            <includeArtifactIds>jakarta-connectors-full-tck</includeArtifactIds>
                             <outputDirectory>${project.build.directory}</outputDirectory>
                         </configuration>
                     </execution>
@@ -300,6 +300,42 @@
                                         <arg value="deploy.all"  />
                                     </exec>
                                 </sequential>
+                                
+                                <echo level="info" message="Deploying MDB ears" />
+                                
+                                <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                    <arg value="stop-domain" />
+                                </exec>
+                                <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                    <arg value="start-domain"/>
+                                </exec>
+                                
+                                <fileset dir="${tck.home}/dist/com/sun/ts/tests/connector/mdb" id="deploy.gf.archive.set">
+                                    <filename name="msginflow_mdb.ear"/> 
+                                    <!--
+                                    <filename name="msginflow_mdb_jca.ear"/> -->
+                                </fileset>
+                                
+                                <ant antfile="${tck.home}/bin/xml/impl/glassfish/deploy.xml"
+                                     target="-deploy"
+                                     inheritRefs="true">
+                                     <property name="deploy.dir" value="${glassfish.home}/glassfish/domains/domain1/autodeploy/"/>
+                                     <reference refid="deploy.gf.archive.set"
+                                                torefid="deploy.archive.set"/>
+                                </ant>
+                                
+                                <!-- Restart GlassFish in debug mode if so requested -->
+                                <sequential if:set="glassfish.suspend">
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                        <arg value="stop-domain" />
+                                    </exec>
+                                    <echo message="Starting GlassFish in suspended mode, waiting on port 9009" />
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                        <arg value="start-domain"/>
+                                        <arg value="--suspend" if:set="glassfish.suspend"/>
+                                    </exec>
+                                </sequential>
+                                
                             </target>
                         </configuration>
                     </execution>

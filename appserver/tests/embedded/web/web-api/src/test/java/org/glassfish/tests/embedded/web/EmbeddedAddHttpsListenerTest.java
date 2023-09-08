@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,18 +23,16 @@ import java.security.*;
 import java.security.cert.X509Certificate;
 import javax.net.ssl.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 
 import org.glassfish.embeddable.*;
 import org.glassfish.embeddable.web.*;
 import org.glassfish.embeddable.web.config.*;
 
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests WebContainer#addWebListener(HttpsListener)
@@ -47,7 +46,7 @@ public class EmbeddedAddHttpsListenerTest {
     static File root;
     static String contextRoot = "test";
 
-    @BeforeClass
+    @BeforeAll
     public static void setupServer() throws GlassFishException {
         glassfish = GlassFishRuntime.bootstrap().newGlassFish();
         glassfish.start();
@@ -56,7 +55,7 @@ public class EmbeddedAddHttpsListenerTest {
         System.out.println("Starting Web "+embedded);
         embedded.setLogLevel(Level.INFO);
         WebContainerConfig config = new WebContainerConfig();
-        root = new File("target/classes");
+        root = new File(TestConfiguration.PROJECT_DIR, "target/classes");
         config.setDocRootDir(root);
         config.setListings(true);
         config.setPort(8080);
@@ -100,7 +99,7 @@ public class EmbeddedAddHttpsListenerTest {
         }
         in.close();
         System.out.println(sb);
-        Assert.assertEquals("Hello World!", sb.toString());
+        Assertions.assertEquals("Hello World!", sb.toString());
     }
 
     @Test
@@ -128,7 +127,7 @@ public class EmbeddedAddHttpsListenerTest {
         System.out.println("Deploying " + path + ", name = " + name);
         String appName = deployer.deploy(path.toURI(), "--name=" + name);
         System.out.println("Deployed " + appName);
-        Assert.assertTrue(appName != null);
+        Assertions.assertTrue(appName != null);
 
         disableCertValidation();
         verify(9191);
@@ -165,7 +164,7 @@ public class EmbeddedAddHttpsListenerTest {
         }
     }
 
-    @AfterClass
+    @AfterAll
     public static void shutdownServer() throws GlassFishException {
         System.out.println("Stopping server " + glassfish);
         if (glassfish != null) {

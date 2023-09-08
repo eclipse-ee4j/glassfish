@@ -338,6 +338,15 @@
                                 <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
                                     <arg value="stop-domain" />
                                 </exec>
+                                
+                                <if>
+                                    <not>
+                                        <equals arg1="${testResult}" arg2="0" />
+                                    </not>
+                                    <then>
+                                        <fail/>
+                                    </then>
+                                </if>
                             </target>
                         </configuration>
                     </execution>

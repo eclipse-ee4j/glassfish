@@ -20,33 +20,27 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.glassfish.tests</groupId>
+        <artifactId>embedded</artifactId>
+        <version>7.0.9-SNAPSHOT</version>
+    </parent>
+
     <groupId>org.glassfish.tests.embedded.basic</groupId>
     <artifactId>glassfish_resources_xml</artifactId>
-    <version>7.0.9-SNAPSHOT</version>
     <name>CDI, EJB, JPA integration test which has glassfish-resources.xml</name>
     <build>
         <finalName>glassfish_resources_xml</finalName>
-        <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.1</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.4.2</version>
-                <configuration>
-                    <forkCount>1</forkCount>
-                    <reuseForks>false</reuseForks>
-                    <useSystemClassLoader>false</useSystemClassLoader>
-                    <useManifestOnlyJar>false</useManifestOnlyJar>
-                </configuration>
-            </plugin>
-        </plugins>
     </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+        </dependency>
+    </dependencies>
+
     <profiles>
         <profile>
             <id>run-with-uber-jar</id>
@@ -57,12 +51,21 @@
                 <dependency>
                     <groupId>org.glassfish.main.extras</groupId>
                     <artifactId>glassfish-embedded-all</artifactId>
-                    <version>${project.version}</version>
                 </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>run-with-uber-jar-web</id>
+            <activation>
+                <property>
+                    <name>build</name>
+                    <value>uber-jar-web</value>
+                </property>
+            </activation>
+            <dependencies>
                 <dependency>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
-                    <version>4.13.2</version>
+                    <groupId>org.glassfish.main.extras</groupId>
+                    <artifactId>glassfish-embedded-web</artifactId>
                 </dependency>
             </dependencies>
         </profile>
@@ -75,11 +78,6 @@
                 </property>
             </activation>
             <dependencies>
-                <dependency>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
-                    <version>4.13.2</version>
-                </dependency>
                 <dependency>
                     <groupId>org.glassfish.main.extras</groupId>
                     <artifactId>glassfish-embedded-static-shell</artifactId>

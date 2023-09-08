@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021-2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,13 +38,36 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.LinkedList;
 import java.util.List;
+
 import org.glassfish.pfl.dynamic.codegen.spi.Expression;
 import org.glassfish.pfl.dynamic.codegen.spi.Type;
 import org.omg.CORBA.SystemException;
 
 import static java.lang.reflect.Modifier.PRIVATE;
 import static java.lang.reflect.Modifier.PUBLIC;
-import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper.*;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._String;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._arg;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._assign;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._body;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._call;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._cast;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._catch;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._class;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._constructor;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._data;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._define;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._end;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._expr;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._method;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._new;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._return;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._s;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._super;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._t;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._throw;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._try;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._v;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._void;
 
 
 /**
@@ -71,18 +94,18 @@ public final class Remote30WrapperGenerator extends Generator {
         final String packageName = getPackageName(businessIntf);
         final String simpleName = getBaseName(businessIntf);
         final String generatedSimpleName = "_" + simpleName + "_Wrapper";
-        return packageName == null ? generatedSimpleName : packageName + "." + generatedSimpleName;
+        return getFullClassName(packageName, generatedSimpleName);
     }
 
     /**
      * Construct the Wrapper generator with the specified deployment
      * descriptor and class loader.
      *
-     * @param loader
+     * @param loader class loader
      * @param businessIntfName must already exist and be loadable by the loader
      * @param remoteInterfaceName generated class will implement this
      *
-     * @throws GeneratorException
+     * @throws GeneratorException if an error occurred during class generation
      */
     public Remote30WrapperGenerator(final ClassLoader loader, final String businessIntfName, final String remoteInterfaceName)
         throws GeneratorException {

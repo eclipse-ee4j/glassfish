@@ -1798,6 +1798,8 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
                 throw new RuntimeException("Cannot find archive handler for source archive");
             }
 
+            initialContext.setArchiveHandler(archiveHandler);
+
             params.name = archiveHandler.getDefaultApplicationName(archive, initialContext);
 
             Applications apps = domain.getApplications();

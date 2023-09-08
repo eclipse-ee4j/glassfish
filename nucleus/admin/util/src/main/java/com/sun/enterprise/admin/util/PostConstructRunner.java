@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,13 @@
 
 package com.sun.enterprise.admin.util;
 
+import jakarta.annotation.PostConstruct;
+
+import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.PrivilegedActionException;
 import java.util.LinkedList;
-import jakarta.annotation.PostConstruct;
 
 /**
  *
@@ -58,8 +61,8 @@ public class PostConstructRunner {
         for (final Method m : postConstructMethods) {
             java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
                 public java.lang.Object run() throws Exception {
-                    if (!m.isAccessible()) {
-                        m.setAccessible(true);
+                    if (!m.trySetAccessible()) {
+                        throw new InaccessibleObjectException("Unable to make accessible: " + m);
                     }
                     m.invoke(obj);
                     return null;

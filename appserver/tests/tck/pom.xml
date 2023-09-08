@@ -43,6 +43,7 @@
         <module>rest_cdi</module>
         <module>faces</module>
         <module>connectors</module>
+        <module>connectors-full</module>
         <module>pages</module>
         <module>pages_tags</module>
         <module>servlet</module>

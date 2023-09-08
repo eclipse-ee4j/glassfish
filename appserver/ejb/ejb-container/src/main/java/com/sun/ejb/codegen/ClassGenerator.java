@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,9 +34,8 @@ import static java.util.logging.Level.CONFIG;
 /**
  * This class serves to generate classes, because ...
  * <p>
- * {@link java.lang.invoke.MethodHandles.Lookup} class restricts
- * the generated class to use an already existing class as a source of the package
- * and {@link ProtectionDomain}.
+ * {@link java.lang.invoke.MethodHandles.Lookup} class restricts the generated class to use
+ * an already existing class as a source of the package and {@link ProtectionDomain}.
  * <p>
  * {@link Proxy#newProxyInstance(ClassLoader, Class[], java.lang.reflect.InvocationHandler)}
  * has another requirements, ie. all referred classes must be loadable by used classloader.
@@ -46,6 +45,7 @@ import static java.util.logging.Level.CONFIG;
 public final class ClassGenerator {
 
     private static final Logger LOG = Logger.getLogger(ClassGenerator.class.getName());
+
     private static Method defineClassMethod;
     private static Method defineClassMethodSM;
 
@@ -101,7 +101,7 @@ public final class ClassGenerator {
 
 
     /**
-     * Calls the {@link Lookup}'s defineClass method to create a new class
+     * Calls the {@link Lookup}'s defineClass method to create a new class.
      *
      * @param anchorClass the class used as an "orientation" class. See the {@link Lookup} class for more info.
      * @param className expected binary name or null
@@ -125,7 +125,7 @@ public final class ClassGenerator {
 
 
     /**
-     * Calls the {@link ClassLoader}'s protected defineClass method to create a new class
+     * Calls the {@link ClassLoader}'s protected defineClass method to create a new class.
      *
      * @param loader the classloader instance used to generate the class
      * @param className expected binary name or null
@@ -141,7 +141,7 @@ public final class ClassGenerator {
 
 
     /**
-     * Calls the {@link ClassLoader}'s protected defineClass method to create a new class
+     * Calls the {@link ClassLoader}'s protected defineClass method to create a new class.
      *
      * @param loader the classloader instance used to generate the class
      * @param className expected binary name or null
@@ -167,7 +167,7 @@ public final class ClassGenerator {
 
 
     /**
-     * Calls the {@link ClassLoader}'s protected defineClass method to create a new class
+     * Calls the {@link ClassLoader}'s protected defineClass method to create a new class.
      *
      * @param loader the classloader instance used to generate the class
      * @param className expected binary name or null
@@ -184,7 +184,7 @@ public final class ClassGenerator {
 
 
     /**
-     * Calls the {@link ClassLoader}'s protected defineClass method to create a new class
+     * Calls the {@link ClassLoader}'s protected defineClass method to create a new class.
      *
      * @param loader the classloader instance used to generate the class
      * @param className expected binary name or null
@@ -239,6 +239,7 @@ public final class ClassGenerator {
         if (anchorClass == null || loader.getParent() == null || loader.getClass() == ASURLClassLoader.class) {
             return false;
         }
-        return Objects.equals(targetPackageName, anchorClass.getPackageName());
+        // Use MethodHandles.Lookup only if the anchor run-time Package defined by CL.
+        return Objects.equals(anchorClass.getPackage(), loader.getDefinedPackage(targetPackageName));
     }
 }

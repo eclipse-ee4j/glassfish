@@ -133,7 +133,6 @@
             <modules>
                 <!-- Builds compile dependencies for Ant tests executed by runtest.sh/gftest.sh -->
                 <module>appserv-tests</module>
-                <module>embedded</module>
             </modules>
         </profile>
         <profile>

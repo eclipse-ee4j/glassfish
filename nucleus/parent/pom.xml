@@ -937,7 +937,7 @@
                         <logViolationsToConsole>true</logViolationsToConsole>
                         <excludes>**/generated-sources/**/*, **/module-info.java</excludes>
                         <!-- build-helper-plugin adds the root as a resource path, but checkstyle overrides the filter and
-                        adds all property files in the tree -->
+                            adds all property files in the tree -->
                         <resourceExcludes>
                             **/appserver/**/src/main/resources/**/*,
                             **/deployment/**/src/main/resources/**/*,
@@ -1283,7 +1283,7 @@
                                 <copy toDir="${project.build.outputDirectory}/META-INF" overwrite="false">
                                     <fileset dir="${basedir}/target" includes="MANIFEST.MF">
                                         <present targetdir="${project.build.outputDirectory}/META-INF"
-                                                 present="srconly" />
+                                            present="srconly" />
                                     </fileset>
                                 </copy>
                             </target>
@@ -1323,8 +1323,8 @@
                 <groupId>org.glassfish.hk2</groupId>
                 <artifactId>osgiversion-maven-plugin</artifactId>
                 <!-- Since we don't want qualifier like b05 or SNAPSHOT to appear in package version attribute, we use the
-                following goal to populate a project property with an OSGi version which is equivalent to maven version without qualifier
-                and then use that property in osgi.bundle while exporting. -->
+                    following goal to populate a project property with an OSGi version which is equivalent to maven version without qualifier
+                    and then use that property in osgi.bundle while exporting. -->
                 <configuration>
                     <dropVersionComponent>qualifier</dropVersionComponent>
                     <versionPropertyName>project.osgi.version</versionPropertyName>

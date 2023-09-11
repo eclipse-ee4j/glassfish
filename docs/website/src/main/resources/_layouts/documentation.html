@@ -35,7 +35,10 @@
       <div class="container">
         <div class="row">
           {% include topnav.html %}
-          <div class="col-md-18 padding-bottom-30">
+          <div class="col-md-4 padding-bottom-30">
+            {% include documentation-toc.html %}
+          </div>
+          <div class="col-md-14 padding-bottom-30">
             {{ content }}
           </div>
           <div class="col-md-6  padding-bottom-30">

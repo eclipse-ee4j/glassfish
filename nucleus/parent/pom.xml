@@ -447,7 +447,7 @@
             <dependency>
                 <groupId>org.jboss.shrinkwrap.resolver</groupId>
                 <artifactId>shrinkwrap-resolver-impl-maven-archive</artifactId>
-                <version>3.1.4</version>
+                <version>3.2.1</version>
                 <scope>test</scope>
             </dependency>
 
@@ -736,7 +736,7 @@
             <dependency>
                 <groupId>org.apache.ant</groupId>
                 <artifactId>ant-launcher</artifactId>
-                <version>1.10.13</version>
+                <version>1.10.14</version>
             </dependency>
             <dependency>
                 <groupId>com.github.mwiede</groupId>
@@ -838,7 +838,7 @@
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
                     <artifactId>glassfishbuild-maven-plugin</artifactId>
-                    <!-- Don't use 3.2.28, FeatureSetsDependenciesMojo is broken. 3.3.0 is fixed, but not released yet. -->
+                    <!-- Don't use 3.2.28, FeatureSetsDependenciesMojo is broken. 3.3.0 is not fixed either, 4.0 may finally work -->
                     <version>3.2.27</version>
                 </plugin>
                 <plugin>
@@ -852,11 +852,11 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.2.1</version>
+                    <version>3.3.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.3.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
@@ -949,7 +949,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>10.12.2</version>
+                            <version>10.12.3</version>
                         </dependency>
                     </dependencies>
                     <executions>
@@ -970,11 +970,11 @@
                 <plugin>
                     <groupId>com.googlecode.maven-download-plugin</groupId>
                     <artifactId>download-maven-plugin</artifactId>
-                    <version>1.6.8</version>
+                    <version>1.7.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>3.0.0-M7</version>
+                    <version>3.0.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
@@ -994,7 +994,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-install-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.1.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>

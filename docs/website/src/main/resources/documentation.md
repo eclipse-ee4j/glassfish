@@ -1,6 +1,10 @@
+---
+layout: documentation
+---
+
 # Eclipse GlassFish Documentation
 
-## <a name="current">Current Release - ${glassfish.version.latest}</a>
+## Current Release - ${glassfish.version.latest} {#current}
 
 * [Add On Component Development Guide](docs/latest/add-on-component-development-guide.html)
   ([pdf](docs/latest/add-on-component-development-guide.pdf))
@@ -35,12 +39,12 @@
 * [Upgrade Guide](docs/latest/upgrade-guide.html)
   ([pdf](docs/latest/upgrade-guide.pdf))
 
-### Documentation for other GlassFish versions
+### Documentation for other GlassFish versions {#older}
 
 * [Development version (${project.version})](docs#development)
 * [${glassfish.version.5x} release](docs#${glassfish.version.5x})
 
-## Jakarta EE Documentation
+## Jakarta EE Documentation {#jakarta-ee}
 
 Eclipse GlassFish ${glassfish.version.latest} provides the following Jakarta EE APIs:
 
@@ -52,11 +56,11 @@ Eclipse GlassFish ${glassfish.version.latest} Web Profile provides the following
 * [Jakarta EE Web Profile 10 APIs](https://jakarta.ee/specifications/webprofile/10/)
 * [Jakarta MVC 2.1](https://jakarta.ee/specifications/mvc/2.1/)
 
-### More Jakarta EE resources
+### More Jakarta EE resources {#more-jakarta-ee}
 
 * [Jakarta EE Documentation](https://jakarta.ee/resources/#documentation)
 
-## MicroProfile Documentation
+## MicroProfile Documentation {#microprofile}
 
 Eclipse GlassFish ${glassfish.version.latest} provides the following MicroProfile APIs:
 
@@ -67,7 +71,6 @@ Eclipse GlassFish ${glassfish.version.latest} provides the following MicroProfil
 Eclipse GlassFish ${glassfish.version.latest} Web Profile doesn't provide any MicroProfile APIs.
 
 
-## Eclipse Open MQ Documentation
+## Eclipse Open MQ Documentation {#open-mq}
 
 * See the [Open MQ Project](https://eclipse-ee4j.github.io/openmq/guides)
-

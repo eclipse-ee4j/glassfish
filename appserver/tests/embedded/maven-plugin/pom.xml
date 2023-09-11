@@ -156,7 +156,6 @@
                     <artifactId>maven-embedded-glassfish-plugin</artifactId>
                     <version>5.1</version>
                     <configuration>
-                        <goalPrefix>glassfish</goalPrefix>
                         <app>target/${project.artifactId}.war</app>
                         <port>8080</port>
                         <name>${project.artifactId}</name>

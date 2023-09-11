@@ -45,7 +45,6 @@
                         <groupId>org.glassfish.embedded</groupId>
                         <artifactId>maven-embedded-glassfish-plugin</artifactId>
                         <configuration>
-                            <goalPrefix>glassfish</goalPrefix>
                             <app>target/dirListing.war</app>
                             <port>8080</port>
                             <name>test</name>

@@ -34,8 +34,8 @@
     <main>
       <div class="container">
         <div class="row">
+          {% include topnav.html %}
           <div class="col-md-18 padding-bottom-30">
-            {% include topnav.html %}
             {{ content }}
           </div>
           <div class="col-md-6  padding-bottom-30">
@@ -44,6 +44,7 @@
         </div>
       </div>
     </main>
+    {% include eclipse-search-bar-fix.html %}
     {% include footer.html %}
   </body>
 </html>

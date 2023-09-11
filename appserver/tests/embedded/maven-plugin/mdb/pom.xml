@@ -30,51 +30,61 @@
     <artifactId>mdb</artifactId>
     <packaging>war</packaging>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.glassfish.embedded</groupId>
-                <artifactId>maven-embedded-glassfish-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>start</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>start</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>admin</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>admin</goal>
-                        </goals>
-                        <configuration>
-                            <commands>
-                                <param>create-jms-resource --restype jakarta.jms.Queue --property imqDestinationName=TestQueue jms/TestQueue</param>
-                                <param>create-jms-resource --restype jakarta.jms.QueueConnectionFactory jms/TestQueueConnectionFactory</param>
-                            </commands>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>deploy</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>stop</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>undeploy</goal>
-                            <goal>stop</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+    <profiles>
+        <profile>
+            <id>start-embedded</id>
+            <activation>
+                <property>
+                    <name>!skipTests</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.glassfish.embedded</groupId>
+                        <artifactId>maven-embedded-glassfish-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>start</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>start</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>admin</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>admin</goal>
+                                </goals>
+                                <configuration>
+                                    <commands>
+                                        <param>create-jms-resource --restype jakarta.jms.Queue --property imqDestinationName=TestQueue jms/TestQueue</param>
+                                        <param>create-jms-resource --restype jakarta.jms.QueueConnectionFactory jms/TestQueueConnectionFactory</param>
+                                    </commands>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>deploy</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>deploy</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>stop</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>undeploy</goal>
+                                    <goal>stop</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <dependencies>
         <dependency>

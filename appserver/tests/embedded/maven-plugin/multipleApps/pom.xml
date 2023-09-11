@@ -32,81 +32,91 @@
     <packaging>war</packaging>
     <name>Multiple application deployment test (maven-plugin/multipleApps)</name>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.glassfish.embedded</groupId>
-                <artifactId>maven-embedded-glassfish-plugin</artifactId>
-                <executions>
-                    <!-- Start embedded GlassFish -->
-                    <execution>
-                        <id>start</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>start</goal>
-                        </goals>
-                    </execution>
-                    <!-- Run some admin commands -->
-                    <execution>
-                        <id>admin</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>admin</goal>
-                        </goals>
-                        <configuration>
-                            <commands>
-                                <param>list-applications</param>
-                            </commands>
-                        </configuration>
-                    </execution>
-                    <!-- Perform normal deployment (first application) using plugin level configurations -->
-                    <execution>
-                        <id>deploy</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                    </execution>
-                    <!-- Deploy second application (using goal specific configurations) -->
-                    <execution>
-                        <id>deploy2</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                        <configuration>
-                            <app>secondapp/secondapp.war</app>
-                            <contextRoot>secondapp</contextRoot>
-                            <name>secondapp</name>
-                            <deploymentParams>
-                                <param>--verify=true</param>
-                            </deploymentParams>
-                        </configuration>
-                    </execution>
-                    <!-- Undeploy the second application (using goal specific configurations) -->
-                    <execution>
-                        <id>undeploy</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>undeploy</goal>
-                        </goals>
-                        <configuration>
-                            <name>secondapp</name>
-                        </configuration>
-                    </execution>
-                    <!-- Perform normal undeploy (i.e., first app) using plugin level configurations and stop embedded GlassFish -->
-                    <execution>
-                        <id>stop</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>undeploy</goal>
-                            <goal>stop</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+    <profiles>
+        <profile>
+            <id>start-embedded</id>
+            <activation>
+                <property>
+                    <name>!skipTests</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.glassfish.embedded</groupId>
+                        <artifactId>maven-embedded-glassfish-plugin</artifactId>
+                        <executions>
+                            <!-- Start embedded GlassFish -->
+                            <execution>
+                                <id>start</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>start</goal>
+                                </goals>
+                            </execution>
+                            <!-- Run some admin commands -->
+                            <execution>
+                                <id>admin</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>admin</goal>
+                                </goals>
+                                <configuration>
+                                    <commands>
+                                        <param>list-applications</param>
+                                    </commands>
+                                </configuration>
+                            </execution>
+                            <!-- Perform normal deployment (first application) using plugin level configurations -->
+                            <execution>
+                                <id>deploy</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>deploy</goal>
+                                </goals>
+                            </execution>
+                            <!-- Deploy second application (using goal specific configurations) -->
+                            <execution>
+                                <id>deploy2</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>deploy</goal>
+                                </goals>
+                                <configuration>
+                                    <app>secondapp/secondapp.war</app>
+                                    <contextRoot>secondapp</contextRoot>
+                                    <name>secondapp</name>
+                                    <deploymentParams>
+                                        <param>--verify=true</param>
+                                    </deploymentParams>
+                                </configuration>
+                            </execution>
+                            <!-- Undeploy the second application (using goal specific configurations) -->
+                            <execution>
+                                <id>undeploy</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>undeploy</goal>
+                                </goals>
+                                <configuration>
+                                    <name>secondapp</name>
+                                </configuration>
+                            </execution>
+                            <!-- Perform normal undeploy (i.e., first app) using plugin level configurations and stop embedded GlassFish -->
+                            <execution>
+                                <id>stop</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>undeploy</goal>
+                                    <goal>stop</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <dependencies>
         <dependency>

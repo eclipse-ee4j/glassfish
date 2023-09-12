@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpServlet;
 import java.util.logging.Logger;
 
 public class WebSocketsServlet extends HttpServlet {
-    static final Logger logger = Logger.getLogger(WebSocketEngine.WEBSOCKET);
+    static final Logger logger = Logger.getLogger(WebSocketsServlet.class.getName());
     private final ChatApplication app = new ChatApplication();
     @Override
     public void init(ServletConfig config) throws ServletException {

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,8 @@
 
 package org.glassfish.tests.embedded.jsftest;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -75,7 +76,7 @@ public class JSFTest {
             }
 
             for (boolean f : found) {
-                Assert.assertTrue(f);
+                Assertions.assertTrue(f);
             }
             System.out.println("\n***** SUCCESS **** Found all matches in the response.*****\n");
             in.close();

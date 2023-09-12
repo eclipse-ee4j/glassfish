@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,9 @@
 
 package org.glassfish.tests.embedded.jsptest;
 
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -29,7 +30,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 
@@ -40,7 +40,7 @@ public class JspTest {
 
     private String contextPath = "test";
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws IOException {
     }
 
@@ -80,7 +80,7 @@ public class JspTest {
                     found = true;
                 }
             }
-            Assert.assertTrue(found);
+            Assertions.assertTrue(found);
             System.out.println("\n***** SUCCESS **** Found [" + result + "] in the response.*****\n");
             in.close();
         } catch (Exception e) {

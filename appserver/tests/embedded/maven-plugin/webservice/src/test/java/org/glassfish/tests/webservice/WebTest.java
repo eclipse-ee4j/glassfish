@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,22 +15,17 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.tests.ejbwar;
+package org.glassfish.tests.webservice;
 
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
-import javax.naming.InitialContext;
 
 public class WebTest {
 
@@ -38,7 +34,7 @@ public class WebTest {
 
     private String contextPath = "test";
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws IOException {
     }
 
@@ -70,7 +66,7 @@ public class WebTest {
                     }
                 }
             }
-            Assert.assertTrue(count==3);
+            Assertions.assertTrue(count==3);
 
         } catch(Exception e) {
             e.printStackTrace();

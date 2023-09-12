@@ -10,19 +10,19 @@
 
 package com.sun.grizzly.samples.websockets;
 
-import org.glassfish.grizzly.websockets.BaseWebSocket;
-import org.glassfish.grizzly.websockets.NetworkHandler;
-import org.glassfish.grizzly.websockets.WebSocketListener;
+import org.glassfish.grizzly.websockets.DefaultWebSocket;
 import org.glassfish.grizzly.websockets.WebSocketException;
 
 import java.util.logging.Level;
-import java.io.IOException;
+import org.glassfish.grizzly.http.HttpRequestPacket;
+import org.glassfish.grizzly.websockets.ProtocolHandler;
+import org.glassfish.grizzly.websockets.WebSocketListener;
 
-public class ChatWebSocket extends BaseWebSocket {
+public class ChatWebSocket extends DefaultWebSocket {
     private volatile String user;
 
-    public ChatWebSocket(WebSocketListener... listeners) {
-        super(listeners);
+    public ChatWebSocket(ProtocolHandler protocolHandler, HttpRequestPacket request, WebSocketListener... listeners) {
+        super(protocolHandler, request, listeners);
     }
 
     public String getUser() {

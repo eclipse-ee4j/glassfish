@@ -2041,8 +2041,7 @@ no version is specified, a default version is used.</p>
 </div>
 </li>
 <li>
-<p>Configure the <code>embedded-glassfish</code> goal prefix, the application
-name, and other standard settings.</p>
+<p>Configure the the path to the application WAR, and other standard settings.</p>
 <div class="paragraph">
 <p>Add the following <code>configuration</code> element to your POM file:</p>
 </div>
@@ -2054,8 +2053,6 @@ name, and other standard settings.</p>
             <span class="tag">&lt;plugin&gt;</span>
                 ...
                 <span class="tag">&lt;configuration&gt;</span>
-                    <span class="tag">&lt;goalPrefix&gt;</span>embedded-glassfish<span class="tag">&lt;/goalPrefix&gt;</span>
-                    ...
                     <span class="tag">&lt;app&gt;</span>target/test.war<span class="tag">&lt;/app&gt;</span>
                     <span class="tag">&lt;port&gt;</span>8080<span class="tag">&lt;/port&gt;</span>
                     <span class="tag">&lt;contextRoot&gt;</span>test<span class="tag">&lt;/contextRoot&gt;</span>
@@ -2092,7 +2089,6 @@ Add the following <code>configuration</code> element to your POM file:</p>
             <span class="tag">&lt;plugin&gt;</span>
                 ...
                 <span class="tag">&lt;configuration&gt;</span>
-                    <span class="tag">&lt;goalPrefix&gt;</span>embedded-glassfish<span class="tag">&lt;/goalPrefix&gt;</span>
                     <span class="tag">&lt;app&gt;</span>target/test.war<span class="tag">&lt;/app&gt;</span>
                     <span class="tag">&lt;name&gt;</span>test<span class="tag">&lt;/name&gt;</span>
                     <span class="tag">&lt;contextRoot&gt;</span>test<span class="tag">&lt;/contextRoot&gt;</span>
@@ -2210,7 +2206,6 @@ Line breaks in the following element are for readability purposes only
         <span class="tag">&lt;artifactId&gt;</span>maven-embedded-glassfish-plugin<span class="tag">&lt;/artifactId&gt;</span>
         <span class="tag">&lt;version&gt;</span>3.1<span class="tag">&lt;/version&gt;</span>
         <span class="tag">&lt;configuration&gt;</span>
-          <span class="tag">&lt;goalPrefix&gt;</span>embedded-glassfish<span class="tag">&lt;/goalPrefix&gt;</span>
           <span class="tag">&lt;app&gt;</span>target/test.war<span class="tag">&lt;/app&gt;</span>
           <span class="tag">&lt;port&gt;</span>8080<span class="tag">&lt;/port&gt;</span>
           <span class="tag">&lt;contextRoot&gt;</span>test<span class="tag">&lt;/contextRoot&gt;</span>
@@ -3400,7 +3395,7 @@ archive (JAR) file in which embedded Eclipse GlassFish is distributed:</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-09-11 15:39:50 UTC
+Last updated 2023-09-12 00:57:07 UTC
 </div>
 </div>
 </body>

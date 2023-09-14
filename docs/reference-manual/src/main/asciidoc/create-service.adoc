@@ -51,29 +51,29 @@ operand is a DAS or an instance.
 
 This subcommand is supported in local mode only.
 
-Behavior of `create-service` on Windows Systems
+==== Behavior of `create-service` on Windows Systems
 
 On Windows systems, the `create-service` subcommand creates a Windows
 service to represent the DAS or instance. The service is created in the
-disabled state. After this subcommand creates the service, you must use
-the Windows Services Manager or the Windows Services Wrapper to start,
+**automatic** state. After this subcommand creates the service, you must
+use the Windows Services Manager or the Windows Services Wrapper to start,
 stop, uninstall, or install the service.
 
 On Windows systems, this subcommand must be run as the OS-level
 administrator user.
 
 The subcommand creates the following Windows Services Wrapper files for
-the service in the domain-dir`\bin` directory or the instance-dir``\bin``
+the service in the domain-dir``\bin`` directory or the instance-dir``\bin``
 directory:
 
 * Configuration file: service-name``Service.xml``
 * Executable file: service-name``Service.exe``
 
 On Windows systems, this subcommand requires the
-http://www.microsoft.com/net/[Microsoft .NET Framework]
-(http://www.microsoft.com/net/). Otherwise, the subcommand fails.
+https://dotnet.microsoft.com/[Microsoft .NET Framework] 4.6.1 or later
+(https://dotnet.microsoft.com/). Otherwise, the subcommand fails.
 
-Behavior of `create-service` on Linux Systems
+==== Behavior of `create-service` on Linux Systems
 
 On Linux systems, the `create-service` subcommand creates a
 System-V-style initialization script
@@ -84,7 +84,7 @@ the domain or instance.
 
 On Linux systems, this subcommand must be run as the OS-level root user.
 
-Behavior of `create-service` on Oracle Solaris Systems
+==== Behavior of `create-service` on Oracle Solaris Systems
 
 On Oracle Solaris systems, the `create-service` subcommand creates a
 Service Management Facility (SMF) service to represent the DAS or
@@ -219,25 +219,29 @@ is running Windows.
 [source]
 ----
 asadmin> create-service
-Found the Windows Service and successfully uninstalled it.
 The Windows Service was created successfully.  It is ready to be started.  Here are
 the details:
 ID of the service: domain1
 Display Name of the service:domain1 Eclipse GlassFish
-Domain Directory: C:\glassfish7\glassfish\domains\domain1
+Server Directory: C:\glassfish7\glassfish\domains\domain1
 Configuration file for Windows Services Wrapper: C:\glassfish7\glassfish\domains\
 domain1\bin\domain1Service.xml
 The service can be controlled using the Windows Services Manager or you can use the
 Windows Services Wrapper instead:
 Start Command:  C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe  start
 Stop Command:   C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe  stop
+Restart Command:  C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe
+restart
 Uninstall Command:  C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe
 uninstall
 Install Command:  C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe
 install
-
-This message is also available in a file named PlatformServices.log in the domain's
-root directory
+Status Command: C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe status
+You can also verify that the service is installed (or not) with sc query state= all
+windows.services.uninstall.good=Found the Windows Service and successfully uninstall
+it.
+For your convenience this message has also been saved to this file:
+C:\glassfish7\glassfish\domains\domain1\PlatformServices.log
 Command create-service executed successfully.
 ----
 
@@ -320,6 +324,6 @@ Administration,
 "http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=SYSADV1faauf[Managing
 Services (Tasks)]" in System Administration Guide: Basic Administration
 
-Microsoft .NET Framework (`http://www.microsoft.com/net/`)
+Microsoft .NET Framework (`https://dotnet.microsoft.com/`)
 
 

@@ -976,7 +976,13 @@
 <li><a href="#create-service">create-service</a>
 <ul class="sectlevel2">
 <li><a href="#synopsis-64">Synopsis</a></li>
-<li><a href="#description-64">Description</a></li>
+<li><a href="#description-64">Description</a>
+<ul class="sectlevel3">
+<li><a href="#behavior-of-create-service-on-windows-systems">Behavior of <code>create-service</code> on Windows Systems</a></li>
+<li><a href="#behavior-of-create-service-on-linux-systems">Behavior of <code>create-service</code> on Linux Systems</a></li>
+<li><a href="#behavior-of-create-service-on-oracle-solaris-systems">Behavior of <code>create-service</code> on Oracle Solaris Systems</a></li>
+</ul>
+</li>
 <li><a href="#options-64">Options</a></li>
 <li><a href="#operands-61">Operands</a></li>
 <li><a href="#examples-60">Examples</a>
@@ -18859,14 +18865,13 @@ operand is a DAS or an instance.</p>
 <div class="paragraph">
 <p>This subcommand is supported in local mode only.</p>
 </div>
-<div class="paragraph">
-<p>Behavior of <code>create-service</code> on Windows Systems</p>
-</div>
+<div class="sect3">
+<h4 id="behavior-of-create-service-on-windows-systems"><a class="anchor" href="#behavior-of-create-service-on-windows-systems"></a>Behavior of <code>create-service</code> on Windows Systems</h4>
 <div class="paragraph">
 <p>On Windows systems, the <code>create-service</code> subcommand creates a Windows
 service to represent the DAS or instance. The service is created in the
-disabled state. After this subcommand creates the service, you must use
-the Windows Services Manager or the Windows Services Wrapper to start,
+<strong>automatic</strong> state. After this subcommand creates the service, you must
+use the Windows Services Manager or the Windows Services Wrapper to start,
 stop, uninstall, or install the service.</p>
 </div>
 <div class="paragraph">
@@ -18875,7 +18880,7 @@ administrator user.</p>
 </div>
 <div class="paragraph">
 <p>The subcommand creates the following Windows Services Wrapper files for
-the service in the domain-dir`\bin` directory or the instance-dir<code>\bin</code>
+the service in the domain-dir<code>\bin</code> directory or the instance-dir<code>\bin</code>
 directory:</p>
 </div>
 <div class="ulist">
@@ -18890,12 +18895,12 @@ directory:</p>
 </div>
 <div class="paragraph">
 <p>On Windows systems, this subcommand requires the
-<a href="http://www.microsoft.com/net/">Microsoft .NET Framework</a>
-(<a href="http://www.microsoft.com/net/" class="bare">http://www.microsoft.com/net/</a>). Otherwise, the subcommand fails.</p>
+<a href="https://dotnet.microsoft.com/">Microsoft .NET Framework</a> 4.6.1 or later
+(<a href="https://dotnet.microsoft.com/" class="bare">https://dotnet.microsoft.com/</a>). Otherwise, the subcommand fails.</p>
 </div>
-<div class="paragraph">
-<p>Behavior of <code>create-service</code> on Linux Systems</p>
 </div>
+<div class="sect3">
+<h4 id="behavior-of-create-service-on-linux-systems"><a class="anchor" href="#behavior-of-create-service-on-linux-systems"></a>Behavior of <code>create-service</code> on Linux Systems</h4>
 <div class="paragraph">
 <p>On Linux systems, the <code>create-service</code> subcommand creates a
 System-V-style initialization script
@@ -18907,9 +18912,9 @@ the domain or instance.</p>
 <div class="paragraph">
 <p>On Linux systems, this subcommand must be run as the OS-level root user.</p>
 </div>
-<div class="paragraph">
-<p>Behavior of <code>create-service</code> on Oracle Solaris Systems</p>
 </div>
+<div class="sect3">
+<h4 id="behavior-of-create-service-on-oracle-solaris-systems"><a class="anchor" href="#behavior-of-create-service-on-oracle-solaris-systems"></a>Behavior of <code>create-service</code> on Oracle Solaris Systems</h4>
 <div class="paragraph">
 <p>On Oracle Solaris systems, the <code>create-service</code> subcommand creates a
 Service Management Facility (SMF) service to represent the DAS or
@@ -18986,6 +18991,7 @@ subcommand, you must delete the directory that contains the manifest
 file and the entire contents of the directory. Otherwise, an attempt to
 re-create the service by using the <code>create-service</code> subcommand fails.
 The Oracle Solaris command <code>svccfg</code> does not delete this directory.</p>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -19099,25 +19105,29 @@ is running Windows.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>asadmin&gt; create-service
-Found the Windows Service and successfully uninstalled it.
 The Windows Service was created successfully.  It is ready to be started.  Here are
 the details:
 ID of the service: domain1
 Display Name of the service:domain1 Eclipse GlassFish
-Domain Directory: C:\glassfish7\glassfish\domains\domain1
+Server Directory: C:\glassfish7\glassfish\domains\domain1
 Configuration file for Windows Services Wrapper: C:\glassfish7\glassfish\domains\
 domain1\bin\domain1Service.xml
 The service can be controlled using the Windows Services Manager or you can use the
 Windows Services Wrapper instead:
 Start Command:  C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe  start
 Stop Command:   C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe  stop
+Restart Command:  C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe
+restart
 Uninstall Command:  C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe
 uninstall
 Install Command:  C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe
 install
-
-This message is also available in a file named PlatformServices.log in the domain's
-root directory
+Status Command: C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe status
+You can also verify that the service is installed (or not) with sc query state= all
+windows.services.uninstall.good=Found the Windows Service and successfully uninstall
+it.
+For your convenience this message has also been saved to this file:
+C:\glassfish7\glassfish\domains\domain1\PlatformServices.log
 Command create-service executed successfully.</code></pre>
 </div>
 </div>
@@ -19215,7 +19225,7 @@ Administration,
 Services (Tasks)</a>" in System Administration Guide: Basic Administration</p>
 </div>
 <div class="paragraph">
-<p>Microsoft .NET Framework (<code><a href="http://www.microsoft.com/net/" class="bare">http://www.microsoft.com/net/</a></code>)</p>
+<p>Microsoft .NET Framework (<code><a href="https://dotnet.microsoft.com/" class="bare">https://dotnet.microsoft.com/</a></code>)</p>
 </div>
 </div>
 </div>
@@ -57617,7 +57627,7 @@ run safely, without potential risk to systems or users.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-09-12 00:59:13 UTC
+Last updated 2023-09-15 07:41:17 UTC
 </div>
 </div>
 </body>

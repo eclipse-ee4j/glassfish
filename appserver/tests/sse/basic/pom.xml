@@ -103,7 +103,6 @@
                         <artifactId>maven-embedded-glassfish-plugin</artifactId>
                         <version>3.1.1</version>
                         <configuration>
-                            <goalPrefix>glassfish</goalPrefix>
                             <app>${project.build.directory}/${build.finalName}.war</app>
                             <port>8080</port>
                             <name>${project.artifactId}</name>

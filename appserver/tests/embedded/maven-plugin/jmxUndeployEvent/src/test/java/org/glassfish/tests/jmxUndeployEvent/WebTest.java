@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,21 +17,22 @@
 
 package org.glassfish.tests.jmxUndeployEvent;
 
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.HttpURLConnection;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 
 public class WebTest {
 
     private String contextPath = "test";
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws IOException {
     }
 
@@ -46,7 +48,7 @@ public class WebTest {
             out.writeByte(1);
             int responseCode=  urlConnection.getResponseCode();
             System.out.println("responseCode: " + responseCode);
-            Assert.assertTrue(urlConnection.getResponseCode()==404);
+            MatcherAssert.assertThat(urlConnection.getResponseCode(), CoreMatchers.is(404));
         }
    }
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -13,22 +14,17 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package org.glassfish.tests.standalonewar;
 
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class WebTest {
 
@@ -37,7 +33,7 @@ public class WebTest {
 
     private String contextPath = "test";
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws IOException {
     }
 
@@ -47,32 +43,27 @@ public class WebTest {
     }
 
     private static void goGet(String host, int port,
-                              String result, String contextPath) throws Exception {
-        try {
-            URL servlet = new URL("http://localhost:8080/test");
-            URLConnection yc = servlet.openConnection();
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    yc.getInputStream()));
-            String line = null;
-            int index;
-            while ((line = in.readLine()) != null) {
-                index = line.indexOf(result);
-                if (index != -1) {
-                    index = line.indexOf(":");
-                    String status = line.substring(index+1);
+            String result, String contextPath) throws Exception {
+        URL servlet = new URL("http://localhost:8080/test");
+        URLConnection yc = servlet.openConnection();
+        BufferedReader in = new BufferedReader(new InputStreamReader(
+                yc.getInputStream()));
+        String line = null;
+        int index;
+        while ((line = in.readLine()) != null) {
+            index = line.indexOf(result);
+            if (index != -1) {
+                index = line.indexOf(":");
+                String status = line.substring(index + 1);
 
-                    if (status.equalsIgnoreCase("PASS")){
-                        count++;
-                    } else {
-                        return;
-                    }
+                if (status.equalsIgnoreCase("PASS")) {
+                    count++;
+                } else {
+                    break;
                 }
             }
-            Assert.assertTrue(count==3);
-        } catch(Exception e) {
-            e.printStackTrace();
-            throw e;
         }
-   }
+        MatcherAssert.assertThat(count, CoreMatchers.is(3));
+    }
 
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,8 @@
 
 package org.glassfish.tests.embedded.localejbs;
 
-import org.junit.Assert;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import javax.naming.InitialContext;
 
 /**
@@ -38,7 +38,7 @@ public class LocalEjbTest {
             Thread.sleep(4000);
             boolean result = ejb.verifyTimer();
             System.out.println("EJB timer called: " + result);
-            Assert.assertTrue(result);
+            Assertions.assertTrue(result);
             System.err.println("TimerEJB successful.");
         } catch (Exception ex) {
             ex.printStackTrace();

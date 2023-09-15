@@ -82,13 +82,13 @@
         <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
 
         <!-- Jakarta Web Services -->
-        <!--
-        Jakarta XML Web Services
-        <jakarta.xml.ws-api.version>4.0.0-RC2</jakarta.xml.ws-api.version>
+        
+        <!-- Jakarta XML Web Services -->
+        <jakarta.xml.ws-api.version>4.0.0</jakarta.xml.ws-api.version>
 
-        Jakarta SOAP (with Attachments)
-        <jakarta.xml.soap-api.version>3.0.0-RC2</jakarta.xml.soap-api.version>
-         -->
+        <!-- Jakarta SOAP (with Attachments)
+       <jakarta.xml.soap-api.version>3.0.0-RC2</jakarta.xml.soap-api.version>
+        -->
         <webservices.version>4.0.2</webservices.version>
 
         <!-- Jakarta Inject -->
@@ -247,6 +247,11 @@
                 <groupId>org.glassfish.metro</groupId>
                 <artifactId>webservices-extra-jdk-packages</artifactId>
                 <version>${webservices.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.xml.ws</groupId>
+                <artifactId>jakarta.xml.ws-api</artifactId>
+                <version>${jakarta.xml.ws-api.version}</version>
             </dependency>
 
             <!-- Jakarta Inject -->
@@ -871,8 +876,8 @@
                         <forkCount>1</forkCount>
                         <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>
                         <excludes>
-                           <exclude>**/*ITest.java</exclude>
-                           <exclude>**/*IT.java</exclude>
+                            <exclude>**/*ITest.java</exclude>
+                            <exclude>**/*IT.java</exclude>
                         </excludes>
                         <systemPropertyVariables>
                             <java.util.logging.manager>${test.logManager}</java.util.logging.manager>
@@ -893,8 +898,8 @@
                         <useSystemClassLoader>true</useSystemClassLoader>
                         <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>
                         <includes>
-                           <include>**/*ITest.java</include>
-                           <include>**/*IT.java</include>
+                            <include>**/*ITest.java</include>
+                            <include>**/*IT.java</include>
                         </includes>
                         <systemPropertyVariables>
                             <java.util.logging.manager>${test.logManager}</java.util.logging.manager>
@@ -1099,13 +1104,13 @@
                             </goals>
                             <configuration>
                                 <!--
-                                    Exclude several versions that we never want to update to since they are OLDER than
-                                    what we currently use.
+                                   Exclude several versions that we never want to update to since they are OLDER than
+                                   what we currently use.
 
-                                    Note that we actually want to specify the version per artefact, but this is currently
-                                    broken.
-                                    See https://github.com/mojohaus/versions/issues/258#issuecomment-1438149133
-                                 -->
+                                   Note that we actually want to specify the version per artefact, but this is currently
+                                   broken.
+                                   See https://github.com/mojohaus/versions/issues/258#issuecomment-1438149133
+                                -->
                                 <ignoredVersions>3.2-b..,2.5.0-b..,5.0-jdk8-rc.,20030911,10.0-b..</ignoredVersions>
                             </configuration>
                         </execution>

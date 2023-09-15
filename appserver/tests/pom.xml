@@ -121,6 +121,7 @@
                 <module>admin</module>
                 <module>application</module>
                 <module>appserv-tests</module>
+                <module>embedded</module>
             </modules>
         </profile>
         <profile>
@@ -140,6 +141,7 @@
                 <module>admin</module>
                 <module>application</module>
                 <module>appserv-tests</module>
+                <module>embedded</module>
                 <module>tck</module>
             </modules>
         </profile>

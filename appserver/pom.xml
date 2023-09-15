@@ -98,6 +98,7 @@
         <!-- Jakarta Security + Authentication/Authorization -->
         <soteria.version>3.0.3</soteria.version>
         <exousia.version>2.1.0</exousia.version>
+        <epicyro.version>3.0.0-M1</epicyro.version>
         <nimbus.version>9.31</nimbus.version>
         <jcip.version>1.0.2</jcip.version>
 
@@ -269,7 +270,7 @@
             <dependency>
                 <groupId>org.glassfish.epicyro</groupId>
                 <artifactId>epicyro</artifactId>
-                <version>3.0.0-M1</version>
+                <version>${epicyro.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.nimbusds</groupId>

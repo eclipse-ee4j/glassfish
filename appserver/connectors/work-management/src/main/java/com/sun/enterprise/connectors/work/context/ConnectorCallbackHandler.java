@@ -37,8 +37,8 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.security.common.Group;
 import org.glassfish.security.common.UserNameAndPassword;
-import org.omnifaces.eleos.config.helper.Caller;
-import org.omnifaces.eleos.config.helper.CallerPrincipal;
+import org.glassfish.epicyro.config.helper.Caller;
+import org.glassfish.epicyro.config.helper.CallerPrincipal;
 
 import com.sun.enterprise.connectors.work.LogFacade;
 import com.sun.enterprise.security.SecurityContext;

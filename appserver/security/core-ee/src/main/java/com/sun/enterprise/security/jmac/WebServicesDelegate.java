@@ -20,7 +20,7 @@ import java.util.Map;
 
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.jvnet.hk2.annotations.Contract;
-import org.omnifaces.eleos.services.AuthConfigRegistrationWrapper;
+import org.glassfish.epicyro.services.AuthConfigRegistrationWrapper;
 
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;

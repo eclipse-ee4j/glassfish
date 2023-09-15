@@ -33,7 +33,7 @@ import org.glassfish.appclient.client.acc.config.Ssl;
 import org.glassfish.appclient.client.acc.config.TargetServer;
 import org.glassfish.enterprise.iiop.api.IIOPSSLUtil;
 import org.jvnet.hk2.annotations.Service;
-import org.omnifaces.eleos.config.factory.file.AuthConfigFileFactory;
+import org.glassfish.epicyro.config.factory.file.AuthConfigFileFactory;
 
 import com.sun.enterprise.security.SecurityServicesUtil;
 import com.sun.enterprise.security.UsernamePasswordStore;

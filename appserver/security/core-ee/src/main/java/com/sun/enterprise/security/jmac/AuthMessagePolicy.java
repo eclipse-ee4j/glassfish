@@ -19,7 +19,7 @@ package com.sun.enterprise.security.jmac;
 
 import static com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor.AUTH_LAYER;
 import static com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor.PROVIDER_ID;
-import static org.omnifaces.eleos.config.helper.HttpServletConstants.SOAP;
+import static org.glassfish.epicyro.config.helper.HttpServletConstants.SOAP;
 
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
@@ -96,7 +96,7 @@ public class AuthMessagePolicy {
         if (pd != null) {
             String source = pd.getAttributeValue(ProtectionDescriptor.AUTH_SOURCE);
             String recipient = pd.getAttributeValue(ProtectionDescriptor.AUTH_RECIPIENT);
-            messagePolicy = org.omnifaces.eleos.config.helper.AuthMessagePolicy.getMessagePolicy(source, recipient);
+            messagePolicy = org.glassfish.epicyro.config.helper.AuthMessagePolicy.getMessagePolicy(source, recipient);
         }
 
         return messagePolicy;

@@ -41,8 +41,8 @@ import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.WebServiceEndpoint;
 import org.glassfish.deployment.common.ModuleDescriptor;
 import org.glassfish.internal.api.Globals;
-import org.omnifaces.eleos.config.module.configprovider.GFServerConfigProvider;
-import org.omnifaces.eleos.services.BaseAuthenticationService;
+import org.glassfish.epicyro.config.module.configprovider.GFServerConfigProvider;
+import org.glassfish.epicyro.services.BaseAuthenticationService;
 
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
 

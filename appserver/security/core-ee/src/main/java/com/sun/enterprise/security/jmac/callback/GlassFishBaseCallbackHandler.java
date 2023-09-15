@@ -18,7 +18,7 @@ import javax.crypto.SecretKey;
 
 import org.glassfish.internal.api.Globals;
 import org.glassfish.security.common.MasterPassword;
-import org.omnifaces.eleos.config.helper.BaseCallbackHandler;
+import org.glassfish.epicyro.config.helper.BaseCallbackHandler;
 
 import com.sun.enterprise.security.SecurityServicesUtil;
 import com.sun.enterprise.security.jmac.config.HandlerContext;

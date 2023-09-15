@@ -37,7 +37,7 @@ import javax.xml.namespace.QName;
 
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.jvnet.hk2.annotations.Service;
-import org.omnifaces.eleos.services.AuthConfigRegistrationWrapper;
+import org.glassfish.epicyro.services.AuthConfigRegistrationWrapper;
 
 import jakarta.inject.Singleton;
 import jakarta.security.auth.message.MessageInfo;

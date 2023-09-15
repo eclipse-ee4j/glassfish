@@ -40,10 +40,10 @@ import org.glassfish.appclient.client.acc.config.ProviderConfig;
 import org.glassfish.appclient.client.acc.config.RequestPolicy;
 import org.glassfish.appclient.client.acc.config.ResponsePolicy;
 import org.glassfish.internal.api.Globals;
-import org.omnifaces.eleos.config.factory.ConfigParser;
-import org.omnifaces.eleos.config.helper.AuthMessagePolicy;
-import org.omnifaces.eleos.data.AuthModuleConfig;
-import org.omnifaces.eleos.data.AuthModulesLayerConfig;
+import org.glassfish.epicyro.config.factory.ConfigParser;
+import org.glassfish.epicyro.config.helper.AuthMessagePolicy;
+import org.glassfish.epicyro.data.AuthModuleConfig;
+import org.glassfish.epicyro.data.AuthModulesLayerConfig;
 
 import com.sun.enterprise.security.common.Util;
 

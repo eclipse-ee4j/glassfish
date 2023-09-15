@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import org.omnifaces.eleos.services.AuthConfigRegistrationWrapper;
+import org.glassfish.epicyro.services.AuthConfigRegistrationWrapper;
 
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 

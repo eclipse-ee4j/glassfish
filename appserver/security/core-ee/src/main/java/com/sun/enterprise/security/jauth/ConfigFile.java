@@ -29,9 +29,9 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.AppConfigurationEntry;
 
-import org.omnifaces.eleos.config.factory.ConfigParser;
-import org.omnifaces.eleos.data.AuthModuleConfig;
-import org.omnifaces.eleos.data.AuthModulesLayerConfig;
+import org.glassfish.epicyro.config.factory.ConfigParser;
+import org.glassfish.epicyro.data.AuthModuleConfig;
+import org.glassfish.epicyro.data.AuthModulesLayerConfig;
 
 import com.sun.logging.LogDomains;
 
@@ -50,7 +50,7 @@ class ConfigFile extends AuthConfig {
     private String parserClassName;
 
     // parser
-    private org.omnifaces.eleos.config.factory.ConfigParser parser;
+    private org.glassfish.epicyro.config.factory.ConfigParser parser;
 
     // package private for ConfigFileParser
     static final String CLIENT = "client";
@@ -266,16 +266,16 @@ class ConfigFile extends AuthConfig {
      *
      * XXX custom file that can be used in place of [domain|sun-acc].xml
      */
-    private static org.omnifaces.eleos.config.factory.ConfigParser loadParser(String className) throws IOException {
+    private static org.glassfish.epicyro.config.factory.ConfigParser loadParser(String className) throws IOException {
         try {
 
             final String finalClassName = className;
             final ClassLoader finalLoader = AuthConfig.getClassLoader();
 
-            return java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction<org.omnifaces.eleos.config.factory.ConfigParser>() {
+            return java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction<org.glassfish.epicyro.config.factory.ConfigParser>() {
                 @Override
-                public org.omnifaces.eleos.config.factory.ConfigParser run() throws Exception {
-                    return (org.omnifaces.eleos.config.factory.ConfigParser) Class.forName(finalClassName, true, finalLoader).newInstance();
+                public org.glassfish.epicyro.config.factory.ConfigParser run() throws Exception {
+                    return (org.glassfish.epicyro.config.factory.ConfigParser) Class.forName(finalClassName, true, finalLoader).newInstance();
                 }
             });
         } catch (java.security.PrivilegedActionException pae) {

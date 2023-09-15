@@ -19,7 +19,7 @@ package com.sun.enterprise.security.ee;
 
 import static jakarta.security.auth.message.config.AuthConfigFactory.DEFAULT_FACTORY_SECURITY_PROPERTY;
 import static java.util.logging.Level.WARNING;
-import static org.omnifaces.eleos.config.factory.file.AuthConfigFileFactory.DEFAULT_FACTORY_DEFAULT_PROVIDERS;
+import static org.glassfish.epicyro.config.factory.file.AuthConfigFileFactory.DEFAULT_FACTORY_DEFAULT_PROVIDERS;
 
 import java.security.Provider;
 import java.security.Security;
@@ -31,8 +31,8 @@ import java.util.logging.Logger;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.Service;
-import org.omnifaces.eleos.config.factory.file.AuthConfigFileFactory;
-import org.omnifaces.eleos.config.module.configprovider.GFServerConfigProvider;
+import org.glassfish.epicyro.config.factory.file.AuthConfigFileFactory;
+import org.glassfish.epicyro.config.module.configprovider.GFServerConfigProvider;
 
 import com.sun.enterprise.security.ContainerSecurityLifecycle;
 import com.sun.enterprise.security.jmac.AuthMessagePolicy;

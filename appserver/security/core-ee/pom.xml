@@ -78,8 +78,8 @@
             <artifactId>exousia</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.omnifaces</groupId>
-            <artifactId>eleos</artifactId>
+            <groupId>org.glassfish.epicyro</groupId>
+            <artifactId>epicyro</artifactId>
         </dependency>
           
         <dependency>

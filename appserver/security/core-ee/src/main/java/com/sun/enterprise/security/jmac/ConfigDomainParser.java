@@ -33,9 +33,9 @@ import java.util.regex.Pattern;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.config.types.Property;
-import org.omnifaces.eleos.config.factory.ConfigParser;
-import org.omnifaces.eleos.data.AuthModuleConfig;
-import org.omnifaces.eleos.data.AuthModulesLayerConfig;
+import org.glassfish.epicyro.config.factory.ConfigParser;
+import org.glassfish.epicyro.data.AuthModuleConfig;
+import org.glassfish.epicyro.data.AuthModulesLayerConfig;
 
 import com.sun.enterprise.config.serverbeans.MessageSecurityConfig;
 import com.sun.enterprise.config.serverbeans.ProviderConfig;
@@ -231,7 +231,7 @@ public class ConfigDomainParser implements ConfigParser {
 
         String authSource = policy.getAuthSource();
         String authRecipient = policy.getAuthRecipient();
-        return org.omnifaces.eleos.config.helper.AuthMessagePolicy.getMessagePolicy(authSource, authRecipient);
+        return org.glassfish.epicyro.config.helper.AuthMessagePolicy.getMessagePolicy(authSource, authRecipient);
     }
 
     private MessagePolicy parsePolicy(ResponsePolicy policy) {
@@ -241,7 +241,7 @@ public class ConfigDomainParser implements ConfigParser {
 
         String authSource = policy.getAuthSource();
         String authRecipient = policy.getAuthRecipient();
-        return org.omnifaces.eleos.config.helper.AuthMessagePolicy.getMessagePolicy(authSource, authRecipient);
+        return org.glassfish.epicyro.config.helper.AuthMessagePolicy.getMessagePolicy(authSource, authRecipient);
     }
 
 }

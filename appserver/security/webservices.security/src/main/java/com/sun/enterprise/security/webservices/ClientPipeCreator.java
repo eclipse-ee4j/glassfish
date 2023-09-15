@@ -29,7 +29,7 @@ import static com.sun.enterprise.security.webservices.PipeConstants.WSDL_MODEL;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.omnifaces.eleos.services.AuthConfigRegistrationWrapper;
+import org.glassfish.epicyro.services.AuthConfigRegistrationWrapper;
 
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 //import com.sun.xml.ws.assembler.ClientTubelineAssemblyContext;

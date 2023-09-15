@@ -17,6 +17,7 @@
 
 package com.sun.enterprise.security.appclient;
 
+import static java.lang.System.Logger.Level.ERROR;
 import static java.util.regex.Matcher.quoteReplacement;
 
 import java.io.File;
@@ -39,18 +40,17 @@ import org.glassfish.appclient.client.acc.config.Property;
 import org.glassfish.appclient.client.acc.config.ProviderConfig;
 import org.glassfish.appclient.client.acc.config.RequestPolicy;
 import org.glassfish.appclient.client.acc.config.ResponsePolicy;
-import org.glassfish.internal.api.Globals;
 import org.glassfish.epicyro.config.factory.ConfigParser;
 import org.glassfish.epicyro.config.helper.AuthMessagePolicy;
 import org.glassfish.epicyro.data.AuthModuleConfig;
 import org.glassfish.epicyro.data.AuthModulesLayerConfig;
+import org.glassfish.internal.api.Globals;
 
 import com.sun.enterprise.security.common.Util;
 
 import jakarta.security.auth.message.MessagePolicy;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Unmarshaller;
 
 /**
  * Parser for message-security-config in glassfish-acc.xml
@@ -61,9 +61,9 @@ public class ConfigXMLParser implements ConfigParser {
     private static Pattern PROPERTY_PATTERN = Pattern.compile("\\$\\{\\{(.*?)}}|\\$\\{(.*?)}");
 
     // configuration info
-    private final Map configMap = new HashMap();
+    private final Map<String, AuthModulesLayerConfig> authModuleLayers = new HashMap<>();
     private final Set<String> layersWithDefault = new HashSet<>();
-    private List<MessageSecurityConfig> msgSecConfigs = null;
+    private List<MessageSecurityConfig> msgSecConfigs;
     private static final String ACC_XML = "glassfish-acc.xml.url";
 
     public ConfigXMLParser() {
@@ -72,29 +72,29 @@ public class ConfigXMLParser implements ConfigParser {
     public void initialize(List<MessageSecurityConfig> msgConfigs) throws IOException {
         this.msgSecConfigs = msgConfigs;
         if (this.msgSecConfigs != null) {
-            processClientConfigContext(configMap);
+            processClientConfigContext(authModuleLayers);
         }
     }
 
-    private void processClientConfigContext(Map newConfig) throws IOException {
+    private void processClientConfigContext(Map<String, AuthModulesLayerConfig> newConfig) throws IOException {
         // auth-layer
-        String intercept = null;
+        String authLayer = null;
 
         List<MessageSecurityConfig> msgConfigs = this.msgSecConfigs;
 
-        for (MessageSecurityConfig config : msgConfigs) {
-            intercept = parseInterceptEntry(config, newConfig);
-            List<ProviderConfig> pConfigs = config.getProviderConfig();
-            for (ProviderConfig pConfig : pConfigs) {
-                parseIDEntry(pConfig, newConfig, intercept);
+        for (MessageSecurityConfig messageSecurityConfig : msgConfigs) {
+            authLayer = parseInterceptEntry(messageSecurityConfig, newConfig);
+            List<ProviderConfig> providerConfigurations = messageSecurityConfig.getProviderConfig();
+            for (ProviderConfig providerConfiguration : providerConfigurations) {
+                parseIDEntry(providerConfiguration, newConfig, authLayer);
             }
         }
 
     }
 
     @Override
-    public Map getAuthModuleLayers() {
-        return configMap;
+    public Map<String, AuthModulesLayerConfig> getAuthModuleLayers() {
+        return authModuleLayers;
     }
 
     @Override
@@ -102,53 +102,50 @@ public class ConfigXMLParser implements ConfigParser {
         return layersWithDefault;
     }
 
-    private String parseInterceptEntry(MessageSecurityConfig msgConfig, Map newConfig) throws IOException {
-        String intercept = null;
-        String defaultServerID = null;
-        String defaultClientID = null;
+    private String parseInterceptEntry(MessageSecurityConfig msgConfig, Map<String, AuthModulesLayerConfig> newConfig) throws IOException {
         MessageSecurityConfig clientMsgSecConfig = msgConfig;
-        intercept = clientMsgSecConfig.getAuthLayer();
-        defaultServerID = clientMsgSecConfig.getDefaultProvider();
-        defaultClientID = clientMsgSecConfig.getDefaultClientProvider();
+        String authLayer = clientMsgSecConfig.getAuthLayer();
+        String defaultServerID = clientMsgSecConfig.getDefaultProvider();
+        String defaultClientID = clientMsgSecConfig.getDefaultClientProvider();
 
-        LOG.log(Level.DEBUG, "Intercept Entry:\n intercept: {0}\n defaultServerID: {1}\n defaultClientID: {2}", intercept, defaultServerID,
+        LOG.log(Level.DEBUG, "AuthLayer Entry:\n AuthLayer: {0}\n defaultServerID: {1}\n defaultClientID: {2}", authLayer, defaultServerID,
                 defaultClientID);
 
         if (defaultServerID != null || defaultClientID != null) {
-            layersWithDefault.add(intercept);
+            layersWithDefault.add(authLayer);
         }
 
-        AuthModulesLayerConfig intEntry = (AuthModulesLayerConfig) newConfig.get(intercept);
-        if (intEntry != null) {
+        AuthModulesLayerConfig authModulesLayerConfig = newConfig.get(authLayer);
+        if (authModulesLayerConfig != null) {
             throw new IOException("found multiple MessageSecurityConfig " + "entries with the same auth-layer");
         }
 
-        // create new intercept entry
-        intEntry = new AuthModulesLayerConfig(defaultClientID, defaultServerID, null);
-        newConfig.put(intercept, intEntry);
-        return intercept;
+        // Create new AuthLayer entry
+        authModulesLayerConfig = new AuthModulesLayerConfig(defaultClientID, defaultServerID, null);
+        newConfig.put(authLayer, authModulesLayerConfig);
+
+        return authLayer;
     }
 
     // duplicate implementation for clientbeans config
-    private void parseIDEntry(ProviderConfig pConfig, Map newConfig, String intercept) throws IOException {
-        String id = pConfig.getProviderId();
-        String type = pConfig.getProviderType();
-        String moduleClass = pConfig.getClassName();
-        MessagePolicy requestPolicy = parsePolicy(pConfig.getRequestPolicy());
-        MessagePolicy responsePolicy = parsePolicy(pConfig.getResponsePolicy());
+    private void parseIDEntry(ProviderConfig providerConfig, Map<String, AuthModulesLayerConfig> newConfig, String authLayer) throws IOException {
+        String id = providerConfig.getProviderId();
+        String type = providerConfig.getProviderType();
+        String moduleClass = providerConfig.getClassName();
+        MessagePolicy requestPolicy = parsePolicy(providerConfig.getRequestPolicy());
+        MessagePolicy responsePolicy = parsePolicy(providerConfig.getResponsePolicy());
 
         // get the module options
 
         Map<String, Object> options = new HashMap<>();
-        List<Property> props = pConfig.getProperty();
-        for (Property prop : props) {
+        List<Property> properties = providerConfig.getProperty();
+        for (Property property : properties) {
             try {
-                options.put(prop.getName(), expand(prop.getValue()));
+                options.put(property.getName(), expand(property.getValue()));
             } catch (IllegalStateException ee) {
-                // log warning and give the provider a chance to
-                // interpret value itself.
+                // log warning and give the provider a chance to interpret value itself.
                 LOG.log(Level.WARNING, "SEC1200: Unable to expand provider property value, unexpanded value passed to provider.");
-                options.put(prop.getName(), prop.getValue());
+                options.put(property.getName(), property.getValue());
             }
         }
 
@@ -158,19 +155,19 @@ public class ConfigXMLParser implements ConfigParser {
 
         // create ID entry
 
-        AuthModuleConfig idEntry = new AuthModuleConfig(type, moduleClass, requestPolicy, responsePolicy, options);
+        AuthModuleConfig authModuleConfig = new AuthModuleConfig(type, moduleClass, requestPolicy, responsePolicy, options);
 
-        AuthModulesLayerConfig intEntry = (AuthModulesLayerConfig) newConfig.get(intercept);
-        if (intEntry == null) {
-            throw new IOException("intercept entry for " + intercept + " must be specified before ID entries");
+        AuthModulesLayerConfig authModulesLayerConfig = newConfig.get(authLayer);
+        if (authModulesLayerConfig == null) {
+            throw new IOException("authLayer entry for " + authLayer + " must be specified before ID entries");
         }
 
-        if (intEntry.getAuthModules() == null) {
-            intEntry.setIdMap(new HashMap());
+        if (authModulesLayerConfig.getAuthModules() == null) {
+            authModulesLayerConfig.setIdMap(new HashMap<>());
         }
 
-        // map id to Intercept
-        intEntry.getAuthModules().put(id, idEntry);
+        // Map id to authLayer
+        authModulesLayerConfig.getAuthModules().put(id, authModuleConfig);
     }
 
     private String expand(String rawProperty) {
@@ -220,21 +217,22 @@ public class ConfigXMLParser implements ConfigParser {
 
     @Override
     public void initialize(Object config) throws IOException {
-        String sun_acc = System.getProperty(ACC_XML, "glassfish-acc.xml");
+        String glassFishAccXml = System.getProperty(ACC_XML, "glassfish-acc.xml");
 
         List<MessageSecurityConfig> msgconfigs = null;
-        if (Globals.getDefaultHabitat() == null && sun_acc != null && new File(sun_acc).exists()) {
-            try (InputStream is = new FileInputStream(sun_acc)) {
-                JAXBContext jc = JAXBContext.newInstance(ClientContainer.class);
-                Unmarshaller u = jc.createUnmarshaller();
-                ClientContainer cc = (ClientContainer) u.unmarshal(is);
-                msgconfigs = cc.getMessageSecurityConfig();
+        if (Globals.getDefaultHabitat() == null && glassFishAccXml != null && new File(glassFishAccXml).exists()) {
+            try (InputStream is = new FileInputStream(glassFishAccXml)) {
+                ClientContainer clientContainer = (ClientContainer)
+                        JAXBContext.newInstance(ClientContainer.class)
+                                   .createUnmarshaller()
+                                   .unmarshal(is);
+
+                msgconfigs = clientContainer.getMessageSecurityConfig();
             } catch (JAXBException ex) {
-                LOG.log(Level.ERROR, "Failed to parse glassfish-acc.xml", ex);
+                LOG.log(ERROR, "Failed to parse glassfish-acc.xml", ex);
             }
         } else {
-            Util util = Util.getInstance();
-            msgconfigs = (List<MessageSecurityConfig>) util.getAppClientMsgSecConfigs();
+            msgconfigs = Util.getInstance().getAppClientMsgSecConfigs();
         }
 
         this.initialize(msgconfigs);

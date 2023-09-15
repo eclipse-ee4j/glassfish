@@ -16,26 +16,26 @@
 
 package com.sun.enterprise.security.jmac;
 
+import static java.util.logging.Level.FINE;
 import static java.util.regex.Matcher.quoteReplacement;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.internal.api.Globals;
-import org.jvnet.hk2.config.types.Property;
 import org.glassfish.epicyro.config.factory.ConfigParser;
+import org.glassfish.epicyro.config.helper.AuthMessagePolicy;
 import org.glassfish.epicyro.data.AuthModuleConfig;
 import org.glassfish.epicyro.data.AuthModulesLayerConfig;
+import org.glassfish.internal.api.Globals;
+import org.jvnet.hk2.config.types.Property;
 
 import com.sun.enterprise.config.serverbeans.MessageSecurityConfig;
 import com.sun.enterprise.config.serverbeans.ProviderConfig;
@@ -51,12 +51,8 @@ import jakarta.security.auth.message.MessagePolicy;
  */
 public class ConfigDomainParser implements ConfigParser {
 
-    private static Logger _logger = null;
-    static {
-        _logger = LogDomains.getLogger(ConfigDomainParser.class, LogDomains.SECURITY_LOGGER);
-    }
-
-    private static Pattern PROPERTY_PATTERN = Pattern.compile("\\$\\{\\{(.*?)}}|\\$\\{(.*?)}");
+    private static final Logger _logger = LogDomains.getLogger(ConfigDomainParser.class, LogDomains.SECURITY_LOGGER);
+    private static final Pattern PROPERTY_PATTERN = Pattern.compile("\\$\\{\\{(.*?)}}|\\$\\{(.*?)}");
 
     // configuration info
     private Map<String, AuthModulesLayerConfig>  configMap = new HashMap<>();
@@ -86,23 +82,19 @@ public class ConfigDomainParser implements ConfigParser {
         return layersWithDefault;
     }
 
-    private void processServerConfig(SecurityService service, Map newConfig) throws IOException {
+    private void processServerConfig(SecurityService service, Map<String, AuthModulesLayerConfig> newConfig) throws IOException {
         List<MessageSecurityConfig> configList = service.getMessageSecurityConfig();
 
         if (configList != null) {
 
-            Iterator<MessageSecurityConfig> cit = configList.iterator();
-
-            while (cit.hasNext()) {
-
-                MessageSecurityConfig next = cit.next();
+            for (MessageSecurityConfig messageSecurityConfig : configList) {
 
                 // single message-security-config for each auth-layer
                 // auth-layer is synonymous with intercept
 
-                String authLayer = parseInterceptEntry(next, newConfig);
+                String authLayer = parseInterceptEntry(messageSecurityConfig, newConfig);
 
-                List<ProviderConfig> providers = next.getProviderConfig();
+                List<ProviderConfig> providers = messageSecurityConfig.getProviderConfig();
 
                 if (providers != null) {
                     for (ProviderConfig provider : providers) {
@@ -115,12 +107,12 @@ public class ConfigDomainParser implements ConfigParser {
 
 
 
-    private String parseInterceptEntry(MessageSecurityConfig msgConfig, Map<String, Object> newConfig) throws IOException {
+    private String parseInterceptEntry(MessageSecurityConfig msgConfig, Map<String, AuthModulesLayerConfig> newConfig) throws IOException {
         String authLayer = msgConfig.getAuthLayer();
         String defaultServerID = msgConfig.getDefaultProvider();
         String defaultClientID = msgConfig.getDefaultClientProvider();
 
-        if (_logger.isLoggable(Level.FINE)) {
+        if (_logger.isLoggable(FINE)) {
             _logger.fine("Intercept Entry: " + "\n    intercept: " + authLayer + "\n    defaultServerID: " + defaultServerID
                     + "\n    defaultClientID:  " + defaultClientID);
         }
@@ -129,7 +121,7 @@ public class ConfigDomainParser implements ConfigParser {
             layersWithDefault.add(authLayer);
         }
 
-        AuthModulesLayerConfig authModulesLayerConfig = (AuthModulesLayerConfig) newConfig.get(authLayer);
+        AuthModulesLayerConfig authModulesLayerConfig = newConfig.get(authLayer);
         if (authModulesLayerConfig != null) {
             throw new IOException("found multiple MessageSecurityConfig " + "entries with the same auth-layer");
         }
@@ -141,68 +133,41 @@ public class ConfigDomainParser implements ConfigParser {
         return authLayer;
     }
 
-    private void parseIDEntry(ProviderConfig pConfig, Map newConfig, String intercept) throws IOException {
+    private void parseIDEntry(ProviderConfig providerConfig, Map<String, AuthModulesLayerConfig> newConfig, String intercept) throws IOException {
+        String providerId = providerConfig.getProviderId();
+        String providerType = providerConfig.getProviderType();
+        String moduleClass = providerConfig.getClassName();
 
-        String id = pConfig.getProviderId();
-        String type = pConfig.getProviderType();
-        String moduleClass = pConfig.getClassName();
-        MessagePolicy requestPolicy = parsePolicy(pConfig.getRequestPolicy());
-        MessagePolicy responsePolicy = parsePolicy(pConfig.getResponsePolicy());
+        MessagePolicy requestPolicy = parsePolicy(providerConfig.getRequestPolicy());
+        MessagePolicy responsePolicy = parsePolicy(providerConfig.getResponsePolicy());
 
-        // get the module options
+        // Expand the module options
+        Map<String, Object> options = getModuleOptions(providerConfig);
 
-        Map options = new HashMap();
-        String key;
-        String value;
-
-        List<Property> pList = pConfig.getProperty();
-
-        if (pList != null) {
-
-            Iterator<Property> pit = pList.iterator();
-
-            while (pit.hasNext()) {
-
-                Property property = pit.next();
-
-                try {
-                    options.put(property.getName(), expand(property.getValue()));
-                } catch (IllegalStateException ee) {
-                    // log warning and give the provider a chance to
-                    // interpret value itself.
-                    if (_logger.isLoggable(Level.FINE)) {
-                        _logger.log(Level.FINE, "jmac.unexpandedproperty");
-                    }
-                    options.put(property.getName(), property.getValue());
-                }
-            }
-        }
-
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.fine("ID Entry: " + "\n    module class: " + moduleClass + "\n    id: " + id + "\n    type: " + type
+        if (_logger.isLoggable(FINE)) {
+            _logger.fine("ID Entry: " + "\n    module class: " + moduleClass + "\n    id: " + providerId + "\n    type: " + providerType
                     + "\n    request policy: " + requestPolicy + "\n    response policy: " + responsePolicy + "\n    options: " + options);
         }
 
-        // create ID entry
-        AuthModuleConfig idEntry = new AuthModuleConfig(type, moduleClass, requestPolicy, responsePolicy,
-                options);
+        AuthModuleConfig AuthModuleConfig = new AuthModuleConfig(providerType, moduleClass, requestPolicy, responsePolicy, options);
 
-        AuthModulesLayerConfig intEntry = (AuthModulesLayerConfig) newConfig.get(intercept);
-        if (intEntry == null) {
+        AuthModulesLayerConfig AuthModulesLayerConfig = newConfig.get(intercept);
+        if (AuthModulesLayerConfig == null) {
             throw new IOException("intercept entry for " + intercept + " must be specified before ID entries");
         }
 
-        if (intEntry.getAuthModules() == null) {
-            intEntry.setIdMap(new HashMap());
+        if (AuthModulesLayerConfig.getAuthModules() == null) {
+            AuthModulesLayerConfig.setIdMap(new HashMap<>());
         }
 
-        // map id to Intercept
-        intEntry.getAuthModules().put(id, idEntry);
+        // Map id to Intercept
+        AuthModulesLayerConfig.getAuthModules().put(providerId, AuthModuleConfig);
     }
 
     private String expand(String rawProperty) {
         Matcher propertyMatcher = PROPERTY_PATTERN.matcher(rawProperty);
         StringBuilder propertyBuilder = new StringBuilder();
+
         while (propertyMatcher.find()) {
             // Check if the ignore pattern matched
             if (propertyMatcher.group(1) != null) {
@@ -229,9 +194,7 @@ public class ConfigDomainParser implements ConfigParser {
             return null;
         }
 
-        String authSource = policy.getAuthSource();
-        String authRecipient = policy.getAuthRecipient();
-        return org.glassfish.epicyro.config.helper.AuthMessagePolicy.getMessagePolicy(authSource, authRecipient);
+        return AuthMessagePolicy.getMessagePolicy(policy.getAuthSource(), policy.getAuthRecipient());
     }
 
     private MessagePolicy parsePolicy(ResponsePolicy policy) {
@@ -239,9 +202,26 @@ public class ConfigDomainParser implements ConfigParser {
             return null;
         }
 
-        String authSource = policy.getAuthSource();
-        String authRecipient = policy.getAuthRecipient();
-        return org.glassfish.epicyro.config.helper.AuthMessagePolicy.getMessagePolicy(authSource, authRecipient);
+        return AuthMessagePolicy.getMessagePolicy(policy.getAuthSource(), policy.getAuthRecipient());
     }
 
+    private Map<String, Object> getModuleOptions(ProviderConfig providerConfig) {
+        Map<String, Object> options = new HashMap<>();
+
+        List<Property> properties = providerConfig.getProperty();
+        if (properties != null) {
+            for (Property property : properties) {
+                try {
+                    options.put(property.getName(), expand(property.getValue()));
+                } catch (IllegalStateException ee) {
+                    // log warning and give the provider a chance to
+                    // interpret value itself.
+                    _logger.log(FINE, "jmac.unexpandedproperty");
+                    options.put(property.getName(), property.getValue());
+                }
+            }
+        }
+
+        return options;
+    }
 }

@@ -19,6 +19,8 @@ package com.sun.enterprise.security.jauth;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.security.AccessController;
+import java.security.PrivilegedExceptionAction;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,7 +52,7 @@ class ConfigFile extends AuthConfig {
     private String parserClassName;
 
     // parser
-    private org.glassfish.epicyro.config.factory.ConfigParser parser;
+    private ConfigParser parser;
 
     // package private for ConfigFileParser
     static final String CLIENT = "client";
@@ -266,16 +268,16 @@ class ConfigFile extends AuthConfig {
      *
      * XXX custom file that can be used in place of [domain|sun-acc].xml
      */
-    private static org.glassfish.epicyro.config.factory.ConfigParser loadParser(String className) throws IOException {
+    private static ConfigParser loadParser(String className) throws IOException {
         try {
 
             final String finalClassName = className;
             final ClassLoader finalLoader = AuthConfig.getClassLoader();
 
-            return java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction<org.glassfish.epicyro.config.factory.ConfigParser>() {
+            return java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction<ConfigParser>() {
                 @Override
-                public org.glassfish.epicyro.config.factory.ConfigParser run() throws Exception {
-                    return (org.glassfish.epicyro.config.factory.ConfigParser) Class.forName(finalClassName, true, finalLoader).newInstance();
+                public ConfigParser run() throws Exception {
+                    return (ConfigParser) Class.forName(finalClassName, true, finalLoader).newInstance();
                 }
             });
         } catch (java.security.PrivilegedActionException pae) {
@@ -295,7 +297,7 @@ class ConfigFile extends AuthConfig {
 
             final ClassLoader finalLoader = AuthConfig.getClassLoader();
 
-            return (CallbackHandler) java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
+            return (CallbackHandler) AccessController.doPrivileged(new PrivilegedExceptionAction() {
                 @Override
                 public Object run() throws Exception {
 
@@ -357,7 +359,7 @@ class ConfigFile extends AuthConfig {
      * This class also provides a way for a caller to obtain an instance of the module listed in the entry by invoking the
      * <code>newInstance</code> method.
      */
-    static class Entry extends javax.security.auth.login.AppConfigurationEntry {
+    static class Entry extends AppConfigurationEntry {
 
         // for loading modules
         private static final Class[] PARAMS = {};

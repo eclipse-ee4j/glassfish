@@ -81,8 +81,9 @@ public class Util {
         this.callbackHandler = callbackHandler;
     }
 
-    public Object getAppClientMsgSecConfigs() {
-        return appClientMsgSecConfigs;
+    @SuppressWarnings("unchecked")
+    public <T> T getAppClientMsgSecConfigs() {
+        return (T) appClientMsgSecConfigs;
     }
 
     public void setAppClientMsgSecConfigs(Object appClientMsgSecConfigs) {

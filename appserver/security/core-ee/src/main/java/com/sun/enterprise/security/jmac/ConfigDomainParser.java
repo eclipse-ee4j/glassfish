@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -54,8 +55,8 @@ public class ConfigDomainParser implements ConfigParser {
     private static final Logger _logger = LogDomains.getLogger(ConfigDomainParser.class, LogDomains.SECURITY_LOGGER);
     private static final Pattern PROPERTY_PATTERN = Pattern.compile("\\$\\{\\{(.*?)}}|\\$\\{(.*?)}");
 
-    // configuration info
-    private Map<String, AuthModulesLayerConfig>  configMap = new HashMap<>();
+    // The authentication modules per layer (SOAP or Servlet)
+    private Map<String, AuthModulesLayerConfig>  authModuleLayers = new HashMap<>();
     private Set<String> layersWithDefault = new HashSet<>();
 
     public ConfigDomainParser() {
@@ -68,13 +69,13 @@ public class ConfigDomainParser implements ConfigParser {
         }
 
         if (service instanceof SecurityService) {
-            processServerConfig((SecurityService) service, configMap);
+            processServerConfig((SecurityService) service, authModuleLayers);
         }
     }
 
     @Override
     public Map<String, AuthModulesLayerConfig> getAuthModuleLayers() {
-        return configMap;
+        return authModuleLayers;
     }
 
     @Override
@@ -82,30 +83,28 @@ public class ConfigDomainParser implements ConfigParser {
         return layersWithDefault;
     }
 
-    private void processServerConfig(SecurityService service, Map<String, AuthModulesLayerConfig> newConfig) throws IOException {
-        List<MessageSecurityConfig> configList = service.getMessageSecurityConfig();
+    private void processServerConfig(SecurityService service, Map<String, AuthModulesLayerConfig> newAuthModuleLayers) throws IOException {
+        List<MessageSecurityConfig> messageSecurityConfigs = service.getMessageSecurityConfig();
 
-        if (configList != null) {
+        if (messageSecurityConfigs != null) {
 
-            for (MessageSecurityConfig messageSecurityConfig : configList) {
+            for (MessageSecurityConfig messageSecurityConfig : messageSecurityConfigs) {
 
                 // single message-security-config for each auth-layer
                 // auth-layer is synonymous with intercept
 
-                String authLayer = parseInterceptEntry(messageSecurityConfig, newConfig);
+                String authLayer = parseInterceptEntry(messageSecurityConfig, newAuthModuleLayers);
 
                 List<ProviderConfig> providers = messageSecurityConfig.getProviderConfig();
 
                 if (providers != null) {
                     for (ProviderConfig provider : providers) {
-                        parseIDEntry(provider, newConfig, authLayer);
+                        parseIDEntry(provider, newAuthModuleLayers, authLayer);
                     }
                 }
             }
         }
     }
-
-
 
     private String parseInterceptEntry(MessageSecurityConfig msgConfig, Map<String, AuthModulesLayerConfig> newConfig) throws IOException {
         String authLayer = msgConfig.getAuthLayer();

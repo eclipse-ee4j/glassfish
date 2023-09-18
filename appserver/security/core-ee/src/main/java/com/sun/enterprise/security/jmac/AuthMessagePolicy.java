@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,7 +23,6 @@ import static org.glassfish.epicyro.config.helper.HttpServletConstants.SOAP;
 
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -52,8 +51,6 @@ public class AuthMessagePolicy {
 
     private static final String HANDLER_CLASS_PROPERTY = "security.jmac.config.ConfigHelper.CallbackHandler";
     private static final String DEFAULT_HANDLER_CLASS = "com.sun.enterprise.security.jmac.callback.ContainerCallbackHandler";
-
-    // for HttpServlet profile
 
     private static String handlerClassName;
 
@@ -91,11 +88,11 @@ public class AuthMessagePolicy {
         return null;
     }
 
-    public static MessagePolicy getMessagePolicy(ProtectionDescriptor pd) {
+    public static MessagePolicy getMessagePolicy(ProtectionDescriptor protectionDescriptor) {
         MessagePolicy messagePolicy = null;
-        if (pd != null) {
-            String source = pd.getAttributeValue(ProtectionDescriptor.AUTH_SOURCE);
-            String recipient = pd.getAttributeValue(ProtectionDescriptor.AUTH_RECIPIENT);
+        if (protectionDescriptor != null) {
+            String source = protectionDescriptor.getAttributeValue(ProtectionDescriptor.AUTH_SOURCE);
+            String recipient = protectionDescriptor.getAttributeValue(ProtectionDescriptor.AUTH_RECIPIENT);
             messagePolicy = org.glassfish.epicyro.config.helper.AuthMessagePolicy.getMessagePolicy(source, recipient);
         }
 
@@ -119,23 +116,23 @@ public class AuthMessagePolicy {
         MessagePolicy responsePolicy = null;
 
         if (binding != null) {
-            ArrayList<MessageSecurityDescriptor> msgSecDescs = null;
+            List<MessageSecurityDescriptor> messageSecurityDescriptors = null;
             String layer = binding.getValue(AUTH_LAYER);
             if (SOAP.equals(layer)) {
-                msgSecDescs = binding.getMessageSecurityDescriptors();
+                messageSecurityDescriptors = binding.getMessageSecurityDescriptors();
             }
 
-            if (msgSecDescs != null) {
+            if (messageSecurityDescriptors != null) {
                 if (onePolicy) {
-                    if (msgSecDescs.size() > 0) {
-                        MessageSecurityDescriptor msd = msgSecDescs.get(0);
-                        requestPolicy = getMessagePolicy(msd.getRequestProtectionDescriptor());
-                        responsePolicy = getMessagePolicy(msd.getResponseProtectionDescriptor());
+                    if (messageSecurityDescriptors.size() > 0) {
+                        MessageSecurityDescriptor messageSecurityDescriptor = messageSecurityDescriptors.get(0);
+                        requestPolicy = getMessagePolicy(messageSecurityDescriptor.getRequestProtectionDescriptor());
+                        responsePolicy = getMessagePolicy(messageSecurityDescriptor.getResponseProtectionDescriptor());
                     }
                 } else { // try to match
                     MessageSecurityDescriptor matchMsd = null;
-                    for (int i = 0; i < msgSecDescs.size(); i++) {
-                        MessageSecurityDescriptor msd = msgSecDescs.get(i);
+                    for (int i = 0; i < messageSecurityDescriptors.size(); i++) {
+                        MessageSecurityDescriptor msd = messageSecurityDescriptors.get(i);
                         List<MessageDescriptor> msgDescs = msd.getMessageDescriptors();
                         for (int j = i + 1; j < msgDescs.size(); j++) {
                             // XXX don't know how to get JavaMethod from operation
@@ -180,7 +177,7 @@ public class AuthMessagePolicy {
 
             MessageSecurityDescriptor msd = msgSecDescs.get(i);
 
-            // determine if all the different messageSecurityDesriptors have the
+            // Determine if all the different messageSecurityDesriptors have the
             // same policy which will help us interpret the effective policy if
             // we cannot determine the opcode of a request at runtime.
             for (int j = 0; j < msgSecDescs.size(); j++) {
@@ -193,7 +190,7 @@ public class AuthMessagePolicy {
         return onePolicy;
     }
 
-    public static SunWebApp getSunWebApp(Map properties) {
+    public static SunWebApp getSunWebApp(Map<String, Object> properties) {
         if (properties == null) {
             return null;
         }
@@ -203,32 +200,29 @@ public class AuthMessagePolicy {
     }
 
     public static String getProviderID(SunWebApp sunWebApp) {
-        String providerID = null;
-        if (sunWebApp != null) {
-            providerID = sunWebApp.getAttributeValue(SunWebApp.HTTPSERVLET_SECURITY_PROVIDER);
+        if (sunWebApp == null) {
+            return null;
         }
 
-        return providerID;
+        return sunWebApp.getAttributeValue(SunWebApp.HTTPSERVLET_SECURITY_PROVIDER);
     }
 
 
     public static CallbackHandler getDefaultCallbackHandler() {
-        // get the default handler class
         try {
-            CallbackHandler rvalue = (CallbackHandler) AppservAccessController.doPrivileged(new PrivilegedExceptionAction() {
+            return AppservAccessController.doPrivileged(new PrivilegedExceptionAction<CallbackHandler>() {
                 @Override
-                public Object run() throws Exception {
-                    ClassLoader loader = Thread.currentThread().getContextClassLoader();
+                public CallbackHandler run() throws Exception {
                     if (handlerClassName == null) {
                         handlerClassName = System.getProperty(HANDLER_CLASS_PROPERTY, DEFAULT_HANDLER_CLASS);
                     }
-                    final String className = handlerClassName;
-                    Class<?> c = Class.forName(className, true, loader);
-                    return c.getDeclaredConstructor().newInstance();
+
+                    return (CallbackHandler)
+                        Class.forName(handlerClassName, true, Thread.currentThread().getContextClassLoader())
+                             .getDeclaredConstructor()
+                             .newInstance();
                 }
             });
-            return rvalue;
-
         } catch (PrivilegedActionException pae) {
             throw new RuntimeException(pae.getException());
         }

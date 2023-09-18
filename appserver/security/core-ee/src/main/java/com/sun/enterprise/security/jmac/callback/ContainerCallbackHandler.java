@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,16 +34,13 @@ import org.jvnet.hk2.annotations.ContractsProvided;
 import org.jvnet.hk2.annotations.Service;
 
 import com.sun.enterprise.security.SecurityServicesUtil;
-//V3:Commented import com.sun.enterprise.Switch;
-import com.sun.enterprise.security.jmac.config.CallbackHandlerConfig;
-import com.sun.enterprise.security.jmac.config.HandlerContext;
 
 /**
  * @author Shing Wai Chan
  */
 @Service
 @ContractsProvided({ ContainerCallbackHandler.class, CallbackHandler.class })
-public final class ContainerCallbackHandler implements CallbackHandler, CallbackHandlerConfig {
+public final class ContainerCallbackHandler implements CallbackHandler {
     private CallbackHandler handler = null;
 
     public ContainerCallbackHandler() {
@@ -56,24 +54,6 @@ public final class ContainerCallbackHandler implements CallbackHandler, Callback
     @Override
     public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
         handler.handle(callbacks);
-    }
-
-    @Override
-    public void setHandlerContext(HandlerContext handlerContext) {
-        ((CallbackHandlerConfig) handler).setHandlerContext(handlerContext);
-    }
-
-    public void setHandlerContext(String realm) {
-        final String fRealmName = realm;
-        HandlerContext handlerContext = new HandlerContext() {
-
-            @Override
-            public String getRealmName() {
-                return fRealmName;
-            }
-        };
-        // TODO
-        // ((BaseContainerCallbackHandler) handler).setHandlerContext(handlerContext);
     }
 
 }

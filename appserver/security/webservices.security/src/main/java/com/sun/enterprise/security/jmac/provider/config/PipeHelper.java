@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,62 +17,6 @@
 
 package com.sun.enterprise.security.jmac.provider.config;
 
-import com.sun.xml.ws.api.server.WSEndpoint;
-import java.net.URL;
-import java.util.Map;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-
-import javax.security.auth.Subject;
-import javax.security.auth.callback.CallbackHandler;
-import jakarta.security.auth.message.AuthException;
-import jakarta.security.auth.message.AuthStatus;
-import jakarta.security.auth.message.MessageInfo;
-import jakarta.security.auth.message.MessagePolicy;
-import jakarta.security.auth.message.config.ClientAuthConfig;
-import jakarta.security.auth.message.config.ClientAuthContext;
-import jakarta.security.auth.message.config.ServerAuthConfig;
-import jakarta.security.auth.message.config.ServerAuthContext;
-import jakarta.xml.ws.WebServiceException;
-import com.sun.enterprise.deployment.Application;
-import com.sun.enterprise.deployment.BundleDescriptor;
-import com.sun.enterprise.deployment.EjbDescriptor;
-import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
-import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.WebServiceEndpoint;
-import org.glassfish.deployment.common.ModuleDescriptor;
-import org.glassfish.internal.api.Globals;
-import org.glassfish.epicyro.config.module.configprovider.GFServerConfigProvider;
-import org.glassfish.epicyro.services.BaseAuthenticationService;
-
-import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
-
-import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
-import com.sun.enterprise.security.SecurityContext;
-import com.sun.enterprise.security.SecurityServicesUtil;
-import com.sun.enterprise.security.appclient.ConfigXMLParser;
-import com.sun.enterprise.security.audit.AuditManager;
-import com.sun.enterprise.security.ee.authorize.EJBPolicyContextDelegate;
-import com.sun.enterprise.security.common.AppservAccessController;
-import com.sun.enterprise.security.common.ClientSecurityContext;
-import com.sun.enterprise.security.jmac.AuthMessagePolicy;
-import com.sun.enterprise.security.jmac.ConfigDomainParser;
-import com.sun.enterprise.security.jmac.WebServicesDelegate;
-import com.sun.enterprise.security.webservices.PipeConstants;
-import com.sun.enterprise.security.jmac.config.HandlerContext;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.io.FileUtils;
-import com.sun.xml.ws.api.EndpointAddress;
-import com.sun.xml.ws.api.message.Messages;
-import com.sun.xml.ws.api.message.Packet;
-import com.sun.xml.ws.api.model.SEIModel;
-import com.sun.xml.ws.api.model.wsdl.WSDLPort;
-import com.sun.xml.ws.api.SOAPVersion;
-import com.sun.xml.ws.api.WSBinding;
-import com.sun.xml.ws.api.message.Message;
-
-import com.sun.xml.ws.api.model.JavaMethod;
-
 import static com.sun.enterprise.security.webservices.PipeConstants.BINDING;
 import static com.sun.enterprise.security.webservices.PipeConstants.CLIENT_SUBJECT;
 import static com.sun.enterprise.security.webservices.PipeConstants.ENDPOINT;
@@ -85,14 +30,67 @@ import static com.sun.enterprise.security.webservices.PipeConstants.WSDL_MODEL;
 import static jakarta.xml.ws.handler.MessageContext.SERVLET_REQUEST;
 
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.xml.bind.UnmarshalException;
+import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
+import javax.security.auth.Subject;
+import javax.security.auth.callback.CallbackHandler;
 
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.deployment.common.ModuleDescriptor;
+import org.glassfish.epicyro.config.module.configprovider.GFServerConfigProvider;
+import org.glassfish.epicyro.services.BaseAuthenticationService;
+import org.glassfish.internal.api.Globals;
+
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.WebServiceEndpoint;
+import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
+import com.sun.enterprise.security.SecurityContext;
+import com.sun.enterprise.security.SecurityServicesUtil;
+import com.sun.enterprise.security.appclient.ConfigXMLParser;
+import com.sun.enterprise.security.audit.AuditManager;
+import com.sun.enterprise.security.common.AppservAccessController;
+import com.sun.enterprise.security.common.ClientSecurityContext;
+import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
+import com.sun.enterprise.security.ee.authorize.EJBPolicyContextDelegate;
+import com.sun.enterprise.security.jmac.AuthMessagePolicy;
+import com.sun.enterprise.security.jmac.ConfigDomainParser;
+import com.sun.enterprise.security.jmac.WebServicesDelegate;
+import com.sun.enterprise.security.webservices.PipeConstants;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.util.io.FileUtils;
+import com.sun.xml.ws.api.EndpointAddress;
+import com.sun.xml.ws.api.SOAPVersion;
+import com.sun.xml.ws.api.WSBinding;
+import com.sun.xml.ws.api.message.Message;
+import com.sun.xml.ws.api.message.Messages;
+import com.sun.xml.ws.api.message.Packet;
+import com.sun.xml.ws.api.model.JavaMethod;
+import com.sun.xml.ws.api.model.SEIModel;
+import com.sun.xml.ws.api.model.wsdl.WSDLPort;
+import com.sun.xml.ws.api.server.WSEndpoint;
+
+import jakarta.security.auth.message.AuthException;
+import jakarta.security.auth.message.AuthStatus;
+import jakarta.security.auth.message.MessageInfo;
+import jakarta.security.auth.message.MessagePolicy;
+import jakarta.security.auth.message.config.ClientAuthConfig;
+import jakarta.security.auth.message.config.ClientAuthContext;
+import jakarta.security.auth.message.config.ServerAuthConfig;
+import jakarta.security.auth.message.config.ServerAuthContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.xml.bind.UnmarshalException;
+import jakarta.xml.ws.WebServiceException;
 
 public class PipeHelper extends BaseAuthenticationService {
 
@@ -254,8 +252,8 @@ public class PipeHelper extends BaseAuthenticationService {
                         }
                     }
                 }
-
             }
+
             if (targetMethod != null) {
                 if (ejbDelegate != null) {
                     try {
@@ -308,8 +306,7 @@ public class PipeHelper extends BaseAuthenticationService {
         return (wsdlModel == null ? "unknown" : wsdlModel.getName());
     }
 
-    // always returns response with embedded fault
-    // public static Packet makeFaultResponse(Packet response, Throwable t) {
+    // Always returns response with embedded fault
     public Packet makeFaultResponse(Packet response, Throwable t) {
         // wrap throwable in WebServiceException, if necessary
         if (!(t instanceof WebServiceException)) {
@@ -338,10 +335,11 @@ public class PipeHelper extends BaseAuthenticationService {
                 twoWay = requestMessage.isOneWay(wsdlModel) ? false : true;
             }
         }
+
         return twoWay;
     }
 
-    // returns empty response if request is determined to be one-way
+    // Returns empty response if request is determined to be one-way
     public Packet getFaultResponse(Packet request, Packet response, Throwable t) {
         boolean twoWay = true;
         try {
@@ -360,32 +358,6 @@ public class PipeHelper extends BaseAuthenticationService {
     @Override
     public void disable() {
         listenerWrapper.disableWithRefCount();
-    }
-
-    // TODO
-    // @Override
-    protected HandlerContext getHandlerContext(Map map) {
-        String realmName = null;
-
-        WebServiceEndpoint wSE = (WebServiceEndpoint) map.get(SERVICE_ENDPOINT);
-        if (wSE != null) {
-            Application app = wSE.getBundleDescriptor().getApplication();
-            if (app != null) {
-                realmName = app.getRealm();
-            }
-            if (realmName == null) {
-                realmName = wSE.getRealm();
-            }
-        }
-
-        final String fRealmName = realmName;
-        return new HandlerContext() {
-
-            @Override
-            public String getRealmName() {
-                return fRealmName;
-            }
-        };
     }
 
     private boolean processSunDeploymentDescriptor() {
@@ -503,7 +475,7 @@ public class PipeHelper extends BaseAuthenticationService {
         String clientModuleID = "#default-client-context#";
 
         if (serviceReferenceDescriptor != null) {
-            ModuleDescriptor moduleDescriptor = null;
+            ModuleDescriptor<?> moduleDescriptor = null;
             BundleDescriptor bundleDescriptor = serviceReferenceDescriptor.getBundleDescriptor();
 
             if (bundleDescriptor != null) {
@@ -525,22 +497,22 @@ public class PipeHelper extends BaseAuthenticationService {
         return clientModuleID;
     }
 
-    private static void addModel(MessageInfo info, Map map) {
+    private static void addModel(MessageInfo messageInfo, Map<String, Object> map) {
         Object model = map.get(WSDL_MODEL);
         if (model != null) {
-            info.getMap().put(WSDL_MODEL, model);
+            messageInfo.getMap().put(WSDL_MODEL, model);
         }
     }
 
-    private static void addPolicy(MessageInfo info, Map map) {
-        Object pol = map.get(POLICY);
-        if (pol != null) {
-            info.getMap().put(POLICY, pol);
+    private static void addPolicy(MessageInfo messageInfo, Map<String, Object> map) {
+        Object policy = map.get(POLICY);
+        if (policy != null) {
+            messageInfo.getMap().put(POLICY, policy);
         }
     }
 
     private String ejbName() {
-        WebServiceEndpoint wSE = (WebServiceEndpoint) getProperty(SERVICE_ENDPOINT);
-        return (wSE == null ? "unknown" : wSE.getEjbComponentImpl().getName());
+        WebServiceEndpoint webServiceEndpoint = (WebServiceEndpoint) getProperty(SERVICE_ENDPOINT);
+        return webServiceEndpoint == null ? "unknown" : webServiceEndpoint.getEjbComponentImpl().getName();
     }
 }

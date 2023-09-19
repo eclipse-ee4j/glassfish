@@ -33,9 +33,8 @@ public class ContextInitializedTestServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest httpServletRequest,
                          HttpServletResponse httpServletResponse) throws ServletException, IOException {
-        PrintWriter out = httpServletResponse.getWriter();
-        out.println(LABEL_CONTEXT_INITIALIZED_COUNTER + ":" + ApplicationStatus.contextInitializedCounter);
-        out.flush();
-        out.close();
+        try (PrintWriter out = httpServletResponse.getWriter()) {
+            out.println(LABEL_CONTEXT_INITIALIZED_COUNTER + ":" + ApplicationStatus.contextInitializedCounter);
+        }
     }
 }

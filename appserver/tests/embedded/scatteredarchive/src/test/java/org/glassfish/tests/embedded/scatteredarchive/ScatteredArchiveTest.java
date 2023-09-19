@@ -166,7 +166,7 @@ public class ScatteredArchiveTest {
         // Deploy archive
         Deployer deployer = glassfish.getDeployer();
         String appname = deployer.deploy(warURI);
-        System.out.println("Deployed [" + appname + "]");
+        logger.log(INFO, "Deployed [" + appname + "]");
         Assertions.assertEquals(appname, ARCHIVE_NAME);
 
         get("http://localhost:8080/satest/" + ContextInitializedTestServlet.class.getSimpleName(),
@@ -198,9 +198,10 @@ public class ScatteredArchiveTest {
     private List<String> getLinesFromUrl(URL url) throws Exception {
         URLConnection yc = url.openConnection();
         logger.log(DEBUG, "\nURLConnection [" + yc + "] : ");
-        BufferedReader in = new BufferedReader(new InputStreamReader(
-                yc.getInputStream()));
-        return in.lines().collect(toList());
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(
+                yc.getInputStream()))) {
+            return in.lines().collect(toList());
+        }
     }
 
     void printContents(URI jarURI) throws IOException {

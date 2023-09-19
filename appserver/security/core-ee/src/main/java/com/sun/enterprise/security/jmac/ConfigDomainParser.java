@@ -56,8 +56,8 @@ public class ConfigDomainParser implements ConfigParser {
     private static final Pattern PROPERTY_PATTERN = Pattern.compile("\\$\\{\\{(.*?)}}|\\$\\{(.*?)}");
 
     // The authentication modules per layer (SOAP or Servlet)
-    private Map<String, AuthModulesLayerConfig>  authModuleLayers = new HashMap<>();
-    private Set<String> layersWithDefault = new HashSet<>();
+    private final Map<String, AuthModulesLayerConfig>  authModuleLayers = new HashMap<>();
+    private final Set<String> layersWithDefault = new HashSet<>();
 
     public ConfigDomainParser() {
     }

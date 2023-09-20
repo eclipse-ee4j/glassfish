@@ -1,5 +1,6 @@
 <!--
 
+    Copyright (c) 2023 Contributors to the Eclipse Foundation.
     Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -35,7 +36,7 @@
                 getUIComponent(clientId="$pageSession{tableRowGroupId}", component=>$attribute{tableRowGroup});
                 getSelectedSingleMapRows(TableRowGroup="$attribute{tableRowGroup}" selectedRows=>$attribute{selectedRows});
                 gf.undeploy(selectedRows="${selectedRows}" );
-                gf.redirect(page="#{listPageLink}");
+                gf.navigate(page="#{listPageLink}");
             />
          </sun:button>
         <sun:button id="button2" text="$resource{i18n.button.Enable}" rendered="#{pageSession.onlyDASExist}" disabled="#{true}" primary="#{false}"

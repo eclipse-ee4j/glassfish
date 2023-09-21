@@ -274,12 +274,10 @@ class ConfigFile extends AuthConfig {
             final String finalClassName = className;
             final ClassLoader finalLoader = AuthConfig.getClassLoader();
 
-            return java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction<ConfigParser>() {
-                @Override
-                public ConfigParser run() throws Exception {
-                    return (ConfigParser) Class.forName(finalClassName, true, finalLoader).newInstance();
-                }
-            });
+            PrivilegedExceptionAction<ConfigParser> action = () -> (ConfigParser) Class.forName(finalClassName, true, finalLoader).getDeclaredConstructor().newInstance();
+
+            return AccessController.doPrivileged(action);
+
         } catch (java.security.PrivilegedActionException pae) {
             IOException iex = new IOException(pae.getException().toString());
             iex.initCause(pae.getException());

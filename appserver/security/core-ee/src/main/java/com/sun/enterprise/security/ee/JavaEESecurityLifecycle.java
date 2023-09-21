@@ -88,12 +88,12 @@ public class JavaEESecurityLifecycle implements ContainerSecurityLifecycle, Post
 
         String defaultProvidersString = null;
         WebServicesDelegate delegate = Globals.get(WebServicesDelegate.class);
-        if (delegate != null) {
+        if (delegate == null) {
+            defaultProvidersString = GFServerConfigProvider.class.getName();
+        } else {
             // NOTE: Order matters here. Providers for the same auth layer (HttpServlet or SOAP) will be overwritten
             //       by ones that appear later in this string without warning.
             defaultProvidersString = delegate.getDefaultWebServicesProvider() + " " + GFServerConfigProvider.class.getName();
-        } else {
-            defaultProvidersString = GFServerConfigProvider.class.getName();
         }
 
         Security.setProperty(DEFAULT_FACTORY_DEFAULT_PROVIDERS, defaultProvidersString);

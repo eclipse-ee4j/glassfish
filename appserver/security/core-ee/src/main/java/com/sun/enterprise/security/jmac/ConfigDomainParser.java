@@ -213,7 +213,7 @@ public class ConfigDomainParser implements ConfigParser {
                 try {
                     options.put(property.getName(), expand(property.getValue()));
                 } catch (IllegalStateException ee) {
-                    // log warning and give the provider a chance to
+                    // log and give the provider a chance to
                     // interpret value itself.
                     _logger.log(FINE, "jmac.unexpandedproperty");
                     options.put(property.getName(), property.getValue());

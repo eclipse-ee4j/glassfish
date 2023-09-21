@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,6 +20,10 @@ package com.sun.enterprise.security.appclient;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.util.regex.Matcher.quoteReplacement;
 
+import com.sun.enterprise.security.common.Util;
+import jakarta.security.auth.message.MessagePolicy;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -33,7 +37,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.glassfish.appclient.client.acc.config.ClientContainer;
 import org.glassfish.appclient.client.acc.config.MessageSecurityConfig;
 import org.glassfish.appclient.client.acc.config.Property;
@@ -46,19 +49,13 @@ import org.glassfish.epicyro.data.AuthModuleConfig;
 import org.glassfish.epicyro.data.AuthModulesLayerConfig;
 import org.glassfish.internal.api.Globals;
 
-import com.sun.enterprise.security.common.Util;
-
-import jakarta.security.auth.message.MessagePolicy;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-
 /**
  * Parser for message-security-config in glassfish-acc.xml
  */
 public class ConfigXMLParser implements ConfigParser {
     private static final Logger LOG = System.getLogger(ConfigXMLParser.class.getName());
 
-    private static Pattern PROPERTY_PATTERN = Pattern.compile("\\$\\{\\{(.*?)}}|\\$\\{(.*?)}");
+    private static final Pattern PROPERTY_PATTERN = Pattern.compile("\\$\\{\\{(.*?)}}|\\$\\{(.*?)}");
 
     // configuration info
     private final Map<String, AuthModulesLayerConfig> authModuleLayers = new HashMap<>();

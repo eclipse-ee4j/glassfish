@@ -154,9 +154,7 @@ public class ClientSecurityPipe extends AbstractFilterPipeImpl implements Secure
         Packet response;
 
         if (status == FAILURE) {
-            if (_logger.isLoggable(FINE)) {
-                _logger.log(FINE, "ws.status_secure_request", status);
-            }
+            _logger.log(FINE, "ws.status_secure_request", status);
             response = info.getResponsePacket();
         } else {
             response = processSecureRequest(info, clientAuthContext, clientSubject);
@@ -179,7 +177,7 @@ public class ClientSecurityPipe extends AbstractFilterPipeImpl implements Secure
                 clientAuthContext.cleanSubject(info, clientSubject);
             }
         } catch (Exception ex) {
-            // ignore exceptions
+            _logger.log(FINE, "Exception when pre-destroying the client security pipe", ex);
         }
 
         helper.disable();

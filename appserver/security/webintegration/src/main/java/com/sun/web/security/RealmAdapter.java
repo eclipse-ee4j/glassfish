@@ -1409,8 +1409,8 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
             // Must have a caller to establish non-default security context
             if (caller != null) {
 
-                // Convert Eleos representation of the Caller Principal / Groups to the existing
-                // GlassFish one. A future version of this code may use the Eleos one everywhere directly.
+                // Convert Epicyro representation of the Caller Principal / Groups to the existing
+                // GlassFish one. A future version of this code may use the Epicyro one everywhere directly.
                 subject = new Subject();
 
                 // See if there's a Subject stored in the session that contain all relevant principals and

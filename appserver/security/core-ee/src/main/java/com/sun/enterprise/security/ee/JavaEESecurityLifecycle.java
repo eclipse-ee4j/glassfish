@@ -106,7 +106,7 @@ public class JavaEESecurityLifecycle implements ContainerSecurityLifecycle, Post
                        AuthMessagePolicy.getMessageSecurityBinding("SOAP", properties),
                        authContextId, true);
 
-        Provider provider = new Provider("EleosProvider", "1.0", "") {
+        Provider provider = new Provider("EpicyroProvider", "1.0", "") {
             private static final long serialVersionUID = 1L;
         };
         provider.put("authContextIdGenerator", authContextIdGenerator);

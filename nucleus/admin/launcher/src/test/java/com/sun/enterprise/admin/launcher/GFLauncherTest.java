@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -129,7 +129,7 @@ public class GFLauncherTest {
         info.setDomainName("baddomain");
         GFLauncherException e = assertThrows(GFLauncherException.class, launcher::launch);
         assertEquals("Fatal Error encountered during launch: \"Xml Parser Error: javax.xml.stream.XMLStreamException:"
-            + " ParseError at [row,col]:[62,7]\n"
+            + " ParseError at [row,col]:[57,7]\n"
             + "Message: The element type \"system-property\" must be terminated by the matching"
             + " end-tag \"</system-property>\".", e.getMessage());
     }

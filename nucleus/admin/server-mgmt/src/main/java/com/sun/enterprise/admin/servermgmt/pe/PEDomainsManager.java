@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,19 @@
 
 package com.sun.enterprise.admin.servermgmt.pe;
 
-//import com.sun.enterprise.admin.servermgmt.launch.LaunchConstants;
-import com.sun.enterprise.admin.servermgmt.*;
+import com.sun.enterprise.admin.servermgmt.DomainConfig;
+import com.sun.enterprise.admin.servermgmt.DomainException;
+import com.sun.enterprise.admin.servermgmt.DomainsManager;
+import com.sun.enterprise.admin.servermgmt.RepositoryException;
+import com.sun.enterprise.admin.servermgmt.RepositoryManager;
 import com.sun.enterprise.admin.util.TokenValueSet;
 import com.sun.enterprise.util.i18n.StringManager;
+
 import java.io.File;
 import java.util.BitSet;
 
 public class PEDomainsManager extends RepositoryManager implements DomainsManager {
+
     /**
      * i18n strings manager object
      */
@@ -38,8 +44,8 @@ public class PEDomainsManager extends RepositoryManager implements DomainsManage
         super();
     }
 
-    //PE does not require that an admin user / password is available at start-domain time.
-    //SE/SEE does require it.
+    // PE does not require that an admin user / password is available at start-domain time.
+    // SE/SEE does require it.
     @Override
     public BitSet getDomainFlags() {
         BitSet bs = new BitSet();
@@ -73,18 +79,6 @@ public class PEDomainsManager extends RepositoryManager implements DomainsManage
         try {
             validateMasterPassword(domainConfig, getMasterPasswordClear(domainConfig));
         } catch (RepositoryException ex) {
-            throw new DomainException(ex);
-        }
-    }
-
-    /**
-     */
-    protected void createJBIInstance(String instanceName, DomainConfig domainConfig) throws DomainException {
-        try {
-            getFileLayout(domainConfig).createJBIDomainDirectories();
-            super.createJBIInstance(instanceName, domainConfig);
-
-        } catch (Exception ex) {
             throw new DomainException(ex);
         }
     }

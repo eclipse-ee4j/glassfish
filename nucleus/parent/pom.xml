@@ -844,7 +844,7 @@
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
                     <artifactId>glassfishbuild-maven-plugin</artifactId>
-                    <version>4.0.0-SNAPSHOT</version>
+                    <version>4.0.0-M1</version>
                     <!-- Adds support for glassfish-jar and it's customized lifecycle-->
                     <extensions>true</extensions>
                 </plugin>

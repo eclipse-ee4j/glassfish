@@ -41,6 +41,5 @@
         <module>webservices.security</module>
         <module>ejb.security</module>
         <module>appclient.security</module>
-        <module>jaspic-provider-framework</module>
   </modules>
 </project>

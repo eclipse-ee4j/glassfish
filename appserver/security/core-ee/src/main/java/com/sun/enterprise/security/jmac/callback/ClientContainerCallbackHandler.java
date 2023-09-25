@@ -48,12 +48,12 @@ import jakarta.security.auth.message.callback.TrustStoreCallback;
  * @author Harpreet Singh
  * @author Shing Wai Chan
  */
-final class ClientContainerCallbackHandler extends BaseContainerCallbackHandler {
+public final class ClientContainerCallbackHandler extends GlassFishBaseCallbackHandler {
 
     private static final String LOGIN_NAME = "j2eelogin.name";
     private static final String LOGIN_PASSWORD = "j2eelogin.password";
 
-    ClientContainerCallbackHandler() {
+    public ClientContainerCallbackHandler() {
     }
 
     // TODO:V3 trying to read system properties here

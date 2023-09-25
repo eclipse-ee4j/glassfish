@@ -25,14 +25,15 @@ import javax.swing.JComponent;
  * @author tjquinn
  */
 public interface CallbackBinding<C extends Callback> {
-    public void finish();
-    public void setCallback(C callback);
+    void finish();
+
+    void setCallback(C callback);
 
     public interface GUI<C extends Callback> extends CallbackBinding<C> {
-        public JComponent getComponent();
+        JComponent getComponent();
     }
 
     public interface Text<C extends Callback> extends CallbackBinding<C> {
-        public void run();
+        void run();
     }
 }

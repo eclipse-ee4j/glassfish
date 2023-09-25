@@ -16,214 +16,214 @@
 
 package com.sun.enterprise.security.webservices;
 
+import static com.sun.enterprise.security.webservices.LogUtils.ERROR_REQUEST_SECURING;
+import static com.sun.enterprise.security.webservices.PipeConstants.CLIENT_SUBJECT;
+import static com.sun.enterprise.security.webservices.PipeConstants.SECURITY_PIPE;
+import static com.sun.enterprise.security.webservices.PipeConstants.SECURITY_TOKEN;
+import static com.sun.enterprise.security.webservices.PipeConstants.SOAP_LAYER;
+import static com.sun.enterprise.security.webservices.PipeConstants.WSDL_MODEL;
+import static com.sun.enterprise.security.webservices.PipeConstants.WSDL_SERVICE;
+import static jakarta.security.auth.message.AuthStatus.FAILURE;
+import static jakarta.security.auth.message.AuthStatus.SEND_CONTINUE;
+import static jakarta.security.auth.message.AuthStatus.SEND_SUCCESS;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.security.auth.Subject;
-import jakarta.security.auth.message.config.*;
-import jakarta.security.auth.message.AuthStatus;
-import jakarta.xml.ws.WebServiceException;
 
-import com.sun.enterprise.security.jmac.provider.PacketMessageInfo;
+import com.sun.enterprise.security.jmac.callback.ClientContainerCallbackHandler;
 import com.sun.enterprise.security.jmac.provider.PacketMapMessageInfo;
+import com.sun.enterprise.security.jmac.provider.PacketMessageInfo;
 import com.sun.enterprise.security.jmac.provider.config.PipeHelper;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-
+import com.sun.xml.ws.api.message.Message;
+import com.sun.xml.ws.api.message.Packet;
 import com.sun.xml.ws.api.model.wsdl.WSDLPort;
 import com.sun.xml.ws.api.pipe.Pipe;
 import com.sun.xml.ws.api.pipe.PipeCloner;
 import com.sun.xml.ws.api.pipe.helper.AbstractFilterPipeImpl;
-import com.sun.xml.ws.api.message.Packet;
-import com.sun.xml.ws.api.message.Message;
-
 import com.sun.xml.ws.security.secconv.SecureConversationInitiator;
 import com.sun.xml.ws.security.secconv.WSSecureConversationException;
+
+import jakarta.security.auth.message.AuthStatus;
+import jakarta.security.auth.message.config.ClientAuthContext;
 import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.ws.Endpoint;
+import jakarta.xml.ws.WebServiceException;
 
 /**
  * This pipe is used to do client side security for app server
  */
 public class ClientSecurityPipe extends AbstractFilterPipeImpl implements SecureConversationInitiator {
 
-    protected PipeHelper helper;
-
     protected static final Logger _logger = LogUtils.getLogger();
-
     protected static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ClientSecurityPipe.class);
-
     private static final String WSIT_CLIENT_AUTH_CONTEXT = "com.sun.xml.wss.provider.wsit.WSITClientAuthContext";
 
-    public ClientSecurityPipe(Map props, Pipe next) {
+    protected PipeHelper helper;
+
+    public ClientSecurityPipe(Map<String, Object> properties, Pipe next) {
         super(next);
 
-        props.put(PipeConstants.SECURITY_PIPE, this);
+        properties.put(SECURITY_PIPE, this);
 
-        WSDLPort wsdlModel = (WSDLPort) props.get(PipeConstants.WSDL_MODEL);
+        WSDLPort wsdlModel = (WSDLPort) properties.get(WSDL_MODEL);
         if (wsdlModel != null) {
-            props.put(PipeConstants.WSDL_SERVICE, wsdlModel.getOwner().getName());
+            properties.put(WSDL_SERVICE, wsdlModel.getOwner().getName());
         }
-        this.helper = new PipeHelper(PipeConstants.SOAP_LAYER, props, null);
 
+        this.helper = new PipeHelper(SOAP_LAYER, properties, new ClientContainerCallbackHandler());
     }
-
 
     protected ClientSecurityPipe(ClientSecurityPipe that, PipeCloner cloner) {
         super(that, cloner);
         this.helper = that.helper;
     }
 
-
-    @Override
-    public void preDestroy() {
-        // Give the AuthContext a chance to cleanup
-        // create a dummy request packet
-        try {
-            Packet request = new Packet();
-            PacketMessageInfo info = new PacketMapMessageInfo(request, new Packet());
-            Subject subj = getClientSubject(request);
-            ClientAuthContext cAC = helper.getClientAuthContext(info, subj);
-            if (cAC != null && WSIT_CLIENT_AUTH_CONTEXT.equals(cAC.getClass().getName())) {
-                cAC.cleanSubject(info, subj);
-            }
-        } catch (Exception ex) {
-            // ignore exceptions
-        }
-        helper.disable();
-    }
-
-
     @Override
     public final Pipe copy(PipeCloner cloner) {
         return new ClientSecurityPipe(this, cloner);
     }
 
-
     public PipeHelper getPipeHelper() {
         return helper;
     }
-
-
-    @Override
-    public Packet process(Packet request) {
-        /*
-         * XXX should there be code like the following?
-         * if(isHttpBinding) {
-         * return next.process(request);
-         * }
-         */
-
-        PacketMessageInfo info = new PacketMapMessageInfo(request, new Packet());
-        info.getMap().put(jakarta.xml.ws.Endpoint.WSDL_SERVICE, helper.getProperty(PipeConstants.WSDL_SERVICE));
-
-        AuthStatus status = AuthStatus.SEND_SUCCESS;
-        Subject clientSubject = getClientSubject(request);
-        ClientAuthContext cAC = null;
-        try {
-            cAC = helper.getClientAuthContext(info, clientSubject);
-            if (cAC != null) {
-                // proceed to process message sescurity
-                status = cAC.secureRequest(info, clientSubject);
-            }
-        } catch (Exception e) {
-            _logger.log(Level.SEVERE, LogUtils.ERROR_REQUEST_SECURING, e);
-            throw new WebServiceException(localStrings.getLocalString("enterprise.webservice.cantSecureRequst",
-                "Cannot secure request for {0}", new Object[] {helper.getModelName()}), e);
-        }
-
-        Packet response;
-
-        if (status == AuthStatus.FAILURE) {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "ws.status_secure_request", status);
-            }
-            response = info.getResponsePacket();
-        } else {
-            response = processSecureRequest(info, cAC, clientSubject);
-        }
-
-        // may return a security fault even if the MEP was one-way
-        return response;
-    }
-
-
-    private Packet processSecureRequest(PacketMessageInfo info, ClientAuthContext cAC, Subject clientSubject)
-        throws WebServiceException {
-        // send the request
-        Packet response = next.process(info.getRequestPacket());
-
-        // check for response
-        Message m = response.getMessage();
-        if (m != null) {
-            if (cAC != null) {
-                AuthStatus status;
-                info.setResponsePacket(response);
-                try {
-                    status = cAC.validateResponse(info, clientSubject, null);
-                } catch (Exception e) {
-                    throw new WebServiceException(localStrings.getLocalString("enterprise.webservice.cantValidateResponse",
-                            "Cannot validate response for {0}",
-                            new Object[]{helper.getModelName()}), e);
-                }
-                if (status == AuthStatus.SEND_CONTINUE) {
-                    response = processSecureRequest(info, cAC, clientSubject);
-                } else {
-                    response = info.getResponsePacket();
-                }
-            }
-        }
-        return response;
-    }
-
-
-    private static Subject getClientSubject(Packet p) {
-        Subject s = null;
-        if (p != null) {
-            s = (Subject) p.invocationProperties.get(PipeConstants.CLIENT_SUBJECT);
-        }
-        if (s == null) {
-            s = PipeHelper.getClientSubject();
-            if (p != null) {
-                p.invocationProperties.put(PipeConstants.CLIENT_SUBJECT, s);
-            }
-        }
-        return s;
-    }
-
 
     @Override
     public JAXBElement startSecureConversation(Packet packet) throws WSSecureConversationException {
         PacketMessageInfo info = new PacketMapMessageInfo(packet, new Packet());
         JAXBElement token = null;
+
         try {
-            // gets the subject from the packet (puts one there if not found)
+            // Gets the subject from the packet (puts one there if not found)
             Subject clientSubject = getClientSubject(packet);
 
-            // put MessageInfo in properties map, since MessageInfo
-            // is not passed to getAuthContext, key idicates function
-            HashMap map = new HashMap();
-            map.put(PipeConstants.SECURITY_TOKEN, info);
+            // Put MessageInfo in properties map, since MessageInfo
+            // is not passed to getAuthContext, key indicates function
+            Map<String, Object> map = new HashMap<>();
+            map.put(SECURITY_TOKEN, info);
 
             helper.getSessionToken(map, info, clientSubject);
 
-            // helper returns token in map of msgInfo, using same key
-            Object o = info.getMap().get(PipeConstants.SECURITY_TOKEN);
+            // Helper returns token in map of msgInfo, using same key
+            Object securityToken = info.getMap().get(SECURITY_TOKEN);
 
-            if (o != null && o instanceof JAXBElement) {
-                token = (JAXBElement) o;
+            if (securityToken != null && securityToken instanceof JAXBElement) {
+                token = (JAXBElement) securityToken;
             }
 
         } catch (Exception e) {
-
             if (e instanceof WSSecureConversationException) {
                 throw (WSSecureConversationException) e;
-            } else {
-                throw new WSSecureConversationException("Secure Conversation failure: ", e);
             }
+
+            throw new WSSecureConversationException("Secure Conversation failure: ", e);
         }
 
         return token;
     }
+
+    @Override
+    public Packet process(Packet request) {
+        /*
+         * XXX should there be code like the following? if(isHttpBinding) { return next.process(request); }
+         */
+
+        PacketMessageInfo info = new PacketMapMessageInfo(request, new Packet());
+        info.getMap().put(Endpoint.WSDL_SERVICE, helper.getProperty(PipeConstants.WSDL_SERVICE));
+
+        AuthStatus status = SEND_SUCCESS;
+        Subject clientSubject = getClientSubject(request);
+        ClientAuthContext clientAuthContext = null;
+        try {
+            clientAuthContext = helper.getClientAuthContext(info, clientSubject);
+            if (clientAuthContext != null) {
+                // Proceed to process message security
+                status = clientAuthContext.secureRequest(info, clientSubject);
+            }
+        } catch (Exception e) {
+            _logger.log(SEVERE, ERROR_REQUEST_SECURING, e);
+            throw new WebServiceException(localStrings.getLocalString("enterprise.webservice.cantSecureRequst",
+                    "Cannot secure request for {0}", new Object[] { helper.getModelName() }), e);
+        }
+
+        Packet response;
+
+        if (status == FAILURE) {
+            _logger.log(FINE, "ws.status_secure_request", status);
+            response = info.getResponsePacket();
+        } else {
+            response = processSecureRequest(info, clientAuthContext, clientSubject);
+        }
+
+        // May return a security fault even if the MEP was one-way
+        return response;
+    }
+
+    @Override
+    public void preDestroy() {
+        // Give the AuthContext a chance to cleanup and create a dummy request packet
+        try {
+            Packet request = new Packet();
+            PacketMessageInfo info = new PacketMapMessageInfo(request, new Packet());
+            Subject clientSubject = getClientSubject(request);
+
+            ClientAuthContext clientAuthContext = helper.getClientAuthContext(info, clientSubject);
+            if (clientAuthContext != null && WSIT_CLIENT_AUTH_CONTEXT.equals(clientAuthContext.getClass().getName())) {
+                clientAuthContext.cleanSubject(info, clientSubject);
+            }
+        } catch (Exception ex) {
+            _logger.log(FINE, "Exception when pre-destroying the client security pipe", ex);
+        }
+
+        helper.disable();
+    }
+
+    private Packet processSecureRequest(PacketMessageInfo info, ClientAuthContext clientAuthContext, Subject clientSubject) throws WebServiceException {
+        // Send the request
+        Packet response = next.process(info.getRequestPacket());
+
+        // Check for response
+        Message responseMessage = response.getMessage();
+        if (responseMessage != null) {
+            if (clientAuthContext != null) {
+                AuthStatus status;
+                info.setResponsePacket(response);
+                try {
+                    status = clientAuthContext.validateResponse(info, clientSubject, null);
+                } catch (Exception e) {
+                    throw new WebServiceException(localStrings.getLocalString("enterprise.webservice.cantValidateResponse",
+                            "Cannot validate response for {0}", new Object[] { helper.getModelName() }), e);
+                }
+                if (status == SEND_CONTINUE) {
+                    response = processSecureRequest(info, clientAuthContext, clientSubject);
+                } else {
+                    response = info.getResponsePacket();
+                }
+            }
+        }
+
+        return response;
+    }
+
+    private static Subject getClientSubject(Packet packet) {
+        Subject subject = null;
+        if (packet != null) {
+            subject = (Subject) packet.invocationProperties.get(CLIENT_SUBJECT);
+        }
+
+        if (subject == null) {
+            subject = PipeHelper.getClientSubject();
+            if (packet != null) {
+                packet.invocationProperties.put(CLIENT_SUBJECT, subject);
+            }
+        }
+
+        return subject;
+    }
+
 }

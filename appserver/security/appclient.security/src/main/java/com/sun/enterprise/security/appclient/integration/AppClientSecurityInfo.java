@@ -27,8 +27,7 @@ import org.glassfish.appclient.client.acc.config.TargetServer;
 import org.jvnet.hk2.annotations.Contract;
 
 /**
- * The Interface usable by AppClient Container for configuring the
- * Security Runtime.
+ * The Interface usable by AppClient Container for configuring the Security Runtime.
  *
  * @author Kumar Jayanti
  */
@@ -39,26 +38,17 @@ public interface AppClientSecurityInfo {
         USERNAME_PASSWORD, CERTIFICATE, ALL
     }
 
-
     /**
-     * Initialize Security Runtime for the AppContainerr (Stores, SecurityManager, JSR 196 etc)
+     * Initialize Security Runtime for the AppContainer (Stores, SecurityManager, Jakarta Authentication etc)
      *
      * @param tServers the Appclient Configuration Object
      * @param handler the CallbackHandler
-     * @param appclientCredType The CredentialType of the Appclient
      * @param username the static username if any was configured
      * @param password the static password if any was configured
      * @Param isJWS set to true if it is Java WebStart client
      * @Param useGUIAuth flag when set to true indicates the use of GUI Authentication
      */
-    void initializeSecurity(
-            List<TargetServer> tServers,
-            List<MessageSecurityConfig> msgSecConfigs,
-            CallbackHandler handler,
-            CredentialType appclientCredType,
-            String username, char[] password,
-            boolean isJWS, boolean useGUIAuth);
-
+    void initializeSecurity(List<TargetServer> tServers, List<MessageSecurityConfig> msgSecConfigs, CallbackHandler handler, String username, char[] password, boolean isJWS, boolean useGUIAuth);
 
     /**
      * @param type the credential type
@@ -81,6 +71,7 @@ public interface AppClientSecurityInfo {
 
     /**
      * Check if the Login attempt was cancelled.
+     *
      * @return boolean indicating whether the login attempt was cancelled.
      */
     boolean isLoginCancelled();

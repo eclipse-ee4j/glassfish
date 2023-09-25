@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation.
+ * Copyright 2021, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,14 +31,29 @@ import com.sun.enterprise.security.auth.digest.impl.DigestParameterGenerator;
 import com.sun.enterprise.security.auth.digest.impl.HttpAlgorithmParameterImpl;
 import com.sun.enterprise.security.auth.digest.impl.NestedDigestAlgoParamImpl;
 import com.sun.enterprise.security.auth.login.DigestCredentials;
+import com.sun.enterprise.security.auth.login.DistinguishedPrincipalCredential;
 import com.sun.enterprise.security.auth.login.LoginContextDriver;
+import com.sun.enterprise.security.auth.realm.certificate.CertificateRealm;
+import com.sun.enterprise.security.authorize.PolicyContextHandlerImpl;
+import com.sun.enterprise.security.common.AppservAccessController;
 import com.sun.enterprise.security.integration.RealmInitializer;
-import com.sun.enterprise.security.jmac.config.HttpServletConstants;
-import com.sun.enterprise.security.jmac.config.HttpServletHelper;
+import com.sun.enterprise.security.jmac.AuthMessagePolicy;
+import com.sun.enterprise.security.jmac.ConfigDomainParser;
+import com.sun.enterprise.security.jmac.callback.ContainerCallbackHandler;
+import com.sun.enterprise.security.jmac.callback.ServerContainerCallbackHandler;
+
+import org.glassfish.epicyro.config.helper.Caller;
+import org.glassfish.epicyro.config.helper.CallerPrincipal;
+import org.glassfish.epicyro.config.helper.HttpServletConstants;
+import org.glassfish.epicyro.config.helper.PriviledgedAccessController;
+import org.glassfish.epicyro.services.BaseAuthenticationService;
+import org.glassfish.epicyro.services.DefaultAuthenticationService;
+
 import com.sun.enterprise.security.web.integration.WebPrincipal;
 import com.sun.enterprise.security.web.integration.WebSecurityManager;
 import com.sun.enterprise.security.web.integration.WebSecurityManagerFactory;
 import com.sun.enterprise.util.net.NetUtils;
+import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -47,6 +62,7 @@ import jakarta.security.auth.message.AuthException;
 import jakarta.security.auth.message.AuthStatus;
 import jakarta.security.auth.message.MessageInfo;
 import jakarta.security.auth.message.config.ServerAuthContext;
+import jakarta.security.jacc.PolicyContext;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServlet;
@@ -54,6 +70,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -65,8 +82,10 @@ import java.security.Principal;
 import java.security.PrivilegedAction;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -77,6 +96,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.security.auth.Subject;
+import javax.security.auth.x500.X500Principal;
 
 import org.apache.catalina.Authenticator;
 import org.apache.catalina.Container;
@@ -100,24 +120,25 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.security.common.CNonceCache;
+import org.glassfish.security.common.Group;
 import org.glassfish.security.common.NonceInfo;
+import org.glassfish.security.common.UserNameAndPassword;
 import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.security.auth.digest.api.Constants.A1;
 import static com.sun.enterprise.security.auth.digest.impl.DigestParameterGenerator.HTTP_DIGEST;
+import static com.sun.enterprise.security.jmac.AuthMessagePolicy.WEB_BUNDLE;
 import static com.sun.enterprise.security.web.integration.WebSecurityManager.getContextID;
 import static com.sun.enterprise.util.Utility.isAnyNull;
 import static com.sun.enterprise.util.Utility.isEmpty;
+import static com.sun.logging.LogDomains.WEB_LOGGER;
 import static com.sun.web.security.WebSecurityResourceBundle.BUNDLE_NAME;
-import static com.sun.web.security.WebSecurityResourceBundle.MSG_FORBIDDEN;
-import static com.sun.web.security.WebSecurityResourceBundle.MSG_INVALID_REQUEST;
-import static com.sun.web.security.WebSecurityResourceBundle.MSG_MISSING_HOST_HEADER;
-import static com.sun.web.security.WebSecurityResourceBundle.MSG_NO_WEB_SECURITY_MGR;
 import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN;
 import static jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 import static jakarta.servlet.http.HttpServletResponse.SC_SERVICE_UNAVAILABLE;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyMap;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.INFO;
@@ -131,6 +152,12 @@ import static org.apache.catalina.ContainerEvent.BEFORE_LOGOUT;
 import static org.apache.catalina.ContainerEvent.BEFORE_POST_AUTHENTICATION;
 import static org.apache.catalina.Globals.WRAPPED_REQUEST;
 import static org.apache.catalina.Globals.WRAPPED_RESPONSE;
+import static org.glassfish.epicyro.config.helper.HttpServletConstants.POLICY_CONTEXT;
+import static org.glassfish.epicyro.config.helper.HttpServletConstants.REGISTER_SESSION;
+import static com.sun.web.security.WebSecurityResourceBundle.MSG_FORBIDDEN;
+import static com.sun.web.security.WebSecurityResourceBundle.MSG_INVALID_REQUEST;
+import static com.sun.web.security.WebSecurityResourceBundle.MSG_MISSING_HOST_HEADER;
+import static com.sun.web.security.WebSecurityResourceBundle.MSG_NO_WEB_SECURITY_MGR;
 
 /**
  * This is the realm adapter used to authenticate users and authorize access to web resources. The authenticate method
@@ -150,6 +177,8 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
     private static final Logger _logger = Logger.getLogger(RealmAdapter.class.getName(), BUNDLE_NAME);
     private static final ResourceBundle resourceBundle = _logger.getResourceBundle();
 
+    @Deprecated
+    private static final String REGISTER_WITH_AUTHENTICATOR = "com.sun.web.RealmAdapter.register";
     private static final String SERVER_AUTH_CONTEXT = "__jakarta.security.auth.message.ServerAuthContext";
     private static final String MESSAGE_INFO = "__jakarta.security.auth.message.MessageInfo";
     private static final WebSecurityDeployerProbeProvider websecurityProbeProvider = new WebSecurityDeployerProbeProvider();
@@ -195,7 +224,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
 
     private String moduleID;
     private boolean isSystemApp;
-    private HttpServletHelper helper;
+    private BaseAuthenticationService authenticationService;
 
     @Inject
     private ServerContext serverContext;
@@ -265,12 +294,12 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
      */
     @Override
     public boolean isSecurityExtensionEnabled(final ServletContext context) {
-        if (helper == null) {
-            initConfigHelper(context);
+        if (authenticationService == null) {
+            initAuthenticationService(context);
         }
 
         try {
-            return (helper.getServerAuthConfig() != null);
+            return (authenticationService.getServerAuthConfig() != null);
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -427,6 +456,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
             _logger.log(SEVERE, "Authentication passed, but authorization failed.", ex);
             ((HttpServletResponse) response.getResponse()).sendError(SC_SERVICE_UNAVAILABLE);
             response.setDetailMessage(resourceBundle.getString(MSG_FORBIDDEN));
+
             return AUTHENTICATED_NOT_AUTHORIZED;
         }
 
@@ -580,8 +610,8 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
      *
      * @param request Request we are processing
      * @param response Response we are creating
-     * @param constraints Security constraint we are enforcing
-     * @param context Context to which client of this class is attached.
+     * @param constraint Security constraint we are enforcing
+     * @param The Context to which client of this class is attached.
      *
      * @exception IOException if an input/output error occurs
      */
@@ -627,7 +657,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
         boolean result = false;
         ServerAuthContext serverAuthContext = null;
         try {
-            if (helper != null) {
+            if (authenticationService != null) {
                 HttpServletRequest httpServletRequest = (HttpServletRequest) request.getRequest();
                 MessageInfo messageInfo = (MessageInfo) httpServletRequest.getAttribute(MESSAGE_INFO);
                 if (messageInfo != null) {
@@ -647,7 +677,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
         } catch (AuthException ex) {
             throw new IOException(ex);
         } finally {
-            if (helper != null && serverAuthContext != null) {
+            if (authenticationService != null && serverAuthContext != null) {
                 if (request instanceof HttpRequestWrapper) {
                     request.removeNote(WRAPPED_REQUEST);
                 }
@@ -703,8 +733,8 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
     @Override
     public void destroy() {
         super.destroy();
-        if (helper != null) {
-            helper.disable();
+        if (authenticationService != null) {
+            authenticationService.disable();
         }
     }
 
@@ -744,7 +774,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
         boolean securityExtensionEnabled = isSecurityExtensionEnabled(httpRequest.getRequest().getServletContext());
         byte[] alreadyCalled = reentrancyStatus.get();
 
-        if (securityExtensionEnabled && helper != null && alreadyCalled[0] == 0) {
+        if (securityExtensionEnabled && authenticationService != null && alreadyCalled[0] == 0) {
             alreadyCalled[0] = 1;
 
             MessageInfo messageInfo = (MessageInfo) httpRequest.getRequest().getAttribute(MESSAGE_INFO);
@@ -755,7 +785,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
 
             messageInfo.getMap().put(HttpServletConstants.IS_MANDATORY, Boolean.TRUE.toString());
             try {
-                ServerAuthContext serverAuthContext = helper.getServerAuthContext(messageInfo, null);
+                ServerAuthContext serverAuthContext = authenticationService.getServerAuthContext(messageInfo, null);
                 if (serverAuthContext != null) {
                     /*
                      * Check for the default/server-generated/unauthenticated security context.
@@ -1013,29 +1043,6 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
 
     private void setSecurityContext(SecurityContext sc) {
         SecurityContext.setCurrent(sc);
-    }
-
-    /**
-     * Used to detect when the principals in the subject correspond to the default or "ANONYMOUS" principal, and therefore a
-     * null principal should be set in the HttpServletRequest.
-     *
-     * @param principalSet
-     * @return true whe a null principal is to be set.
-     */
-    private boolean principalSetContainsOnlyAnonymousPrincipal(Set<Principal> principalSet) {
-        boolean rvalue = false;
-        Principal defaultPrincipal = SecurityContext.getDefaultCallerPrincipal();
-        if (defaultPrincipal != null && principalSet != null) {
-            rvalue = principalSet.contains(defaultPrincipal);
-        }
-        if (rvalue) {
-            for (Principal element : principalSet) {
-                if (!element.equals(defaultPrincipal)) {
-                    return false;
-                }
-            }
-        }
-        return rvalue;
     }
 
     @Override
@@ -1310,12 +1317,35 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
 
     /**
      * This must be invoked after virtualServer is set.
+     * @throws IOException
      */
-    private HttpServletHelper getConfigHelper(final ServletContext servletContext) {
-        Map map = new HashMap();
-        map.put(HttpServletConstants.WEB_BUNDLE, webBundleDescriptor);
-        return new HttpServletHelper(getAppContextID(servletContext), map, null, // null handler
-                realmName, isSystemApp, defaultSystemProviderID);
+    private BaseAuthenticationService createAuthenticationService(final ServletContext servletContext) throws IOException {
+        Map<String, Object> properties = new HashMap<>();
+
+        String policyContextId = WebSecurityManager.getContextID(webBundleDescriptor);
+        if (policyContextId != null) {
+           properties.put(POLICY_CONTEXT, policyContextId);
+        }
+
+        // "authModuleId" (HttpServletSecurityProvider) is a GlassFish proprietary mechanism where a
+        // Jakarta Authentication module gets assigned an ID in the proprietary config of GlassFish (domain.xml).
+        // This ID is then used in glassfish-web.xml to indicate that a war wants to use that authentication module.
+        String authModuleId =
+            AuthMessagePolicy.getProviderID(
+                AuthMessagePolicy.getSunWebApp(Map.of(
+                        WEB_BUNDLE, webBundleDescriptor)));
+
+        if (authModuleId != null) {
+            properties.put("authModuleId", authModuleId);
+        }
+
+        String appContextId = getAppContextID(servletContext);
+
+        return new DefaultAuthenticationService(
+            appContextId,
+            properties,
+            new ConfigDomainParser(),
+            new ServerContainerCallbackHandler(realmName));
     }
 
     /**
@@ -1341,7 +1371,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
 
         MessageInfo messageInfo = new HttpMessageInfo(httpServletRequest, httpServletResponse);
 
-        boolean rvalue = false;
+        boolean isRequestValidated = false;
         boolean isMandatory = true;
         try {
             WebSecurityManager webSecurityManager = getWebSecurityManager(true);
@@ -1351,66 +1381,102 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
             if (isMandatory || calledFromAuthenticate) {
                 messageInfo.getMap().put(HttpServletConstants.IS_MANDATORY, Boolean.TRUE.toString());
             }
-            ServerAuthContext serverAuthContext = helper.getServerAuthContext(messageInfo, null); // null serviceSubject
+
+            // TODO: call validateRequest
+
+            ServerAuthContext serverAuthContext = authenticationService.getServerAuthContext(messageInfo, null); // null serviceSubject
             if (serverAuthContext == null) {
                 throw new AuthException("null ServerAuthContext");
             }
             AuthStatus authStatus = serverAuthContext.validateRequest(messageInfo, subject, null); // null serviceSubject
-            rvalue = AuthStatus.SUCCESS.equals(authStatus);
+            isRequestValidated = AuthStatus.SUCCESS.equals(authStatus);
 
-            if (rvalue) { // cache it only if validateRequest = true
+            if (isRequestValidated) { // cache it only if validateRequest = true
                 messageInfo.getMap().put(SERVER_AUTH_CONTEXT, serverAuthContext);
                 httpServletRequest.setAttribute(MESSAGE_INFO, messageInfo);
             }
         } catch (AuthException ae) {
-            _logger.log(FINE, "Jakarta Authentication: http msg authentication fail", ae);
+            _logger.log(SEVERE, "Jakarta Authentication: http msg authentication fail", ae);
             httpServletResponse.setStatus(SC_INTERNAL_SERVER_ERROR);
         } catch (RuntimeException e) {
             _logger.log(SEVERE , "Jakarta Authentication: Exception during validateRequest", e);
             httpServletResponse.sendError(SC_INTERNAL_SERVER_ERROR);
         }
 
-        if (rvalue) {
-            Set<Principal> principalSet = subject.getPrincipals();
-            // must be at least one new principal to establish
-            // non-default security context
-            if (principalSet != null && !principalSet.isEmpty() && !principalSetContainsOnlyAnonymousPrincipal(principalSet)) {
+        if (isRequestValidated) {
+            Caller caller = getCaller(subject);
 
-                SecurityContext ctx = new SecurityContext(subject);
-                SecurityContext.setCurrent(ctx);
-                // XXX assuming no null principal here
-                Principal principal = ctx.getCallerPrincipal();
-                WebPrincipal webPrincipal = new WebPrincipal(principal, ctx);
-                try {
-                    String authType = (String) messageInfo.getMap().get(HttpServletConstants.AUTH_TYPE);
-                    if (authType == null && config != null && config.getAuthMethod() != null) {
-                        authType = config.getAuthMethod();
+            // Must have a caller to establish non-default security context
+            if (caller != null) {
+
+                // Convert Epicyro representation of the Caller Principal / Groups to the existing
+                // GlassFish one. A future version of this code may use the Epicyro one everywhere directly.
+                subject = new Subject();
+
+                // See if there's a Subject stored in the session that contain all relevant principals and
+                // credentials for reuse, and the caller has indicated to take these.
+                Subject sessionSubject = reuseSessionSubject(caller);
+                if (sessionSubject != null) {
+                    // Copy principals, public credentials and private credentials from the Subject that lives in
+                    // the session to the receiving Subject.
+                    copySubject(subject, sessionSubject);
+                } else {
+                    Principal glassFishCallerPrincipal = getGlassFishCallerPrincipal(caller);
+
+                    toSubject(subject, glassFishCallerPrincipal);
+                    toSubjectCredential(subject, new DistinguishedPrincipalCredential(glassFishCallerPrincipal));
+
+                    for (String group : caller.getGroups()) {
+                        toSubject(subject, new Group(group));
                     }
 
-                    if (shouldRegister(messageInfo.getMap())) {
-                        AuthenticatorProxy proxy = new AuthenticatorProxy(authenticator, webPrincipal, authType);
-                        proxy.authenticate(request, response, config);
+                    if (!glassFishCallerPrincipal.equals(SecurityContext.getDefaultCallerPrincipal())) {
+
+                        // Give native GlassFish (realms, mostly) opportunity to add groups
+                        LoginContextDriver.jmacLogin(subject, glassFishCallerPrincipal, realmName);
+
+                        SecurityContext ctx = new SecurityContext(subject);
+                        SecurityContext.setCurrent(ctx);
+
+                        // XXX assuming no null principal here
+                        Principal principal = ctx.getCallerPrincipal();
+                        WebPrincipal webPrincipal = new WebPrincipal(principal, ctx);
+                        try {
+                            String authType = (String) messageInfo.getMap().get(HttpServletConstants.AUTH_TYPE);
+                            if (authType == null && config != null && config.getAuthMethod() != null) {
+                                authType = config.getAuthMethod();
+                            }
+
+                            if (shouldRegister(messageInfo.getMap())) {
+                                // Sets webPrincipal for the session and request
+                                new AuthenticatorProxy(authenticator, webPrincipal, authType)
+                                        .authenticate(request, response, config);
+                            } else {
+                                // Sets webPrincipal for the request only
+                                request.setAuthType(authType == null ? PROXY_AUTH_TYPE : authType);
+                                request.setUserPrincipal(webPrincipal);
+                            }
+                        } catch (LifecycleException le) {
+                            _logger.log(SEVERE, "[Web-Security] unable to register session", le);
+
+                        }
+
                     } else {
-                        request.setAuthType(authType == null ? PROXY_AUTH_TYPE : authType);
-                        request.setUserPrincipal(webPrincipal);
+                        // GLASSFISH-20930.Set null for the case when SAM does not
+                        // indicate that it needs the session
+                        if (((HttpServletRequest) messageInfo.getRequestMessage()).getUserPrincipal() != null) {
+                            request.setUserPrincipal(null);
+                            request.setAuthType(null);
+                        }
+
+                        if (isMandatory) {
+                            isRequestValidated = false;
+                        }
                     }
-                } catch (LifecycleException le) {
-                    _logger.log(SEVERE, "[Web-Security] unable to register session", le);
-
-                }
-            } else {
-                // GLASSFISH-20930.Set null for the case when SAM does not
-                // indicate that it needs the session
-                if (((HttpServletRequest) messageInfo.getRequestMessage()).getUserPrincipal() != null) {
-                    request.setUserPrincipal(null);
-                    request.setAuthType(null);
-                }
-
-                if (isMandatory) {
-                    rvalue = false;
                 }
             }
-            if (rvalue) {
+
+            if (isRequestValidated) {
                 HttpServletRequest newRequest = (HttpServletRequest) messageInfo.getRequestMessage();
                 if (newRequest != httpServletRequest) {
                     request.setNote(WRAPPED_REQUEST, new HttpRequestWrapper(request, newRequest));
@@ -1424,15 +1490,217 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
 
         }
 
-        return rvalue;
+        return isRequestValidated;
+    }
+
+    private Caller getCaller(Subject subject) {
+        Set<Caller> callers = subject.getPrincipals(Caller.class);
+        if (callers.isEmpty()) {
+            return null;
+        }
+
+        return callers.iterator().next();
+    }
+
+    /**
+     * See if we need to wrap back the principal.
+     *
+     * <p>
+     * This situation occurs when according to the Jakarta Authentication "special move" the Principal
+     * from the request is passed into the callback handler. This signals that a SAM wants to re-use
+     * a previously saved authenticated identity.
+     *
+     *  <p>
+     *  However, in GlassFish getting a Principal from the request will automatically unwrap it if a
+     *  custom principal was used. Here we try to find the original wrapping principal, if any.
+     *
+     * @param principal
+     * @return
+     */
+    private Principal findPrincipalWrapper(Principal principal) {
+        if (principal != null && !(principal instanceof WebPrincipal)) {
+
+            // Get the top level session principal
+            Principal sessionPrincipal = SecurityContext.getCurrent().getSessionPrincipal();
+
+            // If it's the wrapper we're looking for, it must be of type WebPrincipal
+            if (sessionPrincipal instanceof WebPrincipal) {
+                WebPrincipal webPrincipalFromSession = (WebPrincipal) sessionPrincipal;
+
+                // Check if the top level session principal is indeed wrapping our current principal
+                if (webPrincipalFromSession.getCustomPrincipal() == principal) {
+
+                    // Custom principal from wrapper is the same as our current principal, so
+                    // this is the wrapper we're looking for.
+                    return webPrincipalFromSession;
+                }
+            }
+        }
+
+        // Not wrapped, or wrapper could not be found
+        return principal;
+    }
+
+    private Subject reuseSessionSubject(final Caller caller) {
+        Principal returnedPrincipal = findPrincipalWrapper(caller.getCallerPrincipal());
+
+        if (returnedPrincipal instanceof WebPrincipal) {
+            return reuseWebPrincipal((WebPrincipal) returnedPrincipal);
+        }
+
+        return null;
+    }
+
+    /**
+     * This method will distinguish the initiator principal (of the SecurityContext obtained from the WebPrincipal) as the
+     * caller principal, and copy all the other principals into the subject....
+     *
+     * It is assumed that the input WebPrincipal is coming from a SAM, and that it was created either by the SAM (as
+     * described below) or by calls to the LoginContextDriver made by an Authenticator.
+     *
+     * A WebPrincipal constructed by the RealmAdapter will include a DistinguishedPrincipalCredential; other constructions may not; this method
+     * interprets the absence of a DPC as evidence that the resulting WebPrincipal was not constructed by the RealmAdapter
+     * as described below. Note that presence of a DistinguishedPrincipalCredential does not necessarily mean that the resulting WebPrincipal was
+     * constructed by the RealmAdapter... since some authenticators also add the credential).
+     *
+     * A. handling of CPCB by CBH:
+     *
+     * 1. handling of CPC by CBH modifies subject a. constructs principalImpl if called by name b. uses LoginContextDriver
+     * to add group principals for name c. puts principal in principal set, and DPC in public credentials
+     *
+     * B. construction of WebPrincipal by RealmAdapter (occurs after SAM uses CBH to set other than an unauthenticated
+     * result in the subject:
+     *
+     * a. SecurityContext construction done with subject (returned by SAM). Construction sets initiator/caller principal
+     * within SC from DistinguishedPrincipalCredential set by CBH in public credentials of subject
+     *
+     * b WebPrincipal is constructed with initiator principal and SecurityContext
+     *
+     * @param webPrincipal WebPrincipal
+     *
+     * @return true when Security Context has been obtained from webPrincipal, and CB is finished. returns false when more
+     * CB processing is required.
+     */
+    private Subject reuseWebPrincipal(final WebPrincipal webPrincipal) {
+
+        SecurityContext securityContext = webPrincipal.getSecurityContext();
+        final Subject securityContextSubject = securityContext != null ? securityContext.getSubject() : null;
+        final Principal callerPrincipal = securityContext != null ? securityContext.getCallerPrincipal() : null;
+        final Principal defaultPrincipal = SecurityContext.getDefaultCallerPrincipal();
+
+        return AppservAccessController.doPrivileged(new PrivilegedAction<Subject>() {
+
+            /**
+             * this method uses 4 (numbered) criteria to determine if the argument WebPrincipal can be reused
+             */
+            @Override
+            public Subject run() {
+
+                /*
+                 * 1. WebPrincipal must contain a SecurityContext and SC must have a non-null, non-default callerPrincipal and a Subject
+                 */
+                if (callerPrincipal == null || callerPrincipal.equals(defaultPrincipal) || securityContextSubject == null) {
+                    return null;
+                }
+
+                boolean hasObject = false;
+                Set<DistinguishedPrincipalCredential> distinguishedCreds = securityContextSubject.getPublicCredentials(DistinguishedPrincipalCredential.class);
+                if (distinguishedCreds.size() == 1) {
+                    for (DistinguishedPrincipalCredential cred : distinguishedCreds) {
+                        if (cred.getPrincipal().equals(callerPrincipal)) {
+                            hasObject = true;
+                        }
+                    }
+                }
+
+                /**
+                 * 2. Subject within SecurityContext must contain a single DistinguishedPrincipalCredential that identifies the Caller Principal
+                 */
+                if (!hasObject) {
+                    return null;
+                }
+
+                hasObject = securityContextSubject.getPrincipals().contains(callerPrincipal);
+
+                /**
+                 * 3. Subject within SecurityContext must contain the caller principal
+                 */
+                if (!hasObject) {
+                    return null;
+                }
+
+                /**
+                 * 4. The webPrincipal must have a non null name that equals the name of the callerPrincipal.
+                 */
+                if (webPrincipal.getName() == null || !webPrincipal.getName().equals(callerPrincipal.getName())) {
+                    return null;
+                }
+
+                return securityContextSubject;
+            }
+        });
+    }
+
+    private Principal getGlassFishCallerPrincipal(Caller caller) {
+        Principal callerPrincipal = caller.getCallerPrincipal();
+
+        // Check custom principal
+        if (callerPrincipal instanceof CallerPrincipal == false) {
+            return callerPrincipal;
+        }
+
+        // Check anonymous principal
+        if (callerPrincipal.getName() == null) {
+            return SecurityContext.getDefaultCallerPrincipal();
+        }
+
+        // Check certificate / X500 principal (this is oddly specific)
+        if (CertificateRealm.AUTH_TYPE.equals(realmName)) {
+            return new X500Principal(callerPrincipal.getName());
+        }
+
+        return new UserNameAndPassword(callerPrincipal.getName());
+    }
+
+    public static void copySubject(Subject target, Subject source) {
+        PriviledgedAccessController.privileged(() -> {
+            target.getPrincipals().addAll(source.getPrincipals());
+            target.getPublicCredentials().addAll(source.getPublicCredentials());
+            target.getPrivateCredentials().addAll(source.getPrivateCredentials());
+        });
+    }
+
+    public static void toSubject(Subject subject, Principal principal) {
+        PriviledgedAccessController.privileged(() -> subject.getPrincipals().add(principal));
+    }
+
+    public static void toSubject(Subject subject, Set<Principal> principals) {
+        PriviledgedAccessController.privileged(() -> subject.getPrincipals().addAll(principals));
+    }
+
+    public static void toSubjectCredential(Subject subject, Object credential) {
+        PriviledgedAccessController.privileged(() -> subject.getPublicCredentials().add(credential));
+    }
+
+
+
+    public static void removeFromCredentials(Subject subject, Class<?> typeToRemove) {
+        PriviledgedAccessController.privileged(() -> {
+            Iterator<Object> credentials = subject.getPublicCredentials().iterator();
+
+            while (credentials.hasNext()) {
+                if (typeToRemove.isInstance(credentials.next())) {
+                    credentials.remove();
+                }
+            }
+        });
     }
 
     private boolean shouldRegister(Map map) {
         /*
          * Detect both the proprietary property and the standard one.
          */
-        return map.containsKey(HttpServletConstants.REGISTER_WITH_AUTHENTICATOR)
-                || mapEntryToBoolean(HttpServletConstants.REGISTER_SESSION, map);
+        return map.containsKey(REGISTER_WITH_AUTHENTICATOR) || mapEntryToBoolean(REGISTER_SESSION, map);
     }
 
     private boolean mapEntryToBoolean(final String propName, final Map map) {
@@ -1442,6 +1710,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
                 return Boolean.parseBoolean((String) value);
             }
         }
+
         return false;
     }
 
@@ -1599,11 +1868,23 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
     }
 
     // TODO: reexamine this after TP2
-    public synchronized void initConfigHelper(final ServletContext servletContext) {
-        if (this.helper != null) {
+    public synchronized void initAuthenticationService(final ServletContext servletContext) {
+        if (this.authenticationService != null) {
             return;
         }
-        this.helper = getConfigHelper(servletContext);
+
+        try {
+            this.authenticationService = createAuthenticationService(servletContext);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    /**
+     * @return the authenticationService
+     */
+    public BaseAuthenticationService getAuthenticationService() {
+        return authenticationService;
     }
 
     @Override
@@ -1647,8 +1928,8 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
     }
 
     private SecurityConstraint[] findSecurityConstraints(Context context) {
-        if (helper == null) {
-            initConfigHelper(context.getServletContext());
+        if (authenticationService == null) {
+            initAuthenticationService(context.getServletContext());
         }
 
         WebSecurityManager webSecurityManager = getWebSecurityManager(false);
@@ -1666,7 +1947,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
 
     private boolean isJakartaAuthenticationEnabled() throws IOException {
         try {
-            return helper != null && helper.getServerAuthConfig() != null;
+            return authenticationService != null && authenticationService.getServerAuthConfig() != null;
 
         } catch (Exception ex) {
             throw new IOException(ex);

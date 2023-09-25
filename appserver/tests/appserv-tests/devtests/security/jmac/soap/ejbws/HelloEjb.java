@@ -20,8 +20,9 @@ import jakarta.ejb.Stateless;
 import jakarta.jws.WebService;
 
 @Stateless
-@WebService(targetNamespace="http://ejbws.soap.jmac.security.s1asdev.sun.com", serviceName="JmacSoapEjbService")
+@WebService(targetNamespace = "http://ejbws.soap.jmac.security.s1asdev.sun.com", serviceName = "JmacSoapEjbService")
 public class HelloEjb {
+    
     public String hello(String who) {
         String message = "HelloEjb " + who;
         System.out.println(message);

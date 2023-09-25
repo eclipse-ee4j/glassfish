@@ -28,6 +28,13 @@ import org.glassfish.logging.annotation.LogMessageInfo;
  */
 public final class OneWork implements com.sun.corba.ee.spi.threadpool.Work {
 
+    @LogMessageInfo(
+            message = "The Work named [ {0} ], progress [ {1} ].",
+            comment = "Print Work status",
+            level = "INFO",
+            publish = false)
+    private static final String RAR_WORK_PROGRESS_INFO = "AS-RAR-05004";
+
     private final Work work;
     private final WorkCoordinator coordinator;
     private long nqTime;
@@ -36,9 +43,9 @@ public final class OneWork implements com.sun.corba.ee.spi.threadpool.Work {
     private String name = "Resource adapter work";
     private boolean nameSet = false;
 
-    //Store the client's TCC so that when the work is executed,
-    //TCC is set appropriately.
-    private ClassLoader tcc = null;
+    // Store the client's TCC so that when the work is executed,
+    // TCC is set appropriately.
+    private ClassLoader tcc;
 
     /**
      * Creates a work object that can be submitted to a workqueue.
@@ -46,7 +53,7 @@ public final class OneWork implements com.sun.corba.ee.spi.threadpool.Work {
      * @param work Actual work submitted by Resource adapter.
      * @param coordinator <code>WorkCoordinator</code> object.
      */
-    OneWork (Work work, WorkCoordinator coordinator, ClassLoader tcc) {
+    OneWork(Work work, WorkCoordinator coordinator, ClassLoader tcc) {
         this.work = work;
         this.coordinator = coordinator;
         this.tcc = tcc;
@@ -55,61 +62,56 @@ public final class OneWork implements com.sun.corba.ee.spi.threadpool.Work {
     /**
      * This method is executed by thread pool as the basic work operation.
      */
+    @Override
     public void doWork() {
         ClassLoader callerCL = Thread.currentThread().getContextClassLoader();
-        if(tcc != null && tcc != callerCL){
+        if (tcc != null && tcc != callerCL) {
             Thread.currentThread().setContextClassLoader(tcc);
         }
-        try{
-        coordinator.preInvoke(); // pre-invoke will set work state to "started",
-        boolean timedOut = coordinator.isTimedOut();
 
-        // validation of work context should be after this
-        //so as to throw WorkCompletedException in case of error.
-        if (coordinator.proceed()) {
-            try {
-                coordinator.setupContext(this);
-                //work-name will be set (if specified via HintsContext "javax.resources.spi.HintsContext.NAME_HINT")
-                log("Start of Work");
-            } catch (Throwable e) {
-                coordinator.setException(e);
+        try {
+            coordinator.preInvoke(); // pre-invoke will set work state to "started",
+            boolean timedOut = coordinator.isTimedOut();
+
+            // validation of work context should be after this
+            // so as to throw WorkCompletedException in case of error.
+            if (coordinator.proceed()) {
+                try {
+                    coordinator.setupContext(this);
+                    // work-name will be set (if specified via HintsContext "javax.resources.spi.HintsContext.NAME_HINT")
+                    log("Start of Work");
+                } catch (Throwable e) {
+                    coordinator.setException(e);
+                }
             }
-        }
 
-        //there may be failure in context setup
-        if(coordinator.proceed()){
-            try {
-                work.run();
-                log("Work Executed");
-            } catch (Throwable t) {
-                log("Execution has thrown exception " + t.getMessage());
-                coordinator.setException(t);
+            // there may be failure in context setup
+            if (coordinator.proceed()) {
+                try {
+                    work.run();
+                    log("Work Executed");
+                } catch (Throwable t) {
+                    log("Execution has thrown exception " + t.getMessage());
+                    coordinator.setException(t);
+                }
             }
-        }
 
-        if(!timedOut){
-            coordinator.postInvoke();
-        }
-        log("End of Work");
-        }finally{
+            if (!timedOut) {
+                coordinator.postInvoke();
+            }
+            log("End of Work");
+        } finally {
             ClassLoader cl = Thread.currentThread().getContextClassLoader();
-            if(cl != callerCL){
+            if (cl != callerCL) {
                 Thread.currentThread().setContextClassLoader(callerCL);
             }
             tcc = null;
         }
     }
 
-    @LogMessageInfo(
-            message = "The Work named [ {0} ], progress [ {1} ].",
-            comment = "Print Work status",
-            level = "INFO",
-            publish = false)
-    private static final String RAR_WORK_PROGRESS_INFO = "AS-RAR-05004";
-
-    public void log(String message){
-        if(nameSet){
-            Object args[] = new Object[]{name, message};
+    public void log(String message) {
+        if (nameSet) {
+            Object args[] = new Object[] { name, message };
             logger.log(Level.INFO, RAR_WORK_PROGRESS_INFO, args);
         }
     }
@@ -119,6 +121,7 @@ public final class OneWork implements com.sun.corba.ee.spi.threadpool.Work {
      *
      * @param tme Time in milliseconds.
      */
+    @Override
     public void setEnqueueTime(long tme) {
         this.nqTime = tme;
     }
@@ -128,6 +131,7 @@ public final class OneWork implements com.sun.corba.ee.spi.threadpool.Work {
      *
      * @return Time in milliseconds.
      */
+    @Override
     public long getEnqueueTime() {
         return nqTime;
     }
@@ -137,11 +141,12 @@ public final class OneWork implements com.sun.corba.ee.spi.threadpool.Work {
      *
      * @return Name of the work.
      */
+    @Override
     public String getName() {
         return name;
     }
 
-    public void setName(String name){
+    public void setName(String name) {
         this.name = name;
         nameSet = true;
     }
@@ -151,9 +156,10 @@ public final class OneWork implements com.sun.corba.ee.spi.threadpool.Work {
      *
      * @return String representation of work.
      */
+    @Override
     public String toString() {
         StringBuffer result = new StringBuffer();
-        if(nameSet){
+        if (nameSet) {
             result.append("[Work : " + name + "] ");
         }
         result.append(work.toString());

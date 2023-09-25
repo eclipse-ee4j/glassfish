@@ -16,96 +16,75 @@
 
 package com.sun.enterprise.security.webservices;
 
-import java.util.HashMap;
+import static com.sun.enterprise.security.webservices.PipeConstants.ASSEMBLER_CONTEXT;
+import static com.sun.enterprise.security.webservices.PipeConstants.BINDING;
+import static com.sun.enterprise.security.webservices.PipeConstants.CONTAINER;
+import static com.sun.enterprise.security.webservices.PipeConstants.ENDPOINT_ADDRESS;
+import static com.sun.enterprise.security.webservices.PipeConstants.NEXT_PIPE;
+import static com.sun.enterprise.security.webservices.PipeConstants.POLICY;
+import static com.sun.enterprise.security.webservices.PipeConstants.SERVICE;
+import static com.sun.enterprise.security.webservices.PipeConstants.SERVICE_REF;
+import static com.sun.enterprise.security.webservices.PipeConstants.WSDL_MODEL;
 
-import com.sun.xml.ws.api.pipe.Pipe;
-import com.sun.xml.ws.assembler.metro.dev.ClientPipelineHook;
-//import com.sun.xml.ws.assembler.ClientTubelineAssemblyContext;
-import com.sun.xml.ws.api.pipe.ClientPipeAssemblerContext;
-import com.sun.xml.ws.policy.PolicyMap;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.glassfish.epicyro.services.AuthConfigRegistrationWrapper;
 
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
-import com.sun.enterprise.security.jmac.config.ConfigHelper.AuthConfigRegistrationWrapper;
-import com.sun.istack.NotNull;
-import com.sun.xml.ws.api.pipe.Tube;
+//import com.sun.xml.ws.assembler.ClientTubelineAssemblyContext;
+import com.sun.xml.ws.api.pipe.ClientPipeAssemblerContext;
+import com.sun.xml.ws.api.pipe.Pipe;
+import com.sun.xml.ws.assembler.metro.dev.ClientPipelineHook;
+import com.sun.xml.ws.policy.PolicyMap;
 
 /**
- * This is used by WSClientContainer to return proper 196 security pipe
- * to the StandAlonePipeAssembler and TangoPipeAssembler
+ * This is used by WSClientContainer to return proper 196 security pipe to the StandAlonePipeAssembler and
+ * TangoPipeAssembler
  */
 public class ClientPipeCreator extends ClientPipelineHook {
 
-    private ServiceReferenceDescriptor svcRef = null;
+    private ServiceReferenceDescriptor serviceReferenceDescriptor;
 
-    public ClientPipeCreator(){
+    public ClientPipeCreator() {
     }
 
-    public ClientPipeCreator(ServiceReferenceDescriptor ref){
-        svcRef = ref;
+    public ClientPipeCreator(ServiceReferenceDescriptor ref) {
+        serviceReferenceDescriptor = ref;
     }
 
     @Override
-    public Pipe createSecurityPipe(PolicyMap map,
-            ClientPipeAssemblerContext ctxt, Pipe tail) {
-        HashMap propBag = new HashMap();
-        propBag.put(PipeConstants.POLICY, map);
-        propBag.put(PipeConstants.WSDL_MODEL, ctxt.getWsdlModel());
-        propBag.put(PipeConstants.SERVICE, ctxt.getService());
-        propBag.put(PipeConstants.BINDING, ctxt.getBinding());
-        propBag.put(PipeConstants.ENDPOINT_ADDRESS, ctxt.getAddress());
-        if (svcRef != null) {
-            propBag.put(PipeConstants.SERVICE_REF, svcRef);
+    public Pipe createSecurityPipe(PolicyMap policyMap, ClientPipeAssemblerContext clientPipeAssemblerContext, Pipe tail) {
+        Map<String, Object> propBag = new HashMap<>();
+        propBag.put(POLICY, policyMap);
+        propBag.put(WSDL_MODEL, clientPipeAssemblerContext.getWsdlModel());
+        propBag.put(SERVICE, clientPipeAssemblerContext.getService());
+        propBag.put(BINDING, clientPipeAssemblerContext.getBinding());
+        propBag.put(ENDPOINT_ADDRESS, clientPipeAssemblerContext.getAddress());
+        if (serviceReferenceDescriptor != null) {
+            propBag.put(SERVICE_REF, serviceReferenceDescriptor);
         }
-    propBag.put(PipeConstants.NEXT_PIPE,tail);
-        propBag.put(PipeConstants.CONTAINER,ctxt.getContainer());
-        propBag.put(PipeConstants.ASSEMBLER_CONTEXT, ctxt);
-        ClientSecurityPipe ret = new ClientSecurityPipe(propBag, tail);
-        AuthConfigRegistrationWrapper listenerWrapper = ClientPipeCloser.getInstance().lookupListenerWrapper(svcRef);
-        //there is a 1-1 mapping between Service_Ref and a ListenerWrapper
+        propBag.put(NEXT_PIPE, tail);
+        propBag.put(CONTAINER, clientPipeAssemblerContext.getContainer());
+        propBag.put(ASSEMBLER_CONTEXT, clientPipeAssemblerContext);
+
+        ClientSecurityPipe clientSecurityPipe = new ClientSecurityPipe(propBag, tail);
+        AuthConfigRegistrationWrapper listenerWrapper =
+            ClientPipeCloser.getInstance().lookupListenerWrapper(serviceReferenceDescriptor);
+
+        // There is a 1-1 mapping between Service_Ref and a ListenerWrapper
         if (listenerWrapper != null) {
-            //override the listener that was created by the ConfigHelper CTOR :if one was already registered
+            // Override the listener that was created by the ConfigHelper CTOR :if one was already registered
             listenerWrapper.incrementReference();
-            ret.getPipeHelper().setRegistrationWrapper(listenerWrapper);
+            clientSecurityPipe.getPipeHelper().setRegistrationWrapper(listenerWrapper);
         } else {
-            //register a new listener
+            // Register a new listener
             ClientPipeCloser.getInstance().registerListenerWrapper(
-                    svcRef, ret.getPipeHelper().getRegistrationWrapper());
+                serviceReferenceDescriptor,
+                clientSecurityPipe.getPipeHelper().getRegistrationWrapper());
         }
 
-        return ret;
+        return clientSecurityPipe;
     }
-
-//    @Override
-//    public @NotNull
-//    Tube createSecurityTube(ClientTubelineAssemblyContext ctxt) {
-//
-//
-//        HashMap propBag = new HashMap();
-//        /*TODO V3 enable
-//        propBag.put(PipeConstants.POLICY, map);
-//        propBag.put(PipeConstants.WSDL_MODEL, ctxt.getWsdlModel());
-//        propBag.put(PipeConstants.SERVICE, ctxt.getService());
-//        propBag.put(PipeConstants.BINDING, ctxt.getBinding());
-//        propBag.put(PipeConstants.ENDPOINT_ADDRESS, ctxt.getAddress());
-//        propBag.put(PipeConstants.SERVICE_REF, svcRef);
-//    propBag.put(PipeConstants.NEXT_PIPE,tail);
-//        propBag.put(PipeConstants.CONTAINER,ctxt.getContainer());
-//         */
-//        ClientSecurityTube ret = new ClientSecurityTube(propBag, ctxt.getTubelineHead());
-//        AuthConfigRegistrationWrapper listenerWrapper = ClientPipeCloser.getInstance().lookupListenerWrapper(svcRef);
-//        //there is a 1-1 mapping between Service_Ref and a ListenerWrapper
-//        if (listenerWrapper != null) {
-//            //override the listener that was created by the ConfigHelper CTOR :if one was already registered
-//            listenerWrapper.incrementReference();
-//            ret.getPipeHelper().setRegistrationWrapper(listenerWrapper);
-//        } else {
-//            //register a new listener
-//            ClientPipeCloser.getInstance().registerListenerWrapper(
-//                    svcRef, ret.getPipeHelper().getRegistrationWrapper());
-//        }
-//
-//        return ret;
-//
-//    }
 
 }

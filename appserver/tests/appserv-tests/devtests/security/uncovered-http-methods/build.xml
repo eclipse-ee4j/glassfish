@@ -31,82 +31,82 @@
   &testproperties;
   &commonSecurity;
 
-  <target name="all" depends="clean, setup, build, deploy, run, undeploy, unsetup"/>
+  <target name="all" depends="clean, setup, build, deploy, run, undeploy, unsetup" />
 
-  <target name="setup" depends="init-common">
-    <antcall target="create-user-common">
-      <param name="user" value="testuser"/>
-      <param name="password" value="javaee"/>
-      <param name="groups" value="users"/>
-    </antcall>
-  </target>
+    <target name="clean" depends="init-common">
+           <antcall target="clean-common" />
+       </target>
+    
+    <target name="setup" depends="init-common">
+        <antcall target="create-user-common">
+            <param name="user" value="testuser" />
+            <param name="password" value="javaee" />
+            <param name="groups" value="users" />
+        </antcall>
+    </target>
+    
+    <target name="compile" depends="clean">
+    </target>
 
-  <target name="run" depends="init-common">
-    <java classname="${test.client}" fork="yes"
-          classpath="${s1astest.classpath}">
-        <arg value="${http.host}"/>
-        <arg value="${http.port}"/>
-        <arg value="testuser"/>
-        <arg value="javaee"/>
-    </java>
-  </target>
+    <target name="build" depends="compile">
+        <antcall target="compile-common">
+            <param name="src" value="web" />
+        </antcall>
 
-  <target name="unsetup" depends="init-common">
-    <antcall target="delete-user-common">
-      <param name="user" value="testuser"/>
-    </antcall>
-  </target>
+        <mkdir dir="${assemble.dir}" />
+        
+        <antcall target="package-war-common">
+            <param name="war.classes" value="${build.classes.dir}" />
+            <param name="war.file" value="${assemble.dir}/openUncoveredServletTest-web.war" />
+        </antcall>
+        <antcall target="package-war-common">
+            <param name="war.classes" value="${build.classes.dir}" />
+            <param name="web.xml" value="${deny-web.xml}" />
+            <param name="war.file" value="${assemble.dir}/denyUncoveredServletTest-web.war" />
+        </antcall>
 
-  <target name="clean" depends="init-common">
-    <antcall target="clean-common"/>
-  </target>
+        <mkdir dir="${build.classes.dir}/META-INF" />
+        <copy file="${application.xml}" tofile="${build.classes.dir}/META-INF/application.xml" failonerror="false" />
+        <copy file="${glassfish-application.xml}" tofile="${build.classes.dir}/META-INF/glassfish-application.xml" failonerror="false" />
+        <jar jarfile="${assemble.dir}/${appname}App.ear">
+            <fileset dir="${assemble.dir}">
+                <include name="*.war" />
+            </fileset>
+            <fileset dir="${build.classes.dir}">
+                <include name="META-INF/application.xml" />
+                <include name="META-INF/glassfish-application.xml" />
+            </fileset>
+        </jar>
 
-  <target name="compile" depends="clean">
-  </target>
+        <antcall target="compile-common">
+            <param name="src" value="client" />
+        </antcall>
+    </target>
 
-  <target name="build" depends="compile">
-    <antcall target="compile-common">
-      <param name="src" value="web"/>
-    </antcall>
+    <target name="deploy" depends="init-common">
+        <antcall target="deploy-common"/>
+    </target>
 
-    <mkdir dir="${assemble.dir}"/>
-    <antcall target="package-war-common">
-      <param name="war.classes" value="${build.classes.dir}"/>
-      <param name="war.file" value="${assemble.dir}/openUncoveredServletTest-web.war"/>
-    </antcall>
-    <antcall target="package-war-common">
-      <param name="war.classes" value="${build.classes.dir}"/>
-      <param name="web.xml" value="${deny-web.xml}"/>
-      <param name="war.file" value="${assemble.dir}/denyUncoveredServletTest-web.war"/>
-    </antcall>
+    <target name="run" depends="init-common">
+        <java classname="${test.client}" fork="yes" classpath="${s1astest.classpath}">
+            <arg value="${http.host}" />
+            <arg value="${http.port}" />
+            <arg value="testuser" />
+            <arg value="javaee" />
+        </java>
+    </target>
 
-    <mkdir dir="${build.classes.dir}/META-INF"/>
-    <copy file="${application.xml}" tofile="${build.classes.dir}/META-INF/application.xml" failonerror="false"/>
-    <copy file="${glassfish-application.xml}" tofile="${build.classes.dir}/META-INF/glassfish-application.xml" failonerror="false"/>
-    <jar jarfile="${assemble.dir}/${appname}App.ear">
-      <fileset dir="${assemble.dir}">
-        <include name="*.war"/>
-      </fileset>
-      <fileset dir="${build.classes.dir}">
-        <include name="META-INF/application.xml"/>
-        <include name="META-INF/glassfish-application.xml"/>
-      </fileset>
-    </jar>
+    <target name="unsetup" depends="init-common">
+        <antcall target="delete-user-common">
+            <param name="user" value="testuser" />
+        </antcall>
+    </target>
 
-    <antcall target="compile-common">
-      <param name="src" value="client"/>
-    </antcall>
-  </target>
+    <target name="undeploy" depends="init-common">
+        <antcall target="undeploy-common"/>
+    </target>
 
-  <target name="deploy" depends="init-common">
-    <antcall target="deploy-common"/>
-  </target>
-
-  <target name="undeploy" depends="init-common">
-    <antcall target="undeploy-common"/>
-  </target>
-
-  <target name="usage">
-    <antcall target="usage-common"/>
-  </target>
+    <target name="usage">
+        <antcall target="usage-common"/>
+    </target>
 </project>

@@ -17,11 +17,12 @@
 package com.sun.enterprise.security.webservices;
 
 import java.util.Collections;
-import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
-import com.sun.enterprise.security.jmac.config.ConfigHelper.AuthConfigRegistrationWrapper;
 import java.util.Map;
 import java.util.WeakHashMap;
-import jakarta.security.auth.message.config.RegistrationListener;
+
+import org.glassfish.epicyro.services.AuthConfigRegistrationWrapper;
+
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 
 public class ClientPipeCloser {
 
@@ -41,7 +42,7 @@ public class ClientPipeCloser {
     }
 
     public AuthConfigRegistrationWrapper lookupListenerWrapper(ServiceReferenceDescriptor desc) {
-        AuthConfigRegistrationWrapper listenerWrapper = (AuthConfigRegistrationWrapper) svcRefListenerMap.get(desc);
+        AuthConfigRegistrationWrapper listenerWrapper = svcRefListenerMap.get(desc);
         return listenerWrapper;
     }
 
@@ -61,7 +62,7 @@ public class ClientPipeCloser {
     }
 
     public void cleanupClientPipe(ServiceReferenceDescriptor desc) {
-        AuthConfigRegistrationWrapper listenerWrapper = (AuthConfigRegistrationWrapper) svcRefListenerMap.get(desc);
+        AuthConfigRegistrationWrapper listenerWrapper = svcRefListenerMap.get(desc);
         if (listenerWrapper != null) {
             listenerWrapper.disable();
         }

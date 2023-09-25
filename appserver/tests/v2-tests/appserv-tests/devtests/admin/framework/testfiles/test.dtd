@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+    Copyright (c) 2023 Contributors to the Eclipse Foundation.
     Copyright (c) 2006, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -3424,9 +3425,6 @@
     Monitoring Log.                                                   
 
   attributes
-    jbi-enabled                                                                
-        when false, it disables the visibility of this endoint as a   
-        service in JBI                                                
     max-history-size                                                           
         maximum number of monitoring records stored in history for    
         this end point                                                
@@ -3448,8 +3446,7 @@
 <!ATTLIST web-service-endpoint
     name CDATA #REQUIRED
     monitoring %monitoring-level; "OFF"
-    max-history-size CDATA "25"
-    jbi-enabled %boolean; "true">
+    max-history-size CDATA "25">
 
 
 <!-- registry-location

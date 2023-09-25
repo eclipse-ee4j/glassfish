@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,157 +18,121 @@
 package org.glassfish.webservices.config;
 
 import com.sun.enterprise.config.serverbeans.ApplicationExtension;
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.Element;
-
-import java.beans.PropertyVetoException;
-import java.util.List;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
-/**
- * This specifies configuration for a web service end point. This web service
- * end point could be JAXRPC or JSR-109 web service. It contains configuration
- * about Monitoring, Transformation rules and Monitoring Log
- */
+import java.beans.PropertyVetoException;
+import java.util.List;
 
-/* @XmlType(name = "", propOrder = {
-    "registryLocation",
-    "transformationRule"
-}) */
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Element;
+
+/**
+ * This specifies configuration for a web service endpoint.
+ *
+ * <p>This web service endpoint could be JAX-RPC or JSR-109 web service.
+ * It contains configuration about Monitoring, Transformation rules and Monitoring Log.
+ */
 
 @Configured
 public interface WebServiceEndpoint extends ApplicationExtension {
 
     /**
-     * Gets the value of the name property.
+     * Gets the value of the {@code name} property.
      *
-     * fully qualified web service name. Format:
-     * |ModuleName|#|EndpointName|, if the web service endpoint belongs to an
-     * application. (Parent of this element is j2ee-application).
-     * |EndpointName|, if the web service endpoint belongs to stand alone
+     * <p>Fully qualified web service name.
+     *
+     * <p>Format:
+     * <ul>
+     * <li><em>|ModuleName|#|EndpointName|</em> - if the web service endpoint belongs to an
+     * application. (Parent of this element is j2ee-application).</li>
+     * <li><em>|EndpointName|</em> - if the web service endpoint belongs to stand alone
      * ejb-module or web-module (Parent of this element is either ejb-module
-     * or web-module).
+     * or web-module).</li>
+     * </ul>
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
-    @Attribute(key=true)
+    @Attribute(key = true)
     @NotNull
-    public String getName();
+    String getName();
 
     /**
-     * Sets the value of the name property.
+     * Sets the value of the {@code name} property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String}
      */
-    public void setName(String value) throws PropertyVetoException;
+    void setName(String value) throws PropertyVetoException;
 
     /**
-     * Gets the value of the monitoring property.
+     * Gets the value of the {@code monitoring} property.
      *
-     * Monitoring level for this web service.
+     * <p>Monitoring level for this web service.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
-    @Attribute (defaultValue="OFF")
-    public String getMonitoring();
+    @Attribute(defaultValue = "OFF")
+    String getMonitoring();
 
     /**
-     * Sets the value of the monitoring property.
+     * Sets the value of the {@code monitoring} property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String}
      */
-    public void setMonitoring(String value) throws PropertyVetoException;
+    void setMonitoring(String value) throws PropertyVetoException;
 
     /**
-     * Gets the value of the maxHistorySize property.
+     * Gets the value of the {@code maxHistorySize} property.
      *
-     * Maximum number of monitoring records stored in history for this end point
+     * <p>Maximum number of monitoring records stored in history for this end point.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
-    @Attribute (defaultValue="25")
+    @Attribute(defaultValue = "25")
     @Min(value=1)
-    public String getMaxHistorySize();
+    String getMaxHistorySize();
 
     /**
-     * Sets the value of the maxHistorySize property.
+     * Sets the value of the {@code maxHistorySize} property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String}
      */
-    public void setMaxHistorySize(String value) throws PropertyVetoException;
+    void setMaxHistorySize(String value) throws PropertyVetoException;
 
     /**
-     * Gets the value of the jbiEnabled property.
+     * Gets the value of the {@code registryLocation} property.
      *
-     * If true, it enables the visibility of this endoint as a service in JBI.
+     * <p>This accessor method returns a reference to the live list, not a snapshot.
+     * Therefore any modification you make to the returned list will be present inside
+     * the JAXB object. This is why there is not a {@code set} method for the
+     * {@code registryLocation} property.
      *
-     * @return possible object is
-     *         {@link String }
-     */
-    @Attribute (defaultValue="false",dataType=Boolean.class)
-    public String getJbiEnabled();
-
-    /**
-     * Sets the value of the jbiEnabled property.
-     *
-     * @param value allowed object is
-     *              {@link String }
-     */
-    public void setJbiEnabled(String value) throws PropertyVetoException;
-
-    /**
-     * Gets the value of the registryLocation property.
-     * <p/>
-     * <p/>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the registryLocation property.
-     * <p/>
-     * <p/>
-     * For example, to add a new item, do as follows:
+     * <p>For example, to add a new item, do as follows:
      * <pre>
      *    getRegistryLocation().add(newItem);
      * </pre>
-     * <p/>
-     * <p/>
-     * <p/>
-     * Objects of the following type(s) are allowed in the list
-     * {@link RegistryLocation }
+     *
+     * <p>Objects of the following type(s) are allowed in the list {@link RegistryLocation}
      */
     @Element
-    public List<RegistryLocation> getRegistryLocation();
+    List<RegistryLocation> getRegistryLocation();
 
     /**
-     * Gets the value of the transformationRule property.
-     * <p/>
-     * <p/>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the transformationRule property.
-     * <p/>
-     * <p/>
-     * For example, to add a new item, do as follows:
+     * Gets the value of the {@code transformationRule} property.
+     *
+     * <p>This accessor method returns a reference to the live list, not a snapshot.
+     * Therefore any modification you make to the returned list will be present inside the JAXB object.
+     * This is why there is not a {@code set} method for the transformationRule property.
+     *
+     * <p>For example, to add a new item, do as follows:
      * <pre>
      *    getTransformationRule().add(newItem);
      * </pre>
-     * <p/>
-     * <p/>
-     * <p/>
-     * Objects of the following type(s) are allowed in the list
-     * {@link TransformationRule }
+     *
+     * <p>Objects of the following type(s) are allowed in the list {@link TransformationRule}
      */
     @Element
-    public List<TransformationRule> getTransformationRule();
-
+    List<TransformationRule> getTransformationRule();
 }

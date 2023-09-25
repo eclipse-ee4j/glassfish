@@ -10143,26 +10143,6 @@ xref:#value[`value`]
 |===
 
 
-[[properties-15]]
-
-==== Properties
-
-The following table describes properties for the `stub-property`
-element.
-
-[[gawou]]
-
-
-Table C-150 `stub-property` properties
-
-[width="181%",cols="10%,49%,41%",options="header",]
-|===
-|Property |Default |Description
-|`jbi-enabled` |`true` |Determines whether the visibility of this
-endpoint as a Java Business Integration service is enabled or disabled.
-|===
-
-
 [[example-12]]
 
 ==== Example
@@ -10215,7 +10195,7 @@ element.
 [[fvzhm]]
 
 
-Table C-151 `sun-cmp-mapping` Subelements
+Table C-150 `sun-cmp-mapping` Subelements
 
 [width="100%",cols="20%,13%,67%",options="header",]
 |===
@@ -10260,7 +10240,7 @@ element.
 [[fvzin]]
 
 
-Table C-152 `sun-cmp-mappings` Subelements
+Table C-151 `sun-cmp-mappings` Subelements
 
 [width="100%",cols="32%,16%,52%",options="header",]
 |===
@@ -10329,7 +10309,7 @@ element.
 [[fvzhg]]
 
 
-Table C-153 `target-server` subelements
+Table C-152 `target-server` subelements
 
 [width="100%",cols="23%,14%,63%",options="header",]
 |===
@@ -10359,7 +10339,7 @@ element.
 [[fvzgg]]
 
 
-Table C-154 `target-server` attributes
+Table C-153 `target-server` attributes
 
 [width="181%",cols="7%,49%,44%",options="header",]
 |===
@@ -10431,7 +10411,7 @@ The following table describes attributes for the `timeout` element.
 [[fvzih]]
 
 
-Table C-155 `timeout` Attributes
+Table C-154 `timeout` Attributes
 
 [width="181%",cols="51%,11%,38%",options="header",]
 |===
@@ -10469,7 +10449,7 @@ element.
 [[fvziu]]
 
 
-Table C-156 `transport-config` Subelements
+Table C-155 `transport-config` Subelements
 
 [width="100%",cols="30%,10%,60%",options="header",]
 |===
@@ -10655,7 +10635,7 @@ The following table describes subelements for the `valve` element.
 [[giktu]]
 
 
-Table C-157 `valve` Subelements
+Table C-156 `valve` Subelements
 
 [width="100%",cols="25%,12%,63%",options="header",]
 |===
@@ -10682,7 +10662,7 @@ The following table describes attributes for the `valve` element.
 [[gikqw]]
 
 
-Table C-158 `valve` Attributes
+Table C-157 `valve` Attributes
 
 [width="172%",cols="9%,46%,45%",options="header",]
 |===
@@ -10861,7 +10841,7 @@ The following table describes subelements for the `web` element.
 [[fvzfz]]
 
 
-Table C-159 `web` Subelements
+Table C-158 `web` Subelements
 
 [width="100%",cols="24%,11%,65%",options="header",]
 |===
@@ -10921,7 +10901,7 @@ The following table describes subelements for the
 [[fvzjb]]
 
 
-Table C-160 `webservice-description` subelements
+Table C-159 `webservice-description` subelements
 
 [width="100%",cols="33%,11%,56%",options="header",]
 |===
@@ -10984,7 +10964,7 @@ element.
 [[fvzjs]]
 
 
-Table C-161 `webservice-endpoint` subelements
+Table C-160 `webservice-endpoint` subelements
 
 [width="100%",cols="29%,12%,59%",options="header",]
 |===
@@ -11088,7 +11068,7 @@ element.
 [[GSDPG1049]]
 
 
-Table C-162 `work-security-map` Subelements
+Table C-161 `work-security-map` Subelements
 
 [width="100%",cols="17%,12%,71%",options="header",]
 |===
@@ -11123,7 +11103,7 @@ element.
 [[GSDPG1051]]
 
 
-Table C-163 `work-security-map` Attributes
+Table C-162 `work-security-map` Attributes
 
 [width="181%",cols="13%,49%,38%",options="header",]
 |===
@@ -11189,7 +11169,7 @@ The following table describes subelements for the `wsdl-port` element.
 [[fvzju]]
 
 
-Table C-164 `wsdl-port` subelements
+Table C-163 `wsdl-port` subelements
 
 [width="100%",cols="30%,11%,59%",options="header",]
 |===

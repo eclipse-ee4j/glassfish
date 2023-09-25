@@ -17,7 +17,6 @@ The following topics are addressed here:
 * xref:#deploying-a-web-service[Deploying a Web Service]
 * xref:#the-web-service-uri-wsdl-file-and-test-page[The Web Service URI, WSDL File, and Test Page]
 * xref:#the-databinding-provider[The Databinding Provider]
-* xref:#glassfish-java-ee-service-engine[GlassFish Jakarta EE Service Engine]
 
 
 [NOTE]
@@ -246,91 +245,5 @@ compiler files are located here:
 bin/jaxb-compiler.cmd
 bin/jaxb-compiler.sh
 ----
-
-[[glassfish-java-ee-service-engine]]
-
-=== GlassFish Jakarta EE Service Engine
-
-{productName} 7 provides the GlassFish Jakarta EE Service Engine, a
-JSR 208 compliant Java Business Integration (JBI) runtime component that
-connects Jakarta EE web services to JBI components. The Jakarta EE Service
-Engine is installed as an add-on component using the Update Tool. Look
-for the JBI component named Jakarta EE Service Engine. A JBI runtime is not
-installed with or integrated into {productName} 7 and must be
-obtained separately. For more information about using the Update Tool to
-obtain the Jakarta EE Service Engine and other add-on components, see
-"xref:administration-guide.adoc#GSADG00701[Update Tool]" in {productName}
-Administration Guide.
-
-The Jakarta EE Service Engine acts as a bridge between the Jakarta EE and JBI
-runtime environments for web service providers and web service
-consumers. The Jakarta EE Service Engine provides better performance than a
-SOAP over HTTP binding component due to in-process communication between
-components and additional protocols provided by JBI binding components
-such as JMS, SMTP, and File.
-
-The http://jcp.org/en/jsr/detail?id=208[JSR 208]
-(`http://jcp.org/en/jsr/detail?id=208`) specification allows
-transactions to be propagated to other components using a message
-exchange property specified in the `JTA_TRANSACTION_PROPERTY_NAME`
-field. The Jakarta EE Service Engine uses this property to set and get a
-transaction object from the JBI message exchange. It then uses the
-transaction object to take part in a transaction. This means a Jakarta EE
-application or module can take part in a transaction started by a JBI
-application. Conversely, a JBI application can take part in a
-transaction started by a Jakarta EE application or module.
-
-Similarly, the JSR 208 specification allows a security subject to be
-propagated as a message exchange property named
-`javax.jbi.security.subject`. Thus a security subject can be propagated
-from a Jakarta EE application or module to a JBI application or the
-reverse.
-
-To deploy a Jakarta EE application or module as a JBI service unit, use the
-`asadmin deploy` command, or autodeployment. For more information about
-the `asadmin deploy` command, see the xref:reference-manual.adoc#GSRFM[
-{productName} Reference Manual].
-For more information about autodeployment, see
-"xref:application-deployment-guide.adoc#to-deploy-an-application-or-module-automatically[
-To Deploy an Application or Module Automatically]"
-in {productName} Application Deployment Guide.
-
-[[GSDVG00387]][[using-the-jbi.xml-file]]
-
-==== Using the `jbi.xml` File
-
-Section 6.3.1 of the JSR 208 specification describes the `jbi.xml` file.
-This is a deployment descriptor, located in the `META-INF` directory. To
-deploy a Jakarta EE application or module as a JBI service unit, you need
-only specify a small subset of elements in the `jbi.xml` file. Here is
-an example provider:
-
-[source,xml]
-----
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<jbi version="1.0" xmlns="http://java.sun.com/xml/ns/jbi" xmlns:ns0="http://ejbws.jbi.misc/">
-  <services binding-component="false">
-    <provides endpoint-name="MiscPort" interface-name="ns0:Misc" service-name="ns0:MiscService"/>
-  </services>
-</jbi>
-----
-
-Here is an example consumer:
-
-[source,xml]
-----
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<jbi version="1.0" xmlns="http://java.sun.com/xml/ns/jbi" xmlns:ns0="http://message.hello.jbi/">
-  <services binding-component="false">
-    <consumes endpoint-name="MsgPort" interface-name="ns0:Msg" service-name="ns0:MsgService"/>
-  </services>
-</jbi>
-----
-
-The Jakarta EE Service Engine enables the endpoints described in the
-`provides` section of the `jbi.xml` file in the JBI runtime. Similarly,
-the Jakarta EE Service Engine routes invocations of the endpoints described
-in the `consumes` section from the Jakarta EE web service consumer to the
-JBI runtime.
 
 

@@ -2,6 +2,7 @@
 <!DOCTYPE domain PUBLIC "-//Sun Microsystems Inc.//DTD Application Server 9.1 Domain//EN" "http://www.sun.com/software/appserver/dtds/sun-domain_1_3.dtd">
 <!--
 
+    Copyright (c) 2023 Contributors to the Eclipse Foundation.
     Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -32,10 +33,6 @@
       <!-- System Web Module - DO NOT DELETE! -->
     </web-module>
     <web-module availability-enabled="false" context-root="/__wstx-services" directory-deployed="true" enabled="true" location="${com.sun.aas.installRoot}/lib/install/applications/wstx-services" name="WSTXServices" object-type="system-all"/>
-    <lifecycle-module class-name="com.sun.jbi.framework.sun.SunASJBIBootstrap" classpath="${com.sun.aas.installRoot}/jbi/lib/jbi_framework.jar" enabled="true" is-failure-fatal="false" name="JBIFramework" object-type="system-all">
-      <description>"JBI Framework LifecycleModule"</description>
-      <property name="com.sun.jbi.home" value="${com.sun.aas.installRoot}/jbi"/>
-    </lifecycle-module>
     <lifecycle-module class-name="com.sun.xml.ws.transport.tcp.server.glassfish.WSTCPLifeCycleModule" classpath="${com.sun.aas.installRoot}/lib/webservices-rt.jar" enabled="true" is-failure-fatal="false" name="WSTCPConnectorLCModule" object-type="system-all"/>
   </applications>
   <resources>
@@ -676,7 +673,6 @@
     <server config-ref="server-config" lb-weight="100" name="server">
       <application-ref disable-timeout-in-minutes="30" enabled="true" lb-enabled="false" ref="adminapp" virtual-servers="__asadmin"/>
       <application-ref disable-timeout-in-minutes="30" enabled="true" lb-enabled="false" ref="admingui" virtual-servers="__asadmin"/>
-      <application-ref disable-timeout-in-minutes="30" enabled="true" lb-enabled="false" ref="JBIFramework"/>
       <application-ref disable-timeout-in-minutes="30" enabled="true" lb-enabled="false" ref="WSTXServices"/>
       <application-ref disable-timeout-in-minutes="30" enabled="true" lb-enabled="false" ref="WSTCPConnectorLCModule"/>
       <application-ref disable-timeout-in-minutes="30" enabled="true" lb-enabled="false" ref="__ejb_container_timer_app" virtual-servers="server"/>
@@ -694,7 +690,6 @@
       <application-ref disable-timeout-in-minutes="30" enabled="true" lb-enabled="false" ref="__JWSappclients"/>
       <application-ref disable-timeout-in-minutes="30" enabled="true" lb-enabled="false" ref="MEjbApp"/>
       <application-ref disable-timeout-in-minutes="30" enabled="true" lb-enabled="false" ref="WSTXServices"/>
-      <application-ref disable-timeout-in-minutes="30" enabled="true" lb-enabled="false" ref="JBIFramework"/>
       <application-ref disable-timeout-in-minutes="30" enabled="true" lb-enabled="false" ref="WSTCPConnectorLCModule"/>
     </cluster>
     <cluster config-ref="testUpgradeClusterNonDefaultGMSProperties-config" heartbeat-address="228.8.83.98" heartbeat-enabled="true" heartbeat-port="33000" name="testUpgradeClusterNonDefaultGMSProperties">
@@ -703,7 +698,6 @@
       <application-ref disable-timeout-in-minutes="30" enabled="true" lb-enabled="false" ref="__JWSappclients"/>
       <application-ref disable-timeout-in-minutes="30" enabled="true" lb-enabled="false" ref="MEjbApp"/>
       <application-ref disable-timeout-in-minutes="30" enabled="true" lb-enabled="false" ref="WSTXServices"/>
-      <application-ref disable-timeout-in-minutes="30" enabled="true" lb-enabled="false" ref="JBIFramework"/>
       <application-ref disable-timeout-in-minutes="30" enabled="true" lb-enabled="false" ref="WSTCPConnectorLCModule"/>
       <property name="gms-bind-interface-address" value="${GMS_testUpdateClusterNonDefaultGMSProperties_BIND_INTERFACE_ADDR}"/>
     </cluster>

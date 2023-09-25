@@ -68,6 +68,7 @@
         <create-domain.args>--user admin create-domain --nopassword --savelogin=true --checkports=false --adminport 4848
             --instanceport 8080 --keytooloptions CN=localhost domain1</create-domain.args>
         <glassfishbuild-maven-plugin.assemblyInputDirectory>${stage.dir}</glassfishbuild-maven-plugin.assemblyInputDirectory>
+        <nadmin.executable>${stage.dir}/${nucleus.install.dir.name}/bin/nadmin${file.executable.suffix}</nadmin.executable>
     </properties>
 
     <build>
@@ -133,7 +134,7 @@
                                 <goal>exec</goal>
                             </goals>
                             <configuration>
-                                <executable>${stage.dir}/${nucleus.install.dir.name}/bin/nadmin</executable>
+                                <executable>${nadmin.executable}</executable>
                                 <commandlineArgs>${create-domain.args}</commandlineArgs>
                             </configuration>
                         </execution>

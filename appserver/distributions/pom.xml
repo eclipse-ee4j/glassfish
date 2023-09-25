@@ -76,6 +76,7 @@
         <template.jar>${stage.dir}/${install.dir.name}/glassfish/common/templates/gf/appserver-domain.jar</template.jar>
         <create-domain.args>--user admin create-domain --template=${template.jar} --nopassword --savelogin=true --checkports=false --adminport 4848 --instanceport 8080 --keytooloptions CN=localhost domain1</create-domain.args>
         <glassfishbuild-maven-plugin.assemblyInputDirectory>${stage.dir}</glassfishbuild-maven-plugin.assemblyInputDirectory>
+        <asadmin.executable>${stage.dir}/${install.dir.name}/bin/asadmin${file.executable.suffix}</asadmin.executable>
     </properties>
 
     <build>
@@ -142,7 +143,7 @@
                                 <goal>exec</goal>
                             </goals>
                             <configuration>
-                                <executable>${stage.dir}/${install.dir.name}/bin/asadmin</executable>
+                                <executable>${asadmin.executable}</executable>
                                 <commandlineArgs>${create-domain.args}</commandlineArgs>
                             </configuration>
                         </execution>

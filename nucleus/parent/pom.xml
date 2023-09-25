@@ -160,6 +160,7 @@
         <jmh.version>1.37</jmh.version>
         <osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
 
+        <file.executable.suffix></file.executable.suffix>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.commonResourcesDirectory>${project.build.directory}/common-resources</project.build.commonResourcesDirectory>
         <legal.doc.source>${project.build.commonResourcesDirectory}/legal</legal.doc.source>
@@ -1609,6 +1610,18 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <properties>
+                <file.executable.suffix>.bat</file.executable.suffix>
+            </properties>
         </profile>
     </profiles>
 </project>

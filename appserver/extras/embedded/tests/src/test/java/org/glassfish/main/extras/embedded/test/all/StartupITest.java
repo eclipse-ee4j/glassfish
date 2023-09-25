@@ -86,7 +86,7 @@ public class StartupITest {
         ServerUtils.createWar(war, TestServlet.class);
         String result = deployer.deploy(war);
         assertEquals(WEBAPP_NAME, result);
-        URL url = new URL("http", ServerUtils.getLocalIP4Address(), HTTP_PORT, "/" + WEBAPP_NAME);
+        URL url = new URL("http", "localhost", HTTP_PORT, "/" + WEBAPP_NAME);
         assertEquals(RESPONSE_TEXT, ServerUtils.download(url));
     }
 }

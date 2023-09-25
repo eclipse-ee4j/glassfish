@@ -40,6 +40,9 @@ import java.util.concurrent.locks.Lock;
 import org.glassfish.common.util.admin.ManagedFile;
 import org.glassfish.common.util.admin.ManagedFile.ManagedLock;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -279,11 +282,8 @@ public class FileLockTest {
 
 
      @Test
+     @DisabledOnOs(OS.WINDOWS)
      public void lockForReadAndWriteTest_Unix() throws Exception {
-         // on unixes, there is no point on testing locking access through
-         // normal java.io APIs since several outputstream can be created and
-         // the last one to close always win.
-         assumeTrue(System.getProperty("os.name").toLowerCase().contains("linux"));
          final File file = File.createTempFile("common-util-FileLockTest", "tmp");
          final Path filePath = file.toPath();
          try {
@@ -307,8 +307,8 @@ public class FileLockTest {
 
 
     @Test
+    @EnabledOnOs(OS.WINDOWS)
     public void lockForReadAndWriteTest_Windows() throws Exception {
-        assumeTrue(System.getProperty("os.name").toLowerCase().contains("windows"));
         final File file = File.createTempFile("common-util-FileLockTest", "tmp");
         final Path filePath = file.toPath();
         try {

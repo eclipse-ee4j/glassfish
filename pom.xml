@@ -112,7 +112,7 @@
                 <module>docs</module>
             </modules>
         </profile>
-        
+
         <!-- Ommits a variety of things in order to get the fastest build of a basic full glassfish server -->
         <profile>
             <id>fastest</id>
@@ -122,7 +122,7 @@
                 <module>appserver</module>
             </modules>
         </profile>
-        
+
         <profile>
             <!--
                 RE profile for release purposes.

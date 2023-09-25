@@ -36,6 +36,6 @@ class StartStopITest {
      */
     @Test
     void asadminGet() {
-        assertThat(ASADMIN.exec("get", "*"), asadminOK());
+        assertThat(ASADMIN.exec("get", "'*'"), asadminOK());
     }
 }

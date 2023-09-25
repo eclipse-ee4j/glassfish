@@ -882,11 +882,9 @@ This example lists the virtual servers for `localhost`.
 [source]
 ----
 asadmin> list-virtual-servers
-sampleListener
-admin-listener
-http-listener-2
-http-listener-1
-Command list-http-listeners executed successfully.
+server
+__asadmin
+Command list-virtual-servers executed successfully.
 ----
 
 See Also

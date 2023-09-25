@@ -106,7 +106,7 @@ public class ODLLogFormatterTest {
         final ODLLogFormatter formatter = new ODLLogFormatter();
         final String log = formatter.format(record);
         assertNotNull(log, "log");
-        final String[] lines = log.split("\n");
+        final String[] lines = log.split("\r?\n");
         assertAll(
             () -> assertThat(lines, arrayWithSize(2)),
             () -> assertThat(lines[0], matchesPattern(PATTERN_MULTILINE)),
@@ -124,7 +124,7 @@ public class ODLLogFormatterTest {
         formatter.setMultiline(false);
         final String log = formatter.format(record);
         assertNotNull(log, "log");
-        final String[] lines = log.split("\n");
+        final String[] lines = log.split("\r?\n");
         assertAll(
             () -> assertThat(lines, arrayWithSize(3)),
             () -> assertThat(lines[0], matchesPattern(PATTERN_MULTILINE)),
@@ -151,7 +151,7 @@ public class ODLLogFormatterTest {
 
         final String log = formatter.format(record);
         assertNotNull(log, "log");
-        final String[] lines = log.split("\n");
+        final String[] lines = log.split("\r?\n");
         assertAll(
             () -> assertThat(lines, arrayWithSize(1)),
             () -> assertThat(lines[0], matchesPattern(PATTERN_SINGLELINE)),
@@ -169,7 +169,7 @@ public class ODLLogFormatterTest {
         final ODLLogFormatter formatter = new ODLLogFormatter();
         final String log = formatter.format(record);
         assertNotNull(log, "log");
-        final String[] lines = log.split("\n");
+        final String[] lines = log.split("\r?\n");
         assertAll(
             () -> assertThat(lines, arrayWithSize(greaterThan(20))),
             () -> assertThat(lines[0],
@@ -197,7 +197,7 @@ public class ODLLogFormatterTest {
             + " \\[INFO\\]"
             + " \\[\\]"
             + " \\[\\]"
-            + " This is a message\\.+\\n\\n"
+            + " This is a message\\.+\\r?\\n\\r?\\n"
         );
         assertThat(log, matchesPattern(pattern));
     }

@@ -159,11 +159,6 @@
 <li><a href="#deploying-a-web-service">Deploying a Web Service</a></li>
 <li><a href="#the-web-service-uri-wsdl-file-and-test-page">The Web Service URI, WSDL File, and Test Page</a></li>
 <li><a href="#the-databinding-provider">The Databinding Provider</a></li>
-<li><a href="#glassfish-java-ee-service-engine">GlassFish Jakarta EE Service Engine</a>
-<ul class="sectlevel3">
-<li><a href="#using-the-jbi-xml-file">Using the <code>jbi.xml</code> File</a></li>
-</ul>
-</li>
 </ul>
 </li>
 <li><a href="#configuring-the-java-persistence-provider">6 Configuring the Java Persistence Provider</a>
@@ -5808,9 +5803,6 @@ The following topics are addressed here:</p>
 <li>
 <p><a href="#the-databinding-provider">The Databinding Provider</a></p>
 </li>
-<li>
-<p><a href="#glassfish-java-ee-service-engine">GlassFish Jakarta EE Service Engine</a></p>
-</li>
 </ul>
 </div>
 <div class="admonitionblock note">
@@ -6108,101 +6100,6 @@ compiler files are located here:</p>
 <div class="content">
 <pre class="CodeRay highlight"><code>bin/jaxb-compiler.cmd
 bin/jaxb-compiler.sh</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="glassfish-java-ee-service-engine"><a class="anchor" href="#glassfish-java-ee-service-engine"></a>GlassFish Jakarta EE Service Engine</h3>
-<div class="paragraph">
-<p>Eclipse GlassFish 7 provides the GlassFish Jakarta EE Service Engine, a
-JSR 208 compliant Java Business Integration (JBI) runtime component that
-connects Jakarta EE web services to JBI components. The Jakarta EE Service
-Engine is installed as an add-on component using the Update Tool. Look
-for the JBI component named Jakarta EE Service Engine. A JBI runtime is not
-installed with or integrated into Eclipse GlassFish 7 and must be
-obtained separately. For more information about using the Update Tool to
-obtain the Jakarta EE Service Engine and other add-on components, see
-"<a href="administration-guide.html#GSADG00701">Update Tool</a>" in Eclipse GlassFish
-Administration Guide.</p>
-</div>
-<div class="paragraph">
-<p>The Jakarta EE Service Engine acts as a bridge between the Jakarta EE and JBI
-runtime environments for web service providers and web service
-consumers. The Jakarta EE Service Engine provides better performance than a
-SOAP over HTTP binding component due to in-process communication between
-components and additional protocols provided by JBI binding components
-such as JMS, SMTP, and File.</p>
-</div>
-<div class="paragraph">
-<p>The <a href="http://jcp.org/en/jsr/detail?id=208">JSR 208</a>
-(<code><a href="http://jcp.org/en/jsr/detail?id=208" class="bare">http://jcp.org/en/jsr/detail?id=208</a></code>) specification allows
-transactions to be propagated to other components using a message
-exchange property specified in the <code>JTA_TRANSACTION_PROPERTY_NAME</code>
-field. The Jakarta EE Service Engine uses this property to set and get a
-transaction object from the JBI message exchange. It then uses the
-transaction object to take part in a transaction. This means a Jakarta EE
-application or module can take part in a transaction started by a JBI
-application. Conversely, a JBI application can take part in a
-transaction started by a Jakarta EE application or module.</p>
-</div>
-<div class="paragraph">
-<p>Similarly, the JSR 208 specification allows a security subject to be
-propagated as a message exchange property named
-<code>javax.jbi.security.subject</code>. Thus a security subject can be propagated
-from a Jakarta EE application or module to a JBI application or the
-reverse.</p>
-</div>
-<div class="paragraph">
-<p>To deploy a Jakarta EE application or module as a JBI service unit, use the
-<code>asadmin deploy</code> command, or autodeployment. For more information about
-the <code>asadmin deploy</code> command, see the <a href="reference-manual.html#GSRFM">
-Eclipse GlassFish Reference Manual</a>.
-For more information about autodeployment, see
-"<a href="application-deployment-guide.html#to-deploy-an-application-or-module-automatically">
-To Deploy an Application or Module Automatically</a>"
-in Eclipse GlassFish Application Deployment Guide.</p>
-</div>
-<div class="paragraph">
-<p><a id="GSDVG00387"></a><a id="using-the-jbi.xml-file"></a></p>
-</div>
-<div class="sect3">
-<h4 id="using-the-jbi-xml-file"><a class="anchor" href="#using-the-jbi-xml-file"></a>Using the <code>jbi.xml</code> File</h4>
-<div class="paragraph">
-<p>Section 6.3.1 of the JSR 208 specification describes the <code>jbi.xml</code> file.
-This is a deployment descriptor, located in the <code>META-INF</code> directory. To
-deploy a Jakarta EE application or module as a JBI service unit, you need
-only specify a small subset of elements in the <code>jbi.xml</code> file. Here is
-an example provider:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="preprocessor">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt;</span>
-<span class="tag">&lt;jbi</span> <span class="attribute-name">version</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">1.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://java.sun.com/xml/ns/jbi</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns:ns0</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://ejbws.jbi.misc/</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-  <span class="tag">&lt;services</span> <span class="attribute-name">binding-component</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">false</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-    <span class="tag">&lt;provides</span> <span class="attribute-name">endpoint-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">MiscPort</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">interface-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ns0:Misc</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">service-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ns0:MiscService</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
-  <span class="tag">&lt;/services&gt;</span>
-<span class="tag">&lt;/jbi&gt;</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Here is an example consumer:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="preprocessor">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt;</span>
-<span class="tag">&lt;jbi</span> <span class="attribute-name">version</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">1.0</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://java.sun.com/xml/ns/jbi</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns:ns0</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://message.hello.jbi/</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-  <span class="tag">&lt;services</span> <span class="attribute-name">binding-component</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">false</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-    <span class="tag">&lt;consumes</span> <span class="attribute-name">endpoint-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">MsgPort</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">interface-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ns0:Msg</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">service-name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ns0:MsgService</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
-  <span class="tag">&lt;/services&gt;</span>
-<span class="tag">&lt;/jbi&gt;</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The Jakarta EE Service Engine enables the endpoints described in the
-<code>provides</code> section of the <code>jbi.xml</code> file in the JBI runtime. Similarly,
-the Jakarta EE Service Engine routes invocations of the endpoints described
-in the <code>consumes</code> section from the Jakarta EE web service consumer to the
-JBI runtime.</p>
 </div>
 </div>
 </div>
@@ -20761,7 +20658,7 @@ deployment descriptor file. For details, see
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-09-25 18:30:50 UTC
+Last updated 2023-09-25 18:43:06 UTC
 </div>
 </div>
 </body>

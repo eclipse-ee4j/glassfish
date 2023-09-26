@@ -55,7 +55,7 @@
                     getUIComponent(clientId="#{pageSession.textId}", component=>$attribute{textIdComp});
                     getUIComponentProperty(component="$attribute{textIdComp}", name="value", value=>$attribute{nameText});
                     setAttribute(key="reload" value="#{true}" );
-                    gf.redirect(page="#{pageSession.selfPage}?name=#{name}");
+                    gf.navigate(page="#{pageSession.selfPage}");
                 />
                 <!afterCreate
                     getClientId(component="$this{component}" clientId=>$page{dropdownTextId});

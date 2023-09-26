@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.extras</groupId>
         <artifactId>embedded</artifactId>
-        <version>7.0.9</version>
+        <version>7.0.10</version>
     </parent>
 
     <artifactId>tests-embedded</artifactId>

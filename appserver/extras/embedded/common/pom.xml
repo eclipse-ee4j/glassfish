@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.main.extras</groupId>
         <artifactId>extras</artifactId>
-        <version>7.0.9-SNAPSHOT</version>
+        <version>7.0.9</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 

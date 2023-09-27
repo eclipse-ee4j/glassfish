@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,6 +34,8 @@ import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -70,9 +72,9 @@ import static org.glassfish.hk2.utilities.BuilderHelper.createContractFilter;
 /**
  * A simple local asadmin sub-command to establish an interactive osgi shell.
  *
- * This class is forked from com.sun.enterprise.admin.cli.MultimodeCommand
+ * <p>This class is forked from com.sun.enterprise.admin.cli.MultimodeCommand.
  *
- * Original code authors:
+ * <p>Original code authors:
  *      केदार(km@dev.java.net)
  *      Bill Shannon
  * @author ancoron
@@ -114,8 +116,8 @@ public class LocalOSGiShellCommand extends CLICommand {
     public void postConstruct() {
         super.postConstruct();
         try {
-            cmd = new RemoteCLICommand(REMOTE_COMMAND, locator.<ProgramOptions> getService(ProgramOptions.class),
-                locator.<Environment> getService(Environment.class));
+            cmd = new RemoteCLICommand(REMOTE_COMMAND, locator.getService(ProgramOptions.class),
+                locator.getService(Environment.class));
         } catch (MultiException | CommandException e) {
             logger.log(Level.SEVERE, "postConstruct failed!", e);
         }
@@ -129,7 +131,7 @@ public class LocalOSGiShellCommand extends CLICommand {
      * the environment.
      */
     @Override
-    protected void validate() throws CommandException, CommandValidationException {
+    protected void validate() {
         // Save value of --echo because CLICommand will reset it
         // before calling our executeCommand method but we want it
         // to also apply to all commands in multimode.
@@ -157,7 +159,7 @@ public class LocalOSGiShellCommand extends CLICommand {
     }
 
     @Override
-    protected int executeCommand() throws CommandException, CommandValidationException {
+    protected int executeCommand() throws CommandException {
         if (cmd == null) {
             throw new CommandException("Remote command 'osgi' is not available.");
         }
@@ -193,16 +195,29 @@ public class LocalOSGiShellCommand extends CLICommand {
 
 
     private Terminal createTerminal() throws IOException, CommandException {
-        if (file == null) {
+        InputStream inputStream;
+        OutputStream outputStream;
+        if (file != null) {
+            if (!file.canRead()) {
+                throw new CommandException("File: " + file + " can not be read");
+            }
+            inputStream = new FileInputStream(file);
+            outputStream = new EmptyOutputStream();
+        } else {
             System.out.println(STRINGS.get("multimodeIntro"));
-            FileInputStream inputStream = new FileInputStream(FileDescriptor.in);
-            return TerminalBuilder.builder().streams(inputStream, System.out).build();
-        }
-        if (!file.canRead()) {
-            throw new CommandException("File: " + file + " can not be read");
+            inputStream = new FileInputStream(FileDescriptor.in);
+            outputStream = System.out;
         }
 
-        return TerminalBuilder.builder().streams(new FileInputStream(file), new EmptyOutputStream()).build();
+        TerminalBuilder builder = TerminalBuilder.builder().streams(inputStream, outputStream);
+
+        if (System.getenv("TERM") == null) {
+            Terminal terminal = builder.type("dumb").build();
+            terminal.echo(false);
+            return terminal;
+        }
+
+        return builder.build();
     }
 
 
@@ -285,13 +300,13 @@ public class LocalOSGiShellCommand extends CLICommand {
 
 
     /**
-     * Read commands from the specified BufferedReader
+     * Read commands from the specified {@link java.io.BufferedReader}
      * and execute them.  If printPrompt is set, prompt first.
      *
      * @return the exit code of the last command executed
      */
-    private int executeCommands(LineReader reader) throws CommandException, CommandValidationException {
-        String line = null;
+    private int executeCommands(LineReader reader) throws CommandException {
+        String line;
         int rc = 0;
 
         /*
@@ -316,10 +331,8 @@ public class LocalOSGiShellCommand extends CLICommand {
                 }
 
                 if (line == null || line.isBlank()) {
-                    if (isPromptPrinted()) {
-                        System.out.println();
-                    }
-                    break;
+                    // ignore blank lines
+                    continue;
                 }
 
                 if (line.trim().startsWith("#")) {
@@ -444,6 +457,6 @@ public class LocalOSGiShellCommand extends CLICommand {
         while (t.hasMoreTokens()) {
             args.add(t.nextToken());
         }
-        return args.toArray(new String[args.size()]);
+        return args.toArray(String[]::new);
     }
 }

@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.docs</groupId>
         <artifactId>parent</artifactId>
-        <version>7.0.10</version>
+        <version>7.0.10-SNAPSHOT</version>
         <relativePath>../parent</relativePath>
     </parent>
     <artifactId>error-messages-reference</artifactId>

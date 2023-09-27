@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.orb</groupId>
         <artifactId>orb</artifactId>
-        <version>7.0.10</version>
+        <version>7.0.10-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

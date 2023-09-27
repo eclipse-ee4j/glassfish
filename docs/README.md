@@ -36,7 +36,7 @@
 * [Upgrade Guide](latest/upgrade-guide.html)
   ([pdf](latest/upgrade-guide.pdf))
 
-## <a name="development">Development Version - 7.0.9-SNAPSHOT</a>
+## <a name="development">Development Version - 7.0.10-SNAPSHOT</a>
 
 * [Add On Component Development Guide](SNAPSHOT/add-on-component-development-guide.html)
   ([pdf](SNAPSHOT/add-on-component-development-guide.pdf))

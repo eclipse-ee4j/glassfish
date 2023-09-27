@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.docs</groupId>
         <artifactId>parent</artifactId>
-        <version>7.0.9-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
         <relativePath>../parent</relativePath>
     </parent>
     <artifactId>reference-manual</artifactId>

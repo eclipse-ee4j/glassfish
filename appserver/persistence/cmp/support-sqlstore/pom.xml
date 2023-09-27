@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.persistence.cmp</groupId>
         <artifactId>cmp</artifactId>
-        <version>7.0.10</version>
+        <version>7.0.10-SNAPSHOT</version>
     </parent>
 
     <artifactId>cmp-support-sqlstore</artifactId>

@@ -26,7 +26,7 @@
         <version>1.0.8</version>
         <relativePath />
     </parent>
-    <version>7.0.10</version>
+    <version>7.0.10-SNAPSHOT</version>
     <groupId>org.glassfish.docs</groupId>
     <artifactId>docs</artifactId>
     <packaging>pom</packaging>

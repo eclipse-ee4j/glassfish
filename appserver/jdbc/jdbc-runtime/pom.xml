@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.jdbc</groupId>
         <artifactId>jdbc</artifactId>
-        <version>7.0.10</version>
+        <version>7.0.10-SNAPSHOT</version>
     </parent>
 
     <artifactId>jdbc-runtime</artifactId>

@@ -31,9 +31,20 @@
 
     <name>GlassFish Extras modules</name>
 
-    <modules>
-        <module>jakartaee</module>
-        <module>appserv-rt</module>
-        <module>embedded</module>
-    </modules>
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>jakartaee</module>
+                <module>appserv-rt</module>
+                <module>embedded</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>noextras</id>
+        </profile>
+    </profiles>
 </project>

@@ -122,7 +122,15 @@
                 <module>appserver</module>
             </modules>
         </profile>
+
+        <profile>
+            <id>noextras</id>
+        </profile>
         
+        <profile>
+            <id>noweb</id>
+        </profile>
+
         <profile>
             <!--
                 RE profile for release purposes.

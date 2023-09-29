@@ -9,6 +9,16 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
+## September 29, 2023 -- Eclipse GlassFish 7.0.9 Available
+
+We're happy to present you with the latest GlassFish release.
+
+Download links are available from the [GlassFish Download page](download.md).
+
+In this release the modularity of GlassFish is once again increased by moving the Jakarta Authentication implementation code to a new standalone project: [Epicyro](https://github.com/eclipse-ee4j/epicyro). We also enabled the GlassFish embedded tests again, which were dormant for a long time. Among the many updated components, Exousia was updated specifically to fix a bug with deployments on virtual servers, and the ORB was updated to fix a somewhat obscure bug where a remote EJB returned a JDK defined enum type.
+
+Download links are available from the [GlassFish Download page](download.md).
+
 ## August 28, 2023 -- Eclipse GlassFish 7.0.8 Available
 
 The entire GlassFish team is happy to present you another great GlassFish release.

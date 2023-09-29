@@ -2,22 +2,22 @@
 
 ## Eclipse GlassFish 7.x
 
-GlassFish 7.0.8 is a final release, containing final Jakarta EE 10 APIs. It compiles and runs on JDK 11 to JDK 21ea33. MicroProfile support requires JDK 17 or higher.
+GlassFish 7.0.9 is a final release, containing final Jakarta EE 10 APIs. It compiles and runs on JDK 11 to JDK 21ea33. MicroProfile support requires JDK 17 or higher.
 
 This release prepares GlassFish for the upcoming JDK 21; it compiles and passes all internal tests using OpenJDK 21ea35. Several TCKs passed on JDK 21 as well, but the TCK as a whole is not JDK 21 compatible yet. 
 
-This release fixes multi-jar compatibility in GlassFish and does further preparations for JDK 21. It includes various component updates among which those for CDI, Faces, and JSON. Test coverage is improved by adding the TCKs for REST Client and Connectors. Finally, various CDI extensions have been optimised to reduce excessive and unnecessary calls to them.
+In this release the modularity of GlassFish is once again increased by moving the Jakarta Authentication implementation code to a new standalone project: [Epicyro](https://github.com/eclipse-ee4j/epicyro). We also enabled the GlassFish embedded tests again, which were dormant for a long time. Among the many updated components, Exousia was updated specifically to fix a bug with deployments on virtual servers, and the ORB was updated to fix a somewhat obscure bug where a remote EJB returned a JDK defined enum type.
 
 Download:
 
-* [Eclipse GlassFish 7.0.8, Jakarta EE Platform, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-7.0.8.zip)
-* [Eclipse GlassFish 7.0.8, Jakarta EE Web Profile, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-7.0.8.zip)
-* [Eclipse GlassFish Embedded 7.0.8, Jakarta EE Full Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-all/7.0.8/jar)
-* [Eclipse GlassFish Embedded 7.0.8, Jakarta EE Web Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-web/7.0.8/jar)
+* [Eclipse GlassFish 7.0.9, Jakarta EE Platform, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-7.0.9.zip)
+* [Eclipse GlassFish 7.0.9, Jakarta EE Web Profile, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-7.0.9.zip)
+* [Eclipse GlassFish Embedded 7.0.9, Jakarta EE Full Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-all/7.0.9/jar)
+* [Eclipse GlassFish Embedded 7.0.9, Jakarta EE Web Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-web/7.0.9/jar)
 
 More details:
 
-* [Eclipse GlassFish 7.0.8 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.8)
+* [Eclipse GlassFish 7.0.9 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.9)
 * [Jakarte EE Platform Specification Project](https://jakartaee.github.io/jakartaee-platform/) for more info about Jakarta EE 10
 
 

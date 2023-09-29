@@ -190,7 +190,7 @@ spec:
             mvn -B -e clean install -Pfastest,staging -T4C
             ./gfbuild.sh archive_bundles
             ./gfbuild.sh archive_embedded
-            mvn -B -e clean
+            mvn -B -e clean -Pstaging
             tar -c -C ${WORKSPACE}/appserver/tests common_test.sh gftest.sh appserv-tests quicklook | gzip --fast > ${WORKSPACE}/bundles/appserv_tests.tar.gz
             ls -la ${WORKSPACE}/bundles
             ls -la ${WORKSPACE}/embedded

@@ -379,7 +379,7 @@ public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
      */
     @Override
     public boolean isDas() {
-        return serverType == RuntimeType.DAS;
+        return serverType == RuntimeType.DAS || isEmbedded();
     }
 
     public boolean isDebug() {

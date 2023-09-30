@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,7 +34,7 @@ import org.glassfish.hk2.api.PostConstruct;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * Defines various global configuration for the running GlassFish instance.
+ * Defines various global configuration for the running {@code GlassFish} instance.
  *
  * <p>
  * This primarily replaces all the system variables in V2.
@@ -44,25 +45,36 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
 
-    /** folder where all generated code like compiled jsps, stubs is stored */
+    /** Folder where all generated code like compiled jsps, stubs is stored */
     public static final String kGeneratedDirName = "generated";
+
     public static final String kRepositoryDirName = "applications";
+
     public static final String kAppAltDDDirName = "altdd";
+
     public static final String kEJBStubDirName = "ejb";
+
     public static final String kGeneratedXMLDirName = "xml";
+
     public static final String kPolicyFileDirName = "policy";
 
     public static final String kConfigXMLFileName = "domain.xml";
+
     public static final String kConfigXMLFileNameBackup = "domain.xml.bak";
+
     public static final String kLoggingPropertiesFileName = "logging.properties";
+
     public static final String kDefaultLoggingPropertiesFileName = "default-logging.properties";
-    /** folder where the configuration of this instance is stored */
+
+    /** Folder where the configuration of this instance is stored */
     public static final String kConfigDirName = "config";
-    /** init file name */
+
+    /** Init file name */
     public static final String kInitFileName = "init.conf";
 
     public static final String DEFAULT_ADMIN_CONSOLE_CONTEXT_ROOT = "/admin";
-    public static final String DEFAULT_ADMIN_CONSOLE_APP_NAME     = "__admingui"; //same as folder
+
+    public static final String DEFAULT_ADMIN_CONSOLE_APP_NAME = "__admingui"; //same as folder
 
     @Inject
     StartupContext startupContext;
@@ -73,7 +85,8 @@ public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
     private ASenvPropertyReader asenv;
     private /*almost final*/ String domainName;
     private /*almost final*/ String instanceName;
-    private RuntimeType serverType = RuntimeType.DAS; //set to DAS to avoid null
+    private RuntimeType serverType = RuntimeType.DAS; // Set to DAS to avoid null
+    private Status status = Status.starting;
 
     private final static String INSTANCE_ROOT_PROP_NAME = "com.sun.aas.instanceRoot";
     private static final String INSTALL_ROOT_PROP_NAME = "com.sun.aas.installRoot";
@@ -85,8 +98,8 @@ public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
     }
 
     public ServerEnvironmentImpl(File root) {
-        // the getParentFile() that we do later fails to work correctly if
-        // root is for example "new File(".")
+        // The getParentFile() that we do later fails to work correctly
+        // if root is for example "new File(".")
         this.root = root.getAbsoluteFile();
         asenv = new ASenvPropertyReader();
     }
@@ -101,9 +114,8 @@ public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
         String installRoot = startupContext.getArguments().getProperty(INSTALL_ROOT_PROP_NAME);
         if (installRoot == null) {
             // During unit testing, we find an empty StartupContext.
-            // Let's first see if the installRoot system property is set
-            // in the client VM, if not
-            // To be consistent with earlier code (i.e., code that relied on StartupContext.getRootDirectory()),
+            // Let's first see if the installRoot system property is set in the client VM. If not
+            // to be consistent with earlier code (i.e., code that relied on StartupContext.getRootDirectory()),
             // I am setting user.dir as installRoot.
             if (System.getProperty(INSTALL_ROOT_PROP_NAME) != null) {
                 installRoot = System.getProperty(INSTALL_ROOT_PROP_NAME);
@@ -113,8 +125,8 @@ public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
         }
         asenv = new ASenvPropertyReader(new File(installRoot));
 
-        // default
-        if(this.root==null) {
+        // Default
+        if (this.root==null) {
             String envVar = System.getProperty(INSTANCE_ROOT_PROP_NAME);
             if (envVar!=null) {
                 root = new File(envVar);
@@ -171,8 +183,7 @@ public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
 
         if (!isNotEmpty(s)) {
             instanceName = "server";
-        }
-        else {
+        } else {
             instanceName = s;
         }
         // bnevins IT 10209
@@ -181,15 +192,12 @@ public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
 
         // bnevins Apr 2010 adding clustering support...
         String typeString = args.getProperty("-type");
-        serverType = RuntimeType.getDefault();
-
         try {
-            if(typeString != null) {
+            if (typeString != null) {
                 serverType = RuntimeType.valueOf(typeString);
             }
-        }
-        catch(Exception e) {
-            // already handled above...
+        } catch (Exception e) {
+            // Already handled above...
         }
     }
 
@@ -216,7 +224,7 @@ public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
      */
     @Override
     public File getConfigDirPath() {
-        return new File(root,kConfigDirName);
+        return new File(root, kConfigDirName);
     }
 
     /**
@@ -225,7 +233,7 @@ public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
      */
     @Override
     public File getApplicationRepositoryPath() {
-        return new File(root,kRepositoryDirName);
+        return new File(root, kRepositoryDirName);
     }
 
     /**
@@ -234,14 +242,14 @@ public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
      */
     @Override
     public File getApplicationStubPath() {
-        return new File(root,kGeneratedDirName);
+        return new File(root, kGeneratedDirName);
     }
 
     /**
      * Gets the <tt>init.conf</tt> file.
      */
     public File getInitFilePath() {
-        return new File(getConfigDirPath(),kInitFileName);
+        return new File(getConfigDirPath(), kInitFileName);
     }
 
     /**
@@ -261,30 +269,28 @@ public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
 
     @Override
     public File getApplicationGeneratedXMLPath() {
-        return new File(getApplicationStubPath(),kGeneratedXMLDirName);
+        return new File(getApplicationStubPath(), kGeneratedXMLDirName);
     }
 
     /**
-     * Returns the path for compiled JSP Pages from an application
-     * that is deployed on this instance. By default all such compiled JSPs
-     * should lie in the same folder.
+     * Returns the path for compiled JSP Pages from an application that is deployed on this instance.
+     *  By default all such compiled JSPs should lie in the same folder.
      */
     @Override
     public File getApplicationCompileJspPath() {
-        return new File(getApplicationStubPath(),kCompileJspDirName);
+        return new File(getApplicationStubPath(), kCompileJspDirName);
     }
 
     /**
-     * Returns the path for policy files for applications
-     * deployed on this instance.
+     * Returns the path for policy files for applications deployed on this instance.
      */
     @Override
     public File getApplicationPolicyFilePath() {
-        return new File(getApplicationStubPath(),kPolicyFileDirName);
+        return new File(getApplicationStubPath(), kPolicyFileDirName);
     }
 
     /**
-     * Gets the directory to store external alternate deployment descriptors
+     * Gets the directory to store external alternate deployment descriptors.
      * Normally {@code ROOT/generated/altdd}
      */
     @Override
@@ -295,9 +301,12 @@ public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
 
     /**
      * Return the value of one property.
-     * Example <br>
+     *
+     * <p>Example:
+     * <pre>
      * String pr = getProp(SystemPropertyConstants.PRODUCT_ROOT_PROPERTY);
-     * <br>
+     * </pre>
+     *
      * @param key the name of the property
      * @return the value of the property
      */
@@ -309,17 +318,17 @@ public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
         return Collections.unmodifiableMap(asenv.getProps());
     }
 
-    /** Returns the folder where the admin console application's folder (in the
-     *  name of admin console application) should be found. Thus by default,
-     *  it should be: [install-dir]/lib/install/applications. No attempt is made
-     *  to check if this location is readable or writable.
-     *  @return java.io.File representing parent folder for admin console application
-     *   Never returns a null
+    /** Returns the folder where the admin console application's folder (in the name
+     *  of admin console application) should be found. Thus, by default, it should be:
+     *  [install-dir]/lib/install/applications. No attempt is made to check if this
+     *  location is readable or writable.
+     *
+     *  @return {@link File} representing parent folder for admin console application.
+     *  Never returns a {@code null}.
      */
     public File getDefaultAdminConsoleFolderOnDisk() {
         File install = new File(asenv.getProps().get(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
-        File agp = new File(new File(new File(install, "lib"), "install"), "applications");
-        return (agp);
+        return new File(new File(new File(install, "lib"), "install"), "applications");
     }
 
     @Override
@@ -337,7 +346,6 @@ public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
         return new File(getConfigDirPath(), "cacerts.jks");
     }
 
-    private Status status=Status.starting;
     @Override
     public Status getStatus() {
         return status;
@@ -355,8 +363,10 @@ public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
     public RuntimeType getRuntimeType() {
         return serverType;
     }
- /**
-     * Every server has a name that can be found in the server element in domain.xml
+
+    /**
+     * Every server has a name that can be found in the server element in {@code domain.xml}.
+     *
      * @return the name of this server i.e. "my" name
      */
     @Override
@@ -366,6 +376,7 @@ public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
 
     /**
      * Am I a running GlassFish server instance?
+     *
      * @return true if we are an instance
      */
     @Override
@@ -375,11 +386,12 @@ public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
 
     /**
      * Am I a running GlassFish DAS server?
+     *
      * @return true if we are a DAS
      */
     @Override
     public boolean isDas() {
-        return serverType == RuntimeType.DAS;
+        return serverType == RuntimeType.DAS || isEmbedded();
     }
 
     public boolean isDebug() {

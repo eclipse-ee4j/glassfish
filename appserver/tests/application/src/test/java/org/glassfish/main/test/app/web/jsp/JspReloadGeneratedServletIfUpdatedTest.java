@@ -27,7 +27,9 @@ import java.net.HttpURLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.FileTime;
 import java.time.Duration;
+import java.time.Instant;
 
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
@@ -84,6 +86,7 @@ public class JspReloadGeneratedServletIfUpdatedTest {
         assertTimeout(Duration.ofSeconds(10L), () -> assertTrue(targetFile.toFile().exists()));
         Files.createDirectories(targetFile.getParent());
         Files.copy(sourceFile, targetFile, StandardCopyOption.REPLACE_EXISTING);
+        Files.setLastModifiedTime(targetFile, FileTime.from(Instant.now()));
         doHttpGet("This is my UPDATED output");
     }
 

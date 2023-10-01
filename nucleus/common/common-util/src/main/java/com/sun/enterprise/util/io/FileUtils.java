@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +17,6 @@
 
 package com.sun.enterprise.util.io;
 
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.OS;
 
 import java.io.BufferedInputStream;
@@ -59,7 +58,6 @@ public final class FileUtils {
     public static final File USER_HOME = new File(System.getProperty("user.home"));
 
     private static final Logger LOG = System.getLogger(FileUtils.class.getName());
-    private static final LocalStringsImpl I18N = new LocalStringsImpl(FileUtils.class);
 
     private static final char[] ILLEGAL_FILENAME_CHARS = {'/', '\\', ':', '*', '?', '"', '<', '>', '|'};
     private static final char REPLACEMENT_CHAR = '_';

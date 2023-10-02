@@ -182,6 +182,9 @@ public class Asadmin {
         if (System.getenv("AS_TRACE") == null && LOG.isLoggable(Level.FINEST)) {
             processManager.setEnvironment("AS_TRACE", "true");
         }
+        // override any env property to what is used by tests
+        processManager.setEnvironment("JAVA_HOME", System.getProperty("java.home"));
+        processManager.setEnvironment("AS_JAVA", System.getProperty("java.home"));
 
         int exitCode;
         String asadminErrorMessage = "";

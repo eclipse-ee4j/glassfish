@@ -85,7 +85,7 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>3.8.6</version>
+                                    <version>3.9.0</version>
                                 </requireMavenVersion>
                             </rules>
                         </configuration>
@@ -112,7 +112,7 @@
                 <module>docs</module>
             </modules>
         </profile>
-        
+
         <!-- Ommits a variety of things in order to get the fastest build of a basic full glassfish server -->
         <profile>
             <id>fastest</id>
@@ -122,7 +122,7 @@
                 <module>appserver</module>
             </modules>
         </profile>
-        
+
         <profile>
             <!--
                 RE profile for release purposes.

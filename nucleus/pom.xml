@@ -90,6 +90,7 @@
 
     <properties>
         <glassfish.generate-injectors.skip>false</glassfish.generate-injectors.skip>
+        <glassfishbuild-maven-plugin.assemblyInputDirectory>${project.build.outputDirectory}</glassfishbuild-maven-plugin.assemblyInputDirectory>
     </properties>
     <build>
         <pluginManagement>

@@ -93,7 +93,7 @@ kind: Pod
 spec:
   containers:
   - name: maven
-    image: maven:3.9.0-eclipse-temurin-17
+    image: maven:3.9.4-eclipse-temurin-17
     command:
     - cat
     tty: true
@@ -228,7 +228,7 @@ spec:
       }
       tools {
         jdk 'temurin-jdk17-latest'
-        maven 'apache-maven-3.8.6'
+        maven 'apache-maven-3.9.3'
       }
       steps {
         script {

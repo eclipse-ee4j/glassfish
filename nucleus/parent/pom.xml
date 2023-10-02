@@ -82,7 +82,7 @@
         <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
 
         <!-- Jakarta Web Services -->
-        
+
         <!-- Jakarta XML Web Services -->
         <jakarta.xml.ws-api.version>4.0.0</jakarta.xml.ws-api.version>
 
@@ -160,6 +160,7 @@
         <jmh.version>1.37</jmh.version>
         <osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
 
+        <file.executable.suffix></file.executable.suffix>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.commonResourcesDirectory>${project.build.directory}/common-resources</project.build.commonResourcesDirectory>
         <legal.doc.source>${project.build.commonResourcesDirectory}/legal</legal.doc.source>
@@ -843,8 +844,9 @@
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
                     <artifactId>glassfishbuild-maven-plugin</artifactId>
-                    <!-- Don't use 3.2.28, FeatureSetsDependenciesMojo is broken. 3.3.0 is not fixed either, 4.0 may finally work -->
-                    <version>3.2.27</version>
+                    <version>4.0.0-M1</version>
+                    <!-- Adds support for glassfish-jar and it's customized lifecycle-->
+                    <extensions>true</extensions>
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
@@ -990,8 +992,13 @@
                     <version>4.0.0-M9</version>
                 </plugin>
                 <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+                <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>3.6.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
@@ -1130,7 +1137,7 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>3.8.6</version>
+                                    <version>3.9.0</version>
                                 </requireMavenVersion>
                             </rules>
                         </configuration>
@@ -1177,15 +1184,11 @@
             <plugin>
                 <groupId>org.glassfish.build</groupId>
                 <artifactId>glassfishbuild-maven-plugin</artifactId>
-                <!-- Adds support for glassfish-jar and it's customized lifecycle-->
-                <extensions>true</extensions>
-                <configuration>
-                    <dir>${project.build.outputDirectory}</dir>
-                </configuration>
             </plugin>
 
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <inherited>false</inherited>
                 <executions>
                     <execution>
                         <id>common-resources</id>
@@ -1193,7 +1196,6 @@
                         <goals>
                             <goal>single</goal>
                         </goals>
-                        <inherited>false</inherited>
                         <configuration>
                             <descriptors>
                                 <descriptor>src/main/assembly/resources.xml</descriptor>
@@ -1608,6 +1610,18 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <properties>
+                <file.executable.suffix>.bat</file.executable.suffix>
+            </properties>
         </profile>
     </profiles>
 </project>

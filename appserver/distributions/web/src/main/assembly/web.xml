@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+    Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
     Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -17,8 +18,10 @@
 
 -->
 
-<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.2.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.2.0 https://maven.apache.org/xsd/assembly-2.2.0.xsd"
+>
 
     <id>stage-distribution</id>
     <formats>
@@ -27,20 +30,28 @@
     <includeBaseDirectory>false</includeBaseDirectory>
 
     <fileSets>
-
         <!-- glassfish-common -->
         <fileSet>
             <directory>${temp.dir}/glassfish-common/${install.dir.name}</directory>
-            <fileMode>755</fileMode>
+            <fileMode>750</fileMode>
             <includes>
                 <include>bin/**</include>
+                <include>glassfish/bin/**</include>
+                <include>glassfish/config/asenv.bat</include>
+                <include>glassfish/config/asenv.conf</include>
+                <include>glassfish/lib/nadmin</include>
             </includes>
             <outputDirectory>${install.dir.name}</outputDirectory>
         </fileSet>
         <fileSet>
             <directory>${temp.dir}/glassfish-common/${install.dir.name}</directory>
+            <fileMode>640</fileMode>
             <excludes>
                 <exclude>bin/**</exclude>
+                <exclude>glassfish/bin/**</exclude>
+                <exclude>glassfish/config/asenv.bat</exclude>
+                <exclude>glassfish/config/asenv.conf</exclude>
+                <exclude>glassfish/lib/nadmin</exclude>
             </excludes>
             <outputDirectory>${install.dir.name}</outputDirectory>
         </fileSet>
@@ -48,6 +59,7 @@
         <!-- javadb -->
         <fileSet>
             <directory>${temp.dir}/derby/</directory>
+            <fileMode>640</fileMode>
             <excludes>
                 <exclude>demo/**</exclude>
                 <exclude>docs/**</exclude>
@@ -60,50 +72,59 @@
         <!-- lib/dtds -->
        <fileSet>
             <directory>${temp.dir}/appserver-dtds/glassfish/lib/dtds</directory>
+            <fileMode>640</fileMode>
             <outputDirectory>${install.dir.name}/glassfish/lib/dtds</outputDirectory>
         </fileSet>
         <fileSet>
             <directory>${temp.dir}/nucleus-dtds/lib/dtds</directory>
+            <fileMode>640</fileMode>
             <outputDirectory>${install.dir.name}/glassfish/lib/dtds</outputDirectory>
         </fileSet>
         <fileSet>
             <directory>${temp.dir}/descriptors/glassfish/lib/dtds</directory>
+            <fileMode>640</fileMode>
             <outputDirectory>${install.dir.name}/glassfish/lib/dtds</outputDirectory>
         </fileSet>
 
         <!-- lib/schemas -->
         <fileSet>
             <directory>${temp.dir}/nucleus-schemas/lib/schemas</directory>
+            <fileMode>640</fileMode>
             <outputDirectory>${install.dir.name}/glassfish/lib/schemas</outputDirectory>
         </fileSet>
         <fileSet>
             <directory>${temp.dir}/appserver-schemas/glassfish/lib/schemas</directory>
+            <fileMode>640</fileMode>
             <outputDirectory>${install.dir.name}/glassfish/lib/schemas</outputDirectory>
         </fileSet>
         <fileSet>
             <directory>${temp.dir}/descriptors/glassfish/lib/schemas</directory>
+            <fileMode>640</fileMode>
             <outputDirectory>${install.dir.name}/glassfish/lib/schemas</outputDirectory>
         </fileSet>
 
         <!-- lib/install/ -->
         <fileSet>
-          <directory>${temp.dir}/jdbc-ra/glassfish/lib/install/applications</directory>
-          <includes>
-              <include>__cp_jdbc_ra/**</include>
-              <include>__dm_jdbc_ra/**</include>
-              <include>__ds_jdbc_ra/**</include>
-              <include>__xa_jdbc_ra/**</include>
-          </includes>
-          <outputDirectory>${install.dir.name}/glassfish/lib/install/applications</outputDirectory>
+            <directory>${temp.dir}/jdbc-ra/glassfish/lib/install/applications</directory>
+            <fileMode>640</fileMode>
+            <includes>
+                <include>__cp_jdbc_ra/**</include>
+                <include>__dm_jdbc_ra/**</include>
+                <include>__ds_jdbc_ra/**</include>
+                <include>__xa_jdbc_ra/**</include>
+            </includes>
+            <outputDirectory>${install.dir.name}/glassfish/lib/install/applications</outputDirectory>
         </fileSet>
         <fileSet>
             <directory>${temp.dir}/descriptors/glassfish/lib/install/templates/resources/custom</directory>
+            <fileMode>640</fileMode>
             <outputDirectory>${install.dir.name}/glassfish/lib/install/templates/resources/custom</outputDirectory>
         </fileSet>
 
         <!-- admingui -->
         <fileSet>
             <directory>${temp.dir}/war</directory>
+            <fileMode>640</fileMode>
             <outputDirectory>${install.dir.name}/glassfish/lib/install/applications/__admingui</outputDirectory>
         </fileSet>
 
@@ -111,6 +132,7 @@
 
         <fileSet>
             <directory>${temp.dir}</directory>
+            <fileMode>640</fileMode>
             <includes>
                 <include>nucleus-domain.jar</include>
                 <include>appserver-domain.jar</include>
@@ -121,6 +143,7 @@
         <!-- lib/asadmin/ -->
         <fileSet>
             <directory>${temp.dir}</directory>
+            <fileMode>640</fileMode>
             <includes>
                 <include>server-mgmt.jar</include>
                 <include>osgi-cli-interactive.jar</include>
@@ -133,6 +156,7 @@
         <!-- lib/client -->
         <fileSet>
             <directory>${temp.dir}</directory>
+            <fileMode>640</fileMode>
             <includes>
                 <include>appserver-cli.jar</include>
             </includes>
@@ -142,6 +166,7 @@
         <!-- lib/monitor/ -->
         <fileSet>
             <directory>${temp.dir}</directory>
+            <fileMode>640</fileMode>
             <includes>
                 <include>flashlight-agent.jar</include>
             </includes>
@@ -151,6 +176,7 @@
         <!-- lib/embedded -->
         <fileSet>
             <directory>${temp.dir}</directory>
+            <fileMode>640</fileMode>
             <includes>
                 <include>glassfish-embedded-shell.jar</include>
                 <include>glassfish-embedded-static-shell.jar</include>
@@ -161,6 +187,7 @@
         <!-- lib/ -->
         <fileSet>
             <directory>${temp.dir}</directory>
+            <fileMode>640</fileMode>
             <includes>
                 <include>jakartaee.jar</include>
                 <include>appserv-rt.jar</include>
@@ -171,6 +198,7 @@
         <!-- lib/bootstrap -->
         <fileSet>
             <directory>${temp.dir}</directory>
+            <fileMode>640</fileMode>
             <includes>
                 <include>glassfish-jul-extension.jar</include>
                 <include>grizzly-npn-api.jar</include>
@@ -181,6 +209,7 @@
         <!-- felix -->
         <fileSet>
             <directory>${temp.dir}</directory>
+            <fileMode>640</fileMode>
             <includes>
                 <include>felix.jar</include>
             </includes>
@@ -188,6 +217,7 @@
         </fileSet>
         <fileSet>
             <directory>${temp.dir}</directory>
+            <fileMode>640</fileMode>
             <includes>
                 <include>org.apache.felix.*.jar</include>
                 <include>org.osgi.util.function.jar</include>
@@ -202,6 +232,7 @@
         <!-- staging modules -->
         <fileSet>
             <directory>${temp.dir}</directory>
+            <fileMode>640</fileMode>
             <includes>
                 <include>*.jar</include>
             </includes>
@@ -237,17 +268,18 @@
         </fileSet>
     </fileSets>
     <dependencySets>
-       <dependencySet>
-           <includes>
-               <include>org.glassfish.main.jdbc:templates</include>
-           </includes>
-           <unpack>true</unpack>
-           <unpackOptions>
-               <excludes>
-                   <exclude>META-INF/**</exclude>
-               </excludes>
-           </unpackOptions>
-           <outputDirectory>${install.dir.name}</outputDirectory>
-       </dependencySet>
-   </dependencySets>
+        <dependencySet>
+            <fileMode>640</fileMode>
+            <includes>
+                <include>org.glassfish.main.jdbc:templates</include>
+            </includes>
+            <unpack>true</unpack>
+            <unpackOptions>
+                <excludes>
+                    <exclude>META-INF/**</exclude>
+                </excludes>
+            </unpackOptions>
+            <outputDirectory>${install.dir.name}</outputDirectory>
+        </dependencySet>
+    </dependencySets>
 </assembly>

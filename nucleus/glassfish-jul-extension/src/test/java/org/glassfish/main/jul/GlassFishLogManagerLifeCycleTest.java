@@ -170,7 +170,7 @@ public class GlassFishLogManagerLifeCycleTest {
     @Timeout(10)
     public void finishFlushing() throws Exception {
         ACTION_FLUSH.unblock();
-        doLog(Level.INFO, "Log after flushing finished", 5);
+        doLog(Level.INFO, "Log after flushing finished", 10);
         final List<GlassFishLogRecord> logRecords = COLLECTOR.getAll();
         assertAll(
             () -> assertEquals(GlassFishLoggingStatus.FULL_SERVICE, MANAGER.getLoggingStatus(),

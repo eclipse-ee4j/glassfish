@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -41,6 +42,6 @@ public class DetachedTerseAsadminResult extends AsadminResult {
     private static String parseJobId(String stdOut) {
         String[] lines = stdOut.split(System.lineSeparator());
         assertThat(Arrays.toString(lines), lines, arrayWithSize(1));
-        return Integer.valueOf(lines[0]).toString();
+        return Integer.valueOf(lines[0].trim()).toString();
     }
 }

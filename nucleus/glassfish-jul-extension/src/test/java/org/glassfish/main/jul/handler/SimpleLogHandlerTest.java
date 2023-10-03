@@ -71,7 +71,7 @@ public class SimpleLogHandlerTest {
         handler.publish(record);
         final String log = os.toString(StandardCharsets.UTF_8.name());
         assertNotNull(log, "log");
-        final String[] lines = log.split("\n");
+        final String[] lines = log.split("\r?\n");
         assertAll(
             () -> assertThat(lines, arrayWithSize(1)),
             () -> assertThat(lines[0],
@@ -90,7 +90,7 @@ public class SimpleLogHandlerTest {
         handler.publish(record);
         final String log = os.toString(StandardCharsets.UTF_8.name());
         assertNotNull(log, "log");
-        final String[] lines = log.split("\n");
+        final String[] lines = log.split("\r?\n");
         assertAll(
             () -> assertThat(lines, arrayWithSize(greaterThan(20))),
             () -> assertThat(lines[0],

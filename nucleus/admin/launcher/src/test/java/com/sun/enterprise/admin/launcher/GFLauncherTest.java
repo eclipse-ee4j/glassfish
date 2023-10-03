@@ -26,9 +26,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.matchesPattern;
 import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -91,7 +91,8 @@ public class GFLauncherTest {
         launcher.launch();
         List<String> cmdline = launcher.getCommandLine();
         // 0 --> java, 1 --> "-cp" 2 --> the classpath, 3 -->first arg
-        assertThat(cmdline, hasItems(endsWith("java"), is("-cp"), is("-XX:+UnlockDiagnosticVMOptions"), is("-verbose")));
+        assertThat(cmdline,
+            hasItems(matchesPattern(".*java(.exe)?"), is("-cp"), is("-XX:+UnlockDiagnosticVMOptions"), is("-verbose")));
     }
 
     /**
@@ -103,7 +104,7 @@ public class GFLauncherTest {
         launcher.launch();
         List<String> cmdline = launcher.getCommandLine();
         assertThat(cmdline,
-            hasItems(endsWith("java"), is("-cp"), not(is("-XX:+UnlockDiagnosticVMOptions")), is("-verbose")));
+            hasItems(matchesPattern(".*java(.exe)?"), is("-cp"), not(is("-XX:+UnlockDiagnosticVMOptions")), is("-verbose")));
     }
 
 

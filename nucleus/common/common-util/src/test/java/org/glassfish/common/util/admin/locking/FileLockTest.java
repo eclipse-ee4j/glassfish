@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,8 +24,10 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Callable;
@@ -36,11 +38,18 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.Lock;
 
 import org.glassfish.common.util.admin.ManagedFile;
+import org.glassfish.common.util.admin.ManagedFile.ManagedLock;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  * Tests for ManagedFile.writeLock and ManagedFile.readLock.
@@ -271,71 +280,76 @@ public class FileLockTest {
          }
      }
 
+
      @Test
-     public void lockForReadAndWriteTest() throws Exception {
-         // on unixes, there is no point on testing locking access through
-         // normal java.io APIs since several outputstream can be created and
-         // the last one to close always win.
-         if (!System.getProperty("os.name").toUpperCase().contains("WINDOWS")) {
-             return;
-         }
-         File f = File.createTempFile("common-util-FileLockTest", "tmp");
+     @DisabledOnOs(OS.WINDOWS)
+     public void lockForReadAndWriteTest_Unix() throws Exception {
+         final File file = File.createTempFile("common-util-FileLockTest", "tmp");
+         final Path filePath = file.toPath();
          try {
              // Now let's try to write the file.
-             try (FileWriter fw = new FileWriter(f)) {
-                 fw.append("lockForReadAndWriteTest passed !");
-             }
+             final String message = "lockForReadAndWriteTest passed!";
+             Files.writeString(filePath, message);
+             assertEquals(message, Files.readString(filePath));
 
-             System.out.println("file length " + f.length());
-             try (FileReader fr = new FileReader(f)) {
-                 char[] chars = new char[1024];
-                 int length = fr.read(chars);
-                 System.out.println(new String(chars, 0, length));
-             }
+             final ManagedFile managed = new ManagedFile(file, 1000, 1000);
+             final Lock fl = managed.accessRead();
 
-             final ManagedFile managed = new ManagedFile(f, 1000, 1000);
-             Lock fl = managed.accessRead();
-
-             try (FileWriter fwr = new FileWriter(f)) {
-                fwr.append("lockForReadAndWriteTest failed !");
-             }
-
+             final String message2 = "\nlockForReadAndWriteTest passed!";
+             Files.writeString(filePath, message2, StandardOpenOption.APPEND);
              fl.unlock();
 
-             assertThat("The write lock was an advisory lock, file content was deleted !", f.length(), greaterThan(0L));
-             try (FileReader fr = new FileReader(f)) {
-                 char[] chars = new char[1024];
-                 int length = fr.read(chars);
-                 assertThat("lockForReadAndWriteTest failed, file content is empty", length, greaterThan(0));
-             }
+             assertThat(Files.readString(filePath), equalTo(message + message2));
          } finally {
-             f.delete();
-         }
-     }
+            file.delete();
+        }
+    }
+
 
     @Test
-    public void lockAndWriteTest() throws IOException {
-        File f = File.createTempFile("common-util-FileLockTest", "tmp");
+    @EnabledOnOs(OS.WINDOWS)
+    public void lockForReadAndWriteTest_Windows() throws Exception {
+        final File file = File.createTempFile("common-util-FileLockTest", "tmp");
+        final Path filePath = file.toPath();
         try {
-            final ManagedFile managed = new ManagedFile(f, 1000, 1000);
-            ManagedFile.ManagedLock fl = managed.accessWrite();
-
             // Now let's try to write the file.
-            RandomAccessFile raf = fl.getLockedFile();
-            raf.writeUTF("lockAndWriteTest Passed !");
+            final String message = "lockForReadAndWriteTest passed!";
+            Files.writeString(filePath, message);
+            assertEquals(message, Files.readString(filePath));
 
+            final ManagedFile managed = new ManagedFile(file, 1000, 1000);
+            final Lock fl = managed.accessRead();
+
+            final String message2 = "\nlockForReadAndWriteTest failed!";
+            assertThrows(IOException.class, () -> Files.writeString(filePath, message2, StandardOpenOption.APPEND));
             fl.unlock();
+            assertEquals(message, Files.readString(filePath));
 
-            // Let's read it back
-            FileReader fr = new FileReader(f);
-            char[] chars = new char[1024];
-            int length = fr.read(chars);
-            fr.close();
-            f.delete();
-            System.out.println(new String(chars,0,length));
+            final String message3 = "\nlockForReadAndWriteTest passed!";
+            Files.writeString(filePath, message3, StandardOpenOption.APPEND);
+            assertThat(Files.readString(filePath), equalTo(message + message3));
+        } finally {
+            file.delete();
+        }
+    }
 
-        } catch(Exception e) {
-            e.printStackTrace();
+
+    @Test
+    public void lockAndWriteTest() throws Exception {
+        File file = File.createTempFile("common-util-FileLockTest", "tmp");
+        try {
+            final ManagedFile managed = new ManagedFile(file, 1000, 1000);
+            final ManagedLock fileLock = managed.accessWrite();
+            // Now let's try to write the file.
+            final RandomAccessFile raf = fileLock.getLockedFile();
+            final String message = "lockAndWriteTest Passed!";
+            raf.writeUTF(message);
+            fileLock.unlock();
+
+            // Let's read it back; trim leading UTF-8 bytes.
+            assertEquals(message, Files.readString(file.toPath()).trim());
+        } finally {
+            file.delete();
         }
     }
 
@@ -344,36 +358,17 @@ public class FileLockTest {
     public void lockAndRenameTest() throws Exception {
         File f = File.createTempFile("common-util-FileLockTest", "tmp");
         final ManagedFile managed = new ManagedFile(f, 1000, 1000);
-        Lock fl = managed.accessWrite();
-
+        managed.accessWrite();
         File dest = new File("filelock");
-
-        if (f.renameTo(new File("filelock"))) {
-            System.out.println("File renaming successful");
-        } else {
-            System.out.println("File renaming failed");
+        try {
+            assertTrue(!f.renameTo(new File("filelock")), "File renaming blocked");
+        } finally {
+            dest.delete();
         }
-
-        if (dest.exists()) {
-            System.out.println("File is there...");
-        }
-        dest.delete();
     }
 
-    private File getFile() throws IOException {
-        Enumeration<URL> urls = getClass().getClassLoader().getResources("adminport.xml");
-        if (urls.hasMoreElements()) {
-            try {
-                File f = new File(urls.nextElement().toURI());
-                if (f.exists()) {
-                    return f;
-                }
-            } catch (URISyntaxException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            System.out.println("No DomainTest.xml found !");
-        }
-        return null;
+    private File getFile() throws URISyntaxException {
+        URL url = getClass().getClassLoader().getResource("adminport.xml");
+        return new File(url.toURI());
     }
 }

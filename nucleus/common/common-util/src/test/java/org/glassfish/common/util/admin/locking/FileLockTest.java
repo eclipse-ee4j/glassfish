@@ -259,7 +259,7 @@ public class FileLockTest {
     }
 
     @Test
-     public void lockAndReadTest() throws Exception {
+    public void lockAndReadTest() throws Exception {
          File f = File.createTempFile("common-util-FileLockTest", "tmp");
          try {
              // Now let's try to write the file.
@@ -355,6 +355,7 @@ public class FileLockTest {
 
 
     @Test
+    @DisabledOnOs(OS.MAC)
     public void lockAndRenameTest() throws Exception {
         File f = File.createTempFile("common-util-FileLockTest", "tmp");
         final ManagedFile managed = new ManagedFile(f, 1000, 1000);

@@ -372,7 +372,7 @@ public class CheckpointHelper {
             Part part = parts.next();
             File sourceFile = File.createTempFile("source", "", topDir);
             try (InputStream inputStream = part.getInputStream()) {
-                FileUtils.copy(inputStream, sourceFile, Long.MAX_VALUE);
+                FileUtils.copy(inputStream, sourceFile);
             }
             outbound.addPart(part.getContentType(), part.getName(), part.getProperties(), new FileInputStream(sourceFile));
         }

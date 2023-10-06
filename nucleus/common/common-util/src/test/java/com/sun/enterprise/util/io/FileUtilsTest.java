@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,26 +22,27 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import org.junit.jupiter.api.BeforeAll;
+
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.DynamicTest.stream;
 
 /**
  * @author wnevins
  * @author David Matejcek
  */
 public class FileUtilsTest {
+
+    @TempDir
     private static File tempDir;
 
-    @BeforeAll
-    public static void init() throws Exception {
-        tempDir = Files.createTempDirectory(FileUtilsTest.class.getSimpleName()).toFile();
-    }
 
     @Test
     public void testMkdirsMaybe() {
@@ -82,33 +83,58 @@ public class FileUtilsTest {
 
 
     @Test
+    public void testCopyStreamWithKnownSizeToFile() throws Exception {
+        File outputFile = new File(tempDir, "outputFile");
+        File testFile = new File(FileUtilsTest.class.getResource("/adminport.xml").toURI());
+        long length = testFile.length();
+        try (FileInputStream stream = new FileInputStream(testFile)) {
+            FileUtils.copy(stream, outputFile, length);
+            assertEquals(testFile.length(), outputFile.length());
+            assertThrows(IOException.class, () -> stream.available());
+        }
+        // do that once again to verify that the file was not appended or the operation blocked.
+        try (FileInputStream stream = new FileInputStream(testFile)) {
+            FileUtils.copy(stream, outputFile, length);
+            assertEquals(testFile.length(), outputFile.length());
+            assertThrows(IOException.class, () -> stream.available());
+        }
+    }
+
+
+    @Test
     public void testCopyStreamToFile() throws Exception {
         File outputFile = new File(tempDir, "outputFile");
         File testFile = new File(FileUtilsTest.class.getResource("/adminport.xml").toURI());
-        FileInputStream stream = new FileInputStream(testFile);
-        FileUtils.copy(stream, outputFile, Long.MAX_VALUE);
-        assertEquals(testFile.length(), outputFile.length());
+        try (FileInputStream stream = new FileInputStream(testFile)) {
+            FileUtils.copy(stream, outputFile);
+            assertEquals(testFile.length(), outputFile.length());
+            assertEquals(0, stream.available(), "available bytes");
+        }
     }
 
 
     @Test
     public void testCopyFileStreamToFileStream() throws Exception {
         File outputFile = new File(tempDir, "outputFile");
-        FileOutputStream output = new FileOutputStream(outputFile);
         File testFile = new File(FileUtilsTest.class.getResource("/adminport.xml").toURI());
-        FileInputStream inputStream = new FileInputStream(testFile);
-        FileUtils.copy(inputStream, output);
-        assertEquals(testFile.length(), outputFile.length());
+        try (FileOutputStream output = new FileOutputStream(outputFile);
+            FileInputStream inputStream = new FileInputStream(testFile)) {
+            FileUtils.copy(inputStream, output);
+            assertEquals(testFile.length(), outputFile.length());
+            assertEquals(0, inputStream.available(), "available bytes");
+        }
     }
 
 
     @Test
     public void testCopyCLStreamToStream() throws Exception {
         File outputFile = new File(tempDir, "outputFile");
-        BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(outputFile));
         File testFile = new File(FileUtilsTest.class.getResource("/adminport.xml").toURI());
-        InputStream inputStream = new BufferedInputStream(FileUtilsTest.class.getResourceAsStream("/adminport.xml"));
-        FileUtils.copy(inputStream, output);
-        assertEquals(testFile.length(), outputFile.length());
+        try (BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(outputFile));
+        InputStream inputStream = new BufferedInputStream(FileUtilsTest.class.getResourceAsStream("/adminport.xml"))) {
+            FileUtils.copy(inputStream, output);
+            assertEquals(testFile.length(), outputFile.length());
+            assertEquals(0, inputStream.available(), "available bytes");
+        }
     }
 }

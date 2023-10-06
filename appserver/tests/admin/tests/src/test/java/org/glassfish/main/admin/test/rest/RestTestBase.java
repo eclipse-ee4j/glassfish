@@ -95,7 +95,9 @@ public class RestTestBase {
             ensureWritableDir(reportDir);
 
             File reportFile = new File(reportDir, testInfo.getTestClass().orElseThrow().getName() + "-server.log");
-            FileUtils.copy(response.readEntity(InputStream.class), reportFile, Long.MAX_VALUE);
+            try (InputStream readEntity = response.readEntity(InputStream.class)) {
+                FileUtils.copy(readEntity, reportFile);
+            }
         }
     }
 

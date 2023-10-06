@@ -17,15 +17,21 @@
 
 package org.glassfish.admin.payload;
 
-import com.sun.enterprise.util.io.FileUtils;
-
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Properties;
+
 import org.glassfish.api.admin.Payload;
 
 /**

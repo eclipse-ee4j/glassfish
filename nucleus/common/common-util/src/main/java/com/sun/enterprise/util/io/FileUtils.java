@@ -40,6 +40,7 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Set;
@@ -609,8 +610,10 @@ public final class FileUtils {
      * retry count is reached.
      *
      * @param work the RetriableWork implementation to be run
-     * @return the number of retries performed; 0 indicates the work succeeded without having to retry
-     * @deprecated The situation usually means there's an IO leak.
+     * @return the number of retries performed; 0 indicates the work succeeded without having to
+     *         retry
+     * @deprecated The situation usually means there's an IO leak. It can be used also on Windows OS
+     *             when many threads are trying to access the same file.
      */
     @Deprecated
     private static int doWithRetry(RetriableWork work) {
@@ -740,23 +743,40 @@ public final class FileUtils {
 
 
     /**
-     * FIXME: Document and write test with large zip file to see if it wouldn't be better to use
-     * BufferedInputStream and BufferedOutputStream.
-     * FIXME: Usually used with JarFile and it's entry. Add API.
+     * Fast method using NIO to copy data from the input to the output file, when you already do
+     * know the size of the input.
      * <p>
      * WARNING: Don't use it when you don't know the byteCount value.
      *
      * @param in It will be closed after processing.
      * @param out Target output file.
      * @param byteCount count of bytes to be transferred.
-     * @throws IOException
+     * @throws IOException if the operation failed.
+     * @throws IllegalArgumentException if the byte count is less then 0 or equal to
+     *             {@link Long#MAX_VALUE} (obvious hacks)
      */
-    public static void copy(InputStream in, File out, long byteCount) throws IOException {
+    public static void copy(InputStream in, File out, long byteCount) throws IOException, IllegalArgumentException {
+        if (byteCount < 0 || byteCount >= Long.MAX_VALUE) {
+            throw new IllegalArgumentException("If you don't know the byte count, don't use this method!");
+        }
         try (
             ReadableByteChannel inputChannel = Channels.newChannel(in);
             FileOutputStream output = new FileOutputStream(out)) {
             output.getChannel().transferFrom(inputChannel, 0, byteCount);
         }
+    }
+
+
+    /**
+     * This method should be used instead of {@link #copy(InputStream, File, long)} if you don't
+     * know the size of the input stream.
+     *
+     * @param in It will NOT be closed after processing. That is caller's responsibility.
+     * @param out Target output file. If the file already exists, it will be overwritten!
+     * @throws IOException
+     */
+    public static void copy(InputStream in, File out) throws IOException {
+        Files.copy(in, out.toPath(), StandardCopyOption.REPLACE_EXISTING);
     }
 
 

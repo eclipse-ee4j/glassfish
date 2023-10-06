@@ -436,7 +436,7 @@ public abstract class PayloadFilesManager {
 
             if (!extractedFile.isDirectory()) {
                 try (InputStream is = part.getInputStream()) {
-                    FileUtils.copy(is, extractedFile, Long.MAX_VALUE);
+                    FileUtils.copy(is, extractedFile);
                 }
             }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,6 +34,9 @@ import org.jvnet.mimepull.MIMEConfig;
 import org.jvnet.mimepull.MIMEMessage;
 import org.jvnet.mimepull.MIMEPart;
 
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  *
  * @author martinmares
@@ -64,62 +67,63 @@ public final class MultipartProprietaryReader implements ProprietaryReader<Param
 
     @Override
     public ParamsWithPayload readFrom(final InputStream is, final String contentType) throws IOException {
-        RestPayloadImpl.Inbound payload = null;
-        ActionReport actionReport = null;
-        ParameterMap parameters = null;
         Properties mtProps = parseHeaderParams(contentType);
         final String boundary = mtProps.getProperty("boundary");
         if (!StringUtils.ok(boundary)) {
             throw new IOException("ContentType does not define boundary");
         }
-        try (MIMEMessage mimeMessage = new MIMEMessage(is, boundary, new MIMEConfig())) {
-            // Parse
-            for (MIMEPart mimePart : mimeMessage.getAttachments()) {
-                String cd = getFirst(mimePart.getHeader("Content-Disposition"));
-                if (!StringUtils.ok(cd)) {
-                    cd = "file";
+
+        // FIXME: Big refactoring required because of possible resource leaks:
+        // MIMEMessage produces MIMEPart objects based on the is parameter.
+        // All these objects are Closeable.
+        // The final result of this method is the payload, based on mimePart object.
+        // That is used later, and at least in one branch none of these objecs can be closed,
+        // because the payload's input stream would be closed too.
+        final MIMEMessage mimeMessage = new MIMEMessage(is, boundary, new MIMEConfig());
+        RestPayloadImpl.Inbound payload = null;
+        ActionReport actionReport = null;
+        ParameterMap parameters = null;
+        // Parse
+        for (MIMEPart mimePart : mimeMessage.getAttachments()) {
+            String cd = getFirst(mimePart.getHeader("Content-Disposition"));
+            cd = StringUtils.ok(cd) ? cd.trim() : "file";
+            Properties cdParams = parseHeaderParams(cd);
+            // 3 types of content disposition
+            if (cd.startsWith("form-data")) {
+                // COMMAND PARAMETER
+                if (!StringUtils.ok(cdParams.getProperty("name"))) {
+                    throw new IOException("Form-data Content-Disposition does not contains name parameter.");
                 }
-                cd = cd.trim();
-                Properties cdParams = parseHeaderParams(cd);
-                // 3 types of content disposition
-                if (cd.startsWith("form-data")) {
-                    // COMMAND PARAMETER
-                    if (!StringUtils.ok(cdParams.getProperty("name"))) {
-                        throw new IOException("Form-data Content-Disposition does not contains name parameter.");
-                    }
-                    if (parameters == null) {
-                        parameters = new ParameterMap();
-                    }
-                    parameters.add(cdParams.getProperty("name"), stream2String(mimePart.readOnce()));
-                } else if (mimePart.getContentType() != null
-                    && mimePart.getContentType().startsWith("application/json")) {
-                    // ACTION REPORT
-                    actionReport = actionReportReader.readFrom(mimePart.readOnce(), "application/json");
+                if (parameters == null) {
+                    parameters = new ParameterMap();
+                }
+                parameters.add(cdParams.getProperty("name"), stream2String(mimePart.readOnce()));
+            } else if (mimePart.getContentType() != null && mimePart.getContentType().startsWith("application/json")) {
+                // ACTION REPORT
+                actionReport = actionReportReader.readFrom(mimePart.readOnce(), "application/json");
+            } else {
+                // PAYLOAD
+                final String name;
+                if (cdParams.containsKey("name")) {
+                    name = new String(cdParams.getProperty("name").getBytes(ISO_8859_1), UTF_8);
+                } else if (cdParams.containsKey("filename")) {
+                    name = cdParams.getProperty("filename");
                 } else {
-                    // PAYLOAD
-                    String name = "noname";
-                    if (cdParams.containsKey("name")) {
-                        name = cdParams.getProperty("name");
-                        name = new String(name.getBytes("ISO8859-1"), "UTF-8");
-                    } else if (cdParams.containsKey("filename")) {
-                        name = cdParams.getProperty("filename");
-                    }
-                    if (payload == null) {
-                        payload = new RestPayloadImpl.Inbound();
-                    }
-                    String ct = mimePart.getContentType();
-                    if (!StringUtils.ok(ct) || ct.trim().startsWith("text/plain")) {
-                        payload.add(name, stream2String(mimePart.readOnce()), mimePart.getAllHeaders());
-                    } else {
-                        payload.add(name, mimePart.read(), ct, mimePart.getAllHeaders());
-                    }
+                    name = "noname";
+                }
+                if (payload == null) {
+                    payload = new RestPayloadImpl.Inbound();
+                }
+                final String ct = mimePart.getContentType();
+                if (StringUtils.ok(ct) && !ct.trim().startsWith("text/plain")) {
+                    payload.add(name, mimePart.read(), ct, mimePart.getAllHeaders());
+                } else {
+                    payload.add(name, stream2String(mimePart.readOnce()), mimePart.getAllHeaders());
                 }
             }
-            // Result
-            return new ParamsWithPayload(payload, parameters, actionReport);
-        } finally {
-            is.close();
         }
+        // Result
+        return new ParamsWithPayload(payload, parameters, actionReport);
     }
 
     /**

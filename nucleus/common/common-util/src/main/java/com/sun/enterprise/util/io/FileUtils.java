@@ -688,7 +688,7 @@ public final class FileUtils {
      * @throws IOException
      */
     public static File copyResource(String resourcePath, File outputFile) throws IOException {
-        LOG.log(Level.INFO, "copyResource(resourcePath={0}, outputFile={1})", resourcePath, outputFile);
+        LOG.log(DEBUG, "copyResource(resourcePath={0}, outputFile={1})", resourcePath, outputFile);
         try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath)) {
             if (is == null) {
                 return null;
@@ -721,7 +721,7 @@ public final class FileUtils {
             throw new RuntimeException("Can't create parent dir of output file: " + fout);
         }
         Files.copy(fin.toPath(), fout.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        LOG.log(Level.DEBUG, "Successfully copyied file {0} to {1}", fin, fout);
+        LOG.log(DEBUG, "Successfully copyied file {0} to {1}", fin, fout);
     }
 
 
@@ -827,10 +827,10 @@ public final class FileUtils {
      */
     public static void copy(InputStream in, File out) throws IOException {
         if (out.getParentFile().mkdirs()) {
-            LOG.log(Level.INFO, "Created directory {0}", out.getCanonicalPath());
+            LOG.log(DEBUG, "Created directory {0}", out.getCanonicalPath());
         }
         long bytes = Files.copy(in, out.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        LOG.log(Level.INFO, "Copyied {0} bytes to {1}", bytes, out);
+        LOG.log(DEBUG, "Copyied {0} bytes to {1}", bytes, out);
     }
 
 

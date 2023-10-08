@@ -183,7 +183,9 @@ class JarFileManager implements Closeable {
             closeJarFiles(files);
         } finally {
             // No need to interrupt, just cancel next executions
-            this.unusedJarsCheck.cancel(false);
+            if (this.unusedJarsCheck != null) {
+                this.unusedJarsCheck.cancel(false);
+            }
             writeLock.unlock();
         }
     }
@@ -240,21 +242,21 @@ class JarFileManager implements Closeable {
         try {
             codeBase = file.getCanonicalFile().toURI().toURL();
         } catch (IOException e) {
-            LOG.log(DEBUG, "Invalid file: " + file, e);
+            LOG.log(WARNING, "Invalid file: " + file, e);
             return null;
         }
         final URL source;
         try {
             source = new URL("jar:" + codeBase + "!/" + entryPath);
         } catch (MalformedURLException e) {
-            LOG.log(DEBUG, "Cannot create valid URL of file " + file + " and entry path " + entryPath, e);
+            LOG.log(WARNING, "Cannot create valid URL of file " + file + " and entry path " + entryPath, e);
             return null;
         }
         final ResourceEntry entry = new ResourceEntry(codeBase, source);
         try {
             entry.manifest = jarFile.getManifest();
         } catch (IOException e) {
-            LOG.log(DEBUG, "Failed to get manifest from " + jarFile.getName(), e);
+            LOG.log(WARNING, "Failed to get manifest from " + jarFile.getName(), e);
             return null;
         }
         entry.lastModified = file.lastModified();
@@ -264,7 +266,7 @@ class JarFileManager implements Closeable {
                 entry.readEntryData(name, binaryStream, contentLength, jarEntry);
             }
         } catch (IOException e) {
-            LOG.log(DEBUG, "Failed to read entry data for " + name, e);
+            LOG.log(WARNING, "Failed to read entry data for " + name, e);
             return null;
         }
         return entry;
@@ -294,7 +296,7 @@ class JarFileManager implements Closeable {
                 FileOutputStream os = new FileOutputStream(resourceFile)) {
                 FileUtils.copy(is, os, Long.MAX_VALUE);
             } catch (IOException e) {
-                LOG.log(DEBUG, "Failed to copy entry " + jarEntry, e);
+                LOG.log(WARNING, "Failed to copy entry " + jarEntry, e);
             }
         }
     }

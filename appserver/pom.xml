@@ -134,7 +134,7 @@
         <!-- Jakarta Pages and Jakarta Standard Tag Library -->
         <jakarta.pages-api.version>3.1.1</jakarta.pages-api.version>
         <jstl-api.version>3.0.0</jstl-api.version>
-        <wasp.version>3.2.0</wasp.version>
+        <wasp.version>3.2.1</wasp.version>
 
         <!-- Used for Jakarta SOAP (XML Web Services) -->
         <xmlsec.version>3.0.2</xmlsec.version>

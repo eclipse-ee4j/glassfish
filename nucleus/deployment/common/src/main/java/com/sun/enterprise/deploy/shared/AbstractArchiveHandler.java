@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,26 +17,22 @@
 
 package com.sun.enterprise.deploy.shared;
 
-
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.net.URI;
-import org.glassfish.api.deployment.archive.ReadableArchive;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.jar.Manifest;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLResolver;
+import javax.xml.stream.XMLStreamException;
+
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.deployment.common.DeploymentUtils;
-import java.io.IOException;
-import java.util.jar.Manifest;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import java.net.URL;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLResolver;
-
 import org.glassfish.internal.deployment.GenericHandler;
-
 import org.glassfish.logging.annotation.LogMessageInfo;
 
 /**
@@ -52,7 +49,7 @@ public abstract class AbstractArchiveHandler extends GenericHandler {
     private static XMLInputFactory xmlInputFactory;
 
     static {
-        xmlInputFactory = XMLInputFactory.newInstance();
+        xmlInputFactory = XMLInputFactory.newFactory();
         xmlInputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
         // set an zero-byte XMLResolver as IBM JDK does not take SUPPORT_DTD=false
         // unless there is a jvm option com.ibm.xml.xlxp.support.dtd.compat.mode=false
@@ -71,13 +68,12 @@ public abstract class AbstractArchiveHandler extends GenericHandler {
         try {
             Manifest manifest = getManifest(context.getSource());
             return DeploymentUtils.getManifestLibraries(context, manifest);
-        }catch (IOException ioe) {
-            deplLogger.log(Level.WARNING,
-                           MANIFEST_CLASSPATH_ERROR,
-                           ioe);
-            return new ArrayList<URL>();
+        } catch (IOException ioe) {
+            deplLogger.log(Level.WARNING, MANIFEST_CLASSPATH_ERROR, ioe);
+            return new ArrayList<>();
         }
     }
+
 
     protected static XMLInputFactory getXMLInputFactory() {
         return xmlInputFactory;

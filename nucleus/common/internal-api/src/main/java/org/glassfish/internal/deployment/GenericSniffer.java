@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +16,12 @@
  */
 
 package org.glassfish.internal.deployment;
+
+import com.sun.enterprise.module.HK2Module;
+import com.sun.enterprise.module.ModuleDefinition;
+import com.sun.enterprise.module.ModulesRegistry;
+
+import jakarta.inject.Inject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -42,12 +48,6 @@ import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.hk2.api.ServiceLocator;
 
-import com.sun.enterprise.module.HK2Module;
-import com.sun.enterprise.module.ModuleDefinition;
-import com.sun.enterprise.module.ModulesRegistry;
-
-import jakarta.inject.Inject;
-
 /**
  * Generic implementation of the Sniffer service that can be programmatically instantiated
  *
@@ -65,7 +65,7 @@ public abstract class GenericSniffer implements Sniffer {
     final private String appStigma;
     final private String urlPattern;
 
-    final private static XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+    final private static XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
     private HK2Module[] modules;
 
     public GenericSniffer(String containerName, String appStigma, String urlPattern) {

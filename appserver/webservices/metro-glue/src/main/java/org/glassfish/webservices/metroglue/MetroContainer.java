@@ -168,8 +168,8 @@ public class MetroContainer implements PostConstruct, Container, WebServiceDeplo
                 File root = serverContext.getInstallRoot();
                 File app = null;
                 try {
-                    app = FileUtils.copyResource(root, "lib", "install", "applications", "metro",
-                        WSTX_SERVICES_APP_NAME + ".war");
+                    File outputDir = new File(root, "lib/install/applications/metro");
+                    app = FileUtils.copyResourceToDirectory(WSTX_SERVICES_APP_NAME + ".war", outputDir);
                 } catch (Exception e) {
                     logger.log(Level.WARNING, LogUtils.WSTX_SERVICE_UNEXPECTED_EXCEPTION, e);
                 }

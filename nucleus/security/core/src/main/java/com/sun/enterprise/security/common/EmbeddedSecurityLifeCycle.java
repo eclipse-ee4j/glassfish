@@ -68,16 +68,17 @@ public class EmbeddedSecurityLifeCycle implements EmbeddedLifecycle {
         try {
             //Get the keyfile names from the security service
             List<String> keyFileNames = embeddedSecurity.getKeyFileNames(securityService);
+            File cfgDir = new File(instanceRoot, "config");
             for (String keyFileName : keyFileNames) {
                 // Copy the keyfiles in instanceRoot/config. If file is already present, then exit (handled by getManagedFile)
-                FileUtils.copyResource(instanceRoot, "config", embeddedSecurity.parseFileName(keyFileName));
+                FileUtils.copyResourceToDirectory(embeddedSecurity.parseFileName(keyFileName), cfgDir);
             }
             //Copy the other security files to instanceRoot/config
             //Assuming that these files are present as config/filename in the embedded jar file and are to be extracted that way/
-            FileUtils.copyResource(instanceRoot,"config", "login.conf");
-            FileUtils.copyResource(instanceRoot,"config", "server.policy");
-            FileUtils.copyResource(instanceRoot,"config", "cacerts.jks");
-            FileUtils.copyResource(instanceRoot,"config", "keystore.jks");
+            FileUtils.copyResourceToDirectory("login.conf", cfgDir);
+            FileUtils.copyResourceToDirectory("server.policy", cfgDir);
+            FileUtils.copyResourceToDirectory("cacerts.jks", cfgDir);
+            FileUtils.copyResourceToDirectory("keystore.jks", cfgDir);
             String keystoreFile = null;
             String truststoreFile = null;
             try {

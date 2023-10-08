@@ -19,8 +19,6 @@ package com.sun.enterprise.util.io;
 
 import com.sun.enterprise.util.OS;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
@@ -41,7 +39,6 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Collection;
 import java.util.Locale;
@@ -642,29 +639,6 @@ public final class FileUtils {
 
 
     /**
-     * Copies a file.
-     *
-     * @param fin File to copy
-     * @param fout New file
-     * @throws IOException if an error while copying the content
-     */
-    public static void copy(File fin, File fout) throws IOException {
-        if (safeIsDirectory(fin)) {
-            copyTree(fin, fout);
-            return;
-        }
-        if (!fin.exists()) {
-            throw new IllegalArgumentException("File source doesn't exist");
-        }
-        if (!mkdirsMaybe(fout.getParentFile())) {
-            throw new RuntimeException("Can't create parent dir of output file: " + fout);
-        }
-        Files.copy(fin.toPath(), fout.toPath());
-        LOG.log(Level.DEBUG, "Successfully copyied file {0} to {1}", fin, fout);
-    }
-
-
-    /**
      * Copies the entire tree to a new location.
      *
      * @param din  File pointing at root of tree to copy
@@ -688,6 +662,66 @@ public final class FileUtils {
             File fout = new File(dout, file);
             copy(fin, fout);
         }
+    }
+
+
+    public static File copyResourceToDirectory(String resourcePath, File outputDirectory) throws IOException {
+        int slashIndex = resourcePath.lastIndexOf('/');
+        String fileName = slashIndex < 0 ? resourcePath : resourcePath.substring(slashIndex + 1);
+        File output = new File(outputDirectory, fileName);
+        if (output.exists()) {
+            return output;
+        }
+        return copyResource(resourcePath, output);
+    }
+
+
+    /**
+     * If the path dir/file does not exist, look for it in the classpath.
+     * If found in classpath, create dir/file.
+     * <p>
+     * Existing file will not be overwritten.
+     *
+     * @param resourcePath - resource loadable by the thread context classloader.
+     * @param outputFile - if the file exists, it will be overwritten
+     * @return the File representing dir/file. If the resource does not exist, return null.
+     * @throws IOException
+     */
+    public static File copyResource(String resourcePath, File outputFile) throws IOException {
+        LOG.log(Level.INFO, "copyResource(resourcePath={0}, outputFile={1})", resourcePath, outputFile);
+        try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath)) {
+            if (is == null) {
+                return null;
+            }
+            if (!mkdirsMaybe(outputFile.getParentFile())) {
+                throw new IOException("Can't create parent dir of output file: " + outputFile);
+            }
+            copy(is, outputFile);
+            return outputFile;
+        }
+    }
+
+
+    /**
+     * Copies a file.
+     *
+     * @param fin File to copy
+     * @param fout New file
+     * @throws IOException if an error while copying the content
+     */
+    public static void copy(File fin, File fout) throws IOException {
+        if (safeIsDirectory(fin)) {
+            copyTree(fin, fout);
+            return;
+        }
+        if (!fin.exists()) {
+            throw new IllegalArgumentException("File source doesn't exist");
+        }
+        if (!mkdirsMaybe(fout.getParentFile())) {
+            throw new RuntimeException("Can't create parent dir of output file: " + fout);
+        }
+        Files.copy(fin.toPath(), fout.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        LOG.log(Level.DEBUG, "Successfully copyied file {0} to {1}", fin, fout);
     }
 
 
@@ -792,7 +826,11 @@ public final class FileUtils {
      * @throws IOException
      */
     public static void copy(InputStream in, File out) throws IOException {
-        Files.copy(in, out.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        if (out.getParentFile().mkdirs()) {
+            LOG.log(Level.INFO, "Created directory {0}", out.getCanonicalPath());
+        }
+        long bytes = Files.copy(in, out.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        LOG.log(Level.INFO, "Copyied {0} bytes to {1}", bytes, out);
     }
 
 
@@ -883,36 +921,6 @@ public final class FileUtils {
             }
         }
         return sb.toString();
-    }
-
-
-    /**
-     * If the path dir/file does not exist, look for it in the classpath.
-     * If found in classpath, create dir/file.
-     * <p>
-     * Existing file will not be overwritten.
-     *
-     * @param dir - directory where the path file should exist (including resource path)
-     * @param resourcePath - resource loadable by the thread context classloader.
-     * @return the File representing dir/file. If that does not exist, return null.
-     * @throws IOException
-     */
-    public static File copyResource(File dir, String... resourcePath) throws IOException {
-        File f = new File(dir, String.join(File.separator, resourcePath));
-        if (f.exists()) {
-            return f;
-        }
-        try (InputStream is = Thread.currentThread().getContextClassLoader()
-            .getResourceAsStream(String.join("/", resourcePath))) {
-            if (is == null) {
-                return null;
-            }
-            if (!mkdirsMaybe(f.getParentFile())) {
-                throw new IOException("Can't create parent dir of output file: " + f);
-            }
-            copy(is, f);
-            return f;
-        }
     }
 
 

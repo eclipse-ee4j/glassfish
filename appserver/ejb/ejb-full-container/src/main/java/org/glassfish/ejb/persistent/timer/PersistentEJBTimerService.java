@@ -1390,7 +1390,8 @@ public class PersistentEJBTimerService extends EJBTimerService {
         logger.log (Level.INFO, "Loading EJBTimerService. Please wait.");
         File app = null;
         try {
-            app = FileUtils.copyResource(root, "lib", "install", "applications", TIMER_SERVICE_APP_NAME + ".war");
+            File outputDir = new File(root, "lib/install/applications");
+            app = FileUtils.copyResourceToDirectory(TIMER_SERVICE_APP_NAME + ".war", outputDir);
         } catch (Exception e) {
             logger.log (Level.WARNING, "Caught unexpected exception", e);
         }

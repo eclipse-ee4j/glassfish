@@ -208,7 +208,7 @@ spec:
           dumpSysInfo()
           timeout(time: 1, unit: 'HOURS') {
             sh '''
-                mvn -B -e clean install -Pstaging
+                mvn -B -e clean install -Pstaging -P'!docs'
             '''
           }
         }
@@ -233,6 +233,19 @@ spec:
       steps {
         script {
           parallel parallelStagesMap
+        }
+      }
+    }
+    stage('docs') {
+      steps {
+        checkout scm
+        container('maven') {
+          dumpSysInfo()
+          timeout(time: 1, unit: 'HOURS') {
+            sh '''
+                mvn -B -e clean install -Pstaging -Pdocs
+            '''
+          }
         }
       }
     }

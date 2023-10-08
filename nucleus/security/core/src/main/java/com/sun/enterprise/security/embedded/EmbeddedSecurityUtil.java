@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,6 +16,15 @@
  */
 
 package com.sun.enterprise.security.embedded;
+
+import com.sun.enterprise.config.serverbeans.AuthRealm;
+import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.security.EmbeddedSecurity;
+import com.sun.enterprise.security.SecurityLoggerInfo;
+import com.sun.enterprise.util.StringUtils;
+import com.sun.enterprise.util.io.FileUtils;
+
+import jakarta.inject.Singleton;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -35,15 +45,6 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.types.Property;
-
-import com.sun.enterprise.config.serverbeans.AuthRealm;
-import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.security.EmbeddedSecurity;
-import com.sun.enterprise.security.SecurityLoggerInfo;
-import com.sun.enterprise.util.StringUtils;
-import com.sun.enterprise.util.io.FileUtils;
-
-import jakarta.inject.Singleton;
 
 /**
  * Utility file to copy the security related config files from the passed non-embedded instanceDir to the embedded server
@@ -72,7 +73,7 @@ public class EmbeddedSecurityUtil implements EmbeddedSecurity {
 
         File toInstanceDir = habitat.<ServerEnvironmentImpl>getService(ServerEnvironmentImpl.class).getInstanceRoot();
 
-        List<String> fileNames = new ArrayList<String>();
+        List<String> fileNames = new ArrayList<>();
 
         //Handling the exception here, since it is causing CTS failure - CR 6981191
 
@@ -140,7 +141,7 @@ public class EmbeddedSecurityUtil implements EmbeddedSecurity {
 
     @Override
     public List<String> getKeyFileNames(SecurityService securityService) {
-        List<String> keyFileNames = new ArrayList<String>();
+        List<String> keyFileNames = new ArrayList<>();
 
         List<AuthRealm> authRealms = securityService.getAuthRealm();
         for (AuthRealm authRealm : authRealms) {
@@ -160,10 +161,9 @@ public class EmbeddedSecurityUtil implements EmbeddedSecurity {
 
     //Inner class to parse the domainXml to obtain the keyfile names
     class DomainXmlSecurityParser {
-
         XMLStreamReader xmlReader;
-        XMLInputFactory xif = (XMLInputFactory.class.getClassLoader() == null) ? XMLInputFactory.newInstance()
-            : XMLInputFactory.newInstance(XMLInputFactory.class.getName(), XMLInputFactory.class.getClassLoader());
+        XMLInputFactory xif = XMLInputFactory.class.getClassLoader() == null ? XMLInputFactory.newFactory()
+            : XMLInputFactory.newFactory(XMLInputFactory.class.getName(), XMLInputFactory.class.getClassLoader());
 
         private static final String AUTH_REALM = "auth-realm";
         private static final String CONFIG = "config";
@@ -188,7 +188,7 @@ public class EmbeddedSecurityUtil implements EmbeddedSecurity {
 
         //Obtain the keyfile names for the server-config (the first appearing config in domain.xml
         List<String> getAbsolutePathKeyFileNames(File fromInstanceDir) throws XMLStreamException {
-            List<String> keyFileNames = new ArrayList<String>();
+            List<String> keyFileNames = new ArrayList<>();
             while (skipToStartButNotPast(AUTH_REALM, CONFIG)) {
                 String realmClass = xmlReader.getAttributeValue(null, CLASSNAME);
                 if (realmClass.equals(FILE_REALM_CLASS)) {

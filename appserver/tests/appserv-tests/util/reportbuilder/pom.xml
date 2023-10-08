@@ -40,9 +40,9 @@
                     <execution>
                         <phase>install</phase>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <copy file="target/${project.artifactId}.jar" tofile="../../lib/reportbuilder.jar"/>
-                            </tasks>
+                            </target>
                         </configuration>
                         <goals>
                             <goal>run</goal>

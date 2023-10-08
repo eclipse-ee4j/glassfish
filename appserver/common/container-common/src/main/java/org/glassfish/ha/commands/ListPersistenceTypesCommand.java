@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -60,7 +60,7 @@ public class ListPersistenceTypesCommand implements AdminCommand {
     @Param(name = "type", optional = false, primary = false)
     @I18n("list.persistence.types.container")
     @Pattern(regexp = CONTAINER_TYPES, message = "Valid values: " + CONTAINER_TYPES)
-    private final String containerType = "";
+    private String containerType = "";
 
     private Logger logger;
     private static final String EOL = "\n";
@@ -106,7 +106,6 @@ public class ListPersistenceTypesCommand implements AdminCommand {
     private boolean checkEnvAndParams(ActionReport report) {
         if (containerType == null) {
             return fail(report, Strings.get("list.persistence.types.null.parameter"));
-
         }
         if (!containerType.equals("ejb") && !containerType.equals("web")) {
             return fail(report, Strings.get("list.persistence.types.invalid.parameter", containerType));
@@ -121,5 +120,4 @@ public class ListPersistenceTypesCommand implements AdminCommand {
         report.setMessage(s);
         return false;
     }
-
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,14 @@
 
 package com.sun.enterprise.universal.xml;
 
-import java.io.*;
-import javax.xml.stream.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 /**
  * A place to put all the ugly boiler plate for parsing an XML file.
@@ -27,11 +34,11 @@ public final class XmlParserHelper {
 
     public XmlParserHelper(final File f) throws FileNotFoundException, XMLStreamException {
         reader = new InputStreamReader(new FileInputStream(f));
-        parser = XMLInputFactory.newInstance().createXMLStreamReader(
+        parser = XMLInputFactory.newFactory().createXMLStreamReader(
                 f.toURI().toString(), reader);
     }
 
-    public final XMLStreamReader get() {
+    public XMLStreamReader get() {
         return parser;
     }
 
@@ -39,7 +46,7 @@ public final class XmlParserHelper {
      * Don't forget to call this method when finished!
      * Closes the parser and the stream
      */
-    public final void stop() {
+    public void stop() {
         // yes -- you **do** need to close BOTH of them!
         try {
             if (parser != null) {

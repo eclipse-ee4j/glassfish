@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,6 +24,11 @@ import com.sun.enterprise.config.modularity.customization.PortTypeDetails;
 import com.sun.enterprise.config.modularity.customization.TokenTypeDetails;
 import com.sun.enterprise.util.LocalStringManager;
 
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -31,10 +37,6 @@ import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * @author Masoud Kalali
@@ -56,7 +58,7 @@ public class ModuleXMLConfigurationFileParser {
     private static final String PORT = "port";
     private static final String VALIDATION_EXPRESSION = "validation-expression";
 
-    private LocalStringManager localStrings;
+    private final LocalStringManager localStrings;
 
     public ModuleXMLConfigurationFileParser(LocalStringManager localStrings) {
         this.localStrings = localStrings;
@@ -64,8 +66,8 @@ public class ModuleXMLConfigurationFileParser {
 
     public List<ConfigBeanDefaultValue> parseServiceConfiguration(InputStream xmlDocumentStream) throws XMLStreamException {
 
-        List<ConfigBeanDefaultValue> configBeans = new ArrayList<ConfigBeanDefaultValue>();
-        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+        List<ConfigBeanDefaultValue> configBeans = new ArrayList<>();
+        XMLInputFactory inputFactory = XMLInputFactory.newFactory();
         inputFactory.setProperty(XMLInputFactory.IS_COALESCING, Boolean.TRUE);
         XMLEventReader eventReader = inputFactory.createXMLEventReader(xmlDocumentStream);
         ConfigBeanDefaultValue configValue = null;

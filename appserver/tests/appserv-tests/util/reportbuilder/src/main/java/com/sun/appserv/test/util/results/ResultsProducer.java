@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2004, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,62 +17,59 @@
 
 package com.sun.appserv.test.util.results;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-@SuppressWarnings({"IOResourceOpenedButNotSafelyClosed"})
-public class ResultsProducer {
-    private XMLStreamReader parser;
-    private int count = 0;
-    private int pass = 0;
-    private int fail = 0;
-    private int didNotRun = 0;
+public class ResultsProducer implements Closeable {
+    private final XMLStreamReader parser;
+    private final File input;
+    private final Results results;
     private boolean done = false;
-    private StringBuilder buffer;
-    private File input;
 
-    public ResultsProducer(String inputFile) throws XMLStreamException, FileNotFoundException {
-        input = new File(inputFile);
-        parser = XMLInputFactory.newInstance().createXMLStreamReader(new FileInputStream(input));
+    public ResultsProducer(File inputFile) throws XMLStreamException, FileNotFoundException {
+        input = inputFile;
+        parser = XMLInputFactory.newFactory().createXMLStreamReader(new FileInputStream(input));
+        results = new Results();
     }
 
-    private void produce() throws XMLStreamException, IOException {
-        buffer = new StringBuilder();
+    @Override
+    public void close() throws IOException {
+        try {
+            parser.close();
+        } catch (XMLStreamException e) {
+            throw new IOException("Closing parser failed.", e);
+        }
+    }
+
+
+    private Results produce() throws XMLStreamException {
         while (hasNext()) {
             readTestCase();
         }
-        parser.close();
         line();
-        format("PASSED", pass);
-        format("FAILED", fail);
-        format("DID NOT RUN", didNotRun);
-        format("TOTAL", count);
+        format("PASSED", results.pass);
+        format("FAILED", results.fail);
+        format("DID NOT RUN", results.didNotRun);
+        format("TOTAL", results.count);
         line();
-        System.out.println(buffer);
-        FileWriter writer = new FileWriter(new File(input.getParentFile(), "count.txt"));
-        writer.write(buffer.toString());
-        writer.flush();
-        writer.close();
-        if (fail != 0) {
-            System.err.println("All Tests NOT passed, so returning UNSUCCESS status.");
-            System.exit(1);
-        }
-
+        return results;
     }
 
     private void line() {
-        buffer.append("**********************\n");
+        results.buffer.append("**********************\n");
     }
 
     private void format(final String result, final int count) {
-        buffer.append(String.format("* %-12s %5d *\n", result, count));
+        results.buffer.append(String.format("* %-12s %5d *\n", result, count));
     }
 
     private void readTestCase() throws XMLStreamException {
@@ -88,13 +86,13 @@ public class ResultsProducer {
     }
 
     private void process(final TestCase test) {
-        count++;
+        results.count++;
         if(ReporterConstants.PASS.equals(test.getStatus())) {
-            pass++;
+            results.pass++;
         } else if(ReporterConstants.FAIL.equals(test.getStatus())) {
-            fail++;
+            results.fail++;
         } else if(ReporterConstants.DID_NOT_RUN.equals(test.getStatus())) {
-            didNotRun++;
+            results.didNotRun++;
         }
     }
 
@@ -126,18 +124,39 @@ public class ResultsProducer {
     private int next() throws XMLStreamException {
         final int event = parser.next();
         if (event == XMLStreamConstants.END_DOCUMENT) {
-            parser.close();
             done = true;
         }
         return event;
     }
+
 
     public static void main(String[] args) throws XMLStreamException, IOException {
         if (args.length < 1) {
             System.err.println("Please specify the input file name");
             return;
         }
-        final ResultsProducer producer = new ResultsProducer(args[0]);
-        producer.produce();
+        final Results results;
+        final File inputFile = new File(args[0]);
+        try (ResultsProducer producer = new ResultsProducer(inputFile)) {
+            results = producer.produce();
+        }
+
+        System.out.println(results.buffer);
+        try (FileWriter writer = new FileWriter(new File(inputFile.getParentFile(), "count.txt"))) {
+            writer.write(results.buffer.toString());
+        }
+        if (results.fail != 0) {
+            System.err.println("All Tests NOT passed, so returning UNSUCCESS status.");
+            System.exit(1);
+        }
+    }
+
+    private class Results {
+
+        private int count = 0;
+        private int pass = 0;
+        private int fail = 0;
+        private int didNotRun = 0;
+        private final StringBuilder buffer = new StringBuilder();
     }
 }

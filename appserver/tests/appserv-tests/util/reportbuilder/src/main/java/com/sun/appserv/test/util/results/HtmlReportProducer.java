@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,7 @@
 
 package com.sun.appserv.test.util.results;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -31,6 +33,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
+
+import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -40,30 +44,40 @@ import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
-@SuppressWarnings({"IOResourceOpenedButNotSafelyClosed"})
-public class HtmlReportProducer {
-    private XMLEventReader reader;
+public class HtmlReportProducer implements Closeable {
+    private final XMLEventReader reader;
     private XMLEvent event;
     private final static boolean print = false;
-    private Stack<Object> context = new Stack<Object>();
-    private StringBuilder buffer = new StringBuilder();
-    private File input;
-    private ReportHandler handler;
-    private List<TestSuite> suites = new ArrayList<TestSuite>();
+    private final Stack<Object> context = new Stack<>();
+    private final StringBuilder buffer = new StringBuilder();
+    private final File input;
+    private final ReportHandler handler;
+    private final List<TestSuite> suites = new ArrayList<>();
     private final boolean failOnError;
 
-    public HtmlReportProducer(String inputFile) throws FileNotFoundException {
+    public HtmlReportProducer(String inputFile) throws FileNotFoundException, XMLStreamException, FactoryConfigurationError {
         this(inputFile, true);
     }
-    public HtmlReportProducer(String inputFile, boolean fail) throws FileNotFoundException {
+
+    public HtmlReportProducer(String inputFile, boolean fail) throws FileNotFoundException, XMLStreamException, FactoryConfigurationError {
         input = new File(generateValidReport(inputFile));
         // Use the default (non-validating) parser
         handler = new ReportHandler(new File(input.getParentFile(), "test_results.html"));
+        reader = XMLInputFactory.newFactory().createXMLEventReader(new FileReader(input));
         failOnError = fail;
     }
 
+    @Override
+    public void close() throws IOException {
+        handler.close();
+        try {
+            reader.close();
+        } catch (XMLStreamException e) {
+            throw new IOException(e);
+        }
+    }
+
     public void produce() throws IOException, XMLStreamException {
-        reader = XMLInputFactory.newInstance().createXMLEventReader(new FileReader(input));
         try {
             //noinspection LoopConditionNotUpdatedInsideLoop
             while (nextEvent() != null) {
@@ -125,7 +139,6 @@ public class HtmlReportProducer {
         buffer.append(String.format("* %-12s %5d *\n", result, count));
     }
 
-    @SuppressWarnings({"unchecked"})
     private void map() {
         final StartElement start = event.asStartElement();
         final String name = start.getName().getLocalPart();
@@ -290,56 +303,47 @@ public class HtmlReportProducer {
     }
 
     public String generateValidReport(final String notQuiteXml) {
-        if (!notQuiteXml.endsWith("Valid.xml")) {
-            String oFileName;
-            try {
-                final String resultFile = new File(notQuiteXml).getAbsolutePath();
-                if (resultFile.lastIndexOf(".") > 0) {
-                    oFileName = resultFile.substring(0, resultFile.lastIndexOf(".")) + "Valid.xml";
-                } else {
-                    oFileName = resultFile + "Valid.xml";
+        if (notQuiteXml.endsWith("Valid.xml")) {
+            return notQuiteXml;
+        }
+        String oFileName;
+        try {
+            final String resultFile = new File(notQuiteXml).getAbsolutePath();
+            if (resultFile.lastIndexOf(".") > 0) {
+                oFileName = resultFile.substring(0, resultFile.lastIndexOf(".")) + "Valid.xml";
+            } else {
+                oFileName = resultFile + "Valid.xml";
+            }
+            try (FileOutputStream fout = new FileOutputStream(oFileName);
+                FileInputStream fin = new FileInputStream(notQuiteXml)) {
+                String machineName;
+                try (InputStream in = Runtime.getRuntime().exec("uname -n").getInputStream()) {
+                    byte[] bytes = new byte[200];
+                    in.read(bytes);
+                    machineName = new String(bytes).trim();
+                } catch (Exception me) {
+                    machineName = "unavailable";
                 }
-                FileOutputStream fout = new FileOutputStream(oFileName);
-                FileInputStream fin = new FileInputStream(notQuiteXml);
-                try {
-                    String machineName;
-                    try {
-                        InputStream in = Runtime.getRuntime().exec("uname -n").getInputStream();
-                        byte[] bytes = new byte[200];
-                        in.read(bytes);
-                        machineName = new String(bytes).trim();
-                    } catch (Exception me) {
-                        machineName = "unavailable";
-                    }
-                    String extraXML = String.format("<report>"
-                        + "<date>%s</date>"
-                        + "<configuration>"
-                        + "<os>%s %s</os>"
-                        + "<jdkVersion>%s</jdkVersion>"
-                        + "<machineName>%s</machineName>"
-                        + "</configuration>"
-                        + "<testsuites>",
-                        new Date(), System.getProperty("os.name"), System.getProperty("os.version"),
-                        System.getProperty("java.version"), machineName);
-                    fout.write(extraXML.getBytes());
-                    byte[] bytes = new byte[49152];
-                    int read;
-                    while ((read = fin.read(bytes)) != -1) {
-                        fout.write(bytes, 0, read);
-                    }
-                    fout.write("</testsuites>\n</report>\n".getBytes());
-                    fout.flush();
-                } finally {
-                    fout.close();
-                    fin.close();
-                }
-            } catch (Exception e) {
-                System.out.println("ERROR : " + e);
-                throw new RuntimeException(e.getMessage(), e);
+                String extraXML = String.format("<report>"
+                    + "<date>%s</date>"
+                    + "<configuration>"
+                    + "<os>%s %s</os>"
+                    + "<jdkVersion>%s</jdkVersion>"
+                    + "<machineName>%s</machineName>"
+                    + "</configuration>"
+                    + "<testsuites>",
+                    new Date(), System.getProperty("os.name"), System.getProperty("os.version"),
+                    System.getProperty("java.version"), machineName);
+                fout.write(extraXML.getBytes());
+                fin.transferTo(fout);
+                fout.write("</testsuites>\n</report>\n".getBytes());
+                fout.flush();
             }
             return oFileName;
+        } catch (Exception e) {
+            System.out.println("ERROR : " + e);
+            throw new RuntimeException(e.getMessage(), e);
         }
-        return notQuiteXml;
     }
 
     public static void main(String[] args) throws XMLStreamException, IOException {
@@ -347,7 +351,8 @@ public class HtmlReportProducer {
             System.err.println("Please specify the input file name");
             return;
         }
-        final HtmlReportProducer producer = new HtmlReportProducer(args[0]);
-        producer.produce();
+        try (final HtmlReportProducer producer = new HtmlReportProducer(args[0])) {
+            producer.produce();
+        }
     }
 }

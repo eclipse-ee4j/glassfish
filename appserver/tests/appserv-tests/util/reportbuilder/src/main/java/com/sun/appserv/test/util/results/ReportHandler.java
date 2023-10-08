@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +18,7 @@
 package com.sun.appserv.test.util.results;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -24,7 +26,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
-public class ReportHandler {
+public class ReportHandler implements Closeable {
     int pass;
     int fail;
     int didNotRun;
@@ -32,12 +34,17 @@ public class ReportHandler {
     Configuration config;
     String date;
     int testCaseCount;
-    private StringBuilder detail = new StringBuilder();
-    private StringBuilder summary = new StringBuilder();
-    private PrintWriter writer;
+    private final StringBuilder detail = new StringBuilder();
+    private final StringBuilder summary = new StringBuilder();
+    private final PrintWriter writer;
 
     public ReportHandler(final File file) throws FileNotFoundException {
         writer = new PrintWriter(file);
+    }
+
+    @Override
+    public void close() {
+        writer.close();
     }
 
     void process(TestSuite suite) {
@@ -112,7 +119,6 @@ public class ReportHandler {
             , readFile("TestResults.js"), readFile("TestResults.css"), header(), date,
             config == null ? "" : config.toHtml(), testSuiteSummary(), detailedResults()));
         writer.flush();
-        writer.close();
     }
 
     private String readFile(final String name) {

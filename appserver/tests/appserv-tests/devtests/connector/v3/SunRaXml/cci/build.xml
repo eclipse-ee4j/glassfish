@@ -73,7 +73,7 @@
     <mkdir dir="${build.classes.dir}" />
     <javac srcdir="${src}"
            destdir="${build.classes.dir}"
-           classpath="${s1astest.classpath}:${bundles.dir}/cciblackbox-tx.jar"
+           classpath="${s1astest.classpath}:${mvn.lib.dir}/cciblackbox-tx.jar"
            failonerror="true"
     />
   </target>
@@ -235,7 +235,7 @@
   <target name="create-rar">
     <copy file="descriptor/ra.xml" tofile="${assemble.dir}/rar/META-INF/ra.xml" />
     <copy file="descriptor/sun-ra.xml" tofile="${assemble.dir}/rar/META-INF/sun-ra.xml" />
-    <copy file="${bundles.dir}/cciblackbox-tx.jar" tofile="${assemble.dir}/rar/cciblackbox-tx.jar"
+    <copy file="${mvn.lib.dir}/cciblackbox-tx.jar" tofile="${assemble.dir}/rar/cciblackbox-tx.jar"
     />
     <copy file="${env.APS_HOME}/sqetests/connector/lib/cci-derby-proc.jar"
           tofile="${assemble.dir}/rar/cci-derby-proc.jar"

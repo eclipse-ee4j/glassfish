@@ -83,7 +83,7 @@
         <echo message="Starting cluster ${cname}"/>
         <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/reportbuilder.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/target/report-builder.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
               classname="${se.client}">
            <arg line="prepare"/>
            <arg line="${cname}"/>
@@ -100,7 +100,7 @@
         <echo message="deploying application to ${dtarget}"/>
         <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/reportbuilder.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/target/report-builder.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
               classname="${se.client}">
            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
            <arg line="deploy"/>
@@ -119,7 +119,7 @@
         <echo message="undeploying application from ${utarget}"/>
         <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/reportbuilder.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/target/report-builder.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
               classname="${se.client}">
            <arg line="undeploy"/>
            <arg line="${utarget}"/>
@@ -131,7 +131,7 @@
         <echo message="calling add-app-ref for application to ${cname}"/>
         <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/reportbuilder.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/target/report-builder.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
               classname="${se.client}">
            <arg line="add-app-ref"/>
            <arg line="${cname}"/>
@@ -156,7 +156,7 @@
         <echo message="Stopping cluster ${cname}"/>
         <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/reportbuilder.jar:${build.classes.dir}"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/target/report-builder.jar:${build.classes.dir}"
               classname="${se.client}">
            <arg line="clean"/>
            <arg line="${cname}"/>
@@ -167,7 +167,7 @@
         <echo message="redeploying application"/>
         <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/reportbuilder.jar:${build.classes.dir}"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/target/report-builder.jar:${build.classes.dir}"
               classname="${se.client}">
            <arg line="redeploy"/>
            <arg line="${assemble.dir}/${appname}-web.war"/>
@@ -205,11 +205,11 @@
 
     <target name="compile-client" >
         <javac fork="true" includeAntRuntime="false" destdir="${build.classes.dir}" debug="true"
-               classpath="${env.APS_HOME}/lib/reportbuilder.jar:${build.classes.dir}"
+               classpath="${env.APS_HOME}/lib/target/report-builder.jar:${build.classes.dir}"
                srcdir="${env.APS_HOME}/devtests/admin/cli/src" includes="**/*BaseDevTest.java">
         </javac>
         <javac fork="true" includeAntRuntime="false"
-               classpath="${env.APS_HOME}/lib/reportbuilder.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
+               classpath="${env.APS_HOME}/lib/target/report-builder.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
                destdir="${build.classes.dir}" debug="true" srcdir="client" includes="**/*.java">
             <classpath path="${classpath}"/>
         </javac>
@@ -220,7 +220,7 @@
         <echo message="Verifying timeouts"/>
         <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/reportbuilder.jar:${build.classes.dir}"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/target/report-builder.jar:${build.classes.dir}"
               classname="${se.client}">
            <arg line="verify"/>
            <arg line="${appname}-web"/>

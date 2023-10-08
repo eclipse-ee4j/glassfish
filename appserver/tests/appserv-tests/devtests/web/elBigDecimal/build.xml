@@ -37,7 +37,7 @@
     <target name="compile">
         <javac
             srcdir="."
-            classpath="${env.APS_HOME}/lib/reportbuilder.jar;${env.S1AS_HOME}/modules/expressly.jar;${env.S1AS_HOME}/modules/jakarta.el-api.jar"
+            classpath="${env.APS_HOME}/lib/target/report-builder.jar;${env.S1AS_HOME}/modules/expressly.jar;${env.S1AS_HOME}/modules/jakarta.el-api.jar"
             includes="WebTest.java"/>
 
     </target>
@@ -45,7 +45,7 @@
     <target name="run" depends="compile">
         <java classname="WebTest" fork="true">
           <classpath>
-           <pathelement location="${env.APS_HOME}/lib/reportbuilder.jar"/>
+           <pathelement location="${env.APS_HOME}/lib/target/report-builder.jar"/>
            <pathelement location="${env.S1AS_HOME}/modules/expressly.jar"/>
            <pathelement location="${env.S1AS_HOME}/modules/jakarta.el-api.jar"/>
            <pathelement location="."/>

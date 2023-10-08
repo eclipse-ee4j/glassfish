@@ -100,7 +100,7 @@
 
     <target name="init-path">
         <path id="class.path">
-            <pathelement location="${env.APS_HOME}/lib/reportbuilder.jar"/>
+            <pathelement location="${env.APS_HOME}/lib/target/report-builder.jar"/>
             <pathelement location="build"/>
             <pathelement location="${env.S1AS_HOME}/lib/gf-client.jar"/>
             <pathelement location="${env.S1AS_HOME}/modules/common-util.jar"/>

@@ -47,7 +47,7 @@
         </antcall>
 
         <javac srcdir="."
-            classpath="${env.APS_HOME}/lib/reportbuilder.jar"
+            classpath="${env.APS_HOME}/lib/target/report-builder.jar"
             includes="WebTest.java"/>
     </target>
 
@@ -63,7 +63,7 @@
           <arg value="${http.port}"/>
           <arg value="wlctest"/>
           <classpath>
-           <pathelement location="${env.APS_HOME}/lib/reportbuilder.jar"/>
+           <pathelement location="${env.APS_HOME}/lib/target/report-builder.jar"/>
            <pathelement location="."/>
          </classpath>
         </java>

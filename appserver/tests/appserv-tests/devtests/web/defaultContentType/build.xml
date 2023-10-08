@@ -32,7 +32,7 @@
     &run;
 
     <path id="class.path">
-        <pathelement location="${env.APS_HOME}/lib/reportbuilder.jar"/>
+        <pathelement location="${env.APS_HOME}/lib/target/report-builder.jar"/>
         <pathelement location="build"/>
         <fileset dir="${env.S1AS_HOME}/modules"/>
     </path>
@@ -63,7 +63,7 @@
 
     <target name="run" depends="init-common">
         <mkdir dir="build"/>
-        <javac srcdir="." destdir="build" classpath="${env.APS_HOME}/lib/reportbuilder.jar"
+        <javac srcdir="." destdir="build" classpath="${env.APS_HOME}/lib/target/report-builder.jar"
                includes="WebTest.java"/>
         <run-test classname="WebTest" classpath="${test}"/>
     </target>

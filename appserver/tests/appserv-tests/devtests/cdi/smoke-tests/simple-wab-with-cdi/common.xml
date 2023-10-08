@@ -1919,7 +1919,7 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
 <!-- ================================================================ -->
 <target name="dev-report" depends="init-common">
     <java classname="com.sun.appserv.test.util.results.HtmlReportProducer" fork="true" failonerror="false"
-          classpath="${env.APS_HOME}/lib/reportbuilder.jar">
+          classpath="${env.APS_HOME}/lib/target/report-builder.jar">
         <arg value="${env.APS_HOME}/test_results.xml"/>
     </java>
 </target>

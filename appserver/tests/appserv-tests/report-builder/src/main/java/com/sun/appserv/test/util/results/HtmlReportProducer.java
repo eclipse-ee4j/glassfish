@@ -79,13 +79,11 @@ public class HtmlReportProducer implements Closeable {
 
     public void produce() throws IOException, XMLStreamException {
         try {
-            //noinspection LoopConditionNotUpdatedInsideLoop
             while (nextEvent() != null) {
                 if (event.isStartElement()) {
                     getHandler(event).run();
                 } else if (event.isEndElement()) {
                     if (getHandler(event) != null && !context.isEmpty()) {
-//                        handler.process(pop());
                         Object obj = pop();
                         if (obj instanceof TestSuite) {
                             TestSuite suite = (TestSuite) obj;
@@ -126,8 +124,6 @@ public class HtmlReportProducer implements Closeable {
             System.out.println(
                 "HtmlReportProducer.produce: event.getLocation().getLineNumber() = " + event.getLocation()
                     .getLineNumber());
-        } finally {
-            reader.close();
         }
     }
 
@@ -218,10 +214,6 @@ public class HtmlReportProducer implements Closeable {
     private Object pop() {
         Object top = context.pop();
         print("popping " + top);
-//        ListIterator<Object> it = context.listIterator(context.size());
-//        while(it.hasPrevious()) {
-//            print("on stack: " + it.previous());
-//        }
         return top;
     }
 

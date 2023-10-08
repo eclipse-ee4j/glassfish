@@ -23,7 +23,7 @@
 ]>
 <project name="reportbuilder">
     <path id="reportbuilder.class.path">
-        <pathelement location="${env.APS_HOME}/lib/reportbuilder.jar"/>
+        <pathelement location="${env.APS_HOME}/lib/target/report-builder.jar"/>
         <pathelement location="build/classes"/>
         <fileset dir="${env.S1AS_HOME}/modules"/>
     </path>

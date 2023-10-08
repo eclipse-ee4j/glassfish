@@ -49,7 +49,7 @@
             <param name="webclient.war.classes" value="**/*.class"/>
         </antcall>
 
-        <javac srcdir="." classpath="${env.APS_HOME}/lib/reportbuilder.jar:${s1as.classpath}"
+        <javac srcdir="." classpath="${env.APS_HOME}/lib/target/report-builder.jar:${s1as.classpath}"
                includes="WebTest.java"/>
 
     </target>
@@ -73,7 +73,7 @@
     </target>
 
     <target name="run" depends="init-common">
-        <java classname="WebTest" classpath="${env.APS_HOME}/lib/reportbuilder.jar:${s1as.classpath}:." fork="true">
+        <java classname="WebTest" classpath="${env.APS_HOME}/lib/target/report-builder.jar:${s1as.classpath}:." fork="true">
           <arg value="${admin.host}"/>
           <arg value="${admin.port}"/>
           <arg value="${admin.user}"/>

@@ -61,7 +61,7 @@ Custom target for compilation with local libraries for connector
     <mkdir dir="${build.classes.dir}"/>
     <javac srcdir="${src}"
         destdir="${build.classes.dir}"
-        classpath="${s1astest.classpath}:${bundles.dir}/cciblackbox-tx.jar"
+        classpath="${s1astest.classpath}:${mvn.lib.dir}/cciblackbox-tx.jar"
         failonerror="true"/>
   </target>
 
@@ -206,7 +206,7 @@ Custom target for compilation with local libraries for connector
         tofile="${assemble.dir}/rar/META-INF/ra.xml"/>
     <copy file="descriptor/sun-ra.xml"
         tofile="${assemble.dir}/rar/META-INF/sun-ra.xml"/>
-    <copy file="${bundles.dir}/cciblackbox-tx.jar"
+    <copy file="${mvn.lib.dir}/cciblackbox-tx.jar"
         tofile="${assemble.dir}/rar/cciblackbox-tx.jar"/>
     <replace file="${assemble.dir}/rar/META-INF/ra.xml"
         token="DBURL" value="${db.url}"/>

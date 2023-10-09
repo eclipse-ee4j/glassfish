@@ -109,6 +109,18 @@
                 <module>qa</module>
                 <module>nucleus</module>
                 <module>appserver</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>docs</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>release-phase-all</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <modules>
                 <module>docs</module>
             </modules>
         </profile>
@@ -146,7 +158,6 @@
                 <module>qa</module>
                 <module>nucleus</module>
                 <module>appserver</module>
-                <module>docs</module>
                 <module>appserver/extras/embedded/common</module>
                 <module>appserver/tests/appserv-tests/util/reportbuilder</module>
                 <module>appserver/tests/tck</module>

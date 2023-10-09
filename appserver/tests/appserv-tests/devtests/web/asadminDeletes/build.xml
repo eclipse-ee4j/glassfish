@@ -32,7 +32,7 @@
     &run;
 
     <path id="class.path">
-        <pathelement location="${env.APS_HOME}/lib/target/report-builder.jar"/>
+        <pathelement location="${mvn.lib.dir}/report-builder.jar"/>
         <pathelement location="build"/>
         <fileset dir="${env.S1AS_HOME}/modules"/>
     </path>

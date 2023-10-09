@@ -69,7 +69,7 @@
         <fileset dir="${assemble.dir}">
           <include name="*.jar"/>
         </fileset>
-        <fileset dir="${env.APS_HOME}/lib" includes="reporter.jar"/>
+        <fileset dir="${mvn.lib.dir}" includes="reporter.jar"/>
       </ear>
     </target>
 

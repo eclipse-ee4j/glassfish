@@ -53,7 +53,7 @@
 
           <javac
             srcdir="."
-            classpath="${env.APS_HOME}/lib/target/report-builder.jar"
+            classpath="${mvn.lib.dir}/report-builder.jar"
             includes="WebTest.java"/>
 
     </target>
@@ -71,7 +71,7 @@
           <arg value="${contextroot}"/>
           <arg value="${keystore.db.file}"/>
           <classpath>
-           <pathelement location="${env.APS_HOME}/lib/target/report-builder.jar"/>
+           <pathelement location="${mvn.lib.dir}/report-builder.jar"/>
            <pathelement location="."/>
          </classpath>
         </java>

@@ -47,8 +47,7 @@
     <antcall target="create-ra-config" />
 
     <antcall target="deploy-rar-common">
-      <param name="rarfile"
-             value="${mvn.lib.dir}/connectors-ra-redeploy-rars.rar"
+      <param name="rarfile" value="${mvn.lib.dir}/connectors-ra-redeploy-rars.rar"
       />
     </antcall>
     <antcall target="create-pool" />

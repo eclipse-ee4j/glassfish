@@ -149,6 +149,7 @@
   <path id="s1as_classpath_jars">
     <fileset dir="${env.S1AS_HOME}/lib" includes="*.jar,*.zip"/>
     <fileset dir="${env.APS_HOME}/lib" includes="**/*.jar,**/*.zip"/>
+    <fileset dir="${env.APS_HOME}/lib/target" includes="**/*.jar"/>
     <fileset dir="${env.ANT_HOME}/lib" includes="*.jar"/>
   </path>
   <pathconvert pathsep=":"
@@ -160,6 +161,7 @@
   <path id="s1as80_classpath_jars">
     <fileset dir="${env.S1AS80_HOME}/lib" includes="*.jar,*.zip"/>
     <fileset dir="${env.APS_HOME}/lib" includes="**/*.jar,**/*.zip"/>
+    <fileset dir="${env.APS_HOME}/lib/target" includes="**/*.jar"/>
     <fileset dir="${env.S1AS80_HOME}/lib/ant/lib" includes="*.jar"/>
   </path>
   <pathconvert pathsep=":"

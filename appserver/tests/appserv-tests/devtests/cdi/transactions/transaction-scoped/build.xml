@@ -55,7 +55,7 @@
         </antcall>
 
         <javac srcdir="client"
-               classpath="${env.APS_HOME}/lib/target/report-builder.jar"
+               classpath="${mvn.lib.dir}/report-builder.jar"
                includes="test/client/WebTest.java"
                debug="true"/>
 

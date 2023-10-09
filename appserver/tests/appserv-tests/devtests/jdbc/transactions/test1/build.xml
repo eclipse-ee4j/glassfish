@@ -109,7 +109,7 @@
       tofile="${assemble.dir}/META-INF/sun-application.xml"
       failonerror="false"/>
     <ear earfile="${assemble.dir}/${appname}App.ear" appxml="${application.xml}">
-      <fileset dir="${assemble.dir}" includes="*.jar,*.war,META-INF/sun-application.xml,lib/reporter.jar"/>
+      <fileset dir="${assemble.dir}" includes="*.jar,*.war,META-INF/sun-application.xml,lib/target/reporter.jar"/>
     </ear>
   </target>
 

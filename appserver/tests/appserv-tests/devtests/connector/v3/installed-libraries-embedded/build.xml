@@ -180,7 +180,7 @@
     <mkdir dir="${assemble.dir}" />
     <mkdir dir="${build.classes.dir}/META-INF" />
     <copy file="${mvn.lib.dir}/connectors-ra-redeploy-rars-nojar.rar"
-      tofile="${assemble.dir}/connectors-ra-redeploy-rars.rar"
+        tofile="${assemble.dir}/connectors-ra-redeploy-rars.rar"
     />
     <ear earfile="${assemble.dir}/${appname}App.ear" appxml="${application.xml}">
       <fileset dir="${assemble.dir}">

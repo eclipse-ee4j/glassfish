@@ -39,7 +39,7 @@
         <echo message="deploying application"/>
         <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/target/report-builder.jar:${build.classes.dir}:${mvn.lib.dir}/reporter.jar"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${mvn.lib.dir}/report-builder.jar:${build.classes.dir}:${mvn.lib.dir}/reporter.jar"
               classname="${se.client}">
            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
            <arg line="deploy"/>
@@ -66,11 +66,11 @@
 
     <target name="compile-client" >
         <javac fork="true" includeAntRuntime="false" destdir="${build.classes.dir}" debug="true"
-               classpath="${env.APS_HOME}/lib/target/report-builder.jar:${build.classes.dir}"
+               classpath="${mvn.lib.dir}/report-builder.jar:${build.classes.dir}"
                srcdir="${env.APS_HOME}/devtests/admin/cli/src" includes="**/*BaseDevTest.java">
         </javac>
         <javac fork="true" includeAntRuntime="false"
-               classpath="${env.APS_HOME}/lib/target/report-builder.jar:${build.classes.dir}:${mvn.lib.dir}/reporter.jar:${s1astest.classpath}"
+               classpath="${mvn.lib.dir}/report-builder.jar:${build.classes.dir}:${mvn.lib.dir}/reporter.jar:${s1astest.classpath}"
                destdir="${build.classes.dir}" debug="true" srcdir="client" includes="**/*.java">
             <classpath path="${classpath}"/>
         </javac>

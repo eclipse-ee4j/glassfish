@@ -51,7 +51,7 @@
             <param name="webclient.war.classes" value="**/*.class"/>
         </antcall>
 
-        <javac srcdir="." classpath="${env.APS_HOME}/lib/target/report-builder.jar"
+        <javac srcdir="." classpath="${mvn.lib.dir}/report-builder.jar"
                includes="WebTest.java"/>
 
     </target>
@@ -69,7 +69,7 @@
           <arg value="${contextroot}"/>
           <arg value="first"/>
           <classpath>
-           <pathelement location="${env.APS_HOME}/lib/target/report-builder.jar"/>
+           <pathelement location="${mvn.lib.dir}/report-builder.jar"/>
            <pathelement location="."/>
          </classpath>
         </java>
@@ -82,7 +82,7 @@
           <arg value="${contextroot}"/>
           <arg value="second"/>
           <classpath>
-           <pathelement location="${env.APS_HOME}/lib/target/report-builder.jar"/>
+           <pathelement location="${mvn.lib.dir}/report-builder.jar"/>
            <pathelement location="."/>
          </classpath>
         </java>

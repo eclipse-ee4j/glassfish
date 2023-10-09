@@ -133,7 +133,7 @@
         <include name="cciblackbox-tx.rar"/>
         <include name="cci-embedded-client.jar"/>
       </fileset>
-      <fileset dir="${env.APS_HOME}/lib" includes="reporter.jar"/>
+      <fileset dir="${mvn.lib.dir}" includes="reporter.jar"/>
     </ear>
   </target>
 

@@ -31,7 +31,7 @@
      <property name="tomcattest.src" value="tomcattest"/>
      <property name="http2test.src" value="http2test"/>
      <property name="build.dest" value="build"/>
-     <property name="java.classpath" value="${JAVA_HOME}/lib/dt.jar:${JAVA_HOME}/lib/tools.jar:${build.dest}:${myenv.APS_HOME}/lib/reporter.jar"/>
+     <property name="java.classpath" value="${JAVA_HOME}/lib/dt.jar:${JAVA_HOME}/lib/tools.jar:${build.dest}:${myenv.APS_HOME}/lib/target/reporter.jar"/>
      <property name="server.host" value="dsingh"/>
 
   <target name="all" depends="compile-webtest,run-webtest">

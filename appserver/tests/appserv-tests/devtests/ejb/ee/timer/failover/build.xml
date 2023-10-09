@@ -56,7 +56,7 @@
         <echo message="Starting cluster"/>
         <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/target/report-builder.jar:${build.classes.dir}:${mvn.lib.dir}/reporter.jar"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${mvn.lib.dir}/report-builder.jar:${build.classes.dir}:${mvn.lib.dir}/reporter.jar"
               classname="${se.client}">
            <arg line="prepare"/>
         </java>
@@ -66,7 +66,7 @@
         <echo message="deploying application"/>
         <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/target/report-builder.jar:${build.classes.dir}:${mvn.lib.dir}/reporter.jar"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${mvn.lib.dir}/report-builder.jar:${build.classes.dir}:${mvn.lib.dir}/reporter.jar"
               classname="${se.client}">
            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
            <arg line="deploy"/>
@@ -91,7 +91,7 @@
         <echo message="Stopping cluster"/>
         <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/target/report-builder.jar:${build.classes.dir}"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${mvn.lib.dir}/report-builder.jar:${build.classes.dir}"
               classname="${se.client}">
            <arg line="clean"/>
         </java>
@@ -101,7 +101,7 @@
         <echo message="Stopping cluster"/>
         <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/target/report-builder.jar:${build.classes.dir}"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${mvn.lib.dir}/report-builder.jar:${build.classes.dir}"
               classname="${se.client}">
            <arg line="undeploy"/>
            <arg line="${appname}-web"/>
@@ -139,11 +139,11 @@
 
     <target name="compile-client" >
         <javac fork="true" includeAntRuntime="false" destdir="${build.classes.dir}" debug="true"
-               classpath="${env.APS_HOME}/lib/target/report-builder.jar:${build.classes.dir}"
+               classpath="${mvn.lib.dir}/report-builder.jar:${build.classes.dir}"
                srcdir="${env.APS_HOME}/devtests/admin/cli/src" includes="**/*BaseDevTest.java">
         </javac>
         <javac fork="true" includeAntRuntime="false"
-               classpath="${env.APS_HOME}/lib/target/report-builder.jar:${build.classes.dir}:${mvn.lib.dir}/reporter.jar"
+               classpath="${mvn.lib.dir}/report-builder.jar:${build.classes.dir}:${mvn.lib.dir}/reporter.jar"
                destdir="${build.classes.dir}" debug="true" srcdir="client" includes="**/*.java">
             <classpath path="${classpath}"/>
         </javac>
@@ -159,7 +159,7 @@
         <echo message="Verifying timeouts"/>
         <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/target/report-builder.jar:${build.classes.dir}"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${mvn.lib.dir}/report-builder.jar:${build.classes.dir}"
               classname="${se.client}">
            <arg line="verify2"/>
            <arg line="${appname}-web"/>
@@ -190,7 +190,7 @@
         <loadfile property="port-fail" srcFile="error"/>
         <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/target/report-builder.jar:${build.classes.dir}"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${mvn.lib.dir}/report-builder.jar:${build.classes.dir}"
               classname="${se.client}">
            <arg line="verify1"/>
            <arg line="${appname}-web"/>

@@ -34,7 +34,7 @@
     &run;
 
     <path id="class.path">
-        <pathelement location="${env.APS_HOME}/lib/target/report-builder.jar"/>
+        <pathelement location="${mvn.lib.dir}/report-builder.jar"/>
         <pathelement location="build"/>
         <fileset dir="${env.S1AS_HOME}/modules"/>
     </path>
@@ -53,7 +53,7 @@
         </antcall>
          <javac
             srcdir="."
-            classpath="${env.APS_HOME}/lib/target/report-builder.jar"
+            classpath="${mvn.lib.dir}/report-builder.jar"
             includes="WebTest*"/>
     </target>
 
@@ -89,7 +89,7 @@
         <arg value="${contextroot}"/>
           <arg value="${apache.port}"/>
         <classpath>
-          <pathelement location="${env.APS_HOME}/lib/target/report-builder.jar"/>
+          <pathelement location="${mvn.lib.dir}/report-builder.jar"/>
           <pathelement location="."/>
         </classpath>
       </java>
@@ -101,7 +101,7 @@
             <arg value="${contextroot}"/>
             <arg value="${apache.port}"/>
             <classpath>
-                <pathelement location="${env.APS_HOME}/lib/target/report-builder.jar"/>
+                <pathelement location="${mvn.lib.dir}/report-builder.jar"/>
                 <pathelement location="."/>
             </classpath>
         </java>

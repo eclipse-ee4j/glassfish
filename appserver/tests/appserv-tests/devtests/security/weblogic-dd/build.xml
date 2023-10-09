@@ -110,7 +110,7 @@
             <fileset dir="${build.classes.dir}">
                 <include name="META-INF/weblogic-application.xml"/>
             </fileset>
-            <fileset dir="${env.APS_HOME}/lib" includes="reporter.jar"/>
+            <fileset dir="${mvn.lib.dir}" includes="reporter.jar"/>
         </jar>
     </target>
 

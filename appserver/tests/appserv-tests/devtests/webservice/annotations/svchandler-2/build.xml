@@ -40,15 +40,6 @@
     </target>
 
     <target name="setup" depends="assemble-web, assemble-client, deploy-app, deploy-client"/>
-    <path id="class.path">
-        <fileset dir="${env.S1AS_HOME}/modules">
-            <include name="**/*.jar"/>
-        </fileset>
-        <fileset dir="${env.APS_HOME}/lib">
-            <include name="**/*.jar"/>
-        </fileset>
-    </path>
-
 
     <target name="compile" depends="init-common">
       <antcall target="compile-common">
@@ -83,7 +74,7 @@
       <replace file="webclient/Client.java" value="${http.host}" token="HTTP_HOST"/>
       <replace file="webclient/Client.java" value="${http.port}" token="HTTP_PORT"/>
       <javac srcdir="." destdir="${build.classes.dir}/webclient/WEB-INF/classes"
-            classpathref="class.path"
+            classpathref="classpath"
             includes="webclient/**"/>
       <copy file="./client-web.xml" tofile="${build.classes.dir}/webclient/WEB-INF/web.xml"/>
       <copy file="./client-sun-web.xml" tofile="${build.classes.dir}/webclient/WEB-INF/sun-web.xml"/>

@@ -59,7 +59,7 @@
     </target>
 
     <target name="run" depends="init-common,prepare-keystore-common">
-        <javac srcdir="." classpath="${env.APS_HOME}/lib/target/report-builder.jar"
+        <javac srcdir="." classpath="${mvn.lib.dir}/report-builder.jar"
                includes="WebTest.java"/>
 
         <java classname="WebTest" fork="true">
@@ -68,7 +68,7 @@
             <arg value="${contextroot}"/>
             <arg value="${keystore.db.file}"/>
             <classpath>
-                <pathelement location="${env.APS_HOME}/lib/target/report-builder.jar"/>
+                <pathelement location="${mvn.lib.dir}/report-builder.jar"/>
                 <pathelement location="."/>
             </classpath>
         </java>

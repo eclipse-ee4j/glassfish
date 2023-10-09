@@ -40,7 +40,7 @@
             <param name="src" value="ejb"/>
         </antcall>
         <javac fork="true" includeAntRuntime="false"
-               classpath="${env.APS_HOME}/lib/target/report-builder.jar:${build.classes.dir}:${mvn.lib.dir}/reporter.jar:${s1as.classpath}"
+               classpath="${mvn.lib.dir}/report-builder.jar:${build.classes.dir}:${mvn.lib.dir}/reporter.jar:${s1as.classpath}"
                destdir="${build.classes.dir}" debug="true" srcdir="client" includes="**/*.java">
             <classpath path="${classpath}"/>
         </javac>
@@ -102,7 +102,7 @@
     <target name="run" depends="init-common">
        <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${mvn.lib.dir}/reporter.jar:${env.APS_HOME}/lib/target/report-builder.jar"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${mvn.lib.dir}/reporter.jar:${mvn.lib.dir}/report-builder.jar"
               classname="${se.client}">
               <arg line="${client.type}"/>
               <arg line="${ejb.jar}"/>

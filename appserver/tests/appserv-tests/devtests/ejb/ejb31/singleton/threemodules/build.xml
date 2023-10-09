@@ -84,7 +84,9 @@
           <delete file="${assemble.dir}/${appname}.ear"/>
           <mkdir dir="${assemble.dir}"/>
           <mkdir dir="${build.classes.dir}/META-INF"/>
-          <copy file="${application.xml}" tofile="${build.classes.dir}/META-INF/application.xml"          failonerror="false"/>
+          <mkdir dir="${build.classes.dir}/lib"/>
+          <copy file="${application.xml}" tofile="${build.classes.dir}/META-INF/application.xml" failonerror="false"/>
+          <copy file="${mvn.lib.dir}/reporter.jar" tofile="${build.classes.dir}/lib/reporter.jar" />
           <jar jarfile="${assemble.dir}/${appname}App.ear">
             <fileset dir="${assemble.dir}">
               <include name="*ejb.jar"/>
@@ -95,8 +97,8 @@
             <fileset dir="${build.classes.dir}">
                 <include name="META-INF/sun-application.xml"/>
                 <include name="META-INF/application.xml"/>
+                <include name="lib/**"/>
             </fileset>
-            <fileset dir="${env.APS_HOME}" includes="lib/reporter.jar"/>
           </jar>
 
     </target>

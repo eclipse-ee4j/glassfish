@@ -177,7 +177,7 @@
         <include name="*.jar" />
         <include name="*.war" />
       </fileset>
-      <fileset dir="${bundles.dir}">
+      <fileset dir="${mvn.lib.dir}">
         <include name="connectors-ra-redeploy-rars.rar" />
       </fileset>
     </ear>

@@ -18,10 +18,10 @@
 -->
 
 <!DOCTYPE project [
-<!ENTITY commonSetup SYSTEM "file:./../../../../config/properties.xml">
-<!ENTITY commonBuild SYSTEM "file:./../../../../config/common.xml">
-<!ENTITY jaxwsTools SYSTEM "file:./../jaxwstools.xml">
-<!ENTITY testproperties SYSTEM "file:./build.properties">
+<!ENTITY commonSetup SYSTEM "../../../../config/properties.xml">
+<!ENTITY commonBuild SYSTEM "../../../../config/common.xml">
+<!ENTITY jaxwsTools SYSTEM "../jaxwstools.xml">
+<!ENTITY testproperties SYSTEM "build.properties">
 ]>
 
 <project name="dol-override-1" default="all" basedir=".">
@@ -30,16 +30,6 @@
     &commonBuild;
     &testproperties;
     &jaxwsTools;
-
-    <path id="classpath">
-        <fileset dir="${env.S1AS_HOME}/modules">
-            <include name="*.jar"/>
-        </fileset>
-        <fileset dir="${env.APS_HOME}/lib">
-            <include name="*.jar"/>
-        </fileset>
-    </path>
-
 
     <target name="all" depends="clean, setup, runtest, undeploy"/>
 

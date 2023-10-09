@@ -119,7 +119,7 @@
         <include name="META-INF/application.xml"/>
         <include name="META-INF/sun-application.xml"/>
       </fileset>
-      <fileset dir="${env.APS_HOME}/lib" includes="reporter.jar"/>
+      <fileset dir="${mvn.lib.dir}" includes="reporter.jar"/>
     </jar>
 
     <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml" failonerror="false"/>

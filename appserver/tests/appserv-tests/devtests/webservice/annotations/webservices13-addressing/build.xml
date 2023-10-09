@@ -31,16 +31,6 @@
     &testproperties;
     &jaxwsTools;
 
-    <path id="classpath">
-        <fileset dir="${env.S1AS_HOME}/modules">
-                      <include name="*.jar"/>
-        </fileset>
-        <fileset dir="${env.APS_HOME}/lib">
-                      <include name="*.jar"/>
-        </fileset>
-    </path>
-
-
     <target name="all" depends="clean, setup, runtest,undeploy"/>
 
     <target name="clean" depends="init-common">

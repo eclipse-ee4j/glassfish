@@ -23,8 +23,10 @@
         <fileset dir="${env.APS_HOME}/lib">
             <include name="**/*.jar"/>
         </fileset>
-
-    </path>
+        <fileset dir="${env.APS_HOME}/lib/target">
+            <include name="*.jar"/>
+        </fileset>
+   </path>
 
    <path id="run.classpath">
         <fileset dir="${dist}">
@@ -36,9 +38,10 @@
         <fileset dir="${env.APS_HOME}/lib">
           <include name="**/*.jar"/>
         </fileset>
+        <fileset dir="${env.APS_HOME}/lib/target">
+            <include name="*.jar"/>
+        </fileset>
    </path>
-
-
 
   <target name="build-static" depends="clean,generate-stubs,compile-client,package-client"
      description="Executes the targets needed to build a static stub client.">

@@ -34,7 +34,7 @@
     &jaxwsTools;
 
     <path id="client-classpath">
-        <pathelement path="${env.APS_HOME}/lib/reporter.jar"/>
+        <pathelement path="${mvn.lib.dir}/reporter.jar"/>
         <pathelement path="${env.S1AS_HOME}/lib/jakartaee.jar"/>
         <pathelement path="${env.S1AS_HOME}/lib/webservices-osgi.jar"/>
         <pathelement path="${env.S1AS_HOME}/lib/appserv-rt.jar"/>

@@ -1366,7 +1366,7 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
 <target name="runclient-common" depends="init-common">
     <echo message="${APPCLIENT} -client ${assemble.dir}/${appname}AppClient.jar -name ${appname}Client -textauth -user j2ee -password j2ee -xml ${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml ${appclient.application.args}" />
     <exec executable="${APPCLIENT}" failonerror="false">
-        <env key="APPCPATH" file="${env.APS_HOME}/lib/reporter.jar"  />
+        <env key="APPCPATH" file="${mvn.lib.dir}/reporter.jar"  />
         <arg line="-client ${assemble.dir}/${appname}AppClient.jar" />
         <arg line="-name ${appname}Client" />
         <arg line="-textauth" />
@@ -1519,7 +1519,7 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
     <echo message="Adding status 'did not run' into report..." />
     <java classname="com.sun.ejte.ccl.reporter.ReporterClient">
         <classpath>
-            <pathelement location="${env.APS_HOME}/lib/reporter.jar" />
+            <pathelement location="${mvn.lib.dir}/reporter.jar" />
             <pathelement location="." />
         </classpath>
         <arg value="${test.name}" />

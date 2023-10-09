@@ -64,7 +64,7 @@
           <echo message="common.xml: Compiling test source files" level="verbose"/>
           <javac srcdir="src"
             destdir="${build.classes.dir}"
-            classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/modules/gf-client-module.jar:${env.S1AS_HOME}/javadb/lib/derbyclient.jar:${s1astest.classpath}:${env.S1AS_HOME}/osgi/felix/bin/felix.jar:${env.S1AS_HOME}/modules/autostart/osgi-jdbc.jar"
+            classpath="${mvn.lib.dir}/reporter.jar:${env.S1AS_HOME}/modules/gf-client-module.jar:${env.S1AS_HOME}/javadb/lib/derbyclient.jar:${s1astest.classpath}:${env.S1AS_HOME}/osgi/felix/bin/felix.jar:${env.S1AS_HOME}/modules/autostart/osgi-jdbc.jar"
             debug="on"
             failonerror="true"/>
 
@@ -94,7 +94,7 @@
             <pathelement location="${env.S1AS_HOME}/../javadb/lib/derbyclient.jar"/>
             <pathelement location="${env.S1AS_HOME}/../javadb/lib/derby.jar"/>
             <pathelement location="osgi-resources-client-bundle.jar"/>
-            <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
+            <pathelement location="${mvn.lib.dir}/reporter.jar"/>
 
         </classpath>
         </java>

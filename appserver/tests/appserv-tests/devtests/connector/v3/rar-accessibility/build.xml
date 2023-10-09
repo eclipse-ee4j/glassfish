@@ -126,7 +126,7 @@
 
         <javac
           srcdir="."
-          classpath="${env.APS_HOME}/lib/reporter.jar"
+          classpath="${mvn.lib.dir}/reporter.jar"
           includes="client/WebTest.java" destdir="." />
 
         <ant dir="rar" target="build"/>
@@ -245,7 +245,7 @@
             <arg value="${contextroot}"/>
             <arg value="${expected_count}"/>
             <classpath>
-             <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
+             <pathelement location="${mvn.lib.dir}/reporter.jar"/>
              <pathelement location="."/>
            </classpath>
           </java>

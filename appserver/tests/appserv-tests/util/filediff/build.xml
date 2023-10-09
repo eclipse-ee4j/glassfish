@@ -77,7 +77,7 @@
 
 <!--<java
         fork="on"
-        classpath="${classpath}:${jarfile}:${env.APS_HOME}/lib/reporter.jar:${s1astest.classpath}:${env.ANT_HOME}/lib/xercesImpl.jar:${env.ANT_HOME}/xmlParserAPIs.jar"
+        classpath="${classpath}:${jarfile}:${mvn.lib.dir}/reporter.jar:${s1astest.classpath}:${env.ANT_HOME}/lib/xercesImpl.jar:${env.ANT_HOME}/xmlParserAPIs.jar"
         classname="com.sun.ejte.ccl.reporter.ParseML">
         <arg value="${env.APS_HOME}/util/filediff/golden_results.xml"/>
         <arg value="${env.APS_HOME}/test_results.xml"/>

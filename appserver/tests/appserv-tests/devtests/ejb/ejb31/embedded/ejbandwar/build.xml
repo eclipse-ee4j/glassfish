@@ -94,7 +94,7 @@
     <target name="run_war" depends="init-common">
        <java  fork="on"
               failonerror="true"
-              classpath="${assemble.dir}/${appname}-other.jar:${assemble.dir}/${appname}-web.war:${assemble.dir}/${appname}-pu.jar:${embedded.classpath}:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
+              classpath="${assemble.dir}/${appname}-other.jar:${assemble.dir}/${appname}-web.war:${assemble.dir}/${appname}-pu.jar:${embedded.classpath}:${build.classes.dir}:${mvn.lib.dir}/reporter.jar"
               classname="${se.client}">
            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
            <jvmarg value="--add-opens=java.naming/javax.naming.spi=ALL-UNNAMED" />
@@ -107,7 +107,7 @@
        <unzip src="${assemble.dir}/${appname}-other.jar" dest="${assemble.dir}/other"/>
        <java  fork="on"
               failonerror="true"
-              classpath="${assemble.dir}/tmp:${assemble.dir}/other:${embedded.classpath}:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
+              classpath="${assemble.dir}/tmp:${assemble.dir}/other:${embedded.classpath}:${build.classes.dir}:${mvn.lib.dir}/reporter.jar"
               classname="${se.client}">
            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
            <jvmarg value="--add-opens=java.naming/javax.naming.spi=ALL-UNNAMED" />

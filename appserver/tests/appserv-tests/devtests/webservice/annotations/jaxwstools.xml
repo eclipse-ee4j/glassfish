@@ -51,7 +51,7 @@
 </target>
 
 <target name="run-client">
-    <unjar src="${env.APS_HOME}/lib/reporter.jar" dest="${build.classes.dir}/client"/>
+    <unjar src="${mvn.lib.dir}/reporter.jar" dest="${build.classes.dir}/client"/>
     <exec executable="${APPCLIENT}" dir="${build.classes.dir}/client">
       <arg value="${client-class}"/>
       <arg value="${other-args}"/>

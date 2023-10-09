@@ -40,7 +40,7 @@
         <arg value="http://${http.host}:${http.port}/"/>
         <classpath>
             <pathelement path="${build.classes.dir}"/>
-            <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
+            <pathelement location="${mvn.lib.dir}/reporter.jar"/>
         </classpath>
     </java>
   </target>

@@ -50,7 +50,7 @@
 
 <target name="compile-client">
     <javac srcdir="." destdir="${env.APS_HOME}/build/module/classes"
-        classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/modules/webservices-osgi.jar:${build.classes.dir}/client"
+        classpath="${mvn.lib.dir}/reporter.jar:${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/modules/webservices-osgi.jar:${build.classes.dir}/client"
         includes="${client-src-name}"/>
 </target>
 
@@ -113,7 +113,7 @@
     </exec>
     <antcall target="compile-client"/>
     <echo message="Running appclient with ${client-pkg-name}.${client}"/>
-    <unjar src="${env.APS_HOME}/lib/reporter.jar" dest="${env.APS_HOME}/build/module/classes"/>
+    <unjar src="${mvn.lib.dir}/reporter.jar" dest="${env.APS_HOME}/build/module/classes"/>
     <exec executable="${env.S1AS_HOME}/bin/appclient" dir="${env.APS_HOME}/build/module/classes">
         <arg value="${client-pkg-name}.${client}"/>
     </exec>

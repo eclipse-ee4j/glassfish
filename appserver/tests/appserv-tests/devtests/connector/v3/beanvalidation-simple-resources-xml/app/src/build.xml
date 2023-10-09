@@ -37,7 +37,7 @@
 
     <javac
       srcdir="."
-      classpath="${env.APS_HOME}/lib/reporter.jar"
+      classpath="${mvn.lib.dir}/reporter.jar"
       includes="client/WebTest.java" destdir="../" />
 
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,8 +16,6 @@
  */
 
 package com.sun.ejte.ccl.reporter;
-
-import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class ReporterClient{
 
@@ -44,10 +43,10 @@ public class ReporterClient{
         stat.addDescription(default_desc);
         echo("adding status...");
         if (numTests==1) {
-                 stat.addStatus(args[0], stat.DID_NOT_RUN);
+                 stat.addStatus(args[0], SimpleReporterAdapter.DID_NOT_RUN);
         } else {
              for (int i=0;i<numTests; i++) {
-                  stat.addStatus(args[0]+"-"+(i+1), stat.DID_NOT_RUN);
+                  stat.addStatus(args[0]+"-"+(i+1), SimpleReporterAdapter.DID_NOT_RUN);
              }
         }
 

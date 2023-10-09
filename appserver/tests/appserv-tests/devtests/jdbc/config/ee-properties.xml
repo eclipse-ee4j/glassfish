@@ -97,13 +97,13 @@
     <property name="assemble.dir" value="${build.base.dir}/archive"/>
     <property name="results.dir" value="${build.base.dir}/results"/>
 
-    <property name="s1astest.classpath" value="${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar:${s1as.classpath}:${db.classpath}:${env.APS_HOME}/lib/testdriver.jar"/>
+    <property name="s1astest.classpath" value="${build.classes.dir}:${mvn.lib.dir}/reporter.jar:${s1as.classpath}:${db.classpath}:${env.APS_HOME}/lib/testdriver.jar"/>
 
-    <property name="s1as80test.classpath" value="${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar:${s1as80.classpath}:${db.classpath}:${env.APS_HOME}/lib/testdriver.jar"/>
+    <property name="s1as80test.classpath" value="${build.classes.dir}:${mvn.lib.dir}/reporter.jar:${s1as80.classpath}:${db.classpath}:${env.APS_HOME}/lib/testdriver.jar"/>
 
-    <property name="s1wstest.classpath" value="${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar:${s1ws.classpath}:${env.APS_HOME}/lib/testdriver.jar"/>
+    <property name="s1wstest.classpath" value="${build.classes.dir}:${mvn.lib.dir}/reporter.jar:${s1ws.classpath}:${env.APS_HOME}/lib/testdriver.jar"/>
 
-    <property name="jwsdptest.classpath" value="${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar:${jwsdp.classpath}:${env.APS_HOME}/lib/testdriver.jar"/>
+    <property name="jwsdptest.classpath" value="${build.classes.dir}:${mvn.lib.dir}/reporter.jar:${jwsdp.classpath}:${env.APS_HOME}/lib/testdriver.jar"/>
 
     <property name="ejbjar.classes" value="**/*Local*.class,**/*Remote*.class,**/*Home*.class,**/*Bean*.class,**/*.dbschema,**/*EJB*.class,**/*Exception.class"/>
 

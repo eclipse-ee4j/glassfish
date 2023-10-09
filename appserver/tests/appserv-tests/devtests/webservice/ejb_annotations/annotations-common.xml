@@ -176,7 +176,7 @@
 </target>
 
 <target name="unjar-client-utils">
-    <unjar src="${env.APS_HOME}/lib/reporter.jar" dest="${env.APS_HOME}/build/module/classes"/>
+    <unjar src="${mvn.lib.dir}/reporter.jar" dest="${env.APS_HOME}/build/module/classes"/>
 </target>
 
 <target name="internal-run" if="deploy_succeeded">

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,17 +17,13 @@
 
 package com.sun.ejte.ccl.reporter;
 
-import java.rmi.RemoteException;
-import javax.rmi.PortableRemoteObject;
-import jakarta.ejb.*;
-import jakarta.transaction.*;
-import javax.naming.*;
-
-import java.sql.*;
-import javax.sql.*;
-import java.util.*;
 import java.io.Serializable;
-import java.util.logging.*;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Logger;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.rmi.PortableRemoteObject;
 
 public class EnterpriseBeanLogger implements Serializable{
   public static final int PASS_BY_REFERENCE = 0;
@@ -155,7 +152,9 @@ public class EnterpriseBeanLogger implements Serializable{
 
     /*if (outputXML) System.err.println(xml);
     return xml.toString();*/
-    if (outputXML) logger.info(xml.toString());
+    if (outputXML) {
+        logger.info(xml.toString());
+    }
     return xml.toString();
   }
 
@@ -175,10 +174,11 @@ public class EnterpriseBeanLogger implements Serializable{
   }
 
   public void doPassBy(int mode){
-    if (mode == EnterpriseBeanLogger.PASS_BY_VALUE)
-      doPassByValue = true;
-    else
-      doPassByValue = false;
+    if (mode == EnterpriseBeanLogger.PASS_BY_VALUE) {
+        doPassByValue = true;
+    } else {
+        doPassByValue = false;
+    }
   }
 
   public void setDualAccess(boolean b){

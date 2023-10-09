@@ -149,12 +149,12 @@
     <target name="compile" depends="init-common">
         <mkdir dir="${build.classes.dir}"/>
         <javac fork="true" includeAntRuntime="false" destdir="${build.classes.dir}" debug="true"
-               classpath="${build.classes.dir}:${env.S1AS_HOME}/lib/jakartaee.jar:${env.APS_HOME}/lib/target/report-builder.jar:${env.APS_HOME}/lib/reporter.jar"
+               classpath="${build.classes.dir}:${env.S1AS_HOME}/lib/jakartaee.jar:${env.APS_HOME}/lib/target/report-builder.jar:${mvn.lib.dir}/reporter.jar"
                srcdir="${env.APS_HOME}/devtests/admin/cli/src" includes="**/AdminBaseDevTest.java">
         </javac>
 
         <javac fork="true" includeAntRuntime="false"
-               classpath="${build.classes.dir}:${env.S1AS_HOME}/lib/jakartaee.jar:${env.APS_HOME}/lib/target/report-builder.jar:${env.APS_HOME}/lib/reporter.jar"
+               classpath="${build.classes.dir}:${env.S1AS_HOME}/lib/jakartaee.jar:${env.APS_HOME}/lib/target/report-builder.jar:${mvn.lib.dir}/reporter.jar"
                destdir="${build.classes.dir}" debug="true" srcdir="src" includes="**/*.java">
         </javac>
     </target>
@@ -175,7 +175,7 @@
         <attribute name="main-class" default="NOT_SET"/>
         <sequential>
             <java
-        classpath="${build.classes.dir}:${env.S1AS_HOME}/lib/jakartaee.jar:${env.APS_HOME}/lib/target/report-builder.jar:${env.APS_HOME}/lib/reporter.jar"
+        classpath="${build.classes.dir}:${env.S1AS_HOME}/lib/jakartaee.jar:${env.APS_HOME}/lib/target/report-builder.jar:${mvn.lib.dir}/reporter.jar"
         classname="@{main-class}" fork="true">
             <!--
             <jvmarg line="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9009"/>

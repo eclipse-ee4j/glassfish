@@ -1632,7 +1632,7 @@ Added 8/21/2003 Deepa+Sailaja
     <echo message="Adding status 'did not run' into report..."/>
     <java classname="com.sun.ejte.ccl.reporter.ReporterClient">
         <classpath>
-            <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
+            <pathelement location="${mvn.lib.dir}/reporter.jar"/>
             <pathelement location="."/>
         </classpath>
         <arg value="${test.name}"/>
@@ -1665,7 +1665,7 @@ Added 8/21/2003 Deepa+Sailaja
   <property name="testname_and_status" value="defaultname did_not_run"/>
   <java
     classname="com.sun.ejte.ccl.reporter.LooseReporterClient"
-    classpath="${env.APS_HOME}/lib/reporter.jar">
+    classpath="${mvn.lib.dir}/reporter.jar">
     <arg line="${testdesc}"/>
     <arg line="${testname_and_status}"/>
   </java>

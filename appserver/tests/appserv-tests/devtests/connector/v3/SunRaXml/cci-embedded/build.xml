@@ -56,7 +56,7 @@
       <param name="src" value="servlet" />
     </antcall>
     <javac srcdir="."
-           classpath="${env.APS_HOME}/lib/reporter.jar"
+           classpath="${mvn.lib.dir}/reporter.jar"
            includes="client/WebTest.java"
            destdir="."
     />
@@ -167,7 +167,7 @@
       <arg value="${contextroot}" />
       <arg value=" 1 " />
       <classpath>
-        <pathelement location="${env.APS_HOME}/lib/reporter.jar" />
+        <pathelement location="${mvn.lib.dir}/reporter.jar" />
         <pathelement location="." />
       </classpath>
     </java>

@@ -45,7 +45,7 @@
         <antcall target="compile-common">
             <param name="src" value="servlet"/>
         </antcall>
-        <javac srcdir="." destdir="./build" classpath="${env.APS_HOME}/lib/reporter.jar"
+        <javac srcdir="." destdir="./build" classpath="${mvn.lib.dir}/reporter.jar"
             includes="WebSSLClient.java"/>
     </target>
 
@@ -80,7 +80,7 @@
             <arg value="${mytruststore.db.file}"/>
             <arg value="${ssl.password}"/>
             <classpath>
-                <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
+                <pathelement location="${mvn.lib.dir}/reporter.jar"/>
                 <pathelement location="./build"/>
             </classpath>
         </java>

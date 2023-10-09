@@ -153,7 +153,7 @@
 		
 		<javac srcdir="webclient"
            destdir="${build.classes.dir}/webclient"
-           classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/modules/webservices-osgi.jar:${build.classes.dir}/webclient"
+           classpath="${mvn.lib.dir}/reporter.jar:${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/modules/webservices-osgi.jar:${build.classes.dir}/webclient"
            debug="on"
            failonerror="true" />
 	</target>

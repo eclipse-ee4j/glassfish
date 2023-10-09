@@ -80,7 +80,7 @@
 
       <mkdir dir="${build.classes.dir}/appclient/META-INF/wsdl"/>
       <copy file="AddNumbers.wsdl" todir="${build.classes.dir}/appclient/META-INF/wsdl"/>
-      <unjar src="${env.APS_HOME}/lib/reporter.jar" dest="${build.classes.dir}/appclient"/>
+      <unjar src="${mvn.lib.dir}/reporter.jar" dest="${build.classes.dir}/appclient"/>
       <copy file="${application-client.xml}" tofile="${build.classes.dir}/META-INF/application-client.xml" failonerror="false"/>
       <copy file="sun-application-client.xml.template" tofile="sun-application-client.xml"/>
       <replace file="${sun-application-client.xml}">

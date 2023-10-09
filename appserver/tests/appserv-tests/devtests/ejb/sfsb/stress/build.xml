@@ -91,7 +91,7 @@
 
     <target name="runloadgenerator">
        <java  fork="true" failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/appserv-rt.jar:${build.classes.dir}:${assemble.dir}/ejb-sfsb-stressAppClient.jar:${env.APS_HOME}/lib/reporter.jar"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/appserv-rt.jar:${build.classes.dir}:${assemble.dir}/ejb-sfsb-stressAppClient.jar:${mvn.lib.dir}/reporter.jar"
            classname="${loadgenerator.client}">
            <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
            <arg value="ejb/ejb_sfsb_stress_StressSFSBHome"/>

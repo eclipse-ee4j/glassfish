@@ -36,5 +36,6 @@
         <module>cciblackbox-tx</module>
         <module>connectors-ra-redeploy</module>
         <module>report-builder</module>
+        <module>reporter</module>
     </modules>
 </project>

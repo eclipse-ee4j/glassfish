@@ -60,8 +60,7 @@ if [ ! -z "${JENKINS_HOME}" ] ; then
   export MVN_EXTRA="${MVN_EXTRA:=''}";
   export MVN_REPOSITORY="${MVN_REPOSITORY:=${HOME}/.m2/repository}"
   export M2_REPO="${M2_REPO:=$MVN_REPOSITORY}"
-  export GF_VERSION="$(mvn help:evaluate -Pstaging -f "${WORKSPACE}/pom.xml" -Dexpression=project.version -q -DforceStdout)"
-
+  export GF_VERSION="$(mvn help:evaluate -Pstaging -f "${APS_HOME}/pom.xml" -Dexpression=project.version -q -DforceStdout)"
 fi
 
 echo "Preparing dependencies ..."

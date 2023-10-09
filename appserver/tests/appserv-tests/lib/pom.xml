@@ -3,11 +3,14 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
 >
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.glassfish.main.tests</groupId>
+        <artifactId>ant-tests</artifactId>
+        <version>7.0.10-SNAPSHOT</version>
+    </parent>
 
-    <groupId>org.glassfish.main.tests</groupId>
     <artifactId>dependency-lib-downloader</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.0</version>
     <name>GlassFish Ant Dependencies</name>
     <description>
        It is more simple to copy dependencies to target dir than locating them in bash scripts.
@@ -15,8 +18,7 @@
     </description>
 
     <properties>
-        <!-- This is just a fake default. The version must be provided from command line -->
-        <glassfish.version>7.0.10</glassfish.version>
+        <glassfish.version>${project.version}</glassfish.version>
     </properties>
 
     <dependencies>
@@ -72,11 +74,17 @@
         <plugins>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.6.0</version>
                 <configuration>
                     <outputDirectory>${project.build.directory}</outputDirectory>
                 </configuration>
                 <executions>
+                    <execution>
+                        <id>unpack-resource</id>
+                        <goals>
+                            <goal></goal>
+                        </goals>
+                        <phase></phase>
+                    </execution>
                     <execution>
                         <id>copy-dependencies</id>
                         <goals>
@@ -91,14 +99,12 @@
             </plugin>
             <plugin>
                 <artifactId>maven-install-plugin</artifactId>
-                <version>3.1.1</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <version>3.1.1</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>

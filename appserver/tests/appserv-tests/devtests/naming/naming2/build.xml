@@ -44,6 +44,7 @@
         <jvmarg value="-Dglassfish.version=${env.GF_VERSION}" />
         <arg value="clean"/>
         <arg value="verify"/>
+        <arg value="-Pstaging"/>
       </artifact:mvn>
     </target>
 </project>

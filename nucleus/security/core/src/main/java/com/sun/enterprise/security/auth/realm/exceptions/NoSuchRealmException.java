@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,23 +15,23 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.security.auth.realm;
+package com.sun.enterprise.security.auth.realm.exceptions;
 
 /**
- * Exception thrown when an operation is requested on a user which does not exist.
+ * Exception thrown when an operation is requested on a realm which does not exist.
  *
  * @author Harish Prabandham
  */
-public class NoSuchUserException extends Exception {
+public class NoSuchRealmException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * Constructs the exception, with descriptive information.
      *
-     * @param info describes the user which does not exist
+     * @param info describes the realm which does not exist
      */
-    public NoSuchUserException(String info) {
+    public NoSuchRealmException(String info) {
         super(info);
     }
 }

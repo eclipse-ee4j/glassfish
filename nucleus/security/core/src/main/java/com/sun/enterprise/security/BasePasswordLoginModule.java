@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,7 +21,6 @@ import com.sun.enterprise.security.auth.login.LoginCallbackHandler;
 import com.sun.enterprise.security.auth.login.common.PasswordCredential;
 import com.sun.enterprise.security.auth.realm.Realm;
 import com.sun.enterprise.util.i18n.StringManager;
-
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -29,12 +28,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
-
 import org.glassfish.internal.api.Globals;
 import org.glassfish.security.common.Group;
 import org.glassfish.security.common.UserNameAndPassword;
@@ -52,6 +49,10 @@ import org.glassfish.security.common.UserPrincipal;
  * Subclasses need to implement the authenticateUser() method and later call commitUserAuthentication().
  */
 public abstract class BasePasswordLoginModule implements LoginModule {
+
+    protected static final Logger _logger = SecurityLoggerInfo.getLogger();
+    protected static final StringManager sm = StringManager.getManager(LoginCallbackHandler.class);
+
     // The _subject, _sharedState and _options satisfy LoginModule and are
     // shared across sub-classes
     protected Subject _subject;
@@ -69,10 +70,6 @@ public abstract class BasePasswordLoginModule implements LoginModule {
     protected UserPrincipal _userPrincipal;
     protected String[] _groupsList = null;
 
-    protected static final Logger _logger = SecurityLoggerInfo.getLogger();
-
-    protected final static StringManager sm = StringManager.getManager(LoginCallbackHandler.class);
-    private LoginModule userDefinedLoginModule;
 
     /**
      * Initialize this login module.
@@ -331,10 +328,6 @@ public abstract class BasePasswordLoginModule implements LoginModule {
      *
      */
     protected abstract void authenticateUser() throws LoginException;
-
-    public void setLoginModuleForAuthentication(LoginModule userDefinedLoginModule) {
-        this.userDefinedLoginModule = userDefinedLoginModule;
-    }
 
     /**
      * @return the username sent by container - is made available to the custom login module using the protected _username field. Use

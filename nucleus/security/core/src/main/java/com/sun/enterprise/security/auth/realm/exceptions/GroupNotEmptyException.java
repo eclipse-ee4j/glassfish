@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,25 +15,23 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.security.auth;
-
-import java.util.Date;
-import java.util.concurrent.TimeoutException;
+package com.sun.enterprise.security.auth.realm.exceptions;
 
 /**
- * validate Timestamp received in messages.
+ * Exception thrown when an operation is requested to remove a group that has a list of users.
  *
- * @author k.venugopal@sun.com
+ * @author Harpreet Singh
  */
-public interface TimestampValidator {
+public class GroupNotEmptyException extends Exception {
+
+    private static final long serialVersionUID = 1L;
 
     /**
-     * validate given time against current time.
+     * Constructs the exception, with descriptive information.
      *
-     * @param created created time
-     * @param maxClockSkew maximum difference allowed between the system clocks of the sender and recipient.
-     * @param freshnessLimit maximum duration of time after which the Timestamp becomes stale
-     * @throws java.util.concurrent.TimeoutException
+     * @param info describes the user which does not exist
      */
-    void validate(Date created, long maxClockSkew, long freshnessLimit) throws TimeoutException;
+    public GroupNotEmptyException(String info) {
+        super(info);
+    }
 }

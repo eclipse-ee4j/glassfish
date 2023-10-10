@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -303,9 +303,9 @@ public class RealmsManager {
                 if (realm != null) {
                     realm.refresh(configName);
                 }
-            } catch (com.sun.enterprise.security.auth.realm.NoSuchRealmException nre) {
+            } catch (com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException nre) {
                 // _logger.fine("Realm: "+realmName+" is not configured");
-            } catch (com.sun.enterprise.security.auth.realm.BadRealmException bre) {
+            } catch (com.sun.enterprise.security.auth.realm.exceptions.BadRealmException bre) {
                 // _logger.fine("Realm: "+realmName+" is not configured");
             }
         }

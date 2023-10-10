@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,24 +15,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.security.auth.realm;
+package com.sun.enterprise.security.auth.realm.exceptions;
 
-/**
- * Exception thrown when an operation is invoked on a realm that does not support it. e.g. Invoking getGroups (username)
- * is not supported by a certificate realm.
- *
- * @author Harpreet Singh
- */
-public class InvalidOperationException extends Exception {
+public class UnsupportedRealmException extends BadRealmException {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * Constructs the exception, with descriptive information.
-     *
-     * @param info describes the problem with the realm
-     */
-    public InvalidOperationException(String info) {
-        super(info);
+    public UnsupportedRealmException() {
+        super("Operation not supported.");
     }
+
 }

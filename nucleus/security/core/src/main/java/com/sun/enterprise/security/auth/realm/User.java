@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +17,7 @@
 
 package com.sun.enterprise.security.auth.realm;
 
+import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
 import java.security.Principal;
 import java.util.Enumeration;
 

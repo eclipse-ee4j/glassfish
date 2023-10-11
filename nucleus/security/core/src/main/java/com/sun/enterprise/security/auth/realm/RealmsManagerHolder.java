@@ -22,7 +22,7 @@ import org.glassfish.internal.api.Globals;
 
 public class RealmsManagerHolder {
 
-    private static WeakReference<RealmsManager> realmsManagerReference = new WeakReference<RealmsManager>(null);
+    private static volatile WeakReference<RealmsManager> realmsManagerReference = new WeakReference<RealmsManager>(null);
 
     static RealmsManager getNonNullRealmsManager() {
         RealmsManager realmsManager = getRealmsManager();

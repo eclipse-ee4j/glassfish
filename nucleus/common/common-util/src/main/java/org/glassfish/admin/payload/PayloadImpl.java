@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -185,6 +186,7 @@ public class PayloadImpl implements Payload {
                 if (isRecursive) {
                     enhancedProps.setProperty("data-request-type", "file-xfer");
                     attachContainedFilesRecursively(
+                            contentType,
                             file.toURI(),
                             fileURI,
                             dataRequestName,
@@ -203,6 +205,33 @@ public class PayloadImpl implements Payload {
                             file));
             }
             dirty = true;
+        }
+
+        private void attachContainedFilesRecursively(
+                final String contentType,
+                final URI actualBaseDirAbsURI,
+                final URI targetBaseDirRelURI,
+                final String dataRequestName,
+                final Properties enhancedProps,
+                final File dirFile) throws IOException {
+
+            for (File file : dirFile.listFiles()) {
+                if (file.isDirectory()) {
+                    enhancedProps.setProperty("last-modified", Long.toString(file.lastModified()));
+                    attachFilesRecursively(
+                            contentType,
+                            actualBaseDirAbsURI,
+                            targetBaseDirRelURI,
+                            targetBaseDirRelURI.resolve(actualBaseDirAbsURI.relativize(file.toURI())),
+                            "",
+                            enhancedProps,
+                            file);
+                } else {
+                    enhancedProps.setProperty("last-modified", Long.toString(file.lastModified()));
+                    final URI fileURI = targetBaseDirRelURI.resolve(actualBaseDirAbsURI.relativize(file.toURI()));
+                    parts.add(Part.newInstance(contentType, fileURI.getRawPath(), enhancedProps, file));
+                }
+            }
         }
 
         private void attachContainedFilesRecursively(
@@ -276,6 +305,31 @@ public class PayloadImpl implements Payload {
                     enhancedProps,
                     dirFile);
 
+        }
+
+        private void attachFilesRecursively(
+                final String contentType,
+                final URI actualBaseDirAbsURI,
+                final URI targetBaseDirRelURI,
+                final URI dirFileURI,
+                final String dataRequestName,
+                final Properties enhancedProps,
+                final File dirFile) throws IOException {
+            final String dirFileURIPath = dirFileURI.getRawPath();
+            parts.add(Part.newInstance(
+                    "application/octet-stream", /* for the directory itself */
+                    dirFileURIPath + (dirFileURIPath.endsWith("/") ? "" : "/"),
+                    enhancedProps,
+                    (InputStream) null));
+            /*
+             * The enhanced properties contains a setting for the data-request-name
+             * which will be used to inject as a paramter if the receiver is
+             * a command.  We don't want lower-level directories to appear to be
+             * the injectable value when in fact the higher-level directory is
+             * the correct value.
+             */
+            enhancedProps.remove("data-request-name");
+            attachContainedFilesRecursively(contentType, actualBaseDirAbsURI, targetBaseDirRelURI, dataRequestName, enhancedProps, dirFile);
         }
 
         @Override

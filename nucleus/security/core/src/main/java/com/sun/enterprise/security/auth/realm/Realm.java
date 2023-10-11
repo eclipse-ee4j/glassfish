@@ -26,6 +26,7 @@ import com.sun.enterprise.security.SecurityLoggerInfo;
 import com.sun.enterprise.security.auth.realm.exceptions.BadRealmException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -134,7 +135,7 @@ public abstract class Realm extends AbstractGlassFishRealmState implements Glass
         Realm instance = _getInstance(name);
 
         if (instance == null) {
-            throw new NoSuchRealmException(String.format("Realm {0} does not exists.", name));
+            throw new NoSuchRealmException(MessageFormat.format("Realm {0} does not exists.", name));
         }
 
         return instance;
@@ -153,7 +154,7 @@ public abstract class Realm extends AbstractGlassFishRealmState implements Glass
         Realm instance = _getInstance(configName, name);
 
         if (instance == null) {
-            throw new NoSuchRealmException(String.format("Realm {0} does not exists.", name));
+            throw new NoSuchRealmException(MessageFormat.format("Realm {0} does not exists.", name));
         }
 
         return instance;

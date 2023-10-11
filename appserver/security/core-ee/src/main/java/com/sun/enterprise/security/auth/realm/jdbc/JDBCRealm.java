@@ -38,6 +38,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -175,7 +176,7 @@ public final class JDBCRealm extends DigestRealmBase {
             try {
                 messageDigest = MessageDigest.getInstance(digestAlgorithm);
             } catch (NoSuchAlgorithmException e) {
-                throw new BadRealmException(String.format("Digest algorithm {0} is not supported.", digestAlgorithm));
+                throw new BadRealmException(MessageFormat.format("Digest algorithm {0} is not supported.", digestAlgorithm));
             }
         }
         if (messageDigest != null && encoding == null) {
@@ -525,7 +526,7 @@ public final class JDBCRealm extends DigestRealmBase {
 
             return connection;
         } catch (Exception ex) {
-            LoginException loginEx = new LoginException(String.format("Unable to connect to datasource {0} for database user {1}.", dsJndi, dbUser));
+            LoginException loginEx = new LoginException(MessageFormat.format("Unable to connect to datasource {0} for database user {1}.", dsJndi, dbUser));
             loginEx.initCause(ex);
             throw loginEx;
         }

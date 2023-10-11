@@ -33,6 +33,7 @@ import com.sun.enterprise.security.auth.realm.exceptions.BadRealmException;
 import com.sun.enterprise.security.auth.realm.exceptions.InvalidOperationException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -200,7 +201,7 @@ public final class LDAPRealm extends Realm {
 
         String mode = props.getProperty(PARAM_MODE, MODE_DEFAULT);
         if (!MODE_DEFAULT.equals(mode)) {
-            throw new BadRealmException(String.format("Unsupported mode {0}.", mode));
+            throw new BadRealmException(MessageFormat.format("Unsupported mode {0}.", mode));
         }
 
         setProperty(PARAM_MODE, mode);
@@ -381,12 +382,12 @@ public final class LDAPRealm extends Realm {
             ctx = new InitialDirContext(getLdapBindProps());
             String realUserDN = userSearch(ctx, getProperty(PARAM_USERDN), userid);
             if (realUserDN == null) {
-                throw new LoginException(String.format("User {0} not found.", _username));
+                throw new LoginException(MessageFormat.format("User {0} not found.", _username));
             }
 
             boolean bindSuccessful = bindAsUser(realUserDN, _password);
             if (bindSuccessful == false) {
-                throw new LoginException(String.format("LDAP bind failed for {0}.", realUserDN));
+                throw new LoginException(MessageFormat.format("LDAP bind failed for {0}.", realUserDN));
             }
 
             // Search groups using above connection, substituting %d (and %s)

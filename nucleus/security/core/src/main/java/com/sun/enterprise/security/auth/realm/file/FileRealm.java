@@ -33,6 +33,7 @@ import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
 import com.sun.enterprise.security.util.IASSecurityException;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -193,7 +194,7 @@ public final class FileRealm extends Realm {
             }
             fileRealmHelper = new FileRealmHelper(file);
         } catch (IOException ioe) {
-            throw new BadRealmException(String.format("Unable to create keyfile: {0}", ioe.toString()));
+            throw new BadRealmException(MessageFormat.format("Unable to create keyfile: {0}", ioe.toString()));
         }
     }
 
@@ -219,7 +220,7 @@ public final class FileRealm extends Realm {
     public User getUser(String name) throws NoSuchUserException {
         FileRealmHelper.User user = fileRealmHelper.getUser(name);
         if (user == null) {
-            throw new NoSuchUserException(String.format("No such user [{0}]", name));
+            throw new NoSuchUserException(MessageFormat.format("No such user [{0}]", name));
         }
 
         return new FileRealmUser(user, null);

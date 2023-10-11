@@ -71,7 +71,7 @@
 
   -->
   <path id="cp">
-    <pathelement location="${envng.APS_HOME}/lib/testng.jar"/>
+    <pathelement location="${envng.APS_HOME}/lib/target/testng.jar"/>
     <pathelement location="${depl.build.dir}"/>
     <fileset dir="${envng.S1AS_HOME}/lib/ant/lib">
         <include name="*.jar"/>

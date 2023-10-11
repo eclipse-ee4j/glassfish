@@ -34,7 +34,7 @@
                failonerror="true">
             <classpath>
                 <path refid="gfv3.classpath"/>
-                <pathelement location="${junit.jar}"/>
+                <pathelement location="${mvn.lib.dir}/junit.jar"/>
             </classpath>
         </javac>
     </target>

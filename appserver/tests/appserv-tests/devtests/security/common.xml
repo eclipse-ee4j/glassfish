@@ -18,7 +18,7 @@
 
 <!-- common security tasks -->
 <property name="webtest.classname" value="org.apache.tomcat.task.GTest"/>
-<property name="webtest.classpath" value="${env.APS_HOME}/lib/testdriversecurity.jar:${env.APS_HOME}/lib/commons-logging.jar"/>
+<property name="webtest.classpath" value="${env.APS_HOME}/lib/testdriversecurity.jar:${env.APS_HOME}/lib/target/commons-logging.jar"/>
 <property name="webtest.report.dir" value="${env.APS_HOME}/"/>
 <!-- this is for referencing generate key/trust stores in client -->
 <property name="mykeystore.db.file" value="${env.APS_HOME}/build/__keystore.jks"/>

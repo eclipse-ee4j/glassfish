@@ -42,18 +42,20 @@
         <war destfile="${assemble.dir}/${mywar.war}" webxml="${web.xml}">
             <classes dir="${build.classes.dir}"/>
         </war>
-
         <delete file="${assemble.dir}/${appname}App.ear"/>
+        <copy file="${mvn.lib.dir}/commons-logging.jar" todir="target/lib" />
+        <copy file="${mvn.lib.dir}/log4j.jar" todir="target/lib" />
         <ear destfile="${assemble.dir}/${appname}App.ear" appxml="${application.xml}">
             <fileset dir="${assemble.dir}" includes="*.war"/>
             <fileset dir="." includes="lib/*.jar, lib/*.xml"/>
+            <fileset dir="target" includes="lib/*.jar" />
         </ear>
     </target>
 
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="servlet"/>
-            <param name="s1astest.classpath" value="${s1astest.classpath}:lib/commons-logging-1.1.jar"/>
+            <param name="s1astest.classpath" value="${s1astest.classpath}:${mvn.lib.dir}/commons-logging.jar"/>
         </antcall>
         <javac srcdir="."
                classpath="${mvn.lib.dir}/report-builder.jar"
@@ -69,8 +71,10 @@
           <arg value="${http.host}"/>
           <arg value="${http.port}"/>
           <classpath>
-           <pathelement location="${mvn.lib.dir}/report-builder.jar"/>
-           <pathelement location="."/>
+            <pathelement location="${mvn.lib.dir}/commons-logging.jar"/>
+            <pathelement location="${mvn.lib.dir}/log4j.jar"/>
+            <pathelement location="${mvn.lib.dir}/report-builder.jar"/>
+            <pathelement location="."/>
          </classpath>
         </java>
     </target>

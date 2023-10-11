@@ -41,8 +41,7 @@
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="servlet"/>
-            <param name="s1astest.classpath"
-                   value="lib/commons-logging-1.1.1.jar:${s1as.classpath}"/>
+            <param name="s1astest.classpath" value="${mvn.lib.dir}/commons-logging.jar:${s1as.classpath}"/>
         </antcall>
     </target>
 
@@ -70,8 +69,9 @@
           <arg value="${http.port}"/>
           <arg value="${contextroot}"/>
           <classpath>
-           <pathelement location="${mvn.lib.dir}/report-builder.jar"/>
-           <pathelement location="."/>
+            <pathelement location="${mvn.lib.dir}/commons-logging.jar"/>
+            <pathelement location="${mvn.lib.dir}/report-builder.jar"/>
+            <pathelement location="."/>
          </classpath>
         </java>
     </target>
@@ -86,11 +86,9 @@
     </target>
 
     <target name="copyResources" depends="init-common">
-        <copy todir="${env.S1AS_HOME}/lib" failonerror="true">
-            <fileset dir="lib" includes="*.jar"/>
-        </copy>
-        <copy file="mytest.jar" todir="${env.S1AS_HOME}/lib"
-              failonerror="true"/>
+        <copy file="${mvn.lib.dir}/commons-logging.jar" todir="${env.S1AS_HOME}/lib" failonerror="true" />
+        <copy file="${mvn.lib.dir}/log4j.jar" todir="${env.S1AS_HOME}/lib" failonerror="true" />
+        <copy file="mytest.jar" todir="${env.S1AS_HOME}/lib" failonerror="true"/>
     </target>
 
     <target name="restore" depends="init-common">
@@ -100,8 +98,7 @@
 
     <target name="removeResources" depends="init-common">
         <delete failonerror="true">
-            <fileset dir="${env.S1AS_HOME}/lib"
-                     includes="commons-logging.jar,log4j-1.2.17.jar,mytest.jar"/>
+            <fileset dir="${env.S1AS_HOME}/lib" includes="commons-logging.jar,log4j.jar,mytest.jar"/>
         </delete>
     </target>
 

@@ -23,9 +23,9 @@ import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.SecureAdmin;
 import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.security.auth.realm.BadRealmException;
 import com.sun.enterprise.security.auth.realm.Realm;
 import com.sun.enterprise.security.auth.realm.RealmsManager;
+import com.sun.enterprise.security.auth.realm.exceptions.BadRealmException;
 import com.sun.enterprise.security.auth.realm.file.FileRealm;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
@@ -293,9 +293,9 @@ public class CreateFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
                 if (realm != null) {
                     realm.refresh(configName);
                 }
-            } catch (com.sun.enterprise.security.auth.realm.NoSuchRealmException nre) {
+            } catch (com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException nre) {
                 //            _logger.fine("Realm: "+realmName+" is not configured");
-            } catch (com.sun.enterprise.security.auth.realm.BadRealmException bre) {
+            } catch (com.sun.enterprise.security.auth.realm.exceptions.BadRealmException bre) {
                 //            _logger.fine("Realm: "+realmName+" is not configured");
             }
         }

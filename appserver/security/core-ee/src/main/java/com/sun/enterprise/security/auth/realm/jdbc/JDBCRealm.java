@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,19 +17,19 @@
 
 package com.sun.enterprise.security.auth.realm.jdbc;
 
+import static com.sun.enterprise.security.common.Util.getDefaultHabitat;
+import static java.util.logging.Level.FINEST;
+
 import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
-import com.sun.enterprise.security.BaseRealm;
 import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
 import com.sun.enterprise.security.auth.digest.api.Password;
-import com.sun.enterprise.security.auth.realm.BadRealmException;
-import com.sun.enterprise.security.auth.realm.InvalidOperationException;
-import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
-import com.sun.enterprise.security.auth.realm.NoSuchUserException;
-import com.sun.enterprise.security.common.Util;
+import com.sun.enterprise.security.auth.realm.exceptions.BadRealmException;
+import com.sun.enterprise.security.auth.realm.exceptions.InvalidOperationException;
+import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
+import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
 import com.sun.enterprise.security.ee.auth.realm.DigestRealmBase;
 import com.sun.enterprise.universal.GFBase64Encoder;
 import com.sun.enterprise.util.Utility;
-
 import java.io.Reader;
 import java.nio.charset.CharacterCodingException;
 import java.security.MessageDigest;
@@ -38,6 +38,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -48,10 +49,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 import java.util.logging.Level;
-
 import javax.security.auth.login.LoginException;
 import javax.sql.DataSource;
-
 import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.utilities.BuilderHelper;
@@ -106,13 +105,15 @@ public final class JDBCRealm extends DigestRealmBase {
 
     private static final char[] HEXADECIMAL = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
+    private static final String MISSING_PROPERTY = "Missing required property {0} for {1}.";
+
     private Map<String, Vector> groupCache;
     private Vector<String> emptyVector;
-    private String passwordQuery = null;
-    private String groupQuery = null;
-    private MessageDigest md = null;
+    private String passwordQuery;
+    private String groupQuery;
+    private MessageDigest messageDigest;
 
-    private ActiveDescriptor<ConnectorRuntime> cr;
+    private ActiveDescriptor<ConnectorRuntime> connectorRuntimeDescriptor;
 
     /**
      * Initialize a realm with some properties. This can be used when instantiating realms from their descriptions. This
@@ -126,7 +127,8 @@ public final class JDBCRealm extends DigestRealmBase {
     @SuppressWarnings("unchecked")
     public synchronized void init(Properties props) throws BadRealmException, NoSuchRealmException {
         super.init(props);
-        String jaasCtx = props.getProperty(BaseRealm.JAAS_CONTEXT_PARAM);
+
+        String jaasCtx = props.getProperty(JAAS_CONTEXT_PARAM);
         String dbUser = props.getProperty(PARAM_DB_USER);
         String dbPassword = props.getProperty(PARAM_DB_PASSWORD);
         String dsJndi = props.getProperty(PARAM_DATASOURCE_JNDI);
@@ -139,37 +141,31 @@ public final class JDBCRealm extends DigestRealmBase {
         String groupTable = props.getProperty(PARAM_GROUP_TABLE);
         String groupNameColumn = props.getProperty(PARAM_GROUP_NAME_COLUMN);
         String groupTableUserNameColumn = props.getProperty(PARAM_GROUP_TABLE_USER_NAME_COLUMN, userNameColumn);
-        cr = (ActiveDescriptor<ConnectorRuntime>) Util.getDefaultHabitat()
-                .getBestDescriptor(BuilderHelper.createContractFilter(ConnectorRuntime.class.getName()));
+
+        connectorRuntimeDescriptor = (ActiveDescriptor<ConnectorRuntime>)
+            getDefaultHabitat().getBestDescriptor(BuilderHelper.createContractFilter(ConnectorRuntime.class.getName()));
 
         if (jaasCtx == null) {
-            String msg = sm.getString("realm.missingprop", BaseRealm.JAAS_CONTEXT_PARAM, "JDBCRealm");
-            throw new BadRealmException(msg);
+            throw new BadRealmException(MessageFormat.format(MISSING_PROPERTY, JAAS_CONTEXT_PARAM, "JDBCRealm"));
         }
 
         if (dsJndi == null) {
-            String msg = sm.getString("realm.missingprop", PARAM_DATASOURCE_JNDI, "JDBCRealm");
-            throw new BadRealmException(msg);
+            throw new BadRealmException(MessageFormat.format(MISSING_PROPERTY, PARAM_DATASOURCE_JNDI, "JDBCRealm"));
         }
         if (userTable == null) {
-            String msg = sm.getString("realm.missingprop", PARAM_USER_TABLE, "JDBCRealm");
-            throw new BadRealmException(msg);
+            throw new BadRealmException(MessageFormat.format(MISSING_PROPERTY, PARAM_USER_TABLE, "JDBCRealm"));
         }
         if (groupTable == null) {
-            String msg = sm.getString("realm.missingprop", PARAM_GROUP_TABLE, "JDBCRealm");
-            throw new BadRealmException(msg);
+            throw new BadRealmException(MessageFormat.format(MISSING_PROPERTY, PARAM_GROUP_TABLE, "JDBCRealm"));
         }
         if (userNameColumn == null) {
-            String msg = sm.getString("realm.missingprop", PARAM_USER_NAME_COLUMN, "JDBCRealm");
-            throw new BadRealmException(msg);
+            throw new BadRealmException(MessageFormat.format(MISSING_PROPERTY, PARAM_USER_NAME_COLUMN, "JDBCRealm"));
         }
         if (passwordColumn == null) {
-            String msg = sm.getString("realm.missingprop", PARAM_PASSWORD_COLUMN, "JDBCRealm");
-            throw new BadRealmException(msg);
+            throw new BadRealmException(MessageFormat.format(MISSING_PROPERTY, PARAM_PASSWORD_COLUMN, "JDBCRealm"));
         }
         if (groupNameColumn == null) {
-            String msg = sm.getString("realm.missingprop", PARAM_GROUP_NAME_COLUMN, "JDBCRealm");
-            throw new BadRealmException(msg);
+            throw new BadRealmException(MessageFormat.format(MISSING_PROPERTY, PARAM_GROUP_NAME_COLUMN, "JDBCRealm"));
         }
 
         passwordQuery = "SELECT " + passwordColumn + " FROM " + userTable + " WHERE " + userNameColumn + " = ?";
@@ -178,34 +174,38 @@ public final class JDBCRealm extends DigestRealmBase {
 
         if (!NONE.equalsIgnoreCase(digestAlgorithm)) {
             try {
-                md = MessageDigest.getInstance(digestAlgorithm);
+                messageDigest = MessageDigest.getInstance(digestAlgorithm);
             } catch (NoSuchAlgorithmException e) {
-                String msg = sm.getString("jdbcrealm.notsupportdigestalg", digestAlgorithm);
-                throw new BadRealmException(msg);
+                throw new BadRealmException(MessageFormat.format("Digest algorithm {0} is not supported.", digestAlgorithm));
             }
         }
-        if (md != null && encoding == null) {
+        if (messageDigest != null && encoding == null) {
             encoding = DEFAULT_ENCODING;
         }
 
-        this.setProperty(BaseRealm.JAAS_CONTEXT_PARAM, jaasCtx);
+        setProperty(JAAS_CONTEXT_PARAM, jaasCtx);
         if (dbUser != null && dbPassword != null) {
-            this.setProperty(PARAM_DB_USER, dbUser);
-            this.setProperty(PARAM_DB_PASSWORD, dbPassword);
+            setProperty(PARAM_DB_USER, dbUser);
+            setProperty(PARAM_DB_PASSWORD, dbPassword);
         }
-        this.setProperty(PARAM_DATASOURCE_JNDI, dsJndi);
-        this.setProperty(PARAM_DIGEST_ALGORITHM, digestAlgorithm);
+        setProperty(PARAM_DATASOURCE_JNDI, dsJndi);
+        setProperty(PARAM_DIGEST_ALGORITHM, digestAlgorithm);
         if (encoding != null) {
-            this.setProperty(PARAM_ENCODING, encoding);
+            setProperty(PARAM_ENCODING, encoding);
         }
         if (charset != null) {
-            this.setProperty(PARAM_CHARSET, charset);
+            setProperty(PARAM_CHARSET, charset);
         }
 
-        if (_logger.isLoggable(Level.FINEST)) {
-            _logger.finest("JDBCRealm : " + BaseRealm.JAAS_CONTEXT_PARAM + "= " + jaasCtx + ", " + PARAM_DATASOURCE_JNDI + " = " + dsJndi
-                    + ", " + PARAM_DB_USER + " = " + dbUser + ", " + PARAM_DIGEST_ALGORITHM + " = " + digestAlgorithm + ", "
-                    + PARAM_ENCODING + " = " + encoding + ", " + PARAM_CHARSET + " = " + charset);
+        if (_logger.isLoggable(FINEST)) {
+            _logger.finest(
+                "JDBCRealm : " +
+                JAAS_CONTEXT_PARAM + "= " + jaasCtx + ", " +
+                PARAM_DATASOURCE_JNDI + " = " + dsJndi + ", " +
+                PARAM_DB_USER + " = " + dbUser + ", " +
+                PARAM_DIGEST_ALGORITHM + " = " + digestAlgorithm + ", " +
+                PARAM_ENCODING + " = " + encoding + ", " +
+                PARAM_CHARSET + " = " + charset);
         }
 
         groupCache = new HashMap<>();
@@ -411,10 +411,10 @@ public final class JDBCRealm extends DigestRealmBase {
         String charSet = getProperty(PARAM_CHARSET);
         bytes = Utility.convertCharArrayToByteArray(password, charSet);
 
-        if (md != null) {
-            synchronized (md) {
-                md.reset();
-                bytes = md.digest(bytes);
+        if (messageDigest != null) {
+            synchronized (messageDigest) {
+                messageDigest.reset();
+                bytes = messageDigest.digest(bytes);
             }
         }
 
@@ -509,24 +509,24 @@ public final class JDBCRealm extends DigestRealmBase {
      * @return a connection
      */
     private Connection getConnection() throws LoginException {
+        final SimpleJndiName dsJndi = SimpleJndiName.of(getProperty(PARAM_DATASOURCE_JNDI));
+        final String dbUser = getProperty(PARAM_DB_USER);
+        final String dbPassword = getProperty(PARAM_DB_PASSWORD);
 
-        final SimpleJndiName dsJndi = SimpleJndiName.of(this.getProperty(PARAM_DATASOURCE_JNDI));
-        final String dbUser = this.getProperty(PARAM_DB_USER);
-        final String dbPassword = this.getProperty(PARAM_DB_PASSWORD);
         try {
-            ConnectorRuntime connectorRuntime = Util.getDefaultHabitat().getServiceHandle(cr).getService();
+            ConnectorRuntime connectorRuntime = getDefaultHabitat().getServiceHandle(connectorRuntimeDescriptor).getService();
             final DataSource dataSource = (DataSource) connectorRuntime.lookupNonTxResource(dsJndi, false);
-            // (DataSource)ConnectorRuntime.getRuntime().lookupNonTxResource(dsJndi,false);
+
             Connection connection = null;
             if (dbUser != null && dbPassword != null) {
                 connection = dataSource.getConnection(dbUser, dbPassword);
             } else {
                 connection = dataSource.getConnection();
             }
+
             return connection;
         } catch (Exception ex) {
-            String msg = sm.getString("jdbcrealm.cantconnect", dsJndi, dbUser);
-            LoginException loginEx = new LoginException(msg);
+            LoginException loginEx = new LoginException(MessageFormat.format("Unable to connect to datasource {0} for database user {1}.", dsJndi, dbUser));
             loginEx.initCause(ex);
             throw loginEx;
         }

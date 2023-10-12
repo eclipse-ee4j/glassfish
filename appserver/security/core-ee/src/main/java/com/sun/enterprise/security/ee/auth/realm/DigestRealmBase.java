@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,28 +17,26 @@
 
 package com.sun.enterprise.security.ee.auth.realm;
 
+import static com.sun.enterprise.security.auth.digest.api.Constants.A1;
+import static com.sun.enterprise.security.auth.digest.api.Constants.RESPONSE;
+import static java.util.logging.Level.SEVERE;
+
 import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
 import com.sun.enterprise.security.auth.digest.api.Key;
 import com.sun.enterprise.security.auth.digest.api.Password;
 import com.sun.enterprise.security.auth.digest.impl.DigestProcessor;
-import com.sun.enterprise.security.auth.realm.IASRealm;
-
+import com.sun.enterprise.security.auth.realm.Realm;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
-
-import static com.sun.enterprise.security.auth.digest.api.Constants.A1;
-import static com.sun.enterprise.security.auth.digest.api.Constants.RESPONSE;
 
 /**
  * Base class for all realms wanting to support Digest based authentication.
  *
  * @author K.Venugopal@sun.com
  */
-public abstract class DigestRealmBase extends IASRealm implements DigestRealm {
-
-    //    private DigestValidatorImpl validator = null;
+public abstract class DigestRealmBase extends Realm implements DigestRealm {
 
     public DigestRealmBase() {
     }
@@ -107,8 +105,9 @@ public abstract class DigestRealmBase extends IASRealm implements DigestRealm {
             } catch (IOException ex) {
                 Object[] msg = new String[1];
                 msg[0] = ex.getMessage();
-                _logger.log(Level.SEVERE, "digest.error", msg);
+                _logger.log(SEVERE, "digest.error", msg);
             }
+
             return false;
         }
     }

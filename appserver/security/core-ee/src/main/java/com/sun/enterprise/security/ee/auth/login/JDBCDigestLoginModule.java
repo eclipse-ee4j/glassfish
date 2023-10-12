@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,9 +17,8 @@
 
 package com.sun.enterprise.security.ee.auth.login;
 
-import com.sun.enterprise.security.auth.realm.InvalidOperationException;
-import com.sun.enterprise.security.auth.realm.NoSuchUserException;
-
+import com.sun.enterprise.security.auth.realm.exceptions.InvalidOperationException;
+import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
 import java.util.Enumeration;
 import java.util.logging.Level;
 

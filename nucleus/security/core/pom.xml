@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+    Copyright (c) 2023 Contributors to the Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -215,8 +216,6 @@
                             *
                         </Bundle-NativeCode>
                         <Export-Package>
-                            com.iplanet.ias.security.auth.login,
-                            com.iplanet.ias.security.auth.realm,
                             com.sun.enterprise.common.iiop.security,
                             com.sun.enterprise.security,
                             com.sun.enterprise.security.audit,
@@ -225,6 +224,7 @@
                             com.sun.enterprise.security.auth.login,
                             com.sun.enterprise.security.auth.login.common,
                             com.sun.enterprise.security.auth.realm,
+                            com.sun.enterprise.security.auth.realm.exceptions,
                             com.sun.enterprise.security.auth.realm.certificate,
                             com.sun.enterprise.security.auth.realm.file,
                             com.sun.enterprise.security.auth.realm.ldap,

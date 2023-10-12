@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,33 +28,6 @@ import com.sun.enterprise.security.auth.realm.Realm;
  *
  */
 public abstract class PasswordLoginModule extends BasePasswordLoginModule {
-
-    /**
-     * Maintain RI compatibility.
-     *
-     * <P>
-     * This is a convenience method which can be used by subclasses to complete the steps required by RI legacy authentication code.
-     * Most of this should go away if a clean JAAS/Subject based infrastructure is provided. But for now this must be done.
-     *
-     * <P>
-     * Note that this method is called after the authentication has succeeded. If authentication failed do not call this method.
-     *
-     * <P>
-     * A lot of the RI behavior is still present here. Some of the most notable points to remember:
-     * <ul>
-     * <li>Global instance field succeeded is set to true by this method.
-     *
-     * @param username Name of authenticated user.
-     * @param password Password of this user.
-     * @param theRealm Current Realm object for this authentication.
-     * @param groups String array of group memberships for user (could be empty).
-     * @returns void
-     *
-     */
-    @Deprecated
-    public final void commitAuthentication(String username, String password, Realm theRealm, String[] groups) {
-        commitUserAuthentication(groups);
-    }
 
     /**
      * Since the passwords are to be stored as to have char[] BT: 6946553. Retaining the other method for backward compatability

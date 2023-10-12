@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,9 +29,9 @@ import org.jvnet.libpam.PAM;
 import org.jvnet.libpam.PAMException;
 
 import com.sun.appserv.security.AppservRealm;
-import com.sun.enterprise.security.auth.realm.BadRealmException;
-import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
-import com.sun.enterprise.security.auth.realm.NoSuchUserException;
+import com.sun.enterprise.security.auth.realm.exceptions.BadRealmException;
+import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
+import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
 
 /**
  * Realm wrapper for supporting PAM based authentication for all Unix machines. The PAM realm uses the Operating

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,13 +23,17 @@ import java.security.BasicPermission;
  * Permission for using programmatic login.
  *
  * <P>
- * This permission is used by ProgrammaticLogin to verify whether the invoking code has been granted the use of this interface.
+ * This permission is used by ProgrammaticLogin to verify whether the invoking code has been granted the use of this
+ * interface.
  *
  * <P>
  * The name of this permission is the name of the method being invoked.
  *
  */
 public class BaseProgrammaticLoginPermission extends BasicPermission {
+
+    private static final long serialVersionUID = 1L;
+
     public BaseProgrammaticLoginPermission(String name) {
         super(name);
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,8 +19,8 @@ package com.sun.enterprise.security.ee.auth.login;
 
 import com.sun.enterprise.security.PrincipalGroupFactory;
 import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
-import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
 import com.sun.enterprise.security.auth.realm.Realm;
+import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
 import com.sun.enterprise.security.ee.auth.realm.DigestRealm;
 import com.sun.logging.LogDomains;
 

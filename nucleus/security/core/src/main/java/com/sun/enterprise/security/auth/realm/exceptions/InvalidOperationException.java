@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,18 +15,24 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.security.auth;
+package com.sun.enterprise.security.auth.realm.exceptions;
 
 /**
- * This remote interface enables the deployment tool to query the details of the Privilege.
+ * Exception thrown when an operation is invoked on a realm that does not support it. e.g. Invoking getGroups (username)
+ * is not supported by a certificate realm.
  *
- * @author Harish Prabandham
+ * @author Harpreet Singh
  */
-public interface Privilege extends java.io.Serializable {
+public class InvalidOperationException extends Exception {
+
+    private static final long serialVersionUID = 1L;
+
     /**
-     * Returns the name of the name of the Privilege.
+     * Constructs the exception, with descriptive information.
      *
-     * @return The name of the name of the Privilege.
+     * @param info describes the problem with the realm
      */
-    public String getName();
+    public InvalidOperationException(String info) {
+        super(info);
+    }
 }

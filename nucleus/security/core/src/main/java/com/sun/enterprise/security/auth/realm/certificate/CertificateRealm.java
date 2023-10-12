@@ -21,6 +21,13 @@ import static com.sun.enterprise.util.Utility.isEmpty;
 import static java.util.Arrays.asList;
 import static java.util.Collections.enumeration;
 
+import com.sun.enterprise.security.SecurityContext;
+import com.sun.enterprise.security.auth.login.DistinguishedPrincipalCredential;
+import com.sun.enterprise.security.auth.realm.Realm;
+import com.sun.enterprise.security.auth.realm.exceptions.BadRealmException;
+import com.sun.enterprise.security.auth.realm.exceptions.InvalidOperationException;
+import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
+import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
 import java.security.Principal;
 import java.util.Enumeration;
 import java.util.LinkedList;
@@ -28,22 +35,11 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
-
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.x500.X500Principal;
-
 import org.glassfish.security.common.Group;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.security.BaseRealm;
-import com.sun.enterprise.security.SecurityContext;
-import com.sun.enterprise.security.auth.login.DistinguishedPrincipalCredential;
-import com.sun.enterprise.security.auth.realm.BadRealmException;
-import com.sun.enterprise.security.auth.realm.IASRealm;
-import com.sun.enterprise.security.auth.realm.InvalidOperationException;
-import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
-import com.sun.enterprise.security.auth.realm.NoSuchUserException;
 
 /**
  * Realm wrapper for supporting certificate authentication.
@@ -73,7 +69,8 @@ import com.sun.enterprise.security.auth.realm.NoSuchUserException;
  *
  */
 @Service
-public final class CertificateRealm extends IASRealm {
+public final class CertificateRealm extends Realm {
+
     // Descriptive string of the authentication type of this realm.
     public static final String AUTH_TYPE = "certificate";
     private List<String> defaultGroups = new LinkedList<>();
@@ -107,9 +104,9 @@ public final class CertificateRealm extends IASRealm {
             defaultGroups.addAll(asList(groups));
         }
 
-        String jaasCtx = props.getProperty(BaseRealm.JAAS_CONTEXT_PARAM);
+        String jaasCtx = props.getProperty(JAAS_CONTEXT_PARAM);
         if (jaasCtx != null) {
-            setProperty(BaseRealm.JAAS_CONTEXT_PARAM, jaasCtx);
+            setProperty(JAAS_CONTEXT_PARAM, jaasCtx);
         }
     }
 

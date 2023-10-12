@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,23 +15,21 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.security.auth.realm;
+package com.sun.enterprise.security.auth.realm.exceptions;
 
 /**
- * Exception thrown when an operation is requested to remove a group that has a list of users.
+ * Exception thrown when a User is found to be corrupted for some reason. This is a special case of a realm data structure being
+ * corrupted.
  *
- * @author Harpreet Singh
+ * @author Harish Prabandham
  */
-public class GroupNotEmptyException extends Exception {
-
-    private static final long serialVersionUID = 1L;
-
+public class BadUserException extends BadRealmException {
     /**
      * Constructs the exception, with descriptive information.
      *
-     * @param info describes the user which does not exist
+     * @param info describes the problem with the user
      */
-    public GroupNotEmptyException(String info) {
+    public BadUserException(String info) {
         super(info);
     }
 }

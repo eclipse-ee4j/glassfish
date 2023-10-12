@@ -146,26 +146,26 @@ public final class JDBCRealm extends DigestRealmBase {
             getDefaultHabitat().getBestDescriptor(BuilderHelper.createContractFilter(ConnectorRuntime.class.getName()));
 
         if (jaasCtx == null) {
-            throw new BadRealmException(String.format(MISSING_PROPERTY, JAAS_CONTEXT_PARAM, "JDBCRealm"));
+            throw new BadRealmException(MessageFormat.format(MISSING_PROPERTY, JAAS_CONTEXT_PARAM, "JDBCRealm"));
         }
 
         if (dsJndi == null) {
-            throw new BadRealmException(String.format(MISSING_PROPERTY, PARAM_DATASOURCE_JNDI, "JDBCRealm"));
+            throw new BadRealmException(MessageFormat.format(MISSING_PROPERTY, PARAM_DATASOURCE_JNDI, "JDBCRealm"));
         }
         if (userTable == null) {
-            throw new BadRealmException(String.format(MISSING_PROPERTY, PARAM_USER_TABLE, "JDBCRealm"));
+            throw new BadRealmException(MessageFormat.format(MISSING_PROPERTY, PARAM_USER_TABLE, "JDBCRealm"));
         }
         if (groupTable == null) {
-            throw new BadRealmException(String.format(MISSING_PROPERTY, PARAM_GROUP_TABLE, "JDBCRealm"));
+            throw new BadRealmException(MessageFormat.format(MISSING_PROPERTY, PARAM_GROUP_TABLE, "JDBCRealm"));
         }
         if (userNameColumn == null) {
-            throw new BadRealmException(String.format(MISSING_PROPERTY, PARAM_USER_NAME_COLUMN, "JDBCRealm"));
+            throw new BadRealmException(MessageFormat.format(MISSING_PROPERTY, PARAM_USER_NAME_COLUMN, "JDBCRealm"));
         }
         if (passwordColumn == null) {
-            throw new BadRealmException(String.format(MISSING_PROPERTY, PARAM_PASSWORD_COLUMN, "JDBCRealm"));
+            throw new BadRealmException(MessageFormat.format(MISSING_PROPERTY, PARAM_PASSWORD_COLUMN, "JDBCRealm"));
         }
         if (groupNameColumn == null) {
-            throw new BadRealmException(String.format(MISSING_PROPERTY, PARAM_GROUP_NAME_COLUMN, "JDBCRealm"));
+            throw new BadRealmException(MessageFormat.format(MISSING_PROPERTY, PARAM_GROUP_NAME_COLUMN, "JDBCRealm"));
         }
 
         passwordQuery = "SELECT " + passwordColumn + " FROM " + userTable + " WHERE " + userNameColumn + " = ?";

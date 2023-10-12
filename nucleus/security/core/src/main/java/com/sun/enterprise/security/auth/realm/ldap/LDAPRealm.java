@@ -190,7 +190,7 @@ public final class LDAPRealm extends Realm {
         String jaasCtx = props.getProperty(JAAS_CONTEXT_PARAM);
 
         if (isAnyNull(url, dn, jaasCtx)) {
-            throw new BadRealmException(String.format(
+            throw new BadRealmException(MessageFormat.format(
                 "Incomplete configuration of ldap realm: url: {0} baseDN: {1} login module: {2}", url, dn, jaasCtx));
         }
 

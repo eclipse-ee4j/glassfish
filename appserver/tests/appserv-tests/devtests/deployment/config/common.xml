@@ -1248,13 +1248,9 @@ AS_ADMIN_MASTERPASSWORD=changeit
   a new process.
 -->
 <target name="start-process-windows">
-      <taskdef name="spawn"
-        classname="SpawnTask"
-        classpath="${env.APS_HOME}/lib"/>
-      <echo>Executing asadmin command: ${line}</echo>
-      <spawn executable="${ASADMIN}" failifexecutionfails="false">
+      <exec executable="${ASADMIN}" failifexecutionfails="false" spawn="true">
         <arg line="${line}"/>
-      </spawn>
+      </exec>
       <echo message=" ...Waiting for process(es) to be up ...(sleeping for ${start.process.delay.mins} minutes) " />
       <sleep minutes="${start.process.delay.mins}"/>
       <echo message=" Process(es) now assumed to be started."/>

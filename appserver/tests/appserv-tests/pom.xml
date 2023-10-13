@@ -37,6 +37,7 @@
         <module>connectors-ra-redeploy</module>
         <module>report-builder</module>
         <module>reporter</module>
+        <module>webtest</module>
         <module>lib</module>
     </modules>
 </project>

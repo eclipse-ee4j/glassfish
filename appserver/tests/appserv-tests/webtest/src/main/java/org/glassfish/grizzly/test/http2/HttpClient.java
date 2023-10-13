@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,7 +23,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedTransferQueue;
@@ -34,24 +34,17 @@ import org.glassfish.grizzly.filterchain.Filter;
 import org.glassfish.grizzly.filterchain.FilterChain;
 import org.glassfish.grizzly.filterchain.FilterChainBuilder;
 import org.glassfish.grizzly.filterchain.FilterChainContext;
-import org.glassfish.grizzly.filterchain.TransportFilter;
 import org.glassfish.grizzly.filterchain.NextAction;
+import org.glassfish.grizzly.filterchain.TransportFilter;
 import org.glassfish.grizzly.http.HttpClientFilter;
 import org.glassfish.grizzly.http.HttpContent;
-import org.glassfish.grizzly.http.HttpHeader;
-import org.glassfish.grizzly.http.HttpRequestPacket;
-import org.glassfish.grizzly.http.HttpResponsePacket;
 import org.glassfish.grizzly.http.HttpTrailer;
-import org.glassfish.grizzly.http.server.Request;
-import org.glassfish.grizzly.http.server.Response;
-import org.glassfish.grizzly.http2.Http2BaseFilter;
 import org.glassfish.grizzly.http2.Http2ClientFilter;
 import org.glassfish.grizzly.http2.Http2Configuration;
 import org.glassfish.grizzly.http2.Http2Stream;
 import org.glassfish.grizzly.nio.transport.TCPNIOTransport;
 import org.glassfish.grizzly.nio.transport.TCPNIOTransportBuilder;
 import org.glassfish.grizzly.ssl.SSLContextConfigurator;
-import org.glassfish.grizzly.ssl.SSLEngineConfigurator;
 import org.glassfish.grizzly.ssl.SSLEngineConfigurator;
 import org.glassfish.grizzly.ssl.SSLFilter;
 
@@ -130,6 +123,7 @@ public class HttpClient implements AutoCloseable {
             new HttpResponse(contentInfo.httpContent, contentInfo.trailerMap) : null);
     }
 
+    @Override
     public void close() throws Exception {
         if (connection != null) {
             connection.closeSilently();
@@ -203,7 +197,7 @@ public class HttpClient implements AutoCloseable {
 
     // ----- inner class -----
     public static class Builder {
-        private HttpClient httpClient = new HttpClient();
+        private final HttpClient httpClient = new HttpClient();
 
         private Builder() {
         }
@@ -246,7 +240,7 @@ public class HttpClient implements AutoCloseable {
 
     private static class HttpContentInfo {
         private HttpContent httpContent = null;
-        private Map<String, String> trailerMap = new HashMap<>();
+        private final Map<String, String> trailerMap = new HashMap<>();
 
         private HttpContentInfo(HttpContent httpContent) {
             this.httpContent = httpContent;

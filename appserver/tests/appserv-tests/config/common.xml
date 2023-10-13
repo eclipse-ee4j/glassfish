@@ -1399,7 +1399,7 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
     <echo message="Running Web Test from ${basedir}" level="verbose" />
     <echo message="http host: ${http.host}" level="verbose" />
     <echo message="http port: ${http.port}" level="verbose" />
-    <java fork="on" failonerror="false" classpath="${env.APS_HOME}/lib/webtest.jar:${s1astest.classpath}"
+    <java fork="on" failonerror="false" classpath="${env.APS_HOME}/lib/target/webtest.jar:${s1astest.classpath}"
         classname="com.sun.ejte.ccl.webrunner.webtest.WebTest">
         <arg value="script.txt" />
         <arg value="${http.host}" />

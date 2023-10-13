@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,18 @@
 
 package com.sun.ejte.ccl.webrunner.webtest;
 
-import java.net.*;
-import java.util.*;
-import java.io.*;
-import java.lang.*;
-import java.util.logging.*;
-import com.sun.ejte.ccl.reporter.*;
+import com.sun.ejte.ccl.reporter.Reporter;
+import com.sun.ejte.ccl.reporter.ReporterConstants;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Logger;
 
 /**
  *This class is called from WebTest.
@@ -56,10 +63,10 @@ public class SendRequest {
     //int port=8000;
     private int m_port=80;
     int port;
-    private String m_host=new String("local");
+    private String m_host="local";
     boolean serverSet=false;
     private static int buffer_size=8192;
-    private String ws_root;
+    private final String ws_root;
     Reporter reporter=null;
 
 
@@ -108,7 +115,7 @@ public class SendRequest {
                     double temp=0;
                     double time=0;
                     char c;
-                    String hostName = new String("");
+                    String hostName = "";
 
                     int i=0,j=0;
                     MimeHeader mh;
@@ -149,16 +156,16 @@ public class SendRequest {
                                                     //System.out.println("port is"+strport);
 }
                                                     hostName = hostName.trim();
-                                                    port=new Integer(strport).intValue();
+                                                    port=Integer.parseInt(strport);
                                                     // if serverSet is true,then use m_host and m_port from the commandline
                                                     //otherwise read host and port from the script.txt
                                                     if(serverSet){
                                                     System.out.println("HTTP port :"+m_port);
                                                     System.out.println("HTTP hostname :"+m_host);
                                                     server=new Socket(m_host,m_port);
-                                                    }
-                                                    else
+                                                    } else {
                                                         server=new Socket(hostName,port);
+                                                    }
                                                     serverAddress=server.getInetAddress();
                                                     bufferedStream=new BufferedReader(new InputStreamReader(server.getInputStream()));
                                                     server_out= new DataOutputStream(server.getOutputStream());
@@ -169,9 +176,9 @@ public class SendRequest {
                                                             //String post="POST" + " " + server_url+ " " + "HTTP/1.0" + CRLF + inmh
                                                             //+ CRLF + postdata+ CRLF+CRLF;
 
+                                                    } else {
+                                                        req=mh.getRequestHeader()+ CRLF + mh + CRLF + CRLF;
                                                     }
-                                                    else
-                                                            req=mh.getRequestHeader()+ CRLF + mh + CRLF + CRLF;
 
                                                     String requestLine=mh.getRequestHeader();
                                                     int fsp=requestLine.indexOf(' ');
@@ -185,9 +192,11 @@ public class SendRequest {
                                                     //System.out.println(mh);
 
                                                     try {
-                                                            if(server_out!=null)
-                                                                    server_out.write(req.getBytes());
-                                                            else System.out.println("Server_out is null");
+                                                            if(server_out!=null) {
+                                                                server_out.write(req.getBytes());
+                                                            } else {
+                                                                System.out.println("Server_out is null");
+                                                            }
                                                     }
                                                     catch(IOException e) {
                                                             String errMsg=e.getMessage();
@@ -226,8 +235,9 @@ public class SendRequest {
 
                                             i=i+1;
                             }
-                            if(time>=temp)
-                                    temp=time;
+                            if(time>=temp) {
+                                temp=time;
+                            }
 
                     }
                     // System.out.println("while loop ended");
@@ -245,7 +255,7 @@ public class SendRequest {
 
     public synchronized int readHeader(BufferedReader inStream) {
         int status=0;
-        String reasonPhrase = new String("");
+        String reasonPhrase = "";
         String st=null;
         try {
             StringBuffer result=new StringBuffer();

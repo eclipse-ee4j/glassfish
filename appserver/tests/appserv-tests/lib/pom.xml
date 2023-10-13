@@ -24,6 +24,11 @@
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.tests</groupId>
+            <artifactId>webtest</artifactId>
+            <version>${glassfish.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.tests</groupId>
             <artifactId>reporter</artifactId>
             <version>${glassfish.version}</version>
         </dependency>
@@ -124,6 +129,7 @@
                         <phase>prepare-package</phase>
                         <configuration>
                             <stripVersion>true</stripVersion>
+                            <excludeTransitive>true</excludeTransitive>
                         </configuration>
                     </execution>
                 </executions>

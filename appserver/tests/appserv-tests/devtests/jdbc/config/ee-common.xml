@@ -1326,7 +1326,7 @@ successful"/>
   <java
     fork="on"
     timeout="120000"
-    classpath="${env.APS_HOME}/lib/webtest.jar:${s1astest.classpath}"
+    classpath="${env.APS_HOME}/lib/target/webtest.jar:${s1astest.classpath}"
     classname="com.sun.ejte.ccl.webrunner.webtest.WebTest">
     <arg value="script.txt"/>
     <arg value="${http.host}"/>

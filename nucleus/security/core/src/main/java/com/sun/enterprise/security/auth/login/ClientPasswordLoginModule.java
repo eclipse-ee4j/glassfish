@@ -54,21 +54,22 @@ public class ClientPasswordLoginModule implements LoginModule {
     private static final String DEFAULT_REALMNAME = "default";
     private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ClientPasswordLoginModule.class);
 
-    // initial state
+    public static final String LOGIN_NAME = "j2eelogin.name";
+    public static final String LOGIN_PASSWORD = "j2eelogin.password";
+
+    // Initial state
     private Subject subject;
     private CallbackHandler callbackHandler;
 
-    // the authentication status
+    // The authentication status
     private boolean succeeded;
     private boolean commitSucceeded;
 
-    // username and password
+    // Username and password
     private String username;
     private char[] password;
 
     private UserPrincipal userPrincipal;
-    public static final String LOGIN_NAME = "j2eelogin.name";
-    public static final String LOGIN_PASSWORD = "j2eelogin.password";
 
     /**
      * Initialize this <code>LoginModule</code>.
@@ -89,7 +90,7 @@ public class ClientPasswordLoginModule implements LoginModule {
      * <code>LoginModule</code>.
      */
     @Override
-    public void initialize(Subject subject, CallbackHandler callbackHandler, Map sharedState, Map options) {
+    public void initialize(Subject subject, CallbackHandler callbackHandler, Map<String,?> sharedState, Map<String,?> options) {
         this.subject = subject;
         this.callbackHandler = callbackHandler;
     }

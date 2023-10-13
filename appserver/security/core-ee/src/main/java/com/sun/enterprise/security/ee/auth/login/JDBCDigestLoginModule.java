@@ -17,10 +17,11 @@
 
 package com.sun.enterprise.security.ee.auth.login;
 
+import static java.util.logging.Level.SEVERE;
+
 import com.sun.enterprise.security.auth.realm.exceptions.InvalidOperationException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
 import java.util.Enumeration;
-import java.util.logging.Level;
 
 /**
  * @author K.Venugopal@sun.com
@@ -30,10 +31,11 @@ public class JDBCDigestLoginModule extends DigestLoginModule {
     @Override
     protected Enumeration<String> getGroups(String username) {
         try {
-            return this.getRealm().getGroupNames(username);
+            return getRealm().getGroupNames(username);
         } catch (InvalidOperationException | NoSuchUserException ex) {
-            _logger.log(Level.SEVERE, null, ex);
+            _logger.log(SEVERE, null, ex);
         }
+
         return null;
     }
 }

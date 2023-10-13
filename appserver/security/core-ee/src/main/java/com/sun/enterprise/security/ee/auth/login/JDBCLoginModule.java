@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,13 @@
 
 package com.sun.enterprise.security.ee.auth.login;
 
-import java.util.Arrays;
-import java.util.logging.Level;
+import static com.sun.enterprise.util.Utility.isEmpty;
+import static java.util.logging.Level.FINEST;
 
-import com.sun.enterprise.security.auth.login.PasswordLoginModule;
-import com.sun.enterprise.security.auth.login.common.LoginException;
+import com.sun.enterprise.security.BasePasswordLoginModule;
 import com.sun.enterprise.security.auth.realm.jdbc.JDBCRealm;
+import java.util.Arrays;
+import javax.security.auth.login.LoginException;
 
 /**
  * This class implement a JDBC Login module for Glassfish. The work is derivated from Sun's sample JDBC login module.
@@ -29,38 +31,31 @@ import com.sun.enterprise.security.auth.realm.jdbc.JDBCRealm;
  *
  * @author Jean-Baptiste Bugeaud
  */
-public class JDBCLoginModule extends PasswordLoginModule {
+public class JDBCLoginModule extends BasePasswordLoginModule {
     /**
      * Perform JDBC authentication. Delegates to JDBCRealm.
+     * @throws javax.security.auth.login.LoginException
      *
      * @throws LoginException If login fails (JAAS login() behavior).
+     * @throws javax.security.auth.login.LoginException
      */
     @Override
-    protected void authenticate() throws LoginException {
-        if (!(_currentRealm instanceof JDBCRealm)) {
-            String msg = sm.getString("jdbclm.badrealm");
-            throw new LoginException(msg);
-        }
-
-        final JDBCRealm jdbcRealm = (JDBCRealm) _currentRealm;
+    protected void authenticateUser() throws LoginException {
+        final JDBCRealm jdbcRealm = getRealm(JDBCRealm.class, "jdbclm.badrealm");
 
         // A JDBC user must have a name not null and non-empty.
-        if (_username == null || _username.length() == 0) {
-            String msg = sm.getString("jdbclm.nulluser");
-            throw new LoginException(msg);
+        if (isEmpty(_username)) {
+            throw new LoginException(sm.getString("jdbclm.nulluser"));
         }
 
-        String[] grpList = jdbcRealm.authenticate(_username, getPasswordChar());
+        String[] groups = jdbcRealm.authenticate(_username, getPasswordChar());
 
-        if (grpList == null) { // JAAS behavior
-            String msg = sm.getString("jdbclm.loginfail", _username);
-            throw new LoginException(msg);
+        if (groups == null) { // JAAS behavior
+            throw new LoginException(sm.getString("jdbclm.loginfail", _username));
         }
 
-        if (_logger.isLoggable(Level.FINEST)) {
-            _logger.finest("JDBC login succeeded for: " + _username + " groups:" + Arrays.toString(grpList));
-        }
+        _logger.log(FINEST, () -> "JDBC login succeeded for: " + _username + " groups:" + Arrays.toString(groups));
 
-        commitAuthentication(_username, getPasswordChar(), _currentRealm, grpList);
+        commitUserAuthentication(groups);
     }
 }

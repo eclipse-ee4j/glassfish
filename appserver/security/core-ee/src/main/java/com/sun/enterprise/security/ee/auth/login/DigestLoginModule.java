@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -50,9 +50,6 @@ public abstract class DigestLoginModule implements LoginModule {
     protected static final Logger _logger = LogDomains.getLogger(DigestLoginModule.class, LogDomains.SECURITY_LOGGER);
 
     private Subject subject;
-    private CallbackHandler handler;
-    private Map<String, ?> sharedState;
-    private Map<String, ?> options;
     protected boolean _succeeded;
     protected boolean _commitSucceeded;
     protected UserPrincipal _userPrincipal;
@@ -65,12 +62,8 @@ public abstract class DigestLoginModule implements LoginModule {
     @Override
     public final void initialize(Subject subject, CallbackHandler handler, Map<String, ?> sharedState, Map<String, ?> options) {
         this.subject = subject;
-        this.handler = handler;
-        this.sharedState = sharedState;
-        this.options = options;
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Login module initialized: " + this.getClass().toString());
-        }
+
+        _logger.log(Level.FINE, () -> "Login module initialized: " + this.getClass().toString());
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,17 +17,19 @@
 
 package com.sun.enterprise.security.auth.login;
 
+import static com.sun.enterprise.security.auth.realm.ldap.LDAPRealm.MODE_FIND_BIND;
+import static com.sun.enterprise.security.auth.realm.ldap.LDAPRealm.PARAM_MODE;
 import static com.sun.enterprise.util.Utility.isEmpty;
 
 import javax.security.auth.login.LoginException;
-
+import com.sun.enterprise.security.BasePasswordLoginModule;
 import com.sun.enterprise.security.auth.realm.ldap.LDAPRealm;
 
 /**
- * iAS JAAS LoginModule for an LDAP Realm.
+ * GlassFish JAAS LoginModule for an LDAP Realm.
  *
  * <P>
- * Refer to the LDAPRealm documentation for necessary and optional configuration parameters for the iAS LDAP login support.
+ * Refer to the LDAPRealm documentation for necessary and optional configuration parameters for the GlassFish LDAP login support.
  *
  * <P>
  * There are various ways in which a user can be authenticated using an LDAP directory. Currently this login module only supports
@@ -47,22 +49,16 @@ import com.sun.enterprise.security.auth.realm.ldap.LDAPRealm;
  * group names in which the user has membership. If no entries are found, the group membership is empty.
  * </ol>
  *
- *
  */
-public class LDAPLoginModule extends PasswordLoginModule {
-    private LDAPRealm _ldapRealm;
+public class LDAPLoginModule extends BasePasswordLoginModule {
 
     /**
      * Performs authentication for the current user.
      *
      */
     @Override
-    protected void authenticate() throws LoginException {
-        if (!(_currentRealm instanceof LDAPRealm)) {
-            String msg = sm.getString("ldaplm.badrealm");
-            throw new LoginException(msg);
-        }
-        _ldapRealm = (LDAPRealm) _currentRealm;
+    protected void authenticateUser() throws LoginException {
+        LDAPRealm ldapRealm = getRealm(LDAPRealm.class, "ldaplm.badrealm");
 
         // Enforce that password cannot be empty.
         // ldap may grant login on empty password!
@@ -70,14 +66,13 @@ public class LDAPLoginModule extends PasswordLoginModule {
             throw new LoginException(sm.getString("ldaplm.emptypassword", _username));
         }
 
-        String mode = _currentRealm.getProperty(LDAPRealm.PARAM_MODE);
-
-        if (!LDAPRealm.MODE_FIND_BIND.equals(mode)) {
+        String mode = ldapRealm.getProperty(PARAM_MODE);
+        if (!MODE_FIND_BIND.equals(mode)) {
             throw new LoginException(sm.getString("ldaplm.badmode", mode));
         }
 
-        String[] groups = _ldapRealm.findAndBind(_username, getPasswordChar());
+        String[] groups = ldapRealm.findAndBind(_username, getPasswordChar());
 
-        commitAuthentication(_username, getPasswordChar(), _currentRealm, groups);
+        commitUserAuthentication(groups);
     }
 }

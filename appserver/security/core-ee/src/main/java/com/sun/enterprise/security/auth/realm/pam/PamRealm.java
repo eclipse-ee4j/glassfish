@@ -17,21 +17,22 @@
 
 package com.sun.enterprise.security.auth.realm.pam;
 
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.Properties;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import static java.util.Collections.enumeration;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
 
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.libpam.PAM;
-import org.jvnet.libpam.PAMException;
-
-import com.sun.appserv.security.AppservRealm;
+import com.sun.enterprise.security.auth.realm.Realm;
 import com.sun.enterprise.security.auth.realm.exceptions.BadRealmException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
+import java.util.Enumeration;
+import java.util.Properties;
+import java.util.Set;
+import java.util.logging.Logger;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.libpam.PAM;
+import org.jvnet.libpam.PAMException;
+import org.jvnet.libpam.UnixUser;
 
 /**
  * Realm wrapper for supporting PAM based authentication for all Unix machines. The PAM realm uses the Operating
@@ -41,7 +42,7 @@ import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
  */
 
 @Service
-public final class PamRealm extends AppservRealm {
+public final class PamRealm extends Realm {
 
     // Descriptive string of the authentication type of this realm.
     public static final String AUTH_TYPE = "pam";
@@ -77,13 +78,41 @@ public final class PamRealm extends AppservRealm {
         return AUTH_TYPE;
     }
 
-    @Override
-    public Enumeration getGroupNames(String username) throws NoSuchUserException {
+    public String[] authenticate(String username, String password) {
+        UnixUser user = null;
         try {
-            Set<String> groupsSet = new PAM(PAM_SERVICE).getGroupsOfUser(username);
-            return Collections.enumeration(groupsSet);
+            user = new PAM(getPamService()).authenticate(username, password);
+        } catch (PAMException e) {
+            _logger.log(SEVERE, "pam_exception_authenticate", e);
+        }
+
+        if (user == null) { // JAAS behavior
+            return null;
+        }
+
+        _logger.log(FINE, () -> "PAM login succeeded for: " + username);
+
+        // Get the groups from the libpam4j UnixUser class that has been returned after a successful authentication.
+
+        String[] groups = null;
+        Set<String> groupSet = user.getGroups();
+
+        if (groupSet != null) {
+            groups = groupSet.toArray(String[]::new);
+        } else {
+            // Empty group list, create a zero-length group list
+            groups = new String[0];
+        }
+
+        return groups;
+    }
+
+    @Override
+    public Enumeration<String> getGroupNames(String username) throws NoSuchUserException {
+        try {
+            return enumeration(new UnixUser(username).getGroups());
         } catch (PAMException ex) {
-            Logger.getLogger(PamRealm.class.getName()).log(Level.SEVERE, "pam_exception_getgroupsofuser", ex);
+            Logger.getLogger(PamRealm.class.getName()).log(SEVERE, "pam_exception_getgroupsofuser", ex);
             return null;
         }
     }

@@ -98,8 +98,7 @@ public final class PamRealm extends Realm {
         Set<String> groupSet = user.getGroups();
 
         if (groupSet != null) {
-            groups = new String[groupSet.size()];
-            user.getGroups().toArray(groups);
+            groups = groupSet.toArray(String[]::new);
         } else {
             // Empty group list, create a zero-length group list
             groups = new String[0];

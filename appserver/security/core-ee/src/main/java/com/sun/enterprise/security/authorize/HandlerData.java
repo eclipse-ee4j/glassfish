@@ -20,8 +20,7 @@ import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.internal.api.Globals;
 
 import com.sun.enterprise.security.SecurityContext;
-import com.sun.enterprise.security.ee.PermissionCacheFactory;
-
+import com.sun.enterprise.security.authorize.cache.PermissionCacheFactory;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**

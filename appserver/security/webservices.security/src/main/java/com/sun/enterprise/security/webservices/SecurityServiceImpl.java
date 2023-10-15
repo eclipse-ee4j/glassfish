@@ -17,19 +17,28 @@
 
 package com.sun.enterprise.security.webservices;
 
-import static com.sun.enterprise.security.jauth.AuthConfig.SOAP;
 import static com.sun.enterprise.security.webservices.LogUtils.BASIC_AUTH_ERROR;
-import static com.sun.enterprise.security.webservices.LogUtils.EJB_SEC_CONFIG_FAILURE;
 import static com.sun.enterprise.util.Utility.isEmpty;
 import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+import com.sun.enterprise.deployment.WebServiceEndpoint;
+import com.sun.enterprise.security.SecurityContext;
+import com.sun.enterprise.security.authorize.PolicyContextHandlerImpl;
+import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
+import com.sun.enterprise.security.web.integration.WebPrincipal;
+import com.sun.enterprise.web.WebModule;
+import com.sun.web.security.RealmAdapter;
+import com.sun.xml.ws.assembler.metro.dev.ClientPipelineHook;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import jakarta.security.jacc.PolicyContext;
+import jakarta.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
 import java.util.logging.Logger;
-
 import org.apache.catalina.Globals;
 import org.glassfish.security.common.UserNameAndPassword;
 import org.glassfish.webservices.EjbRuntimeEndpointInfo;
@@ -39,23 +48,6 @@ import org.glassfish.webservices.monitoring.AuthenticationListener;
 import org.glassfish.webservices.monitoring.Endpoint;
 import org.glassfish.webservices.monitoring.WebServiceEngineImpl;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
-import com.sun.enterprise.deployment.WebServiceEndpoint;
-import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
-import com.sun.enterprise.security.SecurityContext;
-import com.sun.enterprise.security.authorize.PolicyContextHandlerImpl;
-import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
-import com.sun.enterprise.security.jmac.provider.ServerAuthConfig;
-import com.sun.enterprise.security.web.integration.WebPrincipal;
-import com.sun.enterprise.web.WebModule;
-import com.sun.web.security.RealmAdapter;
-import com.sun.xml.ws.assembler.metro.dev.ClientPipelineHook;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-import jakarta.security.jacc.PolicyContext;
-import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * @author Kumar
@@ -70,18 +62,6 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Inject
     private AppServerAuditManager auditManager;
-
-    @Override
-    public Object mergeSOAPMessageSecurityPolicies(MessageSecurityBindingDescriptor securityBindingDescriptor) {
-        try {
-            // Merge message security policy from domain.xml and sun-specific deployment descriptor
-            return ServerAuthConfig.getConfig(SOAP, securityBindingDescriptor, null);
-        } catch (Exception ae) {
-            _logger.log(SEVERE, EJB_SEC_CONFIG_FAILURE, ae);
-        }
-
-        return null;
-    }
 
     @Override
     public boolean doSecurity(HttpServletRequest request, EjbRuntimeEndpointInfo endpointInfo, String realmName, WebServiceContextImpl context) {

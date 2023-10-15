@@ -17,10 +17,9 @@
 package org.glassfish.webservices;
 
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
-import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
 import com.sun.enterprise.web.WebModule;
-import jakarta.servlet.http.HttpServletRequest;
 import com.sun.xml.ws.assembler.metro.dev.ClientPipelineHook;
+import jakarta.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import org.jvnet.hk2.annotations.Contract;
 
@@ -30,7 +29,6 @@ import org.jvnet.hk2.annotations.Contract;
  */
 @Contract
 public interface SecurityService {
-    Object mergeSOAPMessageSecurityPolicies(MessageSecurityBindingDescriptor desc);
 
     boolean doSecurity(HttpServletRequest hreq, EjbRuntimeEndpointInfo ejbEndpoint, String realmName, WebServiceContextImpl context);
     Principal getUserPrincipal(boolean isWeb);

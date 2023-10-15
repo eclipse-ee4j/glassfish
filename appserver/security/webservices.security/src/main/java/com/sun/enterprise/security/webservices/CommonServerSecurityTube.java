@@ -33,7 +33,7 @@ import jakarta.xml.ws.WebServiceException;
 
 import com.sun.enterprise.security.jmac.provider.PacketMapMessageInfo;
 import com.sun.enterprise.security.jmac.provider.PacketMessageInfo;
-import com.sun.enterprise.security.jmac.provider.config.PipeHelper;
+import com.sun.enterprise.security.jmac.provider.config.SoapAuthenticationService;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import com.sun.xml.ws.api.message.Packet;
@@ -52,7 +52,7 @@ public class CommonServerSecurityTube extends AbstractFilterTubeImpl {
     protected static final LocalStringManagerImpl localStrings =
         new LocalStringManagerImpl(CommonServerSecurityTube.class);
     private final boolean isHttpBinding;
-    private PipeHelper helper;
+    private SoapAuthenticationService helper;
 
     // Introduced during Pipe to Tube conversion
     private ServerAuthContext sAC = null;
@@ -62,7 +62,7 @@ public class CommonServerSecurityTube extends AbstractFilterTubeImpl {
     public CommonServerSecurityTube(Map props, final Tube next, boolean isHttpBinding) {
         super(next);
         props.put(PipeConstants.SECURITY_PIPE, this);
-        this.helper = new PipeHelper(PipeConstants.SOAP_LAYER, props, null);
+        this.helper = new SoapAuthenticationService(PipeConstants.SOAP_LAYER, props, null);
         this.isHttpBinding = isHttpBinding;
 
     }
@@ -70,7 +70,7 @@ public class CommonServerSecurityTube extends AbstractFilterTubeImpl {
 
     protected CommonServerSecurityTube(CommonServerSecurityTube that, TubeCloner cloner) {
         super(that, cloner);
-        // we can share the helper for all pipes so that the remove
+        // we can share the soapAuthenticationService for all pipes so that the remove
         // registration (in server side) can be done properly
         this.helper = that.helper;
         this.isHttpBinding = that.isHttpBinding;
@@ -256,7 +256,7 @@ public class CommonServerSecurityTube extends AbstractFilterTubeImpl {
                 p.invocationProperties.get(PipeConstants.CLIENT_SUBJECT);
         }
         if (s == null) {
-            s = PipeHelper.getClientSubject();
+            s = SoapAuthenticationService.getClientSubject();
             if (p != null) {
                 p.invocationProperties.put(PipeConstants.CLIENT_SUBJECT,s);
             }

@@ -92,7 +92,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.xml.bind.UnmarshalException;
 import jakarta.xml.ws.WebServiceException;
 
-public class PipeHelper extends BaseAuthenticationService {
+public class SoapAuthenticationService extends BaseAuthenticationService {
 
     private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(PipeConstants.class);
 
@@ -103,7 +103,7 @@ public class PipeHelper extends BaseAuthenticationService {
     private InvocationManager invocationManager;
     private EJBPolicyContextDelegate ejbDelegate;
 
-    public PipeHelper(String layer, Map<String, Object> map, CallbackHandler callbackHandler) {
+    public SoapAuthenticationService(String layer, Map<String, Object> map, CallbackHandler callbackHandler) {
         init(layer, getAppCtxt(map), map, callbackHandler, null);
 
         this.isEjbEndpoint = processSunDeploymentDescriptor();

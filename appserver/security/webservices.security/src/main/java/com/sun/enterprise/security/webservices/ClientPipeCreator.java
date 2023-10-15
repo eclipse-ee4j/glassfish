@@ -74,14 +74,14 @@ public class ClientPipeCreator extends ClientPipelineHook {
 
         // There is a 1-1 mapping between Service_Ref and a ListenerWrapper
         if (listenerWrapper != null) {
-            // Override the listener that was created by the ConfigHelper CTOR :if one was already registered
+            // Override the listener that was created: if one was already registered
             listenerWrapper.incrementReference();
-            clientSecurityPipe.getPipeHelper().setRegistrationWrapper(listenerWrapper);
+            clientSecurityPipe.getAuthenticationService().setRegistrationWrapper(listenerWrapper);
         } else {
             // Register a new listener
             ClientPipeCloser.getInstance().registerListenerWrapper(
                 serviceReferenceDescriptor,
-                clientSecurityPipe.getPipeHelper().getRegistrationWrapper());
+                clientSecurityPipe.getAuthenticationService().getRegistrationWrapper());
         }
 
         return clientSecurityPipe;

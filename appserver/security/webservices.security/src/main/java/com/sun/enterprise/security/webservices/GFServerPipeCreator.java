@@ -20,11 +20,6 @@ import static com.sun.enterprise.util.Utility.isAnyNull;
 import static com.sun.xml.ws.policy.PolicyMap.createWsdlEndpointScopeKey;
 import static com.sun.xml.ws.policy.PolicyMap.createWsdlOperationScopeKey;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.jvnet.hk2.annotations.Service;
-
 import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.xml.ws.api.model.SEIModel;
 import com.sun.xml.ws.api.model.wsdl.WSDLBoundOperation;
@@ -36,8 +31,11 @@ import com.sun.xml.ws.policy.PolicyException;
 import com.sun.xml.ws.policy.PolicyMap;
 import com.sun.xml.ws.policy.PolicyMapKey;
 import com.sun.xml.wss.provider.wsit.PipeConstants;
-
 import jakarta.inject.Singleton;
+import java.util.HashMap;
+import java.util.Map;
+import org.glassfish.webservices.ServerPipeCreator;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * This is used by JAXWSContainer to return proper Jakarta Authentication security and app server monitoring pipes to
@@ -45,7 +43,7 @@ import jakarta.inject.Singleton;
  */
 @Service
 @Singleton
-public class GFServerPipeCreator extends org.glassfish.webservices.ServerPipeCreator {
+public class GFServerPipeCreator extends ServerPipeCreator {
 
     private static final String SECURITY_POLICY_NAMESPACE_URI_SUBMISSION = "http://schemas.xmlsoap.org/ws/2005/07/securitypolicy";
     private static final String SECURITY_POLICY_NAMESPACE_URI_SPECVERSION = "http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702";
@@ -71,11 +69,12 @@ public class GFServerPipeCreator extends org.glassfish.webservices.ServerPipeCre
         props.put(PipeConstants.SERVICE_ENDPOINT, endpoint);
         props.put(PipeConstants.NEXT_PIPE, tail);
         props.put(PipeConstants.CONTAINER, owner.getContainer());
+
         if (isSecurityEnabled(policyMap, port)) {
             endpoint.setSecurePipeline();
         }
 
-        return new CommonServerSecurityPipe(props, tail, isHttpBinding);
+        return new ServerSecurityPipe(props, tail, isHttpBinding);
     }
 
     /**

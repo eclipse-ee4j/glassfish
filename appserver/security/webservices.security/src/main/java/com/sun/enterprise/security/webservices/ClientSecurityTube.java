@@ -31,7 +31,7 @@ import jakarta.xml.ws.WebServiceException;
 
 import com.sun.enterprise.security.jmac.provider.PacketMessageInfo;
 import com.sun.enterprise.security.jmac.provider.PacketMapMessageInfo;
-import com.sun.enterprise.security.jmac.provider.config.PipeHelper;
+import com.sun.enterprise.security.jmac.provider.config.SoapAuthenticationService;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import com.sun.xml.ws.api.model.wsdl.WSDLPort;
@@ -50,7 +50,7 @@ import jakarta.xml.bind.JAXBElement;
  */
 public class ClientSecurityTube extends AbstractFilterTubeImpl implements SecureConversationInitiator {
 
-    protected PipeHelper helper;
+    protected SoapAuthenticationService helper;
 
     protected static final Logger _logger = LogUtils.getLogger();
 
@@ -70,7 +70,7 @@ public class ClientSecurityTube extends AbstractFilterTubeImpl implements Secure
         if (wsdlModel != null) {
             props.put(PipeConstants.WSDL_SERVICE, wsdlModel.getOwner().getName());
         }
-        this.helper = new PipeHelper(PipeConstants.SOAP_LAYER, props, null);
+        this.helper = new SoapAuthenticationService(PipeConstants.SOAP_LAYER, props, null);
 
     }
 
@@ -188,7 +188,7 @@ public class ClientSecurityTube extends AbstractFilterTubeImpl implements Secure
 
         if (s == null) {
 
-            s = PipeHelper.getClientSubject();
+            s = SoapAuthenticationService.getClientSubject();
 
             if (p != null) {
                 p.invocationProperties.put(PipeConstants.CLIENT_SUBJECT,s);
@@ -217,7 +217,7 @@ public class ClientSecurityTube extends AbstractFilterTubeImpl implements Secure
 
             helper.getSessionToken(map,locInfo,locClientSubject);
 
-            // helper returns token in map of msgInfo, using same key
+            // soapAuthenticationService returns token in map of msgInfo, using same key
             Object o = locInfo.getMap().get(PipeConstants.SECURITY_TOKEN);
 
             if (o != null && o instanceof JAXBElement) {

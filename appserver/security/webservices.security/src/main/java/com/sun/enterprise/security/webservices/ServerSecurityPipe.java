@@ -32,7 +32,7 @@ import javax.security.auth.Subject;
 import com.sun.enterprise.security.jmac.callback.ServerContainerCallbackHandler;
 import com.sun.enterprise.security.jmac.provider.PacketMapMessageInfo;
 import com.sun.enterprise.security.jmac.provider.PacketMessageInfo;
-import com.sun.enterprise.security.jmac.provider.config.PipeHelper;
+import com.sun.enterprise.security.jmac.provider.config.SoapAuthenticationService;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.xml.ws.api.message.Packet;
 import com.sun.xml.ws.api.pipe.Pipe;
@@ -45,32 +45,32 @@ import jakarta.security.auth.message.config.ServerAuthContext;
 import jakarta.xml.ws.WebServiceException;
 
 /**
- * This pipe is used to do Jakarta Authentication security
+ * This pipe uses Jakarta Authentication to authenticate messages / packages.
  */
 @SuppressWarnings("deprecation")
-public class CommonServerSecurityPipe extends AbstractFilterPipeImpl {
+public class ServerSecurityPipe extends AbstractFilterPipeImpl {
 
     protected static final Logger _logger = LogUtils.getLogger();
-    protected static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CommonServerSecurityPipe.class);
+    protected static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ServerSecurityPipe.class);
 
     private static final String WSIT_SERVER_AUTH_CONTEXT = "com.sun.xml.wss.provider.wsit.WSITServerAuthContext";
 
     private final boolean isHttpBinding;
 
-    private PipeHelper helper;
+    private SoapAuthenticationService authenticationService;
 
-    public CommonServerSecurityPipe(Map<String, Object> props, final Pipe next, boolean isHttpBinding) {
+    public ServerSecurityPipe(Map<String, Object> props, final Pipe next, boolean isHttpBinding) {
         super(next);
         props.put(PipeConstants.SECURITY_PIPE, this);
-        this.helper = new PipeHelper(PipeConstants.SOAP_LAYER, props, new ServerContainerCallbackHandler());
+        this.authenticationService = new SoapAuthenticationService(PipeConstants.SOAP_LAYER, props, new ServerContainerCallbackHandler());
         this.isHttpBinding = isHttpBinding;
     }
 
-    protected CommonServerSecurityPipe(CommonServerSecurityPipe that, PipeCloner cloner) {
+    protected ServerSecurityPipe(ServerSecurityPipe that, PipeCloner cloner) {
         super(that, cloner);
-        // We can share the helper for all pipes so that the remove registration (in server side) can be
+        // We can share the soapAuthenticationService for all pipes so that the remove registration (in server side) can be
         // done properly
-        this.helper = that.helper;
+        this.authenticationService = that.authenticationService;
         this.isHttpBinding = that.isHttpBinding;
     }
 
@@ -79,14 +79,14 @@ public class CommonServerSecurityPipe extends AbstractFilterPipeImpl {
      */
     @Override
     public void preDestroy() {
-        helper.disable();
+        authenticationService.disable();
 
         try {
             Packet request = new Packet();
             PacketMessageInfo messageInfo = new PacketMapMessageInfo(request, new Packet());
             Subject subject = new Subject();
 
-            ServerAuthContext serverAuthContext = helper.getServerAuthContext(messageInfo, subject);
+            ServerAuthContext serverAuthContext = authenticationService.getServerAuthContext(messageInfo, subject);
             if (serverAuthContext != null && WSIT_SERVER_AUTH_CONTEXT.equals(serverAuthContext.getClass().getName())) {
                 serverAuthContext.cleanSubject(messageInfo, subject);
             }
@@ -102,7 +102,7 @@ public class CommonServerSecurityPipe extends AbstractFilterPipeImpl {
      */
     @Override
     public Pipe copy(PipeCloner cloner) {
-        return new CommonServerSecurityPipe(this, cloner);
+        return new ServerSecurityPipe(this, cloner);
     }
 
     @Override
@@ -116,7 +116,7 @@ public class CommonServerSecurityPipe extends AbstractFilterPipeImpl {
             response = processRequest(request);
         } catch (Exception e) {
             _logger.log(FINE, "Failure in security pipe process", e);
-            response = helper.makeFaultResponse(null, e);
+            response = authenticationService.makeFaultResponse(null, e);
         }
 
         return response;
@@ -130,7 +130,7 @@ public class CommonServerSecurityPipe extends AbstractFilterPipeImpl {
         Subject serverSubject = (Subject) request.invocationProperties.get(PipeConstants.SERVER_SUBJECT);
 
         // Could change the request packet
-        ServerAuthContext serverAuthContext = helper.getServerAuthContext(info, serverSubject);
+        ServerAuthContext serverAuthContext = authenticationService.getServerAuthContext(info, serverSubject);
         Subject clientSubject = getClientSubject(request);
         final Packet validatedRequest;
         try {
@@ -142,29 +142,29 @@ public class CommonServerSecurityPipe extends AbstractFilterPipeImpl {
         } catch (Exception e) {
             _logger.log(SEVERE, LogUtils.ERROR_REQUEST_VALIDATION, e);
             WebServiceException wse = new WebServiceException(localStrings.getLocalString("enterprise.webservice.cantValidateRequest",
-                    "Cannot validate request for {0}", new Object[] { helper.getModelName() }), e);
+                    "Cannot validate request for {0}", new Object[] { authenticationService.getModelName() }), e);
 
             // Set status for audit
             status = AuthStatus.SEND_FAILURE;
 
             // If unable to determine if two-way will return empty response
-            return helper.getFaultResponse(info.getRequestPacket(), info.getResponsePacket(), wse);
+            return authenticationService.getFaultResponse(info.getRequestPacket(), info.getResponsePacket(), wse);
 
         } finally {
             validatedRequest = info.getRequestPacket();
-            helper.auditInvocation(validatedRequest, status);
+            authenticationService.auditInvocation(validatedRequest, status);
         }
 
         Packet response = null;
         if (status == AuthStatus.SUCCESS) {
             boolean authorized = false;
             try {
-                helper.authorize(validatedRequest);
+                authenticationService.authorize(validatedRequest);
                 authorized = true;
 
             } catch (Exception e) {
                 // Not authorized, construct fault and proceded
-                response = helper.getFaultResponse(validatedRequest, info.getResponsePacket(), e);
+                response = authenticationService.getFaultResponse(validatedRequest, info.getResponsePacket(), e);
             }
 
             if (authorized) {
@@ -175,7 +175,7 @@ public class CommonServerSecurityPipe extends AbstractFilterPipeImpl {
                         response = next.process(validatedRequest);
                     } catch (Exception e) {
                         _logger.log(SEVERE, LogUtils.NEXT_PIPE, e);
-                        response = helper.getFaultResponse(validatedRequest, info.getResponsePacket(), e);
+                        response = authenticationService.getFaultResponse(validatedRequest, info.getResponsePacket(), e);
                     }
                 } else {
                     try {
@@ -189,7 +189,7 @@ public class CommonServerSecurityPipe extends AbstractFilterPipeImpl {
                     } catch (PrivilegedActionException pae) {
                         Throwable cause = pae.getCause();
                         _logger.log(SEVERE, LogUtils.NEXT_PIPE, cause);
-                        response = helper.getFaultResponse(validatedRequest, info.getResponsePacket(), cause);
+                        response = authenticationService.getFaultResponse(validatedRequest, info.getResponsePacket(), cause);
                     }
                 }
             }
@@ -197,8 +197,8 @@ public class CommonServerSecurityPipe extends AbstractFilterPipeImpl {
             // Pipes are not supposed to return a null response packet
             if (response == null) {
                 WebServiceException wse = new WebServiceException(localStrings.getLocalString("enterprise.webservice.nullResponsePacket",
-                        "Invocation of Service {0} returned null response packet", new Object[] { helper.getModelName() }));
-                response = helper.getFaultResponse(validatedRequest, info.getResponsePacket(), wse);
+                        "Invocation of Service {0} returned null response packet", new Object[] { authenticationService.getModelName() }));
+                response = authenticationService.getFaultResponse(validatedRequest, info.getResponsePacket(), wse);
                 _logger.log(SEVERE, LogUtils.EXCEPTION_THROWN, wse);
 
             }
@@ -233,7 +233,7 @@ public class CommonServerSecurityPipe extends AbstractFilterPipeImpl {
                 _logger.log(SEVERE, ERROR_RESPONSE_SECURING, e);
             }
 
-            return helper.makeFaultResponse(info.getResponsePacket(), e);
+            return authenticationService.makeFaultResponse(info.getResponsePacket(), e);
         }
         _logger.log(FINE, "ws.status_secure_response", status);
 
@@ -248,7 +248,7 @@ public class CommonServerSecurityPipe extends AbstractFilterPipeImpl {
         }
 
         if (clientSubject == null) {
-            clientSubject = PipeHelper.getClientSubject();
+            clientSubject = SoapAuthenticationService.getClientSubject();
             if (packet != null) {
                 packet.invocationProperties.put(CLIENT_SUBJECT, clientSubject);
             }

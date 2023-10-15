@@ -38,7 +38,7 @@ import javax.security.auth.Subject;
 import com.sun.enterprise.security.jmac.callback.ClientContainerCallbackHandler;
 import com.sun.enterprise.security.jmac.provider.PacketMapMessageInfo;
 import com.sun.enterprise.security.jmac.provider.PacketMessageInfo;
-import com.sun.enterprise.security.jmac.provider.config.PipeHelper;
+import com.sun.enterprise.security.jmac.provider.config.SoapAuthenticationService;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.xml.ws.api.message.Message;
 import com.sun.xml.ws.api.message.Packet;
@@ -64,7 +64,7 @@ public class ClientSecurityPipe extends AbstractFilterPipeImpl implements Secure
     protected static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ClientSecurityPipe.class);
     private static final String WSIT_CLIENT_AUTH_CONTEXT = "com.sun.xml.wss.provider.wsit.WSITClientAuthContext";
 
-    protected PipeHelper helper;
+    protected SoapAuthenticationService soapAuthenticationService;
 
     public ClientSecurityPipe(Map<String, Object> properties, Pipe next) {
         super(next);
@@ -76,12 +76,12 @@ public class ClientSecurityPipe extends AbstractFilterPipeImpl implements Secure
             properties.put(WSDL_SERVICE, wsdlModel.getOwner().getName());
         }
 
-        this.helper = new PipeHelper(SOAP_LAYER, properties, new ClientContainerCallbackHandler());
+        this.soapAuthenticationService = new SoapAuthenticationService(SOAP_LAYER, properties, new ClientContainerCallbackHandler());
     }
 
     protected ClientSecurityPipe(ClientSecurityPipe that, PipeCloner cloner) {
         super(that, cloner);
-        this.helper = that.helper;
+        this.soapAuthenticationService = that.soapAuthenticationService;
     }
 
     @Override
@@ -89,8 +89,8 @@ public class ClientSecurityPipe extends AbstractFilterPipeImpl implements Secure
         return new ClientSecurityPipe(this, cloner);
     }
 
-    public PipeHelper getPipeHelper() {
-        return helper;
+    public SoapAuthenticationService getAuthenticationService() {
+        return soapAuthenticationService;
     }
 
     @Override
@@ -107,9 +107,9 @@ public class ClientSecurityPipe extends AbstractFilterPipeImpl implements Secure
             Map<String, Object> map = new HashMap<>();
             map.put(SECURITY_TOKEN, info);
 
-            helper.getSessionToken(map, info, clientSubject);
+            soapAuthenticationService.getSessionToken(map, info, clientSubject);
 
-            // Helper returns token in map of msgInfo, using same key
+            // AuthenticationService returns token in map of msgInfo, using same key
             Object securityToken = info.getMap().get(SECURITY_TOKEN);
 
             if (securityToken != null && securityToken instanceof JAXBElement) {
@@ -134,13 +134,13 @@ public class ClientSecurityPipe extends AbstractFilterPipeImpl implements Secure
          */
 
         PacketMessageInfo info = new PacketMapMessageInfo(request, new Packet());
-        info.getMap().put(Endpoint.WSDL_SERVICE, helper.getProperty(PipeConstants.WSDL_SERVICE));
+        info.getMap().put(Endpoint.WSDL_SERVICE, soapAuthenticationService.getProperty(PipeConstants.WSDL_SERVICE));
 
         AuthStatus status = SEND_SUCCESS;
         Subject clientSubject = getClientSubject(request);
         ClientAuthContext clientAuthContext = null;
         try {
-            clientAuthContext = helper.getClientAuthContext(info, clientSubject);
+            clientAuthContext = soapAuthenticationService.getClientAuthContext(info, clientSubject);
             if (clientAuthContext != null) {
                 // Proceed to process message security
                 status = clientAuthContext.secureRequest(info, clientSubject);
@@ -148,7 +148,7 @@ public class ClientSecurityPipe extends AbstractFilterPipeImpl implements Secure
         } catch (Exception e) {
             _logger.log(SEVERE, ERROR_REQUEST_SECURING, e);
             throw new WebServiceException(localStrings.getLocalString("enterprise.webservice.cantSecureRequst",
-                    "Cannot secure request for {0}", new Object[] { helper.getModelName() }), e);
+                    "Cannot secure request for {0}", new Object[] { soapAuthenticationService.getModelName() }), e);
         }
 
         Packet response;
@@ -172,7 +172,7 @@ public class ClientSecurityPipe extends AbstractFilterPipeImpl implements Secure
             PacketMessageInfo info = new PacketMapMessageInfo(request, new Packet());
             Subject clientSubject = getClientSubject(request);
 
-            ClientAuthContext clientAuthContext = helper.getClientAuthContext(info, clientSubject);
+            ClientAuthContext clientAuthContext = soapAuthenticationService.getClientAuthContext(info, clientSubject);
             if (clientAuthContext != null && WSIT_CLIENT_AUTH_CONTEXT.equals(clientAuthContext.getClass().getName())) {
                 clientAuthContext.cleanSubject(info, clientSubject);
             }
@@ -180,7 +180,7 @@ public class ClientSecurityPipe extends AbstractFilterPipeImpl implements Secure
             _logger.log(FINE, "Exception when pre-destroying the client security pipe", ex);
         }
 
-        helper.disable();
+        soapAuthenticationService.disable();
     }
 
     private Packet processSecureRequest(PacketMessageInfo info, ClientAuthContext clientAuthContext, Subject clientSubject) throws WebServiceException {
@@ -197,7 +197,7 @@ public class ClientSecurityPipe extends AbstractFilterPipeImpl implements Secure
                     status = clientAuthContext.validateResponse(info, clientSubject, null);
                 } catch (Exception e) {
                     throw new WebServiceException(localStrings.getLocalString("enterprise.webservice.cantValidateResponse",
-                            "Cannot validate response for {0}", new Object[] { helper.getModelName() }), e);
+                            "Cannot validate response for {0}", new Object[] { soapAuthenticationService.getModelName() }), e);
                 }
                 if (status == SEND_CONTINUE) {
                     response = processSecureRequest(info, clientAuthContext, clientSubject);
@@ -217,7 +217,7 @@ public class ClientSecurityPipe extends AbstractFilterPipeImpl implements Secure
         }
 
         if (subject == null) {
-            subject = PipeHelper.getClientSubject();
+            subject = SoapAuthenticationService.getClientSubject();
             if (packet != null) {
                 packet.invocationProperties.put(CLIENT_SUBJECT, subject);
             }

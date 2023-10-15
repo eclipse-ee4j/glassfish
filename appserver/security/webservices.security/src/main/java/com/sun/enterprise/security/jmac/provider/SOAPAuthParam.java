@@ -16,14 +16,12 @@
 
 package com.sun.enterprise.security.jmac.provider;
 
-import com.sun.enterprise.security.jauth.AuthParam;
-import java.util.Map;
-import java.util.HashMap;
-import jakarta.xml.soap.*;
-
 import com.sun.xml.ws.api.message.Message;
 import com.sun.xml.ws.api.message.Messages;
 import com.sun.xml.ws.api.message.Packet;
+import jakarta.xml.soap.SOAPMessage;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
   * SOAP authentication parameter.
@@ -40,7 +38,7 @@ import com.sun.xml.ws.api.message.Packet;
   *
   * @version 1.12, 06/08/04
   */
-public class SOAPAuthParam implements AuthParam {
+public class SOAPAuthParam {
 
     private HashMap infoMap;
 
@@ -94,6 +92,7 @@ public class SOAPAuthParam implements AuthParam {
         if (classLoadingException != null) {
             throw new RuntimeException(classLoadingException);
         }
+
         if ((request == null || request instanceof Packet) &&
             (response == null || response instanceof Packet)) {
             this.infoMap = new HashMap();
@@ -116,6 +115,7 @@ public class SOAPAuthParam implements AuthParam {
         if (this.infoMap == null) {
             this.infoMap = new HashMap();
         }
+
         return this.infoMap;
     }
 
@@ -125,7 +125,6 @@ public class SOAPAuthParam implements AuthParam {
      * @return the SOAP request object, which may be null.
      */
     public SOAPMessage getRequest() {
-
         if (this.request == null) {
 
             Object p = getPacket(REQUEST_PACKET,true);
@@ -149,7 +148,6 @@ public class SOAPAuthParam implements AuthParam {
      * @return the SOAP response object, which may be null.
      */
     public SOAPMessage getResponse() {
-
         if (this.response == null) {
 
             Object p = getPacket(RESPONSE_PACKET,false);
@@ -209,6 +207,7 @@ public class SOAPAuthParam implements AuthParam {
         if (classLoadingException != null) {
             throw new RuntimeException(classLoadingException);
         }
+
         return getPacket(REQUEST_PACKET,true);
     }
 
@@ -221,6 +220,7 @@ public class SOAPAuthParam implements AuthParam {
         if (classLoadingException != null) {
             throw new RuntimeException(classLoadingException);
         }
+
         return getPacket(RESPONSE_PACKET,true);
     }
 
@@ -235,6 +235,7 @@ public class SOAPAuthParam implements AuthParam {
         if (classLoadingException != null) {
             throw new RuntimeException(classLoadingException);
         }
+
         if (p == null || p instanceof Packet) {
             getMap().put(REQ_PACKET,p);
             this.requestInPacket = (p == null ? false : true);
@@ -255,6 +256,7 @@ public class SOAPAuthParam implements AuthParam {
         if (classLoadingException != null) {
             throw new RuntimeException(classLoadingException);
         }
+
         if (p == null || p instanceof Packet) {
             getMap().put(RES_PACKET,p);
             this.responseInPacket = (p == null ? false : true);
@@ -270,13 +272,11 @@ public class SOAPAuthParam implements AuthParam {
      * @return the request Packet, which may be null.
      */
     private Object getPacket(boolean isRequestPacket, boolean putDesired) {
-
         Object p = (this.infoMap == null ?
             null : this.infoMap.get
             (isRequestPacket ? REQ_PACKET : RES_PACKET));
 
         if (putDesired) {
-
             SOAPMessage m = (isRequestPacket ? this.request : this.response);
 
             if (p != null && m != null) {
@@ -295,8 +295,8 @@ public class SOAPAuthParam implements AuthParam {
                     }
                 }
             }
-
         }
+
         return p;
     }
 
@@ -304,6 +304,7 @@ public class SOAPAuthParam implements AuthParam {
         if (classLoadingException != null) {
             throw new RuntimeException(classLoadingException);
         }
+
         SOAPMessage s = null;
         if (p instanceof Packet) {
             Message m = ((Packet) p).getMessage();
@@ -342,7 +343,6 @@ public class SOAPAuthParam implements AuthParam {
         try {
             if (s != null) {
                 s.writeTo(System.out);
-                // System.out.println("\n");
             } else {
                 // System.out.println("SOAPMessage is empty");
             }

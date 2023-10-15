@@ -24,8 +24,6 @@ import com.sun.xml.ws.api.message.Packet;
  */
 public interface PacketMessageInfo extends MessageInfo {
 
-    SOAPAuthParam getSOAPAuthParam();
-
     Packet getRequestPacket();
 
     Packet getResponsePacket();

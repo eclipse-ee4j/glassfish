@@ -54,7 +54,6 @@ import javax.security.auth.Subject;
  *
  * @version %I%, %G%
  * @see AuthConfig
- * @see SOAPAuthParam
  */
 public interface ClientAuthContext extends AuthContext {
 

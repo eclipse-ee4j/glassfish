@@ -58,7 +58,6 @@ import javax.security.auth.Subject;
  *
  * @version %I%, %G%
  * @see AuthConfig
- * @see SOAPAuthParam
  */
 public interface ServerAuthContext extends AuthContext {
 
@@ -75,12 +74,6 @@ public interface ServerAuthContext extends AuthContext {
      *
      * @param sharedState a Map for modules to save state across a sequence of calls from <code>validateRequest</code> to
      * <code>secureResponse</code> to <code>disposeSubject</code>.
-     *
-     * @exception PendingException if the operation is pending (for example, when a module issues a challenge). The module
-     * must have updated the response object in the AuthParam input parameter.
-     *
-     * @exception FailureException if the authentication failed. The module must have updated the response object in the
-     * AuthParam input parameter.
      *
      * @exception AuthException if the operation failed.
      */

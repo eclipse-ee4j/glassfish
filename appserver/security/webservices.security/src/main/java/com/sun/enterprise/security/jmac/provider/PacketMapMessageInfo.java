@@ -34,13 +34,13 @@ public class PacketMapMessageInfo implements PacketMessageInfo {
         soapAuthParam = new SOAPAuthParam(reqPacket, resPacket, 0);
     }
 
-
     @Override
     public Map getMap() {
-        if (this.infoMap == null) {
-            this.infoMap = soapAuthParam.getMap();
+        if (infoMap == null) {
+            infoMap = soapAuthParam.getMap();
         }
-        return this.infoMap;
+
+        return infoMap;
     }
 
 
@@ -66,13 +66,6 @@ public class PacketMapMessageInfo implements PacketMessageInfo {
     public void setResponseMessage(Object response) {
         soapAuthParam.setResponse((SOAPMessage) response);
     }
-
-
-    @Override
-    public SOAPAuthParam getSOAPAuthParam() {
-        return soapAuthParam;
-    }
-
 
     @Override
     public Packet getRequestPacket() {

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,17 +17,11 @@
 
 package com.sun.enterprise.security.jmac;
 
-import java.util.Map;
-
-import org.glassfish.api.invocation.ComponentInvocation;
-import org.jvnet.hk2.annotations.Contract;
-import org.glassfish.epicyro.services.AuthConfigRegistrationWrapper;
-
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
-import com.sun.enterprise.security.jauth.AuthParam;
-
 import jakarta.security.auth.message.MessageInfo;
+import java.util.Map;
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * A Delegate Interface for handling WebServices Specific Security and Jakarta Authentication config provider.
@@ -47,13 +42,6 @@ public interface WebServicesDelegate {
     MessageSecurityBindingDescriptor getBinding(ServiceReferenceDescriptor svcRef, Map properties);
 
     /**
-     * remove the registration of the argument listener from the Pipe
-     *
-     * @param listener
-     */
-    void removeListener(AuthConfigRegistrationWrapper listener);
-
-    /**
      * @return the classname of the Default Jakarta Authentication WebServices Security Provider (A.k.a Metro Security Provider)
      */
     String getDefaultWebServicesProvider();
@@ -64,17 +52,4 @@ public interface WebServicesDelegate {
      */
     String getAuthContextID(MessageInfo messageInfo);
 
-    /**
-     * @param messageInfo TheMessageInfo
-     * @return a new instance of SOAPAuthParam
-     */
-    AuthParam newSOAPAuthParam(MessageInfo messageInfo);
-
-    /**
-     * return the SOAP Message from the invocation, to be used by JACC PolicyContextHandler
-     *
-     * @param inv the invocation
-     * @return the SOAP Message
-     */
-    Object getSOAPMessage(ComponentInvocation inv);
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,39 +17,33 @@
 
 package com.sun.enterprise.security.webservices;
 
+import static java.util.logging.Level.FINE;
+
 import com.sun.enterprise.deployment.ServiceRefPortInfo;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
-import com.sun.enterprise.security.jauth.AuthParam;
 import com.sun.enterprise.security.jmac.WebServicesDelegate;
 import com.sun.enterprise.security.jmac.provider.PacketMessageInfo;
-import com.sun.enterprise.security.jmac.provider.SOAPAuthParam;
 import com.sun.xml.ws.api.message.Message;
 import com.sun.xml.ws.api.message.Packet;
 import com.sun.xml.ws.api.model.wsdl.WSDLBoundOperation;
 import com.sun.xml.ws.api.model.wsdl.WSDLPort;
-
-import java.util.Iterator;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.xml.namespace.QName;
-
-import org.glassfish.api.invocation.ComponentInvocation;
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.epicyro.services.AuthConfigRegistrationWrapper;
-
 import jakarta.inject.Singleton;
 import jakarta.security.auth.message.MessageInfo;
 import jakarta.xml.soap.MimeHeaders;
 import jakarta.xml.soap.Name;
+import jakarta.xml.soap.Node;
 import jakarta.xml.soap.SOAPBody;
 import jakarta.xml.soap.SOAPElement;
 import jakarta.xml.soap.SOAPEnvelope;
 import jakarta.xml.soap.SOAPException;
 import jakarta.xml.soap.SOAPMessage;
 import jakarta.xml.soap.SOAPPart;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.logging.Logger;
+import javax.xml.namespace.QName;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  *
@@ -79,12 +74,6 @@ public class WebServicesDelegateImpl implements WebServicesDelegate {
         }
 
         return binding;
-    }
-
-    @Override
-    public void removeListener(AuthConfigRegistrationWrapper listener) {
-        // TODO:V3 convert the pipes to Tubes.
-        ClientPipeCloser.getInstance().removeListenerWrapper(listener);
     }
 
     @Override
@@ -120,11 +109,6 @@ public class WebServicesDelegateImpl implements WebServicesDelegate {
         }
 
         return authContextID;
-    }
-
-    @Override
-    public AuthParam newSOAPAuthParam(MessageInfo messageInfo) {
-        return new SOAPAuthParam((SOAPMessage) messageInfo.getRequestMessage(), (SOAPMessage) messageInfo.getResponseMessage());
     }
 
     private String getOpName(SOAPMessage message) {
@@ -170,27 +154,22 @@ public class WebServicesDelegateImpl implements WebServicesDelegate {
                 if (envelope != null) {
                     SOAPBody body = envelope.getBody();
                     if (body != null) {
-                        Iterator it = body.getChildElements();
+                        Iterator<Node> it = body.getChildElements();
                         while (it.hasNext()) {
-                            Object o = it.next();
-                            if (o instanceof SOAPElement) {
-                                name = ((SOAPElement) o).getElementName();
+                            Node node = it.next();
+                            if (node instanceof SOAPElement) {
+                                name = ((SOAPElement) node).getElementName();
                                 break;
                             }
                         }
                     }
                 }
             } catch (SOAPException se) {
-                _logger.log(Level.FINE, "WSS: Unable to get SOAP envelope", se);
+                _logger.log(FINE, "WSS: Unable to get SOAP envelope", se);
             }
         }
 
         return name;
-    }
-
-    @Override
-    public Object getSOAPMessage(ComponentInvocation inv) {
-        return null;
     }
 
 }

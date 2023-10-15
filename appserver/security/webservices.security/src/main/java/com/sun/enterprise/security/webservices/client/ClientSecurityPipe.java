@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,31 +15,24 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.security.webservices;
+package com.sun.enterprise.security.webservices.client;
 
 import static com.sun.enterprise.security.webservices.LogUtils.ERROR_REQUEST_SECURING;
-import static com.sun.enterprise.security.webservices.PipeConstants.CLIENT_SUBJECT;
-import static com.sun.enterprise.security.webservices.PipeConstants.SECURITY_PIPE;
-import static com.sun.enterprise.security.webservices.PipeConstants.SECURITY_TOKEN;
-import static com.sun.enterprise.security.webservices.PipeConstants.SOAP_LAYER;
-import static com.sun.enterprise.security.webservices.PipeConstants.WSDL_MODEL;
-import static com.sun.enterprise.security.webservices.PipeConstants.WSDL_SERVICE;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.CLIENT_SUBJECT;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.SECURITY_PIPE;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.SECURITY_TOKEN;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.SOAP_LAYER;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.WSDL_MODEL;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.WSDL_SERVICE;
 import static jakarta.security.auth.message.AuthStatus.FAILURE;
 import static jakarta.security.auth.message.AuthStatus.SEND_CONTINUE;
 import static jakarta.security.auth.message.AuthStatus.SEND_SUCCESS;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Logger;
-
-import javax.security.auth.Subject;
-
 import com.sun.enterprise.security.jmac.callback.ClientContainerCallbackHandler;
-import com.sun.enterprise.security.jmac.provider.PacketMapMessageInfo;
-import com.sun.enterprise.security.jmac.provider.PacketMessageInfo;
-import com.sun.enterprise.security.jmac.provider.config.SoapAuthenticationService;
+import com.sun.enterprise.security.webservices.LogUtils;
+import com.sun.enterprise.security.webservices.SoapAuthenticationService;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.xml.ws.api.message.Message;
 import com.sun.xml.ws.api.message.Packet;
@@ -48,12 +42,18 @@ import com.sun.xml.ws.api.pipe.PipeCloner;
 import com.sun.xml.ws.api.pipe.helper.AbstractFilterPipeImpl;
 import com.sun.xml.ws.security.secconv.SecureConversationInitiator;
 import com.sun.xml.ws.security.secconv.WSSecureConversationException;
-
+import com.sun.xml.wss.provider.wsit.PacketMapMessageInfo;
+import com.sun.xml.wss.provider.wsit.PacketMessageInfo;
+import com.sun.xml.wss.provider.wsit.PipeConstants;
 import jakarta.security.auth.message.AuthStatus;
 import jakarta.security.auth.message.config.ClientAuthContext;
 import jakarta.xml.bind.JAXBElement;
 import jakarta.xml.ws.Endpoint;
 import jakarta.xml.ws.WebServiceException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Logger;
+import javax.security.auth.Subject;
 
 /**
  * This pipe is used to do client side security for app server

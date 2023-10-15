@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.security.webservices;
+package com.sun.enterprise.security.webservices.server;
 
 import static com.sun.enterprise.util.Utility.isAnyNull;
 import static com.sun.xml.ws.policy.PolicyMap.createWsdlEndpointScopeKey;

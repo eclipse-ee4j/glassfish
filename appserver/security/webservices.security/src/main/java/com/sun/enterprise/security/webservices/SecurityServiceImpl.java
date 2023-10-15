@@ -28,6 +28,7 @@ import com.sun.enterprise.security.SecurityContext;
 import com.sun.enterprise.security.authorize.PolicyContextHandlerImpl;
 import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
 import com.sun.enterprise.security.web.integration.WebPrincipal;
+import com.sun.enterprise.security.webservices.client.ClientPipeCreator;
 import com.sun.enterprise.web.WebModule;
 import com.sun.web.security.RealmAdapter;
 import com.sun.xml.ws.assembler.metro.dev.ClientPipelineHook;
@@ -128,8 +129,8 @@ public class SecurityServiceImpl implements SecurityService {
 
             // Setting if userPrincipal in WSCtxt applies for JAXWS endpoints only
             endpointInfo.prepareInvocation(false);
-            WebServiceContextImpl ctxt = (WebServiceContextImpl) endpointInfo.getWebServiceContext();
-            ctxt.setUserPrincipal(webPrincipal);
+            WebServiceContextImpl webServiceContext = (WebServiceContextImpl) endpointInfo.getWebServiceContext();
+            webServiceContext.setUserPrincipal(webPrincipal);
 
         } catch (Exception e) {
             throw new RuntimeException(e);

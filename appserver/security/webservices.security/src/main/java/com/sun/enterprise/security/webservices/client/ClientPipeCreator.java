@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,29 +15,26 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.security.webservices;
+package com.sun.enterprise.security.webservices.client;
 
-import static com.sun.enterprise.security.webservices.PipeConstants.ASSEMBLER_CONTEXT;
-import static com.sun.enterprise.security.webservices.PipeConstants.BINDING;
-import static com.sun.enterprise.security.webservices.PipeConstants.CONTAINER;
-import static com.sun.enterprise.security.webservices.PipeConstants.ENDPOINT_ADDRESS;
-import static com.sun.enterprise.security.webservices.PipeConstants.NEXT_PIPE;
-import static com.sun.enterprise.security.webservices.PipeConstants.POLICY;
-import static com.sun.enterprise.security.webservices.PipeConstants.SERVICE;
-import static com.sun.enterprise.security.webservices.PipeConstants.SERVICE_REF;
-import static com.sun.enterprise.security.webservices.PipeConstants.WSDL_MODEL;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import org.glassfish.epicyro.services.AuthConfigRegistrationWrapper;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.ASSEMBLER_CONTEXT;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.BINDING;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.CONTAINER;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.ENDPOINT_ADDRESS;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.NEXT_PIPE;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.POLICY;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.SERVICE;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.SERVICE_REF;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.WSDL_MODEL;
 
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
-//import com.sun.xml.ws.assembler.ClientTubelineAssemblyContext;
 import com.sun.xml.ws.api.pipe.ClientPipeAssemblerContext;
 import com.sun.xml.ws.api.pipe.Pipe;
 import com.sun.xml.ws.assembler.metro.dev.ClientPipelineHook;
 import com.sun.xml.ws.policy.PolicyMap;
+import java.util.HashMap;
+import java.util.Map;
+import org.glassfish.epicyro.services.AuthConfigRegistrationWrapper;
 
 /**
  * This is used by WSClientContainer to return proper 196 security pipe to the StandAlonePipeAssembler and

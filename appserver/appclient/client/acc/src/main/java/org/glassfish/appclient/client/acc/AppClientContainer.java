@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,7 +22,7 @@ import com.sun.enterprise.container.common.spi.util.InjectionException;
 import com.sun.enterprise.container.common.spi.util.InjectionManager;
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
-import com.sun.enterprise.security.webservices.ClientPipeCloser;
+import com.sun.enterprise.security.webservices.client.ClientPipeCloser;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
 
 import com.sun.enterprise.deployment.PersistenceUnitDescriptor;

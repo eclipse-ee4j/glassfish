@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -43,6 +43,7 @@ import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.enterprise.concurrent.spi.ContextHandle;
 import org.glassfish.enterprise.concurrent.spi.ContextSetupProvider;
+import org.glassfish.internal.data.ApplicationRegistry;
 import org.glassfish.internal.deployment.Deployment;
 
 import static com.sun.enterprise.deployment.types.StandardContextType.Classloader;
@@ -69,6 +70,7 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
 
     private transient InvocationManager invocationManager;
     private transient Deployment deployment;
+    private transient ApplicationRegistry applicationRegistry;
     private transient Applications applications;
 
     // transactionManager should be null for ContextService since it uses TransactionSetupProviderImpl
@@ -82,6 +84,7 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
         ConcurrentRuntime runtime = ConcurrentRuntime.getRuntime();
         this.invocationManager = runtime.getInvocationManager();
         this.deployment = runtime.getDeployment();
+        this.applicationRegistry = runtime.getApplicationRegistry();
         this.applications = runtime.getApplications();
         this.transactionManager = runtime.getTransactionManager();
     }
@@ -128,8 +131,12 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
             return null;
         }
         InvocationContext invocationCtx = (InvocationContext) contextHandle;
+        String appName = null;
+
         ComponentInvocation invocation = invocationCtx.getInvocation();
-        final String appName = invocation == null ? null : invocation.getAppName();
+        if (invocation != null) {
+            appName = invocation.getAppName();
+        }
 
         verifyApplicationEnabled(appName);
 
@@ -148,19 +155,11 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
             SecurityContext.setCurrent(invocationCtx.getSecurityContext());
         }
 
-        if (setup.isUnchanged(JNDI) || (!setup.isPropagated(JNDI) && !setup.isClear(JNDI))) {
-            ComponentInvocation currentInvocation = invocationManager.getCurrentInvocation();
-            if (currentInvocation != null) {
-                if (currentInvocation.getAppName() == null) {
-                    currentInvocation.setAppName(invocation.getAppName());
-                }
-                invocation = currentInvocation;
-            }
-        }
-
         // Each invocation needs a ResourceTableKey that returns a unique hashCode for TransactionManager
-        invocation.setResourceTableKey(new PairKey(invocation.getInstance(), Thread.currentThread()));
-        invocationManager.preInvoke(invocation);
+        if (invocation != null) {
+            invocation.setResourceTableKey(new PairKey(invocation.getInstance(), Thread.currentThread()));
+            invocationManager.preInvoke(invocation);
+        }
 
         // Ensure that there is no existing transaction in the current thread
         if (transactionManager != null && setup.isClear(StandardContextType.WorkArea)) {
@@ -239,33 +238,42 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
 
     private ComponentInvocation getSavedInvocation() {
         ComponentInvocation currentInvocation = invocationManager.getCurrentInvocation();
-        if (currentInvocation == null) {
-            return null;
+        if (currentInvocation != null) {
+            if (setup.isClear(JNDI)) {
+                return new ComponentInvocation();
+            }
+            if (setup.isPropagated(JNDI)) {
+                return cloneComponentInvocation(currentInvocation);
+            }
         }
-        if (setup.isClear(JNDI)) {
-            return new ComponentInvocation(null, null, null, currentInvocation.getAppName(), null);
-        }
-        return cloneComponentInvocation(currentInvocation);
+        return null;
     }
 
 
     /**
      * Check whether the application component submitting the task is still running.
-     * Throw IllegalStateException if not.
+     *
+     * @throws IllegalStateException if application not running.
      */
     private void verifyApplicationEnabled(String appId) {
-        if (appId == null) {
-            IllegalStateException ex = new IllegalStateException("The appId is null");
-            LOG.log(Level.WARNING, "Context handle not in valid state. Do not run the task. " + ex.getMessage(), ex);
-            throw ex;
+        if (appId != null) {
+            boolean enabled;
+
+            Application application = applications.getApplication(appId);
+            if (application != null) {
+                enabled = deployment.isAppEnabled(application);
+            } else {
+                // If we know the application name but don't have an application yet,
+                // it is starting, and thus enabled.
+                enabled = applicationRegistry.get(appId) != null;
+            }
+
+            if (!enabled) {
+                IllegalStateException ex = new IllegalStateException("Module " + appId + " is disabled");
+                LOG.log(Level.WARNING, "Context handle not in valid state. Do not run the task. " + ex.getMessage(), ex);
+                throw ex;
+            }
         }
-        Application app = applications.getApplication(appId);
-        if (app != null && !deployment.isAppEnabled(app)) {
-            IllegalStateException ex = new IllegalStateException("Module " + appId + " is disabled");
-            LOG.log(Level.WARNING, "Context handle not in valid state. Do not run the task. " + ex.getMessage(), ex);
-            throw ex;
-        }
-        // if we know the application name but don't have an application yet, it is starting, and thus enabled
     }
 
 
@@ -274,9 +282,6 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
         clonedInvocation.setResourceTableKey(null);
         clonedInvocation.clearRegistry();
         clonedInvocation.instance = currentInvocation.getInstance();
-        if (!setup.isPropagated(JNDI)) {
-            clonedInvocation.setJNDIEnvironment(null);
-        }
         return clonedInvocation;
     }
 
@@ -293,6 +298,7 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
         ConcurrentRuntime concurrentRuntime = ConcurrentRuntime.getRuntime();
         // re-initialize transient fields
         invocationManager = concurrentRuntime.getInvocationManager();
+        applicationRegistry = concurrentRuntime.getApplicationRegistry();
         deployment = concurrentRuntime.getDeployment();
         applications = concurrentRuntime.getApplications();
         if (!nullTransactionManager) {
@@ -301,9 +307,9 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
     }
 
     private static class PairKey {
-        private Object instance = null;
-        private Thread thread = null;
-        int hCode = 0;
+        private final Object instance;
+        private final Thread thread;
+        int hCode;
 
         private PairKey(Object inst, Thread thr) {
             instance = inst;
@@ -328,7 +334,7 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
             }
 
             boolean eq = false;
-            if (obj != null && obj instanceof PairKey) {
+            if (obj instanceof PairKey) {
                 PairKey p = (PairKey)obj;
                 if (instance != null) {
                     eq = (instance.equals(p.instance));

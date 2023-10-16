@@ -28,6 +28,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
@@ -57,8 +58,6 @@ public class GlassFishTestEnvironment {
 
     private static final String ADMIN_USER = "admin";
     private static final String ADMIN_PASSWORD = "admintest";
-    /** You can use this password to create file realm users */
-    public static final String USER_PASSWORD = "password123";
 
     private static final File ASADMIN = findAsadmin();
     private static final File PASSWORD_FILE_FOR_UPDATE = findPasswordFile("password_update.txt");
@@ -151,6 +150,32 @@ public class GlassFishTestEnvironment {
 
 
     /**
+     * Creates the unencrypted password file on the local file system and uses it to create the user
+     * record in the file realm.
+     *
+     * @param realmName
+     * @param user
+     * @param password
+     * @param groupNames
+     */
+    public static void createFileUser(String realmName, String user, String password, String... groupNames) {
+        final Path passwordFile = doIO(() -> Files.createTempFile("pwd", "txt"));
+        try {
+            Files.writeString(passwordFile,
+                "AS_ADMIN_PASSWORD=" + ADMIN_PASSWORD + "\nAS_ADMIN_USERPASSWORD=" + password + "\n",
+                StandardOpenOption.APPEND);
+            Asadmin asadmin = new Asadmin(ASADMIN, ADMIN_USER, passwordFile.toFile());
+            assertThat(asadmin.exec("create-file-user", "--groups", String.join(",", groupNames), "--authrealmname",
+                realmName, "--target", "server", user), asadminOK());
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not create the temporary password file.", e);
+        } finally {
+            doIO(() -> Files.delete(passwordFile));
+        }
+    }
+
+
+    /**
      * This will delete the jobs.xml file
      */
     public static void deleteJobsFile() {
@@ -236,11 +261,41 @@ public class GlassFishTestEnvironment {
         }
     }
 
+
+    private static <T> T doIO(IOSupplier<T> action) {
+        try {
+            return action.execute();
+        } catch (IOException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+    }
+
+
+    private static void doIO(IOAction action) {
+        try {
+            action.execute();
+        } catch (IOException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+    }
+
     private static class DasAuthenticator extends Authenticator {
 
         @Override
         protected PasswordAuthentication getPasswordAuthentication() {
             return new PasswordAuthentication(ADMIN_USER, ADMIN_PASSWORD.toCharArray());
         }
+    }
+
+    @FunctionalInterface
+    private interface IOSupplier<T> {
+
+        T execute() throws IOException;
+    }
+
+    @FunctionalInterface
+    private interface IOAction {
+
+        void execute() throws IOException;
     }
 }

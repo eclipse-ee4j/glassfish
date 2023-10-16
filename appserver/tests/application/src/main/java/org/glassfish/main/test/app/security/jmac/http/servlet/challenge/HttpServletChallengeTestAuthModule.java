@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.main.test.app.security.jmac.http.servlet.basic;
+package org.glassfish.main.test.app.security.jmac.http.servlet.challenge;
 
 import jakarta.security.auth.message.AuthException;
 import jakarta.security.auth.message.AuthStatus;
@@ -26,8 +26,8 @@ import jakarta.security.auth.message.callback.PasswordValidationCallback;
 import jakarta.security.auth.message.module.ServerAuthModule;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-import java.io.PrintWriter;
 import java.lang.System.Logger;
 import java.util.Base64;
 import java.util.Map;
@@ -40,11 +40,10 @@ import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.INFO;
 
-public class HttpServletTestAuthModule implements ServerAuthModule {
-    private static final Logger LOG = System.getLogger(HttpServletTestAuthModule.class.getName());
+public class HttpServletChallengeTestAuthModule implements ServerAuthModule {
+    private static final Logger LOG = System.getLogger(HttpServletChallengeTestAuthModule.class.getName());
 
     private CallbackHandler handler;
-    private String pc;
 
     @Override
     public void initialize(MessagePolicy requestPolicy, MessagePolicy responsePolicy, CallbackHandler handler,
@@ -52,9 +51,6 @@ public class HttpServletTestAuthModule implements ServerAuthModule {
         LOG.log(DEBUG, "initialize(requestPolicy={0}, responsePolicy={1}, handler={2}, options={3})",
             requestPolicy, responsePolicy, handler, options);
         this.handler = handler;
-        if (options != null) {
-            this.pc = (String) options.get("jakarta.security.jacc.PolicyContext");
-        }
     }
 
 
@@ -75,7 +71,6 @@ public class HttpServletTestAuthModule implements ServerAuthModule {
 
         try {
             HttpServletRequest request = (HttpServletRequest) messageInfo.getRequestMessage();
-            HttpServletResponse response = (HttpServletResponse) messageInfo.getResponseMessage();
             String authorization = request.getHeader("Authorization");
             LOG.log(INFO, "Received authorization: {0}", authorization);
             String username = null;
@@ -91,7 +86,7 @@ public class HttpServletTestAuthModule implements ServerAuthModule {
                 }
             }
 
-            LOG.log(INFO, "REQUEST: User={0}, password={1}", username, password);
+            HttpServletResponse response = (HttpServletResponse) messageInfo.getResponseMessage();
             if (username == null || password == null) {
                 response.setHeader("WWW-Authenticate", "Basic realm=\"default\"");
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
@@ -99,23 +94,42 @@ public class HttpServletTestAuthModule implements ServerAuthModule {
                 return AuthStatus.SEND_CONTINUE;
             }
 
+            HttpSession session = request.getSession(false);
+            boolean secondPhase = session != null && session.getAttribute("FIRST_DONE") != null;
+            String loginName = secondPhase ? username + "_2" : username;
             char[] pwd = new char[password.length()];
             password.getChars(0, password.length(), pwd, 0);
-            PasswordValidationCallback pwdCallback = new PasswordValidationCallback(clientSubject, username, pwd);
-            CallerPrincipalCallback cpCallback = new CallerPrincipalCallback(clientSubject, username);
+            Callback[] callbacks;
+            PasswordValidationCallback pwdCallback = new PasswordValidationCallback(clientSubject, loginName, pwd);
+            if (secondPhase) {
+                CallerPrincipalCallback cpCallback = new CallerPrincipalCallback(clientSubject, username);
+                callbacks = new Callback[] {pwdCallback, cpCallback};
+            } else {
+                callbacks = new Callback[] {pwdCallback};
+            }
             LOG.log(DEBUG, "Subject before invoking callbacks: {0}", clientSubject);
-            handler.handle(new Callback[] {pwdCallback, cpCallback});
+            handler.handle(callbacks);
             LOG.log(INFO, "Subject after invoking callbacks: {0}", clientSubject);
 
             if (!pwdCallback.getResult()) {
-                LOG.log(INFO, "login fails for username {0}", username);
+                LOG.log(INFO, "login failed for username {0} and loginname {1}", username, loginName);
                 return AuthStatus.SEND_FAILURE;
             }
-            request.setAttribute("MY_NAME", getClass().getName());
-            request.setAttribute("PC", pc);
-            LOG.log(INFO, "login succeeded for username {0}", username);
-            messageInfo.setResponseMessage(new MyHttpServletResponseWrapper(response));
-            return AuthStatus.SUCCESS;
+            LOG.log(INFO, "login succeeded for username {0} and loginname {1}", username, loginName);
+            if (secondPhase) {
+                LOG.log(DEBUG, "Second phase");
+                request.setAttribute("MY_NAME", getClass().getName());
+                messageInfo.getMap().put("jakarta.servlet.http.authType", "MC");
+                return AuthStatus.SUCCESS;
+            }
+            LOG.log(DEBUG, "First phase");
+            response.setHeader("WWW-Authenticate", "Basic realm=\"default\"");
+            if (session == null) {
+                session = request.getSession(true);
+                session.setAttribute("FIRST_DONE", Boolean.TRUE);
+            }
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return AuthStatus.SEND_SUCCESS;
         } catch (Exception e) {
             LOG.log(ERROR, "Login failed.", e);
             return AuthStatus.SEND_FAILURE;
@@ -125,24 +139,7 @@ public class HttpServletTestAuthModule implements ServerAuthModule {
 
     @Override
     public AuthStatus secureResponse(MessageInfo messageInfo, Subject serviceSubject) throws AuthException {
-        LOG.log(DEBUG, "secureResponse(messageInfo={0}, serviceSubject={1})", messageInfo, serviceSubject);
-        if (!isMandatory(messageInfo)) {
-            return AuthStatus.SUCCESS;
-        }
-
-        try {
-            HttpServletRequest request = (HttpServletRequest) messageInfo.getRequestMessage();
-            request.setAttribute("SR", "true");
-            MyHttpServletResponseWrapper response = (MyHttpServletResponseWrapper) messageInfo.getResponseMessage();
-            int count = response.getAdjustedCount();
-            PrintWriter writer = response.getWriter();
-            writer.println("\nAdjusted count: " + count);
-            messageInfo.setResponseMessage(response.getResponse());
-            return AuthStatus.SUCCESS;
-        } catch (Exception e) {
-            LOG.log(ERROR, "Securing response failed.", e);
-            return AuthStatus.FAILURE;
-        }
+        return AuthStatus.SUCCESS;
     }
 
 

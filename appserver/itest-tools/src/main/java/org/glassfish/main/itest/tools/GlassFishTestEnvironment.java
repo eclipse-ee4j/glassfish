@@ -57,6 +57,8 @@ public class GlassFishTestEnvironment {
 
     private static final String ADMIN_USER = "admin";
     private static final String ADMIN_PASSWORD = "admintest";
+    /** You can use this password to create file realm users */
+    public static final String USER_PASSWORD = "password123";
 
     private static final File ASADMIN = findAsadmin();
     private static final File PASSWORD_FILE_FOR_UPDATE = findPasswordFile("password_update.txt");
@@ -114,7 +116,7 @@ public class GlassFishTestEnvironment {
      * @return new {@link Client} instance
      */
     public static ClientWrapper createClient() {
-        return new ClientWrapper(new HashMap<String, String>(), ADMIN_USER, ADMIN_PASSWORD);
+        return new ClientWrapper(new HashMap<>(), ADMIN_USER, ADMIN_PASSWORD);
     }
 
 

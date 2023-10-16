@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,14 +15,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.s1asdev.security.jmac.httpservlet;
+package org.glassfish.main.test.app.security.jmac.http.servlet.basic;
+
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponseWrapper;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
-
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpServletResponseWrapper;
 
 class MyHttpServletResponseWrapper extends HttpServletResponseWrapper {
     private MyPrintWriter myPrintWriter = null;
@@ -32,10 +33,11 @@ class MyHttpServletResponseWrapper extends HttpServletResponseWrapper {
             myPrintWriter = new MyPrintWriter(response.getWriter());
         } catch(Exception ex) {
             ex.printStackTrace();
-            throw new IllegalStateException(ex.toString());
+            throw new IllegalStateException(ex.toString(), ex);
         }
     }
 
+    @Override
     public PrintWriter getWriter() throws IOException {
         return myPrintWriter;
     }
@@ -53,6 +55,7 @@ class MyPrintWriter extends PrintWriter {
     }
 
     // our jsp writer only use write char[] off len
+    @Override
     public void write(char[] cbuf, int off, int len) {
         count += len - numOfCR(cbuf, off, len);
         super.write(cbuf, off, len);

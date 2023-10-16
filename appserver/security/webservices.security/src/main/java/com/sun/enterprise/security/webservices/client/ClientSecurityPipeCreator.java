@@ -37,36 +37,39 @@ import java.util.Map;
 import org.glassfish.epicyro.services.AuthConfigRegistrationWrapper;
 
 /**
- * This is used by WSClientContainer to return proper 196 security pipe to the StandAlonePipeAssembler and
+ * This is used by WSClientContainer to return proper Jakarta Authentication security pipe to the StandAlonePipeAssembler and
  * TangoPipeAssembler
  */
-public class ClientPipeCreator extends ClientPipelineHook {
+public class ClientSecurityPipeCreator extends ClientPipelineHook {
 
     private ServiceReferenceDescriptor serviceReferenceDescriptor;
 
-    public ClientPipeCreator() {
+    public ClientSecurityPipeCreator() {
     }
 
-    public ClientPipeCreator(ServiceReferenceDescriptor ref) {
+    public ClientSecurityPipeCreator(ServiceReferenceDescriptor ref) {
         serviceReferenceDescriptor = ref;
     }
 
     @Override
     public Pipe createSecurityPipe(PolicyMap policyMap, ClientPipeAssemblerContext clientPipeAssemblerContext, Pipe tail) {
-        Map<String, Object> propBag = new HashMap<>();
-        propBag.put(POLICY, policyMap);
-        propBag.put(WSDL_MODEL, clientPipeAssemblerContext.getWsdlModel());
-        propBag.put(SERVICE, clientPipeAssemblerContext.getService());
-        propBag.put(BINDING, clientPipeAssemblerContext.getBinding());
-        propBag.put(ENDPOINT_ADDRESS, clientPipeAssemblerContext.getAddress());
-        if (serviceReferenceDescriptor != null) {
-            propBag.put(SERVICE_REF, serviceReferenceDescriptor);
-        }
-        propBag.put(NEXT_PIPE, tail);
-        propBag.put(CONTAINER, clientPipeAssemblerContext.getContainer());
-        propBag.put(ASSEMBLER_CONTEXT, clientPipeAssemblerContext);
+        Map<String, Object> properties = new HashMap<>();
 
-        ClientSecurityPipe clientSecurityPipe = new ClientSecurityPipe(propBag, tail);
+        properties.put(POLICY, policyMap);
+        properties.put(WSDL_MODEL, clientPipeAssemblerContext.getWsdlModel());
+        properties.put(SERVICE, clientPipeAssemblerContext.getService());
+        properties.put(BINDING, clientPipeAssemblerContext.getBinding());
+        properties.put(ENDPOINT_ADDRESS, clientPipeAssemblerContext.getAddress());
+
+        if (serviceReferenceDescriptor != null) {
+            properties.put(SERVICE_REF, serviceReferenceDescriptor);
+        }
+        properties.put(NEXT_PIPE, tail);
+        properties.put(CONTAINER, clientPipeAssemblerContext.getContainer());
+        properties.put(ASSEMBLER_CONTEXT, clientPipeAssemblerContext);
+
+        ClientSecurityPipe clientSecurityPipe = new ClientSecurityPipe(properties, tail);
+
         AuthConfigRegistrationWrapper listenerWrapper =
             ClientPipeCloser.getInstance().lookupListenerWrapper(serviceReferenceDescriptor);
 

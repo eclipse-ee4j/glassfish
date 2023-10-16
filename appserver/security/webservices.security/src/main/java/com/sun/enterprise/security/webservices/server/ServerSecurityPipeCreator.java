@@ -20,6 +20,13 @@ package com.sun.enterprise.security.webservices.server;
 import static com.sun.enterprise.util.Utility.isAnyNull;
 import static com.sun.xml.ws.policy.PolicyMap.createWsdlEndpointScopeKey;
 import static com.sun.xml.ws.policy.PolicyMap.createWsdlOperationScopeKey;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.CONTAINER;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.ENDPOINT;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.NEXT_PIPE;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.POLICY;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.SEI_MODEL;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.SERVICE_ENDPOINT;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.WSDL_MODEL;
 
 import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.xml.ws.api.model.SEIModel;
@@ -31,7 +38,6 @@ import com.sun.xml.ws.policy.Policy;
 import com.sun.xml.ws.policy.PolicyException;
 import com.sun.xml.ws.policy.PolicyMap;
 import com.sun.xml.ws.policy.PolicyMapKey;
-import com.sun.xml.wss.provider.wsit.PipeConstants;
 import jakarta.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,38 +50,29 @@ import org.jvnet.hk2.annotations.Service;
  */
 @Service
 @Singleton
-public class GFServerPipeCreator extends ServerPipeCreator {
+public class ServerSecurityPipeCreator extends ServerPipeCreator {
 
     private static final String SECURITY_POLICY_NAMESPACE_URI_SUBMISSION = "http://schemas.xmlsoap.org/ws/2005/07/securitypolicy";
     private static final String SECURITY_POLICY_NAMESPACE_URI_SPECVERSION = "http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702";
 
-    public GFServerPipeCreator() {
-        super();
-    }
-
     @Override
-    public void init(WebServiceEndpoint ep) {
-        super.init(ep);
-    }
+    public Pipe createSecurityPipe(PolicyMap policyMap, SEIModel seiModel, WSDLPort port, WSEndpoint ownerEndpoint, Pipe tail) {
 
-    @Override
-    public Pipe createSecurityPipe(PolicyMap policyMap, SEIModel sei, WSDLPort port, WSEndpoint owner, Pipe tail) {
+        Map<String, Object> properties = new HashMap<>();
 
-        Map<String, Object> props = new HashMap<>();
-
-        props.put(PipeConstants.POLICY, policyMap);
-        props.put(PipeConstants.SEI_MODEL, sei);
-        props.put(PipeConstants.WSDL_MODEL, port);
-        props.put(PipeConstants.ENDPOINT, owner);
-        props.put(PipeConstants.SERVICE_ENDPOINT, endpoint);
-        props.put(PipeConstants.NEXT_PIPE, tail);
-        props.put(PipeConstants.CONTAINER, owner.getContainer());
+        properties.put(POLICY, policyMap);
+        properties.put(SEI_MODEL, seiModel);
+        properties.put(WSDL_MODEL, port);
+        properties.put(ENDPOINT, ownerEndpoint);
+        properties.put(SERVICE_ENDPOINT, endpoint);
+        properties.put(NEXT_PIPE, tail);
+        properties.put(CONTAINER, ownerEndpoint.getContainer());
 
         if (isSecurityEnabled(policyMap, port)) {
             endpoint.setSecurePipeline();
         }
 
-        return new ServerSecurityPipe(props, tail, isHttpBinding);
+        return new ServerSecurityPipe(properties, tail, isHttpBinding);
     }
 
     /**
@@ -85,9 +82,6 @@ public class GFServerPipeCreator extends ServerPipeCreator {
      * @param wsdlPort wsdl:port
      * @return true if Security is enabled, false otherwise
      */
-    // TODO - this code has been copied from PipelineAssemblerFactoryImpl.java and needs
-    // to be maintained in both places. In the future, code needs to be moved somewhere
-    // where it can be invoked from both places.
     public static boolean isSecurityEnabled(PolicyMap policyMap, WSDLPort wsdlPort) {
         if (isAnyNull(policyMap, wsdlPort)) {
             return false;

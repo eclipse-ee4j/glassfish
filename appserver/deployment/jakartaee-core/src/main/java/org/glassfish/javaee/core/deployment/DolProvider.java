@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -198,7 +198,7 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
         sourceArchive.removeExtraData(Types.class);
         sourceArchive.removeExtraData(Parser.class);
 
-        Logger.getAnonymousLogger().log(Level.FINE, "DOL Loading time" + (System.currentTimeMillis() - start));
+        Logger.getAnonymousLogger().log(Level.FINE, "DOL Loading time: {0} ms", System.currentTimeMillis() - start);
 
         return application;
     }
@@ -209,7 +209,7 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
         Application application = processDOL(dc);
 
         // write out xml files if needed
-        if (Boolean.valueOf(WRITEOUT_XML)) {
+        if (Boolean.parseBoolean(WRITEOUT_XML)) {
             saveAppDescriptor(application, dc);
         }
 

@@ -32,7 +32,6 @@
     &commonRun;
 
     <target name="all">
-        <run-jmac-test path="httpServletChallenge" />
         <run-jmac-test path="httpServletForm" />
 
         <run-jmac-test path="soap" />

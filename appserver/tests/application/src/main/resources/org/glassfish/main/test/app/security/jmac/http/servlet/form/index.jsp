@@ -1,6 +1,6 @@
-<!--
-
-    Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+<%--
+    Copyright (c) 2023 Contributors to the Eclipse Foundation
+    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,15 +14,17 @@
 
     SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 
--->
+--%>
 
-<html>
-<head><title> A typical Error Page</title></head>
-<body>
-<h2>A simple Error Page</h2>
+Hello World from 196 HttpServletForm AuthModule Test!
 <hr>
-You could not be authenticated with the information provided. <BR>
-Please check your Username and Password.
-<br>
-</body>
-</html>
+<%
+try {
+    out.println("Hello, " + request.getUserPrincipal().getName() + " from " + request.getAttribute("MY_NAME"));
+    out.println("PC = " + request.getAttribute("PC"));
+} catch (Throwable t) {
+    out.println("Something wrong: " + t);
+    t.printStackTrace();
+}
+%>
+<hr>

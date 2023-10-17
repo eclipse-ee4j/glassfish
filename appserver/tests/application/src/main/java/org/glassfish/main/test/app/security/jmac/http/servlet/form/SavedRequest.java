@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,15 +15,16 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.s1asdev.security.jmac.httpservletform;
+package org.glassfish.main.test.app.security.jmac.http.servlet.form;
 
-import java.io.Serializable;
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.io.Serializable;
+
 final class SavedRequest implements Serializable {
-    private String method = null;
-    private String requestURI = null;
-    private String queryString = null;
+    private String method;
+    private String requestURI;
+    private String queryString;
 
     SavedRequest(HttpServletRequest hreq) {
         method = hreq.getMethod();

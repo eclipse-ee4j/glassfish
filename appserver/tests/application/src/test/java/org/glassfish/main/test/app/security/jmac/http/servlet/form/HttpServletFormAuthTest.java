@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,8 +14,9 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.main.test.app.security.jmac.http.servlet.challenge;
+package org.glassfish.main.test.app.security.jmac.http.servlet.form;
 
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.System.Logger;
@@ -24,8 +25,6 @@ import java.net.CookieManager;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
-import java.nio.file.Path;
-import java.util.Base64;
 
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
@@ -49,53 +48,46 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 
 
-public class HttpServletChallengeAuthTest {
-    private static final Logger LOG = System.getLogger(HttpServletChallengeAuthTest.class.getName());
+public class HttpServletFormAuthTest {
 
-    private static final String APP_NAME = "security-jmac-http-servlet-challenge";
-    private static final String AUTH_MODULE_NAME = "httpServletChallengeTestAuthModule";
-    private static final String FILE_REALM_NAME = "file123";
+    private static final Logger LOG = System.getLogger(HttpServletFormAuthTest.class.getName());
+
+    private static final String APP_NAME = "security-jmac-http-servlet-form";
+    private static final String AUTH_MODULE_NAME = "httpServletFormTestAuthModule";
+    private static final String FILE_REALM_NAME = "file";
     private static final String USER_NAME = "shingwai";
-    private static final String USER_NAME2 = "shingwai_2";
     private static final String USER_PASSWORD = "shingwai";
-    private static final String USER_PASSWORD2 = "adminadmin";
 
     private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
 
     @TempDir
     private static File tempDir;
     private static File warFile;
-    private static File keyFile;
 
     private static File loginModuleFile;
 
     @BeforeAll
     public static void prepareDeployment() {
-        keyFile = getDomain1Directory().resolve(Path.of("config", "file123.txt")).toFile();
-        assertThat(ASADMIN.exec("create-auth-realm", "--classname",
-            "com.sun.enterprise.security.auth.realm.file.FileRealm", "--property",
-            "file=" + keyFile.getAbsolutePath() + ":jaas-context=fileRealm", "--target", "server", FILE_REALM_NAME),
-            asadminOK());
         createFileUser(FILE_REALM_NAME, USER_NAME, USER_PASSWORD, "mygroup");
-        createFileUser(FILE_REALM_NAME, USER_NAME2, USER_PASSWORD2, "mygroup");
 
-        final JavaArchive loginModule = ShrinkWrap.create(JavaArchive.class)
-            .addClass(HttpServletChallengeTestAuthModule.class);
+        final JavaArchive loginModule = ShrinkWrap.create(JavaArchive.class).addClass(HttpServletFormTestAuthModule.class)
+            .addClass(SavedRequest.class);
         LOG.log(INFO, loginModule.toString(true));
-        // FIXME: When you use the same name as in HttpServletBasicAuthTest, the test will fail with HTTP500.
         loginModuleFile = new File(getDomain1Directory().toAbsolutePath().resolve("../../lib").toFile(),
-            "testLoginModuleChallenge.jar");
+            "testFormLoginModule.jar");
         loginModule.as(ZipExporter.class).exportTo(loginModuleFile, true);
 
         assertThat(ASADMIN.exec("create-message-security-provider",
-            "--classname", HttpServletChallengeTestAuthModule.class.getName(),
+            "--classname", HttpServletFormTestAuthModule.class.getName(),
             "--layer", "HttpServlet", "--providertype", "server", "--requestauthsource", "sender",
             AUTH_MODULE_NAME), asadminOK());
 
         final WebArchive webArchive = ShrinkWrap.create(WebArchive.class)
-            .addAsWebResource(HttpServletChallengeAuthTest.class.getPackage(), "index.jsp", "index.jsp")
-            .addAsWebInfResource(HttpServletChallengeAuthTest.class.getPackage(), "web.xml", "web.xml")
-            .addAsWebInfResource(HttpServletChallengeAuthTest.class.getPackage(), "sun-web.xml", "sun-web.xml");
+            .addAsWebResource(HttpServletFormAuthTest.class.getPackage(), "error.html", "error.html")
+            .addAsWebResource(HttpServletFormAuthTest.class.getPackage(), "index.jsp", "index.jsp")
+            .addAsWebResource(HttpServletFormAuthTest.class.getPackage(), "login.jsp", "login.jsp")
+            .addAsWebInfResource(HttpServletFormAuthTest.class.getPackage(), "web.xml", "web.xml")
+            .addAsWebInfResource(HttpServletFormAuthTest.class.getPackage(), "sun-web.xml", "sun-web.xml");
 
         LOG.log(INFO, webArchive.toString(true));
 
@@ -109,12 +101,9 @@ public class HttpServletChallengeAuthTest {
     @AfterAll
     public static void cleanup() {
         ASADMIN.exec("undeploy", APP_NAME);
-        ASADMIN.exec("delete-file-user", "--authrealmname", FILE_REALM_NAME, "--target", "server", USER_NAME2);
         ASADMIN.exec("delete-file-user", "--authrealmname", FILE_REALM_NAME, "--target", "server", USER_NAME);
         ASADMIN.exec("delete-message-security-provider", "--layer", "HttpServlet", AUTH_MODULE_NAME);
-        ASADMIN.exec("delete-auth-realm", FILE_REALM_NAME);
         delete(warFile);
-        delete(keyFile);
         delete(loginModuleFile);
     }
 
@@ -124,32 +113,41 @@ public class HttpServletChallengeAuthTest {
         final CookieManager cookieManager = new CookieManager();
         CookieHandler.setDefault(cookieManager);
         final HttpCookie sessionId;
-        final HttpURLConnection connection = openConnection(8080, "/" + APP_NAME + "/index.jsp");
-        try {
+        {
+            final HttpURLConnection connection = openConnection(8080, "/" + APP_NAME + "/index.jsp");
             connection.setRequestMethod("GET");
-            connection.setDoOutput(true);
-            final String basicAuth = Base64.getEncoder().encodeToString((USER_NAME + ":" + USER_PASSWORD).getBytes(UTF_8));
-            connection.setRequestProperty("Authorization", "Basic " + basicAuth);
-            assertThat(connection.getResponseCode(), equalTo(401));
-            sessionId = cookieManager.getCookieStore().getCookies().stream()
-                .filter(c -> c.getName().equals("JSESSIONID")).findFirst().get();
-        } finally {
-            connection.disconnect();
+            assertThat(connection.getResponseCode(), equalTo(200));
+            try (InputStream is = connection.getInputStream()) {
+                final String text = new String(is.readAllBytes(), UTF_8);
+                assertThat(text,
+                    stringContainsInOrder("<title>Login Page</title>", "Please login", "j_username", "j_password"));
+                sessionId = cookieManager.getCookieStore().getCookies().stream()
+                    .filter(c -> c.getName().equals("JSESSIONID")).findFirst().get();
+                is.readAllBytes();
+            } finally {
+                connection.disconnect();
+            }
         }
-        final HttpURLConnection connection2 = openConnection(8080, "/" + APP_NAME + "/index.jsp");
-        connection2.setRequestProperty("Cookie", "JSESSIONID=" + URLEncoder.encode(sessionId.getValue(), UTF_8));
-        connection2.setRequestMethod("GET");
-        final String basicAuth = Base64.getEncoder().encodeToString((USER_NAME + ":" + USER_PASSWORD2).getBytes(UTF_8));
-        connection2.setRequestProperty("Authorization", "Basic " + basicAuth);
-        assertThat(connection2.getResponseCode(), equalTo(200));
-        try (InputStream is = connection2.getInputStream()) {
+        final HttpURLConnection connection = openConnection(8080, "/" + APP_NAME + "/j_security_check");
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Cookie", "JSESSIONID=" + URLEncoder.encode(sessionId.getValue(), UTF_8));
+        connection.setDoOutput(true);
+        connection.setInstanceFollowRedirects(true);
+        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        connection.setRequestProperty("Charset", UTF_8.name());
+        try (DataOutputStream stream = new DataOutputStream(connection.getOutputStream())) {
+            stream.writeBytes("j_username=" + USER_NAME + "&j_password=" + USER_PASSWORD);
+            stream.flush();
+        }
+        assertThat(connection.getResponseCode(), equalTo(200));
+        try (InputStream is = connection.getInputStream()) {
             final String text = new String(is.readAllBytes(), UTF_8);
             assertThat(text, stringContainsInOrder(
-                "Hello World from 196 HttpServletChallenge AuthModule Test!",
-                "Hello, shingwai from " + HttpServletChallengeTestAuthModule.class.getName(),
-                "with authType MC"));
+                "Hello World from 196 HttpServletForm AuthModule Test!",
+                "Hello, shingwai from " + HttpServletFormTestAuthModule.class.getName(),
+                "PC = security-jmac-http-servlet-form/security-jmac-http-servlet-form"));
         } finally {
-            connection2.disconnect();
+            connection.disconnect();
         }
     }
 

@@ -35,29 +35,32 @@ start_as_main_process () {
       exec java -jar "$ASADMIN_JAR" start-domain --help
     fi
 
-    # Execute start-domain --dry-run and store the output line by line into an array.
-    # If it fails, the last item in the array will be FAILED
-    readarray -t COMMAND < <(java -jar "$ASADMIN_JAR" start-domain --dry-run "$@" 2> /dev/null || echo -e 'FAILED' )
-
-    # If asadmin command failed (last item is FAILED), we execute it again to show 
-    #   the output to the user and exit
-    # If all OK, we filter and execute the command
-    if [ "${COMMAND[-1]}" = FAILED ]
-      then
-
-        "$JAVA" -jar "$AS_INSTALL_LIB/client/appserver-cli.jar" start-domain --dry-run "$@"
-
+    # Execute start-domain --dry-run and store the output line by line into an array,
+    #   except the first and last line, which aren't part of the command to execute.
+    # If it fails, the first item in the array will be FAILED
+    COMMAND=()
+    local FIRST=y
+    local SECOND=y
+    local PREV_COM
+    while read COM; do
+      if [[ "$FIRST" == y ]]; then
+        FIRST=n
+      elif [[ "$SECOND" == y ]]; then
+        SECOND=n
+        PREV_COM="$COM"
       else
-        # Filter the command
-        #   - remove 1st line (Dump of JVM Invocation line...)
-        #   - remove line with "-read-stdin" and the following line with "true"
-        #     to prevent waiting for master password in stdin
-        #   - remove last line (Command executed successfully)
+        COMMAND+=("$PREV_COM");
+        PREV_COM="$COM"
+      fi
+    done < <(java -jar "$ASADMIN_JAR" start-domain --dry-run "$@" 2> /dev/null || echo -e "FAILED\n" )
 
-        COMMAND=("${COMMAND[@]:1}")
-        unset 'COMMAND[-1]'
-
-        # Execute the command to start GlassFish
+    # If asadmin command failed (first item is FAILED), we execute it again to show
+    #   the output to the user and exit
+    if [[ "${COMMAND[@]:0:1}" == FAILED ]]
+      then
+        exec "$JAVA" -jar "$AS_INSTALL_LIB/client/appserver-cli.jar" start-domain --dry-run "$@"
+      else
+        # If all OK, execute the command to start GlassFish
         exec "${COMMAND[@]}"
     fi
 

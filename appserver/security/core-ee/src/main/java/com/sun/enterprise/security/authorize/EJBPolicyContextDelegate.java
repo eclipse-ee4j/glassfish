@@ -14,15 +14,13 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.security.ee.authorize;
+package com.sun.enterprise.security.authorize;
 
 import java.lang.reflect.Method;
 
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.ejb.api.EJBInvocation;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.security.authorize.PolicyContextDelegate;
 
 /**
  * This class is primarily a delegate for PolicyContextHandler related queries But also handles Authorization of

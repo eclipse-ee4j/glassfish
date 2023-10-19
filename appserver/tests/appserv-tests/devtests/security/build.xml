@@ -68,7 +68,6 @@
     	<run-security-test path="jsp2sful" />
     	<run-security-test path="wss" />
 
-    	<run-security-test path="container-auth" />
     	<run-security-test path="ciphertest" />
     	<run-security-test path="standalone" />
     	

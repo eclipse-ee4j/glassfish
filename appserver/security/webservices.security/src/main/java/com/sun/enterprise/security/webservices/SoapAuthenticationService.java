@@ -15,18 +15,18 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.security.jmac.provider.config;
+package com.sun.enterprise.security.webservices;
 
-import static com.sun.enterprise.security.webservices.PipeConstants.BINDING;
-import static com.sun.enterprise.security.webservices.PipeConstants.CLIENT_SUBJECT;
-import static com.sun.enterprise.security.webservices.PipeConstants.ENDPOINT;
-import static com.sun.enterprise.security.webservices.PipeConstants.ENDPOINT_ADDRESS;
-import static com.sun.enterprise.security.webservices.PipeConstants.POLICY;
-import static com.sun.enterprise.security.webservices.PipeConstants.SEI_MODEL;
-import static com.sun.enterprise.security.webservices.PipeConstants.SERVICE_ENDPOINT;
-import static com.sun.enterprise.security.webservices.PipeConstants.SERVICE_REF;
-import static com.sun.enterprise.security.webservices.PipeConstants.SOAP_LAYER;
-import static com.sun.enterprise.security.webservices.PipeConstants.WSDL_MODEL;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.BINDING;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.CLIENT_SUBJECT;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.ENDPOINT;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.ENDPOINT_ADDRESS;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.POLICY;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.SEI_MODEL;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.SERVICE_ENDPOINT;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.SERVICE_REF;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.SOAP_LAYER;
+import static com.sun.xml.wss.provider.wsit.PipeConstants.WSDL_MODEL;
 import static jakarta.xml.ws.handler.MessageContext.SERVLET_REQUEST;
 
 import java.lang.reflect.Method;
@@ -59,14 +59,13 @@ import com.sun.enterprise.security.SecurityContext;
 import com.sun.enterprise.security.SecurityServicesUtil;
 import com.sun.enterprise.security.appclient.ConfigXMLParser;
 import com.sun.enterprise.security.audit.AuditManager;
+import com.sun.enterprise.security.authorize.EJBPolicyContextDelegate;
 import com.sun.enterprise.security.common.AppservAccessController;
 import com.sun.enterprise.security.common.ClientSecurityContext;
 import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
-import com.sun.enterprise.security.ee.authorize.EJBPolicyContextDelegate;
 import com.sun.enterprise.security.jmac.AuthMessagePolicy;
 import com.sun.enterprise.security.jmac.ConfigDomainParser;
 import com.sun.enterprise.security.jmac.WebServicesDelegate;
-import com.sun.enterprise.security.webservices.PipeConstants;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.xml.ws.api.EndpointAddress;
@@ -79,7 +78,7 @@ import com.sun.xml.ws.api.model.JavaMethod;
 import com.sun.xml.ws.api.model.SEIModel;
 import com.sun.xml.ws.api.model.wsdl.WSDLPort;
 import com.sun.xml.ws.api.server.WSEndpoint;
-
+import com.sun.xml.wss.provider.wsit.PipeConstants;
 import jakarta.security.auth.message.AuthException;
 import jakarta.security.auth.message.AuthStatus;
 import jakarta.security.auth.message.MessageInfo;
@@ -92,7 +91,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.xml.bind.UnmarshalException;
 import jakarta.xml.ws.WebServiceException;
 
-public class PipeHelper extends BaseAuthenticationService {
+public class SoapAuthenticationService extends BaseAuthenticationService {
 
     private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(PipeConstants.class);
 
@@ -103,7 +102,7 @@ public class PipeHelper extends BaseAuthenticationService {
     private InvocationManager invocationManager;
     private EJBPolicyContextDelegate ejbDelegate;
 
-    public PipeHelper(String layer, Map<String, Object> map, CallbackHandler callbackHandler) {
+    public SoapAuthenticationService(String layer, Map<String, Object> map, CallbackHandler callbackHandler) {
         init(layer, getAppCtxt(map), map, callbackHandler, null);
 
         this.isEjbEndpoint = processSunDeploymentDescriptor();
@@ -159,10 +158,6 @@ public class PipeHelper extends BaseAuthenticationService {
         addPolicy(messageInfo, map);
 
         return serverAuthConfig.getAuthContext(serverAuthConfig.getAuthContextID(messageInfo), subject, map);
-    }
-
-    private static boolean isACC() {
-        return SecurityServicesUtil.getInstance() == null || SecurityServicesUtil.getInstance().isACC();
     }
 
     public static Subject getClientSubject() {
@@ -358,6 +353,10 @@ public class PipeHelper extends BaseAuthenticationService {
     @Override
     public void disable() {
         listenerWrapper.disableWithRefCount();
+    }
+
+    private static boolean isACC() {
+        return SecurityServicesUtil.getInstance() == null || SecurityServicesUtil.getInstance().isACC();
     }
 
     private boolean processSunDeploymentDescriptor() {

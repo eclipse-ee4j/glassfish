@@ -20,7 +20,8 @@ import java.net.SocketPermission;
 // IASRI 4660742 START
 // IASRI 4660742 END
 import java.util.PropertyPermission;
-
+import com.sun.enterprise.security.authorize.cache.CachedPermissionImpl;
+import com.sun.enterprise.security.authorize.cache.PermissionCache;
 import com.sun.enterprise.security.ssl.SSLUtils;
 
 /**

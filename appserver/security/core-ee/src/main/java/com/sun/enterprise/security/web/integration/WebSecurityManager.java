@@ -18,7 +18,7 @@
 package com.sun.enterprise.security.web.integration;
 
 import static com.sun.enterprise.security.authorize.PolicyContextHandlerImpl.HTTP_SERVLET_REQUEST;
-import static com.sun.enterprise.security.ee.PermissionCacheFactory.createPermissionCache;
+import static com.sun.enterprise.security.authorize.cache.PermissionCacheFactory.createPermissionCache;
 import static com.sun.enterprise.security.web.integration.GlassFishToExousiaConverter.getConstraintsFromBundle;
 import static com.sun.enterprise.security.web.integration.GlassFishToExousiaConverter.getSecurityRoleRefsFromBundle;
 import static java.util.logging.Level.FINE;
@@ -56,10 +56,10 @@ import com.sun.enterprise.security.SecurityRoleMapperFactoryGen;
 import com.sun.enterprise.security.SecurityServicesUtil;
 import com.sun.enterprise.security.audit.AuditManager;
 import com.sun.enterprise.security.authorize.PolicyContextHandlerImpl;
-import com.sun.enterprise.security.ee.CachedPermission;
-import com.sun.enterprise.security.ee.CachedPermissionImpl;
-import com.sun.enterprise.security.ee.PermissionCache;
-import com.sun.enterprise.security.ee.PermissionCacheFactory;
+import com.sun.enterprise.security.authorize.cache.CachedPermission;
+import com.sun.enterprise.security.authorize.cache.CachedPermissionImpl;
+import com.sun.enterprise.security.authorize.cache.PermissionCache;
+import com.sun.enterprise.security.authorize.cache.PermissionCacheFactory;
 import com.sun.enterprise.security.ee.SecurityUtil;
 import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
 

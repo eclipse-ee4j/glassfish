@@ -109,7 +109,7 @@ public class JWSACCMain implements Runnable {
 
     private static boolean runOnSwingThread;
 
-    /** helper for building the class loader and policy changes */
+    /** soapAuthenticationService for building the class loader and policy changes */
     private static ClassPathManager classPathManager;
 
     /** URLs for downloaded JAR files to be used in the class path */

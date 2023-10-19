@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.security.ee;
+package com.sun.enterprise.security.authorize.cache;
 
 import java.security.AllPermission;
 import java.security.CodeSource;
@@ -30,9 +30,8 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import com.sun.enterprise.security.authorize.cache.CachedPermissionImpl.Epoch;
 import com.sun.enterprise.security.common.AppservAccessController;
-import com.sun.enterprise.security.ee.CachedPermissionImpl.Epoch;
 import com.sun.logging.LogDomains;
 
 import jakarta.security.jacc.PolicyContext;

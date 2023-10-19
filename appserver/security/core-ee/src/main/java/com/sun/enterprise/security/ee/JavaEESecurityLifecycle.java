@@ -35,9 +35,9 @@ import org.glassfish.epicyro.config.factory.file.AuthConfigFileFactory;
 import org.glassfish.epicyro.config.module.configprovider.GFServerConfigProvider;
 
 import com.sun.enterprise.security.ContainerSecurityLifecycle;
-import com.sun.enterprise.security.jmac.AuthMessagePolicy;
-import com.sun.enterprise.security.jmac.ConfigDomainParser;
-import com.sun.enterprise.security.jmac.WebServicesDelegate;
+import com.sun.enterprise.security.ee.jmac.AuthMessagePolicy;
+import com.sun.enterprise.security.ee.jmac.ConfigDomainParser;
+import com.sun.enterprise.security.ee.jmac.WebServicesDelegate;
 import com.sun.logging.LogDomains;
 
 import jakarta.inject.Singleton;
@@ -60,7 +60,7 @@ public class JavaEESecurityLifecycle implements ContainerSecurityLifecycle, Post
 
     @Override
     public void onInitialization() {
-        SecurityManager securityManager = System.getSecurityManager();
+        java.lang.SecurityManager securityManager = System.getSecurityManager();
 
         // TODO: need someway to not override the SecMgr if the EmbeddedServer was
         // run with a different non-default SM.

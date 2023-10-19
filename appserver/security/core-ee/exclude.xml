@@ -35,16 +35,16 @@
     -->
     <Match>
     <Or>
-        <Class name="com.sun.enterprise.security.jauth.callback.CertStoreCallback"/>
-        <Class name="com.sun.enterprise.security.jauth.callback.SecretKeyCallback"/>
-        <Class name="com.sun.enterprise.security.jauth.callback.PrivateKeyCallback"/>
-        <Class name="com.sun.enterprise.security.jauth.callback.PrivateKeyCallback$IssuerSerialNumRequest"/>
-        <Class name="com.sun.enterprise.security.jauth.AuthException"/>
-        <Class name="com.sun.enterprise.security.jauth.callback.SecretKeyCallback$AliasRequest"/>
-        <Class name="com.sun.enterprise.security.jauth.callback.TrustStoreCallback"/>
-        <Class name="com.sun.enterprise.security.jauth.callback.PrivateKeyCallback$SubjectKeyIDRequest"/>
-        <Class name="com.sun.enterprise.security.jauth.callback.PasswordValidationCallback"/>
-        <Class name="com.sun.enterprise.security.jauth.callback.PrivateKeyCallback$AliasRequest"/>
+        <Class name="com.sun.enterprise.security.ee.jauth.callback.CertStoreCallback"/>
+        <Class name="com.sun.enterprise.security.ee.jauth.callback.SecretKeyCallback"/>
+        <Class name="com.sun.enterprise.security.ee.jauth.callback.PrivateKeyCallback"/>
+        <Class name="com.sun.enterprise.security.ee.jauth.callback.PrivateKeyCallback$IssuerSerialNumRequest"/>
+        <Class name="com.sun.enterprise.security.ee.jauth.AuthException"/>
+        <Class name="com.sun.enterprise.security.ee.jauth.callback.SecretKeyCallback$AliasRequest"/>
+        <Class name="com.sun.enterprise.security.ee.jauth.callback.TrustStoreCallback"/>
+        <Class name="com.sun.enterprise.security.ee.jauth.callback.PrivateKeyCallback$SubjectKeyIDRequest"/>
+        <Class name="com.sun.enterprise.security.ee.jauth.callback.PasswordValidationCallback"/>
+        <Class name="com.sun.enterprise.security.ee.jauth.callback.PrivateKeyCallback$AliasRequest"/>
     </Or>
     <Bug pattern="NM_SAME_SIMPLE_NAME_AS_SUPERCLASS"/>
     </Match>
@@ -55,20 +55,20 @@
         the constructor exists and doesn't fail.  The object is thrown away.
     -->
     <Match>
-        <Class name="com.sun.enterprise.security.acl.RoleMapper"/>
+        <Class name="com.sun.enterprise.security.ee.acl.RoleMapper"/>
         <Method name="getDefaultP2RMappingClassName"/>
         <Bug pattern="DLS_DEAD_LOCAL_STORE"/>
     </Match>
 
     <!--
         Need to keep both method getUsername in
-        com.sun.enterprise.security.auth.digest.impl.KeyDigestAlgoParamImpl
+        com.sun.enterprise.security.ee.authentication.glassfish.digest.impl.KeyDigestAlgoParamImpl
         and method getUserName in
-        com.sun.enterprise.security.ee.auth.login.DigestCredentials
+        com.sun.enterprise.security.ee.authentication.glassfish.digest.DigestCredentials
         with names differing only in case, for compatibility.
     -->
     <Match>
-        <Class name="com.sun.enterprise.security.auth.digest.impl.KeyDigestAlgoParamImpl"/>
+        <Class name="com.sun.enterprise.security.ee.authentication.glassfish.digest.impl.KeyDigestAlgoParamImpl"/>
         <Method name="getUsername"/>
         <Bug pattern="NM_CONFUSING"/>
     </Match>

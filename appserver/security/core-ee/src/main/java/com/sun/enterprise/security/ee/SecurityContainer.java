@@ -26,8 +26,7 @@ import org.jvnet.hk2.annotations.Service;
 
 import com.sun.enterprise.deployment.interfaces.SecurityRoleMapperFactoryMgr;
 import com.sun.enterprise.security.PolicyLoader;
-import com.sun.enterprise.security.web.integration.WebSecurityManagerFactory;
-
+import com.sun.enterprise.security.ee.web.integration.WebSecurityManagerFactory;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -35,7 +34,7 @@ import jakarta.inject.Provider;
  * Security container service
  *
  */
-@Service(name = "com.sun.enterprise.security.ee.SecurityContainer")
+@Service(name = "com.sun.enterprise.security.ee.ee.SecurityContainer")
 public class SecurityContainer implements Container, PostConstruct {
 
     @Inject
@@ -107,7 +106,7 @@ public class SecurityContainer implements Container, PostConstruct {
         Class c = null;
         // this should never fail.
         try {
-            c = Class.forName("com.sun.enterprise.security.acl.RoleMapperFactory");
+            c = Class.forName("com.sun.enterprise.security.ee.acl.RoleMapperFactory");
             if (c != null) {
                 o = c.newInstance();
                 if (o != null && o instanceof SecurityRoleMapperFactory) {

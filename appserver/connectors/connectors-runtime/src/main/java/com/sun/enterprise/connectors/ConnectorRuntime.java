@@ -61,7 +61,7 @@ import com.sun.enterprise.resource.pool.PoolManager;
 import com.sun.enterprise.resource.pool.monitor.ConnectionPoolProbeProviderUtil;
 import com.sun.enterprise.resource.pool.monitor.PoolMonitoringLevelListener;
 import com.sun.enterprise.security.SecurityServicesUtil;
-import com.sun.enterprise.security.jmac.callback.ContainerCallbackHandler;
+import com.sun.enterprise.security.ee.jmac.callback.ContainerCallbackHandler;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 import com.sun.logging.LogDomains;
 

@@ -241,7 +241,7 @@
                         com.sun.appserv.web.cache.filter,
                         com.sun.appserv.web.cache.mapping,
                         com.sun.appserv.web.taglibs.cache,
-                        com.sun.enterprise.security.web,
+                        com.sun.enterprise.security.ee.web,
                         com.sun.enterprise.util.logging,
                         com.sun.enterprise.web,
                         com.sun.enterprise.web.accesslog,

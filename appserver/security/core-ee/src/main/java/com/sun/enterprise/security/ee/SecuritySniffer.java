@@ -41,7 +41,7 @@ import jakarta.inject.Inject;
 @Service(name = "Security")
 public class SecuritySniffer extends GenericSniffer {
 
-    final String[] containers = { "com.sun.enterprise.security.ee.ee.SecurityContainer" };
+    final String[] containers = { "com.sun.enterprise.security.ee.SecurityContainer" };
 
     @Inject
     private ServiceLocator habitat;

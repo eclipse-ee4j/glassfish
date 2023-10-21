@@ -16,52 +16,39 @@
 
 package com.sun.enterprise.security.ee;
 
+import com.sun.enterprise.deployment.interfaces.SecurityRoleMapperFactoryMgr;
+import com.sun.logging.LogDomains;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.glassfish.api.container.Container;
+import org.glassfish.api.deployment.Deployer;
 import org.glassfish.deployment.common.SecurityRoleMapperFactory;
 import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.ClassLoaderHierarchy;
-import org.glassfish.internal.api.ServerContext;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.deployment.interfaces.SecurityRoleMapperFactoryMgr;
-import com.sun.enterprise.security.PolicyLoader;
-import com.sun.enterprise.security.ee.web.integration.WebSecurityManagerFactory;
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
 
 /**
  * Security container service
  *
  */
-@Service(name = "com.sun.enterprise.security.ee.ee.SecurityContainer")
+@Service(name = "com.sun.enterprise.security.ee.SecurityContainer")
 public class SecurityContainer implements Container, PostConstruct {
 
-    @Inject
-    private PolicyLoader policyLoader;
+    private static final Logger LOGGER = LogDomains.getLogger(SecurityContainer.class, LogDomains.SECURITY_LOGGER);
 
-    @Inject
-    private ServerContext serverContext;
-
-    @Inject
-    private ServiceLocator habitat;
-
-    @Inject
-    private Provider<ClassLoaderHierarchy> classLoaderHierarchyProvider;
-
-    @Inject
-    private Provider<WebSecurityManagerFactory> webSecurityManagerFactoryProvider;
+    /**
+     * The system-assigned default web module's name/identifier.
+     *
+     */
+    public static final String DEFAULT_WEB_MODULE_NAME = "__default-web-module";
 
     static {
         initRoleMapperFactory();
     }
 
-    /**
-     * The system-assigned default web module's name/identifier.
-     *
-     * This has to be the same value as is in j2ee/WebModule.cpp.
-     */
-    public static final String DEFAULT_WEB_MODULE_NAME = "__default-web-module";
+    @Override
+    public void postConstruct() {
+
+    }
 
     @Override
     public String getName() {
@@ -69,61 +56,24 @@ public class SecurityContainer implements Container, PostConstruct {
     }
 
     @Override
-    public Class<? extends org.glassfish.api.deployment.Deployer> getDeployer() {
+    public Class<? extends Deployer<?, ?>> getDeployer() {
         return SecurityDeployer.class;
     }
 
-    @Override
-    public void postConstruct() {
-        /*
-         * This is handled by SecurityDeployer //Generate Policy for the Dummy Module WebBundleDescriptor wbd = new
-         * WebBundleDescriptor(); Application application = Application.createApplication(); application.setVirtual(true);
-         * application.setName(DEFAULT_WEB_MODULE_NAME); application.setRegistrationName(DEFAULT_WEB_MODULE_NAME);
-         * wbd.setApplication(application); generatePolicy(wbd);
-         */
-    }
-    /*
-     * private void generatePolicy(WebBundleDescriptor wbd) { String name = null; ClassLoader oldTcc =
-     * Thread.currentThread().getContextClassLoader(); try { //TODO: workaround here. Once fixed in V3 we should be able to
-     * use //Context ClassLoader instead. ClassLoaderHierarchy hierarchy = classLoaderHierarchyProvider.get(); ClassLoader
-     * tcc = hierarchy.getCommonClassLoader(); Thread.currentThread().setContextClassLoader(tcc);
-     *
-     * policyLoader.loadPolicy();
-     *
-     * WebSecurityManagerFactory wsmf = webSecurityManagerFactoryProvider.get(); // this should create all permissions
-     * wsmf.createManager(wbd,true,serverContext); // for an application the securityRoleMapper should already be //
-     * created. I am just creating the web permissions and handing // it to the security component. name =
-     * WebSecurityManager.getContextID(wbd); SecurityUtil.generatePolicyFile(name);
-     * websecurityProbeProvider.policyCreationEvent(name);
-     *
-     * } catch (IASSecurityException se) { String msg = "Error in generating security policy for " + name; throw new
-     * RuntimeException(msg, se); } finally { Thread.currentThread().setContextClassLoader(oldTcc); } }
-     */
-
-    private static void initRoleMapperFactory() // throws Exception
-    {
-        Object o = null;
-        Class c = null;
-        // this should never fail.
+    private static void initRoleMapperFactory() {
+        // This should never ever fail.
         try {
-            c = Class.forName("com.sun.enterprise.security.ee.acl.RoleMapperFactory");
+            Class<?> c = Class.forName("com.sun.enterprise.security.ee.acl.RoleMapperFactory");
             if (c != null) {
-                o = c.newInstance();
+                Object o = c.getDeclaredConstructor().newInstance();
                 if (o != null && o instanceof SecurityRoleMapperFactory) {
                     SecurityRoleMapperFactoryMgr.registerFactory((SecurityRoleMapperFactory) o);
                 }
             }
-            if (o == null) {
-                // _logger.log(Level.SEVERE,_localStrings.getLocalString("j2ee.norolemapper", "Cannot instantiate the
-                // SecurityRoleMapperFactory"));
-            }
         } catch (Exception cnfe) {
-            //            _logger.log(Level.SEVERE,
-            //            _localStrings.getLocalString("j2ee.norolemapper", "Cannot instantiate the SecurityRoleMapperFactory"),
-            //            cnfe);
-            //        cnfe.printStackTrace();
-            //        throw new RuntimeException(cnfe);
-            // throw cnfe;
+            LOGGER.log(Level.SEVERE, "The impossible has happened.", cnfe);
         }
     }
+
+
 }

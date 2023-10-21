@@ -360,16 +360,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency><!-- Repackaged Apache Santuario -->
-            <groupId>org.glassfish.metro</groupId>
-            <artifactId>webservices-extra-xmlsec</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
         <dependency>
             <groupId>org.glassfish.metro</groupId>
             <artifactId>webservices-extra-jdk-packages</artifactId>
@@ -411,6 +401,12 @@
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <!-- xmlsec depends on commons-codec -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.woodstox</groupId>
@@ -843,7 +839,7 @@
                         </exclusion>
                     </exclusions>
                 </dependency>
-                
+
                 <!-- MicroProfile JWT -->
                 <dependency>
                     <groupId>org.eclipse.microprofile.jwt</groupId>

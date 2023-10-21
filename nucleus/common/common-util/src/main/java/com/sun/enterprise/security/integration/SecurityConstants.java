@@ -22,7 +22,7 @@ package com.sun.enterprise.security.integration;
  */
 public interface SecurityConstants {
     //TODO: Not a very good idea, revisit.
-    String WEB_PRINCIPAL_CLASS = "com.sun.enterprise.security.web.integration.WebPrincipal";
+    String WEB_PRINCIPAL_CLASS = "com.sun.enterprise.security.ee.web.integration.WebPrincipal";
 
     //TODO V3: Temporary till we have AppContainer integration design sorted out
     int APPCONTAINER_CERTIFICATE = 2;

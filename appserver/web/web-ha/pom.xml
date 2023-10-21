@@ -92,5 +92,19 @@
                 <directory>src/main/resources</directory>
             </resource>
         </resources>
+        
+            <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Import-Package>
+                        !com.sun.enterprise.security.web,*
+                        </Import-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>

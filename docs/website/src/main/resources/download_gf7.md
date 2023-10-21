@@ -2,7 +2,7 @@
 
 ### GlassFish 7.0.9
 
-GlassFish 7.0.9 is a final release, containing final Jakarta EE 10 APIs. It compiles and runs on JDK 11 to JDK 21ea33. MicroProfile support requires JDK 17 or higher.
+GlassFish 7.0.9 is a final release, containing final Jakarta EE 10 APIs. It compiles and runs on JDK 11 to JDK 21. MicroProfile support requires JDK 17 or higher.
 
 This release is the first GlassFish release after OpenJDK 21 was released. GlassFish 7.0.9 compiles and passes all internal tests using OpenJDK 21. Several Jakarta EE 10 TCKs passed on JDK 21 as well. The Jakarta EE 10 TCK as a whole is not JDK 21 compatible and it's not possible to run all the Jakarta EE TCK tests. 
 

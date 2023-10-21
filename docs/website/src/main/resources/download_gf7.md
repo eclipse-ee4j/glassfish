@@ -4,7 +4,7 @@
 
 GlassFish 7.0.9 is a final release, containing final Jakarta EE 10 APIs. It compiles and runs on JDK 11 to JDK 21ea33. MicroProfile support requires JDK 17 or higher.
 
-This release prepares GlassFish for the upcoming JDK 21; it compiles and passes all internal tests using OpenJDK 21ea35. Several TCKs passed on JDK 21 as well, but the TCK as a whole is not JDK 21 compatible yet. 
+This release is the first GlassFish release after OpenJDK 21 was released. GlassFish 7.0.9 compiles and passes all internal tests using OpenJDK 21. Several Jakarta EE 10 TCKs passed on JDK 21 as well. The Jakarta EE 10 TCK as a whole is not JDK 21 compatible and it's not possible to run all the Jakarta EE TCK tests. 
 
 In this release the modularity of GlassFish is once again increased by moving the Jakarta Authentication implementation code to a new standalone project: [Epicyro](https://github.com/eclipse-ee4j/epicyro). We also enabled the GlassFish embedded tests again, which were dormant for a long time. Among the many updated components, Exousia was updated specifically to fix a bug with deployments on virtual servers, and the ORB was updated to fix a somewhat obscure bug where a remote EJB returned a JDK defined enum type.
 

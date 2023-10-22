@@ -3652,7 +3652,7 @@ Oracle Solaris realm.</p>
 <p>A Pluggable Authentication Module (PAM) realm allows applications
 deployed on Eclipse GlassFish to authenticate users against a native
 Unix (Solaris/Linux/Mac OS) users list. PAM realms use the class name
-<code>com.sun.enterprise.security.auth.realm.pam.PamRealm</code> and the JAAS
+<code>com.sun.enterprise.security.ee.authentication.glassfish.pam.PamRealm</code> and the JAAS
 Context <code>pamRealm</code>.<br>
 This realm is supported on all Unix Operating Systems, including the
 Oracle Solaris 9 and Oracle Solaris 10 operating systems</p>
@@ -3904,7 +3904,7 @@ For instructions, see <a href="#to-create-an-authentication-realm">To Create an 
 </td>
 <td class="content">
 <div class="paragraph">
-<p>The JAAS context should be <code>jdbcDigestRealm</code> for digest authentication
+<p>The JAAS context should be <code>digestRealm</code> for digest authentication
 or <code>jdbcRealm</code> for other authentication types.</p>
 </div>
 </td>
@@ -7966,7 +7966,7 @@ the user-supplied data as HTML.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-10-21 22:45:21 UTC
+Last updated 2023-10-22 14:16:44 UTC
 </div>
 </div>
 </body>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -41,20 +41,19 @@ import static org.glassfish.config.support.Constants.NAME_REGEX;
 /**
  * An audit-module specifies an optional plug-in module which implements audit capabilities.
  */
-
-/* @XmlType(name = "", propOrder = {
-    "property"
-}) */
-
 @Configured
-@RestRedirects({ @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-audit-module"),
-        @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-audit-module") })
+@RestRedirects({
+        @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-audit-module"),
+        @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-audit-module")
+})
 public interface AuditModule extends ConfigBeanProxy, PropertyBag {
 
     /**
-     * Gets the value of the name property. Defines the name of this realm
+     * Gets the value of the {@code name} property.
      *
-     * @return possible object is {@link String }
+     * <p>Defines the name of this realm.
+     *
+     * @return possible object is {@link String}
      */
     @Attribute(key = true)
     @NotNull
@@ -62,16 +61,18 @@ public interface AuditModule extends ConfigBeanProxy, PropertyBag {
     String getName();
 
     /**
-     * Sets the value of the name property.
+     * Sets the value of the {@code name} property.
      *
-     * @param value allowed object is {@link String }
+     * @param name allowed object is {@link String}
      */
-    void setName(String value) throws PropertyVetoException;
+    void setName(String name) throws PropertyVetoException;
 
     /**
-     * Gets the value of the classname property. Defines the java class which implements this audit module
+     * Gets the value of the {@code classname} property.
      *
-     * @return possible object is {@link String }
+     * <p>Defines the java class which implements this audit module.
+     *
+     * @return possible object is {@link String}
      */
     @Attribute
     @NotNull
@@ -79,11 +80,11 @@ public interface AuditModule extends ConfigBeanProxy, PropertyBag {
     String getClassname();
 
     /**
-     * Sets the value of the classname property.
+     * Sets the value of the {@code classname} property.
      *
-     * @param value allowed object is {@link String }
+     * @param classname allowed object is {@link String}
      */
-    void setClassname(String value) throws PropertyVetoException;
+    void setClassname(String classname) throws PropertyVetoException;
 
     /**
      * Properties as per {@link PropertyBag}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +17,9 @@
 
 package com.sun.enterprise.config.serverbeans;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -24,15 +27,13 @@ import java.util.Collections;
 import java.util.List;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Objects;
 
 import org.glassfish.api.admin.config.ApplicationName;
 import org.jvnet.hk2.annotations.Service;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
 /**
- * Bunch of utility methods for the new serverbeans config api based on jaxb
+ * Bunch of utility methods for the new serverbeans config api based on jaxb.
  */
 @Service
 @Singleton
@@ -42,10 +43,10 @@ public final class ConfigBeansUtilities {
 
     private final Domain domain;
 
-    // dochez : this class needs to be killed but I have no time to do it now
+    // dochez : this class needs to be killed, but I have no time to do it now
     // I am making it a singleton, will force its initialization early enough so
     // users can continue using the static method. Eventually all these methods will
-    // need to be moved to @DuckTyped methods on the interfaces directory.
+    // need to be moved to default methods on the interfaces directory.
     @Inject
     public ConfigBeansUtilities(Applications paramApps, Domain paramDomain) {
         apps = paramApps;
@@ -90,7 +91,8 @@ public final class ConfigBeansUtilities {
     /**
      * This method is used to convert a string value to boolean.
      *
-     * @return true if the value is one of true, on, yes, 1. Note that the values are case sensitive. If it is not one of
+     * @return {@code true} if the value is one of {@code true}, {@code on}, {@code yes}, {@code 1}.
+     * <strong>Note</strong> that the values are case-sensitive. If it is not one of
      * these values, then, it returns false.
      */
     public static boolean toBoolean(final String value) {
@@ -116,12 +118,12 @@ public final class ConfigBeansUtilities {
         }
         List<Application> allApps = getAllDefinedSystemApplications();
         if (allApps.isEmpty()) {
-            return allApps; //if there are no sys-apps, none can reference one :)
+            return allApps; // if there are no sys-apps, none can reference one :)
         }
-        //allApps now contains ALL the system applications
-        Server s = getServerNamed(sn);
+        // allApps now contains ALL the system applications
+        Server server = Objects.requireNonNull(getServerNamed(sn));
         List<Application> referencedApps = new ArrayList<>();
-        List<ApplicationRef> appsReferenced = s.getApplicationRef();
+        List<ApplicationRef> appsReferenced = server.getApplicationRef();
         for (ApplicationRef ref : appsReferenced) {
             for (Application app : allApps) {
                 if (ref.getRef().equals(app.getName())) {
@@ -187,38 +189,31 @@ public final class ConfigBeansUtilities {
     }
 
     /**
-     * Lists the app refs for non-system apps assigned to the specified server
+     * Lists the app refs for non-system apps assigned to the specified server.
      *
      * @param sn server name
-     * @return List of ApplicationRef for non-system apps assigned to the specified server
+     * @return List of {@link ApplicationRef} for non-system apps assigned to the specified server
      */
     public List<ApplicationRef> getApplicationRefsInServer(String sn) {
         return getApplicationRefsInServer(sn, true);
     }
 
     /**
-     * Lists the app refs for apps assigned to the specified server, excluding system apps from the result if requested.
+     * Lists the app refs for apps assigned to the specified server, excluding system apps from
+     * the result if requested.
      *
      * @param sn server name to check
      * @param excludeSystemApps whether system apps should be excluded
-     * @return List of ApplicationRef for apps assigned to the specified server
+     * @return List of {@link ApplicationRef} for apps assigned to the specified server
      */
     public List<ApplicationRef> getApplicationRefsInServer(String sn, boolean excludeSystemApps) {
+        Server server = getServer(sn);
 
-        Servers ss = domain.getServers();
-        List<Server> list = ss.getServer();
-        Server theServer = null;
-        for (Server s : list) {
-            if (s.getName().equals(sn)) {
-                theServer = s;
-                break;
-            }
-        }
-        if (theServer != null) {
-            List<ApplicationName> modulesToExclude = excludeSystemApps ? domain.getSystemApplications().getModules()
-                    : Collections.<ApplicationName>emptyList();
+        if (server != null) {
+            List<ApplicationName> modulesToExclude = excludeSystemApps
+                    ? domain.getSystemApplications().getModules() : Collections.emptyList();
             List<ApplicationRef> result = new ArrayList<>();
-            for (ApplicationRef candidateRef : theServer.getApplicationRef()) {
+            for (ApplicationRef candidateRef : server.getApplicationRef()) {
                 String appRefModuleName = candidateRef.getRef();
                 boolean isSystem = false;
                 for (ApplicationName sysModule : modulesToExclude) {
@@ -233,31 +228,30 @@ public final class ConfigBeansUtilities {
             }
             return result;
         } else {
-            return Collections.<ApplicationRef>emptyList();
+            return List.of();
         }
     }
 
     public ApplicationRef getApplicationRefInServer(String sn, String name) {
-        Servers ss = domain.getServers();
-        List<Server> list = ss.getServer();
-        Server theServer = null;
-        for (Server s : list) {
-            if (s.getName().equals(sn)) {
-                theServer = s;
-                break;
-            }
-        }
-        ApplicationRef aref = null;
-        if (theServer != null) {
-            List<ApplicationRef> arefs = theServer.getApplicationRef();
-            for (ApplicationRef ar : arefs) {
-                if (ar.getRef().equals(name)) {
-                    aref = ar;
-                    break;
+        Server server = getServer(sn);
+        if (server != null) {
+            for (ApplicationRef appRef : server.getApplicationRef()) {
+                if (appRef.getRef().equals(name)) {
+                    return appRef;
                 }
             }
         }
-        return aref;
+        return null;
+    }
+
+    private Server getServer(String serverName) {
+        Servers servers = domain.getServers();
+        for (Server server : servers.getServer()) {
+            if (server.getName().equals(serverName)) {
+                return server;
+            }
+        }
+        return null;
     }
 
     public ApplicationName getModule(String moduleID) {

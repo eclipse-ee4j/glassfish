@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,6 +16,11 @@
  */
 
 package org.glassfish.admin.rest.utils;
+
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.SecureAdmin;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.security.ssl.SSLUtils;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -36,14 +42,8 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 
-import org.glassfish.hk2.api.ServiceLocator;
-
 import org.glassfish.admin.rest.client.utils.MarshallingUtils;
-
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.SecureAdmin;
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.security.ssl.SSLUtils;
+import org.glassfish.hk2.api.ServiceLocator;
 
 /**
  * @author Mitesh Meswani
@@ -64,11 +64,11 @@ public abstract class ProxyImpl implements Proxy {
                 client = addAuthenticationInfo(client, forwardInstance, habitat);
                 WebTarget resourceBuilder = client.target(forwardURI);
                 SecureAdmin secureAdmin = habitat.getService(SecureAdmin.class);
-                final String indicatorValue = SecureAdmin.Util.configuredAdminIndicator(secureAdmin);
+                final String indicatorValue = SecureAdmin.configuredAdminIndicator(secureAdmin);
                 Invocation.Builder builder;
                 Response response;
                 if (indicatorValue != null) {
-                    builder = resourceBuilder.request(MediaType.APPLICATION_JSON).header(SecureAdmin.Util.ADMIN_INDICATOR_HEADER_NAME,
+                    builder = resourceBuilder.request(MediaType.APPLICATION_JSON).header(SecureAdmin.ADMIN_INDICATOR_HEADER_NAME,
                             indicatorValue);
                     response = builder.get(Response.class);
                 } else {
@@ -130,7 +130,7 @@ public abstract class ProxyImpl implements Proxy {
 
         // TODO need to get hardcoded "TLS" from corresponding ServerRemoteAdminCommand constant);
         final SSLContext sslContext = habitat.<SSLUtils>getService(SSLUtils.class)
-                .getAdminSSLContext(SecureAdmin.Util.DASAlias(secureAdmin), "TLS");
+                .getAdminSSLContext(SecureAdmin.DASAlias(secureAdmin), "TLS");
 
         // Instruct Jersey to use HostNameVerifier and SSLContext provided by us.
         final ClientBuilder clientBuilder = ClientBuilder.newBuilder().withConfig(client.getConfiguration())

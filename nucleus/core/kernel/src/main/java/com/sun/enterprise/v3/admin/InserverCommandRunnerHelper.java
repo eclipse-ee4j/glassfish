@@ -16,12 +16,11 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
+
 import javax.security.auth.Subject;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.CommandRunner;
@@ -29,12 +28,15 @@ import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.jvnet.hk2.annotations.Service;
 
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 /**
  *
- * Allows commands executing in the DAS or an instance to invoke other
- * commands in the same server.  This will be most useful from commands
- * that need to change configuration settings by delegating to a
- * sequence of other commands.
+ * Allows commands executing in the DAS or an instance to invoke other commands in the same server. This will be most
+ * useful from commands that need to change configuration settings by delegating to a sequence of other commands.
  * <p>
  * This is similar to some logic in the AdminAdapter.
  *
@@ -51,19 +53,15 @@ public class InserverCommandRunnerHelper {
     @Inject
     private CommandRunnerImpl commandRunner;
 
-    public ActionReport runCommand(final String command,
-            final ParameterMap parameters,
-            final ActionReport report,
-            final Subject subject) {
+    public ActionReport runCommand(final String command, final ParameterMap parameters, final ActionReport report, final Subject subject) {
         try {
             final AdminCommand adminCommand = commandRunner.getCommand(command, report, logger);
-            if (adminCommand==null) {
+            if (adminCommand == null) {
                 // maybe commandRunner already reported the failure?
-                if (report.getActionExitCode() == ActionReport.ExitCode.FAILURE)
+                if (report.getActionExitCode() == ActionReport.ExitCode.FAILURE) {
                     return report;
-                String message =
-                    adminStrings.getLocalString("adapter.command.notfound",
-                        "Command {0} not found", command);
+                }
+                String message = adminStrings.getLocalString("adapter.command.notfound", "Command {0} not found", command);
                 // cound't find command, not a big deal
                 logger.log(Level.FINE, message);
                 report.setMessage(message);
@@ -74,8 +72,7 @@ public class InserverCommandRunnerHelper {
             inv.parameters(parameters).execute();
         } catch (Throwable t) {
             /*
-             * Must put the error information into the report
-             * for the client to see it.
+             * Must put the error information into the report for the client to see it.
              */
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setFailureCause(t);

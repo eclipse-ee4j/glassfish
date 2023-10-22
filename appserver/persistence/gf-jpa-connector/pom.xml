@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.persistence</groupId>
         <artifactId>persistence</artifactId>
-        <version>7.0.4-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -91,5 +91,16 @@
                 </includes>
             </resource>
         </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Export-Package>!*</Export-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>

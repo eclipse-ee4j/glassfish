@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,8 @@
 
 package org.glassfish.tests.weball;
 
-import org.glassfish.grizzly.config.dom.NetworkConfig;
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.internal.embedded.*;
-import org.glassfish.api.embedded.web.*;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -30,7 +29,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import org.glassfish.api.admin.ServerEnvironment;
 
 /**
  * @author Vivek Pandey
@@ -42,11 +40,11 @@ public class WebAllTest {
     @BeforeClass
     public static void setup() throws IOException {
 
-        //create directory 'glassfish' inside target so that it gets cleaned by itself
+        //create directory 'glassfish' inside build directory so that it gets cleaned by Maven
         EmbeddedFileSystem.Builder fsBuilder = new EmbeddedFileSystem.Builder();
         String p = System.getProperty("buildDir");
-        File root = new File(p).getParentFile();
-        root =new File(root, "glassfish");
+        File root = p != null ? new File(p) : new File(".").getParentFile();
+        root = new File(root, "glassfish");
         //If web container requires docroot to be there may be it should be automatically created by embedded API
         new File(root, "docroot").mkdirs();
 
@@ -54,13 +52,11 @@ public class WebAllTest {
         Server.Builder builder = new Server.Builder("WebAllTest");
         builder.embeddedFileSystem(fs);
         server = builder.build();
-        server.getHabitat().getService(NetworkConfig.class,
-                ServerEnvironment.DEFAULT_INSTANCE_NAME);
         http = server.createPort(8080);
         Assert.assertNotNull("Failed to create port 8080!", http);
-        ContainerBuilder b = server.createConfig(ContainerBuilder.Type.web);
-        EmbeddedWebContainer embedded = (EmbeddedWebContainer) b.create(server);
-        embedded.setConfiguration((WebBuilder)b);
+        ContainerBuilder<EmbeddedContainer> b = server.createConfig(ContainerBuilder.Type.web);
+        EmbeddedContainer embedded = b.create(server);
+//        embedded.setConfiguration((WebBuilder)b);
         embedded.bind(http, "http");
 
     }
@@ -75,7 +71,7 @@ public class WebAllTest {
         EmbeddedDeployer deployer = server.getDeployer();
         System.out.println("Added Web");
 
-        String p = System.getProperty("buildDir");
+        String p = System.getProperty("project.directory");
         System.out.println("Root is " + p);
         ScatteredArchive.Builder builder = new ScatteredArchive.Builder("sampleweb", new File(p));
         builder.resources(new File(p));

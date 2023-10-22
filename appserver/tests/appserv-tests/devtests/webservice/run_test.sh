@@ -19,14 +19,14 @@ list_test_ids(){
   echo webservice_all
 }
 
-test_run(){
-  ${S1AS_HOME}/bin/asadmin start-domain
+test_run() {
+  ${S1AS_HOME}/bin/asadmin start-domain ${GLASSFISH_SUSPEND}
   cd ${APS_HOME}/devtests/webservice
   ant ${TARGET} | tee ${TEST_RUN_LOG}
   ${S1AS_HOME}/bin/asadmin stop-domain
 }
 
-run_test_id(){
+run_test_id() {
   kill_process
   unzip_test_resources ${WORKSPACE}/bundles/glassfish.zip
   cd `dirname ${0}`
@@ -38,12 +38,12 @@ run_test_id(){
   change_junit_report_class_names
 }
 
-post_test_run(){
+post_test_run() {
   copy_test_artifacts ${TEST_ID}
   cd -
 }
 
-get_test_target(){
+get_test_target() {
         case ${1} in
                 webservice_all )
                         TARGET=all

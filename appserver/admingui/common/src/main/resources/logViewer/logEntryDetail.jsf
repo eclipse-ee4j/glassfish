@@ -19,7 +19,7 @@
 <!-- logViewer/logEntryDetail.jsf -->
 
 <!initPage
-    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings");
     setResourceBundle(key="help_common" bundle="org.glassfish.common.admingui.Helplinks");
     setResourceBundle(key="i18n" bundle="org.glassfish.admingui.core.Strings");
 />
@@ -56,7 +56,7 @@
     </event>
 <sun:html id="html2">
 <sun:head id="propertyhead" title="$resource{i18nc.logDetail.PageTitle}" debug="false" parseOnLoad="false">
-    <sun:script url="/resource/common/js/adminjsf.js" />
+    <sun:script url="$resource{i18nc.adminjsf.url}" />
 </sun:head>
 <sun:body id="body3">
 <sun:form id="propertyForm">

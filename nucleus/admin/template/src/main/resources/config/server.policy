@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -83,6 +83,7 @@ grant {
     permission java.lang.RuntimePermission "closeClassLoader";
     permission java.io.SerializablePermission "enableSubstitution";
     permission java.security.SecurityPermission "getProperty.package.definition";
+    permission java.security.SecurityPermission "getProperty.authconfigprovider.factory.providers";
 };
 
 // Following grant block is only required by Connectors. If Connectors
@@ -133,4 +134,9 @@ grant codeBase "jrt:/jdk.compiler" {
 // Following grant block is required for using JDK JarSigner
 grant {
     permission java.lang.RuntimePermission "accessClassInPackage.jdk.internal.misc";
+};
+
+// Following grant block is required for using WSToolsObjectFactory (jsr109 WSDL parsing) on JDK 21
+grant {
+    permission java.lang.RuntimePermission "getenv.JDK_JAVAC_OPTIONS";
 };

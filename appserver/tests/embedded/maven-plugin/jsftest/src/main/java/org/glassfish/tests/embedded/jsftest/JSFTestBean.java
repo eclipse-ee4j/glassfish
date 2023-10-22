@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,15 @@
 
 package org.glassfish.tests.embedded.jsftest;
 
-import jakarta.faces.bean.ManagedBean;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Named;
 
 /**
  * @author bhavanishankar@java.net
  */
 
-@ManagedBean(name = "testbean")
+@Named("testbean")
+@RequestScoped
 public class JSFTestBean {
 
     public TestTable[] getTestTable() {

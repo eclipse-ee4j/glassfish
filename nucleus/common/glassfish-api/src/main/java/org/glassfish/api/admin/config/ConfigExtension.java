@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,9 +20,11 @@ package org.glassfish.api.admin.config;
 import org.jvnet.hk2.config.Configured;
 
 /**
- * ConfigExtension is an configuration extension that hooks itself under the config configuration. This interface is
- * just a tag interface that external tools and third party software parts can subclass to be automatically stored in
- * the application server configuration file under the config element.
+ * {@code ConfigExtension} is a configuration extension that hooks itself under
+ * the {@code config} configuration. This interface is just a tag interface that
+ * external tools and third party software parts can subclass to be
+ * automatically stored in the application server configuration file
+ * under the {@code config} element.
  *
  * @author Jerome Dochez
  */

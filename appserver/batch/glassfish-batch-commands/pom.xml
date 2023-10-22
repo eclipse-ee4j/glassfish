@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.batch</groupId>
         <artifactId>batch</artifactId>
-        <version>7.0.4-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

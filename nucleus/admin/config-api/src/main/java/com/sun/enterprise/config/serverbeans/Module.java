@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,12 +20,11 @@ package com.sun.enterprise.config.serverbeans;
 import java.beans.PropertyVetoException;
 import java.util.List;
 
-import org.jvnet.hk2.config.types.PropertyBag;
 import org.glassfish.api.admin.config.Named;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.Element;
+import org.jvnet.hk2.config.types.PropertyBag;
 
 /**
  * Tag Interface for any module
@@ -43,19 +43,12 @@ public interface Module extends Named, ConfigBeanProxy, PropertyBag {
 
     void setResources(Resources resources) throws PropertyVetoException;
 
-    @DuckTyped
-    Engine getEngine(String snifferType);
-
-    class Duck {
-
-        public static Engine getEngine(Module instance, String snifferName) {
-            for (Engine engine : instance.getEngines()) {
-                if (engine.getSniffer().equals(snifferName)) {
-                    return engine;
-                }
+    default Engine getEngine(String snifferName) {
+        for (Engine engine : getEngines()) {
+            if (engine.getSniffer().equals(snifferName)) {
+                return engine;
             }
-            return null;
         }
+        return null;
     }
-
 }

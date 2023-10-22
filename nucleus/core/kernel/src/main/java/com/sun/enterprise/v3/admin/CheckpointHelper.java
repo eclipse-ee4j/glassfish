@@ -16,50 +16,46 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.StringUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.util.Iterator;
-import java.util.Properties;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-
-import jakarta.inject.Inject;
-import javax.security.auth.Subject;
-import javax.security.auth.login.LoginException;
-
-import org.glassfish.admin.payload.PayloadImpl;
-import org.glassfish.api.admin.Payload;
-import org.glassfish.api.admin.Payload.Inbound;
-import org.glassfish.api.admin.Payload.Outbound;
-import org.glassfish.api.admin.Payload.Part;
-
-import com.sun.enterprise.util.io.FileUtils;
-import java.io.FilenameFilter;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Properties;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import javax.security.auth.Subject;
+import javax.security.auth.login.LoginException;
+
+import org.glassfish.admin.payload.PayloadImpl;
 import org.glassfish.api.admin.Job;
 import org.glassfish.api.admin.JobManager;
+import org.glassfish.api.admin.Payload;
+import org.glassfish.api.admin.Payload.Inbound;
+import org.glassfish.api.admin.Payload.Outbound;
+import org.glassfish.api.admin.Payload.Part;
 import org.glassfish.common.util.ObjectInputOutputStreamFactory;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.security.services.api.authentication.AuthenticationService;
 import org.jvnet.hk2.annotations.Service;
+
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.util.io.FileUtils;
+
+import jakarta.inject.Inject;
 
 /**
  * This class is starting point for persistent CheckpointHelper, and currently only
@@ -71,6 +67,8 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 public class CheckpointHelper {
 
+    private static final String CONTENT_TYPE_NAME = "Content-Type";
+
     public static class CheckpointFilename {
 
         enum ExtensionType {
@@ -79,7 +77,7 @@ public class CheckpointHelper {
 
         private static final Map<ExtensionType, String> EXTENSIONS;
         static {
-            Map<ExtensionType, String> extMap = new EnumMap<ExtensionType, String>(ExtensionType.class);
+            Map<ExtensionType, String> extMap = new EnumMap<>(ExtensionType.class);
             extMap.put(ExtensionType.BASIC, ".checkpoint");
             extMap.put(ExtensionType.ATTACHMENT, ".checkpoint_attach");
             extMap.put(ExtensionType.PAYLOAD_INBOUD, ".checkpoint_inb");
@@ -176,8 +174,8 @@ public class CheckpointHelper {
                         try {
                             MessageDigest md = MessageDigest.getInstance("MD5");
                             byte[] thedigest = md.digest(attachmentId.getBytes("UTF-8"));
-                            for (int i = 0; i < thedigest.length; i++) {
-                                result.append(Integer.toString((thedigest[i] & 0xff) + 0x100, 16).substring(1));
+                            for (byte element : thedigest) {
+                                result.append(Integer.toString((element & 0xff) + 0x100, 16).substring(1));
                             }
                         } catch (Exception ex) {
                             result.append(attachmentId);
@@ -247,7 +245,7 @@ public class CheckpointHelper {
             }
             File file = cf.getFile();
             if (file.exists()) {
-                file.delete();;
+                file.delete();
             }
             file = cf.getForPayload(true).getFile();
             if (file.exists()) {
@@ -339,7 +337,7 @@ public class CheckpointHelper {
             }
         });
         if (checkpointFiles != null) {
-            Collection<CheckpointFilename> result = new ArrayList<CheckpointFilename>(checkpointFiles.length);
+            Collection<CheckpointFilename> result = new ArrayList<>(checkpointFiles.length);
             for (File checkpointFile : checkpointFiles) {
                 try {
                     result.add(new CheckpointFilename(checkpointFile));
@@ -351,67 +349,6 @@ public class CheckpointHelper {
             return Collections.emptyList();
         }
     }
-/*
-    private void writeHeader(OutputStream os, Job job) throws IOException {
-        writeHeader(os, StringUtils.nvl(job.getScope()) + job.getName());
-    }
-
-    private void writeHeader(OutputStream os, String headerStr) throws IOException {
-        byte[] headerB = headerStr.getBytes("UTF-8");
-        int len = headerB.length;
-        while (len >= 255) {
-            os.write(255);
-            len -= 255;
-        }
-        os.write(len);
-        os.write(headerB);
-    }
-
-    private String readHeader(InputStream is) throws IOException {
-        int length = 0;
-        int r;
-        while ((r = is.read()) == 255) {
-            length += 255;
-        }
-        if (r < 0) {
-            throw new IOException(strings.getLocalString("checkpointhelper.wrongheader", "Can not load checkpoint. Wrong header."));
-        }
-        length += r;
-        byte[] headerB = new byte[length];
-        int readLen = is.read(headerB);
-        if (readLen < length) {
-            throw new IOException(strings.getLocalString("checkpointhelper.wrongheader", "Can not load checkpoint. Wrong header."));
-        }
-        return new String(headerB, "UTF-8");
-    }
-
-    private ObjectInputStream getObjectInputStream(InputStream is, String header) throws IOException {
-        if (!StringUtils.ok(header)) {
-            return new ObjectInputStream(is);
-        }
-        AdminCommand command = serviceLocator.getService(AdminCommand.class, header);
-        if (command == null) {
-            throw new IOException(strings.getLocalString("checkpointhelper.cannotlocatecommand", "Can not load checkpoint. Can not locate command {0}.", header));
-        }
-        List<ClassLoader> cls = new ArrayList<ClassLoader>(10);
-        cls.add(command.getClass().getClassLoader());
-        cls.add(this.getClass().getClassLoader());
-        cls.add(ClassLoader.getSystemClassLoader());
-        cls.addAll(getJobCreators());
-        return new ObjectInputStreamForClassloader(is, cls);
-    }
-    private List<ClassLoader> getJobCreators() {
-        List<JobCreator> jcs = serviceLocator.getAllServices(JobCreator.class);
-        if (jcs == null) {
-            return Collections.EMPTY_LIST;
-        }
-        List<ClassLoader> result = new ArrayList<ClassLoader>(jcs.size());
-        for (JobCreator jc : jcs) {
-            result.add(jc.getClass().getClassLoader());
-        }
-        return result;
-    }
-*/
 
     private void saveOutbound(Payload.Outbound outbound, File outboundFile) throws IOException {
         FileOutputStream os = new FileOutputStream(outboundFile);
@@ -424,6 +361,7 @@ public class CheckpointHelper {
         if (outbound == null || !outboundFile.exists()) {
             return;
         }
+
         Inbound outboundSource = loadInbound(outboundFile);
         Iterator<Part> parts = outboundSource.parts();
         File topDir = createTempDir("checkpoint", "");
@@ -434,6 +372,7 @@ public class CheckpointHelper {
             FileUtils.copy(part.getInputStream(), new FileOutputStream(sourceFile), Long.MAX_VALUE);
             outbound.addPart(part.getContentType(), part.getName(), part.getProperties(), new FileInputStream(sourceFile));
         }
+
         outbound.resetDirty();
     }
 
@@ -448,6 +387,7 @@ public class CheckpointHelper {
         if (inboundFile == null || !inboundFile.exists()) {
             return null;
         }
+
         FileInputStream is = new FileInputStream(inboundFile);
         Inbound inboundSource = PayloadImpl.Inbound.newInstance("application/zip", is);
         return inboundSource;
@@ -498,7 +438,5 @@ public class CheckpointHelper {
         }
         return temp;
     }
-
-    private static final String CONTENT_TYPE_NAME = "Content-Type";
 
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,13 @@
 
 package com.sun.enterprise.config.serverbeans;
 
+import jakarta.validation.constraints.Min;
+
+import java.beans.PropertyVetoException;
+import java.util.List;
+
+import org.glassfish.api.admin.config.PropertiesDesc;
+import org.glassfish.quality.ToDo;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.Configured;
@@ -23,204 +31,200 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
 
-import java.beans.PropertyVetoException;
-import java.util.List;
-
-import org.glassfish.api.admin.config.PropertiesDesc;
-
-import org.glassfish.quality.ToDo;
-
-import jakarta.validation.constraints.Min;
-
 /**
  *
  */
-
-/* @XmlType(name = "", propOrder = {
-    "property"
-}) */
-
 @Configured
 public interface DasConfig extends ConfigBeanProxy, PropertyBag {
 
     /**
-     * Gets the value of the dynamicReloadEnabled property. When true, server checks timestamp on a .reload file at every
-     * module and application directory level to trigger reload. Polling frequency is controlled by
-     * reload-poll-interval-in-seconds
+     * Gets the value of the {@code dynamicReloadEnabled} property.
      *
-     * @return possible object is {@link String }
+     * <p>When {@code true}, server checks timestamp on a {@code .reload} file at every
+     * module and application directory level to trigger reload. Polling frequency
+     * is controlled by {@code reload-poll-interval-in-seconds}.
+     *
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
     String getDynamicReloadEnabled();
 
     /**
-     * Sets the value of the dynamicReloadEnabled property.
+     * Sets the value of the {@code dynamicReloadEnabled} property.
      *
-     * @param value allowed object is {@link String }
+     * @param dynamicReloadEnabled allowed object is {@link String}
      */
-    void setDynamicReloadEnabled(String value) throws PropertyVetoException;
+    void setDynamicReloadEnabled(String dynamicReloadEnabled) throws PropertyVetoException;
 
     /**
-     * Gets the value of the dynamicReloadPollIntervalInSeconds property.
+     * Gets the value of the {@code dynamicReloadPollIntervalInSeconds} property.
      *
-     * Maximum period, in seconds, that a change to the load balancer configuration file takes before it is detected by the
-     * load balancer and the file reloaded. A value of 0 indicates that reloading is disabled. Default period is 1 minute
-     * (60)
+     * <p>Maximum period, in seconds, that a change to the load balancer configuration
+     * file takes before it is detected by the load balancer and the file reloaded.
+     * A value of {@code 0} indicates that reloading is disabled. Default period
+     * is 1 minute (60).
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "2", dataType = Integer.class)
     @Min(value = 1)
     String getDynamicReloadPollIntervalInSeconds();
 
     /**
-     * Sets the value of the dynamicReloadPollIntervalInSeconds property.
+     * Sets the value of the {@code dynamicReloadPollIntervalInSeconds} property.
      *
-     * @param value allowed object is {@link String }
+     * @param dynamicReloadPollInterval allowed object is {@link String}
      */
-    void setDynamicReloadPollIntervalInSeconds(String value) throws PropertyVetoException;
+    void setDynamicReloadPollIntervalInSeconds(String dynamicReloadPollInterval) throws PropertyVetoException;
 
     /**
-     * Gets the value of the autodeployEnabled property.
+     * Gets the value of the {@code autodeployEnabled} property.
      *
-     * This will enable the autodeployment service. If true, the service will automatically starts with the admin-server.
-     * Auto Deployment is a feature that enables developers to quickly deploy applications and modules to a running
-     * application server withoutrequiring the developer to perform an explicit application server restart or separate
-     * deployment operation.
+     * <p>This will enable the autodeployment service. If {@code true}, the service will
+     * automatically starts with the admin-server. Auto Deployment is a feature that enables
+     * developers to quickly deploy applications and modules to a running application server
+     * without requiring the developer to perform an explicit application server restart
+     * or separate deployment operation.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
     String getAutodeployEnabled();
 
     /**
-     * Sets the value of the autodeployEnabled property.
+     * Sets the value of the {@code autodeployEnabled} property.
      *
-     * @param value allowed object is {@link String }
+     * @param autodeployEnabled allowed object is {@link String}
      */
-    void setAutodeployEnabled(String value) throws PropertyVetoException;
+    void setAutodeployEnabled(String autodeployEnabled) throws PropertyVetoException;
 
     /**
-     * Gets the value of the autodeployPollingIntervalInSeconds property.
+     * Gets the value of the {@code autodeployPollingIntervalInSeconds} property.
      *
-     * The polling interval (in sec), at the end of which autodeployment service will scan the source directory (specified
-     * by "autodeploy-dir" tag) for any new deployable component.
+     * <p>The polling interval (in sec), at the end of which autodeployment service
+     * will scan the source directory (specified by "autodeploy-dir" tag) for
+     * any new deployable component.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "2", dataType = Integer.class)
     @Min(value = 1)
     String getAutodeployPollingIntervalInSeconds();
 
     /**
-     * Sets the value of the autodeployPollingIntervalInSeconds property.
+     * Sets the value of the {@code autodeployPollingIntervalInSeconds} property.
      *
-     * @param value allowed object is {@link String }
+     * @param autodeployPollingInterval allowed object is {@link String}
      */
-    void setAutodeployPollingIntervalInSeconds(String value) throws PropertyVetoException;
+    void setAutodeployPollingIntervalInSeconds(String autodeployPollingInterval) throws PropertyVetoException;
 
     /**
-     * Gets the value of the autodeployDir property.
+     * Gets the value of the {@code autodeployDir} property.
      *
-     * The source directory (relative to instance root) from which autodeploy service will pick deployable components. You
-     * can also specify an absolute directory.
+     * <p>The source directory (relative to instance root) from which autodeploy
+     * service will pick deployable components. You can also specify an absolute directory.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "${com.sun.aas.instanceRoot}/autodeploy")
     String getAutodeployDir();
 
     /**
-     * Sets the value of the autodeployDir property.
+     * Sets the value of the {@code autodeployDir} property.
      *
-     * @param value allowed object is {@link String }
+     * @param autodeployDir allowed object is {@link String}
      */
-    void setAutodeployDir(String value) throws PropertyVetoException;
+    void setAutodeployDir(String autodeployDir) throws PropertyVetoException;
 
     /**
-     * Gets the value of the autodeployVerifierEnabled property. To enable/disable verifier, during auto-deployment. If
-     * true, verification will be done before any deployment activity. In the event of any verifier test failure, deployment
-     * is not performed.
+     * Gets the value of the {@code autodeployVerifierEnabled} property.
      *
-     * @return possible object is {@link String }
+     * <p>To enable/disable verifier, during auto-deployment.
+     *
+     * <p>If {@code true}, verification will be done before any deployment activity.
+     * In the event of any verifier test failure, deployment is not performed.
+     *
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "false", dataType = Boolean.class)
     String getAutodeployVerifierEnabled();
 
     /**
-     * Sets the value of the autodeployVerifierEnabled property.
+     * Sets the value of the {@code autodeployVerifierEnabled} property.
      *
-     * @param value allowed object is {@link String }
+     * @param autodeployVerifierEnabled allowed object is {@link String}
      */
-    void setAutodeployVerifierEnabled(String value) throws PropertyVetoException;
+    void setAutodeployVerifierEnabled(String autodeployVerifierEnabled) throws PropertyVetoException;
 
     /**
-     * Gets the value of the autodeployJspPrecompilationEnabled property.
+     * Gets the value of the {@code autodeployJspPrecompilationEnabled} property.
      *
-     * If true, JSPs will be pre compiled during deployment of war module(s).
+     * <p>If {@code true}, JSPs will be pre compiled during deployment of war module(s).
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "false", dataType = Boolean.class)
     String getAutodeployJspPrecompilationEnabled();
 
     /**
-     * Sets the value of the autodeployJspPrecompilationEnabled property.
+     * Sets the value of the {@code autodeployJspPrecompilationEnabled} property.
      *
-     * @param value allowed object is {@link String }
+     * @param jspPrecompilationEnabled allowed object is {@link String}
      */
-    void setAutodeployJspPrecompilationEnabled(String value) throws PropertyVetoException;
+    void setAutodeployJspPrecompilationEnabled(String jspPrecompilationEnabled) throws PropertyVetoException;
 
     /**
-     * Gets the value of the autodeployRetryTimeout property.
+     * Gets the value of the {@code autodeployRetryTimeout} property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "4", dataType = Integer.class)
     String getAutodeployRetryTimeout();
 
     /**
-     * Sets the value of the autodeployRetryTimeout property.
+     * Sets the value of the {@code autodeployRetryTimeout} property.
      *
-     * @param value allowed object is {@link String }
+     * @param autodeployRetryTimeout allowed object is {@link String}
      */
-    void setAutodeployRetryTimeout(String value) throws PropertyVetoException;
+    void setAutodeployRetryTimeout(String autodeployRetryTimeout) throws PropertyVetoException;
 
     /**
-     * Gets the value of the deployXmlValidation property.
+     * Gets the value of the {@code deployXmlValidation} property.
      *
-     * specifies if descriptor validation is required or not. full xml will be validated and in case of xml validation
-     * errors, deployment will fail parsing xml errors will be reported but deployment process will continue. none no xml
-     * validation will be perfomed on the standard or runtime deployment descriptors
+     * <p>Specifies if descriptor validation is required or not. Full xml will be
+     * validated and in case of xml validation errors, deployment will fail
+     * parsing xml errors will be reported but deployment process will continue.
+     * None no xml validation will be performed on the standard or runtime deployment
+     * descriptors.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "full")
     String getDeployXmlValidation();
 
     /**
-     * Sets the value of the deployXmlValidation property.
+     * Sets the value of the {@code deployXmlValidation} property.
      *
-     * @param value allowed object is {@link String }
+     * @param deployXmlValidation allowed object is {@link String}
      */
-    void setDeployXmlValidation(String value) throws PropertyVetoException;
+    void setDeployXmlValidation(String deployXmlValidation) throws PropertyVetoException;
 
     /**
-     * Gets the value of the adminSessionTimeoutInMinutes property.
+     * Gets the value of the {@code adminSessionTimeoutInMinutes} property.
      *
-     * Timeout in minutes indicating the administration gui session timeout
+     * <p>Timeout in minutes indicating the administration gui session timeout.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "60")
     String getAdminSessionTimeoutInMinutes();
 
     /**
-     * Sets the value of the adminSessionTimeoutInMinutes property.
+     * Sets the value of the {@code adminSessionTimeoutInMinutes} property.
      *
-     * @param value allowed object is {@link String }
+     * @param adminSessionTimeout allowed object is {@link String}
      */
-    void setAdminSessionTimeoutInMinutes(String value) throws PropertyVetoException;
+    void setAdminSessionTimeoutInMinutes(String adminSessionTimeout) throws PropertyVetoException;
 
     /**
      * Properties as per {@link PropertyBag}

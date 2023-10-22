@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,61 +17,62 @@
 
 package com.sun.enterprise.config.serverbeans;
 
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.jvnet.hk2.config.types.PropertyBag;
-import java.beans.PropertyVetoException;
-
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 
+import java.beans.PropertyVetoException;
+
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.types.PropertyBag;
+
 /**
- * Access log configuration
+ * Access log configuration.
  */
 @Configured
-@SuppressWarnings("unused")
 public interface AccessLog extends ConfigBeanProxy, PropertyBag {
 
     /**
-     * Gets the value of the format attribute, which specifies the format of the access log.
+     * Gets the value of the {@code format} attribute, which specifies the format of the access log.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "%client.name% %auth-user-name% %datetime% %request% %status% %response.length%")
     String getFormat();
 
     /**
-     * Sets the value of the format attribute.
+     * Sets the value of the {@code format} attribute.
      *
-     * @param value allowed object is {@link String }
+     * @param format allowed object is {@link String}
      * @throws PropertyVetoException if a listener vetoes the change
      */
-    void setFormat(String value) throws PropertyVetoException;
+    void setFormat(String format) throws PropertyVetoException;
 
     /**
-     * Gets the value of the rotation-policy attribute.
+     * Gets the value of the {@code rotation-policy} attribute.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "time")
     String getRotationPolicy();
 
     /**
-     * Sets the value of the rotation-policy attribute.
+     * Sets the value of the {@code rotation-policy} attribute.
      *
-     * @param value allowed object is {@link String }
+     * @param rotationPolicy allowed object is {@link String}
      * @throws PropertyVetoException if a listener vetoes the change
      *
      */
-    void setRotationPolicy(String value) throws PropertyVetoException;
+    void setRotationPolicy(String rotationPolicy) throws PropertyVetoException;
 
     /**
-     * Gets the value of the rotation-interval-in-minutes attribute. The time interval in minutes between two successive
-     * rotations of the access logs.
+     * Gets the value of the {@code rotation-interval-in-minutes} attribute.
      *
-     * @return possible object is {@link String }
+     * <p>The time interval in minutes between two successive rotations of the access logs.
+     *
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "1440")
     @Min(value = 1)
@@ -78,74 +80,80 @@ public interface AccessLog extends ConfigBeanProxy, PropertyBag {
     String getRotationIntervalInMinutes();
 
     /**
-     * Sets the value of the rotation-interval-in-minutes attribute.
+     * Sets the value of the {@code rotation-interval-in-minutes} attribute.
      *
-     * @param value allowed object is {@link String }
+     * @param rotationInterval allowed object is {@link String}
      * @throws PropertyVetoException if a listener vetoes the change
      */
-    void setRotationIntervalInMinutes(String value) throws PropertyVetoException;
+    void setRotationIntervalInMinutes(String rotationInterval) throws PropertyVetoException;
 
     /**
-     * Gets the value of the rotation-suffix attribute. The suffix to be added to the access-log name after rotation.
-     * Acceptable values include those supported by java.text.SimpleDateFormat and "%YYYY;%MM;%DD;-%hh;h%mm;m%ss;s".
+     * Gets the value of the {@code rotation-suffix} attribute.
      *
-     * @return possible object is {@link String }
+     * <p>The suffix to be added to the {@code access-log} name after rotation.
+     * Acceptable values include those supported by {@link java.text.SimpleDateFormat}
+     * and "%YYYY;%MM;%DD;-%hh;h%mm;m%ss;s".
+     *
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "yyyy-MM-dd")
     String getRotationSuffix();
 
     /**
-     * Sets the value of the rotation-suffix attribute.
+     * Sets the value of the {@code rotation-suffix} attribute.
      *
-     * @param value allowed object is {@link String }
+     * @param rotationSuffix allowed object is {@link String}
      * @throws PropertyVetoException if a listener vetoes the change
      */
-    void setRotationSuffix(String value) throws PropertyVetoException;
+    void setRotationSuffix(String rotationSuffix) throws PropertyVetoException;
 
     /**
-     * Gets the value of the rotation-enabled attribute. The flag for enabling the access-log rotation
+     * Gets the value of the {@code rotation-enabled} attribute.
      *
-     * @return possible object is {@link String }
+     * <p>The flag for enabling the {@code access-log} rotation.
+     *
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
     String getRotationEnabled();
 
     /**
-     * Sets the value of the rotation-enabled attribute.
+     * Sets the value of the {@code rotation-enabled} attribute.
      *
-     * @param value allowed object is {@link String }
+     * @param rotationEnabled allowed object is {@link String}
      * @throws PropertyVetoException if a listener vetoes the change
      */
-    void setRotationEnabled(String value) throws PropertyVetoException;
+    void setRotationEnabled(String rotationEnabled) throws PropertyVetoException;
 
     /**
-     * Size in bytes of the buffer where access log calls are stored. If the value is less than 5120, a warning message is
-     * issued, and the value is set to 5120
+     * Size in bytes of the buffer where access log calls are stored. If the value
+     * is less than {@code 5120}, a warning message is  issued, and the value is set
+     * to {@code 5120}
      *
-     * @return the buffer-size
+     * @return the buffer size
      */
     @Attribute(defaultValue = "32768")
     String getBufferSizeBytes();
 
-    void setBufferSizeBytes(String value);
+    void setBufferSizeBytes(String bufferSize);
 
     /**
-     * Number of seconds before the log is written to the disk. The access log is written when the buffer is full or when
-     * the interval expires. If the value is 0, the buffer is always written even if it is not full. This means that each
-     * time the server is accessed, the log message is stored directly to the file
+     * Number of seconds before the log is written to the disk. The access log is written
+     * when the buffer is full or when the interval expires. If the value is {@code 0},
+     * the buffer is always written even if it is not full. This means that each
+     * time the server is accessed, the log message is stored directly to the file.
      *
      * @return the write interval in seconds
      */
     @Attribute(defaultValue = "300")
     String getWriteIntervalSeconds();
 
-    void setWriteIntervalSeconds(String value);
+    void setWriteIntervalSeconds(String writeInterval);
 
     /**
      * Gets the maximum number of rotated access log files that are to be kept.
      *
-     * <p>
-     * A negative value must be interpreted as no limit.
+     * <p>A negative value must be interpreted as no limit.
      *
      * @return the max number of log files
      */
@@ -156,9 +164,8 @@ public interface AccessLog extends ConfigBeanProxy, PropertyBag {
     /**
      * Sets the maximum number of rotated access log files that are to be kept.
      *
-     * @param value the maximum number of log files
+     * @param maxHistoryFiles the maximum number of log files
      * @throws PropertyVetoException if a listener vetoes the change
      */
-    void setMaxHistoryFiles(String value) throws PropertyVetoException;
-
+    void setMaxHistoryFiles(String maxHistoryFiles) throws PropertyVetoException;
 }

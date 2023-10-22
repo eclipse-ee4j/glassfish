@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,72 +23,80 @@ import com.sun.enterprise.config.util.ConfigApiLoggerInfo;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.net.NetUtils;
 import com.sun.enterprise.util.StringUtils;
-import com.sun.logging.LogDomains;
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.config.support.*;
-import static org.glassfish.config.support.Constants.*;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.jvnet.hk2.config.*;
-import org.glassfish.api.admin.config.Named;
-import org.glassfish.api.admin.config.ReferenceContainer;
 
 import jakarta.inject.Inject;
 import jakarta.validation.Payload;
+import jakarta.validation.constraints.Pattern;
+
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jakarta.validation.constraints.Pattern;
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.config.Named;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.admin.config.ReferenceContainer;
+import org.glassfish.config.support.CreationDecorator;
+import org.glassfish.config.support.DeletionDecorator;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Dom;
+import org.jvnet.hk2.config.Element;
+import org.jvnet.hk2.config.TransactionFailure;
+
+import static org.glassfish.config.support.Constants.NAME_REGEX;
+import static org.glassfish.config.support.Constants.NAME_SERVER_REGEX;
 
 /**
- * A cluster defines a homogeneous set of server instances that share the same applications, resources, and
- * configuration.
+ * A cluster defines a homogeneous set of server instances that share the same
+ * applications, resources, and configuration.
  */
 @Configured
-@SuppressWarnings("unused")
 @NotDuplicateTargetName(message = "{node.duplicate.name}", payload = Node.class)
 public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefContainer, Payload {
+
     /**
-     * Sets the node name
+     * Sets the node {@code name}.
      *
-     * @param value node name
+     * @param name node name
      * @throws PropertyVetoException if a listener vetoes the change
      */
     @Param(name = "name", primary = true)
     @Override
-    public void setName(String value) throws PropertyVetoException;
+    void setName(String name) throws PropertyVetoException;
 
     @NotTargetKeyword(message = "{node.reserved.name}", payload = Node.class)
     @Pattern(regexp = NAME_SERVER_REGEX, message = "{node.invalid.name}", payload = Node.class)
     @Override
-    public String getName();
+    String getName();
 
     /**
-     * points to the parent directory of the node(s) directory.
+     * Points to the parent directory of the node(s) directory.
      *
-     * @return path location of node-dir
+     * @return path location of {@code node-dir}
      */
     @Attribute
     String getNodeDir();
 
     /**
-     * Sets the value of the node-dir, top-level parent directory of node(s)
+     * Sets the value of the {@code node-dir}, top-level parent directory of node(s).
      *
-     * @param value allowed object is {@link String }
+     * @param nodeDir allowed object is {@link String}
      * @throws PropertyVetoException if a listener vetoes the change
      */
     @Param(name = "nodedir", optional = true)
-    void setNodeDir(String value) throws PropertyVetoException;
+    void setNodeDir(String nodeDir) throws PropertyVetoException;
 
     /**
-     * points to a named host.
+     * Points to a named host.
      *
      * @return a named host name
      */
@@ -96,45 +105,45 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
     String getNodeHost();
 
     /**
-     * Sets the value of the name property.
+     * Sets the value of the {@code nodeHost} property.
      *
-     * @param value allowed object is {@link String }
+     * @param nodeHost allowed object is {@link String}
      * @throws PropertyVetoException if a listener vetoes the change
      */
     @Param(name = "nodehost", optional = true)
-    void setNodeHost(String value) throws PropertyVetoException;
+    void setNodeHost(String nodeHost) throws PropertyVetoException;
 
     /**
-     * points to a GlassFish installation root
+     * Points to a GlassFish installation root.
      *
-     * @return value of install-dir
+     * @return value of {@code install-dir}
      */
     @Attribute
     String getInstallDir();
 
     /**
-     * Sets the value of install-dir, the GlassFish installation root.
+     * Sets the value of {@code install-dir}, the GlassFish installation root.
      *
-     * @param value allowed object is {@link String }
+     * @param installDir allowed object is {@link String}
      * @throws PropertyVetoException if a listener vetoes the change
      */
     @Param(name = "installdir", optional = true)
-    void setInstallDir(String value) throws PropertyVetoException;
+    void setInstallDir(String installDir) throws PropertyVetoException;
 
     @Attribute()
     String getType();
 
     /**
-     * Sets the value of type of this node.
+     * Sets the value of {@code type} of this node.
      *
-     * @param value allowed object is {@link String }
+     * @param type allowed object is {@link String}
      * @throws PropertyVetoException if a listener vetoes the change
      */
     @Param(name = "type")
-    void setType(String value) throws PropertyVetoException;
+    void setType(String type) throws PropertyVetoException;
 
     /**
-     * specifies the windows domain if applicable
+     * Specifies the Windows domain if applicable
      *
      * @return the Windows domain name.
      */
@@ -143,30 +152,30 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
     String getWindowsDomain();
 
     /**
-     * Sets the value of the windows domain property.
+     * Sets the value of the Windows domain property.
      *
-     * @param value allowed object is {@link String }
+     * @param windowsDomain allowed object is {@link String}
      * @throws PropertyVetoException if a listener vetoes the change
      */
     @Param(name = "windowsdomain", optional = true)
-    void setWindowsDomain(String value) throws PropertyVetoException;
+    void setWindowsDomain(String windowsDomain) throws PropertyVetoException;
 
     /**
-     * true if node is frozen and we should not allow new instances to be created on the nod.
+     * Check if node is frozen and we should not allow new instances to be created on the node.
      *
-     * @return "true" if node is frozen
+     * @return {@code true} if node is frozen
      */
     @Attribute(defaultValue = "false", dataType = Boolean.class)
     String getFreeze();
 
     /**
-     * Sets the value of the freeze
+     * Sets the value of the {@code freeze} property.
      *
-     * @param value "true" to freeze node and not allow instances to be created
+     * @param freeze {@code true} to freeze node and not allow instances to be created
      *
      * @throws PropertyVetoException if a listener vetoes the change
      */
-    void setFreeze(String value) throws PropertyVetoException;
+    void setFreeze(String freeze) throws PropertyVetoException;
 
     @Element
     SshConnector getSshConnector();
@@ -174,193 +183,196 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
     void setSshConnector(SshConnector connector);
 
     /**
-     * Returns the install dir with separators as forward slashes. This is needed to run commands over SSH tools on Windows
-     * where the backslashes are interpruted as escape chars.
+     * Returns the install dir with separators as forward slashes.
+     *
+     * <p>This is needed to run commands over SSH tools on Windows where
+     * the backslashes are interpreted as escape chars.
      *
      * @return the install dir with separators as forward slashes
      */
-    @DuckTyped
-    String getInstallDirUnixStyle();
+    default String getInstallDirUnixStyle() {
+        String installDir = getInstallDir();
+        if (installDir == null) {
+            return null;
+        }
+        return installDir.replaceAll("\\\\", "/");
+    }
 
     /**
-     * Returns the node dir with separators as forward slashes. This is needed to run commands over SSH tools on Windows
-     * where the backslashes are interpruted as escape chars.
+     * Returns the node dir with separators as forward slashes.
+     *
+     * <p>This is needed to run commands over SSH tools on Windows where
+     * the backslashes are interpreted as escape chars.
      *
      * @return the node dir with separators as forward slashes
      */
-    @DuckTyped
-    String getNodeDirUnixStyle();
+    default String getNodeDirUnixStyle() {
+        String nodeDir = getNodeDir();
+        if (nodeDir == null) {
+            return null;
+        }
+        return nodeDir.replaceAll("\\\\", "/");
+    }
 
     /**
-     * Returns the node dir as an absolute path. If the node dir path in the Node element is relative this will make it
+     * Returns the node dir as an absolute path.
+     *
+     * <p>If the node dir path in the {@code node} element is relative this will make it
      * absolute relative to the node's installdir.
      *
-     * @return the node's nodedir as an absolute path. Null if no nodedir.
+     * @return the node's {@code nodeDir} as an absolute path, {@code null} if no nodedir.
      */
-    @DuckTyped
-    String getNodeDirAbsolute();
+    default String getNodeDirAbsolute() {
+        // If nodedir is relative make it absolute relative to installRoot
+        String nodeDir = getNodeDir();
+        if (nodeDir == null || nodeDir.length() == 0) {
+            return null;
+        }
 
-    @DuckTyped
-    String getNodeDirAbsoluteUnixStyle();
+        File nodeDirFile = new File(nodeDir);
+        if (nodeDirFile.isAbsolute()) {
+            return nodeDir;
+        }
+        // node-dir is relative. Make it absolute. We root it under the
+        // GlassFish root install directory.
+        File installRootFile = new File(getInstallDir(), "glassfish");
+        return new File(installRootFile, nodeDir).getPath();
+    }
+
+    default String getNodeDirAbsoluteUnixStyle() {
+        String nodeDirAbsolute = getNodeDirAbsolute();
+        if (nodeDirAbsolute == null) {
+            return null;
+        }
+        return nodeDirAbsolute.replaceAll("\\\\", "/");
+    }
 
     /**
      * Is a node being used by any server instance?
      *
      * @return true if node is referenced by any server instance, else false.
      */
-    @DuckTyped
-    boolean nodeInUse();
+    default boolean nodeInUse() {
+        //check if node is referenced by an instance
+        String nodeName = getName();
+        ServiceLocator habitat = Objects.requireNonNull(Dom.unwrap(this)).getHabitat();
+        List<Server> servers = habitat.getService(Servers.class).getServer();
+        if (servers != null) {
+            for (Server server : servers) {
+                if (nodeName.equals(server.getNodeRef())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     /**
-     * True if this is the default local node. Example: localhost-domain1
+     * True if this is the default local node.
      *
-     * @return
+     * <p>Example: {@code localhost-domain1}.
+     *
+     * @return {@code true} if this is the default local node, {@code false} otherwise
      */
-    @DuckTyped
-    boolean isDefaultLocalNode();
+    default boolean isDefaultLocalNode() {
+        ServiceLocator habitat = Objects.requireNonNull(Dom.unwrap(this)).getHabitat();
+        Domain domain = habitat.getService(Domain.class);
+        if (getName().equals("localhost-" + domain.getName())) {
+            return true;
+        }
+        return false;
+    }
 
     /**
-     * True if the node's nodeHost is local to this
+     * True if the node's {@code nodeHost} is local to this.
      *
-     * @return
+     * @return {@code true} if the node's host is local to this, {@code false} otherwise
      */
-    @DuckTyped
-    boolean isLocal();
+    default boolean isLocal() {
+        // Short circuit common case for efficiency
+        ServiceLocator habitat = Objects.requireNonNull(Dom.unwrap(this)).getHabitat();
+        Domain domain = habitat.getService(Domain.class);
+        if (getName().equals("localhost-" + domain.getName())) {
+            return true;
+        }
+
+        String nodeHost = getNodeHost();
+        if (nodeHost == null || nodeHost.isEmpty()) {
+            return false;
+        }
+
+        return NetUtils.isThisHostLocal(nodeHost);
+    }
 
     /**
      * Does the node allow instance creation?
      *
-     * @return true if node allows instance creation, else false
+     * @return {@code true} if node allows instance creation, else {@code false}
      */
-    @DuckTyped
-    boolean instanceCreationAllowed();
-
-    class Duck {
-        public static String getInstallDirUnixStyle(Node node) {
-            String installDir = node.getInstallDir();
-            if (installDir == null)
-                return null;
-            return installDir.replaceAll("\\\\", "/");
-        }
-
-        public static String getNodeDirUnixStyle(Node node) {
-            String nodeDir = node.getNodeDir();
-            if (nodeDir == null)
-                return null;
-            return nodeDir.replaceAll("\\\\", "/");
-        }
-
-        public static String getNodeDirAbsolute(Node node) {
-            // If nodedir is relative make it absolute relative to installRoot
-            String nodeDir = node.getNodeDir();
-            if (nodeDir == null || nodeDir.length() == 0)
-                return null;
-            File nodeDirFile = new File(nodeDir);
-            if (nodeDirFile.isAbsolute()) {
-                return nodeDir;
-            }
-            // node-dir is relative. Make it absolute. We root it under the
-            // GlassFish root install directory.
-            String installDir = node.getInstallDir();
-            File installRootFile = new File(installDir, "glassfish");
-            File absoluteNodeDirFile = new File(installRootFile, nodeDir);
-            return absoluteNodeDirFile.getPath();
-        }
-
-        public static String getNodeDirAbsoluteUnixStyle(Node node) {
-            String nodeDirAbsolute = getNodeDirAbsolute(node);
-            if (nodeDirAbsolute == null)
-                return null;
-            return nodeDirAbsolute.replaceAll("\\\\", "/");
-        }
-
-        public static boolean isDefaultLocalNode(Node node) {
-            Dom serverDom = Dom.unwrap(node);
-            Domain domain = serverDom.getHabitat().getService(Domain.class);
-            if (node.getName().equals("localhost-" + domain.getName())) {
-                return true;
-            }
-            return false;
-        }
-
-        public static boolean isLocal(Node node) {
-            // Short circuit common case for efficiency
-            Dom serverDom = Dom.unwrap(node);
-            Domain domain = serverDom.getHabitat().getService(Domain.class);
-            if (node.getName().equals("localhost-" + domain.getName())) {
-                return true;
-            }
-            String nodeHost = node.getNodeHost();
-            if (nodeHost == null || nodeHost.length() == 0) {
-                return false;
-            }
-            return NetUtils.isThisHostLocal(nodeHost);
-        }
-
-        public static boolean nodeInUse(Node node) {
-            //check if node is referenced by an instance
-            String nodeName = node.getName();
-            Dom serverDom = Dom.unwrap(node);
-            Servers servers = serverDom.getHabitat().getService(Servers.class);
-            List<Server> serverList = servers.getServer();
-            if (serverList != null) {
-                for (Server server : serverList) {
-                    if (nodeName.equals(server.getNodeRef())) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        public static boolean instanceCreationAllowed(Node node) {
-            return !Boolean.parseBoolean(node.getFreeze());
-        }
+    default boolean instanceCreationAllowed() {
+        return !Boolean.parseBoolean(getFreeze());
     }
 
     @Service
     @PerLookup
     class Decorator implements CreationDecorator<Node> {
+
         @Param(name = "nodedir", optional = true)
         String nodedir = null;
+
         @Param(name = "nodehost", optional = true)
         String nodehost = null;
+
         @Param(name = "installdir", optional = true)
         String installdir = null;
+
         @Param(name = "type")
         String type = null;
+
         @Param(name = "sshport", optional = true)
         String sshPort = null;
+
         @Param(name = "sshnodehost", optional = true)
         String sshHost = null;
+
         @Param(name = "sshuser", optional = true)
         String sshuser = null;
+
         @Param(name = "sshkeyfile", optional = true)
         String sshkeyfile;
+
         @Param(name = "sshpassword", optional = true)
         String sshpassword;
+
         @Param(name = "sshkeypassphrase", optional = true)
         String sshkeypassphrase;
+
         @Param(name = "windowsdomain", optional = true)
         String windowsdomain;
+
         @Inject
         ServiceLocator habitat;
+
         @Inject
         ServerEnvironment env;
+
         @Inject
         Domain domain;
+
         @Inject
         Nodes nodes;
 
         /**
-         * Decorates the newly CRUD created cluster configuration instance. tasks : - ensures that it references an existing
-         * configuration - creates a new config from the default-config if no config-ref was provided. - check for deprecated
-         * parameters.
+         * Decorates the newly CRUD created cluster configuration instance.
+         *
+         * <p>Tasks :
+         * <ul>
+         * <li>ensures that it references an existing configuration</li>,
+         * <li>creates a new config from the default-config if no config-ref was provided.</li>,
+         * <li>>check for deprecated parameters</p>.
          *
          * @param context administration command context
          * @param instance newly created configuration element
-         * @throws TransactionFailure
-         * @throws PropertyVetoException
          */
         @Override
         public void decorate(AdminCommandContext context, final Node instance) throws TransactionFailure, PropertyVetoException {
@@ -376,14 +388,18 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
             // we want to make sure they are null in the Node. The
             // admin console often passes the empty string instead of null.
             // See bug 14873
-            if (!StringUtils.ok(nodedir))
+            if (!StringUtils.ok(nodedir)) {
                 instance.setNodeDir(null);
-            if (!StringUtils.ok(installdir))
+            }
+            if (!StringUtils.ok(installdir)) {
                 instance.setInstallDir(null);
-            if (!StringUtils.ok(nodehost))
+            }
+            if (!StringUtils.ok(nodehost)) {
                 instance.setNodeHost(null);
-            if (!StringUtils.ok(windowsdomain))
+            }
+            if (!StringUtils.ok(windowsdomain)) {
                 instance.setWindowsDomain(null);
+            }
 
             //only create-node-ssh and update-node-ssh should be changing the type to SSH
             instance.setType(type);
@@ -394,21 +410,27 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
             SshConnector sshC = instance.createChild(SshConnector.class);
 
             SshAuth sshA = sshC.createChild(SshAuth.class);
-            if (StringUtils.ok(sshuser))
+            if (StringUtils.ok(sshuser)) {
                 sshA.setUserName(sshuser);
-            if (StringUtils.ok(sshkeyfile))
+            }
+            if (StringUtils.ok(sshkeyfile)) {
                 sshA.setKeyfile(sshkeyfile);
-            if (StringUtils.ok(sshpassword))
+            }
+            if (StringUtils.ok(sshpassword)) {
                 sshA.setPassword(sshpassword);
-            if (StringUtils.ok(sshkeypassphrase))
+            }
+            if (StringUtils.ok(sshkeypassphrase)) {
                 sshA.setKeyPassphrase(sshkeypassphrase);
+            }
             sshC.setSshAuth(sshA);
 
-            if (StringUtils.ok(sshPort))
+            if (StringUtils.ok(sshPort)) {
                 sshC.setSshPort(sshPort);
+            }
 
-            if (StringUtils.ok(sshHost))
+            if (StringUtils.ok(sshHost)) {
                 sshC.setSshHost(sshHost);
+            }
 
             instance.setSshConnector(sshC);
         }
@@ -417,12 +439,16 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
     @Service
     @PerLookup
     class DeleteDecorator implements DeletionDecorator<Nodes, Node> {
+
         @Inject
         private Domain domain;
+
         @Inject
         Nodes nodes;
+
         @Inject
         Servers servers;
+
         @Inject
         private ServerEnvironment env;
 

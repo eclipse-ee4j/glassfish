@@ -18,15 +18,22 @@ package com.sun.enterprise.v3.common;
 
 import java.io.OutputStream;
 import java.util.Map;
-import javax.xml.parsers.*;
-import javax.xml.transform.*;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.jvnet.hk2.annotations.Service;
 
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Represents the action report as XML like this:
@@ -60,6 +67,7 @@ import org.glassfish.hk2.api.PerLookup;
 @PerLookup
 public class XMLContentActionReporter extends ActionReporter {
 
+    @Override
     public void writeReport(OutputStream os)  {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -123,8 +131,9 @@ public class XMLContentActionReporter extends ActionReporter {
         }
         messagePart.setAttribute("message", part.getMessage());
 
-        for (MessagePart subPart : part.getChildren())
+        for (MessagePart subPart : part.getChildren()) {
             writeSubPart(messagePart, subPart, subPart.getChildrenType());
+        }
     }
 
     /**
@@ -142,8 +151,9 @@ public class XMLContentActionReporter extends ActionReporter {
             messagePart.setAttribute(prop.getKey().toString(),
                 prop.getValue().toString());
         }
-        for (MessagePart subPart : part.getChildren())
+        for (MessagePart subPart : part.getChildren()) {
             writeSubPart(messagePart, subPart, subPart.getChildrenType());
+        }
     }
 
     /**

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,7 +20,6 @@ package org.glassfish.web.config.serverbeans;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.Element;
 
 /**
@@ -31,99 +31,92 @@ import org.jvnet.hk2.config.Element;
 public interface EnvEntry extends ConfigBeanProxy {
 
     @Element
-    public String getDescription();
-    public void setDescription(String value);
+    String getDescription();
 
-    @Element(required=true,key=true)
-    public String getEnvEntryName();
-    public void setEnvEntryName(String value);
+    void setDescription(String description);
 
-    @Element(required=true)
-    public String getEnvEntryType();
-    public void setEnvEntryType(String value);
+    @Element(required = true, key = true)
+    String getEnvEntryName();
 
-    @Element(required=true)
-    public String getEnvEntryValue();
-    public void setEnvEntryValue(String value);
+    void setEnvEntryName(String entryName);
 
+    @Element(required = true)
+    String getEnvEntryType();
 
-    @Attribute(dataType=Boolean.class, defaultValue="false")
-    public String getIgnoreDescriptorItem();
-    public void setIgnoreDescriptorItem(String value);
+    void setEnvEntryType(String entryType);
+
+    @Element(required = true)
+    String getEnvEntryValue();
+
+    void setEnvEntryValue(String entryValue);
+
+    @Attribute(dataType = Boolean.class, defaultValue = "false")
+    String getIgnoreDescriptorItem();
+
+    void setIgnoreDescriptorItem(String ignoreDescriptor);
 
     /**
-     * Validates the value in the env-entry-value subelement against the
-     * type stored in the env-entry-type subelement.
+     * Validates the value in the env-entry-value sub-element against the
+     * type stored in the env-entry-type sub-element.
      * <p>
      * @throws IllegalArgumentException if the type does not match one of the legal ones
      * @throws NumberFormatException if the value cannot be parsed according to the type
      */
-    @DuckTyped
-    public void validateValue();
-
-    public class Duck {
-        public static void validateValue(final EnvEntry me) {
-            String type = me.getEnvEntryType();
-            String value = me.getEnvEntryValue();
-            Util.validateValue(type, value);
-        }
+    default void validateValue() {
+        validateValue(getEnvEntryType(), getEnvEntryValue());
     }
 
     /**
-     * Utility class.
+     * Validates the specified value string against the indicated type.
+     *
+     * <p>The recognized types are (from the spec):
+     *
+     * <ul>
+     * <li>java.lang.Boolean
+     * <li>java.lang.Byte
+     * <li>java.lang.Character
+     * <li>java.lang.Double
+     * <li>java.lang.Float
+     * <li>java.lang.Integer
+     * <li>java.lang.Long
+     * <li>java.lang.Short
+     * <li>java.lang.String
+     * </ul>
+     *
+     * @param type valid type for env-entry-type (from the spec)
+     * @param value value to be checked
+     * @throws IllegalArgumentException if the type does not match one of the legal ones
+     * @throws NumberFormatException if the value cannot be parsed according to the type
      */
-    public class Util {
-
-        /**
-         * Validates the specified value string against the indicated type.  The
-         * recognized types are (from the spec):
-         * <ul>
-         * <li>java.lang.Boolean
-         * <li>java.lang.Byte
-         * <li>java.lang.Character
-         * <li>java.lang.Double
-         * <li>java.lang.Float
-         * <li>java.lang.Integer
-         * <li>java.lang.Long
-         * <li>java.lang.Short
-         * <li>java.lang.String
-         * </ul>
-         *
-         * @param type valid type for env-entry-type (from the spec)
-         * @param value value to be checked
-         * @throws IllegalArgumentException if the type does not match one of the legal ones
-         * @throws NumberFormatException if the value cannot be parsed according to the type
-         */
-        public static void validateValue(final String type, final String value) {
-            if (type == null) {
-                throw new IllegalArgumentException("type");
+    static void validateValue(final String type, final String value) {
+        if (type == null) {
+            throw new IllegalArgumentException("type");
+        }
+        if (value == null) {
+            throw new IllegalArgumentException("value");
+        }
+        if (type.equals("java.lang.Boolean")) {
+            Boolean.parseBoolean(value);
+        } else if (type.equals("java.lang.Byte")) {
+            Byte.parseByte(value);
+        } else if (type.equals("java.lang.Character")) {
+            if (value.length() > 1) {
+                throw new IllegalArgumentException("length(\"" + value + "\") > 1");
             }
-            if (value == null) {
-                throw new IllegalArgumentException("value");
-            }
-            if (type.equals("java.lang.Boolean")) {
-                Boolean.parseBoolean(value);
-            } else if (type.equals("java.lang.Byte")) {
-                Byte.parseByte(value);
-            } else if (type.equals("java.lang.Character")) {
-                if (value.length() > 1) {
-                    throw new IllegalArgumentException("length(\"" + value + "\") > 1");
-                }
-            } else if (type.equals("java.lang.Double")) {
-                Double.parseDouble(value);
-            } else if (type.equals("java.lang.Float")) {
-                Float.parseFloat(value);
-            } else if (type.equals("java.lang.Integer")) {
-                Integer.parseInt(value);
-            } else if (type.equals("java.lang.Long")) {
-                Long.parseLong(value);
-            } else if (type.equals("java.lang.Short")) {
-                Short.parseShort(value);
-            } else if (type.equals("java.lang.String")) {
-                // no-op
-            } else {
-                throw new IllegalArgumentException(type);
-            }
+        } else if (type.equals("java.lang.Double")) {
+            Double.parseDouble(value);
+        } else if (type.equals("java.lang.Float")) {
+            Float.parseFloat(value);
+        } else if (type.equals("java.lang.Integer")) {
+            Integer.parseInt(value);
+        } else if (type.equals("java.lang.Long")) {
+            Long.parseLong(value);
+        } else if (type.equals("java.lang.Short")) {
+            Short.parseShort(value);
+        } else if (type.equals("java.lang.String")) {
+            // no-op
+        } else {
+            throw new IllegalArgumentException(type);
         }
     }
 }

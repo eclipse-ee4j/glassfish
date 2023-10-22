@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,24 +18,30 @@
 package com.sun.enterprise.security.auth.realm.ldap;
 
 import static com.sun.enterprise.util.Utility.isAnyNull;
+import static java.util.Collections.enumeration;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 import static javax.naming.Context.SECURITY_CREDENTIALS;
 import static javax.naming.Context.SECURITY_PRINCIPAL;
 import static javax.naming.directory.SearchControls.SUBTREE_SCOPE;
 
+import com.sun.enterprise.security.auth.realm.GlassFishUserStore;
+import com.sun.enterprise.security.auth.realm.Realm;
+import com.sun.enterprise.security.auth.realm.exceptions.BadRealmException;
+import com.sun.enterprise.security.auth.realm.exceptions.InvalidOperationException;
+import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
+import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.Vector;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
-
 import javax.naming.CompositeName;
 import javax.naming.Context;
 import javax.naming.InvalidNameException;
@@ -49,16 +55,8 @@ import javax.naming.directory.SearchResult;
 import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
 import javax.security.auth.login.LoginException;
-
 import org.glassfish.internal.api.RelativePathResolver;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.security.BaseRealm;
-import com.sun.enterprise.security.auth.realm.BadRealmException;
-import com.sun.enterprise.security.auth.realm.IASRealm;
-import com.sun.enterprise.security.auth.realm.InvalidOperationException;
-import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
-import com.sun.enterprise.security.auth.realm.NoSuchUserException;
 
 /**
  * Realm wrapper for supporting LDAP authentication.
@@ -69,33 +67,35 @@ import com.sun.enterprise.security.auth.realm.NoSuchUserException;
  * <P>
  * The ldap realm needs the following properties in its configuration:
  * <ul>
- * <li>directory - URL of LDAP directory to use
- * <li>base-dn - The base DN to use for user searches.
- * <li>jaas-ctx - JAAS context name used to access LoginModule for authentication.
+ *   <li>directory - URL of LDAP directory to use
+ *   <li>base-dn - The base DN to use for user searches.
+ *   <li>jaas-ctx - JAAS context name used to access LoginModule for authentication.
  * </ul>
  *
  * <P>
- * Besides JDK Context properties start with java.naming, javax.security, one can also set connection pool related properties
- * starting with com.sun.jndi.ldap.connect.pool. See http://java.sun.com/products/jndi/tutorial/ldap/connect/config.html for
- * details. Also, the following optional attributes can also be specified:
+ * Besides JDK Context properties start with java.naming, javax.security, one can also set connection pool related
+ * properties starting with com.sun.jndi.ldap.connect.pool. See
+ * http://java.sun.com/products/jndi/tutorial/ldap/connect/config.html for details. Also, the following optional
+ * attributes can also be specified:
+ *
  * <ul>
- * <li>search-filter - LDAP filter to use for searching for the user entry based on username given to iAS. The default value is
- * <code>uid=%s</code> where %s is expanded to the username.
- * <li>group-base-dn - The base DN to use for group searches. By default its value is the same as base-dn.
- * <li>group-search-filter - The LDAP filter to use for searching group membership of a given user. The default value is <code>
- *       uniquemember=%d</code> where %d is expanded to the DN of the user found by the user search.
- * <li>group-target - The attribute which value(s) are interpreted as group membership names of the user. Default value is
- * <code>cn</code>.
- * <li>search-bind-dn - The dn of ldap user. optional and no default value.
- * <li>search-bind-password - The password of search-bind-dn.optional and no default value.
- * <li>pool-size - The JNDI ldap connection pool size.
+ *   <li>search-filter - LDAP filter to use for searching for the user entry based on username given to iAS. The default
+ * value is <code>uid=%s</code> where %s is expanded to the username.
+ *   <li>group-base-dn - The base DN to use for group searches. By default its value is the same as base-dn.
+ *   <li>group-search-filter - The LDAP filter to use for searching group membership of a given user. The default value is
+ *       <code>uniquemember=%d</code> where %d is expanded to the DN of the user found by the user search.
+ *   <li>group-target - The attribute which value(s) are interpreted as group membership names of the user. Default value
+ *       is <code>cn</code>.
+ *   <li>search-bind-dn - The dn of ldap user. optional and no default value.
+ *   <li>search-bind-password - The password of search-bind-dn.optional and no default value.
+ *   <li>pool-size - The JNDI ldap connection pool size.
  * </ul>
  *
  * @see com.sun.enterprise.security.auth.login.LDAPLoginModule
  *
  */
 @Service
-public final class LDAPRealm extends IASRealm {
+public final class LDAPRealm extends Realm {
     // Descriptive string of the authentication type of this realm.
     public static final String AUTH_TYPE = "ldap";
 
@@ -131,7 +131,7 @@ public final class LDAPRealm extends IASRealm {
     private static final String SEARCH_FILTER_DEFAULT = "uid=" + SUBST_SUBJECT_NAME;
     private static final String GRP_SEARCH_FILTER_DEFAULT = "uniquemember=" + SUBST_SUBJECT_DN;
     private static final String GRP_TARGET_DEFAULT = "cn";
-    private static final String DYNAMIC_GRP_TARGET_DEFAULT = "ismemberof";//"memberOf";
+    private static final String DYNAMIC_GRP_TARGET_DEFAULT = "ismemberof";// "memberOf";
     private static final String MODE_DEFAULT = MODE_FIND_BIND;
     private static final String JNDICF_DEFAULT = "com.sun.jndi.ldap.LdapCtxFactory";
     private static final int POOLSIZE_DEFAULT = 5;
@@ -162,8 +162,19 @@ public final class LDAPRealm extends IASRealm {
     private final Properties ldapBindProps = new Properties();
 
     /**
-     * Initialize a realm with some properties. This can be used when instantiating realms from their descriptions. This method may
-     * only be called a single time.
+     * Returns a short (preferably less than fifteen characters) description of the kind of authentication which is
+     * supported by this realm.
+     *
+     * @return Description of the kind of authentication that is directly supported by this realm.
+     */
+    @Override
+    public String getAuthType() {
+        return AUTH_TYPE;
+    }
+
+    /**
+     * Initialize a realm with some properties. This can be used when instantiating realms from their descriptions. This
+     * method may only be called a single time.
      *
      * @param props Initialization parameters used by this realm.
      * @exception BadRealmException If the configuration parameters identify a corrupt realm.
@@ -176,52 +187,53 @@ public final class LDAPRealm extends IASRealm {
 
         String url = props.getProperty(PARAM_DIRURL);
         String dn = props.getProperty(PARAM_USERDN);
-        String jaasCtx = props.getProperty(BaseRealm.JAAS_CONTEXT_PARAM);
+        String jaasCtx = props.getProperty(JAAS_CONTEXT_PARAM);
 
         if (isAnyNull(url, dn, jaasCtx)) {
-            throw new BadRealmException(sm.getString("ldaprealm.badconfig", url, dn, jaasCtx));
+            throw new BadRealmException(MessageFormat.format(
+                "Incomplete configuration of ldap realm: url: {0} baseDN: {1} login module: {2}", url, dn, jaasCtx));
         }
 
-        this.setProperty(PARAM_DIRURL, url);
+        setProperty(PARAM_DIRURL, url);
         ldapBindProps.setProperty(Context.PROVIDER_URL, url);
-        this.setProperty(PARAM_USERDN, dn);
-        this.setProperty(BaseRealm.JAAS_CONTEXT_PARAM, jaasCtx);
+        setProperty(PARAM_USERDN, dn);
+        setProperty(JAAS_CONTEXT_PARAM, jaasCtx);
 
         String mode = props.getProperty(PARAM_MODE, MODE_DEFAULT);
         if (!MODE_DEFAULT.equals(mode)) {
-            throw new BadRealmException(sm.getString("ldaprealm.badmode", mode));
+            throw new BadRealmException(MessageFormat.format("Unsupported mode {0}.", mode));
         }
 
-        this.setProperty(PARAM_MODE, mode);
+        setProperty(PARAM_MODE, mode);
 
         String ctxF = props.getProperty(PARAM_JNDICF, JNDICF_DEFAULT);
-        this.setProperty(PARAM_JNDICF, ctxF);
+        setProperty(PARAM_JNDICF, ctxF);
         ldapBindProps.setProperty(Context.INITIAL_CONTEXT_FACTORY, ctxF);
 
         String searchFilter = props.getProperty(PARAM_SEARCH_FILTER, SEARCH_FILTER_DEFAULT);
-        this.setProperty(PARAM_SEARCH_FILTER, searchFilter);
+        setProperty(PARAM_SEARCH_FILTER, searchFilter);
 
         String grpDN = props.getProperty(PARAM_GRPDN, dn);
-        this.setProperty(PARAM_GRPDN, grpDN);
+        setProperty(PARAM_GRPDN, grpDN);
 
         String grpSearchFilter = props.getProperty(PARAM_GRP_SEARCH_FILTER, GRP_SEARCH_FILTER_DEFAULT);
-        this.setProperty(PARAM_GRP_SEARCH_FILTER, grpSearchFilter);
+        setProperty(PARAM_GRP_SEARCH_FILTER, grpSearchFilter);
 
         String dynGrpSearchFilter = props.getProperty(PARAM_DYNAMIC_GRP_FILTER, SEARCH_FILTER_DEFAULT);
-        this.setProperty(PARAM_DYNAMIC_GRP_FILTER, dynGrpSearchFilter);
+        setProperty(PARAM_DYNAMIC_GRP_FILTER, dynGrpSearchFilter);
 
         String grpTarget = props.getProperty(PARAM_GRP_TARGET, GRP_TARGET_DEFAULT);
-        this.setProperty(PARAM_GRP_TARGET, grpTarget);
+        setProperty(PARAM_GRP_TARGET, grpTarget);
 
         String dynGrpTarget = props.getProperty(PARAM_DYNAMIC_GRP_TARGET, DYNAMIC_GRP_TARGET_DEFAULT);
-        this.setProperty(PARAM_DYNAMIC_GRP_TARGET, dynGrpTarget);
+        setProperty(PARAM_DYNAMIC_GRP_TARGET, dynGrpTarget);
 
         String objectFactory = props.getProperty(DYNAMIC_GROUP_FACTORY_OBJECT_PROPERTY, DYNAMIC_GROUP_OBJECT_FACTORY);
-        this.setProperty(DYNAMIC_GROUP_FACTORY_OBJECT_PROPERTY, objectFactory);
+        setProperty(DYNAMIC_GROUP_FACTORY_OBJECT_PROPERTY, objectFactory);
         ldapBindProps.setProperty(DYNAMIC_GROUP_FACTORY_OBJECT_PROPERTY, objectFactory);
 
         String stateFactory = props.getProperty(DYNAMIC_GROUP_STATE_FACTORY_PROPERTY, DYNAMIC_GROUP_STATE_FACTORY);
-        this.setProperty(DYNAMIC_GROUP_STATE_FACTORY_PROPERTY, stateFactory);
+        setProperty(DYNAMIC_GROUP_STATE_FACTORY_PROPERTY, stateFactory);
         ldapBindProps.setProperty(DYNAMIC_GROUP_STATE_FACTORY_PROPERTY, stateFactory);
 
         String bindDN = props.getProperty(PARAM_BINDDN);
@@ -232,7 +244,7 @@ public final class LDAPRealm extends IASRealm {
 
         String bindPWD = props.getProperty(PARAM_BINDPWD);
         if (bindPWD != null) {
-            //If the password is aliased, de-alias it
+            // If the password is aliased, de-alias it
             try {
                 bindPWD = RelativePathResolver.getRealPasswordFromAlias(bindPWD);
             } catch (Exception ex) {
@@ -266,7 +278,7 @@ public final class LDAPRealm extends IASRealm {
         if (System.getProperty(SUN_JNDI_POOL_MAXSIZE) == null) {
             System.setProperty(SUN_JNDI_POOL_MAXSIZE, sunPoolSizeStr);
         }
-        this.setProperty(PARAM_POOLSIZE, sunPoolSizeStr);
+        setProperty(PARAM_POOLSIZE, sunPoolSizeStr);
 
         String usePool = props.getProperty(SUN_JNDI_POOL, "true");
         ldapBindProps.setProperty(SUN_JNDI_POOL, usePool);
@@ -276,9 +288,7 @@ public final class LDAPRealm extends IASRealm {
             if (System.getProperty(SUN_JNDI_POOL_PROTOCOL) == null) {
                 System.setProperty(SUN_JNDI_POOL_PROTOCOL, DEFAULT_POOL_PROTOCOL);
             }
-            if (_logger.isLoggable(FINE)) {
-                _logger.log(FINE, "LDAPRealm : Using custom socket factory for SSL with pooling");
-            }
+            _logger.log(FINE, "LDAPRealm : Using custom socket factory for SSL with pooling");
         }
 
         if (_logger.isLoggable(FINE)) {
@@ -292,126 +302,26 @@ public final class LDAPRealm extends IASRealm {
     }
 
     /**
-     * Returns a short (preferably less than fifteen characters) description of the kind of authentication which is supported by this
-     * realm.
-     *
-     * @return Description of the kind of authentication that is directly supported by this realm.
-     */
-    @Override
-    public String getAuthType() {
-        return AUTH_TYPE;
-    }
-
-    private String[] addMappedGroupNames(String[] groups) {
-        if (groupMapper == null) {
-            return groups;
-        }
-
-        ArrayList<String> finalresult = new ArrayList<>();
-        for (String group : groups) {
-            ArrayList<String> result = new ArrayList<>();
-            groupMapper.getMappedGroups(group, result);
-            finalresult.add(group);
-            if (!result.isEmpty()) {
-                finalresult.addAll(result);
-            }
-        }
-
-        return finalresult.toArray(new String[finalresult.size()]);
-    }
-
-    /**
-     * Get binding properties defined in server.xml for LDAP server.
-     *
-     */
-    private Properties getLdapBindProps() {
-        return (Properties) ldapBindProps.clone();
-    }
-
-    private List<String> getGroups(String userDN) {
-        // No authentication has happened through the realm.
-        DirContext ctx = null;
-        String srcFilter = null;
-
-        String dynFilter = null;
-        String dynMember = getProperty(PARAM_DYNAMIC_GRP_TARGET);
-        try {
-            ctx = new InitialDirContext(getLdapBindProps());
-
-            String _username = userDN;
-            try {
-                _username = new LdapName(userDN).getRdns().stream().filter(rdn -> rdn.getType().equalsIgnoreCase("cn"))
-                    .map(rdn -> rdn.getValue().toString()).findFirst().orElseGet(null);
-
-            } catch (InvalidNameException e) {
-                //Ignoring the exception to suppot simple group names as userDN
-                //Issue GLASSFISH-19595
-            }
-
-            if (_username == null && userDN != null && userDN.startsWith("uid")) {
-                // Handle uid=XXX here where cn is not present
-                // TODO :maybe there is a better way to handle this??
-                int first = userDN.indexOf("uid=");
-                int last = userDN.indexOf(",");
-                if (first != -1 && last != -1) {
-                    _username = userDN.substring(first + 4, last);
-                }
-
-            }
-            StringBuilder searchFilterBuilder = new StringBuilder(getProperty(PARAM_GRP_SEARCH_FILTER));
-            StringBuilder dynamicFilterBuilder = new StringBuilder(getProperty(PARAM_DYNAMIC_GRP_FILTER));
-
-            substitute(searchFilterBuilder, SUBST_SUBJECT_NAME, _username);
-            substitute(searchFilterBuilder, SUBST_SUBJECT_DN, userDN);
-            substitute(dynamicFilterBuilder, SUBST_SUBJECT_NAME, _username);
-            substitute(dynamicFilterBuilder, SUBST_SUBJECT_DN, userDN);
-
-            srcFilter = searchFilterBuilder.toString();
-            dynFilter = dynamicFilterBuilder.toString();
-            List<String> groupsList = new ArrayList<>();
-            groupsList.addAll(groupSearch(ctx, getProperty(PARAM_GRPDN), srcFilter, getProperty(PARAM_GRP_TARGET)));
-
-            // Search filter is constructed internally as as a groupofURLS
-            groupsList.addAll(dynamicGroupSearch(ctx, getProperty(PARAM_GRPDN), dynMember, dynFilter, getProperty(PARAM_GRP_TARGET)));
-
-            return groupsList;
-        } catch (Exception e) {
-            _logger.log(WARNING, "ldaprealm.groupsearcherror", e);
-        } finally {
-            if (ctx != null) {
-                try {
-                    ctx.close();
-                } catch (NamingException e) {
-                    _logger.log(WARNING, "ldaprealm.exception", e);
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Returns the name of all the groups that this user belongs to. Note that this information is only known after the user has
-     * logged in. This is called from web path role verification, though it should not be.
+     * Returns the name of all the groups that this user belongs to. Note that this information is only known after the user
+     * has logged in. This is called from web path role verification, though it should not be.
      *
      * @param username Name of the user in this realm whose group listing is needed.
      * @return Enumeration of group names (strings).
-     * @exception InvalidOperationException thrown if the realm does not support this operation - e.g. Certificate realm does not
-     * support this operation.
+     * @exception InvalidOperationException thrown if the realm does not support this operation - e.g. Certificate realm
+     * does not support this operation.
      */
     @Override
     public Enumeration<String> getGroupNames(String username) throws InvalidOperationException, NoSuchUserException {
         Vector<String> groupNames = groupCache.get(username);
+
         if (groupNames == null) {
             // Note : assuming the username is a userDN here
-            List<String> searchedGrps = getGroups(username);
-            if (searchedGrps != null) {
-                return Collections.enumeration(searchedGrps);
+            List<String> searchedGroups = getGroups(username);
+            if (searchedGroups != null) {
+                return enumeration(searchedGroups);
             }
 
-            if (_logger.isLoggable(FINE)) {
-                _logger.log(FINE, "No groups available for: " + username);
-            }
+            _logger.log(FINE, () -> "No groups available for: " + username);
 
             // We don't load group here as we need to bind ctx to user with
             // password before doing that and password is not available here
@@ -421,9 +331,9 @@ public final class LDAPRealm extends IASRealm {
         if (groupMapper != null) {
             Vector<String> ret = new Vector<>();
             ret.addAll(groupNames);
-            ArrayList<String> result = new ArrayList<>();
+            List<String> result = new ArrayList<>();
             for (String grp : groupNames) {
-                ArrayList<String> tmp = this.getMappedGroupNames(grp);
+                List<String> tmp = getMappedGroupNames(grp);
                 result.addAll(tmp);
             }
             ret.addAll(result);
@@ -472,16 +382,15 @@ public final class LDAPRealm extends IASRealm {
             ctx = new InitialDirContext(getLdapBindProps());
             String realUserDN = userSearch(ctx, getProperty(PARAM_USERDN), userid);
             if (realUserDN == null) {
-                throw new LoginException(sm.getString("ldaprealm.usernotfound", _username));
+                throw new LoginException(MessageFormat.format("User {0} not found.", _username));
             }
 
             boolean bindSuccessful = bindAsUser(realUserDN, _password);
             if (bindSuccessful == false) {
-                String msg = sm.getString("ldaprealm.bindfailed", realUserDN);
-                throw new LoginException(msg);
+                throw new LoginException(MessageFormat.format("LDAP bind failed for {0}.", realUserDN));
             }
 
-            // search groups using above connection, substituting %d (and %s)
+            // Search groups using above connection, substituting %d (and %s)
             StringBuilder srcFilterBuilder = new StringBuilder(getProperty(PARAM_GRP_SEARCH_FILTER));
             StringBuilder dynamicFilterBuilder = new StringBuilder(getProperty(PARAM_DYNAMIC_GRP_FILTER));
 
@@ -502,7 +411,7 @@ public final class LDAPRealm extends IASRealm {
         } catch (Exception e) {
             LoginException le = new LoginException(e.toString());
             le.initCause(e);
-            _logger.log(Level.SEVERE, "ldaprealm.exception", le);
+            _logger.log(SEVERE, "ldaprealm.exception", le);
             throw le;
         } finally {
             if (ctx != null) {
@@ -526,9 +435,7 @@ public final class LDAPRealm extends IASRealm {
                 gb.append("(null)");
             }
 
-            if (_logger.isLoggable(FINE)) {
-                _logger.log(FINE, "LDAP: " + gb.toString());
-            }
+            _logger.log(FINE, "LDAP: " + gb.toString());
         }
 
         groups = addAssignGroups(groups);
@@ -540,6 +447,94 @@ public final class LDAPRealm extends IASRealm {
         }
 
         return groups;
+    }
+
+    private String[] addMappedGroupNames(String[] groups) {
+        if (groupMapper == null) {
+            return groups;
+        }
+
+        List<String> finalresult = new ArrayList<>();
+        for (String group : groups) {
+            List<String> result = new ArrayList<>();
+            groupMapper.getMappedGroups(group, result);
+            finalresult.add(group);
+            if (!result.isEmpty()) {
+                finalresult.addAll(result);
+            }
+        }
+
+        return finalresult.toArray(new String[finalresult.size()]);
+    }
+
+    /**
+     * Get binding properties defined in server.xml for LDAP server.
+     *
+     */
+    private Properties getLdapBindProps() {
+        return (Properties) ldapBindProps.clone();
+    }
+
+    private List<String> getGroups(String userDN) {
+        // No authentication has happened through the realm.
+        DirContext ctx = null;
+        String srcFilter = null;
+
+        String dynFilter = null;
+        String dynMember = getProperty(PARAM_DYNAMIC_GRP_TARGET);
+        try {
+            ctx = new InitialDirContext(getLdapBindProps());
+
+            String _username = userDN;
+            try {
+                _username = new LdapName(userDN).getRdns().stream().filter(rdn -> rdn.getType().equalsIgnoreCase("cn"))
+                        .map(rdn -> rdn.getValue().toString()).findFirst().orElseGet(null);
+
+            } catch (InvalidNameException e) {
+                // Ignoring the exception to suppot simple group names as userDN
+                // Issue GLASSFISH-19595
+            }
+
+            if (_username == null && userDN != null && userDN.startsWith("uid")) {
+                // Handle uid=XXX here where cn is not present
+                // TODO :maybe there is a better way to handle this??
+                int first = userDN.indexOf("uid=");
+                int last = userDN.indexOf(",");
+                if (first != -1 && last != -1) {
+                    _username = userDN.substring(first + 4, last);
+                }
+
+            }
+            StringBuilder searchFilterBuilder = new StringBuilder(getProperty(PARAM_GRP_SEARCH_FILTER));
+            StringBuilder dynamicFilterBuilder = new StringBuilder(getProperty(PARAM_DYNAMIC_GRP_FILTER));
+
+            substitute(searchFilterBuilder, SUBST_SUBJECT_NAME, _username);
+            substitute(searchFilterBuilder, SUBST_SUBJECT_DN, userDN);
+            substitute(dynamicFilterBuilder, SUBST_SUBJECT_NAME, _username);
+            substitute(dynamicFilterBuilder, SUBST_SUBJECT_DN, userDN);
+
+            srcFilter = searchFilterBuilder.toString();
+            dynFilter = dynamicFilterBuilder.toString();
+            List<String> groupsList = new ArrayList<>();
+            groupsList.addAll(groupSearch(ctx, getProperty(PARAM_GRPDN), srcFilter, getProperty(PARAM_GRP_TARGET)));
+
+            // Search filter is constructed internally as as a groupofURLS
+            groupsList.addAll(dynamicGroupSearch(ctx, getProperty(PARAM_GRPDN), dynMember, dynFilter, getProperty(PARAM_GRP_TARGET)));
+
+            return groupsList;
+        } catch (Exception e) {
+            _logger.log(WARNING, "ldaprealm.groupsearcherror", e);
+        } finally {
+            if (ctx != null) {
+                try {
+                    ctx.close();
+                } catch (NamingException e) {
+                    _logger.log(WARNING, "ldaprealm.exception", e);
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -632,7 +627,8 @@ public final class LDAPRealm extends IASRealm {
      * Search for group membership using the given connection.
      *
      */
-    private List<String> dynamicGroupSearch(DirContext ctx, String baseDN, String memberOfAttr, String filter, String target) throws NamingException {
+    private List<String> dynamicGroupSearch(DirContext ctx, String baseDN, String memberOfAttr, String filter, String target)
+            throws NamingException {
         List<String> groupList = new ArrayList<>();
 
         String[] targets = new String[] { memberOfAttr };
@@ -685,7 +681,7 @@ public final class LDAPRealm extends IASRealm {
             searchControls.setSearchScope(SUBTREE_SCOPE);
 
             NamingEnumeration<SearchResult> e = ctx.search(baseDN,
-                filter.replaceAll(Matcher.quoteReplacement("\\"), Matcher.quoteReplacement("\\\\")), searchControls);
+                    filter.replaceAll(Matcher.quoteReplacement("\\"), Matcher.quoteReplacement("\\\\")), searchControls);
 
             while (e.hasMore()) {
                 SearchResult res = e.next();
@@ -729,23 +725,23 @@ public final class LDAPRealm extends IASRealm {
         for (int i = 0; i < len; i++) {
             char ch = inName.charAt(i);
             switch (ch) {
-                case '*':
-                    buf.append("\\2a");
-                    break;
-                case '(':
-                    buf.append("\\28");
-                    break;
-                case ')':
-                    buf.append("\\29");
-                    break;
-                case '\\':
-                    buf.append("\\5c");
-                    break;
-                case 0:
-                    buf.append("\\00");
-                    break;
-                default:
-                    buf.append(ch);
+            case '*':
+                buf.append("\\2a");
+                break;
+            case '(':
+                buf.append("\\28");
+                break;
+            case ')':
+                buf.append("\\29");
+                break;
+            case '\\':
+                buf.append("\\5c");
+                break;
+            case 0:
+                buf.append("\\00");
+                break;
+            default:
+                buf.append(ch);
             }
         }
         return buf.toString();

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,16 +17,16 @@
 
 package org.glassfish.api.admin.config;
 
+import jakarta.validation.constraints.NotNull;
+
 import java.beans.PropertyVetoException;
 
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 
-import jakarta.validation.constraints.NotNull;
-
 /**
- * An configured element which is named.
+ * A configured element which is named.
  *
  * @author Jerome Dochez
  */
@@ -41,5 +42,4 @@ public interface Named extends ConfigBeanProxy {
     @NotNull String getName();
 
     void setName(String value) throws PropertyVetoException;
-
 }

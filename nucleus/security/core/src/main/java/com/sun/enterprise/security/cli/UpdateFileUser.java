@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,21 @@
  */
 
 package com.sun.enterprise.security.cli;
+
+import com.sun.enterprise.config.serverbeans.AdminService;
+import com.sun.enterprise.config.serverbeans.AuthRealm;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.SecureAdmin;
+import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.security.auth.realm.RealmsManager;
+import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
+import com.sun.enterprise.security.auth.realm.file.FileRealm;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import java.io.File;
 import java.util.List;
@@ -39,21 +54,6 @@ import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.types.Property;
 
-import com.sun.enterprise.config.serverbeans.AdminService;
-import com.sun.enterprise.config.serverbeans.AuthRealm;
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.SecureAdmin;
-import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
-import com.sun.enterprise.security.auth.realm.RealmsManager;
-import com.sun.enterprise.security.auth.realm.file.FileRealm;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.SystemPropertyConstants;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-
 /**
  * Update File User Command
  *
@@ -67,11 +67,17 @@ import jakarta.inject.Named;
 @Service(name = "update-file-user")
 @PerLookup
 @I18n("update.file.user")
-@ExecuteOn({ RuntimeType.DAS, RuntimeType.INSTANCE })
-@TargetType({ CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER, CommandTarget.CONFIG })
+@ExecuteOn({RuntimeType.DAS, RuntimeType.INSTANCE})
+@TargetType({CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER, CommandTarget.CONFIG})
 @RestEndpoints({
-    @RestEndpoint(configBean = AuthRealm.class, opType = RestEndpoint.OpType.POST, path = "update-user", description = "Update Users", params = {
-        @RestParam(name = "authrealmname", value = "$parent") }) })
+        @RestEndpoint(
+                configBean = AuthRealm.class,
+                opType = RestEndpoint.OpType.POST,
+                path = "update-user",
+                description = "Update Users",
+                params = {@RestParam(name = "authrealmname", value = "$parent")}
+        )
+})
 public class UpdateFileUser implements AdminCommand, AdminCommandSecurity.Preauthorization {
 
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(UpdateFileUser.class);
@@ -195,7 +201,7 @@ public class UpdateFileUser implements AdminCommand, AdminCommandSecurity.Preaut
         //Issue 17525 Fix - Check for null passwords for admin-realm if secureadmin is enabled
         if (password != null) {
             secureAdmin = domain.getSecureAdmin();
-            if ((SecureAdmin.Util.isEnabled(secureAdmin)) && (adminService.getAuthRealmName().equals(authRealmName))) {
+            if ((SecureAdmin.isEnabled(secureAdmin)) && (adminService.getAuthRealmName().equals(authRealmName))) {
                 if ((password.isEmpty())) {
                     report.setMessage(localStrings.getLocalString("null_empty_password", "The admin user password is empty"));
                     report.setActionExitCode(ActionReport.ExitCode.FAILURE);

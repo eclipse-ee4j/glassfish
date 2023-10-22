@@ -18,33 +18,34 @@ package com.sun.enterprise.security.ssl.impl;
 
 import com.sun.enterprise.security.ssl.manager.UnifiedX509KeyManager;
 import com.sun.enterprise.security.ssl.manager.UnifiedX509TrustManager;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.UnrecoverableKeyException;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.security.KeyStore;
-import java.security.Provider;
-
 //V3:Commented import com.sun.enterprise.config.ConfigContext;
 import com.sun.enterprise.server.pluggable.SecuritySupport;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.AccessControlException;
 import java.security.AccessController;
 import java.security.Key;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.security.Permission;
+import java.security.PrivateKey;
+import java.security.Provider;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.PropertyPermission;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.TrustManager;
@@ -54,16 +55,12 @@ import javax.net.ssl.X509TrustManager;
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.admin.ProcessEnvironment.ProcessType;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.embedded.Server;
 import org.glassfish.internal.api.Globals;
+import org.glassfish.internal.embedded.Server;
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
-
-import jakarta.inject.Inject;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Singleton;
 
 /**
  * This implements SecuritySupport used in PluggableFeatureFactory.
@@ -99,9 +96,10 @@ public class SecuritySupportImpl extends SecuritySupport {
     private final Date initDate = new Date();
 
     @Inject
-    private ServiceLocator habitat;
+    private ServiceLocator serviceLocator;
+
     @Inject
-    private ProcessEnvironment penv;
+    private ProcessEnvironment processEnvironment;
 
     public SecuritySupportImpl() {
         this(true);
@@ -123,20 +121,24 @@ public class SecuritySupportImpl extends SecuritySupport {
         char[] keyStorePass = null;
         char[] trustStorePass = null;
         if (!isInstantiated()) {
-            if (habitat == null) {
-                habitat = Globals.getDefaultHabitat();
+            if (serviceLocator == null) {
+                serviceLocator = Globals.getDefaultHabitat();
             }
-            if (masterPasswordHelper == null && habitat != null) {
-                masterPasswordHelper = habitat.getService(MasterPasswordImpl.class);
+
+            if (masterPasswordHelper == null && serviceLocator != null) {
+                masterPasswordHelper = serviceLocator.getService(MasterPasswordImpl.class);
             }
+
             if (masterPasswordHelper != null) {
                 keyStorePass = masterPasswordHelper.getMasterPassword();
                 trustStorePass = keyStorePass;
             }
         }
-        if (penv == null && habitat != null) {
-            penv = habitat.getService(ProcessEnvironment.class);
+
+        if (processEnvironment == null && serviceLocator != null) {
+            processEnvironment = serviceLocator.getService(ProcessEnvironment.class);
         }
+
         /*
          * If we don't have a keystore password yet check the properties.
          * Always do so for the app client case whether the passwords have been
@@ -147,6 +149,7 @@ public class SecuritySupportImpl extends SecuritySupport {
             if (keyStorePassOverride != null) {
                 keyStorePass = keyStorePassOverride.toCharArray();
             }
+
             final String trustStorePassOverride = System.getProperty(TRUSTSTORE_PASS_PROP, DEFAULT_TRUSTSTORE_PASS);
             if (trustStorePassOverride != null) {
                 trustStorePass = trustStorePassOverride.toCharArray();
@@ -154,8 +157,12 @@ public class SecuritySupportImpl extends SecuritySupport {
         }
 
         if (!initialized) {
-            loadStores(null, null, keyStoreFileName, keyStorePass, System.getProperty(KEYSTORE_TYPE_PROP, KeyStore.getDefaultType()),
-                trustStoreFileName, trustStorePass, System.getProperty(TRUSTSTORE_TYPE_PROP, KeyStore.getDefaultType()));
+            loadStores(
+                null, null,
+                keyStoreFileName, keyStorePass,
+                System.getProperty(KEYSTORE_TYPE_PROP, KeyStore.getDefaultType()),
+                trustStoreFileName, trustStorePass,
+                System.getProperty(TRUSTSTORE_TYPE_PROP, KeyStore.getDefaultType()));
             Arrays.fill(keyStorePass, ' ');
             Arrays.fill(trustStorePass, ' ');
             initialized = true;
@@ -163,11 +170,7 @@ public class SecuritySupportImpl extends SecuritySupport {
     }
 
     private boolean isEmbeddedServer() {
-        List<String> servers = Server.getServerNames();
-        if (!servers.isEmpty()) {
-            return true;
-        }
-        return false;
+        return !Server.getServerNames().isEmpty();
     }
 
     private static synchronized boolean isInstantiated() {
@@ -175,6 +178,7 @@ public class SecuritySupportImpl extends SecuritySupport {
             instantiated = true;
             return false;
         }
+
         return true;
     }
 
@@ -190,10 +194,6 @@ public class SecuritySupportImpl extends SecuritySupport {
      * @param trustStoreFile
      * @param trustStoreType
      */
-    /*protected synchronized static void loadStores(String tokenName,
-    String storeType, Provider provider,
-    String keyStoreFile, String keyStorePass,
-    String trustStoreFile, String trustStorePass) {*/
     protected synchronized static void loadStores(String tokenName, Provider provider, String keyStoreFile, char[] keyStorePass,
         String keyStoreType, String trustStoreFile, char[] trustStorePass, String trustStoreType) {
 
@@ -220,11 +220,11 @@ public class SecuritySupportImpl extends SecuritySupport {
      * @retun keystore loaded
      */
     private static KeyStore loadKS(String keyStoreType, Provider provider, String keyStoreFile, char[] keyStorePass) throws Exception {
-        KeyStore ks = null;
+        KeyStore keyStore = null;
         if (provider != null) {
-            ks = KeyStore.getInstance(keyStoreType, provider);
+            keyStore = KeyStore.getInstance(keyStoreType, provider);
         } else {
-            ks = KeyStore.getInstance(keyStoreType);
+            keyStore = KeyStore.getInstance(keyStoreType);
         }
         char[] passphrase = keyStorePass;
 
@@ -239,7 +239,7 @@ public class SecuritySupportImpl extends SecuritySupport {
                 bstream = new BufferedInputStream(istream);
             }
 
-            ks.load(bstream, passphrase);
+            keyStore.load(bstream, passphrase);
         } finally {
             if (bstream != null) {
                 bstream.close();
@@ -248,7 +248,8 @@ public class SecuritySupportImpl extends SecuritySupport {
                 istream.close();
             }
         }
-        return ks;
+
+        return keyStore;
     }
 
     // --- implements SecuritySupport ---
@@ -261,11 +262,11 @@ public class SecuritySupportImpl extends SecuritySupport {
     }
 
     @Override
-    public KeyStore loadNullStore(String type, int index)
-        throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
-        KeyStore ret = KeyStore.getInstance(type);
-        ret.load(null, keyStorePasswords.get(index));
-        return ret;
+    public KeyStore loadNullStore(String type, int index) throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
+        KeyStore keyStore = KeyStore.getInstance(type);
+        keyStore.load(null, keyStorePasswords.get(index));
+
+        return keyStore;
     }
 
     @Override
@@ -308,6 +309,7 @@ public class SecuritySupportImpl extends SecuritySupport {
         } else {
             trustManager = new UnifiedX509TrustManager(trustManagers.toArray(new X509TrustManager[trustManagers.size()]));
         }
+
         return new TrustManager[] { trustManager };
     }
     /*
@@ -398,9 +400,10 @@ public class SecuritySupportImpl extends SecuritySupport {
     public void checkPermission(String key) {
         try {
             // Checking a random permission to check if it is server.
-            if (isEmbeddedServer() || habitat == null || isACC() || isNotServerORACC()) {
+            if (isEmbeddedServer() || serviceLocator == null || isACC() || isNotServerORACC()) {
                 return;
             }
+
             Permission perm = new RuntimePermission("SSLPassword");
             AccessController.checkPermission(perm);
         } catch (AccessControlException e) {
@@ -414,22 +417,22 @@ public class SecuritySupportImpl extends SecuritySupport {
     }
 
     public boolean isACC() {
-        return (penv == null ? false : penv.getProcessType().equals(ProcessType.ACC));
+        return (processEnvironment == null ? false : processEnvironment.getProcessType().equals(ProcessType.ACC));
     }
 
     public boolean isNotServerORACC() {
-        return penv.getProcessType().equals(ProcessType.Other);
+        return processEnvironment.getProcessType().equals(ProcessType.Other);
     }
 
     @Override
-    public PrivateKey getPrivateKeyForAlias(String alias, int keystoreIndex)
-        throws KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException {
+    public PrivateKey getPrivateKeyForAlias(String alias, int keystoreIndex) throws KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException {
         checkPermission(KEYSTORE_PASS_PROP);
+
         Key key = keyStores.get(keystoreIndex).getKey(alias, keyStorePasswords.get(keystoreIndex));
         if (key instanceof PrivateKey) {
             return (PrivateKey) key;
-        } else {
-            return null;
         }
+
+        return null;
     }
 }

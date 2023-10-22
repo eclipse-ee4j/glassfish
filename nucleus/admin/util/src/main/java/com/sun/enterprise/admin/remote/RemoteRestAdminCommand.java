@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,42 +21,65 @@ import com.sun.enterprise.admin.event.AdminCommandEventBrokerImpl;
 import com.sun.enterprise.admin.remote.reader.CliActionReport;
 import com.sun.enterprise.admin.remote.reader.ProprietaryReader;
 import com.sun.enterprise.admin.remote.reader.ProprietaryReaderFactory;
-import com.sun.enterprise.admin.remote.reader.StringProprietaryReader;
 import com.sun.enterprise.admin.remote.sse.GfSseEventReceiver;
 import com.sun.enterprise.admin.remote.sse.GfSseEventReceiverProprietaryReader;
 import com.sun.enterprise.admin.remote.sse.GfSseInboundEvent;
 import com.sun.enterprise.admin.remote.writer.ProprietaryWriter;
 import com.sun.enterprise.admin.remote.writer.ProprietaryWriterFactory;
 import com.sun.enterprise.admin.util.AdminLoggerInfo;
+import com.sun.enterprise.admin.util.AuthenticationInfo;
+import com.sun.enterprise.admin.util.CachedCommandModel;
+import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
+import com.sun.enterprise.admin.util.HttpConnectorAddress;
+import com.sun.enterprise.admin.util.cache.AdminCacheUtils;
 import com.sun.enterprise.config.serverbeans.SecureAdmin;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+import com.sun.enterprise.universal.io.SmartFile;
+import com.sun.enterprise.util.StringUtils;
+import com.sun.enterprise.util.net.NetUtils;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.net.ConnectException;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.SSLException;
 
-import org.glassfish.api.admin.*;
-import org.glassfish.api.admin.CommandModel.ParamModel;
-
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-import com.sun.enterprise.universal.io.SmartFile;
-import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
-import com.sun.enterprise.admin.util.AuthenticationInfo;
-import com.sun.enterprise.admin.util.CachedCommandModel;
-import com.sun.enterprise.admin.util.HttpConnectorAddress;
-import com.sun.enterprise.admin.util.cache.AdminCacheUtils;
-import com.sun.enterprise.util.StringUtils;
-import com.sun.enterprise.util.net.NetUtils;
-import org.glassfish.admin.payload.PayloadFilesManager;
-import org.glassfish.api.admin.Payload;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.ExitCode;
+import org.glassfish.api.admin.AdminCommandState;
+import org.glassfish.api.admin.AuthenticationException;
+import org.glassfish.api.admin.CommandException;
+import org.glassfish.api.admin.CommandModel;
+import org.glassfish.api.admin.CommandModel.ParamModel;
+import org.glassfish.api.admin.CommandValidationException;
+import org.glassfish.api.admin.InvalidCommandException;
+import org.glassfish.api.admin.ParameterMap;
+import org.glassfish.api.admin.Payload;
+import org.glassfish.admin.payload.PayloadFilesManager;
 import org.glassfish.common.util.admin.AuthTokenManager;
-import org.w3c.dom.*;
 
 /**
  * Utility class for executing remote admin commands. Each instance of RemoteAdminCommand represents a particular remote
@@ -991,7 +1015,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
                      * If this request is for metadata then we expect to reuse
                      * the auth token.
                      */
-                    urlConnection.setRequestProperty(SecureAdmin.Util.ADMIN_ONE_TIME_AUTH_TOKEN_HEADER_NAME,
+                    urlConnection.setRequestProperty(SecureAdmin.ADMIN_ONE_TIME_AUTH_TOKEN_HEADER_NAME,
                             (isForMetadata ? AuthTokenManager.markTokenForReuse(authToken) : authToken));
                 }
                 if (commandModel != null && isCommandModelFromCache() && commandModel instanceof CachedCommandModel) {

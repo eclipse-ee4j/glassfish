@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.web</groupId>
         <artifactId>web</artifactId>
-        <version>7.0.4-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -148,6 +148,19 @@
             </resource>
         </resources>
         <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <DynamicImport-Package>org.glassfish.flashlight.provider</DynamicImport-Package>
+                        <Export-Package>
+                            org.glassfish.web.admin.cli,
+                            org.glassfish.web.admin.monitor
+                        </Export-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>

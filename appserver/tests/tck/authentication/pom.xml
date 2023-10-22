@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck</artifactId>
-        <version>7.0.4-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
     </parent>
 
     <artifactId>glassfish-external-tck-authentication</artifactId>
@@ -177,6 +177,8 @@
                                 <tck-setting key="jaspic.home" value="${glassfish.home}/glassfish"/>
                                 <tck-setting key="harness.log.traceflag" value="true"/>
                                 <tck-setting key="s1as.jvm.options" value="-Dj2eelogin.name=${user}:-Dj2eelogin.password=${password}"/>
+                                
+                                <tck-setting key="vendor.authconfig.factory" value="org.glassfish.epicyro.config.factory.file.AuthConfigFileFactory"/>
 
                                 <tck-setting key="webServerHost" value="localhost"/>
                                 <tck-setting key="webServerPort" value="${port.http}"/>
@@ -264,7 +266,7 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <target>
+                            <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
                                          classpathref="maven.plugin.classpath" />
                                 <limit maxwait="20">
@@ -279,6 +281,18 @@
                                 <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin">
                                     <arg value="enable.jaspic"  />
                                 </exec>
+                                
+                                <!-- Restart GlassFish in debug mode if so requested -->
+                                <sequential if:set="glassfish.suspend">
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                        <arg value="stop-domain" />
+                                    </exec>
+                                    <echo message="Starting GlassFish in suspended mode, waiting on port 9009" />
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                        <arg value="start-domain"/>
+                                        <arg value="--suspend" if:set="glassfish.suspend"/>
+                                    </exec>
+                                </sequential>
                             </target>
                         </configuration>
                     </execution>
@@ -294,11 +308,12 @@
                             <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
                                          classpathref="maven.plugin.classpath" />
-
+                                
                                 <echo level="info" message="Start running all tests" />
                                 <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin" resultproperty="testResult">
                                     <arg value="-Dmultiple.tests=${run.test}" if:set="run.test" />
-                                    <arg value="run.all"/>
+                                    <arg value="runclient.nobinaryfinder" if:set="run.test" />
+                                    <arg value="run.all" unless:set="run.test" />
                                     <env key="LC_ALL" value="C" />
                                 </exec>
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -75,8 +75,8 @@ public class DataSourceObjectBuilder implements Serializable {
     private static Logger _logger = LogDomains.getLogger(MethodExecutor.class, LogDomains.RSR_LOGGER);
     private static final StringManager sm = StringManager.getManager(DataSourceObjectBuilder.class);
 
-    private DataSourceSpec spec;
-    private MethodExecutor executor;
+    private final DataSourceSpec spec;
+    private final MethodExecutor executor;
 
     /**
      * Construct a DataSource Object from the spec.
@@ -92,8 +92,7 @@ public class DataSourceObjectBuilder implements Serializable {
      * Construct the DataSource Object from the spec.
      *
      * @return Object constructed using the DataSourceSpec.
-     * @throws <code>ResourceException</code> if the class is not found or some
-     * issue in executing some method.
+     * @throws ResourceException if the class is not found or some issue in executing some method.
      */
     public Object constructDataSourceObject() throws ResourceException {
         Map<String, List<String>> driverProperties = parseDriverProperties(spec, true);
@@ -157,7 +156,6 @@ public class DataSourceObjectBuilder implements Serializable {
 
             } else if (methodName.equalsIgnoreCase("setPropertyCycle")) {
                 executor.runJavaBeanMethod(spec.getDetail(PROPERTYCYCLE), method, dataSourceObject);
-
             }
         }
 

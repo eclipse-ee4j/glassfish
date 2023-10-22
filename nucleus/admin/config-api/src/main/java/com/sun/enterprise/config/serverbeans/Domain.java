@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +17,6 @@
 
 package com.sun.enterprise.config.serverbeans;
 
-import com.sun.enterprise.config.util.ConfigApiLoggerInfo;
 import com.sun.enterprise.util.StringUtils;
 
 import jakarta.validation.constraints.NotNull;
@@ -28,8 +27,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.glassfish.api.admin.config.ApplicationName;
 import org.glassfish.api.admin.config.PropertiesDesc;
@@ -40,75 +37,80 @@ import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.ConfigExtensionMethod;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
 
-@Configured
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.errorGettingCluster;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.errorGettingServers;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.getLogger;
+import static java.util.logging.Level.WARNING;
+
 /**
- * Top level Domain Element that includes applications, resources, configs, servers, clusters and node-agents, load
- * balancer configurations and load balancers. node-agents and load balancers are SE/EE related entities only.
+ * Top level Domain Element that includes applications, resources, configs, servers, clusters
+ * and node-agents, load balancer configurations and load balancers.
  *
+ * <p>Node-agents and load balancers are SE/EE related entities only.
  */
+@Configured
 public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag, ConfigLoader {
 
     String DOMAIN_NAME_PROPERTY = "administrative.domain.name";
 
     /**
-     * Gets the value of the applicationRoot property.
+     * Gets the value of the {@code applicationRoot} property.
      *
-     * For PE this defines the location where applications are deployed
+     * <p>For PE this defines the location where applications are deployed
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     String getApplicationRoot();
 
     /**
-     * Sets the value of the applicationRoot property.
+     * Sets the value of the {@code applicationRoot} property.
      *
-     * @param value allowed object is {@link String }
+     * @param applicationRoot allowed object is {@link String}
      */
-    void setApplicationRoot(String value) throws PropertyVetoException;
+    void setApplicationRoot(String applicationRoot) throws PropertyVetoException;
 
     /**
-     * Gets the value of the logRoot property.
+     * Gets the value of the {@code logRoot} property.
      *
-     * Specifies where the server instance's log files are kept, including HTTP access logs, server logs, and transaction
-     * logs. Default is $INSTANCE-ROOT/logs
+     * <p>Specifies where the server instance's log files are kept, including HTTP access logs, server logs,
+     * and transaction logs. Default is {@code $INSTANCE-ROOT/logs}.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     String getLogRoot();
 
     /**
-     * Sets the value of the logRoot property.
+     * Sets the value of the {@code logRoot} property.
      *
-     * @param value allowed object is {@link String }
+     * @param logRoot allowed object is {@link String}
      */
-    void setLogRoot(String value) throws PropertyVetoException;
+    void setLogRoot(String logRoot) throws PropertyVetoException;
 
     /**
-     * Gets the value of the locale property.
+     * Gets the value of the {@code locale} property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     String getLocale();
 
     /**
-     * Sets the value of the locale property.
+     * Sets the value of the {@code locale} property.
      *
-     * @param value allowed object is {@link String }
+     * @param locale allowed object is {@link String}
      */
-    void setLocale(String value) throws PropertyVetoException;
+    void setLocale(String locale) throws PropertyVetoException;
 
     /**
-     * Gets the value of the version property. It is read-only.
+     * Gets the value of the {@code version} property. It is read-only.
      *
-     * Tools are not to depend on this property. It is only for reference.
+     * <p>Tools are not to depend on this property. It is only for reference.
      *
      * @return String representing version of the Domain.
      */
@@ -116,180 +118,204 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
     String getVersion();
 
     /**
-     * Gets the SecureAdmin value defined in the domain.
+     * Gets the {@code SecureAdmin} value defined in the domain.
      *
-     * @return {@link SecureAdmin }
+     * @return {@link SecureAdmin}
      */
     @Element
     SecureAdmin getSecureAdmin();
 
     /**
-     * Sets the SecureAdmin value.
+     * Sets the {@code SecureAdmin} value.
      *
-     * @param secureAdmin
+     * @param secureAdmin the new {@code SecuredAdmin} value
      */
     void setSecureAdmin(SecureAdmin secureAdmin);
 
     /**
-     * Gets the value of the applications property.
+     * Gets the value of the {@code applications} property.
      *
-     * @return possible object is {@link Applications }
+     * @return possible object is {@link Applications}
      */
     @Element
     @NotNull
     Applications getApplications();
 
     /**
-     * Sets the value of the system-applications property.
+     * Sets the value of the {@code applications} property.
      *
-     * @param value allowed object is {@link Applications }
+     * @param applications allowed object is {@link Applications}
      */
-    void setApplications(Applications value) throws PropertyVetoException;
+    void setApplications(Applications applications) throws PropertyVetoException;
 
+    /**
+     * Gets the value of the {@code system-applications} property.
+     *
+     * @return possible object is {@link SystemApplications}
+     */
     @Element
     @NotNull
     SystemApplications getSystemApplications();
 
     /**
-     * Sets the value of the system-applications property.
+     * Sets the value of the {@code system-applications} property.
      *
-     * @param value allowed object is {@link Applications }
+     * @param systemApplications allowed object is {@link SystemApplications}
      */
-    void setSystemApplications(SystemApplications value) throws PropertyVetoException;
+    void setSystemApplications(SystemApplications systemApplications) throws PropertyVetoException;
 
     /**
-     * Gets the value of the resources property.
+     * Gets the value of the {@code resources} property.
      *
-     * @return possible object is {@link Resources }
+     * @return possible object is {@link Resources}
      */
     @Element
     @NotNull
     Resources getResources();
 
     /**
-     * Sets the value of the resources property.
+     * Sets the value of the {@code resources} property.
      *
-     * @param value allowed object is {@link Resources }
+     * @param resources allowed object is {@link Resources}
      */
-    void setResources(Resources value) throws PropertyVetoException;
+    void setResources(Resources resources) throws PropertyVetoException;
 
     /**
-     * Gets the value of the configs property.
+     * Gets the value of the {@code configs} property.
      *
-     * @return possible object is {@link Configs }
+     * @return possible object is {@link Configs}
      */
     @Element(required = true)
     @NotNull
     Configs getConfigs();
 
     /**
-     * Sets the value of the configs property.
+     * Sets the value of the {@code configs} property.
      *
-     * @param value allowed object is {@link Configs }
+     * @param configs allowed object is {@link Configs}
      */
-    void setConfigs(Configs value) throws PropertyVetoException;
+    void setConfigs(Configs configs) throws PropertyVetoException;
 
     /**
-     * Gets the value of the servers property.
+     * Gets the value of the {@code servers} property.
      *
-     * @return possible object is {@link Servers }
+     * @return possible object is {@link Servers}
      */
     @Element(required = true)
     @NotNull
     Servers getServers();
 
     /**
-     * Sets the value of the servers property.
+     * Sets the value of the {@code servers} property.
      *
-     * @param value allowed object is {@link Servers }
+     * @param servers allowed object is {@link Servers}
      */
-    void setServers(Servers value) throws PropertyVetoException;
+    void setServers(Servers servers) throws PropertyVetoException;
 
     /**
-     * Gets the value of the clusters property.
+     * Gets the value of the {@code clusters} property.
      *
-     * @return possible object is {@link Clusters }
+     * @return possible object is {@link Clusters}
      */
     @Element
     @NotNull
     Clusters getClusters();
 
     /**
-     * Sets the value of the clusters property.
+     * Sets the value of the {@code clusters} property.
      *
-     * @param value allowed object is {@link Clusters }
+     * @param clusters allowed object is {@link Clusters}
      */
-    void setClusters(Clusters value) throws PropertyVetoException;
+    void setClusters(Clusters clusters) throws PropertyVetoException;
 
     /**
-     * Gets the value of the nodes property.
+     * Gets the value of the {@code nodes} property.
      *
-     * @return possible object is {@link Nodes }
+     * @return possible object is {@link Nodes}
      */
     @Element
     Nodes getNodes();
 
     /**
-     * Sets the value of the nodes property.
+     * Sets the value of the {@code nodes} property.
      *
-     * @param value allowed object is {@link Nodes }
+     * @param nodes allowed object is {@link Nodes}
      */
-    void setNodes(Nodes value) throws PropertyVetoException;
+    void setNodes(Nodes nodes) throws PropertyVetoException;
 
     /**
-     * Gets the value of the nodeAgents property.
+     * Gets the value of the {@code nodeAgents} property.
      *
-     * @return possible object is {@link NodeAgents }
+     * @return possible object is {@link NodeAgents}
      */
     @Element
     NodeAgents getNodeAgents();
 
     /**
-     * Sets the value of the nodeAgents property.
+     * Sets the value of the {@code nodeAgents} property.
      *
-     * @param value allowed object is {@link NodeAgents }
+     * @param nodeAgents allowed object is {@link NodeAgents}
      */
-    void setNodeAgents(NodeAgents value) throws PropertyVetoException;
+    void setNodeAgents(NodeAgents nodeAgents) throws PropertyVetoException;
 
     /**
-     * Gets the value of the systemProperty property.
-     * <p/>
-     * <p/>
-     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the
-     * systemProperty property.
-     * <p/>
-     * <p/>
-     * For example, to add a new item, do as follows:
+     * Gets the value of the {@code systemProperty} property.
+     *
+     * <p>This accessor method returns a reference to the live list, not a snapshot. Therefore any modification
+     * you make to the returned list will be present inside the JAXB object. This is why there is not a {@code set}
+     * method for the {@code systemProperty} property.
+     *
+     * <p>For example, to add a new item, do as follows:
      *
      * <pre>
      * getSystemProperty().add(newItem);
      * </pre>
-     * <p/>
-     * <p/>
-     * <p/>
+     *
      * Objects of the following type(s) are allowed in the list {@link SystemProperty }
      */
     @Override
     @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Any more legal system properties?")
     @PropertiesDesc(systemProperties = true, props = {
-            @PropertyDesc(name = "com.sun.aas.installRoot", description = "Operating system dependent. Path to the directory where the server is installed"),
-
-            @PropertyDesc(name = "com.sun.aas.instanceRoot", description = "Operating system dependent. Path to the top level directory for a server instance"),
-
-            @PropertyDesc(name = "com.sun.aas.hostName", description = "Operating system dependent. Path to the name of the host (machine)"),
-
-            @PropertyDesc(name = "com.sun.aas.javaRoot", description = "Operating system dependent. Path to the library directory for the Sun GlassFish Message Queue software"),
-
-            @PropertyDesc(name = "com.sun.aas.imqLib", description = "Operating system dependent. Path to the installation directory for the Java runtime"),
-
-            @PropertyDesc(name = "com.sun.aas.imqLib", description = "Operating system dependent. Path to the installation directory for the Java runtime"),
-
-            @PropertyDesc(name = "com.sun.aas.configName", defaultValue = "server-config", description = "Name of the <config> used by a server instance"),
-
-            @PropertyDesc(name = "com.sun.aas.instanceName", defaultValue = "server1", description = "Name of the server instance. Not used in the default configuration, but can be used to customize configuration"),
-
-            @PropertyDesc(name = "com.sun.aas.domainName", defaultValue = "domain1", description = "Name of the domain. Not used in the default configuration, but can be used to customize configuration") })
+            @PropertyDesc(
+                    name = "com.sun.aas.installRoot",
+                    description = "Operating system dependent. Path to the directory where the server is installed"
+            ),
+            @PropertyDesc(
+                    name = "com.sun.aas.instanceRoot",
+                    description = "Operating system dependent. Path to the top level directory for a server instance"
+            ),
+            @PropertyDesc(
+                    name = "com.sun.aas.hostName",
+                    description = "Operating system dependent. Path to the name of the host (machine)"
+            ),
+            @PropertyDesc(
+                    name = "com.sun.aas.javaRoot",
+                    description = "Operating system dependent. Path to the library directory for the Sun GlassFish Message Queue software"
+            ),
+            @PropertyDesc(
+                    name = "com.sun.aas.imqLib",
+                    description = "Operating system dependent. Path to the installation directory for the Java runtime"
+            ),
+            @PropertyDesc(
+                    name = "com.sun.aas.imqLib",
+                    description = "Operating system dependent. Path to the installation directory for the Java runtime"
+            ),
+            @PropertyDesc(
+                    name = "com.sun.aas.configName",
+                    defaultValue = "server-config",
+                    description = "Name of the <config> used by a server instance"
+            ),
+            @PropertyDesc(
+                    name = "com.sun.aas.instanceName",
+                    defaultValue = "server1",
+                    description = "Name of the server instance. Not used in the default configuration, but can be used to customize configuration"
+            ),
+            @PropertyDesc(
+                    name = "com.sun.aas.domainName",
+                    defaultValue = "domain1",
+                    description = "Name of the domain. Not used in the default configuration, but can be used to customize configuration"
+            )
+    })
     @Element
     List<SystemProperty> getSystemProperty();
 
@@ -305,108 +331,474 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
     @Element("*")
     List<DomainExtension> getExtensions();
 
-    @DuckTyped
-    String getName();
+    default String getName() {
+        return getPropertyValue(DOMAIN_NAME_PROPERTY);
+    }
 
-    @DuckTyped
-    List<Application> getAllDefinedSystemApplications();
+    default List<Application> getAllDefinedSystemApplications() {
+        List<Application> allSysApps = new ArrayList<>();
+        SystemApplications sysApps = getSystemApplications();
+        if (sysApps != null) {
+            for (ApplicationName module : sysApps.getModules()) {
+                if (module instanceof Application) {
+                    allSysApps.add((Application) module);
+                }
+            }
+        }
+        return Collections.unmodifiableList(allSysApps);
+    }
 
-    @DuckTyped
-    ApplicationRef getApplicationRefInServer(String sn, String name);
+    default ApplicationRef getApplicationRefInServer(String serverName, String appName) {
+        Server server = null;
+        for (Server srv : getServers().getServer()) {
+            if (srv.getName().equals(serverName)) {
+                server = srv;
+                break;
+            }
+        }
 
-    @DuckTyped
-    List<ApplicationRef> getApplicationRefsInServer(String sn);
+        ApplicationRef appRef = null;
+        if (server != null) {
+            for (ApplicationRef ref : server.getApplicationRef()) {
+                if (ref.getRef().equals(appName)) {
+                    appRef = ref;
+                    break;
+                }
+            }
+        }
+        return appRef;
+    }
+
+    default List<ApplicationRef> getApplicationRefsInServer(String serverName) {
+        Server server = getServerNamed(serverName);
+        if (server != null) {
+            return server.getApplicationRef();
+        } else {
+            return List.of();
+        }
+    }
 
     /**
      * Returns the list of system-applications that are referenced from the given server. A server references an
-     * application, if the server has an element named &lt;application-ref> in it that points to given application. The
-     * given server is a &lt;server> element inside domain.
+     * application, if the server has an element named {@code <application-ref>} in it that points to given
+     * application. The given server is a {@code <server>} element inside domain.
      *
-     * @param sn the string denoting name of the server
+     * @param serverName the string denoting name of the server
      * @return List of system-applications for that server, an empty list in case there is none
      */
-    @DuckTyped
-    List<Application> getSystemApplicationsReferencedFrom(String sn);
+    default List<Application> getSystemApplicationsReferencedFrom(String serverName) {
+        if (serverName == null) {
+            throw new IllegalArgumentException("Null argument");
+        }
 
-    @DuckTyped
-    Application getSystemApplicationReferencedFrom(String sn, String appName);
+        List<Application> allSysApps = getAllDefinedSystemApplications();
+        if (allSysApps.isEmpty()) {
+            return allSysApps; // if there are no sys-apps, none can reference one :)
+        }
 
-    @DuckTyped
-    boolean isNamedSystemApplicationReferencedFrom(String appName, String serverName);
+        // allSysApps now contains ALL the system applications
+        List<Application> referencedApps = new ArrayList<>();
+        for (ApplicationRef ref : getServerNamed(serverName).getApplicationRef()) {
+            for (Application app : allSysApps) {
+                if (ref.getRef().equals(app.getName())) {
+                    referencedApps.add(app);
+                }
+            }
+        }
+        return Collections.unmodifiableList(referencedApps);
+    }
 
-    @DuckTyped
-    Server getServerNamed(String name);
+    default Application getSystemApplicationReferencedFrom(String serverName, String appName) {
+        // returns null in case there is none
+        for (Application app : getSystemApplicationsReferencedFrom(serverName)) {
+            if (app.getName().equals(appName)) {
+                return app;
+            }
+        }
+        return null;
+    }
 
-    @DuckTyped
-    boolean isServer(String name);
+    default boolean isNamedSystemApplicationReferencedFrom(String appName, String serverName) {
+        for (Application app : getSystemApplicationsReferencedFrom(serverName)) {
+            if (app.getName().equals(appName)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-    @DuckTyped
-    Config getConfigNamed(String name);
+    default Server getServerNamed(String serverName) {
+        Servers servers = getServers();
+        if (servers == null || serverName == null) {
+            throw new IllegalArgumentException("no <servers> element");
+        }
 
-    @DuckTyped
-    Cluster getClusterNamed(String name);
+        for (Server server : servers.getServer()) {
+            if (serverName.equals(server.getName().trim())) {
+                return server;
+            }
+        }
+        return null;
+    }
 
-    @DuckTyped
-    Node getNodeNamed(String name);
+    default boolean isServer(String serverName) {
+        return getServerNamed(serverName) != null;
+    }
 
-    @DuckTyped
-    boolean isCurrentInstanceMatchingTarget(String target, String appName, String currentInstance, List<String> referencedTargets);
+    default Config getConfigNamed(String configName) {
+        Configs configs = getConfigs();
+        if (configs == null || configName == null) {
+            throw new IllegalArgumentException("no <config> element");
+        }
 
-    @DuckTyped
-    List<Server> getServersInTarget(String target);
+        for (Config config : configs.getConfig()) {
+            if (configName.equals(config.getName().trim())) {
+                return config;
+            }
+        }
+        return null;
+    }
 
-    @DuckTyped
-    List<ApplicationRef> getApplicationRefsInTarget(String target);
+    default Cluster getClusterNamed(String clusterName) {
+        Clusters clusters = getClusters();
+        if (clusters == null || clusterName == null) {
+            return null;
+        }
 
-    @DuckTyped
-    ApplicationRef getApplicationRefInTarget(String appName, String target);
+        for (Cluster cluster : clusters.getCluster()) {
+            if (clusterName.equals(cluster.getName().trim())) {
+                return cluster;
+            }
+        }
+        return null;
+    }
 
-    @DuckTyped
-    ApplicationRef getApplicationRefInTarget(String appName, String target, boolean includeInstances);
+    default Node getNodeNamed(String nodeName) {
+        Nodes nodes = getNodes();
+        if (nodes == null || nodeName == null) {
+            return null;
+        }
 
-    @DuckTyped
-    boolean isAppRefEnabledInTarget(String appName, String target);
+        for (Node node : nodes.getNode()) {
+            if (nodeName.equals(node.getName().trim())) {
+                return node;
+            }
+        }
+        return null;
+    }
 
-    @DuckTyped
-    boolean isAppEnabledInTarget(String appName, String target);
+    default boolean isCurrentInstanceMatchingTarget(String target, String appName, String currentInstance, List<String> referencedTargets) {
+        if (target == null || currentInstance == null) {
+            return false;
+        }
 
-    @DuckTyped
-    boolean isAppReferencedByPaaSTarget(String appName);
+        List<String> targets = new ArrayList<>();
+        if (!target.equals("domain")) {
+            targets.add(target);
+        } else {
+            if (referencedTargets == null) {
+                referencedTargets = getAllReferencedTargetsForApplication(appName);
+            }
+            targets = referencedTargets;
+        }
 
-    @DuckTyped
-    List<String> getAllReferencedTargetsForApplication(String appName);
+        for (String tgt : targets) {
+            if (currentInstance.equals(tgt)) {
+                // standalone instance case
+                return true;
+            }
 
-    @DuckTyped
-    List<String> getAllTargets();
+            Cluster cluster = getClusterNamed(tgt);
 
-    @DuckTyped List<String> getTargets(final String tgt);
+            if (cluster != null) {
+                for (Server server : cluster.getInstances()) {
+                    if (server.getName().equals(currentInstance)) {
+                        // cluster instance case
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
-    @DuckTyped
-    List<Application> getApplicationsInTarget(String target);
+    default List<Server> getServersInTarget(String target) {
+        List<Server> servers = new ArrayList<>();
+        Server server = getServerNamed(target);
+        if (server != null) {
+            servers.add(server);
+        } else {
+            Cluster cluster = getClusterNamed(target);
+            if (cluster != null) {
+                servers.addAll(cluster.getInstances());
+            }
+        }
+        return servers;
+    }
 
-    @DuckTyped
-    String getVirtualServersForApplication(String target, String appName);
+    default List<ApplicationRef> getApplicationRefsInTarget(String target) {
+        return getApplicationRefsInTarget(target, false);
+    }
 
-    @DuckTyped
-    String getEnabledForApplication(String target, String appName);
+    default List<ApplicationRef> getApplicationRefsInTarget(String target, boolean includeInstances) {
+        List<ApplicationRef> allAppRefs = new ArrayList<>();
 
-    @DuckTyped
-    ReferenceContainer getReferenceContainerNamed(String name);
+        for (String tgt : getTargets(target)) {
+            Server server = getServerNamed(tgt);
+            if (server != null) {
+                allAppRefs.addAll(server.getApplicationRef());
+            } else {
+                Cluster cluster = getClusterNamed(tgt);
+                if (cluster != null) {
+                    allAppRefs.addAll(cluster.getApplicationRef());
+                    if (includeInstances) {
+                        for (Server srv : cluster.getInstances()) {
+                            allAppRefs.addAll(srv.getApplicationRef());
+                        }
+                    }
+                }
+            }
+        }
+        return allAppRefs;
+    }
 
-    @DuckTyped
-    Cluster getClusterForInstance(String instanceName);
+    default ApplicationRef getApplicationRefInTarget(String appName, String target) {
+        for (ApplicationRef ref : getApplicationRefsInTarget(target)) {
+            if (ref.getRef().equals(appName)) {
+                return ref;
+            }
+        }
+        return null;
+    }
 
-    @DuckTyped
-    List<ReferenceContainer> getAllReferenceContainers();
+    default ApplicationRef getApplicationRefInTarget(String appName, String target, boolean includeInstances) {
+        for (ApplicationRef appRef : getApplicationRefsInTarget(target, includeInstances)) {
+            if (appRef.getRef().equals(appName)) {
+                return appRef;
+            }
+        }
+        return null;
+    }
 
-    @DuckTyped
-    List<ReferenceContainer> getReferenceContainersOf(Config config);
+    default boolean isAppRefEnabledInTarget(String appName, String target) {
+        boolean found = false;
 
-    @DuckTyped
-    List<Server> getInstancesOnNode(String nodeName);
+        Cluster containingCluster = getClusterForInstance(target);
+        if (containingCluster != null) {
+            // if this is a clustered instance, check the enable
+            // attribute of its enclosing cluster first
+            // and return false if the cluster level enable attribute
+            // is false
+            ApplicationRef clusterRef = getApplicationRefInTarget(appName, containingCluster.getName());
+            if (clusterRef == null || !Boolean.parseBoolean(clusterRef.getEnabled())) {
+                return false;
+            }
+        }
 
-    @DuckTyped
-    List<Cluster> getClustersOnNode(String nodeName);
+        for (ApplicationRef ref : getApplicationRefsInTarget(target, true)) {
+            if (ref.getRef().equals(appName)) {
+                found = true;
+                if (!Boolean.parseBoolean(ref.getEnabled())) {
+                    return false;
+                }
+            }
+        }
+        // return true if we found the ref(s)
+        // and the enable attribute(s) is/are true,
+        // false otherwise
+        return found;
+    }
+
+    default boolean isAppEnabledInTarget(String appName, String target) {
+        Application application = getApplications().getApplication(appName);
+        if (application != null && Boolean.parseBoolean(application.getEnabled())) {
+            List<String> targets = new ArrayList<>();
+            if (!target.equals("domain")) {
+                targets.add(target);
+            } else {
+                targets = getAllReferencedTargetsForApplication(appName);
+            }
+            for (String tgt : targets) {
+                if (!isAppRefEnabledInTarget(appName, tgt)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    default boolean isAppReferencedByPaaSTarget(String appName) {
+        for (String target : getAllReferencedTargetsForApplication(appName)) {
+            Cluster cluster = getClusterNamed(target);
+            if (cluster != null) {
+                if (cluster.isVirtual()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    default List<String> getAllReferencedTargetsForApplication(String appName) {
+        List<String> referencedTargets = new ArrayList<>();
+        for (String target : getAllTargets()) {
+            if (getApplicationRefInTarget(appName, target) != null) {
+                referencedTargets.add(target);
+            }
+        }
+        return referencedTargets;
+    }
+
+    default List<String> getAllTargets() {
+        List<String> targets = new ArrayList<>();
+        // only add non-clustered servers as the cluster
+        // targets will be separately added
+        for (Server server : getServers().getServer()) {
+            if (server.getCluster() == null) {
+                targets.add(server.getName());
+            }
+        }
+
+        Clusters clusters = getClusters();
+        if (clusters != null) {
+            for (Cluster cluster : clusters.getCluster()) {
+                targets.add(cluster.getName());
+            }
+        }
+        return targets;
+    }
+
+    default List<String> getTargets(String target) {
+        List<String> targets = new ArrayList<>();
+        if (!target.equals("domain")) {
+            targets.add(target);
+        } else {
+            targets = getAllTargets();
+        }
+        return targets;
+    }
+
+    default List<Application> getApplicationsInTarget(String target) {
+        if (target.equals("domain")) {
+            // special target domain
+            return getApplications().getApplications();
+        }
+
+        List<Application> apps = new ArrayList<>();
+
+        for (ApplicationRef ref : getApplicationRefsInTarget(target)) {
+            Application app = getApplications().getApplication(ref.getRef());
+            if (app != null) {
+                apps.add(app);
+            }
+        }
+        return apps;
+    }
+
+    default String getVirtualServersForApplication(String target, String appName) {
+        ApplicationRef appRef = getApplicationRefInTarget(appName, target);
+        if (appRef != null) {
+            return appRef.getVirtualServers();
+        } else {
+            return null;
+        }
+    }
+
+    default String getEnabledForApplication(String target, String appName) {
+        ApplicationRef appRef = getApplicationRefInTarget(appName, target);
+        if (appRef != null) {
+            return appRef.getEnabled();
+        } else {
+            return null;
+        }
+    }
+
+    default ReferenceContainer getReferenceContainerNamed(String containerName) {
+        // Clusters and Servers are ReferenceContainers
+        Cluster cluster = getClusterNamed(containerName);
+
+        if (cluster != null) {
+            return cluster;
+        }
+
+        return getServerNamed(containerName);
+    }
+
+    default Cluster getClusterForInstance(String instanceName) {
+        for (Cluster cluster : getClusters().getCluster()) {
+            for (ServerRef serverRef : cluster.getServerRef()) {
+                if (serverRef.getRef().equals(instanceName)) {
+                    return cluster;
+                }
+            }
+        }
+        return null;
+    }
+
+    default List<ReferenceContainer> getAllReferenceContainers() {
+        List<ReferenceContainer> referenceContainers = new LinkedList<>(getServers().getServer());
+        if (getClusters() != null) {
+            referenceContainers.addAll(getClusters().getCluster());
+        }
+        return referenceContainers;
+    }
+
+    default List<ReferenceContainer> getReferenceContainersOf(Config config) {
+        // Clusters and Servers are ReferenceContainers
+        List<ReferenceContainer> referenceContainers = new LinkedList<>();
+
+        // both the config and its name need to be sanity-checked
+        String configName = null;
+
+        if (config != null) {
+            configName = config.getName();
+        }
+
+        if (!StringUtils.ok(configName)) { // we choose to make this not an error
+            return referenceContainers;
+        }
+
+        for (ReferenceContainer referenceContainer : getAllReferenceContainers()) {
+            if (configName.equals(referenceContainer.getReference())) {
+                referenceContainers.add(referenceContainer);
+            }
+        }
+        return referenceContainers;
+    }
+
+    default List<Server> getInstancesOnNode(String nodeName) {
+        List<Server> servers = new LinkedList<>();
+        try {
+            if (!StringUtils.ok(nodeName)) {
+                return servers;
+            }
+
+            for (Server server : getServers().getServer()) {
+                if (nodeName.equals(server.getNodeRef())) {
+                    servers.add(server);
+                }
+            }
+        } catch (Exception e) {
+            getLogger().log(WARNING, errorGettingServers, e.getLocalizedMessage());
+        }
+        return servers;
+    }
+
+    default List<Cluster> getClustersOnNode(String nodeName) {
+        HashMap<String, Cluster> clusters = new HashMap<>();
+        try {
+            for (Server server : getInstancesOnNode(nodeName)) {
+                Cluster cluster = server.getCluster();
+                if (nodeName.equals(server.getNodeRef())) {
+                    clusters.put(cluster.getName(), cluster);
+                }
+            }
+        } catch (Exception e) {
+            getLogger().log(WARNING, errorGettingCluster, e.getLocalizedMessage());
+        }
+        return new ArrayList<>(clusters.values());
+    }
 
     @ConfigExtensionMethod
     <T extends DomainExtension> T getExtensionByType(Class<T> type);
@@ -416,498 +808,15 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
      * @param <P> Type that extends the ConfigBeanProxy which is the type of class we accept as parameter
      * @return true if configuration for the type exists in the target area of domain.xml and false if not.
      */
-    @DuckTyped
-    <P extends ConfigBeanProxy> boolean checkIfExtensionExists(Class<P> configBeanType);
-
-    class Duck {
-        private final static Logger logger = ConfigApiLoggerInfo.getLogger();
-
-        public static String getName(Domain domain) {
-            return domain.getPropertyValue(DOMAIN_NAME_PROPERTY);
-        }
-
-        /* return an empty list if given garbage -- or errors are encountered
-         * or if no matches
-         */
-        public static List<Server> getInstancesOnNode(Domain domain, String nodeName) {
-            List<Server> ret = new LinkedList<>();
+    default <P extends ConfigBeanProxy> boolean checkIfExtensionExists(Class<P> configBeanType) {
+        for (DomainExtension extension : getExtensions()) {
             try {
-                if (!StringUtils.ok(nodeName)) {
-                    return ret;
-                }
-
-                List<Server> servers = domain.getServers().getServer();
-
-                for (Server server : servers) {
-                    if (nodeName.equals(server.getNodeRef())) {
-                        ret.add(server);
-                    }
-                }
-            } catch (Exception e) {
-                logger.log(Level.WARNING, ConfigApiLoggerInfo.errorGettingServers, e.getLocalizedMessage());
-            }
-            return ret;
-        }
-
-        /* return an empty list if given garbage -- or errors are encountered
-         * or if no matches
-         */
-        public static List<Cluster> getClustersOnNode(Domain domain, String nodeName) {
-
-            HashMap<String, Cluster> clMap = new HashMap<>();
-            List<Server> serverList = getInstancesOnNode(domain, nodeName);
-
-            try {
-                for (Server server : serverList) {
-                    Cluster mycl = server.getCluster();
-                    if (nodeName.equals(server.getNodeRef())) {
-                        clMap.put(mycl.getName(), mycl);
-                    }
-                }
-            } catch (Exception e) {
-                logger.log(Level.WARNING, ConfigApiLoggerInfo.errorGettingCluster, e.getLocalizedMessage());
-
-            }
-            return new ArrayList(clMap.values());
-        }
-
-        public static List<Application> getAllDefinedSystemApplications(Domain me) {
-            List<Application> allSysApps = new ArrayList<>();
-            SystemApplications sa = me.getSystemApplications();
-            if (sa != null) {
-                for (ApplicationName m : sa.getModules()) {
-                    if (m instanceof Application) {
-                        allSysApps.add((Application) m);
-                    }
-                }
-            }
-            return Collections.unmodifiableList(allSysApps);
-        }
-
-        public static ApplicationRef getApplicationRefInServer(Domain me, String sn, String name) {
-            Servers ss = me.getServers();
-            List<Server> list = ss.getServer();
-            Server theServer = null;
-            for (Server s : list) {
-                if (s.getName().equals(sn)) {
-                    theServer = s;
-                    break;
-                }
-            }
-            ApplicationRef aref = null;
-            if (theServer != null) {
-                List<ApplicationRef> arefs = theServer.getApplicationRef();
-                for (ApplicationRef ar : arefs) {
-                    if (ar.getRef().equals(name)) {
-                        aref = ar;
-                        break;
-                    }
-                }
-            }
-            return aref;
-        }
-
-        public static List<ApplicationRef> getApplicationRefsInServer(Domain me, String sn) {
-            Server server = getServerNamed(me, sn);
-            if (server != null) {
-                return server.getApplicationRef();
-            } else {
-                return Collections.EMPTY_LIST;
-            }
-        }
-
-        public static List<Application> getSystemApplicationsReferencedFrom(Domain d, String sn) {
-            if (d == null || sn == null) {
-                throw new IllegalArgumentException("Null argument");
-            }
-            List<Application> allApps = d.getAllDefinedSystemApplications();
-            if (allApps.isEmpty())
-             {
-                return allApps; //if there are no sys-apps, none can reference one :)
-            }
-            //allApps now contains ALL the system applications
-            Server s = getServerNamed(d, sn);
-            List<Application> referencedApps = new ArrayList<>();
-            List<ApplicationRef> appsReferenced = s.getApplicationRef();
-            for (ApplicationRef ref : appsReferenced) {
-                for (Application app : allApps) {
-                    if (ref.getRef().equals(app.getName())) {
-                        referencedApps.add(app);
-                    }
-                }
-            }
-            return Collections.unmodifiableList(referencedApps);
-        }
-
-        public static Application getSystemApplicationReferencedFrom(Domain d, String sn, String appName) {
-            //returns null in case there is none
-            List<Application> allApps = getSystemApplicationsReferencedFrom(d, sn);
-            for (Application app : allApps) {
-                if (app.getName().equals(appName)) {
-                    return app;
-                }
-            }
-            return null;
-        }
-
-        public static boolean isNamedSystemApplicationReferencedFrom(Domain d, String appName, String serverName) {
-            List<Application> referencedApps = getSystemApplicationsReferencedFrom(d, serverName);
-            for (Application app : referencedApps) {
-                if (app.getName().equals(appName)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public static Server getServerNamed(Domain d, String name) {
-            if (d.getServers() == null || name == null) {
-                throw new IllegalArgumentException("no <servers> element");
-            }
-            List<Server> servers = d.getServers().getServer();
-            for (Server s : servers) {
-                if (name.equals(s.getName().trim())) {
-                    return s;
-                }
-            }
-            return null;
-        }
-
-        public static Config getConfigNamed(Domain d, String name) {
-            if (d.getConfigs() == null || name == null) {
-                throw new IllegalArgumentException("no <config> element");
-            }
-            List<Config> configs = d.getConfigs().getConfig();
-            for (Config c : configs) {
-                if (name.equals(c.getName().trim())) {
-                    return c;
-                }
-            }
-            return null;
-        }
-
-        public static Cluster getClusterNamed(Domain d, String name) {
-            if (d.getClusters() == null || name == null) {
-                return null;
-            }
-            List<Cluster> clusters = d.getClusters().getCluster();
-            for (Cluster c : clusters) {
-                if (name.equals(c.getName().trim())) {
-                    return c;
-                }
-            }
-            return null;
-        }
-
-        public static Node getNodeNamed(Domain d, String name) {
-            if (d.getNodes() == null || name == null) {
-                return null;
-            }
-            List<Node> nodes = d.getNodes().getNode();
-            for (Node n : nodes) {
-                if (name.equals(n.getName().trim())) {
-                    return n;
-                }
-            }
-            return null;
-        }
-
-        public static boolean isCurrentInstanceMatchingTarget(Domain d, String target, String appName, String currentInstance,
-                List<String> referencedTargets) {
-
-            if (target == null || currentInstance == null) {
-                return false;
-            }
-
-            List<String> targets = new ArrayList<>();
-            if (!target.equals("domain")) {
-                targets.add(target);
-            } else {
-                if (referencedTargets == null) {
-                    referencedTargets = d.getAllReferencedTargetsForApplication(appName);
-                }
-                targets = referencedTargets;
-            }
-
-            for (String target2 : targets) {
-                if (currentInstance.equals(target2)) {
-                    // standalone instance case
-                    return true;
-                }
-
-                Cluster cluster = getClusterNamed(d, target2);
-
-                if (cluster != null) {
-                    for (Server svr : cluster.getInstances()) {
-                        if (svr.getName().equals(currentInstance)) {
-                            // cluster instance case
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-
-        public static List<Server> getServersInTarget(Domain me, String target) {
-            List<Server> servers = new ArrayList<>();
-            Server server = me.getServerNamed(target);
-            if (server != null) {
-                servers.add(server);
-            } else {
-                Cluster cluster = getClusterNamed(me, target);
-                if (cluster != null) {
-                    servers.addAll(cluster.getInstances());
-                }
-            }
-            return servers;
-        }
-
-        public static List<ApplicationRef> getApplicationRefsInTarget(Domain me, String target) {
-            return getApplicationRefsInTarget(me, target, false);
-        }
-
-        public static List<String> getTargets(final Domain me, final String tgt) {
-            List<String> targets = new ArrayList<>();
-            if (!tgt.equals("domain")) {
-                targets.add(tgt);
-            } else {
-                targets = me.getAllTargets();
-            }
-            return targets;
-        }
-
-        public static List<ApplicationRef> getApplicationRefsInTarget(Domain me, String tgt, boolean includeInstances) {
-            List<String> targets = getTargets(me, tgt);
-            List<ApplicationRef> allAppRefs = new ArrayList<>();
-
-            for (String target : targets) {
-                Server server = me.getServerNamed(target);
-                if (server != null) {
-                    allAppRefs.addAll(server.getApplicationRef());
-                } else {
-                    Cluster cluster = getClusterNamed(me, target);
-                    if (cluster != null) {
-                        allAppRefs.addAll(cluster.getApplicationRef());
-                        if (includeInstances) {
-                            for (Server svr : cluster.getInstances()) {
-                                allAppRefs.addAll(svr.getApplicationRef());
-                            }
-                        }
-                    }
-                }
-            }
-            return allAppRefs;
-        }
-
-        public static ApplicationRef getApplicationRefInTarget(Domain me, String appName, String target) {
-            for (ApplicationRef ref : getApplicationRefsInTarget(me, target)) {
-                if (ref.getRef().equals(appName)) {
-                    return ref;
-                }
-            }
-            return null;
-        }
-
-        public static boolean isAppRefEnabledInTarget(Domain me, String appName, String target) {
-            boolean found = false;
-
-            Cluster containingCluster = getClusterForInstance(me, target);
-            if (containingCluster != null) {
-                // if this is a clustered instance, check the enable
-                // attribute of its enclosing cluster first
-                // and return false if the cluster level enable attribute
-                // is false
-                ApplicationRef clusterRef = getApplicationRefInTarget(me, appName, containingCluster.getName());
-                if (clusterRef == null || !Boolean.valueOf(clusterRef.getEnabled())) {
-                    return false;
-                }
-            }
-
-            for (ApplicationRef ref : getApplicationRefsInTarget(me, target, true)) {
-                if (ref.getRef().equals(appName)) {
-                    found = true;
-                    if (!Boolean.valueOf(ref.getEnabled())) {
-                        return false;
-                    }
-                }
-            }
-            // if we found the ref(s) and the enable attribute(s) is/are true
-            if (found) {
+                configBeanType.cast(extension);
                 return true;
-            }
-            return false;
-        }
-
-        public static boolean isAppEnabledInTarget(Domain me, String appName, String target) {
-            Application application = me.getApplications().getApplication(appName);
-            if (application != null && Boolean.valueOf(application.getEnabled())) {
-                List<String> targets = new ArrayList<>();
-                if (!target.equals("domain")) {
-                    targets.add(target);
-                } else {
-                    targets = getAllReferencedTargetsForApplication(me, appName);
-                }
-                for (String tgt : targets) {
-                    if (!isAppRefEnabledInTarget(me, appName, tgt)) {
-                        return false;
-                    }
-                }
-                return true;
-            }
-            return false;
-        }
-
-        public static List<String> getAllTargets(Domain d) {
-            List<String> targets = new ArrayList<>();
-            // only add non-clustered servers as the cluster
-            // targets will be separately added
-            for (Server server : d.getServers().getServer()) {
-                if (server.getCluster() == null) {
-                    targets.add(server.getName());
-                }
-            }
-            if (d.getClusters() != null) {
-                for (Cluster cluster : d.getClusters().getCluster()) {
-                    targets.add(cluster.getName());
-                }
-            }
-            return targets;
-        }
-
-        public static List<String> getAllReferencedTargetsForApplication(Domain me, String appName) {
-            List<String> referencedTargets = new ArrayList<>();
-            for (String target : me.getAllTargets()) {
-                if (me.getApplicationRefInTarget(appName, target) != null) {
-                    referencedTargets.add(target);
-                }
-            }
-            return referencedTargets;
-        }
-
-        public static boolean isAppReferencedByPaaSTarget(Domain me, String appName) {
-            List<String> referencedTargets = me.getAllReferencedTargetsForApplication(appName);
-            for (String target : referencedTargets) {
-                Cluster cluster = me.getClusterNamed(target);
-                if (cluster != null) {
-                    if (cluster.isVirtual()) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        public static List<Application> getApplicationsInTarget(Domain me, String target) {
-            if (target.equals("domain")) {
-                // special target domain
-                return me.getApplications().getApplications();
-            }
-
-            List<Application> apps = new ArrayList<>();
-
-            List<ApplicationRef> applicationRefs = me.getApplicationRefsInTarget(target);
-            for (ApplicationRef ref : applicationRefs) {
-                Application app = me.getApplications().getApplication(ref.getRef());
-                if (app != null) {
-                    apps.add(app);
-                }
-            }
-            return apps;
-        }
-
-        public static String getVirtualServersForApplication(Domain d, String target, String appName) {
-            ApplicationRef appRef = d.getApplicationRefInTarget(appName, target);
-            if (appRef != null) {
-                return appRef.getVirtualServers();
-            } else {
-                return null;
+            } catch (Exception e) {
+                // ignore, not the right type.
             }
         }
-
-        public static String getEnabledForApplication(Domain d, String target, String appName) {
-            ApplicationRef appRef = d.getApplicationRefInTarget(appName, target);
-            if (appRef != null) {
-                return appRef.getEnabled();
-            } else {
-                return null;
-            }
-        }
-
-        public static ReferenceContainer getReferenceContainerNamed(Domain d, String name) {
-            // Clusters and Servers are ReferenceContainers
-            Cluster c = getClusterNamed(d, name);
-
-            if (c != null) {
-                return c;
-            }
-
-            return getServerNamed(d, name);
-        }
-
-        public static List<ReferenceContainer> getReferenceContainersOf(Domain d, Config config) {
-            // Clusters and Servers are ReferenceContainers
-            List<ReferenceContainer> sub = new LinkedList<>();
-
-            // both the config and its name need to be sanity-checked
-            String name = null;
-
-            if (config != null) {
-                name = config.getName();
-            }
-
-            if (!StringUtils.ok(name)) { // we choose to make this not an error
-                return sub;
-            }
-
-            List<ReferenceContainer> all = getAllReferenceContainers(d);
-
-            for (ReferenceContainer rc : all) {
-                if (name.equals(rc.getReference())) {
-                    sub.add(rc);
-                }
-            }
-            return sub;
-        }
-
-        public static List<ReferenceContainer> getAllReferenceContainers(Domain d) {
-            List<ReferenceContainer> ReferenceContainers = new LinkedList<>();
-            ReferenceContainers.addAll(d.getServers().getServer());
-            if (d.getClusters() != null) {
-                ReferenceContainers.addAll(d.getClusters().getCluster());
-            }
-            return ReferenceContainers;
-        }
-
-        public static Cluster getClusterForInstance(Domain d, String instanceName) {
-            List<Cluster> clusterList = d.getClusters().getCluster();
-            for (Cluster cluster : clusterList) {
-                List<ServerRef> serverRefs = cluster.getServerRef();
-                for (ServerRef serverRef : serverRefs) {
-                    if (serverRef.getRef().equals(instanceName)) {
-                        return cluster;
-                    }
-                }
-            }
-            return null;
-        }
-
-        public static boolean isServer(Domain d, String name) {
-            final Server server = d.getServerNamed(name);
-            return (server != null ? true : false);
-        }
-
-        public static <P extends DomainExtension> boolean checkIfExtensionExists(Domain d, Class<P> configBeanType) {
-            for (DomainExtension extension : d.getExtensions()) {
-                try {
-                    configBeanType.cast(extension);
-                    return true;
-                } catch (Exception e) {
-                    // ignore, not the right type.
-                }
-            }
-            return false;
-        }
-
+        return false;
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -191,8 +192,7 @@ public class SSHLauncher {
     private void openConnection() throws JSchException {
         assert session == null;
         JSch jsch = new JSch();
-        // TODO: Logger?
-        // jsch.setLogger(logger);
+        jsch.setLogger(new JavaSystemJschLogger(logger != null ? logger.getName() + ".ssh" : JSch.class.getName()));
 
         // Client Auth
         String message = "";

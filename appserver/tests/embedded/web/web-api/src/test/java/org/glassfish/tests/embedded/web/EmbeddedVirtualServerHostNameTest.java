@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,16 +22,13 @@ import java.io.InputStreamReader;
 import java.io.File;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.logging.Level;
-import java.util.ArrayList;
-import java.util.List;
 import org.glassfish.embeddable.*;
 import org.glassfish.embeddable.web.*;
 import org.glassfish.embeddable.web.config.*;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for VirtualServerConfig#setHostNames
@@ -44,7 +42,7 @@ public class EmbeddedVirtualServerHostNameTest {
     static String contextRoot = "host";
     static int newPort = 9090;
 
-    @BeforeClass
+    @BeforeAll
     public static void setupServer() throws GlassFishException {
 
         GlassFishRuntime runtime = GlassFishRuntime.bootstrap();
@@ -60,7 +58,7 @@ public class EmbeddedVirtualServerHostNameTest {
     public void test() throws Exception {
 
         String virtualServerId = "example";
-        File root = new File("target/classes");
+        File root = new File(TestConfiguration.PROJECT_DIR, "target/classes");
         VirtualServer virtualServer = embedded.createVirtualServer(virtualServerId, root);
 
         VirtualServerConfig config = new VirtualServerConfig();
@@ -69,7 +67,7 @@ public class EmbeddedVirtualServerHostNameTest {
         embedded.addVirtualServer(virtualServer);
 
         VirtualServer vs = embedded.getVirtualServer(virtualServerId);
-        Assert.assertEquals(virtualServerId,vs.getID());
+        Assertions.assertEquals(virtualServerId,vs.getID());
 
         Context context = (Context) embedded.createContext(root);
         embedded.addContext(context, contextRoot);
@@ -85,11 +83,11 @@ public class EmbeddedVirtualServerHostNameTest {
         }
         in.close();
         System.out.println(inputLine);
-        Assert.assertEquals("Hello World!", sb.toString());
+        Assertions.assertEquals("Hello World!", sb.toString());
 
     }
 
-    @AfterClass
+    @AfterAll
     public static void shutdownServer() throws GlassFishException {
         System.out.println("Stopping server " + glassfish);
         if (glassfish != null) {

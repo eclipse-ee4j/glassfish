@@ -16,22 +16,20 @@
 
 package com.sun.enterprise.web;
 
+import java.io.IOException;
+
 import org.apache.catalina.Container;
+import org.apache.catalina.Realm;
 import org.apache.catalina.Request;
 import org.apache.catalina.Response;
 import org.apache.catalina.core.StandardPipeline;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import com.sun.web.security.RealmAdapter;
-import org.apache.catalina.Realm;
 
 /**
- * Pipeline whose invoke logic checks if a given request path represents
- * an ad-hoc path: If so, this pipeline delegates the request to the
- * ad-hoc pipeline of its associated web module. Otherwise, this pipeline
- * processes the request.
+ * Pipeline whose invoke logic checks if a given request path represents an ad-hoc path: If so, this pipeline delegates
+ * the request to the ad-hoc pipeline of its associated web module. Otherwise, this pipeline processes the request.
  */
 public class WebPipeline extends StandardPipeline {
 
@@ -39,37 +37,35 @@ public class WebPipeline extends StandardPipeline {
 
     /**
      * creates an instance of WebPipeline
+     *
      * @param container
      */
     public WebPipeline(Container container) {
         super(container);
-        if(container instanceof WebModule) {
-            this.webModule = (WebModule)container;
+        if (container instanceof WebModule) {
+            this.webModule = (WebModule) container;
         }
     }
 
     /**
-     * Processes the specified request, and produces the appropriate
-     * response, by invoking the first valve (if any) of this pipeline, or
-     * the pipeline's basic valve.
+     * Processes the specified request, and produces the appropriate response, by invoking the first valve (if any) of this
+     * pipeline, or the pipeline's basic valve.
      *
-     * If the request path to process identifies an ad-hoc path, the
-     * web module's ad-hoc pipeline is invoked.
+     * If the request path to process identifies an ad-hoc path, the web module's ad-hoc pipeline is invoked.
      *
      * @param request The request to process
      * @param response The response to return
      */
-    public void invoke(Request request, Response response)
-            throws IOException, ServletException {
+    @Override
+    public void invoke(Request request, Response response) throws IOException, ServletException {
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request.getRequest();
 
-        HttpServletRequest hreq = (HttpServletRequest) request.getRequest();
-        if (webModule != null &&
-                webModule.getAdHocServletName(hreq.getServletPath()) != null) {
+        if (webModule != null && webModule.getAdHocServletName(httpServletRequest.getServletPath()) != null) {
             webModule.getAdHocPipeline().invoke(request, response);
         } else if (webModule != null) {
             final Realm realm = webModule.getRealm();
-            if (realm != null &&
-                    realm.isSecurityExtensionEnabled(hreq.getServletContext())){
+
+            if (realm != null && realm.isSecurityExtensionEnabled(httpServletRequest.getServletContext())) {
                 super.doChainInvoke(request, response);
             } else {
                 super.invoke(request, response);

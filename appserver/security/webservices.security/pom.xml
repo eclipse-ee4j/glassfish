@@ -23,13 +23,13 @@
     <parent>
         <groupId>org.glassfish.main.security</groupId>
         <artifactId>securitymodule</artifactId>
-        <version>7.0.4-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
     </parent>
 
     <artifactId>webservices.security</artifactId>
     <packaging>glassfish-jar</packaging>
 
-    <name>WebServices Security and JSR 196 implementation</name>
+    <name>WebServices Security and Jakarta Authentication implementation</name>
 
     <developers>
         <developer>
@@ -65,9 +65,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.glassfish.main.hk2</groupId>
-            <artifactId>hk2-config</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.glassfish.main</groupId>
+            <artifactId>hk2-config-generator</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.core</groupId>
@@ -123,6 +122,12 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.glassfish.main.security</groupId>
+            <artifactId>appclient.security</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
             <!-- Don't set scope as provided. See issue #5992 -->
@@ -140,6 +145,19 @@
         <dependency>
             <groupId>jakarta.authorization</groupId>
             <artifactId>jakarta.authorization-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.epicyro</groupId>
+            <artifactId>epicyro</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
         </dependency>
     </dependencies>
 </project>

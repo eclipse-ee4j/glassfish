@@ -30,6 +30,7 @@ package org.glassfish.admingui.common.handlers;
 
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.jsftemplating.annotation.Handler;
 import com.sun.jsftemplating.annotation.HandlerInput;
 import com.sun.jsftemplating.annotation.HandlerOutput;
@@ -481,6 +482,10 @@ public class ClusterHandler {
             for (int i = 0; i < keys.size(); i++) {
                 attrs.put(keys.get(i), values.get(i));
             }
+        }
+        final String TIMEOUT_ATTR = "timeoutmsec";
+        if (!attrs.containsKey(TIMEOUT_ATTR)) {
+            attrs.put(TIMEOUT_ATTR, SystemPropertyConstants.getDefaultAdminTimeout().toString());
         }
         String endpoint = GuiUtil.getSessionValue("REST_URL")+"/list-instances";
         try{

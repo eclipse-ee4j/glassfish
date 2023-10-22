@@ -25,17 +25,13 @@ import jakarta.xml.soap.SOAPMessage;
 class Util {
     static String getValue(SOAPMessage message) throws SOAPException {
         SOAPBody body = message.getSOAPBody();
-        SOAPElement paramElement =
-                (SOAPElement)body.getFirstChild().getFirstChild();
+        SOAPElement paramElement = (SOAPElement) body.getFirstChild().getFirstChild();
         return paramElement.getValue();
     }
 
-    static void prependSOAPMessage(SOAPMessage message, String prefix)
-            throws IOException, SOAPException {
-        //message.writeTo(System.out); System.out.println();
+    static void prependSOAPMessage(SOAPMessage message, String prefix) throws IOException, SOAPException {
         SOAPBody body = message.getSOAPBody();
-        SOAPElement paramElement =
-                (SOAPElement)body.getFirstChild().getFirstChild();
+        SOAPElement paramElement = (SOAPElement) body.getFirstChild().getFirstChild();
         paramElement.setValue(prefix + paramElement.getValue());
     }
 }

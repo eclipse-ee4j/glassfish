@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,55 +17,51 @@
 
 package com.sun.enterprise.config.serverbeans;
 
+import java.beans.PropertyVetoException;
+
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 
-import java.beans.PropertyVetoException;
-import java.io.Serializable;
-
 /**
  *
  */
-
-/* @XmlType(name = "") */
-
 @Configured
 public interface HttpAccessLog extends ConfigBeanProxy {
 
     /**
-     * Gets the value of the logDirectory property.
+     * Gets the value of the {@code logDirectory} property.
      *
-     * location of the access logs specified as a directory.This defaults to the domain.log-root, which by default is
-     * ${INSTANCE_ROOT}/logs. Hence the default value for this attribute is ${INSTANCE_ROOT}/logs/access
+     * <p>Location of the access logs specified as a directory. This defaults to the
+     * {@code domain.log-root}, which by default is {@code ${INSTANCE_ROOT}/logs}.
+     * Hence, the default value for this attribute is {@code ${INSTANCE_ROOT}/logs/access}.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "access")
-    public String getLogDirectory();
+    String getLogDirectory();
 
     /**
-     * Sets the value of the logDirectory property.
+     * Sets the value of the {@code logDirectory} property.
      *
-     * @param value allowed object is {@link String }
+     * @param logDirectory allowed object is {@link String}
      */
-    public void setLogDirectory(String value) throws PropertyVetoException;
+    void setLogDirectory(String logDirectory) throws PropertyVetoException;
 
     /**
-     * Gets the value of the iponly property.
+     * Gets the value of the {@code iponly} property.
      *
-     * If the IP address of the user agent should be specified or a DNS lookup should be done
+     * <p>If the IP address of the user agent should be specified or a DNS lookup should be done.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
-    public String getIponly();
+    String getIponly();
 
     /**
-     * Sets the value of the iponly property.
+     * Sets the value of the {@code iponly} property.
      *
-     * @param value allowed object is {@link String }
+     * @param iponly allowed object is {@link String}
      */
-    public void setIponly(String value) throws PropertyVetoException;
-
+    void setIponly(String iponly) throws PropertyVetoException;
 }

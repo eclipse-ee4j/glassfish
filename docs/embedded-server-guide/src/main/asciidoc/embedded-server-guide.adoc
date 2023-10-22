@@ -1077,8 +1077,7 @@ version::
   of {productName}. You can specify the version you want to use. If
   no version is specified, a default version is used.
 
-2. Configure the `embedded-glassfish` goal prefix, the application
-name, and other standard settings.
+2. Configure the the path to the application WAR, and other standard settings.
 +
 Add the following `configuration` element to your POM file:
 +
@@ -1090,8 +1089,6 @@ Add the following `configuration` element to your POM file:
             <plugin>
                 ...
                 <configuration>
-                    <goalPrefix>embedded-glassfish</goalPrefix>
-                    ...
                     <app>target/test.war</app>
                     <port>8080</port>
                     <contextRoot>test</contextRoot>
@@ -1121,7 +1118,6 @@ Add the following `configuration` element to your POM file:
             <plugin>
                 ...
                 <configuration>
-                    <goalPrefix>embedded-glassfish</goalPrefix>
                     <app>target/test.war</app>
                     <name>test</name>
                     <contextRoot>test</contextRoot>
@@ -1227,7 +1223,6 @@ http://maven.apache.org/maven-v4_0_0.xsd">
         <artifactId>maven-embedded-glassfish-plugin</artifactId>
         <version>3.1</version>
         <configuration>
-          <goalPrefix>embedded-glassfish</goalPrefix>
           <app>target/test.war</app>
           <port>8080</port>
           <contextRoot>test</contextRoot>

@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.security</groupId>
         <artifactId>securitymodule</artifactId>
-        <version>7.0.4-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -117,6 +117,14 @@
         <dependency>
             <groupId>org.glassfish.gmbal</groupId>
             <artifactId>gmbal</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.epicyro</groupId>
+            <artifactId>epicyro</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.annotations</groupId>
+            <artifactId>logging-annotation-processor</artifactId>
         </dependency>
     </dependencies>
 

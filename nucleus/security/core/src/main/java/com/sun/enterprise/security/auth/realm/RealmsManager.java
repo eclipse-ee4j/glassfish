@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,9 @@
 
 package com.sun.enterprise.security.auth.realm;
 
+import static java.util.Collections.synchronizedMap;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -51,25 +53,25 @@ import jakarta.inject.Singleton;
 @Service
 @Singleton
 public class RealmsManager {
-    //per domain list of loaded Realms
-    //Wanted to get rid of Hashtable but the API exporting  Enumeration<String> is preventing
+
+    private static final Logger _logger = SecurityLoggerInfo.getLogger();
+    private static final String DEFAULT_DIGEST_ALGORITHM = "default-digest-algorithm";
+
+    // Per domain list of loaded Realms
+    // Wanted to get rid of Hashtable but the API exporting Enumeration<String> is preventing
     // it for now.
-    private final Map<String, Hashtable<String, Realm>> loadedRealms = Collections
-        .synchronizedMap(new HashMap<String, Hashtable<String, Realm>>());
+    private final Map<String, Hashtable<String, Realm>> loadedRealms = synchronizedMap(new HashMap<>());
 
     // Keep track of name of default realm for this domain. This is updated during startup
     // using value from server.xml
     private volatile String defaultRealmName = "default";
     private final RealmsProbeProvider probeProvider = new RealmsProbeProvider();
-    private static final Logger _logger = SecurityLoggerInfo.getLogger();
+
+    private String defaultDigestAlgorithm;
 
     @Inject
     @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private Config config;
-
-    private String defaultDigestAlgorithm = null;
-
-    private static final String DEFAULT_DIGEST_ALGORITHM = "default-digest-algorithm";
 
     public RealmsManager() {
 
@@ -84,9 +86,9 @@ public class RealmsManager {
     public boolean isValidRealm(String name) {
         if (name == null) {
             return false;
-        } else {
-            return configContainsRealm(name, config.getName());
         }
+
+        return configContainsRealm(name, config.getName());
     }
 
     /**
@@ -98,9 +100,9 @@ public class RealmsManager {
     public boolean isValidRealm(String configName, String name) {
         if (name == null) {
             return false;
-        } else {
-            return configContainsRealm(name, configName);
         }
+
+        return configContainsRealm(name, configName);
     }
 
     /**
@@ -169,21 +171,15 @@ public class RealmsManager {
      *
      */
     public List<String> getPredefinedAuthRealmClassNames() {
-        //!!!!!!!!!!!! (hardcoded for now until ss will implement backemnd support)
-        /* return new String[]{
-               "com.sun.enterprise.security.auth.realm.file.FileRealm",
-               "com.sun.enterprise.security.auth.realm.certificate.CertificateRealm",
-               "com.sun.enterprise.security.auth.realm.ldap.LDAPRealm",
-               "com.sun.enterprise.security.ee.auth.realm.jdbc.JDBCRealm",
-               "com.sun.enterprise.security.auth.realm.solaris.SolarisRealm"};*/
-        ServiceLocator habitat = Globals.getDefaultHabitat();
-        List<ActiveDescriptor<?>> collection = habitat.getDescriptors(BuilderHelper.createContractFilter(Realm.class.getName()));
-        List<String> arr = new ArrayList<String>();
+        ServiceLocator serviceLocator = Globals.getDefaultBaseServiceLocator();
+
+        List<ActiveDescriptor<?>> collection = serviceLocator.getDescriptors(BuilderHelper.createContractFilter(Realm.class.getName()));
+        List<String> predefinedAuthRealmClassNames = new ArrayList<String>();
         for (ActiveDescriptor<?> it : collection) {
-            arr.add(it.getImplementation());
+            predefinedAuthRealmClassNames.add(it.getImplementation());
         }
 
-        return arr;
+        return predefinedAuthRealmClassNames;
     }
 
     public void createRealms() {
@@ -202,15 +198,17 @@ public class RealmsManager {
         if (service == null) {
             return;
         }
+
         List<Property> props = service.getProperty();
         if (props == null) {
             return;
         }
+
         Iterator<Property> propsIterator = props.iterator();
         while (propsIterator != null && propsIterator.hasNext()) {
-            Property prop = propsIterator.next();
-            if (prop != null && DEFAULT_DIGEST_ALGORITHM.equals(prop.getName())) {
-                this.defaultDigestAlgorithm = prop.getValue();
+            Property property = propsIterator.next();
+            if (property != null && DEFAULT_DIGEST_ALGORITHM.equals(property.getName())) {
+                defaultDigestAlgorithm = property.getValue();
                 break;
             }
         }
@@ -221,16 +219,16 @@ public class RealmsManager {
     }
 
     /**
-     * Load all configured realms from server.xml and initialize each one. Initialization is done by calling Realm.initialize() with
-     * its name, class and properties. The name of the default realm is also saved in the Realm class for reference during server
-     * operation.
+     * Load all configured realms from server.xml and initialize each one. Initialization is done by calling
+     * Realm.initialize() with its name, class and properties. The name of the default realm is also saved in the Realm
+     * class for reference during server operation.
      *
      * <P>
      * This method superceeds the RI RealmManager.createRealms() method.
      *
      */
     private void createRealms(SecurityService securityBean, Config cfg) {
-        //check if realms are already loaded by admin GUI ?
+        // check if realms are already loaded by admin GUI ?
         if (realmsAlreadyLoaded(cfg.getName())) {
             return;
         }
@@ -305,10 +303,10 @@ public class RealmsManager {
                 if (realm != null) {
                     realm.refresh(configName);
                 }
-            } catch (com.sun.enterprise.security.auth.realm.NoSuchRealmException nre) {
-                //            _logger.fine("Realm: "+realmName+" is not configured");
-            } catch (com.sun.enterprise.security.auth.realm.BadRealmException bre) {
-                //            _logger.fine("Realm: "+realmName+" is not configured");
+            } catch (com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException nre) {
+                // _logger.fine("Realm: "+realmName+" is not configured");
+            } catch (com.sun.enterprise.security.auth.realm.exceptions.BadRealmException bre) {
+                // _logger.fine("Realm: "+realmName+" is not configured");
             }
         }
     }

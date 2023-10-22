@@ -28,6 +28,8 @@ package com.sun.enterprise.v3.admin;
  */
 class CommandNotFoundException extends RuntimeException{
 
+    private static final long serialVersionUID = 1L;
+
     CommandNotFoundException(String msg) {
         super(msg);
     }

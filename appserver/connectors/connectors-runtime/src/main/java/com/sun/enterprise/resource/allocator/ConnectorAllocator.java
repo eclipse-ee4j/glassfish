@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,12 +17,6 @@
 
 package com.sun.enterprise.resource.allocator;
 
-
-import java.util.logging.Level;
-
-import javax.security.auth.Subject;
-import javax.transaction.xa.XAResource;
-
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.resource.ClientSecurityInfo;
@@ -37,19 +31,22 @@ import jakarta.resource.spi.ConnectionRequestInfo;
 import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.ManagedConnectionFactory;
 
+import javax.security.auth.Subject;
+import javax.transaction.xa.XAResource;
+
 
 /**
  * @author Tony Ng
  */
 public class ConnectorAllocator extends AbstractConnectorAllocator {
 
-    private boolean shareable;
+    private final boolean shareable;
 
 
     class ConnectionListenerImpl extends com.sun.enterprise.resource.listener.ConnectionEventListener {
-        private ResourceHandle resource;
+        private final ResourceHandle resource;
 
-        public ConnectionListenerImpl(ResourceHandle resource) {
+        ConnectionListenerImpl(ResourceHandle resource) {
             this.resource = resource;
         }
 
@@ -143,30 +140,14 @@ public class ConnectorAllocator extends AbstractConnectorAllocator {
 
 
     @Override
-    public ResourceHandle createResource()
-            throws PoolingException {
+    public ResourceHandle createResource() throws PoolingException {
         try {
-            ManagedConnection mc =
-                    mcf.createManagedConnection(subject, reqInfo);
-
-            ResourceHandle resource =
-                    createResourceHandle(mc, spec, this, info);
-            ConnectionEventListener l =
-                    new ConnectionListenerImpl(resource);
+            ManagedConnection mc = mcf.createManagedConnection(subject, reqInfo);
+            ResourceHandle resource = createResourceHandle(mc, spec, this, info);
+            ConnectionEventListener l = new ConnectionListenerImpl(resource);
             mc.addConnectionEventListener(l);
             return resource;
         } catch (ResourceException ex) {
-            Object[] params = new Object[]{spec.getPoolInfo(), ex.toString()};
-            _logger.log(Level.WARNING,"poolmgr.create_resource_error",params);
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE,"Resource Exception while creating resource",ex);
-            }
-
-            if (ex.getLinkedException() != null) {
-                _logger.log(Level.WARNING,
-                        "poolmgr.create_resource_linked_error", ex
-                                .getLinkedException().toString());
-            }
             throw new PoolingException(ex);
         }
     }

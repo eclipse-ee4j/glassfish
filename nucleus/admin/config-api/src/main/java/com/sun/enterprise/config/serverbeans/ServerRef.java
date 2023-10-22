@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,12 +32,6 @@ import org.jvnet.hk2.config.Element;
 
 import static org.glassfish.config.support.Constants.NAME_SERVER_REGEX;
 
-/*
- * @XmlType(name = "", propOrder = {
- * "healthChecker"
- * })
- */
-
 @Configured
 @ReferenceConstraint(skipDuringCreation = true, payload = ServerRef.class)
 public interface ServerRef extends ConfigBeanProxy, Ref, Payload {
@@ -46,10 +40,11 @@ public interface ServerRef extends ConfigBeanProxy, Ref, Payload {
     String LBENABLED_DEFAULT_VALUE = "true";
 
     /**
-     * Gets the value of the ref property.
-     * A reference to the name of a server defined elsewhere
+     * Gets the value of the {@code ref} property.
      *
-     * @return possible object is {@link String }
+     * <p>A reference to the name of a server defined elsewhere.
+     *
+     * @return possible object is {@link String}
      */
     @Override
     @Attribute(key = true)
@@ -59,76 +54,82 @@ public interface ServerRef extends ConfigBeanProxy, Ref, Payload {
     String getRef();
 
     /**
-     * Sets the value of the ref property.
+     * Sets the value of the {@code ref} property.
      *
-     * @param value allowed object is {@link String }
+     * @param ref allowed object is {@link String}
      */
     @Override
-    void setRef(String value) throws PropertyVetoException;
+    void setRef(String ref) throws PropertyVetoException;
 
     /**
-     * Gets the value of the disableTimeoutInMinutes property.
-     * The time, in minutes, that it takes this server to reach a quiescent state after having been
-     * disabled
+     * Gets the value of the {@code disableTimeoutInMinutes} property.
      *
-     * @return possible object is {@link String }
+     * <p>The time, in minutes, that it takes this server to reach a quiescent state
+     * after having been disabled.
+     *
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "30")
     String getDisableTimeoutInMinutes();
 
     /**
-     * Sets the value of the disableTimeoutInMinutes property.
+     * Sets the value of the {@code disableTimeoutInMinutes} property.
      *
-     * @param value allowed object is {@link String }
+     * @param disableTimeout allowed object is {@link String}
      */
-    void setDisableTimeoutInMinutes(String value) throws PropertyVetoException;
+    void setDisableTimeoutInMinutes(String disableTimeout) throws PropertyVetoException;
 
     /**
-     * Gets the value of the lbEnabled property.
-     * Causes any and all load-balancers using this server to consider this server available to
-     * them. Defaults to available(true)
+     * Gets the value of the {@code lbEnabled} property.
      *
-     * @return possible object is {@link String }
+     * <p>Causes any and all load-balancers using this server to consider this server
+     * available to them.
+     *
+     * <p>Defaults to {@code available}({@code true}).
+     *
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = LBENABLED_DEFAULT_VALUE, dataType = Boolean.class)
     String getLbEnabled();
 
     /**
-     * Sets the value of the lbEnabled property.
+     * Sets the value of the {@code lbEnabled} property.
      *
-     * @param value allowed object is {@link String }
+     * @param lbEnabled allowed object is {@link String}
      */
-    void setLbEnabled(String value) throws PropertyVetoException;
+    void setLbEnabled(String lbEnabled) throws PropertyVetoException;
 
     /**
-     * Gets the value of the enabled property.
-     * A boolean flag that causes the server to be enabled to serve end-users, or not.
-     * Default is to be enabled (true)
+     * Gets the value of the {@code enabled} property.
      *
-     * @return possible object is {@link String }
+     * <p>A boolean flag that causes the server to be enabled to serve end-users, or not.
+     *
+     * <p>Default is to be {@code enabled} ({@code true}).
+     *
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
     String getEnabled();
 
     /**
-     * Sets the value of the enabled property.
+     * Sets the value of the {@code enabled} property.
      *
-     * @param value allowed object is {@link String }
+     * @param enabled allowed object is {@link String}
      */
-    void setEnabled(String value) throws PropertyVetoException;
+    void setEnabled(String enabled) throws PropertyVetoException;
 
     /**
-     * Gets the value of the healthChecker property.
+     * Gets the value of the {@code healthChecker} property.
      *
-     * @return possible object is {@link HealthChecker }
+     * @return possible object is {@link HealthChecker}
      */
     @Element("health-checker")
     HealthChecker getHealthChecker();
 
     /**
-     * Sets the value of the healthChecker property.
+     * Sets the value of the {@code healthChecker} property.
      *
-     * @param value allowed object is {@link HealthChecker }
+     * @param healthChecker allowed object is {@link HealthChecker}
      */
-    void setHealthChecker(HealthChecker value) throws PropertyVetoException;
+    void setHealthChecker(HealthChecker healthChecker) throws PropertyVetoException;
 }

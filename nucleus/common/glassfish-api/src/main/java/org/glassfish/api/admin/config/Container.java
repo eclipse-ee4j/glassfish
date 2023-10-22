@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,8 +21,10 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 
 /**
- * Tag interface for container related configuration. Inheriting from this interface allows glassfish to replicate the
- * container configuration in a clustered environment allowing per server configuration, etc...
+ * Tag interface for container related configuration.
+ *
+ * <p>Inheriting from this interface allows glassfish to replicate the container
+ * configuration in a clustered environment allowing per server configuration, etc...
  *
  * @author Jerome Dochez
  */

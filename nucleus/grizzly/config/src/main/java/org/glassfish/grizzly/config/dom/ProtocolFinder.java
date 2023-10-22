@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,31 +20,31 @@ package org.glassfish.grizzly.config.dom;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.types.PropertyBag;
 
 /**
- * Describes a protocol finder/recognizer, which is able to recognize whether incoming request
- * belongs to the specific protocol or not. If yes - protocol-finder forwards request processing to a
- * specific protocol.
+ * Describes a protocol finder/recognizer, which is able to recognize whether
+ * incoming request belongs to the specific protocol or not. If {@code yes} -
+ * protocol-finder forwards request processing to a specific protocol.
  */
 @Configured
 public interface ProtocolFinder extends ConfigBeanProxy, PropertyBag {
+
     /**
-     * Finder name, which could be used as reference
+     * Finder {@code name}, which could be used as reference.
      */
     @Attribute(key = true)
     String getName();
 
-    void setName(String value);
+    void setName(String name);
 
     /**
-     * Reference to a protocol, which was defined before.
+     * Reference to a {@code protocol}, which was defined before.
      */
     @Attribute
     String getProtocol();
 
-    void setProtocol(String value);
+    void setProtocol(String protocol);
 
     /**
      * Finder logic implementation class
@@ -51,23 +52,14 @@ public interface ProtocolFinder extends ConfigBeanProxy, PropertyBag {
     @Attribute(required = true)
     String getClassname();
 
-    void setClassname(String value);
+    void setClassname(String classname);
 
-    @DuckTyped
-    Protocol findProtocol();
+    default Protocol findProtocol() {
+        final NetworkConfig networkConfig = getParent().getParent().getParent().getParent();
+        return networkConfig.findProtocol(getProtocol());
+    }
 
-    @DuckTyped
-    PortUnification getParent();
-
-    class Duck {
-        public static Protocol findProtocol(ProtocolFinder finder) {
-            String name = finder.getProtocol();
-            final NetworkConfig networkConfig = finder.getParent().getParent().getParent().getParent();
-            return networkConfig.findProtocol(name);
-        }
-
-        public static PortUnification getParent(ProtocolFinder finder) {
-            return finder.getParent(PortUnification.class);
-        }
+    default PortUnification getParent() {
+        return getParent(PortUnification.class);
     }
 }

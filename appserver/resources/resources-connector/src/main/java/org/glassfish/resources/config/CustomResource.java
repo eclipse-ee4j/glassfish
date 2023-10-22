@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,6 +21,8 @@ import com.sun.enterprise.config.serverbeans.BindableResource;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.customvalidators.JavaClassName;
 
+import jakarta.validation.constraints.NotNull;
+
 import java.beans.PropertyVetoException;
 import java.util.List;
 
@@ -34,55 +37,43 @@ import org.glassfish.resourcebase.resources.ResourceTypeOrder;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
 
-import jakarta.validation.constraints.NotNull;
 /**
  * Custom (or generic) resource managed by a user-written factory class.
  */
-
-/* @XmlType(name = "", propOrder = {
-    "description",
-    "property"
-}) */
-
 @Configured
-@ResourceConfigCreator(commandName="create-custom-resource")
+@ResourceConfigCreator(commandName = "create-custom-resource")
 @RestRedirects({
- @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-custom-resource"),
- @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-custom-resource")
+        @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-custom-resource"),
+        @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-custom-resource")
 })
-@ResourceTypeOrder(deploymentOrder= ResourceDeploymentOrder.CUSTOM_RESOURCE)
-@UniqueResourceNameConstraint(message="{resourcename.isnot.unique}", payload=CustomResource.class)
-public interface CustomResource extends ConfigBeanProxy, Resource,
-        PropertyBag, BindableResource {
+@ResourceTypeOrder(deploymentOrder = ResourceDeploymentOrder.CUSTOM_RESOURCE)
+@UniqueResourceNameConstraint(message = "{resourcename.isnot.unique}", payload = CustomResource.class)
+public interface CustomResource extends ConfigBeanProxy, Resource, PropertyBag, BindableResource {
 
     /**
-     * Gets the value of the resType property.
+     * Gets the value of the {@code resType} property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     @NotNull
     String getResType();
 
     /**
-     * Sets the value of the resType property.
+     * Sets the value of the {@code resType} property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param resType allowed object is {@link String}
      */
-    void setResType(String value) throws PropertyVetoException;
+    void setResType(String resType) throws PropertyVetoException;
 
     /**
-     * Gets the value of the factoryClass property.
+     * Gets the value of the {@code factoryClass} property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     @NotNull
@@ -90,66 +81,55 @@ public interface CustomResource extends ConfigBeanProxy, Resource,
     String getFactoryClass();
 
     /**
-     * Sets the value of the factoryClass property.
+     * Sets the value of the {@code factoryClass} property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param factoryClass allowed object is {@link String}
      */
-    void setFactoryClass(String value) throws PropertyVetoException;
+    void setFactoryClass(String factoryClass) throws PropertyVetoException;
 
     /**
-     * Gets the value of the enabled property.
+     * Gets the value of the {@code enabled} property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
     @Override
-    @Attribute (defaultValue="true",dataType=Boolean.class)
+    @Attribute (defaultValue = "true",dataType = Boolean.class)
     String getEnabled();
 
     /**
-     * Sets the value of the enabled property.
+     * Sets the value of the {@code enabled} property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param enabled allowed object is {@link String}
      */
     @Override
-    void setEnabled(String value) throws PropertyVetoException;
+    void setEnabled(String enabled) throws PropertyVetoException;
 
     /**
-     * Gets the value of the description property.
+     * Gets the value of the {@code description} property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     String getDescription();
 
     /**
-     * Sets the value of the description property.
+     * Sets the value of the {@code description} property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param description allowed object is  {@link String}
      */
-    void setDescription(String value) throws PropertyVetoException;
+    void setDescription(String description) throws PropertyVetoException;
 
     /**
      * Properties as per {@link PropertyBag}
      */
     @Override
-    @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
-    @PropertiesDesc(props={})
+    @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props" )
+    @PropertiesDesc(props = {})
     @Element
     List<Property> getProperty();
 
     @Override
-    @DuckTyped
-    String getIdentity();
-
-    class Duck {
-        public static String getIdentity(CustomResource resource){
-            return resource.getJndiName();
-        }
+    default String getIdentity() {
+        return getJndiName();
     }
-
 }

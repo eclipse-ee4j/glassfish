@@ -84,7 +84,7 @@
 
     <target name="autoclose">
         <record name="autoclose.output" action="start" />
-            <ant dir="autoclose" target="all"/>
+            <run-ejb32-embedded-test path="autoclose" target="all"/>
         <record name="autoclose.output" action="stop" />
     </target>
 
@@ -94,4 +94,32 @@
                         ant all (Executes all the ejb-ejb31-embedded tests)
         </echo>
     </target>
+	
+	<macrodef name="run-ejb32-embedded-test" xmlns:if="ant:if" xmlns:unless="ant:unless">
+        <attribute name="path" />
+        <attribute name="target" />
+        <sequential>
+            <local name="do-run-test" />
+            <condition property="do-run-test" else="false">
+                <or>
+                    <equals arg1="${env.ejb32_embedded}" arg2="@{path}" />
+                    <not>
+                        <isset property="env.ejb32_embedded" />
+                    </not>
+                </or>
+            </condition>
+
+            <sequential if:true="${do-run-test}">
+                <local name="absolute.path" />
+                <property name="absolute.path" location="@{path}" />
+                <echo message="${line.separator} ${line.separator}" />
+                <echo message=" **************************************************" />
+                <echo message=" * Running @{path} " />
+                <echo message=" * Path: ${absolute.path} " />
+                <echo message=" **************************************************" />
+                <echo message="${line.separator} ${line.separator}" />
+                <ant dir="@{path}" target="@{target}" />
+            </sequential>
+        </sequential>
+    </macrodef>
 </project>

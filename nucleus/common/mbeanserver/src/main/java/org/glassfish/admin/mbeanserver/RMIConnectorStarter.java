@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -254,6 +255,7 @@ final class RMIConnectorStarter extends ConnectorStarter {
         final Map<String, Object> env = new HashMap<String, Object>();
 
         env.put("jmx.remote.jndi.rebind", "true");
+        env.put(RMIConnectorServer.CREDENTIALS_FILTER_PATTERN, String.class.getName() + ";!*");
 
         // Provide SSL-based RMI socket factories.
         env.put(RMIConnectorServer.RMI_CLIENT_SOCKET_FACTORY_ATTRIBUTE, sslCsf);

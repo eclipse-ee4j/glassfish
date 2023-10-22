@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.osgi-platforms</groupId>
         <artifactId>osgi-platforms</artifactId>
-        <version>7.0.4-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
     </parent>
 
     <artifactId>osgi-cli-remote</artifactId>
@@ -68,4 +68,33 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <!-- Nothing to export -->
+                        <Export-Package></Export-Package>
+                        <!--
+                        Bnd is not smart enough to know that dynamic imported packages should not
+                        be regularly imported. We have to exclude those manually.
+                        -->
+                        <Import-Package>
+                            !org.apache.felix.shell,
+                            !org.apache.felix.service.command,
+                            *
+                        </Import-Package>
+                        <!-- shell packages are resolved at runtime, whatever there is -->
+                        <DynamicImport-Package>
+                            org.apache.felix.shell,
+                            org.apache.felix.service.command
+                        </DynamicImport-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

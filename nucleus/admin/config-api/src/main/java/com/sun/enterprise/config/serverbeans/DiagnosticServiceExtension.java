@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,8 +21,10 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 
 /**
- * Tag interface to extend the DiagnosticService configuration Any implementation of this interface will be stored under
- * the domain.xml diagnostic-service element.
+ * Tag interface to extend the {@link DiagnosticService} configuration.
+ *
+ * <p>Any implementation of this interface will be stored under the {@code domain.xml}
+ * {@code diagnostic-service} element.
  *
  * @author Tony Vlatas
  */

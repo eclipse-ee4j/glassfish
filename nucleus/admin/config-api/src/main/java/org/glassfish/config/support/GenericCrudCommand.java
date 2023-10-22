@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,25 +20,7 @@ package org.glassfish.config.support;
 import com.sun.enterprise.config.util.ConfigApiLoggerInfo;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.api.admin.CommandModelProvider;
-import org.glassfish.common.util.admin.ParamTokenizer;
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.jvnet.hk2.config.ConfigModel;
-import org.jvnet.hk2.config.DomDocument;
-import org.jvnet.hk2.config.GenerateServiceFromMethod;
-import org.jvnet.hk2.config.InjectionManager;
-import org.jvnet.hk2.config.InjectionResolver;
-import org.jvnet.hk2.config.TransactionFailure;
-import org.glassfish.hk2.api.ActiveDescriptor;
-import org.glassfish.hk2.api.HK2Loader;
-import org.glassfish.hk2.api.MultiException;
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.hk2.api.Self;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.jvnet.tiger_types.Types;
+import jakarta.inject.Inject;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -55,10 +38,27 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jakarta.inject.Inject;
-
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.AdminCommandSecurity;
+import org.glassfish.api.admin.CommandModelProvider;
 import org.glassfish.api.logging.LogHelper;
+import org.glassfish.common.util.admin.ParamTokenizer;
+import org.glassfish.hk2.api.ActiveDescriptor;
+import org.glassfish.hk2.api.HK2Loader;
+import org.glassfish.hk2.api.MultiException;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.Self;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigModel;
+import org.jvnet.hk2.config.DomDocument;
+import org.jvnet.hk2.config.GenerateServiceFromMethod;
+import org.jvnet.hk2.config.InjectionManager;
+import org.jvnet.hk2.config.InjectionResolver;
+import org.jvnet.hk2.config.TransactionFailure;
+import org.jvnet.hk2.config.tiger.Types;
 
 /**
  * services pertinent to generic CRUD command implementations
@@ -68,18 +68,18 @@ import org.glassfish.api.logging.LogHelper;
  */
 public abstract class GenericCrudCommand implements CommandModelProvider, PostConstruct, AdminCommandSecurity.Preauthorization {
 
+    protected static final Logger logger = ConfigApiLoggerInfo.getLogger();
+    protected static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(GenericCrudCommand.class);
+
     private InjectionResolver<Param> injector;
 
     @Inject
     @Self
     private ActiveDescriptor<?> myself;
 
-    final protected static Logger logger = ConfigApiLoggerInfo.getLogger();
-    final protected static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(GenericCrudCommand.class);
-
     protected String commandName;
-    protected Class parentType = null;
-    protected Class targetType = null;
+    protected Class parentType;
+    protected Class targetType;
     protected Method targetMethod;
 
     // default level of noise, useful for just swithching these classes in debugging.
@@ -111,16 +111,19 @@ public abstract class GenericCrudCommand implements CommandModelProvider, PostCo
     }
 
     private static String getOne(String key, Map<String, List<String>> metadata) {
-        if (key == null || metadata == null)
+        if (key == null || metadata == null) {
             return null;
+        }
 
         List<String> findInMe = metadata.get(key);
-        if (findInMe == null)
+        if (findInMe == null) {
             return null;
+        }
 
         return findInMe.get(0);
     }
 
+    @Override
     public void postConstruct() {
         commandName = myself.getName();
 
@@ -381,12 +384,15 @@ public abstract class GenericCrudCommand implements CommandModelProvider, PostCo
                 String token = stoken.nextTokenKeepEscapes();
                 final ParamTokenizer nameTok = new ParamTokenizer(token, '=');
                 String name = null, value = null;
-                if (nameTok.hasMoreTokens())
+                if (nameTok.hasMoreTokens()) {
                     name = nameTok.nextToken();
-                if (nameTok.hasMoreTokens())
+                }
+                if (nameTok.hasMoreTokens()) {
                     value = nameTok.nextToken();
-                if (nameTok.hasMoreTokens() || name == null || value == null)
+                }
+                if (nameTok.hasMoreTokens() || name == null || value == null) {
                     throw new IllegalArgumentException("TODO : i18n : Invalid property syntax." + propsString);
+                }
                 //strings.getLocalString("InvalidPropertySyntax",
                 //    "Invalid property syntax.", propsString));
                 int index = value.indexOf(']');

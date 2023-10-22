@@ -16,7 +16,11 @@
 
 package com.sun.enterprise.v3.server;
 
-import com.sun.enterprise.module.bootstrap.*;
+import static org.glassfish.api.admin.ServerEnvironment.Status.stopped;
+import static org.glassfish.api.event.EventTypes.SERVER_SHUTDOWN;
+
+import java.util.logging.Logger;
+
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.EventTypes;
@@ -24,8 +28,10 @@ import org.glassfish.api.event.Events;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
 
+import com.sun.enterprise.module.bootstrap.ModuleStartup;
+import com.sun.enterprise.module.bootstrap.StartupContext;
+
 import jakarta.inject.Inject;
-import java.util.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,20 +47,21 @@ public class DomainCreationStartup implements ModuleStartup {
     Events events;
 
     @Inject
-    ServerEnvironmentImpl env;
+    ServerEnvironmentImpl serverEnvironment;
 
+    @Override
     public void setStartupContext(StartupContext startupContext) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    @Override
     public void start() {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    @Override
     public void stop() {
         try {
-            env.setStatus(ServerEnvironment.Status.stopped);
-            events.send(new EventListener.Event(EventTypes.SERVER_SHUTDOWN), false);
+            serverEnvironment.setStatus(stopped);
+            events.send(new EventListener.Event(SERVER_SHUTDOWN), false);
         } catch (Exception ex) {
             Logger.getAnonymousLogger().warning(ex.getMessage());
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -64,16 +64,17 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 public class ResourcesUtil {
 
     static Logger _logger = LogDomains.getLogger(ResourcesUtil.class,LogDomains.RSR_LOGGER);
+
     static StringManager localStrings = StringManager.getManager(ResourcesUtil.class);
 
     static ServerContext sc_;
+
     private volatile static ResourcesUtil resourcesUtil;
+
 
     protected Domain domain;
     private Server server;
-
     private ConnectorRuntime runtime;
-
 
     private ResourcesUtil(){
     }
@@ -351,7 +352,7 @@ public class ResourcesUtil {
     }
 
     //TODO can be made generic
-    //TODO probably, DuckTyped for resources
+    //TODO probably, default methods for resources
     public Collection<AdminObjectResource> getEnabledAdminObjectResources(String raName, Resources resources)  {
         List<AdminObjectResource> adminObjectResources = new ArrayList<>();
         for(Resource resource : resources.getResources(AdminObjectResource.class)) {

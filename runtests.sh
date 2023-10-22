@@ -73,6 +73,7 @@ export PATH="${JAVA_HOME}/bin:${PATH}"
 if [ -z "${MVN_REPOSITORY}" ]; then
   export MVN_REPOSITORY="${HOME}/.m2/repository"
 fi
+
 export M2_HOME="${M2_HOME=$(realpath $(dirname $(realpath $(which mvn)))/..)}"
 export APS_HOME="$(pwd)/appserver/tests/appserv-tests"
 
@@ -80,6 +81,12 @@ if [ -z "${2}" ]; then
   export GF_VERSION="$(mvn help:evaluate -f \"${APS_HOME}/pom.xml\" -Dexpression=project.version -q -DforceStdout)"
 else
   export GF_VERSION="$2"
+fi
+
+if [ ! -z "${3}" ]; then
+   export GLASSFISH_SUSPEND="--suspend"
+else
+   unset GLASSFISH_SUSPEND
 fi
 
 export JACOCO_ENABLED="true"

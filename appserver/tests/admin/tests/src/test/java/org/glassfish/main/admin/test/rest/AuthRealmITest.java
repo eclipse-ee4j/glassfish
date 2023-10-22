@@ -17,23 +17,6 @@
 
 package org.glassfish.main.admin.test.rest;
 
-import com.sun.enterprise.security.auth.realm.certificate.CertificateRealm;
-import com.sun.enterprise.security.auth.realm.file.FileRealm;
-import com.sun.enterprise.security.auth.realm.jdbc.JDBCRealm;
-import com.sun.enterprise.security.auth.realm.ldap.LDAPRealm;
-import com.sun.enterprise.security.auth.realm.pam.PamRealm;
-import com.sun.enterprise.security.auth.realm.solaris.SolarisRealm;
-
-import jakarta.ws.rs.core.Response;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
-
-import org.glassfish.admin.rest.client.utils.MarshallingUtils;
-import org.glassfish.main.itest.tools.RandomGenerator;
-import org.junit.jupiter.api.Test;
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.not;
@@ -43,6 +26,20 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.collection.IsMapWithSize.aMapWithSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import com.sun.enterprise.security.auth.realm.certificate.CertificateRealm;
+import com.sun.enterprise.security.auth.realm.file.FileRealm;
+import com.sun.enterprise.security.auth.realm.ldap.LDAPRealm;
+import com.sun.enterprise.security.auth.realm.solaris.SolarisRealm;
+import com.sun.enterprise.security.ee.authentication.glassfish.jdbc.JDBCRealm;
+import com.sun.enterprise.security.ee.authentication.glassfish.pam.PamRealm;
+import jakarta.ws.rs.core.Response;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+import org.glassfish.admin.rest.client.utils.MarshallingUtils;
+import org.glassfish.main.itest.tools.RandomGenerator;
+import org.junit.jupiter.api.Test;
 
 public class AuthRealmITest extends RestTestBase {
     private static final String URL_LIST_GROUP_NAMES = "/domain/configs/config/server-config/security-service/auth-realm/admin-realm/list-group-names";
@@ -114,8 +111,16 @@ public class AuthRealmITest extends RestTestBase {
     public void testListAuthRealmClassNames() {
         List<String> classNameList = getCommandResults(managementClient.get(URL_AUTH_REALM_CLASS_NAMES));
         assertThat(classNameList.toString(), classNameList, hasSize(6));
-        String[] realms = Stream.of(JDBCRealm.class, PamRealm.class, CertificateRealm.class, FileRealm.class,
-            LDAPRealm.class, SolarisRealm.class).map(Class::getName).toArray(String[]::new);
+
+        String[] realms = Stream.of(
+                JDBCRealm.class,
+                PamRealm.class,
+                CertificateRealm.class,
+                FileRealm.class,
+                LDAPRealm.class,
+                SolarisRealm.class).map(Class::getName)
+                                   .toArray(String[]::new);
+
         assertThat(classNameList, containsInAnyOrder(realms));
     }
 }

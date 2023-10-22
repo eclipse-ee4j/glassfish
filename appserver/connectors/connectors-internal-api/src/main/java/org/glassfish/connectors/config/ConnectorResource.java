@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,113 +21,98 @@ import com.sun.enterprise.config.serverbeans.BindableResource;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.ResourcePoolReference;
 import com.sun.enterprise.config.serverbeans.customvalidators.ReferenceConstraint;
+
+import jakarta.validation.Payload;
+import jakarta.validation.constraints.NotNull;
+
+import java.beans.PropertyVetoException;
+import java.util.List;
+
 import org.glassfish.admin.cli.resources.ResourceConfigCreator;
+import org.glassfish.admin.cli.resources.UniqueResourceNameConstraint;
 import org.glassfish.api.admin.RestRedirect;
 import org.glassfish.api.admin.RestRedirects;
 import org.glassfish.api.admin.config.PropertiesDesc;
 import org.glassfish.quality.ToDo;
-import org.glassfish.admin.cli.resources.UniqueResourceNameConstraint;
 import org.glassfish.resourcebase.resources.ResourceTypeOrder;
 import org.glassfish.resourcebase.resources.ResourceDeploymentOrder;
-import org.jvnet.hk2.config.*;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
-
-import jakarta.validation.Payload;
-import jakarta.validation.constraints.NotNull;
-import java.beans.PropertyVetoException;
-import java.util.List;
 
 /**
  *
  */
-
-/* @XmlType(name = "", propOrder = {
-    "description",
-    "property"
-}) */
-
 @Configured
-@ResourceConfigCreator(commandName="create-connector-resource")
+@ResourceConfigCreator(commandName = "create-connector-resource")
 @RestRedirects({
- @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-connector-resource"),
- @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-connector-resource")
+        @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-connector-resource"),
+        @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-connector-resource")
 })
-@ResourceTypeOrder(deploymentOrder=ResourceDeploymentOrder.CONNECTOR_RESOURCE)
-@UniqueResourceNameConstraint(message="{resourcename.isnot.unique}", payload=ConnectorResource.class)
-@ReferenceConstraint(skipDuringCreation=true, payload=ConnectorResource.class)
-public interface ConnectorResource extends ConfigBeanProxy, Resource,
-    PropertyBag, BindableResource, Payload, ResourcePoolReference {
-
+@ResourceTypeOrder(deploymentOrder = ResourceDeploymentOrder.CONNECTOR_RESOURCE)
+@UniqueResourceNameConstraint(message = "{resourcename.isnot.unique}", payload = ConnectorResource.class)
+@ReferenceConstraint(skipDuringCreation = true, payload = ConnectorResource.class)
+public interface ConnectorResource extends ConfigBeanProxy, Resource, PropertyBag, BindableResource, Payload, ResourcePoolReference {
 
     /**
-     * Gets the value of the poolName property.
+     * Gets the value of the {@code poolName} property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     @NotNull
-    @ReferenceConstraint.RemoteKey(message="{resourceref.invalid.poolname}", type=ConnectorConnectionPool.class)
+    @ReferenceConstraint.RemoteKey(message = "{resourceref.invalid.poolname}", type = ConnectorConnectionPool.class)
     String getPoolName();
 
     /**
-     * Sets the value of the poolName property.
+     * Sets the value of the {@code poolName} property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param poolName allowed object is {@link String}
      */
-    void setPoolName(String value) throws PropertyVetoException;
+    void setPoolName(String poolName) throws PropertyVetoException;
 
     /**
-     * Gets the value of the enabled property.
+     * Gets the value of the {@code enabled} property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
-    @Attribute (defaultValue="true",dataType=Boolean.class)
+    @Attribute (defaultValue = "true", dataType = Boolean.class)
     String getEnabled();
 
     /**
-     * Sets the value of the enabled property.
+     * Sets the value of the {@code enabled} property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param enabled allowed object is {@link String}
      */
-    void setEnabled(String value) throws PropertyVetoException;
+    void setEnabled(String enabled) throws PropertyVetoException;
 
     /**
-     * Gets the value of the description property.
+     * Gets the value of the {@code description} property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     String getDescription();
 
     /**
-     * Sets the value of the description property.
+     * Sets the value of the {@code description} property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param description allowed object is {@link String}
      */
-    void setDescription(String value) throws PropertyVetoException;
-
+    void setDescription(String description) throws PropertyVetoException;
 
     /**
-        Properties as per {@link PropertyBag}
+        Properties as per {@link PropertyBag}.
      */
-    @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
-    @PropertiesDesc(props={})
+    @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props" )
+    @PropertiesDesc(props = {})
     @Element
     List<Property> getProperty();
 
-    @DuckTyped
-    String getIdentity();
-
-    class Duck {
-        public static String getIdentity(ConnectorResource resource){
-            return resource.getJndiName();
-        }
+    default String getIdentity() {
+        return getJndiName();
     }
 }

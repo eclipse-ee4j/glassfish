@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,89 +17,85 @@
 
 package com.sun.enterprise.config.serverbeans;
 
+import java.beans.PropertyVetoException;
+
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 import org.glassfish.api.Param;
 
-import java.beans.PropertyVetoException;
-
 /**
- * A cluster defines a homogeneous set of server instances that share the same applications, resources, and
- * configuration.
+ * A cluster defines a homogeneous set of server instances that share
+ * the same applications, resources, and configuration.
  */
 @Configured
 public interface SshAuth extends ConfigBeanProxy {
 
     /**
-     * points to a named host.
+     * Points to a username.
      *
-     * @return a named host name
+     * @return a username name
      */
     @Attribute(defaultValue = "${user.name}")
     String getUserName();
 
     /**
-     * Sets the value of the name property.
+     * Sets the value of the {@code userName} property.
      *
-     * @param value allowed object is {@link String }
+     * @param userName allowed object is {@link String}
      * @throws PropertyVetoException if a listener vetoes the change
      */
     @Param(name = "sshuser", optional = true, defaultValue = "${user.name}")
-    void setUserName(String value) throws PropertyVetoException;
+    void setUserName(String userName) throws PropertyVetoException;
 
     /**
-     * points to a named host.
+     * Points to a key file.
      *
-     * @return a named host name
+     * @return a key file name
      */
-
     @Attribute
     String getKeyfile();
 
     /**
-     * Sets the value of the name property.
+     * Sets the value of the {@code keyfile} property.
      *
-     * @param value allowed object is {@link String }
+     * @param keyfile allowed object is {@link String}
      * @throws PropertyVetoException if a listener vetoes the change
      */
     @Param(name = "sshkeyfile", optional = true)
-    void setKeyfile(String value) throws PropertyVetoException;
+    void setKeyfile(String keyfile) throws PropertyVetoException;
 
     /**
-     * SSH Password
+     * SSH {@code password}.
      *
      * @return SSH Password which may be a password alias of the form ${ALIAS=aliasname}
      */
-
     @Attribute
     String getPassword();
 
     /**
-     * Sets the value of the name property.
+     * Sets the value of the {@code password} property.
      *
-     * @param value allowed object is {@link String }
+     * @param password allowed object is {@link String}
      * @throws PropertyVetoException if a listener vetoes the change
      */
     @Param(name = "sshpassword", optional = true)
-    void setPassword(String value) throws PropertyVetoException;
+    void setPassword(String password) throws PropertyVetoException;
 
     /**
-     * SSH Keyfile passphrase
+     * SSH Keyfile {@code passphrase}.
      *
-     * @return SSH keyfile encryption passphrase which may be a password alias of the form ${ALIAS=aliasname}
+     * @return SSH keyfile encryption {@code passphrase} which may be a password alias of the form ${ALIAS=aliasname}
      */
-
     @Attribute
     String getKeyPassphrase();
 
     /**
-     * Sets the value of the name property.
+     * Sets the value of the {@code passphrase} property.
      *
-     * @param value allowed object is {@link String }
+     * @param passphrase allowed object is {@link String}
      * @throws PropertyVetoException if a listener vetoes the change
      */
     @Param(name = "sshkeypassphrase", optional = true)
-    void setKeyPassphrase(String value) throws PropertyVetoException;
-
+    void setKeyPassphrase(String passphrase) throws PropertyVetoException;
 }

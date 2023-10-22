@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,16 +34,15 @@ import org.glassfish.resourcebase.resources.ResourceTypeOrder;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
 
 /**
- * Concurrency managed scheduled executor service resource definition
+ * Concurrency managed scheduled executor service resource definition.
  */
 @Configured
 @ResourceConfigCreator(commandName = "create-managed-scheduled-executor-service")
 @RestRedirects({
-    @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-managed-scheduled-executor-service"),
-    @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-managed-scheduled-executor-service")
+        @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-managed-scheduled-executor-service"),
+        @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-managed-scheduled-executor-service")
 })
 @ResourceTypeOrder(deploymentOrder = ResourceDeploymentOrder.MANAGED_SCHEDULED_EXECUTOR_SERVICE)
 @ReferenceConstraint(skipDuringCreation = true, payload = ManagedScheduledExecutorService.class)
@@ -53,18 +52,12 @@ public interface ManagedScheduledExecutorService
     extends ConfigBeanProxy, Resource, BindableResource, Payload, ConcurrencyResource, ManagedExecutorServiceBase {
 
     @Override
-    @DuckTyped
-    String getIdentity();
-
-    class Duck {
-
-        public static String getIdentity(ManagedScheduledExecutorService resource) {
-            return resource.getJndiName();
-        }
+    default String getIdentity() {
+        return getJndiName();
     }
 
     @Service
-    public class ManagedScheduledExecutorServiceConfigActivator extends ConfigBeanInstaller {
+    class ManagedScheduledExecutorServiceConfigActivator extends ConfigBeanInstaller {
 
     }
 }

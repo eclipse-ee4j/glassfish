@@ -68,8 +68,10 @@ public class ConfigAttributeSetTest {
 
     @Inject
     private ServiceLocator locator;
+
     @Inject
     private MockGenerator mockGenerator;
+
     private Subject adminSubject;
 
     @BeforeEach

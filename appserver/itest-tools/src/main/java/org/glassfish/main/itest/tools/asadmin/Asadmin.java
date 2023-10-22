@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,10 @@ import com.sun.enterprise.universal.process.ProcessManagerTimeoutException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -55,6 +58,7 @@ public class Asadmin {
     private final File asadmin;
     private final String adminUser;
     private final File adminPasswordFile;
+    private final Map<String, String> environment = new HashMap<>();
 
 
     /**
@@ -68,6 +72,19 @@ public class Asadmin {
         this.asadmin = asadmin;
         this.adminUser = adminUser;
         this.adminPasswordFile = adminPasswordFile;
+    }
+
+
+    /**
+     * Adds environment property set for the asadmin execution.
+     *
+     * @param name
+     * @param value
+     * @return this
+     */
+    public Asadmin withEnv(final String name, final String value) {
+        this.environment.put(name, value);
+        return this;
     }
 
 
@@ -124,8 +141,8 @@ public class Asadmin {
     /**
      * Executes the command with arguments synchronously with given timeout in millis.
      *
-     * @param timeout
-     * @param args
+     * @param timeout timeout in millis
+     * @param args command and arguments.
      * @return {@link AsadminResult} never null.
      */
     public AsadminResult exec(final int timeout, final String... args) {
@@ -136,8 +153,8 @@ public class Asadmin {
      * Executes the command with arguments.
      *
      * @param timeout timeout in millis
-     * @param detachedAndTerse - detached command is executed asynchronously, can be attached later by the attach command.
-     * @param args - command and arguments.
+     * @param detachedAndTerse detached command is executed asynchronously, can be attached later by the attach command.
+     * @param args command and arguments.
      * @return {@link AsadminResult} never null.
      */
     private AsadminResult exec(final int timeout, final boolean detachedAndTerse, final String... args) {
@@ -159,16 +176,22 @@ public class Asadmin {
         final ProcessManager processManager = new ProcessManager(command);
         processManager.setTimeoutMsec(timeout);
         processManager.setEcho(false);
-        if (LOG.isLoggable(Level.FINEST)) {
-            processManager.setEnvironment(new String[] {"AS_TRACE=true"});
+        for (Entry<String, String> env : this.environment.entrySet()) {
+            processManager.setEnvironment(env.getKey(), env.getValue());
         }
+        if (System.getenv("AS_TRACE") == null && LOG.isLoggable(Level.FINEST)) {
+            processManager.setEnvironment("AS_TRACE", "true");
+        }
+        // override any env property to what is used by tests
+        processManager.setEnvironment("JAVA_HOME", System.getProperty("java.home"));
+        processManager.setEnvironment("AS_JAVA", System.getProperty("java.home"));
 
         int exitCode;
         String asadminErrorMessage = "";
         try {
             exitCode = processManager.execute();
         } catch (final ProcessManagerTimeoutException e) {
-            asadminErrorMessage = "ProcessManagerTimeoutException: command timed out after " + timeout + " ms.\n";
+            asadminErrorMessage = e.getMessage();
             exitCode = 1;
         } catch (final ProcessManagerException e) {
             LOG.log(Level.SEVERE, "The execution failed.", e);
@@ -183,7 +206,12 @@ public class Asadmin {
         } else {
             result = new AsadminResult(args[0], exitCode, processManager.getStdout(), stdErr);
         }
-        System.out.print(result.getStdOut());
+        if (!result.getStdOut().isEmpty()) {
+            System.out.println(result.getStdOut());
+        }
+        if (!result.getStdErr().isEmpty()) {
+            System.err.println(result.getStdErr());
+        }
         return result;
     }
 }

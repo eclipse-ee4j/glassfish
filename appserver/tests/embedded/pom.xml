@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+    Copyright (c) 2023 Contributors to the Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -20,9 +21,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.glassfish.main.tests</groupId>
+        <artifactId>tests</artifactId>
+        <version>7.0.10-SNAPSHOT</version>
+    </parent>
+
     <groupId>org.glassfish.tests</groupId>
     <artifactId>embedded</artifactId>
-    <version>7.0.4-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>GlassFish Embedded Tests</name>
 
@@ -35,5 +42,48 @@
         <module>scatteredarchive</module>
         <module>maven-plugin</module>
         <module>web</module>
+        <module>utils</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.glassfish.main.extras</groupId>
+                <artifactId>glassfish-embedded-all</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.main.extras</groupId>
+                <artifactId>glassfish-embedded-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <workingDirectory>${project.build.directory}/surefire-workdir</workingDirectory>
+                        <systemPropertyVariables>
+                            <project.directory>${basedir}</project.directory>
+                            <buildDir>${project.build.directory}/surefire-workdir</buildDir>
+                        </systemPropertyVariables>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <configuration>
+                        <workingDirectory>${project.build.directory}/failsafe-workdir</workingDirectory>
+                        <systemPropertyVariables>
+                            <project.directory>${basedir}</project.directory>
+                            <buildDir>${project.build.directory}/failsafe-workdir</buildDir>
+                        </systemPropertyVariables>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

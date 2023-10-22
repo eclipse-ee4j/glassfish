@@ -16,20 +16,23 @@
 
 package com.sun.enterprise.v3.admin;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectStreamClass;
+import java.io.StreamCorruptedException;
+import java.lang.reflect.Array;
+import java.util.List;
+
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.Descriptor;
 import org.glassfish.hk2.api.Filter;
+import org.glassfish.hk2.api.MultiException;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 
-import java.io.*;
-import java.lang.reflect.Array;
-import java.util.List;
-import org.glassfish.hk2.api.MultiException;
-
 /**
- * This subclass of ObjectInputStream uses HK2 to lookup classes not resolved by
- * default ClassLoader.
+ * This subclass of ObjectInputStream uses HK2 to lookup classes not resolved by default ClassLoader.
  *
  * @author Andriy Zhdanov
  */
@@ -42,12 +45,11 @@ public class ObjectInputStreamWithServiceLocator extends ObjectInputStream {
     /**
      * Loader must be non-null;
      *
-     * @throws IOException              on io error
+     * @throws IOException on io error
      * @throws StreamCorruptedException on a corrupted stream
      */
 
-    public ObjectInputStreamWithServiceLocator(InputStream in, ServiceLocator serviceLocator)
-            throws IOException, StreamCorruptedException {
+    public ObjectInputStreamWithServiceLocator(InputStream in, ServiceLocator serviceLocator) throws IOException, StreamCorruptedException {
 
         super(in);
         if (serviceLocator == null) {
@@ -62,8 +64,7 @@ public class ObjectInputStreamWithServiceLocator extends ObjectInputStream {
      * @throws ClassNotFoundException if class can not be loaded
      */
     @Override
-    protected Class<?> resolveClass(ObjectStreamClass classDesc)
-            throws IOException, ClassNotFoundException {
+    protected Class<?> resolveClass(ObjectStreamClass classDesc) throws IOException, ClassNotFoundException {
         try {
             // Try superclass first
             return super.resolveClass(classDesc);
@@ -71,12 +72,13 @@ public class ObjectInputStreamWithServiceLocator extends ObjectInputStream {
             String cname = classDesc.getName();
             if (cname.startsWith("[")) {
                 // An array
-                Class<?> component;    // component class
-                int dcount;            // dimension
-                for (dcount = 1; cname.charAt(dcount) == '['; dcount++) ;
+                Class<?> component; // component class
+                int dcount; // dimension
+                for (dcount = 1; cname.charAt(dcount) == '['; dcount++) {
+                    ;
+                }
                 if (cname.charAt(dcount) == 'L') {
-                    component = loadClass(cname.substring(dcount + 1,
-                            cname.length() - 1));
+                    component = loadClass(cname.substring(dcount + 1, cname.length() - 1));
                 } else {
                     throw new ClassNotFoundException(cname);// malformed
                 }
@@ -110,7 +112,7 @@ public class ObjectInputStreamWithServiceLocator extends ObjectInputStream {
         }
     }
 
-    private  List<ActiveDescriptor<?>> getDescriptors(final String cname) throws ClassNotFoundException {
+    private List<ActiveDescriptor<?>> getDescriptors(final String cname) throws ClassNotFoundException {
         return serviceLocator.getDescriptors(new Filter() {
             @Override
             public boolean matches(Descriptor d) {

@@ -58,8 +58,8 @@ public class APIClassLoaderServiceImplTest {
         apiClassLoaderService.postConstruct();
 
         List<ModuleLifecycleListener> lifecycleListeners = fakeModulesRegistry.getLifecycleListeners();
-        assertThat("apiClassLoaderService should have registered a lifecycle listener",
-            fakeModulesRegistry.getLifecycleListeners(), hasSize(1));
+        assertThat("apiClassLoaderService should have registered a lifecycle listener", fakeModulesRegistry.getLifecycleListeners(),
+                hasSize(1));
 
         ModuleLifecycleListener lifecycleListener = lifecycleListeners.iterator().next();
 
@@ -67,11 +67,9 @@ public class APIClassLoaderServiceImplTest {
         assertEquals(0, loadClassCalls);
 
         final String BAD_CLASSNAME = "BADCLASS";
-        assertThrows(ClassNotFoundException.class,
-            () -> apiClassLoaderService.getAPIClassLoader().loadClass(BAD_CLASSNAME));
+        assertThrows(ClassNotFoundException.class, () -> apiClassLoaderService.getAPIClassLoader().loadClass(BAD_CLASSNAME));
         assertEquals(1, loadClassCalls, "Classloader.loadClass not called at all");
-        assertThrows(ClassNotFoundException.class,
-            () -> apiClassLoaderService.getAPIClassLoader().loadClass(BAD_CLASSNAME));
+        assertThrows(ClassNotFoundException.class, () -> apiClassLoaderService.getAPIClassLoader().loadClass(BAD_CLASSNAME));
 
         assertEquals(1, loadClassCalls, "blacklist not honored, excessive call to classloader.load");
 
@@ -90,8 +88,7 @@ public class APIClassLoaderServiceImplTest {
         apiClassLoaderService.getAPIClassLoader().getResource(BAD_RESOURCE);
         assertEquals(2, getResourceCalls, "blacklist did not clear after a module was installed");
 
-        assertThrows(ClassNotFoundException.class,
-            () -> apiClassLoaderService.getAPIClassLoader().loadClass(BAD_CLASSNAME));
+        assertThrows(ClassNotFoundException.class, () -> apiClassLoaderService.getAPIClassLoader().loadClass(BAD_CLASSNAME));
 
         assertEquals(2, loadClassCalls, "blacklist did not clear after a module was installed");
 
@@ -101,8 +98,7 @@ public class APIClassLoaderServiceImplTest {
         apiClassLoaderService.getAPIClassLoader().getResource(BAD_RESOURCE);
         assertEquals(3, getResourceCalls, "blacklist did not clear after a module was updated");
 
-        assertThrows(ClassNotFoundException.class,
-            () -> apiClassLoaderService.getAPIClassLoader().loadClass(BAD_CLASSNAME));
+        assertThrows(ClassNotFoundException.class, () -> apiClassLoaderService.getAPIClassLoader().loadClass(BAD_CLASSNAME));
 
         assertEquals(3, loadClassCalls, "blacklist did not clear after a module was updated");
     }

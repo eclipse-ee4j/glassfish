@@ -28,8 +28,10 @@ import java.util.logging.Logger;
 public class NetUtils {
     public static final int MAX_PORT = 65535;
     private final static int IS_RUNNING_DEFAULT_TIMEOUT = 3000;
-    private final static boolean asDebug =
-            Boolean.parseBoolean(System.getenv("AS_DEBUG"));
+    private final static int IS_PORT_FREE_TIMEOUT = 1000;
+    private final static int IS_SECURE_PORT_TIMEOUT = 4000;
+    private final static boolean asDebug
+            =            Boolean.parseBoolean(System.getenv("AS_DEBUG"));
     private final static Logger logger = CULoggerInfo.getLogger();
     private static Boolean badHostErrorWasReportedAlready = Boolean.FALSE;
     private final static Object SYNC_OBJECT = new Object();
@@ -530,7 +532,8 @@ public class NetUtils {
             if (hostName == null) {
                 hostName = getHostName();
             }
-            Socket socket = new Socket(hostName, portNumber);
+            Socket socket = new Socket();
+            socket.connect(new InetSocketAddress(hostName, portNumber), IS_PORT_FREE_TIMEOUT);
             OutputStream os = socket.getOutputStream();
             InputStream is = socket.getInputStream();
             os.close();
@@ -695,7 +698,7 @@ public class NetUtils {
         if (false){
             // Open the socket w/ a 4 second timeout
             Socket socket = new Socket();
-            socket.connect(new InetSocketAddress(hostname, port), 4000);
+            socket.connect(new InetSocketAddress(hostname, port), IS_SECURE_PORT_TIMEOUT);
 
             // Send an https query (w/ trailing http query)
             java.io.OutputStream ostream = socket.getOutputStream();

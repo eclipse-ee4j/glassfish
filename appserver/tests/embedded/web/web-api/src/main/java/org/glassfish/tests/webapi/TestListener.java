@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,6 @@
 
 package org.glassfish.tests.webapi;
 
-import java.io.PrintStream;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 
@@ -32,7 +32,7 @@ public final class TestListener
     {
       System.out.println("TestListener : Trying to load TestCacaoList");
 
-      Class c = Class.forName("TestCacaoList");
+        Class c = Class.forName("org.glassfish.tests.embedded.web.TestCacaoList");
 
       msg = "Class TestCacaoList loaded successfully from listener";
       System.out.println(msg);

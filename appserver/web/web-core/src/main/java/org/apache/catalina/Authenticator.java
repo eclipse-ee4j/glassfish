@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -20,19 +21,16 @@ package org.apache.catalina;
 import jakarta.servlet.ServletException;
 
 /**
- * An <b>Authenticator</b> is a component (usually a Valve or Container) that
- * provides some sort of authentication service.  The interface itself has no
- * functional significance,  but is used as a tagging mechanism so that other
- * components can detect the presence (via an "instanceof Authenticator" test)
- * of an already configured authentication service.
+ * An <b>Authenticator</b> is a component (usually a Valve or Container) that provides some sort of authentication
+ * service. The interface itself has no functional significance, but is used as a tagging mechanism so that other
+ * components can detect the presence (via an "instanceof Authenticator" test) of an already configured authentication
+ * service.
  *
  * @author Craig R. McClanahan
  * @version $Revision: 1.2 $ $Date: 2005/12/08 01:27:13 $
  */
 
 public interface Authenticator {
-    public void login(String userName, char[] password, HttpRequest request)
-            throws ServletException;
-
-    public void logout(HttpRequest request) throws ServletException;
+    void login(String userName, char[] password, HttpRequest request) throws ServletException;
+    void logout(HttpRequest request) throws ServletException;
 }

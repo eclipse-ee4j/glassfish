@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +16,6 @@
  */
 
 package com.sun.enterprise.resource.allocator;
-
-import java.util.logging.Level;
-
-import javax.security.auth.Subject;
-import javax.transaction.xa.XAResource;
 
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
@@ -39,6 +34,11 @@ import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.ManagedConnectionFactory;
 import jakarta.transaction.Status;
 import jakarta.transaction.SystemException;
+
+import java.util.logging.Level;
+
+import javax.security.auth.Subject;
+import javax.transaction.xa.XAResource;
 
 /**
  * @author Tony Ng
@@ -66,8 +66,7 @@ public class LocalTxConnectorAllocator extends AbstractConnectorAllocator {
     }
 
     @Override
-    public ResourceHandle createResource()
-            throws PoolingException {
+    public ResourceHandle createResource() throws PoolingException {
         try {
             ManagedConnection mc = mcf.createManagedConnection(subject, reqInfo);
 
@@ -81,17 +80,6 @@ public class LocalTxConnectorAllocator extends AbstractConnectorAllocator {
 
             return resource;
         } catch (ResourceException ex) {
-            Object[] params = new Object[]{spec.getPoolInfo(), ex.toString()};
-            _logger.log(Level.WARNING, "poolmgr.create_resource_error", params);
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Resource Exception while creating resource", ex);
-            }
-
-            if (ex.getLinkedException() != null) {
-                _logger.log(Level.WARNING,
-                        "poolmgr.create_resource_linked_error", ex
-                                .getLinkedException().toString());
-            }
             throw new PoolingException(ex);
         }
     }

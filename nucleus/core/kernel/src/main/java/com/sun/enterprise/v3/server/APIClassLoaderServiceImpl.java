@@ -17,13 +17,11 @@
 
 package com.sun.enterprise.v3.server;
 
-import com.sun.enterprise.module.HK2Module;
-import com.sun.enterprise.module.ModuleLifecycleListener;
-import com.sun.enterprise.module.ModuleState;
-import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.module.common_impl.CompositeEnumeration;
-
-import jakarta.inject.Inject;
+import static com.sun.enterprise.util.FelixPrettyPrinter.prettyPrintExceptionMessage;
+import static com.sun.enterprise.util.SystemPropertyConstants.DEBUG_MODE_PROPERTY;
+import static java.util.Collections.enumeration;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
 
 import java.io.IOException;
 import java.net.URL;
@@ -41,11 +39,13 @@ import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.jvnet.hk2.annotations.Service;
 
-import static com.sun.enterprise.util.FelixPrettyPrinter.prettyPrintExceptionMessage;
-import static com.sun.enterprise.util.SystemPropertyConstants.DEBUG_MODE_PROPERTY;
-import static java.util.Collections.enumeration;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.SEVERE;
+import com.sun.enterprise.module.HK2Module;
+import com.sun.enterprise.module.ModuleLifecycleListener;
+import com.sun.enterprise.module.ModuleState;
+import com.sun.enterprise.module.ModulesRegistry;
+import com.sun.enterprise.module.common_impl.CompositeEnumeration;
+
+import jakarta.inject.Inject;
 
 /**
  * This class is responsible for creating a ClassLoader that can load classes exported by the system for public use. We
@@ -399,11 +399,7 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
 
                     // Punch in for META-INF/mailcap files. see issue #8426
                     for (HK2Module module : modulesRegistry.getModules()) {
-                        if (!select(module)) {
-                            continue; // We don't look in unresolved modules
-                        }
-
-                        if (module == APIModule) {
+                        if (!select(module) || (module == APIModule)) {
                             continue; // we have already looked up resources in apiModuleLoader
                         }
 
@@ -416,10 +412,7 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
                     String serviceName = name.substring(META_INF_SERVICES.length());
                     List<URL> punchedInURLs = new ArrayList<>();
                     for (HK2Module module : modulesRegistry.getModules()) {
-                        if (!select(module)) {
-                            continue; // We don't look in modules that don't meet punch in criteria
-                        }
-                        if (module == APIModule) {
+                        if (!select(module) || (module == APIModule)) {
                             continue; // we have already looked up resources in apiModuleLoader
                         }
                         punchedInURLs.addAll(module.getMetadata().getDescriptors(serviceName));

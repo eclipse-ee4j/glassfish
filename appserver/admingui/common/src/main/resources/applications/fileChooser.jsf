@@ -21,6 +21,7 @@
 <sun:page id="page1">
     <!beforeCreate
     setResourceBundle(key="i18n" bundle="org.glassfish.admingui.core.Strings");
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings");
     getRequestValue(key="dirPathId" value=>$page{dirPathId});
     getRequestValue(key="appNameId" value=>$page{appNameId});
     getRequestValue(key="folderOnly" value=>$page{folderOnly});
@@ -40,7 +41,7 @@
     />
 <sun:html id="html2">
     <sun:head id="propertyhead">
-        <sun:script url="/resource/common/js/adminjsf.js" />
+        <sun:script url="$resource{i18nc.adminjsf.url}" />
     </sun:head>
     <sun:body id="body3">
         <sun:form id="propertyForm">

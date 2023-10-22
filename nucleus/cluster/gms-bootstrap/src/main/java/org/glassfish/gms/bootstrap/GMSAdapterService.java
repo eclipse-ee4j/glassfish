@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,33 +17,6 @@
 
 package org.glassfish.gms.bootstrap;
 
-import java.beans.PropertyChangeEvent;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.glassfish.api.logging.LogLevel;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.inject.Provider;
-
-import org.glassfish.api.StartupRunLevel;
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.hk2.runlevel.RunLevel;
-import org.glassfish.hk2.utilities.BuilderHelper;
-import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.Changed;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.jvnet.hk2.config.ConfigListener;
-import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.NotProcessed;
-import org.jvnet.hk2.config.UnprocessedChangeEvents;
-
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Clusters;
 import com.sun.enterprise.config.serverbeans.Server;
@@ -50,11 +24,36 @@ import com.sun.enterprise.ee.cms.core.GMSConstants;
 import com.sun.enterprise.ee.cms.core.GroupManagementService;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.logging.LogDomains;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Provider;
+
+import java.beans.PropertyChangeEvent;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.StartupRunLevel;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.logging.LogLevel;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.runlevel.RunLevel;
+import org.glassfish.hk2.utilities.BuilderHelper;
+import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.glassfish.logging.annotation.LogMessageInfo;
-import org.glassfish.logging.annotation.LoggerInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
+import org.glassfish.logging.annotation.LoggerInfo;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.Changed;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigListener;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.NotProcessed;
+import org.jvnet.hk2.config.UnprocessedChangeEvents;
 
 /**
  * This service is responsible for loading the group management
@@ -112,7 +111,7 @@ public class GMSAdapterService implements PostConstruct, ConfigListener {
 
     static private final Object lock = new Object();
 
-    List<GMSAdapter> gmsAdapters = new LinkedList<GMSAdapter>();
+    List<GMSAdapter> gmsAdapters = new LinkedList<>();
 
     final static private Level TRACE_LEVEL = LogLevel.FINE;
 
@@ -212,7 +211,7 @@ public class GMSAdapterService implements PostConstruct, ConfigListener {
 
                 // see https://glassfish.dev.java.net/issues/show_bug.cgi?id=12850
                 if (result == null) {
-                    GMSBS_LOGGER.log(LogLevel.WARNING, GMSBS_GMSADAPTER_NOT_AVAILABLE);
+                    GMSBS_LOGGER.log(Level.WARNING, GMSBS_GMSADAPTER_NOT_AVAILABLE);
                     return null;
                 }
                 boolean initResult = result.initialize(cluster.getName());

@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.persistence.cmp</groupId>
         <artifactId>cmp</artifactId>
-        <version>7.0.4-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -61,6 +61,20 @@
                 </includes>
             </resource>
         </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Export-Package>
+                            com.sun.jdo.api.persistence.enhancer.generator,
+                            com.sun.jdo.api.persistence.enhancer.meta
+                        </Export-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
     <!--

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,15 @@
 
 package org.glassfish.ha.store.adapter.file;
 
-import org.glassfish.ha.store.api.*;
-import org.jvnet.hk2.annotations.Service;
-
 import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.glassfish.ha.store.api.BackingStore;
+import org.glassfish.ha.store.api.BackingStoreConfiguration;
+import org.glassfish.ha.store.api.BackingStoreException;
+import org.glassfish.ha.store.api.BackingStoreFactory;
+import org.glassfish.ha.store.api.BackingStoreTransaction;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * @author Mahesh Kannan
@@ -29,10 +34,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class FileBackingStoreFactory
         implements BackingStoreFactory {
 
-    private static ThreadLocal<FileStoreTransaction> _current = new ThreadLocal<FileStoreTransaction>();
+    private static ThreadLocal<FileStoreTransaction> _current = new ThreadLocal<>();
 
     private static ConcurrentHashMap<String, FileBackingStore> _stores
-            = new ConcurrentHashMap<String, FileBackingStore>();
+            = new ConcurrentHashMap<>();
 
 
     static FileBackingStore getFileBackingStore(String storeName) {
@@ -47,7 +52,7 @@ public class FileBackingStoreFactory
     public <K extends Serializable, V extends Serializable> BackingStore<K, V> createBackingStore(
             BackingStoreConfiguration<K, V> conf)
                 throws BackingStoreException {
-        FileBackingStore<K, V> fs = new FileBackingStore<K, V>();
+        FileBackingStore<K, V> fs = new FileBackingStore<>();
         fs.initialize(conf);
         fs.setFileBackingStoreFactory(this);
         _stores.put(conf.getStoreName(), fs);

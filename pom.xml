@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2022 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation. All rights reserved.
     Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -30,7 +30,7 @@
 
     <groupId>org.glassfish.main</groupId>
     <artifactId>glassfish-main-aggregator</artifactId>
-    <version>7.0.4-SNAPSHOT</version>
+    <version>7.0.10-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>GlassFish Project</name>
@@ -85,7 +85,7 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>3.8.6</version>
+                                    <version>3.9.0</version>
                                 </requireMavenVersion>
                             </rules>
                         </configuration>
@@ -112,6 +112,30 @@
             </modules>
         </profile>
         <profile>
+            <id>docs</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>release-phase-all</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <modules>
+                <module>docs</module>
+            </modules>
+        </profile>
+
+        <!-- Ommits a variety of things in order to get the fastest build of a basic full glassfish server -->
+        <profile>
+            <id>fastest</id>
+            <modules>
+                <module>qa</module>
+                <module>nucleus</module>
+                <module>appserver</module>
+            </modules>
+        </profile>
+
+        <profile>
             <!--
                 RE profile for release purposes.
             -->
@@ -134,8 +158,6 @@
                 <module>qa</module>
                 <module>nucleus</module>
                 <module>appserver</module>
-                <module>nucleus/hk2/config-generator</module>
-                <module>docs</module>
                 <module>appserver/extras/embedded/common</module>
                 <module>appserver/tests/appserv-tests/util/reportbuilder</module>
                 <module>appserver/tests/tck</module>
@@ -149,7 +171,7 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.8</version>
+                        <version>0.8.10</version>
                         <executions>
                             <execution>
                                 <id>jacoco-merge</id>

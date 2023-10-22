@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,7 +36,6 @@ import jakarta.inject.Singleton;
 
 import java.beans.PropertyChangeEvent;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.naming.NamingException;
@@ -61,6 +60,10 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.NotProcessed;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
+
 
 /**
  * ResourceManager lifecycle listener that listens to resource-manager startup and shutdown
@@ -71,6 +74,9 @@ import org.jvnet.hk2.config.UnprocessedChangeEvents;
 @Service
 @Singleton
 public class ConnectorResourceManagerLifecycleListener implements org.glassfish.resourcebase.resources.listener.ResourceManagerLifecycleListener, ConfigListener {
+
+    private static final Logger LOG = LogDomains.getLogger(ConnectorResourceManagerLifecycleListener.class,
+        LogDomains.RSR_LOGGER, false);
 
     @Inject
     private GlassfishNamingManager namingMgr;
@@ -107,8 +113,7 @@ public class ConnectorResourceManagerLifecycleListener implements org.glassfish.
     @Inject
     private InternalSystemAdministrator internalSystemAdministrator;
 
-    private static final Logger logger =
-            LogDomains.getLogger(ConnectorRuntime.class, LogDomains.RESOURCE_BUNDLE);
+
 
     private void bindConnectorDescriptors() {
         for(String rarName : ConnectorConstants.systemRarNames){
@@ -125,8 +130,8 @@ public class ConnectorResourceManagerLifecycleListener implements org.glassfish.
         try {
             namingMgr.publishObject(jndiName, proxy, true);
         } catch (NamingException e) {
-            Object[] params = new Object[]{rarName, e};
-            logger.log(Level.WARNING, "resources.resource-manager.connector-descriptor.bind.failure", params);
+            LOG.log(WARNING,
+                "Unable to bind connector descriptor for resource-adapter " + rarName + " to JNDI name " + jndiName, e);
         }
     }
 
@@ -173,16 +178,14 @@ public class ConnectorResourceManagerLifecycleListener implements org.glassfish.
                 cr.cleanUpResourcesAndShutdownAllActiveRAs();
             }
         } else {
-            if(logger.isLoggable(Level.FINEST)) {
-                logger.finest("ConnectorRuntime not initialized, hence skipping " +
-                    "resource-adapters shutdown, resources, pools cleanup");
-            }
+            LOG.log(FINEST, "ConnectorRuntime not initialized, hence skipping resource-adapters"
+                + " shutdown, resources, pools cleanup");
         }
     }
 
     @Override
     public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
-            return ConfigSupport.sortAndDispatch(events, new ConfigChangeHandler(), logger);
+        return ConfigSupport.sortAndDispatch(events, new ConfigChangeHandler(), LOG);
     }
 
     class ConfigChangeHandler implements Changed {
@@ -243,33 +246,34 @@ public class ConnectorResourceManagerLifecycleListener implements org.glassfish.
         }
 
         private void pingConnectionPool(Resources resources) {
-            if(resources != null){
-                if(resources.getResources() != null){
-                    for(Resource resource : resources.getResources()){
-                        if(resource instanceof ResourcePool){
-                            ResourcePool pool = (ResourcePool)resource;
-                            if(Boolean.valueOf(pool.getPing())){
-                                PoolInfo poolInfo = ResourceUtil.getPoolInfo(pool);
-                                CommandRunner commandRunner = commandRunnerProvider.get();
-                                ActionReport report = actionReportProvider.get();
-                                CommandRunner.CommandInvocation invocation =
-                                        commandRunner.getCommandInvocation("ping-connection-pool", report, internalSystemAdministrator.getSubject());
-                                ParameterMap params = new ParameterMap();
-                                params.add("appname",poolInfo.getApplicationName());
-                                params.add("modulename",poolInfo.getModuleName());
-                                params.add("DEFAULT", poolInfo.getName().toString());
-                                invocation.parameters(params).execute();
-                                if(report.getActionExitCode() == ActionReport.ExitCode.SUCCESS){
-                                    logger.log(Level.INFO, "app-scoped.ping.connection.pool.success", poolInfo);
-                                }else{
-                                    Object args[] = new Object[]{poolInfo, report.getFailureCause()};
-                                    logger.log(Level.WARNING, "app-scoped.ping.connection.pool.failed", args);
-                                }
-                            }
-                        }
+            if (resources == null || resources.getResources() == null) {
+                return;
+            }
+            for (Resource resource : resources.getResources()) {
+                if (!(resource instanceof ResourcePool)) {
+                    continue;
+                }
+                ResourcePool pool = (ResourcePool)resource;
+                if (Boolean.parseBoolean(pool.getPing())) {
+                    PoolInfo poolInfo = ResourceUtil.getPoolInfo(pool);
+                    CommandRunner commandRunner = commandRunnerProvider.get();
+                    ActionReport report = actionReportProvider.get();
+                    CommandRunner.CommandInvocation invocation = commandRunner
+                        .getCommandInvocation("ping-connection-pool", report, internalSystemAdministrator.getSubject());
+                    ParameterMap params = new ParameterMap();
+                    params.add("appname",poolInfo.getApplicationName());
+                    params.add("modulename",poolInfo.getModuleName());
+                    params.add("DEFAULT", poolInfo.getName().toString());
+                    invocation.parameters(params).execute();
+                    if (report.getActionExitCode() == ActionReport.ExitCode.SUCCESS) {
+                        LOG.log(INFO, "The ping-connection-pool to {0} succeeded.", poolInfo);
+                    } else {
+                        LOG.log(WARNING, "The ping-connection-pool to " + poolInfo + " failed.",
+                            report.getFailureCause());
                     }
                 }
             }
+
         }
     }
 }

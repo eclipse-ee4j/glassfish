@@ -17,129 +17,103 @@
 
 package org.apache.catalina.core;
 
+import static java.text.MessageFormat.format;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+import static org.apache.catalina.ContainerEvent.AFTER_UPGRADE_HANDLER_INITIALIZED;
+import static org.apache.catalina.ContainerEvent.BEFORE_UPGRADE_HANDLER_INITIALIZED;
+import static org.apache.catalina.Globals.WRAPPED_REQUEST;
+import static org.apache.catalina.Globals.WRAPPED_RESPONSE;
+import static org.apache.catalina.LogFacade.NO_VALVES_IN_PIPELINE_EXCEPTION;
+import static org.apache.catalina.LogFacade.PIPLINE_NOT_STARTED;
+import static org.apache.catalina.LogFacade.PIPLINE_STARTED;
+import static org.apache.catalina.LogFacade.PROTOCOL_HANDLER_REQUIRED_EXCEPTION;
+import static org.apache.catalina.LogFacade.REMOVE_VALVE_EXCEPTION;
+import static org.apache.catalina.LogFacade.SET_BASIC_START_EXCEPTION;
 
-import org.apache.catalina.*;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.logging.Logger;
+
+import javax.management.ObjectName;
+
+import org.apache.catalina.Contained;
+import org.apache.catalina.Container;
+import org.apache.catalina.Context;
+import org.apache.catalina.Lifecycle;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.LifecycleListener;
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.Pipeline;
 import org.apache.catalina.Request;
 import org.apache.catalina.Response;
-import org.apache.catalina.connector.*;
+import org.apache.catalina.Valve;
+import org.apache.catalina.connector.WebConnectionImpl;
 import org.apache.catalina.util.LifecycleSupport;
 import org.apache.catalina.valves.ValveBase;
 import org.glassfish.web.valve.GlassFishValve;
 import org.glassfish.web.valve.GlassFishValveAdapter;
 import org.glassfish.web.valve.TomcatValveAdapter;
 
-import javax.management.ObjectName;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpUpgradeHandler;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.text.MessageFormat;
-import java.util.ResourceBundle;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /** CR 6411114 (Lifecycle implementation moved to ValveBase)
 import org.apache.tomcat.util.modeler.Registry;
 */
 
-
 /**
- * Standard implementation of a processing <b>Pipeline</b> that will invoke
- * a series of Valves that have been configured to be called in order.  This
- * implementation can be used for any type of Container.
+ * Standard implementation of a processing <b>Pipeline</b> that will invoke a series of Valves that have been configured
+ * to be called in order. This implementation can be used for any type of Container.
  *
- * <b>IMPLEMENTATION WARNING</b> - This implementation assumes that no
- * calls to <code>addValve()</code> or <code>removeValve</code> are allowed
- * while a request is currently being processed.  Otherwise, the mechanism
- * by which per-thread state is maintained will need to be modified.
+ * <b>IMPLEMENTATION WARNING</b> - This implementation assumes that no calls to <code>addValve()</code> or
+ * <code>removeValve</code> are allowed while a request is currently being processed. Otherwise, the mechanism by which
+ * per-thread state is maintained will need to be modified.
  *
  * @author Craig R. McClanahan
  */
 
-public class StandardPipeline
-    implements Pipeline, Contained, Lifecycle {
+public class StandardPipeline implements Pipeline, Contained, Lifecycle {
 
     private static final Logger log = LogFacade.getLogger();
     private static final ResourceBundle rb = log.getResourceBundle();
 
-    // ----------------------------------------------------------- Constructors
-
-
-    /**
-     * Construct a new StandardPipeline instance with no associated Container.
-     */
-    public StandardPipeline() {
-
-        this(null);
-
-    }
-
-
-    /**
-     * Construct a new StandardPipeline instance that is associated with the
-     * specified Container.
-     *
-     * @param container The container we should be associated with
-     */
-    public StandardPipeline(Container container) {
-
-        super();
-        setContainer(container);
-
-    }
-
 
     // ----------------------------------------------------- Instance Variables
-
 
     /**
      * The basic Valve (if any) associated with this Pipeline.
      */
-    protected GlassFishValve basic = null;
-
+    protected GlassFishValve basic;
 
     /**
      * The Container with which this Pipeline is associated.
      */
-    protected Container container = null;
-
+    protected Container container;
 
     /**
      * Descriptive information about this implementation.
      */
     protected static final String info = "org.apache.catalina.core.StandardPipeline/1.0";
 
-
     /**
      * The lifecycle event support for this component.
      */
     protected LifecycleSupport lifecycle = new LifecycleSupport(this);
 
-
     /**
      * Has this component been started yet?
      */
-    protected boolean started = false;
-
-    // START OF IASRI# 4647091
-    /*
-     * The per-thread execution state for processing through this pipeline.
-     * The actual value is a java.lang.Integer object containing the subscript
-     * into the <code>values</code> array, or a subscript equal to
-     * <code>values.length</code> if the basic Valve is currently being
-     * processed.
-     */
-    // protected ThreadLocal state = new ThreadLocal();
-    // END OF IASRI# 4647091
+    protected boolean started;
 
     /**
-     * The set of Valves (not including the Basic one, if any) associated with
-     * this Pipeline.
+     * The set of Valves (not including the Basic one, if any) associated with this Pipeline.
      */
     protected GlassFishValve valves[] = new GlassFishValve[0];
-
 
     // The first Tomcat-style valve in the pipeline, if any
     private Valve firstTcValve;
@@ -148,38 +122,51 @@ public class StandardPipeline
     // in the pipeline, if any
     private Valve lastTcValve;
 
+    // ----------------------------------------------------------- Constructors
+
+    /**
+     * Construct a new StandardPipeline instance with no associated Container.
+     */
+    public StandardPipeline() {
+        this(null);
+    }
+
+    /**
+     * Construct a new StandardPipeline instance that is associated with the specified Container.
+     *
+     * @param container The container we should be associated with
+     */
+    public StandardPipeline(Container container) {
+        super();
+        setContainer(container);
+
+    }
 
     // --------------------------------------------------------- Public Methods
-
 
     /**
      * Return descriptive information about this implementation class.
      */
     public String getInfo() {
-
         return info;
-
     }
 
-
     // ------------------------------------------------------ Contained Methods
-
 
     /**
      * Return the Container with which this Pipeline is associated.
      */
+    @Override
     public Container getContainer() {
-
-        return (this.container);
-
+        return container;
     }
-
 
     /**
      * Set the Container with which this Pipeline is associated.
      *
      * @param container The new associated container
      */
+    @Override
     public void setContainer(Container container) {
         this.container = container;
     }
@@ -192,44 +179,41 @@ public class StandardPipeline
      *
      * @param listener The listener to add
      */
+    @Override
     public void addLifecycleListener(LifecycleListener listener) {
         lifecycle.addLifecycleListener(listener);
     }
 
-
     /**
-     * Gets the (possibly empty) list of lifecycle listeners
-     * associated with this Pipeline.
+     * Gets the (possibly empty) list of lifecycle listeners associated with this Pipeline.
      */
+    @Override
     public List<LifecycleListener> findLifecycleListeners() {
         return lifecycle.findLifecycleListeners();
     }
-
 
     /**
      * Remove a lifecycle event listener from this component.
      *
      * @param listener The listener to remove
      */
+    @Override
     public void removeLifecycleListener(LifecycleListener listener) {
         lifecycle.removeLifecycleListener(listener);
     }
 
-
     /**
      * Prepare for active use of the public methods of this Component.
      *
-     * @exception IllegalStateException if this component has already been
-     *  started
-     * @exception LifecycleException if this component detects a fatal error
-     *  that prevents it from being started
+     * @exception IllegalStateException if this component has already been started
+     * @exception LifecycleException if this component detects a fatal error that prevents it from being started
      */
+    @Override
     public synchronized void start() throws LifecycleException {
-
         // Validate and update our current component state
-        if (started)
-            throw new LifecycleException
-                    (rb.getString(LogFacade.PIPLINE_STARTED));
+        if (started) {
+            throw new LifecycleException(rb.getString(PIPLINE_STARTED));
+        }
 
         // Notify our interested LifecycleListeners
         lifecycle.fireLifecycleEvent(BEFORE_START_EVENT, null);
@@ -237,43 +221,35 @@ public class StandardPipeline
         started = true;
 
         // Start the Valves in our pipeline (including the basic), if any
-        for (int i = 0; i < valves.length; i++) {
-            if (valves[i] instanceof Lifecycle)
-                ((Lifecycle) valves[i]).start();
-            /** CR 6411114 (MBean registration moved to ValveBase.start())
-            registerValve(valves[i]);
-            */
+        for (GlassFishValve element : valves) {
+            if (element instanceof Lifecycle) {
+                ((Lifecycle) element).start();
+            }
         }
-        if ((basic != null) && (basic instanceof Lifecycle))
-            ((Lifecycle) basic).start();
 
-        /** CR 6411114 (MBean registration moved to ValveBase.start())
-        if( basic!=null )
-            registerValve(basic);
-        */
+        if ((basic != null) && (basic instanceof Lifecycle)) {
+            ((Lifecycle) basic).start();
+        }
 
         // Notify our interested LifecycleListeners
         lifecycle.fireLifecycleEvent(START_EVENT, null);
 
         // Notify our interested LifecycleListeners
         lifecycle.fireLifecycleEvent(AFTER_START_EVENT, null);
-
     }
-
 
     /**
      * Gracefully shut down active use of the public methods of this Component.
      *
      * @exception IllegalStateException if this component has not been started
-     * @exception LifecycleException if this component detects a fatal error
-     *  that needs to be reported
+     * @exception LifecycleException if this component detects a fatal error that needs to be reported
      */
+    @Override
     public synchronized void stop() throws LifecycleException {
-
         // Validate and update our current component state
-        if (!started)
-            throw new LifecycleException
-                    (rb.getString(LogFacade.PIPLINE_NOT_STARTED));
+        if (!started) {
+            throw new LifecycleException(rb.getString(PIPLINE_NOT_STARTED));
+        }
 
         started = false;
 
@@ -284,61 +260,51 @@ public class StandardPipeline
         lifecycle.fireLifecycleEvent(STOP_EVENT, null);
 
         // Stop the Valves in our pipeline (including the basic), if any
-        if ((basic != null) && (basic instanceof Lifecycle))
+        if ((basic != null) && (basic instanceof Lifecycle)) {
             ((Lifecycle) basic).stop();
-        /** CR 6411114 (MBean deregistration moved to ValveBase.stop())
-        if( basic!=null ) {
-            unregisterValve(basic);
         }
-        */
-        for (int i = 0; i < valves.length; i++) {
-            if (valves[i] instanceof Lifecycle)
-                ((Lifecycle) valves[i]).stop();
-            /** CR 6411114 (MBean deregistration moved to ValveBase.stop())
-            unregisterValve(valves[i]);
-            */
+
+        for (GlassFishValve element : valves) {
+            if (element instanceof Lifecycle) {
+                ((Lifecycle) element).stop();
+            }
 
         }
 
         // Notify our interested LifecycleListeners
         lifecycle.fireLifecycleEvent(AFTER_STOP_EVENT, null);
-
     }
-
 
     // ------------------------------------------------------- Pipeline Methods
 
-
     /**
-     * <p>Return the Valve instance that has been distinguished as the basic
-     * Valve for this Pipeline (if any).
+     * Return the Valve instance that has been distinguished as the basic Valve for this Pipeline (if any).
      */
+    @Override
     public GlassFishValve getBasic() {
-
-        return (this.basic);
-
+        return basic;
     }
 
-
     /**
-     * <p>Set the Valve instance that has been distinguished as the basic
-     * Valve for this Pipeline (if any).  Prior to setting the basic Valve,
-     * the Valve's <code>setContainer()</code> will be called, if it
-     * implements <code>Contained</code>, with the owning Container as an
-     * argument.  The method may throw an <code>IllegalArgumentException</code>
-     * if this Valve chooses not to be associated with this Container, or
-     * <code>IllegalStateException</code> if it is already associated with
-     * a different Container.</p>
+     * Set the Valve instance that has been distinguished as the basic Valve for this Pipeline (if any).
+     *
+     * <p>
+     * Prior to setting the basic Valve, the Valve's <code>setContainer()</code> will be called, if it implements
+     * <code>Contained</code>, with the owning Container as an argument. The method may throw an
+     * <code>IllegalArgumentException</code> if this Valve chooses not to be associated with this Container, or
+     * <code>IllegalStateException</code> if it is already associated with a different Container.
+     * </p>
      *
      * @param valve Valve to be distinguished as the basic Valve
      */
+    @Override
     public void setBasic(GlassFishValve valve) {
-
         // Change components if necessary
         GlassFishValve oldBasic = null;
         synchronized (this) {
             oldBasic = this.basic;
         }
+
         if (oldBasic == valve) {
             return;
         }
@@ -350,7 +316,7 @@ public class StandardPipeline
                     try {
                         ((Lifecycle) oldBasic).stop();
                     } catch (LifecycleException e) {
-                        log.log(Level.SEVERE, LogFacade.SET_BASIC_STOP_EXCEPTION, e);
+                        log.log(SEVERE, LogFacade.SET_BASIC_STOP_EXCEPTION, e);
                     }
                 }
             }
@@ -367,20 +333,17 @@ public class StandardPipeline
         if (valve == null) {
             return;
         }
+
         if (valve instanceof Contained) {
             ((Contained) valve).setContainer(this.container);
         }
-        /** CR 6411114
-        if (valve instanceof Lifecycle) {
-        */
-        // START CR 6411114
+
         // Start the valve if the pipeline has already been started
         if (started && (valve instanceof Lifecycle)) {
-        // END CR 6411114
             try {
                 ((Lifecycle) valve).start();
             } catch (LifecycleException e) {
-                log.log(Level.SEVERE, LogFacade.SET_BASIC_START_EXCEPTION, e);
+                log.log(SEVERE, SET_BASIC_START_EXCEPTION, e);
                 return;
             }
         }
@@ -388,31 +351,26 @@ public class StandardPipeline
         synchronized (this) {
             this.basic = valve;
         }
-
     }
 
-
     /**
-     * <p>Add a new Valve to the end of the pipeline associated with this
-     * Container.  Prior to adding the Valve, the Valve's
-     * <code>setContainer()</code> method will be called, if it implements
-     * <code>Contained</code>, with the owning Container as an argument.
-     * The method may throw an
-     * <code>IllegalArgumentException</code> if this Valve chooses not to
-     * be associated with this Container, or <code>IllegalStateException</code>
-     * if it is already associated with a different Container.</p>
+     * Add a new Valve to the end of the pipeline associated with this Container.
+     *
+     * <p>
+     * Prior to adding the Valve, the Valve's <code>setContainer()</code> method will be called, if it implements
+     * <code>Contained</code>, with the owning Container as an argument. The method may throw an
+     * <code>IllegalArgumentException</code> if this Valve chooses not to be associated with this Container, or
+     * <code>IllegalStateException</code> if it is already associated with a different Container.
+     * </p>
      *
      * @param valve Valve to be added
      *
-     * @exception IllegalArgumentException if this Container refused to
-     *  accept the specified Valve
-     * @exception IllegalArgumentException if the specified Valve refuses to be
-     *  associated with this Container
-     * @exception IllegalStateException if the specified Valve is already
-     *  associated with a different Container
+     * @exception IllegalArgumentException if this Container refused to accept the specified Valve
+     * @exception IllegalArgumentException if the specified Valve refuses to be associated with this Container
+     * @exception IllegalStateException if the specified Valve is already associated with a different Container
      */
+    @Override
     public void addValve(GlassFishValve valve) {
-
         if (firstTcValve != null) {
             // Wrap GlassFish-style valve inside Tomcat-style valve
             addValve(new TomcatValveAdapter(valve));
@@ -420,8 +378,9 @@ public class StandardPipeline
         }
 
         // Validate that we can add this Valve
-        if (valve instanceof Contained)
+        if (valve instanceof Contained) {
             ((Contained) valve).setContainer(this.container);
+        }
 
         // Start the new component if necessary
         if (started) {
@@ -429,46 +388,40 @@ public class StandardPipeline
                 try {
                     ((Lifecycle) valve).start();
                 } catch (LifecycleException e) {
-                    log.log(Level.SEVERE, LogFacade.ADD_VALVE_EXCEPTION, e);
+                    log.log(SEVERE, LogFacade.ADD_VALVE_EXCEPTION, e);
                 }
             }
-            /** CR 6411114 (MBean registration moved to ValveBase.start())
-            // Register the newly added valve
-            registerValve(valve);
-            */
         }
 
         // Add this Valve to the set associated with this Pipeline
-        GlassFishValve results[] = new GlassFishValve[valves.length +1];
+        GlassFishValve results[] = new GlassFishValve[valves.length + 1];
         System.arraycopy(valves, 0, results, 0, valves.length);
         results[valves.length] = valve;
         valves = results;
     }
 
-
     /**
      * Add Tomcat-style valve.
      */
+    @Override
     public synchronized void addValve(Valve valve) {
-
         /*
-         * Check if this is a GlassFish-style valve that was compiled
-         * against the old org.apache.catalina.Valve interface (from
-         * GlassFish releases prior to V3), which has since been renamed
-         * to org.glassfish.web.valve.GlassFishValve (in V3)
+         * Check if this is a GlassFish-style valve that was compiled against the old org.apache.catalina.Valve interface (from
+         * GlassFish releases prior to V3), which has since been renamed to org.glassfish.web.valve.GlassFishValve (in V3)
          */
         if (isGlassFishValve(valve)) {
             try {
                 addValve(new GlassFishValveAdapter(valve));
             } catch (Exception e) {
-                String msg = MessageFormat.format(rb.getString(LogFacade.ADD_TOMCAT_STYLE_VALVE_EXCEPTION), valve);
-                log.log(Level.SEVERE, msg, e);
+                String msg = format(rb.getString(LogFacade.ADD_TOMCAT_STYLE_VALVE_EXCEPTION), valve);
+                log.log(SEVERE, msg, e);
             }
             return;
         }
 
-        if (valve instanceof Contained)
+        if (valve instanceof Contained) {
             ((Contained) valve).setContainer(this.container);
+        }
 
         // Start the new Valve if necessary
         if (started) {
@@ -476,8 +429,7 @@ public class StandardPipeline
                 try {
                     ((Lifecycle) valve).start();
                 } catch (LifecycleException e) {
-                    log.log(Level.SEVERE,
-                            LogFacade.ADD_VALVE_EXCEPTION, e);
+                    log.log(SEVERE, LogFacade.ADD_VALVE_EXCEPTION, e);
                 }
             }
         }
@@ -494,49 +446,50 @@ public class StandardPipeline
         }
     }
 
-
     /**
-     * Return the set of Valves in the pipeline associated with this
-     * Container, including the basic Valve (if any).  If there are no
-     * such Valves, a zero-length array is returned.
+     * Return the set of Valves in the pipeline associated with this Container, including the basic Valve (if any). If there
+     * are no such Valves, a zero-length array is returned.
      */
+    @Override
     public GlassFishValve[] getValves() {
         if (basic == null) {
-            return (valves);
+            return valves;
         }
+
         GlassFishValve results[] = new GlassFishValve[valves.length + 1];
         System.arraycopy(valves, 0, results, 0, valves.length);
         results[valves.length] = basic;
-        return (results);
-    }
 
+        return results;
+    }
 
     /**
-     * @return true if this pipeline has any non basic valves, false
-     * otherwise
+     * @return true if this pipeline has any non basic valves, false otherwise
      */
+    @Override
     public boolean hasNonBasicValves() {
-        return ((valves != null && valves.length > 0) || firstTcValve != null);
+        return (valves != null && valves.length > 0) || firstTcValve != null;
     }
 
-
     public ObjectName[] getValveObjectNames() {
-        ObjectName oname[]=new ObjectName[valves.length + 1];
-        for( int i=0; i<valves.length; i++ ) {
-            if( valves[i] instanceof ValveBase )
-                oname[i]=((ValveBase)valves[i]).getObjectName();
+        ObjectName oname[] = new ObjectName[valves.length + 1];
+        for (int i = 0; i < valves.length; i++) {
+            if (valves[i] instanceof ValveBase) {
+                oname[i] = ((ValveBase) valves[i]).getObjectName();
+            }
         }
-        if( basic instanceof ValveBase )
-            oname[valves.length]=((ValveBase)basic).getObjectName();
+
+        if (basic instanceof ValveBase) {
+            oname[valves.length] = ((ValveBase) basic).getObjectName();
+        }
+
         return oname;
     }
 
     /**
-     * Cause the specified request and response to be processed by the Valves
-     * associated with this pipeline, until one of these valves causes the
-     * response to be created and returned.  The implementation must ensure
-     * that multiple simultaneous requests (on different threads) can be
-     * processed through the same Pipeline without interfering with each
+     * Cause the specified request and response to be processed by the Valves associated with this pipeline, until one of
+     * these valves causes the response to be created and returned. The implementation must ensure that multiple
+     * simultaneous requests (on different threads) can be processed through the same Pipeline without interfering with each
      * other's control flow.
      *
      * @param request The servlet request we are processing
@@ -545,19 +498,16 @@ public class StandardPipeline
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception is thrown
      */
-    public void invoke(Request request, Response response)
-            throws IOException, ServletException {
-        doInvoke(request,response,false);
+    @Override
+    public void invoke(Request request, Response response) throws IOException, ServletException {
+        doInvoke(request, response, false);
     }
 
-    public void doChainInvoke(Request request, Response response)
-            throws IOException, ServletException {
-        doInvoke(request,response,true);
+    public void doChainInvoke(Request request, Response response) throws IOException, ServletException {
+        doInvoke(request, response, true);
     }
 
-    private void doInvoke(Request request, Response response, boolean chaining)
-            throws IOException, ServletException {
-
+    private void doInvoke(Request request, Response response, boolean chaining) throws IOException, ServletException {
         if ((valves.length > 0) || (basic != null)) {
             // Set the status so that if there are no valves (other than the
             // basic one), the basic valve's request processing logic will
@@ -577,8 +527,9 @@ public class StandardPipeline
                     resp = getResponse(request, response);
                 }
                 status = valves[i].invoke(req, resp);
-                if (status != GlassFishValve.INVOKE_NEXT)
+                if (status != GlassFishValve.INVOKE_NEXT) {
                     break;
+                }
             }
 
             // Save a reference to the valve[], to ensure that postInvoke()
@@ -629,68 +580,67 @@ public class StandardPipeline
             savedValves = null;
 
         } else {
-            throw new ServletException
-                    (rb.getString(LogFacade.NO_VALVES_IN_PIPELINE_EXCEPTION));
+            throw new ServletException(rb.getString(NO_VALVES_IN_PIPELINE_EXCEPTION));
         }
 
         // Calls the protocol handler's init method if the request is marked to be upgraded
         if (request instanceof org.apache.catalina.connector.Request) {
-            org.apache.catalina.connector.Request req = (org.apache.catalina.connector.Request) request;
-            if (req.isUpgrade()) {
-                HttpUpgradeHandler handler = req.getHttpUpgradeHandler();
+            org.apache.catalina.connector.Request connectorRequest = (org.apache.catalina.connector.Request) request;
+            if (connectorRequest.isUpgrade()) {
+                HttpUpgradeHandler handler = connectorRequest.getHttpUpgradeHandler();
                 if (handler != null) {
-                    WebConnectionImpl wc =
-                            new WebConnectionImpl(
-                                    req.getInputStream(),
-                                    ((org.apache.catalina.connector.Response)req.getResponse()).getOutputStream());
-                    wc.setRequest(req);
-                    req.setWebConnection(wc);
+                    WebConnectionImpl webConnectionImpl =
+                        new WebConnectionImpl(
+                                connectorRequest.getInputStream(),
+                                ((org.apache.catalina.connector.Response) connectorRequest.getResponse()).getOutputStream());
+
+                    webConnectionImpl.setRequest(connectorRequest);
+                    connectorRequest.setWebConnection(webConnectionImpl);
                     if (response instanceof org.apache.catalina.connector.Response) {
-                        wc.setResponse((org.apache.catalina.connector.Response) response);
+                        webConnectionImpl.setResponse((org.apache.catalina.connector.Response) response);
                     }
-                    Context context = req.getContext();
+
+                    Context context = connectorRequest.getContext();
                     try {
-                        context.fireContainerEvent(ContainerEvent.BEFORE_UPGRADE_HANDLER_INITIALIZED, handler);
-                        handler.init(wc);
+                        context.fireContainerEvent(BEFORE_UPGRADE_HANDLER_INITIALIZED, handler);
+                        handler.init(webConnectionImpl);
                     } finally {
-                        context.fireContainerEvent(ContainerEvent.AFTER_UPGRADE_HANDLER_INITIALIZED, handler);
+                        context.fireContainerEvent(AFTER_UPGRADE_HANDLER_INITIALIZED, handler);
                     }
                 } else {
-                    log.log(Level.SEVERE, LogFacade.PROTOCOL_HANDLER_REQUIRED_EXCEPTION);
+                    log.log(SEVERE, PROTOCOL_HANDLER_REQUIRED_EXCEPTION);
                 }
             }
         }
     }
 
-
     private Request getRequest(Request request) {
-        Request r = (Request) request.getNote(Globals.WRAPPED_REQUEST);
-        if (r == null) {
-            r = request;
+        Request wrappedRequest = (Request) request.getNote(WRAPPED_REQUEST);
+        if (wrappedRequest == null) {
+            return request;
         }
-        return r;
-    }
 
+        return wrappedRequest;
+    }
 
     private Response getResponse(Request request, Response response) {
-        Response r = (Response) request.getNote(Globals.WRAPPED_RESPONSE);
-        if (r == null) {
-            r = response;
+        Response wrappedResponse = (Response) request.getNote(WRAPPED_RESPONSE);
+        if (wrappedResponse == null) {
+            return response;
         }
-        return r;
+
+        return wrappedResponse;
     }
 
-
     /**
-     * Remove the specified Valve from the pipeline associated with this
-     * Container, if it is found; otherwise, do nothing.  If the Valve is
-     * found and removed, the Valve's <code>setContainer(null)</code> method
-     * will be called if it implements <code>Contained</code>.
+     * Remove the specified Valve from the pipeline associated with this Container, if it is found; otherwise, do nothing.
+     * If the Valve is found and removed, the Valve's <code>setContainer(null)</code> method will be called if it implements
+     * <code>Contained</code>.
      *
      * @param valve Valve to be removed
      */
+    @Override
     public void removeValve(GlassFishValve valve) {
-
         // Locate this Valve in our list
         int j = -1;
         for (int i = 0; i < valves.length; i++) {
@@ -699,54 +649,54 @@ public class StandardPipeline
                 break;
             }
         }
-        if (j < 0)
+
+        if (j < 0) {
             return;
+        }
 
         // Remove this valve from our list
         GlassFishValve results[] = new GlassFishValve[valves.length - 1];
         int n = 0;
         for (int i = 0; i < valves.length; i++) {
-            if (i == j)
+            if (i == j) {
                 continue;
+            }
             results[n++] = valves[i];
         }
+
         valves = results;
+
         try {
-            if (valve instanceof Contained)
+            if (valve instanceof Contained) {
                 ((Contained) valve).setContainer(null);
+            }
         } catch (Throwable t) {
-            ;
+
         }
 
         // Stop this valve if necessary
         if (started) {
             if (valve instanceof ValveBase) {
-                if (((ValveBase)valve).isStarted()) {
+                if (((ValveBase) valve).isStarted()) {
                     try {
                         ((Lifecycle) valve).stop();
                     } catch (LifecycleException e) {
-                        log.log(Level.SEVERE, LogFacade.REMOVE_VALVE_EXCEPTION, e);
+                        log.log(SEVERE, REMOVE_VALVE_EXCEPTION, e);
                     }
                 }
             } else if (valve instanceof Lifecycle) {
                 try {
                     ((Lifecycle) valve).stop();
                 } catch (LifecycleException e) {
-                    log.log(Level.SEVERE, LogFacade.REMOVE_VALVE_EXCEPTION, e);
+                    log.log(SEVERE, REMOVE_VALVE_EXCEPTION, e);
                 }
             }
-
-            /** CR 6411114 (MBean deregistration moved to ValveBase.stop())
-            // Unregister the removed valve
-            unregisterValve(valve);
-            */
         }
 
     }
 
 
     // ------------------------------------------------------ Protected Methods
-
 
     /**
      * Log a message on the Logger associated with our Container (if any).
@@ -758,28 +708,21 @@ public class StandardPipeline
         if (container != null) {
             logger = container.getLogger();
 
-            String msg = MessageFormat.format(rb.getString(LogFacade.STANDARD_PIPELINE_INFO),
-                    new Object[] {container.getName(), message});
+            String msg = format(rb.getString(LogFacade.STANDARD_PIPELINE_INFO),
+                    new Object[] { container.getName(), message });
 
             if (logger != null) {
                 logger.log(msg);
             } else {
-                if (log.isLoggable(Level.INFO)) {
-                    log.log(Level.INFO, msg);
-                }
+                log.log(INFO, msg);
             }
         } else {
-            if (log.isLoggable(Level.INFO)) {
-                String msg = MessageFormat.format(rb.getString(LogFacade.STANDARD_PIPELINE_NULL_INFO), message);
-                log.log(Level.INFO, msg);
-            }
+            log.log(INFO, () -> format(rb.getString(LogFacade.STANDARD_PIPELINE_NULL_INFO), message));
         }
     }
 
-
     /**
-     * Logs the given message to the Logger associated with the Container
-     * (if any) of this StandardPipeline.
+     * Logs the given message to the Logger associated with the Container (if any) of this StandardPipeline.
      *
      * @param message the message
      * @param t the Throwable
@@ -789,47 +732,37 @@ public class StandardPipeline
         if (container != null) {
             logger = container.getLogger();
 
-            String msg = MessageFormat.format(rb.getString(LogFacade.STANDARD_PIPELINE_INFO),
-                                              new Object[] {container.getName(), message});
-
+            String msg = format(rb.getString(LogFacade.STANDARD_PIPELINE_INFO),
+                    new Object[] { container.getName(), message });
 
             if (logger != null) {
                 logger.log(msg, t, org.apache.catalina.Logger.WARNING);
             } else {
-                log.log(Level.WARNING, msg, t);
+                log.log(WARNING, msg, t);
             }
         } else {
-            String msg = MessageFormat.format(rb.getString(LogFacade.STANDARD_PIPELINE_NULL_INFO), message);
-            log.log(Level.WARNING, msg, t);// INFO set to WARNING
+            log.log(WARNING, format(rb.getString(LogFacade.STANDARD_PIPELINE_NULL_INFO), message), t);// INFO set to WARNING
         }
     }
 
     // ------------------------------------------------------ Private Methods
 
-
     /*
-     * Checks if the give valve is a GlassFish-style valve that was compiled
-     * against the old org.apache.catalina.Valve interface (from
-     * GlassFish releases prior to V3), which has since been renamed
-     * to org.glassfish.web.valve.GlassFishValve (in V3).
+     * Checks if the give valve is a GlassFish-style valve that was compiled against the old org.apache.catalina.Valve
+     * interface (from GlassFish releases prior to V3), which has since been renamed to
+     * org.glassfish.web.valve.GlassFishValve (in V3).
      *
-     * The check is done by checking that it is not an abstract method with
-     * return type int. Note that invoke method in the original Tomcat-based
-     * Valve interface is declared to be void.
+     * The check is done by checking that it is not an abstract method with return type int. Note that invoke method in the
+     * original Tomcat-based Valve interface is declared to be void.
      *
      * @param valve the valve to check
      *
-     * @return true if the given valve is a GlassFish-style valve, false
-     * otherwise
+     * @return true if the given valve is a GlassFish-style valve, false otherwise
      */
     private boolean isGlassFishValve(Valve valve) {
         try {
-            Method m = valve.getClass().getMethod(
-                        "invoke",
-                        org.apache.catalina.Request.class,
-                        org.apache.catalina.Response.class);
-            return (m != null && int.class.equals(m.getReturnType())
-                    && (!Modifier.isAbstract(m.getModifiers())));
+            Method m = valve.getClass().getMethod("invoke", org.apache.catalina.Request.class, org.apache.catalina.Response.class);
+            return (m != null && int.class.equals(m.getReturnType()) && (!Modifier.isAbstract(m.getModifiers())));
         } catch (Exception e) {
             return false;
         }

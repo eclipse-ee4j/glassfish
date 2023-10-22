@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,16 +34,15 @@ import org.glassfish.resourcebase.resources.ResourceTypeOrder;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
 
 /**
- * Concurrency context service resource definition
+ * Concurrency context service resource definition.
  */
 @Configured
 @ResourceConfigCreator(commandName = "create-context-service")
 @RestRedirects({
-    @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-context-service"),
-    @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-context-service")
+        @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-context-service"),
+        @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-context-service")
 })
 @ResourceTypeOrder(deploymentOrder = ResourceDeploymentOrder.CONTEXT_SERVICE)
 @ReferenceConstraint(skipDuringCreation = true, payload = ContextService.class)
@@ -52,18 +51,12 @@ import org.jvnet.hk2.config.DuckTyped;
 public interface ContextService extends ConfigBeanProxy, Resource, BindableResource, ConcurrencyResource, Payload {
 
     @Override
-    @DuckTyped
-    String getIdentity();
-
-    class Duck {
-
-        public static String getIdentity(ContextService resource) {
-            return resource.getJndiName();
-        }
+    default String getIdentity() {
+        return getJndiName();
     }
 
     @Service
-    public class ContextServiceConfigActivator extends ConfigBeanInstaller {
+    class ContextServiceConfigActivator extends ConfigBeanInstaller {
 
     }
 }

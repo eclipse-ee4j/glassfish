@@ -70,7 +70,7 @@
         setPageSessionAttribute(key="editLink" value="#{request.contextPath}/cluster/node/nodeEdit.jsf");
         setPageSessionAttribute(key="tableTitle" value="$resource{i18ncs.nodes.TableTitle}");
         createMap(result="#{pageSession.nodeInstanceMap}");
-        gf.listInstances(optionKeys={"standaloneonly" } optionValues={"true"}, instances="#{pageSession.standaloneList}");
+        gf.listInstances(optionKeys={"standaloneonly", "nostatus" } optionValues={"true", "true"}, instances="#{pageSession.standaloneList}");
     />
     </event>
 "    <script type="text/javascript">admingui.nav.selectTreeNodeById(admingui.nav.TREE_ID + ":nodeTreeNode");</script>
@@ -123,7 +123,7 @@
     <sun:tableColumn headerText="$resource{i18ncs.clusters.instanceCol}" rowHeader="$boolean{false}" id="col3">
          <event>
             <!beforeEncode
-                gf.listInstances(optionKeys={"id"} optionValues={"$pageSession{nodeName}"}, instances="#{requestScope.instanceList}" statusMap="#{requestScope.statusMap}");
+                gf.listInstances(optionKeys={"id", "nostatus"} optionValues={"$pageSession{nodeName}", "true"}, instances="#{requestScope.instanceList}" statusMap="#{requestScope.statusMap}");
                 mapPut(map="#{pageSession.nodeInstanceMap}" key="#{pageSession.nodeName}" value="#{requestScope.instanceList}");
             />
          </event>
@@ -131,7 +131,10 @@
             <foreach key="instance" list="#{requestScope.instanceList}">
                 <event>
                 <!beforeEncode
-                    setAttribute(key="status" value="#{requestScope.statusMap[ '${instance}']}");
+                    setAttribute(key="status" value="PROGRESS");
+                    if (#{not empty requestScope.statusMap[ '${instance}']}) {
+                        setAttribute(key="status" value="#{requestScope.statusMap[ '${instance}']}");
+                    }
                     gf.containedIn(list="#{pageSession.standaloneList}" testStr="#{requestScope.instance}" contain="#{requestScope.isStandalone}" );
                     urlencode(value="#{requestScope.instance}" encoding="UTF-8" result="#{pageSession.encodedInstanceName}");
                     if (#{requestScope.isStandalone}){
@@ -148,7 +151,10 @@
                 </event>
                 <sun:hyperlink url="#{requestScope.iurl}" text="#{requestScope.instance}" />
                 "&nbsp;&nbsp;&nbsp;
+                "<span class="status" data-instancename="#{instance}">
+
                 <staticText id="colStopped" value="#{requestScope.statusString}" />
+                "</span>
                 "<br />
             </foreach>
             </if>
@@ -178,6 +184,24 @@
 <sun:hidden id="helpKey" value="$resource{help_cluster.nodes}" />
     </sun:form>
 #include "/common/shared/changeButtonsJS.inc"
+
+<sun:script>
+    <f:verbatim>
+        function fetchStatusesOfInstances(tableIdPrefix) {
+            const statusCells = document.querySelectorAll("[id='" + tableIdPrefix + "nodesTable'] tr td span.status");
+            statusCells.forEach(e => {
+                const instName = e.attributes["data-instancename"].value;
+                admingui.ajax.get("#{request.contextPath}/shared/instanceStatus.jsf?instanceName=" + instName, "", (req) => {
+                e.innerHTML = req.responseText;
+                });
+            });
+        }
+
+        fetchStatusesOfInstances("propertyForm:");
+    </f:verbatim>
+
+</sun:script>
+
 
 </define>
 </composition>

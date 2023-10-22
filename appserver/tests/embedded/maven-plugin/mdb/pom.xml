@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+    Copyright (c) 2023 Contributors to the Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -23,57 +24,67 @@
     <parent>
         <groupId>org.glassfish.tests.embedded</groupId>
         <artifactId>maven-plugin</artifactId>
-        <version>7.0.4-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
     </parent>
     <groupId>org.glassfish.tests.embedded.maven-plugin</groupId>
     <artifactId>mdb</artifactId>
     <packaging>war</packaging>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.glassfish.embedded</groupId>
-                <artifactId>maven-embedded-glassfish-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>start</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>start</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>admin</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>admin</goal>
-                        </goals>
-                        <configuration>
-                            <commands>
-                                <param>create-jms-resource --restype jakarta.jms.Queue --property imqDestinationName=TestQueue jms/TestQueue</param>
-                                <param>create-jms-resource --restype jakarta.jms.QueueConnectionFactory jms/TestQueueConnectionFactory</param>
-                            </commands>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>deploy</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>stop</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>undeploy</goal>
-                            <goal>stop</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+    <profiles>
+        <profile>
+            <id>start-embedded</id>
+            <activation>
+                <property>
+                    <name>!skipTests</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.glassfish.embedded</groupId>
+                        <artifactId>maven-embedded-glassfish-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>start</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>start</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>admin</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>admin</goal>
+                                </goals>
+                                <configuration>
+                                    <commands>
+                                        <param>create-jms-resource --restype jakarta.jms.Queue --property imqDestinationName=TestQueue jms/TestQueue</param>
+                                        <param>create-jms-resource --restype jakarta.jms.QueueConnectionFactory jms/TestQueueConnectionFactory</param>
+                                    </commands>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>deploy</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>deploy</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>stop</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>undeploy</goal>
+                                    <goal>stop</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <dependencies>
         <dependency>
@@ -81,8 +92,8 @@
             <artifactId>maven-plugin-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
         </dependency>
         <dependency>
             <groupId>jakarta.jms</groupId>

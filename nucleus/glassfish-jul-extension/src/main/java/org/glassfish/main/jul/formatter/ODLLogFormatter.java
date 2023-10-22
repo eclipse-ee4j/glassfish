@@ -112,7 +112,7 @@ public class ODLLogFormatter extends GlassFishLogFormatter {
             if (message == null) {
                 return "";
             }
-            final boolean forceMultiline = multiline || message.contains(lineSeparator());
+            final boolean forceMultiline = multiline || message.indexOf('\n') >= 0;
             final Level logLevel = record.getLevel();
             final String msgId = record.getMessageKey();
             final String loggerName = record.getLoggerName();

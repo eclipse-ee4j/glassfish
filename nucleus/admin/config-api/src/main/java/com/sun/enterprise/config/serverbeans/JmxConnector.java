@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,139 +18,143 @@
 package com.sun.enterprise.config.serverbeans;
 
 import com.sun.enterprise.config.serverbeans.customvalidators.ReferenceConstraint;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 
-import java.beans.PropertyVetoException;
-import java.util.List;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.Payload;
 
+import java.beans.PropertyVetoException;
+import java.util.List;
+
+import org.glassfish.api.admin.config.Named;
+import org.glassfish.api.admin.config.PropertiesDesc;
+import org.glassfish.grizzly.config.dom.Ssl;
+import org.glassfish.quality.ToDo;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
-import org.glassfish.api.admin.config.Named;
-import org.glassfish.grizzly.config.dom.Ssl;
+
 import static org.glassfish.config.support.Constants.NAME_REGEX;
-import org.glassfish.api.admin.config.PropertiesDesc;
-import org.glassfish.quality.ToDo;
-import org.jvnet.hk2.config.*;
 
 /**
  * The jmx-connector element defines the configuration of a JSR 160 compliant remote JMX Connector.
  */
-
-/* @XmlType(name = "", propOrder = {
-    "ssl",
-    "property"
-}) */
-
 @Configured
 @ReferenceConstraint(skipDuringCreation = true, payload = JmxConnector.class)
 public interface JmxConnector extends ConfigBeanProxy, Named, PropertyBag, Payload {
-    final static String PORT_PATTERN = "\\$\\{[\\p{L}\\p{N}_][\\p{L}\\p{N}\\-_./;#]*\\}"
-            + "|[1-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]" + "|[1-5][0-9][0-9][0-9][0-9]|6[0-4][0-9][0-9][0-9]"
-            + "|65[0-4][0-9][0-9]|655[0-2][0-9]|6553[0-5]";
+
+    String PORT_PATTERN = "\\$\\{[\\p{L}\\p{N}_][\\p{L}\\p{N}\\-_./;#]*}"
+                          + "|[1-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]"
+                          + "|[1-5][0-9][0-9][0-9][0-9]|6[0-4][0-9][0-9][0-9]"
+                          + "|65[0-4][0-9][0-9]|655[0-2][0-9]|6553[0-5]";
 
     /**
-     * Gets the value of the enabled property.
+     * Gets the value of the {@code enabled} property.
      *
-     * Defines if this connector is enabled. For EE this must be enabled
+     * <p>Defines if this connector is enabled. For EE this must be enabled.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
     String getEnabled();
 
     /**
-     * Sets the value of the enabled property.
+     * Sets the value of the {@code enabled} property.
      *
-     * @param value allowed object is {@link String }
+     * @param enabled allowed object is {@link String}
      */
-    void setEnabled(String value) throws PropertyVetoException;
+    void setEnabled(String enabled) throws PropertyVetoException;
 
     /**
-     * Gets the value of the protocol property.
+     * Gets the value of the {@code protocol} property.
      *
-     * Defines the protocol that this jmx-connector should support. Supported protocols are defined by Entity rjmx-protocol.
+     * <p>Defines the protocol that this jmx-connector should support.
+     * Supported protocols are defined by Entity rjmx-protocol.
      * Other protocols can be used by user applications independently.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "rmi_jrmp")
     String getProtocol();
 
     /**
-     * Sets the value of the protocol property.
+     * Sets the value of the {@code protocol} property.
      *
-     * @param value allowed object is {@link String }
+     * @param protocol allowed object is {@link String}
      */
-    void setProtocol(String value) throws PropertyVetoException;
+    void setProtocol(String protocol) throws PropertyVetoException;
 
     /**
-     * Gets the value of the address property.
+     * Gets the value of the {@code address} property.
      *
-     * Specifies the IP address or host-name.
+     * <p>Specifies the IP address or host-name.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     @NotNull
     String getAddress();
 
     /**
-     * Sets the value of the address property.
+     * Sets the value of the {@code address} property.
      *
-     * @param value allowed object is {@link String }
+     * @param address allowed object is {@link String}
      */
-    void setAddress(String value) throws PropertyVetoException;
+    void setAddress(String address) throws PropertyVetoException;
 
     /**
-     * Gets the value of the port property.
+     * Gets the value of the {@code port} property.
      *
-     * Specifies the port of the jmx-connector-server. Note that jmx-service-url is a function of protocol, port and address
-     * as defined by the JSR 160 1.0 Specification.
+     * <p>Specifies the port of the jmx-connector-server. Note that jmx-service-url
+     * is a function of protocol, port and address as defined by the JSR 160 1.0 Specification.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     @Pattern(regexp = PORT_PATTERN, message = "{port-pattern}", payload = JmxConnector.class)
     String getPort();
 
     /**
-     * Sets the value of the port property.
+     * Sets the value of the {@code port} property.
      *
-     * @param value allowed object is {@link String }
+     * @param port allowed object is {@link String}
      */
-    void setPort(String value) throws PropertyVetoException;
+    void setPort(String port) throws PropertyVetoException;
 
     /**
-     * Gets the value of the acceptAll property.
+     * Gets the value of the {@code acceptAll} property.
      *
-     * Determines whether the connection can be made on all the network interfaces. A value of false implies that the
-     * connections only for this specific address will be selected.
+     * <p>Determines whether the connection can be made on all the network interfaces.
+     * A value of false implies that the connections only for this specific
+     * address will be selected.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "false", dataType = Boolean.class)
     String getAcceptAll();
 
     /**
-     * Sets the value of the acceptAll property.
+     * Sets the value of the {@code acceptAll} property.
      *
-     * @param value allowed object is {@link String }
+     * @param acceptAll allowed object is {@link String}
      */
-    void setAcceptAll(String value) throws PropertyVetoException;
+    void setAcceptAll(String acceptAll) throws PropertyVetoException;
 
     /**
-     * Gets the value of the auth-realm-name property.
+     * Gets the value of the {@code authRealmName} property.
      *
-     * The name of the auth-realm in this config element that represents the special administrative realm. All
-     * authentication (from administraive GUI and CLI) will be handled by this realm.
+     * <p>The name of the auth-realm in this config element that represents
+     * the special administrative realm. All authentication (from administrative
+     * GUI and CLI) will be handled by this realm.
      *
-     * Note: This is deprecated since GlassFish v3 FCS. Use similarly named attribute on admin-service. This will be used
+     * <p><strong>Note:</strong> This is deprecated since GlassFish v3 FCS.
+     * Use similarly named attribute on admin-service. This will be used
      * only when the admin-service attribute in missing.
      *
-     * @return String representing the name of auth realm
+     * @return String representing the name of auth realm.
      */
     @Deprecated
     @Attribute
@@ -159,43 +164,44 @@ public interface JmxConnector extends ConfigBeanProxy, Named, PropertyBag, Paylo
     String getAuthRealmName();
 
     /**
-     * Sets the value of the authRealmName property.
+     * Sets the value of the {@code authRealmName} property.
      *
-     * @param value allowed object is {@link String }
+     * @param authRealmName allowed object is {@link String}
      */
-    void setAuthRealmName(String value) throws PropertyVetoException;
+    void setAuthRealmName(String authRealmName) throws PropertyVetoException;
 
     /**
-     * Gets the value of the securityEnabled property.
+     * Gets the value of the {@code securityEnabled} property.
      *
-     * Decides whether the transport layer security be used in jmx-connector. If true, configure the ssl element
+     * <p>Decides whether the transport layer security be used in jmx-connector.
+     * If {@code true}, configure the {@code ssl} element.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
     String getSecurityEnabled();
 
     /**
-     * Sets the value of the securityEnabled property.
+     * Sets the value of the {@code securityEnabled} property.
      *
-     * @param value allowed object is {@link String }
+     * @param securityEnabled allowed object is {@link String}
      */
-    void setSecurityEnabled(String value) throws PropertyVetoException;
+    void setSecurityEnabled(String securityEnabled) throws PropertyVetoException;
 
     /**
-     * Gets the value of the ssl property.
+     * Gets the value of the {@code ssl} property.
      *
-     * @return possible object is {@link Ssl }
+     * @return possible object is {@link Ssl}
      */
     @Element
     Ssl getSsl();
 
     /**
-     * Sets the value of the ssl property.
+     * Sets the value of the {@code ssl} property.
      *
-     * @param value allowed object is {@link Ssl }
+     * @param ssl allowed object is {@link Ssl}
      */
-    void setSsl(Ssl value) throws PropertyVetoException;
+    void setSsl(Ssl ssl) throws PropertyVetoException;
 
     /**
      * Properties as per {@link PropertyBag}

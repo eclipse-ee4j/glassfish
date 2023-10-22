@@ -17,123 +17,118 @@
 
 package org.apache.catalina.realm;
 
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
+
+import java.security.Principal;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.logging.Level;
+
+import javax.security.auth.Subject;
+import javax.security.auth.login.AccountExpiredException;
+import javax.security.auth.login.CredentialExpiredException;
+import javax.security.auth.login.FailedLoginException;
+import javax.security.auth.login.LoginContext;
+import javax.security.auth.login.LoginException;
 
 import org.apache.catalina.Container;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LogFacade;
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 
-import javax.security.auth.Subject;
-import javax.security.auth.login.*;
-import java.security.Principal;
 import com.sun.enterprise.security.GroupPrincipal;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.logging.Level;
 
 /**
- * <p>Implementation of <b>Realm</b> that authenticates users via the <em>Java
- * Authentication and Authorization Service</em> (JAAS).  JAAS support requires
- * either JDK 1.4 (which includes it as part of the standard platform) or
- * JDK 1.3 (with the plug-in <code>jaas.jar</code> file).</p>
+ * <p>
+ * Implementation of <b>Realm</b> that authenticates users via the <em>Java Authentication and Authorization
+ * Service</em> (JAAS). JAAS support requires either JDK 1.4 (which includes it as part of the standard platform) or JDK
+ * 1.3 (with the plug-in <code>jaas.jar</code> file).
+ * </p>
  *
- * <p>The value configured for the <code>appName</code> property is passed to
- * the <code>javax.security.auth.login.LoginContext</code> constructor, to
- * specify the <em>application name</em> used to select the set of relevant
- * <code>LoginModules</code> required.</p>
+ * <p>
+ * The value configured for the <code>appName</code> property is passed to the
+ * <code>javax.security.auth.login.LoginContext</code> constructor, to specify the <em>application name</em> used to
+ * select the set of relevant <code>LoginModules</code> required.
+ * </p>
  *
- * <p>The JAAS Specification describes the result of a successful login as a
- * <code>javax.security.auth.Subject</code> instance, which can contain zero
- * or more <code>java.security.Principal</code> objects in the return value
- * of the <code>Subject.getPrincipals()</code> method.  However, it provides
- * no guidance on how to distinguish Principals that describe the individual
- * user (and are thus appropriate to return as the value of
- * request.getUserPrincipal() in a web application) from the Principal(s)
- * that describe the authorized roles for this user.  To maintain as much
- * independence as possible from the underlying <code>LoginMethod</code>
- * implementation executed by JAAS, the following policy is implemented by
- * this Realm:</p>
+ * <p>
+ * The JAAS Specification describes the result of a successful login as a <code>javax.security.auth.Subject</code>
+ * instance, which can contain zero or more <code>java.security.Principal</code> objects in the return value of the
+ * <code>Subject.getPrincipals()</code> method. However, it provides no guidance on how to distinguish Principals that
+ * describe the individual user (and are thus appropriate to return as the value of request.getUserPrincipal() in a web
+ * application) from the Principal(s) that describe the authorized roles for this user. To maintain as much independence
+ * as possible from the underlying <code>LoginMethod</code> implementation executed by JAAS, the following policy is
+ * implemented by this Realm:
+ * </p>
+ *
  * <ul>
- * <li>The JAAS <code>LoginModule</code> is assumed to return a
- *     <code>Subject with at least one <code>Principal</code> instance
- *     representing the user himself or herself, and zero or more separate
- *     <code>Principals</code> representing the security roles authorized
- *     for this user.</li>
- * <li>On the <code>Principal</code> representing the user, the Principal
- *     name is an appropriate value to return via the Servlet API method
- *     <code>HttpServletRequest.getRemoteUser()</code>.</li>
- * <li>On the <code>Principals</code> representing the security roles, the
- *     name is the name of the authorized security role.</li>
- * <li>This Realm will be configured with two lists of fully qualified Java
- *     class names of classes that implement
- *     <code>java.security.Principal</code> - one that identifies class(es)
- *     representing a user, and one that identifies class(es) representing
- *     a security role.</li>
- * <li>As this Realm iterates over the <code>Principals</code> returned by
- *     <code>Subject.getPrincipals()</code>, it will identify the first
- *     <code>Principal</code> that matches the "user classes" list as the
- *     <code>Principal</code> for this user.</li>
- * <li>As this Realm iterates over the <code>Principals</code> returned by
- *     <code>Subject.getPrincipals()</code>, it will accumulate the set of
- *     all <code>Principals</code> matching the "role classes" list as
- *     identifying the security roles for this user.</li>
- * <li>It is a configuration error for the JAAS login method to return a
- *     validated <code>Subject</code> without a <code>Principal</code> that
- *     matches the "user classes" list.</li>
+ * <li>The JAAS <code>LoginModule</code> is assumed to return a <code>Subject with at least one <code>Principal</code>
+ * instance representing the user himself or herself, and zero or more separate <code>Principals</code> representing the
+ * security roles authorized for this user.</li>
+ * <li>On the <code>Principal</code> representing the user, the Principal name is an appropriate value to return via the
+ * Servlet API method <code>HttpServletRequest.getRemoteUser()</code>.</li>
+ * <li>On the <code>Principals</code> representing the security roles, the name is the name of the authorized security
+ * role.</li>
+ * <li>This Realm will be configured with two lists of fully qualified Java class names of classes that implement
+ * <code>java.security.Principal</code> - one that identifies class(es) representing a user, and one that identifies
+ * class(es) representing a security role.</li>
+ * <li>As this Realm iterates over the <code>Principals</code> returned by <code>Subject.getPrincipals()</code>, it will
+ * identify the first <code>Principal</code> that matches the "user classes" list as the <code>Principal</code> for this
+ * user.</li>
+ * <li>As this Realm iterates over the <code>Principals</code> returned by <code>Subject.getPrincipals()</code>, it will
+ * accumulate the set of all <code>Principals</code> matching the "role classes" list as identifying the security roles
+ * for this user.</li>
+ * <li>It is a configuration error for the JAAS login method to return a validated <code>Subject</code> without a
+ * <code>Principal</code> that matches the "user classes" list.</li>
  * </ul>
  *
  * @author Craig R. McClanahan
  * @version $Revision: 1.3 $ $Date: 2006/03/12 01:27:04 $
  */
 
-public class JAASRealm
-    extends RealmBase
- {
+public class JAASRealm extends RealmBase {
 
     // ----------------------------------------------------- Instance Variables
 
-
     /**
-     * The application name passed to the JAAS <code>LoginContext</code>,
-     * which uses it to select the set of relevant <code>LoginModules</code>.
+     * The application name passed to the JAAS <code>LoginContext</code>, which uses it to select the set of relevant
+     * <code>LoginModules</code>.
      */
-    protected String appName = null;
-
+    protected String appName;
 
     /**
      * Descriptive information about this Realm implementation.
      */
-    protected static final String info =
-        "org.apache.catalina.realm.JAASRealm/1.0";
-
+    protected static final String info = "org.apache.catalina.realm.JAASRealm/1.0";
 
     /**
      * Descriptive information about this Realm implementation.
      */
     protected static final String name = "JAASRealm";
 
-
     /**
      * The list of role class names, split out for easy processing.
      */
-    protected ArrayList<String> roleClasses = new ArrayList<String>();
-
+    protected ArrayList<String> roleClasses = new ArrayList<>();
 
     /**
      * The set of user class names, split out for easy processing.
      */
-    protected ArrayList<String> userClasses = new ArrayList<String>();
+    protected ArrayList<String> userClasses = new ArrayList<>();
 
+    /**
+     * Comma-delimited list of <code>javax.security.Principal</code> classes that represent security roles.
+     */
+    protected String roleClassNames = null;
 
     // ------------------------------------------------------------- Properties
 
-
     /**
      * setter for the appName member variable
+     *
      * @deprecated JAAS should use the Engine ( domain ) name and webpp/host overrides
      */
+    @Deprecated
     public void setAppName(String name) {
         appName = name;
     }
@@ -145,22 +140,17 @@ public class JAASRealm
         return appName;
     }
 
+    @Override
     public void setContainer(Container container) {
         super.setContainer(container);
-        String name=container.getName();
-        if( appName==null  ) {
-            appName=name;
+        String name = container.getName();
+        if (appName == null) {
+            appName = name;
             if (log.isLoggable(Level.INFO)) {
                 log.log(Level.INFO, LogFacade.SETTING_JAAS_INFO, appName);
             }
         }
     }
-
-    /**
-     * Comma-delimited list of <code>javax.security.Principal</code> classes
-     * that represent security roles.
-     */
-    protected String roleClassNames = null;
 
     public String getRoleClassNames() {
         return (this.roleClassNames);
@@ -187,10 +177,8 @@ public class JAASRealm
         }
     }
 
-
     /**
-     * Comma-delimited list of <code>javax.security.Principal</code> classes
-     * that represent individual users.
+     * Comma-delimited list of <code>javax.security.Principal</code> classes that represent individual users.
      */
     protected String userClassNames = null;
 
@@ -213,181 +201,171 @@ public class JAASRealm
             userClasses.add(temp.substring(0, comma).trim());
             temp = temp.substring(comma + 1);
         }
+
         temp = temp.trim();
         if (temp.length() > 0) {
             userClasses.add(temp);
         }
     }
 
-
     // --------------------------------------------------------- Public Methods
 
-
     /**
-     * Return the Principal associated with the specified username and
-     * credentials, if there is one; otherwise return <code>null</code>.
+     * Return the Principal associated with the specified username and credentials, if there is one; otherwise return
+     * <code>null</code>.
      *
-     * If there are any errors with the JDBC connection, executing
-     * the query or anything we return null (don't authenticate). This
-     * event is also logged, and the connection will be closed so that
-     * a subsequent request will automatically re-open it.
+     * If there are any errors with the JDBC connection, executing the query or anything we return null (don't
+     * authenticate). This event is also logged, and the connection will be closed so that a subsequent request will
+     * automatically re-open it.
      *
      * @param username Username of the Principal to look up
-     * @param credentials Password or other credentials to use in
-     *  authenticating this username
+     * @param credentials Password or other credentials to use in authenticating this username
      */
     public Principal authenticate(String username, char[] credentials) {
 
         // Establish a LoginContext to use for authentication
         try {
-        LoginContext loginContext = null;
-        if( appName==null ) appName="Tomcat";
-
-        if (log.isLoggable(Level.FINE))
-            log.log(Level.FINE, neutralizeForLog("Authenticating " + appName + " " +  username));
-
-        // What if the LoginModule is in the container class loader ?
-        //
-        ClassLoader ocl=Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
-        try {
-            loginContext = new LoginContext
-                (appName, new JAASCallbackHandler(this, username,
-                                                  credentials));
-        } catch (Throwable e) {
-            if (log.isLoggable(Level.FINE)) {
-                log.log(Level.FINE, "Error initializing JAAS: " +  e.toString());
-
-                String msg = MessageFormat.format(rb.getString(LogFacade.LOGIN_EXCEPTION_AUTHENTICATING_USERNAME), neutralizeForLog(username));
-                log.log(Level.FINE, msg, e);
+            LoginContext loginContext = null;
+            if (appName == null) {
+                appName = "Tomcat";
             }
-            return (null);
-        } finally {
-            Thread.currentThread().setContextClassLoader(ocl);
-        }
 
-        if (log.isLoggable(Level.FINE))
-            log.log(Level.FINE, "Login context created " + neutralizeForLog(username));
+            if (log.isLoggable(Level.FINE)) {
+                log.log(Level.FINE, neutralizeForLog("Authenticating " + appName + " " + username));
+            }
 
-        // Negotiate a login via this LoginContext
-        Subject subject = null;
-        try {
-            loginContext.login();
-            subject = loginContext.getSubject();
-            if (subject == null) {
+            // What if the LoginModule is in the container class loader ?
+            //
+            ClassLoader ocl = Thread.currentThread().getContextClassLoader();
+            Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+            try {
+                loginContext = new LoginContext(appName, new JAASCallbackHandler(this, username, credentials));
+            } catch (Throwable e) {
+                if (log.isLoggable(Level.FINE)) {
+                    log.log(Level.FINE, "Error initializing JAAS: " + e.toString());
+
+                    String msg = MessageFormat.format(rb.getString(LogFacade.LOGIN_EXCEPTION_AUTHENTICATING_USERNAME),
+                            neutralizeForLog(username));
+                    log.log(Level.FINE, msg, e);
+                }
+                return (null);
+            } finally {
+                Thread.currentThread().setContextClassLoader(ocl);
+            }
+
+            if (log.isLoggable(Level.FINE)) {
+                log.log(Level.FINE, "Login context created " + neutralizeForLog(username));
+            }
+
+            // Negotiate a login via this LoginContext
+            Subject subject = null;
+            try {
+                loginContext.login();
+                subject = loginContext.getSubject();
+                if (subject == null) {
+                    if (log.isLoggable(Level.FINE)) {
+                        log.log(Level.FINE, LogFacade.USERNAME_NOT_AUTHENTICATED_FAILED_LOGIN, neutralizeForLog(username));
+                    }
+                    return (null);
+                }
+            } catch (AccountExpiredException e) {
+                if (log.isLoggable(Level.FINE)) {
+                    log.log(Level.FINE, LogFacade.USERNAME_NOT_AUTHENTICATED_EXPIRED_ACCOUNT, neutralizeForLog(username));
+                }
+                return (null);
+            } catch (CredentialExpiredException e) {
+                if (log.isLoggable(Level.FINE)) {
+                    log.log(Level.FINE, LogFacade.USERNAME_NOT_AUTHENTICATED_EXPIRED_CREDENTIAL, neutralizeForLog(username));
+                }
+                return (null);
+            } catch (FailedLoginException e) {
                 if (log.isLoggable(Level.FINE)) {
                     log.log(Level.FINE, LogFacade.USERNAME_NOT_AUTHENTICATED_FAILED_LOGIN, neutralizeForLog(username));
                 }
                 return (null);
+            } catch (LoginException e) {
+                String msg = MessageFormat.format(rb.getString(LogFacade.LOGIN_EXCEPTION_AUTHENTICATING_USERNAME),
+                        neutralizeForLog(username));
+                log.log(Level.FINE, msg, e);
+                return (null);
+            } catch (Throwable e) {
+                log.log(Level.FINE, "Unexpected error", e);
+                return (null);
             }
-        } catch (AccountExpiredException e) {
-            if (log.isLoggable(Level.FINE)) {
-                log.log(Level.FINE, LogFacade.USERNAME_NOT_AUTHENTICATED_EXPIRED_ACCOUNT, neutralizeForLog(username));
-            }
-            return (null);
-        } catch (CredentialExpiredException e) {
-            if (log.isLoggable(Level.FINE)) {
-                log.log(Level.FINE, LogFacade.USERNAME_NOT_AUTHENTICATED_EXPIRED_CREDENTIAL, neutralizeForLog(username));
-            }
-            return (null);
-        } catch (FailedLoginException e) {
-            if (log.isLoggable(Level.FINE)) {
-                log.log(Level.FINE, LogFacade.USERNAME_NOT_AUTHENTICATED_FAILED_LOGIN, neutralizeForLog(username));
-            }
-            return (null);
-        } catch (LoginException e) {
-            String msg = MessageFormat.format(rb.getString(LogFacade.LOGIN_EXCEPTION_AUTHENTICATING_USERNAME),
-                    neutralizeForLog(username));
-            log.log(Level.FINE, msg, e);
-            return (null);
-        } catch (Throwable e) {
-            log.log(Level.FINE, "Unexpected error", e);
-            return (null);
-        }
 
-        if( log.isLoggable(Level.FINE))
-            log.log(Level.FINE, neutralizeForLog("Getting principal " + subject));
-
-        // Return the appropriate Principal for this authenticated Subject
-        Principal principal = createPrincipal(username, subject);
-        if (principal == null) {
             if (log.isLoggable(Level.FINE)) {
-                log.log(Level.FINE, "Failed to authenticate username " + neutralizeForLog(username));
+                log.log(Level.FINE, neutralizeForLog("Getting principal " + subject));
             }
-            return (null);
-        }
-        if (log.isLoggable(Level.FINE)) {
-            log.log(Level.FINE, "Successful to authenticate username " + neutralizeForLog(username));
-        }
 
-        return (principal);
-        } catch( Throwable t) {
+            // Return the appropriate Principal for this authenticated Subject
+            Principal principal = createPrincipal(username, subject);
+            if (principal == null) {
+                if (log.isLoggable(Level.FINE)) {
+                    log.log(Level.FINE, "Failed to authenticate username " + neutralizeForLog(username));
+                }
+                return (null);
+            }
+            if (log.isLoggable(Level.FINE)) {
+                log.log(Level.FINE, "Successful to authenticate username " + neutralizeForLog(username));
+            }
+
+            return (principal);
+        } catch (Throwable t) {
             log.log(Level.SEVERE, LogFacade.AUTHENTICATION_ERROR, t);
             return null;
         }
     }
 
-
     // -------------------------------------------------------- Package Methods
 
-
     // ------------------------------------------------------ Protected Methods
-
 
     /**
      * Return a short name for this Realm implementation.
      */
+    @Override
     protected String getName() {
-
-        return (this.name);
-
+        return name;
     }
-
 
     /**
      * Return the password associated with the given principal's user name.
      */
+    @Override
     protected char[] getPassword(String username) {
-
-        return (null);
-
+        return null;
     }
-
 
     /**
      * Return the Principal associated with the given user name.
      */
+    @Override
     protected Principal getPrincipal(String username) {
-
-        return (null);
-
+        return null;
     }
 
-
     /**
-     * Construct and return a <code>java.security.Principal</code> instance
-     * representing the authenticated user for the specified Subject.  If no
-     * such Principal can be constructed, return <code>null</code>.
+     * Construct and return a <code>java.security.Principal</code> instance representing the authenticated user for the
+     * specified Subject. If no such Principal can be constructed, return <code>null</code>.
      *
      * @param subject The Subject representing the logged in user
      */
     protected Principal createPrincipal(String username, Subject subject) {
         // Prepare to scan the Principals for this Subject
-        ArrayList<String> roles = new ArrayList<String>();
+        ArrayList<String> roles = new ArrayList<>();
 
-        // Scan the Principals for this Subject
-        Iterator principals = subject.getPrincipals().iterator();
-        while (principals.hasNext()) {
-            Principal principal = (Principal) principals.next();
+        for (Principal principal : subject.getPrincipals()) {
             // No need to look further - that's our own stuff
-            if( principal instanceof GenericPrincipal ) {
-                if (log.isLoggable(Level.FINE))
+            if (principal instanceof GenericPrincipal) {
+                if (log.isLoggable(Level.FINE)) {
                     log.log(Level.FINE, "Found old GenericPrincipal " + principal);
+                }
                 return principal;
             }
             String principalClass = principal.getClass().getName();
-            if (log.isLoggable(Level.FINE))
+            if (log.isLoggable(Level.FINE)) {
                 log.log(Level.FINE, "Principal: " + principalClass + " " + principal);
+            }
 
             if (userClasses.contains(principalClass)) {
                 // Override the default - which is the original user, accepted by
@@ -398,13 +376,12 @@ public class JAASRealm
                 roles.add(principal.getName());
             }
             // Same as Jboss - that's a pretty clean solution
-            if( (principal instanceof GroupPrincipal) &&
-                 "Roles".equals( principal.getName())) {
-                GroupPrincipal grp=(GroupPrincipal)principal;
-                Enumeration en=grp.members();
-                while( en.hasMoreElements() ) {
-                    Principal roleP=(Principal)en.nextElement();
-                    roles.add( roleP.getName());
+            if ((principal instanceof GroupPrincipal) && "Roles".equals(principal.getName())) {
+                GroupPrincipal grp = (GroupPrincipal) principal;
+                Enumeration en = grp.members();
+                while (en.hasMoreElements()) {
+                    Principal roleP = (Principal) en.nextElement();
+                    roles.add(roleP.getName());
                 }
 
             }
@@ -413,43 +390,36 @@ public class JAASRealm
         // Create the resulting Principal for our authenticated user
         if (username != null) {
             // Set password null as it will not be carried forward
-            return (new GenericPrincipal(this, username, null, roles));
+            return new GenericPrincipal(this, username, null, roles);
         } else {
-            return (null);
+            return null;
         }
     }
 
 
     // ------------------------------------------------------ Lifecycle Methods
 
-
     /**
      *
      * Prepare for active use of the public methods of this Component.
      *
-     * @exception LifecycleException if this component detects a fatal error
-     *  that prevents it from being started
+     * @exception LifecycleException if this component detects a fatal error that prevents it from being started
      */
+    @Override
     public void start() throws LifecycleException {
-
         // Perform normal superclass initialization
         super.start();
-
     }
-
 
     /**
      * Gracefully shut down active use of the public methods of this Component.
      *
-     * @exception LifecycleException if this component detects a fatal error
-     *  that needs to be reported
+     * @exception LifecycleException if this component detects a fatal error that needs to be reported
      */
+    @Override
     public void stop() throws LifecycleException {
-
         // Perform normal superclass finalization
         super.stop();
-
     }
-
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -113,7 +113,7 @@ public abstract class AbstractDataSource implements DataSource, Serializable, co
      */
     private void logNonTransientException(ResourceException re) {
         if (!BadConnectionEventListener.POOL_RECONFIGURED_ERROR_CODE.equals(re.getErrorCode())) {
-            _logger.log(WARNING, "jdbc.exc_get_conn", re.getMessage());
+            _logger.log(WARNING, "Error allocating connection: [{0}]", re.getMessage());
         }
     }
 

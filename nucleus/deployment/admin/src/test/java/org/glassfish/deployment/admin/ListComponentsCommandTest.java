@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -39,7 +39,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
@@ -104,39 +103,33 @@ public class ListComponentsCommandTest {
     public class RandomConfig implements ConfigBeanProxy {
 
         @Override
-        @DuckTyped
         public ConfigBeanProxy getParent() {
             throw new UnsupportedOperationException();
         }
 
 
         @Override
-        @DuckTyped
         public <T extends ConfigBeanProxy> T getParent(Class<T> type) {
             throw new UnsupportedOperationException();
         }
 
 
-        @DuckTyped
         public Property getProperty(String name) {
             throw new UnsupportedOperationException();
         }
 
 
-        @DuckTyped
         public String getPropertyValue(String name) {
             throw new UnsupportedOperationException();
         }
 
 
-        @DuckTyped
         public String getPropertyValue(String name, String defaultValue) {
             throw new UnsupportedOperationException();
         }
 
 
         @Override
-        @DuckTyped
         public <T extends ConfigBeanProxy> T createChild(Class<T> type) throws TransactionFailure {
             throw new UnsupportedOperationException();
         }
@@ -452,11 +445,6 @@ public class ListComponentsCommandTest {
         @Override
         public String archiveType() {
             return null;
-        }
-
-
-        @Override
-        public void recordFileLocations(File appFile, File deploymentPlanFile) {
         }
 
 

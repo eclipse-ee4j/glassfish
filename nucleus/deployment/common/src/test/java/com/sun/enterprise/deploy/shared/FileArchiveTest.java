@@ -44,6 +44,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 import static org.glassfish.deployment.common.DeploymentContextImpl.deplLogger;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -62,7 +65,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class FileArchiveTest {
 
     private static final String EXPECTED_LOG_KEY = "NCLS-DEPLOYMENT-00022";
-    private static final String LINE_SEP = System.getProperty("line.separator");
+    private static final String LINE_SEP = System.lineSeparator();
     private static final String STALE_ENTRY = "oldLower/oldFile.txt";
     private static final String SUBARCHIVE_NAME = "subarch";
 
@@ -407,6 +410,7 @@ public class FileArchiveTest {
      }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     public void testInaccessibleDirectoryInFileArchive() throws Exception {
         final FileArchive archive = (FileArchive) createAndPopulateArchive(usualEntryNames);
 

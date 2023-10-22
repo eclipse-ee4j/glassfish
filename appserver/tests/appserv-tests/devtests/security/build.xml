@@ -41,45 +41,55 @@
            <fileset dir="." includes="*.output"/>
         </delete>
         <record name="security.output" action="start" />
-        <ant dir="jaccmr8" target="all"/>
-        <ant dir="uncovered-http-methods" target="all"/>
-<!--    <ant dir="simple-perf" target="all"/>-->                <!-- DISABLED: Not listed -->
-        <ant dir="authConf" target="all"/>
-        <ant dir="negativeRealmPerApp" target="all"/>
-        <ant dir="realmPerApp" target="all"/>
-<!--    <ant dir="weblogic-dd" target="all"/>-->                <!-- DISABLED: Failures -->
-        <ant dir="sful" target="all"/>
-        <ant dir="userWithAtSymbol" target="all"/>
-        <ant dir="anyone" target="all"/>
-        <ant dir="ejb-oneway-ssl" target="all"/>
-        <ant dir="ejb-mutual-ssl" target="all"/>
-<!--    <ant dir="web-mutual-ssl" target="all"/>-->             <!-- DISABLED -->
-<!--    <ant dir="cplogin" target="all"/>-->                    <!-- DISABLED -->
-<!--    <ant dir="plogin" target="all"/>-->                     <!-- DISABLED -->
-        <ant dir="jsp2sful" target="all"/>
-        <ant dir="httpMethod" target="all"/>
-        <ant dir="defaultp2r" target="all"/>
-        <ant dir="sameEjbName" target="all"/>
-<!--    <ant dir="mdb" target="all"/>-->                        <!-- DISABLED: Does not run -->
-<!--    <ant dir="timerStandalone" target="all"/>-->            <!-- DISABLED: Failure -->
-        <ant dir="container-auth" target="all"/>
-        <ant dir="jmac" target="all"/>
-        <ant dir="wss" target="all"/>
-        <ant dir="ciphertest" target="all"/>
-        <ant dir="standalone" target="all"/>
-        <ant dir="simpleMultiRoleMapping" target="all"/>
-        <ant dir="multiRoleMapping" target="all"/>
-        <ant dir="jdbcrealm" target="all"/>
-<!--    <ant dir="pamrealm" target="all"/>-->                      <!-- DISABLED: Needs additional setup -->
-<!--    <ant dir="cert-realm-custom-loginmodule" target="all"/>--> <!-- DISABLED: Failure  -->
-<!--    DISABLED: Needs a running LDAP server
+        
+    	<run-security-test path="jmac" />
+    	<run-security-test path="jaccmr8" />
+    	<run-security-test path="jaccApi" />
+    	
+    	<run-security-test path="httpMethod" />
+    	<run-security-test path="uncovered-http-methods" />
+    	
+    	<run-security-test path="simpleMultiRoleMapping" />
+    	<run-security-test path="multiRoleMapping" />
+    	<run-security-test path="defaultp2r" />
+
+    	<run-security-test path="authConf" />
+    	<run-security-test path="negativeRealmPerApp" />
+    	<run-security-test path="realmPerApp" />
+    	<run-security-test path="jdbcrealm" />
+
+    	<run-security-test path="sful" />
+    	<run-security-test path="userWithAtSymbol" />
+    	<run-security-test path="anyone" />
+    	<run-security-test path="ejb-oneway-ssl" />
+    	<run-security-test path="ejb-mutual-ssl" />
+    	<run-security-test path="sameEjbName" />
+
+    	<run-security-test path="jsp2sful" />
+    	<run-security-test path="wss" />
+
+    	<run-security-test path="ciphertest" />
+    	<run-security-test path="standalone" />
+    	
+    	<record name="security.output" action="stop" />
+        <antcall target="report"/>
+    </target>
+    
+    <target name="do-not-run">
+         <!--    <ant dir="simple-perf" target="all"/>-->                <!-- DISABLED: Not listed -->
+         <!--    <ant dir="weblogic-dd" target="all"/>-->                <!-- DISABLED: Failures -->
+         <!--    <ant dir="web-mutual-ssl" target="all"/>-->             <!-- DISABLED -->
+         <!--    <ant dir="cplogin" target="all"/>-->                    <!-- DISABLED -->
+         <!--    <ant dir="plogin" target="all"/>-->                     <!-- DISABLED -->
+         <!--    <ant dir="mdb" target="all"/>-->                        <!-- DISABLED: Does not run -->
+         <!--    <ant dir="timerStandalone" target="all"/>-->            <!-- DISABLED: Failure -->
+         <!--    <ant dir="pamrealm" target="all"/>-->                      <!-- DISABLED: Needs additional setup -->
+         <!--    <ant dir="cert-realm-custom-loginmodule" target="all"/>--> <!-- DISABLED: Failure  -->
+         <!--    DISABLED: Needs a running LDAP server
         <ant dir="ldap/simpleweb" target="all" />
         <ant dir="ldapRealmPerApp" target="all"/>
--->
+        -->
 <!--    <ant dir="solarisRealm" target="all"/>-->                  <!-- DISABLED -->
-        <ant dir="jaccApi" target="all"/>
-        <record name="security.output" action="stop" />
-        <antcall target="report"/>
     </target>
 
     <target name="ejb">
@@ -96,4 +106,31 @@
                         ant web (Executes the web tests TBD)
         </echo>
     </target>
+    
+    <macrodef name="run-security-test" xmlns:if="ant:if" xmlns:unless="ant:unless">
+        <attribute name="path" />
+        <sequential>
+            <local name="do-run-test" />
+            <condition property="do-run-test" else="false">
+                <or>
+                    <equals arg1="${env.security}" arg2="@{path}" />
+                    <not>
+                        <isset property="env.security" />
+                    </not>
+                </or>
+            </condition>
+
+            <sequential if:true="${do-run-test}">
+                <local name="absolute.path" />
+                <property name="absolute.path" location="@{path}" />
+                <echo message="${line.separator}${line.separator}${line.separator}" />
+                <echo message=" ***************************************************************************" />
+                <echo message=" * Running group @{path} " />
+                <echo message=" * Path: ${absolute.path} " />
+                <echo message=" ***************************************************************************" />
+            	<echo message="${line.separator}${line.separator}${line.separator}" />
+                <ant dir="@{path}" target="all" />
+            </sequential>
+        </sequential>
+    </macrodef>
 </project>

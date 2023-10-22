@@ -24,15 +24,14 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>nucleus-parent</artifactId>
-        <version>7.0.4-SNAPSHOT</version>
-        <relativePath>parent/pom.xml</relativePath>
+        <version>7.0.10-SNAPSHOT</version>
+        <relativePath>parent</relativePath>
     </parent>
 
     <artifactId>glassfish-nucleus-parent</artifactId>
     <packaging>pom</packaging>
 
-    <name>GlassFish Nucleus Project</name>
-    <description>Glassfish Nucleus Project</description>
+    <name>GlassFish Nucleus Modules</name>
     <url>https://projects.eclipse.org/projects/ee4j.glassfish</url>
     <licenses>
         <license>
@@ -60,7 +59,8 @@
     <modules>
         <module>parent</module>
         <module>glassfish-jul-extension</module>
-        <module>hk2</module>
+        <module>hk2-config-generator</module>
+        <module>hk2-config-types</module>
         <module>osgi-platforms</module>
         <module>cluster</module>
         <module>common</module>
@@ -88,6 +88,10 @@
         <url>https://github.com/eclipse-ee4j/glassfish/issues</url>
     </issueManagement>
 
+    <properties>
+        <glassfish.generate-injectors.skip>false</glassfish.generate-injectors.skip>
+        <glassfishbuild-maven-plugin.assemblyInputDirectory>${project.build.outputDirectory}</glassfishbuild-maven-plugin.assemblyInputDirectory>
+    </properties>
     <build>
         <pluginManagement>
             <plugins>
@@ -102,14 +106,43 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+
         <plugins>
             <plugin>
-                <groupId>org.glassfish.hk2</groupId>
-                <artifactId>config-generator</artifactId>
-                <configuration>
-                    <excludes>**/.ade_path/**</excludes>
-                    <supportedProjectTypes>jar,glassfish-jar</supportedProjectTypes>
-                </configuration>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <!-- Ensures that the artifact is rebuilt before the usage -->
+                <dependencies>
+                    <dependency>
+                        <groupId>org.glassfish.main</groupId>
+                        <artifactId>hk2-config-generator</artifactId>
+                        <version>${project.version}</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>generate-hk2-config</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <annotationProcessorPaths>
+                                <path>
+                                    <groupId>org.glassfish.main</groupId>
+                                    <artifactId>hk2-config-generator</artifactId>
+                                    <version>${project.version}</version>
+                                </path>
+                            </annotationProcessorPaths>
+                            <annotationProcessors>
+                                <annotationProcessor>org.jvnet.hk2.config.generator.ConfigInjectorGenerator</annotationProcessor>
+                            </annotationProcessors>
+                            <proc>only</proc>
+                            <generatedSourcesDirectory>${project.build.directory}/generated-sources/hk2-config-generator</generatedSourcesDirectory>
+                            <createMissingPackageInfoClass>false</createMissingPackageInfoClass>
+                            <skipMain>${glassfish.generate-injectors.skip}</skipMain>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

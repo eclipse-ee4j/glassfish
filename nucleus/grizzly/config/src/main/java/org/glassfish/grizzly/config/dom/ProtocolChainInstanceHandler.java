@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,24 +24,24 @@ import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.PropertyBag;
 
 /**
- * Defines protocol chain instantiation and releasing logic
+ * Defines protocol chain instantiation and releasing logic.
  */
 @Configured
 public interface ProtocolChainInstanceHandler extends ConfigBeanProxy, PropertyBag {
 
     /**
-     * Protocol chain instance handler implementation class
+     * Protocol chain instance handler implementation class.
      */
     @Attribute
     String getClassname();
 
-    void setClassname(String value);
+    void setClassname(String classname);
 
     /**
-     * Defines protocol chain configuration
+     * Defines protocol chain configuration.
      */
     @Element
     ProtocolChain getProtocolChain();
 
-    void setProtocolChain(ProtocolChain value);
+    void setProtocolChain(ProtocolChain protocolChain);
 }

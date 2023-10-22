@@ -16,32 +16,14 @@
 
 package test;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import org.xml.sax.InputSource;
-import org.w3c.dom.Element;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
-
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.SAXException;
-
-// jaxp 1.0.1 imports
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
-
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import javax.naming.*;
-import javax.sql.*;
-import java.sql.*;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class ServletTest3 extends HttpServlet{
 

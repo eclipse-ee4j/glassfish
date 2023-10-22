@@ -27,7 +27,6 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.instrument.ClassFileTransformer;
@@ -51,7 +50,6 @@ import java.security.cert.Certificate;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -76,9 +74,9 @@ import org.glassfish.hk2.api.PreDestroy;
 import static java.util.logging.Level.INFO;
 
 /**
- * Class loader used by the ejbs of an application or stand alone module.
+ * Class loader used by the ejbs of an application or stand-alone module.
  *
- * This class loader also keeps cache of not found classes and resources.
+ * <p>This class loader also keeps cache of not found classes and resources.
  *
  * @author Nazrul Islam
  * @author Kenneth Saks
@@ -117,9 +115,6 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
      */
     private volatile String doneSnapshot;
 
-    /** streams opened by this loader */
-    private final List<SentinelInputStream> streams = Collections.synchronizedList(new ArrayList<>(16));
-
     private final ArrayList<ClassFileTransformer> transformers = new ArrayList<>(1);
 
     private final static StringManager sm = StringManager.getManager(ASURLClassLoader.class);
@@ -148,7 +143,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
     }
 
 
-    public boolean isDone() {
+    public boolean isClosed() {
         // method need not by 'synchronized' because 'doneCalled' is 'volatile'.
         return doneCalled;
     }
@@ -156,7 +151,11 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
 
     @Override
     public void preDestroy() {
-        done();
+        try {
+            close();
+        } catch(IOException ioe) {
+            _logger.log(INFO, CULoggerInfo.getString(CULoggerInfo.exceptionIO), ioe);
+        }
     }
 
 
@@ -169,11 +168,12 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
      * <li>race condition while checking 'doneCalled'
      * <li>only one caller should close the zip files,
      * <li>done should occur only once and set the flag when done.
-     * <li>shoudl not return 'true' when a previous thread might still
+     * <li>should not return 'true' when a previous thread might still
      * be in the process of executing the method.
      * </ol>
      */
-    public void done() {
+    @Override
+    public void close() throws IOException {
         // This works because 'doneCalled' is 'volatile'
         if (doneCalled) {
             return;
@@ -193,7 +193,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
                 + "\n AT " + Instant.now() +
                 " \n BY :" + Arrays.toString(Thread.currentThread().getStackTrace());
 
-            // Presumably OK to set this flag now while the rest of the cleanup proceeeds,
+            // Presumably OK to set this flag now while the rest of the cleanup proceeds,
             // because we've taken the snapshot.
             doneCalled = true;
 
@@ -213,18 +213,14 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
                 u = null;
             }
 
-            closeOpenStreams();
-
             // clears out the tables
             // Clear all values. Because fields are 'final' (for thread safety), cannot null them
             this.urlSet.clear();
-            if (this.notFoundResources != null) {
-                this.notFoundResources.clear();
-            }
-            if (this.notFoundClasses != null) {
-                this.notFoundClasses.clear();
-            }
+            this.notFoundResources.clear();
+            this.notFoundClasses.clear();
         }
+
+        super.close();
     }
 
 
@@ -260,7 +256,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
 
 
     /**
-     * Add a url to the list of urls we search for a class's bytecodes.
+     * Add an url to the list of urls we search for a class's bytecodes.
      *
      * @param url url to be added
      */
@@ -302,7 +298,8 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
 
     /**
      * Returns the urls of this class loader.
-     * Method is 'synchronized' to avoid the thread-unsafe null-check idiom idiom, also
+     *
+     * <p>Method is {@code synchronized} to avoid the thread-unsafe null-check idiom, also
      * protects the caller from simultaneous changes while iterating,
      * by returning a URL[] (copy) rather than the original. Also protects against
      * changes to 'urlSet' while iterating over it.
@@ -311,24 +308,14 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
      */
     @Override
     public synchronized URL[] getURLs() {
-        final URL[] url;
-        if (this.urlSet != null) {
-            url = new URL[this.urlSet.size()];
-            int i = 0;
-            for (URLEntry urlEntry : urlSet) {
-                url[i++] = urlEntry.source;
-            }
-        } else {
-            url = new URL[0];
-        }
-        return url;
+        return urlSet.stream().map(urlEntry -> urlEntry.source).toArray(URL[]::new);
     }
 
     /**
      * Returns all the "file" protocol resources of this ASURLClassLoader,
      * concatenated to a classpath string.
      *
-     * Notice that this method is called by the setClassPath() method of
+     * <p>Notice that this method is called by the setClassPath() method of
      * org.apache.catalina.loader.WebappLoader, since this ASURLClassLoader does
      * not extend off of URLClassLoader.
      *
@@ -357,7 +344,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
 
     /**
      * Refreshes the memory of the class loader. This involves clearing the
-     * not-found cahces and recreating the hash tables for the URLEntries that
+     * not-found caches and recreating the hash tables for the URLEntries that
      * record the files accessible for each.
      * <p>
      * Code that creates an ASURLClassLoader and then adds files to a directory
@@ -374,12 +361,12 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
 
     @Override
     public void addTransformer(ClassFileTransformer transformer) {
-        transformers.add(transformer);
+        transformers.add(new ReentrantClassFileTransformer(transformer));
     }
 
 
     /**
-     * Create a new instance of a sibling classloader
+     * Create a new instance of a sibling classloader.
      *
      * @return a new instance of a class loader that has the same visibility
      *         as this class loader
@@ -457,7 +444,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
 
     @Override
     public URL findResource(String name) {
-        // quick quick that relies on 'doneCalled' being 'volatile'
+        // quick that relies on 'doneCalled' being 'volatile'
         if (doneCalled) {
             _logger.log(Level.WARNING, CULoggerInfo.getString(CULoggerInfo.findResourceAfterDone, name, this),
                 new Throwable());
@@ -471,7 +458,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
         //
         // HOWEVER, there is still a race condition from the check for 'doneCalled' above.
         // That's OK for 'notFoundResources', but it could lead to an ArrayIndexOutOfBounds
-        // excpetion for 'urlSet', should the set be cleared while looping.
+        // exception for 'urlSet', should the set be cleared while looping.
 
         // resource is in the not found list
         String nf = notFoundResources.get(name);
@@ -586,7 +573,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
         PrivilegedAction<byte[]> action = () -> {
             InputStream classStream = null;
             try {
-                if (res.isJar) { // It is a jarfile..
+                if (res.isJar) { // It is a jarfile.
                     JarFile zip = res.zip;
                     JarEntry entry = zip.getJarEntry(entryName);
                     if (entry != null) {
@@ -596,8 +583,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
                         return classData1;
                     }
                 } else { // Its a directory....
-                    File classFile = new File (res.file,
-                                entryName.replace('/', File.separatorChar));
+                    File classFile = new File (res.file, entryName.replace('/', File.separatorChar));
 
                     if (classFile.exists()) {
                         try {
@@ -607,9 +593,9 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
                             return classData2;
                         } finally {
                             /*
-                             *Close the stream only if this is a directory.  The stream for
-                             *a jar/zip file was opened elsewhere and should remain open after this
-                             *method completes.
+                             * Close the stream only if this is a directory.  The stream for
+                             * a jar/zip file was opened elsewhere and should remain open after this
+                             * method completes.
                              */
                             if (classStream != null) {
                                 try {
@@ -665,7 +651,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
      * and thus works on the same classData? Or defines the same package? Maybe
      * the same work just gets done twice, and that's all.
      * <p>
-     * CAUTION: this method might be overriden, and subclasses must be cautious (also)
+     * CAUTION: this method might be overridden, and subclasses must be cautious (also)
      * about thread safety.
      */
     @Override
@@ -673,7 +659,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
         ClassData classData = findClassData(name);
         // Instruments the classes if the profiler's enabled
         if (PreprocessorUtil.isPreprocessorEnabled()) {
-            // search thru the JARs for a file of the form java/lang/Object.class
+            // search through the JARs for a file of the form java/lang/Object.class
             final String entryName = name.replace('.', '/') + ".class";
             classData.setClassBytes(PreprocessorUtil.processClass(entryName, classData.getClassBytes()));
         }
@@ -709,16 +695,18 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
         try {
             @SuppressWarnings("unchecked")
             final List<ClassFileTransformer> xformers = (ArrayList<ClassFileTransformer>) transformers.clone();
-            for (final ClassFileTransformer transformer : xformers) {
-                // see javadocs of transform().
-                // It expects class name as java/lang/Object
-                // as opposed to java.lang.Object
-                final String internalClassName = name.replace('.','/');
-                final byte[] transformedBytes = transformer.transform(this, internalClassName, null,
-                    classData.pd, classData.getClassBytes());
-                if (transformedBytes != null) { // null indicates no transformation
-                    _logger.log(INFO, CULoggerInfo.actuallyTransformed, name);
-                    classData.setClassBytes(transformedBytes);
+            if (!xformers.isEmpty()) {
+                for (final ClassFileTransformer transformer : xformers) {
+                    // see javadocs of transform().
+                    // It expects class name as java/lang/Object
+                    // as opposed to java.lang.Object
+                    final String internalClassName = name.replace('.', '/');
+                    final byte[] transformedBytes = transformer.transform(this, internalClassName, null,
+                            classData.pd, classData.getClassBytes());
+                    if (transformedBytes != null) { // null indicates no transformation
+                        _logger.log(Level.FINE, CULoggerInfo.actuallyTransformed, name);
+                        classData.setClassBytes(transformedBytes);
+                    }
                 }
             }
         } catch (IllegalClassFormatException icfEx) {
@@ -726,8 +714,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
         }
         try {
             byte[] bytes = classData.getClassBytes();
-            Class<?> clazz = defineClass(name, bytes, 0, bytes.length, classData.pd);
-            return clazz;
+            return defineClass(name, bytes, 0, bytes.length, classData.pd);
         } catch (UnsupportedClassVersionError ucve) {
             throw new UnsupportedClassVersionError(
                 sm.getString("ejbClassLoader.unsupportedVersion", name, System.getProperty("java.version")));
@@ -758,7 +745,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
             throw new ClassNotFoundException(name);
         }
 
-        // search thru the JARs for a file of the form java/lang/Object.class
+        // search through the JARs for a file of the form java/lang/Object.class
         String entryName = name.replace('.', '/') + ".class";
 
         for (URLEntry u : this.urlSet) {
@@ -829,19 +816,6 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
 
 
     @Override
-    public InputStream getResourceAsStream(final String name) {
-        InputStream stream = super.getResourceAsStream(name);
-        // Make sure not to wrap the stream if it already is a wrapper.
-        if (stream != null) {
-            if (!(stream instanceof SentinelInputStream)) {
-                stream = new SentinelInputStream(stream);
-            }
-        }
-        return stream;
-    }
-
-
-    @Override
     public Enumeration<URL> getResources(String name) throws IOException {
         final ResourceLocator locator = new ResourceLocator(this, getParentClassLoader(), true);
         return locator.getResources(name);
@@ -854,33 +828,6 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
             return getSystemClassLoader();
         }
         return parent;
-    }
-
-
-    /**
-     * Returns the vector of open streams; creates it if needed.
-     *
-     * @return Vector<SentinelInputStream> holding open streams
-     */
-    private Collection<SentinelInputStream> getStreams() {
-        return streams;
-    }
-
-
-    /**
-     * Closes any streams that remain open, logging a warning for each.
-     * <p>
-     * This method should be invoked when the loader will no longer be used
-     * and the app will no longer explicitly close any streams it may have opened.
-     * Must be synchnronized to (a) avoid race condition checking 'streams'.
-     */
-    private synchronized void closeOpenStreams() {
-        //copy is needed because closeWithWarning removes the instance from stream
-        List<SentinelInputStream> streamsCopy = new ArrayList<>(streams);
-        for (SentinelInputStream s : streamsCopy) {
-            s.closeWithWarning();
-        }
-        streams.clear();
     }
 
 
@@ -901,7 +848,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
          * @throws IOException from parent
          */
         public ProtectedJarFile(File file) throws IOException {
-            super(file);
+            super(file, true, OPEN_READ, Runtime.version());
         }
 
         /**
@@ -1017,16 +964,16 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
         }
 
         /**
-         *Adds a file (or, if a directory, the directory's contents) to the table
-         *of files this loader knows about.
-         *<p>
-         *Invokes fillTable for subdirectories which in turn invokes processFile
-         *recursively.
-         *@param fileToProcess the File to be processed
-         *@param t the HashMap that holds the files the loader knows about
-         *@param parentLocalName prefix to be used for the full path; should be
-         *non-empty only for recursive invocations
-         *@throws IOException in case of errors working with the fileToProcess
+         * Adds a file (or, if a directory, the directory's contents) to the table
+         * of files this loader knows about.
+         * <p>
+         * Invokes fillTable for subdirectories which in turn invokes processFile
+         * recursively.
+         * @param fileToProcess the File to be processed
+         * @param t the HashMap that holds the files the loader knows about
+         * @param parentLocalName prefix to be used for the full path; should be
+         * non-empty only for recursive invocations
+         * @throws IOException in case of errors working with the fileToProcess
          */
         private void processFile(File fileToProcess, HashMap<String, String> t, String parentLocalName) throws IOException {
             String key = parentLocalName + fileToProcess.getName();
@@ -1039,33 +986,33 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
 
 
         private boolean hasItem(String item) {
-            // in the case of ejbc stub compilation, asurlclassloader is created before stubs
+            // in the case of ejbc stub compilation, ASURLClassLoader is created before stubs
             // gets generated, thus we need to return true for this case.
             if (table.isEmpty()) {
                 return true;
             }
 
             /*
-             *Even with the previous special handling, a file could be created
-             *in a directory after the loader was created and its table of
-             *URLEntry names populated.  So check the table first and, if
-             *the target item is not there and this URLEntry is for a directory, look for
-             *the file.  If the file is now present but was not when the loader
-             *was created, add an entry for the file in the table.
+             * Even with the previous special handling, a file could be created
+             * in a directory after the loader was created and its table of
+             * URLEntry names populated.  So check the table first and, if
+             * the target item is not there and this URLEntry is for a directory, look for
+             * the file.  If the file is now present but was not when the loader
+             * was created, add an entry for the file in the table.
              */
             boolean result;
             String target = item;
             // special handling
             if (item.startsWith("./")) {
-                target = item.substring(2, item.length());
+                target = item.substring(2);
             }
 
             result = table.containsKey(target);
             if ( ! result && ! isJar) {
                 /*
-                 *If the file exists now then it has been added to the directory since the
-                 *loader was created.  Add it to the table of files we
-                 *know about.
+                 * If the file exists now then it has been added to the directory since the
+                 * loader was created.  Add it to the table of files we
+                 * know about.
                  */
                 File targetFile = privilegedCheckForFile(target);
                 if (targetFile != null) {
@@ -1084,19 +1031,18 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
         }
 
         /**
-         *Returns a File object for the requested path within the URLEntry.
-         *<p>
-         *Runs privileged because user code could trigger invocations of this
-         *method.
-         *@param targetPath the relative path to look for
-         *@return File object for the requested file; null if it does not exist or
-         *in case of error
+         * Returns a File object for the requested path within the URLEntry.
+         * <p>
+         * Runs privileged because user code could trigger invocations of this method.
+         * @param targetPath the relative path to look for
+         * @return File object for the requested file; null if it does not exist or
+         * in case of error
          */
         private File privilegedCheckForFile(final String targetPath) {
             /*
-             *Check for the file existence with privs, because this code can
-             *be invoked from user code which may not otherwise have access
-             *to the directories of interest.
+             * Check for the file existence with privs, because this code can
+             * be invoked from user code which may not otherwise have access
+             * to the directories of interest.
              */
             try {
                 PrivilegedExceptionAction<File> action = () -> {
@@ -1177,88 +1123,6 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
     }
 
     /**
-     * Wraps all InputStreams returned by this class loader to report when
-     * a finalizer is run before the stream has been closed.  This helps
-     * to identify where locked files could arise.
-     * @author vtsyganok
-     * @author tjquinn
-     */
-    protected final class SentinelInputStream extends FilterInputStream {
-        private volatile boolean closed = false;
-        private volatile Throwable throwable;
-
-        /**
-         * Constructs new FilteredInputStream which reports InputStreams not closed properly.
-         * When the garbage collector runs the finalizer.  If the stream is still open this class will
-         * report a stack trace showing where the stream was opened.
-         *
-         * @param in - InputStream to be wrapped
-         */
-        protected SentinelInputStream(final InputStream in) {
-            super(in);
-            throwable = new Throwable();
-            getStreams().add(this);
-        }
-
-        /**
-         * Closes underlying input stream.
-         */
-        @Override
-        public void close() throws IOException {
-            _close();
-        }
-
-        /**
-         * Invoked by Garbage Collector. If underlying InputStream was not closed properly,
-         * the stack trace of the constructor will be logged!
-         *
-         * 'closed' is 'volatile', but it's a race condition to check it and how this code
-         * relates to _close() is unclear.
-         */
-        @Override
-        protected void finalize() throws Throwable {
-            closeWithWarning();
-            super.finalize();
-        }
-
-        private synchronized void _close() throws IOException {
-            if (closed) {
-                return;
-            }
-
-            // race condition with above check, but should have no harmful effects
-            closed = true;
-            throwable = null;
-            getStreams().remove(this);
-            super.close();
-        }
-
-        private void closeWithWarning() {
-            if (closed) {
-                return;
-            }
-
-            // stores the internal Throwable as it will be set to null in the _close method
-            Throwable localThrowable = this.throwable;
-
-            try {
-                _close();
-            } catch (IOException ioe) {
-                _logger.log(Level.WARNING, CULoggerInfo.exceptionClosingStream, ioe);
-            }
-
-            report(localThrowable);
-        }
-
-        /**
-         * Report "left-overs"!
-         */
-        private void report(Throwable localThrowable) {
-            _logger.log(Level.WARNING, CULoggerInfo.inputStreamFinalized, localThrowable);
-        }
-    }
-
-    /**
      * To properly close streams obtained through URL.getResource().getStream():
      * this opens the input stream on a JarFile that is already open as part
      * of the classloader, and returns a sentinel stream on it.
@@ -1314,7 +1178,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
             if (entry == null) {
                 throw new IOException("no entry called " + mName + " found in " + mRes.source);
             }
-            return new SentinelInputStream(mRes.zip.getInputStream(entry));
+            return mRes.zip.getInputStream(entry);
         }
     }
 
@@ -1356,10 +1220,8 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
                     throw new IOException("Cannot open a foreign URL; this.url=" + mURL + "; foreign.url=" + u);
                 }
                 String entryName = path.substring(separator + 1);
-                if (entryName != null) {
-                    assert (entryName.startsWith("/"));
-                    entryName = entryName.substring(1);
-                }
+                assert (entryName.startsWith("/"));
+                entryName = entryName.substring(1);
                 return new InternalJarURLConnection(u, mRes, entryName);
             } catch (URISyntaxException e) {
                 throw new IOException(e);
@@ -1411,7 +1273,6 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
         private synchronized void setClassBytes(byte[] newBytes) {
             classBytes = newBytes;
         }
-
     }
 
     /**
@@ -1434,6 +1295,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
 
         /**
          * Create a new instance.
+         *
          * @param applicationCL  is the original class loader associated
          * with this application. The new class loader uses it to delegate
          * stream handling operations. The new class loader also uses
@@ -1496,6 +1358,36 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
         @Override
         protected Enumeration<URL> findResources(String name) throws IOException {
             return delegate.findResources(name);
+        }
+    }
+
+    private static class ReentrantClassFileTransformer implements ClassFileTransformer {
+
+        private final ThreadLocal<Boolean> bytecodeTransforming = new ThreadLocal<>();
+
+        private final ClassFileTransformer transformer;
+
+        private ReentrantClassFileTransformer(ClassFileTransformer transformer) {
+            this.transformer = transformer;
+        }
+
+        @Override
+        public byte[] transform(ClassLoader loader,
+                                String className,
+                                Class<?> classBeingRedefined,
+                                ProtectionDomain protectionDomain,
+                                byte[] classfileBuffer) throws IllegalClassFormatException {
+            // Skip if the transformation is in progress
+            if (bytecodeTransforming.get() != null) {
+                return classfileBuffer;
+            }
+
+            bytecodeTransforming.set(true);
+            try {
+                return transformer.transform(loader, className, classBeingRedefined, protectionDomain, classfileBuffer);
+            } finally {
+                bytecodeTransforming.remove();
+            }
         }
     }
 }

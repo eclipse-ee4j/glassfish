@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,44 +17,48 @@
 
 package org.glassfish.security.services.config;
 
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
-import org.jvnet.hk2.config.Element;
-import org.jvnet.hk2.config.types.Property;
-import org.jvnet.hk2.config.types.PropertyBag;
+import com.sun.enterprise.config.serverbeans.customvalidators.JavaClassName;
 
+import jakarta.validation.constraints.NotNull;
+
+import java.beans.PropertyVetoException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import java.beans.PropertyVetoException;
-import jakarta.validation.constraints.NotNull;
-import com.sun.enterprise.config.serverbeans.customvalidators.JavaClassName;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Element;
+import org.jvnet.hk2.config.types.Property;
+import org.jvnet.hk2.config.types.PropertyBag;
 
 /**
- * The LoginModule configuration used for a security provider plugin.
+ * The {@link javax.security.auth.spi.LoginModule} configuration used for a
+ * security provider plugin.
  *
- * Defines setup for standard JAAS LoginModule Configuration.
+ * <p>Defines setup for standard JAAS Login Module Configuration.
  */
 @Configured
 public interface LoginModuleConfig extends SecurityProviderConfig, PropertyBag {
+
     /**
      * Gets the class name of the LoginModule.
      */
-    @Attribute(required=true)
+    @Attribute(required = true)
     @NotNull
     @JavaClassName
-    public String getModuleClass();
-    public void setModuleClass(String value) throws PropertyVetoException;
+    String getModuleClass();
+
+    void setModuleClass(String moduleClass) throws PropertyVetoException;
 
     /**
      * Gets the JAAS control flag of the LoginModule.
      */
-    @Attribute(required=true)
+    @Attribute(required = true)
     @NotNull
-    public String getControlFlag();
-    public void setControlFlag(String value) throws PropertyVetoException;
+    String getControlFlag();
+
+    void setControlFlag(String controlFlag) throws PropertyVetoException;
 
     /**
      * Gets the properties of the LoginModule.
@@ -64,19 +69,11 @@ public interface LoginModuleConfig extends SecurityProviderConfig, PropertyBag {
     /**
      * Gets the options of the LoginModule for use with JAAS Configuration.
      */
-    @DuckTyped
-    Map<String,?> getModuleOptions();
-
-    class Duck {
-        /**
-         * Gets the options of the LoginModule for use with JAAS Configuration.
-         */
-        public static Map<String,?> getModuleOptions(LoginModuleConfig config) {
-                Map<String,String> moduleOptions = new HashMap<String,String>();
-            for (Property prop : config.getProperty()) {
-                moduleOptions.put(prop.getName(), prop.getValue());
-            }
-            return moduleOptions;
+    default Map<String,?> getModuleOptions() {
+        Map<String,String> moduleOptions = new HashMap<>();
+        for (Property property : getProperty()) {
+            moduleOptions.put(property.getName(), property.getValue());
         }
+        return moduleOptions;
     }
 }

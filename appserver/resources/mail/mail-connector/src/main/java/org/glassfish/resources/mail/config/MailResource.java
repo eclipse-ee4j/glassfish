@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,48 +19,43 @@ package org.glassfish.resources.mail.config;
 
 import com.sun.enterprise.config.serverbeans.BindableResource;
 import com.sun.enterprise.config.serverbeans.Resource;
-import org.glassfish.admin.cli.resources.ResourceConfigCreator;
-import org.glassfish.admin.cli.resources.UniqueResourceNameConstraint;
-import org.glassfish.resourcebase.resources.ResourceDeploymentOrder;
-import org.glassfish.resourcebase.resources.ResourceTypeOrder;
-import org.jvnet.hk2.config.*;
+import com.sun.enterprise.config.serverbeans.customvalidators.JavaClassName;
+
+import jakarta.validation.constraints.NotNull;
 
 import java.beans.PropertyVetoException;
 import java.util.List;
 
-
+import org.glassfish.admin.cli.resources.ResourceConfigCreator;
+import org.glassfish.admin.cli.resources.UniqueResourceNameConstraint;
 import org.glassfish.api.admin.config.PropertiesDesc;
-import org.jvnet.hk2.config.types.Property;
-import org.jvnet.hk2.config.types.PropertyBag;
 import org.glassfish.api.admin.RestRedirects;
 import org.glassfish.api.admin.RestRedirect;
-
 import org.glassfish.quality.ToDo;
+import org.glassfish.resourcebase.resources.ResourceDeploymentOrder;
+import org.glassfish.resourcebase.resources.ResourceTypeOrder;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Element;
+import org.jvnet.hk2.config.types.Property;
+import org.jvnet.hk2.config.types.PropertyBag;
 
-import jakarta.validation.constraints.NotNull;
-
-import com.sun.enterprise.config.serverbeans.customvalidators.JavaClassName;
-
-/* @XmlType(name = "", propOrder = {
-    "description",
-    "property"
-}) */
-
+/**
+ * The mail-resource element describes a {@link jakarta.mail.Session} resource.
+ */
 @Configured
 @ResourceConfigCreator(commandName="create-mail-resource")
 @RestRedirects({
- @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-mail-resource"),
- @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-mail-resource")
+        @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-mail-resource"),
+        @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-mail-resource")
 })
-@ResourceTypeOrder(deploymentOrder= ResourceDeploymentOrder.MAIL_RESOURCE)
-@UniqueResourceNameConstraint(message="{resourcename.isnot.unique}", payload=MailResource.class)
-/**
- * The mail-resource element describes a jakarta.mail.Session resource
- */
+@ResourceTypeOrder(deploymentOrder = ResourceDeploymentOrder.MAIL_RESOURCE)
+@UniqueResourceNameConstraint(message = "{resourcename.isnot.unique}", payload = MailResource.class)
 public interface MailResource extends ConfigBeanProxy, Resource, PropertyBag, BindableResource {
 
     /**
-     * Gets the value of the storeProtocol property.
+     * Gets the value of the {@code storeProtocol} property.
      *
      * @return possible object is {@link String}
      */
@@ -67,14 +63,14 @@ public interface MailResource extends ConfigBeanProxy, Resource, PropertyBag, Bi
     String getStoreProtocol();
 
     /**
-     * Sets the value of the storeProtocol property.
+     * Sets the value of the {@code storeProtocol} property.
      *
-     * @param value allowed object is {@link String}
+     * @param protocol allowed object is {@link String}
      */
-    void setStoreProtocol(String value) throws PropertyVetoException;
+    void setStoreProtocol(String protocol) throws PropertyVetoException;
 
     /**
-     * Gets the value of the storeProtocolClass property.
+     * Gets the value of the {@code storeProtocolClass} property.
      *
      * @return possible object is {@link String}
      */
@@ -83,14 +79,14 @@ public interface MailResource extends ConfigBeanProxy, Resource, PropertyBag, Bi
     String getStoreProtocolClass();
 
     /**
-     * Sets the value of the storeProtocolClass property.
+     * Sets the value of the {@code storeProtocolClass} property.
      *
-     * @param value allowed object is {@link String}
+     * @param protocolClass allowed object is {@link String}
      */
-    void setStoreProtocolClass(String value) throws PropertyVetoException;
+    void setStoreProtocolClass(String protocolClass) throws PropertyVetoException;
 
     /**
-     * Gets the value of the transportProtocol property.
+     * Gets the value of the {@code transportProtocol} property.
      *
      * @return possible object is {@link String}
      */
@@ -98,14 +94,14 @@ public interface MailResource extends ConfigBeanProxy, Resource, PropertyBag, Bi
     String getTransportProtocol();
 
     /**
-     * Sets the value of the transportProtocol property.
+     * Sets the value of the {@code transportProtocol} property.
      *
-     * @param value allowed object is {@link String}
+     * @param protocol allowed object is {@link String}
      */
-    void setTransportProtocol(String value) throws PropertyVetoException;
+    void setTransportProtocol(String protocol) throws PropertyVetoException;
 
     /**
-     * Gets the value of the transportProtocolClass property.
+     * Gets the value of the {@code transportProtocolClass} property.
      *
      * @return possible object is {@link String}
      */
@@ -114,15 +110,16 @@ public interface MailResource extends ConfigBeanProxy, Resource, PropertyBag, Bi
     String getTransportProtocolClass();
 
     /**
-     * Sets the value of the transportProtocolClass property.
+     * Sets the value of the {@code transportProtocolClass} property.
      *
-     * @param value allowed object is {@link String}
+     * @param protocolClass allowed object is {@link String}
      */
-    void setTransportProtocolClass(String value) throws PropertyVetoException;
+    void setTransportProtocolClass(String protocolClass) throws PropertyVetoException;
 
     /**
-     * Gets the value of the host property.
-     * ip V6 or V4 address or hostname
+     * Gets the value of the {@code host} property.
+     *
+     * <p>IP V6 or V4 address or hostname
      *
      * @return possible object is {@link String}
      */
@@ -131,14 +128,14 @@ public interface MailResource extends ConfigBeanProxy, Resource, PropertyBag, Bi
     String getHost();
 
     /**
-     * Sets the value of the host property.
+     * Sets the value of the {@code host} property.
      *
-     * @param value allowed object is {@link String}
+     * @param host allowed object is {@link String}
      */
-    void setHost(String value) throws PropertyVetoException;
+    void setHost(String host) throws PropertyVetoException;
 
     /**
-     * Gets the value of the user property.
+     * Gets the value of the {@code user} property.
      *
      * @return possible object is {@link String}
      */
@@ -147,14 +144,14 @@ public interface MailResource extends ConfigBeanProxy, Resource, PropertyBag, Bi
     String getUser();
 
     /**
-     * Sets the value of the user property.
+     * Sets the value of the {@code user} property.
      *
-     * @param value allowed object is {@link String}
+     * @param user allowed object is {@link String}
      */
-    void setUser(String value) throws PropertyVetoException;
+    void setUser(String user) throws PropertyVetoException;
 
     /**
-     * Gets the value of the from property.
+     * Gets the value of the {@code from} property.
      *
      * @return possible object is {@link String}
      */
@@ -163,14 +160,14 @@ public interface MailResource extends ConfigBeanProxy, Resource, PropertyBag, Bi
     String getFrom();
 
     /**
-     * Sets the value of the from property.
+     * Sets the value of the {@code from} property.
      *
-     * @param value allowed object is {@link String}
+     * @param from allowed object is {@link String}
      */
-    void setFrom(String value) throws PropertyVetoException;
+    void setFrom(String from) throws PropertyVetoException;
 
     /**
-     * Gets the value of the debug property.
+     * Gets the value of the {@code debug} property.
      *
      * @return possible object is {@link String}
      */
@@ -178,14 +175,14 @@ public interface MailResource extends ConfigBeanProxy, Resource, PropertyBag, Bi
     String getDebug();
 
     /**
-     * Sets the value of the debug property.
+     * Sets the value of the {@code debug} property.
      *
-     * @param value allowed object is {@link String}
+     * @param debug allowed object is {@link String}
      */
-    void setDebug(String value) throws PropertyVetoException;
+    void setDebug(String debug) throws PropertyVetoException;
 
     /**
-     * Gets the value of the enabled property.
+     * Gets the value of the {@code enabled} property.
      *
      * @return possible object is {@link String}
      */
@@ -194,15 +191,15 @@ public interface MailResource extends ConfigBeanProxy, Resource, PropertyBag, Bi
     String getEnabled();
 
     /**
-     * Sets the value of the enabled property.
+     * Sets the value of the {@code enabled} property.
      *
-     * @param value allowed object is {@link String}
+     * @param enabled allowed object is {@link String}
      */
     @Override
-    void setEnabled(String value) throws PropertyVetoException;
+    void setEnabled(String enabled) throws PropertyVetoException;
 
     /**
-     * Gets the value of the description property.
+     * Gets the value of the {@code description} property.
      *
      * @return possible object is {@link String}
      */
@@ -210,11 +207,11 @@ public interface MailResource extends ConfigBeanProxy, Resource, PropertyBag, Bi
     String getDescription();
 
     /**
-     * Sets the value of the description property.
+     * Sets the value of the {@code description} property.
      *
-     * @param value allowed object is {@link String}
+     * @param description allowed object is {@link String}
      */
-    void setDescription(String value) throws PropertyVetoException;
+    void setDescription(String description) throws PropertyVetoException;
 
     /**
      * Properties as per {@link PropertyBag}
@@ -226,12 +223,7 @@ public interface MailResource extends ConfigBeanProxy, Resource, PropertyBag, Bi
     List<Property> getProperty();
 
     @Override
-    @DuckTyped
-    String getIdentity();
-
-    class Duck {
-        public static String getIdentity(MailResource resource){
-            return resource.getJndiName();
-        }
+    default String getIdentity() {
+        return getJndiName();
     }
 }

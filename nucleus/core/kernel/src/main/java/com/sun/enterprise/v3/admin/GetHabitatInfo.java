@@ -17,27 +17,18 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.customvalidators.JavaClassName;
-import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.universal.collections.ManifestUtils;
-import com.sun.enterprise.v3.common.PropsFileActionReporter;
-
-import jakarta.inject.Inject;
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
-import jakarta.validation.Payload;
-import jakarta.validation.constraints.Pattern;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.ExitCode;
 import org.glassfish.api.Param;
@@ -53,28 +44,39 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.BuilderHelper;
 import org.jvnet.hk2.annotations.Service;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.customvalidators.JavaClassName;
+import com.sun.enterprise.module.ModulesRegistry;
+import com.sun.enterprise.universal.collections.ManifestUtils;
+import com.sun.enterprise.v3.common.PropsFileActionReporter;
+
+import jakarta.inject.Inject;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+import jakarta.validation.Payload;
+import jakarta.validation.constraints.Pattern;
 
 /**
  * Dumps a sorted list of all registered Contract's in the Habitat
  *
  * <p>
  * Useful for debugging and developing new Contract's
+ *
  * @author Byron Nevins
  * @param <i>
  */
 @Service(name = "_get-habitat-info")
 @PerLookup
 @RestEndpoints({
-    @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET,
-        path="_get-habitat-info",
-        description="_get-habitat-info")
-})
+    @RestEndpoint(
+        configBean = Domain.class,
+        opType = RestEndpoint.OpType.GET,
+        path = "_get-habitat-info",
+        description = "_get-habitat-info") })
 @GetHabitatInfo.Constraint
-@AccessRequired(resource="domain", action="dump")
+@AccessRequired(resource = "domain", action = "dump")
 public class GetHabitatInfo implements AdminCommand {
+
     @Inject
     ServiceLocator serviceLocator;
 
@@ -85,7 +87,7 @@ public class GetHabitatInfo implements AdminCommand {
     @Param(primary = true, optional = true)
     String contract;
 
-    @Pattern(regexp="true|false", message = "Valid values: true|false")
+    @Pattern(regexp = "true|false", message = "Valid values: true|false")
     @Param(optional = true)
     String started = "false";
 
@@ -99,7 +101,6 @@ public class GetHabitatInfo implements AdminCommand {
         } else {
             dumpInhabitantsImplementingContractPattern(contract, sb);
         }
-
 
         String msg = sb.toString();
         ActionReport report = context.getActionReport();
@@ -115,8 +116,8 @@ public class GetHabitatInfo implements AdminCommand {
         sb.append("\n*********** Sorted List of all Registered Contracts in the Habitat **************\n");
         List<ActiveDescriptor<?>> allDescriptors = serviceLocator.getDescriptors(BuilderHelper.allFilter());
         AtomicInteger counter = new AtomicInteger(0);
-        allDescriptors.stream().flatMap(desc -> desc.getAdvertisedContracts().stream()).sorted().forEach(contract -> sb
-            .append("Contract-").append(counter.incrementAndGet()).append(": ").append(contract).append('\n'));
+        allDescriptors.stream().flatMap(desc -> desc.getAdvertisedContracts().stream()).sorted()
+                .forEach(contract -> sb.append("Contract-").append(counter.incrementAndGet()).append(": ").append(contract).append('\n'));
     }
 
     private void dumpInhabitantsImplementingContractPattern(String pattern, StringBuilder sb) {
@@ -127,14 +128,12 @@ public class GetHabitatInfo implements AdminCommand {
             allContracts.addAll(aDescriptor.getAdvertisedContracts());
         }
 
-        Iterator<String> it = allContracts.iterator();
-        while (it.hasNext()) {
-            String cn = it.next();
+        for (String cn : allContracts) {
             if (cn.toLowerCase(Locale.ENGLISH).indexOf(pattern.toLowerCase(Locale.ENGLISH)) < 0) {
                 continue;
             }
             sb.append("-----------------------------\n");
-            for ( ActiveDescriptor<?> descriptor : serviceLocator.getDescriptors(BuilderHelper.createContractFilter(cn))) {
+            for (ActiveDescriptor<?> descriptor : serviceLocator.getDescriptors(BuilderHelper.createContractFilter(cn))) {
                 sb.append("Inhabitant-Metadata: " + descriptor.getMetadata());
                 sb.append("\n");
                 boolean isStarted = Boolean.parseBoolean(started);
@@ -150,8 +149,8 @@ public class GetHabitatInfo implements AdminCommand {
         sb.append("\n\n*********** Sorted List of all Types in the Habitat **************\n\n");
         List<ActiveDescriptor<?>> allDescriptors = serviceLocator.getDescriptors(BuilderHelper.allFilter());
         AtomicInteger counter = new AtomicInteger(0);
-        allDescriptors.stream().map(ActiveDescriptor::getImplementation).sorted().forEach(
-            impl -> sb.append("Type-").append(counter.incrementAndGet()).append(": ").append(impl).append('\n'));
+        allDescriptors.stream().map(ActiveDescriptor::getImplementation).sorted()
+                .forEach(impl -> sb.append("Type-").append(counter.incrementAndGet()).append(": ").append(impl).append('\n'));
     }
 
     private void dumpModules(StringBuilder sb) {
@@ -165,26 +164,28 @@ public class GetHabitatInfo implements AdminCommand {
      * NOTE: this valdation is here just to test the AdminCommand validation implementation.
      */
     @Retention(RUNTIME)
-    @Target({TYPE})
+    @Target({ TYPE })
     @jakarta.validation.Constraint(validatedBy = GetHabitatInfo.Validator.class)
     public static @interface Constraint {
         String message() default "The contract argument is test but started is true.";
+
         Class<?>[] groups() default {};
+
         Class<? extends Payload>[] payload() default {};
     }
 
-    public static class Validator
-        implements ConstraintValidator<GetHabitatInfo.Constraint, GetHabitatInfo>, Payload {
+    public static class Validator implements ConstraintValidator<GetHabitatInfo.Constraint, GetHabitatInfo>, Payload {
 
         @Override
-        public void initialize(final GetHabitatInfo.Constraint constraint) { }
+        public void initialize(final GetHabitatInfo.Constraint constraint) {
+        }
 
         @Override
-        public boolean isValid(final GetHabitatInfo bean,
-            final ConstraintValidatorContext constraintValidatorContext) {
+        public boolean isValid(final GetHabitatInfo bean, final ConstraintValidatorContext constraintValidatorContext) {
             if ("test".equals(bean.contract) && "true".equals(bean.started)) {
                 return false;
             }
+
             return true;
         }
     }

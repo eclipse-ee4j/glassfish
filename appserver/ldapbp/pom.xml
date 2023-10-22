@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-parent</artifactId>
-        <version>7.0.4-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.main.ldapbp</groupId>
@@ -31,6 +31,11 @@
     <packaging>glassfish-jar</packaging>
 
     <name>LDAP Booster Pack</name>
+
+    <properties>
+        <!-- We don't need it here and it would fail -->
+        <glassfish.generate-injectors.skip>true</glassfish.generate-injectors.skip>
+    </properties>
 
     <dependencies>
         <dependency>

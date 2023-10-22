@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,49 +18,50 @@
 package com.sun.enterprise.config.serverbeans;
 
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import org.glassfish.api.monitoring.ContainerMonitoring;
-import org.glassfish.api.monitoring.MonitoringItem;
-import org.jvnet.hk2.config.*;
-import org.jvnet.hk2.config.types.Property;
-import org.jvnet.hk2.config.types.PropertyBag;
+
+import jakarta.validation.constraints.NotNull;
 
 import java.beans.PropertyVetoException;
-import java.util.List;
-import java.util.Iterator;
-import java.util.ArrayList;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
-import org.glassfish.api.admin.config.PropertiesDesc;
-import org.glassfish.quality.ToDo;
-
-import jakarta.validation.constraints.NotNull;
 import org.glassfish.api.admin.config.ConfigExtension;
-
-/* @XmlType(name = "", propOrder = {
-   "moduleMonitoringLevels",
-   "property"
-}) */
+import org.glassfish.api.admin.config.PropertiesDesc;
+import org.glassfish.api.monitoring.ContainerMonitoring;
+import org.glassfish.api.monitoring.MonitoringItem;
+import org.glassfish.quality.ToDo;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Element;
+import org.jvnet.hk2.config.Transaction;
+import org.jvnet.hk2.config.TransactionFailure;
+import org.jvnet.hk2.config.types.Property;
+import org.jvnet.hk2.config.types.PropertyBag;
 
 @Configured
 public interface MonitoringService extends ConfigExtension, PropertyBag {
 
     /**
-     * Gets the value of the moduleMonitoringLevels property.
+     * Gets the value of the {@code moduleMonitoringLevels} property.
      *
-     * @return possible object is {@link ModuleMonitoringLevels }
+     * @return possible object is {@link ModuleMonitoringLevels}
      */
     @Element
     @NotNull
-    public ModuleMonitoringLevels getModuleMonitoringLevels();
+    ModuleMonitoringLevels getModuleMonitoringLevels();
 
     /**
-     * Sets the value of the moduleMonitoringLevels property.
+     * Sets the value of the {@code moduleMonitoringLevels} property.
      *
-     * @param value allowed object is {@link ModuleMonitoringLevels }
+     * @param moduleMonitoringLevels allowed object is {@link ModuleMonitoringLevels}
      */
-    public void setModuleMonitoringLevels(ModuleMonitoringLevels value) throws PropertyVetoException;
+    void setModuleMonitoringLevels(ModuleMonitoringLevels moduleMonitoringLevels) throws PropertyVetoException;
 
     /**
      * Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
@@ -70,21 +72,23 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
     List<Property> getProperty();
 
     /**
-     * Gets the value of the mbean-enabled attribute. This boolean attribute determines whether monitoring mbeans are
-     * enabled or disabled. When disabled, all montioring activity will be disabled
+     * Gets the value of the {@code mbean-enabled} attribute.
+     *
+     * <p>This {@code boolean} attribute determines whether monitoring mbeans are
+     * enabled or disabled. When disabled, all monitoring activity will be disabled.
      *
      * @return present monitoring activity status
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
-    public String getMbeanEnabled();
+    String getMbeanEnabled();
 
     /**
-     * Sets the value of the mbean-enabled attribute.
+     * Sets the value of the {@code mbean-enabled} attribute.
      *
-     * @param value allowed object is a String
+     * @param mbeanEnabled allowed object is a {@link String}
      *
      */
-    public void setMbeanEnabled(String value) throws PropertyVetoException;
+    void setMbeanEnabled(String mbeanEnabled) throws PropertyVetoException;
 
     // TODO: Ref: Issue # 8706. Sreeni to work with GmBal team and provide a
     // final resolution on where the above mbean-enabled flag would reside.
@@ -94,38 +98,41 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
     // one type of veneer viz the mbean-layer
 
     /**
-     * Gets the value of the monitoring-enabled attribute. This boolean attribute determines whether monitoring mebans are
-     * enabled or disabled. When disabled, all montioring activity will be disabled
+     * Gets the value of the {@code monitoring-enabled} attribute.
+     *
+     * <p>This {@code boolean} attribute determines whether monitoring mebans are
+     * enabled or disabled. When disabled, all monitoring activity will be disabled.
      *
      * @return present monitoring activity status
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
-    public String getMonitoringEnabled();
+    String getMonitoringEnabled();
 
     /**
-     * Sets the value of the monitoring-enabled attribute.
+     * Sets the value of the {@code monitoring-enabled} attribute.
      *
-     * @param value allowed object is String
+     * @param monitoringEnabled allowed object is {@link String}
      */
-    public void setMonitoringEnabled(String value) throws PropertyVetoException;
+    void setMonitoringEnabled(String monitoringEnabled) throws PropertyVetoException;
 
     /**
-     * Gets the value of the dtrace-enabled attribute.
+     * Gets the value of the {@code dtrace-enabled} attribute.
      *
      * @return present dtrace status
      */
     @Attribute(defaultValue = "false", dataType = Boolean.class)
-    public String getDtraceEnabled();
+    String getDtraceEnabled();
 
     /**
-     * Sets the value of the dtrace-enabled attribute.
+     * Sets the value of the {@code dtrace-enabled} attribute.
      *
-     * @param value allowed object is String
+     * @param dtraceEnabled allowed object is {@link String}.
      */
-    public void setDtraceEnabled(String value) throws PropertyVetoException;
+    void setDtraceEnabled(String dtraceEnabled) throws PropertyVetoException;
 
     /**
-     * Get the monitoring configuration for containers that used the default ContainerMonitoring.
+     * Get the monitoring configuration for containers that used the default
+     * {@link ContainerMonitoring}.
      *
      * @return list of container monitoring configurations (default)
      */
@@ -133,7 +140,8 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
     List<ContainerMonitoring> getContainerMonitoring();
 
     /**
-     * Get the monitoring configuration for other types of containers that used custom monitoring configuration.
+     * Get the monitoring configuration for other types of containers that used
+     * custom monitoring configuration.
      *
      * @return list of container monitoring configurations
      */
@@ -141,197 +149,164 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
     List<MonitoringItem> getMonitoringItems();
 
     /**
-     * Return the monitoring configuration for a container by the provided name, assuming the named container used the
-     * default ContainerMonitoring to express its monitoring configuration.
+     * Return the monitoring configuration for a container by the provided name,
+     * assuming the named container used the default {@link ContainerMonitoring}
+     * to express its monitoring configuration.
      *
      * @param name name of the container to return the configuration for
      * @return the container configuration or null if not found
      */
-    @DuckTyped
-    ContainerMonitoring getContainerMonitoring(String name);
-
-    @DuckTyped
-    String getMonitoringLevel(String name);
-
-    @DuckTyped
-    void setMonitoringLevel(String name, String level);
-
-    @DuckTyped
-    boolean isAnyModuleOn();
-
-    public class Duck {
-        public static ContainerMonitoring getContainerMonitoring(MonitoringService ms, String name) {
-            for (ContainerMonitoring cm : ms.getContainerMonitoring()) {
-                if (cm.getName().equals(name)) {
-                    return cm;
-                }
+    default ContainerMonitoring getContainerMonitoring(String name) {
+        for (ContainerMonitoring monitoring : getContainerMonitoring()) {
+            if (monitoring.getName().equals(name)) {
+                return monitoring;
             }
-            return null;
         }
+        return null;
+    }
 
-        private final static List<String> getMethods = new ArrayList<String>();
+    default String getMonitoringLevel(String moduleName) {
+        // It is possible that the given module name might exist as
+        // attribute of module-monitoring-levels or
+        // as container-monitoring element provided for extensibility.
 
-        private static void populateGetMethods() {
-            // We need to use reflection to compare the given name with the
-            // getters of ModuleMonitoringLevel.
-            // For performance, the method names are cached when this is run first time.
-            synchronized (getMethods) {
-                if (getMethods.isEmpty()) {
-                    for (Method method : ModuleMonitoringLevels.class.getDeclaredMethods()) {
-                        // If it is a getter store it in the list
-                        String str = method.getName();
-                        if (str.startsWith("get") && method.getReturnType().equals(String.class)) {
-                            getMethods.add(str);
-                        }
-                    }
-                }
+        // Order of precedence is to first check module-monitoring-levels
+        // then container-monitoring.
+
+        // strip - part from name
+        String name = moduleName.replaceAll("-", "");
+
+        Method getter = GetterCache.methods.get(name.toLowerCase());
+        if (getter != null) {
+            try {
+                return  (String) getter.invoke(getModuleMonitoringLevels());
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                Logger.getAnonymousLogger().log(Level.WARNING, e.getMessage(), e);
             }
         }
 
-        public static String getMonitoringLevel(MonitoringService ms, String name) {
-
-            String level = null;
-
-            // It is possible that the given module name might exist as
-            // attribute of module-monitoring-levels or
-            // as container-monitoring element provided for extensibility.
-
-            // Order of precedence is to first check module-monitoring-levels
-            // then container-monitoring.
-
-            // module-monitoring-levels
-            populateGetMethods();
-
-            // strip - part from name
-            String rName = name.replaceAll("-", "");
-
-            Iterator<String> itr = getMethods.iterator();
-            while (itr.hasNext()) {
-                String methodName = itr.next();
-                if (rName.equalsIgnoreCase(methodName.substring(3))) {
-                    try {
-                        Method mthd = ModuleMonitoringLevels.class.getMethod(methodName, (Class[]) null);
-                        level = (String) mthd.invoke(ms.getModuleMonitoringLevels(), (Object[]) null);
-                    } catch (NoSuchMethodException nsme) {
-                        Logger.getAnonymousLogger().log(Level.WARNING, nsme.getMessage(), nsme);
-                    } catch (IllegalAccessException ile) {
-                        Logger.getAnonymousLogger().log(Level.WARNING, ile.getMessage(), ile);
-                    } catch (java.lang.reflect.InvocationTargetException ite) {
-                        Logger.getAnonymousLogger().log(Level.WARNING, ite.getMessage(), ite);
-                    }
-                    break;
-                }
+        // container-monitoring
+        for (ContainerMonitoring monitoring : getContainerMonitoring()) {
+            if (monitoring.getName().equals(moduleName)) {
+                return monitoring.getLevel();
             }
-
-            if (level != null)
-                return level;
-
-            // container-monitoring
-            for (ContainerMonitoring cm : ms.getContainerMonitoring()) {
-                if (cm.getName().equals(name)) {
-                    return cm.getLevel();
-                }
-            }
-
-            return null;
         }
 
-        public static boolean isAnyModuleOn(MonitoringService ms) {
-            boolean rv = false;
-            populateGetMethods();
-            ModuleMonitoringLevels mml = ms.getModuleMonitoringLevels();
-            for (String methodName : getMethods) {
-                try {
-                    Method mthd = ModuleMonitoringLevels.class.getMethod(methodName, (Class[]) null);
-                    String level = (String) mthd.invoke(mml, (Object[]) null);
-                    rv = rv || !"OFF".equals(level);
-                } catch (NoSuchMethodException nsme) {
-                    Logger.getAnonymousLogger().log(Level.WARNING, nsme.getMessage(), nsme);
-                } catch (IllegalAccessException ile) {
-                    Logger.getAnonymousLogger().log(Level.WARNING, ile.getMessage(), ile);
-                } catch (java.lang.reflect.InvocationTargetException ite) {
-                    Logger.getAnonymousLogger().log(Level.WARNING, ite.getMessage(), ite);
+        return null;
+    }
+
+    default boolean setMonitoringLevel(String moduleName, String level) throws TransactionFailure, PropertyVetoException {
+        // It is possible that the given module name might exist as
+        // attribute of module-monitoring-levels or
+        // as container-monitoring element provided for extensibility.
+
+        // Order of precedence is to first check module-monitoring-levels
+        // then container-monitoring.
+
+        // module-monitoring-levels
+
+        // strip - part from name
+        String name = moduleName.replaceAll("-", "");
+
+        Method setter = SetterCache.methods.get(name.toLowerCase());
+        if (setter != null) {
+            try {
+                Transaction tx = Transaction.getTransaction(this);
+                if (tx == null) {
+                    throw new TransactionFailure(
+                        LocalStringHolder.localStrings.getLocalString("noTransaction", "Internal Error - Cannot obtain transaction object"));
                 }
+                ModuleMonitoringLevels monitoringLevels = tx.enroll(getModuleMonitoringLevels());
+                setter.invoke(monitoringLevels, level);
+                return true;
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                Logger.getAnonymousLogger().log(Level.WARNING, e.getMessage(), e);
             }
-            for (ContainerMonitoring cm : ms.getContainerMonitoring()) {
-                rv = rv || !"OFF".equals(cm.getLevel());
-            }
-            return rv;
         }
 
-        private final static List<String> setMethods = new ArrayList<String>();
+        // container-monitoring
+        for (ContainerMonitoring monitoring : getContainerMonitoring()) {
+            if (monitoring.getName().equals(moduleName)) {
+                monitoring.setLevel(level);
+                return true;
+            }
+        }
 
-        public static boolean setMonitoringLevel(MonitoringService ms, String name, String level)
-                throws PropertyVetoException, TransactionFailure {
+        return false;
+    }
 
-            // It is possible that the given module name might exist as
-            // attribute of module-monitoring-levels or
-            // as container-monitoring element provided for extensibility.
+    default boolean isAnyModuleOn() {
+        ModuleMonitoringLevels monitoringLevels = getModuleMonitoringLevels();
+        for (Method getter : GetterCache.methods.values()) {
+            try {
+                String level = (String) getter.invoke(monitoringLevels);
+                if (!"OFF".equals(level)) {
+                    return true;
+                }
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                Logger.getAnonymousLogger().log(Level.WARNING, e.getMessage(), e);
+            }
+        }
 
-            // Order of precedence is to first check module-monitoring-levels
-            // then container-monitoring.
+        for (ContainerMonitoring monitoring : getContainerMonitoring()) {
+            if (!"OFF".equals(monitoring.getLevel())) {
+                return true;
+            }
+        }
 
-            // module-monitoring-levels
-            // We need to use reflection to comapre the given name with the
-            // getters of ModuleMonitoringLevel.
-            // For performance, the method names are cached when this is run first time.
+        return false;
+    }
 
-            boolean isLevelUpdated = false;
+    final class GetterCache {
+        // We need to use reflection to compare the given name with the
+        // getters of ModuleMonitoringLevel.
+        // For performance, the method names are cached when this is run first time.
+        private static final Map<String, Method> methods;
 
-            synchronized (setMethods) {
-                if (setMethods.isEmpty()) {
-                    for (Method method : ModuleMonitoringLevels.class.getDeclaredMethods()) {
-                        // If it is a setter store it in the list
-                        String str = method.getName();
-                        if (str.startsWith("set")) {
-                            setMethods.add(str);
-                        }
-                    }
+        static {
+            Map<String, Method> getMethods = new HashMap<>();
+            for (Method method : ModuleMonitoringLevels.class.getDeclaredMethods()) {
+                String methodName = method.getName();
+                if (methodName.startsWith("get") && method.getReturnType().equals(String.class)) {
+                    getMethods.put(methodName.substring(3).toLowerCase(), method);
                 }
             }
+            methods = Collections.unmodifiableMap(getMethods);
+        }
 
-            // strip - part from name
-            String rName = name.replaceAll("-", "");
-
-            Iterator<String> itr = setMethods.iterator();
-
-            while (itr.hasNext()) {
-                String methodName = itr.next();
-                if (rName.equalsIgnoreCase(methodName.substring(3))) {
-                    try {
-                        Method mthd = ModuleMonitoringLevels.class.getMethod(methodName, new Class[] { java.lang.String.class });
-                        Transaction tx = Transaction.getTransaction(ms);
-                        if (tx == null) {
-                            throw new TransactionFailure(
-                                    localStrings.getLocalString("noTransaction", "Internal Error - Cannot obtain transaction object"));
-                        }
-                        ModuleMonitoringLevels mml = tx.enroll(ms.getModuleMonitoringLevels());
-                        mthd.invoke(mml, level);
-                        isLevelUpdated = true;
-                    } catch (NoSuchMethodException nsme) {
-                        Logger.getAnonymousLogger().log(Level.WARNING, nsme.getMessage(), nsme);
-                    } catch (IllegalAccessException ile) {
-                        Logger.getAnonymousLogger().log(Level.WARNING, ile.getMessage(), ile);
-                    } catch (java.lang.reflect.InvocationTargetException ite) {
-                        Logger.getAnonymousLogger().log(Level.WARNING, ite.getMessage(), ite);
-                    }
-                    break;
-                }
-            }
-
-            if (!isLevelUpdated) {
-                // container-monitoring
-                for (ContainerMonitoring cm : ms.getContainerMonitoring()) {
-                    if (cm.getName().equals(name)) {
-                        cm.setLevel(level);
-                        isLevelUpdated = true;
-                    }
-                }
-            }
-            return isLevelUpdated;
-
+        private GetterCache() {
+            throw new AssertionError();
         }
     }
 
-    final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(MonitoringService.class);
+    final class SetterCache {
+        // We need to use reflection to compare the given name with the
+        // getters of ModuleMonitoringLevel.
+        // For performance, the method names are cached when this is run first time.
+        private static final Map<String, Method> methods;
+
+        static {
+            Map<String, Method> setMethods = new HashMap<>();
+            for (Method method : ModuleMonitoringLevels.class.getDeclaredMethods()) {
+                String methodName = method.getName();
+                if (methodName.startsWith("set")) {
+                    setMethods.put(methodName.substring(3).toLowerCase(), method);
+                }
+            }
+            methods = Collections.unmodifiableMap(setMethods);
+        }
+
+        private SetterCache() {
+            throw new AssertionError();
+        }
+    }
+
+    final class LocalStringHolder {
+
+        private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(MonitoringService.class);
+
+        private LocalStringHolder() {
+            throw new AssertionError();
+        }
+    }
 }

@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021-2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -40,9 +40,9 @@ import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._t;
  */
 public final class RemoteGenerator extends Generator {
 
-    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(RemoteGenerator.class);
+    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(RemoteGenerator.class);
 
-    private Class<?> businessInterface;
+    private final Class<?> businessInterface;
     private final Method[] methodsToGenerate;
     private final String remoteInterfacePackageName;
     private final String remoteInterfaceSimpleName;
@@ -58,7 +58,7 @@ public final class RemoteGenerator extends Generator {
         String packageName = getPackageName(businessIntf);
         String simpleName = getBaseName(businessIntf);
         String generatedSimpleName = "_" + simpleName + "_Remote";
-        return packageName == null ? generatedSimpleName : packageName + "." + generatedSimpleName;
+        return getFullClassName(packageName, generatedSimpleName);
     }
 
 
@@ -66,8 +66,8 @@ public final class RemoteGenerator extends Generator {
      * Construct the Wrapper generator with the specified deployment
      * descriptor and class loader.
      *
-     * @param classLoader
-     * @param businessIntf
+     * @param classLoader the class loader
+     * @param businessIntf the full qualified class name
      * @throws GeneratorException if the businessInterface doesn't exist.
      */
     public RemoteGenerator(ClassLoader classLoader, String businessIntf) throws GeneratorException {

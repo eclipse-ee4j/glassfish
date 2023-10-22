@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.common</groupId>
         <artifactId>nucleus-common</artifactId>
-        <version>7.0.4-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
     </parent>
 
     <artifactId>common-util</artifactId>
@@ -100,5 +100,16 @@
                 </includes>
             </resource>
         </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Bundle-Activator>org.glassfish.common.util.CommonUtilsActivator</Bundle-Activator>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>

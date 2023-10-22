@@ -29,14 +29,10 @@ import jakarta.annotation.sql.DataSourceDefinition;
 urlPatterns = "/BasicCDITestServlet")
 
 @DataSourceDefinition(
-            name="java:app/jdbc/DB1",
-            className="org.apache.derby.jdbc.EmbeddedDataSource",
-            portNumber=1527,
-            serverName="localhost",
-            databaseName="sun-appserv-samples",
-            user="APP",
-            password="APP",
-            properties={"connectionAttributes=;create=true"}
+        name = "java:app/jdbc/DB1",
+        className = "org.apache.derby.jdbc.EmbeddedDataSource",
+        databaseName = "sun-appserv-samples",
+        properties = {"connectionAttributes=;create=true"}
 )
 public class BasicCDITestServlet extends HttpServlet {
 

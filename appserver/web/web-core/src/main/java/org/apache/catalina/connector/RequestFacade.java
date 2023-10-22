@@ -21,6 +21,7 @@ package org.apache.catalina.connector;
 import static org.apache.catalina.Globals.IS_SECURITY_ENABLED;
 import static org.apache.catalina.security.SecurityUtil.isPackageProtectionEnabled;
 
+import com.sun.enterprise.security.ee.web.integration.WebPrincipal;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.security.AccessControlException;
@@ -36,9 +37,6 @@ import java.util.ResourceBundle;
 
 import org.apache.catalina.LogFacade;
 import org.apache.catalina.core.RequestFacadeHelper;
-
-import com.sun.enterprise.security.web.integration.WebPrincipal;
-
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.RequestDispatcher;

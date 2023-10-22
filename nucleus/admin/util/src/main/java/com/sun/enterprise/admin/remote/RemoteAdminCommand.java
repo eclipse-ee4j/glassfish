@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,33 +18,67 @@
 package com.sun.enterprise.admin.remote;
 
 import com.sun.enterprise.admin.util.AdminLoggerInfo;
-import com.sun.enterprise.config.serverbeans.SecureAdmin;
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.net.ssl.SSLException;
-
-import org.glassfish.api.admin.*;
-import org.glassfish.api.admin.CommandModel.ParamModel;
-
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-import com.sun.enterprise.universal.io.SmartFile;
-import com.sun.enterprise.universal.GFBase64Encoder;
-import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
 import com.sun.enterprise.admin.util.AuthenticationInfo;
 import com.sun.enterprise.admin.util.CachedCommandModel;
+import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
 import com.sun.enterprise.admin.util.HttpConnectorAddress;
 import com.sun.enterprise.admin.util.cache.AdminCacheUtils;
+import com.sun.enterprise.config.serverbeans.SecureAdmin;
+import com.sun.enterprise.universal.GFBase64Encoder;
+import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.net.NetUtils;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+import java.net.ConnectException;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.net.ssl.SSLException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.glassfish.api.admin.AuthenticationException;
+import org.glassfish.api.admin.CommandException;
+import org.glassfish.api.admin.CommandModel;
+import org.glassfish.api.admin.CommandModel.ParamModel;
 import org.glassfish.admin.payload.PayloadFilesManager;
 import org.glassfish.admin.payload.PayloadImpl;
+import org.glassfish.api.admin.CommandValidationException;
+import org.glassfish.api.admin.InvalidCommandException;
+import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.Payload;
-import javax.xml.parsers.*;
 import org.glassfish.common.util.admin.AuthTokenManager;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
@@ -635,7 +670,7 @@ public class RemoteAdminCommand {
                      * If this request is for metadata then we expect to reuse
                      * the auth token.
                      */
-                    urlConnection.setRequestProperty(SecureAdmin.Util.ADMIN_ONE_TIME_AUTH_TOKEN_HEADER_NAME,
+                    urlConnection.setRequestProperty(SecureAdmin.ADMIN_ONE_TIME_AUTH_TOKEN_HEADER_NAME,
                             (isForMetadata ? AuthTokenManager.markTokenForReuse(authToken) : authToken));
                 }
                 if (commandModel != null && isCommandModelFromCache() && commandModel instanceof CachedCommandModel) {

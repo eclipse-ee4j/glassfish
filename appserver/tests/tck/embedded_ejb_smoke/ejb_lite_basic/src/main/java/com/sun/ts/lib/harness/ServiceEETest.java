@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,9 +31,10 @@ import com.sun.ts.tests.common.vehicle.VehicleRunnable;
 import com.sun.ts.tests.common.vehicle.VehicleRunnerFactory;
 
 /**
- * This abstract class must be extended by all clients of tests of J2EE service apis; for example, JDBC, RMI-IIOP, JavaMail, JMS,
- * etc. When a service test is encountered by the JavaTest Client, the instance is passed to a J2EE server component and run from
- * that remote location. Using this model to develop tests allows the same test to be run from different locations within the
+ * This abstract class must be extended by all clients of tests of J2EE service apis; for example,
+ * JDBC, RMI-IIOP, JavaMail, JMS, etc. When a service test is encountered by the JavaTest Client,
+ * the instance is passed to a J2EE server component and run from that remote location. Using this
+ * model to develop tests allows the same test to be run from different locations within the
  * scope of the J2EE Application Programming Model.
  *
  * @author Kyle Grucci
@@ -53,24 +55,24 @@ public abstract class ServiceEETest extends EETest {
 
     private Object theSharedObject;
 
-    private Object theSharedObjectArray[];
+    private Object[] theSharedObjectArray;
 
     /**
-     * Returns any additional properties that may need to be set by a subclass of ServiceEETest for use by a specific vehicle. This
-     * method was created due to a need for clients of the JBIVehicle to set the name of the object to lookup in the rmiregistry. By
-     * rule, this value should match the id name for the component specified in the JBI installation descriptor. This impl returns an
-     * empty properties object by default.
+     * Returns any additional properties that may need to be set by a subclass of ServiceEETest
+     * for use by a specific vehicle. This impl returns an empty properties object by default.
      *
      * @param p user configured properties used by the test
-     * @return Properties Additional properties that may need to be set by a subclass of ServiceEETest for use by a specific vehicle.
+     * @return Properties Additional properties that may need to be set by a subclass of ServiceEETest
+     * for use by a specific vehicle.
      */
     public Properties getVehicleSpecificClientProps(Properties p) {
         return new Properties();
     }
 
     /**
-     * When called within the harness VM, this method passes an instance of itself to the appropriate J2EE server component. When
-     * called from within that server component, EETest's run method is called and the test is run.
+     * When called within the harness VM, this method passes an instance of itself to the appropriate
+     * J2EE server component. When called from within that server component, EETest's run method is
+     * called and the test is run.
      *
      * @param argv an array of arguments that a test may use
      * @param p user configured properties used by this test
@@ -117,7 +119,7 @@ public abstract class ServiceEETest extends EETest {
         vLeftOverTestArgs = new Vector();
 
         if (TestUtil.harnessDebug)
-            TestUtil.logHarnessDebug("ServiceEETest: " + argv.length + " args: " + Arrays.asList(argv).toString());
+            TestUtil.logHarnessDebug("ServiceEETest: " + argv.length + " args: " + Arrays.asList(argv));
         // load a props object if used with -p
         boolean tFound = false;
         String argItem = null;
@@ -126,8 +128,8 @@ public abstract class ServiceEETest extends EETest {
             if (argItem.equals("-p") || argItem.equals("-ap")) {
                 ap = initializeProperties(argv[++ii]);
                 // add additional props to "p"
-                Enumeration e = ap.propertyNames();
-                String key = null;
+                Enumeration<?> e = ap.propertyNames();
+                String key;
                 while (e.hasMoreElements()) {
                     key = (String) e.nextElement();
                     p.put(key, ap.getProperty(key));
@@ -184,12 +186,12 @@ public abstract class ServiceEETest extends EETest {
         } else {
             argv = new String[iSize];
             for (int ii = 0; ii < iSize; ii++) {
-                argv[ii] = (String) vLeftOverTestArgs.elementAt(ii);
+                argv[ii] = vLeftOverTestArgs.elementAt(ii);
             }
         }
-        if (sTestCase == null)
+        if (sTestCase == null) {
             return runAllTestCases(argv, props, log, err);
-        else {
+        } else {
             for (int ii = 0; ii < sVehicles.length; ii++) {
                 props.put("vehicle", sVehicles[ii]);
                 // need to pass these streams to the Local Reporter
@@ -207,8 +209,7 @@ public abstract class ServiceEETest extends EETest {
         return s;
     }
 
-    // overridden to allow service tests to run in standalone
-    // mode outside of javatest
+    // Overridden to allow service tests to run in standalone mode outside of javatest
     protected Status runAllTestCases(String[] argv, Properties p, PrintStream log, PrintStream err) {
         if (sVehicles == null) {
             if (TestUtil.harnessDebug)
@@ -234,10 +235,9 @@ public abstract class ServiceEETest extends EETest {
             sVal = p.getProperty("service_eetest.vehicles");
         } catch (Exception e) {
             // got an exception looking up the prop, so set defaults
-            sVal = "";
             sVal = "ejb servlet jsp";
         }
-        if (sVal == null || sVal.equals("")) {
+        if (sVal == null || sVal.isEmpty()) {
             sVehiclesToUse = "ejb servlet jsp";
             if (TestUtil.harnessDebug)
                 TestUtil.logHarnessDebug("getVehicles:  " + "Using default - all vehicles");

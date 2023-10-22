@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,74 +18,73 @@
 package com.sun.enterprise.config.serverbeans;
 
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+
 import java.beans.PropertyVetoException;
+
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.config.Named;
 import org.glassfish.config.support.CreationDecorator;
 import org.glassfish.config.support.CrudResolver;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.TransactionFailure;
 
-import jakarta.inject.Inject;
-
-@Configured
 /**
- * Represents a security Principal, identified using an SSL cert, that is authorized to perform admin operations. Used
- * both to identify the DAS and instances to each other and also for any end-user cert that should be accepted as
- * authorization for admin operations.
- *
+ * Represents a security Principal, identified using an SSL cert, that is authorized
+ * to perform admin operations. Used both to identify the DAS and instances to each other
+ * and also for any end-user cert that should be accepted as authorization for admin operations.
  */
+@Configured
 public interface SecureAdminPrincipal extends ConfigBeanProxy {
 
     /**
-     * Sets the DN of the SecureAdminPrincipal
+     * Sets the DN of the {@code SecureAdminPrincipal}
      *
      * @param dn the DN
      */
     @Param(primary = true)
-    public void setDn(String dn);
+    void setDn(String dn);
 
     /**
-     * Gets the distinguished name for this SecureAdminPrincipal
+     * Gets the distinguished name for this {@code SecureAdminPrincipal}
      *
-     * @return {@link String } containing the DN
+     * @return {@link String} containing the DN
      */
     @Attribute(key = true)
     String getDn();
 
     /**
-     * Invoked during creation of a new SecureAdminPrincipal.
+     * Invoked during creation of a new {@code SecureAdminPrincipal}.
      */
     @Service
     @PerLookup
-    public static class CrDecorator implements CreationDecorator<SecureAdminPrincipal> {
+    class CrDecorator implements CreationDecorator<SecureAdminPrincipal> {
 
         @Inject
-        //@Named(CREATION_DECORATOR_NAME)
         private SecureAdminHelper helper;
 
-        @Param(optional = false, name = "value", primary = true)
+        @Param(name = "value", primary = true)
         private String value;
 
         @Param(optional = true, name = "alias", defaultValue = "false")
         private boolean isAlias = true;
 
         @Override
-        public void decorate(AdminCommandContext context, SecureAdminPrincipal instance) throws TransactionFailure, PropertyVetoException {
+        public void decorate(AdminCommandContext context, SecureAdminPrincipal principal) throws TransactionFailure, PropertyVetoException {
             try {
                 /*
                  * The user might have specified an alias, so delegate to the
                  * helper to return the DN for that alias (or the DN if that's
                  * what the user specified).
                  */
-                instance.setDn(helper.getDN(value, isAlias));
+                principal.setDn(helper.getDN(value, isAlias));
             } catch (Exception ex) {
                 throw new TransactionFailure("create", ex);
             }
@@ -92,24 +92,24 @@ public interface SecureAdminPrincipal extends ConfigBeanProxy {
     }
 
     /**
-     * Resolves using the type and any name, with no restrictions on the name and with an optional mapping from a cert alias
-     * to the name.
-     * <p>
-     * The similar {@link TypeAndNameResolver} restricts the name to one that excludes commas, because TypeAndNameResolver
-     * uses habitat.getComponent which (ultimately) uses habitat.getInhabitantByContract which splits the name using a comma
-     * to get a list of names to try to match against.
-     * <p>
-     * In some cases the name might actually contain a comma, so this resolver supports those cases.
-     * <p>
-     * This resolver also allows the caller to specify an alias instead of the name (the DN) itself, in which case the
-     * resolver maps the alias to the corresponding cert's DN and uses that as the name.
+     * Resolves using the type and any name, with no restrictions on the name and with an optional mapping
+     * from a cert alias to the name.
+     *
+     * <p>The similar {@link org.glassfish.config.support.TypeAndNameResolver} restricts the name to one
+     * that excludes commas, because {@link org.glassfish.config.support.TypeAndNameResolver} uses
+     * {@code habitat.getComponent()} which (ultimately) uses {@code habitat.getInhabitantByContract()}
+     * which splits the name using a comma to get a list of names to try to match against.
+     *
+     * <p>In some cases the name might actually contain a comma, so this resolver supports those cases.
+     *
+     * <p>This resolver also allows the caller to specify an alias instead of the name (the DN) itself,
+     * in which case the resolver maps the alias to the corresponding cert's DN and uses that as the name.
      *
      * @author Tim Quinn
      */
-
     @Service
     @PerLookup
-    public static class Resolver implements CrudResolver {
+    class Resolver implements CrudResolver {
 
         @Param(primary = true)
         private String value;
@@ -138,8 +138,10 @@ public interface SecureAdminPrincipal extends ConfigBeanProxy {
 
             if (!SecureAdminPrincipal.class.isAssignableFrom(type)) {
                 final String msg = localStrings.getLocalString(SecureAdminPrincipal.class,
-                        "SecureAdminPrincipalResolver.configTypeNotNamed", "Config type {0} must extend {1} but does not",
-                        type.getSimpleName(), Named.class.getName());
+                        "SecureAdminPrincipalResolver.configTypeNotNamed",
+                        "Config type {0} must extend {1} but does not",
+                        type.getSimpleName(),
+                        Named.class.getName());
                 throw new IllegalArgumentException(msg);
             }
 
@@ -147,13 +149,16 @@ public interface SecureAdminPrincipal extends ConfigBeanProxy {
              * Look among all instances of this contract type for a match on the
              * full name.
              */
-            for (T candidate : habitat.<T>getAllServices(type)) {
+            for (T candidate : habitat.getAllServices(type)) {
                 if (value.equals(((SecureAdminPrincipal) candidate).getDn())) {
                     return candidate;
                 }
             }
-            String msg = localStrings.getLocalString(SecureAdminPrincipal.class, "SecureAdminPrincipalResolver.target_object_not_found",
-                    "Cannot find a {0} with a name {1}", type.getSimpleName(), value);
+            String msg = localStrings.getLocalString(SecureAdminPrincipal.class,
+                    "SecureAdminPrincipalResolver.target_object_not_found",
+                    "Cannot find a {0} with a name {1}",
+                    type.getSimpleName(),
+                    value);
             throw new RuntimeException(msg);
         }
     }

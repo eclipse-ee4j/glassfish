@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>glassfish-external-tck-cdi-parent</artifactId>
-        <version>7.0.4-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
     </parent>
 
     <artifactId>glassfish-external-tck-cdi</artifactId>
@@ -35,7 +35,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <cdi.tck-4-0.version>4.0.7</cdi.tck-4-0.version>
+        <cdi.tck-4-0.version>4.0.11</cdi.tck-4-0.version>
 
         <!-- This matches the htmlunit version in TCK -->
         <htmlunit.version>2.50.0</htmlunit.version>
@@ -268,7 +268,7 @@
         <dependency>
             <groupId>org.omnifaces.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-managed</artifactId>
-            <version>1.2</version>
+            <version>1.4</version>
         </dependency>
 
         <dependency>
@@ -424,9 +424,7 @@
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>3.0.0-M7</version>
                 <executions>
                     <execution>
                         <id>generate-test-report</id>

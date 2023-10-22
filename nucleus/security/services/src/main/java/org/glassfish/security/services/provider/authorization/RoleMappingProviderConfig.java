@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,23 +17,21 @@
 
 package org.glassfish.security.services.provider.authorization;
 
+import com.sun.enterprise.config.serverbeans.customvalidators.JavaClassName;
+
+import jakarta.validation.constraints.NotNull;
+
 import java.beans.PropertyVetoException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jakarta.validation.constraints.NotNull;
-
 import org.glassfish.security.services.config.SecurityProviderConfig;
-
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
-
-import com.sun.enterprise.config.serverbeans.customvalidators.JavaClassName;
 
 @Configured
 public interface RoleMappingProviderConfig extends SecurityProviderConfig, PropertyBag {
@@ -40,24 +39,27 @@ public interface RoleMappingProviderConfig extends SecurityProviderConfig, Prope
     /**
      * Gets the class name of the role provider.
      */
-    @Attribute(required=false)
+    @Attribute
     @NotNull
     @JavaClassName String getProviderClass();
-    void setProviderClass(String value) throws PropertyVetoException;
+
+    void setProviderClass(String providerClass) throws PropertyVetoException;
 
     /**
      * Indicates if the provider supports role deployment.
      */
     @Attribute(defaultValue = "true")
     boolean getSupportRoleDeploy();
-    void setSupportRoleDeploy(boolean value) throws PropertyVetoException;
+
+    void setSupportRoleDeploy(boolean supportRoleDeploy) throws PropertyVetoException;
 
     /**
-     * Gets the version of the provider.
+     * Gets the {@code version} of the provider.
      */
-    @Attribute(required=false)
+    @Attribute
     String getVersion();
-    void setVersion(String value) throws PropertyVetoException;
+
+    void setVersion(String version) throws PropertyVetoException;
 
     /**
      * Gets the properties of the provider.
@@ -67,21 +69,13 @@ public interface RoleMappingProviderConfig extends SecurityProviderConfig, Prope
     List<Property> getProperty();
 
     /**
-     * Gets the options of the provider.
+     * Gets the options of the provider by looking at the properties.
      */
-    @DuckTyped
-    Map<String,?> getProviderOptions();
-
-    class Duck {
-        /**
-         * Gets the options of the provider by looking at the properties.
-         */
-        public static Map<String,?> getProviderOptions(RoleMappingProviderConfig config) {
-            Map<String,String> providerOptions = new HashMap<>();
-            for (Property prop : config.getProperty()) {
-                providerOptions.put(prop.getName(), prop.getValue());
-            }
-            return providerOptions;
+    default Map<String,?> getProviderOptions() {
+        Map<String,String> providerOptions = new HashMap<>();
+        for (Property property : getProperty()) {
+            providerOptions.put(property.getName(), property.getValue());
         }
+        return providerOptions;
     }
 }

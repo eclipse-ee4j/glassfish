@@ -126,7 +126,7 @@
         </antcall>
     </target>
 
-    <target name="run_test" depends="init-common">
+    <target name="run_test" depends="init-common" xmlns:if="ant:if" xmlns:unless="ant:unless">
        <java  fork="on"
               failonerror="true"
               classpath="${test-path}:${assemble.dir}/${appname}-pu.jar:${embedded.classpath}:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
@@ -134,6 +134,7 @@
            <jvmarg value="-Dorg.glassfish.ejb.embedded.keep-temporary-files=true"/>
            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
            <jvmarg value="--add-opens=java.naming/javax.naming.spi=ALL-UNNAMED" />
+       	   <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:9009" if:set="env.GLASSFISH_SUSPEND" />
            <arg line="${appname}"/>
            <arg line="${test}"/>
            <arg line="${packaging}"/>

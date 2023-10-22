@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,20 +27,26 @@ import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.net.NetUtils;
-import org.glassfish.grizzly.config.dom.NetworkConfig;
-import org.glassfish.grizzly.config.dom.NetworkListener;
+
 import java.util.List;
+import java.util.Objects;
+
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.config.support.GlassFishConfigBean;
 import org.glassfish.config.support.PropertyResolver;
+import org.glassfish.grizzly.config.dom.NetworkConfig;
+import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.jvnet.hk2.config.Dom;
 
 /**
- * The Server.java file is getting pretty bloated. Offload some utilities here.
+ * The {@code Server.java} file is getting pretty bloated. Offload some utilities here.
  *
  * @author Byron Nevins
  */
 public class ServerHelper {
+
+    private final Server server;
+    private final Config config;
 
     public ServerHelper(Server theServer, Config theConfig) {
         server = theServer;
@@ -51,17 +58,10 @@ public class ServerHelper {
 
     public final int getAdminPort() {
         try {
-            if (server == null)
-                return -1;
-
-            if (config == null)
-                return -1;
-
             String portString = getAdminPortString(server, config);
-
-            if (portString == null)
+            if (portString == null) {
                 return -1; // get out quick.  it is kosher to call with a null Server
-
+            }
             return Integer.parseInt(portString);
         } catch (Exception e) {
             // drop through...
@@ -70,16 +70,13 @@ public class ServerHelper {
     }
 
     public final String getAdminHost() {
-        if (server == null || config == null) {
-            return null;
-        }
         // Look at the address for the admin-listener first
         String addr = translateAddressAndPort(getAdminListener(config), server, config)[0];
         if (addr != null && !addr.equals("0.0.0.0")) {
             return addr;
         }
 
-        Dom serverDom = Dom.unwrap(server);
+        Dom serverDom = Objects.requireNonNull(Dom.unwrap(server));
         Domain domain = serverDom.getHabitat().getService(Domain.class);
         Nodes nodes = serverDom.getHabitat().getService(Nodes.class);
         ServerEnvironment env = serverDom.getHabitat().getService(ServerEnvironment.class);
@@ -126,46 +123,51 @@ public class ServerHelper {
     }
 
     public static NetworkListener getAdminListener(Config config) {
-        NetworkConfig nwc = config.getNetworkConfig();
-        if (nwc == null)
+        NetworkConfig networkConfig = config.getNetworkConfig();
+        if (networkConfig == null) {
             throw new IllegalStateException("Can't operate without <http-service>");
-        List<NetworkListener> lss = nwc.getNetworkListeners().getNetworkListener();
-        if (lss == null || lss.isEmpty())
+        }
+
+        List<NetworkListener> listeners = networkConfig.getNetworkListeners().getNetworkListener();
+        if (listeners == null || listeners.isEmpty()) {
             throw new IllegalStateException("Can't operate without at least one <network-listener>");
-        for (NetworkListener ls : lss) {
-            if (ServerTags.ADMIN_LISTENER_ID.equals(ls.getName())) {
-                return ls;
+        }
+
+        for (NetworkListener listener : listeners) {
+            if (ServerTags.ADMIN_LISTENER_ID.equals(listener.getName())) {
+                return listener;
             }
         }
         // if we can't find the admin-listener, then use the first one
-        return lss.get(0);
+        return listeners.get(0);
     }
 
     ///////////////////////////////////////////
     ///////////////////  all private below
     ///////////////////////////////////////////
-    private static String getAdminPortString(Server server, Config config) {
-        if (server == null || config == null)
-            return null;
 
+    private static String getAdminPortString(Server server, Config config) {
+        if (server == null || config == null) {
+            return null;
+        }
         return translateAddressAndPort(getAdminListener(config), server, config)[1];
     }
 
     /**
      *
-     * @param adminListener
-     * @param server
-     * @param config
+     * @param adminListener the admin listener
+     * @param server the server
+     * @param config the config
      * @return ret[0] == address, ret[1] == port
      */
     private static String[] translateAddressAndPort(NetworkListener adminListener, Server server, Config config) {
-        NetworkListener adminListenerRaw = null;
+        NetworkListener adminListenerRaw;
         String[] ret = new String[2];
         String portString = null;
         String addressString = null;
 
         try {
-            Dom serverDom = Dom.unwrap(server);
+            Dom serverDom = Objects.requireNonNull(Dom.unwrap(server));
             Domain domain = serverDom.getHabitat().getService(Domain.class);
 
             adminListenerRaw = GlassFishConfigBean.getRawView(adminListener);
@@ -173,17 +175,19 @@ public class ServerHelper {
             addressString = adminListenerRaw.getAddress();
             PropertyResolver resolver = new PropertyResolver(domain, server.getName());
 
-            if (isToken(portString))
+            if (isToken(portString)) {
                 ret[1] = resolver.getPropertyValue(portString);
-            else
+            } else {
                 ret[1] = portString;
+            }
 
-            if (isToken(addressString))
+            if (isToken(addressString)) {
                 ret[0] = resolver.getPropertyValue(addressString);
-            else
+            } else {
                 ret[0] = addressString;
+            }
         } catch (ClassCastException e) {
-            //jc: workaround for issue 12354
+            // jc: workaround for issue 12354
             // TODO severe error
             ret[0] = translatePortOld(addressString, server, config);
             ret[1] = translatePortOld(portString, server, config);
@@ -192,14 +196,15 @@ public class ServerHelper {
     }
 
     private static String translatePortOld(String portString, Server server, Config config) {
-        if (!isToken(portString))
+        if (!isToken(portString)) {
             return portString;
+        }
 
-        // isToken returned true so we are NOT assuming anything below!
+        // isToken returned true, so we are NOT assuming anything below!
         String key = portString.substring(2, portString.length() - 1);
 
         // check cluster and the cluster's config if applicable
-        // bnevins Jul 18, 2010 -- don't botehr this should never be called anymore
+        // bnevins Jul 18, 2010 -- don't bother this should never be called anymore
         SystemProperty prop = server.getSystemProperty(key);
 
         if (prop != null) {
@@ -218,7 +223,4 @@ public class ServerHelper {
     private static boolean isToken(String s) {
         return s != null && s.startsWith("${") && s.endsWith("}") && s.length() > 3;
     }
-
-    private final Server server;
-    private final Config config;
 }

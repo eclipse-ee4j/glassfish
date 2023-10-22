@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,7 +17,23 @@
 
 package com.sun.enterprise.security.cli;
 
+import com.sun.enterprise.config.serverbeans.AdminService;
+import com.sun.enterprise.config.serverbeans.AuthRealm;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.SecureAdmin;
+import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.security.auth.realm.Realm;
+import com.sun.enterprise.security.auth.realm.RealmsManager;
+import com.sun.enterprise.security.auth.realm.exceptions.BadRealmException;
+import com.sun.enterprise.security.auth.realm.file.FileRealm;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.util.SystemPropertyConstants;
 import java.beans.PropertyVetoException;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,22 +59,6 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
-
-import com.sun.enterprise.config.serverbeans.AdminService;
-import com.sun.enterprise.config.serverbeans.AuthRealm;
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.SecureAdmin;
-import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.security.auth.realm.BadRealmException;
-import com.sun.enterprise.security.auth.realm.Realm;
-import com.sun.enterprise.security.auth.realm.RealmsManager;
-import com.sun.enterprise.security.auth.realm.file.FileRealm;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.SystemPropertyConstants;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
 
 /**
  * Create File User Command Usage: create-file-user [--terse=false] [--echo=false] [--interactive=true] [--host localhost]
@@ -198,7 +198,7 @@ public class CreateFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
 
         //Issue 17525 Fix - Check for null passwords for admin-realm if secureadmin is enabled
         secureAdmin = domain.getSecureAdmin();
-        if ((SecureAdmin.Util.isEnabled(secureAdmin)) && (authRealmName.equals(adminService.getAuthRealmName()))) {
+        if ((SecureAdmin.isEnabled(secureAdmin)) && (authRealmName.equals(adminService.getAuthRealmName()))) {
             if (password.isEmpty()) {
                 report.setMessage(localStrings.getLocalString("null_empty_password", "The admin user password is null or empty"));
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
@@ -293,9 +293,9 @@ public class CreateFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
                 if (realm != null) {
                     realm.refresh(configName);
                 }
-            } catch (com.sun.enterprise.security.auth.realm.NoSuchRealmException nre) {
+            } catch (com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException nre) {
                 //            _logger.fine("Realm: "+realmName+" is not configured");
-            } catch (com.sun.enterprise.security.auth.realm.BadRealmException bre) {
+            } catch (com.sun.enterprise.security.auth.realm.exceptions.BadRealmException bre) {
                 //            _logger.fine("Realm: "+realmName+" is not configured");
             }
         }

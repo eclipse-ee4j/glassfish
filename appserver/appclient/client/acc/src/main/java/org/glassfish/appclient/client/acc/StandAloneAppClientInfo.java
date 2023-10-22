@@ -276,7 +276,7 @@ public class StandAloneAppClientInfo extends AppClientInfo implements PostConstr
             ClassLoader classLoader = getClassLoader();
             if (classLoader != null &&
                 classLoader instanceof ASURLClassLoader) {
-                ((ASURLClassLoader) classLoader).done();
+                ((ASURLClassLoader) classLoader).close();
             }
         } finally {
             if (deleteAppClientDir()) {

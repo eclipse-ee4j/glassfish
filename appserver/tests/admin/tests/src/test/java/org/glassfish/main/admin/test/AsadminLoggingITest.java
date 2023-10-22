@@ -66,9 +66,9 @@ public class AsadminLoggingITest {
     private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
 
     @BeforeAll
-    public static void fillUpLog() {
+    public static void fillUpServerLog() {
         // Fill up the server log.
-        AsadminResult result = ASADMIN.exec("restart-domain");
+        AsadminResult result = ASADMIN.exec(60_000, "restart-domain");
         assertThat(result, asadminOK());
     }
 
@@ -115,7 +115,7 @@ public class AsadminLoggingITest {
         assertThat(result, asadminOK());
         String[] lines = substringBefore(result.getStdOut(), "Command list-loggers executed successfully.").split("\n");
         assertAll(
-            () -> assertThat(lines, arrayWithSize(equalTo(61))),
+            () -> assertThat(lines, arrayWithSize(equalTo(62))),
             () -> assertThat(lines[0], matchesPattern("Logger Name[ ]+Subsystem[ ]+Logger Description[ ]+"))
         );
         Map<String, String[]> loggers = Arrays.stream(lines).skip(1).map(line -> line.split("\\s{2,}"))
@@ -174,6 +174,8 @@ public class AsadminLoggingITest {
             () -> assertThat(keys.get(keys.size() - 1), equalTo("systemRootLogger.level")),
             () -> assertThat(lines,
                 containsInRelativeOrder(
+                    // It was set to OFF in 7.0.3 via AdminUI; check for possible side effects
+                    "org.glassfish.main.jul.handler.GlassFishLogHandler.level=ALL",
                     "org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.limit.minutes=240",
                     "org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.maxArchiveFiles=100")),
             () -> {

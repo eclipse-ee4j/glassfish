@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,7 +20,6 @@ package com.sun.enterprise.admin.servermgmt.services;
 import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.universal.process.ProcessManager;
 import com.sun.enterprise.util.OS;
-import com.sun.enterprise.util.ProcessExecutor;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.enterprise.util.io.FileUtils;
@@ -70,6 +69,7 @@ public final class SMFService extends ServiceAdapter {
     private static final String MANIFEST_FILE_SUFFIX = "Domain-service-smf.xml";
     private static final String MANIFEST_FILE_TEMPL_SUFFIX = MANIFEST_FILE_SUFFIX + ".template";
     private static final String REL_PATH_TEMPLATES = "lib/install/templates";
+    private static final int DEFAULT_SERVICE_TIMEOUT = 600_000;
 
     /**
      * Creates SMFService instance. All the tokens are initialized to default values. Callers must verify that the tokens
@@ -203,7 +203,7 @@ public final class SMFService extends ServiceAdapter {
     /**
      * Sets the additional service properties that are specific to it.
      *
-     * @param must be a colon separated String, if not null. No effect, if null is passed.
+     * @param cds must be a colon separated String, if not null. No effect, if null is passed.
      */
     @Override
     public void setServiceProperties(final String cds) {
@@ -400,11 +400,11 @@ public final class SMFService extends ServiceAdapter {
         }
         try {
             final String[] cmd = new String[] { path2Auths, user };
-            ProcessExecutor pe = new ProcessExecutor(cmd);
-            pe.setExecutionRetentionFlag(true);
-            pe.execute();
-            auths.append(pe.getLastExecutionOutput());
-            final StringTokenizer st = new StringTokenizer(pe.getLastExecutionOutput(), at);
+            ProcessManager pm = new ProcessManager(cmd);
+            pm.setTimeoutMsec(DEFAULT_SERVICE_TIMEOUT);
+            pm.execute();
+            auths.append(pm.getStdout());
+            final StringTokenizer st = new StringTokenizer(pm.getStdout(), at);
             while (st.hasMoreTokens()) {
                 String t = st.nextToken();
                 t = t.trim();
@@ -423,9 +423,9 @@ public final class SMFService extends ServiceAdapter {
         boolean exists = false;
         try {
             final String[] cmd = new String[] { "/usr/bin/svcs", sn };
-            ProcessExecutor pe = new ProcessExecutor(cmd);
-            pe.setExecutionRetentionFlag(true);
-            pe.execute();
+            ProcessManager pm = new ProcessManager(cmd);
+            pm.setTimeoutMsec(DEFAULT_SERVICE_TIMEOUT);
+            pm.execute();
             exists = true;
         } catch (final Exception e) {
             //returns a non-zero status -- the service does not exist, status is already set
@@ -462,8 +462,9 @@ public final class SMFService extends ServiceAdapter {
 
     private void validateService() throws Exception {
         final String[] cmda = new String[] { SMFService.SVCCFG, "validate", getManifestFilePath() };
-        final ProcessExecutor pe = new ProcessExecutor(cmda);
-        pe.execute();
+        final ProcessManager pm = new ProcessManager(cmda);
+        pm.setTimeoutMsec(DEFAULT_SERVICE_TIMEOUT);
+        pm.execute();
         if (info.trace) {
             printOut("Validated the SMF Service: " + info.fqsn + " using: " + SMFService.SVCCFG);
         }
@@ -471,13 +472,13 @@ public final class SMFService extends ServiceAdapter {
 
     private boolean importService() throws Exception {
         final String[] cmda = new String[] { SMFService.SVCCFG, "import", getManifestFilePath() };
-        final ProcessExecutor pe = new ProcessExecutor(cmda);
-
+        final ProcessManager pm = new ProcessManager(cmda);
+        pm.setTimeoutMsec(DEFAULT_SERVICE_TIMEOUT);
         if (info.dryRun) {
             cleanupManifest();
         }
         else {
-            pe.execute(); //throws ExecException in case of an error
+            pm.execute(); // throws ProcessManagerException in case of an error
         }
 
         if (info.trace) {

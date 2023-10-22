@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,60 +18,55 @@
 package com.sun.enterprise.config.serverbeans;
 
 import com.sun.enterprise.config.serverbeans.customvalidators.ResourceNameConstraint;
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.DuckTyped;
-
-import static org.glassfish.config.support.Constants.NAME_APP_REGEX;
-
-import java.beans.PropertyVetoException;
-import jakarta.validation.Payload;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
+import java.beans.PropertyVetoException;
+import jakarta.validation.Payload;
+
+import org.jvnet.hk2.config.Attribute;
+
+import static org.glassfish.config.support.Constants.NAME_APP_REGEX;
+
 @ResourceNameConstraint(message = "{resourcename.invalid.character}", payload = ResourcePool.class)
 public interface ResourcePool extends Resource, Payload {
+
     /**
-     * Gets the value of the name property.
+     * Gets the value of the {@code name} property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(key = true)
     @NotNull
     @Pattern(regexp = NAME_APP_REGEX, message = "{resourcepool.invalid.name.key}", payload = ResourcePool.class)
-    public String getName();
+    String getName();
 
     /**
-     * Sets the value of the name property.
+     * Sets the value of the {@code name} property.
      *
-     * @param value allowed object is {@link String }
+     * @param name allowed object is {@link String}
      */
-    public void setName(String value) throws PropertyVetoException;
+    void setName(String name) throws PropertyVetoException;
 
-    @DuckTyped
-    String getIdentity();
-
-    class Duck {
-        public static String getIdentity(ResourcePool resource) {
-            return resource.getName();
-        }
+    default String getIdentity() {
+        return getName();
     }
 
     /**
-     * Gets the value of the ping property.
+     * Gets the value of the {@code ping} property.
      *
-     * Property to ping pool during creation.
+     * <p>Property to ping pool during creation.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "false", dataType = Boolean.class)
     String getPing();
 
     /**
-     * Sets the value of the ping property.
+     * Sets the value of the {@code ping} property.
      *
-     * @param value allowed object is {@link String }
+     * @param ping allowed object is {@link String}
      */
-    void setPing(String value) throws PropertyVetoException;
-
+    void setPing(String ping) throws PropertyVetoException;
 }

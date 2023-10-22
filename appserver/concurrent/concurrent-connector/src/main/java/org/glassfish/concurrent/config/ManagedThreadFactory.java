@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,27 +38,25 @@ import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
 
 /**
- * Concurrency managed thread factory resource definition
+ * Concurrency managed thread factory resource definition.
  */
 
 @Configured
 @ResourceConfigCreator(commandName = "create-managed-thread-factory")
 @RestRedirects({
-    @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-managed-thread-factory"),
-    @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-managed-thread-factory")
+        @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-managed-thread-factory"),
+        @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-managed-thread-factory")
 })
 @ResourceTypeOrder(deploymentOrder = ResourceDeploymentOrder.MANAGED_THREAD_FACTORY)
 @ReferenceConstraint(skipDuringCreation = true, payload = ManagedThreadFactory.class)
 @UniqueResourceNameConstraint(message = "{resourcename.isnot.unique}", payload = ManagedThreadFactory.class)
 @CustomConfiguration(baseConfigurationFileName = "managed-thread-factory-conf.xml")
-public interface ManagedThreadFactory
-    extends ConfigBeanProxy, Resource, BindableResource, ConcurrencyResource, Payload {
+public interface ManagedThreadFactory extends ConfigBeanProxy, Resource, BindableResource, ConcurrencyResource, Payload {
 
     /**
-     * Gets the value of the threadPriority property.
+     * Gets the value of the {@code threadPriority} property.
      *
      * @return possible object is {@link String}
      */
@@ -67,40 +65,34 @@ public interface ManagedThreadFactory
     String getThreadPriority();
 
     /**
-     * Sets the value of the threadPriority property.
+     * Sets the value of the {@code threadPriority} property.
      *
-     * @param value allowed object is {@link String}
+     * @param threadPriority allowed object is {@link String}
      */
-    void setThreadPriority(String value) throws PropertyVetoException;
+    void setThreadPriority(String threadPriority) throws PropertyVetoException;
 
     /**
-     * Gets the value of the context property.
+     * Gets the value of the {@code context} property.
      *
      * @return possible object is {@link String}
      */
-    @Attribute(defaultValue = "", dataType = String.class)
+    @Attribute(defaultValue = "")
     String getContext();
 
     /**
-     * Sets the value of the context property.
+     * Sets the value of the {@code context} property.
      *
-     * @param value allowed object is {@link String}
+     * @param context allowed object is {@link String}
      */
-    void setContext(String value) throws PropertyVetoException;
+    void setContext(String context) throws PropertyVetoException;
 
     @Override
-    @DuckTyped
-    String getIdentity();
-
-    class Duck {
-
-        public static String getIdentity(ManagedThreadFactory resource) {
-            return resource.getJndiName();
-        }
+    default String getIdentity() {
+        return getJndiName();
     }
 
     @Service
-    public class ManagedThreadFactoryConfigActivator extends ConfigBeanInstaller {
+    class ManagedThreadFactoryConfigActivator extends ConfigBeanInstaller {
 
     }
 }

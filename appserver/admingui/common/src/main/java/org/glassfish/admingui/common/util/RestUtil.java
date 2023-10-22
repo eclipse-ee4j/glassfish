@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,27 @@
 
 package org.glassfish.admingui.common.util;
 
+import com.sun.enterprise.config.serverbeans.SecureAdmin;
+import com.sun.enterprise.security.SecurityServicesUtil;
+import com.sun.enterprise.security.ssl.SSLUtils;
+import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
+
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.client.ClientRequestFilter;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.Cookie;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
+
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -32,45 +54,22 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jakarta.ws.rs.client.Client;
-import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.client.ClientRequestContext;
-import jakarta.ws.rs.client.ClientRequestFilter;
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.client.WebTarget;
-import jakarta.ws.rs.core.Cookie;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.MultivaluedHashMap;
-import jakarta.ws.rs.core.MultivaluedMap;
-import jakarta.ws.rs.core.Response;
-
-import jakarta.faces.context.FacesContext;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.glassfish.api.ActionReport.ExitCode;
+import org.glassfish.admingui.common.security.AdminConsoleAuthModule;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.glassfish.jersey.jackson.JacksonFeature;
-
-import org.glassfish.hk2.api.ServiceLocator;
-
-import org.glassfish.admingui.common.security.AdminConsoleAuthModule;
-import org.glassfish.api.ActionReport.ExitCode;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.sun.enterprise.config.serverbeans.SecureAdmin;
-import com.sun.enterprise.security.SecurityServicesUtil;
-import com.sun.enterprise.security.ssl.SSLUtils;
-import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
 import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 
 /**
@@ -921,7 +920,7 @@ public class RestUtil {
 
             final SSLContext sslContext = habitat
                     .<SSLUtils>getService(SSLUtils.class)
-                    .getAdminSSLContext(SecureAdmin.Util.DASAlias(secureAdmin), null);
+                    .getAdminSSLContext(SecureAdmin.DASAlias(secureAdmin), null);
 
             // Instruct Jersey to use HostNameVerifier and SSLContext provided by us.
             clientBuilder

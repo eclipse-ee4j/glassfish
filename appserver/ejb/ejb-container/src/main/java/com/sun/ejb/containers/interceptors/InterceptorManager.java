@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,13 +17,21 @@
 
 package com.sun.ejb.containers.interceptors;
 
-import static com.sun.ejb.EJBUtils.loadGeneratedSerializableClass;
-import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.POST_ACTIVATE;
-import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.PRE_PASSIVATE;
-import static java.util.logging.Level.CONFIG;
-import static java.util.logging.Level.FINE;
+import com.sun.ejb.containers.BaseContainer;
+import com.sun.ejb.containers.EJBContextImpl;
+import com.sun.enterprise.container.common.spi.util.InterceptorInfo;
+import com.sun.enterprise.deployment.EjbInterceptor;
+import com.sun.enterprise.deployment.InterceptorDescriptor;
+import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
+import com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
+import com.sun.enterprise.deployment.MethodDescriptor;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.ejb.EJBException;
+import jakarta.interceptor.InvocationContext;
 
 import java.io.Serializable;
+import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,18 +46,11 @@ import java.util.logging.Logger;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 import org.glassfish.ejb.deployment.descriptor.EjbSessionDescriptor;
 
-import com.sun.ejb.containers.BaseContainer;
-import com.sun.ejb.containers.EJBContextImpl;
-import com.sun.enterprise.container.common.spi.util.InterceptorInfo;
-import com.sun.enterprise.deployment.EjbInterceptor;
-import com.sun.enterprise.deployment.InterceptorDescriptor;
-import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
-import com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
-import com.sun.enterprise.deployment.MethodDescriptor;
-
-import jakarta.annotation.PostConstruct;
-import jakarta.ejb.EJBException;
-import jakarta.interceptor.InvocationContext;
+import static com.sun.ejb.EJBUtils.loadGeneratedSerializableClass;
+import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.POST_ACTIVATE;
+import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.PRE_PASSIVATE;
+import static java.util.logging.Level.CONFIG;
+import static java.util.logging.Level.FINE;
 
 /**
  * UserInterceptorsManager manages UserInterceptors. There is one instance of InterceptorManager per container.
@@ -727,15 +728,15 @@ class AroundInvokeInterceptor {
         try {
             final Method finalM = method;
             if (System.getSecurityManager() == null) {
-                if (!finalM.isAccessible()) {
-                    finalM.setAccessible(true);
+                if (!finalM.trySetAccessible()) {
+                    throw new InaccessibleObjectException("Unable to make accessible: "+ finalM);
                 }
             } else {
                 java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
                     @Override
                     public java.lang.Object run() throws Exception {
-                        if (!finalM.isAccessible()) {
-                            finalM.setAccessible(true);
+                        if (!finalM.trySetAccessible()) {
+                            throw new InaccessibleObjectException("Unable to make accessible: " + finalM);
                         }
                         return null;
                     }
@@ -829,15 +830,15 @@ class CallbackInterceptor {
         try {
             final Method finalM = method;
             if (System.getSecurityManager() == null) {
-                if (!finalM.isAccessible()) {
-                    finalM.setAccessible(true);
+                if (!finalM.trySetAccessible()) {
+                    throw new InaccessibleObjectException("Unable to make accessible: " + finalM);
                 }
             } else {
                 java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
                     @Override
                     public java.lang.Object run() throws Exception {
-                        if (!finalM.isAccessible()) {
-                            finalM.setAccessible(true);
+                        if (!finalM.trySetAccessible()) {
+                            throw new InaccessibleObjectException("Unable to make accessible: " + finalM);
                         }
                         return null;
                     }

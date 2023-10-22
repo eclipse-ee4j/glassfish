@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,9 @@
 
 package org.glassfish.tests.paas.external_and_shared_service;
 
-import com.sun.enterprise.util.ExecException;
+import com.sun.enterprise.universal.process.ProcessManager;
+import com.sun.enterprise.universal.process.ProcessManagerException;
 import com.sun.enterprise.util.OS;
-import com.sun.enterprise.util.ProcessExecutor;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.embeddable.*;
@@ -42,6 +43,8 @@ import java.util.regex.Pattern;
  */
 
 public class SharedAndExternalServiceTest {
+    
+    private static final int DATABASE_TIMEOUT = 60_000;
 
     @Test
     public void test() throws Exception {
@@ -95,11 +98,12 @@ public class SharedAndExternalServiceTest {
                 String[] startdbArgs = {serverContext.getInstallRoot().getAbsolutePath() +
                         File.separator + "bin" + File.separator + "asadmin" + (OS.isWindows() ? ".bat" : ""), "start-database",
                         "--dbhome" , serverContext.getInstallRoot().getAbsolutePath() + File.separator + "databases","--dbhost",ip_address};
-                ProcessExecutor startDatabase = new ProcessExecutor(startdbArgs);
+                ProcessManager startDatabase = new ProcessManager(startdbArgs);
+                startDatabase.setTimeoutMsec(DATABASE_TIMEOUT);
 
                 try {
                     startDatabase.execute();
-                } catch (ExecException e) {
+                } catch (ProcessManagerException e) {
                     e.printStackTrace();
                 }
             }
@@ -152,11 +156,12 @@ public class SharedAndExternalServiceTest {
                     ServerContext serverContext = habitat.getService(ServerContext.class);
                     String[] stopDbArgs = {serverContext.getInstallRoot().getAbsolutePath() +
                             File.separator + "bin" + File.separator + "asadmin" + (OS.isWindows() ? ".bat" : ""), "stop-database","--dbhost",ip_address};
-                    ProcessExecutor stopDatabase = new ProcessExecutor(stopDbArgs);
+                    ProcessManager stopDatabase = new ProcessManager(stopDbArgs);
+                    stopDatabase.setTimeoutMsec(DATABASE_TIMEOUT);
 
                     try {
                         stopDatabase.execute();
-                    } catch (ExecException e) {
+                    } catch (ProcessManagerException e) {
                         e.printStackTrace();
                     }
                 }

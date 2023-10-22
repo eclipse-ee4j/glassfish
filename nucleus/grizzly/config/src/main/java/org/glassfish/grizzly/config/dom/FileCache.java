@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,13 +29,17 @@ import org.jvnet.hk2.config.types.PropertyBag;
  */
 @Configured
 public interface FileCache extends ConfigBeanProxy, PropertyBag {
+
     boolean ENABLED = false;
+
     int MAX_AGE = 30;
+
     int MAX_CACHE_SIZE = 10485760;
+
     int MAX_FILES = 1024;
 
     /**
-     * Enables the caching of file content
+     * Enables the caching of file content.
      */
     @Attribute(defaultValue = "" + ENABLED, dataType = Boolean.class)
     String getEnabled();
@@ -42,7 +47,7 @@ public interface FileCache extends ConfigBeanProxy, PropertyBag {
     void setEnabled(final String enabled);
 
     /**
-     * How old files can get before aging out of cache in seconds
+     * How old files can get before aging out of cache in seconds.
      */
     @Attribute(defaultValue = "" + MAX_AGE, dataType = Integer.class)
     String getMaxAgeSeconds();
@@ -50,7 +55,7 @@ public interface FileCache extends ConfigBeanProxy, PropertyBag {
     void setMaxAgeSeconds(final String maxAge);
 
     /**
-     * Maximum cache size on the disk
+     * Maximum cache size on the disk.
      */
     @Attribute(defaultValue = "" + MAX_CACHE_SIZE, dataType = Integer.class)
     String getMaxCacheSizeBytes();

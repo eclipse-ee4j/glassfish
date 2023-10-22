@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -69,14 +70,6 @@ public class MonitoringPipe extends AbstractFilterPipeImpl {
     }
 
     public Packet process(Packet request) {
-        // if it is a JBI request then skip the monitoring logic. This is done
-        // as HTTPServletRequest/Response is not available when the invocation
-        // is from JavaEE service engine.
-
-        String delegateClassName = request.webServiceContextDelegate.getClass().getName();
-        if (delegateClassName.equals("com.sun.enterprise.jbi.serviceengine." + "bridge.transport.NMRServerConnection")) {
-            return next.process(request);
-        }
 
         // No monitoring available for restful services
         if ("http://www.w3.org/2004/08/wsdl/http".equals(endpoint.getProtocolBinding())) {

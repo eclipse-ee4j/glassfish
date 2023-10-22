@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.admin</groupId>
         <artifactId>admin</artifactId>
-        <version>7.0.4-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
     </parent>
 
     <artifactId>appserver-domain</artifactId>
@@ -81,7 +81,6 @@
                             <finalName>classes</finalName>
                             <attach>false</attach>
                             <appendAssemblyId>false</appendAssemblyId>
-                            <useProjectArtifact>false</useProjectArtifact>
                         </configuration>
                     </execution>
                 </executions>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,348 +34,352 @@ import org.jvnet.hk2.config.types.PropertyBag;
 /**
  *
  */
-
-/* @XmlType(name = "", propOrder = {
-    "property"
-}) */
-
 @Configured
 public interface ModuleMonitoringLevels extends ConfigBeanProxy, PropertyBag {
 
     String MONITORING_LEVELS = "(OFF|LOW|HIGH)";
+
     String MONITORING_LEVELS_MSG = "Valid values: " + MONITORING_LEVELS;
 
     /**
-     * Gets the value of the threadPool property.
-     * All the thread-pools used by the run time
+     * Gets the value of the {@code threadPool} property.
      *
-     * @return possible object is {@link String }
+     * <p>All the {@code thread-pools} used by the run time
+     *
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "OFF")
     @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
     String getThreadPool();
 
     /**
-     * Sets the value of the threadPool property.
+     * Sets the value of the {@code threadPool} property.
      *
-     * @param value allowed object is {@link String }
+     * @param threadPool allowed object is {@link String}
      */
-    void setThreadPool(String value) throws PropertyVetoException;
+    void setThreadPool(String threadPool) throws PropertyVetoException;
 
     /**
-     * Gets the value of the orb property.
-     * Specifies the level for connection managers of the orb, which apply to connections to the orb
+     * Gets the value of the {@code orb} property.
      *
-     * @return possible object is {@link String }
+     * <p>Specifies the level for connection managers of the {@code orb}, which apply
+     * to connections to the {@code orb}.
+     *
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "OFF")
     @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
     String getOrb();
 
     /**
-     * Sets the value of the orb property.
+     * Sets the value of the {@code orb} property.
      *
-     * @param value allowed object is {@link String }
+     * @param orb allowed object is {@link String}
      */
-    void setOrb(String value) throws PropertyVetoException;
+    void setOrb(String orb) throws PropertyVetoException;
 
     /**
-     * Gets the value of the ejbContainer property.
-     * Various ejbs deployed to the server, ejb-pools, ejb-caches & ejb-methods
+     * Gets the value of the {@code ejbContainer} property.
      *
-     * @return possible object is {@link String }
+     * <p>Various ejbs deployed to the server, ejb-pools, ejb-caches & ejb-methods.
+     *
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "OFF")
     @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
     String getEjbContainer();
 
     /**
-     * Sets the value of the ejbContainer property.
+     * Sets the value of the {@code ejbContainer} property.
      *
-     * @param value allowed object is {@link String }
+     * @param ejbContainer allowed object is {@link String}
      */
-    void setEjbContainer(String value) throws PropertyVetoException;
+    void setEjbContainer(String ejbContainer) throws PropertyVetoException;
 
     /**
-     * Gets the value of the webContainer property.
+     * Gets the value of the {@code webContainer} property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "OFF")
     @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
     String getWebContainer();
 
     /**
-     * Sets the value of the webContainer property.
+     * Sets the value of the {@code webContainer} property.
      *
-     * @param value allowed object is {@link String }
+     * @param webContainer allowed object is {@link String}
      */
-    void setWebContainer(String value) throws PropertyVetoException;
+    void setWebContainer(String webContainer) throws PropertyVetoException;
 
     /**
-     * Gets the value of the deployment property.
+     * Gets the value of the {@code deployment} property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "OFF")
     @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
     String getDeployment();
 
     /**
-     * Sets the value of the webContainer property.
+     * Sets the value of the {@code webContainer} property.
      *
-     * @param value allowed object is {@link String }
+     * @param deployment allowed object is {@link String}
      */
-    void setDeployment(String value) throws PropertyVetoException;
+    void setDeployment(String deployment) throws PropertyVetoException;
 
     /**
-     * Gets the value of the transactionService property.
-     * Transaction subsystem
+     * Gets the value of the {@code transactionService} property.
      *
-     * @return possible object is {@link String }
+     * <p>Transaction subsystem.
+     *
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "OFF")
     @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
     String getTransactionService();
 
     /**
-     * Sets the value of the transactionService property.
+     * Sets the value of the {@code transactionService} property.
      *
-     * @param value allowed object is {@link String }
+     * @param transactionService allowed object is {@link String}
      */
-    void setTransactionService(String value) throws PropertyVetoException;
+    void setTransactionService(String transactionService) throws PropertyVetoException;
 
     /**
-     * Gets the value of the httpService property.
-     * http engine and the http listeners therein.
+     * Gets the value of the {@code httpService} property.
      *
-     * @return possible object is {@link String }
+     * <p>HTTP engine and the HTTP listeners therein.
+     *
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "OFF")
     @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
     String getHttpService();
 
     /**
-     * Sets the value of the httpService property.
+     * Sets the value of the {@code httpService} property.
      *
-     * @param value allowed object is {@link String }
+     * @param httpService allowed object is {@link String}
      */
-    void setHttpService(String value) throws PropertyVetoException;
+    void setHttpService(String httpService) throws PropertyVetoException;
 
     /**
-     * Gets the value of the jdbcConnectionPool property.
-     * Monitoring level for all the jdbc-connection-pools used by the runtime.
+     * Gets the value of the {@code jdbcConnectionPool} property.
      *
-     * @return possible object is {@link String }
+     * <p>Monitoring level for all the {@code jdbc-connection-pools} used by the runtime.
+     *
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "OFF")
     @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
     String getJdbcConnectionPool();
 
     /**
-     * Sets the value of the jdbcConnectionPool property.
+     * Sets the value of the {@code jdbcConnectionPool} property.
      *
-     * @param value allowed object is {@link String }
+     * @param jdbcConnectionPool allowed object is {@link String}
      */
-    void setJdbcConnectionPool(String value) throws PropertyVetoException;
+    void setJdbcConnectionPool(String jdbcConnectionPool) throws PropertyVetoException;
 
     /**
-     * Gets the value of the connectorConnectionPool property.
-     * Monitoring level for all the connector-connection-pools used by runtime.
+     * Gets the value of the {@code connectorConnectionPool} property.
      *
-     * @return possible object is {@link String }
+     * <p>Monitoring level for all the {@code connector-connection-pools} used by runtime.
+     *
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "OFF")
     @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
     String getConnectorConnectionPool();
 
     /**
-     * Sets the value of the connectorConnectionPool property.
+     * Sets the value of the {@code connectorConnectionPool} property.
      *
-     * @param value allowed object is {@link String }
+     * @param connectorConnectionPool allowed object is {@link String}
      */
-    void setConnectorConnectionPool(String value) throws PropertyVetoException;
+    void setConnectorConnectionPool(String connectorConnectionPool) throws PropertyVetoException;
 
     /**
-     * Gets the value of the connectorService property.
+     * Gets the value of the {@code connectorService} property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "OFF")
     @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
     String getConnectorService();
 
     /**
-     * Sets the value of the connectorService property.
+     * Sets the value of the {@code connectorService} property.
      *
-     * @param value allowed object is {@link String }
+     * @param connectorService allowed object is {@link String}
      */
-    void setConnectorService(String value) throws PropertyVetoException;
+    void setConnectorService(String connectorService) throws PropertyVetoException;
 
     /**
-     * Gets the value of the jmsService property.
+     * Gets the value of the {@code jmsService} property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "OFF")
     @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
     String getJmsService();
 
     /**
-     * Sets the value of the jmsService property.
+     * Sets the value of the {@code jmsService} property.
      *
-     * @param value allowed object is {@link String }
+     * @param jmsService allowed object is {@link String}
      */
-    void setJmsService(String value) throws PropertyVetoException;
+    void setJmsService(String jmsService) throws PropertyVetoException;
 
     /**
-     * Gets the value of the jvm property.
+     * Gets the value of the {@code jvm} property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "OFF")
     @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
     String getJvm();
 
     /**
-     * Sets the value of the jvm property.
+     * Sets the value of the {@code jvm} property.
      *
-     * @param value allowed object is {@link String }
+     * @param jvm allowed object is {@link String}
      */
-    void setJvm(String value) throws PropertyVetoException;
+    void setJvm(String jvm) throws PropertyVetoException;
 
     /**
-     * Gets the value of the security property.
+     * Gets the value of the {@code security} property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "OFF")
     @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
     String getSecurity();
 
     /**
-     * Sets the value of the security property.
+     * Sets the value of the {@code security} property.
      *
-     * @param value allowed object is {@link String }
+     * @param security allowed object is {@link String}
      */
-    void setSecurity(String value) throws PropertyVetoException;
+    void setSecurity(String security) throws PropertyVetoException;
 
     /**
-     * Gets the value of the web-service-container property.
+     * Gets the value of the {@code webServiceContainer} property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "OFF")
     @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
     String getWebServicesContainer();
 
     /**
-     * Sets the value of the web-service-container property.
+     * Sets the value of the {@code webServiceContainer} property.
      *
-     * @param value allowed object is {@link String }
+     * @param webServicesContainer allowed object is {@link String}
      */
-    void setWebServicesContainer(String value) throws PropertyVetoException;
+    void setWebServicesContainer(String webServicesContainer) throws PropertyVetoException;
 
     /**
-     * Gets the value of the jpa property.
+     * Gets the value of the {@code jpa} property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "OFF")
     @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
     String getJpa();
 
     /**
-     * Sets the value of the jpa property.
+     * Sets the value of the {@code jpa} property.
      *
-     * @param value allowed object is {@link String }
+     * @param jpa allowed object is {@link String}
      */
-    void setJpa(String value) throws PropertyVetoException;
+    void setJpa(String jpa) throws PropertyVetoException;
 
     /**
-     * Gets the value of the jax-ra property.
+     * Gets the value of the {@code jax-rs} property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "OFF")
     @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
     String getJersey();
 
     /**
-     * Sets the value of the jax-ra property.
+     * Sets the value of the {@code jax-rs} property.
      *
-     * @param value allowed object is {@link String }
+     * @param jersey allowed object is {@link String}
      */
-    void setJersey(String value) throws PropertyVetoException;
+    void setJersey(String jersey) throws PropertyVetoException;
 
     /**
-     * Gets the value of the cloudTenantManager property.
+     * Gets the value of the {@code cloudTenantManager} property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "OFF")
     @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
     String getCloudTenantManager();
 
     /**
-     * Sets the value of the cloudTenantManager property.
+     * Sets the value of the {@code cloudTenantManager} property.
      *
-     * @param value allowed object is {@link String }
+     * @param cloudTenantManager allowed object is {@link String}
      */
-    void setCloudTenantManager(String value) throws PropertyVetoException;
+    void setCloudTenantManager(String cloudTenantManager) throws PropertyVetoException;
 
     /**
-     * Gets the value of the cloud property.
+     * Gets the value of the {@code cloud} property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "OFF")
     @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
     String getCloud();
 
     /**
-     * Sets the value of the cloud property.
+     * Sets the value of the {@code cloud} property.
      *
-     * @param value allowed object is {@link String }
+     * @param cloud allowed object is {@link String}
      */
-    void setCloud(String value) throws PropertyVetoException;
+    void setCloud(String cloud) throws PropertyVetoException;
 
     /**
-     * Gets the value of the cloud Orchestrator property.
+     * Gets the value of the {@code cloudOrchestrator} property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "OFF")
     @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
     String getCloudOrchestrator();
 
     /**
-     * Sets the value of the cloud Orchestrator property.
+     * Sets the value of the {@code cloudOrchestrator} property.
      *
-     * @param value allowed object is {@link String }
+     * @param cloudOrchestrator allowed object is {@link String}
      */
-    void setCloudOrchestrator(String value) throws PropertyVetoException;
+    void setCloudOrchestrator(String cloudOrchestrator) throws PropertyVetoException;
 
     /**
-     * Gets the value of the cloud Elasticity property.
+     * Gets the value of the {@code cloudElasticity} property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "OFF")
     @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
     String getCloudElasticity();
 
     /**
-     * Sets the value of the cloud elasticity property.
+     * Sets the value of the {@code cloudElasticity} property.
      *
-     * @param value allowed object is {@link String }
+     * @param cloudElasticity allowed object is {@link String}
      */
-    void setCloudElasticity(String value) throws PropertyVetoException;
+    void setCloudElasticity(String cloudElasticity) throws PropertyVetoException;
 
     /**
      * Gets the value of the cloud IMS property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "OFF")
     @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
@@ -384,9 +388,9 @@ public interface ModuleMonitoringLevels extends ConfigBeanProxy, PropertyBag {
     /**
      * Sets the value of the cloud IMS property.
      *
-     * @param value allowed object is {@link String }
+     * @param virtAssemblyService allowed object is {@link String}
      */
-    void setCloudVirtAssemblyService(String value) throws PropertyVetoException;
+    void setCloudVirtAssemblyService(String virtAssemblyService) throws PropertyVetoException;
 
     /**
      * Properties as per {@link PropertyBag}

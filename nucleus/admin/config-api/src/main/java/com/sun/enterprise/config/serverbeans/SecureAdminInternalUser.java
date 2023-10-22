@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,49 +17,49 @@
 
 package com.sun.enterprise.config.serverbeans;
 
+import jakarta.inject.Inject;
+
 import java.beans.PropertyVetoException;
+
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.config.support.CreationDecorator;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.TransactionFailure;
 
-import jakarta.inject.Inject;
-
-@Configured
 /**
- * Records information about a username/password-alias pair to be used for authentication internally among GlassFish
- * processes (DAS to instance, for example).
+ * Records information about a username/password-alias pair to be used for authentication
+ * internally among GlassFish processes (DAS to instance, for example).
  *
  * @author Tim Quinn
  */
+@Configured
 public interface SecureAdminInternalUser extends ConfigBeanProxy {
-
-    /**
-     * Retrieves the username for this authorized internal admin user entry..
-     *
-     * @return {@link String } containing the username
-     */
-    @Param(primary = true)
-    void setUsername(String value);
 
     /**
      * Sets the username for this authorized internal admin user entry.
      *
-     * @param value username
+     * @param userName username
+     */
+    @Param(primary = true)
+    void setUsername(String userName);
+
+    /**
+     * Retrieves the username for this authorized internal admin user entry.
+     *
+     * @return {@link String} containing the username
      */
     @Attribute(required = true, key = true)
     String getUsername();
 
     /**
-     * Retrieves the password alias for this authorized internal admin user entry..
+     * Retrieves the password alias for this authorized internal admin user entry.
      *
-     * @return {@link String } containing the password alias
+     * @return {@link String} containing the password alias
      */
     @Attribute(required = true)
     String getPasswordAlias();
@@ -66,35 +67,33 @@ public interface SecureAdminInternalUser extends ConfigBeanProxy {
     /**
      * Sets the password alias for this authorized internal admin user entry.
      *
-     * @param value password alias
+     * @param passwordAlias password alias
      */
-    @Param(optional = false)
-    void setPasswordAlias(String value);
+    @Param
+    void setPasswordAlias(String passwordAlias);
 
     @Service
     @PerLookup
-    public class CrDecorator implements CreationDecorator<SecureAdminInternalUser> {
+    class CrDecorator implements CreationDecorator<SecureAdminInternalUser> {
 
-        @Param(optional = false, primary = true)
+        @Param(primary = true)
         private String username;
 
-        @Param(optional = false)
+        @Param
         private String passwordAlias;
 
         @Inject
         private SecureAdminHelper helper;
 
         @Override
-        public void decorate(AdminCommandContext context, SecureAdminInternalUser instance)
-                throws TransactionFailure, PropertyVetoException {
-
+        public void decorate(AdminCommandContext context, SecureAdminInternalUser user) throws TransactionFailure, PropertyVetoException {
             try {
                 helper.validateInternalUsernameAndPasswordAlias(username, passwordAlias);
             } catch (Exception ex) {
                 throw new TransactionFailure("create", ex);
             }
-            instance.setUsername(username);
-            instance.setPasswordAlias(passwordAlias);
+            user.setUsername(username);
+            user.setPasswordAlias(passwordAlias);
         }
 
     }

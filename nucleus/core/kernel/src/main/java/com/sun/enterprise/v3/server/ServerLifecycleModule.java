@@ -17,12 +17,6 @@
 
 package com.sun.enterprise.v3.server;
 
-import com.sun.appserv.server.LifecycleEvent;
-import com.sun.appserv.server.LifecycleEventContext;
-import com.sun.appserv.server.LifecycleListener;
-import com.sun.appserv.server.ServerLifecycleException;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
 import java.io.File;
 import java.net.URL;
 import java.security.AccessController;
@@ -36,6 +30,12 @@ import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.glassfish.loader.util.ASClassLoaderUtil;
+
+import com.sun.appserv.server.LifecycleEvent;
+import com.sun.appserv.server.LifecycleEventContext;
+import com.sun.appserv.server.LifecycleListener;
+import com.sun.appserv.server.ServerLifecycleException;
+import com.sun.enterprise.util.LocalStringManagerImpl;
 
 /**
  * @author Sridatta Viswanath

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,7 +23,7 @@ import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.Element;
 
 /**
- * Corresponds to the context-param element for customizing the configuration
+ * Corresponds to the {@code context-param} element for customizing the configuration
  * of web apps.
  *
  * @author tjquinn
@@ -31,46 +32,52 @@ import org.jvnet.hk2.config.Element;
 public interface ContextParam extends ConfigBeanProxy {
 
     /**
-     * Returns the context-param description.
+     * Returns the context-param {@code description}.
+     *
      * @return description
      */
     @Element
-    public String getDescription();
+    String getDescription();
 
     /**
-     * Sets the context-param description.
-     * @param value new description value
+     * Sets the context-param {@code description}.
+     *
+     * @param description new description value
      */
-    public void setDescription(String value);
+    void setDescription(String description);
 
     /**
      * Returns the context-param parameter name.
+     *
      * @return parameter name
      */
-    @Element(required=true,key=true)
-    public String getParamName();
+    @Element(required = true, key = true)
+    String getParamName();
 
     /**
      * Sets the context-param parameter name.
-     * @param value
+     *
+     * @param paramName new parameter name value
      */
-    public void setParamName(String value);
+    void setParamName(String paramName);
 
     /**
      * Returns the context-param parameter value.
+     *
      * @return parameter value
      */
     @Element
-    public String getParamValue();
+    String getParamValue();
 
     /**
      * Sets the context-param parameter value.
-     * @param value new value
+     *
+     * @param paramValue new value
      */
-    public void setParamValue(String value);
+    void setParamValue(String paramValue);
 
-    @Attribute(dataType=Boolean.class, defaultValue="false")
-    public String getIgnoreDescriptorItem();
-    public void setIgnoreDescriptorItem(String value);
+    @Attribute(dataType = Boolean.class, defaultValue = "false")
+    String getIgnoreDescriptorItem();
 
+    void setIgnoreDescriptorItem(String value);
 }

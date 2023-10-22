@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,11 @@
 
 package com.sun.enterprise.config.serverbeans;
 
+import java.beans.PropertyVetoException;
+
 import org.glassfish.api.admin.config.Named;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
-
-import java.beans.PropertyVetoException;
 
 /**
  * Tag interface for all types of resource.
@@ -32,27 +32,22 @@ import java.beans.PropertyVetoException;
 public interface ServerResource extends Named, Resource {
 
     /**
-     * Gets the value of the enabled property.
+     * Gets the value of the {@code enabled} property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
     String getEnabled();
 
     /**
-     * Sets the value of the enabled property.
+     * Sets the value of the {@code enabled} property.
      *
-     * @param value allowed object is {@link String }
+     * @param enabled allowed object is {@link String}
      */
-    void setEnabled(String value) throws PropertyVetoException;
+    void setEnabled(String enabled) throws PropertyVetoException;
 
-    @DuckTyped
     @Override
-    String getIdentity();
-
-    class Duck {
-        public static String getIdentity(ServerResource resource) {
-            return resource.getName();
-        }
+    default String getIdentity() {
+        return getName();
     }
 }

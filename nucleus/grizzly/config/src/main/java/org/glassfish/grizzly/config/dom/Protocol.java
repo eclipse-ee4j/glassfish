@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,55 +17,56 @@
 
 package org.glassfish.grizzly.config.dom;
 
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
-import org.jvnet.hk2.config.Element;
-import org.jvnet.hk2.config.types.PropertyBag;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Element;
+import org.jvnet.hk2.config.types.PropertyBag;
+
 /**
- * Defines one single high-level protocol like: http, https, iiop, etc.
+ * Defines one single high-level protocol like:
+ * {@code http}, {@code https}, {@code iiop}, etc.
  */
 @Configured
 public interface Protocol extends ConfigBeanProxy, PropertyBag {
+
     boolean SECURITY_ENABLED = false;
 
     /**
-     * Defines any HTTP settings for this Protocol
+     * Defines any {@code HTTP} settings for this {@code Protocol}.
      */
     @Element
     Http getHttp();
 
-    void setHttp(Http value);
+    void setHttp(Http http);
 
     /**
-     * Protocol name which could be used as reference
+     * Protocol {@code name} which could be used as reference.
      */
     @Attribute(required = true, key = true)
     String getName();
 
-    void setName(String value);
+    void setName(String name);
 
     /**
-     * Defines port-unification logic.  If it is required to handle more than one high level protocol on a single
-     * network-listener.
+     * Defines port-unification logic.  If it is required to handle more than one
+     * high level protocol on a single network-listener.
      */
     @Element
     PortUnification getPortUnification();
 
-    void setPortUnification(PortUnification value);
+    void setPortUnification(PortUnification portUnification);
 
     /**
-     * Defines <code>http-redirect</code> logic.
+     * Defines {@code http-redirect} logic.
      */
     @Element
     HttpRedirect getHttpRedirect();
 
-    void setHttpRedirect(HttpRedirect value);
+    void setHttpRedirect(HttpRedirect httpRedirect);
 
     /**
      * Protocol chain instance handler logic.
@@ -72,16 +74,17 @@ public interface Protocol extends ConfigBeanProxy, PropertyBag {
     @Element
     ProtocolChainInstanceHandler getProtocolChainInstanceHandler();
 
-    void setProtocolChainInstanceHandler(ProtocolChainInstanceHandler value);
+    void setProtocolChainInstanceHandler(ProtocolChainInstanceHandler protocolChainHandler);
 
     /**
-     * True means the protocol is secured and ssl element will be used to initialize security settings. False means that
-     * protocol is not secured and ssl element, if present, will be ignored.
+     * True means the protocol is secured and ssl element will be used to initialize security
+     * settings. {@code False} means that protocol is not secured and {@code ssl} element,
+     * if present, will be ignored.
      */
     @Attribute(defaultValue = "" + SECURITY_ENABLED, dataType = Boolean.class)
     String getSecurityEnabled();
 
-    void setSecurityEnabled(String value);
+    void setSecurityEnabled(String securityEnabled);
 
     /**
      * Protocol security (ssl) configuration.
@@ -89,29 +92,20 @@ public interface Protocol extends ConfigBeanProxy, PropertyBag {
     @Element
     Ssl getSsl();
 
-    void setSsl(Ssl value);
+    void setSsl(Ssl ssl);
 
-    @DuckTyped
-    List<NetworkListener> findNetworkListeners();
-
-    @DuckTyped
-    Protocols getParent();
-
-    class Duck {
-        static public List<NetworkListener> findNetworkListeners(Protocol protocol) {
-            final List<NetworkListener> listeners = protocol.getParent().getParent()
-                    .getNetworkListeners().getNetworkListener();
-            List<NetworkListener> refs = new ArrayList<NetworkListener>();
-            for (NetworkListener listener : listeners) {
-                if (listener.getProtocol().equals(protocol.getName())) {
-                    refs.add(listener);
-                }
+    default List<NetworkListener> findNetworkListeners() {
+        final List<NetworkListener> listeners = getParent().getParent().getNetworkListeners().getNetworkListener();
+        List<NetworkListener> networkListeners = new ArrayList<>();
+        for (NetworkListener listener : listeners) {
+            if (listener.getProtocol().equals(getName())) {
+                networkListeners.add(listener);
             }
-            return refs;
         }
+        return networkListeners;
+    }
 
-        public static Protocols getParent(Protocol protocol) {
-            return protocol.getParent(Protocols.class);
-        }
+    default Protocols getParent() {
+        return getParent(Protocols.class);
     }
 }

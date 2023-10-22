@@ -38,8 +38,7 @@ public class Servlet extends HttpServlet {
     @WebServiceRef(wsdlLocation="http://@HOST@:@PORT@/security-jmac-soapembedded-web/webservice/JmacSoapEmbeddedServletService/HelloServlet?WSDL")
     private JmacSoapEmbeddedServletService servletService;
 
-    public void service(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    public void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
 

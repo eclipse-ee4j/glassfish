@@ -49,7 +49,7 @@ public class SecurityUtil {
 
     private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(SecurityUtil.class);
     private static final Logger _logger = LogDomains.getLogger(SecurityUtil.class, LogDomains.SECURITY_LOGGER);
-    public static final String VENDOR_PRESENT = "com.sun.enterprise.security.provider.jaccvendorpresent";
+    public static final String VENDOR_PRESENT = "com.sun.enterprise.security.ee.provider.jaccvendorpresent";
 
     // set in PolicyLoader from domain.xml
     private static final String REPOSITORY_HOME_PROP = "com.sun.enterprise.jaccprovider.property.repository";

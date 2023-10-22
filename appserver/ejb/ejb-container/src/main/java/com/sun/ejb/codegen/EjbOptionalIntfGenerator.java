@@ -267,8 +267,11 @@ public class EjbOptionalIntfGenerator extends BeanGeneratorBase {
         }
 
         mv.visitMethodInsn(INVOKEINTERFACE, Type.getInternalName(delegateClass), methodName, methodDesc, true);
-        mv.visitInsn(Type.getReturnType(methodDesc).getOpcode(IRETURN));
-        mv.visitMaxs(varIndex, varIndex);
+
+        Type returnType = Type.getReturnType(methodDesc);
+
+        mv.visitInsn(returnType.getOpcode(IRETURN));
+        mv.visitMaxs(Math.max(varIndex, returnType.getSize()), varIndex);
         mv.visitEnd();
     }
 

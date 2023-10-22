@@ -134,11 +134,11 @@ public class SnifferManagerImpl implements SnifferManager {
 
     private <T extends Sniffer> List<T> getApplicableSniffers(DeploymentContext context, List<URI> uris, Types types, Collection<T> sniffers, boolean checkPath) {
         if (sniffers == null || sniffers.isEmpty() || types == null || types.getAllTypes().isEmpty()) {
-            return new ArrayList<T>();
+            return new ArrayList<>();
         }
 
         ArchiveType archiveType = serviceLocator.getService(ArchiveType.class, context.getArchiveHandler().getArchiveType());
-        List<T> applicableSniffers = new ArrayList<T>();
+        List<T> applicableSniffers = new ArrayList<>();
 
         for (T sniffer : sniffers) {
             if (archiveType != null && !sniffer.supportsArchiveType(archiveType)) {
@@ -196,10 +196,18 @@ public class SnifferManagerImpl implements SnifferManager {
      * @return the type of the class containing the element
      */
     private static Type getDeclaringType(AnnotatedElement element) {
-        if (element instanceof Type) return (Type) element;
-        if (element instanceof Member) return ((Member) element).getDeclaringType();
-        if (element instanceof Parameter) return getDeclaringType(((Parameter) element).getMethod());
-        if (element instanceof ParameterizedType) return ((ParameterizedType) element).getType();
+        if (element instanceof Type) {
+            return (Type) element;
+        }
+        if (element instanceof Member) {
+            return ((Member) element).getDeclaringType();
+        }
+        if (element instanceof Parameter) {
+            return getDeclaringType(((Parameter) element).getMethod());
+        }
+        if (element instanceof ParameterizedType) {
+            return ((ParameterizedType) element).getType();
+        }
         throw new IllegalStateException("Unable to recognise declaring type: " + element.getName());
     }
 }

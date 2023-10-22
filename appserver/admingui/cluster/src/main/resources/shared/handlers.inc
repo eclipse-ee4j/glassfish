@@ -58,6 +58,11 @@
  Output: #{pageSession.instanceStatusMap}
 -->
 <handler id="gfr.getInstancesStatus">
+    if ("#{requestScope.listInstanceAttrMap} = ${null}") {
+        createMap(result="#{requestScope.listInstanceAttrMap}");
+    }
+    getDefaultAdminTimeout(result="#{requestScope.adminTimeout}");
+    mapPut(map="#{requestScope.listInstanceAttrMap}" key="timeoutmsec" value="#{requestScope.adminTimeout}" );
     gf.restRequest( endpoint="#{sessionScope.REST_URL}/list-instances"
         attrs="#{requestScope.listInstanceAttrMap}"
         method="GET"

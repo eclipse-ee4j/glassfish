@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.docs</groupId>
         <artifactId>docs</artifactId>
-        <version>7.0.4-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
     </parent>
     <artifactId>distribution</artifactId>
     <packaging>jar</packaging>
@@ -35,6 +35,15 @@
     <properties>
         <maven.site.skip>true</maven.site.skip>
     </properties>
+
+    <profiles>
+        <profile>
+            <id>release-phase2</id>
+            <properties>
+                <maven.deploy.skip>false</maven.deploy.skip>
+            </properties>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>

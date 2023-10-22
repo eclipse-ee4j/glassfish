@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,119 +19,101 @@ package org.glassfish.connectors.config;
 
 import com.sun.enterprise.config.serverbeans.BindableResource;
 import com.sun.enterprise.config.serverbeans.Resource;
-import org.glassfish.resourcebase.resources.ResourceDeploymentOrder;
-import org.glassfish.resourcebase.resources.ResourceTypeOrder;
-import org.jvnet.hk2.config.*;
-import org.jvnet.hk2.config.types.Property;
-import org.jvnet.hk2.config.types.PropertyBag;
 
 import java.beans.PropertyVetoException;
 import java.util.List;
 
 import org.glassfish.api.admin.config.PropertiesDesc;
-
 import org.glassfish.quality.ToDo;
-
+import org.glassfish.resourcebase.resources.ResourceDeploymentOrder;
+import org.glassfish.resourcebase.resources.ResourceTypeOrder;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Element;
+import org.jvnet.hk2.config.types.Property;
+import org.jvnet.hk2.config.types.PropertyBag;
 
 /**
- * Persistence Manager runtime configuration
+ * Persistence Manager runtime configuration.
  */
-
-/* @XmlType(name = "", propOrder = {
-    "description",
-    "property"
-}) */
 @Configured
-@ResourceTypeOrder(deploymentOrder= ResourceDeploymentOrder.PERSISTENCE_RESOURCE)
+@ResourceTypeOrder(deploymentOrder = ResourceDeploymentOrder.PERSISTENCE_RESOURCE)
 public interface PersistenceManagerFactoryResource extends ConfigBeanProxy, Resource, PropertyBag, BindableResource {
 
     /**
-     * Gets the value of the factoryClass property.
+     * Gets the value of the {@code factoryClass} property.
      *
-     * Class that creates persistence manager instance
+     * <p>Class that creates persistence manager instance.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
-    @Attribute (defaultValue="com.sun.jdo.spi.persistence.support.sqlstore.impl.PersistenceManagerFactoryImpl")
-    public String getFactoryClass();
+    @Attribute (defaultValue = "com.sun.jdo.spi.persistence.support.sqlstore.impl.PersistenceManagerFactoryImpl")
+    String getFactoryClass();
 
     /**
-     * Sets the value of the factoryClass property.
+     * Sets the value of the {@code factoryClass} property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param factoryClass allowed object is {@link String}
      */
-    public void setFactoryClass(String value) throws PropertyVetoException;
+    void setFactoryClass(String factoryClass) throws PropertyVetoException;
 
     /**
-     * Gets the value of the jdbcResourceJndiName property.
+     * Gets the value of the {@code jdbcResourceJndiName} property.
      *
-     * jdbc resource with which database connections are obtained
+     * <p>JDBC resource with which database connections are obtained.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
-    public String getJdbcResourceJndiName();
+    String getJdbcResourceJndiName();
 
     /**
-     * Sets the value of the jdbcResourceJndiName property.
+     * Sets the value of the {@code jdbcResourceJndiName} property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param jndiName allowed object is {@link String}
      */
-    public void setJdbcResourceJndiName(String value) throws PropertyVetoException;
+    void setJdbcResourceJndiName(String jndiName) throws PropertyVetoException;
 
     /**
-     * Gets the value of the enabled property.
+     * Gets the value of the {@code enabled} property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
-    @Attribute (defaultValue="true",dataType=Boolean.class)
-    public String getEnabled();
+    @Attribute (defaultValue = "true",dataType = Boolean.class)
+    String getEnabled();
 
     /**
-     * Sets the value of the enabled property.
+     * Sets the value of the {@code enabled} property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param enabled allowed object is {@link String}
      */
-    public void setEnabled(String value) throws PropertyVetoException;
+    void setEnabled(String enabled) throws PropertyVetoException;
 
     /**
-     * Gets the value of the description property.
+     * Gets the value of the {@code description} property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
-    public String getDescription();
+    String getDescription();
 
     /**
-     * Sets the value of the description property.
+     * Sets the value of the {@code description} property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param description allowed object is {@link String}
      */
-    public void setDescription(String value) throws PropertyVetoException;
+    void setDescription(String description) throws PropertyVetoException;
 
     /**
-        Properties as per {@link org.glassfish.api.admin.config.PropertyBag}
+        Properties as per {@link PropertyBag}.
      */
-    @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
-    @PropertiesDesc(props={})
+    @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props" )
+    @PropertiesDesc(props = {})
     @Element
     List<Property> getProperty();
 
-    @DuckTyped
-    String getIdentity();
-
-    class Duck {
-        public static String getIdentity(PersistenceManagerFactoryResource resource){
-            return resource.getJndiName();
-        }
+    default String getIdentity() {
+        return getJndiName();
     }
-
 }

@@ -15,11 +15,13 @@
     SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 
 -->
-
+<!initPage
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings");
+/>
 <f:verbatim>
 <html>
 <head>
-    <script type="text/javascript" src="#{request.contextPath}/resource/common/js/adminjsf.js" ></script>
+    <script type="text/javascript" src="#{request.contextPath}$resource{i18nc.adminjsf.url}" ></script>
     <script type="text/javascript">
 	function redirectToQS() {
 	    var loc = window.location.href;

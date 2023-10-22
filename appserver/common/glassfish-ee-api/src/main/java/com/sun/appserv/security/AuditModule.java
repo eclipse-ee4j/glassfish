@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,34 +24,33 @@
 package com.sun.appserv.security;
 
 import com.sun.enterprise.security.BaseAuditModule;
-import java.util.Properties;
 import jakarta.servlet.http.HttpServletRequest;
+
 /**
- * Base class that should be extended by all classes that wish to provide their
- * own Audit support.
+ * Base class that should be extended by all classes that wish to provide their own Audit support.
  * <p>
- * Note that the methods inherited from BaseAuditModule are repeated here
- * so developers see the whole API available to their custom AuditModule
- * implementations by looking just at this one abstract class.
+ * Note that the methods inherited from BaseAuditModule are repeated here so developers see the whole API available to
+ * their custom AuditModule implementations by looking just at this one abstract class.
  *
- * @author  Harpreet Singh
+ * @author Harpreet Singh
  * @version
  */
 public abstract class AuditModule extends BaseAuditModule {
 
     /**
      * Invoked post web authorization request.
+     *
      * @param user the username for whom the authorization was performed
      * @param req the HttpRequest object for the web request
-     * @param type the permission type, hasUserDataPermission
-     * or hasResourcePermission.
+     * @param type the permission type, hasUserDataPermission or hasResourcePermission.
      * @param success the status of the web authorization request
      */
-    public void webInvocation(String user, HttpServletRequest req,
-            String type, boolean success) {
+    public void webInvocation(String user, HttpServletRequest req, String type, boolean success) {
     }
+
     /**
      * Invoked post ejb authorization request.
+     *
      * @param user the username for whom the authorization was performed
      * @param ejb the ejb name for which this authorization was performed
      * @param method the method name for which this authorization was performed
@@ -61,6 +61,7 @@ public abstract class AuditModule extends BaseAuditModule {
 
     /**
      * Invoked during validation of the web service request
+     *
      * @param uri The URL representation of the web service endpoint
      * @param endpoint The name of the endpoint representation
      * @param success the status of the web service request validation
@@ -70,6 +71,7 @@ public abstract class AuditModule extends BaseAuditModule {
 
     /**
      * Invoked during validation of the web service request
+     *
      * @param endpoint The representation of the web service endpoint
      * @param success the status of the web service request validation
      */

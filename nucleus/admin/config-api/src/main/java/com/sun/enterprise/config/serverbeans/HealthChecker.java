@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,77 +17,76 @@
 
 package com.sun.enterprise.config.serverbeans;
 
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-
-import java.beans.PropertyVetoException;
-import java.io.Serializable;
-
-import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Min;
 
+import java.beans.PropertyVetoException;
+
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+
 /**
- * Each cluster would be configured for a ping based health check mechanism
+ * Each cluster would be configured for a ping based health check mechanism.
  */
-
-/* @XmlType(name = "") */
-
 @Configured
 public interface HealthChecker extends ConfigBeanProxy {
 
     /**
-     * Gets the value of the url property.
+     * Gets the value of the {@code url} property.
      *
-     * URL to ping so as to determine the health state of a listener. This must be a relative URL.
+     *<p>URL to ping to determine the health state of a listener. This must be a relative URL.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
-    public String getUrl();
+    String getUrl();
 
     /**
-     * Sets the value of the url property.
+     * Sets the value of the {@code url} property.
      *
-     * @param value allowed object is {@link String }
+     * @param url allowed object is {@link String}
      */
-    public void setUrl(String value) throws PropertyVetoException;
+    void setUrl(String url) throws PropertyVetoException;
 
     /**
-     * Gets the value of the intervalInSeconds property.
+     * Gets the value of the {@code intervalInSeconds} property.
      *
-     * Interval, in seconds, between health checks. A value of "0" means that the health check is disabled. Default is 30
-     * seconds. Must be 0 or greater.
+     * <p>Interval, in seconds, between health checks. A value of {@code 0} means that
+     * the health check is disabled. Default is {@code 30} seconds.
      *
-     * @return possible object is {@link String }
+     * <p>Must be {@code 0} or greater.
+     *
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "30")
     @Min(value = 0)
-    public String getIntervalInSeconds();
+    String getIntervalInSeconds();
 
     /**
-     * Sets the value of the intervalInSeconds property.
+     * Sets the value of the {@code intervalInSeconds} property.
      *
-     * @param value allowed object is {@link String }
+     * @param interval allowed object is {@link String}
      */
-    public void setIntervalInSeconds(String value) throws PropertyVetoException;
+    void setIntervalInSeconds(String interval) throws PropertyVetoException;
 
     /**
-     * Gets the value of the timeoutInSeconds property.
+     * Gets the value of the {@code timeoutInSeconds} property.
      *
-     * Maximum time, in seconds, that a server must respond to a health check request to be considered healthy. Default is
-     * 10 seconds. Must be greater than 0.
+     * <p>Maximum time, in seconds, that a server must respond to a health check request
+     * to be considered healthy. Default is {@code 10 seconds}.
      *
-     * @return possible object is {@link String }
+     * <p>Must be greater than {@code 0}.
+     *
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "10")
     @Min(value = 1)
-    public String getTimeoutInSeconds();
+    String getTimeoutInSeconds();
 
     /**
-     * Sets the value of the timeoutInSeconds property.
+     * Sets the value of the {@code timeoutInSeconds} property.
      *
-     * @param value allowed object is {@link String }
+     * @param timeout allowed object is {@link String}
      */
-    public void setTimeoutInSeconds(String value) throws PropertyVetoException;
+    void setTimeoutInSeconds(String timeout) throws PropertyVetoException;
 }

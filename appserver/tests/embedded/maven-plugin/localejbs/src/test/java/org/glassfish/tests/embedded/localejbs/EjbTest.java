@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,7 @@
 
 package org.glassfish.tests.embedded.localejbs;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -33,7 +34,7 @@ public class EjbTest {
         HttpURLConnection uc = (HttpURLConnection)url.openConnection();
         System.out.println("Test status : " + uc.getResponseMessage());
         if(uc.getResponseCode() != 200) {
-            throw new Exception(uc.getResponseMessage());
+            throw new Exception(uc.getResponseCode() + ": " + uc.getResponseMessage());
         }
         uc.disconnect();
     }

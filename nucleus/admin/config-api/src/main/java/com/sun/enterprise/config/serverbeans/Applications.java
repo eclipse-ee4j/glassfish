@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,120 +17,95 @@
 
 package com.sun.enterprise.config.serverbeans;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.glassfish.api.admin.RestRedirect;
+import org.glassfish.api.admin.config.ApplicationName;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.Element;
-
-import java.util.*;
-import org.glassfish.api.admin.config.ApplicationName;
 
 @Configured
 public interface Applications extends ConfigBeanProxy {
 
     /**
-     * Gets the value of the MbeanorApplication property. Objects of the following type(s) are allowed in the list
-     * {@link Application }
+     * Gets the value of the Application property. Objects of the following
+     * type(s) are allowed in the list {@link Application }
      */
     @Element("*")
     @RestRedirect(opType = RestRedirect.OpType.PUT, commandName = "deploy")
-    public List<ApplicationName> getModules();
+    List<ApplicationName> getModules();
 
     /**
      * Gets a subset of {@link #getModules()} that has the given type.
      */
-    @DuckTyped
-    <T> List<T> getModules(Class<T> type);
+    default <T> List<T> getModules(Class<T> type) {
+        List<T> modules = new ArrayList<>();
+        for (Object module : getModules()) {
+            if (type.isInstance(module)) {
+                modules.add(type.cast(module));
+            }
+        }
+        // you have to return an unmodifiable list since this list
+        // is not the real list of elements as maintained by this config bean
+        return Collections.unmodifiableList(modules);
+    }
 
-    @DuckTyped
-    <T> T getModule(Class<T> type, String moduleID);
+    default <T> T getModule(Class<T> type, String moduleID) {
+        if (moduleID == null) {
+            return null;
+        }
 
-    @DuckTyped
-    List<Application> getApplications();
+        for (ApplicationName module : getModules()) {
+            if (type.isInstance(module) && module.getName().equals(moduleID)) {
+                return type.cast(module);
+            }
+        }
+        return null;
+    }
+
+    default List<Application> getApplications() {
+        return getModules(Application.class);
+    }
 
     /**
-     * Return the application with the given module ID (name), or null if no such application exists.
+     * Return the application with the given module ID (name), or {@code null} if no such application exists.
      *
      * @param moduleID the module ID of the application
-     * @return the Application object, or null if no such app
+     * @return the {@code Application} object, or {@code null} if no such app
      */
-    @DuckTyped
-    Application getApplication(String moduleID);
-
-    @DuckTyped
-    List<Application> getApplicationsWithSnifferType(String snifferType);
-
-    @DuckTyped
-    List<Application> getApplicationsWithSnifferType(String snifferType, boolean onlyStandaloneModules);
-
-    public class Duck {
-        public static <T> List<T> getModules(Applications apps, Class<T> type) {
-            List<T> modules = new ArrayList<T>();
-            for (Object module : apps.getModules()) {
-                if (type.isInstance(module)) {
-                    modules.add(type.cast(module));
-                }
-            }
-            // you have to return an umodifiable list since this list
-            // is not the real list of elements as maintained by this config bean
-            return Collections.unmodifiableList(modules);
-        }
-
-        public static <T> T getModule(Applications apps, Class<T> type, String moduleID) {
-            if (moduleID == null) {
-                return null;
-            }
-
-            for (ApplicationName module : apps.getModules())
-                if (type.isInstance(module) && module.getName().equals(moduleID))
-                    return type.cast(module);
-
-            return null;
-
-        }
-
-        public static List<Application> getApplications(Applications apps) {
-            return getModules(apps, Application.class);
-        }
-
-        public static Application getApplication(Applications apps, String moduleID) {
-            if (moduleID == null) {
-                return null;
-            }
-
-            for (ApplicationName module : apps.getModules())
-                if (module instanceof Application && module.getName().equals(moduleID))
-                    return (Application) module;
-
+    default Application getApplication(String moduleID) {
+        if (moduleID == null) {
             return null;
         }
 
-        public static List<Application> getApplicationsWithSnifferType(Applications apps, String snifferType) {
-            return getApplicationsWithSnifferType(apps, snifferType, false);
+        for (ApplicationName module : getModules()) {
+            if (module instanceof Application && module.getName().equals(moduleID)) {
+                return (Application) module;
+            }
         }
+        return null;
+    }
 
-        public static List<Application> getApplicationsWithSnifferType(Applications apps, String snifferType,
-                boolean onlyStandaloneModules) {
-            List<Application> result = new ArrayList<Application>() {
+    default List<Application> getApplicationsWithSnifferType(String snifferType) {
+        return getApplicationsWithSnifferType(snifferType, false);
+    }
 
-            };
-
-            List<Application> applications = getModules(apps, Application.class);
-
-            for (Application app : applications) {
-                if (app.containsSnifferType(snifferType)) {
-                    if (onlyStandaloneModules) {
-                        if (app.isStandaloneModule()) {
-                            result.add(app);
-                        }
-                    } else {
-                        result.add(app);
+    default List<Application> getApplicationsWithSnifferType(String snifferType, boolean onlyStandaloneModules) {
+        List<Application> applications = new ArrayList<>();
+        for (Application app : getModules(Application.class)) {
+            if (app.containsSnifferType(snifferType)) {
+                if (onlyStandaloneModules) {
+                    if (app.isStandaloneModule()) {
+                        applications.add(app);
                     }
+                } else {
+                    applications.add(app);
                 }
             }
-
-            return Collections.unmodifiableList(result);
         }
+        return Collections.unmodifiableList(applications);
     }
 }

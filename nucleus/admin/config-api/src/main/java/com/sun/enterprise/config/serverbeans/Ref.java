@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,20 +17,20 @@
 
 package com.sun.enterprise.config.serverbeans;
 
+import java.beans.PropertyVetoException;
+
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 
-import java.beans.PropertyVetoException;
-
 /**
- * A domain.xml reference
+ * A {@code domain.xml} reference.
  *
  * @author Jerome Dochez
  */
 @Configured
 public interface Ref extends ConfigBeanProxy {
 
-    public String getRef();
+    String getRef();
 
-    public void setRef(String refName) throws PropertyVetoException;
+    void setRef(String refName) throws PropertyVetoException;
 }

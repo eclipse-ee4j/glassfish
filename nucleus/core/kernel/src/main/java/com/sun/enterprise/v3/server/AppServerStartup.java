@@ -17,18 +17,13 @@
 
 package com.sun.enterprise.v3.server;
 
-import com.sun.appserv.server.util.Version;
-import com.sun.enterprise.module.HK2Module;
-import com.sun.enterprise.module.ModuleState;
-import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.module.bootstrap.ModuleStartup;
-import com.sun.enterprise.module.bootstrap.StartupContext;
-import com.sun.enterprise.util.Result;
-import com.sun.enterprise.v3.common.DoNothingActionReporter;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
-import jakarta.inject.Singleton;
+import static com.sun.enterprise.glassfish.bootstrap.Constants.NO_FORCED_SHUTDOWN;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.glassfish.api.admin.ProcessEnvironment.ProcessType.Embedded;
+import static org.glassfish.api.admin.ProcessEnvironment.ProcessType.Server;
+import static org.glassfish.api.admin.ServerEnvironment.Status.stopped;
+import static org.glassfish.api.admin.ServerEnvironment.Status.stopping;
+import static org.glassfish.api.event.EventTypes.SERVER_SHUTDOWN;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -39,7 +34,6 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -79,12 +73,22 @@ import org.glassfish.kernel.KernelLoggerInfo;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
 
+import com.sun.appserv.server.util.Version;
+import com.sun.enterprise.module.HK2Module;
+import com.sun.enterprise.module.ModuleState;
+import com.sun.enterprise.module.ModulesRegistry;
+import com.sun.enterprise.module.bootstrap.ModuleStartup;
+import com.sun.enterprise.module.bootstrap.StartupContext;
+import com.sun.enterprise.util.Result;
+import com.sun.enterprise.v3.common.DoNothingActionReporter;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 /**
- * Main class for Glassfish startup
- * This class spawns a non-daemon Thread when the start() is called.
- * Having a non-daemon thread allows us to control lifecycle of server JVM.
- * The thead is stopped when stop() is called.
+ * Main class for Glassfish startup This class spawns a non-daemon Thread when the start() is called. Having a
+ * non-daemon thread allows us to control lifecycle of server JVM. The thead is stopped when stop() is called.
  *
  * @author Jerome Dochez, sahoo@sun.com
  */
@@ -99,10 +103,10 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
     final static Level level = Level.FINE;
 
     @Inject
-    ServerEnvironmentImpl env;
+    ServerEnvironmentImpl serverEnvironment;
 
     @Inject
-    ServiceLocator locator;
+    ServiceLocator serviceLocator;
 
     @Inject
     ModulesRegistry systemRegistry;
@@ -141,8 +145,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
     private String platform = System.getProperty("GlassFish_Platform");
 
     /**
-     * A keep alive thread that keeps the server JVM from going down
-     * as long as GlassFish kernel is up.
+     * A keep alive thread that keeps the server JVM from going down as long as GlassFish kernel is up.
      */
     private Thread serverThread;
     private boolean shutdownSignal = false;
@@ -165,17 +168,14 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
             if (POLICY_FULLY_THREADED.equals(threadPolicy)) {
                 logger.fine("Using startup thread policy FULLY_THREADED at behest of system property");
                 runLevelController.setThreadingPolicy(RunLevelController.ThreadingPolicy.FULLY_THREADED);
-            }
-            else if (POLICY_USE_NO_THREADS.equals(threadPolicy)) {
+            } else if (POLICY_USE_NO_THREADS.equals(threadPolicy)) {
                 logger.fine("Using startup thread policy USE_NO_THREADS at behest of system property");
                 runLevelController.setThreadingPolicy(RunLevelController.ThreadingPolicy.USE_NO_THREADS);
+            } else {
+                logger.warning("Unknown threading policy " + threadPolicy + ".  Will use the current policy of "
+                        + runLevelController.getThreadingPolicy());
             }
-            else {
-                logger.warning("Unknown threading policy " + threadPolicy + ".  Will use the current policy of " +
-                    runLevelController.getThreadingPolicy());
-            }
-        }
-        else {
+        } else {
             if (platform == null || !(platform.equals(FELIX_PLATFORM) || platform.equals(STATIC_PLATFORM))) {
                 runLevelController.setThreadingPolicy(RunLevelController.ThreadingPolicy.USE_NO_THREADS);
             }
@@ -185,8 +185,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
         if (numThreads > 0) {
             logger.fine("Startup controller will use " + numThreads + " + threads");
             runLevelController.setMaximumUseableThreads(numThreads);
-        }
-        else {
+        } else {
             logger.fine("Startup controller will use infinite threads");
         }
 
@@ -197,8 +196,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
         ClassLoader origCL = Thread.currentThread().getContextClassLoader();
         try {
             // See issue #5596 to know why we set context CL as common CL.
-            Thread.currentThread().setContextClassLoader(
-                    commonCLS.getCommonClassLoader());
+            Thread.currentThread().setContextClassLoader(commonCLS.getCommonClassLoader());
             doStart();
         } finally {
             // reset the context classloader. See issue GLASSFISH-15775
@@ -214,11 +212,10 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
 
         // spwan a non-daemon thread that waits indefinitely for shutdown request.
         // This stops the VM process from exiting.
-        serverThread = new Thread("GlassFish Kernel Main Thread"){
+        serverThread = new Thread("GlassFish Kernel Main Thread") {
             @Override
             public void run() {
-                logger.logp(level, "AppServerStartup", "run",
-                        "[{0}] started", new Object[]{this});
+                logger.logp(level, "AppServerStartup", "run", "[{0}] started", new Object[] { this });
 
                 // notify the other thread to continue now that a non-daemon
                 // thread has started.
@@ -228,15 +225,13 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
                     while (!shutdownSignal) {
                         try {
                             wait(); // Wait indefinitely until shutdown is requested
-                        }
-                        catch (InterruptedException e) {
+                        } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
                     }
                 }
 
-                logger.logp(level, "AppServerStartup", "run",
-                        "[{0}] exiting", new Object[]{this});
+                logger.logp(level, "AppServerStartup", "run", "[{0}] exiting", new Object[] { this });
             }
         };
 
@@ -256,13 +251,12 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
     }
 
     public void run() {
-
-        if (context==null) {
+        if (context == null) {
             System.err.println("Startup context not provided, cannot continue");
             return;
         }
 
-        if (platform==null) {
+        if (platform == null) {
             platform = "Embedded";
         }
 
@@ -273,7 +267,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
         }
 
         // prepare the global variables
-        DynamicConfigurationService dcs = locator.getService(DynamicConfigurationService.class);
+        DynamicConfigurationService dcs = serviceLocator.getService(DynamicConfigurationService.class);
         DynamicConfiguration config = dcs.createDynamicConfiguration();
 
         config.addActiveDescriptor(BuilderHelper.createConstantDescriptor(logger));
@@ -282,12 +276,8 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
         config.addUnbindFilter(BuilderHelper.createContractFilter(ProcessEnvironment.class.getName()));
 
         config.addActiveDescriptor(BuilderHelper.createConstantDescriptor(
-                env.isEmbedded() ?
-                new ProcessEnvironment(ProcessEnvironment.ProcessType.Embedded):
-                new ProcessEnvironment(ProcessEnvironment.ProcessType.Server)));
+                serverEnvironment.isEmbedded() ? new ProcessEnvironment(Embedded) : new ProcessEnvironment(Server)));
         config.commit();
-
-
 
         // activate the run level services
         masterListener.reset();
@@ -303,29 +293,20 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
         if (!logger.isLoggable(level)) {
             // Stop recording the times, no-one cares
             appInstanceListener.stopRecordingTimes();
-        }
-        else {
+        } else {
             initFinishTime = System.currentTimeMillis();
-            logger.log(level, "Init level done in " +
-                (initFinishTime - context.getCreationTime()) + " ms");
+            logger.log(level, "Init level done in " + (initFinishTime - context.getCreationTime()) + " ms");
         }
 
         appInstanceListener.startRecordingFutures();
-        if (!proceedTo(StartupRunLevel.VAL)) {
-            appInstanceListener.stopRecordingTimes();
-            return;
-        }
-
-        if (!postStartupJob()) {
+        if (!proceedTo(StartupRunLevel.VAL) || !postStartupJob()) {
             appInstanceListener.stopRecordingTimes();
             return;
         }
 
         if (logger.isLoggable(level)) {
-
             startupFinishTime = System.currentTimeMillis();
-            logger.log(level, "Startup level done in " +
-                (startupFinishTime - initFinishTime) + " ms");
+            logger.log(level, "Startup level done in " + (startupFinishTime - initFinishTime) + " ms");
         }
 
         if (!proceedTo(PostStartupRunLevel.VAL)) {
@@ -336,25 +317,20 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
         if (logger.isLoggable(level)) {
 
             long postStartupFinishTime = System.currentTimeMillis();
-            logger.log(level, "PostStartup level done in " +
-                (postStartupFinishTime - startupFinishTime) + " ms");
+            logger.log(level, "PostStartup level done in " + (postStartupFinishTime - startupFinishTime) + " ms");
         }
     }
 
     private boolean postStartupJob() {
         LinkedList<Future<Result<Thread>>> futures = appInstanceListener.getFutures();
 
-        env.setStatus(ServerEnvironment.Status.starting);
+        serverEnvironment.setStatus(ServerEnvironment.Status.starting);
         events.send(new Event(EventTypes.SERVER_STARTUP), false);
 
         // finally let's calculate our starting times
         long nowTime = System.currentTimeMillis();
-        logger.log(Level.INFO, KernelLoggerInfo.startupEndMessage, new Object[] {
-            Version.getProductIdInfo(), platform,
-            platformInitTime - context.getCreationTime(),
-            nowTime - platformInitTime,
-            nowTime - context.getCreationTime(),
-        });
+        logger.log(Level.INFO, KernelLoggerInfo.startupEndMessage, new Object[] { Version.getProductIdInfo(), platform,
+                platformInitTime - context.getCreationTime(), nowTime - platformInitTime, nowTime - context.getCreationTime(), });
 
         printModuleStatus(systemRegistry, level);
 
@@ -365,7 +341,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
                 Instant realstart = Instant.parse(wallClockStart);
                 long duration = Duration.between(realstart, Instant.now()).toMillis();
                 logger.log(Level.INFO, KernelLoggerInfo.startupTotalTime, duration);
-            } catch(Exception e) {
+            } catch (Exception e) {
                 // do nothing.
             }
         }
@@ -374,22 +350,22 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
             try {
                 try {
                     // wait for an eventual status, otherwise ignore
-                    if (future.get(3, TimeUnit.SECONDS).isFailure()) {
+                    if (future.get(3, SECONDS).isFailure()) {
                         final Throwable t = future.get().exception();
                         logger.log(Level.SEVERE, KernelLoggerInfo.startupFatalException, t);
-                        events.send(new Event(EventTypes.SERVER_SHUTDOWN), false);
+                        events.send(new Event(SERVER_SHUTDOWN), false);
                         shutdown();
                         return false;
                     }
-                } catch(TimeoutException e) {
+                } catch (TimeoutException e) {
                     logger.log(Level.WARNING, KernelLoggerInfo.startupWaitTimeout, e);
                 }
-            } catch(Throwable t) {
+            } catch (Throwable t) {
                 logger.log(Level.SEVERE, KernelLoggerInfo.startupException, t);
             }
         }
 
-        env.setStatus(ServerEnvironment.Status.started);
+        serverEnvironment.setStatus(ServerEnvironment.Status.started);
         events.send(new Event(EventTypes.SERVER_READY), false);
         pidWriter.writePidFile();
 
@@ -397,7 +373,6 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
     }
 
     public static void printModuleStatus(ModulesRegistry registry, Level level) {
-
         if (!logger.isLoggable(level) || registry == null) {
             return;
         }
@@ -406,21 +381,21 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
         // first started :
 
         for (HK2Module m : registry.getModules()) {
-            if (m.getState()== ModuleState.READY) {
+            if (m.getState() == ModuleState.READY) {
                 sb.append(m).append("\n");
             }
         }
         sb.append("\n");
         // then resolved
         for (HK2Module m : registry.getModules()) {
-            if (m.getState()== ModuleState.RESOLVED) {
+            if (m.getState() == ModuleState.RESOLVED) {
                 sb.append(m).append("\n");
             }
         }
         sb.append("\n");
         // finally installed
         for (HK2Module m : registry.getModules()) {
-            if (m.getState()!= ModuleState.READY && m.getState()!=ModuleState.RESOLVED) {
+            if (m.getState() != ModuleState.READY && m.getState() != ModuleState.RESOLVED) {
                 sb.append(m).append("\n");
             }
         }
@@ -432,21 +407,25 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
     private void shutdown() {
         CommandRunner runner = commandRunnerProvider.get();
 
-        if (runner!=null) {
-           final ParameterMap params = new ParameterMap();
+        if (runner != null) {
+            final ParameterMap params = new ParameterMap();
+
             // By default we don't want to shutdown forcefully, as that will cause the VM to exit and that's not
             // a very good behavior for a code known to be embedded in other processes.
-        final boolean noForcedShutdown =
-                Boolean.parseBoolean(context.getArguments().getProperty(
-                        com.sun.enterprise.glassfish.bootstrap.Constants.NO_FORCED_SHUTDOWN, "true"));
+            final boolean noForcedShutdown = Boolean.parseBoolean(context.getArguments().getProperty(NO_FORCED_SHUTDOWN, "true"));
             if (noForcedShutdown) {
                 params.set("force", "false");
             }
-            final InternalSystemAdministrator kernelIdentity = locator.getService(InternalSystemAdministrator.class);
-            if (env.isDas()) {
-                runner.getCommandInvocation("stop-domain", new DoNothingActionReporter(), kernelIdentity.getSubject()).parameters(params).execute();
+
+            final InternalSystemAdministrator kernelIdentity = serviceLocator.getService(InternalSystemAdministrator.class);
+            if (serverEnvironment.isDas()) {
+                runner.getCommandInvocation("stop-domain", new DoNothingActionReporter(), kernelIdentity.getSubject())
+                      .parameters(params)
+                      .execute();
             } else {
-                runner.getCommandInvocation("_stop-instance", new DoNothingActionReporter(), kernelIdentity.getSubject()).parameters(params).execute();
+                runner.getCommandInvocation("_stop-instance", new DoNothingActionReporter(), kernelIdentity.getSubject())
+                      .parameters(params)
+                      .execute();
             }
         }
     }
@@ -454,13 +433,15 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
     @Override
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public synchronized void stop() {
-        if(env.getStatus() == ServerEnvironment.Status.stopped) {
+        if (serverEnvironment.getStatus() == stopped) {
             // During shutdown because of shutdown hooks, we can be stopped multiple times.
             // In such a case, ignore any subsequent stop operations.
             logger.fine("Already stopped, so just returning");
             return;
         }
-        env.setStatus(ServerEnvironment.Status.stopping);
+
+        serverEnvironment.setStatus(stopping);
+
         try {
             events.send(new Event(EventTypes.PREPARE_SHUTDOWN), false);
         } catch (Exception e) {
@@ -475,9 +456,9 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
         }
 
         // first send the shutdown event synchronously
-        env.setStatus(ServerEnvironment.Status.stopped);
+        serverEnvironment.setStatus(stopped);
         try {
-            events.send(new Event(EventTypes.SERVER_SHUTDOWN), false);
+            events.send(new Event(SERVER_SHUTDOWN), false);
         } catch (Exception e) {
             logger.log(Level.SEVERE, KernelLoggerInfo.exceptionDuringShutdown, e);
         }
@@ -491,7 +472,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
         logger.info(KernelLoggerInfo.shutdownFinished);
 
         // notify the server thread that we are done, so that it can come out.
-        if (serverThread!=null) {
+        if (serverThread != null) {
             synchronized (serverThread) {
                 shutdownSignal = true;
 
@@ -508,13 +489,11 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
     /**
      * Proceed to the given run level using the given {@link AppServerActivator}.
      *
-     * @param runLevel   the run level to proceed to
-     * @param activator  an {@link AppServerActivator activator} used to
-     *                   activate/deactivate the services
+     * @param runLevel the run level to proceed to
+     * @param activator an {@link AppServerActivator activator} used to activate/deactivate the services
      * @return false if an error occurred that required server shutdown; true otherwise
      */
     private boolean proceedTo(int runLevel) {
-
         try {
             runLevelController.proceedTo(runLevel);
         } catch (Exception e) {
@@ -626,13 +605,11 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
                     return;
                 }
 
-                recordedTimes.put(descriptor.getImplementation(),
-                    (System.currentTimeMillis() - startupTime));
+                recordedTimes.put(descriptor.getImplementation(), (System.currentTimeMillis() - startupTime));
             }
 
             if ((getController().getCurrentRunLevel() > InitRunLevel.VAL) && logger.isLoggable(level)) {
-                logger.log(level, "Service " + descriptor.getImplementation() + " finished " +
-                    event.getLifecycleObject());
+                logger.log(level, "Service " + descriptor.getImplementation() + " finished " + event.getLifecycleObject());
             }
 
             if (futures != null) {
@@ -654,7 +631,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
         private LinkedHashMap<String, Long> getAllRecordedTimes() {
             LinkedHashMap<String, Long> retVal = recordedTimes;
 
-            stopRecordingTimes();  // Do not hold onto data that will never be needed again
+            stopRecordingTimes(); // Do not hold onto data that will never be needed again
 
             return retVal;
         }
@@ -675,11 +652,12 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
             forcedShutdown = false;
         }
 
-        private boolean isForcedShutdown() { return forcedShutdown; }
+        private boolean isForcedShutdown() {
+            return forcedShutdown;
+        }
 
         @Override
-        public void onCancelled(RunLevelFuture future,
-                int previousProceedTo) {
+        public void onCancelled(RunLevelFuture future, int previousProceedTo) {
             logger.log(Level.INFO, KernelLoggerInfo.shutdownRequested);
 
             if (future.isDown()) {
@@ -702,7 +680,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
 
             if (controller.getCurrentRunLevel() >= InitRunLevel.VAL) {
                 logger.log(Level.SEVERE, KernelLoggerInfo.startupFailure, info.getError());
-                events.send(new Event(EventTypes.SERVER_SHUTDOWN), false);
+                events.send(new Event(SERVER_SHUTDOWN), false);
             }
 
             forcedShutdown = true;
@@ -720,7 +698,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
                     int lcv = 0;
                     if (recordedTimes != null) {
                         for (Map.Entry<String, Long> service : recordedTimes.entrySet()) {
-                            logger.log(level, "Service(" + lcv++ +") : " + service.getKey() + " took " + service.getValue() + " ms");
+                            logger.log(level, "Service(" + lcv++ + ") : " + service.getKey() + " took " + service.getValue() + " ms");
                         }
                     }
                 }

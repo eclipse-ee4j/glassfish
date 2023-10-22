@@ -16,28 +16,31 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.config.serverbeans.Domain;
+import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
+
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
-import org.glassfish.server.ServerEnvironmentImpl;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.CommandLock;
-import org.glassfish.api.I18n;
-import org.glassfish.api.ActionReport;
-
-import org.jvnet.hk2.annotations.Service;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.hk2.api.PerLookup;
-import com.sun.enterprise.util.LocalStringManagerImpl;
+import org.glassfish.server.ServerEnvironmentImpl;
+import org.jvnet.hk2.annotations.Service;
+
+import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.universal.Duration;
-import org.glassfish.api.admin.*;
+import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import jakarta.inject.Inject;
 
 /**
- * uptime command
- * Reports on how long the server has been running.
+ * Uptime command Reports on how long the server has been running.
  *
  */
 @Service(name = "uptime")
@@ -45,49 +48,56 @@ import jakarta.inject.Inject;
 @CommandLock(CommandLock.LockType.NONE)
 @I18n("uptime")
 @RestEndpoints({
-    @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET,
-        path="uptime",
-        description="Uptime",
-        useForAuthorization=true)
-})
+    @RestEndpoint(
+        configBean = Domain.class,
+        opType = RestEndpoint.OpType.GET,
+        path = "uptime",
+        description = "Uptime",
+        useForAuthorization = true) })
 public class UptimeCommand implements AdminCommand {
 
+    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(UptimeCommand.class);
+
     @Inject
-    ServerEnvironmentImpl env;
+    ServerEnvironmentImpl serverEnvironment;
+
     @Param(name = "milliseconds", optional = true, defaultValue = "false")
     Boolean milliseconds;
 
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
         long totalTime_ms = getUptime();
         String totalTime_mss = "" + totalTime_ms;
         Duration duration = new Duration(totalTime_ms);
         duration.setTerse();
-        report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
+
+        report.setActionExitCode(SUCCESS);
         String message;
 
-        if (milliseconds)
+        if (milliseconds) {
             message = totalTime_mss;
-        else
+        } else {
             message = localStrings.getLocalString("uptime.output.terse", "Uptime: {0}", duration);
+        }
 
         report.setMessage(message);
         report.getTopMessagePart().addProperty("milliseconds", totalTime_mss);
     }
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(UptimeCommand.class);
 
     private long getUptime() {
         RuntimeMXBean mxbean = ManagementFactory.getRuntimeMXBean();
         long totalTime_ms = -1;
 
-        if (mxbean != null)
+        if (mxbean != null) {
             totalTime_ms = mxbean.getUptime();
+        }
 
         if (totalTime_ms <= 0) {
-            long start = env.getStartupContext().getCreationTime();
+            long start = serverEnvironment.getStartupContext().getCreationTime();
             totalTime_ms = System.currentTimeMillis() - start;
         }
+
         return totalTime_ms;
     }
 }

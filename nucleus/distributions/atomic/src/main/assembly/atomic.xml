@@ -32,9 +32,7 @@
         <fileSet>
             <directory>${temp.dir}/nucleus-common</directory>
             <includes>
-                <include>osgi/**</include>
                 <include>config/**</include>
-                <include>modules/**</include>
             </includes>
             <outputDirectory>${install.dir.name}</outputDirectory>
         </fileSet>

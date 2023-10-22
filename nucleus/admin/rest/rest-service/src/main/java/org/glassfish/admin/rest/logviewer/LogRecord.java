@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,44 +17,47 @@
 
 package org.glassfish.admin.rest.logviewer;
 
-import java.io.StringWriter;
+import java.io.Serializable;
 import java.time.OffsetDateTime;
-import java.util.Date;
+import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 /**
- * internal REST wrapper for a log record will be used to emit JSON easily with Jackson framework
+ * Internal REST wrapper for a log record will be used to emit JSON easily
+ * with Jackson framework.
  *
  * @author ludo
  */
 public class LogRecord {
 
-    long recordNumber;
-    OffsetDateTime loggedDateTime;
-    String loggedLevel;
-    String productName;
-    String loggerName;
-    String nameValuePairs;
-    String messageID;
-    String message;
+    private long recordNumber;
+    private OffsetDateTime loggedDateTime;
+    private String loggedLevel;
+    private String productName;
+    private String loggerName;
+    private String nameValuePairs;
+    private String messageID;
+    private String message;
+
+    public LogRecord() { }
+
+    public LogRecord(List<? extends Serializable> logRecord) {
+        int fieldIndex = 0;
+
+        this.recordNumber = (Long) logRecord.get(fieldIndex++);
+        this.loggedDateTime = (OffsetDateTime) logRecord.get(fieldIndex++);
+        this.loggedLevel = (String) logRecord.get(fieldIndex++);
+        this.productName = (String) logRecord.get(fieldIndex++);
+        this.loggerName = (String) logRecord.get(fieldIndex++);
+        this.nameValuePairs = (String) logRecord.get(fieldIndex++);
+        this.messageID = (String) logRecord.get(fieldIndex++);
+        this.message = (String) logRecord.get(fieldIndex);
+    }
 
     public String getMessage() {
         return message;
@@ -120,65 +123,51 @@ public class LogRecord {
         this.recordNumber = recordNumber;
     }
 
-    public String toJSON() {
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("recordNumber", recordNumber);
-            obj.put("loggedDateTimeInMS", loggedDateTime == null ? null : loggedDateTime.toInstant().toEpochMilli());
-            obj.put("loggedLevel", loggedLevel);
-            obj.put("productName", productName);
-            obj.put("loggerName", loggerName);
-            obj.put("nameValuePairs", nameValuePairs);
-            obj.put("messageID", messageID);
-            obj.put("Message", message);
-        } catch (JSONException ex) {
-            throw new RuntimeException(ex);
-        }
-        return obj.toString();
+    public JSONObject toJSONObject() throws JSONException {
+        return new JSONObject()
+                .put("recordNumber", recordNumber)
+                .put("loggedDateTimeInMS",
+                        loggedDateTime == null ? null : loggedDateTime.toInstant().toEpochMilli())
+                .put("loggedLevel", loggedLevel)
+                .put("productName", productName)
+                .put("loggerName", loggerName)
+                .put("nameValuePairs", nameValuePairs)
+                .put("messageID", messageID)
+                .put("Message", message);
     }
 
-    public String toXML() {
+    public void writeXml(XMLStreamWriter writer) throws XMLStreamException {
+        boolean hasMessage = message != null && !message.isEmpty();
 
-        try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
+        if (hasMessage) {
+            writer.writeStartElement("record");
+        } else {
+            writer.writeEmptyElement("record");
+        }
 
-            Document d = db.newDocument();
-
-            Element result = d.createElement("record");
-            result.setAttribute("recordNumber", Long.toString(recordNumber));
-            result.setAttribute("loggedDateTimeInMS",
+        writer.writeAttribute("recordNumber", Long.toString(recordNumber));
+        writer.writeAttribute("loggedDateTimeInMS",
                 loggedDateTime == null ? "" : Long.toString(loggedDateTime.toInstant().toEpochMilli()));
-            result.setAttribute("loggedLevel", loggedLevel);
-            result.setAttribute("productName", productName);
-            result.setAttribute("loggerName", loggerName);
-            result.setAttribute("nameValuePairs", nameValuePairs);
-            result.setAttribute("messageID", messageID);
-            result.setNodeValue(message);
-            d.appendChild(result);
-            return xmlToString(d);
+        writer.writeAttribute("loggedLevel", loggedLevel);
+        writer.writeAttribute("productName", productName);
+        writer.writeAttribute("loggerName", loggerName);
+        writer.writeAttribute("nameValuePairs", nameValuePairs);
+        writer.writeAttribute("messageID", messageID);
 
-        } catch (ParserConfigurationException pex) {
-            throw new RuntimeException(pex);
+        if (hasMessage) {
+            writer.writeCharacters(message);
+            writer.writeEndElement();
         }
     }
 
-    private String xmlToString(Node node) {
-        try {
-            Source source = new DOMSource(node);
-            StringWriter stringWriter = new StringWriter();
-            Result result = new StreamResult(stringWriter);
-            TransformerFactory factory = TransformerFactory.newInstance();
-            Transformer transformer = factory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-
-            transformer.transform(source, result);
-            return stringWriter.getBuffer().toString();
-        } catch (TransformerConfigurationException e) {
-            //  e.printStackTrace();
-        } catch (TransformerException e) {
-            //  e.printStackTrace();
-        }
-        return null;
+    public void writeCsv(StringBuilder sb) {
+        sb.append(recordNumber).append(",");
+        sb.append(loggedDateTime == null ?
+                  "" : Long.toString(loggedDateTime.toInstant().toEpochMilli())).append(",");
+        sb.append(loggedLevel).append(",");
+        sb.append(productName).append(",");
+        sb.append(loggerName).append(",");
+        sb.append(nameValuePairs).append(",");
+        sb.append("\"").append(message.replace("\"", "\"\"")).append("\"");
     }
 }

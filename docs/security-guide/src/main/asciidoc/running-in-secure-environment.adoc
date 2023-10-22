@@ -452,6 +452,14 @@ give them unique names that cannot be easily guessed.
 includes a single account for user "admin" and an empty password. For
 production environments this default is inherently unsecure, and you
 should set a password for admin.
+
+|Run on the latest JDK update. |Refer to the vendor of your JDK for a 
+list of security-related updates.
+
+|Disabling any public facing listeners if they are not used in any
+way. |By default, {productName} opens several listener ports upon
+startup, but you can restrict this by disabling unused listeners. This
+step helps prevent access from malicious attackers.
 |===
 
 

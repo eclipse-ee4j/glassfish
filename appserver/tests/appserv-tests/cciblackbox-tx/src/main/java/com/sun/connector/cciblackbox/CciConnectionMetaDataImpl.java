@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,52 +17,52 @@
 
 package com.sun.connector.cciblackbox;
 
-import java.sql.SQLException;
-
 import jakarta.resource.ResourceException;
 import jakarta.resource.cci.ConnectionMetaData;
 import jakarta.resource.spi.EISSystemException;
+
+import java.sql.SQLException;
 
 /**
  * @author Sheetal Vartak
  */
 public class CciConnectionMetaDataImpl implements ConnectionMetaData {
 
-  private CciManagedConnection mc;
+    private final CciManagedConnection mc;
 
-  public CciConnectionMetaDataImpl(CciManagedConnection mc) {
-    this.mc = mc;
-  }
+    public CciConnectionMetaDataImpl(CciManagedConnection mc) {
+        this.mc = mc;
+    }
 
-  public String getEISProductName() throws ResourceException {
-    try {
-      java.sql.Connection con = mc.getJdbcConnection();
-      return con.getMetaData().getDatabaseProductName();
-    }
-    catch (SQLException ex) {
-      ResourceException re = new EISSystemException(ex.getMessage());
-      re.setLinkedException(ex);
-      throw re;
-    }
-  }
 
-  public String getEISProductVersion() throws ResourceException {
-    try {
-      java.sql.Connection con = mc.getJdbcConnection();
-      return con.getMetaData().getDatabaseProductVersion();
+    @Override
+    public String getEISProductName() throws ResourceException {
+        try {
+            java.sql.Connection con = mc.getJdbcConnection();
+            return con.getMetaData().getDatabaseProductName();
+        } catch (SQLException ex) {
+            throw new EISSystemException(ex.getMessage(), ex);
+        }
     }
-    catch (SQLException ex) {
-      ResourceException re = new EISSystemException(ex.getMessage());
-      re.setLinkedException(ex);
-      throw re;
-    }
-  }
 
-  public String getUserName() throws ResourceException {
-    if (mc.isDestroyed()) {
-      throw new ResourceException("ManagedConnection has been destroyed");
+
+    @Override
+    public String getEISProductVersion() throws ResourceException {
+        try {
+            java.sql.Connection con = mc.getJdbcConnection();
+            return con.getMetaData().getDatabaseProductVersion();
+        } catch (SQLException ex) {
+            throw new EISSystemException(ex.getMessage(), ex);
+        }
     }
-    return mc.getPasswordCredential().getUserName();
-  }
+
+
+    @Override
+    public String getUserName() throws ResourceException {
+        if (mc.isDestroyed()) {
+            throw new ResourceException("ManagedConnection has been destroyed");
+        }
+        return mc.getPasswordCredential().getUserName();
+    }
 
 }

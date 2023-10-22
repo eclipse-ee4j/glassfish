@@ -37,11 +37,15 @@ In this example we assume 7.0.3.
 20. If everything is OK, then merge 7.0.3 branch into master via PR
 21. Delete the 7.0.3 branch after merge
 22. Upload the new release to the Eclipse download folder. 
-    go to [glassfish_copy-staging-to-downloads](https://ci.eclipse.org/glassfish/view/GlassFish/job/glassfish_copy-staging-to-downloads/build?delay=0sec)
+    Go to [glassfish_copy-staging-to-downloads](https://ci.eclipse.org/glassfish/view/GlassFish/job/glassfish_copy-staging-to-downloads/build?delay=0sec)
     - Enter the version to copy; 7.0.3
     - click [Build] button 
 23. Create the release on Github: https://github.com/eclipse-ee4j/glassfish/releases click "draft a new release"
 24. Create the release on Eclipse: https://projects.eclipse.org/projects/ee4j.glassfish click "create a new release"
-25: Create the release on Glassfish.org: do a PR for updating the versions here: https://github.com/eclipse-ee4j/glassfish/tree/master/docs/website/src/main/resources
-
-
+25. Create the release on Glassfish.org. Do a PR for the **master** branch with: 
+    -  an update for the website in [`docs/website/src/main/resources`](https://github.com/eclipse-ee4j/glassfish/tree/master/docs/website/src/main/resources):
+        - in `download_gf7.md`, create a section for the new version at the top, based on the previous version. Update the info based on the release notes in github, e.g. https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.3
+        - in `download.md`, replace information in the "Eclipse GlassFish 7.x" section at the top with info for the new version in `download_gf7.md`
+        - in `README.md`, add a new piece into "Latest News", with the date of the release in Github, based on the info in `download.md`
+    - with an update for the docs:
+        - Update the property `glassfish.version.7x` with the released version in [docs/pom.xml](https://github.com/eclipse-ee4j/glassfish/blob/master/docs/pom.xml)

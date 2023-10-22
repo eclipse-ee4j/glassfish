@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +16,6 @@
  */
 
 package com.sun.enterprise.security.auth.login;
-
-import com.sun.enterprise.security.SecurityLoggerInfo;
-import com.sun.enterprise.security.UsernamePasswordStore;
-import com.sun.enterprise.security.auth.login.common.PasswordCredential;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import java.util.Map;
 import java.util.logging.Level;
@@ -39,11 +34,16 @@ import javax.security.auth.spi.LoginModule;
 import org.glassfish.security.common.UserNameAndPassword;
 import org.glassfish.security.common.UserPrincipal;
 
+import com.sun.enterprise.security.SecurityLoggerInfo;
+import com.sun.enterprise.security.UsernamePasswordStore;
+import com.sun.enterprise.security.auth.login.common.PasswordCredential;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
 /**
  * This sample LoginModule authenticates users with a password.
  * <p>
- * If testUser successfully authenticates itself, a {@link UserPrincipal} with the testUser's
- * username is added to the Subject.
+ * If testUser successfully authenticates itself, a {@link UserPrincipal} with the testUser's username is added to the
+ * Subject.
  *
  * @author Harpreet Singh (harpreet.singh@sun.com)
  */
@@ -53,21 +53,23 @@ public class ClientPasswordLoginModule implements LoginModule {
 
     private static final String DEFAULT_REALMNAME = "default";
     private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ClientPasswordLoginModule.class);
-    // initial state
+
+    public static final String LOGIN_NAME = "j2eelogin.name";
+    public static final String LOGIN_PASSWORD = "j2eelogin.password";
+
+    // Initial state
     private Subject subject;
     private CallbackHandler callbackHandler;
 
-    // the authentication status
+    // The authentication status
     private boolean succeeded;
     private boolean commitSucceeded;
 
-    // username and password
+    // Username and password
     private String username;
     private char[] password;
 
     private UserPrincipal userPrincipal;
-    public static final String LOGIN_NAME = "j2eelogin.name";
-    public static final String LOGIN_PASSWORD = "j2eelogin.password";
 
     /**
      * Initialize this <code>LoginModule</code>.
@@ -77,17 +79,18 @@ public class ClientPasswordLoginModule implements LoginModule {
      * @param subject the <code>Subject</code> to be authenticated.
      * <p>
      *
-     * @param callbackHandler a <code>CallbackHandler</code> for communicating with the end user (prompting for usernames and
-     * passwords, for example).
+     * @param callbackHandler a <code>CallbackHandler</code> for communicating with the end user (prompting for usernames
+     * and passwords, for example).
      * <p>
      *
      * @param sharedState shared <code>LoginModule</code> state.
      * <p>
      *
-     * @param options options specified in the login <code>Configuration</code> for this particular <code>LoginModule</code>.
+     * @param options options specified in the login <code>Configuration</code> for this particular
+     * <code>LoginModule</code>.
      */
     @Override
-    public void initialize(Subject subject, CallbackHandler callbackHandler, Map sharedState, Map options) {
+    public void initialize(Subject subject, CallbackHandler callbackHandler, Map<String,?> sharedState, Map<String,?> options) {
         this.subject = subject;
         this.callbackHandler = callbackHandler;
     }
@@ -110,7 +113,7 @@ public class ClientPasswordLoginModule implements LoginModule {
         // prompt for a username and password
         if (callbackHandler == null) {
             String failure = localStrings.getLocalString("login.nocallback",
-                "Error: no CallbackHandler available to garner authentication information from the user");
+                    "Error: no CallbackHandler available to garner authentication information from the user");
             throw new LoginException(failure);
         }
 
@@ -124,6 +127,7 @@ public class ClientPasswordLoginModule implements LoginModule {
             uname = System.getProperty(LOGIN_NAME);
             doSet = true;
         }
+
         if (pswd == null) {
             if (System.getProperty(LOGIN_PASSWORD) != null) {
                 pswd = System.getProperty(LOGIN_PASSWORD).toCharArray();
@@ -171,12 +175,12 @@ public class ClientPasswordLoginModule implements LoginModule {
                 throw new LoginException(ioe.toString());
             } catch (UnsupportedCallbackException uce) {
                 String nocallback = localStrings.getLocalString("login.callback",
-                    "Error: Callback not available to garner authentication information from user(CallbackName):");
+                        "Error: Callback not available to garner authentication information from user(CallbackName):");
                 throw new LoginException(nocallback + uce.getCallback().toString());
             }
         }
 
-        // by default -  the client side login module will always say
+        // by default - the client side login module will always say
         // that the login successful. The actual login will take place
         // on the server side.
 
@@ -185,17 +189,15 @@ public class ClientPasswordLoginModule implements LoginModule {
         return true;
     }
 
-
     /**
      * <p>
-     * This method is called if the LoginContext's overall authentication succeeded (the relevant
-     * REQUIRED, REQUISITE, SUFFICIENT and OPTIONAL LoginModules succeeded).
+     * This method is called if the LoginContext's overall authentication succeeded (the relevant REQUIRED, REQUISITE,
+     * SUFFICIENT and OPTIONAL LoginModules succeeded).
      * <p>
-     * If this LoginModule's own authentication attempt succeeded (checked by retrieving the private
-     * state saved by the <code>login</code> method), then this method associates a
-     * {@link UserPrincipal} with the <code>Subject</code> located in the <code>LoginModule</code>.
-     * If this LoginModule's own authentication attempted failed, then this method removes any state
-     * that was originally saved.
+     * If this LoginModule's own authentication attempt succeeded (checked by retrieving the private state saved by the
+     * <code>login</code> method), then this method associates a {@link UserPrincipal} with the <code>Subject</code> located
+     * in the <code>LoginModule</code>. If this LoginModule's own authentication attempted failed, then this method removes
+     * any state that was originally saved.
      *
      * @exception LoginException if the commit fails.
      * @return true if this LoginModule's own login and commit attempts succeeded, or false otherwise.
@@ -205,6 +207,7 @@ public class ClientPasswordLoginModule implements LoginModule {
         if (succeeded == false) {
             return false;
         }
+
         userPrincipal = new UserNameAndPassword(username);
         if (!subject.getPrincipals().contains(userPrincipal)) {
             subject.getPrincipals().add(userPrincipal);
@@ -224,17 +227,17 @@ public class ClientPasswordLoginModule implements LoginModule {
         }
         password = null;
         commitSucceeded = true;
+
         return true;
     }
 
-
     /**
-     * This method is called if the LoginContext's overall authentication failed. (the relevant
-     * REQUIRED, REQUISITE, SUFFICIENT and OPTIONAL LoginModules did not succeed).
+     * This method is called if the LoginContext's overall authentication failed. (the relevant REQUIRED, REQUISITE,
+     * SUFFICIENT and OPTIONAL LoginModules did not succeed).
+     *
      * <p>
-     * If this LoginModule's own authentication attempt succeeded (checked by retrieving the private
-     * state saved by the <code>login</code> and <code>commit</code> methods), then this method
-     * cleans up any state that was originally saved.
+     * If this LoginModule's own authentication attempt succeeded (checked by retrieving the private state saved by the
+     * <code>login</code> and <code>commit</code> methods), then this method cleans up any state that was originally saved.
      *
      * @exception LoginException if the abort fails.
      * @return false if this LoginModule's own login and/or commit attempts failed, and true otherwise.
@@ -243,7 +246,8 @@ public class ClientPasswordLoginModule implements LoginModule {
     public boolean abort() throws LoginException {
         if (succeeded == false) {
             return false;
-        } else if (succeeded && !commitSucceeded) {
+        }
+        if (succeeded && !commitSucceeded) {
             // login succeeded but overall authentication failed
             succeeded = false;
             username = null;
@@ -259,15 +263,14 @@ public class ClientPasswordLoginModule implements LoginModule {
             // but someone else's commit failed
             logout();
         }
+
         return true;
     }
-
 
     /**
      * Logout the user.
      * <p>
-     * This method removes the {@link UserPrincipal} that was added by the <code>commit</code>
-     * method.
+     * This method removes the {@link UserPrincipal} that was added by the <code>commit</code> method.
      *
      * @exception LoginException if the logout fails.
      * @return true in all cases since this <code>LoginModule</code> should not be ignored.

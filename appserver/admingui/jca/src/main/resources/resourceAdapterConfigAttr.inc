@@ -1,5 +1,6 @@
 <!--
 
+    Copyright (c) 2023 Contributors to the Eclipse Foundation
     Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -18,7 +19,7 @@
 
 <!-- jca/resourceAdapterConfigAttr.inc -->
 <!-- used by resourceAdapterConfigNew.jsf and resourceAdapterConfigEdit.jsf -->
-   
+
 #include "/common/applications/applicationHandlers.inc"
 <sun:propertySheet id="propertySheet">
     <!-- Text Field section -->
@@ -59,10 +60,10 @@
                 <!afterCreate
                     getClientId(component="$this{component}" clientId=>$page{dropdownTextId});
                 />
-           </sun:dropDown>
-           "<br />
-           <sun:radioButton id="optB"  rendered="#{!edit}" name="textOption" onClick="navigateToPage('#{pageSession.nameDropDown}', 'text');" />
-            <sun:textField id="nameNewText" rendered="#{!edit}" columns="$int{55}" maxLength="#{sessionScope.fieldLengths['maxLength.resourceAdapterConfig.Name']}" text="#{pageSession.nameText}" >
+            </sun:dropDown>
+            "<br />
+            <sun:radioButton id="optB"  rendered="#{!edit}" name="textOption" onClick="navigateToPage('#{pageSession.nameDropDown}', 'text');" />
+             <sun:textField id="nameNewText" rendered="#{!edit}" columns="$int{55}" maxLength="#{sessionScope.fieldLengths['maxLength.resourceAdapterConfig.Name']}" text="#{pageSession.nameText}" >
                 <!afterCreate
                     getClientId(component="$this{component}" clientId=>$page{textId});
                 />

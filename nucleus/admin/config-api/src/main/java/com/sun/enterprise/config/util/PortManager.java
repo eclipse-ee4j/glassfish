@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,11 +22,17 @@ import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.SystemProperty;
-import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.net.*;
+
 import java.beans.PropertyVetoException;
-import java.util.*;
-import java.util.logging.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.jvnet.hk2.config.TransactionFailure;
 
 /**
@@ -47,7 +54,7 @@ public final class PortManager {
 
             // bnevins 7-23-2010
             // we are probably being called from inside the create decorator for a server.
-            // the server is not yet committed.  We can't call ducktype methods
+            // the server is not yet committed.  We can't call default methods
             // on the server yet.  So we do this self-serve call to get the host
 
             //host = newServer.getHost();

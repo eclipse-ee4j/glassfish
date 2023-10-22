@@ -17,8 +17,8 @@
 package com.sun.enterprise.v3.admin;
 
 import javax.management.MBeanServer;
-import javax.management.MBeanServerDelegate;
 import javax.management.MBeanServerBuilder;
+import javax.management.MBeanServerDelegate;
 
 /**
  * AppServer MBSBuilder for PE set as the value for javax.management.initial.builder
@@ -26,12 +26,12 @@ import javax.management.MBeanServerBuilder;
  * and creates MBS with app server interceptors
  */
 public class AppServerMBeanServerBuilder extends javax.management.MBeanServerBuilder {
-    private static final MBeanServerBuilder defaultBuilder = new MBeanServerBuilder();
-    private static MBeanServer _defaultMBeanServer = null;
 
-     public MBeanServer newMBeanServer(String defaultDomain,
-                                    MBeanServer outer,
-                                    MBeanServerDelegate delegate) {
+    private static final MBeanServerBuilder defaultBuilder = new MBeanServerBuilder();
+    private static MBeanServer _defaultMBeanServer;
+
+     @Override
+    public MBeanServer newMBeanServer(String defaultDomain, MBeanServer outer, MBeanServerDelegate delegate) {
          MBeanServer mbeanServer;
          synchronized (AppServerMBeanServerBuilder.class) {
              if ( _defaultMBeanServer == null ) {
@@ -43,19 +43,21 @@ public class AppServerMBeanServerBuilder extends javax.management.MBeanServerBui
                      defaultDomain, outer,  delegate);
              }
          }
+
          return mbeanServer;
      }
 
-     protected MBeanServer newAppServerMBeanServer(String defaultDomain,
-                                                MBeanServerDelegate delegate) {
+     protected MBeanServer newAppServerMBeanServer(String defaultDomain, MBeanServerDelegate delegate) {
         final DynamicInterceptor result = new DynamicInterceptor();
         final MBeanServer jmxMBS = defaultBuilder.newMBeanServer(
             defaultDomain, result, delegate);
+
         result.setDelegateMBeanServer( jmxMBS );
 
         return result;
      }
 
+    @Override
     public MBeanServerDelegate newMBeanServerDelegate()  {
         return defaultBuilder.newMBeanServerDelegate();
      }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,19 +18,19 @@
 package com.sun.enterprise.iiop.security;
 
 import com.sun.corba.ee.org.omg.CSIIOP.CompoundSecMech;
-import java.io.*;
-import java.net.Socket;
-
 import com.sun.corba.ee.spi.ior.IOR;
 import com.sun.corba.ee.spi.transport.SocketInfo;
 
+import java.io.Serializable;
+import java.net.Socket;
+
 public final class ConnectionContext implements Serializable {
-    private CompoundSecMech mechanism = null;
-    private boolean sslClientAuth = false;
-    private boolean ssl = false;
-    private IOR ior = null;
-    private transient Socket socket = null;
-    private transient SocketInfo endpoint = null;
+    private CompoundSecMech mechanism;
+    private boolean sslClientAuth;
+    private boolean ssl;
+    private IOR ior;
+    private transient Socket socket;
+    private transient SocketInfo endpoint;
 
     /**
      * Default constructor.
@@ -123,6 +124,7 @@ public final class ConnectionContext implements Serializable {
         socket = s;
     }
 
+    @Override
     public String toString() {
         String s = "sslClientAuth=" + sslClientAuth;
         s = s + " SSL=" + ssl;

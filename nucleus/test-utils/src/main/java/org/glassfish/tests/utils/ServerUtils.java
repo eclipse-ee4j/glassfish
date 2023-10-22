@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,6 +26,9 @@ import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
+import org.glassfish.embeddable.CommandResult;
+import org.glassfish.embeddable.GlassFish;
+import org.glassfish.embeddable.GlassFishException;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
@@ -38,7 +41,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class ServerUtils {
 
     /**
-     * Tries to alocate a free local port.
+     * Tries to allocate a free local port.
      *
      * @return a free local port number.
      * @throws IllegalStateException if it fails for 20 times
@@ -78,8 +81,8 @@ public class ServerUtils {
     /**
      * Creates a simple war file made of provided classes.
      *
-     * @param warFile
-     * @param classes
+     * @param warFile the WAR file
+     * @param classes a classes to be included to the WAR file
      * @return file usable for deployment.
      */
     public static File createWar(final File warFile, final Class<?>... classes) {
@@ -98,20 +101,30 @@ public class ServerUtils {
      * Expects there is a service listening and returning textual response.
      * Therefore this is usable just for simple servlets.
      *
-     * @param url
+     * @param url target URL
      * @return content from the url.
-     * @throws IOException
+     * @throws IOException if an error occurred
      */
     public static String download(final URL url) throws IOException {
         final Object object = url.getContent();
         if (object instanceof InputStream) {
-            final InputStream input = (InputStream) object;
-            try (Scanner scanner = new Scanner(input, StandardCharsets.UTF_8.name())) {
+            try (InputStream input = (InputStream) object; Scanner scanner = new Scanner(input, StandardCharsets.UTF_8)) {
                 return scanner.nextLine();
-            } finally {
-                input.close();
             }
         }
         return fail("Expected input stream, but received this: " + object);
+    }
+
+    /**
+     * Executes a command on embedded GlassFish instance.
+     *
+     * @param glassfish an embedded GlassFish instance
+     * @param cmd a command to run
+     * @param params command parameters
+     * @return result of command execution
+     * @throws GlassFishException if an error occurred
+     */
+    public static CommandResult runCommand(GlassFish glassfish, String cmd, String params) throws GlassFishException {
+        return glassfish.getCommandRunner().run(cmd, params);
     }
 }

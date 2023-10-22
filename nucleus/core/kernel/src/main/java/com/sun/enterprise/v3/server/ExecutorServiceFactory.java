@@ -16,12 +16,12 @@
 
 package com.sun.enterprise.v3.server;
 
-import org.glassfish.hk2.api.Factory;
-import org.jvnet.hk2.annotations.Service;
-import java.util.concurrent.ThreadFactory;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+
+import org.glassfish.hk2.api.Factory;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Singleton executor service factory.
@@ -31,22 +31,26 @@ import java.util.concurrent.Executors;
 @Service
 public class ExecutorServiceFactory implements Factory<ExecutorService> {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see org.glassfish.hk2.api.Factory#provide()
      */
     @Override
     public ExecutorService provide() {
         return Executors.newCachedThreadPool(new ThreadFactory() {
+            @Override
             public Thread newThread(Runnable r) {
                 Thread t = Executors.defaultThreadFactory().newThread(r);
                 t.setDaemon(true);
                 return t;
             }
-        }
-        );
+        });
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see org.glassfish.hk2.api.Factory#dispose(java.lang.Object)
      */
     @Override

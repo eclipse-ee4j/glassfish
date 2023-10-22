@@ -16,35 +16,40 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.config.serverbeans.*;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.SystemPropertyConstants;
+import java.beans.PropertyVetoException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
+import org.glassfish.api.admin.AccessRequired;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.AdminCommandSecurity;
 import org.glassfish.api.admin.ExecuteOn;
 import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
-import jakarta.inject.Inject;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.Dom;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
-import org.jvnet.hk2.config.Dom;
 import org.jvnet.hk2.config.types.Property;
 
-import java.beans.PropertyVetoException;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import org.glassfish.api.admin.AccessRequired;
-import org.glassfish.api.admin.AdminCommandSecurity;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.SystemPropertyBag;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
 
 /**
  * Delete System Property Command
@@ -63,8 +68,7 @@ import org.glassfish.api.admin.AdminCommandSecurity;
 @TargetType(value={CommandTarget.CLUSTER, CommandTarget.CLUSTERED_INSTANCE,
 CommandTarget.CONFIG, CommandTarget.DAS, CommandTarget.DOMAIN, CommandTarget.STANDALONE_INSTANCE})
 @I18n("delete.system.property")
-public class DeleteSystemProperty implements AdminCommand,
-        AdminCommandSecurity.Preauthorization, AdminCommandSecurity.AccessCheckProvider {
+public class DeleteSystemProperty implements AdminCommand, AdminCommandSecurity.Preauthorization, AdminCommandSecurity.AccessCheckProvider {
 
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeleteSystemProperty.class);
 
@@ -95,7 +99,7 @@ public class DeleteSystemProperty implements AdminCommand,
 
     @Override
     public Collection<? extends AccessRequired.AccessCheck> getAccessChecks() {
-        final Collection<AccessRequired.AccessCheck> result = new ArrayList<AccessRequired.AccessCheck>();
+        final Collection<AccessRequired.AccessCheck> result = new ArrayList<>();
         result.add(new AccessRequired.AccessCheck(AccessRequired.Util.resourceNameFromConfigBeanProxy(spb), "update"));
         return result;
     }
@@ -106,6 +110,7 @@ public class DeleteSystemProperty implements AdminCommand,
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
         Property domainProp = domain.getProperty("administrative.domain.name");
@@ -118,8 +123,8 @@ public class DeleteSystemProperty implements AdminCommand,
             return;
         }
         if (definitions(propName) == 1) { //implying user is deleting the "last" definition of this property
-            List<String> refs = new ArrayList<String>();
-            List<Dom> doms = new ArrayList<Dom>();
+            List<String> refs = new ArrayList<>();
+            List<Dom> doms = new ArrayList<>();
             if ("domain".equals(target) || target.equals(domainName)) {
                 for (Server s : domain.getServers().getServer()) {
                     Config config = s.getConfig();
@@ -189,6 +194,7 @@ public class DeleteSystemProperty implements AdminCommand,
         //now we are sure that the target exits in the config, just remove the given property
         try {
             ConfigSupport.apply(new SingleConfigCode<SystemPropertyBag>() {
+                @Override
                 public Object run(SystemPropertyBag param) throws PropertyVetoException, TransactionFailure {
                     param.getSystemProperty().remove(param.getSystemProperty(propName));
                     return param;
@@ -208,18 +214,21 @@ public class DeleteSystemProperty implements AdminCommand,
         //are there multiple <system-property> definitions for the given name?
         int defs = 0;
         SystemPropertyBag bag = domain;
-        if (bag.containsProperty(propName))
+        if (bag.containsProperty(propName)) {
             defs++;
+        }
 
         bag = domain.getServerNamed(target);
         if (bag != null && bag.containsProperty(propName)) {
             defs++;
             Server server = (Server)bag;
             Cluster cluster = server.getCluster();
-            if (cluster != null && cluster.containsProperty(propName))
+            if (cluster != null && cluster.containsProperty(propName)) {
                 defs++;
-            if (server.getConfig().containsProperty(propName))
+            }
+            if (server.getConfig().containsProperty(propName)) {
                 defs++;
+            }
         }
 
         bag = domain.getClusterNamed(target);
@@ -227,13 +236,15 @@ public class DeleteSystemProperty implements AdminCommand,
             defs++;
             Cluster c = (Cluster)bag;
             Config clusterConfig = domain.getConfigNamed(c.getConfigRef());
-            if (clusterConfig.containsProperty(propName))
+            if (clusterConfig.containsProperty(propName)) {
                 defs++;
+            }
         }
 
         bag = domain.getConfigNamed(target);
-        if (bag != null && bag.containsProperty(propName))
+        if (bag != null && bag.containsProperty(propName)) {
             defs++;
+        }
 
         return defs;
     }
@@ -257,7 +268,9 @@ public class DeleteSystemProperty implements AdminCommand,
             }
             if (nodes != null) {
                 for (Dom node : nodes)
+                 {
                     listRefs(node, value, refs);  //beware: recursive call ...
+                }
             }
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,7 +26,6 @@ import jakarta.validation.constraints.Pattern;
 import java.beans.PropertyVetoException;
 
 import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.DuckTyped;
 
 @ResourceNameConstraint(message = "{resourcename.invalid.character}", payload = BindableResource.class)
 public interface BindableResource extends Resource, Payload {
@@ -34,9 +33,9 @@ public interface BindableResource extends Resource, Payload {
     String PATTERN_JNDI = "[^',][^',\\\\]*";
 
     /**
-     * Gets the value of the jndiName property.
+     * Gets the value of the {@code jndiName} property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(key = true)
     @NotNull
@@ -44,35 +43,29 @@ public interface BindableResource extends Resource, Payload {
     String getJndiName();
 
     /**
-     * Sets the value of the jndiName property.
+     * Sets the value of the {@code jndiName} property.
      *
-     * @param value allowed object is {@link String }
+     * @param jndiName allowed object is {@link String}
      */
-    void setJndiName(String value) throws PropertyVetoException;
+    void setJndiName(String jndiName) throws PropertyVetoException;
 
     /**
-     * Gets the value of the enabled property.
+     * Gets the value of the {@code enabled} property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
     String getEnabled();
 
     /**
-     * Sets the value of the enabled property.
+     * Sets the value of the {@code enabled} property.
      *
-     * @param value allowed object is {@link String }
+     * @param enabled allowed object is {@link String}
      */
-    void setEnabled(String value) throws PropertyVetoException;
+    void setEnabled(String enabled) throws PropertyVetoException;
 
     @Override
-    @DuckTyped
-    String getIdentity();
-
-    class Duck {
-        public static String getIdentity(BindableResource resource) {
-            return resource.getJndiName();
-        }
+    default String getIdentity() {
+        return getJndiName();
     }
-
 }

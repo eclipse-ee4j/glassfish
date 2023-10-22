@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,25 +25,25 @@ import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
  */
 public class DigestCredentials {
 
-    private String realmName = "";
-    private String username = "";
-    private DigestAlgorithmParameter[] params = null;
+    private final String realmName;
+    private final String username;
+    private final DigestAlgorithmParameter[] parameters;
 
-    public DigestCredentials(String realmName, String username, DigestAlgorithmParameter[] params) {
+    public DigestCredentials(String realmName, String username, DigestAlgorithmParameter[] parameters) {
         this.realmName = realmName;
         this.username = username;
-        this.params = params;
+        this.parameters = parameters;
     }
 
     public String getRealmName() {
-        return this.realmName;
+        return realmName;
     }
 
     public String getUserName() {
-        return this.username;
+        return username;
     }
 
     public DigestAlgorithmParameter[] getParameters() {
-        return params;
+        return parameters;
     }
 }

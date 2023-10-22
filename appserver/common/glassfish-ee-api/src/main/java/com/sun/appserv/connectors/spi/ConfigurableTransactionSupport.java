@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,12 +18,10 @@
 package com.sun.appserv.connectors.spi;
 
 /**
- * An optional interface that could be implemented by a resource adapter's
- * ManagedConnectionFactory to be notified of the configured "transaction-support"
- * of the connection pool associated with the ManagedConnectionFactory instance
+ * An optional interface that could be implemented by a resource adapter's ManagedConnectionFactory to be notified of
+ * the configured "transaction-support" of the connection pool associated with the ManagedConnectionFactory instance
  */
 public interface ConfigurableTransactionSupport {
-    public void setTransactionSupport(com.sun.appserv.connectors.spi.TransactionSupport ts);
+    void setTransactionSupport(TransactionSupport ts);
 
 }
-

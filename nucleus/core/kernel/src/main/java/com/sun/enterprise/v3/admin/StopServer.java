@@ -38,9 +38,10 @@ public class StopServer {
      * <li>LookupManager is flushed.
      * </ol>
      */
-    protected final void doExecute(ServiceLocator habitat, ServerEnvironment env, boolean force) {
+    protected final void doExecute(ServiceLocator serviceLocator, ServerEnvironment serverEnvironment, boolean force) {
         try {
             KernelLoggerInfo.getLogger().info(KernelLoggerInfo.serverShutdownInit);
+
             // Don't shutdown GlassFishRuntime, as that can bring the OSGi framework down which is wrong
             // when we are embedded inside an existing runtime. So, just stop the glassfish instance that
             // we are supposed to stop. Leave any cleanup to some other code.
@@ -48,11 +49,12 @@ public class StopServer {
             // get the GlassFish object - we have to wait in case startup is still in progress
             // This is a temporary work-around until HK2 supports waiting for the service to
             // show up in the ServiceLocator.
-            GlassFish gfKernel = habitat.getService(GlassFish.class);
+            GlassFish gfKernel = serviceLocator.getService(GlassFish.class);
             while (gfKernel == null) {
                 Thread.yield();
-                gfKernel = habitat.getService(GlassFish.class);
+                gfKernel = serviceLocator.getService(GlassFish.class);
             }
+
             // gfKernel is absolutely positively for-sure not null.
             gfKernel.stop();
         } catch (Throwable t) {

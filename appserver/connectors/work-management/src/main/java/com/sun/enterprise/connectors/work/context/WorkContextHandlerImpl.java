@@ -38,6 +38,9 @@ import jakarta.resource.spi.work.WorkContextProvider;
 import jakarta.resource.spi.work.WorkException;
 import jakarta.resource.spi.work.WorkRejectedException;
 
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.WARNING;
+
 import java.io.Serializable;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -124,49 +127,6 @@ public class WorkContextHandlerImpl implements WorkContextHandler {
             publish = true)
     private static final String RAR_USE_SUPER_WORK_CONTEXT = "AS-RAR-05010";
 
-    @Inject
-    private ConnectorRuntime runtime ;
-    private ClassLoader rarCL;
-
-
-    public WorkContextHandlerImpl(){
-    }
-
-    public WorkContextHandlerImpl(ConnectorRuntime runtime, ClassLoader cl) {
-        this.runtime = runtime;
-        this.rarCL = cl;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void init(String raName, ClassLoader cl){
-        this.rarCL = cl;
-    }
-
-    //TODO V3 setting scope as per-lookup and this variable seems to cache over multiple invocations ?
-    private final Set<WorkContext> validContexts = new HashSet<>();
-
-    /**
-     * indicates whether the provided workContextClass is supported by the container
-     *
-     * @param strict                 indicates whether the type-check need to be strict or not i.e.,
-     *                               exact type or its super-class type
-     * @param workContextClassName work context class name
-     * @return boolean indicating whether the workContextClass is supported or not
-     */
-    @Override
-    public boolean isContextSupported(boolean strict, String workContextClassName) {
-        boolean result = false;
-        if (strict) {
-            result = canContainerHandleSameContextType(workContextClassName);
-        } else {
-            result = canContainerHandleContext(workContextClassName);
-        }
-        return result;
-    }
-
     @LogMessageInfo(
             message = "Unable to load Work Context class {0}.",
             comment = "Can not find Work Context class.",
@@ -176,6 +136,53 @@ public class WorkContextHandlerImpl implements WorkContextHandler {
             publish = true)
     private static final String RAR_LOAD_WORK_CONTEXT_ERROR = "AS-RAR-05006";
 
+    @LogMessageInfo(
+            message = "Unable to set Security Context.",
+            comment = "Unable to set Security Context.",
+            level = "WARNING", cause = "Unable to set Security Context.",
+            action = "Check the server.log for exceptions",
+            publish = true)
+    private static final String RAR_SETUP_SECURITY_CONTEXT_ERROR = "AS-RAR-05011";
+
+    @Inject
+    private ConnectorRuntime runtime ;
+    private ClassLoader rarClassLoader;
+
+
+    public WorkContextHandlerImpl() {
+    }
+
+    public WorkContextHandlerImpl(ConnectorRuntime runtime, ClassLoader cl) {
+        this.runtime = runtime;
+        this.rarClassLoader = cl;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void init(String raName, ClassLoader cl) {
+        this.rarClassLoader = cl;
+    }
+
+    // TODO V3 setting scope as per-lookup and this variable seems to cache over multiple invocations ?
+    private final Set<WorkContext> validContexts = new HashSet<>();
+
+    /**
+     * indicates whether the provided workContextClass is supported by the container
+     *
+     * @param strict indicates whether the type-check need to be strict or not i.e., exact type or its super-class type
+     * @param workContextClassName work context class name
+     * @return boolean indicating whether the workContextClass is supported or not
+     */
+    @Override
+    public boolean isContextSupported(boolean strict, String workContextClassName) {
+        if (strict) {
+            return canContainerHandleSameContextType(workContextClassName);
+        }
+
+        return canContainerHandleContext(workContextClassName);
+    }
 
     /**
      * checks whether the container can handle the exact context type provided
@@ -185,29 +192,30 @@ public class WorkContextHandlerImpl implements WorkContextHandler {
      */
     private boolean canContainerHandleSameContextType(String workContextClassName) {
         boolean result = false;
-        for (Class workContextClass : containerSupportedContexts) {
-            //TODO JSR-322-WORK-CONTEXT : Still need to do class.equals () ??
-            Class clz = null;
+        for (Class<? extends WorkContext> workContextClass : containerSupportedContexts) {
+            // TODO JSR-322-WORK-CONTEXT : Still need to do class.equals () ??
+            Class<?> clz = null;
             try {
-                clz =  loadClass(workContextClassName);
-
+                clz = loadClass(workContextClassName);
             } catch (ClassNotFoundException cnfe) {
-                logger.log(Level.WARNING, RAR_LOAD_WORK_CONTEXT_ERROR, new Object[]{workContextClassName, cnfe});
+                logger.log(WARNING, RAR_LOAD_WORK_CONTEXT_ERROR, new Object[] { workContextClassName, cnfe });
                 break;
             }
+
             if (workContextClass.equals(clz)) {
                 result = true;
                 debug("Container can handle the context [Strict] : " + workContextClassName);
                 break;
             }
         }
+
         return result;
     }
 
     /**
-     * checks whether the container can handle the contextClass in question.
-     * If the exact class type is not supported, container will look for any of its super-class
-     * If any of the super-class is available, it is indicated as 'can handle'
+     * checks whether the container can handle the contextClass in question. If the exact class type is not supported,
+     * container will look for any of its super-class If any of the super-class is available, it is indicated as 'can
+     * handle'
      *
      * @param contextClassName work context class name
      * @return boolean indicating whether the contextClass is supported or not
@@ -215,7 +223,7 @@ public class WorkContextHandlerImpl implements WorkContextHandler {
     public boolean canContainerHandleContext(String contextClassName) {
         boolean result = false;
 
-        //JSR-322-WORK-CONTEXT First check whether exact 'context-type' is supported.
+        // JSR-322-WORK-CONTEXT First check whether exact 'context-type' is supported.
         if (!canContainerHandleSameContextType(contextClassName)) {
 
             Class context = null;
@@ -224,8 +232,8 @@ public class WorkContextHandlerImpl implements WorkContextHandler {
             } catch (ClassNotFoundException e) {
                 debug("Container cannot load the context class [isAssignable] : " + contextClassName + " ");
             }
-            //TODO JSR-322-WORK-CONTEXT : can we use workContext.getName() ??
-            if(context != null){
+            // TODO JSR-322-WORK-CONTEXT : can we use workContext.getName() ??
+            if (context != null) {
                 for (Class workContextClass : containerSupportedContexts) {
                     if (workContextClass.isAssignableFrom(context)) {
                         result = true;
@@ -233,75 +241,74 @@ public class WorkContextHandlerImpl implements WorkContextHandler {
                         break;
                     }
                 }
-            }else{
-                logger.log(Level.WARNING, RAR_LOAD_WORK_CONTEXT_ERROR, contextClassName);
+            } else {
+                logger.log(WARNING, RAR_LOAD_WORK_CONTEXT_ERROR, contextClassName);
             }
         } else {
             result = true;
         }
+
         return result;
     }
 
-    private Class loadClass(String contextClassName) throws ClassNotFoundException {
-        return rarCL.loadClass(contextClassName);
+    private Class<?> loadClass(String contextClassName) throws ClassNotFoundException {
+        return rarClassLoader.loadClass(contextClassName);
     }
-
 
     /**
      * validate the submitted work
      *
      * @param work work instance to be validated
-     * @param ec   ExecutionContext
+     * @param executionContext ExecutionContext
      * @throws WorkCompletedException when a submitted context is not supported
-     * @throws WorkRejectedException  when validation fails
+     * @throws WorkRejectedException when validation fails
      */
-    public void validateWork(Work work, ExecutionContext ec) throws WorkCompletedException, WorkRejectedException {
-        //JSR-322-WORK-CONTEXT-REQ If work instance is a Work Context provider, handle them
+    public void validateWork(Work work, ExecutionContext executionContext) throws WorkCompletedException, WorkRejectedException {
+        // JSR-322-WORK-CONTEXT-REQ If work instance is a Work Context provider, handle them
         if (work instanceof WorkContextProvider) {
 
-            WorkContextProvider icp = (WorkContextProvider) work;
+            WorkContextProvider workContextProvider = (WorkContextProvider) work;
 
-            //JSR-322-WORK-CONTEXT-REQ
-            //TODO V3 hack - ec & getEC() test
+            // JSR-322-WORK-CONTEXT-REQ
+            // TODO V3 hack - ec & getEC() test
             ExecutionContext transactionContext = getExecutionContext(work);
-            if (ec != null && transactionContext != ec) {
-                WorkRejectedException wre =
-                        new WorkRejectedException();
+            if (executionContext != null && transactionContext != executionContext) {
+                WorkRejectedException wre = new WorkRejectedException();
                 wre.setErrorCode(WorkContextErrorCodes.CONTEXT_SETUP_FAILED);
-                logger.log(Level.WARNING, RAR_EXECUTION_CONTEXT_CONFLICT, new Object[]{ec, transactionContext, work, wre});
+                logger.log(WARNING, RAR_EXECUTION_CONTEXT_CONFLICT, new Object[] { executionContext, transactionContext, work, wre });
 
-                if(transactionContext instanceof WorkContext){
-                    WorkContextLifecycleListener listener = getListener((WorkContext)transactionContext);
+                if (transactionContext instanceof WorkContext) {
+                    WorkContextLifecycleListener listener = getListener((WorkContext) transactionContext);
                     notifyContextSetupFailure(listener, WorkContextErrorCodes.CONTEXT_SETUP_FAILED);
                 }
 
                 throw wre;
             }
 
-            List<WorkContext> contexts = icp.getWorkContexts();
-            if (contexts != null) {
-                for (WorkContext ic : contexts) {
-                    WorkContextLifecycleListener listener = getListener(ic);
+            List<WorkContext> workContexts = workContextProvider.getWorkContexts();
+            if (workContexts != null) {
+                for (WorkContext workContext : workContexts) {
+                    WorkContextLifecycleListener listener = getListener(workContext);
 
-                    //JSR-322-WORK-CONTEXT-REQ strict=false in the method below as the check has to be lenient.
-                    if (isContextSupported(false, ic.getClass().getName())) {
-                        if (isUniqueSubmission(ic, validContexts)) {
-                            validContexts.add(ic);
+                    // JSR-322-WORK-CONTEXT-REQ strict=false in the method below as the check has to be lenient.
+                    if (isContextSupported(false, workContext.getClass().getName())) {
+                        if (isUniqueSubmission(workContext, validContexts)) {
+                            validContexts.add(workContext);
                         } else {
-                            //JSR-322-WORK-CONTEXT-REQ If a particular IC type is submitted twice,
+                            // JSR-322-WORK-CONTEXT-REQ If a particular IC type is submitted twice,
                             // container does not support it, fail work submission.
                             WorkCompletedException wce = new WorkCompletedException();
                             wce.setErrorCode(WorkContextErrorCodes.DUPLICATE_CONTEXTS);
-                            logger.log(Level.WARNING, RAR_EXECUTION_CONTEXT_DUPLICATE, new Object[]{ic.getClass().getName(), wce});
+                            logger.log(WARNING, RAR_EXECUTION_CONTEXT_DUPLICATE, new Object[] { workContext.getClass().getName(), wce });
                             notifyContextSetupFailure(listener, WorkContextErrorCodes.DUPLICATE_CONTEXTS);
                             throw wce;
                         }
                     } else {
-                        //JSR-322-WORK-CONTEXT-REQ   unable to handle the work context or its generic type
+                        // JSR-322-WORK-CONTEXT-REQ unable to handle the work context or its generic type
                         // (any of its super types) container does not support it, fail work submission.
                         WorkCompletedException wce = new WorkCompletedException();
                         wce.setErrorCode(WorkContextErrorCodes.UNSUPPORTED_CONTEXT_TYPE);
-                        logger.log(Level.WARNING, RAR_EXECUTION_CONTEXT_NOT_SUPPORT, new Object[]{ic.getClass().getName(), wce});
+                        logger.log(WARNING, RAR_EXECUTION_CONTEXT_NOT_SUPPORT, new Object[] { workContext.getClass().getName(), wce });
                         notifyContextSetupFailure(listener, WorkContextErrorCodes.UNSUPPORTED_CONTEXT_TYPE);
                         throw wce;
                     }
@@ -313,73 +320,74 @@ public class WorkContextHandlerImpl implements WorkContextHandler {
     /**
      * check whether the work-context is a unique submission
      *
-     * @param ic                work-context
+     * @param iworkContext work-context
      * @param supportedContexts supported contexts
      * @return boolean indicating whether the work-context submitted is unique
      */
-    //TODO V3 - rework - check whether multiple implementations of same IC supported by the container is submitted.
-    private boolean isUniqueSubmission(WorkContext ic, Collection<WorkContext> supportedContexts) {
-        //TODO JSR-322-WORK-CONTEXT : can we use workContext.getName() ??
-        for (WorkContext workContext : supportedContexts) {
-            String workContextName = workContext.getClass().getName().toLowerCase(locale);
-            String icName = ic.getClass().getName().toLowerCase(locale);
+    // TODO V3 - rework - check whether multiple implementations of same IC supported by the container is submitted.
+    private boolean isUniqueSubmission(WorkContext iworkContext, Collection<WorkContext> supportedContexts) {
+        // TODO JSR-322-WORK-CONTEXT : can we use workContext.getName() ??
+        for (WorkContext supportedContext : supportedContexts) {
+            String workContextName = supportedContext.getClass().getName().toLowerCase(locale);
+            String icName = iworkContext.getClass().getName().toLowerCase(locale);
             if (workContextName.equalsIgnoreCase(icName)) {
-                debug("Not a unique workContext submission : " + workContext.getClass().getName());
+                debug("Not a unique workContext submission : " + supportedContext.getClass().getName());
                 return false;
             }
         }
+
         return true;
     }
 
     /**
      * setup the work context or execution context for the work
      *
-     * @param ec ExecutionContext
-     * @param wc Work coordinator
+     * @param executionContext ExecutionContext
+     * @param workCoordinator Work coordinator
      */
-    public void setupContext(ExecutionContext ec, WorkCoordinator wc, OneWork work) throws WorkCompletedException {
+    public void setupContext(ExecutionContext executionContext, WorkCoordinator workCoordinator, OneWork work) throws WorkCompletedException {
         boolean useExecutionContext = true;
-        for (WorkContext ic : validContexts) {
-            WorkContextLifecycleListener listener = getListener(ic);
-            if (ic instanceof TransactionContext) {
+        for (WorkContext validWorkContext : validContexts) {
+            WorkContextLifecycleListener listener = getListener(validWorkContext);
+            if (validWorkContext instanceof TransactionContext) {
                 useExecutionContext = false;
-                setupTransactionWorkContext((TransactionContext) ic, listener);
-            } else if (ic instanceof SecurityContext) {
-                setupSecurityWorkContext((SecurityContext) ic, listener, wc.getRAName());
-            } else if (ic instanceof HintsContext) {
-                setupHintsContext((HintsContext)ic, listener, work);
+                setupTransactionWorkContext((TransactionContext) validWorkContext, listener);
+            } else if (validWorkContext instanceof SecurityContext) {
+                setupSecurityWorkContext((SecurityContext) validWorkContext, listener, workCoordinator.getRAName());
+            } else if (validWorkContext instanceof HintsContext) {
+                setupHintsContext((HintsContext) validWorkContext, listener, work);
             } else {
                 Class<? extends WorkContext> claz = null;
-                String className = ic.getClass().getName();
+                String className = validWorkContext.getClass().getName();
                 if (!isContextSupported(true, className)) {
-                    claz = getMostSpecificWorkContextSupported(ic);
+                    claz = getMostSpecificWorkContextSupported(validWorkContext);
                     if (claz == null) {
                         debug("Cannot handle work context [ " + className + " ]");
-                        continue; //TODO V3 continue ?
+                        continue; // TODO V3 continue ?
                     }
                 }
-                setupCustomWorkContext(ic, listener, claz);
+                setupCustomWorkContext(validWorkContext, listener, claz);
 
-                //Handle custom work contexts, if any, supported by GlassFish
+                // Handle custom work contexts, if any, supported by GlassFish
             }
         }
 
-        //Transaction Context is not provided, so proceed with connector 1.5 way
+        // Transaction Context is not provided, so proceed with connector 1.5 way
         if (useExecutionContext) {
             try {
-                setupExecutionContext(ec);
+                setupExecutionContext(executionContext);
             } catch (WorkException we) {
-                wc.setException(we);
+                workCoordinator.setException(we);
             } catch (Exception e) {
-                wc.setException(e);
+                workCoordinator.setException(e);
             }
         }
     }
 
-    private void setupHintsContext(HintsContext ic, WorkContextLifecycleListener listener, OneWork work) {
-        Map<String, Serializable> hints = ic.getHints();
+    private void setupHintsContext(HintsContext hintsContext, WorkContextLifecycleListener listener, OneWork work) {
+        Map<String, Serializable> hints = hintsContext.getHints();
         Object value = hints.get(HintsContext.NAME_HINT);
-        if(value != null){
+        if (value != null) {
             work.setName(value.toString());
             notifyContextSetupComplete(listener);
         }
@@ -388,33 +396,34 @@ public class WorkContextHandlerImpl implements WorkContextHandler {
     /**
      * check whether the work-context is a work-context-lifecycle-listener and return the listener
      *
-     * @param wc Work-Context
+     * @param workContext Work-Context
      * @return Work-Context-Lifecycle-Listener from the Work-Context
      */
-    private WorkContextLifecycleListener getListener(WorkContext wc) {
+    private WorkContextLifecycleListener getListener(WorkContext workContext) {
         WorkContextLifecycleListener listener = null;
-        //check whether the WorkContext has a listener.
-        if (wc instanceof WorkContextLifecycleListener) {
-            listener = (WorkContextLifecycleListener) wc;
+        // Check whether the WorkContext has a listener.
+        if (workContext instanceof WorkContextLifecycleListener) {
+            listener = (WorkContextLifecycleListener) workContext;
         }
+
         return listener;
     }
 
     /**
      * handles custom work contexts
      *
-     * @param ic       work-context
+     * @param ic work-context
      * @param listener listener
-     * @param claz     work context class
+     * @param claz work context class
      */
-    private void setupCustomWorkContext(WorkContext ic, WorkContextLifecycleListener listener,
-                                          Class<? extends WorkContext> claz) {
+    private void setupCustomWorkContext(WorkContext ic, WorkContextLifecycleListener listener, Class<? extends WorkContext> claz) {
         if (claz != null) {
-            Object params[] = {ic.getClass().getName(), claz.getName()};
+            Object params[] = { ic.getClass().getName(), claz.getName() };
             logger.log(Level.INFO, RAR_USE_SUPER_WORK_CONTEXT, params);
         } else {
             debug("setting exact customWorkContext for WorkContext [ " + ic.getClass().getName() + " ]  ");
         }
+
         notifyContextSetupComplete(listener);
     }
 
@@ -433,7 +442,7 @@ public class WorkContextHandlerImpl implements WorkContextHandler {
             }
         }
         assignableClasses = sortBasedOnInheritence(assignableClasses);
-        Object params[]= {ic.getClass().getName(), assignableClasses.get(0).getName()};
+        Object params[] = { ic.getClass().getName(), assignableClasses.get(0).getName() };
         logger.log(Level.INFO, RAR_USE_SUPER_WORK_CONTEXT, params);
         return assignableClasses.get(0);
     }
@@ -458,7 +467,7 @@ public class WorkContextHandlerImpl implements WorkContextHandler {
     /**
      * given a list of classes, provides the number of assignable (type) classes for the provided class
      *
-     * @param claz              class
+     * @param claz class
      * @param assignableClasses list of assiginable classes
      * @return number of assignable classes
      */
@@ -472,15 +481,6 @@ public class WorkContextHandlerImpl implements WorkContextHandler {
         return count;
     }
 
-    @LogMessageInfo(
-            message = "Unable to set Security Context.",
-            comment = "Unable to set Security Context.",
-            level = "WARNING",
-            cause = "Unable to set Security Context.",
-            action = "Check the server.log for exceptions",
-            publish = true)
-    private static final String RAR_SETUP_SECURITY_CONTEXT_ERROR = "AS-RAR-05011";
-
     /**
      * setup security work context for the work
      *
@@ -488,93 +488,49 @@ public class WorkContextHandlerImpl implements WorkContextHandler {
      * @param listener listener to be notified
      * @param raName resource-adapter name
      */
-    private void setupSecurityWorkContext(SecurityContext securityWorkContext, WorkContextLifecycleListener listener,
-        String raName) throws WorkCompletedException {
+    private void setupSecurityWorkContext(SecurityContext securityWorkContext, WorkContextLifecycleListener listener, String raName)
+            throws WorkCompletedException {
         try {
             Subject executionSubject = new Subject();
             // TODO need to populate with server's credentials ?
             Subject serviceSubject = new Subject();
             Map<Principal, Principal> securityMap = getWorkContextMap(raName);
-            CallbackHandler handler = new ConnectorCallbackHandler(executionSubject, runtime.getCallbackHandler(),
-                securityMap);
+            CallbackHandler handler = new ConnectorCallbackHandler(executionSubject, runtime.getCallbackHandler(), securityMap);
             securityWorkContext.setupSecurityContext(handler, executionSubject, serviceSubject);
             notifyContextSetupComplete(listener);
         } catch (Exception e) {
-            logger.log(Level.WARNING, RAR_SETUP_SECURITY_CONTEXT_ERROR, e);
+            logger.log(WARNING, RAR_SETUP_SECURITY_CONTEXT_ERROR, e);
             notifyContextSetupFailure(listener, WorkContextErrorCodes.CONTEXT_SETUP_FAILED);
             throw new WorkCompletedException(e.getMessage(), e);
         }
     }
 
     /**
-     * get the security work context map (if any) for the resource-adapter
-     * look for <[raname]-principals-map> & <[raname]-groups-map> jvm-options
-     * to generate the map
-     *
-     * @param raName resource-adapter name
-     * @return security-map
-     */
-/*
-    private Map getSecurityWorkContextMap(String raName) {
-        HashMap eisASMap = new HashMap();
-
-        String principalsMap = System.getProperty(raName + "-principals-map");
-        if (principalsMap != null) {
-            StringTokenizer tokenizer = new StringTokenizer(principalsMap, ",");
-            while (tokenizer.hasMoreElements()) {
-                String nameValue = (String) tokenizer.nextElement();
-                if (nameValue != null && nameValue.contains("=")) {
-                    int delimiterLocation = nameValue.indexOf("=");
-                    String eisPrincipal = nameValue.substring(0, delimiterLocation);
-                    String appserverPrincipal = nameValue.substring(delimiterLocation + 1);
-                    eisASMap.put(new UserPrincipal(eisPrincipal), new UserPrincipal(appserverPrincipal));
-                }
-            }
-        }
-
-        //TODO V3 refactor (common code for principals & groups)
-        String groupsMap = System.getProperty(raName + "-groups-map");
-        if (groupsMap != null) {
-            StringTokenizer tokenizer = new StringTokenizer(groupsMap, ",");
-            while (tokenizer.hasMoreElements()) {
-                String nameValue = (String) tokenizer.nextElement();
-                if (nameValue != null && nameValue.contains("=")) {
-                    int delimiterLocation = nameValue.indexOf("=");
-                    String eisGroup = nameValue.substring(0, delimiterLocation);
-                    String appserverGroup = nameValue.substring(delimiterLocation + 1);
-                    eisASMap.put(new Group(eisGroup), new Group(appserverGroup));
-                }
-            }
-            return eisASMap;
-        }
-        return null;
-    }
-*/
-
-    /**
      * Given a resource-adapter name, get all its work-context-map
+     *
      * @param raName resource-adapter-name
      * @return work-context-map
      */
-    private Map<Principal, Principal> getWorkContextMap(String raName){
+    private Map<Principal, Principal> getWorkContextMap(String raName) {
         List<WorkSecurityMap> maps = runtime.getWorkSecurityMap(raName);
         List<PrincipalMap> principalsMap = getPrincipalsMap(maps);
         List<GroupMap> groupsMap = getGroupsMap(maps);
         HashMap<Principal, Principal> eisASMap = new HashMap<>();
+
         for (PrincipalMap map : principalsMap) {
-            eisASMap.put(
-                new UserNameAndPassword(map.getEisPrincipal()),
-                new UserNameAndPassword(map.getMappedPrincipal())
-            );
+            eisASMap.put(new UserNameAndPassword(map.getEisPrincipal()), new UserNameAndPassword(map.getMappedPrincipal()));
         }
+
         for (GroupMap map : groupsMap) {
             eisASMap.put(new Group(map.getEisGroup()), new Group(map.getMappedGroup()));
         }
+
         return eisASMap;
     }
 
     /**
      * get the complete list of principal map from all the work-context-maps
+     *
      * @param maps work security maps
      * @return all principal-map
      */
@@ -586,11 +542,13 @@ public class WorkContextHandlerImpl implements WorkContextHandler {
                 principalsMap.addAll(principalMap);
             }
         }
+
         return principalsMap;
     }
 
     /**
      * get the complete list of group map from all the work-context-maps
+     *
      * @param maps work security maps
      * @return all group-map
      */
@@ -602,14 +560,14 @@ public class WorkContextHandlerImpl implements WorkContextHandler {
                 groupsMap.addAll(groupMap);
             }
         }
+
         return groupsMap;
     }
 
     /**
-     * notify the work-context-listener that the context setup has failed
-     * Error code provides specific information
+     * notify the work-context-listener that the context setup has failed Error code provides specific information
      *
-     * @param listener  listener to be notified
+     * @param listener listener to be notified
      * @param errorCode error-code
      */
     private void notifyContextSetupFailure(WorkContextLifecycleListener listener, String errorCode) {
@@ -634,16 +592,15 @@ public class WorkContextHandlerImpl implements WorkContextHandler {
     /**
      * setup transaction-work-context for the work
      *
-     * @param tic      transaction-context
+     * @param tic transaction-context
      * @param listener listener that has to be notified
      */
-    private void setupTransactionWorkContext(TransactionContext tic, WorkContextLifecycleListener listener)
-        throws WorkCompletedException {
+    private void setupTransactionWorkContext(TransactionContext tic, WorkContextLifecycleListener listener) throws WorkCompletedException {
         try {
             setupExecutionContext(tic);
             notifyContextSetupComplete(listener);
         } catch (Exception e) {
-            notifyContextSetupFailure(listener, WorkContextErrorCodes.CONTEXT_SETUP_FAILED); //TODO
+            notifyContextSetupFailure(listener, WorkContextErrorCodes.CONTEXT_SETUP_FAILED); // TODO
             WorkCompletedException wce = new WorkCompletedException(e.getMessage());
             wce.initCause(e);
             throw wce;
@@ -654,41 +611,39 @@ public class WorkContextHandlerImpl implements WorkContextHandler {
     /**
      * sets the execution context for the work (traditional, 1.5 way)
      *
-     * @param ec ExecutionContext
+     * @param executionContext ExecutionContext
      * @throws WorkException when unable to setup the execution context
      */
-    private void setupExecutionContext(ExecutionContext ec) throws WorkException {
-        JavaEETransactionManager tm = runtime.getTransactionManager();
-        if (ec != null && ec.getXid() != null) {
-            tm.recreate(ec.getXid(), ec.getTransactionTimeout());
+    private void setupExecutionContext(ExecutionContext executionContext) throws WorkException {
+        JavaEETransactionManager eeTransactionManager = runtime.getTransactionManager();
+        if (executionContext != null && executionContext.getXid() != null) {
+            eeTransactionManager.recreate(executionContext.getXid(), executionContext.getTransactionTimeout());
         }
     }
 
     public static void debug(String message) {
-        if(logger.isLoggable(Level.FINEST)){
-            logger.log(Level.FINEST, message);
+        if (logger.isLoggable(FINEST)) {
+            logger.log(FINEST, message);
         }
     }
 
-
     public static ExecutionContext getExecutionContext(Work work) {
-
-        ExecutionContext ec = null;
+        ExecutionContext executionContext = null;
         if (work instanceof WorkContextProvider) {
             WorkContextProvider icp = (WorkContextProvider) work;
             List<WorkContext> icList = icp.getWorkContexts();
-            if(icList != null){
+            if (icList != null) {
                 for (WorkContext ic : icList) {
                     if (ic instanceof TransactionContext) {
-                        ec = (TransactionContext) ic;
+                        executionContext = (TransactionContext) ic;
                         break;
                     }
                 }
             }
         }
-        return ec;
-    }
 
+        return executionContext;
+    }
 
     public boolean isContextSupported(Class contextClass) {
         return canContainerHandleSameContextType(contextClass.getClass().getName());

@@ -50,7 +50,8 @@ public class HandlerConfigurationHelperTest {
         final Formatter formatter = helper.getFormatter(ODLLogFormatter.class);
         assertThat("formatter", formatter, IsInstanceOf.instanceOf(OneLineFormatter.class));
         final String line = formatter.format(new LogRecord(Level.INFO, "something"));
-        assertThat("line length", line, hasLength(58));
+        // trim to remove LF or CRLF
+        assertThat("line length", line.trim(), hasLength(57));
     }
 
 
@@ -61,7 +62,8 @@ public class HandlerConfigurationHelperTest {
         final Formatter formatter = helper.getFormatter(OneLineFormatter.class);
         assertThat("formatter", formatter, IsInstanceOf.instanceOf(OneLineFormatter.class));
         final String line = formatter.format(new LogRecord(Level.INFO, "something"));
-        assertThat("line length", line, hasLength(117));
+        // trim to remove LF or CRLF
+        assertThat("line length", line.trim(), hasLength(116));
     }
 
 

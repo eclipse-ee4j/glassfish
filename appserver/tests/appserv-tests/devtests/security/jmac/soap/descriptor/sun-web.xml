@@ -20,17 +20,19 @@
 
 <sun-web-app>
     <servlet>
-      <servlet-name>HelloServlet</servlet-name>
-      <webservice-endpoint>
-        <port-component-name>HelloServlet</port-component-name>
-        <message-security-binding auth-layer="SOAP"
-          provider-id="SOAPTestServerAuthModule">
-          <message-security>
-            <message/>
-            <request-protection auth-source="content"/>
-            <response-protection auth-source="content"/>
-          </message-security>
-        </message-security-binding>
-      </webservice-endpoint>
+        <servlet-name>HelloServlet</servlet-name>
+        <webservice-endpoint>
+            <port-component-name>HelloServlet</port-component-name>
+            <message-security-binding
+                auth-layer="SOAP" provider-id="SOAPTestServerAuthModule">
+                <message-security>
+                    <message />
+                    <request-protection
+                        auth-source="content" />
+                    <response-protection
+                        auth-source="content" />
+                </message-security>
+            </message-security-binding>
+        </webservice-endpoint>
     </servlet>
 </sun-web-app>

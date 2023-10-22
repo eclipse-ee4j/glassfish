@@ -129,7 +129,7 @@ PAM realm::
   A Pluggable Authentication Module (PAM) realm allows applications
   deployed on {productName} to authenticate users against a native
   Unix (Solaris/Linux/Mac OS) users list. PAM realms use the class name
-  `com.sun.enterprise.security.auth.realm.pam.PamRealm` and the JAAS
+  `com.sun.enterprise.security.ee.authentication.glassfish.pam.PamRealm` and the JAAS
   Context `pamRealm`. +
   This realm is supported on all Unix Operating Systems, including the
   Oracle Solaris 9 and Oracle Solaris 10 operating systems
@@ -302,7 +302,7 @@ For instructions, see xref:#to-create-an-authentication-realm[To Create an Authe
 +
 [NOTE]
 ====
-The JAAS context should be `jdbcDigestRealm` for digest authentication
+The JAAS context should be `digestRealm` for digest authentication
 or `jdbcRealm` for other authentication types.
 ====
 

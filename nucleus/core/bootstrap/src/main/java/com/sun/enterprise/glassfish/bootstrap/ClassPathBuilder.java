@@ -20,6 +20,7 @@ package com.sun.enterprise.glassfish.bootstrap;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -35,12 +36,11 @@ import org.glassfish.common.util.GlassfishUrlClassLoader;
  * @author Kohsuke Kawaguchi
  */
 public final class ClassPathBuilder {
-    private final List<URL> urls = new ArrayList<>();
-    private final ClassLoader parent;
+    private final List<File> files = new ArrayList<>();
 
-    public ClassPathBuilder(ClassLoader parent) {
-        this.parent = parent;
+    public ClassPathBuilder() {
     }
+
 
     /**
      * Adds a single jar.
@@ -49,14 +49,7 @@ public final class ClassPathBuilder {
         if (!jar.exists()) {
             throw new IOException("No such file: " + jar);
         }
-        urls.add(jar.toURI().toURL());
-    }
-
-    /**
-     * Adds a single class folder.
-     */
-    public void addClassFolder(File classFolder) throws IOException {
-        addJar(classFolder);
+        files.add(jar);
     }
 
     /**
@@ -120,13 +113,21 @@ public final class ClassPathBuilder {
         }
     }
 
-    public ClassLoader create() {
-        return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
-            @Override
-            public ClassLoader run() {
-                return new GlassfishUrlClassLoader(urls.toArray(new URL[urls.size()]), parent);
-            }
-        });
+    public ClassLoader create(final ClassLoader parent) {
+        PrivilegedAction<GlassfishUrlClassLoader> action = () -> {
+            URL[] urls = files.stream().map(ClassPathBuilder::toURL).toArray(URL[]::new);
+            return new GlassfishUrlClassLoader(urls, parent);
+        };
+        return AccessController.doPrivileged(action);
+    }
+
+
+    private static URL toURL(File file) {
+        try {
+            return file.toURI().toURL();
+        } catch (MalformedURLException e) {
+            throw new IllegalArgumentException("File cannot be converted to URL: " + file.getAbsolutePath(), e);
+        }
     }
 
 }

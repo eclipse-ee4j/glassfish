@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,45 +17,37 @@
 
 package org.glassfish.grizzly.config.dom;
 
+import java.util.List;
+
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.PropertyBag;
 
-import java.util.List;
-
 /**
- * Contains the description of higher level protocols like: http, https, iiop, etc.
+ * Contains the description of higher level protocols like:
+ * {@code http}, {@code https}, {@code iiop}, etc.
  */
 @Configured
 public interface Protocols extends ConfigBeanProxy, PropertyBag {
+
     /**
      * List of Protocol implementations
      */
     @Element
     List<Protocol> getProtocol();
 
-    @DuckTyped
-    Protocol findProtocol(String name);
-
-    @DuckTyped
-    NetworkConfig getParent();
-
-    class Duck {
-        public static Protocol findProtocol(Protocols protocols, String name) {
-            for (Protocol protocol : protocols.getProtocol()) {
-                if (protocol.getName().equals(name)) {
-                    return protocol;
-                }
+    default Protocol findProtocol(String name) {
+        for (Protocol protocol : getProtocol()) {
+            if (protocol.getName().equals(name)) {
+                return protocol;
             }
-
-            return null;
         }
 
-        public static NetworkConfig getParent(Protocols protocols) {
-            return protocols.getParent(NetworkConfig.class);
-        }
+        return null;
+    }
 
+    default NetworkConfig getParent() {
+        return getParent(NetworkConfig.class);
     }
 }

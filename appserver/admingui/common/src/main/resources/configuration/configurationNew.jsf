@@ -1,5 +1,6 @@
 <!--
 
+    Copyright (c) 2023 Contributors to Eclipse Foundation.
     Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -68,13 +69,8 @@
                      <sun:dropDown id="Config" selected="#{pageSession.selectedConfig}" labels="$pageSession{newConfigsList}"  values="$pageSession{newConfigsList}" required="#{true}">
                         <!beforeCreate
                             gf.getChildrenNamesList(endpoint="#{sessionScope.REST_URL}/configs/config" result="#{pageSession.configsList}");
-                            createList(size="0" result="#{pageSession.newConfigsList}");
-                            foreach (var="configName" list="#{pageSession.configsList}") {
-                                if ("!(#{configName} = server-config)") {
-                                    listAdd(value="#{configName}" list="#{pageSession.newConfigsList}");
-                                }
-                            }
-                            />
+                            listRemove(list="#{pageSession.configsList}" value="server-config" result="#{pageSession.newConfigsList}");
+                        />
                         <!afterCreate
                             getClientId(component="$this{component}" clientId=>$page{config});
                         />

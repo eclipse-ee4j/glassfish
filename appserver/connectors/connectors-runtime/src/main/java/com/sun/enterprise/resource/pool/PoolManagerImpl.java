@@ -637,17 +637,12 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
      */
     @Override
     public boolean flushConnectionPool(PoolInfo poolInfo) throws PoolingException {
-        boolean result = false;
-
         ResourcePool pool = getPool(poolInfo);
-        if (pool != null) {
-            result = pool.flushConnectionPool();
-        } else {
-            LOG.log(WARNING, "poolmgr.flush_noop_pool_not_initialized", poolInfo);
-            throw new PoolingException(MESSAGES.getString("poolmgr.flush_noop_pool_not_initialized", poolInfo.toString()));
+        if (pool == null) {
+            throw new PoolingException(
+                "Flush Connection Pool did not happen as pool " + poolInfo + " is not initialized");
         }
-
-        return result;
+        return pool.flushConnectionPool();
     }
 
     @Override

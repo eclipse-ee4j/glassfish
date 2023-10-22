@@ -19,6 +19,7 @@
 
 <ui:event type="initPage">
     setResourceBundle(key="i18n" bundle="org.glassfish.admingui.core.Strings");
+    setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings");
     getPluginIdFromViewId(viewId="#{facesContext.viewRoot.viewId}", pluginId="#{pluginId}");
 </ui:event>
 
@@ -56,7 +57,7 @@
             <script src="#{request.contextPath}/resources/yui/layout-min.js"></script>
         </f:verbatim>
 
-            <sun:script url="/resource/common/js/adminjsf.js" />
+            <sun:script url="$resource{i18nc.adminjsf.url}" />
             
             <!-- comment out for now since the file style.css doesn't exist.
              <link rel="stylesheet" type="text/css" href="#{request.contextPath}/style.css" />
@@ -238,51 +239,6 @@
 
     <!-- FIXME: this should be in adminjsf.js -->
 "    <script type="text/javascript">
-/*
-        function submitTagForm(el) {
-            YAHOO.util.Dom.get('tagForm:url').value = window.location;
-            DynaFaces.fireAjaxTransaction(el,
-            {
-                execute: 'tagForm:tag,tagForm:name,tagForm:url,'+el.id,
-                inputs: 'tagForm:tag,tagForm:name,tagForm:url,'+el.id,
-                render: 'tagForm:tag,tagForm:name,tagForm:url,'+el.id,
-                postReplace: function() {
-                    YAHOO.util.Dom.get('tagForm:tag').value = '';
-                    YAHOO.util.Dom.get('tagForm:name').value = '';
-                    hidePanel('addTagPanel');
-                }
-            } );
-        }
-        function submitTagSearchForm(el) {
-            DynaFaces.fireAjaxTransaction(el,
-            {
-                execute: 'hits,tagSearch:tag,'+el.id,
-                inputs: 'hits,tagSearch:tag,'+el.id,
-                render: 'hits',
-                postReplace: function(zone, html) {
-                    YAHOO.util.Dom.get('tagSearch:tag').value = '';
-                }
-            } );
-        }
-
-        <!--
-        FIXME: I think this would be better implemented using Y!'s KeyListener:
-        http://developer.yahoo.com/yui/examples/container/keylistener.html
-        function showSearchPanel(e) {
-            var result = true;
-            if ((e.charCode == 102) &amp;&amp; (e.ctrlKey == true)) {
-                showPanel('searchTagsPanel');
-                if (e.preventDefault) {
-                    e.preventDefault();
-                }
-                result = false;
-            }
-            return result;
-        }
-        YAHOO.util.Event.addListener(document, "keypress", showSearchPanel);
-        -->
-*/
-
 <f:verbatim>
         admingui.help.pluginId = '#{pluginId}';
 

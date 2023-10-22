@@ -17,6 +17,14 @@
 
 package com.sun.enterprise.v3.admin;
 
+import java.io.IOException;
+import java.util.Properties;
+import java.util.logging.Logger;
+
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.embeddable.GlassFish;
+import org.glassfish.internal.api.Globals;
+
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
@@ -26,21 +34,12 @@ import com.sun.enterprise.util.StringUtils;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import java.io.IOException;
-import java.util.Properties;
-import java.util.logging.Logger;
-
-import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.embeddable.GlassFish;
-import org.glassfish.internal.api.Globals;
-
 /**
- * For non-verbose mode:
- * Stop this server, spawn a new JVM that will wait for this JVM to die.  The new JVM then starts the server again.
+ * For non-verbose mode: Stop this server, spawn a new JVM that will wait for this JVM to die. The new JVM then starts
+ * the server again.
  *
- * For verbose mode:
- * We want the asadmin console itself to do the respawning -- so just return a special int from
- * System.exit().  This tells asadmin to restart.
+ * For verbose mode: We want the asadmin console itself to do the respawning -- so just return a special int from
+ * System.exit(). This tells asadmin to restart.
  *
  * @author Byron Nevins
  */
@@ -60,14 +59,12 @@ public class RestartServer {
     private String serverName = "";
     private static final LocalStringsImpl strings = new LocalStringsImpl(RestartServer.class);
     private static final String magicProperty = "-DAS_RESTART=" + ProcessHandle.current().pid();
-    private static final String[] normalProps = {magicProperty};
+    private static final String[] normalProps = { magicProperty };
     private static final int RESTART_NORMAL = 10;
     private static final int RESTART_DEBUG_ON = 11;
     private static final int RESTART_DEBUG_OFF = 12;
-    private static final String[] debuggerProps = {
-        magicProperty,
-        "-Xdebug",
-        "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=1323"};
+    private static final String[] debuggerProps = { magicProperty, "-Xdebug",
+            "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=1323" };
 
     protected final void setDebug(Boolean b) {
         debug = b;
@@ -84,8 +81,7 @@ public class RestartServer {
     /**
      * Restart of the application server :
      *
-     * All running services are stopped.
-     * LookupManager is flushed.
+     * All running services are stopped. LookupManager is flushed.
      *
      * Client code that started us should notice the special return value and restart us.
      */
@@ -127,7 +123,7 @@ public class RestartServer {
 
     ////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
-    /////////               ALL PRIVATE BELOW               ////////////////////
+    ///////// ALL PRIVATE BELOW ////////////////////
     ////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
     private void init(AdminCommandContext context) throws IOException {
@@ -137,18 +133,14 @@ public class RestartServer {
         logger.info(strings.get("restart.server.init"));
     }
 
-
     private void reincarnate() throws Exception {
         if (setupReincarnationWithAsadmin() || setupReincarnationWithOther()) {
             doReincarnation();
         } else {
-            logger.severe(
-                strings.get("restart.server.noStartupInfo",
-                strings.get("restart.server.asadminError"),
-                strings.get("restart.server.nonAsadminError")));
+            logger.severe(strings.get("restart.server.noStartupInfo", strings.get("restart.server.asadminError"),
+                    strings.get("restart.server.nonAsadminError")));
         }
     }
-
 
     private void doReincarnation() throws RDCException {
         try {
@@ -265,10 +257,7 @@ public class RestartServer {
         int ctr = 0;
 
         for (int i = 0; i < oldlen; i++) {
-            if (i == indexOfDebug) {
-                continue;
-            }
-            if (twoArgs && i == (indexOfDebug + 1)) {
+            if ((i == indexOfDebug) || (twoArgs && i == (indexOfDebug + 1))) {
                 continue;
             }
 

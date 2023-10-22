@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.web</groupId>
         <artifactId>web</artifactId>
-        <version>7.0.4-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
     </parent>
 
     <artifactId>weld-integration</artifactId>
@@ -53,6 +53,18 @@
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.faces</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.ext.cdi</groupId>
+            <artifactId>jersey-cdi1x</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-common</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.web</groupId>
@@ -179,5 +191,20 @@
                 </includes>
             </resource>
         </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Bundle-Activator>org.glassfish.weld.WeldActivator</Bundle-Activator>
+                        <Import-Package>
+                            org.glassfish.javaee.full.deployment; resolution:=optional,
+                            *
+                        </Import-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +19,7 @@ package com.sun.enterprise.admin.util;
 
 import com.sun.enterprise.config.serverbeans.SecureAdmin;
 import com.sun.enterprise.universal.GFBase64Decoder;
+
 import java.io.IOException;
 import java.net.PasswordAuthentication;
 import java.security.Principal;
@@ -26,7 +28,13 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.security.auth.callback.*;
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.NameCallback;
+import javax.security.auth.callback.PasswordCallback;
+import javax.security.auth.callback.TextInputCallback;
+import javax.security.auth.callback.UnsupportedCallbackException;
+
 import org.glassfish.common.util.admin.AdminAuthenticator.AuthenticatorType;
 import org.glassfish.grizzly.http.Cookie;
 import org.glassfish.grizzly.http.server.Request;
@@ -151,11 +159,11 @@ public class AdminCallbackHandler implements CallbackHandler {
     }
 
     private String specialAdminIndicator() {
-        return header(SecureAdmin.Util.ADMIN_INDICATOR_HEADER_NAME);
+        return header(SecureAdmin.ADMIN_INDICATOR_HEADER_NAME);
     }
 
     private String token() {
-        return header(SecureAdmin.Util.ADMIN_ONE_TIME_AUTH_TOKEN_HEADER_NAME);
+        return header(SecureAdmin.ADMIN_ONE_TIME_AUTH_TOKEN_HEADER_NAME);
     }
 
     private String restToken() {

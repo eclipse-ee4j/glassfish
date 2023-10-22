@@ -46,12 +46,12 @@ public class Util {
     @Inject
     private ProcessEnvironment penv;
 
-    //stuff required for AppClient
+    // stuff required for AppClient
     private CallbackHandler callbackHandler;
     private Object appClientMsgSecConfigs;
 
-    //Note: Will return Non-Null only after Util has been
-    //Injected in some Service.
+    // Note: Will return Non-Null only after Util has been
+    // Injected in some Service.
     public static ServiceLocator getDefaultHabitat() {
         return habitat;
     }
@@ -81,8 +81,9 @@ public class Util {
         this.callbackHandler = callbackHandler;
     }
 
-    public Object getAppClientMsgSecConfigs() {
-        return appClientMsgSecConfigs;
+    @SuppressWarnings("unchecked")
+    public <T> T getAppClientMsgSecConfigs() {
+        return (T) appClientMsgSecConfigs;
     }
 
     public void setAppClientMsgSecConfigs(Object appClientMsgSecConfigs) {
@@ -94,6 +95,7 @@ public class Util {
         if (!servers.isEmpty()) {
             return true;
         }
+
         return false;
     }
 
@@ -101,11 +103,12 @@ public class Util {
         File filePath = new File(fileName);
 
         if (filePath.exists()) {
-            //the string provided is a filepath, so return
+            // the string provided is a filepath, so return
             return filePath;
         }
+
         File localFile = null;
-        //Parent directories until the fileName exist, so create the file that has been provided
+        // Parent directories until the fileName exist, so create the file that has been provided
         if (filePath.getParentFile() != null && filePath.getParentFile().exists()) {
             localFile = filePath;
             if (!localFile.createNewFile()) {
@@ -115,7 +118,7 @@ public class Util {
         } else {
             /*
              * File parent directory does not exist - so create parent directory as user.home/.glassfish-{embedded}/config
-             * */
+             */
             String userHome = System.getProperty("user.home");
 
             String embeddedServerName = getCurrentEmbeddedServerName();
@@ -156,9 +159,7 @@ public class Util {
 
     public static String getCurrentEmbeddedServerName() {
         List<String> embeddedServerNames = Server.getServerNames();
-        String embeddedServerName = (embeddedServerNames.get(0) == null) ? "embedded" : embeddedServerNames.get(0);
-        return embeddedServerName;
-
+        return embeddedServerNames.get(0) == null ? "embedded" : embeddedServerNames.get(0);
     }
 
 }

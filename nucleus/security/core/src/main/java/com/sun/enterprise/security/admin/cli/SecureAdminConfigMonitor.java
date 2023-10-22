@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,13 @@
 
 package com.sun.enterprise.security.admin.cli;
 
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.SecureAdmin;
+import com.sun.enterprise.security.SecurityLoggerInfo;
+
+import jakarta.inject.Inject;
+
 import java.beans.PropertyChangeEvent;
-import java.util.logging.Logger;
 
 import org.glassfish.hk2.runlevel.RunLevel;
 import org.glassfish.internal.api.PostStartupRunLevel;
@@ -30,12 +36,6 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.NotProcessed;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.SecureAdmin;
-import com.sun.enterprise.security.SecurityLoggerInfo;
-
-import jakarta.inject.Inject;
-
 /**
  * Tracks changes to secure admin configuration, basically so it can report restart-required.
  *
@@ -47,15 +47,14 @@ public class SecureAdminConfigMonitor implements ConfigListener {
 
     private static final String restartRequiredMsg = Strings.get("secure.admin.change.requires.restart");
 
-    /*
-     * Must inject Domain to get notifications of SecureAdmin changes.  We
-     * cannot inject SecureAdmin itself because it might be null and that
+    /**
+     * Must inject Domain to get notifications of SecureAdmin changes.
+     * We cannot inject SecureAdmin itself because it might be null and that
      * bothers some components.
      */
     @Inject
     private Domain domain;
 
-    private Logger logger = SecurityLoggerInfo.getLogger();
 
     @Override
     public UnprocessedChangeEvents changed(final PropertyChangeEvent[] events) {
@@ -69,7 +68,7 @@ public class SecureAdminConfigMonitor implements ConfigListener {
                 }
                 return null;
             }
-        }, logger);
+        }, SecurityLoggerInfo.getLogger());
     }
 
     private NotProcessed processDomain(final TYPE type, final Domain d, final PropertyChangeEvent[] events) {
@@ -83,9 +82,7 @@ public class SecureAdminConfigMonitor implements ConfigListener {
     }
 
     private NotProcessed processSecureAdmin(final TYPE type, final SecureAdmin sa, final PropertyChangeEvent[] events) {
-        /*
-         * Any change to the secure admin config requires a restart.
-         */
+        // Any change to the secure admin config requires a restart.
         return new NotProcessed(restartRequiredMsg);
     }
 }

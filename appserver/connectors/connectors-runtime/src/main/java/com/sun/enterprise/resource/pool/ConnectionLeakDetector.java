@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +17,11 @@
 
 package com.sun.enterprise.resource.pool;
 
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.resource.ResourceHandle;
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.logging.LogDomains;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -27,11 +32,6 @@ import java.util.logging.Logger;
 
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.enterprise.resource.ResourceHandle;
-import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.logging.LogDomains;
-
 /**
  * Connection leak detector, book keeps the caller stack-trace during getConnection()<br>
  * Once the leak-timeout expires, assumes a connection leak and prints the caller stack-trace<br>
@@ -40,13 +40,13 @@ import com.sun.logging.LogDomains;
  * @author Kshitiz Saxena, Jagadish Ramu
  */
 public class ConnectionLeakDetector {
-    private HashMap<ResourceHandle, StackTraceElement[]> connectionLeakThreadStackHashMap;
-    private HashMap<ResourceHandle, ConnectionLeakTask> connectionLeakTimerTaskHashMap;
+    private final HashMap<ResourceHandle, StackTraceElement[]> connectionLeakThreadStackHashMap;
+    private final HashMap<ResourceHandle, ConnectionLeakTask> connectionLeakTimerTaskHashMap;
     private boolean connectionLeakTracing;
     private long connectionLeakTimeoutInMillis;
     private boolean connectionLeakReclaim;
-    private PoolInfo connectionPoolInfo;
-    private Map<ResourceHandle, ConnectionLeakListener> listeners;
+    private final PoolInfo connectionPoolInfo;
+    private final Map<ResourceHandle, ConnectionLeakListener> listeners;
 
     // Lock on HashMap to trace connection leaks
     private final Object connectionLeakLock;
@@ -153,19 +153,15 @@ public class ConnectionLeakDetector {
      * @param threadStackTrace Application(caller) thread stack trace
      */
     private void printConnectionLeakTrace(StackTraceElement[] threadStackTrace, ConnectionLeakListener connLeakListener) {
-        StringBuffer stackTrace = new StringBuffer();
-        String msg = localStrings.getStringWithDefault("potential.connection.leak.msg",
-                "A potential connection leak detected for connection pool " + connectionPoolInfo
-                        + ". The stack trace of the thread is provided below : ",
-                new Object[] { connectionPoolInfo });
-        stackTrace.append(msg);
-        stackTrace.append("\n");
+        StringBuffer stackTrace = new StringBuffer(1024);
+        stackTrace.append("A potential connection leak detected for connection pool ").append(connectionPoolInfo);
+        stackTrace.append(". The stack trace of the thread is provided below:\n");
         for (int i = 2; i < threadStackTrace.length; i++) {
-            stackTrace.append(threadStackTrace[i].toString());
-            stackTrace.append("\n");
+            stackTrace.append(threadStackTrace[i]);
+            stackTrace.append('\n');
         }
         connLeakListener.printConnectionLeakTrace(stackTrace);
-        _logger.log(Level.WARNING, stackTrace.toString(), "ConnectionPoolName=" + connectionPoolInfo);
+        _logger.log(Level.WARNING, stackTrace.toString());
     }
 
     /**
@@ -190,7 +186,7 @@ public class ConnectionLeakDetector {
 
     private class ConnectionLeakTask extends TimerTask {
 
-        private ResourceHandle resourceHandle;
+        private final ResourceHandle resourceHandle;
 
         ConnectionLeakTask(ResourceHandle resourceHandle) {
             this.resourceHandle = resourceHandle;

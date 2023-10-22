@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck</artifactId>
-        <version>7.0.4-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
     </parent>
 
     <artifactId>glassfish-external-tck-concurrency</artifactId>
@@ -45,7 +45,7 @@
 
         <jcommander.version>1.82</jcommander.version>
         <sigtest.version>1.7</sigtest.version>
-        <testng.version>7.4.0</testng.version>
+        <testng.version>7.7.0</testng.version>
     </properties>
 
     <dependencyManagement>
@@ -53,7 +53,7 @@
             <dependency>
                 <groupId>org.jboss.arquillian</groupId>
                 <artifactId>arquillian-bom</artifactId>
-                <version>1.7.0.Alpha13</version>
+                <version>1.7.0.Final</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

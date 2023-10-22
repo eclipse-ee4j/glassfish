@@ -9,6 +9,67 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
+## September 29, 2023 -- Eclipse GlassFish 7.0.9 Available
+
+We're happy to present you with the latest GlassFish release.
+
+Download links are available from the [GlassFish Download page](download.md).
+
+In this release the modularity of GlassFish is once again increased by moving the Jakarta Authentication implementation code to a new standalone project: [Epicyro](https://github.com/eclipse-ee4j/epicyro). We also enabled the GlassFish embedded tests again, which were dormant for a long time. Among the many updated components, Exousia was updated specifically to fix a bug with deployments on virtual servers, and the ORB was updated to fix a somewhat obscure bug where a remote EJB returned a JDK defined enum type.
+
+Download links are available from the [GlassFish Download page](download.md).
+
+## August 28, 2023 -- Eclipse GlassFish 7.0.8 Available
+
+The entire GlassFish team is happy to present you another great GlassFish release.
+
+Download links are available from the [GlassFish Download page](download.md).
+
+This release fixes multi-jar compatibility in GlassFish and does further preparations for JDK 21. It includes various component updates among which those for CDI, Faces, and JSON. Test coverage is improved by adding the TCKs for REST Client and Connectors. Finally, various CDI extensions have been optimised to reduce excessive and unnecessary calls to them.
+
+Download links are available from the [GlassFish Download page](download.md).
+
+## July 29, 2023 -- Eclipse GlassFish 7.0.7 Available
+
+Another month, another new version of Eclipse GlassFish 7.0.7 released today.
+
+This release prepares GlassFish for the upcoming JDK 21; it compiles and passes all internal tests using OpenJDK 21ea33. Several TCKs passed on JDK 21 as well, but the TCK as a whole is not JDK 21 compatible yet. 
+
+This release also adds support for MicroProfile JWT 2.1, and has many components updated to their latest version. Several issues have again been fixed in the Admin Console. An important bug regarding Enterprise Beans method generation has been fixed, as has a remote access issue for Enterprise Beans.
+
+Download links are available from the [GlassFish Download page](download.md).
+
+
+## June 29, 2023 -- Eclipse GlassFish 7.0.6 Available
+
+We are very happy to present the release today of Eclipse GlassFish 7.0.6.
+
+The main features of this release are the newly added support of the MicroProfile REST Client and a new way to start GlassFish, which is a preparation for Docker images that will run GlassFish in the foreground in a single JVM process to save memory consumed by Docker containers.
+
+This release also contains the usual amount of fixes, and a number of important component updates. Specifically the EclipseLink and Soteria updates fix important bugs (see their release notes).
+
+Download links are available from the [GlassFish Download page](download.md).
+
+## May 30, 2023 -- Eclipse GlassFish 7.0.5 Available
+
+We are pleased to announce the release today of Eclipse GlassFish 7.0.5.
+
+The main features of this release are a number of important bug fixes such as one in deployment-time recursive bytecode, resetting the security context if a principal has not changed, and several fixes in clustering.
+
+Jakarta EE components have been updated for Mail, JSON Processing, and REST. Auxiliary components such as Jackson and Commons IO have also been updated to their latest version.
+
+Download links are available from the [GlassFish Download page](download.md).
+
+## April 27, 2023 -- Eclipse GlassFish 7.0.4 Available
+
+We are pleased to announce the release today of Eclipse GlassFish 7.0.4.
+
+The main features of this release are important bug fixes for things like a class loader leak, and again several fixes in the admin console such as the ability to upload a war file. 
+
+A new feature for ScatteredArchive has been added to GlassFsih Embedded.
+
+Download links are available from the [GlassFish Download page](download.md).
+
 ## March 30, 2023 -- Eclipse GlassFish 7.0.3 Available
 
 We are pleased to announce the release today of Eclipse GlassFish 7.0.3. 
@@ -140,24 +201,3 @@ and [here](https://blog.payara.fish/glassfish-5.1-release-marks-major-milestone-
 ### September 28, 2017 - Introducing Eclipse Enterprise for Java
 
 See the [Jakarta EE home-page](https://jakarta.ee/).
-
-## How To Contribute
-
-The Eclipse GlassFish Project is open for contributions and your help is
-greatly appreciated.
-The easiest way to contribute to the Eclipse GlassFish documentation is by
-opening an [issue](https://github.com/eclipse-ee4j/glassfish/issues)
-that contains feedback and review comments.
-Contributions to the source code are also welcome.
-
-Please review the following links:
-
-* [Contribute](CONTRIBUTING)
-* [Pull Request Acceptance Workflow](pr_workflow)
-* [License](LICENSE)
-
-## Professional Services and Enterprise Support for Eclipse GlassFish
-
-There are companies that provide enterprise support for Eclipse GlassFish and other professional services related to Eclipse GlassFish. 
-
-There's a list of those companies on the [Professional Services and Enterprise Support](support.md) page.

@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.common</groupId>
         <artifactId>nucleus-common</artifactId>
-        <version>7.0.4-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
         <relativePath>../../common/pom.xml</relativePath>
     </parent>
 
@@ -81,5 +81,25 @@
                 </includes>
             </resource>
         </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Bundle-Activator>org.glassfish.flashlight.impl.core.FlashlightBundleActivator</Bundle-Activator>
+                        <DynamicImport-Package>
+                            org.objectweb.asm,
+                            org.objectweb.asm.commons
+                        </DynamicImport-Package>
+                        <Export-Package>
+                            org.glassfish.flashlight.client,
+                            org.glassfish.flashlight.impl.client,
+                            org.glassfish.flashlight.provider
+                        </Export-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>

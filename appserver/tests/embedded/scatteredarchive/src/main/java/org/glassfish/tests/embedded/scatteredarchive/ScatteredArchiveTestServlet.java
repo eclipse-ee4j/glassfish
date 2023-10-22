@@ -35,7 +35,7 @@ public class ScatteredArchiveTestServlet extends HttpServlet {
     protected void doGet(HttpServletRequest httpServletRequest,
                          HttpServletResponse httpServletResponse) throws ServletException, IOException {
         PrintWriter out = httpServletResponse.getWriter();
-        out.println("Hi from ScatteredArchiveTestServlet");
+        out.println("Hi from " + this.getClass().getSimpleName());
         out.flush();
         out.close();
     }

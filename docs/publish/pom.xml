@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.docs</groupId>
         <artifactId>docs</artifactId>
-        <version>7.0.4-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
     </parent>
     <artifactId>publish</artifactId>
     <packaging>jar</packaging>
@@ -130,7 +130,7 @@
                                         <artifactItem>
                                             <groupId>org.glassfish.docs</groupId>
                                             <artifactId>distribution</artifactId>
-                                            <version>${glassfish.version.7x}</version>
+                                            <version>${glassfish.version.7x.artifact}</version>
                                             <outputDirectory>
                                                 ${docs.7x.dir}
                                             </outputDirectory>

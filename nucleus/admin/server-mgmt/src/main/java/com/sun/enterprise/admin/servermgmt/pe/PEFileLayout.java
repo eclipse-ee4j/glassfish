@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -51,18 +51,6 @@ public class PEFileLayout {
 
     public void createRepositoryRoot() throws RepositoryException {
         createDirectory(getRepositoryRootDir());
-    }
-
-    public void createJBIDirectories() throws RepositoryException {
-        createDirectory(getJbiInstanceDir());
-    }
-
-    public void createJBIDomainDirectories() throws RepositoryException {
-        createJBIDirectories();
-        createDirectory(getJbiAuotoInstallDir());
-        createDirectory(getJbiConfigDir());
-        createDirectory(getJbiConfigPrivateDir());
-        createJbiSystemComponentsLayout();
     }
 
     protected void createDirectory(File dir) throws RepositoryException {
@@ -232,110 +220,6 @@ public class PEFileLayout {
 
     public File getImqDir() {
         return new File(getInstallRootDir(), IMQ);
-    }
-
-    public static final String JBI_DIR = "jbi";
-
-    public File getJbiDir() {
-        return new File(getInstallRootDir(), JBI_DIR);
-    }
-
-    public static final String JBI_LIB_DIR = "lib";
-
-    public File getJbiLibDir() {
-        return new File(getJbiDir(), JBI_LIB_DIR);
-    }
-
-    public static final String JBI_LIB_INSTALL_DIR = "install";
-
-    public File getJbiLibInstallDir() {
-        return new File(getJbiLibDir(), JBI_LIB_INSTALL_DIR);
-    }
-
-    public static final String JBI_TEMPLATE_DIR = "templates";
-
-    public File getJbiTemplateDir() {
-        return new File(getJbiLibInstallDir(), JBI_TEMPLATE_DIR);
-    }
-
-    public static final String JBI_TEMPLATE_FILE = "jbi-registry.xml.template";
-
-    public File getJbiTemplateFile() {
-        return new File(getJbiTemplateDir(), JBI_TEMPLATE_FILE);
-    }
-
-    public static final String JBI_INSTANCE_DIR = "jbi";
-
-    public File getJbiInstanceDir() {
-        return new File(getRepositoryDir(), JBI_INSTANCE_DIR);
-    }
-
-    public static final String JBI_COMPONENTS_DIR = "components";
-
-    public File getJbiComponentsDir() {
-        return new File(getJbiInstanceDir(), JBI_COMPONENTS_DIR);
-    }
-
-    public static final String JAVAEE_SE_DIR = "sun-javaee-engine";
-
-    public File getJavaEESEDir() {
-        return new File(getJbiComponentsDir(), JAVAEE_SE_DIR);
-    }
-
-    public static final String HTTP_BC_DIR = "sun-http-binding";
-
-    public File getHttpBcDir() {
-        return new File(getJbiComponentsDir(), HTTP_BC_DIR);
-    }
-
-    public static final String JBI_COMPONENT_WS = "install_root" + File.separator + "workspace";
-
-    public File getJavaEESEWorkSpace() {
-        return new File(getJavaEESEDir(), JBI_COMPONENT_WS);
-    }
-
-    public File getHttpBcWorkSpace() {
-        return new File(getHttpBcDir(), JBI_COMPONENT_WS);
-    }
-
-    public static final String JBI_SHAREDLIB_DIR = "shared-libraries";
-
-    public File getJbiSharedLibDir() {
-        return new File(getJbiInstanceDir(), JBI_SHAREDLIB_DIR);
-    }
-
-    public static final String JBI_CONFIG_DIR = "config";
-
-    public File getJbiConfigDir() {
-        return new File(getJbiInstanceDir(), JBI_CONFIG_DIR);
-    }
-
-    public static final String JBI_AUTOINSTALL_DIR = "autoinstall";
-
-    public File getJbiAuotoInstallDir() {
-        return new File(getJbiInstanceDir(), JBI_AUTOINSTALL_DIR);
-    }
-
-    public static final String JBI_CONFIG_PRIVATE_DIR = "private";
-
-    public File getJbiConfigPrivateDir() {
-        return new File(getJbiConfigDir(), JBI_CONFIG_PRIVATE_DIR);
-    }
-
-    public static final String JBI_REGISTRY_FILE = "jbi-registry.xml";
-
-    public File getJbiRegistryFile() {
-        return new File(getJbiConfigDir(), JBI_REGISTRY_FILE);
-    }
-
-    public static final String HTTP_BC_CONFIG = "config.properties";
-
-    public File getHttpBcConfigTemplate() {
-        return new File(getJbiTemplateDir(), HTTP_BC_CONFIG);
-    }
-
-    public File getHttpBcConfigFile() {
-        return new File(getHttpBcWorkSpace(), HTTP_BC_CONFIG);
     }
 
     public static final String IMQ_VAR_DIR = "imq";
@@ -749,96 +633,4 @@ public class PEFileLayout {
     File getCanonicalFile(File f) {
         return FileUtils.safeGetCanonicalFile(f);
     }
-
-    /**
-     * This method is used to create the file layout for JBI system components, HttpSoapBC, JavaEESE, WSDLSL
-     */
-    public void createJbiSystemComponentsLayout() throws RepositoryException {
-        try {
-            createDirectory(getHttpBcDir());
-            createDirectory(getHttpBcInstallRoot());
-            createDirectory(getJavaEESEDir());
-            createDirectory(getJavaEESEInstallRoot());
-            createDirectory(getWSDLSLDir());
-            createDirectory(getWSDLSLInstallRoot());
-            createDirectory(getHttpBcWorkSpace());
-            createDirectory(getJavaEESEWorkSpace());
-        } catch (Exception e) {
-            throw new RepositoryException(e);
-        }
-    }
-
-    /**
-     * This method is used to create WSDLSL install root
-     */
-    public void createWSDLSLInstallRoot() throws Exception {
-        createDirectory(getWSDLSLDir());
-        createDirectory(getWSDLSLInstallRoot());
-    }
-
-    public static final String JBI_COMPONENTS = "components";
-
-    public File getJbiComponents() {
-        return new File(getJbiDir(), JBI_COMPONENTS);
-    }
-
-    public static final String HTTP_BC_ARCHIVE = "httpbc.jar";
-
-    public File getHttpBcArchiveSource() {
-        File bcDir = new File(getJbiComponents(), HTTP_BC_DIR);
-        return new File(bcDir, HTTP_BC_ARCHIVE);
-    }
-
-    public File getHttpBcArchiveDestination() {
-        return new File(getHttpBcDir(), HTTP_BC_ARCHIVE);
-    }
-
-    public static final String JBI_COMPONENTS_INSTALL_ROOT = "install_root";
-
-    public File getHttpBcInstallRoot() {
-        return new File(getHttpBcDir(), JBI_COMPONENTS_INSTALL_ROOT);
-    }
-
-    public static final String JAVAEE_SE_ARCHIVE = "appserv-jbise.jar";
-
-    public File getJavaEESEArchiveSource() {
-        File seDir = new File(getJbiComponents(), JAVAEE_SE_DIR);
-        return new File(seDir, JAVAEE_SE_ARCHIVE);
-    }
-
-    public File getJavaEESEArchiveDestination() {
-        return new File(getJavaEESEDir(), JAVAEE_SE_ARCHIVE);
-    }
-
-    public File getJavaEESEInstallRoot() {
-        return new File(getJavaEESEDir(), JBI_COMPONENTS_INSTALL_ROOT);
-    }
-
-    public static final String JBI_SHARED_LIBRARIES = "shared-libraries";
-
-    public File getJbiSharedLibraries() {
-        return new File(getJbiDir(), JBI_SHARED_LIBRARIES);
-    }
-
-    public static final String WSDLSL_DIR = "sun-wsdl-library";
-
-    public File getWSDLSLDir() {
-        return new File(getJbiSharedLibDir(), WSDLSL_DIR);
-    }
-
-    public static final String WSDLSL_ARCHIVE = "wsdlsl.jar";
-
-    public File getWSDLSLArchiveSource() {
-        File slDir = new File(getJbiSharedLibraries(), WSDLSL_DIR);
-        return new File(slDir, WSDLSL_ARCHIVE);
-    }
-
-    public File getWSDLSLArchiveDestination() {
-        return new File(getWSDLSLDir(), WSDLSL_ARCHIVE);
-    }
-
-    public File getWSDLSLInstallRoot() {
-        return new File(getWSDLSLDir(), JBI_COMPONENTS_INSTALL_ROOT);
-    }
-
 }

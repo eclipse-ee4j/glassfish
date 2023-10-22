@@ -24,7 +24,7 @@
   <parent>
     <groupId>org.glassfish.main.extras</groupId>
     <artifactId>glassfish-embedded-common</artifactId>
-    <version>7.0.4-SNAPSHOT</version>
+    <version>7.0.10-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -46,4 +46,19 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Bundle-Activator>org.glassfish.uberjar.osgimodulesuninstaller.GlassFishOSGiModulesUninstaller</Bundle-Activator>
+                        <Bundle-SymbolicName>org.glassfish.uberjar.osgi-modules-uninstaller</Bundle-SymbolicName>
+                        <Export-Package>!*</Export-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

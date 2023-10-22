@@ -60,7 +60,9 @@ public class Client {
             HelloServlet servletPort = servletService.getHelloServletPort();
             description = testSuite + " serlvetws: hello";
             String servletMsg = servletPort.hello("Sun");
-            System.out.println(servletMsg);
+            System.out.println("servletMsg         : " + servletMsg);
+            System.out.println("servletMsg expected: " + "InboundHandler ValResp SecResp HelloServlet ValReq SecReq OutboundHandler Sun");
+            
             if ("InboundHandler ValResp SecResp HelloServlet ValReq SecReq OutboundHandler Sun".equals(servletMsg)) {
                 stat.addStatus(description, stat.PASS);  
             } else {

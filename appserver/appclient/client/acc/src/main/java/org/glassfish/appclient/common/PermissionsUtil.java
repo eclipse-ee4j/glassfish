@@ -15,9 +15,10 @@
  */
 package org.glassfish.appclient.common;
 
-import static com.sun.enterprise.security.perms.SMGlobalPolicyUtil.CLIENT_TYPE_CODESOURCE;
-import static com.sun.enterprise.security.perms.SMGlobalPolicyUtil.CommponentType.car;
+import static com.sun.enterprise.security.ee.perms.SMGlobalPolicyUtil.CLIENT_TYPE_CODESOURCE;
+import static com.sun.enterprise.security.ee.perms.SMGlobalPolicyUtil.CommponentType.car;
 
+import com.sun.enterprise.security.ee.perms.XMLPermissionsHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -32,8 +33,6 @@ import java.security.URIParameter;
 import java.security.cert.Certificate;
 
 import javax.xml.stream.XMLStreamException;
-
-import com.sun.enterprise.security.perms.XMLPermissionsHandler;
 
 public class PermissionsUtil {
 

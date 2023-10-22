@@ -21,8 +21,8 @@ import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsClassLoaderUtil;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
-import com.sun.enterprise.security.perms.PermsArchiveDelegate;
-import com.sun.enterprise.security.perms.SMGlobalPolicyUtil;
+import com.sun.enterprise.security.ee.perms.PermsArchiveDelegate;
+import com.sun.enterprise.security.ee.perms.SMGlobalPolicyUtil;
 import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;

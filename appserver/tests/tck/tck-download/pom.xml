@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck</artifactId>
-        <version>7.0.4-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
     </parent>
 
     <artifactId>tck-download</artifactId>
@@ -35,8 +35,11 @@
         <module>jakarta-ant-based-tck</module>
         <module>jakarta-rest-tck</module>
         <module>jakarta-faces-tck</module>
+        <module>jakarta-connectors-tck</module>
+        <module>jakarta-connectors-full-tck</module>
         <module>jakarta-pages-tck</module>
         <module>jakarta-pages-tags-tck</module>
+        <module>jakarta-servlet-tck</module>
         <module>jakarta-authentication-tck</module>
         <module>jakarta-authorization-tck</module>
         <module>jakarta-expression-language-tck</module>

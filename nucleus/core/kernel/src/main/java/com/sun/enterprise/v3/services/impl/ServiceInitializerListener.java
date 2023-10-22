@@ -86,7 +86,7 @@ public class ServiceInitializerListener extends org.glassfish.grizzly.config.Gen
             final NetworkListener networkListener,
             final Protocol protocol, final FilterChainBuilder filterChainBuilder) {
         filterChainBuilder.add(new ServiceInitializerFilter(this,
-                grizzlyService.getHabitat(), logger));
+                grizzlyService.getServiceLocator(), logger));
     }
 
     @Override

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -74,6 +75,8 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
             {"org.glassfish.", "com.sun.enterprise.", "org.eclipse.", "org.jboss.weld."};
     private static final String[] ATTRIBUTE_VALUES_OK = {"sample", "test"};
 
+    private static final String IS_EJB_CONTAINER = "org.glassfish.ejb.embedded.active";
+
 
     // Use Bundle from another package
     private static final Logger _logger =
@@ -90,6 +93,7 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
 
     public EJBContainerProviderImpl() {}
 
+    @Override
     public EJBContainer createEJBContainer(Map<?, ?> properties) throws EJBException {
         if (properties == null || properties.get(EJBContainer.PROVIDER) == null ||
                 properties.get(EJBContainer.PROVIDER).equals(GF_PROVIDER_NAME)) {
@@ -102,6 +106,7 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
             boolean ok = false;
             Locations l = getLocations(properties);
             try {
+                System.setProperty(IS_EJB_CONTAINER, "true");
                 createContainer(properties, l);
                 Set<DeploymentElement> modules = addModules(properties, l);
                 if (!DeploymentElement.hasEJBModule(modules)) {
@@ -125,6 +130,7 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
                         _logger.info("[EJBContainerProviderImpl] Error cleaning up..." + t1);
                     }
                     container = null;
+                    System.clearProperty(IS_EJB_CONTAINER);
                 }
             }
         }
@@ -302,7 +308,7 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
                 EjbDeploymentDescriptorFile eddf =
                         new EjbDeploymentDescriptorFile();
                 eddf.setXMLValidation(false);
-                EjbBundleDescriptor bundleDesc =  (EjbBundleDescriptor) eddf.read(is);
+                EjbBundleDescriptor bundleDesc =  eddf.read(is);
                 ModuleDescriptor moduleDesc = bundleDesc.getModuleDescriptor();
                 moduleDesc.setArchiveUri(fileName);
                 moduleName = moduleDesc.getModuleName();

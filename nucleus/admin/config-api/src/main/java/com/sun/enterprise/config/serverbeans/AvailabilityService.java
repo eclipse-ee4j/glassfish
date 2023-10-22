@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,14 @@
 
 package com.sun.enterprise.config.serverbeans;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+
+import java.beans.PropertyVetoException;
+import java.util.List;
+
+import org.glassfish.api.admin.config.PropertiesDesc;
+import org.glassfish.quality.ToDo;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.Element;
@@ -23,78 +32,61 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
 
-import java.beans.PropertyVetoException;
-import java.util.List;
-
-import org.glassfish.api.admin.config.PropertiesDesc;
-
-import org.glassfish.quality.ToDo;
-
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import org.jvnet.hk2.config.DuckTyped;
-
 /**
  *
  */
-
-/* @XmlType(name = "", propOrder = {
-    "webContainerAvailability",
-    "ejbContainerAvailability",
-    "jmsAvailability",
-    "property"
-}) */
-
 @Configured
-
 public interface AvailabilityService extends ConfigBeanProxy, PropertyBag {
 
     /**
-     * Gets the value of the availabilityEnabled property.
+     * Gets the value of the {@code availabilityEnabled} property.
      *
-     * This boolean flag controls whether availability is enabled for HTTP session persistence. If this is "false", then
-     * session persistence is disabled for all web modules in j2ee apps and stand-alone web modules. If it is "true" (and
-     * providing that the global availability-enabled in availability-service is also "true", then j2ee apps and stand-alone
-     * web modules may be ha enabled. Finer-grained control exists at lower levels. If this attribute is missing, it
-     * "inherits" the value of the global availability-enabled under availability-service.
+     * <p>This boolean flag controls whether availability is enabled for HTTP session
+     * persistence. If this is {@code false}, then session persistence is disabled
+     * for all web modules in j2ee apps and stand-alone web modules. If it is
+     * {@code true} (and providing that the global availability-enabled in
+     * {@code availability-service} is also {@code true}, then j2ee apps and
+     * stand-alone web modules may be ha enabled. Finer-grained control exists
+     * at lower levels. If this attribute is missing, it "inherits" the value
+     * of the global availability-enabled under availability-service.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
     String getAvailabilityEnabled();
 
     /**
-     * Sets the value of the availabilityEnabled property.
+     * Sets the value of the {@code availabilityEnabled} property.
      *
-     * @param value allowed object is {@link String }
+     * @param availabilityEnabled allowed object is {@link String}
      */
-    void setAvailabilityEnabled(String value) throws PropertyVetoException;
+    void setAvailabilityEnabled(String availabilityEnabled) throws PropertyVetoException;
 
     /**
-     * Gets the value of the haAgentHosts property.
+     * Gets the value of the {@code haAgentHosts} property.
      *
-     * Comma-delimited list of server host names or IP addresses where high availability store management agents are
-     * running.
+     * <p>Comma-delimited list of server host names or IP addresses where high
+     * availability store management agents are running.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     @Deprecated
     String getHaAgentHosts();
 
     /**
-     * Sets the value of the haAgentHosts property.
+     * Sets the value of the {@code haAgentHosts} property.
      *
-     * @param value allowed object is {@link String }
+     * @param agentHosts allowed object is {@link String}
      */
-    void setHaAgentHosts(String value) throws PropertyVetoException;
+    void setHaAgentHosts(String agentHosts) throws PropertyVetoException;
 
     /**
-     * Gets the value of the haAgentPort property.
+     * Gets the value of the {@code haAgentPort} property.
      *
-     * Port number where highly available store management agents can be contacted
+     * <p>Port number where highly available store management agents can be contacted.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     @Max(value = 65535)
@@ -103,113 +95,126 @@ public interface AvailabilityService extends ConfigBeanProxy, PropertyBag {
     String getHaAgentPort();
 
     /**
-     * Sets the value of the haAgentPort property.
+     * Sets the value of the {@code haAgentPort} property.
      *
-     * @param value allowed object is {@link String }
+     * @param agentPort allowed object is {@link String}
      */
-    void setHaAgentPort(String value) throws PropertyVetoException;
+    void setHaAgentPort(String agentPort) throws PropertyVetoException;
 
     /**
-     * Gets the value of the haAgentPassword property. password needed to contact highly available store management agents
+     * Gets the value of the {@code haAgentPassword} property.
      *
-     * @return possible object is {@link String }
+     * <p>Password needed to contact highly available store management agents.
+     *
+     * @return possible object is {@link String}
      */
     @Attribute
     @Deprecated
     String getHaAgentPassword();
 
     /**
-     * Sets the value of the haAgentPassword property.
+     * Sets the value of the {@code haAgentPassword} property.
      *
-     * @param value allowed object is {@link String }
+     * @param agentPassword allowed object is {@link String}
      */
-    void setHaAgentPassword(String value) throws PropertyVetoException;
+    void setHaAgentPassword(String agentPassword) throws PropertyVetoException;
 
     /**
-     * Gets the value of the haStoreName property. Name of the session store
+     * Gets the value of the {@code haStoreName} property.
      *
-     * @return possible object is {@link String }
+     * <p>Name of the session store.
+     *
+     * @return possible object is {@link String}
      */
     @Attribute
     @Deprecated
     String getHaStoreName();
 
     /**
-     * Sets the value of the haStoreName property.
+     * Sets the value of the {@code haStoreName} property.
      *
-     * @param value allowed object is {@link String }
+     * @param storeName allowed object is {@link String}
      */
-    void setHaStoreName(String value) throws PropertyVetoException;
+    void setHaStoreName(String storeName) throws PropertyVetoException;
 
     /**
-     * Gets the value of the autoManageHaStore property. If set to true, the lifecycle of the highly available store is
-     * matched with the lifecycle of the highly available cluster. The store is started or stopped with the cluster. It is
-     * removed when the cluster is deleted. When set to false, the store lifecycle would have to manually managed by the
-     * administrator.
+     * Gets the value of the {@code autoManageHaStore} property.
      *
-     * @return possible object is {@link String }
+     * <p>If set to {@code true}, the lifecycle of the highly available store is
+     * matched with the lifecycle of the highly available cluster. The store is
+     * started or stopped with the cluster. It is removed when the cluster is deleted.
+     * When set to {@code false}, the store lifecycle would have to manually managed by
+     * the administrator.
+     *
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "false", dataType = Boolean.class)
     @Deprecated
     String getAutoManageHaStore();
 
     /**
-     * Sets the value of the autoManageHaStore property.
+     * Sets the value of the {@code autoManageHaStore} property.
      *
-     * @param value allowed object is {@link String }
+     * @param autoManage allowed object is {@link String}
      */
-    void setAutoManageHaStore(String value) throws PropertyVetoException;
+    void setAutoManageHaStore(String autoManage) throws PropertyVetoException;
 
     /**
-     * Gets the value of the storePoolName property.
+     * Gets the value of the {@code storePoolName} property.
      *
-     * This is the jndi-name for the JDBC Connection Pool used potentially by both the Web Container and the EJB Stateful
-     * Session Bean Container for use in checkpointing/passivation when persistence-type = "ha". See
-     * sfsb-ha-persistence-type and sfsb-persistence-type for more details. It will default to "jdbc/hastore". This
-     * attribute can be over-ridden in either web-container-availability (with http-session-store-pool-name) and/or in
-     * ejb-container-availability (with sfsb-store-pool-name). If store-pool-name is not over-ridden then both containers
-     * will share the same connection pool. If either container over-rides then it may have its own dedicated pool. In this
-     * case there must also be a new corresponding JDBC Resource and JDBC Connection Pool defined for this new pool name.
+     * <p>This is the {@code jndi-name} for the JDBC Connection Pool used potentially
+     * by both the Web Container and the EJB Stateful Session Bean Container for use
+     * in checkpointing/passivation when persistence-type = "ha". See
+     * {@code sfsb-ha-persistence-type} and {@code sfsb-persistence-type} for more details.
+     * It will default to "jdbc/hastore". This attribute can be over-ridden in either
+     * {@code web-container-availability} (with {@code http-session-store-pool-name}) and/or
+     * in {@code ejb-container-availability} (with {@code sfsb-store-pool-name}).
+     * If {@code store-pool-name} is not overridden then both containers will share
+     * the same connection pool. If either container overrides then it may have its
+     * own dedicated pool. In this case there must also be a new corresponding JDBC Resource
+     * and JDBC Connection Pool defined for this new pool name.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     @Deprecated
     String getStorePoolName();
 
     /**
-     * Sets the value of the storePoolName property.
+     * Sets the value of the {@code storePoolName} property.
      *
-     * @param value allowed object is {@link String }
+     * @param storePoolName allowed object is {@link String}
      */
-    void setStorePoolName(String value) throws PropertyVetoException;
+    void setStorePoolName(String storePoolName) throws PropertyVetoException;
 
     /**
-     * Gets the value of the haStoreHealthcheckEnabled property.
+     * Gets the value of the {@code haStoreHealthcheckEnabled} property.
      *
-     * Application server stops saving session state when the store service does not function properly or is is not
-     * accessible for any reason. When this attribute is set to true, periodic checking is done to detect if the store
-     * service has become available again. If healthcheck succeeds the session state saving is resumed.
+     * <p>Application server stops saving session state when the store service
+     * does not function properly or is not accessible for any reason. When this
+     * attribute is set to {@code true}, periodic checking is done to detect if
+     * the store service has become available again. If healthcheck succeeds
+     * the session state saving is resumed.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "false", dataType = Boolean.class)
     @Deprecated
     String getHaStoreHealthcheckEnabled();
 
     /**
-     * Sets the value of the haStoreHealthcheckEnabled property.
+     * Sets the value of the {@code haStoreHealthcheckEnabled} property.
      *
-     * @param value allowed object is {@link String }
+     * @param healthcheckEnabled allowed object is {@link String}
      */
-    void setHaStoreHealthcheckEnabled(String value) throws PropertyVetoException;
+    void setHaStoreHealthcheckEnabled(String healthcheckEnabled) throws PropertyVetoException;
 
     /**
-     * Gets the value of the haStoreHealthcheckIntervalInSeconds property.
+     * Gets the value of the {@code haStoreHealthcheckIntervalInSeconds} property.
      *
-     * The periodicity at which store health is checked.
+     * <p>The periodicity at which store health is checked.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(defaultValue = "5")
     @Min(value = 1)
@@ -217,37 +222,32 @@ public interface AvailabilityService extends ConfigBeanProxy, PropertyBag {
     String getHaStoreHealthcheckIntervalInSeconds();
 
     /**
-     * Sets the value of the haStoreHealthcheckIntervalInSeconds property.
+     * Sets the value of the {@code haStoreHealthcheckIntervalInSeconds} property.
      *
-     * @param value allowed object is {@link String }
+     * @param healthcheckInterval allowed object is {@link String}
      */
-    void setHaStoreHealthcheckIntervalInSeconds(String value) throws PropertyVetoException;
+    void setHaStoreHealthcheckIntervalInSeconds(String healthcheckInterval) throws PropertyVetoException;
 
     @Element("*")
     List<AvailabilityServiceExtension> getExtensions();
 
-    @DuckTyped
-    <T extends AvailabilityServiceExtension> T getExtensionByType(Class<T> type);
+    default <T extends AvailabilityServiceExtension> T getExtensionByType(Class<T> type) {
+        for (AvailabilityServiceExtension extension : getExtensions()) {
+            try {
+                return type.cast(extension);
+            } catch (Exception e) {
+                // ignore, not the right type.
+            }
+        }
+        return null;
+    }
 
     /**
-     * Properties as per {@link PropertyBag}
+     * Properties as per {@link PropertyBag}.
      */
     @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props")
     @PropertiesDesc(props = {})
     @Element
     @Override
     List<Property> getProperty();
-
-    class Duck {
-        public static <T extends AvailabilityServiceExtension> T getExtensionByType(AvailabilityService as, Class<T> type) {
-            for (AvailabilityServiceExtension extension : as.getExtensions()) {
-                try {
-                    return type.cast(extension);
-                } catch (Exception e) {
-                    // ignore, not the right type.
-                }
-            }
-            return null;
-        }
-    }
 }

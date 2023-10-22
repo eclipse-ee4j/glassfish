@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,14 +18,13 @@
 package com.sun.enterprise.config.serverbeans;
 
 import java.beans.PropertyVetoException;
+import java.util.Properties;
+
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.types.Property;
-import org.jvnet.hk2.config.types.PropertyBag;
-import org.jvnet.hk2.config.DuckTyped;
 
-import java.util.Properties;
+import static com.sun.enterprise.config.serverbeans.ServerTags.CONTEXT_ROOT;
 
 /**
  * Records information about a tenant provisioned for a given application.
@@ -37,23 +37,19 @@ public interface AppTenant extends ConfigBeanProxy {
     @Attribute
     String getTenant();
 
-    void setTenant(String value) throws PropertyVetoException;
+    void setTenant(String tenant) throws PropertyVetoException;
 
     @Attribute
     String getContextRoot();
 
-    void setContextRoot(String value) throws PropertyVetoException;
+    void setContextRoot(String contextRoot) throws PropertyVetoException;
 
-    @DuckTyped
-    Properties getDeployProperties();
-
-    class Duck {
-        public static Properties getDeployProperties(AppTenant instance) {
-            Properties deploymentProps = new Properties();
-            if (instance.getContextRoot() != null) {
-                deploymentProps.setProperty(ServerTags.CONTEXT_ROOT, instance.getContextRoot());
-            }
-            return deploymentProps;
+    default Properties getDeployProperties() {
+        Properties deploymentProps = new Properties();
+        String contextRoot = getContextRoot();
+        if (contextRoot != null) {
+            deploymentProps.setProperty(CONTEXT_ROOT, contextRoot);
         }
+        return deploymentProps;
     }
 }

@@ -18,9 +18,9 @@
 
 -->
 
-<!ENTITY commonSetup SYSTEM "file:./../../../config/properties.xml">
-<!ENTITY commonBuild SYSTEM "file:./../../../config/common.xml">
-<!ENTITY commonRun SYSTEM "file:./../../../config/run.xml">
+<!ENTITY commonSetup SYSTEM "./../../../config/properties.xml">
+<!ENTITY commonBuild SYSTEM "./../../../config/common.xml">
+<!ENTITY commonRun SYSTEM "./../../../config/run.xml">
 <!ENTITY testProperties SYSTEM "./build.properties">
 ]>
 
@@ -73,7 +73,7 @@
     <target name="setup" depends="init-common">
         <antcall target="asadmin-common">
             <param name="admin.command" value="create-auth-realm" />
-            <param name="operand.props" value="--classname com.sun.enterprise.security.auth.realm.pam.PamRealm --property jaas-context=pamRealm pam"/>
+            <param name="operand.props" value="--classname com.sun.enterprise.security.ee.authentication.glassfish.pam.PamRealm --property jaas-context=pamRealm pam"/>
         </antcall>
     </target>
 

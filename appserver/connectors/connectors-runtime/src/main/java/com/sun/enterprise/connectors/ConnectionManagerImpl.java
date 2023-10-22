@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -51,6 +51,7 @@ import jakarta.resource.spi.SecurityException;
 
 import java.io.Serializable;
 import java.security.Principal;
+import java.text.MessageFormat;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -255,10 +256,8 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
             resourceSpec.setPoolInfo(this.poolInfo);
             ManagedConnectionFactory freshManagedConnectionFactory = poolMetaData.getMCF();
 
-            if (LOG.isLoggable(Level.INFO)) {
-                if (!freshManagedConnectionFactory.equals(mcf)) {
-                    LOG.info("conmgr.mcf_not_equal");
-                }
+            if (!freshManagedConnectionFactory.equals(mcf)) {
+                LOG.info("conmgr.mcf_not_equal");
             }
             ConnectorDescriptor rarConnectorDescriptor = registry.getDescriptor(rarName);
 
@@ -298,23 +297,23 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
 
             return getResource(txLevel, poolManager, mcf, resourceSpec, subject, cxRequestInfo, info, rarConnectorDescriptor, shareable);
 
-        } catch (PoolingException ex) {
-            LOG.log(Level.WARNING, "poolmgr.get_connection_failure", new Object[]{poolInfo, ex});
+        } catch (PoolingException e) {
             // We can't simply look for ResourceException and throw back since
             // Connector Container also throws ResourceException which might
             // hide the SecurityException thrown by RA.
             // So, we try to track SecurityException
-            unwrapSecurityException(ex);
-            String i18nMsg = I18N.getString("con_mgr.error_creating_connection", ex.getMessage());
-            ResourceAllocationException rae = new ResourceAllocationException(i18nMsg);
-            rae.initCause(ex);
-            throw rae;
+            unwrapSecurityException(e);
+            throw new ResourceAllocationException(
+                MessageFormat.format("Failed to obtain/create connection from connection pool [{0}]. Reason: {1}",
+                    poolInfo.getName(), e.getMessage()),
+                e);
         }
     }
 
-    private void unwrapSecurityException(Throwable ex) throws ResourceException{
+    private void unwrapSecurityException(Throwable ex) throws ResourceException {
         if (ex != null) {
             if (ex instanceof SecurityException) {
+                LOG.log(Level.WARNING, "poolmgr.get_connection_failure", new Object[] {poolInfo, ex});
                 throw (SecurityException) ex;
             }
             unwrapSecurityException(ex.getCause());

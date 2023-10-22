@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,17 +17,12 @@
 
 package org.glassfish.paas.mydbplugin;
 
-import com.sun.enterprise.util.ExecException;
+import com.sun.enterprise.universal.process.ProcessManager;
+import com.sun.enterprise.universal.process.ProcessManagerException;
 import com.sun.enterprise.util.OS;
-import com.sun.enterprise.util.ProcessExecutor;
 import com.sun.logging.LogDomains;
-import org.glassfish.internal.api.ServerContext;
-import org.glassfish.paas.javadbplugin.DerbyPlugin;
-import org.glassfish.virtualization.spi.VirtualMachine;
-import jakarta.inject.Inject;
 
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
+import jakarta.inject.Inject;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,6 +33,12 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.internal.api.ServerContext;
+import org.glassfish.paas.javadbplugin.DerbyPlugin;
+import org.glassfish.virtualization.spi.VirtualMachine;
+import org.jvnet.hk2.annotations.Service;
+import org.glassfish.hk2.api.PerLookup;
+
 /**
  * @author Sandhya Kripalani K
   */
@@ -44,15 +46,18 @@ import java.util.logging.Logger;
 @Service
 public class MyDBPlugin extends DerbyPlugin {
 
-    @Inject
-    private ServerContext serverContext;
+    private static Logger logger = LogDomains.getLogger(MyDBPlugin.class, LogDomains.PAAS_LOGGER);
 
-    private String derbyDatabaseName = "sample-db";
     private static final String DERBY_USERNAME = "APP";
     private static final String DERBY_PASSWORD = "APP";
     // TODO :: grab the actual port.
     private static final String DERBY_PORT = "1528";
-    private static Logger logger = LogDomains.getLogger(MyDBPlugin.class, LogDomains.PAAS_LOGGER);
+    private static final int DERBY_TIMEOUT = 60_000;
+
+    @Inject
+    private ServerContext serverContext;
+
+    private String derbyDatabaseName = "sample-db";
 
     public String getDefaultServiceName() {
         return "default-myderby-db-service";
@@ -133,11 +138,12 @@ public class MyDBPlugin extends DerbyPlugin {
 
         String[] startdbArgs = {serverContext.getInstallRoot().getAbsolutePath() +
                 File.separator + "bin" + File.separator + "asadmin" + (OS.isWindows() ? ".bat" : ""), "start-database", "--dbport", "1528"};
-        ProcessExecutor startDatabase = new ProcessExecutor(startdbArgs);
+        ProcessManager startDatabase = new ProcessManager(startdbArgs);
+        startDatabase.setTimeoutMsec(DERBY_TIMEOUT);
 
         try {
             startDatabase.execute();
-        } catch (ExecException e) {
+        } catch (ProcessManagerException e) {
             e.printStackTrace();
         }
     }
@@ -146,11 +152,12 @@ public class MyDBPlugin extends DerbyPlugin {
 
         String[] stopdbArgs = {serverContext.getInstallRoot().getAbsolutePath() +
                 File.separator + "bin" + File.separator + "asadmin" + (OS.isWindows() ? ".bat" : ""), "stop-database", "--dbport", "1528"};
-        ProcessExecutor stopDatabase = new ProcessExecutor(stopdbArgs);
+        ProcessManager stopDatabase = new ProcessManager(stopdbArgs);
+        stopDatabase.setTimeoutMsec(DERBY_TIMEOUT);
 
         try {
             stopDatabase.execute();
-        } catch (ExecException e) {
+        } catch (ProcessManagerException e) {
             e.printStackTrace();
         }
     }

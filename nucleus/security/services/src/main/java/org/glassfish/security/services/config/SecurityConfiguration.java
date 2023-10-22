@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,38 +17,41 @@
 
 package org.glassfish.security.services.config;
 
+import jakarta.validation.constraints.NotNull;
+
+import java.beans.PropertyVetoException;
+import java.util.List;
+
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.Element;
-
-import jakarta.validation.constraints.NotNull;
-import java.beans.PropertyVetoException;
-import java.util.List;
 
 /**
  * Base interface for all security service configurations.
  *
- * Each security service configuration has a name, indication of the service
+ * <p>Each security service configuration has a name, indication of the service
  * configuration being the default when multiple service configurations are
  * present and an optional list of the specific security provider plugins.
  */
 @Configured
 public interface SecurityConfiguration extends ConfigBeanProxy {
+
     /**
-     * Gets the name of the security service instance.
+     * Gets the {@code name} of the security service instance.
      */
-    @Attribute(required=true, key=true)
+    @Attribute(required = true, key = true)
     @NotNull
-    public String getName();
-    public void setName(String value) throws PropertyVetoException;
+    String getName();
+
+    void setName(String name) throws PropertyVetoException;
 
     /**
      * Determine if this is the default instance.
      */
     @Attribute(defaultValue = "false")
     boolean getDefault();
+
     void setDefault(boolean defaultValue) throws PropertyVetoException;
 
     /**
@@ -59,20 +63,12 @@ public interface SecurityConfiguration extends ConfigBeanProxy {
     /**
      * Gets a named security provider.
      */
-    @DuckTyped
-    SecurityProvider getSecurityProviderByName(String name);
-
-    class Duck {
-        /**
-         * Gets a named security provider.
-         */
-            public static SecurityProvider getSecurityProviderByName(SecurityConfiguration securityServiceConfiguration, String name) {
-            for (SecurityProvider config : securityServiceConfiguration.getSecurityProviders()) {
-                if (config.getProviderName().equals(name)) {
-                    return config;
-                }
+    default SecurityProvider getSecurityProviderByName(String name) {
+        for (SecurityProvider config : getSecurityProviders()) {
+            if (config.getProviderName().equals(name)) {
+                return config;
             }
-            return null;
         }
+        return null;
     }
 }

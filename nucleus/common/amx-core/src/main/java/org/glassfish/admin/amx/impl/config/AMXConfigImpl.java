@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,28 +21,77 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.AbstractQueue;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.management.*;
+
 import javax.management.Attribute;
-import static org.glassfish.admin.amx.config.AMXConfigConstants.*;
+import javax.management.AttributeChangeNotification;
+import javax.management.AttributeList;
+import javax.management.AttributeNotFoundException;
+import javax.management.Descriptor;
+import javax.management.InvalidAttributeValueException;
+import javax.management.MBeanAttributeInfo;
+import javax.management.MBeanException;
+import javax.management.MBeanInfo;
+import javax.management.MBeanOperationInfo;
+import javax.management.ObjectName;
+import javax.management.ReflectionException;
+
 import org.glassfish.admin.amx.config.AMXConfigProxy;
 import org.glassfish.admin.amx.config.AttributeResolver;
 import org.glassfish.admin.amx.core.AMXProxy;
 import org.glassfish.admin.amx.core.Util;
 import org.glassfish.admin.amx.impl.mbean.AMXImplBase;
-import org.glassfish.admin.amx.impl.util.*;
-import org.glassfish.admin.amx.util.*;
+import org.glassfish.admin.amx.impl.util.Issues;
+import org.glassfish.admin.amx.impl.util.MBeanInfoSupport;
+import org.glassfish.admin.amx.impl.util.SingletonEnforcer;
+import org.glassfish.admin.amx.impl.util.UnregistrationListener;
+import org.glassfish.admin.amx.util.AMXLoggerInfo;
+import org.glassfish.admin.amx.util.CollectionUtil;
+import org.glassfish.admin.amx.util.ExceptionUtil;
+import org.glassfish.admin.amx.util.ListUtil;
+import org.glassfish.admin.amx.util.MapUtil;
+import org.glassfish.admin.amx.util.StringUtil;
+import org.glassfish.admin.amx.util.TypeCast;
 import org.glassfish.admin.amx.util.jmx.JMXUtil;
-import static org.glassfish.external.amx.AMX.*;
 import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
-import org.jvnet.hk2.config.*;
+import org.jvnet.hk2.config.AttributeChanges;
+import org.jvnet.hk2.config.ConfigBean;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigCode;
+import org.jvnet.hk2.config.ConfigModel;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.Dom;
+import org.jvnet.hk2.config.RetryableException;
+import org.jvnet.hk2.config.Transaction;
+import org.jvnet.hk2.config.TransactionCallBack;
+import org.jvnet.hk2.config.TransactionFailure;
+import org.jvnet.hk2.config.TransactionListener;
+import org.jvnet.hk2.config.Transactions;
+import org.jvnet.hk2.config.UnprocessedChangeEvents;
+import org.jvnet.hk2.config.WriteableView;
+
+import static org.glassfish.admin.amx.config.AMXConfigConstants.CONFIG_CREATED_NOTIFICATION_TYPE;
+import static org.glassfish.admin.amx.config.AMXConfigConstants.CONFIG_OBJECT_NAME_KEY;
+import static org.glassfish.admin.amx.config.AMXConfigConstants.CONFIG_REMOVED_NOTIFICATION_TYPE;
+import static org.glassfish.external.amx.AMX.ATTR_CHILDREN;
+import static org.glassfish.external.amx.AMX.ATTR_NAME;
+import static org.glassfish.external.amx.AMX.NO_NAME;
 
 /**
 Base class from which all AMX Config MBeans should derive (but not "must").
@@ -856,29 +906,22 @@ public class AMXConfigImpl extends AMXImplBase
         return removed;
     }
 
-    private Object invokeDuckMethod(
-            final ConfigBeanJMXSupport.DuckTypedInfo info,
+    private Object invokeDefaultMethod(
+            final ConfigBeanJMXSupport.DefaultMethodInfo info,
             Object[] args)
             throws MBeanException
     {
-        try
-        {
-            //cdebug( "invokeDuckMethod(): invoking: " + info.name() + " on " + info.method().getDeclaringClass() );
-
+        try {
             if (!info.method().getDeclaringClass().isAssignableFrom(getConfigBeanProxy().getClass()))
             {
-                throw new IllegalArgumentException("invokeDuckMethod: " + getConfigBean().getProxyType() + " not asssignable to " + info.method().getDeclaringClass());
+                throw new IllegalArgumentException("invokeDefaultMethod: " + getConfigBean().getProxyType() + " not asssignable to " + info.method().getDeclaringClass());
             }
 
             Object result = info.method().invoke(getConfigBeanProxy(), args);
             result = translateResult(result);
 
-            // cdebug( "invokeDuckMethod(): invoked: " + info.name() + ", got " + result );
-
             return result;
-        }
-        catch (final Exception e)
-        {
+        } catch (final Exception e) {
             throw new MBeanException(e);
         }
     }
@@ -979,10 +1022,10 @@ public class AMXConfigImpl extends AMXImplBase
         Object result = null;
         debugMethod(operationName, args);
 
-        ConfigBeanJMXSupport.DuckTypedInfo duckTypedInfo = null;
-        if ((duckTypedInfo = getConfigBeanJMXSupport().findDuckTyped(operationName, types)) != null)
+        ConfigBeanJMXSupport.DefaultMethodInfo defaultMethodInfo = null;
+        if ((defaultMethodInfo = getConfigBeanJMXSupport().findDefaultMethod(operationName, types)) != null)
         {
-            result = invokeDuckMethod(duckTypedInfo, args);
+            result = invokeDefaultMethod(defaultMethodInfo, args);
         }
         else
         {
@@ -1068,17 +1111,16 @@ public class AMXConfigImpl extends AMXImplBase
             //
             //cdebug( "getAttributeFromConfigBean: no info for " + amxName );
 
-            ConfigBeanJMXSupport.DuckTypedInfo info = getConfigBeanJMXSupport().findDuckTyped("get" + amxName, null);
+            ConfigBeanJMXSupport.DefaultMethodInfo info = getConfigBeanJMXSupport().findDefaultMethod("get" + amxName, null);
             if ( info == null )
             {
-                info = getConfigBeanJMXSupport().findDuckTyped("is" + amxName, null);
+                info = getConfigBeanJMXSupport().findDefaultMethod("is" + amxName, null);
             }
             if ( info != null )
             {
-                //cdebug( "getAttributeFromConfigBean: found DuckTyped for " + amxName );
                 try
                 {
-                    result = invokeDuckMethod( info, null);
+                    result = invokeDefaultMethod( info, null);
                     return result;
                 }
                 catch( final Exception e )
@@ -1089,7 +1131,7 @@ public class AMXConfigImpl extends AMXImplBase
             }
             else
             {
-                //cdebug( "getAttributeFromConfigBean: no DuckTyped for " + amxName );
+
             }
             throw new RuntimeException( new AttributeNotFoundException( amxName ) );
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,85 +33,73 @@ import org.glassfish.resourcebase.resources.ResourceTypeOrder;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
 
 import static org.glassfish.config.support.Constants.NAME_REGEX;
 
-/* @XmlType(name = "", propOrder = {
-    "property"
-}) */
-
 /**
- *  This element is for configuring the resource adapter. These values
+ * This element is for configuring the resource adapter. These values
  * (properties) over-rides the default values present in ra.xml. The name
  * attribute has to be unique . It is optional for PE. It is used mainly for EE.
  */
-
 @Configured
 @RestRedirects({
- @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-resource-adapter-config"),
- @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-resource-adapter-config")
+        @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-resource-adapter-config"),
+        @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-resource-adapter-config")
 })
-@ResourceTypeOrder(deploymentOrder= ResourceDeploymentOrder.RESOURCEADAPTERCONFIG_RESOURCE)
+@ResourceTypeOrder(deploymentOrder = ResourceDeploymentOrder.RESOURCEADAPTERCONFIG_RESOURCE)
 public interface ResourceAdapterConfig extends ConfigBeanProxy, Resource, PropertyBag {
 
     String PATTERN_RA_NAME = "[^',][^',\\\\]*";
 
     /**
-     * Gets the value of the name property.
+     * Gets the value of the {@code name} property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     @Pattern(regexp = NAME_REGEX, message = "Pattern: " + NAME_REGEX)
     String getName();
 
     /**
-     * Sets the value of the name property.
+     * Sets the value of the {@code  name} property.
      *
-     * @param value allowed object is
-     *            {@link String }
+     * @param name allowed object is {@link String}
      */
-    void setName(String value) throws PropertyVetoException;
+    void setName(String name) throws PropertyVetoException;
 
     /**
-     * Gets the value of the threadPoolIds property.
+     * Gets the value of the {@code threadPoolIds} property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     String getThreadPoolIds();
 
     /**
-     * Sets the value of the threadPoolIds property.
+     * Sets the value of the {@code threadPoolIds} property.
      *
-     * @param value allowed object is
-     *            {@link String }
+     * @param poolIds allowed object is {@link String}
      */
-    void setThreadPoolIds(String value) throws PropertyVetoException;
+    void setThreadPoolIds(String poolIds) throws PropertyVetoException;
 
     /**
-     * Gets the value of the resourceAdapterName property.
+     * Gets the value of the {@code resourceAdapterName} property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute(key = true)
     @Pattern(regexp = PATTERN_RA_NAME, message = "Pattern: " + PATTERN_RA_NAME)
     String getResourceAdapterName();
 
     /**
-     * Sets the value of the resourceAdapterName property.
+     * Sets the value of the {@code resourceAdapterName} property.
      *
-     * @param value allowed object is
-     *            {@link String }
+     * @param raName allowed object is {@link String}
      */
-    void setResourceAdapterName(String value) throws PropertyVetoException;
+    void setResourceAdapterName(String raName) throws PropertyVetoException;
 
     /**
      * Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
@@ -123,13 +111,7 @@ public interface ResourceAdapterConfig extends ConfigBeanProxy, Resource, Proper
     List<Property> getProperty();
 
     @Override
-    @DuckTyped
-    String getIdentity();
-
-    class Duck {
-
-        public static String getIdentity(ResourceAdapterConfig resource) {
-            return resource.getResourceAdapterName();
-        }
+    default String getIdentity() {
+        return getResourceAdapterName();
     }
 }

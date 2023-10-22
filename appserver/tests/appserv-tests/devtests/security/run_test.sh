@@ -37,7 +37,8 @@ test_run(){
 
     "${OPENDS_HOME}/bin/start-ds"
     "${S1AS_HOME}/bin/asadmin" start-database
-    "${S1AS_HOME}/bin/asadmin" start-domain
+    "${S1AS_HOME}/bin/asadmin" start-domain ${GLASSFISH_SUSPEND}
+    
     cd "${APS_HOME}/devtests/security"
 
     ant "${TARGET}" | tee "${TEST_RUN_LOG}"

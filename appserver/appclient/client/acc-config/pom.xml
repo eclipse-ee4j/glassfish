@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.appclient</groupId>
         <artifactId>client</artifactId>
-        <version>7.0.4-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
     </parent>
 
     <artifactId>acc-config</artifactId>
@@ -56,6 +56,8 @@
         <config-dtd-file>*-application-client-container*.dtd</config-dtd-file>
         <added-test-classpath>${project.basedir}/${extracted-dtd-root}</added-test-classpath>
         <findbugs.exclude>${project.basedir}/exclude.xml</findbugs.exclude>
+        <!-- We don't need it here and it would fail -->
+        <glassfish.generate-injectors.skip>true</glassfish.generate-injectors.skip>
     </properties>
 
     <dependencies>

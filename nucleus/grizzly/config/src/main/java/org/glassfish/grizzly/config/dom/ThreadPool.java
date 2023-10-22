@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,23 +17,24 @@
 
 package org.glassfish.grizzly.config.dom;
 
+import java.beans.PropertyVetoException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.Dom;
-import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.types.PropertyBag;
-
-import java.beans.PropertyVetoException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Configured
 public interface ThreadPool extends ConfigBeanProxy, PropertyBag {
-    String DEFAULT_THREAD_POOL_CLASS_NAME =
-            "org.glassfish.grizzly.threadpool.GrizzlyExecutorService";
+
+    String DEFAULT_THREAD_POOL_CLASS_NAME = "org.glassfish.grizzly.threadpool.GrizzlyExecutorService";
 
     int IDLE_THREAD_TIMEOUT = 900;
+
     int MAX_QUEUE_SIZE = 4096;
 
     // min and max are set to the same value to force the use
@@ -40,41 +42,44 @@ public interface ThreadPool extends ConfigBeanProxy, PropertyBag {
     // This thread pool offers better performance characteristics
     // over the sync thread pool.
     int MAX_THREADPOOL_SIZE = 5;
+
     int MIN_THREADPOOL_SIZE = 5;
 
     /**
-     * The classname of a thread pool implementation
+     * The classname of a thread pool implementation.
      */
     @Attribute(defaultValue = DEFAULT_THREAD_POOL_CLASS_NAME)
     String getClassname();
 
-    void setClassname(String value);
+    void setClassname(String classname);
 
     /**
-     * Idle threads are removed from pool, after this time (in seconds)
+     * Idle threads are removed from pool, after this time (in seconds).
      */
     @Attribute(defaultValue = "" + IDLE_THREAD_TIMEOUT, dataType = Integer.class)
     String getIdleThreadTimeoutSeconds();
 
-    void setIdleThreadTimeoutSeconds(String value);
+    void setIdleThreadTimeoutSeconds(String idleThreadTimeout);
 
     /**
-     * The maxim number of tasks, which could be queued on the thread pool.  -1 disables any maximum checks.
+     * The maxim number of tasks, which could be queued on the thread pool.
+     *
+     * <p>{@code -1} disables any maximum checks.
      */
     @Attribute(defaultValue = "" + MAX_QUEUE_SIZE, dataType = Integer.class)
     String getMaxQueueSize();
 
-    void setMaxQueueSize(String value);
+    void setMaxQueueSize(String maxQueueSize);
 
     /**
      * Maximum number of threads in the thread pool servicing
-     * requests in this queue. This is the upper bound on the no. of
-     * threads that exist in the thread pool.
+     * requests in this queue. This is the upper bound on the number
+     * of threads that exist in the thread pool.
      */
     @Attribute(defaultValue = "" + MAX_THREADPOOL_SIZE, dataType = Integer.class)
     String getMaxThreadPoolSize();
 
-    void setMaxThreadPoolSize(String value) throws PropertyVetoException;
+    void setMaxThreadPoolSize(String maxThreadPoolSize) throws PropertyVetoException;
 
     /**
      * Minimum number of threads in the thread pool servicing
@@ -84,44 +89,38 @@ public interface ThreadPool extends ConfigBeanProxy, PropertyBag {
     @Attribute(defaultValue = "" + MIN_THREADPOOL_SIZE, dataType = Integer.class)
     String getMinThreadPoolSize();
 
-    void setMinThreadPoolSize(String value);
+    void setMinThreadPoolSize(String minThreadPoolSize);
 
     /**
-     * This is an id for the work-queue e.g. "thread-pool-1", "thread-pool-2" etc
+     * This is an id for the work-queue e.g. {@code thread-pool-1}, {@code thread-pool-2} etc.
      */
     @Attribute(required = true, key = true)
     String getName();
 
-    void setName(String value);
+    void setName(String name);
 
     /**
-     * This is an id for the work-queue e.g. "thread-pool-1", "thread-pool-2" etc
+     * This is an id for the work-queue e.g. {@code thread-pool-1}, {@code thread-pool-2} etc.
      */
     @Attribute
     @Deprecated
     String getThreadPoolId();
 
-    void setThreadPoolId(String value);
+    void setThreadPoolId(String threadPoolId);
 
-    @DuckTyped
-    List<NetworkListener> findNetworkListeners();
-
-    class Duck {
-
-        static public List<NetworkListener> findNetworkListeners(ThreadPool threadpool) {
-            NetworkConfig config = threadpool.getParent().getParent(NetworkConfig.class);
-            if (!Dom.unwrap(config).getProxyType().equals(NetworkConfig.class)) {
-                config = Dom.unwrap(config).element("network-config").createProxy();
-            }
-            List<NetworkListener> listeners = config.getNetworkListeners().getNetworkListener();
-            List<NetworkListener> refs = new ArrayList<NetworkListener>();
-            for (NetworkListener listener : listeners) {
-                if (listener.getThreadPool().equals(threadpool.getName())) {
-                    refs.add(listener);
-                }
-            }
-            return refs;
+    default List<NetworkListener> findNetworkListeners() {
+        NetworkConfig config = getParent().getParent(NetworkConfig.class);
+        Dom configProxy = Objects.requireNonNull(Dom.unwrap(config));
+        if (!configProxy.getProxyType().equals(NetworkConfig.class)) {
+            config = configProxy.element("network-config").createProxy();
         }
 
+        List<NetworkListener> networkListeners = new ArrayList<>();
+        for (NetworkListener listener : config.getNetworkListeners().getNetworkListener()) {
+            if (listener.getThreadPool().equals(getName())) {
+                networkListeners.add(listener);
+            }
+        }
+        return networkListeners;
     }
 }

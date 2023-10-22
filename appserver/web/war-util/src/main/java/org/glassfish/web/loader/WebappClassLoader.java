@@ -24,8 +24,6 @@ import com.sun.enterprise.security.integration.DDPermissionsLoader;
 import com.sun.enterprise.security.integration.PermsHolder;
 import com.sun.enterprise.util.io.FileUtils;
 
-import jakarta.annotation.PreDestroy;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FilePermission;
@@ -76,6 +74,7 @@ import org.apache.naming.resources.ResourceAttributes;
 import org.apache.naming.resources.WebDirContext;
 import org.glassfish.api.deployment.InstrumentableClassLoader;
 import org.glassfish.common.util.GlassfishUrlClassLoader;
+import org.glassfish.hk2.api.PreDestroy;
 import org.glassfish.web.loader.RepositoryManager.RepositoryResource;
 
 import static java.lang.System.Logger.Level.DEBUG;
@@ -125,7 +124,7 @@ import static org.glassfish.web.loader.LogFacade.getString;
  * @since 2007/08/17 15:46:27 $
  */
 public final class WebappClassLoader extends GlassfishUrlClassLoader
-    implements Reloader, InstrumentableClassLoader, DDPermissionsLoader, JarFileResourcesProvider {
+    implements Reloader, InstrumentableClassLoader, DDPermissionsLoader, JarFileResourcesProvider, PreDestroy {
 
     static {
         registerAsParallelCapable();
@@ -1181,7 +1180,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     }
 
 
-    @PreDestroy
     public void preDestroy() {
         LOG.log(TRACE, "preDestroy()");
         try {
@@ -1605,6 +1603,9 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
     private static class WebappBytecodePreprocessor implements BytecodePreprocessor {
 
+        /** Bytecode preprocessing flag */
+        private final ThreadLocal<Boolean> bytecodePreprocessing = new ThreadLocal<>();
+
         private final ClassFileTransformer transformer;
         private final WebappClassLoader classLoader;
 
@@ -1622,9 +1623,16 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
 
         @Override
         public byte[] preprocess(String resourceName, byte[] classBytes) {
+            // Skip preprocessing if already in progress
+            if (bytecodePreprocessing.get() != null) {
+                return classBytes;
+            }
+
+            bytecodePreprocessing.set(true);
             try {
                 // convert java/lang/Object.class to java/lang/Object (6 chars).
                 String classname = resourceName.substring(0, resourceName.length() - 6);
+                LOG.log(TRACE, "Transforming {0}", classname);
                 byte[] newBytes = transformer.transform(classLoader, classname, null, null, classBytes);
                 // ClassFileTransformer returns null if no transformation
                 // took place, where as ByteCodePreprocessor is expected
@@ -1632,6 +1640,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
                 return newBytes == null ? classBytes : newBytes;
             } catch (IllegalClassFormatException e) {
                 throw new IllegalStateException("Could not preprocess " + resourceName, e);
+            } finally {
+                bytecodePreprocessing.remove();
             }
         }
     }

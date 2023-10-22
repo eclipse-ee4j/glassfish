@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,11 +18,12 @@
 package com.sun.enterprise.config.serverbeans;
 
 /**
- * This is a marker interface to mark the interfaces which are involved in managing parts of the domain.xml. For example
- * Each one of the Domain, Config and Application interfaces manages one part of the domain.xml.
+ * This is a marker interface to mark the interfaces which are involved
+ * in managing parts of the {@code domain.xml}. For example, each one
+ * of the {@link Domain}, {@link Config} and {@link  Application} interfaces
+ * manages one part of the {@code domain.xml}.
  *
  * @author Masoud Kalali
  */
 public interface ConfigLoader {
-
 }

@@ -17,9 +17,6 @@
 
 package com.sun.enterprise.v3.server;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -37,6 +34,9 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.ClassLoaderHierarchy;
 import org.glassfish.internal.api.DelegatingClassLoader;
 import org.jvnet.hk2.annotations.Service;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
  * This class is responsible for constructing class loader that has visibility

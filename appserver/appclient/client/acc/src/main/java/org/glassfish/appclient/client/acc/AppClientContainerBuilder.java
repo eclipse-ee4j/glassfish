@@ -22,6 +22,11 @@ import com.sun.enterprise.module.bootstrap.BootException;
 import com.sun.enterprise.util.LocalStringManager;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
+import static java.util.logging.Level.CONFIG;
+import static org.glassfish.internal.api.ORBLocator.OMG_ORB_INIT_HOST_PROPERTY;
+import static org.glassfish.internal.api.ORBLocator.OMG_ORB_INIT_PORT_PROPERTY;
+import static org.glassfish.internal.api.ORBLocator.ORB_SSL_CLIENT_REQUIRED;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -29,7 +34,6 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.security.auth.callback.CallbackHandler;
@@ -41,41 +45,40 @@ import org.glassfish.appclient.client.acc.config.Property;
 import org.glassfish.appclient.client.acc.config.TargetServer;
 import org.glassfish.appclient.client.acc.config.util.XML;
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
-import org.glassfish.internal.api.ORBLocator;
 import org.xml.sax.SAXException;
 
 /**
- * Implements a builder for accumulating configuration information for the
- * app client container and then starting the ACC.
+ * Implements a builder for accumulating configuration information for the app client container and then starting the
+ * ACC.
+ *
  * <p>
- * The interface for the  ACC builder is defined as AppClientContainer.Builder so the
- * relevant JavaDoc is concentrated in that one class.
- *<p>
- * The AppClientContainerBuilder class records the
- * information the container itself needs in order to operate.
+ * The interface for the ACC builder is defined as AppClientContainer.Builder so the relevant JavaDoc is concentrated in
+ * that one class.
+ *
+ * <p>
+ * The AppClientContainerBuilder class records the information the container itself needs in order to operate.
  *
  * @author tjquinn
  */
 public class AppClientContainerBuilder implements AppClientContainer.Builder {
 
+    /** caller-optional logger - initialized to logger name from the class; caller can override with logger method */
+    private Logger logger = Logger.getLogger(getClass().getName());
+
     private final static String ENDPOINTS_PROPERTY_NAME = "com.sun.appserv.iiop.endpoints";
 
     private static final LocalStringManager localStrings = new LocalStringManagerImpl(AppClientContainerBuilder.class);
+
     /** caller-specified target servers */
     private TargetServer[] targetServers;
 
-    /** caller-optional logger  - initialized to logger name from the class; caller can override with logger method */
-    private Logger logger = Logger.getLogger(getClass().getName());
-
-    private AuthRealm authRealm = null;
+    private AuthRealm authRealm;
 
     private final URLClassLoader classLoader = (URLClassLoader) Thread.currentThread().getContextClassLoader();
 
     /**
-     * The caller can pre-set the client credentials using the
-     * <code>clientCredentials</code> method.  The ACC will use the
-     * username and realm values in intializing a callback handler if one is
-     * needed.
+     * The caller can pre-set the client credentials using the <code>clientCredentials</code> method. The ACC will use the
+     * username and realm values in intializing a callback handler if one is needed.
      */
     private ClientCredential clientCredential;
 
@@ -86,11 +89,9 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
     /** caller-provided message security configurations */
     private final List<MessageSecurityConfig> messageSecurityConfigs = new ArrayList<>();
 
-
     /**
-     * optional caller-specified properties governing the ACC's behavior.
-     * Correspond to the property elements available in the client-container
-     * element from sun-application-client-containerxxx.dtd.
+     * optional caller-specified properties governing the ACC's behavior. Correspond to the property elements available in
+     * the client-container element from sun-application-client-containerxxx.dtd.
      */
     private Properties containerProperties;
 
@@ -108,13 +109,10 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
         this.targetServers = targetServers;
     }
 
-    public AppClientContainer newContainer(final Class mainClass,
-            final CallbackHandler callerSpecifiedCallbackHandler) throws Exception {
+    public AppClientContainer newContainer(final Class mainClass, final CallbackHandler callerSpecifiedCallbackHandler) throws Exception {
         prepareHabitat();
-        Launchable client = Launchable.LaunchableUtil.newLaunchable(
-                ACCModulesManager.getHabitat(), mainClass);
-        AppClientContainer container = createContainer(client,
-                callerSpecifiedCallbackHandler, false /* istextAuth */);
+        Launchable client = Launchable.LaunchableUtil.newLaunchable(ACCModulesManager.getHabitat(), mainClass);
+        AppClientContainer container = createContainer(client, callerSpecifiedCallbackHandler, false /* istextAuth */);
         return container;
     }
 
@@ -125,22 +123,20 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
     }
 
     @Override
-    public AppClientContainer newContainer(final URI clientURI,
-            final CallbackHandler callerSpecifiedCallbackHandler,
-            final String callerSpecifiedMainClassName,
-            final String callerSpecifiedAppClientName) throws Exception, UserError {
-        return newContainer(clientURI, callerSpecifiedCallbackHandler,
-                callerSpecifiedMainClassName,
-                callerSpecifiedAppClientName,
-                false /* isTextAuth */);
+    public AppClientContainer newContainer(final URI clientURI, final CallbackHandler callerSpecifiedCallbackHandler,
+            final String callerSpecifiedMainClassName, final String callerSpecifiedAppClientName) throws Exception, UserError {
+        return newContainer(
+            clientURI,
+            callerSpecifiedCallbackHandler,
+            callerSpecifiedMainClassName,
+            callerSpecifiedAppClientName,
+            false /* isTextAuth */);
     }
 
     @Override
-    public AppClientContainer newContainer(final URI clientURI,
-            final CallbackHandler callerSpecifiedCallbackHandler,
-            final String callerSpecifiedMainClassName,
-            final String callerSpecifiedAppClientName,
-            final boolean isTextAuth) throws Exception, UserError {
+    public AppClientContainer newContainer(final URI clientURI, final CallbackHandler callerSpecifiedCallbackHandler,
+            final String callerSpecifiedMainClassName, final String callerSpecifiedAppClientName, final boolean isTextAuth)
+            throws Exception, UserError {
         prepareHabitat();
         prepareIIOP(targetServers, containerProperties);
         Launchable client = Launchable.LaunchableUtil.newLaunchable(
@@ -149,9 +145,7 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
                 callerSpecifiedAppClientName,
                 ACCModulesManager.getHabitat());
 
-        AppClientContainer container = createContainer(client,
-                callerSpecifiedCallbackHandler, isTextAuth);
-        return container;
+        return createContainer(client, callerSpecifiedCallbackHandler, isTextAuth);
     }
 
     @Override
@@ -159,28 +153,31 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
         return newContainer(clientURI, null, null, null);
     }
 
-    private AppClientContainer createContainer(final Launchable client,
-            final CallbackHandler callerSuppliedCallbackHandler,
-            final boolean isTextAuth) throws BootException, BootException, URISyntaxException, ClassNotFoundException, InstantiationException, IllegalAccessException, InjectionException, IOException, SAXException {
+    private AppClientContainer createContainer(final Launchable client, final CallbackHandler callerSuppliedCallbackHandler,
+            final boolean isTextAuth)
+            throws BootException, URISyntaxException, ReflectiveOperationException, InjectionException, IOException, SAXException {
+
         AppClientContainer container = ACCModulesManager.getService(AppClientContainer.class);
-        //process the packaged permissions.xml
+
+        // process the packaged permissions.xml
         container.processPermissions();
         container.setClient(client);
         container.setBuilder(this);
-        CallbackHandler callbackHandler =
-                (callerSuppliedCallbackHandler != null ?
-                    callerSuppliedCallbackHandler : getCallbackHandlerFromDescriptor(client.getDescriptor(classLoader).getCallbackHandler()));
-        container.prepareSecurity(targetServers, messageSecurityConfigs, containerProperties,
-                clientCredential, callbackHandler, classLoader, isTextAuth);
+        CallbackHandler callbackHandler = (callerSuppliedCallbackHandler != null ? callerSuppliedCallbackHandler
+                : getCallbackHandlerFromDescriptor(client.getDescriptor(classLoader).getCallbackHandler()));
+        container.prepareSecurity(targetServers, messageSecurityConfigs, containerProperties, clientCredential, callbackHandler,
+                classLoader, isTextAuth);
+
         return container;
     }
 
-    private CallbackHandler getCallbackHandlerFromDescriptor(final String callbackHandlerName) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-        if (callbackHandlerName != null && ! callbackHandlerName.equals("")) {
-            Class<CallbackHandler> callbackHandlerClass =
-                    (Class<CallbackHandler>) Class.forName(callbackHandlerName, true, classLoader);
+    private CallbackHandler getCallbackHandlerFromDescriptor(final String callbackHandlerName)
+            throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+        if (callbackHandlerName != null && !callbackHandlerName.equals("")) {
+            Class<CallbackHandler> callbackHandlerClass = (Class<CallbackHandler>) Class.forName(callbackHandlerName, true, classLoader);
             return callbackHandlerClass.newInstance();
         }
+
         return null;
     }
 
@@ -190,8 +187,8 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
     }
 
     /**
-     * Prepares the client ORB to bootstrap into the server ORB(s) specified
-     * by the TargetServer objects.
+     * Prepares the client ORB to bootstrap into the server ORB(s) specified by the TargetServer objects.
+     *
      * @param targetServers the TargetServer endpoints to which the client ORB can try to connect
      * @param containerProperties Properties, if specified, which might indicate that SSL is to be used
      * @return ORB-related properties to define host and port for bootstrapping
@@ -210,14 +207,11 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
         }
 
         /*
-         * If the user has explicitly defined the ORB-related properties, do
-         * not override those settings.
+         * If the user has explicitly defined the ORB-related properties, do not override those settings.
          */
         if (targetServers.length == 1) {
-            defineIfNotDefined(ORBLocator.OMG_ORB_INIT_HOST_PROPERTY,
-                    targetServers[0].getAddress());
-            defineIfNotDefined(ORBLocator.OMG_ORB_INIT_PORT_PROPERTY,
-                    Integer.toString(targetServers[0].getPort()));
+            defineIfNotDefined(OMG_ORB_INIT_HOST_PROPERTY, targetServers[0].getAddress());
+            defineIfNotDefined(OMG_ORB_INIT_PORT_PROPERTY, Integer.toString(targetServers[0].getPort()));
         } else {
             /*
              * Currently, set a system property to specify multiple endpoints.
@@ -226,27 +220,24 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
         }
 
         if (isSSLRequired(targetServers, containerProperties)) {
-            orbHelper.setCSIv2Prop(ORBLocator.ORB_SSL_CLIENT_REQUIRED, "true");
+            orbHelper.setCSIv2Prop(ORB_SSL_CLIENT_REQUIRED, "true");
         }
-        logger.log(Level.CONFIG, "Using endpoint address(es): {0}", sb.toString());
+
+        logger.log(CONFIG, "Using endpoint address(es): {0}", sb.toString());
 
     }
 
     /**
-     * Define the specified system property using the new value unless the
-     * property is already set.
+     * Define the specified system property using the new value unless the property is already set.
+     *
      * @param propName name of the property to check and, possibly, set
      * @param newPropValue value to set if the property is not already set
      */
     private void defineIfNotDefined(final String propName, final String newPropValue) {
         if (System.getProperty(propName) == null) {
             if (newPropValue == null) {
-                throw new RuntimeException(localStrings.getLocalString(
-                        AppClientContainerBuilder.class,
-                        "appclient.missingValue",
-                        "Value for {0} expected but was not configured or assigned",
-                        new Object[] {propName}
-                        ));
+                throw new RuntimeException(localStrings.getLocalString(AppClientContainerBuilder.class, "appclient.missingValue",
+                        "Value for {0} expected but was not configured or assigned", new Object[] { propName }));
 
             }
             System.setProperty(propName, newPropValue);
@@ -256,8 +247,8 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
     /**
      * Reports whether the ORB should be requested to use SSL.
      * <p>
-     * If any TargetServer specifies SSL or the container-level properties
-     * specify SSL then report "true."
+     * If any TargetServer specifies SSL or the container-level properties specify SSL then report "true."
+     *
      * @param targetServers configured TargetServer(s)
      * @param containerProperties configured container-level properties
      * @return whether the target servers or the properties implies the use of SSL
@@ -269,19 +260,19 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
                 return true;
             }
         }
-        for (TargetServer ts : targetServers) {
+
+        for (TargetServer targetServer : targetServers) {
             /*
-             * If this target server has the optional security sub-item then
-             * the security sub-item must have an ssl sub-item.  So we can just
-             * look for the security sub-item.
+             * If this target server has the optional security sub-item then the security sub-item must have an ssl sub-item. So we
+             * can just look for the security sub-item.
              */
-            if (ts.getSecurity() != null) {
+            if (targetServer.getSecurity() != null) {
                 return true;
             }
         }
+
         return false;
     }
-
 
     @Override
     public AppClientContainerBuilder addMessageSecurityConfig(final MessageSecurityConfig msConfig) {
@@ -304,7 +295,6 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
     public Logger getLogger() {
         return logger;
     }
-
 
     @Override
     public AppClientContainerBuilder authRealm(final String className) {
@@ -356,7 +346,7 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
     }
 
     @Override
-    public AppClientContainerBuilder sendPassword(final boolean sendPassword){
+    public AppClientContainerBuilder sendPassword(final boolean sendPassword) {
         this.sendPassword = sendPassword;
         return this;
     }

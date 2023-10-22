@@ -24,7 +24,7 @@ The Zip distributions can be found on following paths:
 ### Prerequisites
 
 * JDK11+, we strongly recommend using JDK17 to build GlassFish with all features.
-* Maven 3.6.0+
+* Maven 3.9.0+
 
 ### Execution
 

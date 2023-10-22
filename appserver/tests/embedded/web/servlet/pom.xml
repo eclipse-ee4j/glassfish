@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+    Copyright (c) 2023 Contributors to the Eclipse Foundation.
     Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -20,11 +21,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.tests.embedded</groupId>
         <artifactId>web</artifactId>
-        <version>7.0.4-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
+        <version>7.0.10-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.tests.embedded.web</groupId>
@@ -34,14 +35,6 @@
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
-            <plugin>
-                <inherited>true</inherited>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.1</version>
-            </plugin>
-            <plugin>
-                <artifactId>maven-war-plugin</artifactId>
-            </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
@@ -71,15 +64,13 @@
     </build>
     <dependencies>
         <dependency>
-            <groupId>org.glassfish.extras</groupId>
+            <groupId>org.glassfish.main.extras</groupId>
             <artifactId>glassfish-embedded-web</artifactId>
-            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>${servlet-api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

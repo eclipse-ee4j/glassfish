@@ -16,32 +16,37 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.admin.remote.RemoteRestAdminCommand;
-import com.sun.enterprise.config.serverbeans.*;
-import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.module.common_impl.LogHelper;
-import com.sun.enterprise.universal.GFBase64Decoder;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.SystemPropertyConstants;
-import com.sun.enterprise.util.uuid.UuidGenerator;
-import com.sun.enterprise.util.uuid.UuidGeneratorImpl;
-import com.sun.enterprise.v3.admin.adapter.AdminEndpointDecider;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URLDecoder;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
+
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;
+
 import org.glassfish.admin.payload.PayloadImpl;
 import org.glassfish.api.ActionReport;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.CommandModel;
+import org.glassfish.api.admin.CommandRunner;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.ParameterMap;
+import org.glassfish.api.admin.Payload;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.container.Adapter;
 import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.EventTypes;
@@ -62,6 +67,23 @@ import org.glassfish.internal.api.RemoteAdminAccessException;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.glassfish.server.ServerEnvironmentImpl;
+
+import com.sun.enterprise.admin.remote.RemoteRestAdminCommand;
+import com.sun.enterprise.config.serverbeans.AdminService;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.module.ModulesRegistry;
+import com.sun.enterprise.module.common_impl.LogHelper;
+import com.sun.enterprise.universal.GFBase64Decoder;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.util.SystemPropertyConstants;
+import com.sun.enterprise.util.uuid.UuidGenerator;
+import com.sun.enterprise.util.uuid.UuidGeneratorImpl;
+import com.sun.enterprise.v3.admin.adapter.AdminEndpointDecider;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * Listen to admin commands...
@@ -385,8 +407,9 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
         String enc = authHeader.substring(BASIC.length());
         String dec = new String(decoder.decodeBuffer(enc));
         int i = dec.indexOf(':');
-        if (i < 0)
+        if (i < 0) {
             return new String[] { "", "" };
+        }
         return new String[] { dec.substring(0, i), dec.substring(i + 1) };
     }
 
@@ -422,8 +445,9 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
             report = habitat.getService(ActionReport.class, qualifier);
         } else {
             String userAgent = req.getHeader("User-Agent");
-            if (userAgent!=null)
+            if (userAgent!=null) {
                 report = habitat.getService(ActionReport.class, userAgent.substring(userAgent.indexOf('/')+1));
+            }
             if (report==null) {
                 String accept = req.getHeader("Accept");
                 if (accept!=null) {
@@ -480,8 +504,9 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
             AdminCommand adminCommand = commandRunner.getCommand(scope, command, report, aalogger);
             if (adminCommand==null) {
                 // maybe commandRunner already reported the failure?
-                if (report.getActionExitCode() == ActionReport.ExitCode.FAILURE)
+                if (report.getActionExitCode() == ActionReport.ExitCode.FAILURE) {
                     return report;
+                }
                 String message =
                     adminStrings.getLocalString("adapter.command.notfound",
                         "Command {0} not found", command);
@@ -567,8 +592,9 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
         StringTokenizer stoken = new StringTokenizer(requestString == null ? "" : requestString, QUERY_STRING_SEPARATOR);
         while (stoken.hasMoreTokens()) {
             String token = stoken.nextToken();
-            if (token.indexOf("=") == -1)
+            if (token.indexOf("=") == -1) {
                 continue;
+            }
             String paramName = token.substring(0, token.indexOf("="));
             String value = token.substring(token.indexOf("=") + 1);
 
@@ -605,8 +631,9 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
         StringTokenizer stoken = new StringTokenizer(requestString == null ? "" : requestString, QUERY_STRING_SEPARATOR);
         while (stoken.hasMoreTokens()) {
             String token = stoken.nextToken();
-            if (token.indexOf("=") == -1)
+            if (token.indexOf("=") == -1) {
                 continue;
+            }
             String paramName = token.substring(0, token.indexOf("="));
             String value = token.substring(token.indexOf("=") + 1);
             try {
@@ -622,8 +649,9 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
         // Dump parameters...
         if (aalogger.isLoggable(Level.FINER)) {
             for (Map.Entry<String, List<String>> entry : parameters.entrySet()) {
-                for (String v : entry.getValue())
+                for (String v : entry.getValue()) {
                     aalogger.log(Level.FINER, "Key {0} = {1}", new Object[]{entry.getKey(), v});
+                }
             }
         }
         return parameters;

@@ -96,8 +96,9 @@ public class ScatteredWebArchivist extends WebArchivist {
         public void process(ReadableArchive archiveFile, WebBundleDescriptorImpl descriptor, ClassLoader classLoader,
             Parser parser) throws IOException {
             this.classLoader = classLoader;
+            this.elements.clear();
             // in embedded mode, we don't scan archive, we just process all classes.
-            Enumeration<String> fileEntries = archiveFile.entries();
+            Enumeration<String> fileEntries = descriptor.getArchiveFileEntries(archiveFile);
             while (fileEntries.hasMoreElements()) {
                 String entry = fileEntries.nextElement();
                 if (entry.endsWith(".class")) {

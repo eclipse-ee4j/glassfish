@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,13 @@
 
 package org.glassfish.connectors.config;
 
+import jakarta.validation.constraints.NotNull;
+
+import java.beans.PropertyVetoException;
+
+import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.jvnet.hk2.config.Attribute;
-
-import jakarta.validation.constraints.NotNull;
-import java.beans.PropertyVetoException;
 
 @Configured
 public interface GroupMap extends ConfigBeanProxy {
@@ -29,43 +31,38 @@ public interface GroupMap extends ConfigBeanProxy {
     /**
      * Gets the value of the EISGroup - a Group in the EIS security
      * domain that is being mapped to a Group in the application server's
-     * security domain
+     * security domain.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
-    @Attribute(key=true)
+    @Attribute(key = true)
     @NotNull
-    public String getEisGroup();
+    String getEisGroup();
 
     /**
      * Sets the value of the EISGroup - a Group in the EIS security
      * domain that is being mapped to a Group in the application server's
-     * security domain
+     * security domain.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param group allowed object is {@link String}
      */
-    public void setEisGroup(String value) throws PropertyVetoException;
+    void setEisGroup(String group) throws PropertyVetoException;
 
     /**
      * Gets the value of the MappedGroup - a Group that is valid in
-     * the application server's security domain
+     * the application server's security domain.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     @NotNull
-    public String getMappedGroup();
+    String getMappedGroup();
 
     /**
      * Sets the value of the MappedGroup - a Group that is valid in
-     * the application server's security domain
+     * the application server's security domain.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param group allowed object is {@link String}
      */
-    public void setMappedGroup(String value) throws PropertyVetoException;
-
+    void setMappedGroup(String group) throws PropertyVetoException;
 }

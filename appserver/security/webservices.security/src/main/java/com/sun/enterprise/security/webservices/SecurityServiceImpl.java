@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,29 +17,29 @@
 
 package com.sun.enterprise.security.webservices;
 
+import static com.sun.enterprise.security.webservices.LogUtils.BASIC_AUTH_ERROR;
+import static com.sun.enterprise.util.Utility.isEmpty;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
+
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.WebServiceEndpoint;
-import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
 import com.sun.enterprise.security.SecurityContext;
-import com.sun.enterprise.security.authorize.PolicyContextHandlerImpl;
 import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
-import com.sun.enterprise.security.jmac.provider.ServerAuthConfig;
-import com.sun.enterprise.security.web.integration.WebPrincipal;
+import com.sun.enterprise.security.ee.authorize.PolicyContextHandlerImpl;
+import com.sun.enterprise.security.ee.web.integration.WebPrincipal;
+import com.sun.enterprise.security.webservices.client.ClientSecurityPipeCreator;
 import com.sun.enterprise.web.WebModule;
 import com.sun.web.security.RealmAdapter;
 import com.sun.xml.ws.assembler.metro.dev.ClientPipelineHook;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.security.jacc.PolicyContext;
 import jakarta.servlet.http.HttpServletRequest;
-
 import java.security.Principal;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.apache.catalina.Globals;
 import org.glassfish.security.common.UserNameAndPassword;
 import org.glassfish.webservices.EjbRuntimeEndpointInfo;
@@ -57,126 +57,153 @@ import org.jvnet.hk2.annotations.Service;
 @Singleton
 public class SecurityServiceImpl implements SecurityService {
 
-    @Inject
-    private AppServerAuditManager auditManager;
-
     protected static final Logger _logger = LogUtils.getLogger();
 
     private static final String AUTHORIZATION_HEADER = "authorization";
 
-    @Override
-    public Object mergeSOAPMessageSecurityPolicies(MessageSecurityBindingDescriptor desc) {
-        try {
-            // merge message security policy from domain.xml and sun-specific
-            // deployment descriptor
-            ServerAuthConfig serverAuthConfig = com.sun.enterprise.security.jmac.provider.ServerAuthConfig
-                .getConfig(com.sun.enterprise.security.jauth.AuthConfig.SOAP, desc, null);
-            return serverAuthConfig;
-        } catch (Exception ae) {
-            _logger.log(Level.SEVERE, LogUtils.EJB_SEC_CONFIG_FAILURE, ae);
-        }
-        return null;
-    }
+    @Inject
+    private AppServerAuditManager auditManager;
 
     @Override
-    public boolean doSecurity(HttpServletRequest hreq, EjbRuntimeEndpointInfo epInfo, String realmName, WebServiceContextImpl context) {
-        //BUG2263 - Clear the value of UserPrincipal from previous request
-        //If authentication succeeds, the proper value will be set later in
-        //this method.
+    public boolean doSecurity(HttpServletRequest request, EjbRuntimeEndpointInfo endpointInfo, String realmName, WebServiceContextImpl context) {
+        // Clear the value of UserPrincipal from previous request
+        // If authentication succeeds, the proper value will be set later in this method.
         boolean authenticated = false;
+
         try {
-            //calling this for a GET request WSDL query etc can cause problems
-            String method = hreq.getMethod();
-//            if (method.equals("POST") /*&& hreq.getUserPrincipal() == null*/) {
-//                resetSecurityContext();
-//            }
+            // Calling this for a GET request WSDL query etc can cause problems
+            String method = request.getMethod();
 
             if (context != null) {
                 context.setUserPrincipal(null);
             }
 
-            WebServiceEndpoint endpoint = epInfo.getEndpoint();
+            WebServiceEndpoint endpoint = endpointInfo.getEndpoint();
 
-            String rawAuthInfo = hreq.getHeader(AUTHORIZATION_HEADER);
+            String rawAuthInfo = request.getHeader(AUTHORIZATION_HEADER);
             if (method.equals("GET") || !endpoint.hasAuthMethod()) {
-            //if (method.equals("GET") || rawAuthInfo == null) {
-                authenticated = true;
                 return true;
             }
 
             WebPrincipal webPrincipal = null;
             String endpointName = endpoint.getEndpointName();
             if (endpoint.hasBasicAuth() || rawAuthInfo != null) {
-                //String rawAuthInfo = hreq.getHeader(AUTHORIZATION_HEADER);
                 if (rawAuthInfo == null) {
-                    sendAuthenticationEvents(false, hreq.getRequestURI(), null);
-                    authenticated = false;
+                    sendAuthenticationEvents(false, request.getRequestURI(), null);
                     return false;
                 }
 
                 UserNameAndPassword usernamePassword = parseUsernameAndPassword(rawAuthInfo);
                 if (usernamePassword == null) {
-                    _logger.log(Level.WARNING, LogUtils.BASIC_AUTH_ERROR, endpointName);
+                    _logger.log(WARNING, BASIC_AUTH_ERROR, endpointName);
                 } else {
                     webPrincipal = new WebPrincipal(usernamePassword, SecurityContext.init());
                 }
             } else {
-                //org.apache.coyote.request.X509Certificate
-                X509Certificate certs[] = (X509Certificate[]) hreq.getAttribute(Globals.CERTIFICATES_ATTR);
-                if (certs == null || certs.length < 1) {
-                    certs = (X509Certificate[]) hreq.getAttribute(Globals.SSL_CERTIFICATE_ATTR);
+                X509Certificate certificates[] = (X509Certificate[]) request.getAttribute(Globals.CERTIFICATES_ATTR);
+                if (isEmpty(certificates)) {
+                    certificates = (X509Certificate[]) request.getAttribute(Globals.SSL_CERTIFICATE_ATTR);
                 }
 
-                if (certs == null) {
-                    _logger.log(Level.WARNING, LogUtils.CLIENT_CERT_ERROR, endpointName);
+                if (certificates == null) {
+                    _logger.log(WARNING, LogUtils.CLIENT_CERT_ERROR, endpointName);
                 } else {
-                    webPrincipal = new WebPrincipal(certs, SecurityContext.init());
+                    webPrincipal = new WebPrincipal(certificates, SecurityContext.init());
                 }
             }
 
             if (webPrincipal == null) {
-                sendAuthenticationEvents(false, hreq.getRequestURI(), null);
+                sendAuthenticationEvents(false, request.getRequestURI(), null);
                 return authenticated;
             }
 
-            RealmAdapter ra = new RealmAdapter(realmName, endpoint.getBundleDescriptor().getModuleID());
-            authenticated = ra.authenticate(webPrincipal);
+            // Very questionable use of RealmAdapter!
+            RealmAdapter realmAdapter = new RealmAdapter(realmName, endpoint.getBundleDescriptor().getModuleID());
+            authenticated = realmAdapter.authenticate(request, webPrincipal);
             if (authenticated) {
-                sendAuthenticationEvents(true, hreq.getRequestURI(), webPrincipal);
+                sendAuthenticationEvents(true, request.getRequestURI(), webPrincipal);
             } else {
-                sendAuthenticationEvents(false, hreq.getRequestURI(), webPrincipal);
-                _logger.log(Level.FINE, "authentication failed for {0}", endpointName);
+                sendAuthenticationEvents(false, request.getRequestURI(), webPrincipal);
+                _logger.log(FINE, "authentication failed for {0}", endpointName);
             }
 
-            //Setting if userPrincipal in WSCtxt applies for JAXWS endpoints only
-            epInfo.prepareInvocation(false);
-            WebServiceContextImpl ctxt = (WebServiceContextImpl) epInfo.getWebServiceContext();
-            ctxt.setUserPrincipal(webPrincipal);
+            // Setting if userPrincipal in WSCtxt applies for JAXWS endpoints only
+            endpointInfo.prepareInvocation(false);
+            WebServiceContextImpl webServiceContext = (WebServiceContextImpl) endpointInfo.getWebServiceContext();
+            webServiceContext.setUserPrincipal(webPrincipal);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
             if (auditManager != null && auditManager.isAuditOn()) {
-                auditManager.ejbAsWebServiceInvocation(epInfo.getEndpoint().getEndpointName(), authenticated);
+                auditManager.ejbAsWebServiceInvocation(endpointInfo.getEndpoint().getEndpointName(), authenticated);
             }
         }
+
         return authenticated;
     }
 
+    @Override
+    public void resetSecurityContext() {
+        SecurityContext.setUnauthenticatedContext();
+    }
 
-    private UserNameAndPassword parseUsernameAndPassword(String rawAuthInfo) {
-        if (rawAuthInfo != null && rawAuthInfo.startsWith("Basic ")) {
-            String authString = rawAuthInfo.substring(6).trim();
-            // Decode and parse the authorization credentials
-            String unencoded = new String(Base64.getDecoder().decode(authString.getBytes()));
-            int colon = unencoded.indexOf(':');
-            if (colon > 0) {
-                String user = unencoded.substring(0, colon).trim();
-                String password = unencoded.substring(colon + 1).trim();
-                return new UserNameAndPassword(user, password);
+    @Override
+    public void resetPolicyContext() {
+        PolicyContextHandlerImpl.getInstance().reset();
+        PolicyContext.setContextID(null);
+    }
+
+    @Override
+    public ClientPipelineHook getClientPipelineHook(ServiceReferenceDescriptor ref) {
+        return new ClientSecurityPipeCreator(ref);
+    }
+
+    @Override
+    public Principal getUserPrincipal(boolean isWeb) {
+        // This is a servlet endpoint
+        SecurityContext securityContext = SecurityContext.getCurrent();
+        if (securityContext == null) {
+            return null;
+        }
+
+        if (securityContext.didServerGenerateCredentials()) {
+            if (isWeb) {
+                return null;
             }
         }
-        return null;
+
+        return securityContext.getCallerPrincipal();
+    }
+
+    @Override
+    public boolean isUserInRole(WebModule webModule, Principal principal, String servletName, String role) {
+        if (webModule.getRealm() instanceof RealmAdapter) {
+            RealmAdapter realmAdapter = (RealmAdapter) webModule.getRealm();
+            return realmAdapter.hasRole(servletName, principal, role);
+        }
+
+        return false;
+    }
+
+    private UserNameAndPassword parseUsernameAndPassword(String rawAuthInfo) {
+        if (rawAuthInfo == null || !rawAuthInfo.startsWith("Basic ")) {
+            return null;
+        }
+
+        String authString = rawAuthInfo.substring(6).trim();
+
+        // Decode and parse the authorization credentials
+        String unencoded = new String(Base64.getDecoder().decode(authString.getBytes()));
+        int colon = unencoded.indexOf(':');
+
+        if (colon <= 0) {
+            return null;
+        }
+
+        String user = unencoded.substring(0, colon).trim();
+        String password = unencoded.substring(colon + 1).trim();
+        return new UserNameAndPassword(user, password);
     }
 
 
@@ -185,6 +212,7 @@ public class SecurityServiceImpl implements SecurityService {
         if (endpoint == null) {
             return;
         }
+
         for (AuthenticationListener listener : WebServiceEngineImpl.getInstance().getAuthListeners()) {
             if (success) {
                 listener.authSucess(endpoint.getDescriptor().getBundleDescriptor(), endpoint, principal);
@@ -192,50 +220,5 @@ public class SecurityServiceImpl implements SecurityService {
                 listener.authFailure(endpoint.getDescriptor().getBundleDescriptor(), endpoint, principal);
             }
         }
-    }
-
-
-    @Override
-    public void resetSecurityContext() {
-        SecurityContext.setUnauthenticatedContext();
-    }
-
-
-    @Override
-    public void resetPolicyContext() {
-        PolicyContextHandlerImpl.getInstance().reset();
-        PolicyContext.setContextID(null);
-    }
-
-
-    @Override
-    public ClientPipelineHook getClientPipelineHook(ServiceReferenceDescriptor ref) {
-        return new ClientPipeCreator(ref);
-    }
-
-
-    @Override
-    public Principal getUserPrincipal(boolean isWeb) {
-        // This is a servlet endpoint
-        SecurityContext ctx = SecurityContext.getCurrent();
-        if (ctx == null) {
-            return null;
-        }
-        if (ctx.didServerGenerateCredentials()) {
-            if (isWeb) {
-                return null;
-            }
-        }
-        return ctx.getCallerPrincipal();
-    }
-
-
-    @Override
-    public boolean isUserInRole(WebModule webModule, Principal principal, String servletName, String role) {
-        if (webModule.getRealm() instanceof RealmAdapter) {
-            RealmAdapter realmAdapter = (RealmAdapter) webModule.getRealm();
-            return realmAdapter.hasRole(servletName, principal, role);
-        }
-        return false;
     }
 }

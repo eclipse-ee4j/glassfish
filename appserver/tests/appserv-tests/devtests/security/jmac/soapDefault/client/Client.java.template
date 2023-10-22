@@ -28,8 +28,7 @@ import com.sun.s1asdev.security.jmac.soapdefault.servletws.HelloServlet;
 import com.sun.s1asdev.security.jmac.soapdefault.servletws.JmacSoapDefaultServletService;
 
 public class Client {
-    private static SimpleReporterAdapter stat =
-            new SimpleReporterAdapter("appserv-tests");
+    private static SimpleReporterAdapter stat = new SimpleReporterAdapter("appserv-tests");
     private static String testSuite = "Sec::Jmac SOAPDefault test ";
 
     @WebServiceRef(wsdlLocation="http://@HOST@:@PORT@/JmacSoapDefaultEjbService/HelloEjb?WSDL")
@@ -47,7 +46,9 @@ public class Client {
 
             description = testSuite + " ejbws: hello";
             String ejbMsg = ejbPort.hello("Sun");
-            System.out.println(ejbMsg);
+            System.out.println("Actual: " + ejbMsg);
+            System.out.println("Expected: " + "ValResp SecResp HelloEjb ValReq SecReq Sun");
+            
             if ("ValResp SecResp HelloEjb ValReq SecReq Sun".equals(ejbMsg)) {
                 stat.addStatus(description, stat.PASS);  
             } else {
@@ -57,7 +58,9 @@ public class Client {
             HelloServlet servletPort = servletService.getHelloServletPort();
             description = testSuite + " serlvetws: hello";
             String servletMsg = servletPort.hello("Sun");
-            System.out.println(servletMsg);
+            System.out.println("Actual: " + servletMsg);
+            System.out.println("Expected: " + "ValResp SecResp HelloServlet ValReq SecReq Sun");
+            
             if ("ValResp SecResp HelloServlet ValReq SecReq Sun".equals(servletMsg)) {
                 stat.addStatus(description, stat.PASS);  
             } else {

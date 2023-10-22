@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,7 @@
 
 package com.sun.enterprise.security.auth.realm;
 
+import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
 import java.security.Principal;
 import java.util.Enumeration;
 
@@ -23,9 +25,10 @@ import java.util.Enumeration;
  * All users are principals ... perhaps in the native OS, perhaps not.
  *
  * <P>
- * Users always have authentication information, which is used to validate a user's proferred credentials. Different kinds of
- * realms use different kinds of authentication information. For example, realms could use X.509 public key certificates, shared
- * passphrases, encrypted passwords, smart cards, or biometric data to figure out if the user's credentials are valid.
+ * Users always have authentication information, which is used to validate a user's proferred credentials. Different
+ * kinds of realms use different kinds of authentication information. For example, realms could use X.509 public key
+ * certificates, shared passphrases, encrypted passwords, smart cards, or biometric data to figure out if the user's
+ * credentials are valid.
  *
  * <P>
  * Users typically have attributes that identify privileges granted/possesed by the user.
@@ -50,5 +53,5 @@ public interface User extends Principal {
     /**
      * Returns an enumeration of the keys for the attributes supported for this user.
      */
-    Enumeration getAttributeNames();
+    Enumeration<String> getAttributeNames();
 }

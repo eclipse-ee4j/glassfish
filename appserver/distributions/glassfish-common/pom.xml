@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.distributions</groupId>
         <artifactId>distributions</artifactId>
-        <version>7.0.4-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
     </parent>
 
     <artifactId>glassfish-common</artifactId>
@@ -80,15 +80,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>create-artifact</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

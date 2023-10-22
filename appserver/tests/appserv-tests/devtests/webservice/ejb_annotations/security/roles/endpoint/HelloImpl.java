@@ -26,7 +26,7 @@ import jakarta.annotation.security.PermitAll;
 @Stateless
 public class HelloImpl {
 
-    @RolesAllowed(value={"webservicetester"})
+    @RolesAllowed(value = { "webservicetester" })
     public String roleBased(String who) {
         return "WebSvcTest-Hello " + who;
     }
@@ -36,7 +36,7 @@ public class HelloImpl {
         return "WebSvcTest-Hello " + who;
     }
 
-   @PermitAll
+    @PermitAll
     public String permitAll(String who) {
         return "WebSvcTest-Hello " + who;
     }

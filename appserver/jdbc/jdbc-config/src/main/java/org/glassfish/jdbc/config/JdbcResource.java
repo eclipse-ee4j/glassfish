@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -40,102 +40,83 @@ import org.glassfish.resourcebase.resources.ResourceTypeOrder;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
 
 /**
- * JDBC javax.sql.(XA)DataSource resource definition
+ * JDBC javax.sql.(XA)DataSource resource definition.
  */
-
-/* @XmlType(name = "", propOrder = {
-    "description",
-    "property"
-}) */
-
 @Configured
-@ResourceConfigCreator(commandName="create-jdbc-resource")
+@ResourceConfigCreator(commandName = "create-jdbc-resource")
 @RestRedirects({
- @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-jdbc-resource"),
- @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-jdbc-resource")
+        @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-jdbc-resource"),
+        @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-jdbc-resource")
 })
-@ResourceTypeOrder(deploymentOrder=ResourceDeploymentOrder.JDBC_RESOURCE)
-@ReferenceConstraint(skipDuringCreation=true, payload=JdbcResource.class)
-@UniqueResourceNameConstraint(message="{resourcename.isnot.unique}", payload=JdbcResource.class)
-public interface JdbcResource extends ConfigBeanProxy, Resource,
-        PropertyBag, BindableResource, Payload, ResourcePoolReference {
+@ResourceTypeOrder(deploymentOrder = ResourceDeploymentOrder.JDBC_RESOURCE)
+@ReferenceConstraint(skipDuringCreation = true, payload = JdbcResource.class)
+@UniqueResourceNameConstraint(message = "{resourcename.isnot.unique}", payload = JdbcResource.class)
+public interface JdbcResource extends ConfigBeanProxy, Resource, PropertyBag, BindableResource, Payload, ResourcePoolReference {
 
     /**
-     * Gets the value of the poolName property.
+     * Gets the value of the {@code poolName} property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
     @Override
     @Attribute
     @NotNull
-    @Param(name=name)
-    @ReferenceConstraint.RemoteKey(message="{resourceref.invalid.poolname}", type=JdbcConnectionPool.class)
+    @Param(name = name)
+    @ReferenceConstraint.RemoteKey(message = "{resourceref.invalid.poolname}", type = JdbcConnectionPool.class)
     String getPoolName();
 
     String name = "connectionpoolid";
 
     /**
-     * Gets the value of the enabled property.
+     * Gets the value of the {@code enabled} property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
     @Override
-    @Attribute (defaultValue="true",dataType=Boolean.class)
+    @Attribute(defaultValue = "true", dataType = Boolean.class)
     @Param
     String getEnabled();
 
     /**
-     * Sets the value of the enabled property.
+     * Sets the value of the {@code enabled} property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param enabled allowed object is {@link String}
      */
     @Override
-    void setEnabled(String value) throws PropertyVetoException;
+    void setEnabled(String enabled) throws PropertyVetoException;
 
     /**
-     * Gets the value of the description property.
+     * Gets the value of the {@code description} property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     @Param
     String getDescription();
 
     /**
-     * Sets the value of the description property.
+     * Sets the value of the {@code description} property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param description allowed object is {@link String}
      */
-    void setDescription(String value) throws PropertyVetoException;
+    void setDescription(String description) throws PropertyVetoException;
 
     /**
      * Properties as per {@link PropertyBag}
      */
     @Override
-    @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
-    @PropertiesDesc(props={})
+    @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props" )
+    @PropertiesDesc(props = {})
     @Element
     List<Property> getProperty();
 
-
     @Override
-    @DuckTyped
-    String getIdentity();
-
-    class Duck {
-        public static String getIdentity(JdbcResource resource){
-            return resource.getJndiName();
-        }
+    default String getIdentity() {
+        return getJndiName();
     }
 }

@@ -20,8 +20,8 @@
 <!DOCTYPE glassfish-application PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Java EE Application 6.0//EN" "http://glassfish.org/dtds/glassfish-application_6_0-1.dtd">
 
 <glassfish-application>
-  <security-role-mapping>
-    <role-name>users</role-name>
-    <group-name>users</group-name>
-  </security-role-mapping>
+    <security-role-mapping>
+        <role-name>users</role-name>
+        <group-name>users</group-name>
+    </security-role-mapping>
 </glassfish-application>

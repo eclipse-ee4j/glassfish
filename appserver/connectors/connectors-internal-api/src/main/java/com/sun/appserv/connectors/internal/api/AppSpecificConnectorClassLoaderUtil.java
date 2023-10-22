@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -91,12 +91,10 @@ public class AppSpecificConnectorClassLoaderUtil {
     @Inject
     private Provider<Applications> applicationsProvider;
 
-    private static final Logger _logger =
-            LogDomains.getLogger(AppSpecificConnectorClassLoaderUtil.class, LogDomains.RSR_LOGGER);
+    private static final Logger LOG = LogDomains.getLogger(AppSpecificConnectorClassLoaderUtil.class,
+        LogDomains.RSR_LOGGER, false);
 
-    /**
-     * {@inheritDoc}
-     */
+
     public void detectReferredRARs(String appName) {
         ApplicationInfo appInfo = appRegistry.get(appName);
 
@@ -106,11 +104,9 @@ public class AppSpecificConnectorClassLoaderUtil {
         }
         Application app = appInfo.getMetaData(Application.class);
 
-        if(!appInfo.isJakartaEEApp()){
-            if(_logger.isLoggable(Level.FINEST)){
-                _logger.finest("Application ["+appName+"] is not a Jakarta EE application, skipping " +
-                        "resource-adapter references detection");
-            }
+        if (!appInfo.isJakartaEEApp()) {
+            LOG.log(Level.FINEST, "Application [{0}] is not a Jakarta EE application, skipping"
+                + " resource-adapter references detection", appName);
             return;
         }
 

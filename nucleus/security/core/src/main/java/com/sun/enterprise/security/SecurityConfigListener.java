@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -41,10 +42,9 @@ import com.sun.enterprise.config.serverbeans.JaccProvider;
 import com.sun.enterprise.config.serverbeans.MessageSecurityConfig;
 import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.security.audit.BaseAuditManager;
-import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
 import com.sun.enterprise.security.auth.realm.Realm;
 import com.sun.enterprise.security.auth.realm.RealmsManager;
-
+import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
@@ -70,11 +70,11 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
     @Inject
     BaseAuditManager auditManager;
 
-    private String auditEnabled = null;
-    private String defaultRealm = null;
-    private String jacc = null;
-    private String activateDefaultP2RMapping = null;
-    private String mappedPrincipalClassName = null;
+    private String auditEnabled;
+    private String defaultRealm;
+    private String jacc;
+    private String activateDefaultP2RMapping;
+    private String mappedPrincipalClassName;
 
     public SecurityConfigListener() {
 
@@ -87,98 +87,101 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
      */
     @Override
     public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
-        // I am not so interested with the list of events, just sort who got added or removed for me.
+        // The list of events is not so interesting. Just sort which ones got added or removed.
         ConfigSupport.sortAndDispatch(events, new Changed() {
             /**
              * Notification of a change on a configuration object
              *
-             * @param type type of change : ADD mean the changedInstance was added to the parent REMOVE means the changedInstance was
-             * removed from the parent, CHANGE means the changedInstance has mutated.
+             * @param type type of change : ADD mean the changedInstance was added to the parent REMOVE means the changedInstance
+             * was removed from the parent, CHANGE means the changedInstance has mutated.
              * @param changedType type of the configuration object
              * @param changedInstance changed instance.
              */
             @Override
             public <T extends ConfigBeanProxy> NotProcessed changed(TYPE type, Class<T> changedType, T changedInstance) {
-                NotProcessed np = null;
+                NotProcessed notProcessed = null;
                 switch (type) {
                 case ADD:
                     logger.fine("A new " + changedType.getName() + " was added : " + changedInstance);
-                    np = handleAddEvent(changedInstance);
+                    notProcessed = handleAddEvent(changedInstance);
                     break;
 
                 case CHANGE:
                     logger.fine("A " + changedType.getName() + " was changed : " + changedInstance);
-                    np = handleChangeEvent(changedInstance);
+                    notProcessed = handleChangeEvent(changedInstance);
                     break;
 
                 case REMOVE:
                     logger.fine("A " + changedType.getName() + " was removed : " + changedInstance);
-                    np = handleRemoveEvent(changedInstance);
+                    notProcessed = handleRemoveEvent(changedInstance);
                     break;
                 }
-                return np;
+
+                return notProcessed;
             }
 
             private <T extends ConfigBeanProxy> NotProcessed handleAddEvent(T instance) {
-                NotProcessed np = null;
+                NotProcessed notProcessed = null;
                 if (instance instanceof AuthRealm) {
                     authRealmCreated((AuthRealm) instance);
                 } else if (instance instanceof JaccProvider) {
-                    np = new NotProcessed("Cannot change JACC provider once installed, restart required");
-                    //inject PolicyLoader and try to call loadPolicy
-                    //but policyLoader in V2 does not allow reloading of policy provider
-                    //once installed. The only option is restart the server
+                    notProcessed = new NotProcessed("Cannot change Jakarta Authorization provider once installed, restart required");
+                    // inject PolicyLoader and try to call loadPolicy
+                    // but policyLoader in V2 does not allow reloading of policy provider
+                    // once installed. The only option is restart the server
                 } else if (instance instanceof AuditModule) {
                     auditModuleCreated((AuditModule) instance);
                 } else if (instance instanceof MessageSecurityConfig) {
                     // do nothing since we have a Message security config listener
                 } else if (instance instanceof SecurityService) {
-                    //since everything exists the only thing that can be added
+                    // since everything exists the only thing that can be added
                     // in terms of Attrs is the defaultPrincipal and defaultPrinPassword
                     // but they are directly used from securityService in core/security
                 } else {
-                    np = new NotProcessed("unimplemented: unknown instance: " + instance.getClass().getName());
+                    notProcessed = new NotProcessed("unimplemented: unknown instance: " + instance.getClass().getName());
                 }
-                return np;
+
+                return notProcessed;
             }
 
             private <T extends ConfigBeanProxy> NotProcessed handleRemoveEvent(final T instance) {
-                NotProcessed np = null;
+                NotProcessed notProcessed = null;
                 if (instance instanceof AuthRealm) {
                     authRealmDeleted((AuthRealm) instance);
                 } else if (instance instanceof JaccProvider) {
-                    np = new NotProcessed("Cannot change JACC provider once installed, restart required");
-                    //inject PolicyLoader and try to call loadPolicy
-                    //but policyLoader in V2 does not allow reloading of policy provider
-                    //once installed. The only option is restart the server
+                    notProcessed = new NotProcessed("Cannot change Jakarta Authorization provider once installed, restart required");
+                    // inject PolicyLoader and try to call loadPolicy
+                    // but policyLoader in V2 does not allow reloading of policy provider
+                    // once installed. The only option is restart the server
                 } else if (instance instanceof AuditModule) {
                     auditModuleDeleted((AuditModule) instance);
                 } else if (instance instanceof MessageSecurityConfig) {
-                    //do nothing since we have a message security config listener
+                    // do nothing since we have a message security config listener
                 } else if (instance instanceof SecurityService) {
                     // The only Attrs on securityService whose removal can affect the
                     // security code are those which are stored explicitly
                     // they are getAuditEnabled, getDefaultRealm and getAuditModules
                     // not sure what the effect of removing getDefaultRealm
                 } else {
-                    np = new NotProcessed("unimplemented: unknown instance: " + instance.getClass().getName());
+                    notProcessed = new NotProcessed("unimplemented: unknown instance: " + instance.getClass().getName());
                 }
-                return np;
+
+                return notProcessed;
             }
 
             private <T extends ConfigBeanProxy> NotProcessed handleChangeEvent(final T instance) {
-                NotProcessed np = null;
+                NotProcessed notProcessed = null;
                 if (instance instanceof AuthRealm) {
                     authRealmUpdated((AuthRealm) instance);
                 } else if (instance instanceof JaccProvider) {
-                    np = new NotProcessed("Cannot change JACC provider once installed, restart required");
-                    //inject PolicyLoader and try to call loadPolicy
-                    //but policyLoader in V2 does not allow reloading of policy provider
-                    //once installed. The only option is restart the server
+                    notProcessed = new NotProcessed("Cannot change Jakarta Authorization provider once installed, restart required");
+                    // inject PolicyLoader and try to call loadPolicy
+                    // but policyLoader in V2 does not allow reloading of policy provider
+                    // once installed. The only option is restart the server
                 } else if (instance instanceof AuditModule) {
                     auditModuleUpdated((AuditModule) instance);
                 } else if (instance instanceof MessageSecurityConfig) {
-                    //do nothing since we have a message security config listener
+                    // do nothing since we have a message security config listener
                 } else if (instance instanceof SecurityService) {
                     // The only Attrs on securityService whose change in value can affect the
                     // security code are those which are stored explicitly
@@ -192,27 +195,28 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
                         auditManager.setAuditOn(auditON);
                     }
                     if (!jacc.equals(((SecurityService) instance).getJacc())) {
-                        np = new NotProcessed("Cannot change JACC provider once installed, restart required");
+                        notProcessed = new NotProcessed("Cannot change Jakarta Authorization provider once installed, restart required");
                     }
                     if ((mappedPrincipalClassName != null)
-                        && !mappedPrincipalClassName.equals(((SecurityService) instance).getMappedPrincipalClass())) {
-                        np = new NotProcessed(
-                            "MappedPrincipalClassname changes for existing applications requires restart and redeployment");
+                            && !mappedPrincipalClassName.equals(((SecurityService) instance).getMappedPrincipalClass())) {
+                        notProcessed = new NotProcessed(
+                                "MappedPrincipalClassname changes for existing applications requires restart and redeployment");
                     }
                     if (!activateDefaultP2RMapping.equals(((SecurityService) instance).getActivateDefaultPrincipalToRoleMapping())) {
-                        np = new NotProcessed("DefaultP2R changes for existng applications requires restart and redeployment");
+                        notProcessed = new NotProcessed("DefaultP2R changes for existng applications requires restart and redeployment");
                     }
                 } else {
-                    np = new NotProcessed("unimplemented: unknown instance: " + instance.getClass().getName());
+                    notProcessed = new NotProcessed("unimplemented: unknown instance: " + instance.getClass().getName());
                 }
-                return np;
+                return notProcessed;
             }
         }, logger);
         return null;
     }
 
     /**
-     * New auth realm created. It is called whenever a AuthRealmEvent with action of AuthRealmEvent.ACTION_CREATE is received.
+     * New auth realm created. It is called whenever a AuthRealmEvent with action of AuthRealmEvent.ACTION_CREATE is
+     * received.
      *
      * @throws AdminEventListenerException when the listener is unable to process the event.
      */
@@ -225,7 +229,8 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
     }
 
     /**
-     * New auth realm created. It is called whenever a AuthRealmEvent with action of AuthRealmEvent.ACTION_CREATE is received.
+     * New auth realm created. It is called whenever a AuthRealmEvent with action of AuthRealmEvent.ACTION_CREATE is
+     * received.
      *
      * @throws AdminEventListenerException when the listener is unable to process the event.
      */
@@ -244,14 +249,15 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
      */
     public static void authRealmDeleted(Config config, AuthRealm instance) {
         try {
-            //the listener firing has been unpredictable earlier
-            //after a CLI delete the listener's were not firing in time
-            //so we added explicit calls to this method from CLI
-            //now with latest builds it looks like listeners also fire
-            //causing a NoSuchRealmException
+            // the listener firing has been unpredictable earlier
+            // after a CLI delete the listener's were not firing in time
+            // so we added explicit calls to this method from CLI
+            // now with latest builds it looks like listeners also fire
+            // causing a NoSuchRealmException
             if (!Realm.isValidRealm(config.getName(), instance.getName())) {
                 return;
             }
+
             Realm.unloadInstance(config.getName(), instance.getName());
         } catch (NoSuchRealmException ex) {
             throw new RuntimeException(ex);
@@ -265,14 +271,15 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
      */
     public static void authRealmDeleted(AuthRealm instance) {
         try {
-            //the listener firing has been unpredictable earlier
-            //after a CLI delete the listener's were not firing in time
-            //so we added explicit calls to this method from CLI
-            //now with latest builds it looks like listeners also fire
-            //causing a NoSuchRealmException
+            // The listener firing has been unpredictable earlier after a CLI delete the listener's
+            // were not firing in time.
+            //
+            // So we added explicit calls to this method from CLI now with latest builds it looks
+            // like listeners also fire causing a NoSuchRealmException
             if (!Realm.isValidRealm(instance.getName())) {
                 return;
             }
+
             Realm.unloadInstance(instance.getName());
         } catch (NoSuchRealmException ex) {
             throw new RuntimeException(ex);
@@ -280,8 +287,8 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
     }
 
     /**
-     * Auth realm updated (attributes change). It is called whenever a AuthRealmEvent with action of AuthRealmEvent.ACTION_UPDATE is
-     * received.
+     * Auth realm updated (attributes change). It is called whenever a AuthRealmEvent with action of
+     * AuthRealmEvent.ACTION_UPDATE is received.
      *
      * @throws AdminEventListenerException when the listener is unable to process the event.
      */
@@ -295,8 +302,8 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
     }
 
     /**
-     * Auth realm updated (attributes change). It is called whenever a AuthRealmEvent with action of AuthRealmEvent.ACTION_UPDATE is
-     * received.
+     * Auth realm updated (attributes change). It is called whenever a AuthRealmEvent with action of
+     * AuthRealmEvent.ACTION_UPDATE is received.
      *
      * @throws AdminEventListenerException when the listener is unable to process the event.
      */
@@ -316,7 +323,7 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
      * @exception for instance, BadRealmException, ConfigException, SynchronizationException
      */
     private static void createRealm(AuthRealm authRealm) throws Exception {
-        //authRealm cannot be null here
+        // authRealm cannot be null here
         String className = authRealm.getClassname();
         List<Property> elementProps = authRealm.getProperty();
         Properties props = new Properties();
@@ -325,6 +332,7 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
                 props.setProperty(p.getName(), p.getValue());
             }
         }
+
         Realm.instantiate(authRealm.getName(), className, props);
         Configuration.getConfiguration().refresh();
     }
@@ -336,7 +344,7 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
      * @exception for instance, BadRealmException, ConfigException, SynchronizationException
      */
     private static void createRealm(Config config, AuthRealm authRealm) throws Exception {
-        //authRealm cannot be null here
+        // authRealm cannot be null here
         String className = authRealm.getClassname();
         List<Property> elementProps = authRealm.getProperty();
         Properties props = new Properties();
@@ -345,6 +353,7 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
                 props.setProperty(p.getName(), p.getValue());
             }
         }
+
         Realm.instantiate(authRealm.getName(), className, props, config.getName());
         Configuration.getConfiguration().refresh();
     }
@@ -352,26 +361,28 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
     @Override
     public void postConstruct() {
         if (securityService == null) {
-            //should never happen
+            // should never happen
             return;
         }
-        //the first 3 of them below are not stored anywhere and directly
-        //used from securityService instance available
-        //even defaultPrincipal and defaultPrincipalPassword is directly being
-        //read from securityService.
+
+        // The first 3 of them below are not stored anywhere and directly
+        // used from securityService instance available,
+        // Even defaultPrincipal and defaultPrincipalPassword are directly being
+        // read from securityService.
         auditEnabled = securityService.getAuditEnabled();
         defaultRealm = securityService.getDefaultRealm();
         jacc = securityService.getJacc();
         if (jacc == null) {
             jacc = "default";
         }
+
         activateDefaultP2RMapping = securityService.getActivateDefaultPrincipalToRoleMapping();
         mappedPrincipalClassName = securityService.getMappedPrincipalClass();
-
     }
 
     /**
-     * New audit module created. It is called whenever a AuditModuleEvent with action of AuditModuleEvent.ACTION_CREATE is received.
+     * New audit module created. It is called whenever a AuditModuleEvent with action of AuditModuleEvent.ACTION_CREATE is
+     * received.
      */
     public void auditModuleCreated(AuditModule instance) {
         try {
@@ -383,6 +394,7 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
                     properties.put(p.getName(), p.getValue());
                 }
             }
+
             auditManager.addAuditModule(instance.getName(), classname, properties);
         } catch (Exception ex) {
             throw new RuntimeException(ex);
@@ -390,7 +402,8 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
     }
 
     /**
-     * Audit module deleted. It is called whenever a AuditModuleEvent with action of AuditModuleEvent.ACTION_DELETE is received.
+     * Audit module deleted. It is called whenever a AuditModuleEvent with action of AuditModuleEvent.ACTION_DELETE is
+     * received.
      */
     public void auditModuleDeleted(AuditModule instance) {
 
@@ -411,7 +424,8 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
                     properties.put(p.getName(), p.getValue());
                 }
             }
-            // we don't have a way to get hold of the Old Module in V3
+
+            // We don't have a way to get hold of the Old Module in V3
             // so we would always delete and create new
 
             auditManager.addAuditModule(instance.getName(), instance.getClassname(), properties);

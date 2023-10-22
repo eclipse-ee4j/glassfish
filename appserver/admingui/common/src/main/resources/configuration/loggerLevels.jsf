@@ -44,7 +44,8 @@
             loggerLevels="#{requestScope.loggerLevels.data.extraProperties.logLevels}"
             loggerList="#{requestScope.tableList}");
 
-        setPageSessionAttribute(key="levelList" value={"OFF" "FINEST" "FINER" "FINE" "CONFIG" "INFO" "WARNING" "SEVERE" "ALERT" "EMERGENCY"})
+        setPageSessionAttribute(key="levelList" value={"ALL" "FINEST" "FINER" "FINE" "CONFIG" "INFO" "WARNING" "SEVERE" "ALERT" "EMERGENCY" "OFF"});
+        setPageSessionAttribute(key="defaultNewLevel" value="OFF");
 		gf.isConfigName(configName="#{pageSession.configName}" );
     />
 </event>
@@ -75,7 +76,7 @@
         <sun:button id="addSharedTableButton" disabled="#{false}" text="$resource{i18nc.log.addLogger}" >
         <!command
             getUIComponent(clientId="$pageSession{tableRowGroupId}", component=>$attribute{tableRowGroup});
-            addRowToTable(TableRowGroup="$attribute{tableRowGroup}", NameList={"loggerName", "level"});
+            addRowToTable(TableRowGroup="$attribute{tableRowGroup}", NameList={"loggerName", "level"}, DefaultValueList={"","$pageSession{defaultNewLevel}"});
         />
         </sun:button>
 

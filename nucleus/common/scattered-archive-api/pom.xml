@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-nucleus-parent</artifactId>
-        <version>7.0.4-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -32,4 +32,58 @@
     <packaging>glassfish-jar</packaging>
 
     <name>Scattered Archive APIs of Glassfish</name>
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+        </dependency>        
+    </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <!-- To display JUnit 5 test argument names-->
+                    <parameters>true</parameters>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    
+                    <!-- Enable JUNit 5 reporting features, like test display name -->
+                    <statelessTestsetReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5Xml30StatelessReporter">
+                        <version>3.0</version>
+                        <usePhrasedFileName>false</usePhrasedFileName>
+                        <usePhrasedTestSuiteClassName>true</usePhrasedTestSuiteClassName>
+                        <usePhrasedTestCaseClassName>true</usePhrasedTestCaseClassName>
+                        <usePhrasedTestCaseMethodName>true</usePhrasedTestCaseMethodName>
+                    </statelessTestsetReporter>
+                    <consoleOutputReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5ConsoleOutputReporter">
+                        <disable>false</disable>
+                        <encoding>UTF-8</encoding>
+                        <usePhrasedFileName>true</usePhrasedFileName>
+                    </consoleOutputReporter>
+                    <statelessTestsetInfoReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoReporter">
+                        <usePhrasedFileName>false</usePhrasedFileName>
+                        <usePhrasedClassNameInRunning>true</usePhrasedClassNameInRunning>
+                        <usePhrasedClassNameInTestCaseSummary>true</usePhrasedClassNameInTestCaseSummary>
+                    </statelessTestsetInfoReporter>
+                    <!-- END of enable JUnit 5 reporting features -->
+                    
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

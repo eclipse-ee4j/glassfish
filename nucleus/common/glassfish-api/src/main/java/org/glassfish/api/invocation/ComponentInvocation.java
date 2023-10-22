@@ -246,6 +246,10 @@ public class ComponentInvocation implements Cloneable {
         return appName;
     }
 
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
+
     /**
      * Returns the moduleName for the current invocation, equivalent to the value bound to java:module/ModuleName, without
      * the cost of lookup. For invocations that are not on Jakarta EE components, returns null.

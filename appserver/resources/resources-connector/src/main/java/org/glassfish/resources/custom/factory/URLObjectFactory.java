@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,21 +17,23 @@
 
 package org.glassfish.resources.custom.factory;
 
-import com.sun.logging.LogDomains;
-
-import javax.naming.spi.ObjectFactory;
-import javax.naming.*;
 import java.io.Serializable;
-import java.util.Hashtable;
-import java.util.Enumeration;
-import java.util.logging.Logger;
-import java.util.logging.Level;
 import java.net.URL;
+import java.util.Enumeration;
+import java.util.Hashtable;
+
+import javax.naming.Context;
+import javax.naming.Name;
+import javax.naming.RefAddr;
+import javax.naming.Reference;
+import javax.naming.spi.ObjectFactory;
 
 public class URLObjectFactory implements Serializable, ObjectFactory {
-    public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable<?, ?> environment) throws Exception {
-        Reference ref = (Reference)obj;
 
+    @Override
+    public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable<?, ?> environment)
+        throws Exception {
+        Reference ref = (Reference) obj;
         Enumeration<RefAddr> refAddrs = ref.getAll();
 
         String protocol = null;
@@ -39,37 +42,32 @@ public class URLObjectFactory implements Serializable, ObjectFactory {
         String file = null;
         String spec = null;
 
-        while(refAddrs.hasMoreElements()){
+        while (refAddrs.hasMoreElements()) {
             RefAddr addr = refAddrs.nextElement();
-
             String type = addr.getType();
-            String content = (String)addr.getContent();
-            if(type.equalsIgnoreCase("protocol")){
+            String content = (String) addr.getContent();
+            if (type.equalsIgnoreCase("protocol")) {
                 protocol = content;
-            }else if(type.equalsIgnoreCase("host")){
+            } else if (type.equalsIgnoreCase("host")) {
                 host = content;
-            }else if(type.equalsIgnoreCase("port")){
-                try{
+            } else if (type.equalsIgnoreCase("port")) {
+                try {
                     port = Integer.parseInt(content);
-                }catch(NumberFormatException nfe){
-                    Object args[] = new Object[]{content, nfe};
-                    Logger.getLogger(LogDomains.RSR_LOGGER).log(Level.WARNING, "invalid.port.number", args);
-                    IllegalArgumentException iae = new IllegalArgumentException("Invalid value for port");
-                    iae.initCause(nfe);
-                    throw iae;
+                } catch (NumberFormatException nfe) {
+                    throw new IllegalArgumentException("Provided port number is not a number: " + content, nfe);
                 }
-            }else if(type.equalsIgnoreCase("file")){
+            } else if (type.equalsIgnoreCase("file")) {
                 file = content;
-            }else if(type.equalsIgnoreCase("spec")){
+            } else if (type.equalsIgnoreCase("spec")) {
                 spec = content;
             }
         }
 
-        if(protocol != null && host != null && port != -1 && file != null){
+        if (protocol != null && host != null && port != -1 && file != null) {
             return new URL(protocol, host, port, file);
-        }else if(protocol != null && host != null && file != null){
+        } else if (protocol != null && host != null && file != null) {
             return new URL(protocol, host, file);
-        }else if(spec != null){
+        } else if (spec != null) {
             return new URL(spec);
         }
 

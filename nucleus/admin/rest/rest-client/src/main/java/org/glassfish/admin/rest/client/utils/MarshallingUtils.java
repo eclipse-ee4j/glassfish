@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -68,7 +68,7 @@ public class MarshallingUtils {
         List<Map<String, String>> list = new ArrayList<>();
         InputStream input = null;
         try {
-            XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+            XMLInputFactory inputFactory = XMLInputFactory.newFactory();
             inputFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
             input = new ByteArrayInputStream(xml.trim().getBytes("UTF-8"));
             XMLStreamReader parser = inputFactory.createXMLStreamReader(input);
@@ -175,7 +175,7 @@ public class MarshallingUtils {
         } else if (text.startsWith("<")) {
             InputStream input = null;
             try {
-                XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+                XMLInputFactory inputFactory = XMLInputFactory.newFactory();
                 inputFactory.setProperty(XMLInputFactory.IS_VALIDATING, false);
                 input = new ByteArrayInputStream(text.trim().getBytes("UTF-8"));
                 XMLStreamReader parser = inputFactory.createXMLStreamReader(input);

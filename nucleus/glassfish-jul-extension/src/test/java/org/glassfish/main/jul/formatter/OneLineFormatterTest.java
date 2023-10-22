@@ -73,7 +73,7 @@ public class OneLineFormatterTest {
         final OneLineFormatter formatter = new OneLineFormatter();
         final String log = formatter.format(record);
         assertNotNull(log, "log");
-        final String[] lines = log.split("\n");
+        final String[] lines = log.split("\r?\n");
         assertAll(
             () -> assertThat(lines, arrayWithSize(1)),
             () -> assertThat(lines[0], matchesPattern(PATTERN_SINGLELINE)),
@@ -92,7 +92,7 @@ public class OneLineFormatterTest {
         final OneLineFormatter formatter = new OneLineFormatter();
         final String log = formatter.format(record);
         assertNotNull(log, "log");
-        final String[] lines = log.split("\n");
+        final String[] lines = log.split("\r?\n");
         assertAll(
             () -> assertThat(lines, arrayWithSize(1)),
             () -> assertThat(lines[0], matchesPattern(PATTERN_SINGLELINE)),
@@ -109,7 +109,7 @@ public class OneLineFormatterTest {
         final OneLineFormatter formatter = new OneLineFormatter();
         final String log = formatter.format(record);
         assertNotNull(log, "log");
-        final String[] lines = log.split("\n");
+        final String[] lines = log.split("\r?\n");
         assertAll(
             () -> assertThat(lines, arrayWithSize(greaterThan(20))),
             () -> assertThat(lines[0], endsWith(leftPad("SEVERE", 8) + leftPad("main", 21) + leftPad("", 61) + ". Failure!")),

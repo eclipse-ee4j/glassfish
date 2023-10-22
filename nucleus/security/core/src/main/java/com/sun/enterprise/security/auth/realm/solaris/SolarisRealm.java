@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,19 +17,19 @@
 
 package com.sun.enterprise.security.auth.realm.solaris;
 
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
+
+import com.sun.enterprise.security.auth.realm.Realm;
+import com.sun.enterprise.security.auth.realm.exceptions.BadRealmException;
+import com.sun.enterprise.security.auth.realm.exceptions.InvalidOperationException;
+import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
+import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.Vector;
-import java.util.logging.Level;
-
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.security.auth.realm.BadRealmException;
-import com.sun.enterprise.security.auth.realm.IASRealm;
-import com.sun.enterprise.security.auth.realm.InvalidOperationException;
-import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
-import com.sun.enterprise.security.auth.realm.NoSuchUserException;
 
 /**
  * Realm wrapper for supporting Solaris authentication.
@@ -43,7 +44,8 @@ import com.sun.enterprise.security.auth.realm.NoSuchUserException;
  *
  */
 @Service
-public final class SolarisRealm extends IASRealm {
+public final class SolarisRealm extends Realm {
+
     // Descriptive string of the authentication type of this realm.
     public static final String AUTH_TYPE = "solaris";
     public static final String OS_ARCH = "os.arch";
@@ -52,7 +54,7 @@ public final class SolarisRealm extends IASRealm {
 
     private HashMap groupCache;
     private Vector emptyVector;
-    private static String osArchType = null;
+    private static String osArchType;
 
     // Library for native methods
     static {
@@ -76,19 +78,18 @@ public final class SolarisRealm extends IASRealm {
     @Override
     public synchronized void init(Properties props) throws BadRealmException, NoSuchRealmException {
         super.init(props);
-        String jaasCtx = props.getProperty(IASRealm.JAAS_CONTEXT_PARAM);
+        String jaasCtx = props.getProperty(JAAS_CONTEXT_PARAM);
         if (jaasCtx == null) {
-            if (_logger.isLoggable(Level.WARNING)) {
+            if (_logger.isLoggable(WARNING)) {
                 _logger.warning("realmconfig.noctx");
             }
-            String msg = sm.getString("solarisrealm.nojaas");
-            throw new BadRealmException(msg);
+            throw new BadRealmException("Solaris realm jaas-context not set.");
         }
 
-        this.setProperty(IASRealm.JAAS_CONTEXT_PARAM, jaasCtx);
+        setProperty(JAAS_CONTEXT_PARAM, jaasCtx);
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.fine("SolarisRealm : " + IASRealm.JAAS_CONTEXT_PARAM + "=" + jaasCtx);
+        if (_logger.isLoggable(FINE)) {
+            _logger.fine("SolarisRealm : " + JAAS_CONTEXT_PARAM + "=" + jaasCtx);
         }
 
         groupCache = new HashMap();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,7 @@
 
 package org.glassfish.weld;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.Runtime.Version;
@@ -47,7 +48,7 @@ class FilteringClassLoader extends ClassLoader {
     private static final Pattern PATTERN_OSGI_EE_JAVA = Pattern.compile("\\(&\\(osgi.ee=JavaSE\\)\\(version=(.+)\\)\\)");
     private static final Version JDK17 = Version.parse("17");
 
-    public FilteringClassLoader(ClassLoader parent) {
+    FilteringClassLoader(ClassLoader parent) {
         super(parent);
         LOG.log(Level.FINEST, "Parent: {0}", parent);
     }
@@ -121,10 +122,23 @@ class FilteringClassLoader extends ClassLoader {
      * @return {@link Manifest} or null if there's no such file or cannot be read.
      */
     private Manifest loadManifest(final URL manifestURL) {
-        try (InputStream stream = manifestURL.openStream()) {
+        try (InputStream stream = openStream(manifestURL)) {
+            if (stream == null) {
+                return null;
+            }
             return new Manifest(stream);
         } catch (final IOException e) {
             LOG.log(Level.WARNING, "Could not read manifest at " + manifestURL, e);
+            return null;
+        }
+    }
+
+
+    private InputStream openStream(final URL manifestURL) throws IOException {
+        try {
+            return manifestURL.openStream();
+        } catch (final FileNotFoundException e) {
+            LOG.log(Level.FINEST, "The manifest is not present at " + manifestURL, e);
             return null;
         }
     }

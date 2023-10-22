@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,20 +17,26 @@
 
 package org.glassfish.flashlight.xml;
 
-/**
- * An abstract class that you can build upon to make your own custom parser.
- * @author bnevins
- */
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
-import java.io.*;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.stream.*;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
 import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 
+
+/**
+ * An abstract class that you can build upon to make your own custom parser.
+ * @author bnevins
+ */
 public abstract class StaxParser {
 
     abstract protected void read() throws XMLStreamException, EndDocumentException;
@@ -100,7 +107,7 @@ public abstract class StaxParser {
 
     protected Map<String, String> parseAttributes() {
         int num = parser.getAttributeCount();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
 
         for (int i = 0; i < num; i++) {
             map.put(parser.getAttributeName(i).getLocalPart(), parser.getAttributeValue(i));
@@ -128,8 +135,9 @@ public abstract class StaxParser {
      * @throws xml.StaxParser.EndDocumentException
      */
     protected void nextStart() throws XMLStreamException, EndDocumentException {
-        while (next() != START_ELEMENT)
-            ;
+        while (next() != START_ELEMENT) {
+
+        }
     }
 
     protected void close() {
@@ -154,7 +162,7 @@ public abstract class StaxParser {
      /////////////////////  private below //////////////////////////////////////
 
      private void createParser() throws XMLStreamException {
-        XMLInputFactory xif = XMLInputFactory.newInstance();
+        XMLInputFactory xif = XMLInputFactory.newFactory();
         parser = xif.createXMLStreamReader(xmlStream);
     }
 

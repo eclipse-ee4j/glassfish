@@ -99,7 +99,7 @@ grant {
 
 // Permissions to invoke CORBA objects in server
 grant {
-    permission com.sun.enterprise.security.ee.CORBAObjectPermission "*", "*";
+    permission com.sun.enterprise.security.CORBAObjectPermission "*", "*";
 };
 
 // GLASSFISH-21011

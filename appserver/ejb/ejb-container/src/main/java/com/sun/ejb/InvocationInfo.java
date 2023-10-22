@@ -19,7 +19,7 @@ package com.sun.ejb;
 import java.lang.reflect.Method;
 
 import com.sun.ejb.containers.interceptors.InterceptorManager;
-import com.sun.enterprise.security.authorize.cache.CachedPermission;
+import com.sun.enterprise.security.ee.authorize.cache.CachedPermission;
 import org.glassfish.ejb.deployment.descriptor.EjbRemovalInfo;
 
 /**

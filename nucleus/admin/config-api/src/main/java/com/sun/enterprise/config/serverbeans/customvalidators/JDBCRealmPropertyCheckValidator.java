@@ -29,7 +29,7 @@ import org.jvnet.hk2.config.types.Property;
  */
 public class JDBCRealmPropertyCheckValidator implements ConstraintValidator<JDBCRealmPropertyCheck, AuthRealm> {
 
-    private static final String JDBC_REALM = "com.sun.enterprise.security.auth.realm.jdbc.JDBCRealm";
+    private static final String JDBC_REALM = "com.sun.enterprise.security.ee.authentication.glassfish.jdbc.JDBCRealm";
     private static final String DEFAULT_DIGEST_ALGORITHM = "MD5";
 
     public void initialize(final JDBCRealmPropertyCheck fqcn) {

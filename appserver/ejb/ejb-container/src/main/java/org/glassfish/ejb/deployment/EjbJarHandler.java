@@ -21,8 +21,8 @@ import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
 import com.sun.enterprise.deployment.io.DescriptorConstants;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.loader.ASURLClassLoader;
-import com.sun.enterprise.security.perms.PermsArchiveDelegate;
-import com.sun.enterprise.security.perms.SMGlobalPolicyUtil;
+import com.sun.enterprise.security.ee.perms.PermsArchiveDelegate;
+import com.sun.enterprise.security.ee.perms.SMGlobalPolicyUtil;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import jakarta.inject.Inject;

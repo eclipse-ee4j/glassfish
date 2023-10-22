@@ -30,7 +30,7 @@ import static jakarta.security.auth.message.AuthStatus.SEND_SUCCESS;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;
 
-import com.sun.enterprise.security.jmac.callback.ClientContainerCallbackHandler;
+import com.sun.enterprise.security.ee.jmac.callback.ClientContainerCallbackHandler;
 import com.sun.enterprise.security.webservices.LogUtils;
 import com.sun.enterprise.security.webservices.SoapAuthenticationService;
 import com.sun.enterprise.util.LocalStringManagerImpl;

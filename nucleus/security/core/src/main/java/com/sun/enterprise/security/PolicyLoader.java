@@ -117,7 +117,7 @@ public class PolicyLoader {
 
         if (System.getProperty("simple.jacc.provider.JACCRoleMapper.class") == null) {
             System.setProperty("simple.jacc.provider.JACCRoleMapper.class",
-                "com.sun.enterprise.security.web.integration.GlassfishRoleMapper");
+                "com.sun.enterprise.security.ee.web.integration.GlassfishRoleMapper");
         }
 
         // Now install the policy provider if one was identified

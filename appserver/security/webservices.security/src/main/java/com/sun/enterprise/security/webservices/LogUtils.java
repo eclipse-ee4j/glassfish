@@ -29,7 +29,7 @@ public class LogUtils {
 private static final String LOGMSG_PREFIX = "AS-WSSECURITY";
 
     @LogMessagesResourceBundle
-    public static final String LOG_MESSAGES = "com.sun.enterprise.security.webservices.LogMessages";
+    public static final String LOG_MESSAGES = "com.sun.enterprise.security.ee.webservices.LogMessages";
 
     @LoggerInfo(subsystem = "WEBSERVICES", description = "Web Services Security Logger", publish = true)
     public static final String LOG_DOMAIN = "jakarta.enterprise.webservices.security";

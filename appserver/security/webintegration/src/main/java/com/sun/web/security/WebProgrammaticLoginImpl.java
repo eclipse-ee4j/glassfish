@@ -19,9 +19,8 @@ package com.sun.web.security;
 
 import com.sun.enterprise.security.SecurityContext;
 import com.sun.enterprise.security.auth.login.LoginContextDriver;
-import com.sun.enterprise.security.web.integration.WebPrincipal;
-import com.sun.enterprise.security.web.integration.WebProgrammaticLogin;
-
+import com.sun.enterprise.security.ee.web.integration.WebPrincipal;
+import com.sun.enterprise.security.ee.web.integration.WebProgrammaticLogin;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletRequestWrapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,7 +43,7 @@ import static java.util.logging.Level.FINE;
 /**
  * Internal implementation for servlet programmatic login.
  *
- * @see com.sun.enterprise.security.ee.auth.login.ProgrammaticLogin
+ * @see com.sun.enterprise.security.ee.authentication.ProgrammaticLogin
  *
  */
 @Service
@@ -77,7 +76,7 @@ public class WebProgrammaticLoginImpl implements WebProgrammaticLogin {
      * not used currently.
      * @param realm the realm name to be authenticated to. If the realm is null, authentication takes place in default realm
      * @returns A Boolean object; true if login succeeded, false otherwise.
-     * @see com.sun.enterprise.security.ee.auth.login.ProgrammaticLogin
+     * @see com.sun.enterprise.security.ee.authentication.ProgrammaticLogin
      * @throws Exception on login failure.
      *
      */
@@ -154,7 +153,7 @@ public class WebProgrammaticLoginImpl implements WebProgrammaticLogin {
      * @param response HTTP response object provided by called application. It should be an instance of HttpServletResponse. This is
      * not used currently.
      * @returns A Boolean object; true if login succeeded, false otherwise.
-     * @see com.sun.enterprise.security.ee.auth.login.ProgrammaticLogin
+     * @see com.sun.enterprise.security.ee.authentication.ProgrammaticLogin
      * @throws Exception any exception encountered during logout operation
      */
     @Override

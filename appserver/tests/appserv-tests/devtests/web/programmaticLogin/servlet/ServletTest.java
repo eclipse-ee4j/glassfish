@@ -21,13 +21,11 @@ import java.net.*;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 
-import com.sun.enterprise.security.ee.auth.login.ProgrammaticLogin;
+import com.sun.enterprise.security.ee.authentication.ProgrammaticLogin;
 
 public class ServletTest extends HttpServlet {
 
-    public void doGet(HttpServletRequest request,
-                      HttpServletResponse response)
-            throws ServletException, IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String user = request.getParameter("user");
         String password = request.getParameter("password");
         System.out.println("[user] " + user + " [password] " + password);

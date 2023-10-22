@@ -21,8 +21,8 @@ import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.HttpService;
 import com.sun.enterprise.config.serverbeans.VirtualServer;
 import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
-import com.sun.enterprise.security.perms.PermsArchiveDelegate;
-import com.sun.enterprise.security.perms.SMGlobalPolicyUtil;
+import com.sun.enterprise.security.ee.perms.PermsArchiveDelegate;
+import com.sun.enterprise.security.ee.perms.SMGlobalPolicyUtil;
 import com.sun.enterprise.util.StringUtils;
 
 import jakarta.inject.Inject;

@@ -780,6 +780,9 @@
                     <groupId>org.glassfish.hk2</groupId>
                     <artifactId>hk2-inhabitant-generator</artifactId>
                     <version>${hk2.plugin.version}</version>
+                    <configuration>
+                        <includeDate>false</includeDate>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.hk2</groupId>

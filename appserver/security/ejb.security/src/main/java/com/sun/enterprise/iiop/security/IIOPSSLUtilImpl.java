@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,99 +21,94 @@ import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.security.ssl.J2EEKeyManager;
 import com.sun.enterprise.security.ssl.SSLUtils;
 import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.security.SecureRandom;
-import java.text.MessageFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.inject.Inject;
+
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509KeyManager;
+
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 import org.glassfish.enterprise.iiop.api.IIOPSSLUtil;
-import org.glassfish.internal.api.SharedSecureRandom;
-
+import org.glassfish.security.common.SharedSecureRandomImpl;
 import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Singleton;
 import org.omg.IOP.TaggedComponent;
 import org.omg.PortableInterceptor.IORInfo;
 
 /**
- *
  * @author Kumar
  */
 @Service
 @Singleton
 public class IIOPSSLUtilImpl implements IIOPSSLUtil {
+    private static final Logger LOG = LogDomains.getLogger(IIOPSSLUtilImpl.class, LogDomains.SECURITY_LOGGER, false);
+
     @Inject
     private SSLUtils sslUtils;
 
     private GlassFishORBHelper orbHelper;
 
-    private static final Logger _logger;
-    static {
-        _logger = LogDomains.getLogger(IIOPSSLUtilImpl.class, LogDomains.SECURITY_LOGGER);
-    }
     private Object appClientSSL;
 
+    @Override
     public Object getAppClientSSL() {
         return this.appClientSSL;
     }
 
+    @Override
     public void setAppClientSSL(Object ssl) {
         this.appClientSSL = ssl;
     }
 
+    @Override
     public KeyManager[] getKeyManagers(String alias) {
         KeyManager[] mgrs = null;
         try {
             if (alias != null && !sslUtils.isTokenKeyAlias(alias)) {
-                throw new IllegalStateException(getFormatMessage("iiop.cannot_find_keyalias", new Object[] { alias }));
+                throw new IllegalStateException("IIOP1004: Key alias '" + alias + "' not found in keystore");
             }
 
             mgrs = sslUtils.getKeyManagers();
             if (alias != null && mgrs != null && mgrs.length > 0) {
                 KeyManager[] newMgrs = new KeyManager[mgrs.length];
                 for (int i = 0; i < mgrs.length; i++) {
-                    if (_logger.isLoggable(Level.FINE)) {
+                    if (LOG.isLoggable(Level.FINE)) {
                         StringBuffer msg = new StringBuffer("Setting J2EEKeyManager for ");
                         msg.append(" alias : " + alias);
-                        _logger.log(Level.FINE, msg.toString());
+                        LOG.log(Level.FINE, msg.toString());
                     }
                     newMgrs[i] = new J2EEKeyManager((X509KeyManager) mgrs[i], alias);
                 }
                 mgrs = newMgrs;
             }
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
-            // TODO: log here
             throw new RuntimeException(e);
         }
         return mgrs;
     }
 
+    @Override
     public TrustManager[] getTrustManagers() {
         try {
             return sslUtils.getTrustManagers();
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
-            // TODO: log here
             throw new RuntimeException(e);
         }
     }
 
-    /**
-     * This API get the format string from resource bundle of _logger.
-     *
-     * @param key the key of the message
-     * @param params the parameter array of Object
-     * @return the format String for _logger
-     */
-    private String getFormatMessage(String key, Object[] params) {
-        return MessageFormat.format(_logger.getResourceBundle().getString(key), params);
-    }
-
+    @Override
     public SecureRandom getInitializedSecureRandom() {
-        return SharedSecureRandom.get();
+        return SharedSecureRandomImpl.get();
     }
 
     @Override
@@ -121,6 +117,7 @@ public class IIOPSSLUtilImpl implements IIOPSSLUtil {
         return selector.getSSLSocketInfo(ior);
     }
 
+    @Override
     public TaggedComponent createSSLTaggedComponent(IORInfo iorInfo, Object sInfos) {
         List<com.sun.corba.ee.spi.folb.SocketInfo> socketInfos = (List<com.sun.corba.ee.spi.folb.SocketInfo>) sInfos;
         orbHelper = Lookups.getGlassFishORBHelper();
@@ -129,15 +126,14 @@ public class IIOPSSLUtilImpl implements IIOPSSLUtil {
         int sslMutualAuthPort = -1;
         try {
             if (iorInfo instanceof com.sun.corba.ee.spi.legacy.interceptor.IORInfoExt) {
-                sslMutualAuthPort = ((com.sun.corba.ee.spi.legacy.interceptor.IORInfoExt) iorInfo).getServerPort("SSL_MUTUALAUTH");
+                sslMutualAuthPort = ((com.sun.corba.ee.spi.legacy.interceptor.IORInfoExt) iorInfo)
+                    .getServerPort("SSL_MUTUALAUTH");
             }
         } catch (com.sun.corba.ee.spi.legacy.interceptor.UnknownType ute) {
-            _logger.log(Level.FINE, ".isnert: UnknownType exception", ute);
+            LOG.log(Level.FINE, "UnknownType exception", ute);
         }
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, ".insert: sslMutualAuthPort: " + sslMutualAuthPort);
-        }
+        LOG.log(Level.FINE, "sslMutualAuthPort: {0}", sslMutualAuthPort);
 
         CSIV2TaggedComponentInfo ctc = new CSIV2TaggedComponentInfo(orb, sslMutualAuthPort);
         EjbDescriptor desc = ctc.getEjbDescriptor(iorInfo);

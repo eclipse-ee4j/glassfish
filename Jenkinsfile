@@ -93,7 +93,7 @@ kind: Pod
 spec:
   containers:
   - name: maven
-    image: maven:3.9.0-eclipse-temurin-17
+    image: maven:3.9.4-eclipse-temurin-17
     command:
     - cat
     tty: true
@@ -189,12 +189,15 @@ spec:
             # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
             mvn -B -e clean install -Pfastest,staging -T4C
             ./gfbuild.sh archive_bundles
-            mvn -B -e clean
+            ./gfbuild.sh archive_embedded
+            mvn -B -e clean -Pstaging
             tar -c -C ${WORKSPACE}/appserver/tests common_test.sh gftest.sh appserv-tests quicklook | gzip --fast > ${WORKSPACE}/bundles/appserv_tests.tar.gz
             ls -la ${WORKSPACE}/bundles
+            ls -la ${WORKSPACE}/embedded
           '''
         }
-        archiveArtifacts artifacts: 'bundles/*.zip'
+        archiveArtifacts artifacts: 'bundles/*.zip', onlyIfSuccessful: true
+        archiveArtifacts artifacts: 'embedded/*', onlyIfSuccessful: true
         stash includes: 'bundles/*', name: 'build-bundles'
       }
     }
@@ -205,12 +208,16 @@ spec:
           dumpSysInfo()
           timeout(time: 1, unit: 'HOURS') {
             sh '''
-                mvn -B -e clean install -Pstaging
+                mvn -B -e clean install -Pstaging -P'!docs'
             '''
           }
         }
-        archiveArtifacts artifacts: "**/server.log"
-        junit testResults: '**/*-reports/*.xml', allowEmptyResults: false
+      }
+      post {
+        always {
+          archiveArtifacts artifacts: "**/server.log", onlyIfSuccessful: false
+          junit testResults: '**/*-reports/*.xml', allowEmptyResults: false
+        }
       }
     }
     stage('ant-tests') {
@@ -221,11 +228,24 @@ spec:
       }
       tools {
         jdk 'temurin-jdk17-latest'
-        maven 'apache-maven-3.8.6'
+        maven 'apache-maven-3.9.3'
       }
       steps {
         script {
           parallel parallelStagesMap
+        }
+      }
+    }
+    stage('docs') {
+      steps {
+        checkout scm
+        container('maven') {
+          dumpSysInfo()
+          timeout(time: 1, unit: 'HOURS') {
+            sh '''
+                mvn -B -e clean install -Pstaging -Pdocs
+            '''
+          }
         }
       }
     }

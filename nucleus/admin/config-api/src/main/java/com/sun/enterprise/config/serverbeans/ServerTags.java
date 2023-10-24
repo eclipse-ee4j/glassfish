@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,8 +16,6 @@
  */
 
 package com.sun.enterprise.config.serverbeans;
-
-import org.jvnet.hk2.config.ConfigBeanProxy;
 
 public class ServerTags {
     // Tags for Element domain
@@ -752,7 +751,6 @@ public class ServerTags {
     //static public final String NAME = "name";
     static public final String MONITORING = "monitoring";
     static public final String MAX_HISTORY_SIZE = "max-history-size";
-    static public final String JBI_ENABLED = "jbi-enabled";
     // Tags for Element registry-location
     static public final String REGISTRY_LOCATION = "registry-location";
     static public final String CONNECTOR_RESOURCE_JNDI_NAME = "connector-resource-jndi-name";

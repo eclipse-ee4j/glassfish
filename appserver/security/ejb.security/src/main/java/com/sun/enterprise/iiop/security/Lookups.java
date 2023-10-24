@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,15 @@
 
 package com.sun.enterprise.iiop.security;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+
 import java.lang.ref.WeakReference;
+
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 import org.glassfish.gms.bootstrap.GMSAdapterService;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
 
 /**
  * This class is a local utility class to provide for hk2 lookups during runtime.
@@ -55,9 +57,9 @@ public class Lookups {
      */
     private static Lookups singleton;
 
-    private static WeakReference<SecurityMechanismSelector> sms = new WeakReference<SecurityMechanismSelector>(null);
-    private static WeakReference<GlassFishORBHelper> orb = new WeakReference<GlassFishORBHelper>(null);
-    private static WeakReference<SecurityContextUtil> sc = new WeakReference<SecurityContextUtil>(null);
+    private static WeakReference<SecurityMechanismSelector> sms = new WeakReference<>(null);
+    private static WeakReference<GlassFishORBHelper> orb = new WeakReference<>(null);
+    private static WeakReference<SecurityContextUtil> sc = new WeakReference<>(null);
 
     private Lookups() {
     }
@@ -92,7 +94,7 @@ public class Lookups {
 
     private static synchronized SecurityMechanismSelector _getSecurityMechanismSelector() {
         if (sms.get() == null && checkSingleton()) {
-            sms = new WeakReference<SecurityMechanismSelector>(singleton.securityMechanismSelectorProvider.get());
+            sms = new WeakReference<>(singleton.securityMechanismSelectorProvider.get());
         }
         return sms.get();
     }
@@ -111,7 +113,7 @@ public class Lookups {
 
     private static synchronized GlassFishORBHelper _getGlassFishORBHelper() {
         if (orb.get() == null && checkSingleton()) {
-            orb = new WeakReference<GlassFishORBHelper>(singleton.glassFishORBHelperProvider.get());
+            orb = new WeakReference<>(singleton.glassFishORBHelperProvider.get());
         }
         return orb.get();
     }
@@ -130,7 +132,7 @@ public class Lookups {
 
     private static synchronized SecurityContextUtil _getSecurityContextUtil() {
         if (sc.get() == null && checkSingleton()) {
-            sc = new WeakReference<SecurityContextUtil>(singleton.securityContextUtilProvider.get());
+            sc = new WeakReference<>(singleton.securityContextUtilProvider.get());
         }
         return sc.get();
     }

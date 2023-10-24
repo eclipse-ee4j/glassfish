@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,15 +27,15 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /**
- * ProcessManager.java
  * Use this class for painless process spawning.
+ * <p>
  * This class was originally written to be compatible with JDK 1.4, using Runtime.exec(),
  * but has been refactored to use ProcessBuilder for better control and configurability.
  *
@@ -46,25 +46,19 @@ public class ProcessManager {
     private static final Logger LOG = System.getLogger(ProcessManager.class.getName());
 
     protected final ProcessBuilder builder;
-    private final StringBuffer sb_out;
-    private final StringBuffer sb_err;
+    private String stdout;
+    private String stderr;
     private int timeout;
     private boolean echo = true;
     private String[] stdinLines;
-    private final List<Thread> threads = new ArrayList<>(2);
-    private boolean waitForReaderThreads = true;
 
     public ProcessManager(String... cmds) {
         builder = new ProcessBuilder(cmds);
-        sb_out = new StringBuffer();
-        sb_err = new StringBuffer();
     }
 
 
     public ProcessManager(List<String> cmdline) {
         builder = new ProcessBuilder(cmdline);
-        sb_out = new StringBuffer();
-        sb_err = new StringBuffer();
     }
 
 
@@ -85,17 +79,13 @@ public class ProcessManager {
 
     public void setStdinLines(List<String> list) {
         if (list != null && !list.isEmpty()) {
-            stdinLines = new String[list.size()];
-            stdinLines = list.toArray(stdinLines);
+            stdinLines = list.toArray(String[]::new);
         }
     }
 
-    public void waitForReaderThreads(boolean b) {
-        waitForReaderThreads = b;
-    }
 
-
-    /** Should the output of the process be echoed to stdout?
+    /**
+     * Should the output of the process be echoed to stdout?
      *
      * @param newEcho
      */
@@ -112,34 +102,30 @@ public class ProcessManager {
         } catch (IOException e) {
             throw new IllegalStateException("Could not execute command: " + builder.command(), e);
         }
+        ReaderThread threadErr = new ReaderThread(process.getErrorStream(), echo, "stderr");
+        threadErr.start();
+        ReaderThread threadOut = new ReaderThread(process.getInputStream(), echo, "stdout");
+        threadOut.start();
         try {
-            readStream("stderr", process.getErrorStream(), sb_err);
-            readStream("stdout", process.getInputStream(), sb_out);
-            writeStdin(process);
-            await(process);
             try {
-                return process.exitValue();
-            } catch (IllegalThreadStateException tse) {
-                // this means that the process is still running...
-                throw new ProcessManagerTimeoutException("Process is still running.", tse);
+                writeStdin(process);
+                return await(process);
+            } finally {
+                stderr = threadErr.finish(1000L);
+                stdout = threadOut.finish(1000L);
             }
         } catch (ProcessManagerException pme) {
             throw pme;
         } catch (Exception e) {
             throw new ProcessManagerException(e);
         } finally {
-            destroy(process);
-            // Always wait for reader threads -- unless the boolean flag is false.
-            // note that this won't block when there was a timeout because the process
-            // has been forcibly destroyed above.
-            doWaitForReaderThreads();
+            if (process.isAlive()) {
+                destroy(process);
+            }
         }
     }
 
     private void destroy(Process process) {
-        if (process == null) {
-            return;
-        }
         process.destroy();
         // Wait for a while to let the process stop
         try {
@@ -155,12 +141,12 @@ public class ProcessManager {
     }
 
     public String getStdout() {
-        return sb_out.toString();
+        return stdout;
     }
 
 
     public String getStderr() {
-        return sb_err.toString();
+        return stderr;
     }
 
 
@@ -171,7 +157,7 @@ public class ProcessManager {
 
 
     private void writeStdin(Process process) throws ProcessManagerException {
-        if (stdinLines == null || stdinLines.length <= 0) {
+        if (stdinLines == null || stdinLines.length == 0) {
             return;
         }
         if (process == null) {
@@ -179,7 +165,7 @@ public class ProcessManager {
         }
         try (PrintWriter pipe = new PrintWriter(new BufferedWriter(new OutputStreamWriter(process.getOutputStream())))) {
             for (String stdinLine : stdinLines) {
-                LOG.log(Level.DEBUG, "InputLine -->" + stdinLine + "<--");
+                LOG.log(Level.DEBUG, "InputLine --> {0} <--", stdinLine);
                 pipe.println(stdinLine);
                 pipe.flush();
             }
@@ -189,61 +175,27 @@ public class ProcessManager {
     }
 
 
-    private void readStream(String name, InputStream stream, StringBuffer sb) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-        Thread thread = new Thread(new ReaderThread(reader, sb, echo), name);
-        threads.add(thread);
-        thread.start();
-    }
-
-
-    private void await(Process process) throws InterruptedException, ProcessManagerException {
-        if (timeout <= 0) {
-            waitForever(process);
-        } else {
-            waitAwhile(process);
-        }
-    }
-
-
-    private void waitForever(Process process) throws InterruptedException, ProcessManagerException {
-        if (process == null) {
-            throw new ProcessManagerException("Parameter process was null.");
-        }
-        process.waitFor();
-    }
-
-
-    private void waitAwhile(Process process) throws InterruptedException, ProcessManagerException {
-        if (process == null) {
-            throw new ProcessManagerException("Parameter process was null.");
-        }
-        process.waitFor(timeout, TimeUnit.MILLISECONDS);
-    }
-
-
-    private void doWaitForReaderThreads() {
-        if (waitForReaderThreads) {
-            // wait for stdin and stderr to finish up
-            for (Thread t : threads) {
-                try {
-                    t.join();
-                } catch (InterruptedException ex) {
-                    // nothing to do
-                }
+    private int await(Process process) throws InterruptedException, ProcessManagerException {
+        if (timeout > 0) {
+            if (process.waitFor(timeout, TimeUnit.MILLISECONDS)) {
+                return process.exitValue();
             }
+            throw new ProcessManagerTimeoutException("Process is still running, timeout " + timeout + " ms exceeded.");
         }
+        return process.waitFor();
     }
 
 
-    static class ReaderThread implements Runnable {
+    static class ReaderThread extends Thread {
         private final BufferedReader reader;
-        private final StringBuffer sb;
+        private final StringBuilder sb;
         private final boolean echo;
+        private final AtomicBoolean stop = new AtomicBoolean();
 
-        ReaderThread(BufferedReader Reader, StringBuffer SB, boolean echo) {
-            reader = Reader;
-            sb = SB;
+        ReaderThread(InputStream stream, boolean echo, String threadName) {
+            setName(threadName);
+            this.reader = new BufferedReader(new InputStreamReader(stream));
+            this.sb = new StringBuilder();
             this.echo = echo;
         }
 
@@ -251,22 +203,49 @@ public class ProcessManager {
         @Override
         public void run() {
             try {
-                for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+                while (true) {
+                    String line;
+                    if (reader.ready()) {
+                        line = reader.readLine();
+                    } else if (stop.getAcquire()) {
+                        break;
+                    } else {
+                        Thread.yield();
+                        continue;
+                    }
                     sb.append(line).append('\n');
-
                     if (echo) {
                         System.out.println(line);
                     }
                 }
             } catch (Exception e) {
+                LOG.log(Level.ERROR, "ReaderThread broke ...", e);
             } finally {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    LOG.log(Level.TRACE, "Failed to close BufferedReader", e);
+                    LOG.log(Level.ERROR, "Failed to close BufferedReader", e);
                 }
             }
             LOG.log(Level.TRACE, "ReaderThread exiting...");
+        }
+
+
+        /**
+         * Asks the thread to finish it's job and waits until the thread dies.
+         * <p>
+         * @param timeout The maximal time for the waiting.
+         *
+         * @return the final output of the process.
+         */
+        public String finish(long timeout) {
+            stop.setRelease(true);
+            try {
+                join(timeout);
+            } catch (InterruptedException ex) {
+                // nothing to do
+            }
+            return sb.toString();
         }
     }
 }

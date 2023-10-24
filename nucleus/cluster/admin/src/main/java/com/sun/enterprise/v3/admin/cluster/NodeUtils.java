@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,15 +26,6 @@ import com.sun.enterprise.util.ExceptionUtil;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.cluster.RemoteType;
 import com.sun.enterprise.util.net.NetUtils;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.api.admin.CommandValidationException;
-import org.glassfish.api.admin.ParameterMap;
-import org.glassfish.api.admin.SSHCommandExecutionException;
-import org.glassfish.cluster.ssh.connect.NodeRunner;
-import org.glassfish.cluster.ssh.launcher.SSHLauncher;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.RelativePathResolver;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -45,6 +37,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandValidationException;
+import org.glassfish.api.admin.ParameterMap;
+import org.glassfish.api.admin.SSHCommandExecutionException;
+import org.glassfish.cluster.ssh.connect.NodeRunner;
+import org.glassfish.cluster.ssh.launcher.SSHLauncher;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.RelativePathResolver;
 
 /**
  * Utility methods for operating on Nodes
@@ -71,7 +73,7 @@ public class NodeUtils {
     static final String PARAM_INSTALL = "install";
     public static final String PARAM_WINDOWS_DOMAIN = "windowsdomain";
     static final String LANDMARK_FILE = "glassfish/modules/admin-cli.jar";
-    private static final String NL = System.getProperty("line.separator");
+    private static final String NL = System.lineSeparator();
     private TokenResolver resolver = null;
     private Logger logger = null;
     private ServiceLocator habitat = null;
@@ -89,8 +91,9 @@ public class NodeUtils {
     }
 
     static boolean isSSHNode(Node node) {
-        if (node == null)
+        if (node == null) {
             return false;
+        }
         return node.getType().equals("SSH");
     }
 
@@ -100,10 +103,11 @@ public class NodeUtils {
      * @return version string
      */
     String getGlassFishVersionOnNode(Node node, AdminCommandContext context) throws CommandValidationException {
-        if (node == null)
+        if (node == null) {
             return "";
+        }
 
-        List<String> command = new ArrayList<String>();
+        List<String> command = new ArrayList<>();
         command.add("version");
         command.add("--local");
         command.add("--terse");
@@ -170,8 +174,9 @@ public class NodeUtils {
         // guaranteed to either get a valid type -- or a CommandValidationException
         RemoteType type = parseType(map);
 
-        if (type == RemoteType.SSH)
+        if (type == RemoteType.SSH) {
             validateSsh(map, nodehost);
+        }
 
         // bn: shouldn't this be something more sophisticated than just the standard string?!?
         // i.e. check to see if the hostname is this machine?
@@ -181,8 +186,9 @@ public class NodeUtils {
         }
 
         // BN says: Shouldn't this be a fatal error?!?  TODO
-        if (sshL == null)
+        if (sshL == null) {
             return;
+        }
 
         validateRemoteConnection(map);
     }
@@ -314,8 +320,9 @@ public class NodeUtils {
         RemoteType type = parseType(map);
 
         // just too difficult to refactor now...
-        if (type == RemoteType.SSH)
+        if (type == RemoteType.SSH) {
             validateSSHConnection(map);
+        }
     }
 
     private void validateSSHConnection(ParameterMap map) throws
@@ -421,8 +428,7 @@ public class NodeUtils {
      */
     void runAdminCommandOnNode(Node node, List<String> command,
             AdminCommandContext context, String firstErrorMessage,
-            String humanCommand, StringBuilder output,
-            boolean waitForReaderThreads) {
+            String humanCommand, StringBuilder output) {
 
         ActionReport report = context.getActionReport();
         boolean failure = true;
@@ -444,8 +450,7 @@ public class NodeUtils {
 
         NodeRunner nr = new NodeRunner(habitat, logger);
         try {
-            int status = nr.runAdminCommandOnNode(node, output, waitForReaderThreads,
-                    command, context);
+            int status = nr.runAdminCommandOnNode(node, output, command, context);
             if (status != 0) {
                 // Command ran, but didn't succeed. Log full information
                 msg2 = Strings.get("node.command.failed", nodeName,
@@ -496,14 +501,6 @@ public class NodeUtils {
 
 
         return;
-    }
-
-    void runAdminCommandOnNode(Node node, List<String> command,
-            AdminCommandContext context, String firstErrorMessage,
-            String humanCommand, StringBuilder output) {
-
-        runAdminCommandOnNode(node, command, context, firstErrorMessage,
-                humanCommand, output, true);
     }
 
     private RemoteType parseType(ParameterMap map) throws CommandValidationException {

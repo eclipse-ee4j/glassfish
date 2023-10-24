@@ -1536,7 +1536,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
     private void createParser(InputStream template) throws FileNotFoundException, XMLStreamException {
         if (template != null) {
             reader = new InputStreamReader(template);
-            parser = XMLInputFactory.newInstance().createXMLStreamReader("domain.xml", reader);
+            parser = XMLInputFactory.newFactory().createXMLStreamReader("domain.xml", reader);
         }
     }
 }

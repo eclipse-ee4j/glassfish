@@ -1,0 +1,50 @@
+<!--
+    Copyright (c) 2023 Contributors to the Eclipse Foundation
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+-->
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://www.eclipse.org/favicon.ico" rel='icon' type='image/x-icon'/>
+    <!-- Links and stylesheets -->
+    <link rel="stylesheet" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/quicksilver.min.css?v0.0.211">
+    <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" type="text/css"/>
+    <title>{{ page.title | default: site.title }}</title>
+    {% include google_tag_manager.html %}
+  </head>
+  <body>
+    {% include header.html %}
+    {% include breadcrumbs.html %}
+    <main>
+      <div class="container">
+        <div class="row">
+          {% include topnav.html %}
+          <div class="col-md-18 padding-bottom-30">
+            {{ content }}
+          </div>
+          <div class="col-md-6  padding-bottom-30">
+            {% include sidebar.html %}
+          </div>
+        </div>
+      </div>
+    </main>
+    {% include eclipse-search-bar-fix.html %}
+    {% include footer.html %}
+  </body>
+</html>

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,14 +24,13 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Level;
 import java.util.ArrayList;
-import java.util.List;
 import org.glassfish.embeddable.*;
 import org.glassfish.embeddable.web.*;
 import org.glassfish.embeddable.web.config.*;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests WebContainer
@@ -46,7 +46,7 @@ public class EmbeddedWebTest {
     static File root;
     static WebContainerConfig config;
 
-    @BeforeClass
+    @BeforeAll
     public static void setupServer() throws Exception {
 
         glassfish = GlassFishRuntime.bootstrap().newGlassFish();
@@ -54,7 +54,7 @@ public class EmbeddedWebTest {
         embedded = glassfish.getService(WebContainer.class);
         System.out.println("================ EmbeddedWeb Test");
         System.out.println("Starting Web "+embedded);
-        root = new File("target/classes");
+        root = new File(TestConfiguration.PROJECT_DIR, "target/classes");
         configure();
 
     }
@@ -94,12 +94,12 @@ public class EmbeddedWebTest {
 
         ArrayList<WebListener> listenerList = new ArrayList(embedded.getWebListeners());
         System.out.println("Network listener size after creation " + listenerList.size());
-        Assert.assertTrue(listenerList.size()==2);
+        Assertions.assertTrue(listenerList.size()==2);
         for (WebListener listener : embedded.getWebListeners())
             System.out.println("Web listener "+listener.getId()+" "+listener.getPort());
 
         VirtualServer vs = embedded.getVirtualServer(virtualServerId);
-        Assert.assertEquals(virtualServerId,vs.getID());
+        Assertions.assertEquals(virtualServerId,vs.getID());
 
         Context context = (Context) embedded.createContext(root);
         //embedded.addContext(context, contextRoot);
@@ -115,14 +115,14 @@ public class EmbeddedWebTest {
         }
         in.close();
         System.out.println(inputLine);
-        Assert.assertEquals("Hello World!", sb.toString());
+        Assertions.assertEquals("Hello World!", sb.toString());
 
         System.out.println("Removing web listener "+testListener.getId());
         embedded.removeWebListener(testListener);
 
         listenerList = new ArrayList(embedded.getWebListeners());
         System.out.println("Network listener size after deletion " + listenerList.size());
-        Assert.assertTrue(listenerList.size()==1);
+        Assertions.assertTrue(listenerList.size()==1);
         for (WebListener listener : embedded.getWebListeners())
             System.out.println("Web listener "+listener.getId()+" "+listener.getPort());
 
@@ -130,7 +130,7 @@ public class EmbeddedWebTest {
 
     }
 
-    @AfterClass
+    @AfterAll
     public static void shutdownServer() throws GlassFishException {
         System.out.println("Stopping server " + glassfish);
         if (glassfish != null) {

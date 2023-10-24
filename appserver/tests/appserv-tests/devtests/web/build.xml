@@ -42,7 +42,7 @@
         <echo message="@@## Running WEB JSP developer tests ##@@" />
         <echo unless:set="env.web" message="@@## Set environment variable 'web' to name of single test dir to run only that one. ##@@${line.separator}" />
         <echo if:set="env.web" message="@@## environment variable 'web' set. Running only ${env.web}  ##@@${line.separator}" />
-        
+
         <run-web-test path="emptyServletPathJspInclude" />
         <run-web-test path="jsp-security" />
         <run-web-test path="jspAllowErrorPageToSetResponseCharsetIfNoOutputWritten" />
@@ -88,7 +88,6 @@
         <run-web-test path="jspPrecompileConsiderDomainLibJarFilesAndClasses" />
         <run-web-test path="jspPrecompileDeployDashDashLibraries" />
         <run-web-test path="jspPrecompileIgnoreFragmentErrors" />
-        <run-web-test path="jspReloadGeneratedServletIfUpdated" />
         <run-web-test path="jspResourceInjectionContextListener" />
         <run-web-test path="jspResourceInjectionSimpleTagHandler" />
         <run-web-test path="jspResourceInjectionTagHandler" />
@@ -633,7 +632,7 @@
     <target name="usage">
         <echo>Usage: ant web (Executes the web tests)</echo>
     </target>
-    
+
     <macrodef name="run-web-test" xmlns:if="ant:if" xmlns:unless="ant:unless">
             <attribute name="path" />
             <attribute name="target" default="all"/>

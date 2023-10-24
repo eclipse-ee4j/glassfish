@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -66,6 +66,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
@@ -1233,8 +1234,8 @@ public class WsUtil {
                     AccessController.doPrivileged(new PrivilegedExceptionAction() {
                         @Override
                         public Object run() throws IllegalAccessException, InvocationTargetException {
-                            if (!method.isAccessible()) {
-                                method.setAccessible(true);
+                            if (!method.trySetAccessible()) {
+                                throw new InaccessibleObjectException("Unable to make accessible: " + method);
                             }
                             method.invoke(implObj, new Object[] {});
                             return null;

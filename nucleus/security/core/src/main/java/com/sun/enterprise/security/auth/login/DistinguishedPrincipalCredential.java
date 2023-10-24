@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,20 +21,18 @@ import java.security.Principal;
 
 public class DistinguishedPrincipalCredential {
 
-    private final Principal prin;
+    private final Principal principal;
 
-    public DistinguishedPrincipalCredential(Principal prin) {
-        this.prin = prin;
+    public DistinguishedPrincipalCredential(Principal principal) {
+        this.principal = principal;
     }
-
 
     public Principal getPrincipal() {
-        return prin;
+        return principal;
     }
-
 
     @Override
     public String toString() {
-        return "DistingushedPrincipal[" + prin + "]";
+        return "DistingushedPrincipal[" + principal + "]";
     }
 }

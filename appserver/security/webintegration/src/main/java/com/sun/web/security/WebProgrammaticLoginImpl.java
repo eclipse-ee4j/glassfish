@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,15 @@
 
 package com.sun.web.security;
 
-import static java.util.logging.Level.FINE;
+import com.sun.enterprise.security.SecurityContext;
+import com.sun.enterprise.security.auth.login.LoginContextDriver;
+import com.sun.enterprise.security.ee.web.integration.WebPrincipal;
+import com.sun.enterprise.security.ee.web.integration.WebProgrammaticLogin;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletRequestWrapper;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.security.AccessControlException;
@@ -29,22 +38,12 @@ import org.apache.catalina.connector.Request;
 import org.apache.catalina.connector.RequestFacade;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.security.SecurityContext;
-import com.sun.enterprise.security.auth.login.LoginContextDriver;
-import com.sun.enterprise.security.web.integration.WebPrincipal;
-import com.sun.enterprise.security.web.integration.WebProgrammaticLogin;
-import com.sun.logging.LogDomains;
-
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletRequestWrapper;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import static java.util.logging.Level.FINE;
 
 /**
  * Internal implementation for servlet programmatic login.
  *
- * @see com.sun.enterprise.security.ee.auth.login.ProgrammaticLogin
+ * @see com.sun.enterprise.security.ee.authentication.ProgrammaticLogin
  *
  */
 @Service
@@ -53,7 +52,7 @@ public class WebProgrammaticLoginImpl implements WebProgrammaticLogin {
     // Used for the auth-type string.
     public static final String WEBAUTH_PROGRAMMATIC = "PROGRAMMATIC";
 
-    private static Logger logger = LogDomains.getLogger(WebProgrammaticLoginImpl.class, LogDomains.SECURITY_LOGGER);
+    private static final Logger LOG = Logger.getLogger(WebProgrammaticLoginImpl.class.getName());
 
     /**
      * Login and set up principal in request and session. This implements programmatic login for servlets.
@@ -77,7 +76,7 @@ public class WebProgrammaticLoginImpl implements WebProgrammaticLogin {
      * not used currently.
      * @param realm the realm name to be authenticated to. If the realm is null, authentication takes place in default realm
      * @returns A Boolean object; true if login succeeded, false otherwise.
-     * @see com.sun.enterprise.security.ee.auth.login.ProgrammaticLogin
+     * @see com.sun.enterprise.security.ee.authentication.ProgrammaticLogin
      * @throws Exception on login failure.
      *
      */
@@ -104,9 +103,7 @@ public class WebProgrammaticLoginImpl implements WebProgrammaticLogin {
         coyoteRequest.setUserPrincipal(principal);
         coyoteRequest.setAuthType(WEBAUTH_PROGRAMMATIC);
 
-        if (logger.isLoggable(FINE)) {
-            logger.log(FINE, "Programmatic login set principal in http request to: " + user);
-        }
+        LOG.log(FINE, "Programmatic login set principal in http request to: {0}", user);
 
         // Try to retrieve a Session object (not the facade); if it exists
         // store the principal there as well. This will allow web container
@@ -116,9 +113,9 @@ public class WebProgrammaticLoginImpl implements WebProgrammaticLogin {
         if (realSession != null) {
             realSession.setPrincipal(principal);
             realSession.setAuthType(WEBAUTH_PROGRAMMATIC);
-            logger.log(FINE, "Programmatic login set principal in session.");
+            LOG.log(FINE, "Programmatic login set principal in session.");
         } else {
-            logger.log(FINE, "Programmatic login: No session available.");
+            LOG.log(FINE, "Programmatic login: No session available.");
         }
 
         return true;
@@ -143,7 +140,7 @@ public class WebProgrammaticLoginImpl implements WebProgrammaticLogin {
             }
 
         } catch (AccessControlException ex) {
-            logger.log(FINE, "Programmatic login faiied to get request");
+            LOG.log(FINE, "Programmatic login faiied to get request", ex);
         }
 
         return coyoteRequest;
@@ -156,7 +153,7 @@ public class WebProgrammaticLoginImpl implements WebProgrammaticLogin {
      * @param response HTTP response object provided by called application. It should be an instance of HttpServletResponse. This is
      * not used currently.
      * @returns A Boolean object; true if login succeeded, false otherwise.
-     * @see com.sun.enterprise.security.ee.auth.login.ProgrammaticLogin
+     * @see com.sun.enterprise.security.ee.authentication.ProgrammaticLogin
      * @throws Exception any exception encountered during logout operation
      */
     @Override
@@ -175,9 +172,7 @@ public class WebProgrammaticLoginImpl implements WebProgrammaticLogin {
 
         coyoteRequest.setUserPrincipal(null);
         coyoteRequest.setAuthType(null);
-        if (logger.isLoggable(FINE)) {
-            logger.log(FINE, "Programmatic logout removed principal from request.");
-        }
+        LOG.log(FINE, "Programmatic logout removed principal from request.");
 
         // Remove from session if possible.
 
@@ -185,9 +180,7 @@ public class WebProgrammaticLoginImpl implements WebProgrammaticLogin {
         if (realSession != null) {
             realSession.setPrincipal(null);
             realSession.setAuthType(null);
-            if (logger.isLoggable(FINE)) {
-                logger.log(FINE, "Programmatic logout removed principal from " + "session.");
-            }
+            LOG.log(FINE, "Programmatic logout removed principal from session.");
         }
 
         return true;

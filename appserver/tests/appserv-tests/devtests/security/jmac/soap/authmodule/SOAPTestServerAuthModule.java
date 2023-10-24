@@ -29,11 +29,7 @@ import jakarta.xml.soap.SOAPMessage;
 public class SOAPTestServerAuthModule implements ServerAuthModule {
     private CallbackHandler handler = null;
 
-    public void initialize(MessagePolicy requestPolicy,
-               MessagePolicy responsePolicy,
-               CallbackHandler handler,
-               Map options)
-               throws AuthException {
+    public void initialize(MessagePolicy requestPolicy, MessagePolicy responsePolicy, CallbackHandler handler, Map options) throws AuthException {
         this.handler = handler;
     }
 
@@ -41,38 +37,32 @@ public class SOAPTestServerAuthModule implements ServerAuthModule {
         return new Class[] { SOAPMessage.class };
     }
 
-    public AuthStatus validateRequest(MessageInfo messageInfo,
-            Subject clientSubject,
-            Subject serviceSubject) throws AuthException {
-        SOAPMessage reqMessage = (SOAPMessage)messageInfo.getRequestMessage();
+    public AuthStatus validateRequest(MessageInfo messageInfo, Subject clientSubject, Subject serviceSubject) throws AuthException {
+        SOAPMessage reqMessage = (SOAPMessage) messageInfo.getRequestMessage();
         try {
             String value = Util.getValue(reqMessage);
             if (value == null || !value.startsWith("SecReq ")) {
                 return AuthStatus.FAILURE;
             }
             Util.prependSOAPMessage(reqMessage, "ValReq ");
-        } catch(Exception ex) {
-            AuthException aex = new AuthException();
-            aex.initCause(ex);
-            throw aex;
+        } catch (Exception ex) {
+            throw new AuthException("", ex);
         }
+        
         return AuthStatus.SUCCESS;
     }
 
-    public AuthStatus secureResponse(MessageInfo messageInfo,
-            Subject serviceSubject) throws AuthException {
-        SOAPMessage respMessage = (SOAPMessage)messageInfo.getResponseMessage();
+    public AuthStatus secureResponse(MessageInfo messageInfo, Subject serviceSubject) throws AuthException {
+        SOAPMessage respMessage = (SOAPMessage) messageInfo.getResponseMessage();
         try {
             Util.prependSOAPMessage(respMessage, "SecResp ");
-        } catch(Exception ex) {
-            AuthException aex = new AuthException();
-            aex.initCause(ex);
-            throw aex;
+        } catch (Exception ex) {
+            throw new AuthException("", ex);
         }
+        
         return AuthStatus.SUCCESS;
     }
 
-    public void cleanSubject(MessageInfo messageInfo, Subject subject)
-        throws AuthException {
+    public void cleanSubject(MessageInfo messageInfo, Subject subject) throws AuthException {
     }
 }

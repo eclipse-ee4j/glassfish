@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -69,6 +69,7 @@ public final class SMFService extends ServiceAdapter {
     private static final String MANIFEST_FILE_SUFFIX = "Domain-service-smf.xml";
     private static final String MANIFEST_FILE_TEMPL_SUFFIX = MANIFEST_FILE_SUFFIX + ".template";
     private static final String REL_PATH_TEMPLATES = "lib/install/templates";
+    private static final int DEFAULT_SERVICE_TIMEOUT = 600_000;
 
     /**
      * Creates SMFService instance. All the tokens are initialized to default values. Callers must verify that the tokens
@@ -202,7 +203,7 @@ public final class SMFService extends ServiceAdapter {
     /**
      * Sets the additional service properties that are specific to it.
      *
-     * @param must be a colon separated String, if not null. No effect, if null is passed.
+     * @param cds must be a colon separated String, if not null. No effect, if null is passed.
      */
     @Override
     public void setServiceProperties(final String cds) {
@@ -400,7 +401,7 @@ public final class SMFService extends ServiceAdapter {
         try {
             final String[] cmd = new String[] { path2Auths, user };
             ProcessManager pm = new ProcessManager(cmd);
-            pm.setTimeoutMsec(600 * 1000);
+            pm.setTimeoutMsec(DEFAULT_SERVICE_TIMEOUT);
             pm.execute();
             auths.append(pm.getStdout());
             final StringTokenizer st = new StringTokenizer(pm.getStdout(), at);
@@ -423,7 +424,7 @@ public final class SMFService extends ServiceAdapter {
         try {
             final String[] cmd = new String[] { "/usr/bin/svcs", sn };
             ProcessManager pm = new ProcessManager(cmd);
-            pm.setTimeoutMsec(600 * 1000);
+            pm.setTimeoutMsec(DEFAULT_SERVICE_TIMEOUT);
             pm.execute();
             exists = true;
         } catch (final Exception e) {
@@ -462,7 +463,7 @@ public final class SMFService extends ServiceAdapter {
     private void validateService() throws Exception {
         final String[] cmda = new String[] { SMFService.SVCCFG, "validate", getManifestFilePath() };
         final ProcessManager pm = new ProcessManager(cmda);
-        pm.setTimeoutMsec(600 * 1000);
+        pm.setTimeoutMsec(DEFAULT_SERVICE_TIMEOUT);
         pm.execute();
         if (info.trace) {
             printOut("Validated the SMF Service: " + info.fqsn + " using: " + SMFService.SVCCFG);
@@ -472,12 +473,12 @@ public final class SMFService extends ServiceAdapter {
     private boolean importService() throws Exception {
         final String[] cmda = new String[] { SMFService.SVCCFG, "import", getManifestFilePath() };
         final ProcessManager pm = new ProcessManager(cmda);
-        pm.setTimeoutMsec(600 * 1000);
+        pm.setTimeoutMsec(DEFAULT_SERVICE_TIMEOUT);
         if (info.dryRun) {
             cleanupManifest();
         }
         else {
-            pm.execute(); //throws ExecException in case of an error
+            pm.execute(); // throws ProcessManagerException in case of an error
         }
 
         if (info.trace) {

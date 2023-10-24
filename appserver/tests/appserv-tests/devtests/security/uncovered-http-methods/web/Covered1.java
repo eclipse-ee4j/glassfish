@@ -18,7 +18,6 @@ package org.glassfish.jacc.test.uncoveredmethods;
 
 import jakarta.servlet.annotation.WebServlet;
 
-
-@WebServlet(urlPatterns = {"/Covered1"})
+@WebServlet(urlPatterns = { "/Covered1" })
 public class Covered1 extends BaseServlet {
 }

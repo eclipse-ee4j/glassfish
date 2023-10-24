@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.persistence.cmp</groupId>
         <artifactId>cmp</artifactId>
-        <version>7.0.6-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -70,5 +70,26 @@
                 </includes>
             </resource>
         </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <!--
+                        impl packages would not be exported by default
+                        util package is not exported
+                        -->
+                        <Export-Package>
+                            com.sun.jdo.api.persistence.model,
+                            com.sun.jdo.api.persistence.model.jdo,
+                            com.sun.jdo.api.persistence.model.jdo.impl,
+                            com.sun.jdo.api.persistence.model.mapping,
+                            com.sun.jdo.api.persistence.model.mapping.impl
+                        </Export-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>

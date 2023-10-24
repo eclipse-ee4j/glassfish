@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,15 +23,13 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Level;
-import java.util.ArrayList;
-import java.util.List;
 import org.glassfish.embeddable.*;
 import org.glassfish.embeddable.web.*;
 import org.glassfish.embeddable.web.config.*;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests WebContainer#removeContext
@@ -44,7 +43,7 @@ public class EmbeddedRemoveContextTest {
     static File root;
     static String contextRoot = "test";
 
-    @BeforeClass
+    @BeforeAll
     public static void setupServer() throws GlassFishException {
         glassfish = GlassFishRuntime.bootstrap().newGlassFish();
         glassfish.start();
@@ -53,7 +52,7 @@ public class EmbeddedRemoveContextTest {
         System.out.println("Starting Web "+embedded);
         embedded.setLogLevel(Level.INFO);
         WebContainerConfig config = new WebContainerConfig();
-        root = new File("target/classes");
+        root = new File(TestConfiguration.PROJECT_DIR, "target/classes");
         config.setDocRootDir(root);
         config.setListings(true);
         config.setPort(8080);
@@ -68,8 +67,8 @@ public class EmbeddedRemoveContextTest {
         embedded.addContext(context, contextRoot);
 
         VirtualServer vs = embedded.getVirtualServer("server");
-        Assert.assertEquals("server", vs.getID());
-        Assert.assertEquals("/"+contextRoot, vs.getContext(contextRoot).getPath());
+        Assertions.assertEquals("server", vs.getID());
+        Assertions.assertEquals("/"+contextRoot, vs.getContext(contextRoot).getPath());
         boolean containsContext = false;
         for (Context ctx : vs.getContexts()) {
             System.out.println("Context found "+ctx.getPath());
@@ -77,7 +76,7 @@ public class EmbeddedRemoveContextTest {
                 containsContext = true;
             }
         }
-        Assert.assertTrue(containsContext);
+        Assertions.assertTrue(containsContext);
 
         URL servlet = new URL("http://localhost:8080/"+contextRoot+"/hello");
         URLConnection yc = servlet.openConnection();
@@ -94,7 +93,7 @@ public class EmbeddedRemoveContextTest {
 
         embedded.removeContext(context);
 
-        Assert.assertNull(vs.getContext(contextRoot));
+        Assertions.assertNull(vs.getContext(contextRoot));
 
         containsContext = false;
         for (Context ctx : vs.getContexts()) {
@@ -103,18 +102,18 @@ public class EmbeddedRemoveContextTest {
                 containsContext = true;
             }
         }
-        Assert.assertTrue(!containsContext);
+        Assertions.assertTrue(!containsContext);
 
         embedded.addContext(context, contextRoot);
 
-        Assert.assertEquals("/"+contextRoot, vs.getContext(contextRoot).getPath());
+        Assertions.assertEquals("/"+contextRoot, vs.getContext(contextRoot).getPath());
         for (Context ctx : vs.getContexts()) {
             System.out.println("Context found "+ctx.getPath());
             if (ctx.getPath().endsWith(contextRoot)) {
                 containsContext = true;
             }
         }
-        Assert.assertTrue(containsContext);
+        Assertions.assertTrue(containsContext);
         yc = servlet.openConnection();
         in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
 
@@ -127,7 +126,7 @@ public class EmbeddedRemoveContextTest {
         embedded.removeContext(context);
     }
 
-    @AfterClass
+    @AfterAll
     public static void shutdownServer() throws GlassFishException {
         System.out.println("Stopping server " + glassfish);
         if (glassfish != null) {

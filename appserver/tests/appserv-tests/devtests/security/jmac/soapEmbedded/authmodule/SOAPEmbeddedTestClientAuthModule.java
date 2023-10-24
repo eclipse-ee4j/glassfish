@@ -30,11 +30,7 @@ import jakarta.xml.soap.SOAPMessage;
 public class SOAPEmbeddedTestClientAuthModule implements ClientAuthModule {
     private CallbackHandler handler = null;
 
-    public void initialize(MessagePolicy requestPolicy,
-               MessagePolicy responsePolicy,
-               CallbackHandler handler,
-               Map options)
-               throws AuthException {
+    public void initialize(MessagePolicy requestPolicy, MessagePolicy responsePolicy, CallbackHandler handler, Map options) throws AuthException {
         this.handler = handler;
     }
 
@@ -42,47 +38,41 @@ public class SOAPEmbeddedTestClientAuthModule implements ClientAuthModule {
         return new Class[] { SOAPMessage.class };
     }
 
-    public AuthStatus secureRequest(MessageInfo messageInfo,
-            Subject clientSubject) throws AuthException {
-        SOAPMessage reqMessage = (SOAPMessage)messageInfo.getRequestMessage();
-        QName serviceName = (QName)messageInfo.getMap().get(
-                jakarta.xml.ws.Endpoint.WSDL_SERVICE);
+    public AuthStatus secureRequest(MessageInfo messageInfo, Subject clientSubject) throws AuthException {
+        SOAPMessage reqMessage = (SOAPMessage) messageInfo.getRequestMessage();
+        QName serviceName = (QName) messageInfo.getMap().get(jakarta.xml.ws.Endpoint.WSDL_SERVICE);
         System.out.println("serviceName = " + serviceName);
+        
         if (serviceName == null) {
             throw new AuthException("serviceName is null");
-        } else if (!(serviceName instanceof javax.xml.namespace.QName)) {
+        }
+        
+        if (!(serviceName instanceof javax.xml.namespace.QName)) {
             throw new AuthException("serviceName is not an instanceof javax.xml.namespace.QName");
         }
+        
         try {
             Util.prependSOAPMessage(reqMessage, "SecReq ");
-        } catch(Exception ex) {
-            AuthException aex = new AuthException();
-            aex.initCause(ex);
-            throw aex;
+        } catch (Exception ex) {
+            throw new AuthException("", ex);
         }
+        
         return AuthStatus.SUCCESS;
     }
 
-    public AuthStatus validateResponse(MessageInfo messageInfo,
-            Subject clientSubject, Subject serviceSubject)
-            throws AuthException {
-        SOAPMessage respMessage = (SOAPMessage)messageInfo.getResponseMessage();
+    public AuthStatus validateResponse(MessageInfo messageInfo, Subject clientSubject, Subject serviceSubject) throws AuthException {
+        SOAPMessage respMessage = (SOAPMessage) messageInfo.getResponseMessage();
         try {
             String value = Util.getValue(respMessage);
-            if (value == null || !value.startsWith("SecResp ") ||
-                    (value.indexOf("ValReq SecReq ") == -1)) {
+            if (value == null || !value.startsWith("SecResp ") || (value.indexOf("ValReq SecReq ") == -1)) {
                 return AuthStatus.FAILURE;
             }
             Util.prependSOAPMessage(respMessage, "ValResp ");
-        } catch(Exception ex) {
-            AuthException aex = new AuthException();
-            aex.initCause(ex);
-            throw aex;
+        } catch (Exception ex) {
+            throw new AuthException("", ex);
         }
+        
         return AuthStatus.SUCCESS;
     }
 
-    public void cleanSubject(MessageInfo messageInfo, Subject subject)
-        throws AuthException {
-    }
 }

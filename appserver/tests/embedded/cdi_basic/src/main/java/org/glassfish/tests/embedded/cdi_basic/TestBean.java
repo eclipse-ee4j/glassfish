@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +18,9 @@
 package org.glassfish.tests.embedded.cdi_basic;
 
 //Simple TestBean to test CDI.
+import jakarta.enterprise.context.Dependent;
+
 //This bean implements Serializable as it needs to be placed into a Stateful Bean
+@Dependent
 public class TestBean
 {}

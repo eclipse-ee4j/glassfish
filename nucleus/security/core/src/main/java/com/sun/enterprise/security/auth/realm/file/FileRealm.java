@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,30 +23,27 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.enumeration;
 import static java.util.logging.Level.FINE;
 
+import com.sun.enterprise.config.serverbeans.AuthRealm;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.security.auth.realm.Realm;
+import com.sun.enterprise.security.auth.realm.User;
+import com.sun.enterprise.security.auth.realm.exceptions.BadRealmException;
+import com.sun.enterprise.security.auth.realm.exceptions.InvalidOperationException;
+import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
+import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
+import com.sun.enterprise.security.util.IASSecurityException;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
-
 import org.glassfish.internal.api.RelativePathResolver;
 import org.glassfish.security.common.FileRealmHelper;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.config.serverbeans.AuthRealm;
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.security.BaseRealm;
-import com.sun.enterprise.security.auth.realm.BadRealmException;
-import com.sun.enterprise.security.auth.realm.IASRealm;
-import com.sun.enterprise.security.auth.realm.InvalidOperationException;
-import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
-import com.sun.enterprise.security.auth.realm.NoSuchUserException;
-import com.sun.enterprise.security.auth.realm.Realm;
-import com.sun.enterprise.security.auth.realm.User;
-import com.sun.enterprise.security.util.IASSecurityException;
-
 /**
- * Realm wrapper for supporting file password authentication.
+ * Realm implementation for supporting file password authentication.
  *
  * <P>
  * In addition to the basic realm functionality, this class provides administration methods for the file realm.
@@ -71,7 +68,8 @@ import com.sun.enterprise.security.util.IASSecurityException;
  * @author Shing Wai Chan
  */
 @Service
-public final class FileRealm extends IASRealm {
+public final class FileRealm extends Realm {
+
     // Descriptive string of the authentication type of this realm.
     public static final String AUTH_TYPE = "filepassword";
 
@@ -104,7 +102,7 @@ public final class FileRealm extends IASRealm {
 
         // The original keyfile is stored here for use in the init and refresh methods
         properties.setProperty(PARAM_KEYFILE, keyfile);
-        properties.setProperty(BaseRealm.JAAS_CONTEXT_PARAM, "ignore");
+        properties.setProperty(JAAS_CONTEXT_PARAM, "ignore");
         this.init(properties);
     }
 
@@ -171,7 +169,7 @@ public final class FileRealm extends IASRealm {
 
         String file = props.getProperty(PARAM_KEYFILE);
         if (file == null) {
-            throw new BadRealmException(sm.getString("filerealm.nofile"));
+            throw new BadRealmException("Incomplete configuration in file realm: file not specified.");
         }
 
         if (file.contains("$")) {
@@ -180,15 +178,15 @@ public final class FileRealm extends IASRealm {
 
         setProperty(PARAM_KEYFILE, file);
 
-        String jaasCtx = props.getProperty(BaseRealm.JAAS_CONTEXT_PARAM);
+        String jaasCtx = props.getProperty(JAAS_CONTEXT_PARAM);
         if (jaasCtx == null) {
-            throw new BadRealmException(sm.getString("filerealm.nomodule"));
+            throw new BadRealmException("Incomplete configuration in file realm: login module not specified.");
         }
 
-        setProperty(BaseRealm.JAAS_CONTEXT_PARAM, jaasCtx);
+        setProperty(JAAS_CONTEXT_PARAM, jaasCtx);
 
         _logger.log(FINE, "FileRealm : " + PARAM_KEYFILE + "={0}", file);
-        _logger.log(FINE, "FileRealm : " + BaseRealm.JAAS_CONTEXT_PARAM + "={0}", jaasCtx);
+        _logger.log(FINE, "FileRealm : " + JAAS_CONTEXT_PARAM + "={0}", jaasCtx);
 
         try {
             if (isEmbeddedServer()) {
@@ -196,7 +194,7 @@ public final class FileRealm extends IASRealm {
             }
             fileRealmHelper = new FileRealmHelper(file);
         } catch (IOException ioe) {
-            throw new BadRealmException(sm.getString("filerealm.noaccess", ioe.toString()));
+            throw new BadRealmException(MessageFormat.format("Unable to create keyfile: {0}", ioe.toString()));
         }
     }
 
@@ -222,7 +220,7 @@ public final class FileRealm extends IASRealm {
     public User getUser(String name) throws NoSuchUserException {
         FileRealmHelper.User user = fileRealmHelper.getUser(name);
         if (user == null) {
-            throw new NoSuchUserException(sm.getString("filerealm.nouser", name));
+            throw new NoSuchUserException(MessageFormat.format("No such user [{0}]", name));
         }
 
         return new FileRealmUser(user, null);
@@ -394,7 +392,7 @@ public final class FileRealm extends IASRealm {
     /**
      * Persist the realm data to permanent storage
      *
-     * @throws com.sun.enterprise.security.auth.realm.BadRealmException
+     * @throws com.sun.enterprise.security.auth.realm.exceptions.BadRealmException
      */
     @Override
     public void persist() throws BadRealmException {

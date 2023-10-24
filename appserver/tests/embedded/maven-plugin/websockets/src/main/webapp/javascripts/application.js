@@ -21,6 +21,9 @@ var name  = null;
 var url = 'ws://' + document.location.host + document.location.pathname + 'chat';
 
 var app = {
+
+    url: url,
+
     initialize: function() {
         if ("WebSocket" in window) {
             $('login-name').focus();

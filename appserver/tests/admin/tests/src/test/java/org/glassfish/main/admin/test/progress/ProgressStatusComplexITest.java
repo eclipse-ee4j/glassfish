@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -84,17 +84,17 @@ public class ProgressStatusComplexITest {
         assertThat(prgs, hasSize(greaterThanOrEqualTo(100)));
         assertThat(prgs, isIncreasing());
         assertEquals(5, scopeCount(prgs, "complex:"));
-        assertEquals(0, scopeCount(prgs, "complex.ch1:"));
-        assertThat(scopeCount(prgs, "complex.ch2-paral:"), anyOf(equalTo(5), equalTo(6)));
-        assertEquals(4, scopeCount(prgs, "complex.ch3:"));
-        assertEquals(5, scopeCount(prgs, "complex.ch1.ch11:"));
-        assertEquals(6, scopeCount(prgs, "complex.ch1.ch12:"));
-        assertEquals(25, scopeCount(prgs, "complex.ch2-paral.ch21:"));
-        assertEquals(25, scopeCount(prgs, "complex.ch2-paral.ch22:"));
-        assertEquals(25, scopeCount(prgs, "complex.ch2-paral.ch23:"));
-        assertEquals(25, scopeCount(prgs, "complex.ch2-paral.ch24:"));
-        assertEquals(5, scopeCount(prgs, "complex.ch3.ch31:"));
-        assertEquals(5, scopeCount(prgs, "complex.ch3.ch32:"));
+        assertEquals(0, scopeCount(prgs, "complex.child1:"));
+        assertThat(scopeCount(prgs, "complex.child2:"), equalTo(5));
+        assertEquals(4, scopeCount(prgs, "complex.child3:"));
+        assertEquals(5, scopeCount(prgs, "complex.child1.child11:"));
+        assertEquals(6, scopeCount(prgs, "complex.child1.child12:"));
+        assertEquals(25, scopeCount(prgs, "complex.child2.child21:"));
+        assertEquals(25, scopeCount(prgs, "complex.child2.child22:"));
+        assertEquals(25, scopeCount(prgs, "complex.child2.child23:"));
+        assertEquals(25, scopeCount(prgs, "complex.child2.child24:"));
+        assertEquals(5, scopeCount(prgs, "complex.child3.child31:"));
+        assertEquals(5, scopeCount(prgs, "complex.child3.child32:"));
     }
 
     private int scopeCount(List<ProgressMessage> prgs, String scope) {

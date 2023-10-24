@@ -22,42 +22,46 @@
 
 <sun-application-client>
     <service-ref>
-      <service-ref-name>com.sun.s1asdev.security.wss.gartner.client.PingClient/ejbService</service-ref-name>
-      <port-info>
-        <wsdl-port>
-          <namespaceURI>http://gartner.wss.security.s1asdev.sun.com</namespaceURI>
-          <localpart>PingEjbPort</localpart>
-        </wsdl-port>
-        <message-security-binding auth-layer="SOAP"
-          provider-id="XWS_ClientProvider">
-          <message-security>
-            <message/>
-            <request-protection
-              auth-source="content" auth-recipient="after-content"/>
-            <response-protection
-              auth-source="content" auth-recipient="after-content"/>
-          </message-security>
-        </message-security-binding>
-      </port-info>
+        <service-ref-name>com.sun.s1asdev.security.wss.gartner.client.PingClient/ejbService</service-ref-name>
+        <port-info>
+            <wsdl-port>
+                <namespaceURI>http://gartner.wss.security.s1asdev.sun.com</namespaceURI>
+                <localpart>PingEjbPort</localpart>
+            </wsdl-port>
+            <message-security-binding
+                auth-layer="SOAP" provider-id="XWS_ClientProvider">
+                <message-security>
+                    <message />
+                    <request-protection
+                        auth-source="content"
+                        auth-recipient="after-content" />
+                    <response-protection
+                        auth-source="content"
+                        auth-recipient="after-content" />
+                </message-security>
+            </message-security-binding>
+        </port-info>
     </service-ref>
 
     <service-ref>
-      <service-ref-name>com.sun.s1asdev.security.wss.gartner.client.PingClient/servletService</service-ref-name>
-      <port-info>
-        <wsdl-port>
-          <namespaceURI>http://gartner.wss.security.s1asdev.sun.com</namespaceURI>
-          <localpart>PingServletPort</localpart>
-        </wsdl-port>
-        <message-security-binding auth-layer="SOAP"
-          provider-id="XWS_ClientProvider">
-          <message-security>
-            <message/>
-            <request-protection
-              auth-source="content" auth-recipient="after-content"/>
-            <response-protection
-              auth-source="content" auth-recipient="after-content"/>
-          </message-security>
-        </message-security-binding>
-      </port-info>
+        <service-ref-name>com.sun.s1asdev.security.wss.gartner.client.PingClient/servletService</service-ref-name>
+        <port-info>
+            <wsdl-port>
+                <namespaceURI>http://gartner.wss.security.s1asdev.sun.com</namespaceURI>
+                <localpart>PingServletPort</localpart>
+            </wsdl-port>
+            <message-security-binding
+                auth-layer="SOAP" provider-id="XWS_ClientProvider">
+                <message-security>
+                    <message />
+                    <request-protection
+                        auth-source="content"
+                        auth-recipient="after-content" />
+                    <response-protection
+                        auth-source="content"
+                        auth-recipient="after-content" />
+                </message-security>
+            </message-security-binding>
+        </port-info>
     </service-ref>
 </sun-application-client>

@@ -16,6 +16,9 @@
 
 package com.sun.enterprise.security.ssl;
 
+import static java.util.Collections.list;
+import static java.util.logging.Level.FINE;
+
 import java.io.IOException;
 import java.security.AccessControlException;
 import java.security.AccessController;
@@ -30,7 +33,6 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.util.Enumeration;
 import java.util.PropertyPermission;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -63,89 +65,87 @@ import jakarta.inject.Singleton;
 @Service
 @Singleton
 public final class SSLUtils implements PostConstruct {
-    private static final String DEFAULT_OUTBOUND_KEY_ALIAS = "s1as";
     public static final String HTTPS_OUTBOUND_KEY_ALIAS = "com.sun.enterprise.security.httpsOutboundKeyAlias";
     private static final String DEFAULT_SSL_PROTOCOL = "TLS";
 
     private static final Logger _logger = SecurityLoggerInfo.getLogger();
 
     @Inject
-    private SecuritySupport secSupp;
+    private SecuritySupport securitySupport;
 
-    private boolean hasKey = false;
-    private KeyStore mergedTrustStore = null;
-    private AppClientSSL appclientSsl = null;
-    private SSLContext ctx = null;
+    private boolean hasKey;
+    private KeyStore mergedTrustStore;
+    private AppClientSSL appclientSsl;
+    private SSLContext sslContext;
 
     @Override
     public void postConstruct() {
         try {
-            //TODO: To check the right implementation once we support EE.
-            if (secSupp == null) {
-                secSupp = SecuritySupport.getDefaultInstance();
+            // TODO: To check the right implementation once we support EE.
+            if (securitySupport == null) {
+                securitySupport = SecuritySupport.getDefaultInstance();
             }
+
             KeyStore[] keyStores = getKeyStores();
             if (keyStores != null) {
                 for (KeyStore keyStore : keyStores) {
-                    Enumeration aliases = keyStore.aliases();
-                    while (aliases.hasMoreElements()) {
-                        String alias = (String) aliases.nextElement();
+                    for (String alias : list(keyStore.aliases())) {
                         if (keyStore.isKeyEntry(alias)) {
                             hasKey = true;
                             break;
                         }
                     }
+
                     if (hasKey) {
                         break;
                     }
                 }
             }
-            mergedTrustStore = mergingTrustStores(secSupp.getTrustStores());
+
+            mergedTrustStore = mergingTrustStores(securitySupport.getTrustStores());
             getSSLContext(null, null, null);
         } catch (Exception ex) {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "SSLUtils static init fails.", ex);
-            }
+            _logger.log(FINE, "SSLUtils static init fails.", ex);
             throw new IllegalStateException(ex);
         }
     }
 
     SSLContext getSSLContext(String protocol, String algorithm, String trustAlgorithm) {
         try {
-            //V3:Commented to break dependency on WebTier.
-            //The SSLSocketFactory CTOR will now take care of setting the kmgr and tmgr
-            //SSLSocketFactory.setManagers(getKeyManagers(), getTrustManagers());
-
             // Creating a default SSLContext and HttpsURLConnection for clients
             // that use Https
             if (protocol == null) {
                 protocol = DEFAULT_SSL_PROTOCOL;
             }
-            ctx = SSLContext.getInstance(protocol);
+
+            sslContext = SSLContext.getInstance(protocol);
             String keyAlias = System.getProperty(HTTPS_OUTBOUND_KEY_ALIAS);
-            KeyManager[] kMgrs = getKeyManagers(algorithm);
-            if (keyAlias != null && keyAlias.length() > 0 && kMgrs != null) {
-                for (int i = 0; i < kMgrs.length; i++) {
-                    kMgrs[i] = new J2EEKeyManager((X509KeyManager) kMgrs[i], keyAlias);
+            KeyManager[] keyManagers = getKeyManagers(algorithm);
+            if (keyAlias != null && keyAlias.length() > 0 && keyManagers != null) {
+                for (int i = 0; i < keyManagers.length; i++) {
+                    keyManagers[i] = new J2EEKeyManager((X509KeyManager) keyManagers[i], keyAlias);
                 }
             }
-            ctx.init(kMgrs, getTrustManagers(trustAlgorithm), null);
 
-            HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());
+            sslContext.init(keyManagers, getTrustManagers(trustAlgorithm), null);
+
+            HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+
             //refer issue :http://java.net/jira/browse/GLASSFISH-15369
-            SSLContext.setDefault(ctx);
+            SSLContext.setDefault(sslContext);
         } catch (Exception e) {
             throw new Error(e);
         }
-        return ctx;
+
+        return sslContext;
     }
 
     public boolean verifyMasterPassword(final char[] masterPass) {
-        return secSupp.verifyMasterPassword(masterPass);
+        return securitySupport.verifyMasterPassword(masterPass);
     }
 
     public KeyStore[] getKeyStores() throws IOException {
-        return secSupp.getKeyStores();
+        return securitySupport.getKeyStores();
     }
 
     public KeyStore getKeyStore() throws IOException {
@@ -153,7 +153,7 @@ public final class SSLUtils implements PostConstruct {
     }
 
     public KeyStore[] getTrustStores() throws IOException {
-        return secSupp.getTrustStores();
+        return securitySupport.getTrustStores();
     }
 
     public KeyStore getTrustStore() throws IOException {
@@ -161,7 +161,9 @@ public final class SSLUtils implements PostConstruct {
     }
 
     /**
-     * This API is for temporary purpose. It will be removed once JSR 196 is updated.
+     * This API was supposedly for temporary purpose, but it's been in use for some 15 years.
+     * Someone once thought it would be removed once Jakarta Authentication is update, but never
+     * made clear why or how that would work.
      */
     public KeyStore getMergedTrustStore() {
         return mergedTrustStore;
@@ -171,9 +173,8 @@ public final class SSLUtils implements PostConstruct {
         return getKeyManagers(null);
     }
 
-    public KeyManager[] getKeyManagers(String algorithm)
-        throws IOException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException {
-        return secSupp.getKeyManagers(algorithm);
+    public KeyManager[] getKeyManagers(String algorithm) throws IOException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException {
+        return securitySupport.getKeyManagers(algorithm);
     }
 
     public TrustManager[] getTrustManagers() throws Exception {
@@ -181,7 +182,7 @@ public final class SSLUtils implements PostConstruct {
     }
 
     public TrustManager[] getTrustManagers(String algorithm) throws IOException, KeyStoreException, NoSuchAlgorithmException {
-        return secSupp.getTrustManagers(algorithm);
+        return securitySupport.getTrustManagers(algorithm);
     }
 
     public void setAppclientSsl(AppClientSSL ssl) {
@@ -215,13 +216,14 @@ public final class SSLUtils implements PostConstruct {
      */
     public boolean isTokenKeyAlias(String certNickname) throws Exception {
         boolean isTokenKeyAlias = false;
+
         if (certNickname != null) {
             int ind = certNickname.indexOf(':');
-            KeyStore[] kstores = getKeyStores();
+            KeyStore[] keyStores = getKeyStores();
             int count = -1;
             String aliasName = null;
             if (ind != -1) {
-                String[] tokens = secSupp.getTokenNames();
+                String[] tokens = securitySupport.getTokenNames();
                 String tokenName = certNickname.substring(0, ind);
                 aliasName = certNickname.substring(ind + 1);
                 for (int i = 0; i < tokens.length; i++) {
@@ -232,16 +234,17 @@ public final class SSLUtils implements PostConstruct {
             }
 
             if (count != -1) {
-                isTokenKeyAlias = kstores[count].isKeyEntry(aliasName);
+                isTokenKeyAlias = keyStores[count].isKeyEntry(aliasName);
             } else {
-                for (KeyStore kstore : kstores) {
-                    if (kstore.isKeyEntry(certNickname)) {
+                for (KeyStore keyStore : keyStores) {
+                    if (keyStore.isKeyEntry(certNickname)) {
                         isTokenKeyAlias = true;
                         break;
                     }
                 }
             }
         }
+
         return isTokenKeyAlias;
     }
 
@@ -253,14 +256,16 @@ public final class SSLUtils implements PostConstruct {
      */
     public PrivateKeyEntry getPrivateKeyEntryFromTokenAlias(String certNickname) throws Exception {
         checkPermission(SecuritySupport.KEYSTORE_PASS_PROP);
-        PrivateKeyEntry privKeyEntry = null;
+
+        PrivateKeyEntry privateKeyEntry = null;
+
         if (certNickname != null) {
             int ind = certNickname.indexOf(':');
-            KeyStore[] kstores = getKeyStores();
+            KeyStore[] keyStores = getKeyStores();
             int count = -1;
             String aliasName = certNickname;
             if (ind != -1) {
-                String[] tokens = secSupp.getTokenNames();
+                String[] tokens = securitySupport.getTokenNames();
                 String tokenName = certNickname.substring(0, ind);
                 aliasName = certNickname.substring(ind + 1);
                 for (int i = 0; i < tokens.length; i++) {
@@ -270,25 +275,23 @@ public final class SSLUtils implements PostConstruct {
                 }
             }
 
-            if (count != -1 && kstores.length >= count) {
-                PrivateKey privKey = secSupp.getPrivateKeyForAlias(aliasName, count);
-                if (privKey != null) {
-                    Certificate[] certs = kstores[count].getCertificateChain(aliasName);
-                    privKeyEntry = new PrivateKeyEntry(privKey, certs);
+            if (count != -1 && keyStores.length >= count) {
+                PrivateKey privateKey = securitySupport.getPrivateKeyForAlias(aliasName, count);
+                if (privateKey != null) {
+                    privateKeyEntry = new PrivateKeyEntry(privateKey, keyStores[count].getCertificateChain(aliasName));
                 }
             } else {
-                for (int i = 0; i < kstores.length; i++) {
-                    PrivateKey privKey = secSupp.getPrivateKeyForAlias(aliasName, i);
-                    if (privKey != null) {
-                        Certificate[] certs = kstores[i].getCertificateChain(aliasName);
-                        privKeyEntry = new PrivateKeyEntry(privKey, certs);
+                for (int i = 0; i < keyStores.length; i++) {
+                    PrivateKey privateKey = securitySupport.getPrivateKeyForAlias(aliasName, i);
+                    if (privateKey != null) {
+                        privateKeyEntry = new PrivateKeyEntry(privateKey, keyStores[i].getCertificateChain(aliasName));
                         break;
                     }
                 }
             }
         }
 
-        return privKeyEntry;
+        return privateKeyEntry;
     }
 
     public static void checkPermission(String key) {
@@ -298,6 +301,7 @@ public final class SSLUtils implements PostConstruct {
                 || Util.getInstance().isNotServerOrACC()) {
                 return;
             }
+
             Permission perm = new RuntimePermission("SSLPassword");
             AccessController.checkPermission(perm);
         } catch (AccessControlException e) {
@@ -306,12 +310,13 @@ public final class SSLUtils implements PostConstruct {
             if (message != null) {
                 message = message.replace(e.getPermission().toString(), perm.toString());
             }
+
             throw new AccessControlException(message, perm);
         }
     }
 
     public String[] getSupportedCipherSuites() {
-        //postConstruct is already setting this.
+        // PostConstruct is already setting this.
         return HttpsURLConnection.getDefaultSSLSocketFactory().getSupportedCipherSuites();
     }
 
@@ -319,19 +324,19 @@ public final class SSLUtils implements PostConstruct {
         throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException {
         KeyStore mergedStore;
         try {
-            mergedStore = secSupp.loadNullStore("CaseExactJKS", secSupp.getKeyStores().length - 1);
+            mergedStore = securitySupport.loadNullStore("CaseExactJKS", securitySupport.getKeyStores().length - 1);
         } catch (KeyStoreException ex) {
-            mergedStore = secSupp.loadNullStore("JKS", secSupp.getKeyStores().length - 1);
+            mergedStore = securitySupport.loadNullStore("JKS", securitySupport.getKeyStores().length - 1);
         }
 
-        String[] tokens = secSupp.getTokenNames();
+        String[] tokens = securitySupport.getTokenNames();
         for (int i = 0; i < trustStores.length; i++) {
             Enumeration aliases = trustStores[i].aliases();
             while (aliases.hasMoreElements()) {
                 String alias = (String) aliases.nextElement();
                 Certificate cert = trustStores[i].getCertificate(alias);
 
-                //need to preserve the token:alias name format
+                // Need to preserve the token:alias name format
                 String alias2 = (i < tokens.length - 1) ? tokens[i] + ":" + alias : alias;
 
                 String alias3 = alias2;
@@ -345,11 +350,13 @@ public final class SSLUtils implements PostConstruct {
                     }
                     alias3 = alias2 + "__" + count++;
                 }
+
                 if (!alreadyInStore) {
                     mergedStore.setCertificateEntry(alias3, cert);
                 }
             }
         }
+
         return mergedStore;
     }
 
@@ -374,16 +381,17 @@ public final class SSLUtils implements PostConstruct {
             if (protocol == null) {
                 protocol = "TLS";
             }
-            SSLContext cntxt = SSLContext.getInstance(protocol);
-            KeyManager[] kMgrs = getKeyManagers();
-            if (alias != null && alias.length() > 0 && kMgrs != null) {
-                for (int i = 0; i < kMgrs.length; i++) {
-                    kMgrs[i] = new J2EEKeyManager((X509KeyManager) kMgrs[i], alias);
+
+            SSLContext adminSSLContext = SSLContext.getInstance(protocol);
+            KeyManager[] keyManagers = getKeyManagers();
+            if (alias != null && alias.length() > 0 && keyManagers != null) {
+                for (int i = 0; i < keyManagers.length; i++) {
+                    keyManagers[i] = new J2EEKeyManager((X509KeyManager) keyManagers[i], alias);
                 }
             }
-            cntxt.init(kMgrs, getTrustManagers(), null);
+            adminSSLContext.init(keyManagers, getTrustManagers(), null);
 
-            return cntxt;
+            return adminSSLContext;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -236,13 +236,6 @@ public class JDBCResourceManager implements ResourceManager {
                     return new ResourceStatus(ResourceStatus.FAILURE, msg);
                 }
             } else {
-                if (!resourceUtil.isResourceRefInTarget(jndiName, target)) {
-                    String msg = localStrings.getLocalString("delete.jdbc.resource.no.resource-ref",
-                            "jdbc-resource [ {0} ] is not referenced in target [ {1} ]",
-                            jndiName, target);
-                    return new ResourceStatus(ResourceStatus.FAILURE, msg);
-                }
-
                 if (resourceUtil.getTargetsReferringResourceRef(jndiName).size() > 1) {
                     String msg = localStrings.getLocalString("delete.jdbc.resource.multiple.resource-refs",
                             "jdbc resource [ {0} ] is referenced in multiple " +
@@ -256,7 +249,7 @@ public class JDBCResourceManager implements ResourceManager {
         try {
 
             // delete resource-ref
-            if (!CommandTarget.TARGET_DOMAIN.equals(target)) {
+            if (!CommandTarget.TARGET_DOMAIN.equals(target) && resourceUtil.isResourceRefInTarget(jndiName, target)) {
                 resourceUtil.deleteResourceRef(jndiName, target);
             }
 

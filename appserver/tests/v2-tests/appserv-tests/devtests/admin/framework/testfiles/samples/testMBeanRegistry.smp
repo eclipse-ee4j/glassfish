@@ -1452,8 +1452,6 @@ MBeanRegistry(132 entries):
       --- Attributes:
          AttributeInfo[name=name, description=null, type=java.lang.String]
             Descriptor[setter=setName getter=getName bean=CBEAN ]
-         AttributeInfo[name=jbi-enabled, description=null, type=boolean]
-            Descriptor[setter=setJbiEnabled getter=isJbiEnabled bean=CBEAN ]
          AttributeInfo[name=max-history-size, description=null, type=java.lang.String]
             Descriptor[setter=setMaxHistorySize getter=getMaxHistorySize bean=CBEAN ]
          AttributeInfo[name=monitoring, description=null, type=java.lang.String]
@@ -2214,8 +2212,6 @@ MBeanRegistry(132 entries):
       --- Attributes:
          AttributeInfo[name=name, description=null, type=java.lang.String]
             Descriptor[setter=setName getter=getName bean=CBEAN ]
-         AttributeInfo[name=jbi-enabled, description=null, type=boolean]
-            Descriptor[setter=setJbiEnabled getter=isJbiEnabled bean=CBEAN ]
          AttributeInfo[name=max-history-size, description=null, type=java.lang.String]
             Descriptor[setter=setMaxHistorySize getter=getMaxHistorySize bean=CBEAN ]
          AttributeInfo[name=monitoring, description=null, type=java.lang.String]
@@ -5406,8 +5402,6 @@ MBeanRegistry(132 entries):
       --- Attributes:
          AttributeInfo[name=name, description=null, type=java.lang.String]
             Descriptor[setter=setName getter=getName bean=CBEAN ]
-         AttributeInfo[name=jbi-enabled, description=null, type=boolean]
-            Descriptor[setter=setJbiEnabled getter=isJbiEnabled bean=CBEAN ]
          AttributeInfo[name=max-history-size, description=null, type=java.lang.String]
             Descriptor[setter=setMaxHistorySize getter=getMaxHistorySize bean=CBEAN ]
          AttributeInfo[name=monitoring, description=null, type=java.lang.String]

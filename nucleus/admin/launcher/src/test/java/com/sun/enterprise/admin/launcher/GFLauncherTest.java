@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,9 +26,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.matchesPattern;
 import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -91,7 +91,8 @@ public class GFLauncherTest {
         launcher.launch();
         List<String> cmdline = launcher.getCommandLine();
         // 0 --> java, 1 --> "-cp" 2 --> the classpath, 3 -->first arg
-        assertThat(cmdline, hasItems(endsWith("java"), is("-cp"), is("-XX:+UnlockDiagnosticVMOptions"), is("-verbose")));
+        assertThat(cmdline,
+            hasItems(matchesPattern(".*java(.exe)?"), is("-cp"), is("-XX:+UnlockDiagnosticVMOptions"), is("-verbose")));
     }
 
     /**
@@ -103,7 +104,7 @@ public class GFLauncherTest {
         launcher.launch();
         List<String> cmdline = launcher.getCommandLine();
         assertThat(cmdline,
-            hasItems(endsWith("java"), is("-cp"), not(is("-XX:+UnlockDiagnosticVMOptions")), is("-verbose")));
+            hasItems(matchesPattern(".*java(.exe)?"), is("-cp"), not(is("-XX:+UnlockDiagnosticVMOptions")), is("-verbose")));
     }
 
 
@@ -129,7 +130,7 @@ public class GFLauncherTest {
         info.setDomainName("baddomain");
         GFLauncherException e = assertThrows(GFLauncherException.class, launcher::launch);
         assertEquals("Fatal Error encountered during launch: \"Xml Parser Error: javax.xml.stream.XMLStreamException:"
-            + " ParseError at [row,col]:[62,7]\n"
+            + " ParseError at [row,col]:[57,7]\n"
             + "Message: The element type \"system-property\" must be terminated by the matching"
             + " end-tag \"</system-property>\".", e.getMessage());
     }

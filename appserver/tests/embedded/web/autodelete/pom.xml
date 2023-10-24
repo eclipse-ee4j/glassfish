@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+    Copyright (c) 2023 Contributors to the Eclipse Foundation.
     Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -23,8 +24,7 @@
     <parent>
         <groupId>org.glassfish.tests.embedded</groupId>
         <artifactId>web</artifactId>
-        <version>7.0.6-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
+        <version>7.0.10-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.tests.embedded.web</groupId>
@@ -35,49 +35,36 @@
         <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
-                <inherited>true</inherited>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.1</version>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.1.1</version>
+                <executions>
+                    <execution>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <executable>java</executable>
+                    <arguments>
+                        <!--argument>-Xdebug</argument>
+                        <argument>-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9009</argument-->
+                        <argument>-classpath</argument>
+                        <classpath/>
+                        <argument>org.glassfish.tests.embedded.web.autodelete.ServletMain</argument>
+                    </arguments>
+                    <classpathScope>test</classpathScope>
+                    <includeProjectDependencies>true</includeProjectDependencies>
                 </configuration>
             </plugin>
-            <plugin>
-                <artifactId>maven-war-plugin</artifactId>
-            </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.1.1</version>
-          <executions>
-              <execution>
-                  <phase>test</phase>
-                  <goals>
-                      <goal>exec</goal>
-                  </goals>
-              </execution>
-          </executions>
-          <configuration>
-              <executable>java</executable>
-              <arguments>
-                  <!--argument>-Xdebug</argument>
-                  <argument>-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9009</argument-->
-                  <argument>-classpath</argument>
-                  <classpath/>
-                  <argument>org.glassfish.tests.embedded.web.autodelete.ServletMain</argument>
-              </arguments>
-              <classpathScope>test</classpathScope>
-              <includeProjectDependencies>true</includeProjectDependencies>
-          </configuration>
-      </plugin>
         </plugins>
     </build>
     <dependencies>
         <dependency>
-            <groupId>org.glassfish.extras</groupId>
+            <groupId>org.glassfish.main.extras</groupId>
             <artifactId>glassfish-embedded-web</artifactId>
-            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -88,14 +75,12 @@
         <dependency>
             <groupId>net.sourceforge.htmlunit</groupId>
             <artifactId>htmlunit</artifactId>
-            <version>2.29</version>
+            <version>2.70.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.tests.embedded</groupId>
-            <artifactId>utils</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
         </dependency>
     </dependencies>
 </project>

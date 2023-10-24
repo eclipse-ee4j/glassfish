@@ -24,10 +24,13 @@ import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Path;
+import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,6 +48,8 @@ import org.osgi.util.tracker.ServiceTracker;
 
 import static com.sun.enterprise.glassfish.bootstrap.Constants.PLATFORM_PROPERTY_KEY;
 import static com.sun.enterprise.util.io.FileUtils.USER_HOME;
+import static org.osgi.framework.Constants.FRAMEWORK_STORAGE;
+import static org.osgi.framework.Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA;
 
 /**
  * @author bhavanishankar@dev.java.net
@@ -159,8 +164,8 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
         System.setProperty(Constants.INSTALL_ROOT_PROP_NAME, installRoot);
         System.setProperty(Constants.INSTANCE_ROOT_PROP_NAME, instanceRoot);
 
-        bsOptions.setProperty("org.osgi.framework.system.packages.extra",
-                "org.glassfish.simpleglassfishapi; version=3.1");
+        String version = loadVersion();
+        bsOptions.setProperty(FRAMEWORK_SYSTEMPACKAGES_EXTRA, "org.glassfish.simpleglassfishapi; version=" + version);
 
 //        props.setProperty(org.osgi.framework.Constants.FRAMEWORK_BUNDLE_PARENT,
 //                org.osgi.framework.Constants.FRAMEWORK_BUNDLE_PARENT_FRAMEWORK);
@@ -170,7 +175,7 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
 //                "org.jvnet.hk2.annotations.*");
 //        props.setProperty("org.osgi.framework.bootdelegation", "*");
 
-        bsOptions.setProperty("org.osgi.framework.storage", instanceRoot + "/osgi-cache/Felix");
+        bsOptions.setProperty(FRAMEWORK_STORAGE, instanceRoot + "/osgi-cache/Felix");
 //        }
 
         logger.logp(Level.FINER, "EmbeddedOSGIRuntimeBuilder", "build", "Building file system {0}", bsOptions);
@@ -231,4 +236,14 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
         }
     }
 
+
+    private String loadVersion() {
+        URL manifestURL = UberJarOSGiGlassFishRuntimeBuilder.class.getResource("/META-INF/MANIFEST.MF");
+        try (InputStream manifestStream = manifestURL.openStream()) {
+            Manifest manifest = new Manifest(manifestStream);
+            return  manifest.getMainAttributes().getValue(org.osgi.framework.Constants.BUNDLE_VERSION);
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not load version from the manifest file.", e);
+        }
+    }
 }

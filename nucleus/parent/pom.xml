@@ -30,7 +30,7 @@
 
     <groupId>org.glassfish.main</groupId>
     <artifactId>nucleus-parent</artifactId>
-    <version>7.0.6-SNAPSHOT</version>
+    <version>7.0.10-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Nucleus Parent</name>
@@ -68,7 +68,6 @@
         <system>IssueTracker</system>
         <url>https://github.com/eclipse-ee4j/glassfish/issues</url>
     </issueManagement>
-
     <properties>
         <!-- Jakarta Expression Language -->
         <jakarta.el-api.version>5.0.1</jakarta.el-api.version>
@@ -79,30 +78,30 @@
 
         <!-- Jakarta Validation -->
         <jakarta.validation-api.version>3.0.2</jakarta.validation-api.version>
-        <hibernate-validator.version>8.0.0.Final</hibernate-validator.version>
+        <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
 
         <!-- Jakarta Web Services -->
-        <!--
-        Jakarta XML Web Services
-        <jakarta.xml.ws-api.version>4.0.0-RC2</jakarta.xml.ws-api.version>
 
-        Jakarta SOAP (with Attachments)
-        <jakarta.xml.soap-api.version>3.0.0-RC2</jakarta.xml.soap-api.version>
-         -->
-        <webservices.version>4.0.2</webservices.version>
+        <!-- Jakarta XML Web Services -->
+        <jakarta.xml.ws-api.version>4.0.1</jakarta.xml.ws-api.version>
+
+        <!-- Jakarta SOAP (with Attachments)
+       <jakarta.xml.soap-api.version>3.0.0-RC2</jakarta.xml.soap-api.version>
+        -->
+        <webservices.version>4.0.3</webservices.version>
 
         <!-- Jakarta Inject -->
         <jakarta.inject-api.version>2.0.1.MR</jakarta.inject-api.version>
-        <hk2.version>3.0.4</hk2.version>
-        <hk2.plugin.version>3.0.4</hk2.plugin.version><!-- requires 3.0.5 to benefit from https://github.com/eclipse-ee4j/glassfish-hk2/pull/821 -->
+        <hk2.version>3.0.5</hk2.version>
+        <hk2.plugin.version>3.0.5</hk2.plugin.version>
 
         <!-- Jakarta XML Binding -->
-        <jakarta.xml.bind-api.version>4.0.0</jakarta.xml.bind-api.version>
-        <jakarta.jaxb-impl.version>4.0.2</jakarta.jaxb-impl.version>
+        <jakarta.xml.bind-api.version>4.0.1</jakarta.xml.bind-api.version>
+        <jakarta.jaxb-impl.version>4.0.4</jakarta.jaxb-impl.version>
 
         <!-- Jakarta REST -->
         <jakarta.rest-api.version>3.1.0</jakarta.rest-api.version>
-        <jersey.version>3.1.2</jersey.version>
+        <jersey.version>3.1.3</jersey.version>
 
         <!-- Jakarta Mail -->
         <jakarta.mail-api.version>2.1.2</jakarta.mail-api.version>
@@ -122,8 +121,8 @@
 
         <!-- GlassFish Components -->
 
-        <glassfish-corba.version>4.2.4</glassfish-corba.version>
-        <grizzly.version>4.0.0</grizzly.version>
+        <glassfish-corba.version>4.2.5</glassfish-corba.version>
+        <grizzly.version>4.0.1</grizzly.version>
         <grizzly.npn.version>2.0.0</grizzly.npn.version>
         <glassfish-management-api.version>3.2.3</glassfish-management-api.version>
         <pfl.version>4.1.2</pfl.version>
@@ -136,12 +135,12 @@
 
         <!-- 3rd party dependencies -->
 
-        <commons-io.version>2.12.0</commons-io.version>
+        <commons-io.version>2.13.0</commons-io.version>
         <jboss.logging.annotation.version>2.2.1.Final</jboss.logging.annotation.version>
-        <jboss.logging.version>3.5.1.Final</jboss.logging.version>
+        <jboss.logging.version>3.5.3.Final</jboss.logging.version>
         <javassist.version>3.29.2-GA</javassist.version>
-        <asm.version>9.5</asm.version>
-        <jsch.version>0.1.56</jsch.version>
+        <asm.version>9.6</asm.version>
+        <jsch.version>0.2.11</jsch.version>
         <antlr.version>2.7.8</antlr.version>
         <ant.version>1.10.12</ant.version>
         <ant.external.version>1.10.2</ant.external.version>
@@ -156,10 +155,11 @@
 
         <easymock.version>4.3</easymock.version>
         <jmockit.version>1.49</jmockit.version>
-        <junit.version>5.9.2</junit.version>
-        <jmh.version>1.36</jmh.version>
+        <junit.version>5.10.0</junit.version>
+        <jmh.version>1.37</jmh.version>
         <osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
 
+        <file.executable.suffix></file.executable.suffix>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.commonResourcesDirectory>${project.build.directory}/common-resources</project.build.commonResourcesDirectory>
         <legal.doc.source>${project.build.commonResourcesDirectory}/legal</legal.doc.source>
@@ -247,6 +247,11 @@
                 <groupId>org.glassfish.metro</groupId>
                 <artifactId>webservices-extra-jdk-packages</artifactId>
                 <version>${webservices.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.xml.ws</groupId>
+                <artifactId>jakarta.xml.ws-api</artifactId>
+                <version>${jakarta.xml.ws-api.version}</version>
             </dependency>
 
             <!-- Jakarta Inject -->
@@ -447,7 +452,7 @@
             <dependency>
                 <groupId>org.jboss.shrinkwrap.resolver</groupId>
                 <artifactId>shrinkwrap-resolver-impl-maven-archive</artifactId>
-                <version>3.1.4</version>
+                <version>3.2.1</version>
                 <scope>test</scope>
             </dependency>
 
@@ -510,7 +515,7 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.webconsole</artifactId>
-                <version>4.8.4</version>
+                <version>4.8.12</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -725,7 +730,7 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>3.12.0</version>
+                <version>3.13.0</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -736,10 +741,10 @@
             <dependency>
                 <groupId>org.apache.ant</groupId>
                 <artifactId>ant-launcher</artifactId>
-                <version>1.10.13</version>
+                <version>1.10.14</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish.external</groupId>
+                <groupId>com.github.mwiede</groupId>
                 <artifactId>jsch</artifactId>
                 <version>${jsch.version}</version>
             </dependency>
@@ -775,6 +780,9 @@
                     <groupId>org.glassfish.hk2</groupId>
                     <artifactId>hk2-inhabitant-generator</artifactId>
                     <version>${hk2.plugin.version}</version>
+                    <configuration>
+                        <includeDate>false</includeDate>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.hk2</groupId>
@@ -797,7 +805,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.10.1</version>
+                    <version>3.11.0</version>
                     <configuration>
                         <source>11</source>
                         <target>11</target>
@@ -833,13 +841,14 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>3.6.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
                     <artifactId>glassfishbuild-maven-plugin</artifactId>
-                    <!-- Don't use 3.2.28, FeatureSetsDependenciesMojo is broken. 3.3.0 is fixed, but not released yet. -->
-                    <version>3.2.27</version><!-- requires 3.3.0 to benefit from https://github.com/eclipse-ee4j/glassfish-build-maven-plugin/pull/116 -->
+                    <version>4.0.0-M1</version>
+                    <!-- Adds support for glassfish-jar and it's customized lifecycle-->
+                    <extensions>true</extensions>
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
@@ -856,7 +865,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.3.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
@@ -871,8 +880,8 @@
                         <forkCount>1</forkCount>
                         <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>
                         <excludes>
-                           <exclude>**/*ITest.java</exclude>
-                           <exclude>**/*IT.java</exclude>
+                            <exclude>**/*ITest.java</exclude>
+                            <exclude>**/*IT.java</exclude>
                         </excludes>
                         <systemPropertyVariables>
                             <java.util.logging.manager>${test.logManager}</java.util.logging.manager>
@@ -893,8 +902,8 @@
                         <useSystemClassLoader>true</useSystemClassLoader>
                         <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>
                         <includes>
-                           <include>**/*ITest.java</include>
-                           <include>**/*IT.java</include>
+                            <include>**/*ITest.java</include>
+                            <include>**/*IT.java</include>
                         </includes>
                         <systemPropertyVariables>
                             <java.util.logging.manager>${test.logManager}</java.util.logging.manager>
@@ -949,7 +958,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>10.7.0</version>
+                            <version>10.12.3</version>
                         </dependency>
                     </dependencies>
                     <executions>
@@ -970,7 +979,7 @@
                 <plugin>
                     <groupId>com.googlecode.maven-download-plugin</groupId>
                     <artifactId>download-maven-plugin</artifactId>
-                    <version>1.6.8</version>
+                    <version>1.7.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-release-plugin</artifactId>
@@ -978,11 +987,22 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.3.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>4.0.0-M5</version>
+                    <version>4.0.0-M9</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>3.1.0</version>
+                    <configuration>
+                        <environmentVariables>
+                            <AS_JAVA>${java.home}</AS_JAVA>
+                            <JAVA_HOME>${java.home}</JAVA_HOME>
+                        </environmentVariables>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
@@ -990,11 +1010,11 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.1.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-install-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.1.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
@@ -1003,7 +1023,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.4.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-invoker-plugin</artifactId>
@@ -1074,18 +1094,14 @@
                         <dateFormatTimeZone>UTC</dateFormatTimeZone>
                         <commitIdGenerationMode>full</commitIdGenerationMode>
                         <includeOnlyProperties>
-                            <includeOnlyProperty>git.branch</includeOnlyProperty>
-                            <includeOnlyProperty>git.build.time</includeOnlyProperty>
-                            <includeOnlyProperty>git.commit.id.abbrev</includeOnlyProperty>
                             <includeOnlyProperty>git.commit.id.full</includeOnlyProperty>
-                            <includeOnlyProperty>git.closest.tag.commit.count</includeOnlyProperty>
                         </includeOnlyProperties>
                     </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
                     <artifactId>command-security-maven-plugin</artifactId>
-                    <version>1.0.16</version>
+                    <version>1.0.17</version>
                     <configuration>
                         <isFailureFatal>${command.security.maven.plugin.isFailureFatal}</isFailureFatal>
                     </configuration>
@@ -1103,13 +1119,13 @@
                             </goals>
                             <configuration>
                                 <!--
-                                    Exclude several versions that we never want to update to since they are OLDER than
-                                    what we currently use.
+                                   Exclude several versions that we never want to update to since they are OLDER than
+                                   what we currently use.
 
-                                    Note that we actually want to specify the version per artefact, but this is currently
-                                    broken.
-                                    See https://github.com/mojohaus/versions/issues/258#issuecomment-1438149133
-                                 -->
+                                   Note that we actually want to specify the version per artefact, but this is currently
+                                   broken.
+                                   See https://github.com/mojohaus/versions/issues/258#issuecomment-1438149133
+                                -->
                                 <ignoredVersions>3.2-b..,2.5.0-b..,5.0-jdk8-rc.,20030911,10.0-b..</ignoredVersions>
                             </configuration>
                         </execution>
@@ -1129,7 +1145,7 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>3.8.6</version>
+                                    <version>3.9.0</version>
                                 </requireMavenVersion>
                             </rules>
                         </configuration>
@@ -1176,15 +1192,11 @@
             <plugin>
                 <groupId>org.glassfish.build</groupId>
                 <artifactId>glassfishbuild-maven-plugin</artifactId>
-                <!-- Adds support for glassfish-jar and it's customized lifecycle-->
-                <extensions>true</extensions>
-                <configuration>
-                    <dir>${project.build.outputDirectory}</dir>
-                </configuration>
             </plugin>
 
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <inherited>false</inherited>
                 <executions>
                     <execution>
                         <id>common-resources</id>
@@ -1192,7 +1204,6 @@
                         <goals>
                             <goal>single</goal>
                         </goals>
-                        <inherited>false</inherited>
                         <configuration>
                             <descriptors>
                                 <descriptor>src/main/assembly/resources.xml</descriptor>
@@ -1608,6 +1619,18 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <properties>
+                <file.executable.suffix>.bat</file.executable.suffix>
+            </properties>
         </profile>
     </profiles>
 </project>

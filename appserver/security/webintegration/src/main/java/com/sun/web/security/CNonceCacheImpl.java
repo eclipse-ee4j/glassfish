@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,9 +19,9 @@ package com.sun.web.security;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.catalina.util.StringManager;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.security.common.CNonceCache;
 import org.glassfish.security.common.NonceInfo;
@@ -47,14 +48,6 @@ public final class CNonceCacheImpl extends LinkedHashMap<String, NonceInfo> impl
 
     private String eldestCNonce;
     private String storeName;
-    /**
-     * The string manager for this package.
-     */
-    static final StringManager sm = StringManager.getManager("org.apache.catalina.util");
-
-    public CNonceCacheImpl() {
-
-    }
 
     /**
      * Maximum number of client nonces to keep in the cache. If not specified, the default value of 1000 is used.
@@ -74,8 +67,8 @@ public final class CNonceCacheImpl extends LinkedHashMap<String, NonceInfo> impl
         if (size() > getCnonceCacheSize()) {
             if (lastLog < currentTime && currentTime - eldest.getValue().getTimestamp() < getNonceValidity()) {
                 // Replay attack is possible
-                log.warning(sm.getString("digestAuthenticator.cacheRemove"));
                 lastLog = currentTime + LOG_SUPPRESS_TIME;
+                log.log(Level.WARNING, "The lastLog was set to {0}", lastLog);
             }
             return true;
         }

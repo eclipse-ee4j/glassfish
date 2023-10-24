@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,34 +17,35 @@
 
 package org.glassfish.ejb.embedded;
 
+import com.sun.enterprise.util.i18n.StringManager;
+
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.EOFException;
 import java.util.Arrays;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
+
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventFactory;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
-import javax.xml.stream.events.XMLEvent;
-import javax.xml.stream.events.StartElement;
-import javax.xml.stream.events.EndElement;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
-import javax.xml.namespace.QName;
-
-import com.sun.enterprise.util.i18n.StringManager;
+import javax.xml.stream.events.EndElement;
+import javax.xml.stream.events.StartElement;
+import javax.xml.stream.events.XMLEvent;
 
 /**
  */
 public class DomainXmlTransformer {
 
-    private File in;
+    private final File in;
     private File out;
     private final XMLEventFactory xmlEventFactory = XMLEventFactory.newInstance();
     private final XMLOutputFactory xof = XMLOutputFactory.newInstance();
@@ -95,11 +97,8 @@ public class DomainXmlTransformer {
         FileOutputStream fos = null;
         XMLEventReader parser = null;
         XMLEventWriter writer = null;
-        XMLInputFactory xif =
-                (XMLInputFactory.class.getClassLoader() == null) ?
-                XMLInputFactory.newInstance() :
-                XMLInputFactory.newInstance(XMLInputFactory.class.getName(),
-                        XMLInputFactory.class.getClassLoader());
+        XMLInputFactory xif = (XMLInputFactory.class.getClassLoader() == null) ? XMLInputFactory.newFactory()
+            : XMLInputFactory.newFactory(XMLInputFactory.class.getName(), XMLInputFactory.class.getClassLoader());
 
         Set<String> empty_elements = (keepPorts)? EMPTY_ELEMENTS_KEEP_PORTS : EMPTY_ELEMENTS;
         try {

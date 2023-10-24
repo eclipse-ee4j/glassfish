@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,9 +19,9 @@ package com.sun.enterprise.security.auth.login;
 
 import static java.util.logging.Level.FINE;
 
-import javax.security.auth.login.LoginException;
-
+import com.sun.enterprise.security.BasePasswordLoginModule;
 import com.sun.enterprise.security.auth.realm.file.FileRealm;
+import javax.security.auth.login.LoginException;
 
 /**
  * File realm login module.
@@ -29,11 +29,10 @@ import com.sun.enterprise.security.auth.realm.file.FileRealm;
  * <P>
  * Provides a file-based implementation of a password login module. Processing is delegated to the FileRealm class.
  *
- * @see com.sun.enterprise.security.auth.login.PasswordLoginModule
  * @see com.sun.enterprise.security.auth.realm.file.FileRealm
  *
  */
-public class FileLoginModule extends PasswordLoginModule {
+public class FileLoginModule extends BasePasswordLoginModule {
 
     /**
      * Perform file authentication. Delegates to FileRealm.
@@ -42,12 +41,8 @@ public class FileLoginModule extends PasswordLoginModule {
      *
      */
     @Override
-    protected void authenticate() throws LoginException {
-        if (!(_currentRealm instanceof FileRealm)) {
-            String msg = sm.getString("filelm.badrealm");
-            throw new LoginException(msg);
-        }
-        FileRealm fileRealm = (FileRealm) _currentRealm;
+    protected void authenticateUser() throws LoginException {
+        FileRealm fileRealm = getRealm(FileRealm.class, "filelm.badrealm");
 
         String[] groups = fileRealm.authenticate(_username, getPasswordChar());
 
@@ -55,10 +50,8 @@ public class FileLoginModule extends PasswordLoginModule {
             throw new LoginException(sm.getString("filelm.faillogin", _username));
         }
 
-        if (_logger.isLoggable(FINE)) {
-            _logger.log(FINE, "File login succeeded for: " + _username);
-        }
+        _logger.log(FINE, () -> "File login succeeded for: " + _username);
 
-        commitAuthentication(_username, getPasswordChar(), _currentRealm, groups);
+        commitUserAuthentication(groups);
     }
 }

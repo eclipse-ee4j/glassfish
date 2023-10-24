@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.ejb</groupId>
         <artifactId>ejb</artifactId>
-        <version>7.0.6-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -235,6 +235,38 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
+                        <Export-Package>
+                            com.sun.ejb,
+                            com.sun.ejb.codegen,
+                            com.sun.ejb.containers,
+                            com.sun.ejb.containers.util,
+                            com.sun.ejb.containers.util.cache,
+                            com.sun.ejb.containers.util.pool,
+                            com.sun.ejb.monitoring.probes,
+                            com.sun.ejb.monitoring.stats,
+                            com.sun.ejb.spi.container,
+                            org.glassfish.ejb.deployment.annotation.handlers,
+                            org.glassfish.ejb.deployment.descriptor,
+                            org.glassfish.ejb.deployment.descriptor.runtime
+                        </Export-Package>
+                        <DynamicImport-Package>org.glassfish.flashlight.provider</DynamicImport-Package>
+                        <!-- These packages are not required and unavailable in glassfish-web distribution -->
+                        <Import-Package>
+                            jakarta.xml.soap;resolution:=optional,
+                            jakarta.xml.ws;resolution:=optional,
+                            jakarta.xml.ws.handler;resolution:=optional,
+                            jakarta.jws;resolution:=optional,
+                            *
+                        </Import-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
            <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>

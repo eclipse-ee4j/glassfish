@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -39,21 +40,15 @@ public class ConnectionExecutionContext {
     private static final boolean isPerThreadAuth;
 
     static {
-        Boolean b = (Boolean) AccessController.doPrivileged(new PrivilegedAction() {
-            @Override
-            public Object run() {
-                return Boolean.valueOf(Boolean.getBoolean(IIOP_CLIENT_PER_THREAD_FLAG));
-            }
-
-        });
-        isPerThreadAuth = b.booleanValue();
+        PrivilegedAction<Boolean> action = () -> Boolean.getBoolean(IIOP_CLIENT_PER_THREAD_FLAG);
+        isPerThreadAuth = AccessController.doPrivileged(action).booleanValue();
     }
 
     // private static final InheritableThreadLocal connCurrent= new InheritableThreadLocal();
     private static final ThreadLocal connCurrent = (isPerThreadAuth) ? new ThreadLocal() : new InheritableThreadLocal();
 
     // XXX: Workaround for non-null connection object ri for local invocation.
-    private static final ThreadLocal<Long> ClientThreadID = new ThreadLocal<Long>();
+    private static final ThreadLocal<Long> ClientThreadID = new ThreadLocal<>();
 
     public static Long readClientThreadID() {
         Long ID = ClientThreadID.get();
@@ -73,7 +68,7 @@ public class ConnectionExecutionContext {
      * This method can be used to add a new hashtable for storing the Thread specific context information. This method is
      * useful to add a deserialized Context information that arrived over the wire.
      *
-     * @param A hashtable that stores the current thread's context information.
+     * @param ctxTable hashtable that stores the current thread's context information.
      */
     public static void setContext(Hashtable ctxTable) {
         if (ctxTable != null) {

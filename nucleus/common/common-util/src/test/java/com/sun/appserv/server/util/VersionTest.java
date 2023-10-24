@@ -52,8 +52,8 @@ public class VersionTest {
         assertAll(
             () -> assertEquals("Wonderful GlassFish 2023.2.27", Version.getProductId()),
             () -> assertEquals(
-                "Wonderful GlassFish 2023.2.27-SNAPSHOT (branch: experimental,"
-                    + " commit: 93176e2555176091c8522e43d1d32a0a30652d4a, timestamp: 2023-02-27T11:09:42Z)",
+                "Wonderful GlassFish 2023.2.27-SNAPSHOT ("
+                    + "commit: 93176e2555176091c8522e43d1d32a0a30652d4a)",
                 Version.getProductIdInfo()),
             () -> assertEquals("Wonderful GlassFish", Version.getProductName()),
             () -> assertEquals("WGF", Version.getProductNameAbbreviation()),

@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -43,7 +43,7 @@ public class DomainXmlPreParserTest {
 
     private static URL stock, i1, i1i2, c1i1, c1i1c1i2, noconfigfori1;
     private static ClassLoader classLoader = DomainXmlPreParserTest.class.getClassLoader();
-    private static XMLInputFactory xif = XMLInputFactory.newInstance();
+    private static XMLInputFactory xif = XMLInputFactory.newFactory();
 
     @BeforeAll
     public static void setUpClass() throws Exception {

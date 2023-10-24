@@ -271,29 +271,17 @@ public final class OSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
     }
 
     private void storeBundleIds(Long[] bundleIds) {
-        ObjectOutputStream os = null;
-        try {
-            File f = framework.getBundleContext().getDataFile(BUNDLEIDS_FILENAME);
-            // GLASSFISH-19623: f can be null
-            if (f == null) {
-                logger.log(Level.WARNING, LogFacade.CANT_STORE_BUNDLEIDS);
-                return;
-            }
-            os = new ObjectOutputStream(new FileOutputStream(f));
+        File f = framework.getBundleContext().getDataFile(BUNDLEIDS_FILENAME);
+        // GLASSFISH-19623: f can be null
+        if (f == null) {
+            logger.log(Level.WARNING, LogFacade.CANT_STORE_BUNDLEIDS);
+            return;
+        }
+        try (ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(f))) {
             os.writeObject(bundleIds);
-            os.flush();
-            logger.logp(Level.FINE, "OSGiGlassFishRuntimeBuilder", "storeBundleIds", "Stored bundle ids in {0}",
-                    new Object[]{f.getAbsolutePath()});
+            logger.logp(Level.FINE, "OSGiGlassFishRuntimeBuilder", "storeBundleIds", "Stored bundle ids in {0}", f);
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (os != null) {
-                try {
-                    os.close();
-                } catch (IOException e) {
-                    // ignored
-                }
-            }
         }
     }
 

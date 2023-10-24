@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,28 +23,31 @@ import com.sun.enterprise.common.iiop.security.SecurityContext;
 import com.sun.enterprise.security.CORBAObjectPermission;
 import com.sun.enterprise.security.auth.login.LoginContextDriver;
 import com.sun.logging.LogDomains;
-import java.net.Socket;
 
-import java.security.Principal;
-import java.security.ProtectionDomain;
-import java.security.CodeSource;
-import java.security.Policy;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.logging.Level;
-import java.util.Set;
 import jakarta.inject.Inject;
-import javax.security.auth.Subject;
-import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
-import org.glassfish.enterprise.iiop.api.ProtocolManager;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PostConstruct;
 import jakarta.inject.Singleton;
 
+import java.net.Socket;
+import java.security.AccessController;
+import java.security.CodeSource;
+import java.security.Policy;
+import java.security.Principal;
+import java.security.PrivilegedAction;
+import java.security.ProtectionDomain;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
+
+import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
+import org.glassfish.enterprise.iiop.api.ProtocolManager;
+import org.glassfish.hk2.api.PostConstruct;
+import org.jvnet.hk2.annotations.Service;
+
 /**
- * This class provides has the helper methods to deal with the SecurityContext .This represents the SecurityServiceImpl
- * of V2
+ * This class provides has the helper methods to deal with the SecurityContext.
+ * This represents the SecurityServiceImpl of V2
  *
  * @author Nithya Subramanian
  */
@@ -52,13 +56,14 @@ import jakarta.inject.Singleton;
 @Singleton
 public class SecurityContextUtil implements PostConstruct {
 
+    private static final Logger LOG = LogDomains.getLogger(SecurityContextUtil.class, LogDomains.SECURITY_LOGGER, false);
+
     public static final int STATUS_PASSED = 0;
     public static final int STATUS_FAILED = 1;
     public static final int STATUS_RETRY = 2;
 
-    private static java.util.logging.Logger _logger = LogDomains.getLogger(SecurityContextUtil.class, LogDomains.SECURITY_LOGGER);
 
-    private static String IS_A = "_is_a";
+    private static final String IS_A = "_is_a";
     private Policy policy;
 
     @Inject
@@ -71,8 +76,10 @@ public class SecurityContextUtil implements PostConstruct {
 
     }
 
+    @Override
     public void postConstruct() {
         AccessController.doPrivileged(new PrivilegedAction<Object>() {
+            @Override
             public Object run() {
                 policy = Policy.getPolicy();
                 return null;
@@ -83,11 +90,13 @@ public class SecurityContextUtil implements PostConstruct {
     /**
      * This is called by the CSIv2 interceptor on the client before sending the IIOP message.
      *
-     * @param the effective_target field of the PortableInterceptor ClientRequestInfo object.
+     * @param effective_target the effective_target field of the PortableInterceptor ClientRequestInfo object.
      * @return a SecurityContext which is marshalled into the IIOP msg by the CSIv2 interceptor.
+     * @throws InvalidMechanismException
+     * @throws InvalidIdentityTokenException
      */
-    public SecurityContext getSecurityContext(org.omg.CORBA.Object effective_target) throws InvalidMechanismException, InvalidIdentityTokenException {
-        SecurityContext context = null;
+    public SecurityContext getSecurityContext(org.omg.CORBA.Object effective_target)
+        throws InvalidMechanismException, InvalidIdentityTokenException {
         assert (orbHelper != null);
         IOR ior = ((com.sun.corba.ee.spi.orb.ORB) orbHelper.getORB()).getIOR(effective_target, false);
         if (StubAdapter.isStub(effective_target)) {
@@ -99,45 +108,37 @@ public class SecurityContextUtil implements PostConstruct {
         }
 
         try {
-            context = sms.selectSecurityContext(ior);
-        } catch (InvalidMechanismException ime) { // let this pass ahead
-            _logger.log(Level.SEVERE, "iiop.invalidmechanism_exception", ime);
-            throw new InvalidMechanismException(ime.getMessage());
-        } catch (InvalidIdentityTokenException iite) {
-            _logger.log(Level.SEVERE, "iiop.invalididtoken_exception", iite);
-            throw new InvalidIdentityTokenException(iite.getMessage());
-            // let this pass ahead
-        } catch (SecurityMechanismException sme) {
-            _logger.log(Level.SEVERE, "iiop.secmechanism_exception", sme);
-            throw new RuntimeException(sme.getMessage());
+            return sms.selectSecurityContext(ior);
+        } catch (InvalidMechanismException | InvalidIdentityTokenException e) {
+            throw e;
+        } catch (SecurityMechanismException e) {
+            throw new RuntimeException("Could not select a security context.", e);
         }
-        return context;
     }
+
 
     /**
      * This is called by the CSIv2 interceptor on the client after a reply is received.
      *
-     * @param the reply status from the call. The reply status field could indicate an authentication retry. The following
-     * is the mapping of PI status to the reply_status field PortableInterceptor::SUCCESSFUL -> STATUS_PASSED
-     * PortableInterceptor::SYSTEM_EXCEPTION -> STATUS_FAILED PortableInterceptor::USER_EXCEPTION -> STATUS_PASSED
-     * PortableInterceptor::LOCATION_FORWARD -> STATUS_RETRY PortableInterceptor::TRANSPORT_RETRY -> STATUS_RETRY
-     * @param the effective_target field of the PI ClientRequestInfo object.
+     * @param reply_status the reply status from the call. The reply status field could indicate an
+     *            an authentication retry. The following is the mapping of PI status
+     *            to the reply_status field
+     *            PortableInterceptor::SUCCESSFUL -> STATUS_PASSED
+     *            PortableInterceptor::SYSTEM_EXCEPTION -> STATUS_FAILED
+     *            PortableInterceptor::USER_EXCEPTION -> STATUS_PASSED
+     *            PortableInterceptor::LOCATION_FORWARD -> STATUS_RETRY
+     *            PortableInterceptor::TRANSPORT_RETRY -> STATUS_RETRY
+     * @param effective_target the effective_target field of the PI ClientRequestInfo object.
      */
     public static void receivedReply(int reply_status, org.omg.CORBA.Object effective_target) {
         if (reply_status == STATUS_FAILED) {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Failed status");
-            }
+            LOG.log(Level.FINE, "Failed status");
             // what kind of exception should we throw?
             throw new RuntimeException("Target did not accept security context");
         } else if (reply_status == STATUS_RETRY) {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Retry status");
-            }
+            LOG.log(Level.FINE, "Retry status");
         } else {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Passed status");
-            }
+            LOG.log(Level.FINE, "Passed status");
         }
     }
 
@@ -146,13 +147,11 @@ public class SecurityContextUtil implements PostConstruct {
      * FAILED status is returned. If a FAILED status is returned the CSIV2 interceptor will marshall the MessageError
      * service context and throw the NO_PERMISSION exception.
      *
-     * @param the SecurityContext which arrived in the IIOP message.
+     * @param context the SecurityContext which arrived in the IIOP message.
      * @return the status
      */
     public int setSecurityContext(SecurityContext context, byte[] object_id, String method, Socket socket) {
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "ABOUT TO EVALUATE TRUST");
-        }
+        LOG.log(Level.FINE, "ABOUT TO EVALUATE TRUST");
 
         try {
             // First check if the client sent the credentials
@@ -165,14 +164,13 @@ public class SecurityContextUtil implements PostConstruct {
             Subject s = null;
             if (ssc == null) {
                 return STATUS_PASSED;
-            } else {
-                if (ssc.authcls != null) {
-                    cls = ssc.authcls;
-                } else {
-                    cls = ssc.identcls;
-                }
-                s = ssc.subject;
             }
+            if (ssc.authcls == null) {
+                cls = ssc.identcls;
+            } else {
+                cls = ssc.authcls;
+            }
+            s = ssc.subject;
 
             // Authenticate the client. An Exception is thrown if login fails.
             // SecurityContext is set on current thread if login succeeds.
@@ -182,17 +180,11 @@ public class SecurityContextUtil implements PostConstruct {
             // Auth for EJB objects is done in BaseContainer.preInvoke().
             if (authorizeCORBA(object_id, method)) {
                 return STATUS_PASSED;
-            } else {
-                return STATUS_FAILED;
             }
+            return STATUS_FAILED;
         } catch (Exception e) {
             if (!method.equals(IS_A)) {
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "iiop.authenticate_exception", e.toString());
-                }
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "Authentication Exception", e);
-                }
+                LOG.log(Level.FINE, "Authentication Exception", e);
             }
             return STATUS_FAILED;
         }
@@ -225,16 +217,15 @@ public class SecurityContextUtil implements PostConstruct {
         // Check if policy gives principal the permissions
         boolean result = policy.implies(prdm, perm);
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "CORBA Object permission evaluation result=" + result + " for method=" + method);
-        }
+        LOG.log(Level.FINE, "CORBA Object permission evaluation result={0} for method={1}",
+            new Object[] {result, method});
         return result;
     }
 
     /**
      * This is called by the CSIv2 interceptor on the server before sending the reply.
      *
-     * @param the SecurityContext which arrived in the IIOP message.
+     * @param context the SecurityContext which arrived in the IIOP message.
      */
     public void sendingReply(SecurityContext context) {
         // NO OP
@@ -256,25 +247,14 @@ public class SecurityContextUtil implements PostConstruct {
      * Authenticate the user with the specified subject and credential class.
      */
     private void authenticate(Subject s, Class cls) throws SecurityMechanismException {
-        // authenticate
         try {
-            final Subject fs = s;
-            final Class cl = cls;
-            AccessController.doPrivileged(new PrivilegedAction() {
-
-                public java.lang.Object run() {
-                    LoginContextDriver.login(fs, cl);
-                    return null;
-                }
-            });
+            PrivilegedAction<Void> action = () -> {
+                LoginContextDriver.login(s, cls);
+                return null;
+            };
+            AccessController.doPrivileged(action);
         } catch (Exception e) {
-            if (_logger.isLoggable(Level.SEVERE)) {
-                _logger.log(Level.SEVERE, "iiop.login_exception", e.toString());
-            }
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Login Exception", e);
-            }
-            throw new SecurityMechanismException("Cannot login user:" + e.getMessage());
+            throw new SecurityMechanismException("Cannot login user: " + e.getMessage(), e);
         }
     }
 

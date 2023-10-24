@@ -51,8 +51,6 @@ public final class StandardWrapperFacade implements ServletConfig {
         this.config = config;
     }
 
-
-
     // -------------------------------------------------- ServletConfig Methods
 
     @Override

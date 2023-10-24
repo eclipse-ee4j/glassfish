@@ -328,7 +328,7 @@ when you first install the {productName}.
 In the JDBC realm, the server gets user credentials from a database. The
 {productName} uses the database information and the enabled JDBC
 realm option in the configuration file. For digest authentication, a
-JDBC realm should be created with `jdbcDigestRealm` as the JAAS context.
+JDBC realm should be created with `digestRealm` as the JAAS context.
 * `certificate` - Sets up the user identity in the {productName}
 security context, and populates it with user data obtained from
 cryptographically verified client certificates.

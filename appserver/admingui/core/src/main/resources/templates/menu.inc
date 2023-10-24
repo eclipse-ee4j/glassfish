@@ -1,5 +1,6 @@
 <!--
 
+    Copyright (c) 2023 Contributors to the Eclipse Foundation.
     Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -24,13 +25,6 @@
 <sc:menuItem value="Lifecycle Module" url="#{request.contextPath}/layouttest.jsf?page=Lifecycle+Module" />
 <sc:menuItem value="App Client Module" url="#{request.contextPath}/layouttest.jsf?page=App+Client+Module" />
 <sc:menuItem value="Custom MBean" url="#{request.contextPath}/layouttest.jsf?page=Custom+MBean" />
-<!--
-<sc:subMenu value="JBI" id="jbiMenu">
-<sc:menuItem value="Component" url="#{request.contextPath}/layouttest.jsf?page=Component" />
-<sc:menuItem value="Shared Library" url="#{request.contextPath}/layouttest.jsf?page=Shared+Library" />
-</sc:subMenu>
--->
-
 </sc:subMenu>
 
 <sc:subMenu value="Configure" id="editMenu">
@@ -96,7 +90,6 @@
     <sc:menuItem value="HTTP Load Balancers" url="#{request.contextPath}/layouttest.jsf?page=HTTP+Load+Balancers" />
     <sc:menuItem value="Stand-Alone Instances" url="#{request.contextPath}/layouttest.jsf?page=Stand-Alone Instances" />
     <sc:menuItem value="Node Agent References" url="#{request.contextPath}/layouttest.jsf?page=Node+Agent+References" />
-    <sc:subMenu value="JBI">
 	<sc:menuItem value="Service Assemblies" url="#{request.contextPath}/layouttest.jsf?page=Service+Assemblies" />
 	<sc:menuItem value="Components" url="#{request.contextPath}/layouttest.jsf?page=Components" />
 	<sc:menuItem value="Shared Libraries" url="#{request.contextPath}/layouttest.jsf?page=Shared+Libraries" />

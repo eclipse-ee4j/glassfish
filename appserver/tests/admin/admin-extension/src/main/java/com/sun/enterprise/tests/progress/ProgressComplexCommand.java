@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -40,50 +40,69 @@ import org.jvnet.hk2.annotations.Service;
 @CommandLock(CommandLock.LockType.NONE)
 @I18n("progress")
 @ManagedJob
-@Progress(name="complex", totalStepCount=20)
+@Progress(name = "complex", totalStepCount = 20)
 public class ProgressComplexCommand implements AdminCommand {
 
     @Override
-    public void execute(AdminCommandContext context) {
-        ProgressStatus ps = context.getProgressStatus();
-        ProgressStatus ch1 = ps.createChild("ch1", 5);
-        ProgressStatus ch2 = ps.createChild("ch2-paral", 5);
-        ProgressStatus ch3 = ps.createChild("ch3", 6);
-        //Prepare ch1
-        ch1.setTotalStepCount(10);
-        ProgressStatus ch11 = ch1.createChild("ch11", 5);
-        ch11.setTotalStepCount(5);
-        ProgressStatus ch12 = ch1.createChild("ch12", 5);
-        //Prepare ch2
-        ch2.setTotalStepCount(50);
-        ProgressStatus ch21 = ch2.createChild("ch21", 10);
-        ch21.setTotalStepCount(25);
-        ProgressStatus ch22 = ch2.createChild("ch22", 10);
-        ch22.setTotalStepCount(25);
-        ProgressStatus ch23 = ch2.createChild("ch23", 10);
-        ch23.setTotalStepCount(25);
-        ProgressStatus ch24 = ch2.createChild("ch24", 15);
-        ch24.setTotalStepCount(25);
-        //First move ch1
-        doProgress(ch11, 4, 200, "progress ch1.1");
-        //Init ch3
-        ch3.setTotalStepCount(112);
-        ProgressStatus ch31 = ch3.createChild("ch31", 100);
-        ch31.setTotalStepCount(5);
-        ProgressStatus ch32 = ch3.createChild("ch32", 8);
-        ch32.setTotalStepCount(5);
-        //Move ch3 then ch1 and then ch3 and then finish ch1
-        doProgress(ch3, 4, 150, "progress ch3");
-        doProgress(ch11, 1, 150, "progress ch1.1");
-        doProgress(ch32, 5, 150, "progress ch3.2");
-        ch12.setTotalStepCount(6);
-        doProgress(ch31, 5, 150, "progress ch3.1");
-        doProgress(ch12, 6, 150, "progress ch1.2");
-        //Do paralel progress of ch2.x
-        Thread th21 = new Thread(new ProgressRunnable(ch21, 25, 100, "progress ch2.1"));
-        Thread th22 = new Thread(new ProgressRunnable(ch22, 25, 100, "progress ch2.2"));
-        Thread th23 = new Thread(new ProgressRunnable(ch23, 25, 100, "progress ch2.3"));
-        Thread th24 = new Thread(new ProgressRunnable(ch24, 25, 100, "progress ch2.4"));
+    public void execute(final AdminCommandContext context) {
+        final ProgressStatus parent = context.getProgressStatus();
+
+        // Sum 16 allocated of 20 set in annotation.
+        final ProgressStatus child1 = parent.createChild("child1", 5);
+        child1.setTotalStepCount(10);
+
+        final ProgressStatus child2 = parent.createChild("child2", 5);
+        child2.setTotalStepCount(50);
+
+        final ProgressStatus child3 = parent.createChild("child3", 6);
+        child3.setTotalStepCount(112);
+
+        // child1 has 2 children, each has 5 steps of 10 of their parent.
+        // child11 sets also total step count to 5.
+        // child12 doesn't.
+        final ProgressStatus child11 = child1.createChild("child11", 5);
+        child11.setTotalStepCount(5);
+        final ProgressStatus child12 = child1.createChild("child12", 5);
+
+        // child2 has 4 children, they allocate 10+10+10+15=45 of parent's 50
+        // each child sets total step count to 25
+        final ProgressStatus child21 = child2.createChild("child21", 10);
+        child21.setTotalStepCount(25);
+        final ProgressStatus child22 = child2.createChild("child22", 10);
+        child22.setTotalStepCount(25);
+        final ProgressStatus child23 = child2.createChild("child23", 10);
+        child23.setTotalStepCount(25);
+        final ProgressStatus child24 = child2.createChild("child24", 15);
+        child24.setTotalStepCount(25);
+
+        // We have prepared all children of child1 and child2.
+        // Now we do 4 steps of child11.
+        doProgress(child11, 4, 200, "progress child11");
+
+        // child3 has 2 children which allocate 108 of 112 total steps
+        final ProgressStatus child31 = child3.createChild("child31", 100);
+        child31.setTotalStepCount(5);
+        final ProgressStatus child32 = child3.createChild("child32", 8);
+        child32.setTotalStepCount(5);
+
+        // Now we do 4 steps of child3 (it's children have 108)
+        // Then 1 (the last one) of child11
+        // Then 5/5 of child32
+        doProgress(child3, 4, 150, "progress child3");
+        doProgress(child11, 1, 150, "progress child11");
+        doProgress(child32, 5, 150, "progress child32");
+
+        // Well, this is quite late, but we did not set it yet.
+        // 5/5 of child 31, then 6/6 of child12
+        child12.setTotalStepCount(6);
+        doProgress(child31, 5, 150, "progress child31");
+        doProgress(child12, 6, 150, "progress child12");
+
+        // Finally let's do a paralel progress of child2x
+        final Thread th21 = new Thread(new ProgressRunnable(child21, 25, 100, "progress child21"));
+        final Thread th22 = new Thread(new ProgressRunnable(child22, 25, 100, "progress child22"));
+        final Thread th23 = new Thread(new ProgressRunnable(child23, 25, 100, "progress child23"));
+        final Thread th24 = new Thread(new ProgressRunnable(child24, 25, 100, "progress child24"));
         th21.start();
         th22.start();
         th23.start();
@@ -93,27 +112,26 @@ public class ProgressComplexCommand implements AdminCommand {
             th22.join();
             th23.join();
             th24.join();
-        } catch (InterruptedException ex) {
-            context.getActionReport().failure(Logger.global, "Unexpected interrupt", ex);
+        } catch (final InterruptedException ex) {
+            context.getActionReport().failure(Logger.getGlobal(), "Unexpected interrupt", ex);
             return;
         }
-        doProgress(ps, 4, 100, "progress main");
-        doProgress(ch2, 5, 100, "progress ch2");
+        doProgress(parent, 4, 100, "progress main");
+        doProgress(child2, 5, 100, "progress child2");
         context.getActionReport().appendMessage("All done");
     }
 
-    private static void doProgress(ProgressStatus ps, int count, long interval, String message) {
+
+    private static void doProgress(final ProgressStatus ps, final int count, final long interval,
+        final String message) {
         for (int i = 0; i < count; i++) {
             try {
                 Thread.sleep(interval);
-            } catch (Exception ex) {
+            } catch (final Exception e) {
+                throw new IllegalStateException(e);
             }
-            if (message != null) {
-                int rsc = ps.getRemainingStepCount() - 1;
-                ps.progress(1, message + ", remaining " + rsc);
-            } else {
-                ps.progress(1);
-            }
+            final int remainingStepCount = Math.max(0, ps.getRemainingStepCount() - 1);
+            ps.progress(1, message + ", remaining " + remainingStepCount);
         }
     }
 
@@ -124,19 +142,17 @@ public class ProgressComplexCommand implements AdminCommand {
         private final long interval;
         private final String message;
 
-        public ProgressRunnable(ProgressStatus ps, int count, long interval, String message) {
+        public ProgressRunnable(final ProgressStatus ps, final int count, final long interval, final String message) {
             this.ps = ps;
             this.count = count;
             this.interval = interval;
             this.message = message;
         }
 
+
         @Override
         public void run() {
             doProgress(ps, count, interval, message);
         }
-
-
     }
-
 }

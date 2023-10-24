@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -43,12 +44,11 @@ import com.sun.enterprise.security.auth.login.common.LoginException;
 import com.sun.enterprise.security.auth.login.common.PasswordCredential;
 import com.sun.enterprise.security.auth.login.common.ServerLoginCallbackHandler;
 import com.sun.enterprise.security.auth.login.common.X509CertificateCredential;
-// FIXME: ACC methods need to be moved to ACC-specific class.
-import com.sun.enterprise.security.auth.realm.InvalidOperationException;
-import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
-import com.sun.enterprise.security.auth.realm.NoSuchUserException;
 import com.sun.enterprise.security.auth.realm.Realm;
 import com.sun.enterprise.security.auth.realm.certificate.CertificateRealm;
+import com.sun.enterprise.security.auth.realm.exceptions.InvalidOperationException;
+import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
+import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
 import com.sun.enterprise.security.common.AppservAccessController;
 import com.sun.enterprise.security.common.ClientSecurityContext;
 import com.sun.enterprise.security.common.SecurityConstants;
@@ -350,6 +350,16 @@ public class LoginContextDriver {
         setSecurityContext(user, s, realm);
         if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, "Set security context as user: " + user);
+        }
+    }
+
+    public static void jmacLogin(Subject subject, Principal callerPrincipal, String realmName) throws LoginException {
+        if (CertificateRealm.AUTH_TYPE.equals(realmName)) {
+            if (callerPrincipal instanceof X500Principal) {
+                LoginContextDriver.jmacLogin(subject, (X500Principal) callerPrincipal);
+            }
+        } else if (!callerPrincipal.equals(SecurityContext.getDefaultCallerPrincipal())) {
+            LoginContextDriver.jmacLogin(subject, callerPrincipal.getName(), realmName);
         }
     }
 

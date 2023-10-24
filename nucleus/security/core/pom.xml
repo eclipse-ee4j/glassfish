@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+    Copyright (c) 2023 Contributors to the Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -23,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.security</groupId>
         <artifactId>nucleus-security</artifactId>
-        <version>7.0.6-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
     </parent>
 
     <artifactId>security</artifactId>
@@ -107,7 +108,7 @@
             <groupId>org.javassist</groupId>
             <artifactId>javassist</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.glassfish.annotations</groupId>
             <artifactId>logging-annotation-processor</artifactId>
@@ -198,14 +199,43 @@
                                     <type>so</type>
                                 </artifactItem>
                             </artifactItems>
-                            <stripVersion>
-                                true
-                            </stripVersion>
-                            <!--<outputDirectory>${maven.project.build.outputDirectory}</outputDirectory> -->
-                            <outputDirectory>target/classes</outputDirectory>
+                            <stripVersion>true</stripVersion>
+                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Bundle-NativeCode>
+                            libsolsparcauth.so; osname=SunOS; osname=Solaris; processor=sparc,
+                            libsolx86auth.so; osname=SunOS; osname=Solaris; processor=x86,
+                            *
+                        </Bundle-NativeCode>
+                        <Export-Package>
+                            com.sun.enterprise.common.iiop.security,
+                            com.sun.enterprise.security,
+                            com.sun.enterprise.security.audit,
+                            com.sun.enterprise.security.auth,
+                            com.sun.enterprise.security.auth.digest.api,
+                            com.sun.enterprise.security.auth.login,
+                            com.sun.enterprise.security.auth.login.common,
+                            com.sun.enterprise.security.auth.realm,
+                            com.sun.enterprise.security.auth.realm.exceptions,
+                            com.sun.enterprise.security.auth.realm.certificate,
+                            com.sun.enterprise.security.auth.realm.file,
+                            com.sun.enterprise.security.auth.realm.ldap,
+                            com.sun.enterprise.security.auth.realm.solaris,
+                            com.sun.enterprise.security.common,
+                            com.sun.enterprise.security.factory,
+                            com.sun.enterprise.security.ssl,
+                            com.sun.enterprise.security.util
+                        </Export-Package>
+                    </instructions>
+                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -26,6 +26,9 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
 import static com.sun.ejb.codegen.ClassGenerator.defineClass;
+import static com.sun.ejb.codegen.Generator.getBaseName;
+import static com.sun.ejb.codegen.Generator.getFullClassName;
+import static com.sun.ejb.codegen.Generator.getPackageName;
 import static org.objectweb.asm.Opcodes.ACC_PRIVATE;
 import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
 import static org.objectweb.asm.Opcodes.ALOAD;
@@ -45,10 +48,10 @@ public class AsmSerializableBeanGenerator extends BeanGeneratorBase {
      * @param beanClass full class name
      */
     public static String getGeneratedSerializableClassName(String beanClass) {
-        String packageName = Generator.getPackageName(beanClass);
-        String simpleName = Generator.getBaseName(beanClass);
+        String packageName = getPackageName(beanClass);
+        String simpleName = getBaseName(beanClass);
         String generatedSimpleName = "_" + simpleName + "_Serializable";
-        return packageName == null ? generatedSimpleName : packageName + "." + generatedSimpleName;
+        return getFullClassName(packageName, generatedSimpleName);
     }
 
     public AsmSerializableBeanGenerator(ClassLoader loader, Class<?> superClass, String serializableSubclassName) {

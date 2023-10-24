@@ -25,8 +25,8 @@ import com.sun.enterprise.security.AppCNonceCacheMap;
 import com.sun.enterprise.security.CNonceCacheFactory;
 import com.sun.enterprise.security.EjbSecurityPolicyProbeProvider;
 import com.sun.enterprise.security.WebSecurityDeployerProbeProvider;
-import com.sun.enterprise.security.web.integration.WebSecurityManager;
-import com.sun.enterprise.security.web.integration.WebSecurityManagerFactory;
+import com.sun.enterprise.security.ee.web.integration.WebSecurityManager;
+import com.sun.enterprise.security.ee.web.integration.WebSecurityManagerFactory;
 import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;

@@ -26,7 +26,7 @@
         <version>1.0.8</version>
         <relativePath />
     </parent>
-    <version>7.0.6-SNAPSHOT</version>
+    <version>7.0.10-SNAPSHOT</version>
     <groupId>org.glassfish.docs</groupId>
     <artifactId>docs</artifactId>
     <packaging>pom</packaging>
@@ -36,8 +36,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <glassfish.version.5x>5.1.0</glassfish.version.5x>
         <glassfish.version.6x>6.2.5</glassfish.version.6x>
-        <glassfish.version.7x>7.0.0</glassfish.version.7x>
+        <glassfish.version.7x>7.0.7</glassfish.version.7x>
         <glassfish.version.latest>${glassfish.version.7x}</glassfish.version.latest>
+        <glassfish.version.7x.artifact>${glassfish.version.7x}</glassfish.version.7x.artifact>
     </properties>
 
     <modules>
@@ -69,6 +70,12 @@
                 <module>publish</module>
             </modules>
         </profile>
+        <profile>
+            <id>release-phase2</id>
+            <properties>
+                <maven.deploy.skip>true</maven.deploy.skip>
+            </properties>
+        </profile>
     </profiles>
 
     <build>
@@ -98,7 +105,7 @@
             <plugins>
                 <plugin>
                     <artifactId>maven-scm-publish-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.2.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.doc</groupId>
@@ -108,11 +115,11 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.4.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.3.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-antrun-plugin</artifactId>

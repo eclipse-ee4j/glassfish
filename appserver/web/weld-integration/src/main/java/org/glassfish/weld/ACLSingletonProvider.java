@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2023 Contributors to Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,10 +17,6 @@
 
 package org.glassfish.weld;
 
-import static java.lang.System.getSecurityManager;
-import static java.lang.Thread.currentThread;
-import static java.security.AccessController.doPrivileged;
-
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Hashtable;
@@ -32,6 +28,11 @@ import org.glassfish.javaee.full.deployment.EarLibClassLoader;
 import org.glassfish.web.loader.WebappClassLoader;
 import org.jboss.weld.bootstrap.api.Singleton;
 import org.jboss.weld.bootstrap.api.SingletonProvider;
+import org.jboss.weld.bootstrap.api.helpers.TCCLSingletonProvider;
+
+import static java.lang.System.getSecurityManager;
+import static java.lang.Thread.currentThread;
+import static java.security.AccessController.doPrivileged;
 
 /**
  * Singleton provider that uses Application ClassLoader to differentiate between applications.
@@ -48,6 +49,23 @@ import org.jboss.weld.bootstrap.api.SingletonProvider;
  * @author Sanjeeb.Sahoo@Sun.COM
  */
 public class ACLSingletonProvider extends SingletonProvider {
+
+    /**
+     * Calls {@link SingletonProvider#initialize(SingletonProvider)} with
+     * {@link ACLSingletonProvider} if there is an EAR support or with {@link TCCLSingletonProvider}
+     * if EARs are not supported.
+     */
+    public static void initializeSingletonProvider() {
+        boolean earSupport;
+        try {
+            Class.forName("org.glassfish.javaee.full.deployment.EarClassLoader");
+            earSupport = true;
+        } catch (ClassNotFoundException ignore) {
+            earSupport = false;
+        }
+        SingletonProvider.initialize(earSupport ? new ACLSingletonProvider() : new TCCLSingletonProvider());
+    }
+
 
     /*
      * See https://glassfish.dev.java.net/issues/show_bug.cgi?id=10192
@@ -68,7 +86,7 @@ public class ACLSingletonProvider extends SingletonProvider {
 
         // use Hashtable for concurrent access
         private final Map<ClassLoader, T> store = new Hashtable<>();
-        private ClassLoader commonClassLoader = Globals.get(ClassLoaderHierarchy.class).getCommonClassLoader();
+        private final ClassLoader commonClassLoader = Globals.get(ClassLoaderHierarchy.class).getCommonClassLoader();
 
         // Can't assume bootstrap loader as null. That's more of a convention.
         // I think either android or IBM JVM does not use null for bootstap loader

@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-parent</artifactId>
-        <version>7.0.6-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.main.distributions</groupId>
@@ -75,12 +75,17 @@
         <include.group.ids>org.glassfish.main.packager,org.glassfish.main.registration</include.group.ids>
         <template.jar>${stage.dir}/${install.dir.name}/glassfish/common/templates/gf/appserver-domain.jar</template.jar>
         <create-domain.args>--user admin create-domain --template=${template.jar} --nopassword --savelogin=true --checkports=false --adminport 4848 --instanceport 8080 --keytooloptions CN=localhost domain1</create-domain.args>
+        <glassfishbuild-maven-plugin.assemblyInputDirectory>${stage.dir}</glassfishbuild-maven-plugin.assemblyInputDirectory>
+        <asadmin.executable>${stage.dir}/${install.dir.name}/bin/asadmin${file.executable.suffix}</asadmin.executable>
     </properties>
 
     <build>
         <outputDirectory>${temp.dir}</outputDirectory>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                </plugin>
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
                     <artifactId>glassfishbuild-maven-plugin</artifactId>
@@ -104,74 +109,45 @@
                                 </mappings>
                             </configuration>
                         </execution>
-
+                    </executions>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <executions>
                         <execution>
-                            <id>create-domain</id>
-                            <phase>process-resources</phase>
+                            <id>create-artifact</id>
+                            <phase>prepare-package</phase>
+                            <goals>
+                                <goal>single</goal>
+                            </goals>
                             <configuration>
-                                <executable>${stage.dir}/${install.dir.name}/bin/asadmin</executable>
-                                <commandlineArgs>${create-domain.args}</commandlineArgs>
-                            </configuration>
-                        </execution>
-
-                        <!-- Build glassfish.zip -->
-                        <execution>
-                            <id>default-zip</id>
-                            <phase>package</phase>
-                            <configuration>
-                                <excludes>**/.gitkeep_empty_dir</excludes>
-                                <duplicate>preserve</duplicate>
-                                <filesets>
-                                     <fileset>
-                                        <fileMode>600</fileMode>
-                                        <dir>${stage.dir}</dir>
-                                        <includes>**/*.jks</includes>
-                                        <includes>**/admin-keyfile</includes>
-                                        <includes>**/domain-passwords</includes>
-                                        <includes>**/keyfile</includes>
-                                    </fileset>
-                                    <fileset>
-                                        <fileMode>640</fileMode>
-                                        <dir>${stage.dir}</dir>
-                                        <includes>**/bin/*.1m</includes>
-                                        <includes>**/bin/*.jar</includes>
-                                    </fileset>
-                                    <fileset>
-                                        <dir>${stage.dir}</dir>
-                                        <fileMode>750</fileMode>
-                                        <includes>**/bin/*</includes>
-                                        <includes>**/bin/*.bat</includes>
-                                        <includes>**/config/*.bat</includes>
-                                        <includes>**/config/*.conf</includes>
-                                        <includes>**/lib/nadmin*</includes>
-                                        <includes>**/imq</includes>
-                                        <includes>**/imqinit</includes>
-                                        <excludes>**/bin/*.1m</excludes>
-                                        <excludes>**/bin/*.jar</excludes>
-                                    </fileset>
-                                    <fileset>
-                                        <fileMode>640</fileMode>
-                                        <dir>${stage.dir}</dir>
-                                        <excludes>**/bin/*</excludes>
-                                        <excludes>**/bin/*.bat</excludes>
-                                        <excludes>**/lib/nadmin*</excludes>
-                                    </fileset>
-                                </filesets>
+                                <descriptors>
+                                    <descriptor>src/main/assembly/${project.artifactId}.xml</descriptor>
+                                </descriptors>
+                                <ignoreMissingDescriptor>false</ignoreMissingDescriptor>
+                                <finalName>${stage.dir.name}</finalName>
+                                <attach>false</attach>
+                                <appendAssemblyId>false</appendAssemblyId>
                             </configuration>
                         </execution>
                     </executions>
                 </plugin>
                 <plugin>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <configuration>
-                        <descriptors>
-                            <descriptor>src/main/assembly/${project.artifactId}.xml</descriptor>
-                        </descriptors>
-                        <ignoreMissingDescriptor>false</ignoreMissingDescriptor>
-                        <finalName>${stage.dir.name}</finalName>
-                        <attach>false</attach>
-                        <appendAssemblyId>false</appendAssemblyId>
-                    </configuration>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>create-domain</id>
+                            <phase>prepare-package</phase>
+                            <goals>
+                                <goal>exec</goal>
+                            </goals>
+                            <configuration>
+                                <executable>${asadmin.executable}</executable>
+                                <commandlineArgs>${create-domain.args}</commandlineArgs>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
@@ -179,13 +155,20 @@
                         <skip>true</skip>
                     </configuration>
                 </plugin>
-                <plugin>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <configuration>
-                        <includeEmptyDirs>true</includeEmptyDirs>
-                    </configuration>
-                </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <id>create-artifact</id>
+                        <!-- All children will execute it, but not us -->
+                        <phase></phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>

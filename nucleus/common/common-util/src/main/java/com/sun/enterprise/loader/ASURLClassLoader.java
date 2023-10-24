@@ -848,7 +848,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
          * @throws IOException from parent
          */
         public ProtectedJarFile(File file) throws IOException {
-            super(file);
+            super(file, true, OPEN_READ, Runtime.version());
         }
 
         /**

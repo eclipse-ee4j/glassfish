@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -100,7 +100,7 @@ public class GSSUtils {
 
     // Dumps the hex values in the given byte array
     public static String dumpHex(byte[] octets) {
-        StringBuffer result = new StringBuffer("");
+        StringBuilder result = new StringBuilder();
         for (int i = 0; i < octets.length; i++) {
             if ((i != 0) && ((i % 16) == 0)) {
                 result.append("\n    ");
@@ -113,7 +113,7 @@ public class GSSUtils {
             if (hex.length() == 1) {
                 hex = "0" + hex;
             }
-            result.append(hex + " ");
+            result.append(hex).append(' ');
         }
 
         return result.toString();

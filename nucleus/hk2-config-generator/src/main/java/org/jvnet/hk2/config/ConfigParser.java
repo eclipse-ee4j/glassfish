@@ -242,9 +242,9 @@ public class ConfigParser {
     // https://glassfish.dev.java.net/issues/show_bug.cgi?id=6428
 
     // as of Hk2 version 1.5, we do not support JDK 1.5 any more.
-    private static final XMLInputFactory xif =  XMLInputFactory.newInstance();
+    private static final XMLInputFactory xif =  XMLInputFactory.newFactory();
 //            XMLInputFactory.class.getClassLoader() == null ?
-//                    XMLInputFactory.newInstance() :
-//                    XMLInputFactory.newInstance(XMLInputFactory.class.getName(),
+//                    XMLInputFactory.newFactory() :
+//                    XMLInputFactory.newFactory(XMLInputFactory.class.getName(),
 //                            XMLInputFactory.class.getClassLoader());
 }

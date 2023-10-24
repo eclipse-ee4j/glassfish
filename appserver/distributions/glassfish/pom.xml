@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2022 Contributors to Eclipse Foundation.
+    Copyright (c) 2021, 2023 Contributors to Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.distributions</groupId>
         <artifactId>distributions</artifactId>
-        <version>7.0.6-SNAPSHOT</version>
+        <version>7.0.10-SNAPSHOT</version>
     </parent>
 
     <artifactId>glassfish</artifactId>
@@ -70,32 +70,28 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.glassfish.build</groupId>
-                <artifactId>glassfishbuild-maven-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
                 <executions>
                     <execution>
                         <id>create-domain</id>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <phase>process-resources</phase>
                     </execution>
                 </executions>
             </plugin>
-            
+
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
                         <id>do stuff</id>
-                        <phase>process-resources</phase>
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>run</goal>
                         </goals>
                         <configuration>
                             <target>
                                 <macrodef name="jarupdate">
-                                    <attribute name="basedir"/> 
+                                    <attribute name="basedir"/>
                                     <attribute name="includes"/>
                                     <attribute name="destfile"/>
                                     <sequential>
@@ -106,14 +102,13 @@
                                         <zip update="true" basedir="@{basedir}" includes="@{includes}" destfile="@{destfile}" />
                                     </sequential>
                                 </macrodef>
-                                
-                                <jarupdate 
-                                    basedir="${patches}/xmlsec" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/xmlsec.jar"
-                                />
-                                <jarupdate 
+                                <jarupdate
                                     basedir="${patches}/microprofile-jwt-auth-api" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/microprofile-jwt-auth-api.jar"
+                                />
+                                <jarupdate
+                                    basedir="${patches}/microprofile-rest-client-api" includes="META-INF/MANIFEST.MF"
+                                    destfile="${glassfish.modules}/microprofile-rest-client-api.jar"
                                 />
                             </target>
                         </configuration>

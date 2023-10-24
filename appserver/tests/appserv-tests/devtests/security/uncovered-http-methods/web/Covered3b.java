@@ -21,8 +21,7 @@ import jakarta.servlet.annotation.ServletSecurity;
 import jakarta.servlet.annotation.ServletSecurity.TransportGuarantee;
 import jakarta.servlet.annotation.WebServlet;
 
-
-@WebServlet(urlPatterns = {"/Covered3b"})
-@ServletSecurity(value = @HttpConstraint(transportGuarantee=TransportGuarantee.CONFIDENTIAL))
+@WebServlet(urlPatterns = { "/Covered3b" })
+@ServletSecurity(value = @HttpConstraint(transportGuarantee = TransportGuarantee.CONFIDENTIAL))
 public class Covered3b extends BaseServlet {
 }

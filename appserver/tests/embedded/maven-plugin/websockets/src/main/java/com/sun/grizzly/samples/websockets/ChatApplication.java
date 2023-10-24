@@ -11,16 +11,12 @@
 package com.sun.grizzly.samples.websockets;
 
 import java.util.logging.Level;
-
-import org.glassfish.grizzly.Connection;
-import org.glassfish.grizzly.http.HttpRequestPacket;;
+import org.glassfish.grizzly.http.HttpRequestPacket;
 import org.glassfish.grizzly.websockets.DataFrame;
-import org.glassfish.grizzly.websockets.NetworkHandler;
+import org.glassfish.grizzly.websockets.ProtocolHandler;
 import org.glassfish.grizzly.websockets.WebSocket;
 import org.glassfish.grizzly.websockets.WebSocketApplication;
 import org.glassfish.grizzly.websockets.WebSocketListener;
-
-import java.io.IOException;
 
 public class ChatApplication extends WebSocketApplication {
     @Override
@@ -29,21 +25,25 @@ public class ChatApplication extends WebSocketApplication {
     }
 
     @Override
-    public WebSocket createSocket(final Connection connection, WebSocketListener... listeners) {
-        return new ChatWebSocket(listeners);
+    public WebSocket createSocket(ProtocolHandler handler,
+            HttpRequestPacket requestPacket,
+            WebSocketListener... listeners) {
+        final ChatWebSocket ws
+                = new ChatWebSocket(handler, requestPacket, listeners);
+        return ws;
     }
 
-    public void onMessage(WebSocket socket, DataFrame frame) throws IOException {
-        final String data = frame.getTextPayload();
+    @Override
+    public void onMessage(WebSocket socket, String data) {
         if (data.startsWith("login:")) {
-            login((ChatWebSocket) socket, frame);
+            login((ChatWebSocket) socket, data);
         } else {
             broadcast(((ChatWebSocket) socket).getUser(), data);
         }
     }
 
     @Override
-    public void onClose(WebSocket websocket) {
+    public void onClose(WebSocket websocket, DataFrame frame) {
         broadcast("system", ((ChatWebSocket)websocket).getUser() + " left the chat");
     }
 
@@ -64,10 +64,10 @@ public class ChatApplication extends WebSocketApplication {
 
     }
 
-    private void login(ChatWebSocket socket, DataFrame frame) throws IOException {
+    private void login(ChatWebSocket socket, String data) {
         if (socket.getUser() == null) {
             WebSocketsServlet.logger.info("ChatApplication.login");
-            socket.setUser(frame.getTextPayload().split(":")[1].trim());
+            socket.setUser(data.split(":")[1].trim());
             broadcast(socket.getUser(), " has joined the chat.");
         }
     }

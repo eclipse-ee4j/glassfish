@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,8 @@
 
 package org.glassfish.tests.embedded.ejb.test;
 
-import org.junit.Test;
-import org.junit.Assert;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
 import org.glassfish.tests.embedded.ejb.SampleEjb;
 
 import jakarta.ejb.embeddable.EJBContainer;
@@ -60,7 +61,7 @@ public class EmbeddedTest {
                     if (ejb!=null) {
                         System.out.println("Invoking EJB...");
                         System.out.println(ejb.saySomething());
-                        Assert.assertEquals(ejb.saySomething(), "Hello World");
+                        Assertions.assertEquals(ejb.saySomething(), "Hello World");
                     }
                 } catch (Exception e) {
                     System.out.println("ERROR calling EJB:");

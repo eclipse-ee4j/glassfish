@@ -27,6 +27,13 @@ import static javax.naming.Context.SECURITY_CREDENTIALS;
 import static javax.naming.Context.SECURITY_PRINCIPAL;
 import static javax.naming.directory.SearchControls.SUBTREE_SCOPE;
 
+import com.sun.enterprise.security.auth.realm.GlassFishUserStore;
+import com.sun.enterprise.security.auth.realm.Realm;
+import com.sun.enterprise.security.auth.realm.exceptions.BadRealmException;
+import com.sun.enterprise.security.auth.realm.exceptions.InvalidOperationException;
+import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
+import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -35,7 +42,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.Vector;
 import java.util.regex.Matcher;
-
 import javax.naming.CompositeName;
 import javax.naming.Context;
 import javax.naming.InvalidNameException;
@@ -49,16 +55,8 @@ import javax.naming.directory.SearchResult;
 import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
 import javax.security.auth.login.LoginException;
-
 import org.glassfish.internal.api.RelativePathResolver;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.security.BaseRealm;
-import com.sun.enterprise.security.auth.realm.BadRealmException;
-import com.sun.enterprise.security.auth.realm.IASRealm;
-import com.sun.enterprise.security.auth.realm.InvalidOperationException;
-import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
-import com.sun.enterprise.security.auth.realm.NoSuchUserException;
 
 /**
  * Realm wrapper for supporting LDAP authentication.
@@ -97,7 +95,7 @@ import com.sun.enterprise.security.auth.realm.NoSuchUserException;
  *
  */
 @Service
-public final class LDAPRealm extends IASRealm {
+public final class LDAPRealm extends Realm {
     // Descriptive string of the authentication type of this realm.
     public static final String AUTH_TYPE = "ldap";
 
@@ -189,52 +187,53 @@ public final class LDAPRealm extends IASRealm {
 
         String url = props.getProperty(PARAM_DIRURL);
         String dn = props.getProperty(PARAM_USERDN);
-        String jaasCtx = props.getProperty(BaseRealm.JAAS_CONTEXT_PARAM);
+        String jaasCtx = props.getProperty(JAAS_CONTEXT_PARAM);
 
         if (isAnyNull(url, dn, jaasCtx)) {
-            throw new BadRealmException(sm.getString("ldaprealm.badconfig", url, dn, jaasCtx));
+            throw new BadRealmException(MessageFormat.format(
+                "Incomplete configuration of ldap realm: url: {0} baseDN: {1} login module: {2}", url, dn, jaasCtx));
         }
 
-        this.setProperty(PARAM_DIRURL, url);
+        setProperty(PARAM_DIRURL, url);
         ldapBindProps.setProperty(Context.PROVIDER_URL, url);
-        this.setProperty(PARAM_USERDN, dn);
-        this.setProperty(BaseRealm.JAAS_CONTEXT_PARAM, jaasCtx);
+        setProperty(PARAM_USERDN, dn);
+        setProperty(JAAS_CONTEXT_PARAM, jaasCtx);
 
         String mode = props.getProperty(PARAM_MODE, MODE_DEFAULT);
         if (!MODE_DEFAULT.equals(mode)) {
-            throw new BadRealmException(sm.getString("ldaprealm.badmode", mode));
+            throw new BadRealmException(MessageFormat.format("Unsupported mode {0}.", mode));
         }
 
-        this.setProperty(PARAM_MODE, mode);
+        setProperty(PARAM_MODE, mode);
 
         String ctxF = props.getProperty(PARAM_JNDICF, JNDICF_DEFAULT);
-        this.setProperty(PARAM_JNDICF, ctxF);
+        setProperty(PARAM_JNDICF, ctxF);
         ldapBindProps.setProperty(Context.INITIAL_CONTEXT_FACTORY, ctxF);
 
         String searchFilter = props.getProperty(PARAM_SEARCH_FILTER, SEARCH_FILTER_DEFAULT);
-        this.setProperty(PARAM_SEARCH_FILTER, searchFilter);
+        setProperty(PARAM_SEARCH_FILTER, searchFilter);
 
         String grpDN = props.getProperty(PARAM_GRPDN, dn);
-        this.setProperty(PARAM_GRPDN, grpDN);
+        setProperty(PARAM_GRPDN, grpDN);
 
         String grpSearchFilter = props.getProperty(PARAM_GRP_SEARCH_FILTER, GRP_SEARCH_FILTER_DEFAULT);
-        this.setProperty(PARAM_GRP_SEARCH_FILTER, grpSearchFilter);
+        setProperty(PARAM_GRP_SEARCH_FILTER, grpSearchFilter);
 
         String dynGrpSearchFilter = props.getProperty(PARAM_DYNAMIC_GRP_FILTER, SEARCH_FILTER_DEFAULT);
-        this.setProperty(PARAM_DYNAMIC_GRP_FILTER, dynGrpSearchFilter);
+        setProperty(PARAM_DYNAMIC_GRP_FILTER, dynGrpSearchFilter);
 
         String grpTarget = props.getProperty(PARAM_GRP_TARGET, GRP_TARGET_DEFAULT);
-        this.setProperty(PARAM_GRP_TARGET, grpTarget);
+        setProperty(PARAM_GRP_TARGET, grpTarget);
 
         String dynGrpTarget = props.getProperty(PARAM_DYNAMIC_GRP_TARGET, DYNAMIC_GRP_TARGET_DEFAULT);
-        this.setProperty(PARAM_DYNAMIC_GRP_TARGET, dynGrpTarget);
+        setProperty(PARAM_DYNAMIC_GRP_TARGET, dynGrpTarget);
 
         String objectFactory = props.getProperty(DYNAMIC_GROUP_FACTORY_OBJECT_PROPERTY, DYNAMIC_GROUP_OBJECT_FACTORY);
-        this.setProperty(DYNAMIC_GROUP_FACTORY_OBJECT_PROPERTY, objectFactory);
+        setProperty(DYNAMIC_GROUP_FACTORY_OBJECT_PROPERTY, objectFactory);
         ldapBindProps.setProperty(DYNAMIC_GROUP_FACTORY_OBJECT_PROPERTY, objectFactory);
 
         String stateFactory = props.getProperty(DYNAMIC_GROUP_STATE_FACTORY_PROPERTY, DYNAMIC_GROUP_STATE_FACTORY);
-        this.setProperty(DYNAMIC_GROUP_STATE_FACTORY_PROPERTY, stateFactory);
+        setProperty(DYNAMIC_GROUP_STATE_FACTORY_PROPERTY, stateFactory);
         ldapBindProps.setProperty(DYNAMIC_GROUP_STATE_FACTORY_PROPERTY, stateFactory);
 
         String bindDN = props.getProperty(PARAM_BINDDN);
@@ -279,7 +278,7 @@ public final class LDAPRealm extends IASRealm {
         if (System.getProperty(SUN_JNDI_POOL_MAXSIZE) == null) {
             System.setProperty(SUN_JNDI_POOL_MAXSIZE, sunPoolSizeStr);
         }
-        this.setProperty(PARAM_POOLSIZE, sunPoolSizeStr);
+        setProperty(PARAM_POOLSIZE, sunPoolSizeStr);
 
         String usePool = props.getProperty(SUN_JNDI_POOL, "true");
         ldapBindProps.setProperty(SUN_JNDI_POOL, usePool);
@@ -383,15 +382,15 @@ public final class LDAPRealm extends IASRealm {
             ctx = new InitialDirContext(getLdapBindProps());
             String realUserDN = userSearch(ctx, getProperty(PARAM_USERDN), userid);
             if (realUserDN == null) {
-                throw new LoginException(sm.getString("ldaprealm.usernotfound", _username));
+                throw new LoginException(MessageFormat.format("User {0} not found.", _username));
             }
 
             boolean bindSuccessful = bindAsUser(realUserDN, _password);
             if (bindSuccessful == false) {
-                throw new LoginException(sm.getString("ldaprealm.bindfailed", realUserDN));
+                throw new LoginException(MessageFormat.format("LDAP bind failed for {0}.", realUserDN));
             }
 
-            // search groups using above connection, substituting %d (and %s)
+            // Search groups using above connection, substituting %d (and %s)
             StringBuilder srcFilterBuilder = new StringBuilder(getProperty(PARAM_GRP_SEARCH_FILTER));
             StringBuilder dynamicFilterBuilder = new StringBuilder(getProperty(PARAM_DYNAMIC_GRP_FILTER));
 

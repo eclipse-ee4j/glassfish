@@ -31,20 +31,14 @@ import jakarta.enterprise.event.Observes;
 import jakarta.enterprise.inject.Any;
 import jakarta.enterprise.inject.Default;
 import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
-import jakarta.enterprise.inject.spi.AfterDeploymentValidation;
 import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
-import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
-import jakarta.enterprise.inject.spi.BeforeShutdown;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.InjectionPoint;
 import jakarta.enterprise.inject.spi.InjectionTarget;
 import jakarta.enterprise.inject.spi.InjectionTargetFactory;
 import jakarta.enterprise.inject.spi.PassivationCapable;
-import jakarta.enterprise.inject.spi.ProcessAnnotatedType;
-import jakarta.enterprise.inject.spi.ProcessInjectionTarget;
-import jakarta.enterprise.inject.spi.ProcessProducer;
 import jakarta.transaction.TransactionScoped;
 
 /*
@@ -62,33 +56,6 @@ public class JMSCDIExtension implements Extension {
 
         Bean contextBean = createLocalBean(beanManager, InjectableJMSContext.class);
         afterBeanDiscoveryEvent.addBean(contextBean);
-    }
-
-    void addScope(@Observes final BeforeBeanDiscovery event) {
-    }
-
-    void afterBeanDiscovery(@Observes final AfterBeanDiscovery event) {
-    }
-
-    public void beforeBeanDiscovery(@Observes BeforeBeanDiscovery event) {
-    }
-
-    public void beforeBeanDiscovery(@Observes BeforeBeanDiscovery event, BeanManager beanManager) {
-    }
-
-    public void afterDeploymentValidation(@Observes AfterDeploymentValidation event, BeanManager beanManager) {
-    }
-
-    public void beforeShutdown(@Observes BeforeShutdown event, BeanManager beanManager) {
-    }
-
-    public <T> void processInjectionTarget(@Observes ProcessInjectionTarget<T> pit) {
-    }
-
-    public <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> pat) {
-    }
-
-    public <T, X> void processProducer(@Observes ProcessProducer<T, X> event) {
     }
 
     public static class LocalPassivationCapableBean implements Bean, PassivationCapable {

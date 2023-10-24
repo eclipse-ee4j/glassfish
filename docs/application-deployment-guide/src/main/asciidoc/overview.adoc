@@ -671,7 +671,7 @@ asadmin list-applications --type web
 Application deployment commands are listed in
 xref:asadmin-deployment-subcommands.adoc#a-the-asadmin-deployment-subcommands[The `asadmin` Deployment
 Subcommands]. All {productName} `asadmin` subcommands are documented
-in the xref:reference-manual.adoc#GSRFM[{productName} Reference
+in the xref:reference-manual.adoc[{productName} Reference
 Manual].
 
 For the most part, you can perform the same administrative tasks by
@@ -757,7 +757,7 @@ application deployment:
 {productName} Administration Guide]
 * xref:add-on-component-development-guide.adoc#GSACG[
 {productName} Add-On Component Development Guide]
-* xref:reference-manual.adoc#GSRFM[
+* xref:reference-manual.adoc[
 {productName} Reference Manual]
 * {productName} Administration Console online help
 

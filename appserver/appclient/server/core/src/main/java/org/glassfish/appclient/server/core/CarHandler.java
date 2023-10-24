@@ -19,9 +19,8 @@ package org.glassfish.appclient.server.core;
 
 import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
 import com.sun.enterprise.loader.ASURLClassLoader;
-import com.sun.enterprise.security.perms.PermsArchiveDelegate;
-import com.sun.enterprise.security.perms.SMGlobalPolicyUtil;
-
+import com.sun.enterprise.security.ee.perms.PermsArchiveDelegate;
+import com.sun.enterprise.security.ee.perms.SMGlobalPolicyUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 

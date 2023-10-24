@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,16 +23,22 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.condition.OS.WINDOWS;
 
 /**
- *
  * @author bnevins
  */
 public class ProcessManagerTest {
@@ -50,6 +56,7 @@ public class ProcessManagerTest {
      * This stuff is platform dependent.
      */
     @Test
+    @Timeout(value = 5, unit = TimeUnit.SECONDS)
     public void test1() throws ProcessManagerException {
         ProcessManager pm;
 
@@ -78,9 +85,11 @@ public class ProcessManagerTest {
     }
 
     @Test
+    @Timeout(value = 5, unit = TimeUnit.SECONDS)
     @DisabledOnOs(WINDOWS)
     void testCommandExecution() {
         ProcessManager pm = new ProcessManager("sh", "-c", "echo hello; sleep 1");
+        pm.setEcho(false);
         int exitCode = assertDoesNotThrow(pm::execute);
         assertAll(
                 () -> assertEquals(0, exitCode),
@@ -89,10 +98,12 @@ public class ProcessManagerTest {
     }
 
     @Test
+    @Timeout(value = 5, unit = TimeUnit.SECONDS)
     @DisabledOnOs(WINDOWS)
     void testSetEnvironment() {
         String value = String.valueOf(System.currentTimeMillis());
         ProcessManager pm = new ProcessManager("sh", "-c", "echo ${PM_TEST_ENV_VAR}; sleep 1");
+        pm.setEcho(false);
         pm.setEnvironment("PM_TEST_ENV_VAR", value);
         int exitCode = assertDoesNotThrow(pm::execute);
         assertAll(
@@ -101,12 +112,14 @@ public class ProcessManagerTest {
         );
     }
 
-    @Test
+    @RepeatedTest(value = 2000)
+    @Timeout(value = 5, unit = TimeUnit.SECONDS)
     @DisabledOnOs(WINDOWS)
     void testSetStdinLines() {
         List<String> inputLines = Arrays.asList("line1", "line2", "line3");
         String expectedOutput = String.join("\n", inputLines) + "\n";
         ProcessManager pm = new ProcessManager("cat");
+        pm.setEcho(false);
         pm.setStdinLines(inputLines);
         int exitCode = assertDoesNotThrow(pm::execute);
         assertAll(
@@ -116,6 +129,7 @@ public class ProcessManagerTest {
     }
 
     @Test
+    @Timeout(value = 5, unit = TimeUnit.SECONDS)
     @DisabledOnOs(WINDOWS)
     void testSetTimeoutLessThanExecutionTime() {
         int sleepTimeSeconds = 2;
@@ -126,6 +140,7 @@ public class ProcessManagerTest {
     }
 
     @Test
+    @Timeout(value = 5, unit = TimeUnit.SECONDS)
     @DisabledOnOs(WINDOWS)
     void testSetTimeoutGreaterThanExecutionTime() {
         int sleepTimeSeconds = 1;

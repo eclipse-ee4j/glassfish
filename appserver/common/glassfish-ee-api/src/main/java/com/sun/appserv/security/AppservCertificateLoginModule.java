@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,8 +22,8 @@ import com.sun.enterprise.security.BaseCertificateLoginModule;
 /**
  * Abstract base class for certificate-based login modules.
  *
- * <P>Subclasses need to implement the authenticateUser() method and later
- * call commitUserAuthentication().
+ * <P>
+ * Subclasses need to implement the authenticateUser() method and later call commitUserAuthentication().
  *
  */
 public abstract class AppservCertificateLoginModule extends BaseCertificateLoginModule {}

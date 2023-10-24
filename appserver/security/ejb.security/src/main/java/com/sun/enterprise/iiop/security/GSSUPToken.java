@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,42 +17,33 @@
 
 package com.sun.enterprise.iiop.security;
 
-/**
- * GSSUPToken class creates a mechanism specific gssapi token for
- * the username, password mechanism
- * @author Nithya Subramanian
- */
-
 import com.sun.corba.ee.org.omg.CSIIOP.CompoundSecMech;
 import com.sun.corba.ee.org.omg.GSSUP.InitialContextToken;
 import com.sun.corba.ee.org.omg.GSSUP.InitialContextTokenHelper;
-import java.io.IOException;
+import com.sun.enterprise.security.auth.login.common.PasswordCredential;
+import com.sun.enterprise.util.Utility;
+import com.sun.logging.LogDomains;
+
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.ietf.jgss.GSSException;
-import org.omg.CORBA.*;
-import org.omg.IOP.*;
-
-import java.util.*;
-
-import com.sun.enterprise.security.auth.login.common.PasswordCredential;
-
-import com.sun.enterprise.util.Utility;
-import java.util.logging.*;
-import com.sun.logging.*;
+import org.omg.CORBA.Any;
+import org.omg.CORBA.ORB;
+import org.omg.IOP.Codec;
 
 /**
+ * GSSUPToken class creates a mechanism specific gssapi token for the username, password mechanism.
  * GSSUPToken Represents the on the wire username/password credential on the client side and the server side.
  *
  * @author Sekhar Vajjhala
  * @author Harpreet Singh
+ * @author Nithya Subramanian
  */
-
 public class GSSUPToken {
-    private static java.util.logging.Logger _logger = null;
+    private static final Logger LOG = LogDomains.getLogger(GSSUPToken.class, LogDomains.SECURITY_LOGGER, false);
 
-    static {
-        _logger = LogDomains.getLogger(GSSUPToken.class, LogDomains.SECURITY_LOGGER);
-    }
     // START OF IASRI 4825735.
     // to allow for usernames of the type user@foobar.com
     // Will be represented as user\\@foobar.com@domain
@@ -70,8 +62,8 @@ public class GSSUPToken {
      */
     private byte[] cdr_encoded_token = {};
 
-    /* PasswordCredential that contains the username, password and realm */
-    PasswordCredential pwdcred = null;
+    /** PasswordCredential that contains the username, password and realm */
+    PasswordCredential pwdcred;
 
     /**
      * Constructs mechanism token from a password credential, called from the client side interceptors
@@ -91,7 +83,7 @@ public class GSSUPToken {
      *
      * @param orb the orb
      * @param codec the codec
-     * @param authok the authtoken received on the wire.
+     * @param authtok the authtoken received on the wire.
      * @throws SecurityMechanismException if a name/value pair is not found in the authtok
      * @since 1.4
      */
@@ -107,10 +99,7 @@ public class GSSUPToken {
         byte[] name_utf8 = {}; // username in UTF8 format
         byte[] password_utf8 = {}; // password in UTF8 format
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "IIOP: Going to construct a GSSUPToken:");
-            _logger.log(Level.FINE, pwdcred.toString());
-        }
+        LOG.log(Level.FINE, "IIOP: Going to construct a GSSUPToken: {0}", pwdcred);
 
         try {
             String _name_ = pwdcred.getUser();
@@ -144,7 +133,7 @@ public class GSSUPToken {
             // password_utf8 = pwdcred.getPassword().getBytes("UTF8");
             password_utf8 = Utility.convertCharArrayToByteArray(pwdcred.getPassword(), "UTF-8");
         } catch (Exception e) {
-            _logger.log(Level.SEVERE, "iiop.password_exception", e);
+            LOG.log(Level.SEVERE, "Construction of GSSUPToken failed.", e);
         }
 
         /*
@@ -153,11 +142,11 @@ public class GSSUPToken {
          */
         byte[] target_name = mech.as_context_mech.target_name;
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.fine("Username (UTF8) " + GSSUtils.dumpHex(name_utf8));
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Username (UTF8) " + GSSUtils.dumpHex(name_utf8));
             // _logger.fine("Password (UTF8) " + GSSUtils.dumpHex(password_utf8));
-            _logger.fine("Password (UTF8) " + "########");
-            _logger.fine("Targetname      " + GSSUtils.dumpHex(target_name));
+            LOG.fine("Password (UTF8) " + "########");
+            LOG.fine("Targetname      " + GSSUtils.dumpHex(target_name));
         }
 
         /* Create an InitialContextToken */
@@ -170,10 +159,10 @@ public class GSSUPToken {
         try {
             cdr_encoded_token = codec.encode_value(a);
         } catch (Exception e) {
-            _logger.log(Level.SEVERE, "iiop.encode_exception", e);
+            LOG.log(Level.SEVERE, "Could not encode token value.", e);
         }
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "IIOP:Mech specific token length (CDR encoded) = " + cdr_encoded_token.length);
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "IIOP:Mech specific token length (CDR encoded) = " + cdr_encoded_token.length);
         }
     }
 
@@ -192,16 +181,16 @@ public class GSSUPToken {
         String realm = "";
         byte[] encoded_token = null;
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "IIOP:Going to construct a GSSUPToken:");
-            _logger.log(Level.FINE, "IIOP:Getting CDR encoded GSSUP mechanism token from client authentication token");
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "IIOP:Going to construct a GSSUPToken:");
+            LOG.log(Level.FINE, "IIOP:Getting CDR encoded GSSUP mechanism token from client authentication token");
         }
         /* get CDR encoded mechanism specific token */
         encoded_token = GSSUtils.getMechToken(GSSUtils.GSSUP_MECH_OID, authtok);
 
         /* create a GSSUPToken from the authentication token */
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "CDR encoded mech specific token length = " + encoded_token.length);
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "CDR encoded mech specific token length = " + encoded_token.length);
         }
         /* Decode the cdr encoded token */
         Any a = orb.create_any();
@@ -209,7 +198,7 @@ public class GSSUPToken {
         try {
             a = codec.decode_value(encoded_token, InitialContextTokenHelper.type());
         } catch (Exception e) {
-            _logger.log(Level.SEVERE, "iiop.decode_exception", e);
+            LOG.log(Level.SEVERE, "Could not decode token value.", e);
         }
 
         InitialContextToken inctxToken = InitialContextTokenHelper.extract(a);
@@ -219,11 +208,11 @@ public class GSSUPToken {
         name_utf8 = inctxToken.username;
         target_name = inctxToken.target_name;
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.fine("IIOP:Username (UTF8) " + GSSUtils.dumpHex(name_utf8));
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("IIOP:Username (UTF8) " + GSSUtils.dumpHex(name_utf8));
             // _logger.fine("IIOP:Password (UTF8) " + GSSUtils.dumpHex(password_utf8));
-            _logger.fine("IIOP:Password (UTF8) " + "########");
-            _logger.fine("IIOP:Targetname      " + GSSUtils.dumpHex(target_name));
+            LOG.fine("IIOP:Password (UTF8) " + "########");
+            LOG.fine("IIOP:Targetname      " + GSSUtils.dumpHex(target_name));
         }
         /* Construct a PasswordCredential */
         try {
@@ -231,7 +220,7 @@ public class GSSUPToken {
             // userpwd = new String(password_utf8, "UTF8");
             userpwd = Utility.convertByteArrayToCharArray(password_utf8, "UTF-8");
         } catch (Exception e) {
-            _logger.log(Level.SEVERE, "iiop.user_password_exception", e);
+            LOG.log(Level.SEVERE, "IIOP1001: Exception getting username and password", e);
         }
 
         /**
@@ -253,9 +242,7 @@ public class GSSUPToken {
             if (esc_index + 2 >= username.length()) {
                 // string ends at username\\@ - nothing follows
                 name = username.replaceAll(ESCAPE_CHAR_REGEXP, DELIMITER);
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "IIOP:No Realm specified, " + " creating a default realm for login");
-                }
+                LOG.log(Level.FINE, "IIOP:No Realm specified, creating a default realm for login");
                 realm = DEFAULT_REALM_NAME;
             } else {
                 // locate the second @ token
@@ -266,10 +253,7 @@ public class GSSUPToken {
                 if (second_at_index == -1) {
                     // user\\@foobar.com - no realm specified
                     name = username.replaceAll(ESCAPE_CHAR_REGEXP, DELIMITER);
-
-                    if (_logger.isLoggable(Level.FINE)) {
-                        _logger.log(Level.FINE, "IIOP:No Realm specified, " + " creating a default realm for login");
-                    }
+                    LOG.log(Level.FINE, "IIOP:No Realm specified, creating a default realm for login");
                     realm = DEFAULT_REALM_NAME;
                 } else {
                     name = username.substring(0, second_at_index);
@@ -277,9 +261,7 @@ public class GSSUPToken {
                     realm = username.substring(second_at_index + 1);
                     if (realm == null || realm.isEmpty()) {
                         // user\\@foo.com@ type
-                        if (_logger.isLoggable(Level.FINE)) {
-                            _logger.log(Level.FINE, "IIOP:No Realm specified, " + " creating a default realm for login");
-                        }
+                        LOG.log(Level.FINE, "IIOP:No Realm specified, creating a default realm for login");
                         realm = DEFAULT_REALM_NAME;
                     }
                 }
@@ -296,9 +278,7 @@ public class GSSUPToken {
                 // if ( !realm.equals("default") )
                 // throw new SecurityMechanismException("Unknown realm");
                 if (realm.isEmpty()) {
-                    if (_logger.isLoggable(Level.FINE)) {
-                        _logger.log(Level.FINE, "IIOP:No Realm specified, " + " creating a default realm for login");
-                    }
+                    LOG.log(Level.FINE, "IIOP:No Realm specified, creating a default realm for login");
                     realm = DEFAULT_REALM_NAME;
                 }
             }
@@ -309,14 +289,14 @@ public class GSSUPToken {
                 targetNameRealm = new String(GSSUtils.importName(GSSUtils.GSSUP_MECH_OID, target_name));
             }
         } catch (GSSException ex) {
-            _logger.log(Level.FINE, null, ex);
+            LOG.log(Level.FINE, null, ex);
         }
         if (targetNameRealm != null && !DEFAULT_REALM_NAME.equals(targetNameRealm)) {
             realm = targetNameRealm;
         }
         pwdcred = new PasswordCredential(name, userpwd, realm, target_name);
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, pwdcred.toString());
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, pwdcred.toString());
         }
     }
 
@@ -326,14 +306,14 @@ public class GSSUPToken {
      * @return byte[] the byte array representation of the GSSToken
      */
     byte[] getGSSToken() throws GSSException {
-        if (_logger.isLoggable(Level.FINER)) {
-            _logger.log(Level.FINER, "IIOP:GSSUP mech token : " + GSSUtils.dumpHex(cdr_encoded_token));
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.log(Level.FINER, "IIOP:GSSUP mech token : " + GSSUtils.dumpHex(cdr_encoded_token));
         }
         /* construct a GSSAPI token ( hdr + mechanism token ) */
         byte[] gsstoken = GSSUtils.createMechIndToken(GSSUtils.GSSUP_MECH_OID, cdr_encoded_token);
-        if (_logger.isLoggable(Level.FINER)) {
-            _logger.log(Level.FINER, "IIOP:GSSUP token length : " + gsstoken.length);
-            _logger.log(Level.FINER, "IIOP:GSSUP token: " + GSSUtils.dumpHex(gsstoken));
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.log(Level.FINER, "IIOP:GSSUP token length : " + gsstoken.length);
+            LOG.log(Level.FINER, "IIOP:GSSUP token: " + GSSUtils.dumpHex(gsstoken));
         }
         return gsstoken;
     }

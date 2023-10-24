@@ -54,7 +54,6 @@
         setPageSessionAttribute(key="showCancelButton" value="#{true}" );
         setPageSessionAttribute(key="hasPropertySheet" value="#{true}" );
         setPageSessionAttribute(key="hasPropertyTable" value="#{true}" );
-        setPageSessionAttribute(key="reload" value="#{false}" );
 
         gf.getAdminObjectResourceWizard(
             reload="#{reload}"
@@ -62,6 +61,9 @@
             currentMap="#{pageSession.valueMap}"
             valueMap=>$pageSession{valueMap});
         mapPut(map="#{pageSession.valueMap}" key="enabled" value="true");
+
+        setPageSessionAttribute(key="reload" value="#{false}" );
+
         //To get the resource types
       if ("#{pageSession.valueMap.resAdapter}"){
         createMap(result="#{pageSession.attrsMap}");
@@ -127,6 +129,6 @@
 	<sun:hidden id="helpKey" value="$resource{help_jca.adminObjectNew1}" />
             </sun:form>
                         "<br/>
-#include "/common/shared/changeButtonsJS.inc" 
+#include "/common/shared/changeButtonsJS.inc"
 </define>
 </composition>

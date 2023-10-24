@@ -58,7 +58,7 @@ if [ ! -z "${JENKINS_HOME}" ] ; then
     export MVN_EXTRA="";
   fi
   if [ -z "${GF_VERSION}" ]; then
-    export GF_VERSION="$(mvn help:evaluate -f \"${APS_HOME}/pom.xml\" -Dexpression=project.version -q -DforceStdout ${MVN_EXTRA})"
+    export GF_VERSION="$(mvn help:evaluate -Pstaging -f \"${APS_HOME}/pom.xml\" -Dexpression=project.version -q -DforceStdout ${MVN_EXTRA})"
   fi
   if [ -z "${MVN_REPOSITORY}" ]; then
     export MVN_REPOSITORY="${HOME}/.m2/repository";

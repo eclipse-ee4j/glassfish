@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,9 +27,9 @@ import org.omg.PortableInterceptor.ServerRequestInterceptor;
  * @author Sudarsan Sridhar
  */
 public interface AlternateSecurityInterceptorFactory {
-    public static final String SEC_INTEROP_INTFACTORY_PROP = "com.sun.enterprise.iiop.security.interceptorFactory";
+    String SEC_INTEROP_INTFACTORY_PROP = "com.sun.enterprise.iiop.security.interceptorFactory";
 
-    public ClientRequestInterceptor getClientRequestInterceptor(Codec codec);
+    ClientRequestInterceptor getClientRequestInterceptor(Codec codec);
 
-    public ServerRequestInterceptor getServerRequestInterceptor(Codec codec);
+    ServerRequestInterceptor getServerRequestInterceptor(Codec codec);
 }

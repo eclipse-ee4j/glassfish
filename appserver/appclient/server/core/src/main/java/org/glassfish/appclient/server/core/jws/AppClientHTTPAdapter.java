@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,9 @@
 
 package org.glassfish.appclient.server.core.jws;
 
-import org.glassfish.orb.admin.config.IiopListener;
-import org.glassfish.orb.admin.config.IiopService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -31,16 +33,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletResponse;
+
 import org.glassfish.appclient.server.core.jws.servedcontent.ACCConfigContent;
 import org.glassfish.appclient.server.core.jws.servedcontent.DynamicContent;
 import org.glassfish.appclient.server.core.jws.servedcontent.StaticContent;
+import org.glassfish.enterprise.iiop.api.GlassFishORBFactory;
 import org.glassfish.grizzly.http.Method;
 import org.glassfish.grizzly.http.server.Request;
 import org.glassfish.grizzly.http.server.Response;
-import org.glassfish.enterprise.iiop.api.GlassFishORBFactory;
 import org.glassfish.grizzly.http.server.Session;
+import org.glassfish.orb.admin.config.IiopListener;
+import org.glassfish.orb.admin.config.IiopService;
 
 /**
  * GrizzlyAdapter for serving static and dynamic content.
@@ -62,7 +65,7 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
 
     private static final String DEFAULT_ORB_LISTENER_ID = "orb-listener-1";
 
-    private final static String LINE_SEP = System.getProperty("line.separator");
+    private final static String LINE_SEP = System.lineSeparator();
     private static final String NEW_LINE = "\r\n";
 
     private final Map<String,DynamicContent> dynamicContent;
@@ -98,8 +101,8 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
             final IiopService iiopService,
             final GlassFishORBFactory orbFactory) throws IOException {
         this(contextRoot,
-                new HashMap<String,StaticContent>(),
-                new HashMap<String,DynamicContent>(),
+                new HashMap<>(),
+                new HashMap<>(),
                 tokens,
                 domainDir,
                 installDir,
@@ -162,15 +165,17 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
                     dumpHeaders(gResp, savedRequestURI);
                 }
             }
-        } else try {
-            if (!serviceContent(gReq, gResp)) {
-                respondNotFound(gResp);
-            }
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        } finally {
-            if (logger.isLoggable(Level.FINER)) {
-                dumpHeaders(gResp, savedRequestURI);
+        } else {
+            try {
+                if (!serviceContent(gReq, gResp)) {
+                    respondNotFound(gResp);
+                }
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            } finally {
+                if (logger.isLoggable(Level.FINER)) {
+                    dumpHeaders(gResp, savedRequestURI);
+                }
             }
         }
     }
@@ -349,7 +354,7 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
         answer.setProperty("request.message.security.config.provider.security.config",
                 Util.toXMLEscaped(accConfigContent.securityConfig()));
         answer.setProperty("loader.config",
-                Util.toXMLEscaped(loaderConfigContent.content()));
+                Util.toXMLEscapedInclAmp(loaderConfigContent.content()));
 
         /*
          *Treat query parameters with the name "arg" as command line arguments to the
@@ -489,7 +494,7 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
 //        }
 //    }
     private abstract class QueryParams {
-        private String prefix;
+        private final String prefix;
 
         protected QueryParams(String prefix) {
             this.prefix = prefix;
@@ -526,7 +531,7 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
     }
 
     private class ArgQueryParams extends QueryParams {
-        private StringBuilder arguments = new StringBuilder();
+        private final StringBuilder arguments = new StringBuilder();
 
         public ArgQueryParams() {
             super(ARG_QUERY_PARAM_NAME);
@@ -562,7 +567,7 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
      * </code> in the agent arguments.
      */
     private class ACCArgQueryParams extends QueryParams {
-        private StringBuilder settings = new StringBuilder();
+        private final StringBuilder settings = new StringBuilder();
         private final String targetServerSetting;
 
 
@@ -630,7 +635,7 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
     }
 
     private class PropQueryParams extends QueryParams {
-        private StringBuilder properties = new StringBuilder();
+        private final StringBuilder properties = new StringBuilder();
 
         public PropQueryParams() {
             super(PROP_QUERY_PARAM_NAME);
@@ -665,7 +670,7 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
     }
 
     private class VMArgQueryParams extends QueryParams {
-        private StringBuilder vmArgs = new StringBuilder();
+        private final StringBuilder vmArgs = new StringBuilder();
 
         public VMArgQueryParams() {
             super(VMARG_QUERY_PARAM_NAME);

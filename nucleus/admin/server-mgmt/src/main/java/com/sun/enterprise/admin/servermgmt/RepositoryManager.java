@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,7 +36,6 @@ import com.sun.enterprise.util.OS;
 //import jakarta.jms.JMSException;
 
 import com.sun.enterprise.util.SystemPropertyConstants;
-//import com.sun.enterprise.util.ExecException;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.zip.ZipFile;
@@ -532,82 +531,6 @@ public class RepositoryManager extends MasterPasswordFileManager {
     }
 
     /**
-     * Create JBI instance.
-     */
-    protected void createJBIInstance(String instanceName, RepositoryConfig config) throws RepositoryException {
-        final PEFileLayout layout = getFileLayout(config);
-        layout.createJBIDirectories();
-        final TokenValueSet tvSet = new TokenValueSet();
-        final String tvDelimiter = "@";
-        final String tJbiInstanceName = "JBI_INSTANCE_NAME";
-        final String tJbiInstanceRoot = "JBI_INSTANCE_ROOT";
-        try {
-
-            final TokenValue tvJbiInstanceName = new TokenValue(tJbiInstanceName, instanceName, tvDelimiter);
-            final TokenValue tvJbiInstanceRoot = new TokenValue(tJbiInstanceRoot, layout.getRepositoryDir().getCanonicalPath(),
-                    tvDelimiter);
-            tvSet.add(tvJbiInstanceName);
-            tvSet.add(tvJbiInstanceRoot);
-            final File src = layout.getJbiTemplateFile();
-            final File dest = layout.getJbiRegistryFile();
-
-            generateFromTemplate(tvSet, src, dest);
-
-            final File httpConfigSrc = layout.getHttpBcConfigTemplate();
-            final File httpConfigDest = layout.getHttpBcConfigFile();
-            //tokens will be added in a follow-up integration
-            final TokenValueSet httpTvSet = new TokenValueSet();
-            generateFromTemplate(httpTvSet, httpConfigSrc, httpConfigDest);
-
-            createHttpBCInstallRoot(layout);
-            createJavaEESEInstallRoot(layout);
-            createWSDLSLInstallRoot(layout);
-
-        } catch (Exception ioe) {
-            throw new RepositoryException(_strMgr.getString("jbiRegistryFileNotCreated"), ioe);
-        }
-    }
-
-    /**
-     * This method is used to create httpsoapbc install root
-     *
-     * @param layout PEFileLayout
-     */
-    public void createHttpBCInstallRoot(PEFileLayout layout) throws Exception {
-
-        FileUtils.copy(layout.getHttpBcArchiveSource(), layout.getHttpBcArchiveDestination());
-
-        ZipFile zf = new ZipFile(layout.getHttpBcArchiveSource(), layout.getHttpBcInstallRoot());
-        zf.explode();
-    }
-
-    /**
-     * This method is used to create Java EESE install root
-     *
-     * @param layout PEFileLayout
-     */
-    public void createJavaEESEInstallRoot(PEFileLayout layout) throws Exception {
-        FileUtils.copy(layout.getJavaEESEArchiveSource(), layout.getJavaEESEArchiveDestination());
-
-        ZipFile zf = new ZipFile(layout.getJavaEESEArchiveSource(), layout.getJavaEESEInstallRoot());
-        zf.explode();
-    }
-
-    /**
-     * This method is used to create WSDLSL install root
-     *
-     * @param layout PEFileLayout
-     */
-    public void createWSDLSLInstallRoot(PEFileLayout layout) throws Exception {
-        FileUtils.copy(layout.getWSDLSLArchiveSource(), layout.getWSDLSLArchiveDestination());
-
-        ZipFile zf = new ZipFile(layout.getWSDLSLArchiveSource(), layout.getWSDLSLInstallRoot());
-        zf.explode();
-
-    }
-
-
-    /**
      * Create the timer database wal file.
      */
     protected void createTimerWal(RepositoryConfig config) throws RepositoryException {
@@ -696,7 +619,7 @@ public class RepositoryManager extends MasterPasswordFileManager {
     protected String[] getInteractiveOptions(String user, String password, String masterPassword, HashMap<Object, Object> extraPasswords) {
         int numKeys = extraPasswords == null ? 0 : extraPasswords.size();
         String[] options = new String[3 + numKeys];
-        // set interativeOptions for security to hand to starting process from ProcessExecutor
+        // set interativeOptions for security to hand to starting process from ProcessManager
         options[0] = user;
         options[1] = password;
         options[2] = masterPassword;

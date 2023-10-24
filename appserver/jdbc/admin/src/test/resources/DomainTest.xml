@@ -1,5 +1,6 @@
 <!--
 
+    Copyright (c) 2023 Contributors to the Eclipse Foundation.
     Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -171,7 +172,6 @@
     <server name="server" config-ref="server-config">
       <application-ref ref="adminapp" virtual-servers="__asadmin"></application-ref>
       <application-ref ref="admingui" virtual-servers="__asadmin"></application-ref>
-      <application-ref ref="JBIFramework"></application-ref>
       <application-ref ref="WSTXServices"></application-ref>
       <application-ref ref="WSTCPConnectorLCModule"></application-ref>
       <resource-ref ref="jdbc/__TimerPool"></resource-ref>

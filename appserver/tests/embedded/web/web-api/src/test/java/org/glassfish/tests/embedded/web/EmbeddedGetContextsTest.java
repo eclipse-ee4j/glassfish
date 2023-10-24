@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,11 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 import org.glassfish.embeddable.*;
 import org.glassfish.embeddable.web.*;
-import org.glassfish.embeddable.web.config.*;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests VirtualServer#getContexts after deploy
@@ -44,7 +44,7 @@ public class EmbeddedGetContextsTest {
     static File root;
     static String contextRoot = "test";
 
-    @BeforeClass
+    @BeforeAll
     public static void setupServer() throws GlassFishException {
         glassfish = GlassFishRuntime.bootstrap().newGlassFish();
         glassfish.start();
@@ -63,7 +63,7 @@ public class EmbeddedGetContextsTest {
         embedded.addWebListener(httpListener);
 
         List<WebListener> listenerList = new ArrayList(embedded.getWebListeners());
-        Assert.assertTrue(listenerList.size()==1);
+        Assertions.assertTrue(listenerList.size()==1);
         for (WebListener listener : embedded.getWebListeners())
             System.out.println("Web listener "+listener.getId()+" "+listener.getPort());
 
@@ -89,11 +89,11 @@ public class EmbeddedGetContextsTest {
 
         System.out.println("Deployed " + appName);
 
-        Assert.assertTrue(appName != null);
+        Assertions.assertTrue(appName != null);
 
         VirtualServer vs = embedded.getVirtualServer("server");
-        Assert.assertEquals("server", vs.getID());
-        Assert.assertEquals("/"+contextRoot, vs.getContext(contextRoot).getPath());
+        Assertions.assertEquals("server", vs.getID());
+        Assertions.assertEquals("/"+contextRoot, vs.getContext(contextRoot).getPath());
         boolean containsContext = false;
         for (Context ctx : vs.getContexts()) {
             System.out.println("Context found "+ctx.getPath());
@@ -101,7 +101,7 @@ public class EmbeddedGetContextsTest {
                 containsContext = true;
             }
         }
-        Assert.assertTrue(containsContext);
+        Assertions.assertTrue(containsContext);
 
         URL servlet = new URL("http://localhost:8080/"+contextRoot+"/hello");
         URLConnection yc = servlet.openConnection();
@@ -113,14 +113,14 @@ public class EmbeddedGetContextsTest {
         }
         in.close();
         System.out.println(inputLine);
-        Assert.assertEquals("Hello World!", sb.toString());
+        Assertions.assertEquals("Hello World!", sb.toString());
 
         if (appName!=null)
             deployer.undeploy(appName);
 
     }
 
-    @AfterClass
+    @AfterAll
     public static void shutdownServer() throws GlassFishException {
         System.out.println("Stopping server " + glassfish);
         if (glassfish != null) {

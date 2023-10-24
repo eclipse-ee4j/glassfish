@@ -22,8 +22,6 @@ import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.ejb.api.EJBInvocation;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.security.authorize.PolicyContextDelegate;
-
 /**
  * This class is primarily a delegate for PolicyContextHandler related queries But also handles Authorization of
  * WebServiceInvocations

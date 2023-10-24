@@ -18,10 +18,10 @@
 
 -->
 
-<!ENTITY commonSetup SYSTEM "file:./../../../config/properties.xml">
-<!ENTITY commonBuild SYSTEM "file:./../../../config/common.xml">
-<!ENTITY testproperties SYSTEM "file:./build.properties">
-<!ENTITY commonSecurity SYSTEM "file:./../common.xml">
+<!ENTITY commonSetup SYSTEM "./../../../config/properties.xml">
+<!ENTITY commonBuild SYSTEM "./../../../config/common.xml">
+<!ENTITY testproperties SYSTEM "./build.properties">
+<!ENTITY commonSecurity SYSTEM "./../common.xml">
 ]>
 
 <project name="PLoginConverterApp" default="usage" basedir=".">

@@ -428,11 +428,9 @@ public class RestUtil {
                             GuiUtil.handleError(handlerCtx, message);
                             if (!quiet) {
                                 Logger logger = GuiUtil.getLogger();
-                                logger.severe(
+                                logger.log(Level.SEVERE,
                                         neutralizeForLog(GuiUtil.getCommonMessage("LOG_REQUEST_RESULT", new Object[] { exitCode, endpoint, maskedAttr })));
-                                if (logger.isLoggable(Level.FINEST)) {
-                                    logger.finest("response.getResponseBody(): " + response.getResponseBody());
-                                }
+                                logger.log(Level.FINEST, "response.getResponseBody(): " + response.getResponseBody());
                             }
                             return new HashMap();
                         } else {
@@ -442,10 +440,8 @@ public class RestUtil {
                     } else { // Issue Number :13312 handling the case when throwException is false.
                         if (!quiet) {
                             Logger logger = GuiUtil.getLogger();
-                            logger.severe(neutralizeForLog(GuiUtil.getCommonMessage("LOG_REQUEST_RESULT", new Object[] { exitCode, endpoint, maskedAttr })));
-                            if (logger.isLoggable(Level.FINEST)) {
-                                logger.finest("response.getResponseBody(): " + response.getResponseBody());
-                            }
+                            logger.log(Level.SEVERE, neutralizeForLog(GuiUtil.getCommonMessage("LOG_REQUEST_RESULT", new Object[] { exitCode, endpoint, maskedAttr })));
+                            logger.log(Level.FINEST, "response.getResponseBody(): " + response.getResponseBody());
                         }
                         return responseMap;
                     }
@@ -453,7 +449,7 @@ public class RestUtil {
                 case WARNING: {
                     GuiUtil.prepareAlert("warning", GuiUtil.getCommonMessage("msg.command.warning"), message);
                     GuiUtil.getLogger()
-                            .warning(neutralizeForLog(GuiUtil.getCommonMessage("LOG_REQUEST_RESULT", new Object[] { exitCode, endpoint, maskedAttr })));
+                            .log(Level.WARNING, neutralizeForLog(GuiUtil.getCommonMessage("LOG_REQUEST_RESULT", new Object[] { exitCode, endpoint, maskedAttr })));
                     return responseMap;
                 }
                 case SUCCESS: {
@@ -463,10 +459,8 @@ public class RestUtil {
             } catch (Exception ex) {
                 if (!quiet) {
                     Logger logger = GuiUtil.getLogger();
-                    logger.severe(neutralizeForLog(GuiUtil.getCommonMessage("LOG_REQUEST_RESULT", new Object[] { exitCode, endpoint, maskedAttr })));
-                    if (logger.isLoggable(Level.FINEST)) {
-                        logger.finest("response.getResponseBody(): " + response.getResponseBody());
-                    }
+                    logger.log(Level.SEVERE, neutralizeForLog(GuiUtil.getCommonMessage("LOG_REQUEST_RESULT", new Object[] { exitCode, endpoint, maskedAttr })));
+                    logger.log(Level.FINEST, "response.getResponseBody(): " + response.getResponseBody());
                 }
                 if (handlerCtx != null) {
                     // If this is called from the jsf as handler, we want to stop processing and show error
@@ -531,10 +525,8 @@ public class RestUtil {
                         formData.add(key, obj);
                     } catch (ClassCastException ex) {
                         Logger logger = GuiUtil.getLogger();
-                        if (logger.isLoggable(Level.FINEST)) {
-                            logger.log(Level.FINEST,
-                                    GuiUtil.getCommonMessage("LOG_BUILD_MULTI_VALUE_MAP_ERROR", new Object[] { key, obj }));
-                        }
+                        logger.log(Level.FINEST,
+                                GuiUtil.getCommonMessage("LOG_BUILD_MULTI_VALUE_MAP_ERROR", new Object[] { key, obj }));
 
                         // Allow it to continue b/c this property most likely
                         // should have been excluded for this request
@@ -546,10 +538,8 @@ public class RestUtil {
                     formData.putSingle(key, value);
                 } catch (ClassCastException ex) {
                     Logger logger = GuiUtil.getLogger();
-                    if (logger.isLoggable(Level.FINEST)) {
-                        logger.log(Level.FINEST,
-                                GuiUtil.getCommonMessage("LOG_BUILD_MULTI_VALUE_MAP_ERROR", new Object[] { key, value }));
-                    }
+                    logger.log(Level.FINEST,
+                            GuiUtil.getCommonMessage("LOG_BUILD_MULTI_VALUE_MAP_ERROR", new Object[] { key, value }));
                     // Allow it to continue b/c this property most likely
                     // should have been excluded for this request
                 }
@@ -932,7 +922,7 @@ public class RestUtil {
                     .register(CsrfProtectionFilter.class);
 
         } catch (Exception ex) {
-            GuiUtil.getLogger().warning("RestUtil.initialize() failed");
+            GuiUtil.getLogger().log(Level.WARNING, "RestUtil.initialize() failed");
             if (GuiUtil.getLogger().isLoggable(Level.FINE)) {
                 ex.printStackTrace();
             }

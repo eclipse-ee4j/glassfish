@@ -104,12 +104,10 @@ public class ConsolePluginService {
                             ConsoleProvider.DEFAULT_CONFIG_FILENAME);
                 }
                 if (url == null) {
-                    if (logger.isLoggable(Level.INFO)) {
-                        logger.info("Unable to find "
-                                + ConsoleProvider.DEFAULT_CONFIG_FILENAME
-                                + " file for provider '"
-                                + provider.getClass().getName() + "'");
-                    }
+                    logger.log(Level.INFO, "Unable to find "
+                            + ConsoleProvider.DEFAULT_CONFIG_FILENAME
+                            + " file for provider '"
+                            + provider.getClass().getName() + "'");
                     continue;
                 }
 //System.out.println("Provider *"+provider+"* : url=*"+url+"*");
@@ -132,12 +130,8 @@ public class ConsolePluginService {
 //System.out.println("IP Map: " + pointsByType.toString());
 
         // Log some trace messages
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine("Console Plugin Service has been Initialized!");
-            if (logger.isLoggable(Level.FINEST)) {
-                logger.finest(pointsByType.toString());
-            }
-        }
+        logger.log(Level.FINE, "Console Plugin Service has been Initialized!");
+        logger.log(Level.FINEST, pointsByType.toString());
     }
 
     /**
@@ -313,12 +307,10 @@ public class ConsolePluginService {
                 try {
                     urls = loader.getResources(name);
                 } catch (IOException ex) {
-                    if (logger.isLoggable(Level.INFO)) {
-                        logger.log(Level.INFO, "Error getting resource '"
-                                + name + "' from provider: '"
-                                + provider.getClass().getName() + "'. Skipping...",
-                                ex);
-                    }
+                    logger.log(Level.INFO, "Error getting resource '"
+                            + name + "' from provider: '"
+                            + provider.getClass().getName() + "'. Skipping...",
+                            ex);
                     continue;
                 }
                 List<URL> providerURLs = new ArrayList<URL>();

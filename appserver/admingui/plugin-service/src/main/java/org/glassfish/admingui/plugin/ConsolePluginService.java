@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -48,35 +48,39 @@ import org.glassfish.admingui.connector.ConsoleConfig;
 
 import jakarta.inject.Inject;
 
-
 /**
- *  <p>        This class provides access to {@link IntegrationPoint}s.</p>
+ * <p>
+ * This class provides access to {@link IntegrationPoint}s.
+ * </p>
  *
- *  @author Ken Paulsen        (ken.paulsen@sun.com)
+ * @author Ken Paulsen (ken.paulsen@sun.com)
  */
 @Service
 public class ConsolePluginService {
-    @Inject Logger logger;
-    @Inject ServiceLocator habitat;
-    @Inject IterableProvider<ConsoleProvider> providers;
+    @Inject
+    Logger logger;
+    @Inject
+    ServiceLocator habitat;
+    @Inject
+    IterableProvider<ConsoleProvider> providers;
 
-/*
-    @Inject ModulesRegistry modulesRegistry;
-        for(HK2Module m : modulesRegistry.getModules()) {
-            url = m.getClassLoader().getResource(ConsoleProvider.DEFAULT_CONFIG_FILENAME);
-            if(url!=null)
-                ; // TODO: parse url
-        }
-*/
+    /*
+     * @Inject ModulesRegistry modulesRegistry; for(HK2Module m : modulesRegistry.getModules()) { url =
+     * m.getClassLoader().getResource(ConsoleProvider.DEFAULT_CONFIG_FILENAME); if(url!=null) ; // TODO: parse url }
+     */
 
     /**
-     * <p> Default constructor.</p>
+     * <p>
+     * Default constructor.
+     * </p>
      */
     public ConsolePluginService() {
     }
 
     /**
-     * <p> Initialize the available {@link IntegrationPoint}s.</p>
+     * <p>
+     * Initialize the available {@link IntegrationPoint}s.
+     * </p>
      */
     protected synchronized void init() {
         if (initialized) {
@@ -97,14 +101,14 @@ public class ConsolePluginService {
                 url = provider.getConfiguration();
                 if (url == null) {
                     url = provider.getClass().getClassLoader().getResource(
-                        ConsoleProvider.DEFAULT_CONFIG_FILENAME);
+                            ConsoleProvider.DEFAULT_CONFIG_FILENAME);
                 }
                 if (url == null) {
                     if (logger.isLoggable(Level.INFO)) {
                         logger.info("Unable to find "
-                            + ConsoleProvider.DEFAULT_CONFIG_FILENAME
-                            + " file for provider '"
-                            + provider.getClass().getName() + "'");
+                                + ConsoleProvider.DEFAULT_CONFIG_FILENAME
+                                + " file for provider '"
+                                + provider.getClass().getName() + "'");
                     }
                     continue;
                 }
@@ -137,8 +141,9 @@ public class ConsolePluginService {
     }
 
     /**
-     * <p> This method returns a merged Table Of Contents for all found help
-     *     sets for the given locale.</p>
+     * <p>
+     * This method returns a merged Table Of Contents for all found help sets for the given locale.
+     * </p>
      */
     public synchronized TOC getHelpTOC(String locale) {
         if (locale == null) {
@@ -158,7 +163,7 @@ public class ConsolePluginService {
 
         // Loop through the urls and add them all
         String id = null; // module id
-        String prefix = "/" + locale + "/help/";  // prefix (minus module id)
+        String prefix = "/" + locale + "/help/"; // prefix (minus module id)
         List<URL> urls = null; // URLs to TOC files w/i each plugin module
         for (Map.Entry<String, List<URL>> entry : mapUrls.entrySet()) {
             id = entry.getKey();
@@ -179,8 +184,9 @@ public class ConsolePluginService {
     }
 
     /**
-     * <p> This method inserts the given <code>item</code> into the
-     *     <code>dest</code> list.</p>
+     * <p>
+     * This method inserts the given <code>item</code> into the <code>dest</code> list.
+     * </p>
      */
     private void insertTOCItem(List<TOCItem> dest, TOCItem item, String prefix) {
         int idx = dest.indexOf(item);
@@ -200,8 +206,9 @@ public class ConsolePluginService {
     }
 
     /**
-     * <p> This method returns a merged Table Of Contents for all found help
-     *     sets for the given locale.</p>
+     * <p>
+     * This method returns a merged Table Of Contents for all found help sets for the given locale.
+     * </p>
      */
     public synchronized Index getHelpIndex(String locale) {
         if (locale == null) {
@@ -221,7 +228,7 @@ public class ConsolePluginService {
 
         // Loop through the urls and add them all
         String id = null; // module id
-        String prefix = "/" + locale + "/help/";  // prefix (minus module id)
+        String prefix = "/" + locale + "/help/"; // prefix (minus module id)
         List<URL> urls = null; // URLs to TOC files w/i each plugin module
         for (Map.Entry<String, List<URL>> entry : mapUrls.entrySet()) {
             id = entry.getKey();
@@ -242,8 +249,9 @@ public class ConsolePluginService {
     }
 
     /**
-     * <p> This method inserts the given <code>item</code> into the
-     *     <code>dest</code> list.</p>
+     * <p>
+     * This method inserts the given <code>item</code> into the <code>dest</code> list.
+     * </p>
      */
     private void insertIndexItem(List<IndexItem> dest, IndexItem item, String prefix) {
         int idx = dest.indexOf(item);
@@ -261,7 +269,6 @@ public class ConsolePluginService {
             }
         }
     }
-
 
     /**
      *
@@ -287,10 +294,10 @@ public class ConsolePluginService {
     }
 
     /**
-     * <p> This method searches the classpath of all plugins for the requested
-     *     resource and returns all instances of it (if any).  This method
-     *     will NOT return <code>null</code>, but may return an empty
-     *     <code>List</code>.</p>
+     * <p>
+     * This method searches the classpath of all plugins for the requested resource and returns all instances of it (if
+     * any). This method will NOT return <code>null</code>, but may return an empty <code>List</code>.
+     * </p>
      */
     public Map<String, List<URL>> getResources(String name) {
         Map<String, List<URL>> result = new HashMap<String, List<URL>>();
@@ -308,9 +315,9 @@ public class ConsolePluginService {
                 } catch (IOException ex) {
                     if (logger.isLoggable(Level.INFO)) {
                         logger.log(Level.INFO, "Error getting resource '"
-                            + name + "' from provider: '"
-                            + provider.getClass().getName() + "'. Skipping...",
-                            ex);
+                                + name + "' from provider: '"
+                                + provider.getClass().getName() + "'. Skipping...",
+                                ex);
                     }
                     continue;
                 }
@@ -324,7 +331,7 @@ public class ConsolePluginService {
                         // Ignore b/c this should not ever happen, we're not
                         // changing the URL
                         System.out.println(
-                            "ConsolePluginService: URL Copy Failed!");
+                                "ConsolePluginService: URL Copy Failed!");
                     }
                 }
 
@@ -371,8 +378,9 @@ public class ConsolePluginService {
     ***********************************************************/
 
     /**
-     * <p> This method allows new {@link IntegrationPoint}s to be added to
-     *     the known {@link IntegrationPoint}s.</p>
+     * <p>
+     * This method allows new {@link IntegrationPoint}s to be added to the known {@link IntegrationPoint}s.
+     * </p>
      */
     public void addIntegrationPoints(List<IntegrationPoint> points, String id) {
         // Add them all...
@@ -382,8 +390,9 @@ public class ConsolePluginService {
     }
 
     /**
-     * <p> This method allows a new {@link IntegrationPoint} to be added to
-     *     the known {@link IntegrationPoint}s.</p>
+     * <p>
+     * This method allows a new {@link IntegrationPoint} to be added to the known {@link IntegrationPoint}s.
+     * </p>
      */
     public void addIntegrationPoint(IntegrationPoint point, String id) {
         // Associate the Provider with this IntegrationPoint so we
@@ -395,57 +404,61 @@ public class ConsolePluginService {
     }
 
     /**
-     * <p> This method returns the {@link IntegrationPoint}s associated with
-     *     the given type.</p>
+     * <p>
+     * This method returns the {@link IntegrationPoint}s associated with the given type.
+     * </p>
      *
-     * @param        type        The type of {@link IntegrationPoint}s to retrieve.
+     * @param type The type of {@link IntegrationPoint}s to retrieve.
      */
     public List<IntegrationPoint> getIntegrationPoints(String type) {
-        init();        // Ensure it is initialized.
+        init(); // Ensure it is initialized.
         return pointsByType.get(type);
     }
 
     /**
-     * <p> This method returns the <code>ClassLoader</code> associated with
-     *     the requested module.  If the requested module does not exist, has
-     *     not been initialized, or does not contain any admin console
-     *     extensions, this method will return <code>null</code>.</p>
+     * <p>
+     * This method returns the <code>ClassLoader</code> associated with the requested module. If the requested module does
+     * not exist, has not been initialized, or does not contain any admin console extensions, this method will return
+     * <code>null</code>.
+     * </p>
      *
-     * @param        moduleName        The name of the module.
+     * @param moduleName The name of the module.
      *
-     * @return        <code>null</code>, or the module's <code>ClassLoader</code>.
+     * @return <code>null</code>, or the module's <code>ClassLoader</code>.
      */
     public ClassLoader getModuleClassLoader(String moduleName) {
         return moduleClassLoaderMap.get(moduleName);
     }
 
     /**
-     * <p> Flag indicating intialization has already occured.</p>
+     * <p>
+     * Flag indicating intialization has already occured.
+     * </p>
      */
-    private boolean initialized            = false;
+    private boolean initialized = false;
 
     /**
-     * <p> This <code>Map</code> contains the {@link IntegrationPoint}s keyed
-     *     by the <code>type</code> of integration.</p>
+     * <p>
+     * This <code>Map</code> contains the {@link IntegrationPoint}s keyed by the <code>type</code> of integration.
+     * </p>
      */
-    private MultiMap<String, IntegrationPoint> pointsByType =
-            new MultiMap<String, IntegrationPoint>();
+    private MultiMap<String, IntegrationPoint> pointsByType = new MultiMap<String, IntegrationPoint>();
 
     /**
-     * <p> This <code>Map</code> keeps track of the <code>ClassLoader</code>
-     *     for each module that provides GUI {@link IntegrationPoint}s.  It
-     *     is keyed by the id specified in the <code>console-config.xml</code>
-     *     file from the module.</p>
+     * <p>
+     * This <code>Map</code> keeps track of the <code>ClassLoader</code> for each module that provides GUI
+     * {@link IntegrationPoint}s. It is keyed by the id specified in the <code>console-config.xml</code> file from the
+     * module.
+     * </p>
      */
-    private Map<String, ClassLoader> moduleClassLoaderMap =
-            new HashMap<String, ClassLoader>();
+    private Map<String, ClassLoader> moduleClassLoaderMap = new HashMap<String, ClassLoader>();
 
     /**
-     * <p> This <code>Map</code> keeps track of the module id for each
-     *     <code>ClassLoader</code> that provides {@link IntegrationPoint}s.
-     *     It is keyed by the classloader and returns the module id as
-     *     specified in the module's <code>console-config.xml</code> file.</p>
+     * <p>
+     * This <code>Map</code> keeps track of the module id for each <code>ClassLoader</code> that provides
+     * {@link IntegrationPoint}s. It is keyed by the classloader and returns the module id as specified in the module's
+     * <code>console-config.xml</code> file.
+     * </p>
      */
-    private Map<ClassLoader, String> classLoaderModuleMap =
-            new HashMap<ClassLoader, String>();
+    private Map<ClassLoader, String> classLoaderModuleMap = new HashMap<ClassLoader, String>();
 }

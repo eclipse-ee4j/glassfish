@@ -51,8 +51,7 @@ public class JMXUtil {
             Object result = invoke(new ObjectName(objectName), operationName, params, signature);
             return result;
         } catch (javax.management.MalformedObjectNameException ex) {
-            System.out.println("MalformedObjectNameException: " + objectName);
-            throw new RuntimeException(ex);
+            throw new RuntimeException(objectName + " is MalformedObjectName.", ex);
         }
     }
 
@@ -90,8 +89,7 @@ public class JMXUtil {
         try {
             setAttribute(new ObjectName(objectName), attributeName);
         } catch (javax.management.MalformedObjectNameException ex) {
-            System.out.println("MalformedObjectNameException: " + objectName);
-            throw new RuntimeException(ex);
+            throw new RuntimeException(objectName + " is MalformedObjectName.", ex);
         }
     }
 

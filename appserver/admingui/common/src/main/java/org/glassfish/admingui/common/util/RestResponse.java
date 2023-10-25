@@ -205,9 +205,7 @@ class JerseyRestResponse extends RestResponse {
                 // Decode JSON
                 result.put("data", JSONUtil.jsonToJava(responseBody));
             } else {
-                // Unsupported Response Format!
-                System.out.println("Unsupported Response Format: '"
-                        + contentType + "'!");
+                Logger.getLogger(RestResponse.class.getName()).log(Level.WARNING, "Unsupported Response Format: '" + contentType + "'!");
             }
         }
 

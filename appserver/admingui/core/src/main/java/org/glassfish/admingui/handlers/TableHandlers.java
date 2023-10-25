@@ -207,8 +207,7 @@ public class TableHandlers {
         try {
             handlerCtx.setOutputValue("Rows", data.get(0));
         } catch (Exception ex) {
-            // TODO alert user, log exception
-            System.out.println("!!!! getAllSingleMapRows() Throws Exception: " + ex.toString());
+            GuiUtil.prepareException(handlerCtx, ex);
         }
 
     }

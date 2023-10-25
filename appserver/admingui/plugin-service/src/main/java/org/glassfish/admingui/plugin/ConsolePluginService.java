@@ -330,8 +330,7 @@ public class ConsolePluginService {
                     } catch (Exception ex) {
                         // Ignore b/c this should not ever happen, we're not
                         // changing the URL
-                        System.out.println(
-                                "ConsolePluginService: URL Copy Failed!");
+                        logger.log(Level.INFO, "ConsolePluginService: URL Copy Failed!");
                     }
                 }
 

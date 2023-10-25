@@ -215,7 +215,6 @@ public class JmsHandlers {
             }
 
         } catch (Exception ex) {
-            System.out.println("invoke:   " + OBJECT_DEST_MGR + ", method  =  " + OP_LIST_DESTINATIONS);
             GuiUtil.handleException(handlerCtx, ex);
         }
         handlerCtx.setOutputValue("result", result);

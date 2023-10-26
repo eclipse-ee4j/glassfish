@@ -52,7 +52,7 @@
         <dependency>
             <groupId>net.sourceforge.htmlunit</groupId>
             <artifactId>htmlunit</artifactId>
-            <version>2.70.0</version>
+            <version>2.29</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

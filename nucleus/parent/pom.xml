@@ -140,7 +140,7 @@
         <jboss.logging.version>3.5.3.Final</jboss.logging.version>
         <javassist.version>3.29.2-GA</javassist.version>
         <asm.version>9.6</asm.version>
-        <jsch.version>0.2.11</jsch.version>
+        <jsch.version>0.2.12</jsch.version>
         <antlr.version>2.7.8</antlr.version>
         <ant.version>1.10.12</ant.version>
         <ant.external.version>1.10.2</ant.external.version>

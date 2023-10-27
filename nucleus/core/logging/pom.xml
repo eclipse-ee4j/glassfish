@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.core</groupId>
         <artifactId>nucleus-core</artifactId>
-        <version>7.0.10</version>
+        <version>7.0.11-SNAPSHOT</version>
     </parent>
 
     <artifactId>logging</artifactId>

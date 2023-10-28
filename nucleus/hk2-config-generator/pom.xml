@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>nucleus-parent</artifactId>
-        <version>7.0.10-SNAPSHOT</version>
+        <version>7.0.11-SNAPSHOT</version>
         <relativePath>../parent</relativePath>
     </parent>
     <artifactId>hk2-config-generator</artifactId>

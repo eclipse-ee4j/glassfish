@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.distributions</groupId>
         <artifactId>distributions</artifactId>
-        <version>7.0.10-SNAPSHOT</version>
+        <version>7.0.11-SNAPSHOT</version>
     </parent>
 
     <artifactId>glassfish-common</artifactId>

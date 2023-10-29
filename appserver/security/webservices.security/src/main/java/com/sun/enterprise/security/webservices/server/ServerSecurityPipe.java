@@ -59,7 +59,7 @@ public class ServerSecurityPipe extends AbstractFilterPipeImpl {
 
     private final boolean isHttpBinding;
 
-    private SoapAuthenticationService authenticationService;
+    private final SoapAuthenticationService authenticationService;
 
     public ServerSecurityPipe(Map<String, Object> props, final Pipe next, boolean isHttpBinding) {
         super(next);
@@ -157,6 +157,7 @@ public class ServerSecurityPipe extends AbstractFilterPipeImpl {
             authenticationService.auditInvocation(validatedRequest, status);
         }
 
+        _logger.log(FINE, "Validation status: {0}", status);
         Packet response = null;
         if (status == AuthStatus.SUCCESS) {
             boolean authorized = false;
@@ -213,8 +214,6 @@ public class ServerSecurityPipe extends AbstractFilterPipeImpl {
 
         } else {
             // ValidateRequest did not return success
-            _logger.log(FINE, "ws.status_validate_request", status);
-
             // Even for one-way mep, may return response with non-empty message
             response = info.getResponsePacket();
         }

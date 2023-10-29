@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,12 @@
 
 package com.sun.enterprise.security.ee.authorize.cache;
 
+import com.sun.enterprise.security.common.AppservAccessController;
+import com.sun.enterprise.security.ee.authorize.cache.CachedPermissionImpl.Epoch;
+import com.sun.logging.LogDomains;
+
+import jakarta.security.jacc.PolicyContext;
+
 import java.security.AllPermission;
 import java.security.CodeSource;
 import java.security.Permission;
@@ -30,11 +37,6 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.sun.enterprise.security.common.AppservAccessController;
-import com.sun.enterprise.security.ee.authorize.cache.CachedPermissionImpl.Epoch;
-import com.sun.logging.LogDomains;
-
-import jakarta.security.jacc.PolicyContext;
 
 /**
  * This class is
@@ -44,22 +46,22 @@ import jakarta.security.jacc.PolicyContext;
 
 public class PermissionCache extends Object {
 
-    private static Logger _logger = LogDomains.getLogger(PermissionCache.class, LogDomains.SECURITY_LOGGER);
+    private static final Logger LOG = LogDomains.getLogger(PermissionCache.class, LogDomains.SECURITY_LOGGER, false);
     private static Policy policy = Policy.getPolicy();
     private static AllPermission allPermission = new AllPermission();
 
     private Permissions cache;
     private CodeSource codesource;
-    private Permission[] protoPerms;
+    private final Permission[] protoPerms;
     private Class[] classes;
-    private String name;
-    private String pcID;
+    private final String name;
+    private final String pcID;
     private final Integer factoryKey;
     private volatile int epoch;
     private volatile boolean loading;
-    private ReadWriteLock rwLock;
-    private Lock rLock;
-    private Lock wLock;
+    private final ReadWriteLock rwLock;
+    private final Lock rLock;
+    private final Lock wLock;
 
     /*
      * USE OF THIS CONSTRUCTOR WITH IS DISCOURAGED PLEASE USE THE Permission (object) based CONSTRUCTOR.
@@ -219,7 +221,7 @@ public class PermissionCache extends Object {
                 setPc = true;
             }
         } catch (Exception ex) {
-            _logger.log(Level.SEVERE, "JACC: Unexpected security exception on access decision", ex);
+            LOG.log(Level.SEVERE, "JACC: Unexpected security exception on access decision", ex);
             return false;
         }
 
@@ -231,14 +233,14 @@ public class PermissionCache extends Object {
 
             pc = policy.getPermissions(this.codesource);
         } catch (Exception ex) {
-            _logger.log(Level.SEVERE, "JACC: Unexpected security exception on access decision", ex);
+            LOG.log(Level.SEVERE, "JACC: Unexpected security exception on access decision", ex);
             return false;
         } finally {
             if (setPc) {
                 try {
                     setPolicyContextID(oldpcID);
                 } catch (Exception ex) {
-                    _logger.log(Level.SEVERE, "JACC: Unexpected security exception on access decision", ex);
+                    LOG.log(Level.SEVERE, "JACC: Unexpected security exception on access decision", ex);
                     return false;
                 }
             }

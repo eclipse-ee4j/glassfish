@@ -121,7 +121,7 @@
                 <executions>
                     <execution>
                         <id>generate-hk2-config</id>
-                        <phase>generate-sources</phase>
+                        <phase>process-sources</phase>
                         <goals>
                             <goal>compile</goal>
                         </goals>

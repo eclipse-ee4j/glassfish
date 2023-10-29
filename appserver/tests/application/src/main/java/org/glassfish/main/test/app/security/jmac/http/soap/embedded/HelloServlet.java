@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,17 +15,27 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.s1asdev.security.jmac.soapembedded.servletws;
+package org.glassfish.main.test.app.security.jmac.http.soap.embedded;
 
 import jakarta.jws.WebService;
 
-@WebService(targetNamespace = "http://servletws.soapembedded.jmac.security.s1asdev.sun.com", serviceName = "JmacSoapEmbeddedServletService")
-public class HelloServlet {
-    
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
+
+import org.glassfish.main.test.app.hello.servlet.HelloServletPort;
+
+@WebService(
+    portName="HelloServletPort",
+    targetNamespace = "urn:org:glassfish:main:test:app:hello:servlet",
+    endpointInterface = "org.glassfish.main.test.app.hello.servlet.HelloServletPort",
+    wsdlLocation = "WEB-INF/wsdl/hello-servlet.wsdl")
+public class HelloServlet implements HelloServletPort {
+    private static final Logger LOG = System.getLogger(HelloServlet.class.getName());
+
+    @Override
     public String hello(String who) {
         String message = "HelloServlet " + who;
-        System.out.println(message);
+        LOG.log(Level.INFO, "Responding: {0}", message);
         return message;
-
     }
 }

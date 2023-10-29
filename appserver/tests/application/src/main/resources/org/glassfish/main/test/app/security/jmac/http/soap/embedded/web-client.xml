@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+    Copyright (c) 2023 Contributors to the Eclipse Foundation
     Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -17,19 +18,22 @@
 
 -->
 
-<web-app xmlns="http://java.sun.com/xml/ns/javaee"
-  xmlns:j2ee="http://java.sun.com/xml/ns/javaee"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5"
-  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
-      http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+<web-app
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:j2ee="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+      http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+    version="2.5"
+>
 
-  <servlet>
-    <servlet-name>Servlet</servlet-name>
-    <servlet-class>com.sun.s1asdev.security.jmac.soapembedded.webclient.Servlet</servlet-class>
-    <load-on-startup>0</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Servlet</servlet-name>
-    <url-pattern>/webclient/Servlet</url-pattern>
-  </servlet-mapping>
+    <servlet>
+        <servlet-name>Servlet</servlet-name>
+        <servlet-class>org.glassfish.main.test.app.security.jmac.http.soap.embedded.Servlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Servlet</servlet-name>
+        <url-pattern>/webclient/Servlet</url-pattern>
+    </servlet-mapping>
 </web-app>

@@ -34,7 +34,7 @@
     <target name="all">
         <run-jmac-test path="soap" />
         <run-jmac-test path="soapDefault" />
-        <run-jmac-test path="soapEmbedded" />
+        <run-jmac-test path="https" />
     </target>
 
     <macrodef name="run-jmac-test" xmlns:if="ant:if" xmlns:unless="ant:unless">

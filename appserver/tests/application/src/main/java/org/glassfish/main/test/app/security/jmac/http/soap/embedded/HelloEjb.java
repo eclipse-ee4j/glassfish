@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,17 +15,29 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.s1asdev.security.jmac.soapembedded.ejbws;
+package org.glassfish.main.test.app.security.jmac.http.soap.embedded;
 
 import jakarta.ejb.Stateless;
 import jakarta.jws.WebService;
 
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
+
+import org.glassfish.main.test.app.hello.ejb.HelloEjbPort;
+
 @Stateless
-@WebService(targetNamespace = "http://ejbws.soapembedded.jmac.security.s1asdev.sun.com", serviceName = "JmacSoapEmbeddedEjbService")
-public class HelloEjb {
+@WebService(
+    portName="HelloEjbPort",
+    targetNamespace = "urn:org:glassfish:main:test:app:hello:ejb",
+    endpointInterface = "org.glassfish.main.test.app.hello.ejb.HelloEjbPort",
+    wsdlLocation = "META-INF/wsdl/hello-ejb.wsdl")
+public class HelloEjb implements HelloEjbPort {
+    private static final Logger LOG = System.getLogger(HelloEjb.class.getName());
+
+    @Override
     public String hello(String who) {
         String message = "HelloEjb " + who;
-        System.out.println(message);
+        LOG.log(Level.INFO, "Responding: {0}", message);
         return message;
     }
 }

@@ -31,7 +31,7 @@ public class WebTest
     private String ws_root="appserv-tests";
     private String testsuite_id="";
 
-    WebTest(){}
+    public WebTest(){}
 
     public void setTestSuiteID(String testsuiteid)
     {
@@ -73,7 +73,7 @@ public class WebTest
 
             fin.close();
             SendRequest sendRequest=new SendRequest(ws_root,testsuite_id);
-            int port=new Integer(s_port).intValue();
+            int port=Integer.parseInt(s_port);
             sendRequest.setServerProperties(s_host,port);
             sendRequest.processUrl(buffer);
         }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xsd:schema
+    targetNamespace="urn:org:glassfish:main:test:app:hello:common"
+    xmlns="urn:org:glassfish:main:test:app:hello:common"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified"
+    version="1.0.0"
+>
+    <xsd:element name="HelloParameters" type="xsd:string" />
+    <xsd:element name="HelloResponse" type="xsd:string" />
+</xsd:schema>

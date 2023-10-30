@@ -9,6 +9,20 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
+## October 29, 2023 -- Eclipse GlassFish 7.0.10 Available
+
+The GlassFish team is very happy to present you another great release of GlassFish.
+
+Download links are available from the [GlassFish Download page](download.md).
+
+In this release a 10 months long operation to get an internal dependency to the slf4j-api removed finally got to fruition. This involved the intense cooperation of multiple teams, and we're exceptionally happy to have finally been able to do this. 
+
+We also did a lot of work to make our builds repeatable, and we did a ton of refactoring to the internal security packages of GlassFish, making them easier to understand and therefore easier to maintain. Any external code depending on these internal packages (such as potentially custom LoginModules/Realms) may have to update (we recommend of course not depending on internal packages and using public APIs). 
+
+As every release, we integrated many component updates, and did a number of smaller fixes.
+
+Download links are available from the [GlassFish Download page](download.md).
+
 ## September 29, 2023 -- Eclipse GlassFish 7.0.9 Available
 
 We're happy to present you with the latest GlassFish release.

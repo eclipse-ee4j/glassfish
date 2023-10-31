@@ -96,6 +96,10 @@
     </build>
 
     <profiles>
+        <!--
+        This profile is implicit when you run maven clean install and is automatically disabled
+        when you choose another from this set.
+        -->
         <profile>
             <id>default</id>
             <activation>
@@ -109,7 +113,10 @@
             </modules>
         </profile>
 
-        <!-- Ommits a variety of things in order to get the fastest build of a basic full glassfish server -->
+        <!--
+        Build glassfixh.zip as soon as possible.
+        Profile of the same id is also in parent, together they exclude unimportant modules and plugin executions.
+         -->
         <profile>
             <id>fastest</id>
             <modules>
@@ -119,6 +126,21 @@
             </modules>
         </profile>
 
+        <!--
+        Build all distributed binaries except documentation and run all maven tests.
+        -->
+        <profile>
+            <id>qa</id>
+            <modules>
+                <module>qa</module>
+                <module>nucleus</module>
+                <module>appserver</module>
+            </modules>
+        </profile>
+
+        <!--
+        Change version number in all artifacts in the repository.
+        -->
         <profile>
             <id>set-version-id</id>
             <modules>
@@ -132,6 +154,11 @@
             </modules>
         </profile>
 
+        <!--
+        Merges all exec files in the directory tree - useful when you want to se the code coverage
+        produced by integration tests executed by different modules, or exactly opposite - to see
+        not covered by tests at all.
+        -->
         <profile>
             <id>jacoco-merge</id>
             <build>

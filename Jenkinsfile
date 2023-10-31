@@ -208,7 +208,7 @@ spec:
           dumpSysInfo()
           timeout(time: 1, unit: 'HOURS') {
             sh '''
-                mvn -B -e clean install -Pstaging -P'!docs'
+                mvn -B -e clean install -Pstaging,qa
             '''
           }
         }
@@ -243,7 +243,7 @@ spec:
           dumpSysInfo()
           timeout(time: 1, unit: 'HOURS') {
             sh '''
-                mvn -B -e clean install -Pstaging -Pdocs
+                mvn -B -e clean install -Pstaging -f docs -amd
             '''
           }
         }

@@ -136,6 +136,13 @@
             </modules>
         </profile>
         <profile>
+            <id>fast</id>
+            <modules>
+                <!-- Builds compile dependencies for Ant tests executed by runtest.sh/gftest.sh -->
+                <module>appserv-tests</module>
+            </modules>
+        </profile>
+        <profile>
             <id>tck</id>
             <modules>
                 <module>admin</module>

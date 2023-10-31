@@ -127,6 +127,19 @@
         </profile>
 
         <!--
+        Build glassfixh.zip as soon as possible and runs also unit tests.
+        Profile of the same id is also in parent, together they exclude unimportant modules and plugin executions.
+         -->
+        <profile>
+            <id>fast</id>
+            <modules>
+                <module>qa</module>
+                <module>nucleus</module>
+                <module>appserver</module>
+            </modules>
+        </profile>
+
+        <!--
         Build all distributed binaries except documentation and run all maven tests.
         -->
         <profile>

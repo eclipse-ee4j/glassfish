@@ -28,11 +28,13 @@ The Zip distributions can be found on following paths:
 
 ### Execution
 
-* `mvn clean install` - Full build including automatic QA and maven managed tests. Typical time: 5 minutes.
-* `mvn clean install -Pfast` - Building all distribution artifacts, running just unit tests, QA and integration tests excluded. Typical time: 3 minutes.
-* `mvn clean install -Pfastest` - Building all distribution artifacts, excluded all QA and testing. Typical time: 1.5 minutes.
+* `mvn clean install` - Full build including documentation, automatic QA and maven managed tests. Excludes just Ant and TCK tests. Typical time: 15 minutes.
+* `mvn clean install -Pqa` - Building all distribution artifacts, running QA and all maven managed tests. Excludes Ant, TCK and documentation. Typical time: 10 minutes.
+* `mvn clean install -Pfast` - Building all distribution artifacts, running just unit tests. Excludes QA, integration tests, Ant, TCK and documentation. Typical time: 7 minutes.
+* `mvn clean install -Pfastest -T4C` - Building all distribution artifacts as fast as possible. Excludes everything not serving this purpose. Typical time: 1.5 minutes.
 
-You can use also some maven optimizations, ie. using `-T4C` to allow parallel build.
+You can use also some maven optimizations, see [Maven documentation](https://maven.apache.org/ref/3.9.5/maven-embedder/cli.html).
+Especially `-am`, `-amd`, `-f`, `-pl`, `-rf` and their combinations are useful.
 
 If you want to see more logs you can use the `-Dtest.logLevel=FINEST` option set to an appropriate log level.
 Note that this applies just for tests which are executed by Maven and which use the **GlassFish Java Util Logging Extension (GJULE)**.

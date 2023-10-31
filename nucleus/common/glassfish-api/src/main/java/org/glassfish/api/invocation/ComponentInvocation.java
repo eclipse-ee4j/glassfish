@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -74,9 +74,9 @@ public class ComponentInvocation implements Cloneable {
     private ResourceHandler resourceHandler;
 
     /**
-     * Registry to be carried with this invocation
+     * Registry to be carried with this invocation.
      */
-    private Map<Class, Object> registry;
+    private Map<Class<?>, Object> registry;
 
     protected String appName;
 
@@ -153,14 +153,14 @@ public class ComponentInvocation implements Cloneable {
     }
 
     /**
-     * Sets the security context of the call coming in
+     * Sets the security context of the call coming in.
      */
     public void setOldSecurityContext(Object sc) {
         this.oldSecurityContext = sc;
     }
 
     /**
-     * gets the security context of the call that came in before a new context for runas is made
+     * Gets the security context of the call that came in before a new context for runas is made.
      */
     public Object getOldSecurityContext() {
         return oldSecurityContext;
@@ -191,9 +191,9 @@ public class ComponentInvocation implements Cloneable {
     }
 
     /**
-     * @return Registry associated with this invocation for the given <code>key</code>
+     * @return Registry associated with this invocation for the given {@code key}.
      */
-    public Object getRegistryFor(Class key) {
+    public Object getRegistryFor(Class<?> key) {
         if (registry == null) {
             return null;
         } else {
@@ -202,9 +202,9 @@ public class ComponentInvocation implements Cloneable {
     }
 
     /**
-     * Associate given <code></code>registry</code> with given <code>key</code> for this invocation
+     * Associate given {@code registry} with given {@code key} for this invocation.
      */
-    public void setRegistryFor(Class key, Object payLoad) {
+    public void setRegistryFor(Class<?> key, Object payLoad) {
         if (registry == null) {
             registry = new HashMap<>();
         }
@@ -238,21 +238,22 @@ public class ComponentInvocation implements Cloneable {
     }
 
     /**
-     * Returns the appName for the current invocation, equivalent to the value bound to java:app/AppName, without the cost
-     * of lookup. For standalone modules, returns the same value as getModuleName(). For invocations that are not on Java EE
-     * components, returns null.
+     * Returns the {@code appName} for the current invocation, equivalent to the value
+     * bound to {@code java:app/AppName}, without the cost of lookup.
+     *
+     * <p>For standalone modules, returns the same value as {@link #getModuleName()}.
+     *
+     * <p>For invocations that are not on Java EE components, returns {@code null}.
      */
     public String getAppName() {
         return appName;
     }
 
-    public void setAppName(String appName) {
-        this.appName = appName;
-    }
-
     /**
-     * Returns the moduleName for the current invocation, equivalent to the value bound to java:module/ModuleName, without
-     * the cost of lookup. For invocations that are not on Jakarta EE components, returns null.
+     * Returns the {@code moduleName} for the current invocation, equivalent to the value
+     * bound to {@code java:module/ModuleName}, without the cost of lookup.
+     *
+     * <p>For invocations that are not on Jakarta EE components, returns {@code null}.
      */
     public String getModuleName() {
         return moduleName;

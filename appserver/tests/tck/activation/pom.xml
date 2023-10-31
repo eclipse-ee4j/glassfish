@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.glassfish.main.tests.tck</groupId>
+        <artifactId>tck</artifactId>
+        <version>7.0.11-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>glassfish-external-tck-activation</artifactId>
+    <packaging>pom</packaging>
+
+    <name>TCK: Activation</name>
+
+    <properties>
+        <ant.home>${project.build.directory}/apache-ant-${ant.version}</ant.home>
+        <ant.zip.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip</ant.zip.url>
+
+        <tck.home>${project.build.directory}/activation-tck</tck.home>
+
+        <glassfish.home>${project.build.directory}/glassfish7</glassfish.home>
+        <glassfish.version>${project.version}</glassfish.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.main.distributions</groupId>
+            <artifactId>glassfish</artifactId>
+            <version>${glassfish.version}</version>
+            <type>zip</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.tests.tck</groupId>
+            <artifactId>jakarta-activation-tck</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Download Ant -->
+            <plugin>
+                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>download-ant</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <skip>${skipITs}</skip>
+                    <url>${ant.zip.url}</url>
+                    <unpack>true</unpack>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                </configuration>
+            </plugin>
+
+            <!-- Unpack GlassFish and TCK -->
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <configuration>
+                    <skip>${skipITs}</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>unpack-glassfish</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeArtifactIds>glassfish,jakarta-activation-tck</includeArtifactIds>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Configure and run TCK -->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.ant</groupId>
+                        <artifactId>ant</artifactId>
+                        <version>${ant.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>ant-contrib</groupId>
+                        <artifactId>ant-contrib</artifactId>
+                        <version>1.0b3</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>ant</groupId>
+                                <artifactId>ant</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <skip>${skipITs}</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>prepare-tck-and-glassfish</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target xmlns:if="ant:if" xmlns:unless="ant:unless">
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
+
+                                <macrodef name="tck-setting">
+                                    <attribute name="key" /> <attribute name="value" />
+                                    <sequential>
+                                      <replaceregexp file="${tck.home}/lib/ts.jte" byline="true"
+                                        match="@{key}=.*" replace="@{key}=@{value}" />
+                                      <replaceregexp file="${tck.home}/lib/ts.pluggability.jte" byline="true"
+                                        match="@{key}=.*" replace="@{key}=@{value}" />
+                                    </sequential>
+                                </macrodef>
+
+
+                                <!-- Change configuration -->
+                                
+                                <tck-setting key="TS_HOME" value="${tck.home}"/>
+                                <tck-setting key="JAVA_HOME" value="${java.home}"/>
+                                <tck-setting key="JARPATH" value="${glassfish.home}/glassfish/modules"/>
+                                
+                                <replace file="${tck.home}/build.xml">
+                                  <replacetoken><![CDATA[<sysproperty key="testDebug" value="${tests.debug}"/>]]></replacetoken>
+                                  <replacevalue><![CDATA[<sysproperty key="testDebug" value="${tests.debug}"/>
+                                <jvmarg value="-Djavatest.security.noSecurityManager=true"/>]]></replacevalue>
+                                </replace>
+                            </target>
+                        </configuration>
+                    </execution>
+
+
+                    <execution>
+                        <id>run-tck-tests</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target xmlns:if="ant:if" xmlns:unless="ant:unless">
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
+                                         
+                                <echo level="info" message="Start running all tests" />
+                                <exec executable="${ant.home}/bin/ant" dir="${tck.home}" resultproperty="testResult">
+                                    <arg value="run" />
+                                    <arg value="run.pluggability" />
+                                    <env key="LC_ALL" value="C" />
+                                </exec>
+
+                                <if>
+                                    <not>
+                                        <equals arg1="${testResult}" arg2="0" />
+                                    </not>
+                                    <then>
+                                        <echo message="Running tests failed." />
+                                        <loadfile property="contents" srcFile="${glassfish.home}/glassfish/domains/domain1/logs/server.log" />
+                                        <echo message="${contents}" />
+                                    </then>
+                                </if>
+                                
+                                <if>
+                                    <not>
+                                        <equals arg1="${testResult}" arg2="0" />
+                                    </not>
+                                    <then>
+                                        <fail/>
+                                    </then>
+                                </if>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -131,10 +131,12 @@ public class JmsHandlers {
     protected static final String PROP_NAME = "name";
     protected static final String PROP_DEST_TYPE = "desttype";
 
-    @Handler(id = "getPhysicalDestination", input = {
-            @HandlerInput(name = "name", type = String.class, required = true),
-            @HandlerInput(name = "type", type = String.class, required = true) }, output = {
-                    @HandlerOutput(name = "destData", type = java.util.Map.class) })
+    @Handler(id = "getPhysicalDestination",
+    input = {
+        @HandlerInput(name = "name", type = String.class, required = true),
+        @HandlerInput(name = "type", type = String.class, required = true) },
+    output = {
+        @HandlerOutput(name = "destData", type = java.util.Map.class) })
     public static void getPhysicalDestination(HandlerContext handlerCtx) {
         String name = (String) handlerCtx.getInputValue("name");
         String type = (String) handlerCtx.getInputValue("type");
@@ -154,11 +156,13 @@ public class JmsHandlers {
         handlerCtx.setOutputValue("destData", valueMap);
     }
 
-    @Handler(id = "getPhysicalDestinationStats", input = {
-            @HandlerInput(name = "name", type = String.class, required = true),
-            @HandlerInput(name = "type", type = String.class, required = true),
-            @HandlerInput(name = "target", type = String.class, required = true) }, output = {
-                    @HandlerOutput(name = "statsData", type = java.util.List.class) })
+    @Handler(id = "getPhysicalDestinationStats",
+    input = {
+        @HandlerInput(name = "name", type = String.class, required = true),
+        @HandlerInput(name = "type", type = String.class, required = true),
+        @HandlerInput(name = "target", type = String.class, required = true) },
+    output = {
+        @HandlerOutput(name = "statsData", type = java.util.List.class) })
     public static void getPhysicalDestinationStats(HandlerContext handlerCtx) {
         String name = (String) handlerCtx.getInputValue("name");
         String type = (String) handlerCtx.getInputValue("type");
@@ -186,9 +190,11 @@ public class JmsHandlers {
         handlerCtx.setOutputValue("statsData", statsList);
     }
 
-    @Handler(id = "getPhysicalDestinations", input = {
-            @HandlerInput(name = "selectedRows", type = List.class) }, output = {
-                    @HandlerOutput(name = "result", type = java.util.List.class) })
+    @Handler(id = "getPhysicalDestinations",
+    input = {
+        @HandlerInput(name = "selectedRows", type = List.class) },
+    output = {
+        @HandlerOutput(name = "result", type = java.util.List.class) })
     public static void getPhysicalDestinations(HandlerContext handlerCtx) {
         ObjectName[] objectNames = null;
         List result = new ArrayList();
@@ -227,10 +233,11 @@ public class JmsHandlers {
      *
      * @param context The HandlerContext.
      */
-    @Handler(id = "createPhysicalDestination", input = {
-            @HandlerInput(name = "name", type = String.class, required = true),
-            @HandlerInput(name = "attributes", type = Map.class, required = true),
-            @HandlerInput(name = "type", type = String.class) })
+    @Handler(id = "createPhysicalDestination",
+    input = {
+        @HandlerInput(name = "name", type = String.class, required = true),
+        @HandlerInput(name = "attributes", type = Map.class, required = true),
+        @HandlerInput(name = "type", type = String.class) })
     public static void createPhysicalDestination(HandlerContext handlerCtx) {
         try {
             final String type = (String) handlerCtx.getInputValue("type");
@@ -258,10 +265,11 @@ public class JmsHandlers {
      *
      * @param context The HandlerContext.
      */
-    @Handler(id = "updatePhysicalDestination", input = {
-            @HandlerInput(name = "name", type = String.class, required = true),
-            @HandlerInput(name = "attributes", type = Map.class, required = true),
-            @HandlerInput(name = "type", type = String.class) })
+    @Handler(id = "updatePhysicalDestination",
+    input = {
+        @HandlerInput(name = "name", type = String.class, required = true),
+        @HandlerInput(name = "attributes", type = Map.class, required = true),
+        @HandlerInput(name = "type", type = String.class) })
     public static void updatePhysicalDestination(HandlerContext handlerCtx) {
         try {
             final String type = (String) handlerCtx.getInputValue("type");
@@ -280,8 +288,9 @@ public class JmsHandlers {
         }
     }
 
-    @Handler(id = "deleteJMSDest", input = {
-            @HandlerInput(name = "selectedRows", type = List.class, required = true) })
+    @Handler(id = "deleteJMSDest",
+    input = {
+        @HandlerInput(name = "selectedRows", type = List.class, required = true) })
     public static void deleteJMSDest(HandlerContext handlerCtx) {
 //        String configName = ((String) handlerCtx.getInputValue("targetName"));
         List obj = (List) handlerCtx.getInputValue("selectedRows");
@@ -305,8 +314,9 @@ public class JmsHandlers {
      *
      * @param context The HandlerContext.
      */
-    @Handler(id = "flushJMSDestination", input = {
-            @HandlerInput(name = "selectedRows", type = List.class, required = true) })
+    @Handler(id = "flushJMSDestination",
+    input = {
+        @HandlerInput(name = "selectedRows", type = List.class, required = true) })
     public static void flushJMSDestination(HandlerContext handlerCtx) {
         List<Map> selectedRows = (List) handlerCtx.getInputValue("selectedRows");
         try {
@@ -331,10 +341,11 @@ public class JmsHandlers {
      *
      * @param context The HandlerContext.
      */
-    @Handler(id = "getDefaultPhysicalDestinationValues", input = {
-            @HandlerInput(name = "orig", type = Map.class) }, output = {
-                    @HandlerOutput(name = "map", type = Map.class)
-            })
+    @Handler(id = "getDefaultPhysicalDestinationValues",
+    input = {
+        @HandlerInput(name = "orig", type = Map.class) },
+    output = {
+        @HandlerOutput(name = "map", type = Map.class) })
     public static void getDefaultPhysicalDestinationValues(HandlerContext handlerCtx) {
         Map orig = (Map) handlerCtx.getInputValue("orig");
         Map map = new HashMap();
@@ -357,8 +368,9 @@ public class JmsHandlers {
         handlerCtx.setOutputValue("map", map);
     }
 
-    @Handler(id = "pingJms", input = {
-            @HandlerInput(name = "poolName", type = String.class, required = true) })
+    @Handler(id = "pingJms",
+    input = {
+        @HandlerInput(name = "poolName", type = String.class, required = true) })
     public static void pingJms(HandlerContext handlerCtx) {
         try {
             String poolName = (String) handlerCtx.getInputValue("poolName");

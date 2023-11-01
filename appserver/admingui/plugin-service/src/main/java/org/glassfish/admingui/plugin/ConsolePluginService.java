@@ -64,23 +64,14 @@ public class ConsolePluginService {
     @Inject
     IterableProvider<ConsoleProvider> providers;
 
-    /*
-     * @Inject ModulesRegistry modulesRegistry; for(HK2Module m : modulesRegistry.getModules()) { url =
-     * m.getClassLoader().getResource(ConsoleProvider.DEFAULT_CONFIG_FILENAME); if(url!=null) ; // TODO: parse url }
-     */
-
     /**
-     * <p>
      * Default constructor.
-     * </p>
      */
     public ConsolePluginService() {
     }
 
     /**
-     * <p>
      * Initialize the available {@link IntegrationPoint}s.
-     * </p>
      */
     protected synchronized void init() {
         if (initialized) {
@@ -135,9 +126,7 @@ public class ConsolePluginService {
     }
 
     /**
-     * <p>
      * This method returns a merged Table Of Contents for all found help sets for the given locale.
-     * </p>
      */
     public synchronized TOC getHelpTOC(String locale) {
         if (locale == null) {
@@ -178,9 +167,7 @@ public class ConsolePluginService {
     }
 
     /**
-     * <p>
      * This method inserts the given <code>item</code> into the <code>dest</code> list.
-     * </p>
      */
     private void insertTOCItem(List<TOCItem> dest, TOCItem item, String prefix) {
         int idx = dest.indexOf(item);
@@ -200,9 +187,7 @@ public class ConsolePluginService {
     }
 
     /**
-     * <p>
      * This method returns a merged Table Of Contents for all found help sets for the given locale.
-     * </p>
      */
     public synchronized Index getHelpIndex(String locale) {
         if (locale == null) {
@@ -243,9 +228,7 @@ public class ConsolePluginService {
     }
 
     /**
-     * <p>
      * This method inserts the given <code>item</code> into the <code>dest</code> list.
-     * </p>
      */
     private void insertIndexItem(List<IndexItem> dest, IndexItem item, String prefix) {
         int idx = dest.indexOf(item);
@@ -369,9 +352,7 @@ public class ConsolePluginService {
     ***********************************************************/
 
     /**
-     * <p>
      * This method allows new {@link IntegrationPoint}s to be added to the known {@link IntegrationPoint}s.
-     * </p>
      */
     public void addIntegrationPoints(List<IntegrationPoint> points, String id) {
         // Add them all...
@@ -381,9 +362,7 @@ public class ConsolePluginService {
     }
 
     /**
-     * <p>
      * This method allows a new {@link IntegrationPoint} to be added to the known {@link IntegrationPoint}s.
-     * </p>
      */
     public void addIntegrationPoint(IntegrationPoint point, String id) {
         // Associate the Provider with this IntegrationPoint so we
@@ -422,16 +401,12 @@ public class ConsolePluginService {
     }
 
     /**
-     * <p>
      * Flag indicating intialization has already occured.
-     * </p>
      */
     private boolean initialized = false;
 
     /**
-     * <p>
      * This <code>Map</code> contains the {@link IntegrationPoint}s keyed by the <code>type</code> of integration.
-     * </p>
      */
     private MultiMap<String, IntegrationPoint> pointsByType = new MultiMap<String, IntegrationPoint>();
 

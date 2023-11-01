@@ -39,10 +39,10 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-
 /**
- * <p>This class abstracts the response from the admin console code so that
- * we can use JSON / REST interchangeably.</p>
+ * <p>
+ * This class abstracts the response from the admin console code so that we can use JSON / REST interchangeably.
+ * </p>
  *
  * @author jasonlee
  * @author Ken Paulsen (ken.paulsen@oracle.com)
@@ -62,9 +62,10 @@ public abstract class RestResponse {
     }
 
     /**
-     * <p> This method abstracts the physical response to return a consistent
-     * data structure.  For many responses, this data structure may look
-     * like:</p>
+     * <p>
+     * This method abstracts the physical response to return a consistent data structure. For many responses, this data
+     * structure may look like:
+     * </p>
      * <p/>
      * <p>
      * <code>
@@ -100,7 +101,6 @@ public abstract class RestResponse {
 
 }
 
-
 class JerseyRestResponse extends RestResponse {
     protected Response response;
     private String body = null;
@@ -123,8 +123,9 @@ class JerseyRestResponse extends RestResponse {
     }
 
     /**
-     * <p> This method abstracts the physical response to return a consistent
-     * data structure.</p>
+     * <p>
+     * This method abstracts the physical response to return a consistent data structure.
+     * </p>
      */
     @Override
     public Map<String, Object> getResponse() {
@@ -151,13 +152,14 @@ class JerseyRestResponse extends RestResponse {
                     while (parser.hasNext()) {
                         int event = parser.next();
                         switch (event) {
-                            case XMLStreamConstants.START_ELEMENT: {
-                                if ("map".equals(parser.getLocalName())) {
-                                    result.put("data", processXmlMap(parser));
-                                }
-                                break;
+                        case XMLStreamConstants.START_ELEMENT: {
+                            if ("map".equals(parser.getLocalName())) {
+                                result.put("data", processXmlMap(parser));
                             }
-                            default: break;
+                            break;
+                        }
+                        default:
+                            break;
                         }
                     }
                 } catch (Exception ex) {
@@ -165,7 +167,7 @@ class JerseyRestResponse extends RestResponse {
                     throw new RuntimeException(ex);
                 } finally {
                     try {
-                        if (input != null){
+                        if (input != null) {
                             input.close();
                         }
                     } catch (IOException ex) {
@@ -203,9 +205,7 @@ class JerseyRestResponse extends RestResponse {
                 // Decode JSON
                 result.put("data", JSONUtil.jsonToJava(responseBody));
             } else {
-                // Unsupported Response Format!
-                System.out.println("Unsupported Response Format: '"
-                    + contentType + "'!");
+                Logger.getLogger(RestResponse.class.getName()).log(Level.WARNING, "Unsupported Response Format: '" + contentType + "'!");
             }
         }
 
@@ -214,11 +214,11 @@ class JerseyRestResponse extends RestResponse {
     }
 
     /**
-     * <p> This method will create a Map<String, Object>.  It will add all the
-     * attributes of the given root Element to the Map.  It will then walk
-     * any child Elements and add the children as a
-     * <code>List&lt;Map&lt;String, Object&gt;&gt;</code> for each unique
-     * element name.</p>
+     * <p>
+     * This method will create a Map<String, Object>. It will add all the attributes of the given root Element to the Map.
+     * It will then walk any child Elements and add the children as a <code>List&lt;Map&lt;String, Object&gt;&gt;</code> for
+     * each unique element name.
+     * </p>
      */
     private Map<String, Object> getJavaFromXML(Element element) {
         // Create a new Map to store the properties and children.
@@ -261,8 +261,9 @@ class JerseyRestResponse extends RestResponse {
     }
 
     /**
-     * <p> This method returns a fully populated Map<String, Object> for the
-     * given "message-part" <code>Node</code>.</p>
+     * <p>
+     * This method returns a fully populated Map<String, Object> for the given "message-part" <code>Node</code>.
+     * </p>
      */
     private Map<String, Object> processMessagePart(Node messageNode) {
         // Create a Map to hold all the Message info...
@@ -317,8 +318,9 @@ class JerseyRestResponse extends RestResponse {
     }
 
     /**
-     * <p> This method returns a fully populated Map<String, Object> for the
-     * given "property" <code>Node</code>.</p>
+     * <p>
+     * This method returns a fully populated Map<String, Object> for the given "property" <code>Node</code>.
+     * </p>
      */
     private Map<String, Object> processProperty(Node propertyNode) {
         // Create a Map to hold all the Message info...
@@ -368,48 +370,48 @@ class JerseyRestResponse extends RestResponse {
         while (!endOfMap) {
             int event = parser.next();
             switch (event) {
-                case XMLStreamConstants.START_ELEMENT: {
-                    if ("entry".equals(parser.getLocalName())) {
-                        key = parser.getAttributeValue(null, "key");
-                        String value = parser.getAttributeValue(null, "value");
-                        if (value != null) {
-                            entry.put(key, value);
-                            key = null;
-                        }
-                    } else if ("map".equals(parser.getLocalName())) {
-                        Map value = processXmlMap(parser);
+            case XMLStreamConstants.START_ELEMENT: {
+                if ("entry".equals(parser.getLocalName())) {
+                    key = parser.getAttributeValue(null, "key");
+                    String value = parser.getAttributeValue(null, "value");
+                    if (value != null) {
                         entry.put(key, value);
-                    } else if ("list".equals(parser.getLocalName())) {
-                        List value = processXmlList(parser);
-                        entry.put(key, value);
-                    } else {
-                        element = parser.getLocalName();
+                        key = null;
                     }
-                    break;
+                } else if ("map".equals(parser.getLocalName())) {
+                    Map value = processXmlMap(parser);
+                    entry.put(key, value);
+                } else if ("list".equals(parser.getLocalName())) {
+                    List value = processXmlList(parser);
+                    entry.put(key, value);
+                } else {
+                    element = parser.getLocalName();
                 }
-                case XMLStreamConstants.END_ELEMENT: {
-                    if ("map".equals(parser.getLocalName())) {
-                        endOfMap = true;
-                    }
-                    element = null;
-                    break;
+                break;
+            }
+            case XMLStreamConstants.END_ELEMENT: {
+                if ("map".equals(parser.getLocalName())) {
+                    endOfMap = true;
                 }
-                default: {
-                    String text=parser.getText();
-                    if (element != null) {
-                        if ("number".equals(element)) {
-                            if (text.contains(".")) {
-                                entry.put(key, Double.parseDouble(text));
-                            } else {
-                                entry.put(key, Long.parseLong(text));
-                            }
-                        } else if ("string".equals(element)) {
-                            entry.put(key, text);
+                element = null;
+                break;
+            }
+            default: {
+                String text = parser.getText();
+                if (element != null) {
+                    if ("number".equals(element)) {
+                        if (text.contains(".")) {
+                            entry.put(key, Double.parseDouble(text));
+                        } else {
+                            entry.put(key, Long.parseLong(text));
                         }
+                    } else if ("string".equals(element)) {
+                        entry.put(key, text);
+                    }
 
-                        element = null;
-                    }
+                    element = null;
                 }
+            }
             }
         }
         return entry;
@@ -422,37 +424,37 @@ class JerseyRestResponse extends RestResponse {
         while (!endOfList) {
             int event = parser.next();
             switch (event) {
-                case XMLStreamConstants.START_ELEMENT: {
-                    if ("map".equals(parser.getLocalName())) {
-                        list.add(processXmlMap(parser));
-                    } else {
-                        element = parser.getLocalName();
-                    }
-                    break;
+            case XMLStreamConstants.START_ELEMENT: {
+                if ("map".equals(parser.getLocalName())) {
+                    list.add(processXmlMap(parser));
+                } else {
+                    element = parser.getLocalName();
                 }
-                case XMLStreamConstants.END_ELEMENT: {
-                    if ("list".equals(parser.getLocalName())) {
-                        endOfList = true;
-                    }
-                    element = null;
-                    break;
+                break;
+            }
+            case XMLStreamConstants.END_ELEMENT: {
+                if ("list".equals(parser.getLocalName())) {
+                    endOfList = true;
                 }
-                default: {
-                    String text = parser.getText();
-                    if (element != null) {
-                        if ("number".equals(element)) {
-                            if (text.contains(".")) {
-                                list.add(Double.parseDouble(text));
-                            } else {
-                                list.add(Long.parseLong(text));
-                            }
-                        } else if ("string".equals(element)) {
-                            list.add(text);
+                element = null;
+                break;
+            }
+            default: {
+                String text = parser.getText();
+                if (element != null) {
+                    if ("number".equals(element)) {
+                        if (text.contains(".")) {
+                            list.add(Double.parseDouble(text));
+                        } else {
+                            list.add(Long.parseLong(text));
                         }
-
-                        element = null;
+                    } else if ("string".equals(element)) {
+                        list.add(text);
                     }
+
+                    element = null;
                 }
+            }
             }
         }
         return list;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -117,26 +117,26 @@ public class JmsHandlers {
     protected static final String ATTR_DISK_RESERVED = "DiskReserved";
     protected static final String ATTR_DISK_USED = "DiskUsed";
     protected static final String ATTR_DISK_UTILIZATION_RATIO = "DiskUtilizationRatio";
-    private static final String[] ATTRS_CONFIG = new String[]{ATTR_MAX_NUM_MSGS, ATTR_MAX_BYTES_PER_MSG, ATTR_MAX_TOTAL_MSG_BYTES, ATTR_LIMIT_BEHAVIOR,
-        ATTR_MAX_NUM_PRODUCERS, ATTR_MAX_NUM_ACTIVE_CONSUMERS, ATTR_MAX_NUM_BACKUP_CONSUMERS, ATTR_CONSUMER_FLOW_LIMIT,
-        ATTR_LOCAL_DELIVERY_PREFERRED, ATTR_USE_DMQ, ATTR_VALIDATE_XML_SCHEMA_ENABLED, ATTR_XML_SCHEMA_URI_LIST};
-    private static final String[] ATTRS_MONITOR = new String[]{ATTR_CREATED_BY_ADMIN, ATTR_TEMPORARY, ATTR_CONNECTION_ID, ATTR_STATE, ATTR_STATE_LABEL,
-        ATTR_NUM_PRODUCERS, ATTR_NUM_CONSUMERS, ATTR_NUM_WILDCARD_PRODUCERS, ATTR_NUM_WILDCARD_CONSUMERS, ATTR_NUM_WILDCARDS, ATTR_PEAK_NUM_CONSUMERS,
-        ATTR_AVG_NUM_CONSUMERS, ATTR_NUM_ACTIVE_CONSUMERS, ATTR_PEAK_NUM_ACTIVE_CONSUMERS, ATTR_AVG_NUM_ACTIVE_CONSUMERS,
-        ATTR_NUM_BACKUP_CONSUMERS, ATTR_PEAK_NUM_BACKUP_CONSUMERS, ATTR_AVG_NUM_BACKUP_CONSUMERS, ATTR_NUM_MSGS, ATTR_NUM_MSGS_REMOTE,
-        ATTR_NUM_MSGS_PENDING_ACKS, ATTR_NUM_MSGS_HELD_IN_TRANSACTION, ATTR_NEXT_MESSAGE_ID, ATTR_PEAK_NUM_MSGS, ATTR_AVG_NUM_MSGS,
-        ATTR_NUM_MSGS_IN, ATTR_NUM_MSGS_OUT, ATTR_MSG_BYTES_IN, ATTR_MSG_BYTES_OUT, ATTR_PEAK_MSG_BYTES, ATTR_TOTAL_MSG_BYTES, ATTR_TOTAL_MSG_BYTES_REMOTE,
-        ATTR_TOTAL_MSG_BYTES_HELD_IN_TRANSACTION, ATTR_PEAK_TOTAL_MSG_BYTES, ATTR_AVG_TOTAL_MSG_BYTES, ATTR_DISK_RESERVED, ATTR_DISK_USED,
-        ATTR_DISK_UTILIZATION_RATIO};
+    private static final String[] ATTRS_CONFIG = new String[] { ATTR_MAX_NUM_MSGS, ATTR_MAX_BYTES_PER_MSG, ATTR_MAX_TOTAL_MSG_BYTES, ATTR_LIMIT_BEHAVIOR,
+            ATTR_MAX_NUM_PRODUCERS, ATTR_MAX_NUM_ACTIVE_CONSUMERS, ATTR_MAX_NUM_BACKUP_CONSUMERS, ATTR_CONSUMER_FLOW_LIMIT,
+            ATTR_LOCAL_DELIVERY_PREFERRED, ATTR_USE_DMQ, ATTR_VALIDATE_XML_SCHEMA_ENABLED, ATTR_XML_SCHEMA_URI_LIST };
+    private static final String[] ATTRS_MONITOR = new String[] { ATTR_CREATED_BY_ADMIN, ATTR_TEMPORARY, ATTR_CONNECTION_ID, ATTR_STATE, ATTR_STATE_LABEL,
+            ATTR_NUM_PRODUCERS, ATTR_NUM_CONSUMERS, ATTR_NUM_WILDCARD_PRODUCERS, ATTR_NUM_WILDCARD_CONSUMERS, ATTR_NUM_WILDCARDS, ATTR_PEAK_NUM_CONSUMERS,
+            ATTR_AVG_NUM_CONSUMERS, ATTR_NUM_ACTIVE_CONSUMERS, ATTR_PEAK_NUM_ACTIVE_CONSUMERS, ATTR_AVG_NUM_ACTIVE_CONSUMERS,
+            ATTR_NUM_BACKUP_CONSUMERS, ATTR_PEAK_NUM_BACKUP_CONSUMERS, ATTR_AVG_NUM_BACKUP_CONSUMERS, ATTR_NUM_MSGS, ATTR_NUM_MSGS_REMOTE,
+            ATTR_NUM_MSGS_PENDING_ACKS, ATTR_NUM_MSGS_HELD_IN_TRANSACTION, ATTR_NEXT_MESSAGE_ID, ATTR_PEAK_NUM_MSGS, ATTR_AVG_NUM_MSGS,
+            ATTR_NUM_MSGS_IN, ATTR_NUM_MSGS_OUT, ATTR_MSG_BYTES_IN, ATTR_MSG_BYTES_OUT, ATTR_PEAK_MSG_BYTES, ATTR_TOTAL_MSG_BYTES, ATTR_TOTAL_MSG_BYTES_REMOTE,
+            ATTR_TOTAL_MSG_BYTES_HELD_IN_TRANSACTION, ATTR_PEAK_TOTAL_MSG_BYTES, ATTR_AVG_TOTAL_MSG_BYTES, ATTR_DISK_RESERVED, ATTR_DISK_USED,
+            ATTR_DISK_UTILIZATION_RATIO };
     protected static final String PROP_NAME = "name";
     protected static final String PROP_DEST_TYPE = "desttype";
 
     @Handler(id = "getPhysicalDestination",
     input = {
         @HandlerInput(name = "name", type = String.class, required = true),
-        @HandlerInput(name = "type", type = String.class, required = true)},
+        @HandlerInput(name = "type", type = String.class, required = true) },
     output = {
-        @HandlerOutput(name = "destData", type = java.util.Map.class)})
+        @HandlerOutput(name = "destData", type = java.util.Map.class) })
     public static void getPhysicalDestination(HandlerContext handlerCtx) {
         String name = (String) handlerCtx.getInputValue("name");
         String type = (String) handlerCtx.getInputValue("type");
@@ -153,7 +153,6 @@ public class JmsHandlers {
             GuiUtil.handleException(handlerCtx, ex);
         }
 
-
         handlerCtx.setOutputValue("destData", valueMap);
     }
 
@@ -161,9 +160,9 @@ public class JmsHandlers {
     input = {
         @HandlerInput(name = "name", type = String.class, required = true),
         @HandlerInput(name = "type", type = String.class, required = true),
-        @HandlerInput(name = "target", type = String.class, required = true)},
+        @HandlerInput(name = "target", type = String.class, required = true) },
     output = {
-        @HandlerOutput(name = "statsData", type = java.util.List.class)})
+        @HandlerOutput(name = "statsData", type = java.util.List.class) })
     public static void getPhysicalDestinationStats(HandlerContext handlerCtx) {
         String name = (String) handlerCtx.getInputValue("name");
         String type = (String) handlerCtx.getInputValue("type");
@@ -180,35 +179,34 @@ public class JmsHandlers {
             for (Attribute attribute : attributes.asList()) {
                 statsList.add(
                         createRow(
-                        GuiUtil.getMessage(bundle, "jmsPhysDestinations." + attribute.getName()),
-                        attribute.getValue(),
-                        GuiUtil.getMessage(bundle, "jmsPhysDestinations." + attribute.getName() + "Help")));
+                                GuiUtil.getMessage(bundle, "jmsPhysDestinations." + attribute.getName()),
+                                attribute.getValue(),
+                                GuiUtil.getMessage(bundle, "jmsPhysDestinations." + attribute.getName() + "Help")));
             }
         } catch (Exception ex) {
             GuiUtil.handleException(handlerCtx, ex);
         }
-
 
         handlerCtx.setOutputValue("statsData", statsList);
     }
 
     @Handler(id = "getPhysicalDestinations",
     input = {
-        @HandlerInput(name = "selectedRows", type = List.class)},
+        @HandlerInput(name = "selectedRows", type = List.class) },
     output = {
-        @HandlerOutput(name = "result", type = java.util.List.class)})
+        @HandlerOutput(name = "result", type = java.util.List.class) })
     public static void getPhysicalDestinations(HandlerContext handlerCtx) {
         ObjectName[] objectNames = null;
         List result = new ArrayList();
         try {
             insureJmsBrokerIsRunning();
 
-            //com.sun.messaging.jms.server:type=Destination,subtype=Config,desttype=q,name="mq.sys.dmq"
+            // com.sun.messaging.jms.server:type=Destination,subtype=Config,desttype=q,name="mq.sys.dmq"
             objectNames = (ObjectName[]) JMXUtil.invoke(OBJECT_DEST_MGR, OP_LIST_DESTINATIONS);
 
             if (objectNames == null) {
                 handlerCtx.setOutputValue("result", result);
-                return; //nothing to load..
+                return; // nothing to load..
             }
             List<Map> selectedList = (List) handlerCtx.getInputValue("selectedRows");
             boolean hasOrig = (selectedList == null || selectedList.size() == 0) ? false : true;
@@ -223,21 +221,23 @@ public class JmsHandlers {
             }
 
         } catch (Exception ex) {
-            System.out.println("invoke:   " + OBJECT_DEST_MGR + ", method  =  " + OP_LIST_DESTINATIONS);
             GuiUtil.handleException(handlerCtx, ex);
         }
         handlerCtx.setOutputValue("result", result);
     }
 
     /**
-     * <p>This handler creates a physical destination.</p>
+     * <p>
+     * This handler creates a physical destination.
+     * </p>
+     *
      * @param context The HandlerContext.
      */
     @Handler(id = "createPhysicalDestination",
     input = {
         @HandlerInput(name = "name", type = String.class, required = true),
         @HandlerInput(name = "attributes", type = Map.class, required = true),
-        @HandlerInput(name = "type", type = String.class)})
+        @HandlerInput(name = "type", type = String.class) })
     public static void createPhysicalDestination(HandlerContext handlerCtx) {
         try {
             final String type = (String) handlerCtx.getInputValue("type");
@@ -249,8 +249,8 @@ public class JmsHandlers {
             Map attrMap = (Map) handlerCtx.getInputValue("attributes");
             buildAttributeList(list, attrMap, type);
 
-            String[] types = new String[]{"java.lang.String", "java.lang.String", "javax.management.AttributeList"};
-            Object[] params = new Object[]{type, name, list};
+            String[] types = new String[] { "java.lang.String", "java.lang.String", "javax.management.AttributeList" };
+            Object[] params = new Object[] { type, name, list };
 
             JMXUtil.invoke(OBJECT_DEST_MGR, OP_CREATE, params, types);
         } catch (Exception ex) {
@@ -259,14 +259,17 @@ public class JmsHandlers {
     }
 
     /**
-     * <p>This handler updates a physical destination.</p>
+     * <p>
+     * This handler updates a physical destination.
+     * </p>
+     *
      * @param context The HandlerContext.
      */
     @Handler(id = "updatePhysicalDestination",
     input = {
         @HandlerInput(name = "name", type = String.class, required = true),
         @HandlerInput(name = "attributes", type = Map.class, required = true),
-        @HandlerInput(name = "type", type = String.class)})
+        @HandlerInput(name = "type", type = String.class) })
     public static void updatePhysicalDestination(HandlerContext handlerCtx) {
         try {
             final String type = (String) handlerCtx.getInputValue("type");
@@ -287,8 +290,7 @@ public class JmsHandlers {
 
     @Handler(id = "deleteJMSDest",
     input = {
-        @HandlerInput(name = "selectedRows", type = List.class, required = true)}
-    )
+        @HandlerInput(name = "selectedRows", type = List.class, required = true) })
     public static void deleteJMSDest(HandlerContext handlerCtx) {
 //        String configName = ((String) handlerCtx.getInputValue("targetName"));
         List obj = (List) handlerCtx.getInputValue("selectedRows");
@@ -297,8 +299,8 @@ public class JmsHandlers {
             for (Map oneRow : selectedRows) {
                 String name = (String) oneRow.get("name");
                 String type = ((String) oneRow.get("type")).substring(0, 1).toLowerCase(GuiUtil.guiLocale);
-                Object[] params = new Object[]{type, name};
-                String[] types = new String[]{"java.lang.String", "java.lang.String"};
+                Object[] params = new Object[] { type, name };
+                String[] types = new String[] { "java.lang.String", "java.lang.String" };
                 JMXUtil.invoke(OBJECT_DEST_MGR, OP_DESTROY, params, types);
             }
         } catch (Exception ex) {
@@ -307,12 +309,14 @@ public class JmsHandlers {
     }
 
     /**
-     * <p> This handler takes in selected rows, and removes selected config
+     * <p>
+     * This handler takes in selected rows, and removes selected config
+     *
      * @param context The HandlerContext.
      */
     @Handler(id = "flushJMSDestination",
     input = {
-        @HandlerInput(name = "selectedRows", type = List.class, required = true)})
+        @HandlerInput(name = "selectedRows", type = List.class, required = true) })
     public static void flushJMSDestination(HandlerContext handlerCtx) {
         List<Map> selectedRows = (List) handlerCtx.getInputValue("selectedRows");
         try {
@@ -327,20 +331,21 @@ public class JmsHandlers {
     }
 
     /**
-     * <p> This handler returns a map populated with the default values for a
-     * destination.  Currently, this is all hard-coded, based on data from the MQ
-     * documentation.  When/if they expose an API for determining this programmatically,
-     * the implementation will be updated.</p>
-     * If an orig map is passed in, the default value will be set to this orig map instead
-     * of creating a new one.  This is used for restoring back to the default value during edit.
+     * <p>
+     * This handler returns a map populated with the default values for a destination. Currently, this is all hard-coded,
+     * based on data from the MQ documentation. When/if they expose an API for determining this programmatically, the
+     * implementation will be updated.
+     * </p>
+     * If an orig map is passed in, the default value will be set to this orig map instead of creating a new one. This is
+     * used for restoring back to the default value during edit.
+     *
      * @param context The HandlerContext.
      */
     @Handler(id = "getDefaultPhysicalDestinationValues",
     input = {
-        @HandlerInput(name = "orig", type = Map.class)},
+        @HandlerInput(name = "orig", type = Map.class) },
     output = {
-        @HandlerOutput(name = "map", type = Map.class)
-    })
+        @HandlerOutput(name = "map", type = Map.class) })
     public static void getDefaultPhysicalDestinationValues(HandlerContext handlerCtx) {
         Map orig = (Map) handlerCtx.getInputValue("orig");
         Map map = new HashMap();
@@ -365,7 +370,7 @@ public class JmsHandlers {
 
     @Handler(id = "pingJms",
     input = {
-        @HandlerInput(name = "poolName", type = String.class, required = true)})
+        @HandlerInput(name = "poolName", type = String.class, required = true) })
     public static void pingJms(HandlerContext handlerCtx) {
         try {
             String poolName = (String) handlerCtx.getInputValue("poolName");
@@ -379,10 +384,10 @@ public class JmsHandlers {
     }
 
     public static void getDestinations(HandlerContext handlerCtx) {
-        //String result = (String)JMXUtil.invoke(JMS_OBJECT_NAME, OP_LIST_DESTINATIONS, null, null);
+        // String result = (String)JMXUtil.invoke(JMS_OBJECT_NAME, OP_LIST_DESTINATIONS, null, null);
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         try {
-            mbs.invoke(new ObjectName(OBJECT_DEST_MGR), OP_LIST_DESTINATIONS, new Object[]{}, new String[]{});
+            mbs.invoke(new ObjectName(OBJECT_DEST_MGR), OP_LIST_DESTINATIONS, new Object[] {}, new String[] {});
         } catch (Exception ex) {
             Logger.getLogger(JmsHandlers.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -458,7 +463,7 @@ public class JmsHandlers {
     private static class PhysicalDestinations extends JMSDestination {
         public MQJMXConnectorInfo createConnectorInfo(String target, String configName, ServiceLocator habitat, Domain domain) throws Exception {
             return createMQJMXConnectorInfo(target, domain.getConfigNamed(configName), habitat.<ServerContext>getService(ServerContext.class),
-                domain, habitat.<ConnectorRuntime>getService(ConnectorRuntime.class));
+                    domain, habitat.<ConnectorRuntime>getService(ConnectorRuntime.class));
         }
     }
 }

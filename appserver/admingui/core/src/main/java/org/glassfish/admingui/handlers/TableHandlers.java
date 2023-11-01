@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -55,117 +56,120 @@ public class TableHandlers {
     public TableHandlers() {
     }
 
-
-
-  /**
-     * <p> This handler looks at the input TableRowGroup, checks which row is selected, and returns a list of the Map.
-     *  <p> Each Map corresponding to one single row of the table.
-     *  <p> This method only works for the table where each row consists of one single map since it only looks at the
-     *  <p> first element that is returned by the getObject() method of <code>MultipleListDataProvider<code>.
+    /**
+     * <p>
+     * This handler looks at the input TableRowGroup, checks which row is selected, and returns a list of the Map.
+     * <p>
+     * Each Map corresponding to one single row of the table.
+     * <p>
+     * This method only works for the table where each row consists of one single map since it only looks at the
+     * <p>
+     * first element that is returned by the getObject() method of <code>MultipleListDataProvider<code>.
      *
-     *  <p> Input  value: "TableRowGroup" -- Type: <code> com.sun.webui.jsf.component.TableRowGroup</code></p>
-     *  <p> Input  value: "selectedRows" -- Type: <code> java.util.List</code></p>
-     * @param        handlerCtx        The HandlerContext.
+     * <p> Input  value: "TableRowGroup" -- Type: <code> com.sun.webui.jsf.component.TableRowGroup</code>
+     * </p>
+     * <p>
+     * Input value: "selectedRows" -- Type: <code> java.util.List</code>
+     * </p>
+     *
+     * @param handlerCtx The HandlerContext.
      */
-    @Handler(id="getSelectedSingleMapRows",
-        input={
-            @HandlerInput(name="TableRowGroup", type=TableRowGroup.class, required=true)},
-        output={
-            @HandlerOutput(name="selectedRows", type=List.class)})
+    @Handler(id = "getSelectedSingleMapRows", input = {
+            @HandlerInput(name = "TableRowGroup", type = TableRowGroup.class, required = true) }, output = {
+                    @HandlerOutput(name = "selectedRows", type = List.class) })
     public static void getSelectedSingleMapRows(HandlerContext handlerCtx) {
-        TableRowGroup trg = (TableRowGroup)handlerCtx.getInputValue("TableRowGroup");
-        MultipleListDataProvider dp = (MultipleListDataProvider)trg.getSourceData();
+        TableRowGroup trg = (TableRowGroup) handlerCtx.getInputValue("TableRowGroup");
+        MultipleListDataProvider dp = (MultipleListDataProvider) trg.getSourceData();
         List selectedList = new ArrayList();
         try {
-           RowKey[] rowKeys  = trg.getSelectedRowKeys();
+            RowKey[] rowKeys = trg.getSelectedRowKeys();
 
-           for(int i=0; i<rowKeys.length; i++){
-               Object[] multiDataRows =  (Object[]) dp.getObject(rowKeys[i]);
-               Object oneMap = multiDataRows[0];
-               selectedList.add(oneMap);
+            for (int i = 0; i < rowKeys.length; i++) {
+                Object[] multiDataRows = (Object[]) dp.getObject(rowKeys[i]);
+                Object oneMap = multiDataRows[0];
+                selectedList.add(oneMap);
             }
             handlerCtx.setOutputValue("selectedRows", selectedList);
-        }catch(Exception ex){
+        } catch (Exception ex) {
             GuiUtil.prepareException(handlerCtx, ex);
         }
 
     }
 
     /**
-     * <p> This handler returns the selected row keys.</p>
+     * <p>
+     * This handler returns the selected row keys.
+     * </p>
      *
-     * @param        handlerCtx        The HandlerContext.
+     * @param handlerCtx The HandlerContext.
      */
-    @Handler(id="getSelectedTableRowKeys",
-        input={
-            @HandlerInput(name="tableRowGroup", type=TableRowGroup.class, required=true)},
-        output={
-            @HandlerOutput(name="rowKeys", type=RowKey[].class)})
+    @Handler(id = "getSelectedTableRowKeys", input = {
+            @HandlerInput(name = "tableRowGroup", type = TableRowGroup.class, required = true) }, output = {
+                    @HandlerOutput(name = "rowKeys", type = RowKey[].class) })
     public static void getSelectedTableRowKeys(HandlerContext handlerCtx) {
-        TableRowGroup trg =
-            (TableRowGroup) handlerCtx.getInputValue("tableRowGroup");
+        TableRowGroup trg = (TableRowGroup) handlerCtx.getInputValue("tableRowGroup");
         handlerCtx.setOutputValue("rowKeys", trg.getSelectedRowKeys());
     }
 
     /**
-     * <p> This handler deletes the given <code>RowKey</code>s.</p>
+     * <p>
+     * This handler deletes the given <code>RowKey</code>s.
+     * </p>
      *
-     * @param        handlerCtx        The HandlerContext.
+     * @param handlerCtx The HandlerContext.
      */
-    @Handler(id="deleteTableRows",
-        input={
-            @HandlerInput(name="tableRowGroup", type=TableRowGroup.class, required=true),
-            @HandlerInput(name="rowKeys", type=RowKey[].class, required=true)})
+    @Handler(id = "deleteTableRows", input = {
+            @HandlerInput(name = "tableRowGroup", type = TableRowGroup.class, required = true),
+            @HandlerInput(name = "rowKeys", type = RowKey[].class, required = true) })
     public static void deleteTableRows(HandlerContext handlerCtx) {
-        TableRowGroup trg =
-            (TableRowGroup) handlerCtx.getInputValue("tableRowGroup");
-        RowKey[] keys = (RowKey []) handlerCtx.getInputValue("rowKeys");
-        MultipleListDataProvider dp =
-            (MultipleListDataProvider) trg.getSourceData();
+        TableRowGroup trg = (TableRowGroup) handlerCtx.getInputValue("tableRowGroup");
+        RowKey[] keys = (RowKey[]) handlerCtx.getInputValue("rowKeys");
+        MultipleListDataProvider dp = (MultipleListDataProvider) trg.getSourceData();
         for (RowKey key : keys) {
             dp.removeRow(key);
         }
     }
 
     /**
-     * <p> This handler commits the changes to a <code>TableRowGroup</code>'s
-     *     DataProvider.</p>
+     * <p>
+     * This handler commits the changes to a <code>TableRowGroup</code>'s DataProvider.
+     * </p>
      *
-     * @param        handlerCtx        The HandlerContext.
+     * @param handlerCtx The HandlerContext.
      */
-    @Handler(id="commitTableRowGroup",
-        input={
-            @HandlerInput(name="tableRowGroup", type=TableRowGroup.class, required=true)})
+    @Handler(id = "commitTableRowGroup", input = {
+            @HandlerInput(name = "tableRowGroup", type = TableRowGroup.class, required = true) })
     public static void commitTableRowGroup(HandlerContext handlerCtx) {
-        TableRowGroup trg =
-            (TableRowGroup) handlerCtx.getInputValue("tableRowGroup");
-        MultipleListDataProvider dp =
-            (MultipleListDataProvider) trg.getSourceData();
+        TableRowGroup trg = (TableRowGroup) handlerCtx.getInputValue("tableRowGroup");
+        MultipleListDataProvider dp = (MultipleListDataProvider) trg.getSourceData();
         dp.commitChanges();
     }
 
     /**
-     * <p> This handler takes in a HashMap, the name-value pair being the Properties.
-     *  It turns each name-value pair to one hashMap, representing one row of table data,
-     *  and returns the list of Map.
+     * <p>
+     * This handler takes in a HashMap, the name-value pair being the Properties. It turns each name-value pair to one
+     * hashMap, representing one row of table data, and returns the list of Map.
      *
-     *  <p> Input value: "Properties" -- Type: <code>java.util.Map</code>/</p>
-     *  <p> Output value: "TableList" -- Type: <code>java.util.List</code>/</p>
-     * @param        handlerCtx        The HandlerContext.
+     * <p>
+     * Input value: "Properties" -- Type: <code>java.util.Map</code>/
+     * </p>
+     * <p>
+     * Output value: "TableList" -- Type: <code>java.util.List</code>/
+     * </p>
+     *
+     * @param handlerCtx The HandlerContext.
      */
-    @Handler(id="getTableListFromProperties",
-    input={
-        @HandlerInput(name="Properties", type=Map.class, required=true)},
-    output={
-        @HandlerOutput(name="TableList", type=List.class)})
+    @Handler(id = "getTableListFromProperties", input = {
+            @HandlerInput(name = "Properties", type = Map.class, required = true) }, output = {
+                    @HandlerOutput(name = "TableList", type = List.class) })
     public static void getTableListFromProperties(HandlerContext handlerCtx) {
         List data = new ArrayList();
-        Map<String, Object> props = (Map)handlerCtx.getInputValue("Properties");
-        if(props != null ){
-            for(Map.Entry<String,Object> e : props.entrySet()){
+        Map<String, Object> props = (Map) handlerCtx.getInputValue("Properties");
+        if (props != null) {
+            for (Map.Entry<String, Object> e : props.entrySet()) {
                 HashMap oneRow = new HashMap();
                 Object value = e.getValue();
-                String valString = (value==null)? "" : value.toString();
+                String valString = (value == null) ? "" : value.toString();
                 oneRow.put("name", e.getKey());
                 oneRow.put("value", valString);
                 oneRow.put("selected", false);
@@ -175,57 +179,68 @@ public class TableHandlers {
         handlerCtx.setOutputValue("TableList", data);
     }
 
-/**
-     * <p> This handler takes TableRowGroup as input and returns a List of Map objects.
-     *  <p> The List returned contains Map objects with each Map representing one single row.
-     *  <p> This method only works for tables where each row consists of one single map
+    /**
+     * <p>
+     * This handler takes TableRowGroup as input and returns a List of Map objects.
+     * <p>
+     * The List returned contains Map objects with each Map representing one single row.
+     * <p>
+     * This method only works for tables where each row consists of one single map
      *
-     *  <p> Input  value: "TableRowGroup" -- Type: <code> com.sun.webui.jsf.component.TableRowGroup</code></p>
-     *  <p> Output  value: "Rows" -- Type: <code> java.util.List</code></p>
-     * @param        handlerCtx        The HandlerContext.
+     * <p>
+     * Input value: "TableRowGroup" -- Type: <code> com.sun.webui.jsf.component.TableRowGroup</code>
+     * </p>
+     * <p>
+     * Output value: "Rows" -- Type: <code> java.util.List</code>
+     * </p>
+     *
+     * @param handlerCtx The HandlerContext.
      */
-    @Handler(id="getAllSingleMapRows",
-    input={
-        @HandlerInput(name="TableRowGroup", type=TableRowGroup.class, required=true)},
-    output={
-        @HandlerOutput(name="Rows", type=List.class)})
+    @Handler(id = "getAllSingleMapRows", input = {
+            @HandlerInput(name = "TableRowGroup", type = TableRowGroup.class, required = true) }, output = {
+                    @HandlerOutput(name = "Rows", type = List.class) })
     public static void getAllSingleMapRows(HandlerContext handlerCtx) {
 
-        TableRowGroup trg = (TableRowGroup)handlerCtx.getInputValue("TableRowGroup");
-        MultipleListDataProvider dp = (MultipleListDataProvider)trg.getSourceData();
+        TableRowGroup trg = (TableRowGroup) handlerCtx.getInputValue("TableRowGroup");
+        MultipleListDataProvider dp = (MultipleListDataProvider) trg.getSourceData();
         List data = dp.getLists();
         try {
             handlerCtx.setOutputValue("Rows", data.get(0));
-        }catch(Exception ex){
-            //TODO alert user, log exception
-            System.out.println("!!!! getAllSingleMapRows() Throws Exception: " + ex.toString());
+        } catch (Exception ex) {
+            GuiUtil.prepareException(handlerCtx, ex);
         }
-
-
-
 
     }
 
     /**
-     * <p> This handler adds one row to  table
-     *  <p> Input  value: "TableRowGroup" -- Type: <code> com.sun.webui.jsf.component.TableRowGroup</code></p>
-     *  <p> Input value: "NameList" -- Type:<code>java.util.List</code></p>
-     *  <p> Input value: "DefaultValueList" -- Type:<code>java.util.List</code></p>
-     *  <p> Input value: "HasSelected" -- Type:<code>java.lang.Boolean</code></p>
-     * @param        handlerCtx        The HandlerContext.
+     * <p>
+     * This handler adds one row to table
+     * <p>
+     * Input value: "TableRowGroup" -- Type: <code> com.sun.webui.jsf.component.TableRowGroup</code>
+     * </p>
+     * <p>
+     * Input value: "NameList" -- Type:<code>java.util.List</code>
+     * </p>
+     * <p>
+     * Input value: "DefaultValueList" -- Type:<code>java.util.List</code>
+     * </p>
+     * <p>
+     * Input value: "HasSelected" -- Type:<code>java.lang.Boolean</code>
+     * </p>
+     *
+     * @param handlerCtx The HandlerContext.
      */
-    @Handler(id="addRowToTable",
-    input={
-        @HandlerInput(name="TableRowGroup", type=TableRowGroup.class, required=true),
-        @HandlerInput(name="NameList", type=List.class),
-        @HandlerInput(name="HasSelected", type=Boolean.class),
-        @HandlerInput(name="DefaultValueList", type=List.class)} )
+    @Handler(id = "addRowToTable", input = {
+            @HandlerInput(name = "TableRowGroup", type = TableRowGroup.class, required = true),
+            @HandlerInput(name = "NameList", type = List.class),
+            @HandlerInput(name = "HasSelected", type = Boolean.class),
+            @HandlerInput(name = "DefaultValueList", type = List.class) })
     public static void addRowToTable(HandlerContext handlerCtx) {
-        TableRowGroup trg = (TableRowGroup)handlerCtx.getInputValue("TableRowGroup");
-        List names = (List)handlerCtx.getInputValue("NameList");
-        List defaults = (List)handlerCtx.getInputValue("DefaultValueList");
-        Boolean hasSelected = (Boolean)handlerCtx.getInputValue("HasSelected");
-        MultipleListDataProvider dp = (MultipleListDataProvider)trg.getSourceData();
+        TableRowGroup trg = (TableRowGroup) handlerCtx.getInputValue("TableRowGroup");
+        List names = (List) handlerCtx.getInputValue("NameList");
+        List defaults = (List) handlerCtx.getInputValue("DefaultValueList");
+        Boolean hasSelected = (Boolean) handlerCtx.getInputValue("HasSelected");
+        MultipleListDataProvider dp = (MultipleListDataProvider) trg.getSourceData();
         List data = dp.getLists();
         ListIterator li = data.listIterator();
         if (li.hasNext()) {
@@ -237,27 +252,26 @@ public class TableHandlers {
                 if (defaults != null) {
                     if (names.size() != defaults.size()) {
                         throw new IllegalArgumentException("NameList.size("
-                            + names.size()
-                            + ") does not match DefaultValueList.size("
-                            + defaults.size() + ")!");
+                                + names.size()
+                                + ") does not match DefaultValueList.size("
+                                + defaults.size() + ")!");
                     }
                     ListIterator ni = names.listIterator();
                     ListIterator dv = defaults.listIterator();
                     while (ni.hasNext() && dv.hasNext()) {
                         String name = (String) ni.next();
                         String value = (String) dv.next();
-                        if ( "#{true}".equals(value)){
+                        if ("#{true}".equals(value)) {
                             map.put(name, true);
-                        }else
-                        if ( "#{false}".equals(value)){
+                        } else if ("#{false}".equals(value)) {
                             map.put(name, false);
-                        }else{
+                        } else {
                             map.put(name, value);
                         }
                     }
                 } else {
                     ListIterator ni = names.listIterator();
-                    while(ni.hasNext()) {
+                    while (ni.hasNext()) {
                         String name = (String) ni.next();
                         map.put(name, "");
                     }
@@ -295,28 +309,28 @@ public class TableHandlers {
         }
     }
 
-  /**
-     * <p> This handler converts the table list to arraylist.</p>
+    /**
+     * <p>
+     * This handler converts the table list to arraylist.
+     * </p>
      *
-     * @param        handlerCtx        The HandlerContext.
+     * @param handlerCtx The HandlerContext.
      */
-    @Handler(id="convertListToArrayList",
-        input={
-            @HandlerInput(name="TableList", type=List.class, required=true),
-            @HandlerInput(name="Name", type=String.class)},
-        output={
-            @HandlerOutput(name="NameList",     type=ArrayList.class)})
+    @Handler(id = "convertListToArrayList", input = {
+            @HandlerInput(name = "TableList", type = List.class, required = true),
+            @HandlerInput(name = "Name", type = String.class) }, output = {
+                    @HandlerOutput(name = "NameList", type = ArrayList.class) })
     public static void convertListToArrayList(HandlerContext handlerCtx) {
-        List tableList = (List)handlerCtx.getInputValue("TableList");
-        String name = (String)handlerCtx.getInputValue("Name");
+        List tableList = (List) handlerCtx.getInputValue("TableList");
+        String name = (String) handlerCtx.getInputValue("Name");
         if (GuiUtil.isEmpty(name))
             name = "name";
-        if(tableList != null) {
+        if (tableList != null) {
             ListIterator li = tableList.listIterator();
             ArrayList names = new ArrayList();
-            while(li.hasNext()) {
-                Map props = (Map)li.next();
-                String val= (String) props.get(name);
+            while (li.hasNext()) {
+                Map props = (Map) li.next();
+                String val = (String) props.get(name);
                 if (!GuiUtil.isEmpty(val))
                     names.add(val);
             }
@@ -324,53 +338,53 @@ public class TableHandlers {
         }
     }
 
- /**
-     * <p> This handler returns the properties to be removed and added.</p>
+    /**
+     * <p>
+     * This handler returns the properties to be removed and added.
+     * </p>
      *
-     * @param        handlerCtx        The HandlerContext.
+     * @param handlerCtx The HandlerContext.
      */
-    @Handler(id="getAddRemoveProps",
-        input={
-            @HandlerInput(name="NewList", type=List.class, required=true),
-            @HandlerInput(name="OldList", type=Map.class, required=true),
-            @HandlerInput(name="NameList", type=ArrayList.class, required=true)},
-        output={
-            @HandlerOutput(name="AddProps", type=Map.class),
-            @HandlerOutput(name="RemoveProps", type=ArrayList.class)})
+    @Handler(id = "getAddRemoveProps", input = {
+            @HandlerInput(name = "NewList", type = List.class, required = true),
+            @HandlerInput(name = "OldList", type = Map.class, required = true),
+            @HandlerInput(name = "NameList", type = ArrayList.class, required = true) }, output = {
+                    @HandlerOutput(name = "AddProps", type = Map.class),
+                    @HandlerOutput(name = "RemoveProps", type = ArrayList.class) })
     public static void getAddRemoveProps(HandlerContext handlerCtx) {
-        List newList = (List)handlerCtx.getInputValue("NewList");
-        ArrayList names = (ArrayList)handlerCtx.getInputValue("NameList");
-        Map<String, String> oldList = (Map)handlerCtx.getInputValue("OldList");
+        List newList = (List) handlerCtx.getInputValue("NewList");
+        ArrayList names = (ArrayList) handlerCtx.getInputValue("NameList");
+        Map<String, String> oldList = (Map) handlerCtx.getInputValue("OldList");
         ListIterator li = newList.listIterator();
         ArrayList removeProps = new ArrayList();
         Iterator iter = oldList.keySet().iterator();
         Map addProps = new HashMap<String, String>();
-        while(li.hasNext()) {
-            Map props = (Map)li.next();
-            if(!oldList.containsKey(props.get("name"))){
-                String name = (String)props.get("name");
-                if (name != null && (! name.trim().equals(""))) {
-                    addProps.put((String)props.get("name"), (String)props.get("value"));
+        while (li.hasNext()) {
+            Map props = (Map) li.next();
+            if (!oldList.containsKey(props.get("name"))) {
+                String name = (String) props.get("name");
+                if (name != null && (!name.trim().equals(""))) {
+                    addProps.put((String) props.get("name"), (String) props.get("value"));
                 }
             }
-            if(oldList.containsKey(props.get("name"))){
-                String oldvalue = (String)oldList.get(props.get("name"));
-                String newvalue = (String)props.get("value");
-                if(!oldvalue.equals(newvalue)) {
-                    removeProps.add((String)props.get("name"));
-                    String name = (String)props.get("name");
-                    if (name != null && (! name.trim().equals(""))) {
-                        addProps.put((String)props.get("name"), (String)props.get("value"));
+            if (oldList.containsKey(props.get("name"))) {
+                String oldvalue = (String) oldList.get(props.get("name"));
+                String newvalue = (String) props.get("value");
+                if (!oldvalue.equals(newvalue)) {
+                    removeProps.add((String) props.get("name"));
+                    String name = (String) props.get("name");
+                    if (name != null && (!name.trim().equals(""))) {
+                        addProps.put((String) props.get("name"), (String) props.get("value"));
                     }
                 }
 
             }
         }
-        if(iter != null ){
-            while(iter.hasNext()){
+        if (iter != null) {
+            while (iter.hasNext()) {
                 Object key = iter.next();
-                if(!names.contains(key)) {
-                    removeProps.add((String)key);
+                if (!names.contains(key)) {
+                    removeProps.add((String) key);
                 }
             }
         }
@@ -378,58 +392,56 @@ public class TableHandlers {
         handlerCtx.setOutputValue("RemoveProps", removeProps);
     }
 
-  /**
-     * <p> This handler converts the table List to a Property map.
+    /**
+     * <p>
+     * This handler converts the table List to a Property map.
      *
-     * @param        handlerCtx        The HandlerContext.
+     * @param handlerCtx The HandlerContext.
      */
-    @Handler(id="convertRowsToProperties",
-        input={
-            @HandlerInput(name="NewList", type=List.class, required=true)},
-        output={
-            @HandlerOutput(name="AddProps", type=Map.class)})
+    @Handler(id = "convertRowsToProperties", input = {
+            @HandlerInput(name = "NewList", type = List.class, required = true) }, output = {
+                    @HandlerOutput(name = "AddProps", type = Map.class) })
     public static void convertRowsToProperties(HandlerContext handlerCtx) {
-        List newList = (List)handlerCtx.getInputValue("NewList");
+        List newList = (List) handlerCtx.getInputValue("NewList");
         ListIterator li = newList.listIterator();
         Map addProps = new HashMap<String, String>();
-        while(li.hasNext()) {
-            Map props = (Map)li.next();
-               String name = (String)props.get("name");
-                if (name != null && (! name.trim().equals(""))) {
-                    if (addProps.containsKey(name)){
-                        //duplicate property name, give error
-                        GuiUtil.handleError(handlerCtx, GuiUtil.getMessage("msg.duplicatePropTableKey" , new Object[]{name}));
-                        return;
-                    }
-                    addProps.put(name, (String)props.get("value"));
+        while (li.hasNext()) {
+            Map props = (Map) li.next();
+            String name = (String) props.get("name");
+            if (name != null && (!name.trim().equals(""))) {
+                if (addProps.containsKey(name)) {
+                    // duplicate property name, give error
+                    GuiUtil.handleError(handlerCtx, GuiUtil.getMessage("msg.duplicatePropTableKey", new Object[] { name }));
+                    return;
                 }
+                addProps.put(name, (String) props.get("value"));
+            }
         }
         handlerCtx.setOutputValue("AddProps", addProps);
     }
 
-  /**
-     * <p> This handler converts the table List to a Properties map.
+    /**
+     * <p>
+     * This handler converts the table List to a Properties map.
      *
-     * @param        handlerCtx        The HandlerContext.
+     * @param handlerCtx The HandlerContext.
      */
-    @Handler(id="getProperties",
-        input={
-            @HandlerInput(name="NewList", type=List.class, required=true)},
-        output={
-            @HandlerOutput(name="AddProps", type=Map.class)})
+    @Handler(id = "getProperties", input = {
+            @HandlerInput(name = "NewList", type = List.class, required = true) }, output = {
+                    @HandlerOutput(name = "AddProps", type = Map.class) })
     public static void getProperties(HandlerContext handlerCtx) {
-        List newList = (List)handlerCtx.getInputValue("NewList");
+        List newList = (List) handlerCtx.getInputValue("NewList");
         ListIterator li = newList.listIterator();
         Map addProps = new Properties();
-        while(li.hasNext()) {
-            Map props = (Map)li.next();
-               String name = (String)props.get("name");
-                if (name != null && (! name.trim().equals(""))) {
-                                        String value = (String)props.get("value");
-                        if (value != null && (! value.trim().equals(""))) {
-                            addProps.put(name, value);
-                                        }
+        while (li.hasNext()) {
+            Map props = (Map) li.next();
+            String name = (String) props.get("name");
+            if (name != null && (!name.trim().equals(""))) {
+                String value = (String) props.get("value");
+                if (value != null && (!value.trim().equals(""))) {
+                    addProps.put(name, value);
                 }
+            }
         }
         handlerCtx.setOutputValue("AddProps", addProps);
     }

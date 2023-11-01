@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -42,16 +43,15 @@ public class JMXUtil {
     }
 
     public static Object invoke(String objectName, String operationName) {
-        return invoke(objectName, operationName, new Object[]{}, new String[]{});
+        return invoke(objectName, operationName, new Object[] {}, new String[] {});
     }
 
     public static Object invoke(String objectName, String operationName, Object[] params, String[] signature) {
         try {
             Object result = invoke(new ObjectName(objectName), operationName, params, signature);
             return result;
-        } catch (javax.management.MalformedObjectNameException ex) {
-            System.out.println("MalformedObjectNameException: " + objectName);
-            throw new RuntimeException(ex);
+        } catch (MalformedObjectNameException ex) {
+            throw new RuntimeException(objectName + " is MalformedObjectName.", ex);
         }
     }
 
@@ -61,8 +61,8 @@ public class JMXUtil {
             Object result = getMBeanServer().invoke(objectName, operationName, params, signature);
             return result;
         } catch (Exception ex) {
-            //The calling method will decide if to catch this exception or dump stack trace. ex issue#2902
-            //ex.printStackTrace();
+            // The calling method will decide if to catch this exception or dump stack trace. ex issue#2902
+            // ex.printStackTrace();
             throw new RuntimeException(ex);
         }
     }
@@ -72,7 +72,7 @@ public class JMXUtil {
             Object result = getAttribute(new ObjectName(objectName), attributeName);
             return result;
         } catch (MalformedObjectNameException ex) {
-            return null;  //TODO-ErrorHandling
+            return null; // TODO-ErrorHandling
         }
 
     }
@@ -88,9 +88,8 @@ public class JMXUtil {
     public static void setAttribute(String objectName, Attribute attributeName) {
         try {
             setAttribute(new ObjectName(objectName), attributeName);
-        } catch (javax.management.MalformedObjectNameException ex) {
-            System.out.println("MalformedObjectNameException: " + objectName);
-            throw new RuntimeException(ex);
+        } catch (MalformedObjectNameException ex) {
+            throw new RuntimeException(objectName + " is MalformedObjectName.", ex);
         }
     }
 
@@ -105,14 +104,14 @@ public class JMXUtil {
 
     /**
      * Method that obtains the default values from domain
+     *
      * @param objName Object Name of Mbean
-     * @param params array containing the name of attribute whose default
-     * value is needed
+     * @param params array containing the name of attribute whose default value is needed
      * @return an Object representing the default value
      */
     public static Object getDefaultAttributeValue(String objName, String[] params) {
         String operName = "getDefaultAttributeValue";
-        String[] signature = {"java.lang.String"};
+        String[] signature = { "java.lang.String" };
         Object defaultValue = invoke(objName, operName, params, signature);
         return defaultValue;
     }
@@ -129,6 +128,7 @@ public class JMXUtil {
         }
         return valid;
     }
+
     public final static String DomainDiagnosticsMBeanName = "com.sun.appserv:type=DomainDiagnostics,name=server,category=monitor";
     public final static String DomainDiagnosticsGenerateReportMethod = "generateReport";
 }

@@ -121,8 +121,7 @@ public class ConsolePluginService {
 //System.out.println("IP Map: " + pointsByType.toString());
 
         // Log some trace messages
-        logger.log(Level.FINE, "Console Plugin Service has been Initialized!");
-        logger.log(Level.FINEST, pointsByType.toString());
+        logger.log(Level.CONFIG, "Console Plugin Service has been initialized. Integration points by type: \n{0}", pointsByType);
     }
 
     /**
@@ -305,7 +304,7 @@ public class ConsolePluginService {
                     } catch (Exception ex) {
                         // Ignore b/c this should not ever happen, we're not
                         // changing the URL
-                        logger.log(Level.INFO, "ConsolePluginService: URL Copy Failed!");
+                        logger.log(Level.SEVERE, "ConsolePluginService: URL Copy Failed!", ex);
                     }
                 }
 

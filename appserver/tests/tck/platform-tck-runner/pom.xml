@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,10 +26,10 @@
         <version>7.0.11-SNAPSHOT</version>
     </parent>
 
-    <artifactId>tck-runner</artifactId>
+    <artifactId>platform-tck-runner</artifactId>
     <packaging>jar</packaging>
 
-    <name>TCK: TCK Runner for Ant-based Test Suites</name>
+    <name>TCK: TCK Runner for the Platform Tests</name>
 
     <properties>
         <ant.home>${env.ANT_HOME}</ant.home>
@@ -42,7 +42,7 @@
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.tests.tck</groupId>
-            <artifactId>jakarta-ant-based-tck</artifactId>
+            <artifactId>jakarta-platform-tck</artifactId>
             <version>${tck.version}</version>
             <type>zip</type>
             <scope>runtime</scope>

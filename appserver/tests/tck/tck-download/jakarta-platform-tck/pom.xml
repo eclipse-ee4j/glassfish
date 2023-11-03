@@ -27,14 +27,14 @@
         <version>7.0.11-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jakarta-ant-based-tck</artifactId>
+    <artifactId>jakarta-platform-tck</artifactId>
     <packaging>pom</packaging>
-    <name>TCK: Install Jakarta EE TCK</name>
+    <name>TCK: Install Jakarta EE Platform TCK</name>
 
     <properties>
         <!-- Be patient, it is over 500 MB -->
         <tck.test.jee.file>jakarta-jakartaeetck-10.0.2.zip</tck.test.jee.file>
-        <tck.test.jee.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/${tck.test.jee.file}</tck.test.jee.url>
+        <tck.test.jee.url>https://download.eclipse.org/jakartaee/platform/10/${tck.test.jee.file}</tck.test.jee.url>
     </properties>
 
     <build>

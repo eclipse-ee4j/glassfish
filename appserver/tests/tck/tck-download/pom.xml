@@ -32,7 +32,7 @@
     <name>TCK: Download and Install Dependencies not in Maven Repos</name>
 
     <modules>
-        <module>jakarta-ant-based-tck</module>
+        <module>jakarta-platform-tck</module>
         <module>jakarta-activation-tck</module>
         <module>jakarta-rest-tck</module>
         <module>jakarta-faces-tck</module>

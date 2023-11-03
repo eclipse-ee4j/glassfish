@@ -177,6 +177,7 @@
                                 <exec executable="${ant.home}/bin/ant" dir="${tck.home}" resultproperty="testResult">
                                     <arg value="run" />
                                     <arg value="run.pluggability" />
+                                    <arg value="-DfailOnError=true" />
                                     <env key="LC_ALL" value="C" />
                                 </exec>
 

@@ -20,18 +20,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.glassfish.docs</groupId>
+        <groupId>org.glassfish.main.docs</groupId>
         <artifactId>docs</artifactId>
         <version>7.0.11-SNAPSHOT</version>
     </parent>
-    <groupId>org.glassfish.docs</groupId>
-    <artifactId>parent</artifactId>
+    <artifactId>documentation-generators-parent</artifactId>
     <packaging>pom</packaging>
     <name>Eclipse GlassFish Documentation parent pom</name>
 
     <properties>
         <maven.site.skip>true</maven.site.skip>
-        <maven.deploy.skip>true</maven.deploy.skip>
         <asciidoctor.maven.plugin.version>2.2.4</asciidoctor.maven.plugin.version>
         <asciidoctorj.pdf.version>2.3.9</asciidoctorj.pdf.version>
         <!-- status: DRAFT, BETA, etc., or blank for final -->
@@ -46,10 +44,24 @@
     </properties>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>default-deploy</id>
+                            <phase>disabled</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.glassfish.doc</groupId>
                 <artifactId>glassfish-doc-maven-plugin</artifactId>
+                <version>1.3</version>
                 <configuration>
                     <sourceDirectory>src/main/asciidoc</sourceDirectory>
                 </configuration>

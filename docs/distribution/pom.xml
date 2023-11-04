@@ -20,30 +20,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.glassfish.docs</groupId>
+        <groupId>org.glassfish.main.docs</groupId>
         <artifactId>docs</artifactId>
         <version>7.0.11-SNAPSHOT</version>
     </parent>
-    <artifactId>distribution</artifactId>
+    <artifactId>glassfish-documentation</artifactId>
     <packaging>jar</packaging>
     <name>Eclipse GlassFish Documentation Distribution</name>
-    <description>
-        Combine the Eclipse GlassFish documentation into one bundle
-        for distribution.
-    </description>
-
-    <properties>
-        <maven.site.skip>true</maven.site.skip>
-    </properties>
-
-    <profiles>
-        <profile>
-            <id>release-phase2</id>
-            <properties>
-                <maven.deploy.skip>false</maven.deploy.skip>
-            </properties>
-        </profile>
-    </profiles>
+    <description>Combine the Eclipse GlassFish documentation into one bundle for distribution.</description>
 
     <build>
         <plugins>
@@ -57,7 +41,7 @@
                             <goal>unpack-dependencies</goal>
                         </goals>
                         <configuration>
-                            <includeGroupIds>org.glassfish.docs</includeGroupIds>
+                            <includeGroupIds>org.glassfish.main.docs</includeGroupIds>
                             <includeTypes>jar</includeTypes>
                             <excludes>META-INF/**</excludes>
                             <outputDirectory>${project.build.directory}/classes</outputDirectory>
@@ -70,7 +54,7 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <includeGroupIds>org.glassfish.docs</includeGroupIds>
+                            <includeGroupIds>org.glassfish.main.docs</includeGroupIds>
                             <includeTypes>pdf</includeTypes>
                             <outputDirectory>${project.build.directory}/classes</outputDirectory>
                             <stripVersion>true</stripVersion>
@@ -82,214 +66,210 @@
     </build>
 
     <dependencies>
-        <!--
-            The following items are the current
-            (under development) versions of the
-            documentation.
-        -->
+        <!-- optional: no need to download dependencies of the distribution when referring this artifact -->
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>add-on-component-development-guide</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>add-on-component-development-guide</artifactId>
             <version>${project.version}</version>
             <type>pdf</type>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>administration-guide</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>administration-guide</artifactId>
             <version>${project.version}</version>
             <type>pdf</type>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>application-deployment-guide</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>application-deployment-guide</artifactId>
             <version>${project.version}</version>
             <type>pdf</type>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>application-development-guide</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>application-development-guide</artifactId>
             <version>${project.version}</version>
             <type>pdf</type>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>deployment-planning-guide</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>deployment-planning-guide</artifactId>
             <version>${project.version}</version>
             <type>pdf</type>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>embedded-server-guide</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>embedded-server-guide</artifactId>
             <version>${project.version}</version>
             <type>pdf</type>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>error-messages-reference</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>error-messages-reference</artifactId>
             <version>${project.version}</version>
             <type>pdf</type>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>ha-administration-guide</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>ha-administration-guide</artifactId>
             <version>${project.version}</version>
             <type>pdf</type>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>installation-guide</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>installation-guide</artifactId>
             <version>${project.version}</version>
             <type>pdf</type>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>performance-tuning-guide</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>performance-tuning-guide</artifactId>
             <version>${project.version}</version>
             <type>pdf</type>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>quick-start-guide</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>quick-start-guide</artifactId>
             <version>${project.version}</version>
             <type>pdf</type>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>reference-manual</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>reference-manual</artifactId>
             <version>${project.version}</version>
             <type>pdf</type>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>release-notes</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>release-notes</artifactId>
             <version>${project.version}</version>
             <type>pdf</type>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>security-guide</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>security-guide</artifactId>
             <version>${project.version}</version>
             <type>pdf</type>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>troubleshooting-guide</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>troubleshooting-guide</artifactId>
             <version>${project.version}</version>
             <type>pdf</type>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>upgrade-guide</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.docs</groupId>
+            <groupId>org.glassfish.main.docs</groupId>
             <artifactId>upgrade-guide</artifactId>
             <version>${project.version}</version>
             <type>pdf</type>

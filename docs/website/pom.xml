@@ -20,25 +20,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.glassfish.docs</groupId>
+        <groupId>org.glassfish.main.docs</groupId>
         <artifactId>docs</artifactId>
         <version>7.0.11-SNAPSHOT</version>
     </parent>
     <artifactId>website</artifactId>
     <packaging>jar</packaging>
-    <name>Eclipse GlassFish website content</name>
+    <name>Eclipse GlassFish Website Content</name>
 
-    <properties>
-        <maven.site.skip>true</maven.site.skip>
-        <maven.deploy.skip>true</maven.deploy.skip>
-    </properties>
-
-    <!--
-        This project doesn't inherit from ../parent because it doesn't
-        need asciidoc, and so the jar plugin needs to be configured here...
-    -->
     <build>
-        <defaultGoal>package</defaultGoal>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -46,12 +42,15 @@
                     <finalName>${project.artifactId}</finalName>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-deploy</id>
+                        <phase>disabled</phase>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
     </build>
 </project>

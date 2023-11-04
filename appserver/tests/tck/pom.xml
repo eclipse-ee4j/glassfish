@@ -47,6 +47,7 @@
         <module>connectors-full</module>
         <module>pages</module>
         <module>pages_tags</module>
+        <module>pages_debugging</module>
         <module>servlet</module>
         <module>authentication</module>
         <module>authorization</module>

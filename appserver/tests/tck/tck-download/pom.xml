@@ -40,6 +40,7 @@
         <module>jakarta-connectors-full-tck</module>
         <module>jakarta-pages-tck</module>
         <module>jakarta-pages-tags-tck</module>
+        <module>jakarta-pages-debugging-tck</module>
         <module>jakarta-servlet-tck</module>
         <module>jakarta-authentication-tck</module>
         <module>jakarta-authorization-tck</module>

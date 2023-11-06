@@ -74,7 +74,7 @@ public class TckRunner {
         if (cfg.getJakartaeeDir().exists()) {
             LOG.log(Level.INFO, "Jakarta EE was already installed, unzipping to {0} skipped.", cfg.getJakartaeeDir());
         } else {
-            zipResolver.unzipDependency("org.glassfish.main.tests.tck", "jakarta-ant-based-tck", cfg.getTckVersion());
+            zipResolver.unzipDependency("org.glassfish.main.tests.tck", "jakarta-platform-tck", cfg.getTckVersion());
             File command = cfg.getJakartaeetckCommand().toFile();
             if (command.exists()) {
                 command.setExecutable(true);

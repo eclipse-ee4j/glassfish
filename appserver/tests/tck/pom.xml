@@ -36,7 +36,7 @@
         <module>embedded_ejb_smoke</module>
 
         <module>tck-download</module>
-        <module>tck-runner</module>
+        <module>platform-tck-runner</module>
         
         <module>activation</module>
         <module>expression_language</module>

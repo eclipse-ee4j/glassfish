@@ -160,10 +160,8 @@
                 <module>qa</module>
                 <module>nucleus</module>
                 <module>appserver</module>
-                <module>appserver/extras/embedded/common</module>
-                <module>appserver/tests/appserv-tests/util/reportbuilder</module>
-                <module>appserver/tests/tck</module>
                 <module>docs</module>
+                <module>docs/publish</module>
             </modules>
         </profile>
 

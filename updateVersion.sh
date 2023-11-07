@@ -13,7 +13,7 @@ oldVersion="$(mvn help:evaluate -Dexpression=project.version -N -q -DforceStdout
 implicitVersionParams="-DgenerateBackupPoms=false -DprocessAllModules=true -DoldVersion=${oldVersion}"
 
 # change version of the aggregator and keep consistency
-mvn versions:set ${implicitVersionParams} -DnewVersion=${version} -Pembedded,set-version-id;
+mvn versions:set ${implicitVersionParams} -DnewVersion=${version} -Pset-version-id;
 
 # these folders are broken now, but we keep updating version ids at least
 find "./appserver/tests" -type f -name "pom.xml" -print0 | while IFS= read -r -d '' file; do
@@ -24,3 +24,4 @@ find "./appserver/tests" -type f -name "pom.xml" -print0 | while IFS= read -r -d
     mv "${file}.temporary" "${file}";
     chmod $fileMode "${file}";
 done
+

@@ -24,7 +24,7 @@
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-parent</artifactId>
         <version>7.0.11-SNAPSHOT</version>
-        <relativePath>../appserver/parent</relativePath>
+        <relativePath>../appserver</relativePath>
     </parent>
     <groupId>org.glassfish.main.docs</groupId>
     <artifactId>docs</artifactId>

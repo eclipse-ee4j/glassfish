@@ -20,11 +20,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.glassfish.docs</groupId>
+        <groupId>org.glassfish.main.docs</groupId>
         <artifactId>docs</artifactId>
         <version>7.0.11-SNAPSHOT</version>
     </parent>
-    <artifactId>publish</artifactId>
+    <artifactId>website-publisher</artifactId>
     <packaging>jar</packaging>
     <name>Publish the Eclipse GlassFish Website</name>
 
@@ -38,238 +38,198 @@
         <site.output.dir>${project.build.directory}/staging</site.output.dir>
         <maven.site.skip>true</maven.site.skip>
         <!-- the directory where the current snapshot is published -->
-        <dir.snap>${site.output.dir}/docs/SNAPSHOT</dir.snap>
+        <docs.snapshot.dir>${site.output.dir}/docs/SNAPSHOT</docs.snapshot.dir>
         <!-- add a new property for each new release -->
         <docs.5x.dir>${site.output.dir}/docs/${glassfish.version.5x}</docs.5x.dir>
         <docs.6x.dir>${site.output.dir}/docs/${glassfish.version.6x}</docs.6x.dir>
         <docs.7x.dir>${site.output.dir}/docs/${glassfish.version.7x}</docs.7x.dir>
-        <!-- the "latest" version; update when a new release is done -->
     </properties>
 
-    <!--
-        This profile is used to publish the entire web site.
-
-        Usage: mvn -Ppublish-site deploy
-    -->
-    <profiles>
-        <profile>
-            <id>publish-site</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <executions>
-                            <!--
-                                Get the content for the top level web site.
-                            -->
-                            <execution>
-                                <id>get-website</id>
-                                <phase>generate-sources</phase>
-                                <goals>
-                                    <goal>unpack</goal>
-                                </goals>
-                                <configuration>
-                                    <excludes>
-                                        META-INF/**
-                                    </excludes>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>org.glassfish.docs</groupId>
-                                            <artifactId>website</artifactId>
-                                            <version>${project.version}</version>
-                                            <outputDirectory>
-                                                ${site.output.dir}
-                                            </outputDirectory>
-                                        </artifactItem>
-                                    </artifactItems>
-                                </configuration>
-                            </execution>
-                            <!--
-                                Get the collection of documentation for the
-                                current (under development) release.
-                            -->
-                            <execution>
-                                <id>get-current</id>
-                                <phase>generate-sources</phase>
-                                <goals>
-                                    <goal>unpack</goal>
-                                </goals>
-                                <configuration>
-                                    <includeGroupIds>
-                                        org.glassfish.docs
-                                    </includeGroupIds>
-                                    <excludes>META-INF/**</excludes>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>org.glassfish.docs</groupId>
-                                            <artifactId>distribution</artifactId>
-                                            <version>${project.version}</version>
-                                            <outputDirectory>
-                                                ${dir.snap}
-                                            </outputDirectory>
-                                        </artifactItem>
-                                    </artifactItems>
-                                </configuration>
-                            </execution>
-                            <!--
-                                Get the collection of documentation for the
-                                6.x release.
-                            -->
-                            <execution>
-                                <id>get-7x</id>
-                                <phase>generate-sources</phase>
-                                <goals>
-                                    <goal>unpack</goal>
-                                </goals>
-                                <configuration>
-                                    <includeGroupIds>
-                                        org.glassfish.docs
-                                    </includeGroupIds>
-                                    <excludes>META-INF/**</excludes>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>org.glassfish.docs</groupId>
-                                            <artifactId>distribution</artifactId>
-                                            <version>${glassfish.version.7x.artifact}</version>
-                                            <outputDirectory>
-                                                ${docs.7x.dir}
-                                            </outputDirectory>
-                                        </artifactItem>
-                                    </artifactItems>
-                                </configuration>
-                            </execution>
-                            <!--
-                                Get the collection of documentation for the
-                                6.x release.
-                            -->
-                            <execution>
-                                <id>get-6x</id>
-                                <phase>generate-sources</phase>
-                                <goals>
-                                    <goal>unpack</goal>
-                                </goals>
-                                <configuration>
-                                    <includeGroupIds>
-                                        org.glassfish.docs
-                                    </includeGroupIds>
-                                    <excludes>META-INF/**</excludes>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>org.glassfish.docs</groupId>
-                                            <artifactId>distribution</artifactId>
-                                            <version>${glassfish.version.6x}</version>
-                                            <outputDirectory>
-                                                ${docs.6x.dir}
-                                            </outputDirectory>
-                                        </artifactItem>
-                                    </artifactItems>
-                                </configuration>
-                            </execution>
-                            <!--
-                                Get the collection of documentation for the
-                                5.1.0 release.
-                            -->
-                            <execution>
-                                <id>get-5x</id>
-                                <phase>generate-sources</phase>
-                                <goals>
-                                    <goal>unpack</goal>
-                                </goals>
-                                <configuration>
-                                    <includeGroupIds>
-                                        org.glassfish.docs
-                                    </includeGroupIds>
-                                    <excludes>META-INF/**</excludes>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>org.glassfish.docs</groupId>
-                                            <artifactId>distribution</artifactId>
-                                            <version>${glassfish.version.5x}</version>
-                                            <outputDirectory>
-                                                ${docs.5x.dir}
-                                            </outputDirectory>
-                                        </artifactItem>
-                                    </artifactItems>
-                                </configuration>
-                            </execution>
-                            <!--
-                                Add additional execution blocks here as
-                                new releases are made, using the above
-                                as a template.  Don't forget to update
-                                the glassfish.version.latest property.
-                            -->
-                        </executions>
-                    </plugin>
-
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <!-- Get the content for the top level web site. -->
+                    <execution>
+                        <id>get-website</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <excludes>META-INF/**</excludes>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.glassfish.main.docs</groupId>
+                                    <artifactId>website</artifactId>
+                                    <version>${project.version}</version>
+                                    <outputDirectory>${site.output.dir}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                     <!--
-                        Create a symlink from "latest" to the most recently
-                        released version of the docs.
+                        Get the collection of documentation for
+                        the current (under development) release.
                     -->
-                    <plugin>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>create-latest-link</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target>
-                                        <delete
-                                          dir="${site.output.dir}/docs/latest"
-                                          followSymlinks="false"
-                                          removeNotFollowedSymlinks="true"
-                                          />
-                                        <symlink
-                                          link="${site.output.dir}/docs/latest"
-                                          resource="${glassfish.version.latest}"/>
-                                    </target>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>redirect-for-installation-guide</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target>
-                                        <copy todir="${site.output.dir}">
-                                            <fileset dir="${project.build.outputDirectory}">
-                                            </fileset>
-                                        </copy>
-                                    </target>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-
+                    <execution>
+                        <id>get-current</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <excludes>META-INF/**</excludes>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.glassfish.main.docs</groupId>
+                                    <artifactId>glassfish-documentation</artifactId>
+                                    <version>${project.version}</version>
+                                    <outputDirectory>${docs.snapshot.dir}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                     <!--
-                        Publish the entire web site to the gh-pages branch.
+                        Get the collection of documentation for the 7.x release.
                     -->
-                    <plugin>
-                        <artifactId>maven-scm-publish-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>deploy-site</id>
-                                <phase>deploy</phase>
-                                <goals>
-                                    <goal>publish-scm</goal>
-                                </goals>
-                                <configuration>
-                                    <scmBranch>gh-pages</scmBranch>
-                                    <skipDeletedFiles>false</skipDeletedFiles>
-                                    <checkinComment>Update docs</checkinComment>
-                                    <ignorePathsToDelete>
-                                        <ignorePathsToDelete>latest</ignorePathsToDelete>
-                                    </ignorePathsToDelete>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+                    <execution>
+                        <id>get-7x</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <excludes>META-INF/**</excludes>
+                            <artifactItems>
+                                <artifactItem>
+                                    <!-- TODO: 2/2 Update groupId+artifactId after 7.0.11 -->
+                                    <groupId>org.glassfish.docs</groupId>
+                                    <artifactId>distribution</artifactId>
+                                    <version>${glassfish.version.7x.artifact}</version>
+                                    <outputDirectory>${docs.7x.dir}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <!--
+                        Get the collection of documentation for the 6.x release.
+                    -->
+                    <execution>
+                        <id>get-6x</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <excludes>META-INF/**</excludes>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.glassfish.docs</groupId>
+                                    <artifactId>distribution</artifactId>
+                                    <version>${glassfish.version.6x}</version>
+                                    <outputDirectory>${docs.6x.dir}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <!--
+                        Get the collection of documentation for the 5.1.0 release.
+                    -->
+                    <execution>
+                        <id>get-5x</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <excludes>META-INF/**</excludes>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.glassfish.docs</groupId>
+                                    <artifactId>distribution</artifactId>
+                                    <version>${glassfish.version.5x}</version>
+                                    <outputDirectory>${docs.5x.dir}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <!--
+                        Add additional execution blocks here as
+                        new releases are made, using the above
+                        as a template.  Don't forget to update
+                        the glassfish.version.latest property.
+                    -->
+                </executions>
+            </plugin>
+
+            <!--
+                Create a symlink from "latest" to the most recently
+                released version of the docs.
+            -->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>create-latest-link</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <delete
+                                  dir="${site.output.dir}/docs/latest"
+                                  followSymlinks="false"
+                                  removeNotFollowedSymlinks="true"
+                                  />
+                                <symlink
+                                  link="${site.output.dir}/docs/latest"
+                                  resource="${glassfish.version.latest}"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>redirect-for-installation-guide</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <copy todir="${site.output.dir}">
+                                    <fileset dir="${project.build.outputDirectory}">
+                                    </fileset>
+                                </copy>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Publish the entire web site to the gh-pages branch. -->
+            <plugin>
+                <artifactId>maven-scm-publish-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <id>deploy-site</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>publish-scm</goal>
+                        </goals>
+                        <configuration>
+                            <scmBranch>gh-pages</scmBranch>
+                            <skipDeletedFiles>false</skipDeletedFiles>
+                            <checkinComment>Update docs</checkinComment>
+                            <ignorePathsToDelete>
+                                <ignorePathsToDelete>latest</ignorePathsToDelete>
+                            </ignorePathsToDelete>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

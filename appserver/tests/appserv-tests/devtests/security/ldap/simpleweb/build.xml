@@ -49,7 +49,7 @@
        <antcall target="all-ssl"/>
    </target>
 
-   <target name="all-reg" depends="init-common,env-check">
+   <target name="all-reg" depends="init-common">
            <antcall target="setup"/>
            <antcall target="build"/>
            <antcall target="deploy"/>
@@ -58,7 +58,7 @@
            <antcall target="unsetup"/>
    </target>
 
-   <target name="all-ssl" depends="init-common,env-check">
+   <target name="all-ssl" depends="init-common">
            <antcall target="setup-ssl"/>
            <antcall target="build"/>
            <antcall target="deploy"/>
@@ -272,12 +272,12 @@
       </antcall>
 </target>
 
-    <target name="setup-ssl" depends="init-common,env-check">
+    <target name="setup-ssl" depends="init-common">
 <!--      <antcall target="import-ldap-server-cert"/>-->
       <antcall target="create-auth-ldaprealm-ssl"/>
       <antcall target="create-ldap-usrgrps"/>
     </target>
-    <target name="unsetup-ssl" depends="init-common,env-check">
+    <target name="unsetup-ssl" depends="init-common">
 <!--      <antcall target="delete-ldap-server-cert"/>-->
       <antcall target="delete-auth-ldaprealm"/>
       <antcall target="delete-ldap-usrgrps"/>

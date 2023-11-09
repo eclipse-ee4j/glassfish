@@ -88,7 +88,7 @@
   <!-- =============================================== -->
     <!-- Target to run the standalone client without ACC -->
     <!-- =============================================== -->
-    <target name="run-standalone-client" depends="init-common,init-security-util">
+    <target name="run-standalone-client" depends="init-common">
         <property name="jndi.name" value="SSLconverter"/>
         <property name="provider.url" value="iiop://${s1asCN}:${orb.port}"/>
         <property name="ctxfactory"

@@ -70,7 +70,7 @@
         <antcall target="deploy-war-common"/>
     </target>
 
-    <target name="run" depends="init-common,init-security-util">
+    <target name="run" depends="init-common">
         <java classname="devtests.security.WebSSLClient">
             <sysproperty key="javax.net.debug1" value="ssl,handshake,data,trustmanager"   />
             <sysproperty key="sun.security.ssl.allowUnsafeRenegotiation" value="true"   />
@@ -96,7 +96,6 @@
     </target>
 
     <target name="setup" depends="init-common,prepare-store-common">
-        <antcall target="env-check" />
         <copy file="${assemble.dir}/test-${appname}.jar"
             todir="${env.S1AS_HOME}/lib"/>
         <copy file="${admin.domain.dir}/${admin.domain}/config/login.conf"

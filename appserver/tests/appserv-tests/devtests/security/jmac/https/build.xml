@@ -65,7 +65,7 @@
         <delete file="${env.S1AS_HOME}/lib/test-${appname}-provider.jar" failonerror="false"/>
     </target>
 
-    <target name="build" depends="init-common, init-security-util">
+    <target name="build" depends="init-common">
         <antcall target="webclient-war-common">
             <param name="hasWebclient" value="yes"/>
         </antcall>
@@ -91,7 +91,7 @@
         <antcall target="undeploy-war-common"/>
     </target>
 
-    <target name="run" depends="init-common, init-security-util">
+    <target name="run" depends="init-common">
         <java classname="com.sun.s1asdev.security.jmac.https.WebSSLClient" fork="true">
             <!--jvmarg value="-Djavax.net.debug=all" -->
             <jvmarg value="-Djavax.net.ssl.keyStore=${mykeystore.db.file}"/>

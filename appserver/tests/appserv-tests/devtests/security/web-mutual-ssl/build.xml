@@ -67,7 +67,7 @@
         <antcall target="deploy-war-common"/>
     </target>
 
-    <target name="run" depends="init-common,init-security-util">
+    <target name="run" depends="init-common">
         <!-- <property name="myhttps.host" value="localhost"/>
          <property name="myhttps.port" value="8181"/> -->
         <java classname="devtests.security.WebSSLClient">
@@ -95,7 +95,6 @@
     </target>
 
     <target name="setup" depends="init-common,prepare-store-common">
-        <antcall target="env-check" />
         <antcall target="generate-ca-client-certs-pe" />
         <antcall target="generate-ca-client-certs-ee" />
         <antcall target="restart-server-instance-common"/>

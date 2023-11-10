@@ -1,6 +1,6 @@
-<!--
-
-    Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+<%--
+    Copyright (c) 2023 Contributors to the Eclipse Foundation.
+    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,13 +14,18 @@
 
     SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 
--->
+--%>
 
-
-<property name="module" value="security-jmac-https"/>
-<property name="appname" value="${module}"/>
-<property name="app.type" value="war"/>
-<property name="assemble" value="${build.classes.dir}/archive"/>
-<property name="web.xml" value="descriptor/web.xml"/>
-<property name="glassfish-web.xml" value="descriptor/glassfish-web.xml"/>
-
+Hello World from 196 HttpServlet AuthModule Test!
+<hr>
+<%
+    try {
+        out.println("Hello, " + request.getRemoteUser() + " from " + request.getAttribute("MY_NAME"));
+    } catch (Exception ex) {
+        out.println("Something wrong: " + ex);
+        throw ex;
+    } finally {
+        out.flush();
+    }
+%>
+<hr>

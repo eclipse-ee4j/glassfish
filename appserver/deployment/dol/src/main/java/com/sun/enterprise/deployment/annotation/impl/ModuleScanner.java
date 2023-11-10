@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -92,7 +92,7 @@ public abstract class ModuleScanner<T extends Descriptor> extends JavaEEScanner<
         level = "SEVERE")
     private static final String NO_CLASSLOADER = "AS-DEPLOYMENT-00010";
 
-    @LogMessageInfo(message = "Error in annotation processing: {0}.", level = "WARNING")
+    @LogMessageInfo(message = "Error in annotation processing:", level = "WARNING")
     private static final String ANNOTATION_ERROR = "AS-DEPLOYMENT-00011";
 
     @LogMessageInfo(message = "Cannot load {0}  reason : {1}.", level = "WARNING")

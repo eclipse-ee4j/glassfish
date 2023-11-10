@@ -80,11 +80,6 @@
     <property name="mqadmin.user" value="admin"/>
     <property name="mqadmin.password" value="admin"/>
 
-    <!-- pointbase properties -->
-    <!-- Changed to derby properties
-    <property file="${env.APS_HOME}/devtests/jdbc/config/pointbase.properties"/>
-    <property name="db.root" value="${env.S1AS_HOME}/pointbase"/>
-    <property name="db.classpath" value="${db.root}/lib/pbtools.jar:${db.root}/lib/pbclient.jar:${db.root}/lib/pbembedded.jar"/>-->
     <property file="${env.APS_HOME}/config/derby.properties"/>
     <property name="db.root" value="${env.S1AS_HOME}/../javadb"/>
     <property name="db.classpath" value="${db.root}/lib/derby.jar:${db.root}/lib/derbyclient.jar:${db.root}/lib/derbynet.jar:${env.APS_HOME}/sqetests/connector/lib/cci-derby-proc.jar"/>
@@ -115,27 +110,6 @@
     <property name="test.name" value=""/>
     <property name="test.description" value=""/>
     <property name="component.name" value="${appname}App"/>
-
-    <property name="test.base" value="pe"/>
-    <property name="base.report.dir"
-        value="${env.APS_HOME}/reports/${test.base}-${execution.mode}"/>
-<!--
-    <property name="results.golden.list.file"
-        value="${env.APS_HOME}/build-config/results_baseline.properties"/>
-    <property name="results.analysis.file" value="test_analysis"/>
-    <property name="results.list.file"
-        value="${env.rPS_HOME}/build-config/results.properties"/>
-    <property name="results.summary.file" value="summaryreport"/>
--->
-<!-- Test Harness properties for WebTest ============ -->
-    <property name="webtest.classname" value="org.apache.tomcat.task.GTest"/>
-    <property name="webtest.classpath" value="${env.APS_HOME}/lib/testdriver.jar:${mvn.lib.dir}/commons-logging.jar"/>
-    <property name="webtest.report.dir" value="${base.report.dir}/${os.arch}_${hostname}_${osname}"/>
-    <antcall target="create-report-dir" />
-</target>
-
-<target name="create-report-dir" unless="${webtest.report.dir}">
-  <mkdir dir="${webtest.report.dir}"/>
 </target>
 
 <!-- default is PE mode of operation -->

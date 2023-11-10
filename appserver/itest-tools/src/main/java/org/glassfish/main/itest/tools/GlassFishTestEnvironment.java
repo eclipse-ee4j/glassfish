@@ -29,6 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.security.KeyStore;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
@@ -60,6 +61,7 @@ public class GlassFishTestEnvironment {
     private static final String ADMIN_PASSWORD = "admintest";
 
     private static final File ASADMIN = findAsadmin();
+    private static final File KEYTOOL = findKeyTool();
     private static final File PASSWORD_FILE_FOR_UPDATE = findPasswordFile("password_update.txt");
     private static final File PASSWORD_FILE = findPasswordFile("password.txt");
 
@@ -92,6 +94,11 @@ public class GlassFishTestEnvironment {
     }
 
 
+    public static KeyTool getKeyTool() {
+        return new KeyTool(KEYTOOL);
+    }
+
+
     /**
      * @return project's target directory.
      */
@@ -105,6 +112,18 @@ public class GlassFishTestEnvironment {
      */
     public static Path getDomain1Directory() {
         return GF_ROOT.toPath().resolve(Paths.get("domains", "domain1"));
+    }
+
+
+    public static KeyStore getDomain1KeyStore() {
+        Path keystore = getDomain1Directory().resolve(Paths.get("config", "keystore.jks"));
+        return KeyTool.loadKeyStore(keystore.toFile(), "changeit".toCharArray());
+    }
+
+
+    public static KeyStore getDomain1TrustStore() {
+        Path cacerts = getDomain1Directory().resolve(Paths.get("config", "cacerts.jks"));
+        return KeyTool.loadKeyStore(cacerts.toFile(), "changeit".toCharArray());
     }
 
 
@@ -127,14 +146,14 @@ public class GlassFishTestEnvironment {
      * @throws IOException
      */
     public static HttpURLConnection openConnection(final String context) throws IOException {
-        final HttpURLConnection connection = openConnection(4848, context);
+        final HttpURLConnection connection = openConnection(false, 4848, context);
         connection.setAuthenticator(new DasAuthenticator());
         return connection;
     }
 
 
     /**
-     * Creates an unencrypted {@link HttpURLConnection} for the gine port and context.
+     * Creates an unencrypted {@link HttpURLConnection} for the given port and context.
      *
      * @param port
      * @param context - part of the url behind the <code>http://localhost:[port]</code>
@@ -142,8 +161,26 @@ public class GlassFishTestEnvironment {
      * @throws IOException
      */
     public static HttpURLConnection openConnection(final int port, final String context) throws IOException {
-        final HttpURLConnection connection = (HttpURLConnection) new URL("http://localhost:" + port + context)
-            .openConnection();
+        return openConnection(false, port, context);
+    }
+
+
+    /**
+     * Creates a {@link HttpURLConnection} for the given port and context.
+     *
+     * @param secured true for https, false for http
+     * @param port
+     * @param context - part of the url behind the <code>http://localhost:[port]</code>
+     * @return a new disconnected {@link HttpURLConnection}.
+     * @throws IOException
+     */
+    public static <T extends HttpURLConnection> T openConnection(final boolean secured, final int port, final String context)
+        throws IOException {
+        final String protocol = secured ? "https" : "http";
+        @SuppressWarnings("unchecked")
+        final T connection = (T) new URL(protocol + "://localhost:" + port + context).openConnection();
+        connection.setReadTimeout(15000);
+        connection.setConnectTimeout(100);
         connection.setRequestProperty("X-Requested-By", "JUnit5Test");
         return connection;
     }
@@ -218,6 +255,11 @@ public class GlassFishTestEnvironment {
 
     private static File findAsadmin() {
         return new File(GF_ROOT, isWindows() ? "bin/asadmin.bat" : "bin/asadmin");
+    }
+
+
+    private static File findKeyTool() {
+        return new File(System.getProperty("java.home"), isWindows() ? "bin/keytool.bat" : "bin/keytool");
     }
 
 

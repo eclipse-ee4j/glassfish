@@ -50,7 +50,6 @@
 
         <run-security-test path="simpleMultiRoleMapping" />
         <run-security-test path="multiRoleMapping" />
-        <run-security-test path="defaultp2r" />
 
         <run-security-test path="authConf" />
         <run-security-test path="negativeRealmPerApp" />

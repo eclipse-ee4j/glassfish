@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,9 +15,8 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.s1asdev.security.simpleMultiRoleMapping.ejb2;
+package org.glassfish.main.test.app.security.multirolemapping;
 
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Local;
 import jakarta.ejb.Stateless;
 
@@ -24,9 +24,8 @@ import jakarta.ejb.Stateless;
 @Local({MessageLocal2.class})
 public class MessageBean2 implements MessageLocal2 {
 
-    //@RolesAllowed("ejbrole")
+    @Override
     public String getMessage() {
         return "Hello from ejb";
     }
-
 }

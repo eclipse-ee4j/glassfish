@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-
+    Copyright (c) 2023 Contributors to the Eclipse Foundation.
     Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -17,10 +17,13 @@
 
 -->
 
-<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+>
     <servlet>
         <servlet-name>WebTest</servlet-name>
-        <servlet-class>com.sun.s1asdev.security.multiRoleMapping.web.WebTest</servlet-class>
+        <servlet-class>org.glassfish.main.test.app.security.multirolemapping.WebTest</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -29,21 +32,19 @@
     </servlet-mapping>
     <session-config>
 
-        <session-timeout>
-            30
-        </session-timeout>
+        <session-timeout>30</session-timeout>
     </session-config>
 
     <security-constraint>
         <display-name>constraint-role1</display-name>
         <web-resource-collection>
             <web-resource-name>WebTestServlet</web-resource-name>
-            <description/>
+            <description />
             <url-pattern>/role1</url-pattern>
             <http-method>GET</http-method>
         </web-resource-collection>
         <auth-constraint>
-            <description/>
+            <description />
             <role-name>role1</role-name>
         </auth-constraint>
     </security-constraint>
@@ -51,12 +52,12 @@
         <display-name>constraint-role2</display-name>
         <web-resource-collection>
             <web-resource-name>WebTestServlet</web-resource-name>
-            <description/>
+            <description />
             <url-pattern>/role2</url-pattern>
             <http-method>GET</http-method>
         </web-resource-collection>
         <auth-constraint>
-            <description/>
+            <description />
             <role-name>role2</role-name>
         </auth-constraint>
     </security-constraint>
@@ -64,12 +65,12 @@
         <display-name>constraint-role3</display-name>
         <web-resource-collection>
             <web-resource-name>WebTestServlet</web-resource-name>
-            <description/>
+            <description />
             <url-pattern>/role3</url-pattern>
             <http-method>GET</http-method>
         </web-resource-collection>
         <auth-constraint>
-            <description/>
+            <description />
             <role-name>role3</role-name>
         </auth-constraint>
     </security-constraint>
@@ -77,12 +78,12 @@
         <display-name>constraint-role4</display-name>
         <web-resource-collection>
             <web-resource-name>WebTestServlet</web-resource-name>
-            <description/>
+            <description />
             <url-pattern>/role4</url-pattern>
             <http-method>GET</http-method>
         </web-resource-collection>
         <auth-constraint>
-            <description/>
+            <description />
             <role-name>role4</role-name>
         </auth-constraint>
     </security-constraint>
@@ -90,12 +91,12 @@
         <display-name>constraint-role5</display-name>
         <web-resource-collection>
             <web-resource-name>WebTestServlet</web-resource-name>
-            <description/>
+            <description />
             <url-pattern>/role5</url-pattern>
             <http-method>GET</http-method>
         </web-resource-collection>
         <auth-constraint>
-            <description/>
+            <description />
             <role-name>role5</role-name>
         </auth-constraint>
     </security-constraint>
@@ -103,12 +104,12 @@
         <display-name>constraint-role6</display-name>
         <web-resource-collection>
             <web-resource-name>WebTestServlet</web-resource-name>
-            <description/>
+            <description />
             <url-pattern>/role6</url-pattern>
             <http-method>GET</http-method>
         </web-resource-collection>
         <auth-constraint>
-            <description/>
+            <description />
             <role-name>role6</role-name>
         </auth-constraint>
     </security-constraint>
@@ -116,12 +117,12 @@
         <display-name>constraint-role7</display-name>
         <web-resource-collection>
             <web-resource-name>WebTestServlet</web-resource-name>
-            <description/>
+            <description />
             <url-pattern>/role7</url-pattern>
             <http-method>GET</http-method>
         </web-resource-collection>
         <auth-constraint>
-            <description/>
+            <description />
             <role-name>role7</role-name>
         </auth-constraint>
     </security-constraint>

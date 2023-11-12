@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-
+    Copyright (c) 2023 Contributors to the Eclipse Foundation.
     Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -17,14 +17,17 @@
 
 -->
 
-<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+>
     <servlet>
         <servlet-name>WebTest</servlet-name>
-        <servlet-class>com.sun.s1asdev.security.simpleMultiRoleMapping.web.WebTest</servlet-class>
+        <servlet-class>org.glassfish.main.test.app.security.simplemultirolemapping.WebTest</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>EjbTest</servlet-name>
-        <servlet-class>com.sun.s1asdev.security.simpleMultiRoleMapping.web.EjbTest</servlet-class>
+        <servlet-class>org.glassfish.main.test.app.security.simplemultirolemapping.EjbTest</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>WebTest</servlet-name>
@@ -35,20 +38,16 @@
         <url-pattern>/ejb</url-pattern>
     </servlet-mapping>
     <session-config>
-        <session-timeout>
-            30
-        </session-timeout>
+        <session-timeout>30</session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>
-            index.jsp
-        </welcome-file>
+        <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
     <security-constraint>
         <display-name>web-constraint</display-name>
         <web-resource-collection>
             <web-resource-name>WebTestServlet</web-resource-name>
-            <description/>
+            <description />
             <url-pattern>/web</url-pattern>
             <http-method>GET</http-method>
         </web-resource-collection>
@@ -61,7 +60,7 @@
         <display-name>ejb-constraint</display-name>
         <web-resource-collection>
             <web-resource-name>EJBTestServlet</web-resource-name>
-            <description/>
+            <description />
             <url-pattern>/ejb</url-pattern>
             <http-method>GET</http-method>
         </web-resource-collection>

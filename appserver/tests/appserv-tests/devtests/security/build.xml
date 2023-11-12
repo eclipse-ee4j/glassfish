@@ -48,8 +48,6 @@
 
         <run-security-test path="uncovered-http-methods" />
 
-        <run-security-test path="simpleMultiRoleMapping" />
-
         <run-security-test path="authConf" />
         <run-security-test path="negativeRealmPerApp" />
         <run-security-test path="realmPerApp" />

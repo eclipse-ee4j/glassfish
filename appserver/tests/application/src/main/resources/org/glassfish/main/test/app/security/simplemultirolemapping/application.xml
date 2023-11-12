@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE sun-ejb-jar PUBLIC "-//Sun Microsystems, Inc.//DTD Application Server 9.0 EJB 3.0//EN" "http://www.sun.com/software/appserver/dtds/sun-ejb-jar_3_0-0.dtd">
 <!--
-
+    Copyright (c) 2023 Contributors to the Eclipse Foundation.
     Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -18,16 +17,18 @@
 
 -->
 
-<sun-ejb-jar>
-  <enterprise-beans>
-    <ejb>
-      <ejb-name>MessageBean</ejb-name>
-    </ejb>
-  </enterprise-beans>
-
-  <security-role-mapping>
-    <role-name>ejbrole</role-name>
-    <principal-name>bobby</principal-name>
-  </security-role-mapping>
-
-</sun-ejb-jar>
+<application version="5" xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/application_5.xsd"
+>
+    <display-name>security-multimapping</display-name>
+    <module>
+        <web>
+            <web-uri>security-multimapping-web.war</web-uri>
+            <context-root>/security-multimapping</context-root>
+        </web>
+    </module>
+    <module>
+        <ejb>security-multimapping-ejb.jar</ejb>
+    </module>
+</application>

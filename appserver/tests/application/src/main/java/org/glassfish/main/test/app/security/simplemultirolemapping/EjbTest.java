@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,21 +15,25 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.s1asdev.security.simpleMultiRoleMapping.web;
+package org.glassfish.main.test.app.security.simplemultirolemapping;
 
-import com.sun.s1asdev.security.simpleMultiRoleMapping.ejb.MessageLocal;
-import java.io.*;
-import java.net.*;
 import jakarta.ejb.EJB;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class EjbTest extends HttpServlet {
+
+    private static final long serialVersionUID = 1L;
 
     @EJB
     private MessageLocal messageBean;
 
+    @Override
     protected void doGet(HttpServletRequest request,
         HttpServletResponse response) throws ServletException, IOException {
 
@@ -36,7 +41,7 @@ public class EjbTest extends HttpServlet {
         PrintWriter out = response.getWriter();
         out.println("<html>");
         out.println("<head>");
-        out.println("<title>Servlet WebTest</title>");
+        out.println("<title>Servlet EjbTest</title>");
         out.println("</head>");
         out.println("<body>");
         out.println("<h2>" + messageBean.getMessage() + "</h2>");

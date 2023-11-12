@@ -56,6 +56,7 @@ import org.glassfish.hk2.classmodel.reflect.Types;
 
 import static java.security.AccessController.doPrivileged;
 import static java.util.logging.Level.FINE;
+import static org.glassfish.api.invocation.ComponentInvocation.ComponentInvocationType.SERVLET_INVOCATION;
 
 /**
  * <p>
@@ -222,25 +223,24 @@ public class GlassFishInjectionProvider extends DiscoverableInjectionProvider im
      * @throws InjectionException if we're unable to obtain the <code>JndiNameEnvironment</code>
      */
     private JndiNameEnvironment getNamingEnvironment() throws InjectionException {
-        ComponentInvocation inv = invocationManager.getCurrentInvocation();
+        ComponentInvocation currentInvocation = invocationManager.getCurrentInvocation();
 
-        if (inv != null) {
-
-            if (inv.getInvocationType() == ComponentInvocation.ComponentInvocationType.SERVLET_INVOCATION) {
-
-                JndiNameEnvironment componentEnv = (JndiNameEnvironment) inv.jndiEnvironment;
-
-                if (componentEnv != null) {
-                    return componentEnv;
-                } else {
-                    throw new InjectionException("No descriptor registered for " + " current invocation : " + inv);
-                }
-            } else {
-                throw new InjectionException("Wrong invocation type");
-            }
-        } else {
+        if (currentInvocation == null) {
             throw new InjectionException("null invocation context");
         }
+
+        if (currentInvocation.getInvocationType() != SERVLET_INVOCATION) {
+            throw new InjectionException("Wrong invocation type");
+        }
+
+
+        JndiNameEnvironment componentEnv = (JndiNameEnvironment) currentInvocation.jndiEnvironment;
+
+        if (componentEnv != null) {
+            return componentEnv;
+        }
+
+        throw new InjectionException("No descriptor registered for " + " current invocation : " + currentInvocation);
     }
 
     /**
@@ -348,9 +348,7 @@ public class GlassFishInjectionProvider extends DiscoverableInjectionProvider im
             });
         } catch (Exception t) {
             String msg = "Exception attempting invoke lifecycle " + " method " + lifecycleMethod;
-            if (LOGGER.isLoggable(FINE)) {
-                LOGGER.log(FINE, msg, t);
-            }
+            LOGGER.log(FINE, msg, t);
 
             InjectionException ie = new InjectionException(msg);
             Throwable cause = (t instanceof InvocationTargetException) ? t.getCause() : t;
@@ -391,7 +389,7 @@ public class GlassFishInjectionProvider extends DiscoverableInjectionProvider im
         // 1> has <distributable /> in the web.xml
         // 2> Was deployed with --availabilityenabled --target <clustername>
         WebConfiguration config = WebConfiguration.getInstance(ctx);
-        if (!config.isSet(WebConfiguration.BooleanWebContextInitParameter.EnableAgressiveSessionDirtying)) {
+        if (!config.isSet(WebConfiguration.BooleanWebContextInitParameter.EnableDistributable )) {
             Object isDistributableObj = ctx.getAttribute(Constants.IS_DISTRIBUTABLE_ATTRIBUTE);
             Object enableHAObj = ctx.getAttribute(Constants.ENABLE_HA_ATTRIBUTE);
             if (isDistributableObj instanceof Boolean && enableHAObj instanceof Boolean) {
@@ -402,10 +400,8 @@ public class GlassFishInjectionProvider extends DiscoverableInjectionProvider im
                     LOGGER.log(FINE, "isDistributable = {0} enableHA = {1}", new Object[] { isDistributable, enableHA });
                 }
                 if (isDistributable && enableHA) {
-                    if (LOGGER.isLoggable(FINE)) {
-                        LOGGER.fine("setting the EnableAgressiveSessionDirtying to true");
-                    }
-                    config.overrideContextInitParameter(WebConfiguration.BooleanWebContextInitParameter.EnableAgressiveSessionDirtying,
+                    LOGGER.fine("setting the EnableAgressiveSessionDirtying to true");
+                    config.overrideContextInitParameter(WebConfiguration.BooleanWebContextInitParameter.EnableDistributable,
                             Boolean.TRUE);
                 }
             }

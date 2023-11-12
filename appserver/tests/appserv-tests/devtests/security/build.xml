@@ -63,7 +63,6 @@
         <run-security-test path="ejb-mutual-ssl" />
         <run-security-test path="sameEjbName" />
 
-        <run-security-test path="jsp2sful" />
         <run-security-test path="wss" />
 
         <run-security-test path="ciphertest" />

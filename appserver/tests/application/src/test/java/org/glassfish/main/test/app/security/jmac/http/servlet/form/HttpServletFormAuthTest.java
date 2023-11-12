@@ -16,16 +16,12 @@
 
 package org.glassfish.main.test.app.security.jmac.http.servlet.form;
 
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.InputStream;
 import java.lang.System.Logger;
-import java.net.CookieHandler;
-import java.net.CookieManager;
-import java.net.HttpCookie;
 import java.net.HttpURLConnection;
-import java.net.URLEncoder;
+import java.net.URL;
 
+import org.glassfish.main.itest.tools.FormAuthHttpClient;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -38,10 +34,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import static java.lang.System.Logger.Level.INFO;
-import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.glassfish.main.itest.tools.FormAuthHttpClient.readResponseBody;
 import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.createFileUser;
 import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getDomain1Directory;
-import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.openConnection;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -110,38 +105,12 @@ public class HttpServletFormAuthTest {
 
     @Test
     void test() throws Exception {
-        final CookieManager cookieManager = new CookieManager();
-        CookieHandler.setDefault(cookieManager);
-        final HttpCookie sessionId;
-        {
-            final HttpURLConnection connection = openConnection(8080, "/" + APP_NAME + "/index.jsp");
-            connection.setRequestMethod("GET");
+        final URL baseUrl = new URL("http://localhost:8080/" + APP_NAME);
+        final FormAuthHttpClient client = new FormAuthHttpClient(baseUrl, USER_NAME, USER_PASSWORD);
+        final HttpURLConnection connection = client.get("index.jsp");
+        try {
             assertThat(connection.getResponseCode(), equalTo(200));
-            try (InputStream is = connection.getInputStream()) {
-                final String text = new String(is.readAllBytes(), UTF_8);
-                assertThat(text,
-                    stringContainsInOrder("<title>Login Page</title>", "Please login", "j_username", "j_password"));
-                sessionId = cookieManager.getCookieStore().getCookies().stream()
-                    .filter(c -> c.getName().equals("JSESSIONID")).findFirst().get();
-                is.readAllBytes();
-            } finally {
-                connection.disconnect();
-            }
-        }
-        final HttpURLConnection connection = openConnection(8080, "/" + APP_NAME + "/j_security_check");
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Cookie", "JSESSIONID=" + URLEncoder.encode(sessionId.getValue(), UTF_8));
-        connection.setDoOutput(true);
-        connection.setInstanceFollowRedirects(true);
-        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-        connection.setRequestProperty("Charset", UTF_8.name());
-        try (DataOutputStream stream = new DataOutputStream(connection.getOutputStream())) {
-            stream.writeBytes("j_username=" + USER_NAME + "&j_password=" + USER_PASSWORD);
-            stream.flush();
-        }
-        assertThat(connection.getResponseCode(), equalTo(200));
-        try (InputStream is = connection.getInputStream()) {
-            final String text = new String(is.readAllBytes(), UTF_8);
+            final String text = readResponseBody(connection);
             assertThat(text, stringContainsInOrder(
                 "Hello World from 196 HttpServletForm AuthModule Test!",
                 "Hello, shingwai from " + HttpServletFormTestAuthModule.class.getName(),

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,16 +15,18 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package profile;
+package org.glassfish.main.test.app.security.jsp2sful;
 
+import jakarta.ejb.CreateException;
 import jakarta.ejb.EJBHome;
-/**
- *
- * @author  swchan2
- */
-public interface ProfileInfoHome extends EJBHome{
 
-    public ProfileInfoRemote create(String name)
-        throws java.rmi.RemoteException, jakarta.ejb.CreateException;
+import java.rmi.RemoteException;
+
+/**
+ * @author swchan2
+ */
+public interface ProfileInfoHome extends EJBHome {
+
+    ProfileInfoRemote create(String name) throws RemoteException, CreateException;
 
 }

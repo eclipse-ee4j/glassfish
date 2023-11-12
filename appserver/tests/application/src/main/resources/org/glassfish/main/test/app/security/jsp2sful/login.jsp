@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE sun-web-app PUBLIC '-//Sun Microsystems, Inc.//DTD Sun ONE Application Server 7.0 Servlet 2.3//EN' 'http://www.sun.com/software/sunone/appserver/dtds/sun-web-app_2_3-0.dtd'>
-<!--
+<%--
 
+    Copyright (c) 2023 Contributors to the Eclipse Foundation.
     Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -16,18 +15,28 @@
 
     SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 
--->
+--%>
 
-<sun-web-app>
-  <session-config>
-    <session-manager/>
-  </session-config>
+<%@ page language="java"%>
+<html>
+<head>
+<title>Login Page</title>
+</head>
+<h2>Welcome</h2>
+<BR>
+Please login
+<BR>
+<HR>
+<FORM ACTION="j_security_check" METHOD=POST>
+  <table border=0>
+    <tr>
+      <td align="right">UserName:
+      <td><INPUT TYPE="text" NAME="j_username" VALUE=""> <BR>
+    <tr>
+      <td align="right">Password:
+      <td><INPUT TYPE="password" NAME="j_password" VALUE=""> <BR>
+  </table>
+  <BR> <INPUT TYPE="submit" value="Login"> <INPUT TYPE="reset" value="Clear">
 
-  <ejb-ref>
-    <ejb-ref-name>jsp2sful</ejb-ref-name>
-    <jndi-name>jsp2sful</jndi-name>
-  </ejb-ref>
-  <class-loader delegate="true"/>
-  <jsp-config/>
-</sun-web-app>
-
+</FORM>
+</html>

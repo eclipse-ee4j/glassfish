@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,56 +15,55 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package profile;
+package org.glassfish.main.test.app.security.jsp2sful;
 
-import jakarta.ejb.SessionContext;
 import jakarta.ejb.SessionBean;
-import java.util.Vector;
-import java.lang.String;
-import java.util.Iterator;
-import jakarta.ejb.EJBException;
-import java.rmi.RemoteException;
-/**
- *
- * @author  hsingh
- */
+import jakarta.ejb.SessionContext;
 
+/**
+ * @author hsingh
+ */
 public class ProfileInfoBean implements SessionBean {
 
-    private String name;
+    private static final long serialVersionUID = 1L;
 
-    private SessionContext sc = null;
+    private SessionContext context;
 
     /** Creates a new instance of ProfieInfo */
     public void ejbCreate(String name) {
-        this.name = name;
     }
 
+
     public String getCallerInfo() {
-        return sc.getCallerPrincipal().getName();
+        return context.getCallerPrincipal().getName();
     }
+
 
     public String getSecretInfo() {
         return "Keep It Secret!";
     }
 
+
+    @Override
     public void ejbActivate() {
         System.out.println("In ShoppingCart ejbActivate");
     }
 
 
+    @Override
     public void ejbPassivate() {
         System.out.println("In ShoppingCart ejbPassivate");
     }
 
 
-    public void ejbRemove()  {
+    @Override
+    public void ejbRemove() {
         System.out.println("In ShoppingCart ejbRemove");
     }
 
 
+    @Override
     public void setSessionContext(jakarta.ejb.SessionContext sessionContext) {
-        sc = sessionContext;
+        context = sessionContext;
     }
-
 }

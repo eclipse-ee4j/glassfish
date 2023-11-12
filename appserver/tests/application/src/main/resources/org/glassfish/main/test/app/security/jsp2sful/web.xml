@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC '-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN' 'http://java.sun.com/j2ee/dtds/web-app_2_2.dtd'>
+<!--
+
+    Copyright (c) 2023 Contributors to the Eclipse Foundation.
+    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<web-app>
+    <display-name>jsp2sful</display-name>
+    <distributable></distributable>
+    <servlet>
+        <servlet-name>LoginJsp</servlet-name>
+        <jsp-file>/login.jsp</jsp-file>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+    <servlet>
+        <servlet-name>IndexJsp</servlet-name>
+        <jsp-file>/index.jsp</jsp-file>
+        <load-on-startup>0</load-on-startup>
+        <security-role-ref>
+            <role-name>EMP</role-name>
+            <role-link>employee</role-link>
+        </security-role-ref>
+    </servlet>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>MySecureBit</web-resource-name>
+            <url-pattern>/index.jsp</url-pattern>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>employee</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>NONE</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+
+    <login-config>
+        <auth-method>FORM</auth-method>
+        <realm-name>default</realm-name>
+        <form-login-config>
+            <form-login-page>/login.jsp</form-login-page>
+            <form-error-page>/error.html</form-error-page>
+        </form-login-config>
+    </login-config>
+
+    <security-role>
+        <role-name>employee</role-name>
+    </security-role>
+
+    <ejb-ref>
+        <ejb-ref-name>jsp2sful</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <home>org.glassfish.main.test.app.security.jsp2sful.ProfileInfoHome</home>
+        <remote>org.glassfish.main.test.app.security.jsp2sful.ProfileInfoRemote</remote>
+    </ejb-ref>
+</web-app>
+

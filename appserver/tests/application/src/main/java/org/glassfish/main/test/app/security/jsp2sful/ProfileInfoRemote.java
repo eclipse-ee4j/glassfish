@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,16 +15,19 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package profile;
+package org.glassfish.main.test.app.security.jsp2sful;
 
 import java.rmi.RemoteException;
 import jakarta.ejb.EJBObject;
 
 /**
  * ProfileInfo Stateful Session Bean. Test JSR 115 authorization.
- * @author  swchan2
+ *
+ * @author swchan2
  */
 public interface ProfileInfoRemote extends EJBObject {
-    public String getCallerInfo() throws RemoteException;
-    public String getSecretInfo() throws RemoteException;
+
+    String getCallerInfo() throws RemoteException;
+
+    String getSecretInfo() throws RemoteException;
 }

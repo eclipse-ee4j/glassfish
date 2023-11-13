@@ -73,7 +73,7 @@
         <java classname="devtests.security.WebSSLClient">
             <sysproperty key="javax.net.debug1" value="ssl,handshake,data,trustmanager"   />
             <sysproperty key="sun.security.ssl.allowUnsafeRenegotiation" value="true"   />
-            <arg value="${s1asCN}"/>
+            <arg value="localhost"/>
             <arg value="${https.port}"/>
             <arg value="${contextroot}"/>
             <arg value="${mykeystore.db.file}"/>

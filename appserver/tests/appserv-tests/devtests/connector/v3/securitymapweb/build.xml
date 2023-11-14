@@ -87,7 +87,7 @@
     <exec executable="${ASADMIN}" failonerror="false">
       <arg line="deploy" />
       <arg line="${as.props}" />
-      <arg line="${bundles.dir}/connectors-ra-redeploy-rars.rar" />
+      <arg line="${mvn.lib.dir}/connectors-ra-redeploy-rars.rar" />
     </exec>
 
     <antcall target="create-connector-connpool-common">

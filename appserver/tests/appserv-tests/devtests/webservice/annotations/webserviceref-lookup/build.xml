@@ -31,15 +31,6 @@
     &testproperties;
     &jaxwsTools;
 
-    <path id="classpath">
-        <fileset dir="${env.S1AS_HOME}/modules">
-                      <include name="*.jar"/>
-        </fileset>
-        <fileset dir="${env.APS_HOME}/lib">
-                      <include name="*.jar"/>
-        </fileset>
-    </path>
-
 
     <target name="all" depends="clean, setup, runtest,undeploy"/>
 
@@ -125,9 +116,9 @@
     <target name="runtest" depends="init-common">
       <mkdir dir="${build.classes.dir}/client"/>
       <javac srcdir="." destdir="${build.classes.dir}/client"
-            classpath="${env.APS_HOME}/lib/reporter.jar"
+            classpath="${mvn.lib.dir}/reporter.jar"
             includes="client/**"/>
-      <unjar src="${env.APS_HOME}/lib/reporter.jar" dest="${build.classes.dir}/client"/>
+      <unjar src="${mvn.lib.dir}/reporter.jar" dest="${build.classes.dir}/client"/>
       <java classname="client.TestClient">
         <classpath>
           <pathelement path="${build.classes.dir}/client"/>

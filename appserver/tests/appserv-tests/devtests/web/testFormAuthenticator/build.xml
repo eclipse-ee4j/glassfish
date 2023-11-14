@@ -60,7 +60,7 @@
         </antcall>
 
         <javac srcdir="."
-            classpath="${env.APS_HOME}/lib/reportbuilder.jar:${env.APS_HOME}/lib/webtest.jar"
+            classpath="${mvn.lib.dir}/report-builder.jar:${mvn.lib.dir}/webtest.jar"
             includes="WebTest.java"/>
 
     </target>
@@ -80,8 +80,8 @@
             <arg value="${testuser}"/>
             <arg value="${testpassword}"/>
             <classpath>
-                <pathelement location="${env.APS_HOME}/lib/reportbuilder.jar"/>
-                <pathelement location="${env.APS_HOME}/lib/webtest.jar"/>
+                <pathelement location="${mvn.lib.dir}/report-builder.jar"/>
+                <pathelement location="${mvn.lib.dir}/webtest.jar"/>
                 <pathelement location="."/>
             </classpath>
         </java>

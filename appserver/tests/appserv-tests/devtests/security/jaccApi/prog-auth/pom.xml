@@ -85,7 +85,7 @@
             <artifactId>SimpleReporterAdapter</artifactId>
             <version>1.0</version>
             <scope>system</scope>
-            <systemPath>${APS_HOME}/lib/reporter.jar</systemPath>
+            <systemPath>${APS_HOME}/lib/target/reporter.jar</systemPath>
         </dependency>
     </dependencies>
 

@@ -39,16 +39,14 @@
     <property name="javaprops" value="-Dverbose=${verbose}"/>
 
     <path id="class.path">
-        <pathelement location="${env.APS_HOME}/lib/reportbuilder.jar"/>
+        <pathelement location="${env.APS_HOME}/lib/target/report-builder.jar"/>
         <pathelement location="build"/>
         <fileset dir="${env.S1AS_HOME}/modules"/>
     </path>
-    <pathconvert refid="class.path" property="classpath"/>
 
     <target name="listjndi">
-         <java classname="listjndi.ListJndiEntriesTest" classpath="${classpath}">
+         <java classname="listjndi.ListJndiEntriesTest" classpathref="class.path">
             <jvmarg line="${javaprops}"/>
-            <classpath id="classpath" />
         </java>
     </target>
 
@@ -56,14 +54,11 @@
 
     <target name="build">
         <mkdir dir="build"/>
-        <javac  includeAntRuntime="false" destdir="build" debug="true"
+        <javac includeAntRuntime="false" destdir="build" debug="true"  classpathref="class.path"
                srcdir="${env.APS_HOME}/devtests/admin/cli/src" includes="**/AdminBaseDevTest.java">
-
-            <classpath path="${classpath}"/>
         </javac>
-        <javac  includeAntRuntime="false"
+        <javac includeAntRuntime="false" classpathref="class.path"
                destdir="build" debug="true" srcdir="." includes="**/*.java">
-            <classpath path="${classpath}"/>
         </javac>
     </target>
 

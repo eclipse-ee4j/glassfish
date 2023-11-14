@@ -28,6 +28,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.security.KeyStore;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
@@ -59,6 +61,7 @@ public class GlassFishTestEnvironment {
     private static final String ADMIN_PASSWORD = "admintest";
 
     private static final File ASADMIN = findAsadmin();
+    private static final File KEYTOOL = findKeyTool();
     private static final File PASSWORD_FILE_FOR_UPDATE = findPasswordFile("password_update.txt");
     private static final File PASSWORD_FILE = findPasswordFile("password.txt");
 
@@ -91,6 +94,11 @@ public class GlassFishTestEnvironment {
     }
 
 
+    public static KeyTool getKeyTool() {
+        return new KeyTool(KEYTOOL);
+    }
+
+
     /**
      * @return project's target directory.
      */
@@ -107,6 +115,18 @@ public class GlassFishTestEnvironment {
     }
 
 
+    public static KeyStore getDomain1KeyStore() {
+        Path keystore = getDomain1Directory().resolve(Paths.get("config", "keystore.jks"));
+        return KeyTool.loadKeyStore(keystore.toFile(), "changeit".toCharArray());
+    }
+
+
+    public static KeyStore getDomain1TrustStore() {
+        Path cacerts = getDomain1Directory().resolve(Paths.get("config", "cacerts.jks"));
+        return KeyTool.loadKeyStore(cacerts.toFile(), "changeit".toCharArray());
+    }
+
+
     /**
      * Creates a {@link Client} instance for the domain administrator.
      * Caller is responsible for closing.
@@ -114,7 +134,7 @@ public class GlassFishTestEnvironment {
      * @return new {@link Client} instance
      */
     public static ClientWrapper createClient() {
-        return new ClientWrapper(new HashMap<String, String>(), ADMIN_USER, ADMIN_PASSWORD);
+        return new ClientWrapper(new HashMap<>(), ADMIN_USER, ADMIN_PASSWORD);
     }
 
 
@@ -126,14 +146,14 @@ public class GlassFishTestEnvironment {
      * @throws IOException
      */
     public static HttpURLConnection openConnection(final String context) throws IOException {
-        final HttpURLConnection connection = openConnection(4848, context);
+        final HttpURLConnection connection = openConnection(false, 4848, context);
         connection.setAuthenticator(new DasAuthenticator());
         return connection;
     }
 
 
     /**
-     * Creates an unencrypted {@link HttpURLConnection} for the gine port and context.
+     * Creates an unencrypted {@link HttpURLConnection} for the given port and context.
      *
      * @param port
      * @param context - part of the url behind the <code>http://localhost:[port]</code>
@@ -141,10 +161,54 @@ public class GlassFishTestEnvironment {
      * @throws IOException
      */
     public static HttpURLConnection openConnection(final int port, final String context) throws IOException {
-        final HttpURLConnection connection = (HttpURLConnection) new URL("http://localhost:" + port + context)
-            .openConnection();
+        return openConnection(false, port, context);
+    }
+
+
+    /**
+     * Creates a {@link HttpURLConnection} for the given port and context.
+     *
+     * @param secured true for https, false for http
+     * @param port
+     * @param context - part of the url behind the <code>http://localhost:[port]</code>
+     * @return a new disconnected {@link HttpURLConnection}.
+     * @throws IOException
+     */
+    public static <T extends HttpURLConnection> T openConnection(final boolean secured, final int port, final String context)
+        throws IOException {
+        final String protocol = secured ? "https" : "http";
+        @SuppressWarnings("unchecked")
+        final T connection = (T) new URL(protocol + "://localhost:" + port + context).openConnection();
+        connection.setReadTimeout(15000);
+        connection.setConnectTimeout(100);
         connection.setRequestProperty("X-Requested-By", "JUnit5Test");
         return connection;
+    }
+
+
+    /**
+     * Creates the unencrypted password file on the local file system and uses it to create the user
+     * record in the file realm.
+     *
+     * @param realmName
+     * @param user
+     * @param password
+     * @param groupNames
+     */
+    public static void createFileUser(String realmName, String user, String password, String... groupNames) {
+        final Path passwordFile = doIO(() -> Files.createTempFile("pwd", "txt"));
+        try {
+            Files.writeString(passwordFile,
+                "AS_ADMIN_PASSWORD=" + ADMIN_PASSWORD + "\nAS_ADMIN_USERPASSWORD=" + password + "\n",
+                StandardOpenOption.APPEND);
+            Asadmin asadmin = new Asadmin(ASADMIN, ADMIN_USER, passwordFile.toFile());
+            assertThat(asadmin.exec("create-file-user", "--groups", String.join(",", groupNames), "--authrealmname",
+                realmName, "--target", "server", user), asadminOK());
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not create the temporary password file.", e);
+        } finally {
+            doIO(() -> Files.delete(passwordFile));
+        }
     }
 
 
@@ -194,6 +258,11 @@ public class GlassFishTestEnvironment {
     }
 
 
+    private static File findKeyTool() {
+        return new File(System.getProperty("java.home"), isWindows() ? "bin/keytool.bat" : "bin/keytool");
+    }
+
+
     private static boolean isWindows() {
         return System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("win");
     }
@@ -234,11 +303,41 @@ public class GlassFishTestEnvironment {
         }
     }
 
+
+    private static <T> T doIO(IOSupplier<T> action) {
+        try {
+            return action.execute();
+        } catch (IOException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+    }
+
+
+    private static void doIO(IOAction action) {
+        try {
+            action.execute();
+        } catch (IOException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+    }
+
     private static class DasAuthenticator extends Authenticator {
 
         @Override
         protected PasswordAuthentication getPasswordAuthentication() {
             return new PasswordAuthentication(ADMIN_USER, ADMIN_PASSWORD.toCharArray());
         }
+    }
+
+    @FunctionalInterface
+    private interface IOSupplier<T> {
+
+        T execute() throws IOException;
+    }
+
+    @FunctionalInterface
+    private interface IOAction {
+
+        void execute() throws IOException;
     }
 }

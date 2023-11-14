@@ -99,7 +99,7 @@
         <arg line="-password j2ee"/>
         <arg line="-xml ${env.S1AS_HOME}/domains/${admin.domain}/config/glassfish-acc.xml"/>
         <arg line="${appclient.application.args}"/>
-        <env key="APPCPATH" value="${env.APS_HOME}/lib/reporter.jar"/>
+        <env key="APPCPATH" value="${mvn.lib.dir}/reporter.jar"/>
       </exec>
 
       <!-- confirming report generation... -->

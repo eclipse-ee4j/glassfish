@@ -72,7 +72,7 @@
         </jar>
         <jar jarfile="${assemble.dir}/${appname}-all.jar">
              <manifest>
-                 <attribute name="Class-Path" value="file:${assemble.dir}/${appname}-ejb.jar file:${assemble.dir}/${appname}-client.jar file:${env.APS_HOME}/lib/reporter.jar"/>
+                 <attribute name="Class-Path" value="file:${assemble.dir}/${appname}-ejb.jar file:${assemble.dir}/${appname}-client.jar file:${mvn.lib.dir}/reporter.jar"/>
              </manifest>
         </jar>
     </target>

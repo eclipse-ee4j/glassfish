@@ -86,7 +86,7 @@
   <target name="run" depends="init-common">
     <property file="${env.APS_HOME}/config/derby.properties" />
     <exec executable="${APPCLIENT}" failonerror="true">
-      <env key="APPCPATH" value="${env.APS_HOME}/lib/reporter.jar" />
+      <env key="APPCPATH" value="${mvn.lib.dir}/reporter.jar" />
       <arg line="-client ${assemble.dir}/${appname}AppClient.jar" />
       <arg line="-name ${appname}Client" />
       <arg line="-textauth" />

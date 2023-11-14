@@ -32,7 +32,7 @@
   <target name="all" depends="init-common">
     <antcall target="compile-common">
       <param name="src" value="." />
-      <param name="s1astest.classpath" value="${s1astest.classpath}:${bundles.dir}/connectors-ra-redeploy-jars.jar" />
+      <param name="s1astest.classpath" value="${s1astest.classpath}:${mvn.lib.dir}/connectors-ra-redeploy-jars.jar" />
     </antcall>
 
     <antcall target="ejb-jar-common">
@@ -45,7 +45,7 @@
          basedir="${build.classes.dir}"
          update="true"
     >
-      <zipfileset src="${bundles.dir}/connectors-ra-redeploy-jars.jar" includes="**/*.class" />
+      <zipfileset src="${mvn.lib.dir}/connectors-ra-redeploy-jars.jar" includes="**/*.class" />
     </jar>
 
     <antcall target="appclient-jar-common">

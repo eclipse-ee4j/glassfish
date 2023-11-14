@@ -84,7 +84,7 @@
             <param name="wsimport.args" value=" -keep  -p com.sun.s1asdev.security.wss.gartner.client -d ${build.classes.dir}/client ${build.classes.dir}/servletws/WEB-INF/classes/PingServletService.wsdl" />
         </antcall>
 
-        <javac srcdir="client" destdir="${build.classes.dir}/client" classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/modules/webservices-osgi.jar:${build.classes.dir}/ejbws:${build.classes.dir}/servletws/WEB-INF/classes:${build.classes.dir}/client" debug="on" failonerror="true" />
+        <javac srcdir="client" destdir="${build.classes.dir}/client" classpath="${mvn.lib.dir}/reporter.jar:${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/modules/webservices-osgi.jar:${build.classes.dir}/ejbws:${build.classes.dir}/servletws/WEB-INF/classes:${build.classes.dir}/client" debug="on" failonerror="true" />
     </target>
 
 
@@ -92,6 +92,7 @@
         <delete file="${assemble.dir}/${appname}.ear" />
         <mkdir dir="${assemble.dir}" />
         <mkdir dir="${build.classes.dir}/META-INF" />
+        <mkdir dir="${build.classes.dir}/lib"/>
 
         <antcall target="package-ejbjar-common">
             <param name="ejbjar.files" value="${build.classes.dir}/ejbws" />
@@ -106,6 +107,7 @@
 
         <copy file="${application-client.xml}" tofile="${build.classes.dir}/client/META-INF/application-client.xml" failonerror="false" />
         <copy file="${sun-application-client.xml}" tofile="${build.classes.dir}/client/META-INF/sun-application-client.xml" failonerror="false" />
+        <copy file="${mvn.lib.dir}/reporter.jar" tofile="${build.classes.dir}/lib/reporter.jar" />
         <jar jarfile="${assemble.dir}/${appname}-client.jar" basedir="${build.classes.dir}/client" includes="com/sun/**/*.class/" manifest="./client/MANIFEST.MF">
             <metainf dir="${build.classes.dir}/client/META-INF">
                 <include name="**" />
@@ -122,17 +124,14 @@
             <fileset dir="${build.classes.dir}">
                 <include name="META-INF/sun-application.xml"/>
                 <include name="META-INF/application.xml"/>
+                <include name="lib/**"/>
             </fileset>
-            <fileset dir="${env.APS_HOME}" includes="lib/reporter.jar"/>
         </jar>
     </target>
-
 
     <target name="deploy" depends="init-common">
         <antcall target="deploy-common"/>
     </target>
-
-
 
     <target name="run" depends="init-common" xmlns:if="ant:if" xmlns:unless="ant:unless">
         <property name="vmargs.base" value="-Djavax.net.ssl.keyStore=${mykeystore.db.file} -Djavax.net.ssl.trustStore=${mytruststore.db.file} -Djavax.net.ssl.keyStorePassword=${ssl.password} -Djavax.net.ssl.trustStorePassword=${ssl.password}"/>

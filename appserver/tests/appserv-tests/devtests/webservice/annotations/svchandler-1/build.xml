@@ -37,17 +37,6 @@
       <antcall target="clean-common"/>
     </target>
 
-<path id="class.path">
-        <fileset dir="${env.S1AS_HOME}/modules">
-            <include name="**/*.jar"/>
-        </fileset>
-        <fileset dir="${env.APS_HOME}/lib">
-            <include name="**/*.jar"/>
-        </fileset>
-
-    </path>
-
-
     <target name="setup" depends="assemble-web, assemble-client, deploy-app, deploy-client"/>
 
     <target name="compile" depends="init-common">
@@ -80,7 +69,7 @@
       <replace file="webclient/Client.java" value="${http.host}" token="HTTP_HOST"/>
       <replace file="webclient/Client.java" value="${http.port}" token="HTTP_PORT"/>
       <javac srcdir="." destdir="${build.classes.dir}/webclient/WEB-INF/classes"
-            classpathref="class.path"
+            classpathref="classpath"
             includes="webclient/**"/>
       <copy file="./client-web.xml" tofile="${build.classes.dir}/webclient/WEB-INF/web.xml"/>
       <copy file="./client-sun-web.xml" tofile="${build.classes.dir}/webclient/WEB-INF/sun-web.xml"/>
@@ -125,9 +114,9 @@
     <target name="runtest" depends="init-common">
       <mkdir dir="${build.classes.dir}/client"/>
       <javac srcdir="." destdir="${build.classes.dir}/client"
-            classpath="${env.APS_HOME}/lib/reporter.jar"
+            classpath="${mvn.lib.dir}/reporter.jar"
             includes="client/**"/>
-      <unjar src="${env.APS_HOME}/lib/reporter.jar" dest="${build.classes.dir}/client"/>
+      <unjar src="${mvn.lib.dir}/reporter.jar" dest="${build.classes.dir}/client"/>
       <java classname="client.TestClient">
         <classpath>
           <pathelement path="${build.classes.dir}/client"/>

@@ -87,7 +87,7 @@
         <jar destfile="${assemble.dir}/${appname}App.ear">
             <fileset dir="${env.APS_HOME}/build/module/archive"/>
         </jar>
-        <javac srcdir="." classpath="${env.APS_HOME}/lib/reportbuilder.jar"
+        <javac srcdir="." classpath="${mvn.lib.dir}/report-builder.jar"
                includes="WebTest.java"/>
     </target>
 
@@ -97,7 +97,7 @@
           <arg value="${http.port}"/>
           <arg value="/mytest1"/>
           <classpath>
-           <pathelement location="${env.APS_HOME}/lib/reportbuilder.jar"/>
+           <pathelement location="${mvn.lib.dir}/report-builder.jar"/>
            <pathelement location="."/>
          </classpath>
         </java>

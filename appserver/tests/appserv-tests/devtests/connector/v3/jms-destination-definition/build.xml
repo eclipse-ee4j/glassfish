@@ -43,7 +43,7 @@
     <target name="compile-ut" depends="init-common">
         <mkdir dir="${build.classes.dir}"/>
         <javac srcdir="ut" destdir="${build.classes.dir}"
-            classpath="${env.APS_HOME}/lib/junit.jar:${s1astest.classpath}"
+            classpath="${mvn.lib.dir}/junit.jar:${s1astest.classpath}"
             debug="on"
             includeantruntime="false"
             failonerror="true"/>
@@ -78,7 +78,7 @@
             <jvmarg value="-DworkDir=${basedir}"/>
             <jvmarg value="-DArchiveDir=${assemble.dir}/temp"/>
             <classpath>
-                <pathelement path="${env.APS_HOME}/lib/junit.jar:${s1astest.classpath}"/>
+                <pathelement path="${mvn.lib.dir}/junit.jar:${s1astest.classpath}"/>
             </classpath>
 
             <test name="com.sun.s1asdev.jmsdd.ArchiveTest" todir="${basedir}/report"/>

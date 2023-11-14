@@ -15,7 +15,7 @@
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 #
 
-run_test(){
+run_test() {
     local testid=${1}
     local found=false
     for runtest in `find . -name run_test\.sh`; do
@@ -52,17 +52,17 @@ if [ ! -z "${JENKINS_HOME}" ] ; then
   if [ -f "${WORKSPACE}/bundles/maven-repo.tar.gz" ]; then
     tar -xzf ${WORKSPACE}/bundles/maven-repo.tar.gz --overwrite -m -p -C ${HOME}/.m2/repository
   fi
+
   echo "Removing old glassfish directory: ${S1AS_HOME}";
   rm -rf "${S1AS_HOME}";
-  if [ -z "${MVN_EXTRA}" ]; then
-    export MVN_EXTRA="";
-  fi
-  if [ -z "${GF_VERSION}" ]; then
-    export GF_VERSION="$(mvn help:evaluate -Pstaging -f \"${APS_HOME}/pom.xml\" -Dexpression=project.version -q -DforceStdout ${MVN_EXTRA})"
-  fi
-  if [ -z "${MVN_REPOSITORY}" ]; then
-    export MVN_REPOSITORY="${HOME}/.m2/repository";
-  fi
+
+  export APS_HOME="${WORKSPACE}/appserver/tests/appserv-tests"
+  export MVN_EXTRA="${MVN_EXTRA:=''}";
+  export MVN_REPOSITORY="${MVN_REPOSITORY:=${HOME}/.m2/repository}"
+  export M2_REPO="${M2_REPO:=$MVN_REPOSITORY}"
+
+  echo "Preparing dependencies ..."
+  mvn clean package -f ${APS_HOME}/lib/pom.xml -Pstaging
 fi
 
 "$@"

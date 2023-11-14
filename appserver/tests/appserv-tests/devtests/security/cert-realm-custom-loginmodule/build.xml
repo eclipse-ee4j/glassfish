@@ -42,7 +42,7 @@
 
     <target name="compile" depends="clean">
         <mkdir dir="build"/>
-        <javac srcdir="." destdir="./build" classpath="${env.APS_HOME}/lib/reporter.jar"
+        <javac srcdir="." destdir="./build" classpath="${mvn.lib.dir}/reporter.jar"
             includes="WebSSLClient.java"/>
     </target>
 
@@ -70,18 +70,18 @@
         <antcall target="deploy-war-common"/>
     </target>
 
-    <target name="run" depends="init-common,init-security-util">
+    <target name="run" depends="init-common">
         <java classname="devtests.security.WebSSLClient">
             <sysproperty key="javax.net.debug1" value="ssl,handshake,data,trustmanager"   />
             <sysproperty key="sun.security.ssl.allowUnsafeRenegotiation" value="true"   />
-            <arg value="${s1asCN}"/>
+            <arg value="localhost"/>
             <arg value="${https.port}"/>
             <arg value="${contextroot}"/>
             <arg value="${mykeystore.db.file}"/>
             <arg value="${mytruststore.db.file}"/>
             <arg value="${ssl.password}"/>
             <classpath>
-                <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
+                <pathelement location="${mvn.lib.dir}/reporter.jar"/>
                 <pathelement location="./build"/>
             </classpath>
         </java>
@@ -96,7 +96,6 @@
     </target>
 
     <target name="setup" depends="init-common,prepare-store-common">
-        <antcall target="env-check" />
         <copy file="${assemble.dir}/test-${appname}.jar"
             todir="${env.S1AS_HOME}/lib"/>
         <copy file="${admin.domain.dir}/${admin.domain}/config/login.conf"

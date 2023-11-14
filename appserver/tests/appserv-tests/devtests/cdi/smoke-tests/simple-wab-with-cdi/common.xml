@@ -493,9 +493,11 @@ Variables Used:
   <delete file="${assemble.dir}/${appname}.ear"/>
   <mkdir dir="${assemble.dir}"/>
   <mkdir dir="${build.classes.dir}/META-INF"/>
-  <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml"          failonerror="false"/>
-  <copy file="${application.xml}" tofile="${build.classes.dir}/META-INF/application.xml"          failonerror="false"/>
-  <copy file="${glassfish-resources-ear.xml}" tofile="${build.classes.dir}/META-INF/glassfish-resources.xml" failonerror="false"  filtering="true"/>
+  <mkdir dir="${build.classes.dir}/lib"/>
+  <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml" failonerror="false"/>
+  <copy file="${application.xml}" tofile="${build.classes.dir}/META-INF/application.xml" failonerror="false"/>
+  <copy file="${glassfish-resources-ear.xml}" tofile="${build.classes.dir}/META-INF/glassfish-resources.xml" failonerror="false" filtering="true"/>
+  <copy file="${mvn.lib.dir}/reporter.jar" tofile="${build.classes.dir}/lib/reporter.jar" />
   <jar jarfile="${assemble.dir}/${appname}App.ear">
     <fileset dir="${assemble.dir}">
       <include name="*.jar"/>
@@ -505,8 +507,8 @@ Variables Used:
         <include name="META-INF/sun-application.xml"/>
         <include name="META-INF/application.xml"/>
         <include name="META-INF/glassfish-resources.xml"/>
+        <include name="lib/**"/>
     </fileset>
-    <fileset dir="${env.APS_HOME}" includes="lib/reporter.jar"/>
   </jar>
 </target>
 
@@ -518,10 +520,11 @@ Variables Used:
   <delete file="${assemble.dir}/${appname}.ear"/>
   <mkdir dir="${assemble.dir}"/>
   <mkdir dir="${build.classes.dir}/META-INF"/>
-  <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml"          failonerror="false"/>
-  <copy file="${glassfish-resources-ear.xml}" tofile="${build.classes.dir}/META-INF/glassfish-resources.xml" failonerror="false"  filtering="true"/>
-  <ear earfile="${assemble.dir}/${appname}App.ear"
-    appxml="${application.xml}">
+  <mkdir dir="${build.classes.dir}/lib"/>
+  <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml" failonerror="false"/>
+  <copy file="${glassfish-resources-ear.xml}" tofile="${build.classes.dir}/META-INF/glassfish-resources.xml" failonerror="false" filtering="true"/>
+  <copy file="${mvn.lib.dir}/reporter.jar" tofile="${build.classes.dir}/lib/reporter.jar" />
+  <ear earfile="${assemble.dir}/${appname}App.ear" appxml="${application.xml}">
     <fileset dir="${assemble.dir}">
       <include name="*.jar"/>
       <include name="*.war"/>
@@ -529,8 +532,8 @@ Variables Used:
     <fileset dir="${build.classes.dir}">
         <include name="META-INF/sun-application.xml"/>
         <include name="META-INF/glassfish-resources.xml"/>
+        <include name="lib/**"/>
     </fileset>
-    <fileset dir="${env.APS_HOME}" includes="lib/reporter.jar"/>
   </ear>
 </target>
 
@@ -1438,7 +1441,7 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
   <exec executable="${APPCLIENT}" failonerror="false">
     <!-- set APPCPATH to include reporter.jar so that all app clients
          don't have to package the test framework in their apps -->
-    <env key="APPCPATH" file="${env.APS_HOME}/lib/reporter.jar"/>
+    <env key="APPCPATH" file="${mvn.lib.dir}/reporter.jar"/>
     <arg line="-client ${assemble.dir}/${appname}AppClient.jar"/>
     <arg line="-name ${appname}Client"/>
     <arg line="-textauth"/>
@@ -1463,7 +1466,7 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
   <echo message="http port: ${http.port}" level="verbose"/>
   <java
     fork="on" failonerror="false"
-    classpath="${env.APS_HOME}/lib/webtest.jar:${s1astest.classpath}"
+    classpath="${env.APS_HOME}/lib/target/webtest.jar:${s1astest.classpath}"
     classname="com.sun.ejte.ccl.webrunner.webtest.WebTest">
     <arg value="script.txt"/>
     <arg value="${http.host}"/>
@@ -1612,7 +1615,7 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
     <echo message="Adding status 'did not run' into report..."/>
     <java classname="com.sun.ejte.ccl.reporter.ReporterClient">
         <classpath>
-            <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
+            <pathelement location="${mvn.lib.dir}/reporter.jar"/>
             <pathelement location="."/>
         </classpath>
         <arg value="${test.name}"/>
@@ -1919,7 +1922,7 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
 <!-- ================================================================ -->
 <target name="dev-report" depends="init-common">
     <java classname="com.sun.appserv.test.util.results.HtmlReportProducer" fork="true" failonerror="false"
-          classpath="${env.APS_HOME}/lib/reportbuilder.jar">
+          classpath="${mvn.lib.dir}/report-builder.jar">
         <arg value="${env.APS_HOME}/test_results.xml"/>
     </java>
 </target>

@@ -55,7 +55,7 @@
         </antcall>
 
         <javac srcdir="client"
-               classpath="${env.APS_HOME}/lib/reportbuilder.jar"
+               classpath="${mvn.lib.dir}/report-builder.jar"
                includes="test/client/WebTest.java"
                debug="true"/>
 
@@ -73,7 +73,7 @@
             <arg value="${http.port}"/>
             <arg value="${contextroot}"/>
             <classpath>
-                <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
+                <pathelement location="${mvn.lib.dir}/reporter.jar"/>
                 <pathelement location="client"/>
             </classpath>
             <!--<jvmarg value="-Xdebug"/>-->

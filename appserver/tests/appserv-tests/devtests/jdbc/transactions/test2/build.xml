@@ -119,7 +119,7 @@
       failonerror="false"/>
     <ear earfile="${assemble.dir}/${appname}App.ear" appxml="${application.xml}">
       <fileset dir="${assemble.dir}"
-        includes="*.jar,*.war,META-INF/sun-application.xml,lib/reporter.jar"/>
+        includes="*.jar,*.war,META-INF/sun-application.xml,lib/target/reporter.jar"/>
     </ear>
   </target>
 
@@ -249,7 +249,7 @@
   -->
   <target name="runweb" depends="init-common">
     <taskdef name="gtest" classname="org.apache.tomcat.task.GTest"
-        classpath="${env.APS_HOME}/lib/testdriversecurity.jar:${env.APS_HOME}/lib/commons-logging.jar"/>
+        classpath="${env.APS_HOME}/lib/testdriversecurity.jar:${mvn.lib.dir}/commons-logging.jar"/>
     <property name="wgdir" value="${env.APS_HOME}/devtests/jdbc/transactions/test2"/>
     <gtest request="GET /txnstatus-test2/bmservlet HTTP/1.0"
       debug="9"

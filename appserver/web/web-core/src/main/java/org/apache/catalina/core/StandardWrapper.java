@@ -1371,28 +1371,8 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
                 serv.service(request, response);
             }
             supp.fireInstanceEvent(AFTER_SERVICE_EVENT, serv, request, response);
-        } catch (IOException e) {
-            // Set response status before firing event, see IT 10022
-            if (response instanceof HttpServletResponse) {
-                ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            }
-            supp.fireInstanceEvent(AFTER_SERVICE_EVENT, serv, request, response, e);
-            throw e;
-        } catch (ServletException e) {
-            // Set response status before firing event, see IT 10022
-            if (response instanceof HttpServletResponse) {
-                ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            }
-            supp.fireInstanceEvent(AFTER_SERVICE_EVENT, serv, request, response, e);
-            throw e;
-        } catch (RuntimeException e) {
-            // Set response status before firing event, see IT 10022
-            if (response instanceof HttpServletResponse) {
-                ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            }
-            supp.fireInstanceEvent(AFTER_SERVICE_EVENT, serv, request, response, e);
-            throw e;
-        } catch (Error e) {
+        } catch (IOException | ServletException | RuntimeException | Error e) {
+            log.log(Level.FINE, "Seen throwable, firing instance event and rethrowing ...", e);
             // Set response status before firing event, see IT 10022
             if (response instanceof HttpServletResponse) {
                 ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -1400,6 +1380,7 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
             supp.fireInstanceEvent(AFTER_SERVICE_EVENT, serv, request, response, e);
             throw e;
         } catch (Throwable e) {
+            log.log(Level.FINE, "Seen throwable, firing instance event and throwing a servlet exception ...", e);
             // Set response status before firing event, see IT 10022
             ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             supp.fireInstanceEvent(AFTER_SERVICE_EVENT, serv, request, response, e);

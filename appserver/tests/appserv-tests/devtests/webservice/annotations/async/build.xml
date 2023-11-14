@@ -64,7 +64,7 @@
                value="-keep -b custom-client.xml -d ${build.classes.dir}/client http://${http.host}:${http.port}/${appname}/webservice/AsyncService?WSDL"/>
       </antcall>
       <javac srcdir="." destdir="${build.classes.dir}/client"
-          classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/modules/webservices-osgi.jar"
+          classpath="${mvn.lib.dir}/reporter.jar:${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/modules/webservices-osgi.jar"
           includes="client/**"
       />
     </target>

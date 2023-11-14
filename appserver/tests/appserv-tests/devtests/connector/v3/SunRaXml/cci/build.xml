@@ -58,7 +58,7 @@
 
 
     <javac srcdir="."
-           classpath="${env.APS_HOME}/lib/reporter.jar"
+           classpath="${mvn.lib.dir}/reporter.jar"
            includes="client/WebTest.java"
            destdir="."
     />
@@ -73,7 +73,7 @@
     <mkdir dir="${build.classes.dir}" />
     <javac srcdir="${src}"
            destdir="${build.classes.dir}"
-           classpath="${s1astest.classpath}:${bundles.dir}/cciblackbox-tx.jar"
+           classpath="${s1astest.classpath}:${mvn.lib.dir}/cciblackbox-tx.jar"
            failonerror="true"
     />
   </target>
@@ -140,7 +140,7 @@
       <arg value="${contextroot}" />
       <arg value=" 1 " />
       <classpath>
-        <pathelement location="${env.APS_HOME}/lib/reporter.jar" />
+        <pathelement location="${mvn.lib.dir}/reporter.jar" />
         <pathelement location="." />
       </classpath>
     </java>
@@ -235,7 +235,7 @@
   <target name="create-rar">
     <copy file="descriptor/ra.xml" tofile="${assemble.dir}/rar/META-INF/ra.xml" />
     <copy file="descriptor/sun-ra.xml" tofile="${assemble.dir}/rar/META-INF/sun-ra.xml" />
-    <copy file="${bundles.dir}/cciblackbox-tx.jar" tofile="${assemble.dir}/rar/cciblackbox-tx.jar"
+    <copy file="${mvn.lib.dir}/cciblackbox-tx.jar" tofile="${assemble.dir}/rar/cciblackbox-tx.jar"
     />
     <copy file="${env.APS_HOME}/sqetests/connector/lib/cci-derby-proc.jar"
           tofile="${assemble.dir}/rar/cci-derby-proc.jar"

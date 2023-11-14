@@ -33,7 +33,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -158,7 +157,7 @@ public class Asadmin {
      * @return {@link AsadminResult} never null.
      */
     private AsadminResult exec(final int timeout, final boolean detachedAndTerse, final String... args) {
-        final List<String> parameters = asList(args);
+        final List<String> parameters = Arrays.asList(args);
         LOG.log(Level.INFO, "exec(timeout={0}, detached={1}, args={2})",
             new Object[] {timeout, detachedAndTerse, parameters});
         final List<String> command = new ArrayList<>();

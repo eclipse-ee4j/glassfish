@@ -153,7 +153,7 @@
             <arg value="${http.port}"/>
             <arg value="${contextroot}"/>
             <classpath>
-                <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
+                <pathelement location="${mvn.lib.dir}/reporter.jar"/>
                 <pathelement location="app"/>
             </classpath>
         </java>

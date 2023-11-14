@@ -101,11 +101,11 @@
     <target name="run" depends="build">
         <exec executable="${APPCLIENT}" failonerror="true">
             <arg line="-client ${build.base.dir}/archive/${appname}AppClient.jar"/>
-            <env key="APPCPATH" value="${env.APS_HOME}/lib/reporter.jar"/>
+            <env key="APPCPATH" value="${mvn.lib.dir}/reporter.jar"/>
         </exec>
         <exec executable="${APPCLIENT}" failonerror="true">
             <arg line="-client ${build.base.dir}/archive/${appname}AppClient2.jar"/>
-            <env key="APPCPATH" value="${env.APS_HOME}/lib/reporter.jar"/>
+            <env key="APPCPATH" value="${mvn.lib.dir}/reporter.jar"/>
         </exec>
     </target>
 

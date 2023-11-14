@@ -78,11 +78,11 @@
     <antcall target="webclient-pu-warlib"/>
     <javac srcdir="${basedir}/../../../util/"
         destdir="${build.classes.dir}"
-        classpath="${env.APS_HOME}/lib/reporter.jar"
+        classpath="${mvn.lib.dir}/reporter.jar"
                        includes="WebTestUtil.java"/>
     <javac srcdir="src/test"
         destdir="${build.classes.dir}"
-        classpath="${env.APS_HOME}/lib/reporter.jar"
+        classpath="${mvn.lib.dir}/reporter.jar"
                        includes="WebTest.java"/>
 </target>
 
@@ -98,7 +98,7 @@
           <arg value="${contextroot}"/>
           <arg value="${urlpattern}"/>
           <classpath>
-           <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
+           <pathelement location="${mvn.lib.dir}/reporter.jar"/>
            <pathelement location="${build.classes.dir}"/>
          </classpath>
         </java>

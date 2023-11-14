@@ -43,7 +43,7 @@
             <param name="src" value="servlet"/>
         </antcall>
         <javac srcdir="."
-               classpath="${env.APS_HOME}/lib/reportbuilder.jar"
+               classpath="${mvn.lib.dir}/report-builder.jar"
                includes="WebTest.java"/>
     </target>
 
@@ -77,7 +77,7 @@
           <arg value="${http.port}"/>
           <arg value="first"/>
           <classpath>
-           <pathelement location="${env.APS_HOME}/lib/reportbuilder.jar"/>
+           <pathelement location="${mvn.lib.dir}/report-builder.jar"/>
            <pathelement location="."/>
          </classpath>
         </java>
@@ -89,7 +89,7 @@
           <arg value="${http.port}"/>
           <arg value="second"/>
           <classpath>
-           <pathelement location="${env.APS_HOME}/lib/reportbuilder.jar"/>
+           <pathelement location="${mvn.lib.dir}/report-builder.jar"/>
            <pathelement location="."/>
          </classpath>
         </java>

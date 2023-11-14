@@ -80,7 +80,7 @@
             <param name="webclient.war.classes" value="**/*.class" />
         </antcall>
 
-        <javac srcdir="." classpath="${env.APS_HOME}/lib/reportbuilder.jar" includes="WebTest.java" />
+        <javac srcdir="." classpath="${mvn.lib.dir}/report-builder.jar" includes="WebTest.java" />
     </target>
 
     <target name="build-publish-war" depends="build, publish-war-common" />
@@ -95,7 +95,7 @@
             <arg value="${http.port}" />
             <arg value="${contextroot}" />
             <classpath>
-                <pathelement location="${env.APS_HOME}/lib/reportbuilder.jar" />
+                <pathelement location="${mvn.lib.dir}/report-builder.jar" />
                 <pathelement location="." />
             </classpath>
         </java>

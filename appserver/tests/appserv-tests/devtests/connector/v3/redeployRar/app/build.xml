@@ -53,7 +53,7 @@
             <include name="*.jar"/>
             <include name="*.war"/>
        </fileset>
-       <fileset dir="${env.APS_HOME}/lib">
+       <fileset dir="${mvn.lib.dir}">
            <include name="reporter.jar"/>
        </fileset>
      </ear>

@@ -157,7 +157,7 @@
     <echo message="common.xml: Compiling test source files" level="verbose" />
     <javac srcdir="servlet"
            destdir="${build.classes.dir}"
-           classpath="${s1astest.classpath}:${bundles.dir}/connectors-ra-redeploy-jars.jar"
+           classpath="${s1astest.classpath}:${mvn.lib.dir}/connectors-ra-redeploy-jars.jar"
            debug="on"
            failonerror="true"
     />
@@ -179,8 +179,8 @@
     <delete file="${assemble.dir}/${appname}.ear" />
     <mkdir dir="${assemble.dir}" />
     <mkdir dir="${build.classes.dir}/META-INF" />
-    <copy file="${bundles.dir}/connectors-ra-redeploy-rars-nojar.rar"
-      tofile="${assemble.dir}/connectors-ra-redeploy-rars.rar"
+    <copy file="${mvn.lib.dir}/connectors-ra-redeploy-rars-nojar.rar"
+        tofile="${assemble.dir}/connectors-ra-redeploy-rars.rar"
     />
     <ear earfile="${assemble.dir}/${appname}App.ear" appxml="${application.xml}">
       <fileset dir="${assemble.dir}">
@@ -195,7 +195,7 @@
 
   <target name="install-library">
     <echo message="copying file [jdbc.jar] to applibs" />
-    <copy file="${bundles.dir}/connectors-ra-redeploy-jars.jar" todir="${env.S1AS_HOME}/domains/domain1/lib/applibs" />
+    <copy file="${mvn.lib.dir}/connectors-ra-redeploy-jars.jar" todir="${env.S1AS_HOME}/domains/domain1/lib/applibs" />
     <antcall target="restart-server" />
   </target>
 

@@ -76,7 +76,7 @@
         <echo message="Starting cluster"/>
         <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/reportbuilder.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${mvn.lib.dir}/report-builder.jar:${build.classes.dir}:${mvn.lib.dir}/reporter.jar"
               classname="${se.client}">
            <arg line="prepare"/>
            <arg line="${assemble.dir}/${appname}-web.war"/>
@@ -143,7 +143,7 @@
         <echo message="Verifying results"/>
         <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/reportbuilder.jar:${build.classes.dir}"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${mvn.lib.dir}/report-builder.jar:${build.classes.dir}"
               classname="${se.client}">
            <arg line="verify_xa"/>
            <arg line="${appname}-web"/>
@@ -168,7 +168,7 @@
         <echo message="Executing test on in1"/>
         <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/reportbuilder.jar:${build.classes.dir}"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${mvn.lib.dir}/report-builder.jar:${build.classes.dir}"
               classname="${se.client}">
            <arg line="${operation}"/>
            <arg line="${appname}-web"/>

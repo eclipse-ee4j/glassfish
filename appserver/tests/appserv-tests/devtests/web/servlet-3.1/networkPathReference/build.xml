@@ -45,11 +45,11 @@
             <param name="hasWebclient" value="yes"/>
         </antcall>
 
-        <javac srcdir="." classpath="${env.APS_HOME}/lib/reportbuilder.jar"
+        <javac srcdir="." classpath="${mvn.lib.dir}/report-builder.jar"
                includes="WebTest.java">
             <classpath>
-                <pathelement location="${env.APS_HOME}/lib/reportbuilder.jar"/>
-                <pathelement location="${env.APS_HOME}/lib/webtest.jar"/>
+                <pathelement location="${mvn.lib.dir}/report-builder.jar"/>
+                <pathelement location="${mvn.lib.dir}/webtest.jar"/>
             </classpath>
         </javac>
     </target>
@@ -65,8 +65,8 @@
             <arg value="${http.port}"/>
             <arg value="${contextroot}"/>
             <classpath>
-                <pathelement location="${env.APS_HOME}/lib/reportbuilder.jar"/>
-                <pathelement location="${env.APS_HOME}/lib/webtest.jar"/>
+                <pathelement location="${mvn.lib.dir}/report-builder.jar"/>
+                <pathelement location="${mvn.lib.dir}/webtest.jar"/>
                 <pathelement location="."/>
             </classpath>
         </java>

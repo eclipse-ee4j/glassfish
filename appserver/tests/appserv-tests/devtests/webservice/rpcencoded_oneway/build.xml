@@ -87,7 +87,7 @@
       file="SimpleTest.wsdl"/>
     <copy todir="${build.classes.dir}"
          file="NoMetadata.SimpleTest.xml"/>
-    <unjar src="${env.APS_HOME}/lib/reporter.jar"
+    <unjar src="${mvn.lib.dir}/reporter.jar"
         dest="${build.classes.dir}"/>
     <antcall target="appclient-jar-common">
       <param name="appclientjar.classes"

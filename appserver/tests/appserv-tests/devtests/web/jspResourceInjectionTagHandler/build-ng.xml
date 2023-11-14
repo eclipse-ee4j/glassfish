@@ -39,7 +39,7 @@
     </target>
 
     <path id="tng-compile.cp">
-       <pathelement location="${env.APS_HOME}/lib/testng.jar"/>
+       <pathelement location="${mvn.lib.dir}/testng.jar"/>
     </path>
 
     <target name="tng-compile"

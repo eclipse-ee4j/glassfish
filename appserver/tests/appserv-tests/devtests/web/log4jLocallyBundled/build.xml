@@ -39,8 +39,7 @@
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="servlet"/>
-            <param name="s1astest.classpath"
-                   value="lib/commons-logging-1.1.1.jar:${s1as.classpath}"/>
+            <param name="s1astest.classpath" value="${mvn.lib.dir}/commons-logging.jar:${s1as.classpath}"/>
         </antcall>
     </target>
 
@@ -51,7 +50,7 @@
             <param name="webclient.war.classes" value="**/*.class"/>
         </antcall>
 
-        <javac srcdir="." classpath="${env.APS_HOME}/lib/reportbuilder.jar"
+        <javac srcdir="." classpath="${mvn.lib.dir}/report-builder.jar"
                includes="WebTest.java"/>
 
     </target>
@@ -72,8 +71,10 @@
           <arg value="${http.port}"/>
           <arg value="${contextroot}"/>
           <classpath>
-           <pathelement location="${env.APS_HOME}/lib/reportbuilder.jar"/>
-           <pathelement location="."/>
+            <pathelement location="${mvn.lib.dir}/commons-logging.jar.jar"/>
+            <pathelement location="${mvn.lib.dir}/log4j.jar"/>
+            <pathelement location="${mvn.lib.dir}/report-builder.jar"/>
+            <pathelement location="."/>
          </classpath>
         </java>
     </target>

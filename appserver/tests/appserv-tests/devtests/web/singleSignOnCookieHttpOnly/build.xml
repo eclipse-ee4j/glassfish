@@ -72,7 +72,7 @@
 
           <javac
             srcdir="."
-            classpath="${env.APS_HOME}/lib/reportbuilder.jar:${env.S1AS_HOME}/lib/appserv-rt.jar"
+            classpath="${mvn.lib.dir}/report-builder.jar:${env.S1AS_HOME}/lib/appserv-rt.jar"
             includes="WebTest.java"/>
 
     </target>
@@ -91,7 +91,7 @@
           <arg value="${testuser}"/>
           <arg value="${testpassword}"/>
           <classpath>
-           <pathelement location="${env.APS_HOME}/lib/reportbuilder.jar"/>
+           <pathelement location="${mvn.lib.dir}/report-builder.jar"/>
            <pathelement location="."/>
          </classpath>
         </java>

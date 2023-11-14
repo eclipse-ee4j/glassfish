@@ -54,8 +54,8 @@
 
         <javac srcdir="." includes="WebTest.java">
             <classpath>
-                <pathelement location="${env.APS_HOME}/lib/reportbuilder.jar"/>
-                <pathelement location="${env.APS_HOME}/lib/webtest.jar"/>
+                <pathelement location="${mvn.lib.dir}/report-builder.jar"/>
+                <pathelement location="${mvn.lib.dir}/webtest.jar"/>
             </classpath>
         </javac>
 
@@ -76,8 +76,8 @@
             <arg value="${appname}-web"/>
             <arg value="${admin.domain.dir}/${admin.domain}/logs/server.log"/>
             <classpath>
-                <pathelement location="${env.APS_HOME}/lib/reportbuilder.jar"/>
-                <pathelement location="${env.APS_HOME}/lib/webtest.jar"/>
+                <pathelement location="${mvn.lib.dir}/report-builder.jar"/>
+                <pathelement location="${mvn.lib.dir}/webtest.jar"/>
                 <pathelement location="${env.S1AS_HOME}/modules/nucleus-grizzly-all.jar"/>
                 <pathelement location="${env.S1AS_HOME}/modules/glassfish-grizzly-extra-all.jar"/>
                 <pathelement location="."/>

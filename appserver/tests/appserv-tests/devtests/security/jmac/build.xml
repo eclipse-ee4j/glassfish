@@ -32,41 +32,38 @@
     &commonRun;
 
     <target name="all">
-        <run-jmac-test path="httpServlet" />
-    	<run-jmac-test path="httpServletChallenge" />
-    	<run-jmac-test path="httpServletForm" />
-
-    	<run-jmac-test path="soap" />
-    	<run-jmac-test path="soapDefault" />
-    	<run-jmac-test path="soapEmbedded" />
+        <run-jmac-test path="soap" />
+        <run-jmac-test path="soapDefault" />
     </target>
-	
-	<macrodef name="run-jmac-test" xmlns:if="ant:if" xmlns:unless="ant:unless">
-	        <attribute name="path" />
-	        <sequential>
-	            <local name="do-run-test" />
-	            <condition property="do-run-test" else="false">
-	                <or>
-	                    <equals arg1="${env.security_jmac}" arg2="@{path}" />
-	                    <not>
-	                        <isset property="env.security_jmac" />
-	                    </not>
-	                </or>
-	            </condition>
-	        	
-	        	<echo message="env.security_jmac = ${env.security_jmac}, current path = @{path}" />
 
-	            <sequential if:true="${do-run-test}">
-	                <local name="absolute.path" />
-	                <property name="absolute.path" location="@{path}" />
-	                <echo message="${line.separator}" />
-	                <echo message=" ***************************************************************************" />
-	                <echo message=" * Running @{path} " />
-	                <echo message=" * Path: ${absolute.path} " />
-	                <echo message=" ***************************************************************************" />
-	                <echo message="${line.separator}" />
-	                <ant dir="@{path}" target="all" />
-	            </sequential>
-	        </sequential>
-	    </macrodef>
+    <macrodef name="run-jmac-test" xmlns:if="ant:if" xmlns:unless="ant:unless">
+        <attribute name="path" />
+        <sequential>
+            <local name="do-run-test" />
+            <condition property="do-run-test" else="false">
+                <or>
+                    <equals arg1="${env.security_jmac}" arg2="@{path}" />
+                    <not>
+                        <isset property="env.security_jmac" />
+                    </not>
+                </or>
+            </condition>
+
+            <echo message="env.security_jmac = ${env.security_jmac}, current path = @{path}" />
+
+            <sequential if:true="${do-run-test}">
+                <local name="absolute.path" />
+                <property name="absolute.path" location="@{path}" />
+                <echo message="${line.separator}" />
+                <echo
+                    message=" ***************************************************************************" />
+                <echo message=" * Running @{path} " />
+                <echo message=" * Path: ${absolute.path} " />
+                <echo
+                    message=" ***************************************************************************" />
+                <echo message="${line.separator}" />
+                <ant dir="@{path}" target="all" />
+            </sequential>
+        </sequential>
+    </macrodef>
 </project>

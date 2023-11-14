@@ -39,7 +39,7 @@
     </target>
 
     <target name="compile" depends="clean">
-        <javac srcdir="." classpath="${env.APS_HOME}/lib/reportbuilder.jar"
+        <javac srcdir="." classpath="${mvn.lib.dir}/report-builder.jar"
                includes="WebTest.java"/>
     </target>
 
@@ -68,7 +68,7 @@
           <arg value="${http.host}"/>
           <arg value="${http.port}"/>
           <classpath>
-           <pathelement location="${env.APS_HOME}/lib/reportbuilder.jar"/>
+           <pathelement location="${mvn.lib.dir}/report-builder.jar"/>
            <pathelement location="."/>
          </classpath>
         </java>

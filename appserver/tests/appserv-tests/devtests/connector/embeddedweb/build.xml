@@ -151,7 +151,7 @@
     <echo message="common.xml: Compiling test source files" level="verbose"/>
     <javac srcdir="servlet"
          destdir="${build.classes.dir}"
-         classpath="${s1astest.classpath}:${bundles.dir}/connectors-ra-redeploy-jars.jar"
+         classpath="${s1astest.classpath}:${mvn.lib.dir}/connectors-ra-redeploy-jars.jar"
          debug="on"
          failonerror="true"/>
   </target>
@@ -176,7 +176,7 @@
         <include name="*.jar"/>
         <include name="*.war"/>
       </fileset>
-      <fileset dir="${bundles.dir}">
+      <fileset dir="${mvn.lib.dir}">
         <include name="connectors-ra-redeploy-rars.rar"/>
       </fileset>
     </ear>

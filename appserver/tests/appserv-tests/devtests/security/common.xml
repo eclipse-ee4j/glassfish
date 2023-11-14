@@ -17,8 +17,6 @@
 -->
 
 <!-- common security tasks -->
-<property name="webtest.classname" value="org.apache.tomcat.task.GTest"/>
-<property name="webtest.classpath" value="${env.APS_HOME}/lib/testdriversecurity.jar:${env.APS_HOME}/lib/commons-logging.jar"/>
 <property name="webtest.report.dir" value="${env.APS_HOME}/"/>
 <!-- this is for referencing generate key/trust stores in client -->
 <property name="mykeystore.db.file" value="${env.APS_HOME}/build/__keystore.jks"/>
@@ -29,17 +27,6 @@
   <isset property="env.WSIMPORT_OPTS" />
 </condition>
 
-<target name="init-security-util" depends="gethostname">
-<!--    <ant dir="${env.APS_HOME}/devtests/security/util" target="all"/>
-    <taskdef name="s1asCN" classname="devtests.security.util.S1ASCN" classpath="${env.APS_HOME}/devtests/security/util/build:${env.S1AS_HOME}/lib/appserv-rt.jar"/>
-    <s1asCN/>
-    <echo message="s1as CN = ${s1asCN}"/> -->
-</target>
-<target name="gethostname">
-    <exec executable="hostname" osfamily="unix" failifexecutionfails="false" outputproperty="env.COMPUTERNAME"/>
-    <property name="s1asCN" value="${env.COMPUTERNAME}" />
-    <echo message="s1as CN = ${s1asCN}"/>
-</target>
 <!-- Create auth realm -->
 <target name="create-auth-realm" depends="init-common">
     <echo message="Creating auth realm ${realmname} ..."/>
@@ -83,23 +70,8 @@
       </antcall>
 </target>
 
-<target name="env-check" depends="init-common">
-    <!--
-      Determine if we need to use the certutil or the keytool command to
-      access the certificate truststore
-    -->
-    <property name="nss.db.dir" location="${admin.domain.dir}/${admin.domain}/config"/>
-    <condition property="isNSS">
-        <and>
-            <available file="${nss.db.dir}/cert8.db"/>
-            <available file="${nss.db.dir}/key3.db"/>
-            <available file="${nss.db.dir}/secmod.db"/>
-        </and>
-    </condition>
-</target>
-
 <!-- this target parpare stores with client and server have different keys -->
-<target name="prepare-store-common" depends="env-check">
+<target name="prepare-store-common">
     <property name="cert.rfc.file" location="${build.base.dir}/${cert.nickname}.rfc"/>
     <property name="keycert.rfc.file" location="${build.base.dir}/ssltest.rfc"/>
     <delete quiet="true" file="${mytruststore.db.file}"/>
@@ -108,44 +80,7 @@
     <delete quiet="true" file="${keycert.rfc.file}"/>
 
     <mkdir dir="${build.base.dir}"/>
-    <antcall target="prepare-store-certutil-common"/>
     <antcall target="prepare-store-keytool-common"/>
-</target>
-
-<target name="prepare-store-certutil-common" depends="init-common" if="isNSS">
-    <exec executable="${env.S1AS_HOME}/lib/certutil" failonerror="true" output="${cert.rfc.file}">
-        <!--
-            LD_LIBRARY_PATH is needed on Unix platforms and should have no
-            effect on Windows
-        -->
-        <env key="LD_LIBRARY_PATH" path="${env.S1AS_HOME}/lib"/>
-        <arg line="-L -n '${cert.nickname}' -a"/>
-        <arg value="-d"/>
-        <arg file="${nss.db.dir}"/>
-    </exec>
-    <antcall target="import-cert-jks">
-        <param name="cert.alias" value="${cert.nickname}"/>
-        <param name="keystore.file" value="${mytruststore.db.file}"/>
-        <param name="cert.file" value="${cert.rfc.file}"/>
-    </antcall>
-
-    <antcall target="generate-jks-key"/>
-    <exec executable="${java.home}/bin/keytool" failonerror="true">
-        <arg line="-export -rfc -alias ssltest -file ${keycert.rfc.file} -keystore ${mykeystore.db.file} -storepass ${ssl.password}"/>
-    </exec>
-
-    <exec executable="${env.S1AS_HOME}/lib/certutil" failonerror="true">
-        <!--
-            LD_LIBRARY_PATH is needed on Unix platforms and should have no
-            effect on Windows
-        -->
-        <env key="LD_LIBRARY_PATH" path="${env.S1AS_HOME}/lib"/>
-        <arg line="-A -n ssltest -i ${keycert.rfc.file} -a"/>
-        <arg value="-t"/>
-        <arg value="P,p,p"/>
-        <arg value="-d"/>
-        <arg file="${nss.db.dir}"/>
-    </exec>
 </target>
 
 <target name="prepare-store-keytool-common" depends="init-common" unless="isNSS">
@@ -182,27 +117,11 @@
     </exec>
 </target>
 
-<target name="remove-store-common" depends="env-check">
+<target name="remove-store-common">
     <property name="keycert.rfc.file" location="${build.base.dir}/ssltest.rfc"/>
-
     <delete quiet="true" file="${mykeystore.db.file}"/>
     <delete quiet="true" file="${keycert.rfc.file}"/>
-
-    <antcall target="remove-store-certutil-common"/>
     <antcall target="remove-store-keytool-common"/>
-</target>
-
-<target name="remove-store-certutil-common" depends="init-common" if="isNSS">
-    <exec executable="${env.S1AS_HOME}/lib/certutil" failonerror="true">
-        <!--
-            LD_LIBRARY_PATH is needed on Unix platforms and should have no
-            effect on Windows
-        -->
-        <env key="LD_LIBRARY_PATH" path="${env.S1AS_HOME}/lib"/>
-        <arg line="-D -n ssltest "/>
-        <arg value="-d"/>
-        <arg file="${nss.db.dir}"/>
-    </exec>
 </target>
 
 <target name="remove-store-keytool-common" depends="init-common" unless="isNSS">
@@ -213,8 +132,8 @@
     </exec>
 </target>
 
-<!-- this target parpare stores with client and server have the same key -->
-<target name="prepare-store-nickname-common" depends="env-check">
+<!-- this target prepare stores with client and server have the same key -->
+<target name="prepare-store-nickname-common">
     <property name="cert.rfc.file" location="${build.base.dir}/${cert.nickname}.rfc"/>
     <property name="keycert.rfc.file" location="${build.base.dir}/ssltest.rfc"/>
     <delete quiet="true" file="${mytruststore.db.file}"/>

@@ -79,7 +79,7 @@
     <target name="run" depends="init-common">
         <java fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${assemble.dir}/${appname}-client.jar:${env.APS_HOME}/lib/reporter.jar"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${assemble.dir}/${appname}-client.jar:${mvn.lib.dir}/reporter.jar"
               classname="org.glassfish.test.jms.defaultcf.client.Client">
             <sysproperty key="org.omg.CORBA.ORBInitialPort" value="${orb.port}"/>
         </java>

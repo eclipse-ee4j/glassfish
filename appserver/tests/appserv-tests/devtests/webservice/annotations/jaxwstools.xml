@@ -15,15 +15,17 @@
     SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 
 -->
-
 <path id="classpath">
-        <fileset dir="${env.S1AS_HOME}/modules">
-                      <include name="*.jar"/>
-        </fileset>
-        <fileset dir="${env.APS_HOME}/lib">
-                      <include name="*.jar"/>
-        </fileset>
-    </path>
+    <fileset dir="${env.S1AS_HOME}/modules">
+        <include name="*.jar"/>
+    </fileset>
+    <fileset dir="${env.APS_HOME}/lib">
+        <include name="*.jar"/>
+    </fileset>
+    <fileset dir="${env.APS_HOME}/lib/target">
+        <include name="*.jar"/>
+    </fileset>
+</path>
 
 <target name="wsgen" depends="init-common">
     <exec executable="${WSGEN}" failonerror="true" >
@@ -51,7 +53,7 @@
 </target>
 
 <target name="run-client">
-    <unjar src="${env.APS_HOME}/lib/reporter.jar" dest="${build.classes.dir}/client"/>
+    <unjar src="${env.APS_HOME}/lib/target/reporter.jar" dest="${build.classes.dir}/client"/>
     <exec executable="${APPCLIENT}" dir="${build.classes.dir}/client">
       <arg value="${client-class}"/>
       <arg value="${other-args}"/>

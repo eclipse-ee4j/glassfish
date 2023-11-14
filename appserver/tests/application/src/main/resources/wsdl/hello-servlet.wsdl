@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<wsdl:definitions name="HelloServlet"
+    targetNamespace="urn:org:glassfish:main:test:app:hello:servlet"
+    xmlns="urn:org:glassfish:main:test:app:hello:servlet"
+    xmlns:hello="urn:org:glassfish:main:test:app:hello:common"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+>
+    <wsdl:documentation>Hello World for GlassFish Application Tests</wsdl:documentation>
+
+    <wsdl:types>
+        <xsd:schema>
+            <xsd:import namespace="urn:org:glassfish:main:test:app:hello:common" schemaLocation="hello.xsd" />
+        </xsd:schema>
+    </wsdl:types>
+
+    <wsdl:message name="HelloParameters">
+        <wsdl:part name="parameters" element="hello:HelloParameters" />
+    </wsdl:message>
+    <wsdl:message name="HelloResponse">
+        <wsdl:part name="result" element="hello:HelloResponse" />
+    </wsdl:message>
+
+    <wsdl:portType name="HelloServletPort">
+        <wsdl:operation name="Hello">
+            <wsdl:input message="HelloParameters" />
+            <wsdl:output message="HelloResponse" />
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="HelloServletPortBinding" type="HelloServletPort">
+        <wsdl:documentation>Service for saying hello to the tester</wsdl:documentation>
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+        <wsdl:operation name="Hello">
+            <wsdl:documentation>Responds with a greeting</wsdl:documentation>
+            <soap:operation soapAction="Hello" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="HelloServletService">
+        <wsdl:documentation>Hello Servlet Service</wsdl:documentation>
+        <wsdl:port name="HelloServletPort" binding="HelloServletPortBinding">
+            <soap:address location="REPLACE_ME" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

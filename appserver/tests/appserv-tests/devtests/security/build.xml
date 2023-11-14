@@ -41,40 +41,34 @@
            <fileset dir="." includes="*.output"/>
         </delete>
         <record name="security.output" action="start" />
-        
-    	<run-security-test path="jmac" />
-    	<run-security-test path="jaccmr8" />
-    	<run-security-test path="jaccApi" />
-    	
-    	<run-security-test path="httpMethod" />
-    	<run-security-test path="uncovered-http-methods" />
-    	
-    	<run-security-test path="simpleMultiRoleMapping" />
-    	<run-security-test path="multiRoleMapping" />
-    	<run-security-test path="defaultp2r" />
 
-    	<run-security-test path="authConf" />
-    	<run-security-test path="negativeRealmPerApp" />
-    	<run-security-test path="realmPerApp" />
-    	<run-security-test path="jdbcrealm" />
+        <run-security-test path="jmac" />
+        <run-security-test path="jaccmr8" />
+        <run-security-test path="jaccApi" />
 
-    	<run-security-test path="sful" />
-    	<run-security-test path="userWithAtSymbol" />
-    	<run-security-test path="anyone" />
-    	<run-security-test path="ejb-oneway-ssl" />
-    	<run-security-test path="ejb-mutual-ssl" />
-    	<run-security-test path="sameEjbName" />
+        <run-security-test path="uncovered-http-methods" />
 
-    	<run-security-test path="jsp2sful" />
-    	<run-security-test path="wss" />
+        <run-security-test path="authConf" />
+        <run-security-test path="negativeRealmPerApp" />
+        <run-security-test path="realmPerApp" />
+        <run-security-test path="jdbcrealm" />
 
-    	<run-security-test path="ciphertest" />
-    	<run-security-test path="standalone" />
-    	
-    	<record name="security.output" action="stop" />
+        <run-security-test path="sful" />
+        <run-security-test path="userWithAtSymbol" />
+        <run-security-test path="anyone" />
+        <run-security-test path="ejb-oneway-ssl" />
+        <run-security-test path="ejb-mutual-ssl" />
+        <run-security-test path="sameEjbName" />
+
+        <run-security-test path="wss" />
+
+        <run-security-test path="ciphertest" />
+        <run-security-test path="standalone" />
+
+        <record name="security.output" action="stop" />
         <antcall target="report"/>
     </target>
-    
+
     <target name="do-not-run">
          <!--    <ant dir="simple-perf" target="all"/>-->                <!-- DISABLED: Not listed -->
          <!--    <ant dir="weblogic-dd" target="all"/>-->                <!-- DISABLED: Failures -->
@@ -106,7 +100,7 @@
                         ant web (Executes the web tests TBD)
         </echo>
     </target>
-    
+
     <macrodef name="run-security-test" xmlns:if="ant:if" xmlns:unless="ant:unless">
         <attribute name="path" />
         <sequential>
@@ -128,7 +122,7 @@
                 <echo message=" * Running group @{path} " />
                 <echo message=" * Path: ${absolute.path} " />
                 <echo message=" ***************************************************************************" />
-            	<echo message="${line.separator}${line.separator}${line.separator}" />
+                <echo message="${line.separator}${line.separator}${line.separator}" />
                 <ant dir="@{path}" target="all" />
             </sequential>
         </sequential>

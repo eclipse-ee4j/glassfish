@@ -22,7 +22,7 @@
     <parent>
         <artifactId>naming2</artifactId>
         <groupId>org.glassfish.devtests</groupId>
-        <version>6.2.6-SNAPSHOT</version>
+        <version>7.0.11-SNAPSHOT</version>
     </parent>
     <groupId>org.glassfish.devtests</groupId>
     <artifactId>naming-context-tests</artifactId>
@@ -35,8 +35,8 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>jakarta.el</artifactId>
+            <groupId>jakarta.el</groupId>
+            <artifactId>jakarta.el-api</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -45,11 +45,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.sun.ejte.ccl.reporter</groupId>
-            <artifactId>SimpleReporterAdapter</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${APS_HOME}/lib/reporter.jar</systemPath>
+            <groupId>org.glassfish.main.tests</groupId>
+            <artifactId>report-builder</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
     <build>

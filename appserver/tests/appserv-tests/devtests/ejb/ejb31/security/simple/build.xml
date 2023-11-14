@@ -40,7 +40,7 @@
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
         </antcall>
-        <javac classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar" srcdir="client" destdir="${build.classes.dir}" debug="on" failonerror="true">
+        <javac classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${mvn.lib.dir}/reporter.jar" srcdir="client" destdir="${build.classes.dir}" debug="on" failonerror="true">
 
         </javac>
     </target>
@@ -85,7 +85,7 @@
 
     <target name="run_bob" depends="init-common">
         <exec executable="${APPCLIENT}" failonerror="false">
-            <env key="APPCPATH" file="${env.APS_HOME}/lib/reporter.jar"/>
+            <env key="APPCPATH" file="${mvn.lib.dir}/reporter.jar"/>
 
             <arg line="-client
                  ${assemble.dir}/${appname}AppClient.jar"/>
@@ -100,7 +100,7 @@
 
     <target name="run_mary" depends="init-common">
         <exec executable="${APPCLIENT}" failonerror="false">
-            <env key="APPCPATH" file="${env.APS_HOME}/lib/reporter.jar"/>
+            <env key="APPCPATH" file="${mvn.lib.dir}/reporter.jar"/>
 
             <arg line="-client
                  ${assemble.dir}/${appname}AppClient.jar"/>
@@ -116,7 +116,7 @@
     <target name="run_se" depends="init-common">
        <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${mvn.lib.dir}/reporter.jar"
               classname="${se.client}">
            <sysproperty key="org.omg.CORBA.ORBInitialPort" value="${orb.port}"/>
            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />

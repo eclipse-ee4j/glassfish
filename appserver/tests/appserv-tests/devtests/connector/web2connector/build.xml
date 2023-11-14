@@ -47,8 +47,7 @@
     <antcall target="create-ra-config" />
 
     <antcall target="deploy-rar-common">
-      <param name="rarfile"
-             value="${bundles.dir}/connectors-ra-redeploy-rars.rar"
+      <param name="rarfile" value="${mvn.lib.dir}/connectors-ra-redeploy-rars.rar"
       />
     </antcall>
     <antcall target="create-pool" />
@@ -153,7 +152,7 @@
     <echo message="common.xml: Compiling test source files" level="verbose" />
     <javac srcdir="servlet"
            destdir="${build.classes.dir}"
-           classpath="${s1astest.classpath}:${bundles.dir}/connectors-ra-redeploy-jars.jar"
+           classpath="${s1astest.classpath}:${mvn.lib.dir}/connectors-ra-redeploy-jars.jar"
            debug="on"
            failonerror="true"
     />

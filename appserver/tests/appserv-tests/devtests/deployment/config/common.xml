@@ -39,7 +39,6 @@
 <property name="customtasks.src" value="${testsRoot}/util/customAntTasks"/>
 <property name="customtasks.dest" value="${testsRoot}/util/build/customAntTasks"/>
 <property name="customtasks.jar" value="${customtasks.dest}/customAntTasks.jar"/>
-<property name="junit.jar" value="${env.APS_HOME}/devtests/deployment/junit-4.12.jar" />
 <property name="annotation.report.dir" value="${testsRoot}/annotation/report"/>
 <property name="testDomain" value="depltest-domain"/>
 <property name="testServer" value="depltest-server"/>
@@ -79,7 +78,6 @@
 
 
 <target name="init" depends="init.os,init.tools,setAsadminArgs">
-    <get src="https://repo1.maven.org/maven2/junit/junit/4.12/junit-4.12.jar" dest="${env.APS_HOME}/devtests/deployment/junit-4.12.jar" usetimestamp="true"/>
     <property name="root" value="${basedir}"/>
 
     <available property="cluster.exists" file="${s1as.home}/domains/${testDomain}"/>
@@ -1250,13 +1248,9 @@ AS_ADMIN_MASTERPASSWORD=changeit
   a new process.
 -->
 <target name="start-process-windows">
-      <taskdef name="spawn"
-        classname="SpawnTask"
-        classpath="${env.APS_HOME}/lib"/>
-      <echo>Executing asadmin command: ${line}</echo>
-      <spawn executable="${ASADMIN}" failifexecutionfails="false">
+      <exec executable="${ASADMIN}" failifexecutionfails="false" spawn="true">
         <arg line="${line}"/>
-      </spawn>
+      </exec>
       <echo message=" ...Waiting for process(es) to be up ...(sleeping for ${start.process.delay.mins} minutes) " />
       <sleep minutes="${start.process.delay.mins}"/>
       <echo message=" Process(es) now assumed to be started."/>

@@ -80,12 +80,12 @@
     <replace file="appclient/Client.java" value="${http.port}" token="HTTP_PORT" />
     <javac srcdir="."
            destdir="${build.classes.dir}/appclient"
-           classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/modules/webservices-osgi.jar"
+           classpath="${mvn.lib.dir}/reporter.jar:${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/modules/webservices-osgi.jar"
            includes="appclient/**"
     />
     <mkdir dir="${build.classes.dir}/appclient/META-INF/wsdl" />
     <copy file="AddNumbers.wsdl" todir="${build.classes.dir}/appclient/META-INF/wsdl" />
-    <unjar src="${env.APS_HOME}/lib/reporter.jar" dest="${build.classes.dir}/appclient" />
+    <unjar src="${mvn.lib.dir}/reporter.jar" dest="${build.classes.dir}/appclient" />
     <copy file="${application-client.xml}"
           tofile="${build.classes.dir}/META-INF/application-client.xml"
           failonerror="false"

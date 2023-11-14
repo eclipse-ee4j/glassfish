@@ -18,14 +18,14 @@
 -->
 
 <!DOCTYPE project [
-<!ENTITY commonSetup SYSTEM "file:./../../../../config/properties.xml">
-<!ENTITY commonBuild SYSTEM "file:./../../../../config/common.xml">
-<!ENTITY commonRun SYSTEM "file:./../../../../config/run.xml">
-<!ENTITY jaxwsTools SYSTEM "file:./../jaxwstools.xml">
-<!ENTITY testproperties SYSTEM "file:./build.properties">
+<!ENTITY commonSetup SYSTEM "../../../../config/properties.xml">
+<!ENTITY commonBuild SYSTEM "../../../../config/common.xml">
+<!ENTITY commonRun SYSTEM "../../../../config/run.xml">
+<!ENTITY jaxwsTools SYSTEM "../jaxwstools.xml">
+<!ENTITY testproperties SYSTEM "build.properties">
 ]>
 
-<project name="Hello" default="core" basedir=".">
+<project name="Hello" basedir=".">
 
     &commonSetup;
     &commonBuild;
@@ -59,9 +59,9 @@
     <target name="runtest1" depends="init-common">
       <mkdir dir="${build.classes.dir}/client"/>
       <javac srcdir="." destdir="${build.classes.dir}/client"
-            classpath="${env.APS_HOME}/lib/reporter.jar"
+            classpath="${mvn.lib.dir}/reporter.jar"
             includes="client/**"/>
-      <unjar src="${env.APS_HOME}/lib/reporter.jar" dest="${build.classes.dir}/client"/>
+      <unjar src="${mvn.lib.dir}/reporter.jar" dest="${build.classes.dir}/client"/>
       <java classname="client.TestClient">
         <classpath>
           <pathelement path="${build.classes.dir}/client"/>
@@ -89,10 +89,8 @@
         <param name="wsimport.args"
           value="-p client   -keep -d ${build.classes.dir}/webclient/WEB-INF/classes http://${http.host}:${http.port}/noname/HelloService?wsdl"/>
       </antcall>
-      <javac srcdir="." destdir="${build.classes.dir}/webclient/WEB-INF/classes"
-            includes="webclient/**">
+      <javac srcdir="." destdir="${build.classes.dir}/webclient/WEB-INF/classes" includes="webclient/**">
          <classpath refid="classpath"/>
-
       </javac>
       <copy file="client-web.xml" tofile="${build.classes.dir}/webclient/WEB-INF/web.xml"/>
       <copy file="client-sun-web.xml" tofile="${build.classes.dir}/webclient/WEB-INF/sun-web.xml"/>
@@ -112,7 +110,8 @@
     </target>
 
     <target name="deploy-client" depends="init-common">
-      <property name="client.war" value="${assemble.dir}/wsclient.war"/>      <echo message="Deploying ${wsdl.war} from ${basedir}." level="verbose"/>
+      <property name="client.war" value="${assemble.dir}/wsclient.war"/>
+      <echo message="Deploying ${wsdl.war} from ${basedir}." level="verbose"/>
       <exec executable="${ASADMIN}">
         <arg line="deploy"/>
         <arg line="--user ${admin.user}"/>

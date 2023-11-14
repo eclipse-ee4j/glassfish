@@ -73,7 +73,7 @@
 
         <javac
           srcdir="."
-          classpath="${env.APS_HOME}/lib/reporter.jar"
+          classpath="${mvn.lib.dir}/reporter.jar"
           includes="client/WebTest.java" destdir="." />
 
 
@@ -191,7 +191,7 @@
             <arg value="${contextroot}"/>
             <arg value="${mode}"/>
             <classpath>
-             <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
+             <pathelement location="${mvn.lib.dir}/reporter.jar"/>
              <pathelement location="."/>
            </classpath>
           </java>

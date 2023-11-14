@@ -90,6 +90,7 @@
     <target name="build" depends="compile">
         <mkdir dir="${assemble.dir}"/>
         <mkdir dir="${build.classes.dir}/META-INF"/>
+        <mkdir dir="${build.classes.dir}/lib"/>
 
         <antcall target="package-ejbjar-common">
             <param name="ejbjar.files" value="${build.classes.dir}/nonweb"/>
@@ -111,6 +112,7 @@
 
         <copy file="${application.xml}" tofile="${build.classes.dir}/META-INF/application.xml" failonerror="false"/>
         <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml" failonerror="false"/>
+        <copy file="${mvn.lib.dir}/reporter.jar" tofile="${build.classes.dir}/lib/reporter.jar" />
         <jar jarfile="${assemble.dir}/${appname}App.ear">
             <fileset dir="${assemble.dir}">
                <include name="*.jar"/>
@@ -119,8 +121,8 @@
             <fileset dir="${build.classes.dir}">
                <include name="META-INF/application.xml"/>
                <include name="META-INF/sun-application.xml"/>
+               <include name="lib/**"/>
             </fileset>
-            <fileset dir="${env.APS_HOME}" includes="lib/reporter.jar"/>
         </jar>
 
         <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml" failonerror="false"/>

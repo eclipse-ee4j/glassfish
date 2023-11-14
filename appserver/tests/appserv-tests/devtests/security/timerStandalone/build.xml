@@ -71,7 +71,7 @@
         </antcall>
         <echo message="appclient.jar=${assemble.dir}/${appname}-client.jar"/>
         <jar jarfile="${assemble.dir}/${appname}-client.jar" update="yes">
-            <zipfileset src="${env.APS_HOME}/lib/reporter.jar"
+            <zipfileset src="${mvn.lib.dir}/reporter.jar"
                         excludes="META-INF/**"/>
         </jar>
     </target>

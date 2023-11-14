@@ -55,7 +55,7 @@
             basedir="${env.APS_HOME}/build/module/classes"
             includes="ejb/**,endpoint/**"/>
         <waitfor maxwait="100" maxwaitunit="second">
-                   <or>
+            <or>
                 <available file="${env.S1AS_HOME}/domains/domain1/autodeploy/EjbClient.jar_deployed"/>
                 <available file="${env.S1AS_HOME}/domains/domain1/autodeploy/EjbClient.jar_deployFailed"/>
             </or>
@@ -73,7 +73,7 @@
         <property name="client-class-name" value="${client-pkg-name}/${client}.class"/>
         <antcall target="compile-client"/>
         <echo message="Running appclient with ${client-pkg-name}.${client}"/>
-        <unjar src="${env.APS_HOME}/lib/reporter.jar" dest="${env.APS_HOME}/build/module/classes"/>
+        <unjar src="${env.APS_HOME}/lib/target/reporter.jar" dest="${env.APS_HOME}/build/module/classes"/>
         <exec executable="${env.S1AS_HOME}/bin/appclient" dir="${env.APS_HOME}/build/module/classes">
             <arg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
             <arg value="${client-pkg-name}.${client}"/>

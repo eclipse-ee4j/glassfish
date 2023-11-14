@@ -113,6 +113,7 @@
   <delete file="${assemble.dir}/${appname}.ear"/>
   <mkdir dir="${build.classes.dir}/META-INF"/>
   <mkdir dir="${assemble.dir}/lib"/>
+  <mkdir dir="${build.classes.dir}/lib"/>
   <move file="${assemble.dir}/entity.jar" todir="${assemble.dir}/lib"/>
   <copy file="${application.xml}"
         tofile="${build.classes.dir}/META-INF/application.xml"
@@ -120,6 +121,7 @@
   <copy file="${glassfish-resources.xml}"
         tofile="${build.classes.dir}/META-INF/glassfish-resources.xml"
         failonerror="false"/>
+  <copy file="${mvn.lib.dir}/reporter.jar" tofile="${build.classes.dir}/lib/reporter.jar" />
   <jar jarfile="${assemble.dir}/${appname}App.ear">
     <fileset dir="${assemble.dir}">
       <include name="**/*.jar"/>
@@ -128,8 +130,8 @@
     <fileset dir="${build.classes.dir}">
         <include name="META-INF/application.xml"/>
         <include name="META-INF/glassfish-resources.xml"/>
+        <include name="lib/**"/>
     </fileset>
-    <fileset dir="${env.APS_HOME}" includes="lib/reporter.jar"/>
   </jar>
 </target>
 
@@ -138,7 +140,9 @@
   <delete file="${assemble.dir}/${appname}.ear"/>
   <mkdir dir="${assemble.dir}"/>
   <mkdir dir="${build.classes.dir}/META-INF"/>
+  <mkdir dir="${build.classes.dir}/lib"/>
   <copy file="${application.xml}" tofile="${build.classes.dir}/META-INF/application.xml" failonerror="false"/>
+  <copy file="${mvn.lib.dir}/reporter.jar" tofile="${build.classes.dir}/lib/reporter.jar" />
   <jar jarfile="${assemble.dir}/${appname}App.ear">
     <fileset dir="${assemble.dir}">
       <include name="*.jar"/>
@@ -147,8 +151,8 @@
     <fileset dir="${build.classes.dir}">
         <include name="META-INF/sun-application.xml"/>
         <include name="META-INF/application.xml"/>
+        <include name="lib/**"/>
     </fileset>
-    <fileset dir="${env.APS_HOME}" includes="lib/reporter.jar"/>
   </jar>
 </target>
 

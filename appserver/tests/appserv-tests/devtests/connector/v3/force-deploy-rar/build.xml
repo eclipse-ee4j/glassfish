@@ -41,7 +41,7 @@
     <antcall target="compile-common">
       <param name="src" value="ejb" />
       <param name="s1astest.classpath"
-             value="${s1astest.classpath}:${bundles.dir}/connectors-ra-redeploy-jars.jar"
+             value="${s1astest.classpath}:${mvn.lib.dir}/connectors-ra-redeploy-jars.jar"
       />
     </antcall>
     <antcall target="compile-common">
@@ -52,7 +52,7 @@
     </antcall>
 
     <javac srcdir="."
-           classpath="${env.APS_HOME}/lib/reporter.jar"
+           classpath="${mvn.lib.dir}/reporter.jar"
            includes="client/WebTest.java"
            destdir="."
     />
@@ -80,14 +80,14 @@
   <target name="setupone" depends="init-common">
     <antcall target="create-ra-config" />
     <antcall target="deploy-rar-common">
-      <param name="rarfile" value="${bundles.dir}/connectors-ra-redeploy-rars.rar" />
+      <param name="rarfile" value="${mvn.lib.dir}/connectors-ra-redeploy-rars.rar" />
       <param name="force" value="true" />
     </antcall>
   </target>
 
   <target name="setuptwo" depends="init-common">
     <!-- Applications must have the same filename, which is used as an application name -->
-    <copy file="${bundles.dir}/connectors-ra-redeploy-rars-v2.rar" tofile="connectors-ra-redeploy-rars.rar" />
+    <copy file="${mvn.lib.dir}/connectors-ra-redeploy-rars-v2.rar" tofile="connectors-ra-redeploy-rars.rar" />
     <antcall target="deploy-rar-common">
       <param name="rarfile" value="connectors-ra-redeploy-rars.rar" />
       <param name="force" value="true" />
@@ -121,7 +121,7 @@
       <arg value="${contextroot}" />
       <arg value=" 1 " />
       <classpath>
-        <pathelement location="${env.APS_HOME}/lib/reporter.jar" />
+        <pathelement location="${mvn.lib.dir}/reporter.jar" />
         <pathelement location="." />
       </classpath>
     </java>
@@ -137,7 +137,7 @@
       <arg value="${contextroot}" />
       <arg value=" 2 " />
       <classpath>
-        <pathelement location="${env.APS_HOME}/lib/reporter.jar" />
+        <pathelement location="${mvn.lib.dir}/reporter.jar" />
         <pathelement location="." />
       </classpath>
     </java>

@@ -72,8 +72,9 @@ AS_ADMIN_MASTERPASSWORD=${master.password}</echo>
     <property name="build.classes.dir" value="${build.base.dir}/classes" />
     <property name="assemble.dir" value="${build.base.dir}/archive" />
     <property name="results.dir" value="${build.base.dir}/results" />
+    <property name="mvn.lib.dir" value="${env.APS_HOME}/lib/target" />
     <property name="s1astest.classpath"
-        value="${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar:${s1as.classpath}:${db.classpath}:${Derby.classpath}" />
+        value="${build.classes.dir}:${mvn.lib.dir}/reporter.jar:${s1as.classpath}:${db.classpath}:${Derby.classpath}" />
     <property name="ejbjar.classes" value="**/*Local*.class,**/*Remote*.class,**/*Home*.class,**/*Bean*.class" />
     <property name="appclientjar.classes"
         value="**/*Local*.class,**/*Home*.class,**/*Remote*.class,**/*Client*.class" />
@@ -104,25 +105,6 @@ AS_ADMIN_MASTERPASSWORD=${master.password}</echo>
     <property name="ssl.mutualauth.port.two" value="33921" />
     <property name="jmx.system.connector.port.two" value="38687" />
     <property name="cert.nickname" value="s1as" />
-
-    <copy
-        file="${env.MVN_REPOSITORY}/org/glassfish/main/tests/connectors/cciblackbox-tx/${gf.version}/cciblackbox-tx-${gf.version}.jar"
-        tofile="${bundles.dir}/cciblackbox-tx.jar" />
-    <copy
-        file="${env.MVN_REPOSITORY}/org/glassfish/main/tests/connectors/connectors-ra-redeploy-jars/${gf.version}/connectors-ra-redeploy-jars-${gf.version}.jar"
-        tofile="${bundles.dir}/connectors-ra-redeploy-jars.jar" />
-    <copy
-        file="${env.MVN_REPOSITORY}/org/glassfish/main/tests/connectors/connectors-ra-redeploy-rars/${gf.version}/connectors-ra-redeploy-rars-${gf.version}.rar"
-        tofile="${bundles.dir}/connectors-ra-redeploy-rars.rar" />
-    <copy
-        file="${env.MVN_REPOSITORY}/org/glassfish/main/tests/connectors/connectors-ra-redeploy-rars/${gf.version}/connectors-ra-redeploy-rars-${gf.version}-v2.rar"
-        tofile="${bundles.dir}/connectors-ra-redeploy-rars-v2.rar" />
-    <copy
-        file="${env.MVN_REPOSITORY}/org/glassfish/main/tests/connectors/connectors-ra-redeploy-rars/${gf.version}/connectors-ra-redeploy-rars-${gf.version}-nojar.rar"
-        tofile="${bundles.dir}/connectors-ra-redeploy-rars-nojar.rar" />
-    <copy
-        file="${env.MVN_REPOSITORY}/org/glassfish/main/tests/connectors/connectors-ra-redeploy-rars-xa/${gf.version}/connectors-ra-redeploy-rars-xa-${gf.version}.rar"
-        tofile="${bundles.dir}/connectors-ra-redeploy-rars-xa.rar" />
 </target>
 
 <target name="setS1ASclassPath" unless="s1as.classpath">

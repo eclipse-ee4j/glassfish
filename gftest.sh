@@ -21,11 +21,16 @@ export S1AS_HOME="${WORKSPACE}/glassfish7/glassfish"
 export APS_HOME="${WORKSPACE}/appserver/tests/appserv-tests"
 export TEST_RUN_LOG="${WORKSPACE}/tests-run.log"
 export LANG="en_US.UTF-8"
+export MVN_REPOSITORY="${MVN_REPOSITORY:=${HOME}/.m2/repository}"
+export M2_REPO="${M2_REPO:=$MVN_REPOSITORY}"
+export GF_VERSION="$(mvn help:evaluate -f "${WORKSPACE}/pom.xml" -Dexpression=project.version -q -DforceStdout)"
 
 echo WORKSPACE =  $WORKSPACE
 echo S1AS_HOME =  $S1AS_HOME
 echo APS_HOME  =  $APS_HOME
 echo TEST_RUN_LOG =  $TEST_RUN_LOG
+echo M2_REPO=MVN_REPOSITORY = ${M2_REPO}
+echo GF_VERSION = ${GF_VERSION}
 
 if [ "$#" -eq 0 ]; then
     declare -a arr=(

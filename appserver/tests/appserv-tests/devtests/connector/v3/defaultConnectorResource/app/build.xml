@@ -49,10 +49,8 @@
       <fileset dir="../ra">
         <include name="generic-ra.rar" />
       </fileset>
-      <fileset dir="${bundles.dir}">
+      <fileset dir="${mvn.lib.dir}">
         <include name="connectors-ra-redeploy-rars-xa.rar" />
-      </fileset>
-      <fileset dir="${env.APS_HOME}/lib">
         <include name="reporter.jar" />
       </fileset>
     </ear>

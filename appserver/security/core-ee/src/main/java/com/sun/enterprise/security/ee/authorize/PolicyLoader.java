@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.security;
+package com.sun.enterprise.security.ee.authorize;
 
 import static com.sun.enterprise.security.SecurityLoggerInfo.policyConfigFactoryNotDefined;
 import static com.sun.enterprise.security.SecurityLoggerInfo.policyFactoryOverride;
@@ -28,36 +28,23 @@ import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
-import static javassist.Modifier.PUBLIC;
 
-import java.lang.reflect.Method;
-import java.security.Permission;
-import java.security.Policy;
-import java.security.ProtectionDomain;
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Logger;
-
-import org.glassfish.api.admin.ServerEnvironment;
-//V3:Commented import com.sun.enterprise.config.serverbeans.ElementProperty;
-//V3:Commented import com.sun.enterprise.config.ConfigContext;
-import org.glassfish.hk2.api.IterableProvider;
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.types.Property;
-
-//V3:Commented import com.sun.enterprise.server.ApplicationServer;
 import com.sun.enterprise.config.serverbeans.JaccProvider;
 import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.security.SecurityLoggerInfo;
 import com.sun.enterprise.util.i18n.StringManager;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
+import java.util.List;
+import java.util.logging.Logger;
+import jakarta.security.jacc.Policy;
+import jakarta.security.jacc.PolicyFactory;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.exousia.modules.def.DefaultPolicyFactory;
+import org.glassfish.hk2.api.IterableProvider;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.types.Property;
 
 /**
  * Loads the Default Policy File into the system.
@@ -83,7 +70,6 @@ public class PolicyLoader {
     private static final String POLICY_PROVIDER = "jakarta.security.jacc.policy.provider";
     private static final String POLICY_CONF_FACTORY = "jakarta.security.jacc.PolicyConfigurationFactory.provider";
     private static final String POLICY_PROP_PREFIX = "com.sun.enterprise.jaccprovider.property.";
-    private static final String POLICY_PROXY = "com.sun.enterprise.jaccprovider.proxy";
     private boolean isPolicyInstalled;
 
     /**
@@ -115,6 +101,8 @@ public class PolicyLoader {
             javaPolicyClassName = authorizationModule.getPolicyProvider();
         }
 
+        // Set the role mapper
+        // TODO: replace with standard version
         if (System.getProperty("simple.jacc.provider.JACCRoleMapper.class") == null) {
             System.setProperty("simple.jacc.provider.JACCRoleMapper.class",
                 "com.sun.enterprise.security.ee.web.integration.GlassfishRoleMapper");
@@ -126,25 +114,9 @@ public class PolicyLoader {
             try {
                 LOGGER.log(INFO, policyLoading, javaPolicyClassName);
 
-                boolean usePolicyProxy = Boolean.parseBoolean(System.getProperty(POLICY_PROXY, "true"));
-
-                Policy policy = null;
-                if (usePolicyProxy && System.getSecurityManager() != null) {
-                    policy = loadPolicyAsProxy(javaPolicyClassName);
-                } else {
-                    policy = loadPolicy(javaPolicyClassName);
-                }
-
-                Policy.setPolicy(policy);
-
-                // TODO: causing ClassCircularity error when SM ON and
-                // deployment use library feature and ApplibClassLoader
-                // it is likely a problem caused by the way classloading is done
-                // in this case.
-                if (System.getSecurityManager() == null) {
-                    policy.refresh();
-                }
-
+                Policy policy = loadPolicy(javaPolicyClassName);
+                PolicyFactory.setPolicyFactory(new DefaultPolicyFactory()); // TMP!!!
+                PolicyFactory.getPolicyFactory().setPolicy(policy);
             } catch (Exception e) {
                 LOGGER.log(SEVERE, policyInstallError, e.getLocalizedMessage());
                 throw new RuntimeException(e);
@@ -160,58 +132,6 @@ public class PolicyLoader {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T> T createPolicyProxy(Class<T> targetClass) throws Exception {
-        ProxyFactory factory = new ProxyFactory();
-        factory.setSuperclass(targetClass);
-
-        ProxyObject instance = (ProxyObject) factory.createClass().getDeclaredConstructor().newInstance();
-        instance.setHandler(new JakartaAuthenticationGuardHandler(Policy.getPolicy()));
-
-        return (T) instance;
-    }
-
-    private static class JakartaAuthenticationGuardHandler implements MethodHandler {
-
-        public final static Method impliesMethod = getMethod(
-            Policy.class, "implies", ProtectionDomain.class, Permission.class);
-
-        private final Policy javaSePolicy;
-
-        public JakartaAuthenticationGuardHandler(Policy javaSePolicy) {
-            this.javaSePolicy = javaSePolicy;
-        }
-
-        @Override
-        public Object invoke(Object self, Method overridden, Method forwarder, Object[] args) throws Throwable {
-            if (isImplementationOf(overridden, impliesMethod)) {
-                Permission permission = (Permission) args[1];
-                if (!permission.getClass().getName().startsWith("jakarta.")) {
-                    return javaSePolicy.implies((ProtectionDomain)args[0], permission);
-                }
-            }
-
-            return forwarder.invoke(self, args);
-        }
-
-        public static boolean isImplementationOf(Method implementationMethod, Method interfaceMethod) {
-            return
-                interfaceMethod.getDeclaringClass().isAssignableFrom(implementationMethod.getDeclaringClass()) &&
-                interfaceMethod.getName().equals(implementationMethod.getName()) &&
-                Arrays.equals(interfaceMethod.getParameterTypes(), implementationMethod.getParameterTypes());
-        }
-
-       public static Method getMethod(Class<?> base, String name, Class<?>... parameterTypes) {
-            try {
-                // Method literals in Java would be nice
-                return base.getMethod(name, parameterTypes);
-            } catch (NoSuchMethodException | SecurityException e) {
-                throw new IllegalStateException(e);
-            }
-        }
-
-    }
-
     private Policy loadPolicy(String javaPolicyClassName) throws ReflectiveOperationException, SecurityException {
         Object javaPolicyInstance =
                 Thread.currentThread()
@@ -223,28 +143,6 @@ public class PolicyLoader {
         if (!(javaPolicyInstance instanceof Policy)) {
             throw new RuntimeException(SM.getString("enterprise.security.plcyload.not14"));
         }
-
-        return (Policy) javaPolicyInstance;
-    }
-
-    private Policy loadPolicyAsProxy(String javaPolicyClassName) throws Exception {
-        ClassPool pool = ClassPool.getDefault();
-        CtClass clazz = pool.get(javaPolicyClassName);
-        clazz.defrost();
-        clazz.setModifiers(PUBLIC);
-
-        Object javaPolicyInstance =
-            createPolicyProxy(
-                clazz.toClass(
-                    Thread.currentThread()
-                          .getContextClassLoader()
-                          .loadClass(System.getProperty(POLICY_CONF_FACTORY))));
-
-        if (!(javaPolicyInstance instanceof Policy)) {
-            throw new RuntimeException(SM.getString("enterprise.security.plcyload.not14"));
-        }
-
-        javaPolicyInstance.toString();
 
         return (Policy) javaPolicyInstance;
     }

@@ -35,11 +35,12 @@ import org.glassfish.epicyro.config.factory.file.AuthConfigFileFactory;
 import org.glassfish.epicyro.config.module.configprovider.GFServerConfigProvider;
 
 import com.sun.enterprise.security.ContainerSecurityLifecycle;
+import com.sun.enterprise.security.ee.authorize.PolicyLoader;
 import com.sun.enterprise.security.ee.jmac.AuthMessagePolicy;
 import com.sun.enterprise.security.ee.jmac.ConfigDomainParser;
 import com.sun.enterprise.security.ee.jmac.WebServicesDelegate;
 import com.sun.logging.LogDomains;
-
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.security.auth.message.MessageInfo;
 import jakarta.security.auth.message.MessagePolicy;
@@ -52,6 +53,9 @@ import jakarta.security.auth.message.MessagePolicy;
 public class JavaEESecurityLifecycle implements ContainerSecurityLifecycle, PostConstruct {
 
     private static final Logger LOG = LogDomains.getLogger(JavaEESecurityLifecycle.class, LogDomains.SECURITY_LOGGER, false);
+
+    @Inject
+    PolicyLoader policyLoader;
 
     @Override
     public void postConstruct() {
@@ -74,6 +78,8 @@ public class JavaEESecurityLifecycle implements ContainerSecurityLifecycle, Post
         }
 
         initializeJakartaAuthentication();
+
+        policyLoader.loadPolicy();
     }
 
     private void initializeJakartaAuthentication() {

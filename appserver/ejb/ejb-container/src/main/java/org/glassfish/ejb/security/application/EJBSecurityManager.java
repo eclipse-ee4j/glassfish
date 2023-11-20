@@ -161,8 +161,6 @@ public final class EJBSecurityManager implements SecurityManager {
             () -> SecurityContext.getCurrent().getSubject(),
             null);
 
-        authorizationService.setProtectionDomainCreator(principalSet -> getCachedProtectionDomain(principalSet, true));
-
         authorizationService.addPermissionsToPolicy(
             convertEJBMethodPermissions(ejbDescriptor, contextId));
 

@@ -115,7 +115,7 @@
         <jakarta.annotation-api.version>2.1.1</jakarta.annotation-api.version>
 
         <jakarta.security-api.version>3.0.0</jakarta.security-api.version>
-        <jakarta.authorization-api.version>2.1.0</jakarta.authorization-api.version>
+        <jakarta.authorization-api.version>3.0.0-SNAPSHOT</jakarta.authorization-api.version>
         <jakarta.authentication-api.version>3.0.0</jakarta.authentication-api.version>
 
 

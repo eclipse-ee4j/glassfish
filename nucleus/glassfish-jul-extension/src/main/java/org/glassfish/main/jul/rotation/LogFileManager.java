@@ -78,9 +78,9 @@ public class LogFileManager {
      * @param maxCountOfOldLogFiles - if the count of rolled files with logFile's file name prefix
      *            crosses this value, old files will be permanently deleted.
      * @param streamSetter - this should be a {@link StreamHandler#setOutputStream} method. This
-     *            method will be called when we enable ouput.
+     *            method will be called when we enable ouput. Can be null.
      * @param streamCloser - this should be a {@link StreamHandler#close()} method. This method will
-     *            be called when we disable output.
+     *            be called when we disable output. Can be null.
      */
     public LogFileManager(final File logFile, //
         final long maxFileSize, final boolean compressOldLogFiles, final int maxCountOfOldLogFiles, //
@@ -173,7 +173,9 @@ public class LogFileManager {
             final FileOutputStream fout = new FileOutputStream(this.logFile, true);
             final BufferedOutputStream bout = new BufferedOutputStream(fout);
             this.meter = new MeteredStream(bout, this.logFile.length());
-            this.streamSetter.setStream(this.meter);
+            if (this.streamSetter != null) {
+                this.streamSetter.setStream(this.meter);
+            }
         } catch (Exception e) {
             throw new IllegalStateException("Could not open the log file for writing: " + this.logFile, e);
         }
@@ -187,7 +189,9 @@ public class LogFileManager {
      */
     public synchronized void disableOutput() {
         if (isOutputEnabled()) {
-            this.streamCloser.close();
+            if (streamCloser != null) {
+                this.streamCloser.close();
+            }
             try {
                 this.meter.close();
             } catch (final IOException e) {

@@ -165,7 +165,8 @@ public class LogFileManager {
         }
         // check that the parent directory exists.
         final File parent = this.logFile.getParentFile();
-        if (!parent.exists() && !parent.mkdirs()) {
+        // if the file instance doesn't use parent, we don't care about it.
+        if (parent != null && !parent.exists() && !parent.mkdirs()) {
             throw new IllegalStateException("Failed to create the parent directory " + parent.getAbsolutePath());
         }
         try {

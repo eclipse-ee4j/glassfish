@@ -283,6 +283,11 @@ public class GlassFishLogHandler extends StreamHandler implements ExternallyMana
     public synchronized void close() {
         trace(GlassFishLogHandler.class, "close()");
         this.status = GlassFishLogHandlerStatus.OFF;
+        if (this.rotationTimerTask != null) {
+            this.rotationTimerTask.cancel();
+            this.rotationTimerTask = null;
+        }
+        this.rotationTimer.cancel();
         stopPump();
         try {
             LoggingSystemEnvironment.resetStandardOutputs();
@@ -387,6 +392,7 @@ public class GlassFishLogHandler extends StreamHandler implements ExternallyMana
         trace(GlassFishLogHandler.class, "updateRollSchedule()");
         if (rotationTimerTask != null) {
             rotationTimerTask.cancel();
+            rotationTimerTask = null;
         }
         if (this.configuration.isRotationOnDateChange()) {
             this.rotationTimerTask = new DailyLogRotationTimerTask(this::scheduledRoll);

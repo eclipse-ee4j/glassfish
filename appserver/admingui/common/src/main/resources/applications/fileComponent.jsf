@@ -1,5 +1,6 @@
 <!--
 
+    Copyright (c) 2023 Contributors to the Eclipse Foundation
     Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -37,6 +38,7 @@
             getClientId(component="$this{component}" clientId=>$page{fileuploadId});
         />
     </sun:upload>
+    <sun:message for="#{fileuploadId}"/>
 
 
     "<br /><br/><br/>

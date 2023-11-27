@@ -1,5 +1,6 @@
 <!--
 
+    Copyright (c) 2023 Contributors to the Eclipse Foundation
     Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -99,7 +100,7 @@
                 labels="$attribute{filterLabels}" values="$attribute{filterValues}">
                 <!beforeCreate
                     getContentOfIntegrationPoints(type="org.glassfish.admingui:resFilterDropdown" labels="#{requestScope.filterLabels}" values="#{requestScope.filterValues}" );
-                    listAdd(list="#{requestScope.filterLabels}" value="$resource{i18n.common.showAll}",  index="0", sort="true");
+                    listAdd(list="#{requestScope.filterLabels}" value="$resource{i18n.common.showAll}",  index="0");
                     listAdd(list="#{requestScope.filterValues}" value=""  index="0" );
                 />
                 <!command

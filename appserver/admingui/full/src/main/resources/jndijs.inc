@@ -1,5 +1,6 @@
 <!--
 
+    Copyright (c) 2023 Contributors to the Eclipse Foundation
     Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -23,9 +24,9 @@
     var selectedOption = getSelectedValueFromForm(document.forms['form1'], 'classnameOption');
     enableClassnameFields(option);   
     if (option == 'input'){ 
-        #{themeJavascript.JS_PREFIX}.radiobutton.setChecked('#{rbPropId}:optB', true);  
+        require(['webui/suntheme/radiobutton'], function (radiobutton) { radiobutton.setChecked('#{rbPropId}:optB', true); });
     }else{  
-        #{themeJavascript.JS_PREFIX}.radiobutton.setChecked('#{rbPropId}:optA', true);  
+        require(['webui/suntheme/radiobutton'], function (radiobutton) { radiobutton.setChecked('#{rbPropId}:optA', true); });
     }  
   }
 
@@ -33,14 +34,14 @@
     if(opt == 'input') {
 	enableComponent('#{classnameTextId}', 'text');  
 	getTextElement('#{classnameTextId}').focus(); 
-	#{themeJavascript.JS_PREFIX}.dropDown.setDisabled('#{classnameDropdownId}', true); 
+	require(['webui/suntheme/dropDown'], function (dropDown) { dropDown.setDisabled('#{classnameDropdownId}', true); });
         //showDisplay('none');
         document.getElementById('form1:option').value='input'; 
     }else{
         //We need to set a timeout to delay the call to getTextElement inside disable component.
         //otherwise getTextElement will always return null, causing JS error.
 	window.setTimeout("disableComponent('#{classnameTextId}', 'text')", 1); 
-	#{themeJavascript.JS_PREFIX}.dropDown.setDisabled('#{classnameDropdownId}', false); 
+	require(['webui/suntheme/dropDown'], function (dropDown) { dropDown.setDisabled('#{classnameDropdownId}', false); });
         //showDisplay('');
         document.getElementById('form1:option').value='predefine';
     }

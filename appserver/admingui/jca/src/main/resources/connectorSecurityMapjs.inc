@@ -1,5 +1,6 @@
 <!--
 
+    Copyright (c) 2023 Contributors to the Eclipse Foundation
     Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -24,13 +25,13 @@
         getTextElement('#{userGroupsId}').value='';  \
         disableComponent('#{userGroupsId}', 'text'); \
 	getTextElement('#{principalsId}').focus();  \
-        #{themeJavascript.JS_PREFIX}.radiobutton.setChecked('#{pPropId}:optB', true); \
+        require(['webui/suntheme/radiobutton'], function (radiobutton) { radiobutton.setChecked('#{pPropId}:optB', true); }); \
     }else{ \
         getTextElement('#{principalsId}').value='';  \
 	disableComponent('#{principalsId}', 'text'); \
         enableComponent('#{userGroupsId}', 'text');  \
         getTextElement('#{userGroupsId}').focus();  \
-        #{themeJavascript.JS_PREFIX}.radiobutton.setChecked('#{grpPropId}:optA', true);  \
+        require(['webui/suntheme/radiobutton'], function (radiobutton) { radiobutton.setChecked('#{grpPropId}:optA', true); }); \
     }\
  }
 "</SCRIPT>          

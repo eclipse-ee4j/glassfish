@@ -18,7 +18,6 @@
 package org.glassfish.webservices.transport.tcp;
 
 import com.oracle.webservices.api.message.BaseDistributedPropertySet;
-
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.RequestDispatcher;
@@ -35,7 +34,6 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpUpgradeHandler;
 import jakarta.servlet.http.Part;
 import jakarta.xml.ws.handler.MessageContext;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -490,7 +488,7 @@ public final class ServletFakeArtifactSet extends BaseDistributedPropertySet {
         }
 
         @Override
-        public void addHeader(final String string,final  String string0) {
+        public void addHeader(final String string, final String string0) {
         }
 
         @Override
@@ -594,6 +592,11 @@ public final class ServletFakeArtifactSet extends BaseDistributedPropertySet {
         @Override
         public int getStatus() {
             return 200;
+        }
+
+        @Override
+        public void sendRedirect(String location, int sc, boolean clearBuffer) throws IOException {
+
         }
     }
 }

@@ -485,4 +485,10 @@ public class ResponseFacade implements HttpServletResponse {
         }
     }
 
+    @Override
+    public void sendRedirect(String location, int sc, boolean clearBuffer) throws IOException {
+        // TODO TODO SERVLET 6.1
+        // TODO Auto-generated method stub
+    }
+
 }

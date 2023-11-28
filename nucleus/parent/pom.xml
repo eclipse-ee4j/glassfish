@@ -74,7 +74,7 @@
         <expressly.version>5.0.0</expressly.version>
 
         <!-- Jakarta Servlet -->
-        <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
+        <jakarta.servlet-api.version>6.1.0-M1</jakarta.servlet-api.version>
 
         <!-- Jakarta Validation -->
         <jakarta.validation-api.version>3.0.2</jakarta.validation-api.version>
@@ -115,8 +115,8 @@
         <jakarta.annotation-api.version>2.1.1</jakarta.annotation-api.version>
 
         <jakarta.security-api.version>3.0.0</jakarta.security-api.version>
-        <jakarta.authorization-api.version>2.1.0</jakarta.authorization-api.version>
-        <jakarta.authentication-api.version>3.0.0</jakarta.authentication-api.version>
+        <jakarta.authorization-api.version>3.0.0-M1</jakarta.authorization-api.version>
+        <jakarta.authentication-api.version>3.1.0-M1</jakarta.authentication-api.version>
 
 
         <!-- GlassFish Components -->

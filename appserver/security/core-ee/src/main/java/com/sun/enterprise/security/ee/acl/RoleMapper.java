@@ -17,15 +17,18 @@
 
 package com.sun.enterprise.security.ee.acl;
 
-import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.security.common.AppservAccessController;
-import com.sun.logging.LogDomains;
+import static com.sun.enterprise.util.Utility.isEmpty;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.enumeration;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+import static java.util.stream.Collectors.toSet;
 
+import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.logging.LogDomains;
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
 import java.security.Principal;
-import java.security.PrivilegedAction;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,9 +37,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.security.auth.Subject;
-
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.glassfish.deployment.common.SecurityRoleMapper;
@@ -49,7 +50,7 @@ import org.glassfish.security.common.UserPrincipal;
 /**
  * This Object maintains a mapping of users and groups to application specific Roles. Using this object this mapping
  * information could be maintained and queried at a later time. This is a complete rewrite of the previous RoleMapper
- * for JACC related changes.
+ * for Jakarta Authorization related changes.
  *
  * @author Harpreet Singh
  */
@@ -61,15 +62,17 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
     private String appName;
     private final Map<String, Subject> roleToSubject = new HashMap<>();
 
-    // default mapper to emulate Servlet default p2r mapping semantics
-    private String defaultP2RMappingClassName;
-    private final DefaultRoleToSubjectMapping defaultRTSM = new DefaultRoleToSubjectMapping();
+    // Default mapper to emulate Servlet default p2r mapping semantics
+    private String defaultPrincipalToRoleMappingClassName;
+    private final DefaultRoleToSubjectMapping defaultRoleToSubjectMapping = new DefaultRoleToSubjectMapping();
+
     /*
-     * the following 2 Maps are a copy of roleToSubject. This is added as a support for deployment. Should think of
+     * The following 2 Maps are a copy of roleToSubject. This is added as a support for deployment. Should think of
      * optimizing this.
      */
     private final Map<String, Set<UserPrincipal>> roleToPrincipal = new HashMap<>();
     private final Map<String, Set<Group>> roleToGroup = new HashMap<>();
+
     /* The following objects are used to detect conflicts during deployment */
     /*
      * .....Mapping of module (or application) that is presently calling assignRole(). It is set by the startMappingFor()
@@ -77,25 +80,61 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
      * against those previously assigned.
      */
     private Mapping currentMapping;
-    // These override roles mapped in submodules.
+
+    /**
+     * These override roles mapped in submodules.
+     */
     private Set<Role> topLevelRoles;
 
-    // used to identify the application level mapping file
+    /**
+     * Used to identify the application level mapping file
+     */
     private static final String TOP_LEVEL = "sun-application.xml mapping file";
+
     // used to log a warning only one time
     private boolean conflictLogged;
+
     // store roles that have a conflict so they are not re-mapped
     private Set<Role> conflictedRoles;
-    /* End conflict detection objects */
 
-    private transient SecurityService secService;
+    private transient SecurityService securityService;
 
     RoleMapper(String appName) {
         this.appName = appName;
-        secService = Globals.getDefaultHabitat().getService(SecurityService.class, ServerEnvironment.DEFAULT_INSTANCE_NAME);
-        defaultP2RMappingClassName = getDefaultP2RMappingClassName();
+        securityService = Globals.getDefaultBaseServiceLocator().getService(SecurityService.class, ServerEnvironment.DEFAULT_INSTANCE_NAME);
+        defaultPrincipalToRoleMappingClassName = getDefaultPrincipalToRoleMappingClassName();
     }
 
+    /**
+     * Copy constructor. This is called from the JSR88 implementation. This is not stored into the internal rolemapper maps.
+     */
+    public RoleMapper(RoleMapper other) {
+        this.appName = other.getName();
+        for (Iterator<String> it = other.getRoles(); it.hasNext();) {
+            String role = it.next();
+
+            // Recover groups
+            Enumeration<Group> groups = other.getGroupsAssignedTo(new Role(role));
+            Set<Group> groupsToRole = new HashSet<>();
+            for (; groups.hasMoreElements();) {
+                Group gp = groups.nextElement();
+                groupsToRole.add(new Group(gp.getName()));
+                addRoleToSubject(gp, role);
+            }
+            this.roleToGroup.put(role, groupsToRole);
+
+            // Recover principles
+            Enumeration<UserPrincipal> users = other.getUsersAssignedTo(new Role(role));
+            Set<UserPrincipal> usersToRole = new HashSet<>();
+            while (users.hasMoreElements()) {
+                UserPrincipal principal = users.nextElement();
+                usersToRole.add(new UserNameAndPassword(principal.getName()));
+                addRoleToSubject(principal, role);
+            }
+
+            this.roleToPrincipal.put(role, usersToRole);
+        }
+    }
 
     /**
      * @return The application/module name for this RoleMapper
@@ -114,22 +153,65 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
     }
 
     /**
-     * @param principal A principal that corresponds to the role
-     * @param role A role corresponding to this principal
+     * Returns the RoleToSubjectMapping for the RoleMapping
+     *
+     * @return Map of role->subject mapping
      */
-    private void addRoleToPrincipal(final Principal principal, String role) {
-        assert roleToSubject != null;
-        Subject subject = roleToSubject.get(role);
-        final Subject sub = subject == null ? new Subject() : subject;
-        AppservAccessController.doPrivileged(new PrivilegedAction<>() {
+    @Override
+    public Map<String, Subject> getRoleToSubjectMapping() {
+        // This causes the last currentMapping information to be added
+        checkAndAddMappings();
 
-            @Override
-            public java.lang.Object run() {
-                sub.getPrincipals().add(principal);
-                return null;
+        if (roleToSubject.isEmpty() && isDefaultPrincipalToRoleMapping()) {
+            return defaultRoleToSubjectMapping;
+        }
+
+        return roleToSubject;
+    }
+
+    @Override
+    public Map<String, Set<String>> getGroupToRolesMapping() {
+        Map<String, Set<String>> groupToRoles = new HashMap<>();
+
+        for (Map.Entry<String, Subject> roleToSubject : getRoleToSubjectMapping().entrySet()) {
+            for (String group : getGroups(roleToSubject.getValue())) {
+                groupToRoles.computeIfAbsent(group, g -> new HashSet<>())
+                            .add(roleToSubject.getKey());
             }
-        });
-        roleToSubject.put(role, sub);
+        }
+
+        return groupToRoles;
+    }
+
+    /**
+     * Assigns a Principal to the specified role. This method delegates work to internalAssignRole() after checking for
+     * conflicts. RootDeploymentDescriptor added as a fix for: https://glassfish.dev.java.net/issues/show_bug.cgi?id=2475
+     *
+     * The first time this is called, a new Mapping object is created to store the role mapping information. When called
+     * again from a different module, the old mapping information is checked and stored and a new Mapping object is created.
+     *
+     * @param principal The principal that needs to be assigned to the role.
+     * @param role The Role the principal is being assigned to.
+     * @param rootDeploymentDescriptor The descriptor of the module containing the role mapping
+     */
+    @Override
+    public void assignRole(Principal principal, Role role, RootDeploymentDescriptor rootDeploymentDescriptor) {
+        String callingModuleID = getModuleID(rootDeploymentDescriptor);
+
+        if (currentMapping == null) {
+            currentMapping = new Mapping(callingModuleID);
+        } else if (!callingModuleID.equals(currentMapping.owner)) {
+            checkAndAddMappings();
+            currentMapping = new Mapping(callingModuleID);
+        }
+
+        // When using the top level mapping
+        if (callingModuleID.equals(TOP_LEVEL) && topLevelRoles == null) {
+            topLevelRoles = new HashSet<>();
+        }
+
+        // Store principal and role temporarily until stopMappingFor called
+        currentMapping.addMapping(principal, role);
     }
 
     /**
@@ -140,152 +222,62 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
      */
     @Override
     public void unassignPrincipalFromRole(Role role, Principal principal) {
-        assert roleToSubject != null;
-        String mrole = role.getName();
-        final Subject sub = roleToSubject.get(mrole);
-        final Principal p = principal;
-        if (sub != null) {
-            AppservAccessController.doPrivileged(new PrivilegedAction<>() {
-
-                @Override
-                public Void run() {
-                    sub.getPrincipals().remove(p);
-                    return null;
-                }
-            });
-            roleToSubject.put(mrole, sub);
+        String roleName = role.getName();
+        Subject subject = roleToSubject.get(roleName);
+        if (subject != null) {
+            subject.getPrincipals().remove(principal);
+            roleToSubject.put(roleName, subject);
         }
+
         if (principal instanceof Group) {
-            Set<Group> groups = roleToGroup.get(mrole);
+            Set<Group> groups = roleToGroup.get(roleName);
             if (groups != null) {
                 groups.remove(principal);
-                roleToGroup.put(mrole, groups);
+                roleToGroup.put(roleName, groups);
             }
         } else {
-            Set<UserPrincipal> principals = roleToPrincipal.get(mrole);
+            Set<UserPrincipal> principals = roleToPrincipal.get(roleName);
             if (principals != null) {
                 principals.remove(principal);
-                roleToPrincipal.put(mrole, principals);
+                roleToPrincipal.put(roleName, principals);
             }
         }
-    }
-
-    // @return true or false depending on activation of
-    // the mapping via domain.xml.
-    boolean isDefaultRTSMActivated() {
-        return defaultP2RMappingClassName != null;
-    }
-
-    /**
-     * Returns the RoleToSubjectMapping for the RoleMapping
-     *
-     * @return Map of role->subject mapping
-     */
-    @Override
-    public Map<String, Subject> getRoleToSubjectMapping() {
-        // this causes the last currentMapping information to be added
-        checkAndAddMappings();
-        assert roleToSubject != null;
-        if (roleToSubject.isEmpty() && isDefaultRTSMActivated()) {
-            return defaultRTSM;
-        }
-        return roleToSubject;
-    }
-
-    // The method that does the work for assignRole().
-    private void internalAssignRole(Principal p, Role r) {
-        String role = r.getName();
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "SECURITY:RoleMapper Assigning Role {0} to {1}", new Object[] {role, p});
-        }
-        addRoleToPrincipal(p, role);
-        if (p instanceof Group) {
-            Set<Group> groups = roleToGroup.get(role);
-            if (groups == null) {
-                groups = new HashSet<>();
-            }
-            groups.add((Group) p);
-            roleToGroup.put(role, groups);
-        } else if (p instanceof UserPrincipal) {
-            Set<UserPrincipal> principals = roleToPrincipal.get(role);
-            if (principals == null) {
-                principals = new HashSet<>();
-            }
-            principals.add((UserPrincipal) p);
-            roleToPrincipal.put(role, principals);
-        } else {
-            throw new IllegalArgumentException("Unknown principal class: " + p.getClass());
-        }
-    }
-
-    /**
-     * Assigns a Principal to the specified role. This method delegates work to internalAssignRole() after checking for
-     * conflicts. RootDeploymentDescriptor added as a fix for: https://glassfish.dev.java.net/issues/show_bug.cgi?id=2475
-     *
-     * The first time this is called, a new Mapping object is created to store the role mapping information. When called
-     * again from a different module, the old mapping information is checked and stored and a new Mapping object is created.
-     *
-     * @param p The principal that needs to be assigned to the role.
-     * @param r The Role the principal is being assigned to.
-     * @param rdd The descriptor of the module containing the role mapping
-     */
-    @Override
-    public void assignRole(Principal p, Role r, RootDeploymentDescriptor rdd) {
-        assert rdd != null;
-        String callingModuleID = getModuleID(rdd);
-
-        if (currentMapping == null) {
-            currentMapping = new Mapping(callingModuleID);
-        } else if (!callingModuleID.equals(currentMapping.owner)) {
-            checkAndAddMappings();
-            currentMapping = new Mapping(callingModuleID);
-        }
-
-        // when using the top level mapping
-        if (callingModuleID.equals(TOP_LEVEL) && topLevelRoles == null) {
-            topLevelRoles = new HashSet<>();
-        }
-
-        // store principal and role temporarily until stopMappingFor called
-        currentMapping.addMapping(p, r);
     }
 
 
     @Override
     public Iterator<String> getRoles() {
-        assert roleToSubject != null;
         return roleToSubject.keySet().iterator(); // All the roles
     }
 
-
     @Override
-    public Enumeration<Group> getGroupsAssignedTo(Role r) {
-        assert roleToGroup != null;
-        Set<Group> s = roleToGroup.get(r.getName());
-        if (s == null) {
-            return Collections.enumeration(Collections.emptySet());
+    public Enumeration<Group> getGroupsAssignedTo(Role role) {
+        Set<Group> groups = roleToGroup.get(role.getName());
+        if (groups == null) {
+            return enumeration(emptySet());
         }
-        return Collections.enumeration(s);
+
+        return enumeration(groups);
     }
 
 
     @Override
-    public Enumeration<UserPrincipal> getUsersAssignedTo(Role r) {
-        assert roleToPrincipal != null;
-        Set<UserPrincipal> s = roleToPrincipal.get(r.getName());
-        if (s == null) {
-            return Collections.enumeration(Collections.emptySet());
+    public Enumeration<UserPrincipal> getUsersAssignedTo(Role role) {
+        Set<UserPrincipal> principals = roleToPrincipal.get(role.getName());
+        if (principals == null) {
+            return enumeration(emptySet());
         }
-        return Collections.enumeration(s);
+
+        return enumeration(principals);
     }
 
     @Override
-    public void unassignRole(Role r) {
-        if (r != null) {
-            String role = r.getName();
-            roleToSubject.remove(role);
-            roleToPrincipal.remove(role);
-            roleToGroup.remove(role);
+    public void unassignRole(Role role) {
+        if (role != null) {
+            String roleName = role.getName();
+            roleToSubject.remove(roleName);
+            roleToPrincipal.remove(roleName);
+            roleToGroup.remove(roleName);
         }
     }
 
@@ -294,8 +286,8 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
      */
     @Override
     public String toString() {
-
         StringBuilder s = new StringBuilder("RoleMapper:");
+
         for (Iterator<String> e = this.getRoles(); e.hasNext();) {
             String r = e.next();
             s.append("\n\tRole (").append(r).append(") has Principals(");
@@ -307,51 +299,32 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
             }
             s.append(")");
         }
-        if (LOG.isLoggable(Level.FINER)) {
-            LOG.log(Level.FINER, s.toString());
-        }
+
+        LOG.log(Level.FINER, () -> s.toString());
+
         return s.toString();
     }
 
     /**
-     * Copy constructor. This is called from the JSR88 implementation. This is not stored into the internal rolemapper maps.
+     * @param principal A principal that corresponds to the role
+     * @param role A role corresponding to this principal
      */
-    public RoleMapper(RoleMapper r) {
-        this.appName = r.getName();
-        for (Iterator<String> it = r.getRoles(); it.hasNext();) {
-            String role = it.next();
-            // recover groups
-            Enumeration<Group> groups = r.getGroupsAssignedTo(new Role(role));
-            Set<Group> groupsToRole = new HashSet<>();
-            for (; groups.hasMoreElements();) {
-                Group gp = groups.nextElement();
-                groupsToRole.add(new Group(gp.getName()));
-                addRoleToPrincipal(gp, role);
-            }
-            this.roleToGroup.put(role, groupsToRole);
-
-            // recover principles
-            Enumeration<UserPrincipal> users = r.getUsersAssignedTo(new Role(role));
-            Set<UserPrincipal> usersToRole = new HashSet<>();
-            while (users.hasMoreElements()) {
-                UserPrincipal principal = users.nextElement();
-                usersToRole.add(new UserNameAndPassword(principal.getName()));
-                addRoleToPrincipal(principal, role);
-            }
-            this.roleToPrincipal.put(role, usersToRole);
-        }
+    private void addRoleToSubject(final Principal principal, String role) {
+        roleToSubject.computeIfAbsent(role, e -> new Subject())
+                     .getPrincipals()
+                     .add(principal);
     }
 
     /**
      * @returns the class name used for default Principal to role mapping return null if default P2R mapping is not
      * supported.
      */
-    private String getDefaultP2RMappingClassName() {
+    private String getDefaultPrincipalToRoleMappingClassName() {
         String className = null;
         try {
-            if (secService != null && Boolean.parseBoolean(secService.getActivateDefaultPrincipalToRoleMapping())) {
-                className = secService.getMappedPrincipalClass();
-                if (className == null || className.isEmpty()) {
+            if (securityService != null && Boolean.parseBoolean(securityService.getActivateDefaultPrincipalToRoleMapping())) {
+                className = securityService.getMappedPrincipalClass();
+                if (isEmpty(className)) {
                     className = Group.class.getName();
                 }
             }
@@ -359,14 +332,53 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
             if (className == null) {
                 return null;
             }
+
             // To avoid a failure later make sure we can instantiate now
-            Class<?> clazz = Class.forName(className);
-            Constructor<?> c = clazz.getConstructor(String.class);
-            c.newInstance("anystring");
+            Class.forName(className)
+                 .getConstructor(String.class)
+                 .newInstance("anystring");
+
             return className;
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "pc.getDefaultP2RMappingClass: " + e);
+            LOG.log(SEVERE, "pc.getDefaultP2RMappingClass: " + e);
             return null;
+        }
+    }
+
+    // @return true or false depending on activation of
+    // the mapping via domain.xml.
+    @Override
+    public boolean isDefaultPrincipalToRoleMapping() {
+        return defaultPrincipalToRoleMappingClassName != null;
+    }
+
+    @Override
+    public Set<String> getGroups(Subject subject) {
+        return
+            subject.getPrincipals()
+                   .stream()
+                   .filter(e -> e instanceof Group)
+                   .map(e -> e.getName())
+                   .collect(toSet());
+    }
+
+    // The method that does the work for assignRole().
+    private void internalAssignRole(Principal principal, Role role) {
+        String roleName = role.getName();
+        if (LOG.isLoggable(FINE)) {
+            LOG.log(FINE, "SECURITY:RoleMapper Assigning Role {0} to {1}", new Object[] {roleName, principal});
+        }
+
+        addRoleToSubject(principal, roleName);
+
+        if (principal instanceof Group) {
+            roleToGroup.computeIfAbsent(roleName, e -> new HashSet<>())
+                       .add((Group) principal);
+        } else if (principal instanceof UserPrincipal) {
+            roleToPrincipal.computeIfAbsent(roleName, e -> new HashSet<>())
+                           .add((UserPrincipal) principal);
+        } else {
+            throw new IllegalArgumentException("Unknown principal class: " + principal.getClass());
         }
     }
 
@@ -374,21 +386,19 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
      * Only web/ejb BundleDescriptor and Application descriptor objects are used for role mapping currently. If other
      * subtypes of RootDeploymentDescriptor are used in the future, they should be added here.
      */
-    private String getModuleID(RootDeploymentDescriptor rdd) {
+    private String getModuleID(RootDeploymentDescriptor rootDeploymentDescriptor) {
         // V3: Can we use this : return rdd.getModuleID();
-        /*
-         * V3:Comment if (rdd instanceof Application) { return TOP_LEVEL; } else if (rdd instanceof BundleDescriptor) { return
-         * ((BundleDescriptor) rdd).getModuleDescriptor().getArchiveUri(); } else { // cannot happen unless glassfish code is
-         * changed throw new AssertionError(rdd.getClass() + " is not a known descriptor type"); }
-         */
-        if (rdd.isApplication()) {
+
+        if (rootDeploymentDescriptor.isApplication()) {
             return TOP_LEVEL;
         }
-        if (rdd.getModuleDescriptor() != null) {
-            return rdd.getModuleDescriptor().getArchiveUri();
+
+        if (rootDeploymentDescriptor.getModuleDescriptor() != null) {
+            return rootDeploymentDescriptor.getModuleDescriptor().getArchiveUri();
         }
-        // cannot happen unless glassfish code is changed
-        throw new AssertionError(rdd.getClass() + " is not a known descriptor type");
+
+        // Cannot happen unless glassfish code is changed
+        throw new AssertionError(rootDeploymentDescriptor.getClass() + " is not a known descriptor type");
 
     }
 
@@ -410,61 +420,54 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
             return;
         }
 
-        for (Role r : currentMapping.getRoles()) {
+        for (Role role : currentMapping.getRoles()) {
 
-            if (topLevelRoles != null && topLevelRoles.contains(r)) {
+            if (topLevelRoles != null && topLevelRoles.contains(role)) {
                 logConflictWarning();
-                if (LOG.isLoggable(Level.FINE)) {
-                    LOG.log(Level.FINE,
-                            "Role " + r + " from module " + currentMapping.owner + " is being overridden by top-level mapping.");
-                }
+                LOG.log(FINE, () ->
+                        "Role " + role + " from module " + currentMapping.owner + " is being overridden by top-level mapping.");
 
                 continue;
             }
 
             if (currentMapping.owner.equals(TOP_LEVEL)) {
-                topLevelRoles.add(r);
-                if (roleToSubject.keySet().contains(r.getName())) {
+                topLevelRoles.add(role);
+                if (roleToSubject.keySet().contains(role.getName())) {
                     logConflictWarning();
-                    if (LOG.isLoggable(Level.FINE)) {
-                        LOG.log(Level.FINE,
-                                "Role " + r + " from top-level mapping descriptor is " + "overriding existing role in sub module.");
-                    }
+                    LOG.log(FINE, () ->
+                            "Role " + role + " from top-level mapping descriptor is " + "overriding existing role in sub module.");
 
-                    unassignRole(r);
+                    unassignRole(role);
                 }
 
-            } else if (roleConflicts(r, currentMapping.getPrincipals(r))) {
-                // detail message already logged
+            } else if (roleConflicts(role, currentMapping.getPrincipals(role))) {
+                // Detail message already logged
                 logConflictWarning();
-                unassignRole(r);
+                unassignRole(role);
                 continue;
             }
 
-            // no problems, so assign role
-            for (Principal p : currentMapping.getPrincipals(r)) {
-                internalAssignRole(p, r);
+            // No problems, so assign role
+            for (Principal principal : currentMapping.getPrincipals(role)) {
+                internalAssignRole(principal, role);
             }
 
         }
 
-        // clear current mapping
+        // Clear current mapping
         currentMapping = null;
     }
 
     private boolean roleConflicts(Role r, Set<Principal> ps) {
-
         // check to see if there has been a previous conflict
         if (conflictedRoles != null && conflictedRoles.contains(r)) {
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.log(Level.FINE,
-                        "Role " + r + " from module " + currentMapping.owner + " has already had a conflict with other modules.");
-            }
+            LOG.log(FINE,
+                    () -> "Role " + r + " from module " + currentMapping.owner + " has already had a conflict with other modules.");
 
             return true;
         }
 
-        // if role not previously mapped, no conflict
+        // If role not previously mapped, no conflict
         if (!roleToSubject.keySet().contains(r.getName())) {
             return false;
         }
@@ -477,8 +480,8 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
         actualNum += pSet == null ? 0 : pSet.size();
         actualNum += gSet == null ? 0 : gSet.size();
         if (targetNumPrin != actualNum) {
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.log(Level.FINE, "Module " + currentMapping.owner + " has different number of mappings for role " + r.getName()
+            if (LOG.isLoggable(FINE)) {
+                LOG.log(FINE, "Module " + currentMapping.owner + " has different number of mappings for role " + r.getName()
                         + " than other mapping files");
             }
 
@@ -503,8 +506,8 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
             }
 
             if (fail) {
-                if (LOG.isLoggable(Level.FINE)) {
-                    LOG.log(Level.FINE, "Role " + r + " in module " + currentMapping.owner + " is not included in other modules.");
+                if (LOG.isLoggable(FINE)) {
+                    LOG.log(FINE, "Role " + r + " in module " + currentMapping.owner + " is not included in other modules.");
                 }
 
                 if (conflictedRoles == null) {
@@ -523,7 +526,7 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
 
     private void logConflictWarning() {
         if (!conflictLogged) {
-            LOG.log(Level.WARNING, "Role mapping conflicts found in application {0}. Some roles may not be mapped.", getName());
+            LOG.log(WARNING, "Role mapping conflicts found in application {0}. Some roles may not be mapped.", getName());
             conflictLogged = true;
         }
     }
@@ -533,6 +536,7 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
      */
     private static class Mapping implements Serializable {
         private static final long serialVersionUID = 5863982599500877228L;
+
         private final String owner;
         private final Map<Role, Set<Principal>> roleMap;
 
@@ -541,13 +545,9 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
             roleMap = new HashMap<>();
         }
 
-        void addMapping(Principal p, Role r) {
-            Set<Principal> pSet = roleMap.get(r);
-            if (pSet == null) {
-                pSet = new HashSet<>();
-                roleMap.put(r, pSet);
-            }
-            pSet.add(p);
+        void addMapping(Principal principal, Role role) {
+            roleMap.computeIfAbsent(role, e -> new HashSet<>())
+                   .add(principal);
         }
 
         Set<Role> getRoles() {
@@ -562,45 +562,36 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
     class DefaultRoleToSubjectMapping extends HashMap<String, Subject> {
         private static final long serialVersionUID = 3074733840327132690L;
 
-        private final HashMap<String, Subject> roleMap = new HashMap<>();
+        private final Map<String, Subject> roleMap = new HashMap<>();
 
         DefaultRoleToSubjectMapping() {
-        }
-
-        Principal getSameNamedPrincipal(String roleName) {
-            try {
-                Class<?> clazz = Class.forName(defaultP2RMappingClassName);
-                Class<?>[] argClasses = new Class<?>[] { String.class };
-                Object[] arg = new Object[] { roleName };
-                Constructor<?> c = clazz.getConstructor(argClasses);
-                Principal principal = (Principal) c.newInstance(arg);
-                return principal;
-            } catch (Exception e) {
-                LOG.log(Level.SEVERE, "rm.getSameNamedPrincipal", new Object[] { roleName, e });
-                throw new RuntimeException("Unable to get principal by default p2r mapping");
-            }
         }
 
         // Do not map '**' to a Principal as this represents the any authenticated user role
         @Override
         public Subject get(Object key) {
             synchronized (roleMap) {
-                Subject s = roleMap.get(key);
-                if (s == null && key instanceof String && !"**".equals(key)) {
-                    final Subject fs = new Subject();
-                    final String roleName = (String) key;
-                    AppservAccessController.doPrivileged(new PrivilegedAction<>() {
-
-                        @Override
-                        public Void run() {
-                            fs.getPrincipals().add(getSameNamedPrincipal(roleName));
-                            return null;
-                        }
-                    });
-                    roleMap.put((String) key, fs);
-                    s = fs;
+                Subject subject = roleMap.get(key);
+                if (subject == null && key instanceof String && !"**".equals(key)) {
+                    subject = new Subject();
+                    String roleName = (String) key;
+                    subject.getPrincipals().add(getSameNamedPrincipal(roleName));
+                    roleMap.put(roleName, subject);
                 }
-                return s;
+
+                return subject;
+            }
+        }
+
+        Principal getSameNamedPrincipal(String roleName) {
+            try {
+                return (Principal)
+                    Class.forName(defaultPrincipalToRoleMappingClassName)
+                         .getConstructor(String.class)
+                         .newInstance(roleName);
+            } catch (Exception e) {
+                LOG.log(SEVERE, "rm.getSameNamedPrincipal", new Object[] { roleName, e });
+                throw new RuntimeException("Unable to get principal by default p2r mapping");
             }
         }
     }

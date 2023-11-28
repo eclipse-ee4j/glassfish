@@ -1180,6 +1180,7 @@ public class Response implements HttpResponse, HttpServletResponse {
      * @throws IllegalStateException if this response has already been committed
      * @throws IOException if an input/output error occurs
      */
+    @Override
     public void sendRedirect(String location, boolean isTemporary) throws IOException {
         if (isCommitted()) {
             throw new IllegalStateException(rb.getString(CANNOT_CALL_SEND_REDIRECT_EXCEPTION));
@@ -1808,6 +1809,12 @@ public class Response implements HttpResponse, HttpServletResponse {
         } else {
             log.log(Level.WARNING, localName + " " + message, t);
         }
+    }
+
+    @Override
+    public void sendRedirect(String location, int sc, boolean clearBuffer) throws IOException {
+        // TODO TODO SERVLET 6.1
+        // TODO Auto-generated method stub
     }
 
 }

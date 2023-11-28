@@ -93,7 +93,7 @@
           <property name="jaas-context" value="fileRealm"></property>
         </auth-realm>
         <auth-realm classname="com.sun.enterprise.security.auth.realm.certificate.CertificateRealm" name="certificate"></auth-realm>
-        <jacc-provider policy-provider="org.glassfish.exousia.modules.locked.SimplePolicyProvider" name="default" policy-configuration-factory-provider="org.glassfish.exousia.modules.locked.SimplePolicyConfigurationFactory">
+        <jacc-provider policy-provider="org.glassfish.exousia.modules.def.DefaultPolicy" name="default" policy-configuration-factory-provider="org.glassfish.exousia.modules.def.DefaultPolicyConfigurationFactory">
           <property name="repository" value="${com.sun.aas.instanceRoot}/generated/policy"></property>
         </jacc-provider>
         <audit-module classname="com.sun.enterprise.security.ee.Audit" name="default">

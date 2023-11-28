@@ -146,10 +146,40 @@ public class LogFileManagerTest {
 
         manager.roll();
         Thread.sleep(100L);
-        File[] files = dir.listFiles(f -> f.isFile());
+        File[] files = dir.listFiles(File::isFile);
         assertThat(toString(files), files, Matchers.arrayWithSize(3));
     }
 
+
+    /**
+     * This test verifies that it is safe
+     * <ul>
+     * <li>to use null as the streamSetter parameter
+     * <li>to use null as the streamCloser parameter
+     * <li>to use an output file without parent (just a file name)
+     * </ul>
+     */
+    @Test
+    public void nullChecks() throws Exception {
+        final String logFilename = "___logfile_garbage.log";
+        try {
+            final File logFile = new File(logFilename);
+            final LogFileManager mgr = new LogFileManager(logFile, 1000L, false, 2, null, null);
+            mgr.enableOutput();
+            assertTrue(mgr.isOutputEnabled());
+            mgr.disableOutput();
+            assertFalse(mgr.isOutputEnabled());
+            assertEquals(0, mgr.getFileSize());
+            mgr.roll();
+        } finally {
+            final File[] files = new File(".").listFiles(f -> f.getName().startsWith(logFilename));
+            for (final File f : files) {
+                f.delete();
+            }
+            // First delete those files wherever was the current directory.
+            assertThat(toString(files), files, Matchers.arrayWithSize(2));
+        }
+    }
 
 
     private String toString(File[] files) {

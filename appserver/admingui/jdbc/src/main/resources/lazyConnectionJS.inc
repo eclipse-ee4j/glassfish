@@ -1,5 +1,6 @@
 <!--
 
+    Copyright (c) 2023 Contributors to the Eclipse Foundation
     Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -22,7 +23,7 @@
     var c = getTextElement(la);
     var selected = c.checked;
     if(selected) {
-        #{themeJavascript.JS_PREFIX}.checkbox.setChecked('#{enlistId}', true);
+        require(['webui/suntheme/checkbox'], function (checkbox) { checkbox.setChecked('#{enlistId}', true); });
         disableComponent('#{enlistId}', 'text');
     }
     if(!selected) {

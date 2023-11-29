@@ -340,6 +340,9 @@ public class DeployCommand extends DeployCommandParameters implements AdminComma
                 final File reposDir = new File(env.getApplicationRepositoryPath(), VersioningUtils.getRepositoryName(name));
                 if (reposDir.exists()) {
                     for (int i = 0; i < domain.getApplications().getApplications().size(); i++) {
+                        if (domain.getApplications().getApplications().get(i).isLifecycleModule()) {
+                            continue;
+                        }
                         File existrepos = new File(new URI(domain.getApplications().getApplications().get(i).getLocation()));
                         String appname = domain.getApplications().getApplications().get(i).getName();
                         if (!appname.equals(name) && existrepos.getAbsoluteFile().equals(reposDir.getAbsoluteFile())) {

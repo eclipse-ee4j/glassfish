@@ -24,6 +24,7 @@
     <!afterCreate
         getClientId(component="$this{component}" clientId=>$page{locationPropId});
     />
+    <sun:textField id="hiddenText" visible="#{false}" text="required" required="#{true}"/>
     <sun:radioButton id="uploadRdBtn" name="uploadRdBtn" label="$resource{i18n.deploy.chooseJarLabel}" selected="#{uploadRdBtn}" selectedValue="client"
         onClick="admingui.deploy.uploadRdBtnAction('#{dirPathId}','#{dirSelectBtnId}','#{filSelectBtnId}','#{fileuploadId}','#{pageSession.radioChoosenId}')"
     >

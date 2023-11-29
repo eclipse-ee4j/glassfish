@@ -429,63 +429,7 @@ public final class ApplicationContextFacade implements ServletContext {
             // Dummy registration to counter ordering issue between Mojarra
             // and Tyrus.
             // Should eventually be fixed in those projects.
-            registration = new FilterRegistration.Dynamic() {
-
-                @Override
-                public void setAsyncSupported(boolean isAsyncSupported) {
-                }
-
-                @Override
-                public Set<String> setInitParameters(Map<String, String> initParameters) {
-                    return null;
-                }
-
-                @Override
-                public boolean setInitParameter(String name, String value) {
-                    return false;
-                }
-
-                @Override
-                public String getName() {
-                    return null;
-                }
-
-                @Override
-                public Map<String, String> getInitParameters() {
-                    return null;
-                }
-
-                @Override
-                public String getInitParameter(String name) {
-                    return null;
-                }
-
-                @Override
-                public String getClassName() {
-                    return null;
-                }
-
-                @Override
-                public Collection<String> getUrlPatternMappings() {
-                    return null;
-                }
-
-                @Override
-                public Collection<String> getServletNameMappings() {
-                    return null;
-                }
-
-                @Override
-                public void addMappingForUrlPatterns(EnumSet<DispatcherType> dispatcherTypes, boolean isMatchAfter, String... urlPatterns) {
-
-                }
-
-                @Override
-                public void addMappingForServletNames(EnumSet<DispatcherType> dispatcherTypes, boolean isMatchAfter, String... servletNames) {
-                }
-            }; {
-
-            }
+            registration = new DummyFilterRegistrationDynamic();
         }
 
         return registration;

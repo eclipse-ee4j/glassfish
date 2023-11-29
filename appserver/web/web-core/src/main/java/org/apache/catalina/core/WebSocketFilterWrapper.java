@@ -69,7 +69,7 @@ public class WebSocketFilterWrapper implements Filter  {
 
                 @Override
                 public String getRequestURI() {
-                    RequestFacade wrappedRequest = (RequestFacade) super.getRequest();;
+                    RequestFacade wrappedRequest = (RequestFacade) super.getRequest();
                     String requestURI = wrappedRequest.getRequestURI();
 
                     // Get the contextPath without masking the default context mapping.

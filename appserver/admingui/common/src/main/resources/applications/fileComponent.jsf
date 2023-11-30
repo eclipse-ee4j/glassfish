@@ -1,5 +1,6 @@
 <!--
 
+    Copyright (c) 2023 Contributors to the Eclipse Foundation
     Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -23,6 +24,7 @@
     <!afterCreate
         getClientId(component="$this{component}" clientId=>$page{locationPropId});
     />
+    <sun:textField id="hiddenText" visible="#{false}" text="required" required="#{true}"/>
     <sun:radioButton id="uploadRdBtn" name="uploadRdBtn" label="$resource{i18n.deploy.chooseJarLabel}" selected="#{uploadRdBtn}" selectedValue="client"
         onClick="admingui.deploy.uploadRdBtnAction('#{dirPathId}','#{dirSelectBtnId}','#{filSelectBtnId}','#{fileuploadId}','#{pageSession.radioChoosenId}')"
     >
@@ -37,6 +39,7 @@
             getClientId(component="$this{component}" clientId=>$page{fileuploadId});
         />
     </sun:upload>
+    <sun:message for="#{fileuploadId}"/>
 
 
     "<br /><br/><br/>

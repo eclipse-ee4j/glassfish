@@ -339,12 +339,13 @@ public class DeployCommand extends DeployCommandParameters implements AdminComma
             if (!keepreposdir.booleanValue()) {
                 final File reposDir = new File(env.getApplicationRepositoryPath(), VersioningUtils.getRepositoryName(name));
                 if (reposDir.exists()) {
-                    for (int i = 0; i < domain.getApplications().getApplications().size(); i++) {
-                        if (domain.getApplications().getApplications().get(i).isLifecycleModule()) {
+                    List<Application> applications = domain.getApplications().getApplications();
+                    for (Application app : applications) {
+                        if (app.isLifecycleModule()) {
                             continue;
                         }
-                        File existrepos = new File(new URI(domain.getApplications().getApplications().get(i).getLocation()));
-                        String appname = domain.getApplications().getApplications().get(i).getName();
+                        File existrepos = new File(new URI(app.getLocation()));
+                        String appname = app.getName();
                         if (!appname.equals(name) && existrepos.getAbsoluteFile().equals(reposDir.getAbsoluteFile())) {
                             report.failure(logger, localStrings.getLocalString("deploy.dupdeployment",
                                     "Application {0} is trying to use the same repository directory as application {1}, please choose a different application name to deploy",

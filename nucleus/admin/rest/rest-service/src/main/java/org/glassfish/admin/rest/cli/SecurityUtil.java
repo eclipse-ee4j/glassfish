@@ -45,7 +45,7 @@ import org.jvnet.hk2.config.types.Property;
 public class SecurityUtil {
     private static final String DAS_CONFIG = "server-config";
     private static String ADMIN_REALM = "admin-realm";
-    private static String FILE_REALM_CLASSNAME = "com.sun.enterprise.security.ee.auth.realm.file.FileRealm";
+    private static String FILE_REALM_CLASSNAME = "com.sun.enterprise.security.auth.realm.file.FileRealm";
 
     private Domain domain;
 

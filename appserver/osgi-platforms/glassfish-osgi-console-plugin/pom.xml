@@ -23,7 +23,7 @@
     <parent>
        <groupId>org.glassfish.main.admingui</groupId>
        <artifactId>admingui</artifactId>
-       <version>7.0.11</version>
+       <version>7.0.12-SNAPSHOT</version>
        <relativePath>../../admingui/pom.xml</relativePath>
     </parent>
 

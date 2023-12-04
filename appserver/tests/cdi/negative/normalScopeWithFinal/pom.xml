@@ -23,13 +23,13 @@
     <parent>
         <groupId>org.glassfish.tests.cdi</groupId>
         <artifactId>negative</artifactId>
-        <version>7.0.11</version>
+        <version>7.0.12-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>org.glassfish.tests.cdi.negative</groupId>
     <artifactId>normalScopeWithFinal</artifactId>
-    <version>7.0.11</version>
+    <version>7.0.12-SNAPSHOT</version>
 
     <name>GlassFish Normal Scoped Bean With Final Methods</name>
 

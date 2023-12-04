@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.glassfish.tests.paas</groupId>
     <artifactId>basic-jpa</artifactId>
-    <version>7.0.11-SNAPSHOT</version>
+    <version>7.0.11</version>
     <name>Basic JPA PaaS sample</name>
     <packaging>war</packaging>
     <build>

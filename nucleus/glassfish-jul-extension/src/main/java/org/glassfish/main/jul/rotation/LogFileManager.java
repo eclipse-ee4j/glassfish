@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -136,12 +136,16 @@ public class LogFileManager {
         final boolean wasOutputEnabled = isOutputEnabled();
         disableOutput();
         final File archivedFile = rollToNewFile();
-        // There is no need to block processing of new log records with this time consuming action.
-        final Runnable cleanup = () -> cleanUpHistoryLogFiles(archivedFile);
-        new Thread(cleanup, "old-log-files-cleanup-" + this.logFile.getName()).start();
         if (wasOutputEnabled) {
             enableOutput();
         }
+        if (archivedFile == null) {
+            // Rolling failed.
+            return;
+        }
+        // There is no need to block processing of new log records with this time consuming action.
+        final Runnable cleanup = () -> cleanUpHistoryLogFiles(archivedFile);
+        new Thread(cleanup, "old-log-files-cleanup-" + this.logFile.getName()).start();
     }
 
 
@@ -158,6 +162,7 @@ public class LogFileManager {
      * constructor.
      * <p>
      * Redundant calls do nothing.
+     * @throws IllegalStateException if the output could not be enabled (IO issues)
      */
     public synchronized void enableOutput() {
         if (isOutputEnabled()) {
@@ -212,7 +217,8 @@ public class LogFileManager {
 
 
     /**
-     * @return archived rolled file or null
+     * @return archived rolled file or null on error.
+     *         The error will be logged to STDERR and to the logging system.
      */
     private File rollToNewFile() {
         try {
@@ -271,7 +277,13 @@ public class LogFileManager {
             // If we don't succeed with file rename which most likely can happen on
             // Windows because of multiple file handles opened. We go through Plan B to
             // copy bytes explicitly to a renamed file.
-            Files.copy(logFileToArchive.toPath(), target.toPath(), StandardCopyOption.ATOMIC_MOVE);
+            try {
+                Files.copy(logFileToArchive.toPath(), target.toPath(), StandardCopyOption.ATOMIC_MOVE);
+            } catch (UnsupportedOperationException e) {
+                // Can happen on some windows file systems - then we try non-atomic version at least.
+                Files.copy(logFileToArchive.toPath(), target.toPath());
+                logFileToArchive.delete();
+            }
         }
     }
 
@@ -377,7 +389,7 @@ public class LogFileManager {
          *
          * @param outputStream target output stream
          */
-        void setStream(final OutputStream outputStream);
+        void setStream(OutputStream outputStream);
     }
 
     /**

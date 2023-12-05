@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,20 +23,22 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.System.Logger;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.logging.Logger;
 import java.util.logging.StreamHandler;
 import java.util.zip.GZIPOutputStream;
 
 import org.glassfish.main.jul.tracing.GlassFishLoggingTracer;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.SEVERE;
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.ERROR;
+
 
 /**
  * Manages the logging file, it's rotations, packing of rolled log file, etc.
@@ -51,7 +53,7 @@ import static java.util.logging.Level.SEVERE;
  * @author David Matejcek
  */
 public class LogFileManager {
-    private static final Logger LOG = Logger.getLogger(LogFileManager.class.getName());
+    private static final Logger LOG = System.getLogger(LogFileManager.class.getName());
 
     private static final DateTimeFormatter SUFFIX_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH-mm-ss");
     private static final String GZIP_EXTENSION = ".gz";
@@ -132,16 +134,20 @@ public class LogFileManager {
      * again.
      */
     public synchronized void roll() {
-        LOG.log(FINE, "roll(); {0}", this.logFile);
+        LOG.log(DEBUG, "roll(); {0}", this.logFile);
         final boolean wasOutputEnabled = isOutputEnabled();
         disableOutput();
         final File archivedFile = rollToNewFile();
-        // There is no need to block processing of new log records with this time consuming action.
-        final Runnable cleanup = () -> cleanUpHistoryLogFiles(archivedFile);
-        new Thread(cleanup, "old-log-files-cleanup-" + this.logFile.getName()).start();
         if (wasOutputEnabled) {
             enableOutput();
         }
+        if (archivedFile == null) {
+            // Rolling failed.
+            return;
+        }
+        // There is no need to block processing of new log records with this time consuming action.
+        final Runnable cleanup = () -> cleanUpHistoryLogFiles(archivedFile);
+        new Thread(cleanup, "old-log-files-cleanup-" + this.logFile.getName()).start();
     }
 
 
@@ -158,6 +164,7 @@ public class LogFileManager {
      * constructor.
      * <p>
      * Redundant calls do nothing.
+     * @throws IllegalStateException if the output could not be enabled (IO issues)
      */
     public synchronized void enableOutput() {
         if (isOutputEnabled()) {
@@ -212,15 +219,16 @@ public class LogFileManager {
 
 
     /**
-     * @return archived rolled file or null
+     * @return archived rolled file or null on error.
+     *         The error will be logged to STDERR and to the logging system.
      */
     private File rollToNewFile() {
         try {
             if (this.logFile.createNewFile()) {
-                LOG.log(FINE, "Created new log file: {0}", this.logFile);
+                LOG.log(DEBUG, "Created new log file: {0}", this.logFile);
                 return null;
             }
-            LOG.log(FINE, "Rolling log file: {0}", this.logFile);
+            LOG.log(DEBUG, "Rolling log file: {0}", this.logFile);
             final File archivedLogFile = prepareAchivedLogFileTarget();
             moveFile(logFile, archivedLogFile);
             forceOSFilesync(logFile);
@@ -262,16 +270,18 @@ public class LogFileManager {
 
 
     private void moveFile(final File logFileToArchive, final File target) throws IOException {
-        LOG.log(FINE, () -> String.format("moveFile(logFileToArchive=%s, target=%s)", logFileToArchive, target));
-        final boolean renameSuccess = logFileToArchive.renameTo(target);
-        if (!renameSuccess) {
-            logError(String.format(
-                "File %s could not be renamed to %s trying to copy and delete it with NIO.",
-                logFileToArchive, target));
+        LOG.log(DEBUG, "moveFile(logFileToArchive={0}, target={1})", logFileToArchive, target);
+        try {
+            Files.move(logFileToArchive.toPath(), target.toPath(), StandardCopyOption.ATOMIC_MOVE);
+        } catch (UnsupportedOperationException | AtomicMoveNotSupportedException e) {
             // If we don't succeed with file rename which most likely can happen on
             // Windows because of multiple file handles opened. We go through Plan B to
             // copy bytes explicitly to a renamed file.
-            Files.copy(logFileToArchive.toPath(), target.toPath(), StandardCopyOption.ATOMIC_MOVE);
+            // Can happen on some windows file systems - then we try non-atomic version at least.
+            logError(String.format(
+                "File %s could not be renamed to %s atomically, now trying to move it without this request.",
+                logFileToArchive, target));
+            Files.move(logFileToArchive.toPath(), target.toPath());
         }
     }
 
@@ -291,8 +301,8 @@ public class LogFileManager {
         final boolean compressed = gzipFile(rotatedFile, outFile);
         if (compressed) {
             final long time = System.currentTimeMillis() - start;
-            LOG.log(FINE, "File {0} of size {1} has been archived to file {2} of size {3} in {4} ms",
-                new Object[] {rotatedFile, rotatedFile.length(), outFile, outFile.length(), time});
+            LOG.log(DEBUG, "File {0} of size {1} has been archived to file {2} of size {3} in {4} ms",
+                rotatedFile, rotatedFile.length(), outFile, outFile.length(), time);
             final boolean deleted = rotatedFile.delete();
             if (!deleted) {
                 logError("Could not delete uncompressed log file: " + rotatedFile.getAbsolutePath());
@@ -355,13 +365,13 @@ public class LogFileManager {
 
     private void logError(final String message) {
         GlassFishLoggingTracer.error(getClass(), message);
-        LOG.log(SEVERE, message);
+        LOG.log(ERROR, message);
     }
 
 
     private void logError(final String message, final Throwable t) {
         GlassFishLoggingTracer.error(getClass(), message, t);
-        LOG.log(SEVERE, message, t);
+        LOG.log(ERROR, message, t);
     }
 
     /**
@@ -377,7 +387,7 @@ public class LogFileManager {
          *
          * @param outputStream target output stream
          */
-        void setStream(final OutputStream outputStream);
+        void setStream(OutputStream outputStream);
     }
 
     /**

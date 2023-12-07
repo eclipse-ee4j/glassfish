@@ -81,7 +81,7 @@ public class EJBContainerTransactionManager {
         TransactionService txnService = ejbContainerUtilImpl.getServices().getService(TransactionService.class,
                 ServerEnvironment.DEFAULT_INSTANCE_NAME);
         int transactionTimeout = Integer.parseInt(txnService.getTimeoutInSeconds());
-        if (transactionTimeout != 0) {
+        if (transactionTimeout >= 0) {
             cmtTimeoutInSeconds = transactionTimeout;
         }
 

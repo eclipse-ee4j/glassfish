@@ -1,5 +1,6 @@
 <!--
 
+    Copyright (c) 2023 Contributors to the Eclipse Foundation
     Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -40,16 +41,24 @@
         getClientId(component="$this{component}" clientId=>$page{sheetId});
      />
      
-     <sun:property id="SSL3Prop"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.ssl.ssl3Label}" >
+     <sun:property id="SSL3Prop"  visible="#{false}" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.ssl.ssl3Label}" >
         <sun:checkbox id="SSL3"  selected="#{pageSession.valueMap['ssl3Enabled']}" selectedValue="true" />
      </sun:property>
-     <!--
-     <sun:property id="SSL2Prop"  rendered="#{ssl2}"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.ssl.ssl2Label}" >
-        <sun:checkbox id="SSL2" label="$resource{i18n.desc.Enabled}" selected="#{pageSession.valueMap['ssl2Enabled']}" selectedValue="true" />
-     </sun:property>
-     -->
+
      <sun:property id="TLSProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.ssl.tlsLabel}" >
         <sun:checkbox id="TLS"  selected="#{pageSession.valueMap['tlsEnabled']}" selectedValue="true"/>
+     </sun:property>
+
+     <sun:property id="TLS11Prop"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.ssl.tls11Label}" >
+        <sun:checkbox id="TLS11"  selected="#{pageSession.valueMap['tls11Enabled']}" selectedValue="true"/>
+     </sun:property>
+ 
+     <sun:property id="TLS12Prop"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.ssl.tls12Label}" >
+        <sun:checkbox id="TLS12"  selected="#{pageSession.valueMap['tls12Enabled']}" selectedValue="true"/>
+     </sun:property>
+
+     <sun:property id="TLS13Prop"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.ssl.tls13Label}" >
+        <sun:checkbox id="TLS13"  selected="#{pageSession.valueMap['tls13Enabled']}" selectedValue="true"/>
      </sun:property>
 
      <sun:property id="ClientAuthProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.ssl.clientAuthLabel}" helpText="$resource{i18n.ssl.clientAuthHelp}" >

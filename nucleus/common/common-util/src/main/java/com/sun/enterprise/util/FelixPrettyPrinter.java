@@ -34,6 +34,9 @@ public class FelixPrettyPrinter {
 
     private static final Pattern BUNDLE_PATTERN = Pattern.compile("\\[(\\d+)\\]", Pattern.MULTILINE);
 
+    public static void main(String[] args) {
+        System.out.println(prettyPrintExceptionMessage("missing requirement [org.glassfish.hk2.osgi-adapter [142](R 142.0)] osgi.wiring.package; (&(osgi.wiring.package=com.sun.enterprise.module.bootstrap)(version>=3.0.0)(!(version>=4.0.0))) [caused by: Unable to resolve org.glassfish.hk2.core [232](R 232.0): missing requirement [org.glassfish.hk2.core [232](R 232.0)] osgi.wiring.package; (&(osgi.wiring.package=org.glassfish.hk2.utilities)(version>=3.0.0)(!(version>=4.0.0))) [caused by: Unable to resolve org.glassfish.hk2.api [3](R 3.0): missing requirement [org.glassfish.hk2.api [3](R 3.0)] osgi.wiring.package; (&(osgi.wiring.package=org.glassfish.hk2.utilities.reflection)(version>=3.0.0)(!(version>=4.0.0))) [caused by: Unable to resolve org.glassfish.hk2.utils [2](R 2.0): missing requirement [org.glassfish.hk2.utils [2](R 2.0)] osgi.wiring.package; (&(osgi.wiring.package=jakarta.annotation)(version>=2.1.0)(!(version>=3.0.0)))]]] Unresolved requirements: [[org.glassfish.hk2.osgi-adapter [142](R 142.0)] osgi.wiring.package; (&(osgi.wiring.package=com.sun.enterprise.module.bootstrap)(version>=3.0.0)(!(version>=4.0.0)))]"));
+    }
 
     /**
      * Prints exception messages from Felix bundle classloading in a more human readable way.

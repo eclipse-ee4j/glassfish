@@ -93,10 +93,10 @@
         <concurrent.version>3.0.0</concurrent.version>
 
         <!-- Jakarta Interceptors -->
-        <jakarta.interceptor-api.version>2.1.0</jakarta.interceptor-api.version>
+        <jakarta.interceptor-api.version>2.2.0-M1</jakarta.interceptor-api.version>
 
         <!-- Jakarta Security + Authentication/Authorization -->
-        <soteria.version>3.0.3</soteria.version>
+        <soteria.version>4.0.0-SNAPSHOT</soteria.version>
         <exousia.version>3.0.0-M1</exousia.version>
         <epicyro.version>3.1.0-M1</epicyro.version>
         <nimbus.version>9.37</nimbus.version>
@@ -132,9 +132,9 @@
         <yasson.version>3.0.3</yasson.version>
 
         <!-- Jakarta Pages and Jakarta Standard Tag Library -->
-        <jakarta.pages-api.version>3.1.1</jakarta.pages-api.version>
+        <jakarta.pages-api.version>4.0.0-M1</jakarta.pages-api.version>
         <jstl-api.version>3.0.0</jstl-api.version>
-        <wasp.version>3.2.2</wasp.version>
+        <wasp.version>4.0.0-M1</wasp.version>
 
         <!-- Used for Jakarta SOAP (XML Web Services) -->
         <xmlsec.version>4.0.0</xmlsec.version>
@@ -142,8 +142,8 @@
         <stax2-api.version>4.2.2</stax2-api.version>
 
         <!-- Jakarta CDI -->
-        <jakarta.cdi-api.version>4.0.1</jakarta.cdi-api.version>
-        <weld.version>5.1.2.Final</weld.version>
+        <jakarta.cdi-api.version>4.1.0-M1</jakarta.cdi-api.version>
+        <weld.version>6.0.0.Alpha1</weld.version>
         <jboss.classfilewriter.version>1.3.0.Final</jboss.classfilewriter.version>
 
         <!-- Jakarta MVC -->

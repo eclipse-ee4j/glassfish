@@ -1,0 +1,37 @@
+Manifest-Version: 1.0
+Build-Jdk-Spec: 11
+Bundle-Description: Jersey extension module providing support for JSP 
+ templates.
+Bundle-DocURL: https://www.eclipse.org/org/foundation/
+Bundle-License: http://www.eclipse.org/legal/epl-2.0, https://www.gnu.
+ org/software/classpath/license.html, http://www.eclipse.org/org/docum
+ ents/edl-v10.php, https://opensource.org/licenses/BSD-2-Clause, http:
+ //www.apache.org/licenses/LICENSE-2.0.html, https://creativecommons.o
+ rg/publicdomain/zero/1.0/, https://asm.ow2.io/license.html, jquery.or
+ g/license, http://www.opensource.org/licenses/mit-license.php, https:
+ //www.w3.org/Consortium/Legal/copyright-documents-19990405
+Bundle-ManifestVersion: 2
+Bundle-Name: jersey-ext-mvc-jsp
+Bundle-SymbolicName: org.glassfish.jersey.ext.jersey-mvc-jsp
+Bundle-Vendor: Eclipse Foundation
+Bundle-Version: 3.1.4
+Created-By: Apache Maven Bundle Plugin 5.1.9
+Export-Package: org.glassfish.jersey.server.mvc.jsp;version="3.1.4";us
+ es:="jakarta.servlet.jsp,jakarta.servlet.jsp.tagext,jakarta.ws.rs,jak
+ arta.ws.rs.core",org.glassfish.jersey.server.mvc.jsp.internal;version
+ ="3.1.4";uses:="org.glassfish.jersey.internal.l10n"
+Import-Package: jakarta.servlet.jsp;version="[3.0,5.0)",jakarta.servle
+ t.jsp.tagext;version="[3.0,5.0)",jakarta.servlet;version="[5.0,7.0)",
+ jakarta.servlet.http;version="[5.0,7.0)",jakarta.inject;version="[2.0
+ ,3)",jakarta.ws.rs;version="[3.1,4)",jakarta.ws.rs.core;version="[3.1
+ ,4)",java.io,java.lang,java.net,java.nio.charset,java.util,org.glassf
+ ish.jersey.internal;version="[3.1,4)",org.glassfish.jersey.internal.l
+ 10n;version="[3.1,4)",org.glassfish.jersey.internal.util.collection;v
+ ersion="[3.1,4)",org.glassfish.jersey.message.internal;version="[3.1,
+ 4)",org.glassfish.jersey.server;version="[3.1,4)",org.glassfish.jerse
+ y.server.mvc;version="[3.1,4)",org.glassfish.jersey.server.mvc.intern
+ al;version="[3.1,4)",org.glassfish.jersey.server.mvc.jsp.internal;ver
+ sion="[3.1,4)",org.glassfish.jersey.server.mvc.spi;version="[3.1,4)"
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=11))"
+Tool: Bnd-6.3.1.202206071316
+

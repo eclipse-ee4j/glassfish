@@ -107,6 +107,7 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.classmodel.reflect.Types;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.security.common.Role;
+import org.glassfish.soteria.servlet.SamRegistrationInstaller;
 import org.glassfish.wasp.servlet.JspServlet;
 import org.glassfish.web.LogFacade;
 import org.glassfish.web.admin.monitor.ServletProbeProvider;
@@ -634,6 +635,9 @@ public class WebModule extends PwcWebModule implements Context {
 
     @Override
     protected void callServletContainerInitializers() throws LifecycleException {
+
+        SamRegistrationInstaller foo = new SamRegistrationInstaller();
+
         super.callServletContainerInitializers();
 
         if (!isJsfApplication() && !contextListeners.isEmpty()) {

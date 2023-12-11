@@ -126,11 +126,17 @@
                                     destfile="${glassfish.modules}/hibernate-validator.jar"
                                 />
                                 
-                                <!-- tmp, we have newer faces, but to stop cascade of updates -->
                                 <jarupdate
-                                    basedir="${patches}/jakarta.faces" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/jakarta.faces.jar"
+                                    basedir="${patches}/hibernate-validator" includes="META-INF/MANIFEST.MF"
+                                    destfile="${glassfish.modules}/hibernate-validator.jar"
                                 />
+                                
+                                <jarupdate
+                                    basedir="${patches}/jakarta.enterprise.cdi-el-api" includes="META-INF/MANIFEST.MF"
+                                    destfile="${glassfish.modules}/jakarta.enterprise.cdi-el-api.jar"
+                                />
+                                
+                                
                                 
                                 
                                 <!-- To support JSP 5 -->
@@ -156,6 +162,14 @@
                                 <jarupdate
                                     basedir="${patches}/jersey-hk2" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/jersey-hk2.jar"
+                                />
+                                <jarupdate
+                                    basedir="${patches}/jersey-media-json-jackson" includes="META-INF/MANIFEST.MF"
+                                    destfile="${glassfish.modules}/jersey-media-json-jackson.jar"
+                                />
+                                <jarupdate
+                                    basedir="${patches}/jersey-entity-filtering" includes="META-INF/MANIFEST.MF"
+                                    destfile="${glassfish.modules}/jersey-entity-filtering.jar"
                                 />
                                 <jarupdate
                                     basedir="${patches}/jersey-media-sse" includes="META-INF/MANIFEST.MF"

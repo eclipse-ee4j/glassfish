@@ -81,11 +81,11 @@
         <!-- Jakarta API Versions -->
 
         <!-- Jakarta Faces -->
-        <jakarta.faces-api.version>4.0.1</jakarta.faces-api.version>
-        <mojarra.version>4.0.5</mojarra.version>
+        <jakarta.faces-api.version>4.1.0-SNAPSHOT</jakarta.faces-api.version>
+        <mojarra.version>4.1.0-SNAPSHOT</mojarra.version>
 
         <!-- Jakarta WebSocket -->
-        <jakarta.websocket-api.version>2.1.1</jakarta.websocket-api.version>
+        <jakarta.websocket-api.version>2.2.0-M1</jakarta.websocket-api.version>
         <tyrus.version>2.1.4</tyrus.version>
 
         <!-- Jakarta Concurrency -->
@@ -96,7 +96,7 @@
         <jakarta.interceptor-api.version>2.2.0-M1</jakarta.interceptor-api.version>
 
         <!-- Jakarta Security + Authentication/Authorization -->
-        <soteria.version>4.0.0-SNAPSHOT</soteria.version>
+        <soteria.version>4.0.0-M1</soteria.version>
         <exousia.version>3.0.0-M1</exousia.version>
         <epicyro.version>3.1.0-M1</epicyro.version>
         <nimbus.version>9.37</nimbus.version>
@@ -163,7 +163,7 @@
         <reactive-streams.version>1.0.4</reactive-streams.version>
 
         <!-- Admin console components -->
-        <jsftemplating.version>4.0.3</jsftemplating.version>
+        <jsftemplating.version>4.1.0-SNAPSHOT</jsftemplating.version>
         <jsf-ext.version>0.2</jsf-ext.version>
         <woodstock.version>6.0.1</woodstock.version>
         <woodstock-dataprovider.version>1.0</woodstock-dataprovider.version>
@@ -511,6 +511,12 @@
                 <artifactId>jakarta.enterprise.lang-model</artifactId>
                 <version>${jakarta.cdi-api.version}</version>
             </dependency>
+            <dependency>
+                <groupId>jakarta.enterprise</groupId>
+                <artifactId>jakarta.enterprise.cdi-el-api</artifactId>
+                <version>${jakarta.cdi-api.version}</version>
+            </dependency>
+            
             <dependency>
                 <groupId>org.jboss.weld</groupId>
                 <artifactId>weld-osgi-bundle</artifactId>

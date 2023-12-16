@@ -1,5 +1,6 @@
 #!/bin/bash
 #
+# Copyright (c) 2023 Contributors to the Eclipse Foundation
 # Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
 #
 # This program and the accompanying materials are made available under the
@@ -15,11 +16,11 @@
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 #
 
-AS_INSTALL=`dirname "$0"`/../glassfish
+AS_INSTALL=`dirname "$0"`/..
+AS_INSTALL_LIB="$AS_INSTALL/modules"
 case "`uname`" in
   CYGWIN*) AS_INSTALL=`cygpath --windows $AS_INSTALL`
 esac
-AS_INSTALL_LIB="$AS_INSTALL/lib"
 . "${AS_INSTALL}/config/asenv.conf"
 JAVA=java
 #Depends upon Java from ../config/asenv.conf
@@ -29,44 +30,37 @@ fi
 
 start_as_main_process () {
     local COMMAND
-    local ASADMIN_JAR="$AS_INSTALL_LIB/client/appserver-cli.jar"
 
     if [[ "$@" == "--help" ]] || [[ "$@" == "--help=true" ]] || [[ "$@" == "-?" ]]; then
       exec java -jar "$ASADMIN_JAR" start-domain --help
     fi
 
-    # Execute start-domain --dry-run and store the output line by line into an array,
-    #   except the first and last line, which aren't part of the command to execute.
-    # If it fails, the first item in the array will be FAILED
-    COMMAND=()
-    local FIRST=y
-    local SECOND=y
-    local PREV_COM
+    # Execute start-domain --dry-run and store the output line by line into an array.
+    # The first and last line will not be part of the command to execute, we'll remove them later.
+    # If command fails, the last item in the array will be "FAILED"
+    DRY_RUN_OUTPUT=()
     while read COM; do
-      if [[ "$FIRST" == y ]]; then
-        FIRST=n
-      elif [[ "$SECOND" == y ]]; then
-        SECOND=n
-        PREV_COM="$COM"
-      else
-        COMMAND+=("$PREV_COM");
-        PREV_COM="$COM"
-      fi
-    done < <(java -jar "$ASADMIN_JAR" start-domain --dry-run "$@" 2> /dev/null || echo -e "FAILED\n" )
+      DRY_RUN_OUTPUT+=("$COM");
+    done < <(java -jar "$ASADMIN_JAR" start-domain --dry-run "$@" 2> /dev/null || echo "FAILED" )
+    OUTPUT_LENGTH=${#DRY_RUN_OUTPUT[@]}
+    LAST_LINE=${DRY_RUN_OUTPUT[${OUTPUT_LENGTH}-1]}
 
-    # If asadmin command failed (first item is FAILED), we execute it again to show
+    # If asadmin command failed (last line is FAILED), we execute it again to show
     #   the output to the user and exit
-    if [[ "${COMMAND[@]:0:1}" == FAILED ]]
+    if [[ "$LAST_LINE" == FAILED ]]
       then
-        exec "$JAVA" -jar "$AS_INSTALL_LIB/client/appserver-cli.jar" start-domain --dry-run "$@"
+        exec "$JAVA" -jar "$ASADMIN_JAR" start-domain --dry-run "$@"
       else
-        # If all OK, execute the command to start GlassFish
-        exec "${COMMAND[@]}"
+        # If all OK, execute the command to start GlassFish. 
+        # Remove the first and last line as they aren't part of the command.
+        FINAL_COMMAND=(${DRY_RUN_OUTPUT[@]:1:${OUTPUT_LENGTH}-2})
+        exec "${FINAL_COMMAND[@]}"
     fi
 
 }
 
+ASADMIN_JAR="$AS_INSTALL_LIB/admin-cli.jar"
 start_as_main_process "$@"
 
 # Alternatively, run the following:
-# exec "$JAVA" -jar "$AS_INSTALL_LIB/client/appserver-cli.jar" start-domain --verbose "$@"
+# exec "$JAVA" -jar "$ASADMIN_JAR" start-domain --verbose "$@"

@@ -101,7 +101,7 @@
 
         <!-- Jakarta REST -->
         <jakarta.rest-api.version>3.1.0</jakarta.rest-api.version>
-        <jersey.version>3.1.4</jersey.version>
+        <jersey.version>3.1.5</jersey.version>
 
         <!-- Jakarta Mail -->
         <jakarta.mail-api.version>2.1.2</jakarta.mail-api.version>

@@ -35,7 +35,7 @@ public class FelixPrettyPrinter {
     private static final Pattern BUNDLE_PATTERN = Pattern.compile("\\[(\\d+)\\]", Pattern.MULTILINE);
 
     public static void main(String[] args) {
-        System.out.println(prettyPrintExceptionMessage("missing requirement [org.glassfish.hk2.osgi-adapter [142](R 142.0)] osgi.wiring.package; (&(osgi.wiring.package=com.sun.enterprise.module.bootstrap)(version>=3.0.0)(!(version>=4.0.0))) [caused by: Unable to resolve org.glassfish.hk2.core [232](R 232.0): missing requirement [org.glassfish.hk2.core [232](R 232.0)] osgi.wiring.package; (&(osgi.wiring.package=org.glassfish.hk2.utilities)(version>=3.0.0)(!(version>=4.0.0))) [caused by: Unable to resolve org.glassfish.hk2.api [3](R 3.0): missing requirement [org.glassfish.hk2.api [3](R 3.0)] osgi.wiring.package; (&(osgi.wiring.package=org.glassfish.hk2.utilities.reflection)(version>=3.0.0)(!(version>=4.0.0))) [caused by: Unable to resolve org.glassfish.hk2.utils [2](R 2.0): missing requirement [org.glassfish.hk2.utils [2](R 2.0)] osgi.wiring.package; (&(osgi.wiring.package=jakarta.annotation)(version>=2.1.0)(!(version>=3.0.0)))]]] Unresolved requirements: [[org.glassfish.hk2.osgi-adapter [142](R 142.0)] osgi.wiring.package; (&(osgi.wiring.package=com.sun.enterprise.module.bootstrap)(version>=3.0.0)(!(version>=4.0.0)))]"));
+        System.out.println(prettyPrintExceptionMessage("Unable to resolve org.glassfish.main.webservices.connector [220](R 220.0): missing requirement [org.glassfish.main.webservices.connector [220](R 220.0)] osgi.wiring.package; (&(osgi.wiring.package=org.glassfish.web.deployment.descriptor)(version>=7.0.0)(!(version>=8.0.0))) [caused by: Unable to resolve org.glassfish.main.web.glue [124](R 124.0): missing requirement [org.glassfish.main.web.glue [124](R 124.0)] osgi.wiring.package; (&(osgi.wiring.package=com.sun.web.security)(version>=7.0.0)(!(version>=8.0.0))) [caused by: Unable to resolve org.glassfish.main.security.websecurity [229](R 229.0): missing requirement [org.glassfish.main.security.websecurity [229](R 229.0)] osgi.wiring.package; (&(osgi.wiring.package=org.apache.catalina.realm)(version>=7.0.0)(!(version>=8.0.0))) [caused by: Unable to resolve org.glassfish.main.web.core [36](R 36.0): missing requirement [org.glassfish.main.web.core [36](R 36.0)] osgi.wiring.package; (&(osgi.wiring.package=org.hibernate.validator.cdi)(version>=8.0.0)(!(version>=9.0.0))) [caused by: Unable to resolve org.hibernate.validator.cdi [97](R 97.0): missing requirement [org.hibernate.validator.cdi [97](R 97.0)] osgi.wiring.host; (&(osgi.wiring.host=org.hibernate.validator)(bundle-version>=0.0.0))]]]] Unresolved requirements: [[org.glassfish.main.webservices.connector [220](R 220.0)] osgi.wiring.package; (&(osgi.wiring.package=org.glassfish.web.deployment.descriptor)(version>=7.0.0)(!(version>=8.0.0)))]"));
     }
 
     /**
@@ -74,43 +74,82 @@ public class FelixPrettyPrinter {
 
                     // In GlassFish and in a classloader the search is always for package, so we can
                     // use that as a delimiter here
-                    index = message.indexOf("osgi.wiring.package; ", index);
+                    int indexPackage = message.indexOf("osgi.wiring.package; ", index);
+                    int indexHost = message.indexOf("osgi.wiring.host; ", index);
+
+                    boolean isPackage;
+                    if (indexPackage < indexHost) {
+                        index = indexPackage;
+                        isPackage = true;
+                    } else {
+                        index = indexHost;
+                        isPackage = false;
+                    }
+
                     if (index >= 0) {
 
                         indent++;
 
-                        // Remainder of input now looks like this:
+                        if (isPackage) {
 
-                        // osgi.wiring.package; (&(osgi.wiring.package=org.glassfish.grizzly)(version>=2.4.0)(!(version>=3.0.0)))
+                            // Remainder of input now looks like this:
 
-                        // Skip over "osgi.wiring.package; ", we're always searching for this so
-                        // no need to print it.
-                        index += "osgi.wiring.package; ".length();
+                            // osgi.wiring.package; (&(osgi.wiring.package=org.glassfish.grizzly)(version>=2.4.0)(!(version>=3.0.0)))
 
-                        // Now extracting this:
-                        // "(&(osgi.wiring.package=org.glassfish.grizzly)(version>=2.4.0)(!(version>=3.0.0)))"
-                        index2 = message.indexOf(" ", index);
+                            // Skip over "osgi.wiring.package; ", we're always searching for this so
+                            // no need to print it.
+                            index += "osgi.wiring.package; ".length();
 
-                        String packageAndVersion = message.substring(index, index2);
+                            // Now extracting this:
+                            // "(&(osgi.wiring.package=org.glassfish.grizzly)(version>=2.4.0)(!(version>=3.0.0)))"
+                            index2 = message.indexOf(" ", index);
 
-                        // Make it a little less "cramped"
-                        // "(&(package=org.glassfish.grizzly) (version>=2.4.0) (!(version>=3.0.0)))"
-                        packageAndVersion = packageAndVersion.replace("osgi.wiring.package", "package");
-                        packageAndVersion = packageAndVersion.replace(")(", ") (");
-                        packageAndVersion = packageAndVersion.replace("=", " = ");
-                        packageAndVersion = packageAndVersion.replace("> =", " >=");
-                        packageAndVersion = packageAndVersion.replace("< =", " <=");
+                            String packageAndVersion = null;
+                            if (index2 != -1) {
+                                packageAndVersion = message.substring(index, index2);
+                            } else {
+                                packageAndVersion = message.substring(index);
+                            }
 
-                        // Remove outer braces
-                        // "&(package=org.glassfish.grizzly) (version>=2.4.0) (!(version>=3.0.0))"
-                        if (packageAndVersion.startsWith("(")) {
-                            packageAndVersion = packageAndVersion.substring(1);
+                            // Make it a little less "cramped"
+                            // "(&(package=org.glassfish.grizzly) (version>=2.4.0) (!(version>=3.0.0)))"
+                            packageAndVersion = packageAndVersion.replace("osgi.wiring.package", "package");
+                            packageAndVersion = packageAndVersion.replace(")(", ") (");
+                            packageAndVersion = packageAndVersion.replace("=", " = ");
+                            packageAndVersion = packageAndVersion.replace("> =", " >=");
+                            packageAndVersion = packageAndVersion.replace("< =", " <=");
+
+                            // Remove outer braces
+                            // "&(package=org.glassfish.grizzly) (version>=2.4.0) (!(version>=3.0.0))"
+                            if (packageAndVersion.startsWith("(")) {
+                                packageAndVersion = packageAndVersion.substring(1);
+                            }
+                            if (packageAndVersion.endsWith(")")) {
+                                packageAndVersion = packageAndVersion.substring(0, packageAndVersion.length() - 1);
+                            }
+
+                            printLn(messageBuilder, indent, packageAndVersion);
+                        } else {
+
+                            // Remainder of input now looks like this:
+
+                            // osgi.wiring.host; (&(osgi.wiring.host=org.hibernate.validator)(bundle-version>=0.0.0)
+
+                            // Skip over "osgi.wiring.host; ", we're already searching for this so
+                            // no need to print it.
+                            index += "osgi.wiring.host; ".length();
+
+                            index2 = message.indexOf("]", index);
+
+                            String remainder = null;
+                            if (index2 != -1) {
+                                remainder = message.substring(index, index2);
+                            } else {
+                                remainder = message.substring(index);
+                            }
+
+                            printLn(messageBuilder, indent, remainder);
                         }
-                        if (packageAndVersion.endsWith(")")) {
-                            packageAndVersion = packageAndVersion.substring(0, packageAndVersion.length()-1);
-                        }
-
-                        printLn(messageBuilder, indent, packageAndVersion);
 
                         // If there's a "caused by:", print it and increase the indent
                         index = message.indexOf("caused by: ", index2);
@@ -121,13 +160,16 @@ public class FelixPrettyPrinter {
                             indent++;
                             index += "caused by: ".length();
                         }
-                    }
 
+                    }
                 }
 
-                index = index2;
-
-                index = message.indexOf("Unable to resolve", index);
+                if (index2 == -1) {
+                    index = -1;
+                } else {
+                    index = index2;
+                    index = message.indexOf("Unable to resolve", index);
+                }
             }
             return messageBuilder.toString();
         } catch (Exception e) {

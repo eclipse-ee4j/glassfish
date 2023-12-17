@@ -90,7 +90,15 @@ public class GlassFishMain {
         // launcherCL is used only to load the RuntimeBuilder service.
         // on all other places is used classloader which loaded the GlassfishRuntime class
         // -> it must not be loaded by any parent classloader, it's children would be ignored.
-        method.invoke(launcher, startupCtx);
+        try {
+            method.invoke(launcher, startupCtx);
+        } catch (Throwable t) {
+            String root = (String) startupCtx.get("com.sun.aas.instanceRoot") + "/logs/serverx.log";
+
+            try (PrintStream exceptionStream = new PrintStream(root)) {
+                t.printStackTrace(exceptionStream);
+            }
+        }
 
         // also note that debugging is not possible until the debug port is open.
     }

@@ -17,10 +17,10 @@
 #
 
 AS_INSTALL=`dirname "$0"`/../glassfish
-AS_INSTALL_LIB="$AS_INSTALL/modules"
 case "`uname`" in
   CYGWIN*) AS_INSTALL=`cygpath --windows $AS_INSTALL`
 esac
+AS_INSTALL_LIB="$AS_INSTALL/modules"
 . "${AS_INSTALL}/config/asenv.conf"
 JAVA=java
 #Depends upon Java from ../config/asenv.conf

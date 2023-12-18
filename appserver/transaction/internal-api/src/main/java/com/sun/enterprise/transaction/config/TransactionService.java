@@ -75,7 +75,7 @@ public interface TransactionService extends ConfigBeanProxy, PropertyBag, Config
      * @return possible object is
      *         {@link String }
      */
-    @Attribute (defaultValue="120",dataType=Integer.class)
+    @Attribute (defaultValue="0",dataType=Integer.class)
     public String getTimeoutInSeconds();
 
     /**

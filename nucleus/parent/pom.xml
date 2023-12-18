@@ -144,8 +144,8 @@
         <antlr.version>2.7.8</antlr.version>
         <ant.version>1.10.12</ant.version>
         <ant.external.version>1.10.2</ant.external.version>
-        <jackson.version>2.15.2</jackson.version>
-        <jackson-databind.version>2.15.2</jackson-databind.version>
+        <jackson.version>2.16.0</jackson.version>
+        <jackson-databind.version>2.16.0</jackson-databind.version>
         <fasterxml.classmate.version>1.6.0</fasterxml.classmate.version>
         <stax-api.version>1.0-2</stax-api.version>
         <jettison.version>1.5.4</jettison.version>

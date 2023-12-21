@@ -480,6 +480,12 @@
                 </dependency>
                 <dependency>
                     <groupId>jakarta.enterprise</groupId>
+                    <artifactId>jakarta.enterprise.cdi-el-api</artifactId>
+                    <scope>system</scope>
+                    <systemPath>${glassfish.home}/glassfish/modules/jakarta.enterprise.cdi-el-api.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>jakarta.enterprise</groupId>
                     <artifactId>jakarta.enterprise.cdi-api</artifactId>
                     <scope>system</scope>
                     <systemPath>${glassfish.home}/glassfish/modules/jakarta.enterprise.cdi-api.jar</systemPath>

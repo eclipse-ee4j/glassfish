@@ -97,7 +97,7 @@
 
         <!-- Jakarta Security + Authentication/Authorization -->
         <soteria.version>4.0.0-M1</soteria.version>
-        <exousia.version>3.0.0-M1</exousia.version>
+        <exousia.version>3.0.0-SNAPSHOT</exousia.version>
         <epicyro.version>3.1.0-M1</epicyro.version>
         <nimbus.version>9.37</nimbus.version>
         <jcip.version>1.0.2</jcip.version>
@@ -515,7 +515,14 @@
                 <groupId>jakarta.enterprise</groupId>
                 <artifactId>jakarta.enterprise.cdi-el-api</artifactId>
                 <version>${jakarta.cdi-api.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
+            
             
             <dependency>
                 <groupId>org.jboss.weld</groupId>

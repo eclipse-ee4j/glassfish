@@ -233,13 +233,14 @@ public final class JDBCRealm extends DigestRealmBase {
      * does not support this operation.
      */
     @Override
-    public Enumeration getGroupNames(String username) throws InvalidOperationException, NoSuchUserException {
-        Vector vector = groupCache.get(username);
+    public Enumeration<String> getGroupNames(String username) throws NoSuchUserException {
+        Vector<String> vector = groupCache.get(username);
         if (vector == null) {
             String[] grps = findGroups(username);
             setGroupNames(username, grps);
             vector = groupCache.get(username);
         }
+
         return vector.elements();
     }
 

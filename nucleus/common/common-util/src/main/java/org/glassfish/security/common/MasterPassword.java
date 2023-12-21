@@ -41,5 +41,5 @@ public interface MasterPassword {
      * @throws KeyStoreException
      * @throws NoSuchAlgorithmException
      */
-    public PasswordAdapter getMasterPasswordAdapter() throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException;
+    PasswordAdapter getMasterPasswordAdapter() throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException;
 }

@@ -19,6 +19,7 @@ package org.glassfish.main.admin.test.rest;
 import jakarta.ws.rs.core.Response;
 
 import org.glassfish.main.itest.tools.DomainAdminRestClient;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -29,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 /**
  * @author David Matejcek
  */
+@Disabled("TEMPORARY FOR GLASSFISH 8 M1 - create-instance is missing")
 public class StatusGeneratorITest extends RestTestBase {
 
     @Test

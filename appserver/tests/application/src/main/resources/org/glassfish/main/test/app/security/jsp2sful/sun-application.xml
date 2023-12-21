@@ -21,6 +21,7 @@
 
 <sun-application>
     <unique-id>0</unique-id>
+    
     <security-role-mapping>
         <role-name>Administrator</role-name>
         <principal-name>harry</principal-name>

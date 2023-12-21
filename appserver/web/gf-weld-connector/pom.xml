@@ -59,5 +59,10 @@
             <artifactId>jakarta.enterprise.lang-model</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-el-api</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 </project>

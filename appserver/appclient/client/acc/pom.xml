@@ -356,6 +356,11 @@
             <artifactId>jakarta.enterprise.lang-model</artifactId>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-el-api</artifactId>
+            <scope>compile</scope>
+        </dependency>
 
         <dependency>
             <groupId>jakarta.authorization</groupId>

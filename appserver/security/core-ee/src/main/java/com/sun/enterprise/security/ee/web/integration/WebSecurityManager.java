@@ -130,7 +130,7 @@ public class WebSecurityManager {
             () -> new GlassFishPrincipalMapper(contextId));
 
         authorizationService.setConstrainedUriRequestAttribute(CONSTRAINT_URI);
-        authorizationService.setRequestSupplier(
+        authorizationService.setRequestSupplier(contextId,
             () -> (HttpServletRequest) webSecurityManagerFactory.pcHandlerImpl.getHandlerData().get(HTTP_SERVLET_REQUEST));
 
         authorizationService.addConstraintsToPolicy(

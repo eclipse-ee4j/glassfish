@@ -1,4 +1,4 @@
-package com.sun.enterprise.security.ee.authorize;
+package org.glassfish.ejb.security.application;
 
 import jakarta.security.jacc.PrincipalMapper;
 import java.security.Principal;

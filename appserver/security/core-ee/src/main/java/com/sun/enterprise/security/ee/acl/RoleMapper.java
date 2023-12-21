@@ -183,6 +183,20 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
         return groupToRoles;
     }
 
+    @Override
+    public Map<String, Set<String>> getCallerToRolesMapping() {
+        Map<String, Set<String>> callerToRoles = new HashMap<>();
+
+        for (Map.Entry<String, Subject> roleToSubject : getRoleToSubjectMapping().entrySet()) {
+            for (String callerName : getCallerPrincipalNames(roleToSubject.getValue())) {
+                callerToRoles.computeIfAbsent(callerName, g -> new HashSet<>())
+                            .add(roleToSubject.getKey());
+            }
+        }
+
+        return callerToRoles;
+    }
+
     /**
      * Assigns a Principal to the specified role. This method delegates work to internalAssignRole() after checking for
      * conflicts. RootDeploymentDescriptor added as a fix for: https://glassfish.dev.java.net/issues/show_bug.cgi?id=2475
@@ -358,6 +372,25 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
             subject.getPrincipals()
                    .stream()
                    .filter(e -> e instanceof Group)
+                   .map(e -> e.getName())
+                   .collect(toSet());
+    }
+
+    @Override
+    public Principal getCallerPrincipal(Subject subject) {
+        return
+            subject.getPrincipals()
+                   .stream()
+                   .filter(e -> e instanceof UserNameAndPassword)
+                   .findAny()
+                   .orElse(null);
+    }
+
+    private Set<String> getCallerPrincipalNames(Subject subject) {
+        return
+            subject.getPrincipals()
+                   .stream()
+                   .filter(e -> e instanceof UserNameAndPassword)
                    .map(e -> e.getName())
                    .collect(toSet());
     }

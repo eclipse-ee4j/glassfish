@@ -78,7 +78,7 @@ public class FelixPrettyPrinter {
                     int indexHost = message.indexOf("osgi.wiring.host; ", index);
 
                     boolean isPackage;
-                    if (indexPackage < indexHost) {
+                    if (indexHost == -1 || indexPackage < indexHost) {
                         index = indexPackage;
                         isPackage = true;
                     } else {

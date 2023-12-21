@@ -562,6 +562,11 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-el-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.main.web</groupId>
             <artifactId>cdi-api-fragment</artifactId>
             <version>${project.version}</version>

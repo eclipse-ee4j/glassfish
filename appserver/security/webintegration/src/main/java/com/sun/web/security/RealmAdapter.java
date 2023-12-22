@@ -707,14 +707,6 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
         return isGranted;
     }
 
-    /**
-     * Create the realm adapter. Extracts the role to user/group mapping from the runtime deployment descriptor.
-     *
-     * @param the web bundle deployment descriptor.
-     * @param isSystemApp if the app is a system app.
-     *
-     * public RealmAdapter(WebBundleDescriptor descriptor, boolean isSystemApp) { this(descriptor, isSystemApp, null); }
-     */
     @Override
     public void destroy() {
         super.destroy();
@@ -834,7 +826,6 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
         WebSecurityManager webSecurityManager = getWebSecurityManager(false);
         if (webSecurityManager != null) {
             webSecurityManager.onLogout();
-
         }
     }
 

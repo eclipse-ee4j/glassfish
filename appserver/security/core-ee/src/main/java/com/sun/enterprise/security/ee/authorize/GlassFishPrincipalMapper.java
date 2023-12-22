@@ -27,7 +27,10 @@ public class GlassFishPrincipalMapper implements PrincipalMapper {
 
         groupToRoles = roleMapper.getGroupToRolesMapping();
         callerToRoles = roleMapper.getCallerToRolesMapping();
-        oneToOneMapping = groupToRoles.isEmpty() && roleMapper.isDefaultPrincipalToRoleMapping();
+        oneToOneMapping =
+            groupToRoles.isEmpty() &&
+            callerToRoles.isEmpty() &&
+            roleMapper.isDefaultPrincipalToRoleMapping();
 
 
         // Jakarta Authorization spec 3.2 states:
@@ -85,10 +88,6 @@ public class GlassFishPrincipalMapper implements PrincipalMapper {
         for (String group : groups) {
             if (groupToRoles.containsKey(group)) {
                 roles.addAll(groupToRoles.get(group));
-            } else {
-                // Default to 1:1 mapping when group is not explicitly mapped
-                // TODO: or don't do this?
-                roles.add(group);
             }
         }
 

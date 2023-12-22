@@ -335,6 +335,7 @@ public class WebSecurityManager {
 
     public void destroy() throws PolicyContextException {
         authorizationService.refresh();
+        authorizationService.destroy();
 
         PermissionCacheFactory.removePermissionCache(uncheckedPermissionCache);
         uncheckedPermissionCache = null;

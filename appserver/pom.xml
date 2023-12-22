@@ -163,7 +163,7 @@
         <reactive-streams.version>1.0.4</reactive-streams.version>
 
         <!-- Admin console components -->
-        <jsftemplating.version>4.1.0-SNAPSHOT</jsftemplating.version>
+        <jsftemplating.version>4.1.0-M1</jsftemplating.version>
         <jsf-ext.version>0.2</jsf-ext.version>
         <woodstock.version>6.0.1</woodstock.version>
         <woodstock-dataprovider.version>1.0</woodstock-dataprovider.version>

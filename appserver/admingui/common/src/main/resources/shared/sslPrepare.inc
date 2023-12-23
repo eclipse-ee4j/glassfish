@@ -1,5 +1,6 @@
 <!--
 
+    Copyright (c) 2023 Contributors to the Eclipse Foundation
     Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -47,7 +48,7 @@ if (! #{requestScope.exist}){
 }
 
 //set the following for including buttons.inc
-setPageSessionAttribute(key="convertToFalseList" value={"ssl3Enabled" "tlsEnabled" "clientAuthEnabled" })
+setPageSessionAttribute(key="convertToFalseList" value={"ssl3Enabled" "tlsEnabled" "tls11Enabled" "tls12Enabled" "tls13Enabled" "clientAuthEnabled" })
 setPageSessionAttribute(key="skipAttrsList", value={"sslInactivityTimeout"});
 setPageSessionAttribute(key="showDefaultButton" value="#{false}" )
 setPageSessionAttribute(key="hasPropertySheet" value="#{true}" )

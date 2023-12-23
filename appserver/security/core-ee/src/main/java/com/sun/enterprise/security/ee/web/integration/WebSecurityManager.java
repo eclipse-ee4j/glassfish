@@ -130,7 +130,7 @@ public class WebSecurityManager {
             () -> new GlassFishPrincipalMapper(contextId));
 
         authorizationService.setConstrainedUriRequestAttribute(CONSTRAINT_URI);
-        authorizationService.setRequestSupplier(
+        authorizationService.setRequestSupplier(contextId,
             () -> (HttpServletRequest) webSecurityManagerFactory.pcHandlerImpl.getHandlerData().get(HTTP_SERVLET_REQUEST));
 
         authorizationService.addConstraintsToPolicy(
@@ -335,6 +335,7 @@ public class WebSecurityManager {
 
     public void destroy() throws PolicyContextException {
         authorizationService.refresh();
+        authorizationService.destroy();
 
         PermissionCacheFactory.removePermissionCache(uncheckedPermissionCache);
         uncheckedPermissionCache = null;

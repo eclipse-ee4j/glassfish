@@ -99,6 +99,13 @@ public interface SecurityRoleMapper {
      */
     Map<String, Set<String>> getGroupToRolesMapping();
 
+
+    /**
+     *
+     * @return
+     */
+    Map<String, Set<String>> getCallerToRolesMapping();
+
     /**
      *
      * @return
@@ -112,4 +119,11 @@ public interface SecurityRoleMapper {
      * @return a list of (non-mapped) groups
      */
     Set<String> getGroups(Subject subject);
+
+    /**
+     *
+     * @param subject
+     * @return
+     */
+    Principal getCallerPrincipal(Subject subject);
 }

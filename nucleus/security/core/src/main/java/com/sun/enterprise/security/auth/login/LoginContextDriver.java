@@ -17,22 +17,13 @@
 
 package com.sun.enterprise.security.auth.login;
 
-import java.security.Principal;
-import java.security.PrivilegedAction;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.security.auth.Subject;
-import javax.security.auth.login.LoginContext;
-import javax.security.auth.x500.X500Principal;
-
-import org.glassfish.internal.api.Globals;
-import org.glassfish.security.common.Group;
-import org.glassfish.security.common.UserNameAndPassword;
-import org.glassfish.security.common.UserPrincipal;
+import static com.sun.enterprise.security.SecurityLoggerInfo.auditAtnRefusedError;
+import static com.sun.enterprise.security.SecurityLoggerInfo.noSuchUserInRealmError;
+import static com.sun.enterprise.util.Utility.isEmpty;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
 
 import com.sun.enterprise.common.iiop.security.AnonCredential;
 import com.sun.enterprise.common.iiop.security.GSSUPName;
@@ -46,12 +37,24 @@ import com.sun.enterprise.security.auth.login.common.ServerLoginCallbackHandler;
 import com.sun.enterprise.security.auth.login.common.X509CertificateCredential;
 import com.sun.enterprise.security.auth.realm.Realm;
 import com.sun.enterprise.security.auth.realm.certificate.CertificateRealm;
-import com.sun.enterprise.security.auth.realm.exceptions.InvalidOperationException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
 import com.sun.enterprise.security.common.AppservAccessController;
 import com.sun.enterprise.security.common.ClientSecurityContext;
 import com.sun.enterprise.security.common.SecurityConstants;
+import java.security.Principal;
+import java.security.PrivilegedAction;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.security.auth.Subject;
+import javax.security.auth.login.LoginContext;
+import javax.security.auth.x500.X500Principal;
+import org.glassfish.internal.api.Globals;
+import org.glassfish.security.common.Group;
+import org.glassfish.security.common.UserNameAndPassword;
 
 /**
  *
@@ -68,13 +71,9 @@ public class LoginContextDriver {
 
     private static final ServerLoginCallbackHandler dummyCallback = new ServerLoginCallbackHandler();
 
-    // moved to SecurityConstants.
-    //    private static final String CLIENT_JAAS_PASSWORD = "default";
-    //    private static final String CLIENT_JAAS_CERTIFICATE = "certificate";
-
     public static final String CERT_REALMNAME = "certificate";
 
-    private static volatile AuditManager AUDIT_MANAGER = null;
+    private static volatile AuditManager AUDIT_MANAGER;
 
     /**
      * This class cannot be instantiated
@@ -108,61 +107,14 @@ public class LoginContextDriver {
      */
 
     public static void login(String username, char[] password, String realmName) {
-
-        if (realmName == null || !(Realm.isValidRealm(realmName))) {
+        if (realmName == null || !Realm.isValidRealm(realmName)) {
             realmName = Realm.getDefaultRealm();
         }
-        final Subject fs = new Subject();
-        final PasswordCredential pc = new PasswordCredential(username, password, realmName);
 
-        AppservAccessController.doPrivileged(new PrivilegedAction() {
-            @Override
-            public java.lang.Object run() {
-                fs.getPrivateCredentials().add(pc);
-                return fs;
-            }
-        });
+        final Subject subject = new Subject();
+        subject.getPrivateCredentials().add(new PasswordCredential(username, password, realmName));
 
-        LoginContextDriver.login(fs, PasswordCredential.class);
-    }
-
-    public static void login(AssertedCredentials asrtCred) throws javax.security.auth.login.LoginException {
-        Subject subject = new Subject();
-        subject.getPrivateCredentials().add(asrtCred);
-        String jaasCtx = null;
-        try {
-            jaasCtx = Realm.getInstance(asrtCred.getRealmName()).getJAASContext();
-        } catch (Exception ex) {
-            if (ex instanceof LoginException) {
-                throw (LoginException) ex;
-            } else {
-                throw (LoginException) new LoginException(ex.toString()).initCause(ex);
-            }
-        }
-
-        try {
-            // A dummyCallback is used to satisfy JAAS but it is never used.
-            // name/pwd info is already contained in Subject's Credential
-            LoginContext lg = new LoginContext(jaasCtx, subject, dummyCallback);
-            lg.login();
-        } catch (Exception e) {
-            if (_logger.isLoggable(Level.INFO)) {
-                _logger.log(Level.INFO, SecurityLoggerInfo.auditAtnRefusedError, asrtCred.getUserName());
-            }
-            if (_logger.isLoggable(Level.FINEST)) {
-                _logger.log(Level.FINEST, "doPasswordLogin fails", e);
-            }
-            if (AUDIT_MANAGER.isAuditOn()) {
-                AUDIT_MANAGER.authentication(asrtCred.getUserName(), asrtCred.getRealmName(), false);
-            }
-            if (e instanceof LoginException) {
-                throw (LoginException) e;
-            } else {
-                throw (LoginException) new LoginException("Login failed: " + e.getMessage()).initCause(e);
-            }
-        }
-
-        setSecurityContext(asrtCred.getUserName(), subject, asrtCred.getRealmName());
+        LoginContextDriver.login(subject, PasswordCredential.class);
     }
 
     /**
@@ -192,28 +144,28 @@ public class LoginContextDriver {
      * @param Class the class of the credential packaged in the subject.
      *
      */
-    public static void login(Subject subject, Class cls) throws LoginException {
-        if (_logger.isLoggable(Level.FINEST)) {
-            _logger.log(Level.FINEST, "Processing login with credentials of type: " + cls.toString());
+    public static void login(Subject subject, Class<?> credentialClass) throws LoginException {
+        if (_logger.isLoggable(FINEST)) {
+            _logger.log(FINEST, "Processing login with credentials of type: " + credentialClass.toString());
         }
 
-        if (cls.equals(PasswordCredential.class)) {
+        if (credentialClass.equals(PasswordCredential.class)) {
             doPasswordLogin(subject);
 
-        } else if (cls.equals(X509CertificateCredential.class)) {
+        } else if (credentialClass.equals(X509CertificateCredential.class)) {
             doCertificateLogin(subject);
 
-        } else if (cls.equals(AnonCredential.class)) {
+        } else if (credentialClass.equals(AnonCredential.class)) {
             doAnonLogin();
 
-        } else if (cls.equals(GSSUPName.class)) {
+        } else if (credentialClass.equals(GSSUPName.class)) {
             doGSSUPLogin(subject);
 
-        } else if (cls.equals(X500Principal.class)) {
+        } else if (credentialClass.equals(X500Principal.class)) {
             doX500Login(subject, null);
 
         } else {
-            _logger.log(Level.INFO, SecurityLoggerInfo.unknownCredentialError, cls.toString());
+            _logger.log(INFO, SecurityLoggerInfo.unknownCredentialError, credentialClass.toString());
             throw new LoginException("Unknown credential type, cannot login.");
         }
     }
@@ -224,44 +176,29 @@ public class LoginContextDriver {
      *
      */
     public static void loginPrincipal(String username, String realmName) throws LoginException {
-
-        // no realm provided, assuming default
+        // No realm provided, assuming default
         if (realmName == null || realmName.isEmpty()) {
             realmName = Realm.getDefaultRealm();
         }
 
-        final Subject s = new Subject();
-        final UserPrincipal p = new UserNameAndPassword(username);
-        final GSSUPName name = new GSSUPName(username, realmName);
-
-        AppservAccessController.doPrivileged(new PrivilegedAction<Void>() {
-            @Override
-            public Void run() {
-                s.getPrincipals().add(p);
-                s.getPublicCredentials().add(name);
-                return null;
-            }
-        });
+        final Subject subject = new Subject();
+        subject.getPrincipals().add(new UserNameAndPassword(username));
+        subject.getPublicCredentials().add(new GSSUPName(username, realmName));
 
         try {
-            Realm realm = Realm.getInstance(realmName);
-            Enumeration<String> en = realm.getGroupNames(username);
-            Set<Principal> principalSet = s.getPrincipals();
-            while (en.hasMoreElements()) {
-                principalSet.add(new Group(en.nextElement()));
+            Enumeration<String> groupNames = Realm.getInstance(realmName).getGroupNames(username);
+            while (groupNames.hasMoreElements()) {
+                subject.getPrincipals().add(new Group(groupNames.nextElement()));
             }
-
-        } catch (InvalidOperationException ex) {
-            _logger.log(Level.WARNING, SecurityLoggerInfo.invalidOperationForRealmError,
-                new Object[] { username, realmName, ex.toString() });
         } catch (NoSuchUserException ex) {
-            _logger.log(Level.WARNING, SecurityLoggerInfo.noSuchUserInRealmError, new Object[] { username, realmName, ex.toString() });
+            _logger.log(WARNING, noSuchUserInRealmError, new Object[] { username, realmName, ex.toString() });
         } catch (NoSuchRealmException ex) {
             LoginException lex = new LoginException(ex.toString());
             lex.initCause(ex);
             throw lex;
         }
-        setSecurityContext(username, s, realmName);
+
+        setSecurityContext(username, subject, realmName);
     }
 
     /**
@@ -292,64 +229,53 @@ public class LoginContextDriver {
      *
      */
     private static void doPasswordLogin(Subject subject) throws LoginException {
-        final Subject s = subject;
+        Object obj = getPrivateCredentials(subject, PasswordCredential.class);
 
-        Object obj = getPrivateCredentials(s, PasswordCredential.class);
-        assert obj != null;
+        PasswordCredential passwordCredential = (PasswordCredential) obj;
+        String user = passwordCredential.getUser();
+        String realm = passwordCredential.getRealm();
+        String jaasCtx = getJaasCtx(realm);
 
-        PasswordCredential p = (PasswordCredential) obj;
-        String user = p.getUser();
-        char[] pwd = p.getPassword();
-        String realm = p.getRealm();
-        String jaasCtx = null;
-        try {
-            jaasCtx = Realm.getInstance(realm).getJAASContext();
-        } catch (Exception ex) {
-            if (ex instanceof LoginException) {
-                throw (LoginException) ex;
-            } else {
-                throw (LoginException) new LoginException(ex.toString()).initCause(ex);
-            }
-        }
-
-        assert user != null;
-        assert pwd != null;
-        assert realm != null;
-        assert jaasCtx != null;
-
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.fine("Logging in user [" + user + "] into realm: " + realm + " using JAAS module: " + jaasCtx);
-        }
+        _logger.log(FINE, () -> "Logging in user [" + user + "] into realm: " + realm + " using JAAS module: " + jaasCtx);
 
         try {
             // A dummyCallback is used to satisfy JAAS but it is never used.
             // name/pwd info is already contained in Subject's Credential
-            LoginContext lg = new LoginContext(jaasCtx, s, dummyCallback);
-            lg.login();
+            new LoginContext(jaasCtx, subject, dummyCallback).login();
 
         } catch (Exception e) {
-            if (_logger.isLoggable(Level.FINEST)) {
-                _logger.log(Level.FINEST, "doPasswordLogin fails", e);
-            }
+            _logger.log(FINEST, "doPasswordLogin fails", e);
+
             if (getAuditManager() != null && getAuditManager().isAuditOn()) {
                 getAuditManager().authentication(user, realm, false);
             }
             if (e instanceof LoginException) {
                 throw (LoginException) e;
-            } else {
-                throw (LoginException) new LoginException("Login failed: " + e.getMessage()).initCause(e);
             }
+
+            throw (LoginException) new LoginException("Login failed: " + e.getMessage()).initCause(e);
+
         }
         if (getAuditManager() != null && getAuditManager().isAuditOn()) {
             getAuditManager().authentication(user, realm, true);
         }
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.fine("Password login succeeded for : " + user);
-        }
 
-        setSecurityContext(user, s, realm);
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Set security context as user: " + user);
+        _logger.log(FINE, () -> "Password login succeeded for : " + user);
+
+        setSecurityContext(user, subject, realm);
+
+        _logger.log(FINE, () -> "Set security context as user: " + user);
+    }
+
+    private static String getJaasCtx(String realm) {
+        try {
+            return Realm.getInstance(realm).getJAASContext();
+        } catch (Exception ex) {
+            if (ex instanceof LoginException) {
+                throw (LoginException) ex;
+            }
+
+            throw (LoginException) new LoginException(ex.toString()).initCause(ex);
         }
     }
 
@@ -377,47 +303,31 @@ public class LoginContextDriver {
      * @throws LoginException
      */
     public static Subject jmacLogin(Subject subject, String username, char[] password, String realmName) throws LoginException {
-
-        if (realmName == null || !(Realm.isValidRealm(realmName))) {
+        if (realmName == null || !Realm.isValidRealm(realmName)) {
             realmName = Realm.getDefaultRealm();
         }
+
         if (subject == null) {
             subject = new Subject();
         }
-        final Subject fs = subject;
-        final PasswordCredential pc = new PasswordCredential(username, password, realmName);
 
-        AppservAccessController.doPrivileged(new PrivilegedAction() {
-            @Override
-            public java.lang.Object run() {
-                fs.getPrivateCredentials().add(pc);
-                return fs;
-            }
-        });
+        final PasswordCredential passwordCredential = new PasswordCredential(username, password, realmName);
+        subject.getPrivateCredentials().add(passwordCredential);
 
-        String jaasCtx = null;
-        try {
-            jaasCtx = Realm.getInstance(realmName).getJAASContext();
-        } catch (Exception ex) {
-            if (ex instanceof LoginException) {
-                throw (LoginException) ex;
-            } else {
-                throw (LoginException) new LoginException(ex.toString()).initCause(ex);
-            }
-        }
+        String jaasCtx = getJaasCtx(realmName);
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.fine("jmac login user [" + username + "] into realm: " + realmName + " using JAAS module: " + jaasCtx);
+        if (_logger.isLoggable(FINE)) {
+            _logger.log(FINE, "jmac login user [" + username + "] into realm: " + realmName + " using JAAS module: " + jaasCtx);
         }
 
         try {
             // A dummyCallback is used to satisfy JAAS but it is never used.
             // name/pwd info is already contained in Subject's Credential
-            LoginContext lg = new LoginContext(jaasCtx, fs, dummyCallback);
-            lg.login();
+            new LoginContext(jaasCtx, subject, dummyCallback).login();
+
         } catch (Exception e) {
-            if (_logger.isLoggable(Level.INFO)) {
-                _logger.log(Level.INFO, SecurityLoggerInfo.auditAtnRefusedError, username);
+            if (_logger.isLoggable(INFO)) {
+                _logger.log(INFO, SecurityLoggerInfo.auditAtnRefusedError, username);
             }
             if (getAuditManager().isAuditOn()) {
                 getAuditManager().authentication(username, realmName, false);
@@ -432,7 +342,7 @@ public class LoginContextDriver {
         if (getAuditManager().isAuditOn()) {
             getAuditManager().authentication(username, realmName, true);
         }
-        if (_logger.isLoggable(Level.FINE)) {
+        if (_logger.isLoggable(FINE)) {
             _logger.fine("jmac Password login succeeded for : " + username);
         }
 
@@ -441,51 +351,40 @@ public class LoginContextDriver {
     }
 
     public static Subject jmacLogin(Subject subject, X500Principal x500Principal) throws LoginException {
-
         if (subject == null) {
             subject = new Subject();
         }
 
-        final Subject fs = subject;
-
         String userName = "";
         try {
-
             userName = x500Principal.getName();
+            subject.getPublicCredentials().add(x500Principal);
 
-            AppservAccessController.doPrivileged(new PrivilegedAction() {
-                @Override
-                public java.lang.Object run() {
-                    fs.getPublicCredentials().add(x500Principal);
-                    return fs;
-                }
-            });
-
-            Realm realm = Realm.getInstance(CertificateRealm.AUTH_TYPE);
-            CertificateRealm certRealm = (CertificateRealm) realm;
+            CertificateRealm certRealm = (CertificateRealm) Realm.getInstance(CertificateRealm.AUTH_TYPE);
             String jaasCtx = certRealm.getJAASContext();
             if (jaasCtx != null) {
-                // The subject has the Cretificate Credential.
-                LoginContext lg = new LoginContext(jaasCtx, fs, dummyCallback);
-                lg.login();
+                // The subject has the Certificate Credential.
+                new LoginContext(jaasCtx, subject, dummyCallback).login();
             }
-            certRealm.authenticate(fs, x500Principal);
+            certRealm.authenticate(subject, x500Principal);
         } catch (Exception ex) {
-            if (_logger.isLoggable(Level.INFO)) {
-                _logger.log(Level.INFO, SecurityLoggerInfo.auditAtnRefusedError, userName);
+            if (_logger.isLoggable(INFO)) {
+                _logger.log(INFO, auditAtnRefusedError, userName);
             }
+
             if (getAuditManager().isAuditOn()) {
                 getAuditManager().authentication(userName, CertificateRealm.AUTH_TYPE, false);
             }
+
             if (ex instanceof LoginException) {
                 throw (LoginException) ex;
-            } else {
-                throw (LoginException) new LoginException(ex.toString()).initCause(ex);
             }
+
+            throw (LoginException) new LoginException(ex.toString()).initCause(ex);
         }
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.fine("jmac cert login succeeded for: " + userName);
+        if (_logger.isLoggable(FINE)) {
+            _logger.log(FINE, "jmac cert login succeeded for: " + userName);
         }
 
         if (getAuditManager().isAuditOn()) {
@@ -496,38 +395,26 @@ public class LoginContextDriver {
         return subject;
     }
 
-    public static Subject jmacLogin(Subject subject, String identityAssertion, String realm) throws LoginException {
-
+    public static Subject jmacLogin(Subject subject, String userName, String realm) throws LoginException {
         if (subject == null) {
             subject = new Subject();
         }
-        final Subject fs = subject;
-        String userName = identityAssertion;
 
         try {
-            if (realm == null || "".equals(realm)) {
+            if (isEmpty(realm)) {
                 realm = Realm.getDefaultRealm();
             }
-            Realm realmInst = Realm.getInstance(realm);
-            final Enumeration groups = realmInst.getGroupNames(userName);
-            if (groups != null && groups.hasMoreElements()) {
-                AppservAccessController.doPrivileged(new PrivilegedAction() {
 
-                    @Override
-                    public java.lang.Object run() {
-                        while (groups.hasMoreElements()) {
-                            String grp = (String) groups.nextElement();
-                            fs.getPrincipals().add(new Group(grp));
-                        }
-                        return fs;
-                    }
-                });
+            Enumeration<String> groups = Realm.getInstance(realm).getGroupNames(userName);
+            if (groups != null) {
+                while (groups.hasMoreElements()) {
+                    subject.getPrincipals().add(new Group(groups.nextElement()));
+                }
             }
         } catch (Exception ex) {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Exception when trying to populate groups for CallerPrincipal " + identityAssertion, ex);
-            }
+            _logger.log(FINE, ex, () -> "Exception when trying to populate groups for CallerPrincipal " + userName);
         }
+
         return subject;
     }
 
@@ -537,9 +424,8 @@ public class LoginContextDriver {
      *
      */
     private static void doCertificateLogin(Subject s) throws LoginException {
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Processing X509 certificate login.");
-        }
+        _logger.log(FINE, "Processing X509 certificate login.");
+
         String realm = CertificateRealm.AUTH_TYPE;
         String user = null;
         try {
@@ -547,8 +433,8 @@ public class LoginContextDriver {
 
             X509CertificateCredential xp = (X509CertificateCredential) obj;
             user = xp.getAlias();
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Set security context as user: " + user);
+            if (_logger.isLoggable(FINE)) {
+                _logger.log(FINE, "Set security context as user: " + user);
             }
             setSecurityContext(user, s, realm);
             if (getAuditManager().isAuditOn()) {
@@ -569,8 +455,8 @@ public class LoginContextDriver {
     private static void doAnonLogin() throws LoginException {
         // instance of anononymous credential login with guest
         SecurityContext.setUnauthenticatedContext();
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Set anonymous security context.");
+        if (_logger.isLoggable(FINE)) {
+            _logger.log(FINE, "Set anonymous security context.");
         }
     }
 
@@ -579,7 +465,7 @@ public class LoginContextDriver {
      *
      */
     private static void doGSSUPLogin(Subject s) throws LoginException {
-        if (_logger.isLoggable(Level.FINE)) {
+        if (_logger.isLoggable(FINE)) {
             _logger.fine("Processing GSSUP login.");
         }
         String user = null;
@@ -593,7 +479,7 @@ public class LoginContextDriver {
             if (getAuditManager().isAuditOn()) {
                 getAuditManager().authentication(user, realm, true);
             }
-            if (_logger.isLoggable(Level.FINE)) {
+            if (_logger.isLoggable(FINE)) {
                 _logger.fine("GSSUP login succeeded for : " + user);
             }
         } catch (LoginException le) {
@@ -610,7 +496,7 @@ public class LoginContextDriver {
      *
      */
     public static void doX500Login(Subject s, String appModuleID) throws LoginException {
-        if (_logger.isLoggable(Level.FINE)) {
+        if (_logger.isLoggable(FINE)) {
             _logger.fine("Processing X.500 name login.");
         }
         String user = null;
@@ -650,7 +536,7 @@ public class LoginContextDriver {
                 setSecurityContext(user, s, realm_name);
             }
 
-            if (_logger.isLoggable(Level.FINE)) {
+            if (_logger.isLoggable(FINE)) {
                 _logger.fine("X.500 name login succeeded for : " + user);
             }
         } catch (LoginException le) {
@@ -894,11 +780,11 @@ public class LoginContextDriver {
             LoginContext lg = new LoginContext(jaasCtx, subject, dummyCallback);
             lg.login();
         } catch (Exception e) {
-            if (_logger.isLoggable(Level.INFO)) {
-                _logger.log(Level.INFO, SecurityLoggerInfo.auditAtnRefusedError, digestCred.getUserName());
+            if (_logger.isLoggable(INFO)) {
+                _logger.log(INFO, SecurityLoggerInfo.auditAtnRefusedError, digestCred.getUserName());
             }
-            if (_logger.isLoggable(Level.FINEST)) {
-                _logger.log(Level.FINEST, "doPasswordLogin fails", e);
+            if (_logger.isLoggable(FINEST)) {
+                _logger.log(FINEST, "doPasswordLogin fails", e);
             }
             if (getAuditManager().isAuditOn()) {
                 getAuditManager().authentication(digestCred.getUserName(), digestCred.getRealmName(), false);
@@ -927,8 +813,8 @@ public class LoginContextDriver {
         Set credset = (Set) AppservAccessController.doPrivileged(new PrivilegedAction() {
             @Override
             public java.lang.Object run() {
-                if (_logger.isLoggable(Level.FINEST)) {
-                    _logger.log(Level.FINEST, "LCD post login subject :" + fs);
+                if (_logger.isLoggable(FINEST)) {
+                    _logger.log(FINEST, "LCD post login subject :" + fs);
                 }
                 return fs.getPrivateCredentials(clas);
             }
@@ -950,18 +836,18 @@ public class LoginContextDriver {
             if (obj instanceof PasswordCredential) {
                 PasswordCredential p = (PasswordCredential) obj;
                 String user = p.getUser();
-                if (_logger.isLoggable(Level.FINEST)) {
+                if (_logger.isLoggable(FINEST)) {
                     String realm = p.getRealm();
-                    _logger.log(Level.FINEST, "In LCD user-pass login:" + user + " realm :" + realm);
+                    _logger.log(FINEST, "In LCD user-pass login:" + user + " realm :" + realm);
                 }
                 setClientSecurityContext(user, fs);
                 return;
             } else if (obj instanceof X509CertificateCredential) {
                 X509CertificateCredential p = (X509CertificateCredential) obj;
                 String user = p.getAlias();
-                if (_logger.isLoggable(Level.FINEST)) {
+                if (_logger.isLoggable(FINEST)) {
                     String realm = p.getRealm();
-                    _logger.log(Level.FINEST, "In LCD cert-login::" + user + " realm :" + realm);
+                    _logger.log(FINEST, "In LCD cert-login::" + user + " realm :" + realm);
                 }
                 setClientSecurityContext(user, fs);
                 return;

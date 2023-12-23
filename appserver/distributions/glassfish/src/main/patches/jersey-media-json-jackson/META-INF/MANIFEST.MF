@@ -1,0 +1,75 @@
+Manifest-Version: 1.0
+Build-Jdk-Spec: 11
+Bundle-Description: Jersey JSON Jackson (2.x) entity providers support
+  module.
+Bundle-DocURL: https://www.eclipse.org/org/foundation/
+Bundle-License: http://www.eclipse.org/legal/epl-2.0, https://www.gnu.
+ org/software/classpath/license.html, http://www.apache.org/licenses/L
+ ICENSE-2.0.html
+Bundle-ManifestVersion: 2
+Bundle-Name: jersey-media-json-jackson
+Bundle-SymbolicName: org.glassfish.jersey.media.jersey-media-json-jack
+ son
+Bundle-Vendor: Eclipse Foundation
+Bundle-Version: 3.1.4
+Created-By: Apache Maven Bundle Plugin 5.1.9
+Export-Package: org.glassfish.jersey.jackson;uses:="jakarta.ws.rs.core
+ ,org.glassfish.jersey.internal.l10n";version="3.1.4",org.glassfish.je
+ rsey.jackson.internal;uses:="com.fasterxml.jackson.databind,com.faste
+ rxml.jackson.databind.ser,jakarta.annotation,jakarta.inject,jakarta.w
+ s.rs.core,jakarta.ws.rs.ext,org.glassfish.jersey.internal.spi,org.gla
+ ssfish.jersey.jackson.internal.jackson.jaxrs.cfg,org.glassfish.jersey
+ .jackson.internal.jackson.jaxrs.json,org.glassfish.jersey.message.fil
+ tering.spi";version="3.1.4",org.glassfish.jersey.jackson.internal.jac
+ kson.jaxrs.annotation;uses:="com.fasterxml.jackson.annotation,com.fas
+ terxml.jackson.databind";version="3.1.4",org.glassfish.jersey.jackson
+ .internal.jackson.jaxrs.base;uses:="com.fasterxml.jackson.core,com.fa
+ sterxml.jackson.databind,jakarta.ws.rs.core,jakarta.ws.rs.ext,org.gla
+ ssfish.jersey.jackson.internal.jackson.jaxrs.cfg,org.glassfish.jersey
+ .jackson.internal.jackson.jaxrs.util";version="3.1.4",org.glassfish.j
+ ersey.jackson.internal.jackson.jaxrs.cfg;uses:="com.fasterxml.jackson
+ .core,com.fasterxml.jackson.databind,com.fasterxml.jackson.databind.c
+ fg,jakarta.ws.rs.core";version="3.1.4",org.glassfish.jersey.jackson.i
+ nternal.jackson.jaxrs.json;uses:="com.fasterxml.jackson.core,com.fast
+ erxml.jackson.databind,com.fasterxml.jackson.databind.cfg,jakarta.ws.
+ rs,jakarta.ws.rs.core,jakarta.ws.rs.ext,org.glassfish.jersey.jackson.
+ internal.jackson.jaxrs.base,org.glassfish.jersey.jackson.internal.jac
+ kson.jaxrs.cfg,org.glassfish.jersey.jackson.internal.jackson.jaxrs.js
+ on.annotation";version="3.1.4",org.glassfish.jersey.jackson.internal.
+ jackson.jaxrs.json.annotation;uses:="com.fasterxml.jackson.annotation
+ ";version="3.1.4",org.glassfish.jersey.jackson.internal.jackson.jaxrs
+ .util;uses:="com.fasterxml.jackson.databind,com.fasterxml.jackson.dat
+ abind.introspect";version="3.1.4"
+Import-Package: jakarta.annotation;version="[2.0,4)",com.fasterxml.jac
+ kson.annotation;version="[2.15,3)",com.fasterxml.jackson.core;version
+ ="[2.15,3)",com.fasterxml.jackson.core.util;version="[2.15,3)",com.fa
+ sterxml.jackson.databind;version="[2.15,3)",com.fasterxml.jackson.dat
+ abind.cfg;version="[2.15,3)",com.fasterxml.jackson.databind.introspec
+ t;version="[2.15,3)",com.fasterxml.jackson.databind.jsonFormatVisitor
+ s;version="[2.15,3)",com.fasterxml.jackson.databind.node;version="[2.
+ 15,3)",com.fasterxml.jackson.databind.ser;version="[2.15,3)",com.fast
+ erxml.jackson.databind.ser.impl;version="[2.15,3)",com.fasterxml.jack
+ son.databind.type;version="[2.15,3)",com.fasterxml.jackson.databind.u
+ til;version="[2.15,3)",com.fasterxml.jackson.module.jakarta.xmlbind;v
+ ersion="[2.15,3)",com.fasterxml.jackson.module.jaxb;version="[2.15,3)
+ ";resolution:=optional,jakarta.inject;version="[2.0,3)",jakarta.ws.rs
+ ;version="[3.1,4)",jakarta.ws.rs.core;version="[3.1,4)",jakarta.ws.rs
+ .ext;version="[3.1,4)",java.io,java.lang,java.lang.annotation,java.la
+ ng.invoke,java.lang.reflect,java.security,java.util,java.util.concurr
+ ent.atomic,java.util.function,java.util.logging,org.glassfish.jersey;
+ version="[3.1,4)",org.glassfish.jersey.internal.inject;version="[3.1,
+ 4)",org.glassfish.jersey.internal.l10n;version="[3.1,4)",org.glassfis
+ h.jersey.internal.spi;version="[3.1,4)",org.glassfish.jersey.internal
+ .util;version="[3.1,4)",org.glassfish.jersey.internal.util.collection
+ ;version="[3.1,4)",org.glassfish.jersey.jackson,org.glassfish.jersey.
+ jackson.internal,org.glassfish.jersey.jackson.internal.jackson.jaxrs.
+ annotation,org.glassfish.jersey.jackson.internal.jackson.jaxrs.base,o
+ rg.glassfish.jersey.jackson.internal.jackson.jaxrs.cfg,org.glassfish.
+ jersey.jackson.internal.jackson.jaxrs.json,org.glassfish.jersey.jacks
+ on.internal.jackson.jaxrs.json.annotation,org.glassfish.jersey.jackso
+ n.internal.jackson.jaxrs.util,org.glassfish.jersey.message;version="[
+ 3.1,4)",org.glassfish.jersey.message.filtering;version="[3.1,4)",org.
+ glassfish.jersey.message.filtering.spi;version="[3.1,4)"
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=11))"
+Tool: Bnd-6.3.1.202206071316
+

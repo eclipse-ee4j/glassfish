@@ -15,6 +15,7 @@ public class GlassFishPrincipalMapper implements PrincipalMapper {
     private final SecurityRoleMapper roleMapper;
 
     private final Map<String, Set<String>> groupToRoles;
+    private final Map<String, Set<String>> callerToRoles;
     private final boolean oneToOneMapping;
     private final boolean anyAuthenticatedUserRoleMapped;
 
@@ -25,7 +26,11 @@ public class GlassFishPrincipalMapper implements PrincipalMapper {
                    .getRoleMapper(contextId);
 
         groupToRoles = roleMapper.getGroupToRolesMapping();
-        oneToOneMapping = roleMapper.isDefaultPrincipalToRoleMapping();
+        callerToRoles = roleMapper.getCallerToRolesMapping();
+        oneToOneMapping =
+            groupToRoles.isEmpty() &&
+            callerToRoles.isEmpty() &&
+            roleMapper.isDefaultPrincipalToRoleMapping();
 
 
         // Jakarta Authorization spec 3.2 states:
@@ -48,13 +53,23 @@ public class GlassFishPrincipalMapper implements PrincipalMapper {
 
     @Override
     public Principal getCallerPrincipal(Subject subject) {
-        // TODO Auto-generated method stub
-        return null;
+        return roleMapper.getCallerPrincipal(subject);
     }
 
     @Override
     public Set<String> getMappedRoles(Subject subject) {
-        return mapGroupsToRoles(roleMapper.getGroups(subject));
+        // Check for groups that have been mapped to roles
+        Set<String> mappedRoles = mapGroupsToRoles(roleMapper.getGroups(subject));
+
+        Principal callerPrincipal = getCallerPrincipal(subject);
+
+        // Check if the caller principal has been mapped to roles
+        if (callerPrincipal != null && callerToRoles.containsKey(callerPrincipal.getName())) {
+            mappedRoles = new HashSet<>(mappedRoles);
+            mappedRoles.addAll(callerToRoles.get(callerPrincipal.getName()));
+        }
+
+        return mappedRoles;
     }
 
     @Override
@@ -73,10 +88,6 @@ public class GlassFishPrincipalMapper implements PrincipalMapper {
         for (String group : groups) {
             if (groupToRoles.containsKey(group)) {
                 roles.addAll(groupToRoles.get(group));
-            } else {
-                // Default to 1:1 mapping when group is not explicitly mapped
-                // TODO: or don't do this?
-                roles.add(group);
             }
         }
 

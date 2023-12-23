@@ -1,5 +1,6 @@
 <!--
 
+    Copyright (c) 2023 Contributors to the Eclipse Foundation
     Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -29,11 +30,11 @@
         var bitField = document.getElementById('#{cipherId}:OtherCiphersProp:otherAddRemove').selectedValues.value; \
         var eccField = document.getElementById('#{cipherId}:EccCiphersProp:eccAddRemove').selectedValues.value; \
         var ssl3Prop = document.getElementById('#{sheetId}:SSL3Prop:SSL3').checked; \
-        if(document.getElementById('#{sheetId}:SSL2Prop:SSL2')) { \
-           var ssl2Prop = document.getElementById('#{sheetId}:SSL2Prop:SSL2').checked; \
-        } \
         var tlsProp = document.getElementById('#{sheetId}:TLSProp:TLS').checked; \
-        if (ssl3Prop || tlsProp || ssl2Prop) {   \
+        var tls11Prop = document.getElementById('#{sheetId}:TLS11Prop:TLS11').checked; \
+        var tls12Prop = document.getElementById('#{sheetId}:TLS12Prop:TLS12').checked; \
+        var tls13Prop = document.getElementById('#{sheetId}:TLS13Prop:TLS13').checked; \
+        if (ssl3Prop || tlsProp || tls11Prop || tls12Prop || tls13Prop) {   \
             var result = checkForValue(getTextElement('#{sheetId}:CertNicknameProp:CertNickname'));  \
             if(result != true){ \
                 return showAlert('$resource{i18n.msg.JS.ssl.errSslTlsCert}'); \

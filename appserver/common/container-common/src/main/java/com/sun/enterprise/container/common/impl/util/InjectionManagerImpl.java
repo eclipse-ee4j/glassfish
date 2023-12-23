@@ -17,6 +17,10 @@
 
 package com.sun.enterprise.container.common.impl.util;
 
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.TRACE;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT_ENV;
+
 import com.sun.enterprise.container.common.spi.CDIService;
 import com.sun.enterprise.container.common.spi.ManagedBeanManager;
 import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
@@ -26,10 +30,7 @@ import com.sun.enterprise.deployment.InjectionCapable;
 import com.sun.enterprise.deployment.InjectionInfo;
 import com.sun.enterprise.deployment.InjectionTarget;
 import com.sun.enterprise.deployment.JndiNameEnvironment;
-
-import jakarta.annotation.ManagedBean;
 import jakarta.inject.Inject;
-
 import java.lang.System.Logger;
 import java.lang.reflect.Field;
 import java.lang.reflect.InaccessibleObjectException;
@@ -39,9 +40,7 @@ import java.lang.reflect.Modifier;
 import java.text.MessageFormat;
 import java.util.LinkedList;
 import java.util.List;
-
 import javax.naming.NamingException;
-
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
@@ -50,10 +49,6 @@ import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
-
-import static java.lang.System.Logger.Level.DEBUG;
-import static java.lang.System.Logger.Level.TRACE;
-import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT_ENV;
 
 /**
  * Implementation of InjectionManager.
@@ -67,12 +62,16 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
 
     @Inject
     private ComponentEnvManager componentEnvManager;
+
     @Inject
     private InvocationManager invocationManager;
+
     @Inject
     private GlassfishNamingManager glassfishNamingManager;
+
     @Inject
     private ServiceLocator serviceLocator;
+
     @Inject
     private ProcessEnvironment processEnvironment;
 
@@ -84,8 +83,9 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
 
         if (processEnvironment.getProcessType().isServer()) {
             try {
-                SimpleJndiName jndiName = new SimpleJndiName(InjectionManager.class.getName());
-                glassfishNamingManager.publishObject(jndiName, this, true);
+                glassfishNamingManager.publishObject(
+                    new SimpleJndiName(InjectionManager.class.getName()),
+                    this, true);
             } catch (NamingException ne) {
                 throw new RuntimeException(ne);
             }
@@ -104,12 +104,13 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
         if (currentInvocation == null) {
             throw new InjectionException("Null invocation context");
         }
+
         JndiNameEnvironment componentEnv = componentEnvManager.getJndiNameEnvironment(currentInvocation.getComponentId());
         if (componentEnv == null) {
             throw new InjectionException("No descriptor registered for current invocation: " + currentInvocation);
         }
-        inject(instance.getClass(), instance, componentEnv, null, invokePostConstruct);
 
+        inject(instance.getClass(), instance, componentEnv, null, invokePostConstruct);
     }
 
     @Override
@@ -128,11 +129,13 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
         if (currentInvocation == null) {
             throw new InjectionException("Null invocation context");
         }
+
         String componentId = jndiName == null ? null : jndiName.toString();
         JndiNameEnvironment componentEnv = componentEnvManager.getJndiNameEnvironment(componentId);
         if (componentEnv == null) {
             throw new InjectionException("No descriptor registered for componentId: " + jndiName);
         }
+
         inject(instance.getClass(), instance, componentEnv, componentId, invokePostConstruct);
     }
 
@@ -142,6 +145,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
         if (currentInvocation == null) {
             throw new InjectionException("Null invocation context");
         }
+
         String componentId = jndiName == null ? null : jndiName.toString();
         JndiNameEnvironment componentEnv = componentEnvManager.getJndiNameEnvironment(componentId);
         if (componentEnv == null) {
@@ -181,6 +185,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
         ComponentInvocation currentInvocation = invocationManager.getCurrentInvocation();
         LOG.log(DEBUG, "invokeInstancePreDestroy(instance={0}, validate={1}); invocation={2}", instance, validate,
             currentInvocation);
+
         // if ComponentInv is null and validate is true, throw InjectionException;
         // if component JndiNameEnvironment is null and validate is true, throw InjectionException;
         // if validate is false, the above 2 null conditions are basically ignored,
@@ -199,6 +204,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
             }
             return;
         }
+
         invokePreDestroy(instance.getClass(), instance, componentEnv);
     }
 
@@ -225,32 +231,20 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
         T managedObject = null;
 
         try {
-            ManagedBean managedBeanAnnotation = clazz.getAnnotation(ManagedBean.class);
-
             ManagedBeanManager managedBeanManager = serviceLocator.getService(ManagedBeanManager.class);
+            CDIService cdiService = serviceLocator.getService(CDIService.class);
 
-            if (managedBeanAnnotation != null) {
-                // EE style @ManagedBean
+            if (cdiService != null && cdiService.isCurrentModuleCDIEnabled()) {
 
                 // Create , inject, and call PostConstruct via managed bean manager
                 managedObject = managedBeanManager.createManagedBean(clazz);
-
             } else {
-                CDIService cdiService = serviceLocator.getService(CDIService.class);
 
-                if (cdiService != null && cdiService.isCurrentModuleCDIEnabled()) {
+                // Not in a CDI-enabled module so just instantiate using new and perform injection
+                managedObject = clazz.getConstructor().newInstance();
 
-                    // Create , inject, and call PostConstruct via managed bean manager
-                    managedObject = managedBeanManager.createManagedBean(clazz);
-                } else {
-
-                    // Not in a CDI-enabled module and not annotated with @ManagedBean, so
-                    // just instantiate using new and perform injection
-                    managedObject = clazz.getConstructor().newInstance();
-
-                    // Inject and call PostConstruct
-                    injectInstance(managedObject);
-                }
+                // Inject and call PostConstruct
+                injectInstance(managedObject);
             }
         } catch (Exception e) {
             throw new InjectionException("Error creating managed object for class: " + clazz, e);
@@ -280,32 +274,21 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
         T managedObject = null;
 
         try {
-            ManagedBean managedBeanAnnotation = clazz.getAnnotation(ManagedBean.class);
-
             ManagedBeanManager managedBeanMgr = serviceLocator.getService(ManagedBeanManager.class);
+            CDIService cdiService = serviceLocator.getService(CDIService.class);
 
-            if (managedBeanAnnotation != null) {
-                // EE style @ManagedBean
+            if (cdiService != null && cdiService.isCurrentModuleCDIEnabled()) {
 
                 // Create , inject, and call PostConstruct (if necessary) via managed bean manager
                 managedObject = managedBeanMgr.createManagedBean(clazz, invokePostConstruct);
 
             } else {
-                CDIService cdiService = serviceLocator.getService(CDIService.class);
+                // Not in a CDI-enabled module and not annoated with @ManagedBean, so
+                // just instantiate using new and perform injection
+                managedObject = clazz.getConstructor().newInstance();
 
-                if (cdiService != null && cdiService.isCurrentModuleCDIEnabled()) {
-
-                    // Create , inject, and call PostConstruct (if necessary) via managed bean manager
-                    managedObject = managedBeanMgr.createManagedBean(clazz, invokePostConstruct);
-
-                } else {
-                    // Not in a CDI-enabled module and not annoated with @ManagedBean, so
-                    // just instantiate using new and perform injection
-                    managedObject = clazz.getConstructor().newInstance();
-
-                    // Inject and call PostConstruct if necessary
-                    injectInstance(managedObject, invokePostConstruct);
-                }
+                // Inject and call PostConstruct if necessary
+                injectInstance(managedObject, invokePostConstruct);
             }
 
         } catch (Exception e) {
@@ -337,12 +320,8 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
     @Override
     public void destroyManagedObject(Object managedObject, boolean validate) throws InjectionException {
         LOG.log(DEBUG, "destroyManagedObject(managedObject={0}, validate={1})", managedObject, validate);
-        Class<?> managedObjectClass = managedObject.getClass();
-
-        ManagedBean managedBeanAnn = managedObjectClass.getAnnotation(ManagedBean.class);
 
         ManagedBeanManager managedBeanManager = serviceLocator.getService(ManagedBeanManager.class);
-
         CDIService cdiService = serviceLocator.getService(CDIService.class);
 
         if (cdiService != null && cdiService.isCurrentModuleCDIEnabled()) {
@@ -351,10 +330,8 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
             managedBeanManager.destroyManagedBean(managedObject, validate);
 
         } else {
-
-            // If the object's class has @ManagedBean it's a managed bean. Otherwise, ask
-            // managed bean manager.
-            if (managedBeanAnn != null || managedBeanManager.isManagedBean(managedObject)) {
+            // Ask managed bean manager.
+            if (managedBeanManager.isManagedBean(managedObject)) {
                 managedBeanManager.destroyManagedBean(managedObject, validate);
             } else {
                 invokeInstancePreDestroy(managedObject, validate);

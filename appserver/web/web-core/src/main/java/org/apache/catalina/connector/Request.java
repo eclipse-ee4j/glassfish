@@ -18,6 +18,7 @@
 
 package org.apache.catalina.connector;
 
+import static com.sun.enterprise.util.Utility.isAnyNull;
 import static com.sun.logging.LogCleanerUtil.getSafeHeaderValue;
 import static jakarta.servlet.DispatcherType.REQUEST;
 import static jakarta.servlet.RequestDispatcher.ERROR_EXCEPTION;
@@ -143,7 +144,7 @@ import org.glassfish.grizzly.utils.Charsets;
 import org.glassfish.web.valve.GlassFishValve;
 
 import com.sun.appserv.ProxyHandler;
-
+import com.sun.enterprise.util.Utility;
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.FilterChain;
@@ -2165,9 +2166,9 @@ public class Request implements HttpRequest, HttpServletRequest {
         try {
             if (maskDefaultContextMapping || !isDefaultContext) {
                 return grizzlyRequest.getDecodedRequestURI();
-            } else {
-                return getContextPath() + grizzlyRequest.getDecodedRequestURI();
             }
+
+            return getContextPath() + grizzlyRequest.getDecodedRequestURI();
         } catch (CharConversionException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -2591,7 +2592,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     @Override
     public boolean isRequestedSessionIdValid() {
-        if ((requestedSessionId == null) || (context == null)) {
+        if (isAnyNull(requestedSessionId, context == null)) {
             return false;
         }
 
@@ -2630,15 +2631,13 @@ public class Request implements HttpRequest, HttpServletRequest {
     @Override
     public boolean isUserInRole(String role) {
 
-        /*
-         * Must get userPrincipal through getUserPrincipal(), can't assume it has already been set since it may be coming from
-         * core.
-         */
+        // Must get userPrincipal through getUserPrincipal(), can't assume it has already been set since it
+        // may be coming from core.
         Principal userPrincipal = getUserPrincipal();
 
         // Have we got an authenticated principal at all?
         // Identify the Realm we will use for checking role assignments
-        if (userPrincipal == null || context == null) {
+        if (isAnyNull(userPrincipal, context)) {
             return false;
         }
 
@@ -3533,6 +3532,11 @@ public class Request implements HttpRequest, HttpServletRequest {
         }
 
         return asyncContext;
+    }
+
+    @Override
+    public String toString() {
+        return getMethod() + " " + getRequestURI() + (getQueryString() != null? "?" + getQueryString() : "") ;
     }
 
     /*

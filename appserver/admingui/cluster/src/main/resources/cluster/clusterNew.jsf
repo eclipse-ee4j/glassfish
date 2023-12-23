@@ -1,5 +1,6 @@
 <!--
 
+    Copyright (c) 2023 Contributors to the Eclipse Foundation
     Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -110,18 +111,28 @@
         />
     </event>
 
-    <sun:table id="basicTable" style="padding: 10pt" deselectMultipleButton="$boolean{true}" selectMultipleButton="$boolean{true}"
+    <sun:table id="basicTable" style="padding: 10pt"
+               deselectMultipleButton="$boolean{true}"
+               deselectMultipleButtonOnClick="setTimeout('admingui.table.changeOneTableButton(\\\\\'#{pageSession.topActionGroup}\\\\\', \\\\\'#{pageSession.tableId}\\\\\');', 0)"
+               selectMultipleButton="$boolean{true}"
+               selectMultipleButtonOnClick="setTimeout('admingui.table.changeOneTableButton(\\\\\'#{pageSession.topActionGroup}\\\\\', \\\\\'#{pageSession.tableId}\\\\\');', 0)"
                title="$resource{i18ncs.clusterNew.TableTitle}">
+        <!afterCreate
+            getClientId(component="$this{component}" clientId=>$page{tableId});
+        />
         <!-- Actions (Top) -->
         <!facet actionsTop>
         <sun:panelGroup id="topActionsGroup1">
+            <!afterCreate
+                getClientId(component="$this{component}" clientId=>$page{topActionGroup});
+            />
             <sun:button id="addSharedTableButton" disabled="#{false}" text="$resource{i18n.button.New}" primary="#{true}">
                 <!command
                 getUIComponent(clientId="$pageSession{clusterTableRowGroupId}", component="#{requestScope.tableRowGroup}" );
                 addRowToTable(TableRowGroup="$attribute{tableRowGroup}", NameList={"name", "weight", "node"});
                 />
             </sun:button>
-            <sun:button id="deleteSharedTableButton" disabled="#{false}" text="$resource{i18n.button.Delete}" primary="#{false}">
+            <sun:button id="button1" disabled="#{true}" text="$resource{i18n.button.Delete}" primary="#{false}">
                 <!command
                 getUIComponent(clientId="$pageSession{clusterTableRowGroupId}", component=>$attribute{trg});
                 getSelectedTableRowKeys(tableRowGroup="${trg}" rowKeys=>$attribute{rowKeys});
@@ -136,7 +147,9 @@
             getClientId(component="$this{component}" clientId=>$page{clusterTableRowGroupId});
             />
             <sun:tableColumn headerText="$resource{i18n.common.SelectHeader}" selectId="select" rowHeader="$boolean{false}" id="col1">
-                <sun:checkbox id="select" selected="#{td.value.selected}" selectedValue="$boolean{true}" />
+                <sun:checkbox id="select" selected="#{td.value.selected}" selectedValue="$boolean{true}"
+                     onClick="setTimeout('admingui.table.changeOneTableButton(\\\\\'#{pageSession.topActionGroup}\\\\\', \\\\\'#{pageSession.tableId}\\\\\'); admingui.table.initAllRows(\\\\\'#{pageSession.tableId}\\\\\');', 0);"
+                 />
             </sun:tableColumn>
             <sun:tableColumn headerText="$resource{i18ncs.clusterNew.InstanceNameCol}" rowHeader="$boolean{false}" id="col2">
                 <sun:textField columns="$int{35}" maxLength="#{sessionScope.fieldLengths['maxLength.cluster.instanceName']}" id="name" value="#{td.value.name}" />

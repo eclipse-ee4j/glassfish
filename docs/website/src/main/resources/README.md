@@ -9,6 +9,21 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
+## November 30, 2023 -- Eclipse GlassFish 7.0.11 Available
+
+We are happy to announce the release of Eclipse GlassFish 7.0.11. 
+
+Download links are available from the [GlassFish Download page](download.md).
+
+This release sees an important fix where WebSockets would not work at all for applications on the default context root (e.g. https://example.com vs https://example.com/myapp). 
+
+This month we have concentrated on the AdminGUI and fixed an assortment of small but annoying defects in it. Various major components were updated, such as Jersey (Jakarta REST), Tyrus (Jakarta WebSockets) and Mojarra (Jakarta Faces). 
+
+To keep the project maintainable and well tested, several tests were added and improved as well.
+
+Download links are available from the [GlassFish Download page](download.md).
+
+
 ## October 29, 2023 -- Eclipse GlassFish 7.0.10 Available
 
 The GlassFish team is very happy to present you another great release of GlassFish.

@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.distributions</groupId>
         <artifactId>distributions</artifactId>
-        <version>7.0.11-SNAPSHOT</version>
+        <version>8.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>web</artifactId>
@@ -112,6 +112,10 @@
                                 <jarupdate
                                     basedir="${patches}/jersey-hk2" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/jersey-hk2.jar"
+                                />
+                                <jarupdate
+                                    basedir="${patches}/jakarta.servlet.jsp.jstl-api" includes="META-INF/MANIFEST.MF"
+                                    destfile="${glassfish.modules}/jakarta.servlet.jsp.jstl-api.jar"
                                 />
                             </target>
                         </configuration>

@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Created-By: Apache Maven Bundle Plugin 5.1.9
+Build-Jdk-Spec: 11
+Bundle-Description: API for integrating CDI with Unified EL
+Bundle-DocURL: https://www.eclipse.org
+Bundle-License: https://repository.jboss.org/licenses/apache-2.0.txt
+Bundle-ManifestVersion: 2
+Bundle-Name: CDI EL integration API
+Bundle-SymbolicName: jakarta.enterprise.cdi-el-api
+Bundle-Vendor: Eclipse Foundation
+Bundle-Version: 4.1.0.M1
+Export-Package: jakarta.enterprise.inject.spi.el;version="4.1";uses:="ja
+ karta.el"
+Import-Package: jakarta.el;version="6.0",jakarta.enterprise.context,jaka
+ rta.enterprise.inject.spi
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=11))"
+Tool: Bnd-6.3.1.202206071316
+

@@ -18,6 +18,7 @@
 
 package org.apache.catalina.core;
 
+import jakarta.servlet.DispatcherType;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterRegistration;
 import jakarta.servlet.RequestDispatcher;
@@ -36,6 +37,8 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
+import java.util.Collection;
+import java.util.EnumSet;
 import java.util.Enumeration;
 import java.util.EventListener;
 import java.util.Map;
@@ -404,11 +407,32 @@ public final class ApplicationContextFacade implements ServletContext {
 
     @Override
     public FilterRegistration.Dynamic addFilter(String filterName, Filter filter) {
+
+        // Add a wrapper to the WebSocket (Tyrus) filter that corrects the URI
+        // for HTTP upgrade requests when running on the root context.
+        // Tyrus expects the URI to include the full context path (the application name).
+        final Filter wrappedFilter;
+        if ("WebSocket filter".equals(filterName)) {
+            wrappedFilter = new WebSocketFilterWrapper(filter);
+        } else {
+            wrappedFilter = filter;
+        }
+
         if (IS_SECURITY_ENABLED) {
-            PrivilegedAction<FilterRegistration.Dynamic> action = () -> context.addFilter(filterName, filter);
+            PrivilegedAction<FilterRegistration.Dynamic> action = () -> context.addFilter(filterName, wrappedFilter);
             return AccessController.doPrivileged(action);
         }
-        return context.addFilter(filterName, filter);
+
+        FilterRegistration.Dynamic registration = context.addFilter(filterName, wrappedFilter);
+
+        if (registration == null && "WebSocket filter".equals(filterName)) {
+            // Dummy registration to counter ordering issue between Mojarra
+            // and Tyrus.
+            // Should eventually be fixed in those projects.
+            registration = new DummyFilterRegistrationDynamic();
+        }
+
+        return registration;
     }
 
 

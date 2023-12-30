@@ -22,25 +22,13 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_4_0.xsd"
         version="4.0">
-
+    <name>admingui</name>
     <application>
-        <locale-config>
-          <default-locale>en</default-locale>
-          <supported-locale>de</supported-locale>
-          <supported-locale>sv</supported-locale>
-          <supported-locale>en_US</supported-locale>
-          <supported-locale>fr</supported-locale>
-          <supported-locale>ko</supported-locale>
-          <supported-locale>ja</supported-locale>
-          <supported-locale>zh_TW</supported-locale>
-          <supported-locale>zh_CN</supported-locale>
-          <supported-locale>es</supported-locale>
-          <supported-locale>it</supported-locale>
-          <supported-locale>pt_BR</supported-locale>
-        </locale-config>
-        <el-resolver>com.sun.webui.jsf.faces.UIComponentELResolver</el-resolver>
+        <view-handler>org.glassfish.admingui.common.AdminGuiViewHandler</view-handler>
     </application>
-
+    <factory>
+        <application-factory>org.glassfish.admingui.common.AdminGuiApplicationFactory</application-factory>
+    </factory>
 <!--
     <component>
         <component-type>com.sun.enterprise.tools.admingui.Tail</component-type>

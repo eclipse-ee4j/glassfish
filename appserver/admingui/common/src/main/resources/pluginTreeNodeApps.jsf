@@ -24,7 +24,7 @@
 	treeAdaptorClass="org.glassfish.admingui.common.tree.ListTreeAdaptor"
 	children="#{requestScope.children}"
 	text="$resource{i18n.tree.applications}"
-	url="/common/applications/applications.jsf"
+	url="/common/applications/applications.xhtml"
 	expanded="false"
 	childImageURL="/resource/images/webModule.gif"
         imageURL="/resource/images/application.gif"

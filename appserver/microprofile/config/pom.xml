@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2022 Contributors to Eclipse Foundation.
+    Copyright (c) 2022, 2024 Contributors to Eclipse Foundation.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -71,12 +71,17 @@
                         <supportedProjectType>glassfish-jar</supportedProjectType>
                     </supportedProjectTypes>
                     <instructions>
+                        <Import-Package>
+                            !io.helidon.inject.runtime,*
+                        </Import-Package>
+                        
                         <!-- A list of packages that are exposed to classes outside the bundle -->
                         <Export-Package>
                             org.glassfish.microprofile.config,
                             io.helidon.config.mp,
-                            io.helidon.config,
+                            io.helidon.config
                         </Export-Package>
+                        
                         <!-- A list of dependencies to include in the bundle (as they're not native OSGI bundles) -->
                         <Embed-Dependency>
                             <!--
@@ -88,6 +93,12 @@
                                     groupId=io.helidon.common;artifactId=helidon-common-service-loader,
                                     groupId=io.helidon.config;artifactId=helidon-config-yaml-mp,
                                     groupId=io.helidon.config;artifactId=helidon-config,
+                                        groupId=io.helidon.inject;artifactId=helidon-inject-api,
+                                        groupId=io.helidon.logging;artifactId=helidon-logging-common,
+                                        groupId=io.helidon.common;artifactId=helidon-common-types,
+                                            groupId=io.helidon.builder;artifactId=helidon-builder-api,
+                                        groupId=io.helidon.common;artifactId=helidon-common-config,
+                                            groupId=io.helidon.common;artifactId=helidon-common-mapper,
                                         <!--
                                         groupId=io.helidon.common;artifactId=helidon-common-reactive,
                                             groupId=io.helidon.common;artifactId=helidon-common-mapper, -->
@@ -102,11 +113,13 @@
                                 groupId=io.helidon.common;artifactId=helidon-common-crypto,
                             groupId=io.helidon.config;artifactId=helidon-config-object-mapping, -->
                         </Embed-Dependency>
+                        
                         <!--
                             Include transitive dependencies (note that this only include compile scoped dependencies,
                             other scoped dependencies still need explicit inclusion)
                         -->
                         <Embed-Transitive>true</Embed-Transitive>
+                        
                         <Multi-Release>true</Multi-Release>
                         <Include-Resource>
                             {maven-resources},

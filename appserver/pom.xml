@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2023 Contributors to Eclipse Foundation.
+    Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -151,12 +151,12 @@
         <krazo.version>3.0.1</krazo.version>
 
         <!-- MicroProfile Config -->
-        <microprofile.config-api.version>3.0.3</microprofile.config-api.version>
-        <helidon-config.version>3.2.3</helidon-config.version>
+        <microprofile.config-api.version>3.1</microprofile.config-api.version>
+        <helidon-config.version>4.0.2</helidon-config.version>
 
         <!-- MicroProfile JWT / JWT Authentication Mechanism for Jakarta Security -->
         <microprofile-jwt-auth-api.version>2.1</microprofile-jwt-auth-api.version>
-        <omnifaces-jwt-auth.version>2.0.2</omnifaces-jwt-auth.version>
+        <omnifaces-jwt-auth.version>3.0.0-M1</omnifaces-jwt-auth.version>
 
         <!-- MicroProfile REST Client -->
         <microprofile.rest-client.version>3.0.1</microprofile.rest-client.version>

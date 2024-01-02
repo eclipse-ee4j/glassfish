@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
+    Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
     Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -153,7 +153,7 @@
 
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
 
-        <easymock.version>4.3</easymock.version>
+        <easymock.version>5.2.0</easymock.version>
         <jmockit.version>1.49</jmockit.version>
         <junit.version>5.10.1</junit.version>
         <jmh.version>1.37</jmh.version>
@@ -807,8 +807,8 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.11.0</version>
                     <configuration>
-                        <source>11</source>
-                        <target>11</target>
+                        <source>21</source>
+                        <target>21</target>
                         <excludes>
                             <exclude>**/.ade_path/**</exclude>
                         </excludes>

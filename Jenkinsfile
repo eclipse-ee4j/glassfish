@@ -227,7 +227,7 @@ spec:
         }
       }
       tools {
-        jdk 'temurin-jdk17-latest'
+        jdk 'temurin-jdk21-latest'
         maven 'apache-maven-3.9.5'
       }
       steps {

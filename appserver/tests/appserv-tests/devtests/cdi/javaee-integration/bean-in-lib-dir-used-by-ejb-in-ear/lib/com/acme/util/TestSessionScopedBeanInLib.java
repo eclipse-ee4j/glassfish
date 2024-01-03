@@ -21,8 +21,8 @@ import java.io.Serializable;
 import jakarta.enterprise.context.SessionScoped;
 
 @SessionScoped
-public class TestSessionScopedBeanInLib implements Serializable{
-    public void m1(){
+public class TestSessionScopedBeanInLib implements Serializable {
+    public void m1() {
         System.out.println("TestSessionScopedBeanInLib:m1");
     }
 

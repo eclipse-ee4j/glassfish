@@ -45,11 +45,6 @@ public class ContextListener implements ServletContextListener {
             Method createManagedMethod = injectionMgr.getClass().getMethod("createManagedObject", java.lang.Class.class);
             System.out.println("create managed object method = " + createManagedMethod);
 
-            FooNonManagedBean nonF = (FooNonManagedBean) createManagedMethod.invoke(injectionMgr, FooNonManagedBean.class);
-            System.out.println("FooNonManagedBean = " + nonF);
-            nonF.hello();
-            destroyManagedMethod.invoke(injectionMgr, nonF);
-
         } catch (Exception e) {
             e.printStackTrace();
         }

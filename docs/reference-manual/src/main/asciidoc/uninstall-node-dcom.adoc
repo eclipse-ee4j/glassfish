@@ -75,7 +75,7 @@ asadmin-options::
 `--installdir`::
   The absolute path to the parent of the base installation directory
   where the {productName} software is installed on each host, for
-  example, `C:\glassfish7`. +
+  example, `C:\glassfish8`. +
   The user that is running this subcommand must have write access to the
   specified directory. Otherwise, an error occurs. +
   The specified directory must contain the installation of the
@@ -140,11 +140,11 @@ This example uninstalls {productName} software on the host
 `xkyd.example.com`.
 
 The software is uninstalled even if a user-defined node resides on the
-host. The entire content of the `C:\glassfish7` directory is removed.
+host. The entire content of the `C:\glassfish8` directory is removed.
 
 [source]
 ----
-asadmin> uninstall-node-dcom --force --installdir C:\glassfish7 xkyd.example.com
+asadmin> uninstall-node-dcom --force --installdir C:\glassfish8 xkyd.example.com
 Command uninstall-node-dcom executed successfully.
 ----
 

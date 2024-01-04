@@ -17,8 +17,8 @@
 
 copy_ql_results(){
     if [[ ${1} = "ql_gf_web_profile_all" || ${1} = "ql_gf_full_profile_all" || "ql_gf_embedded_profile_all" = ${1} ]]; then
-        tar -cf ${WORKSPACE}/results/domainArchive.tar.gz ${WORKSPACE}/glassfish7/glassfish/domains
-        cp ${WORKSPACE}/glassfish7/glassfish/domains/domain1/logs/server.log* ${WORKSPACE}/results/ || true
+        tar -cf ${WORKSPACE}/results/domainArchive.tar.gz ${WORKSPACE}/glassfish8/glassfish/domains
+        cp ${WORKSPACE}/glassfish8/glassfish/domains/domain1/logs/server.log* ${WORKSPACE}/results/ || true
         cp -r ${WORKSPACE}/appserver/tests/quicklook/test-output/* ${WORKSPACE}/results/
         cp ${WORKSPACE}/appserver/tests/quicklook/test-output/TESTS-TestSuites.xml ${WORKSPACE}/results/junitreports/test_results_junit.xml
         cp ${WORKSPACE}/appserver/tests/quicklook/quicklook_summary.txt ${WORKSPACE}/results || true

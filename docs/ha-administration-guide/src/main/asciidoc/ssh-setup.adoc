@@ -1724,14 +1724,14 @@ asadmin> install-node-dcom wpmdl1.example.com wpmdl2.example.com
 Created installation zip C:\glassfish8107276692860773166.zip
 Copying 85760199 bytes..........................................................
 ....................................
-WROTE FILE TO REMOTE SYSTEM: C:/glassfish7/glassfish_install.zip and C:/glassfish7/unpack.bat
+WROTE FILE TO REMOTE SYSTEM: C:/glassfish8/glassfish_install.zip and C:/glassfish8/unpack.bat
 Output from Windows Unpacker:
 
 C:\Windows\system32>C:
 
-C:\Windows\system32>cd "C:\glassfish7"
+C:\Windows\system32>cd "C:\glassfish8"
 
-C:\glassfish7>jar xvf glassfish_install.zip
+C:\glassfish8>jar xvf glassfish_install.zip
  inflated: bin/asadmin
  inflated: bin/asadmin.bat
  inflated: glassfish/bin/appclient
@@ -1761,17 +1761,17 @@ Created installation zip /home/gfuser/glassfish2339538623689073993.zip
 Successfully connected to gfuser@sj03.example.com using keyfile /home/gfuser
 /.ssh/id_rsa
 Copying /home/gfuser/glassfish2339538623689073993.zip (81395008 bytes) to
-sj03.example.com:/export/glassfish7
-Installing glassfish2339538623689073993.zip into sj03.example.com:/export/glassfish7
-Removing sj03.example.com:/export/glassfish7/glassfish2339538623689073993.zip
-Fixing file permissions of all files under sj03.example.com:/export/glassfish7/bin
+sj03.example.com:/export/glassfish8
+Installing glassfish2339538623689073993.zip into sj03.example.com:/export/glassfish8
+Removing sj03.example.com:/export/glassfish8/glassfish2339538623689073993.zip
+Fixing file permissions of all files under sj03.example.com:/export/glassfish8/bin
 Successfully connected to gfuser@sj04.example.com using keyfile /home/gfuser
 /.ssh/id_rsa
 Copying /home/gfuser/glassfish2339538623689073993.zip (81395008 bytes) to
-sj04.example.com:/export/glassfish7
-Installing glassfish2339538623689073993.zip into sj04.example.com:/export/glassfish7
-Removing sj04.example.com:/export/glassfish7/glassfish2339538623689073993.zip
-Fixing file permissions of all files under sj04.example.com:/export/glassfish7/bin
+sj04.example.com:/export/glassfish8
+Installing glassfish2339538623689073993.zip into sj04.example.com:/export/glassfish8
+Removing sj04.example.com:/export/glassfish8/glassfish2339538623689073993.zip
+Fixing file permissions of all files under sj04.example.com:/export/glassfish8/bin
 Command install-node-ssh executed successfully
 ----
 

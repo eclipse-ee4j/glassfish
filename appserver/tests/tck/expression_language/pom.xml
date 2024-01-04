@@ -70,7 +70,7 @@ mvn clean install -Drun.test="com/sun/ts/tests/el/api/jakarta_el/methodexpressio
         <tck.home>${project.build.directory}/expression-language-tck</tck.home>
         <tck.tests.home>${tck.home}/src/com/sun/ts/tests</tck.tests.home>
 
-        <glassfish.home>${project.build.directory}/glassfish7</glassfish.home>
+        <glassfish.home>${project.build.directory}/glassfish8</glassfish.home>
         <glassfish.modules>${glassfish.home}/glassfish/modules</glassfish.modules>
 
         <glassfish.version>${project.version}</glassfish.version>

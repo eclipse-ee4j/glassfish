@@ -69,7 +69,7 @@ mvn clean install -Dgroups=security
         
         <glassfish.version>${project.version}</glassfish.version>
         <glassfish.root>${project.build.directory}</glassfish.root>
-        <glassfish.home>${glassfish.root}/glassfish7</glassfish.home>
+        <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
     </properties>
     
 
@@ -170,7 +170,7 @@ mvn clean install -Dgroups=security
                             <dependenciesToScan>jakarta.ws.rs:jakarta-restful-ws-tck</dependenciesToScan>
                             
                             <systemPropertyVariables>
-                                <glassfish.home>${glassfish.root}/glassfish7</glassfish.home>
+                                <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
                                 <glassfish.maxHeapSize>2048m</glassfish.maxHeapSize>
                                 
                                 <glassfish.postBootCommands>

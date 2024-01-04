@@ -34,8 +34,8 @@
 
     <properties>
         <patch.classes>${project.build.directory}/dependency</patch.classes>
-        <glassfish.modules>${project.build.directory}/stage/glassfish7/glassfish/modules</glassfish.modules>
-        <glassfish.appclient>${project.build.directory}/stage/glassfish7/glassfish/lib/appclient</glassfish.appclient>
+        <glassfish.modules>${project.build.directory}/stage/glassfish8/glassfish/modules</glassfish.modules>
+        <glassfish.appclient>${project.build.directory}/stage/glassfish8/glassfish/lib/appclient</glassfish.appclient>
         <patches>${basedir}/src/main/patches</patches>
     </properties>
 

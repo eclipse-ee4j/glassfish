@@ -107,7 +107,7 @@ This example validates the DCOM-enabled node `adc-node`.
 ----
 asadmin> ping-node-dcom --validate=true adc-node
 Successfully made DCOM connection to node adc-node (adc-node.example.com)
-GlassFish version found at C:\glassfish7:
+GlassFish version found at C:\glassfish8:
 Using locally retrieved version string from version class.
 Version = Eclipse GlassFish 7.0.0 (build 18)
 Command version executed successfully.

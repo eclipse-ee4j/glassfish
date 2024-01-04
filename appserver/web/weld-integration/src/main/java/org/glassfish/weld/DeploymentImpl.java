@@ -763,7 +763,7 @@ public class DeploymentImpl implements CDI11Deployment {
 
         try {
             // Each appLib in context.getAppLibs is a URI of the form
-            // "file:/glassfish/runtime/trunk/glassfish7/glassfish/domains/domain1/lib/applibs/mylib.jar"
+            // "file:/glassfish/runtime/trunk/glassfish8/glassfish/domains/domain1/lib/applibs/mylib.jar"
             // parentArchiveAppLibs are the app libs in the manifest of the root archive and any embedded
             // archives.
             List<URI> rootArchiveAppLibs = context.getAppLibs();

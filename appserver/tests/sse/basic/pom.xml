@@ -30,7 +30,7 @@
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <glasfish.home>../../../distributions/web/target/stage/glassfish7/glassfish</glasfish.home>
+        <glasfish.home>../../../distributions/web/target/stage/glassfish8/glassfish</glasfish.home>
     </properties>
 
     <dependencies>

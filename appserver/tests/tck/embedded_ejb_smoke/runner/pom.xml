@@ -37,7 +37,7 @@
     <properties>
         <tck.debug>${maven.tck.debug}</tck.debug>
         <tck.home>${project.build.directory}/tck</tck.home>
-        <glassfish.home>${tck.home}/glassfish7</glassfish.home>
+        <glassfish.home>${tck.home}/glassfish8</glassfish.home>
         <glassfish.version>${project.version}</glassfish.version>
     </properties>
 

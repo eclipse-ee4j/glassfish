@@ -2636,7 +2636,7 @@ something like this:
 +
 [source]
 ----
-[#|2009-12-03T10:25:17.737-0800|INFO|glassfish7.0|
+[#|2009-12-03T10:25:17.737-0800|INFO|glassfish8.0|
 x..system.tools.admin.org.glassfish.server|_ThreadID=20;
 _ThreadName=Thread-26;|JMXStartupService: Started JMXConnector, JMXService
 URL = service:jmx:rmi://localhost:8686/jndi/rmi://localhost:8686/jmxrmi|#]

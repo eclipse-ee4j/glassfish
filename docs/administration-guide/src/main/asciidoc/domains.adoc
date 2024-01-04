@@ -748,16 +748,16 @@ The Windows Service was created successfully.  It is ready to be started.  Here 
 the details:
 ID of the service: domain1
 Display Name of the service:domain1 Eclipse GlassFish
-Domain Directory: C:\glassfish7\glassfish\domains\domain1
-Configuration file for Windows Services Wrapper: C:\glassfish7\glassfish\domains\
+Domain Directory: C:\glassfish8\glassfish\domains\domain1
+Configuration file for Windows Services Wrapper: C:\glassfish8\glassfish\domains\
 domain1\bin\domain1Service.xml
 The service can be controlled using the Windows Services Manager or you can use the
 Windows Services Wrapper instead:
-Start Command:  C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe  start
-Stop Command:   C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe  stop
-Uninstall Command:  C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe
+Start Command:  C:\glassfish8\glassfish\domains\domain1\bin\domain1Service.exe  start
+Stop Command:   C:\glassfish8\glassfish\domains\domain1\bin\domain1Service.exe  stop
+Uninstall Command:  C:\glassfish8\glassfish\domains\domain1\bin\domain1Service.exe
 uninstall
-Install Command:  C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe
+Install Command:  C:\glassfish8\glassfish\domains\domain1\bin\domain1Service.exe
 install
 
 This message is also available in a file named PlatformServices.log in the domain's
@@ -835,7 +835,7 @@ Here are the most typical Linux commands of interest:
 * /etc/init.d/GlassFish_domain1 restart
 
 For your convenience this message has also been saved to this file:
-/export/glassfish7/glassfish/domains/domain1/PlatformServices.log
+/export/glassfish8/glassfish/domains/domain1/PlatformServices.log
 Command create-service executed successfully.
 ----
 
@@ -908,9 +908,9 @@ The Service was created successfully. Here are the details:
 Name of the service:application/GlassFish/domain1
 Type of the service:Domain
 Configuration location of the service:/home/gfuser/glassfish-installations
-/glassfish7/glassfish/domains
+/glassfish8/glassfish/domains
 Manifest file location on the system:/var/svc/manifest/application
-/GlassFish/domain1_home_gfuser_glassfish-installations_glassfish7
+/GlassFish/domain1_home_gfuser_glassfish-installations_glassfish8
 _glassfish_domains/Domain-service-smf.xml.
 You have created the service but you need to start it yourself.
 Here are the most typical Solaris commands of interest:
@@ -1078,7 +1078,7 @@ most recent backup stored in a specified backup directory:
 [source]
 ----
 asadmin> restore-domain --backupdir /net/backups.example.com/glassfish domain1
-Restored the domain (domain1) to /home/user1/glassfish7/glassfish/domains/domain1
+Restored the domain (domain1) to /home/user1/glassfish8/glassfish/domains/domain1
 Command restore-domain executed successfully.
 ----
 
@@ -1406,8 +1406,8 @@ Command stop-domain executed successfully.
 $ asadmin start-domain
 Waiting for domain1 to start ........................
 Successfully started the domain : domain1
-domain  Location: /export/glassfish7/glassfish/domains/domain1
-Log File: /export/glassfish7/glassfish/domains/domain1/logs/server.log
+domain  Location: /export/glassfish8/glassfish/domains/domain1
+Log File: /export/glassfish8/glassfish/domains/domain1/logs/server.log
 Admin Port: 4849
 Command start-domain executed successfully.
 ----

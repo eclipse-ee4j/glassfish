@@ -256,7 +256,7 @@ public class GlassFishTestEnvironment {
 
 
     private static File resolveGlassFishRoot() {
-        final File gfDir = BASEDIR.toPath().resolve(Path.of("target", "glassfish7", "glassfish")).toFile();
+        final File gfDir = BASEDIR.toPath().resolve(Path.of("target", "glassfish8", "glassfish")).toFile();
         if (gfDir == null || !gfDir.exists()) {
             throw new IllegalStateException("The expected GlassFish home directory doesn't exist: " + gfDir);
         }

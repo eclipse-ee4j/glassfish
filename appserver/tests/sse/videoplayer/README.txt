@@ -2,7 +2,7 @@ This sample tests Server Sent Events. To test
 
 * Deploy the target/videoplayer.war file to the server avatar distribution
 
-$cd appserver/distributions/avatar/target/stage/glassfish7/glassfish/bin
+$cd appserver/distributions/avatar/target/stage/glassfish8/glassfish/bin
 $./asadmin start-domain
 $./asadmin deploy videoplayer.war
 

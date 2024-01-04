@@ -129,7 +129,7 @@ node-host::
   must be specified. Otherwise, an error occurs.
 install-dir::
   The full path to the parent of the base installation directory of the
-  {productName} software on the host, for example, `C:\glassfish7`.
+  {productName} software on the host, for example, `C:\glassfish8`.
   If the {productName} software is installed in the same directory on
   the node's host and the DAS host, you can omit this option.
 node-name::
@@ -217,9 +217,9 @@ current domain.
 ----
 asadmin> list-nodes-dcom --long=true
 NODE NAME    TYPE   NODE HOST            INSTALL DIRECTORY   REFERENCED BY
-xkyd         DCOM   xkyd.example.com     C:\glassfish7
-wpmdl2       DCOM   wpmdl2.example.com   C:\glassfish7       wdi2
-wpmdl1       DCOM   wpmdl1.example.com   C:\glassfish7       wdi1
+xkyd         DCOM   xkyd.example.com     C:\glassfish8
+wpmdl2       DCOM   wpmdl2.example.com   C:\glassfish8       wdi2
+wpmdl1       DCOM   wpmdl1.example.com   C:\glassfish8       wdi1
 Command list-nodes-dcom executed successfully.
 ----
 
@@ -329,9 +329,9 @@ and deletes the node `xkyd`.
 ----
 asadmin> list-nodes-dcom --long=true
 NODE NAME    TYPE   NODE HOST            INSTALL DIRECTORY   REFERENCED BY
-xkyd         DCOM   xkyd.example.com     C:\glassfish7
-wpmdl2       DCOM   wpmdl2.example.com   C:\glassfish7       wdi2
-wpmdl1       DCOM   wpmdl1.example.com   C:\glassfish7       wdi1
+xkyd         DCOM   xkyd.example.com     C:\glassfish8
+wpmdl2       DCOM   wpmdl2.example.com   C:\glassfish8       wdi2
+wpmdl1       DCOM   wpmdl1.example.com   C:\glassfish8       wdi1
 Command list-nodes-dcom executed successfully.
 asadmin> delete-node-dcom xkyd
 Command delete-node-dcom executed successfully.
@@ -419,7 +419,7 @@ node-host::
 install-dir::
   The full path to the parent of the base installation directory of the
   {productName} software on the host, for example,
-  `/export/glassfish7/`. If the {productName} software is installed
+  `/export/glassfish8/`. If the {productName} software is installed
   in the same directory on the node's host and the DAS host, you can
   omit this option.
 node-name::
@@ -519,8 +519,8 @@ current domain.
 ----
 asadmin> list-nodes-ssh --long=true
 NODE NAME   TYPE   NODE HOST          INSTALL DIRECTORY    REFERENCED BY
-sj01        SSH    sj01.example.com   /export/glassfish7   pmd-i1
-sj02        SSH    sj02.example.com   /export/glassfish7   pmd-i2
+sj01        SSH    sj01.example.com   /export/glassfish8   pmd-i1
+sj02        SSH    sj02.example.com   /export/glassfish8   pmd-i2
 Command list-nodes-ssh executed successfully.
 ----
 
@@ -631,8 +631,8 @@ and deletes the node `sj01`.
 ----
 asadmin> list-nodes-ssh --long=true
 NODE NAME   TYPE   NODE HOST          INSTALL DIRECTORY    REFERENCED BY
-sj01        SSH    sj01.example.com   /export/glassfish7
-sj02        SSH    sj02.example.com   /export/glassfish7   pmd-i2
+sj01        SSH    sj01.example.com   /export/glassfish8
+sj02        SSH    sj02.example.com   /export/glassfish8   pmd-i2
 Command list-nodes-ssh executed successfully.
 asadmin> delete-node-ssh sj01
 Command delete-node-ssh executed successfully.
@@ -708,7 +708,7 @@ node-host::
 install-dir::
   The full path to the parent of the base installation directory of the
   {productName} software on the host, for example,
-  `/export/glassfish7/`. You may omit this option. The installation
+  `/export/glassfish8/`. You may omit this option. The installation
   directory can be determined when instances that reside on the node are
   created.
 node-name::
@@ -794,9 +794,9 @@ current domain.
 ----
 asadmin> list-nodes-config --long=true
 NODE NAME           TYPE     NODE HOST            INSTALL DIRECTORY    REFERENCED BY
-localhost-domain1   CONFIG   localhost            /export/glassfish7
-cfg01               CONFIG   cfg01.example.com    /export/glassfish7   yml-i1
-cfg02               CONFIG   cfg02.example.com    /export/glassfish7   yml-i2
+localhost-domain1   CONFIG   localhost            /export/glassfish8
+cfg01               CONFIG   cfg01.example.com    /export/glassfish8   yml-i1
+cfg02               CONFIG   cfg02.example.com    /export/glassfish8   yml-i2
 Command list-nodes-config executed successfully.
 ----
 
@@ -856,9 +856,9 @@ This example confirms that no instances reside on the `CONFIG` node
 ----
 asadmin> list-nodes-config --long=true
 NODE NAME           TYPE     NODE HOST           INSTALL DIRECTORY    REFERENCED BY
-localhost-domain1   CONFIG   localhost           /export/glassfish7
-cfg01               CONFIG   cfg01.example.com   /export/glassfish7
-cfg02               CONFIG   cfg02.example.com   /export/glassfish7   yml-i2
+localhost-domain1   CONFIG   localhost           /export/glassfish8
+cfg01               CONFIG   cfg01.example.com   /export/glassfish8
+cfg02               CONFIG   cfg02.example.com   /export/glassfish8   yml-i2
 Command list-nodes-config executed successfully.
 asadmin> delete-node-config cfg01
 Command delete-node-config executed successfully.

@@ -183,7 +183,7 @@
 
         <admin.command.name>asadmin</admin.command.name>
         <domain.template.defaultJarFileName>appserver-domain.jar</domain.template.defaultJarFileName>
-        <install.dir.name>glassfish7</install.dir.name>
+        <install.dir.name>glassfish8</install.dir.name>
 
         <test.logManager>org.glassfish.main.jul.GlassFishLogManager</test.logManager>
     </properties>

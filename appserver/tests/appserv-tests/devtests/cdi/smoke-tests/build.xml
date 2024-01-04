@@ -112,17 +112,15 @@
 
         <!--
         Not running until
-        https://issues.jboss.org/browse/WELD-1345 is fixed. (fixed in 2.0.0.Beta5)
+        https://issues.jboss.org/browse/WELD-1345 is fixed. (fixed in 2.0.0.Beta5, but we're still not running it)
         In 1.1.10.Final the test passes.
         In 2.0 Beta it fails.
         -->
 <!--
         <ant dir="simple-mdb" target="${smoke-target}"/>
         <ant dir="simple-ejb-singleton/hello" target="${smoke-target}"/>
-            <ant dir="singleton-startup/hello" target="${smoke-target}"/>
+        <ant dir="singleton-startup/hello" target="${smoke-target}"/>
 -->
-            <ant dir="simple-managed-bean" target="${smoke-target}"/>
-            <ant dir="simple-managed-bean-interceptor-nonnull-package" target="${smoke-target}"/>
             <ant dir="cdi-servlet-3.0-annotation" target="${smoke-target}"/>
             <ant dir="cdi-servlet-filter-3.0-annotation" target="${smoke-target}"/>
             <ant dir="simple-ear" target="${smoke-target}"/>

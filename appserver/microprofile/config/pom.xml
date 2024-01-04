@@ -78,6 +78,7 @@
                         <!-- A list of packages that are exposed to classes outside the bundle -->
                         <Export-Package>
                             org.glassfish.microprofile.config,
+                            io.helidon.common.config,
                             io.helidon.config.mp,
                             io.helidon.config
                         </Export-Package>

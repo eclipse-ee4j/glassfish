@@ -16,7 +16,6 @@
 
 package com.acme.servlet;
 
-
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -34,10 +33,8 @@ import com.acme.ejb.api.Hello;
 import com.acme.util.TestDependentBeanInLib;
 import com.acme.util.ResourcesProducer;
 import com.acme.util.TestDatabase;
-import com.acme.util.TestManagedBean;
 
 @WebServlet(urlPatterns = "/HelloServlet", loadOnStartup = 1)
-
 @SuppressWarnings("serial")
 public class HelloServlet extends HttpServlet {
     String msg = "";
@@ -55,47 +52,36 @@ public class HelloServlet extends HttpServlet {
     @Inject
     private TestDependentBeanInLib fb;
 
-    @Inject
-    private TestManagedBean tmb;
-
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         System.out.println("In HelloServlet::doGet");
         resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
 
         checkForNull(emf, "Injection of EMF failed in Servlet");
-        //ensure EMF works!
+
+        // Ensure EMF works!
         emf.createEntityManager();
 
-        //call Singleton EJB
+        // Call Singleton EJB
         String response = h.hello();
-        if(!response.equals(Hello.HELLO_TEST_STRING))
+        if (!response.equals(Hello.HELLO_TEST_STRING))
             msg += "Invocation of Hello Singeton EJB failed:msg=" + response;
 
         if (!rp.isInjectionSuccessful())
-            msg += "Injection of a bean in lib directory into another " +
-                            "Bean in lib directory failed";
-        checkForNull(fb, "Injection of a bean that is placed in lib directory " +
-                        "into a Servlet that is placed in a WAR failed");
-        checkForNull(tmb, "Injection of a Managed bean that is placed in lib directory " +
-        "into a Servlet that is placed in a WAR failed");
+            msg += "Injection of a bean in lib directory into another " + "Bean in lib directory failed";
+
+        checkForNull(fb, "Injection of a bean that is placed in lib directory " + "into a Servlet that is placed in a WAR failed");
 
         if (!rp.isInjectionSuccessful())
-            msg += "Injection of a bean in lib directory into another Bean " +
-                            "in lib directory failed";
-
-        if (!tmb.isInjectionSuccessful())
-            msg += "Injection of a Bean placed in lib dir into a " +
-                            "ManagedBean placed in lib dir failed";
-
+            msg += "Injection of a bean in lib directory into another Bean " + "in lib directory failed";
 
         out.println(msg);
     }
 
-    protected void checkForNull(Object o, String errorMessage){
+    protected void checkForNull(Object o, String errorMessage) {
         System.out.println("o=" + o);
-        if (o == null) msg += " " + errorMessage;
+        if (o == null)
+            msg += " " + errorMessage;
     }
 }

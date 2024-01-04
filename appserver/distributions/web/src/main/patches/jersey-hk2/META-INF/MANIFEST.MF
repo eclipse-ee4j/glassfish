@@ -1,7 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1648639470401
-Build-Jdk: 11.0.2
-Built-By: jenkins
+Build-Jdk-Spec: 11
 Bundle-Description: HK2 InjectionManager implementation
 Bundle-DocURL: https://www.eclipse.org/org/foundation/
 Bundle-License: http://www.eclipse.org/legal/epl-2.0, https://www.gnu.
@@ -15,18 +13,18 @@ Bundle-ManifestVersion: 2
 Bundle-Name: jersey-inject-hk2
 Bundle-SymbolicName: org.glassfish.jersey.inject.jersey-hk2
 Bundle-Vendor: Eclipse Foundation
-Bundle-Version: 3.1.0.M4
-Created-By: Apache Maven Bundle Plugin
-Export-Package: org.glassfish.jersey.inject.hk2;version="3.1.0.M4";use
- s:="jakarta.annotation,jakarta.inject,jakarta.ws.rs.core,org.glassfis
- h.hk2.api,org.glassfish.hk2.utilities.binding,org.glassfish.jersey.in
- ternal.inject,org.glassfish.jersey.internal.l10n,org.glassfish.jersey
- .internal.util.collection,org.glassfish.jersey.process.internal"
-Import-Package: jakarta.annotation;version="[2.0,3)",org.jvnet.hk2.ext
- ernal.runtime;version="[3.0,4)",org.glassfish.hk2.api;version="[3.0,4
- )",org.glassfish.hk2.extension;version="[3.0,4)",org.glassfish.hk2.ut
- ilities;version="[3.0,4)",org.glassfish.hk2.utilities.binding;version
- ="[3.0,4)",org.glassfish.hk2.utilities.reflection;version="[3.0,4)",j
+Bundle-Version: 3.1.4
+Created-By: Apache Maven Bundle Plugin 5.1.9
+Export-Package: org.glassfish.jersey.inject.hk2;version="3.1.4";uses:=
+ "jakarta.annotation,jakarta.inject,jakarta.ws.rs.core,org.glassfish.h
+ k2.api,org.glassfish.hk2.utilities.binding,org.glassfish.jersey.inter
+ nal.inject,org.glassfish.jersey.internal.l10n,org.glassfish.jersey.in
+ ternal.util.collection,org.glassfish.jersey.process.internal"
+Import-Package: jakarta.annotation;version="[2.0,4)",org.jvnet.hk2.ext
+ ernal.runtime;version="[3.0,5)",org.glassfish.hk2.api;version="[3.0,5
+ )",org.glassfish.hk2.extension;version="[3.0,5)",org.glassfish.hk2.ut
+ ilities;version="[3.0,5)",org.glassfish.hk2.utilities.binding;version
+ ="[3.0,5)",org.glassfish.hk2.utilities.reflection;version="[3.0,5)",j
  akarta.inject;version="[2.0,3)",jakarta.ws.rs.core;version="[3.1,4)",
  org.glassfish.jersey.internal;version="[3.1,4)",org.glassfish.jersey.
  internal.guava;version="[3.1,4)",org.glassfish.jersey.internal.inject
@@ -34,5 +32,5 @@ Import-Package: jakarta.annotation;version="[2.0,3)",org.jvnet.hk2.ext
  )",org.glassfish.jersey.internal.util;version="[3.1,4)",org.glassfish
  .jersey.internal.util.collection;version="[3.1,4)",org.glassfish.jers
  ey.process.internal;version="[3.1,4)"
-Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=11))"
-Tool: Bnd-3.5.0.201709291849
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"
+Tool: Bnd-6.3.1.202206071316

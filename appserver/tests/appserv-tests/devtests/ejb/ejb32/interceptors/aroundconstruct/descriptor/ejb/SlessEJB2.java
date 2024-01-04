@@ -23,9 +23,6 @@ import jakarta.annotation.*;
 @Stateless
 public class SlessEJB2 extends BaseBean {
 
-    @Resource
-    private SomeManagedBean mb;
-
     public String sayHello() {
         try {
             verify("SlessEJB2");
@@ -33,7 +30,7 @@ public class SlessEJB2 extends BaseBean {
         } catch (Exception e) {
             // ok
         }
-        mb.foo();
+
         return "Hello";
     }
 

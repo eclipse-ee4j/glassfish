@@ -1402,19 +1402,17 @@ public class RecoveryManager {
     }
 
     /**
-     * Waits for resync to complete with timeout.
-     *
-     * @param cmtTimeout Container managed transaction timeout
+     * Waits for the resync between the resource and the transaction manager to complete with timeout.
      *
      * @return
      *
      * @see
      */
-    public static void waitForResync(int cmtTimeOut) {
-
+    public static void waitForResyncWithTimeout(){
         if (resyncInProgress != null) {
+            int resyncTimeout = Integer.getInteger("org.glassfish.jts.CosTransactions.resyncTimeoutInSeconds", 120);
             try {
-                resyncInProgress.waitTimeoutEvent(cmtTimeOut);
+                resyncInProgress.waitTimeoutEvent(resyncTimeout);
             } catch (InterruptedException exc) {
                 _logger.log(Level.SEVERE,"jts.wait_for_resync_complete_interrupted");
                 String msg = LogFormatter.getLocalizedMessage(_logger,

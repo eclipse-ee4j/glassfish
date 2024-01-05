@@ -15,8 +15,10 @@
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 #
 
-# Always use JDK 1.6 or higher
 AS_INSTALL=`dirname "$0"`/../glassfish
+case "`uname`" in
+  CYGWIN*) AS_INSTALL=`cygpath --windows $AS_INSTALL`
+esac
 AS_INSTALL_LIB="$AS_INSTALL/lib"
 . "${AS_INSTALL}/config/asenv.conf"
 JAVA=java

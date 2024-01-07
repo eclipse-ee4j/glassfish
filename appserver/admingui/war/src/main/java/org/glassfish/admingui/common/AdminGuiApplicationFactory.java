@@ -17,8 +17,6 @@ package org.glassfish.admingui.common;
 
 import jakarta.faces.application.Application;
 import jakarta.faces.application.ApplicationFactory;
-import jakarta.faces.application.ApplicationWrapper;
-import jakarta.faces.application.ViewHandler;
 
 /**
  *
@@ -30,18 +28,7 @@ public class AdminGuiApplicationFactory extends ApplicationFactory {
 
     public AdminGuiApplicationFactory(ApplicationFactory wrapped) {
         super(wrapped);
-        app = new ApplicationWrapper(wrapped.getApplication()) {
-            @Override
-            public void setViewHandler(ViewHandler handler) {
-                super.setViewHandler(handler);
-            }
-
-            @Override
-            public ViewHandler getViewHandler() {
-                return super.getViewHandler();
-            }
-
-        };
+        app = new AdminGuiApplication(wrapped.getApplication());
     }
 
     @Override

@@ -27,15 +27,15 @@ import jakarta.faces.context.FacesContext;
  */
 public class AdminGuiViewHandler extends ViewHandlerWrapper {
 
-    private ViewHandler defauViewHandler = null;
+    private ViewHandler defaultViewHandler = null;
 
     public AdminGuiViewHandler(ViewHandler wrapped) {
         super(wrapped);
         Application app = FacesContext.getCurrentInstance().getApplication();
         if (app instanceof AdminGuiApplication) {
-            defauViewHandler = ((AdminGuiApplication) app).getDefaViewHandler();
+            defaultViewHandler = ((AdminGuiApplication) app).getDefaViewHandler();
         } else {
-            defauViewHandler = wrapped;
+            defaultViewHandler = wrapped;
         }
     }
 

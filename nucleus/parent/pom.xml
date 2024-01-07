@@ -135,10 +135,10 @@
 
         <!-- 3rd party dependencies -->
 
-        <commons-io.version>2.15.0</commons-io.version>
+        <commons-io.version>2.15.1</commons-io.version>
         <jboss.logging.annotation.version>2.2.1.Final</jboss.logging.annotation.version>
         <jboss.logging.version>3.5.3.Final</jboss.logging.version>
-        <javassist.version>3.29.2-GA</javassist.version>
+        <javassist.version>3.30.2-GA</javassist.version>
         <asm.version>9.6</asm.version>
         <jsch.version>0.2.12</jsch.version>
         <antlr.version>2.7.8</antlr.version>
@@ -146,7 +146,7 @@
         <ant.external.version>1.10.2</ant.external.version>
         <jackson.version>2.16.0</jackson.version>
         <jackson-databind.version>2.16.0</jackson-databind.version>
-        <fasterxml.classmate.version>1.6.0</fasterxml.classmate.version>
+        <fasterxml.classmate.version>1.7.0</fasterxml.classmate.version>
         <stax-api.version>1.0-2</stax-api.version>
         <jettison.version>1.5.4</jettison.version>
         <mimepull.version>1.10.0</mimepull.version>
@@ -578,7 +578,7 @@
             <dependency>
                 <groupId>org.jline</groupId>
                 <artifactId>jline</artifactId>
-                <version>3.24.0</version>
+                <version>3.25.0</version>
             </dependency>
 
             <!--3rd party dependencies -->
@@ -730,7 +730,7 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>3.13.0</version>
+                <version>3.14.0</version>
                 <scope>test</scope>
             </dependency>
             <dependency>

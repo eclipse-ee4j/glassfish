@@ -15,6 +15,7 @@
  */
 package org.glassfish.admingui.common;
 
+import jakarta.faces.application.Application;
 import jakarta.faces.application.ApplicationWrapper;
 import jakarta.faces.application.ViewHandler;
 
@@ -25,6 +26,10 @@ import jakarta.faces.application.ViewHandler;
 public class AdminGuiApplication extends ApplicationWrapper {
 
     ViewHandler defaultViewHandler = null;
+
+    public AdminGuiApplication(Application wrapped) {
+        super(wrapped);
+    }
 
     @Override
     public void setViewHandler(ViewHandler handler) {

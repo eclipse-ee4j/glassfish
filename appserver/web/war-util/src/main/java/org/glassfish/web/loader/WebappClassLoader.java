@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -18,7 +18,6 @@
 
 package org.glassfish.web.loader;
 
-import com.sun.appserv.BytecodePreprocessor;
 import com.sun.enterprise.loader.ResourceLocator;
 import com.sun.enterprise.security.integration.DDPermissionsLoader;
 import com.sun.enterprise.security.integration.PermsHolder;
@@ -47,7 +46,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -229,7 +227,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     private boolean hasExternalRepositories;
 
     /** List of byte code pre-processors per webapp class loader. */
-    private final ConcurrentLinkedQueue<BytecodePreprocessor> byteCodePreprocessors = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<ClassFileTransformer> transformers = new ConcurrentLinkedQueue<>();
 
     /** myfaces-api uses jakarta.faces packages */
     private boolean useMyFaces;
@@ -525,7 +523,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     @Override
     public void addTransformer(final ClassFileTransformer transformer) {
         checkStatus(LifeCycleStatus.NEW, LifeCycleStatus.RUNNING);
-        byteCodePreprocessors.add(new WebappBytecodePreprocessor(transformer, this));
+        transformers.add(transformer);
     }
 
 
@@ -578,10 +576,15 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
                         // We use a temporary byte[] so that we don't change
                         // the content of entry in case bytecode preprocessing takes place.
                         byte[] binaryContent = entry.binaryContent;
-                        if (!byteCodePreprocessors.isEmpty()) {
-                            String classFilePath = toClassFilePath(name);
-                            for (BytecodePreprocessor preprocessor : byteCodePreprocessors) {
-                                binaryContent = preprocessor.preprocess(classFilePath, binaryContent);
+                        if (!transformers.isEmpty()) {
+                            String internalClassName = name.replace('.', '/');
+                            for (ClassFileTransformer transformer : transformers) {
+                                byte[] transformedBytes = transformer.transform(this, internalClassName, null, null, binaryContent);
+                                // ClassFileTransformer returns null if no transformation took place.
+                                if (transformedBytes != null) {
+                                    binaryContent = transformedBytes;
+                                    LOG.log(TRACE, "Transformed {0}", internalClassName);
+                                }
                             }
                         }
                         clazz = defineClass(name, binaryContent, 0, binaryContent.length, codeSource);
@@ -595,6 +598,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
                         clazz = entry.loadedClass;
                     }
                 }
+            } catch (IllegalClassFormatException icfe) {
+                throw new IllegalStateException("Could not preprocess " + toClassFilePath(name), icfe);
             } catch (ClassNotFoundException cnfe) {
                 if (!hasExternalRepositories) {
                     throw cnfe;
@@ -1599,53 +1604,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
         }
         return className.substring(0, pos);
     }
-
-
-    private static class WebappBytecodePreprocessor implements BytecodePreprocessor {
-
-        /** Bytecode preprocessing flag */
-        private final ThreadLocal<Boolean> bytecodePreprocessing = new ThreadLocal<>();
-
-        private final ClassFileTransformer transformer;
-        private final WebappClassLoader classLoader;
-
-        private WebappBytecodePreprocessor(ClassFileTransformer transformer, WebappClassLoader classLoader) {
-            this.transformer = transformer;
-            this.classLoader = classLoader;
-        }
-
-
-        @Override
-        public boolean initialize(Hashtable parameters) {
-            return true;
-        }
-
-
-        @Override
-        public byte[] preprocess(String resourceName, byte[] classBytes) {
-            // Skip preprocessing if already in progress
-            if (bytecodePreprocessing.get() != null) {
-                return classBytes;
-            }
-
-            bytecodePreprocessing.set(true);
-            try {
-                // convert java/lang/Object.class to java/lang/Object (6 chars).
-                String classname = resourceName.substring(0, resourceName.length() - 6);
-                LOG.log(TRACE, "Transforming {0}", classname);
-                byte[] newBytes = transformer.transform(classLoader, classname, null, null, classBytes);
-                // ClassFileTransformer returns null if no transformation
-                // took place, where as ByteCodePreprocessor is expected
-                // to return non-null byte array.
-                return newBytes == null ? classBytes : newBytes;
-            } catch (IllegalClassFormatException e) {
-                throw new IllegalStateException("Could not preprocess " + resourceName, e);
-            } finally {
-                bytecodePreprocessing.remove();
-            }
-        }
-    }
-
 
     private enum LifeCycleStatus {
         NEW, RUNNING, CLOSED

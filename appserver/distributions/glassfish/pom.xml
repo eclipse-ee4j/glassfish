@@ -133,74 +133,13 @@
                                 
                                 
                                 
-                                
-                                <!-- To support Pages 5 -->
-                                <jarupdate
-                                    basedir="${patches}/jersey-mvc-jsp" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/jersey-mvc-jsp.jar"
-                                />
-                                
-                                
-                                <!-- To support Jakarta Annotations 3 -->
-                                <jarupdate
-                                    basedir="${patches}/jersey-client" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/jersey-client.jar"
-                                />
-                                <jarupdate
-                                    basedir="${patches}/jersey-common" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/jersey-common.jar"
-                                />
-                                <jarupdate
-                                    basedir="${patches}/jersey-server" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/jersey-server.jar"
-                                />
-                                <jarupdate
-                                    basedir="${patches}/jersey-hk2" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/jersey-hk2.jar"
-                                />
-                                <jarupdate
-                                    basedir="${patches}/jersey-media-json-jackson" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/jersey-media-json-jackson.jar"
-                                />
-                                <jarupdate
-                                    basedir="${patches}/jersey-entity-filtering" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/jersey-entity-filtering.jar"
-                                />
-                                <jarupdate
-                                    basedir="${patches}/jersey-media-sse" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/jersey-media-sse.jar"
-                                />
-                                <jarupdate
-                                    basedir="${patches}/jersey-media-json-processing" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/jersey-media-json-processing.jar"
-                                />
                                 <jarupdate
                                     basedir="${patches}/parsson-media" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/parsson-media.jar"
                                 />
                                 <jarupdate
-                                    basedir="${patches}/jersey-cdi1x" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/jersey-cdi1x.jar"
-                                />
-                                <jarupdate
-                                    basedir="${patches}/jersey-cdi1x-transaction" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/jersey-cdi1x-transaction.jar"
-                                />
-                                <jarupdate
                                     basedir="${patches}/webservices-osgi" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/webservices-osgi.jar"
-                                />
-                                <jarupdate
-                                    basedir="${patches}/jersey-mvc" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/jersey-mvc.jar"
-                                />
-                                <jarupdate
-                                    basedir="${patch.classes}" includes="org/glassfish/jersey/ext/cdi1x/internal/CdiComponentProvider.class"
-                                    destfile="${glassfish.modules}/jersey-cdi1x.jar"
-                                />
-                                <jarupdate
-                                    basedir="${patch.classes}" includes="org/glassfish/jersey/ext/cdi1x/internal/CdiComponentProvider$*"
-                                    destfile="${glassfish.modules}/jersey-cdi1x.jar"
                                 />
                                 <jarupdate
                                     basedir="${patches}/hibernate-validator-cdi" includes="META-INF/MANIFEST.MF"

@@ -50,6 +50,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 import java.util.jar.Attributes;
 import java.util.jar.Attributes.Name;
@@ -227,7 +228,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader
     private boolean hasExternalRepositories;
 
     /** List of byte code pre-processors per webapp class loader. */
-    private final ConcurrentLinkedQueue<ClassFileTransformer> transformers = new ConcurrentLinkedQueue<>();
+    private final List<ClassFileTransformer> transformers = new CopyOnWriteArrayList<>();
 
     /** myfaces-api uses jakarta.faces packages */
     private boolean useMyFaces;

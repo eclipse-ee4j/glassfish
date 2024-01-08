@@ -91,7 +91,6 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
     ArchiveHandler archiveHandler;
     Properties props;
     Map<String, Object> modulesMetaData = new HashMap<>();
-    List<ClassFileTransformer> transformers = new ArrayList<>();
     Phase phase = Phase.UNKNOWN;
     ClassLoader sharableTemp;
     Map<String, Properties> modulePropsMap = new HashMap<>();
@@ -419,16 +418,6 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
         }
 
         instrumentableClassLoader.addTransformer(reentrantTransformer);
-    }
-
-    /**
-     * Returns the list of transformers registered to this context.
-     *
-     * @return the transformers list
-     */
-    @Override
-    public List<ClassFileTransformer> getTransformers() {
-        return transformers;
     }
 
     @Override

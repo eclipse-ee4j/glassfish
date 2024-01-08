@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,8 +24,6 @@ import org.glassfish.api.deployment.archive.ArchiveHandler;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.internal.api.ClassLoaderHierarchy;
 
-import java.lang.instrument.ClassFileTransformer;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.net.URISyntaxException;
@@ -51,13 +50,6 @@ public interface ExtendedDeploymentContext extends DeploymentContext {
     public void setPhase(Phase newPhase);
 
     public Phase getPhase();
-
-    /**
-     * Returns the list of transformers registered to this context.
-     *
-     * @return the transformers list
-     */
-    public List<ClassFileTransformer> getTransformers();
 
     /**
      * Create the deployment class loader. It will be used for sniffer

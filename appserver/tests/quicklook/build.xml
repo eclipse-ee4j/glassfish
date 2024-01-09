@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021 Contributors to Eclipse Foundation.
+    Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
     Copyright (c) 1997, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -420,7 +420,6 @@
         <run-quicklook-test path="jms/injection" target="build-deploy" />
         <run-quicklook-test path="wsit/JaxwsFromWsdl" target="build-deploy" />
         <run-quicklook-test path="wsit/jsr109tester" target="build-deploy" />
-        <run-quicklook-test path="security/appperms" target="build-deploy" />
     </target>
 
 
@@ -518,9 +517,6 @@
         <run-quicklook-test path="ejb/singleton" target="undeploy" />
         <run-quicklook-test path="ejb/remoteview" target="undeploy" />
         <run-quicklook-test path="ejb/cmp" target="undeploy" />
-        <!-- <ant dir="wsit/JaxwsFromWsdl" target="undeploy"/>
-        <ant dir="wsit/jsr109tester" target="undeploy"/>-->
-        <run-quicklook-test path="security/appperms" target="undeploy" />
     </target>
 
     <!-- Target is re-defined here as someone (who?) didn't want to specify ws.root property -->

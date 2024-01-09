@@ -62,8 +62,6 @@ import org.jboss.weld.lite.extension.translator.LiteExtensionTranslator;
 import static com.sun.enterprise.util.Utility.isAnyEmpty;
 import static com.sun.enterprise.util.Utility.isAnyNull;
 import static com.sun.enterprise.util.Utility.isEmpty;
-import static java.lang.System.getSecurityManager;
-import static java.security.AccessController.doPrivileged;
 import static java.util.Collections.emptyList;
 import static java.util.logging.Level.FINE;
 import static java.util.stream.Collectors.toList;
@@ -272,13 +270,7 @@ public class DeploymentImpl implements CDI11Deployment {
 
         if (!buildExtensions.isEmpty()) {
             try {
-                LiteExtensionTranslator extension = getSecurityManager() != null ? doPrivileged(new PrivilegedAction<LiteExtensionTranslator>() {
-                    @Override
-                    public LiteExtensionTranslator run() {
-                        return new LiteExtensionTranslator(buildExtensions, Thread.currentThread().getContextClassLoader());
-                    }
-                }) : new LiteExtensionTranslator(buildExtensions, Thread.currentThread().getContextClassLoader());
-                extensionsList.add(new MetadataImpl<>(extension));
+                extensionsList.add(new MetadataImpl<>(new LiteExtensionTranslator(buildExtensions, Thread.currentThread().getContextClassLoader())));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

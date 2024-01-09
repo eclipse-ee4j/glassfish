@@ -17,19 +17,18 @@
 
 package org.apache.catalina.connector;
 
+import static java.util.logging.Level.FINE;
+
+import jakarta.servlet.WriteListener;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.channels.InterruptedByTimeoutException;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.servlet.WriteListener;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-
 import org.apache.catalina.ContainerEvent;
 import org.apache.catalina.Context;
 import org.apache.catalina.Globals;
@@ -43,15 +42,13 @@ import org.glassfish.grizzly.WriteHandler;
 import org.glassfish.grizzly.http.util.ByteChunk;
 
 /**
- * The buffer used by Tomcat response. This is a derivative of the Tomcat 3.3
- * OutputBuffer, with the removal of some of the state handling (which in
- * Coyote is mostly the Processor's responsibility).
+ * The buffer used by Tomcat response. This is a derivative of the Tomcat 3.3 OutputBuffer, with the removal of some of
+ * the state handling (which in Coyote is mostly the Processor's responsibility).
  *
  * @author Costin Manolache
  * @author Remy Maucherat
  */
-public class OutputBuffer extends Writer
-    implements ByteChunk.ByteOutputChannel {
+public class OutputBuffer extends Writer implements ByteChunk.ByteOutputChannel {
 
     private static final Logger log = LogFacade.getLogger();
     private static final ResourceBundle rb = log.getResourceBundle();
@@ -59,25 +56,21 @@ public class OutputBuffer extends Writer
     // -------------------------------------------------------------- Constants
 
     private static final String SET_COOKIE_HEADER = "Set-Cookie";
-    public static final String DEFAULT_ENCODING =
-        org.glassfish.grizzly.http.util.Constants.DEFAULT_HTTP_CHARACTER_ENCODING;
-    public static final int DEFAULT_BUFFER_SIZE = 8*1024;
+    public static final String DEFAULT_ENCODING = org.glassfish.grizzly.http.util.Constants.DEFAULT_HTTP_CHARACTER_ENCODING;
+    public static final int DEFAULT_BUFFER_SIZE = 8 * 1024;
     static final int debug = 0;
 
     // ----------------------------------------------------- Instance Variables
-
 
     /**
      * Number of bytes written.
      */
     private int bytesWritten = 0;
 
-
     /**
      * Number of chars written.
      */
     private int charsWritten = 0;
-
 
     /**
      * Associated Coyote response.
@@ -98,20 +91,15 @@ public class OutputBuffer extends Writer
 
     private int size;
 
-    private org.glassfish.grizzly.http.io.OutputBuffer.LifeCycleListener sessionCookieChecker =
-            new SessionCookieChecker();
+    private org.glassfish.grizzly.http.io.OutputBuffer.LifeCycleListener sessionCookieChecker = new SessionCookieChecker();
     // ----------------------------------------------------------- Constructors
-
 
     /**
      * Default constructor. Allocate the buffer with the default buffer size.
      */
     public OutputBuffer() {
-
         this(DEFAULT_BUFFER_SIZE);
-
     }
-
 
     /**
      * Alternate constructor which allows specifying the initial buffer size.
@@ -119,22 +107,10 @@ public class OutputBuffer extends Writer
      * @param size Buffer size to use
      */
     public OutputBuffer(int size) {
-        // START S1AS8 4861933
-        /*
-        bb = new ByteChunk(size);
-        bb.setLimit(size);
-        bb.setByteOutputChannel(this);
-        cb = new CharChunk(size);
-        cb.setCharOutputChannel(this);
-        cb.setLimit(size);
-        */
         this.size = size;
-        // END S1AS8 4861933
     }
 
-
     // ------------------------------------------------------------- Properties
-
 
     public void setCoyoteResponse(Response coyoteResponse) {
         this.response = coyoteResponse;
@@ -154,7 +130,6 @@ public class OutputBuffer extends Writer
         return this.suspended;
     }
 
-
     /**
      * Set the suspended flag.
      *
@@ -164,17 +139,13 @@ public class OutputBuffer extends Writer
         this.suspended = suspended;
     }
 
-
     // --------------------------------------------------------- Public Methods
-
 
     /**
      * Recycle the output buffer.
      */
     public void recycle() {
-
-    if (log.isLoggable(Level.FINE))
-            log.log(Level.FINE, "recycle()");
+        log.log(FINE, "recycle()");
 
         bytesWritten = 0;
         charsWritten = 0;
@@ -185,19 +156,15 @@ public class OutputBuffer extends Writer
         writeHandler = null;
         prevIsReady = true;
         response = null;
-
     }
 
-
     /**
-     * Close the output buffer. This tries to calculate the response size if
-     * the response has not been committed yet.
+     * Close the output buffer. This tries to calculate the response size if the response has not been committed yet.
      *
      * @throws IOException An underlying IOException occurred
      */
-    public void close()
-        throws IOException {
-
+    @Override
+    public void close() throws IOException {
         if (suspended)
             return;
 
@@ -205,26 +172,22 @@ public class OutputBuffer extends Writer
 
     }
 
-
     /**
      * Flush bytes or chars contained in the buffer.
      *
      * @throws IOException An underlying IOException occurred
      */
-    public void flush()
-        throws IOException {
+    @Override
+    public void flush() throws IOException {
         doFlush(true);
     }
 
-
     /**
      * Flush bytes or chars contained in the buffer.
      *
      * @throws IOException An underlying IOException occurred
      */
-    protected void doFlush(boolean realFlush)
-        throws IOException {
-
+    protected void doFlush(boolean realFlush) throws IOException {
         if (suspended)
             return;
 
@@ -234,13 +197,10 @@ public class OutputBuffer extends Writer
 
     }
 
-
     // ------------------------------------------------- Bytes Handling Methods
 
-
     /**
-     * Sends the buffer data to the client output, checking the
-     * state of Response and calling the right interceptors.
+     * Sends the buffer data to the client output, checking the state of Response and calling the right interceptors.
      *
      * @param buf Byte buffer to be written to the response
      * @param off Offset
@@ -248,11 +208,10 @@ public class OutputBuffer extends Writer
      *
      * @throws IOException An underlying IOException occurred
      */
-    public void realWriteBytes(byte buf[], int off, int cnt)
-    throws IOException {
-
-        if (log.isLoggable(Level.FINE))
-            log.log(Level.FINE, "realWrite(b, " + off + ", " + cnt + ") " + grizzlyResponse);
+    @Override
+    public void realWriteBytes(byte buf[], int off, int cnt) throws IOException {
+        if (log.isLoggable(FINE))
+            log.log(FINE, "realWrite(b, " + off + ", " + cnt + ") " + grizzlyResponse);
 
         if (grizzlyResponse == null)
             return;
@@ -266,7 +225,7 @@ public class OutputBuffer extends Writer
                 grizzlyOutputBuffer.write(buf, off, cnt);
             } catch (IOException e) {
                 // An IOException on a write is almost always due to
-                // the remote client aborting the request.  Wrap this
+                // the remote client aborting the request. Wrap this
                 // so that it can be handled better by the error dispatcher.
                 throw new ClientAbortException(e);
             }
@@ -274,9 +233,7 @@ public class OutputBuffer extends Writer
 
     }
 
-
     public void write(byte b[], int off, int len) throws IOException {
-
         if (suspended)
             return;
 
@@ -284,25 +241,19 @@ public class OutputBuffer extends Writer
 
     }
 
-
-    private void writeBytes(byte b[], int off, int len)
-        throws IOException {
-
+    private void writeBytes(byte b[], int off, int len) throws IOException {
         if (grizzlyOutputBuffer.isClosed())
             return;
-        if (log.isLoggable(Level.FINE))
-            log.log(Level.FINE, "write(b,off,len)");
+
+        log.log(FINE, "write(b,off,len)");
 
         grizzlyOutputBuffer.write(b, off, len);
         bytesWritten += len;
 
     }
 
-
     // XXX Char or byte ?
-    public void writeByte(int b)
-        throws IOException {
-
+    public void writeByte(int b) throws IOException {
         if (suspended)
             return;
 
@@ -310,13 +261,10 @@ public class OutputBuffer extends Writer
         bytesWritten++;
     }
 
-
     // ------------------------------------------------- Chars Handling Methods
 
-
-    public void write(int c)
-        throws IOException {
-
+    @Override
+    public void write(int c) throws IOException {
         if (suspended)
             return;
 
@@ -325,9 +273,8 @@ public class OutputBuffer extends Writer
 
     }
 
-
-    public void write(char c[])
-        throws IOException {
+    @Override
+    public void write(char c[]) throws IOException {
 
         if (suspended)
             return;
@@ -336,9 +283,8 @@ public class OutputBuffer extends Writer
 
     }
 
-
-    public void write(char c[], int off, int len)
-        throws IOException {
+    @Override
+    public void write(char c[], int off, int len) throws IOException {
 
         if (suspended)
             return;
@@ -347,26 +293,22 @@ public class OutputBuffer extends Writer
         charsWritten += len;
     }
 
-
     /**
      * Append a string to the buffer
      */
-    public void write(String s, int off, int len)
-        throws IOException {
-
+    @Override
+    public void write(String s, int off, int len) throws IOException {
         if (suspended)
             return;
 
         charsWritten += len;
-        if (s==null)
-            s="null";
+        if (s == null)
+            s = "null";
         grizzlyOutputBuffer.write(s, off, len);
     }
 
-
-    public void write(String s)
-        throws IOException {
-
+    @Override
+    public void write(String s) throws IOException {
         if (suspended)
             return;
 
@@ -375,52 +317,39 @@ public class OutputBuffer extends Writer
         grizzlyOutputBuffer.write(s);
     }
 
-
-    public void checkConverter()
-        throws IOException {
+    public void checkConverter() throws IOException {
 
         grizzlyOutputBuffer.prepareCharacterEncoder();
 
     }
 
-
-    // --------------------  BufferedOutputStream compatibility
-
+    // -------------------- BufferedOutputStream compatibility
 
     /**
      * Real write - this buffer will be sent to the client
      */
-    public void flushBytes()
-        throws IOException {
-
+    public void flushBytes() throws IOException {
         grizzlyOutputBuffer.flush();
-
     }
-
 
     public int getBytesWritten() {
         return bytesWritten;
     }
 
-
     public int getCharsWritten() {
         return charsWritten;
     }
-
 
     public int getContentWritten() {
         return bytesWritten + charsWritten;
     }
 
-
     /**
-     * True if this buffer hasn't been used ( since recycle() ) -
-     * i.e. no chars or bytes have been added to the buffer.
+     * True if this buffer hasn't been used ( since recycle() ) - i.e. no chars or bytes have been added to the buffer.
      */
     public boolean isNew() {
         return (bytesWritten == 0) && (charsWritten == 0);
     }
-
 
     public void setBufferSize(int size) {
         if (size > grizzlyOutputBuffer.getBufferSize()) {
@@ -428,20 +357,15 @@ public class OutputBuffer extends Writer
         }
     }
 
-
     public void reset() {
-
         grizzlyOutputBuffer.reset();
         bytesWritten = 0;
         charsWritten = 0;
-
     }
-
 
     public int getBufferSize() {
         return grizzlyOutputBuffer.getBufferSize();
     }
-
 
     public boolean isReady() {
         if (!prevIsReady) {
@@ -460,7 +384,7 @@ public class OutputBuffer extends Writer
                 }
 
             } else {
-                prevIsReady = true;  // Allow next .isReady() call to check underlying outputStream
+                prevIsReady = true; // Allow next .isReady() call to check underlying outputStream
             }
         }
 
@@ -472,7 +396,7 @@ public class OutputBuffer extends Writer
             throw new IllegalStateException(rb.getString(LogFacade.WRITE_LISTENER_BEEN_SET));
         }
 
-        Request req = (Request)response.getRequest();
+        Request req = (Request) response.getRequest();
         if (!(req.isAsyncStarted() || req.isUpgrade())) {
             throw new IllegalStateException(rb.getString(LogFacade.NON_ASYNC_UPGRADE_WRITER_EXCEPTION));
         }
@@ -482,7 +406,7 @@ public class OutputBuffer extends Writer
         if (isReady()) {
             try {
                 writeHandler.onWritePossible();
-            } catch(Throwable t) {
+            } catch (Throwable t) {
                 log.log(Level.WARNING, LogFacade.WRITE_LISTENER_ON_WRITE_POSSIBLE_ERROR, t);
             }
         }
@@ -490,12 +414,11 @@ public class OutputBuffer extends Writer
 
     void disableWriteHandler() {
         if (writeHandler != null) {
-            synchronized(writeHandler) {
+            synchronized (writeHandler) {
                 writeHandler.onError(new InterruptedByTimeoutException());
             }
         }
     }
-
 
     private void addSessionCookies() throws IOException {
         Request req = (Request) response.getRequest();
@@ -523,46 +446,34 @@ public class OutputBuffer extends Writer
     /**
      * Adds a session version cookie to the response if necessary.
      */
-    private void addSessionVersionCookie(Request request,
-                                         StandardContext context) {
-        Map<String, String> sessionVersions =
-            request.getSessionVersionsRequestAttribute();
+    private void addSessionVersionCookie(Request request, StandardContext context) {
+        Map<String, String> sessionVersions = request.getSessionVersionsRequestAttribute();
         if (sessionVersions != null) {
-            Cookie cookie = new Cookie(
-                Globals.SESSION_VERSION_COOKIE_NAME,
-                RequestUtil.createSessionVersionString(sessionVersions));
+            Cookie cookie = new Cookie(Globals.SESSION_VERSION_COOKIE_NAME, RequestUtil.createSessionVersionString(sessionVersions));
             request.configureSessionCookie(cookie);
             if (request.isRequestedSessionIdFromCookie()) {
                 /*
-                 * Have the JSESSIONIDVERSION cookie inherit the
-                 * security setting of the JSESSIONID cookie to avoid
-                 * session loss when switching from HTTPS to HTTP,
-                 * see IT 7414
+                 * Have the JSESSIONIDVERSION cookie inherit the security setting of the JSESSIONID cookie to avoid session loss when
+                 * switching from HTTPS to HTTP, see IT 7414
                  */
-                cookie.setSecure(
-                    request.isRequestedSessionIdFromSecureCookie());
+                cookie.setSecure(request.isRequestedSessionIdFromSecureCookie());
             }
-            grizzlyResponse.addHeader(SET_COOKIE_HEADER,
-                               response.getCookieString(cookie));
+            grizzlyResponse.addHeader(SET_COOKIE_HEADER, response.getCookieString(cookie));
         }
     }
 
     /**
      * Adds JSESSIONID cookie whose value includes jvmRoute if necessary.
      */
-    private void addSessionCookieWithJvmRoute(Request request, StandardContext ctx,
-            Session sess) {
-
+    private void addSessionCookieWithJvmRoute(Request request, StandardContext ctx, Session sess) {
         if (ctx.getJvmRoute() == null || sess == null) {
             return;
         }
 
         // Create JSESSIONID cookie that includes jvmRoute
-        Cookie cookie = getSafeCookie(ctx.getSessionCookieName(),
-                sess.getIdInternal() + "." + ctx.getJvmRoute());
+        Cookie cookie = getSafeCookie(ctx.getSessionCookieName(), sess.getIdInternal() + "." + ctx.getJvmRoute());
         request.configureSessionCookie(cookie);
-        grizzlyResponse.addHeader(SET_COOKIE_HEADER,
-                response.getCookieString(cookie));
+        grizzlyResponse.addHeader(SET_COOKIE_HEADER, response.getCookieString(cookie));
     }
 
     private Cookie getSafeCookie(String name, String value) {
@@ -584,13 +495,11 @@ public class OutputBuffer extends Writer
     /**
      * Adds JSESSIONID cookie whose value includes jvmRoute if necessary.
      */
-    private void addSessionCookieWithJReplica(Request request, StandardContext ctx,
-            Session sess) {
-
+    private void addSessionCookieWithJReplica(Request request, StandardContext ctx, Session sess) {
         String replicaLocation = null;
 
         if (sess != null) {
-            replicaLocation = (String)sess.getNote(Globals.JREPLICA_SESSION_NOTE);
+            replicaLocation = (String) sess.getNote(Globals.JREPLICA_SESSION_NOTE);
             sess.removeNote(Globals.JREPLICA_SESSION_NOTE);
         }
 
@@ -598,11 +507,9 @@ public class OutputBuffer extends Writer
             Cookie cookie = getSafeCookie(Globals.JREPLICA_COOKIE_NAME, replicaLocation);
             request.configureSessionCookie(cookie);
             if (request.isRequestedSessionIdFromCookie()) {
-                cookie.setSecure(
-                    request.isRequestedSessionIdFromSecureCookie());
+                cookie.setSecure(request.isRequestedSessionIdFromSecureCookie());
             }
-            grizzlyResponse.addHeader(SET_COOKIE_HEADER,
-                               response.getCookieString(cookie));
+            grizzlyResponse.addHeader(SET_COOKIE_HEADER, response.getCookieString(cookie));
         }
 
     }
@@ -611,18 +518,13 @@ public class OutputBuffer extends Writer
      * Adds JSESSIONSSOVERSION cookie
      */
     private void addSsoVersionCookie(Request request, StandardContext ctx) {
-
-        Long ssoVersion = (Long)request.getNote(
-                org.apache.catalina.authenticator.Constants.REQ_SSO_VERSION_NOTE);
+        Long ssoVersion = (Long) request.getNote(org.apache.catalina.authenticator.Constants.REQ_SSO_VERSION_NOTE);
         if (ssoVersion != null) {
-            Cookie cookie = new Cookie(
-                    org.apache.catalina.authenticator.Constants.SINGLE_SIGN_ON_VERSION_COOKIE,
-                    ssoVersion.toString());
+            Cookie cookie = new Cookie(org.apache.catalina.authenticator.Constants.SINGLE_SIGN_ON_VERSION_COOKIE, ssoVersion.toString());
             cookie.setMaxAge(-1);
             cookie.setPath("/");
             StandardHost host = (StandardHost) ctx.getParent();
-            HttpServletRequest hreq =
-                    (HttpServletRequest)request.getRequest();
+            HttpServletRequest hreq = request.getRequest();
             if (host != null) {
                 host.configureSingleSignOnCookieSecure(cookie, hreq);
                 host.configureSingleSignOnCookieHttpOnly(cookie);
@@ -630,28 +532,22 @@ public class OutputBuffer extends Writer
                 cookie.setSecure(hreq.isSecure());
             }
 
-            grizzlyResponse.addHeader(SET_COOKIE_HEADER,
-                    response.getCookieString(cookie));
+            grizzlyResponse.addHeader(SET_COOKIE_HEADER, response.getCookieString(cookie));
         }
     }
 
-    private void addPersistedSessionCookie(Request request, StandardContext ctx,
-            Session sess) throws IOException {
-
+    private void addPersistedSessionCookie(Request request, StandardContext ctx, Session sess) throws IOException {
         if (sess == null) {
             return;
         }
         Cookie cookie = ctx.getManager().toCookie(sess);
         if (cookie != null) {
             request.configureSessionCookie(cookie);
-            grizzlyResponse.addHeader(SET_COOKIE_HEADER,
-                    response.getCookieString(cookie));
+            grizzlyResponse.addHeader(SET_COOKIE_HEADER, response.getCookieString(cookie));
         }
     }
 
-    private void addJrouteCookie(Request request, StandardContext ctx,
-            Session sess) {
-
+    private void addJrouteCookie(Request request, StandardContext ctx, Session sess) {
         String jrouteId = request.getHeader(Constants.PROXY_JROUTE);
 
         if (jrouteId == null) {
@@ -664,37 +560,28 @@ public class OutputBuffer extends Writer
             return;
         }
 
-        if (request.getJrouteId() == null
-                || !request.getJrouteId().equals(jrouteId)) {
+        if (request.getJrouteId() == null || !request.getJrouteId().equals(jrouteId)) {
             // Initial request or failover
             Cookie cookie = getSafeCookie(Constants.JROUTE_COOKIE, jrouteId);
             request.configureSessionCookie(cookie);
             if (request.isRequestedSessionIdFromCookie()) {
                 /*
-                 * Have the JSESSIONIDVERSION cookie inherit the
-                 * security setting of the JSESSIONID cookie to avoid
-                 * session loss when switching from HTTPS to HTTP,
-                 * see IT 7414
+                 * Have the JSESSIONIDVERSION cookie inherit the security setting of the JSESSIONID cookie to avoid session loss when
+                 * switching from HTTPS to HTTP, see IT 7414
                  */
-                cookie.setSecure(
-                        request.isRequestedSessionIdFromSecureCookie());
+                cookie.setSecure(request.isRequestedSessionIdFromSecureCookie());
             }
-            grizzlyResponse.addHeader(SET_COOKIE_HEADER,
-                    response.getCookieString(cookie));
+            grizzlyResponse.addHeader(SET_COOKIE_HEADER, response.getCookieString(cookie));
         }
 
     }
 
-    // START PWC 6512276
     /**
      * Are there any pending writes waiting to be flushed?
      */
     public boolean hasData() {
-
-        return !suspended && (!grizzlyResponse.isCommitted() ||
-                grizzlyOutputBuffer.getBufferedDataSize() > 0);
+        return !suspended && (!grizzlyResponse.isCommitted() || grizzlyOutputBuffer.getBufferedDataSize() > 0);
     }
-    // END PWC 6512276
 
     private class SessionCookieChecker implements org.glassfish.grizzly.http.io.OutputBuffer.LifeCycleListener {
 
@@ -713,6 +600,7 @@ public class OutputBuffer extends Writer
             writeListener = listener;
         }
 
+        @Override
         public void onWritePossible() {
             if (disable) {
                 return;
@@ -730,48 +618,31 @@ public class OutputBuffer extends Writer
         }
 
         private void processWritePossible() {
-            ClassLoader oldCL;
-            if (Globals.IS_SECURITY_ENABLED) {
-                PrivilegedAction<ClassLoader> pa = new PrivilegedGetTccl();
-                oldCL = AccessController.doPrivileged(pa);
-            } else {
-                oldCL = Thread.currentThread().getContextClassLoader();
-            }
+            ClassLoader oldCL = Thread.currentThread().getContextClassLoader();
 
             try {
                 Context context = response.getContext();
                 ClassLoader newCL = context.getLoader().getClassLoader();
-                if (Globals.IS_SECURITY_ENABLED) {
-                    PrivilegedAction<Void> pa = new PrivilegedSetTccl(newCL);
-                    AccessController.doPrivileged(pa);
-                } else {
-                    Thread.currentThread().setContextClassLoader(newCL);
-                }
+                Thread.currentThread().setContextClassLoader(newCL);
 
-                synchronized(this) {
+                synchronized (this) {
                     prevIsReady = true;
                     try {
-                        context.fireContainerEvent(
-                            ContainerEvent.BEFORE_WRITE_LISTENER_ON_WRITE_POSSIBLE, writeListener);
+                        context.fireContainerEvent(ContainerEvent.BEFORE_WRITE_LISTENER_ON_WRITE_POSSIBLE, writeListener);
                         writeListener.onWritePossible();
-                    } catch(Throwable t) {
+                    } catch (Throwable t) {
                         disable = true;
                         writeListener.onError(t);
                     } finally {
-                        context.fireContainerEvent(
-                            ContainerEvent.AFTER_WRITE_LISTENER_ON_WRITE_POSSIBLE, writeListener);
+                        context.fireContainerEvent(ContainerEvent.AFTER_WRITE_LISTENER_ON_WRITE_POSSIBLE, writeListener);
                     }
                 }
             } finally {
-                if (Globals.IS_SECURITY_ENABLED) {
-                    PrivilegedAction<Void> pa = new PrivilegedSetTccl(oldCL);
-                    AccessController.doPrivileged(pa);
-                } else {
-                    Thread.currentThread().setContextClassLoader(oldCL);
-                }
+                Thread.currentThread().setContextClassLoader(oldCL);
             }
         }
 
+        @Override
         public void onError(final Throwable t) {
             if (disable) {
                 return;
@@ -791,66 +662,24 @@ public class OutputBuffer extends Writer
         }
 
         private void processError(final Throwable t) {
-            ClassLoader oldCL;
-            if (Globals.IS_SECURITY_ENABLED) {
-                PrivilegedAction<ClassLoader> pa = new PrivilegedGetTccl();
-                oldCL = AccessController.doPrivileged(pa);
-            } else {
-                oldCL = Thread.currentThread().getContextClassLoader();
-            }
+            ClassLoader oldCL = Thread.currentThread().getContextClassLoader();
 
             try {
                 Context context = response.getContext();
                 ClassLoader newCL = context.getLoader().getClassLoader();
-                if (Globals.IS_SECURITY_ENABLED) {
-                    PrivilegedAction<Void> pa = new PrivilegedSetTccl(newCL);
-                    AccessController.doPrivileged(pa);
-                } else {
-                    Thread.currentThread().setContextClassLoader(newCL);
-                }
+                Thread.currentThread().setContextClassLoader(newCL);
 
-                synchronized(this) {
+                synchronized (this) {
                     try {
-                        context.fireContainerEvent(
-                            ContainerEvent.BEFORE_WRITE_LISTENER_ON_ERROR, writeListener);
+                        context.fireContainerEvent(ContainerEvent.BEFORE_WRITE_LISTENER_ON_ERROR, writeListener);
                         writeListener.onError(t);
                     } finally {
-                        context.fireContainerEvent(
-                            ContainerEvent.AFTER_WRITE_LISTENER_ON_ERROR, writeListener);
+                        context.fireContainerEvent(ContainerEvent.AFTER_WRITE_LISTENER_ON_ERROR, writeListener);
                     }
                 }
             } finally {
-                if (Globals.IS_SECURITY_ENABLED) {
-                    PrivilegedAction<Void> pa = new PrivilegedSetTccl(oldCL);
-                    AccessController.doPrivileged(pa);
-                } else {
-                    Thread.currentThread().setContextClassLoader(oldCL);
-                }
+                Thread.currentThread().setContextClassLoader(oldCL);
             }
-        }
-    }
-
-    private static class PrivilegedSetTccl implements PrivilegedAction<Void> {
-
-        private ClassLoader cl;
-
-        PrivilegedSetTccl(ClassLoader cl) {
-            this.cl = cl;
-        }
-
-        @Override
-        public Void run() {
-            Thread.currentThread().setContextClassLoader(cl);
-            return null;
-        }
-    }
-
-    private static class PrivilegedGetTccl
-            implements PrivilegedAction<ClassLoader> {
-
-        @Override
-        public ClassLoader run() {
-            return Thread.currentThread().getContextClassLoader();
         }
     }
 }

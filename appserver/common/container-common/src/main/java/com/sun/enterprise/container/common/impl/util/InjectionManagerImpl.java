@@ -481,35 +481,25 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
                     }
 
                     if (target.isFieldInjectable()) {
-                        final Field f = getField(target, clazz);
-                        if (Modifier.isStatic(f.getModifiers()) && instance != null) {
+                        final Field injectableField = getField(target, clazz);
+                        if (Modifier.isStatic(injectableField.getModifiers()) && instance != null) {
                             throw new InjectionException(
                                 "Illegal use of static field on class that only supports instance-based injection: "
-                                    + f);
+                                    + injectableField);
                         }
 
-                        if (instance == null && !Modifier.isStatic(f.getModifiers())) {
+                        if (instance == null && !Modifier.isStatic(injectableField.getModifiers())) {
                             throw new InjectionException(MessageFormat.format(
-                                "Injected field: {0} on Application Client class: {1} must be declared static", f,
+                                "Injected field: {0} on Application Client class: {1} must be declared static", injectableField,
                                 clazz));
                         }
 
                         LOG.log(DEBUG, "Injecting dependency with logical name: {0} into field: {1} on class: {2}",
-                            next.getComponentEnvName(), f, clazz);
+                            next.getComponentEnvName(), injectableField, clazz);
 
                         // Wrap actual value insertion in doPrivileged to
                         // allow for private/protected field access.
-                        if (System.getSecurityManager() != null) {
-                            java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
-                                @Override
-                                public java.lang.Object run() throws Exception {
-                                    f.set(instance, value);
-                                    return null;
-                                }
-                            });
-                        } else {
-                            f.set(instance, value);
-                        }
+                        injectableField.set(instance, value);
                     } else if (target.isMethodInjectable()) {
 
                         final Method method = getMethod(next, target, clazz);

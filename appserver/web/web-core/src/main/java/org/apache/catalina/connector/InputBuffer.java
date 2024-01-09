@@ -20,7 +20,6 @@ package org.apache.catalina.connector;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.channels.InterruptedByTimeoutException;
-import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -39,28 +38,22 @@ import org.glassfish.grizzly.http.util.ByteChunk.ByteInputChannel;
 import org.glassfish.grizzly.http.util.CharChunk;
 
 /**
- * The buffer used by Tomcat request. This is a derivative of the Tomcat 3.3
- * OutputBuffer, adapted to handle input instead of output. This allows
- * complete recycling of the facade objects (the ServletInputStream and the
+ * The buffer used by Tomcat request. This is a derivative of the Tomcat 3.3 OutputBuffer, adapted to handle input
+ * instead of output. This allows complete recycling of the facade objects (the ServletInputStream and the
  * BufferedReader).
  *
  * @author Remy Maucherat
  */
-public class InputBuffer extends Reader
-    implements ByteInputChannel, CharChunk.CharInputChannel,
-               CharChunk.CharOutputChannel {
+public class InputBuffer extends Reader implements ByteInputChannel, CharChunk.CharInputChannel, CharChunk.CharOutputChannel {
 
     private static final Logger log = LogFacade.getLogger();
     private static final ResourceBundle rb = log.getResourceBundle();
 
     // -------------------------------------------------------------- Constants
 
-
-    public static final int DEFAULT_BUFFER_SIZE = 8*1024;
-
+    public static final int DEFAULT_BUFFER_SIZE = 8 * 1024;
 
     // ----------------------------------------------------- Instance Variables
-
 
     /**
      * Associated Grizzly request.
@@ -77,16 +70,12 @@ public class InputBuffer extends Reader
 
     // ----------------------------------------------------------- Constructors
 
-
     /**
      * Default constructor. Allocate the buffer with the default buffer size.
      */
     public InputBuffer() {
-
         this(DEFAULT_BUFFER_SIZE);
-
     }
-
 
     /**
      * Alternate constructor which allows specifying the initial buffer size.
@@ -103,7 +92,6 @@ public class InputBuffer extends Reader
 
     // ------------------------------------------------------------- Properties
 
-
     /**
      * Associated Grizzly request.
      *
@@ -114,11 +102,9 @@ public class InputBuffer extends Reader
         this.grizzlyInputBuffer = grizzlyRequest.getInputBuffer();
     }
 
-
     public void setRequest(org.apache.catalina.connector.Request request) {
         this.request = request;
     }
-
 
     /**
      * Get associated Grizzly request.
@@ -129,15 +115,12 @@ public class InputBuffer extends Reader
         return this.grizzlyRequest;
     }
 
-
     // --------------------------------------------------------- Public Methods
-
 
     /**
      * Recycle the output buffer.
      */
     public void recycle() {
-
         if (log.isLoggable(Level.FINEST))
             log.log(Level.FINEST, "recycle()");
 
@@ -148,26 +131,21 @@ public class InputBuffer extends Reader
 
     }
 
-
     /**
      * Close the input buffer.
      *
      * @throws IOException An underlying IOException occurred
      */
-    public void close()
-        throws IOException {
+    @Override
+    public void close() throws IOException {
         grizzlyInputBuffer.close();
     }
 
-
-    public int available()
-        throws IOException {
+    public int available() throws IOException {
         return grizzlyInputBuffer.readyData();
     }
 
-
     // ------------------------------------------------- Bytes Handling Methods
-
 
     /**
      * Reads new bytes in the byte chunk.
@@ -178,34 +156,28 @@ public class InputBuffer extends Reader
      *
      * @throws IOException An underlying IOException occurred
      */
-    public int realReadBytes(byte cbuf[], int off, int len)
-    throws IOException {
+    @Override
+    public int realReadBytes(byte cbuf[], int off, int len) throws IOException {
         return grizzlyInputBuffer.read(cbuf, off, len);
     }
 
-
-    public int readByte()
-        throws IOException {
+    public int readByte() throws IOException {
         if (grizzlyInputBuffer.isClosed())
             throw new IOException(rb.getString(LogFacade.STREAM_CLOSED));
 
         return grizzlyInputBuffer.readByte();
     }
 
-
-    public int read(final byte[] b, final int off, final int len)
-        throws IOException {
+    public int read(final byte[] b, final int off, final int len) throws IOException {
         if (grizzlyInputBuffer.isClosed())
             throw new IOException(rb.getString(LogFacade.STREAM_CLOSED));
 
         return grizzlyInputBuffer.read(b, off, len);
     }
 
-
     public boolean isFinished() {
         return grizzlyInputBuffer.isFinished();
     }
-
 
     public boolean isReady() {
         if (!prevIsReady) {
@@ -224,13 +196,12 @@ public class InputBuffer extends Reader
                 }
 
             } else {
-                prevIsReady = true;  // Allow next .isReady() call to check underlying inputStream
+                prevIsReady = true; // Allow next .isReady() call to check underlying inputStream
             }
         }
 
         return result;
     }
-
 
     public void setReadListener(ReadListener readListener) {
         if (readHandler != null) {
@@ -246,7 +217,7 @@ public class InputBuffer extends Reader
         if (isReady()) {
             try {
                 readHandler.onDataAvailable();
-            } catch(Throwable t) {
+            } catch (Throwable t) {
                 log.log(Level.WARNING, LogFacade.READ_LISTENER_ON_DATA_AVAILABLE_ERROR, t);
             }
         }
@@ -254,7 +225,7 @@ public class InputBuffer extends Reader
 
     void disableReadHandler() {
         if (readHandler != null) {
-            synchronized(readHandler) {
+            synchronized (readHandler) {
                 readHandler.onError(new InterruptedByTimeoutException());
             }
         }
@@ -262,65 +233,52 @@ public class InputBuffer extends Reader
 
     // ------------------------------------------------- Chars Handling Methods
 
-
     /**
-     * Since the converter will use append, it is possible to get chars to
-     * be removed from the buffer for "writing". Since the chars have already
-     * been read before, they are ignored. If a mark was set, then the
-     * mark is lost.
+     * Since the converter will use append, it is possible to get chars to be removed from the buffer for "writing". Since
+     * the chars have already been read before, they are ignored. If a mark was set, then the mark is lost.
      */
-    public void realWriteChars(char c[], int off, int len)
-        throws IOException {
+    @Override
+    public void realWriteChars(char c[], int off, int len) throws IOException {
         // START OF SJSAS 6231069
 //        initChar();
         // END OF SJSAS 6231069
 //        markPos = -1;
     }
 
-
     public void setEncoding(final String encoding) {
         grizzlyInputBuffer.setDefaultEncoding(encoding);
     }
 
-
-    public int realReadChars(final char cbuf[], final int off, final int len)
-        throws IOException {
+    @Override
+    public int realReadChars(final char cbuf[], final int off, final int len) throws IOException {
 
         return grizzlyInputBuffer.read(cbuf, off, len);
 
     }
 
-
-    public int read()
-        throws IOException {
-
+    @Override
+    public int read() throws IOException {
         if (grizzlyInputBuffer.isClosed())
             throw new IOException(rb.getString(LogFacade.STREAM_CLOSED));
 
         return grizzlyInputBuffer.readChar();
     }
 
-
-    public int read(char[] cbuf)
-        throws IOException {
-
+    @Override
+    public int read(char[] cbuf) throws IOException {
         return read(cbuf, 0, cbuf.length);
     }
 
-
-    public int read(char[] cbuf, int off, int len)
-        throws IOException {
-
+    @Override
+    public int read(char[] cbuf, int off, int len) throws IOException {
         if (grizzlyInputBuffer.isClosed())
             throw new IOException(rb.getString(LogFacade.STREAM_CLOSED));
 
         return grizzlyInputBuffer.read(cbuf, off, len);
     }
 
-
-    public long skip(long n)
-        throws IOException {
-
+    @Override
+    public long skip(long n) throws IOException {
         if (grizzlyInputBuffer.isClosed())
             throw new IOException(rb.getString(LogFacade.STREAM_CLOSED));
 
@@ -331,44 +289,34 @@ public class InputBuffer extends Reader
 
     }
 
-
-    public boolean ready()
-        throws IOException {
-
+    @Override
+    public boolean ready() throws IOException {
         if (grizzlyInputBuffer.isClosed())
             throw new IOException(rb.getString(LogFacade.STREAM_CLOSED));
 
         return grizzlyInputBuffer.ready();
     }
 
-
+    @Override
     public boolean markSupported() {
         return true;
     }
 
-
-    public void mark(int readAheadLimit)
-        throws IOException {
+    @Override
+    public void mark(int readAheadLimit) throws IOException {
         grizzlyInputBuffer.mark(readAheadLimit);
     }
 
-
-    public void reset()
-        throws IOException {
-
+    @Override
+    public void reset() throws IOException {
         if (grizzlyInputBuffer.isClosed())
             throw new IOException(rb.getString(LogFacade.STREAM_CLOSED));
         grizzlyInputBuffer.reset();
     }
 
-
-    public void checkConverter()
-        throws IOException {
-
+    public void checkConverter() throws IOException {
         grizzlyInputBuffer.processingChars();
-
     }
-
 
     class ReadHandlerImpl implements ReadHandler {
         private ReadListener readListener = null;
@@ -396,45 +344,27 @@ public class InputBuffer extends Reader
         }
 
         private void processDataAvailable() {
-            ClassLoader oldCL;
-            if (Globals.IS_SECURITY_ENABLED) {
-                PrivilegedAction<ClassLoader> pa = new PrivilegedGetTccl();
-                oldCL = AccessController.doPrivileged(pa);
-            } else {
-                oldCL = Thread.currentThread().getContextClassLoader();
-            }
+            ClassLoader oldCL = Thread.currentThread().getContextClassLoader();
 
             try {
                 Context context = request.getContext();
                 ClassLoader newCL = context.getLoader().getClassLoader();
-                if (Globals.IS_SECURITY_ENABLED) {
-                    PrivilegedAction<Void> pa = new PrivilegedSetTccl(newCL);
-                    AccessController.doPrivileged(pa);
-                } else {
-                    Thread.currentThread().setContextClassLoader(newCL);
-                }
+                Thread.currentThread().setContextClassLoader(newCL);
 
-                synchronized(this) {
+                synchronized (this) {
                     prevIsReady = true;
                     try {
-                        context.fireContainerEvent(
-                            ContainerEvent.BEFORE_READ_LISTENER_ON_DATA_AVAILABLE, readListener);
+                        context.fireContainerEvent(ContainerEvent.BEFORE_READ_LISTENER_ON_DATA_AVAILABLE, readListener);
                         readListener.onDataAvailable();
-                    } catch(Throwable t) {
+                    } catch (Throwable t) {
                         disable = true;
                         readListener.onError(t);
                     } finally {
-                        context.fireContainerEvent(
-                            ContainerEvent.AFTER_READ_LISTENER_ON_DATA_AVAILABLE, readListener);
+                        context.fireContainerEvent(ContainerEvent.AFTER_READ_LISTENER_ON_DATA_AVAILABLE, readListener);
                     }
                 }
             } finally {
-                if (Globals.IS_SECURITY_ENABLED) {
-                    PrivilegedAction<Void> pa = new PrivilegedSetTccl(oldCL);
-                    AccessController.doPrivileged(pa);
-                } else {
-                    Thread.currentThread().setContextClassLoader(oldCL);
-                }
+                Thread.currentThread().setContextClassLoader(oldCL);
             }
         }
 
@@ -456,45 +386,27 @@ public class InputBuffer extends Reader
         }
 
         private void processAllDataRead() {
-            ClassLoader oldCL;
-            if (Globals.IS_SECURITY_ENABLED) {
-                PrivilegedAction<ClassLoader> pa = new PrivilegedGetTccl();
-                oldCL = AccessController.doPrivileged(pa);
-            } else {
-                oldCL = Thread.currentThread().getContextClassLoader();
-            }
+            ClassLoader oldCL = Thread.currentThread().getContextClassLoader();
 
             try {
                 Context context = request.getContext();
                 ClassLoader newCL = context.getLoader().getClassLoader();
-                if (Globals.IS_SECURITY_ENABLED) {
-                    PrivilegedAction<Void> pa = new PrivilegedSetTccl(newCL);
-                    AccessController.doPrivileged(pa);
-                } else {
-                    Thread.currentThread().setContextClassLoader(newCL);
-                }
+                Thread.currentThread().setContextClassLoader(newCL);
 
-                synchronized(this) {
+                synchronized (this) {
                     prevIsReady = true;
                     try {
-                        context.fireContainerEvent(
-                            ContainerEvent.BEFORE_READ_LISTENER_ON_ALL_DATA_READ, readListener);
+                        context.fireContainerEvent(ContainerEvent.BEFORE_READ_LISTENER_ON_ALL_DATA_READ, readListener);
                         readListener.onAllDataRead();
-                    } catch(Throwable t) {
+                    } catch (Throwable t) {
                         disable = true;
                         readListener.onError(t);
                     } finally {
-                        context.fireContainerEvent(
-                            ContainerEvent.AFTER_READ_LISTENER_ON_ALL_DATA_READ, readListener);
+                        context.fireContainerEvent(ContainerEvent.AFTER_READ_LISTENER_ON_ALL_DATA_READ, readListener);
                     }
                 }
             } finally {
-                if (Globals.IS_SECURITY_ENABLED) {
-                    PrivilegedAction<Void> pa = new PrivilegedSetTccl(oldCL);
-                    AccessController.doPrivileged(pa);
-                } else {
-                    Thread.currentThread().setContextClassLoader(oldCL);
-                }
+                Thread.currentThread().setContextClassLoader(oldCL);
             }
         }
 
@@ -518,33 +430,21 @@ public class InputBuffer extends Reader
         }
 
         private void processError(final Throwable t) {
-            ClassLoader oldCL;
-            if (Globals.IS_SECURITY_ENABLED) {
-                PrivilegedAction<ClassLoader> pa = new PrivilegedGetTccl();
-                oldCL = AccessController.doPrivileged(pa);
-            } else {
-                oldCL = Thread.currentThread().getContextClassLoader();
-            }
+            ClassLoader oldCL = Thread.currentThread().getContextClassLoader();
 
             try {
                 Context context = request.getContext();
                 ClassLoader newCL = context.getLoader().getClassLoader();
-                if (Globals.IS_SECURITY_ENABLED) {
-                    PrivilegedAction<Void> pa = new PrivilegedSetTccl(newCL);
-                    AccessController.doPrivileged(pa);
-                } else {
-                    Thread.currentThread().setContextClassLoader(newCL);
-                }
+                Thread.currentThread().setContextClassLoader(newCL);
 
-                synchronized(this) {
+                synchronized (this) {
                     // Get isUpgrade and WebConnection before calling onError
                     // Just in case onError will complete the async processing.
                     final boolean isUpgrade = request.isUpgrade();
                     final WebConnection wc = request.getWebConnection();
 
                     try {
-                        context.fireContainerEvent(
-                            ContainerEvent.BEFORE_READ_LISTENER_ON_ERROR, readListener);
+                        context.fireContainerEvent(ContainerEvent.BEFORE_READ_LISTENER_ON_ERROR, readListener);
                         readListener.onError(t);
                     } finally {
                         if (isUpgrade && wc != null) {
@@ -553,43 +453,13 @@ public class InputBuffer extends Reader
                             } catch (Exception ignored) {
                             }
                         }
-                        context.fireContainerEvent(
-                            ContainerEvent.AFTER_READ_LISTENER_ON_ERROR, readListener);
+                        context.fireContainerEvent(ContainerEvent.AFTER_READ_LISTENER_ON_ERROR, readListener);
 
                     }
                 }
             } finally {
-                if (Globals.IS_SECURITY_ENABLED) {
-                    PrivilegedAction<Void> pa = new PrivilegedSetTccl(oldCL);
-                    AccessController.doPrivileged(pa);
-                } else {
-                    Thread.currentThread().setContextClassLoader(oldCL);
-                }
+                Thread.currentThread().setContextClassLoader(oldCL);
             }
-        }
-    }
-
-    private static class PrivilegedSetTccl implements PrivilegedAction<Void> {
-
-        private ClassLoader cl;
-
-        PrivilegedSetTccl(ClassLoader cl) {
-            this.cl = cl;
-        }
-
-        @Override
-        public Void run() {
-            Thread.currentThread().setContextClassLoader(cl);
-            return null;
-        }
-    }
-
-    private static class PrivilegedGetTccl
-            implements PrivilegedAction<ClassLoader> {
-
-        @Override
-        public ClassLoader run() {
-            return Thread.currentThread().getContextClassLoader();
         }
     }
 }

@@ -17,11 +17,10 @@
 
 package org.glassfish.weld;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
+import static java.lang.Thread.currentThread;
+
 import java.util.Hashtable;
 import java.util.Map;
-
 import org.glassfish.internal.api.ClassLoaderHierarchy;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.javaee.full.deployment.EarLibClassLoader;
@@ -29,10 +28,6 @@ import org.glassfish.web.loader.WebappClassLoader;
 import org.jboss.weld.bootstrap.api.Singleton;
 import org.jboss.weld.bootstrap.api.SingletonProvider;
 import org.jboss.weld.bootstrap.api.helpers.TCCLSingletonProvider;
-
-import static java.lang.System.getSecurityManager;
-import static java.lang.Thread.currentThread;
-import static java.security.AccessController.doPrivileged;
 
 /**
  * Singleton provider that uses Application ClassLoader to differentiate between applications.
@@ -93,12 +88,7 @@ public class ACLSingletonProvider extends SingletonProvider {
         private static ClassLoader bootstrapCL;
 
         static {
-            bootstrapCL = getSecurityManager() != null ? AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
-                @Override
-                public ClassLoader run() {
-                    return Object.class.getClassLoader();
-                }
-            }) : Object.class.getClassLoader();
+            bootstrapCL = Object.class.getClassLoader();
         }
 
         @Override
@@ -113,11 +103,11 @@ public class ACLSingletonProvider extends SingletonProvider {
         }
 
         /**
-         * This is the most significant method of this class. This is what distingushes it from TCCLSIngleton.
+         * This is the most significant method of this class. This is what distinguishes it from TCCLSIngleton.
          *
          * <p>
          * It tries to obtain a class loader that's common to all modules of an application (ear). Since it runs in the context
-         * of Java EE, it can assume that Thread's context class loader is always set as application class loader. In GlassFish,
+         * of Jakarta EE, it can assume that Thread's context class loader is always set as application class loader. In GlassFish,
          * the class loader can vary for each module of an Ear. Thread's context class loader is set depending on which module
          * is handling the request.
          *
@@ -131,12 +121,7 @@ public class ACLSingletonProvider extends SingletonProvider {
          * @return a class loader that's common to all modules of a Jakarta EE application
          */
         private ClassLoader getClassLoader() {
-            ClassLoader contextClassLoader = getSecurityManager() != null ? doPrivileged(new PrivilegedAction<ClassLoader>() {
-                @Override
-                public ClassLoader run() {
-                    return currentThread().getContextClassLoader();
-                }
-            }) : currentThread().getContextClassLoader();
+            ClassLoader contextClassLoader = currentThread().getContextClassLoader();
 
             if (contextClassLoader == null) {
                 throw new RuntimeException("Thread's context class loader is null");
@@ -168,12 +153,7 @@ public class ACLSingletonProvider extends SingletonProvider {
         }
 
         private ClassLoader getParent(ClassLoader classLoader) {
-            return getSecurityManager() != null ? doPrivileged(new PrivilegedAction<ClassLoader>() {
-                @Override
-                public ClassLoader run() {
-                    return classLoader.getParent();
-                }
-            }) : classLoader.getParent();
+            return classLoader.getParent();
         }
 
         @Override

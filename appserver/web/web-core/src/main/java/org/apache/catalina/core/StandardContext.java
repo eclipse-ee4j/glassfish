@@ -18,6 +18,84 @@
 
 package org.apache.catalina.core;
 
+import static com.sun.enterprise.util.Utility.isAllNull;
+import static com.sun.enterprise.util.Utility.isEmpty;
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
+import static jakarta.servlet.RequestDispatcher.ERROR_EXCEPTION;
+import static java.text.MessageFormat.format;
+import static java.util.Collections.synchronizedList;
+import static java.util.Collections.unmodifiableMap;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+import static org.apache.catalina.ContainerEvent.AFTER_CONTEXT_DESTROYED;
+import static org.apache.catalina.ContainerEvent.AFTER_CONTEXT_INITIALIZED;
+import static org.apache.catalina.ContainerEvent.AFTER_CONTEXT_INITIALIZER_ON_STARTUP;
+import static org.apache.catalina.ContainerEvent.AFTER_REQUEST_DESTROYED;
+import static org.apache.catalina.ContainerEvent.AFTER_REQUEST_INITIALIZED;
+import static org.apache.catalina.ContainerEvent.BEFORE_CONTEXT_DESTROYED;
+import static org.apache.catalina.ContainerEvent.BEFORE_CONTEXT_INITIALIZED;
+import static org.apache.catalina.ContainerEvent.BEFORE_CONTEXT_INITIALIZER_ON_STARTUP;
+import static org.apache.catalina.ContainerEvent.BEFORE_REQUEST_DESTROYED;
+import static org.apache.catalina.ContainerEvent.BEFORE_REQUEST_INITIALIZED;
+import static org.apache.catalina.ContainerEvent.PRE_DESTROY;
+import static org.apache.catalina.Globals.ALTERNATE_RESOURCES_ATTR;
+import static org.apache.catalina.Globals.ALT_DD_ATTR;
+import static org.apache.catalina.Globals.FACES_INITIALIZER;
+import static org.apache.catalina.Globals.META_INF_RESOURCES;
+import static org.apache.catalina.Globals.RESOURCES_ATTR;
+import static org.apache.catalina.LogFacade.BIND_THREAD_EXCEPTION;
+import static org.apache.catalina.LogFacade.CONTAINER_ALREADY_STARTED_EXCEPTION;
+import static org.apache.catalina.LogFacade.CONTAINER_NOT_STARTED_EXCEPTION;
+import static org.apache.catalina.LogFacade.DEPENDENCY_CHECK_EXCEPTION;
+import static org.apache.catalina.LogFacade.DUPLICATE_SERVLET_MAPPING_EXCEPTION;
+import static org.apache.catalina.LogFacade.ERROR_PAGE_LOCATION_EXCEPTION;
+import static org.apache.catalina.LogFacade.ERROR_PAGE_REQUIRED_EXCEPTION;
+import static org.apache.catalina.LogFacade.FILTER_MAPPING_INVALID_URL_EXCEPTION;
+import static org.apache.catalina.LogFacade.FILTER_MAPPING_NAME_EXCEPTION;
+import static org.apache.catalina.LogFacade.FILTER_WITHOUT_ANY_CLASS;
+import static org.apache.catalina.LogFacade.INIT_RESOURCES_EXCEPTION;
+import static org.apache.catalina.LogFacade.INVALID_ERROR_PAGE_CODE_EXCEPTION;
+import static org.apache.catalina.LogFacade.INVOKING_SERVLET_CONTAINER_INIT_EXCEPTION;
+import static org.apache.catalina.LogFacade.JSP_FILE_FINE;
+import static org.apache.catalina.LogFacade.LISTENER_STOP_EXCEPTION;
+import static org.apache.catalina.LogFacade.LOGIN_CONFIG_ERROR_PAGE_EXCEPTION;
+import static org.apache.catalina.LogFacade.LOGIN_CONFIG_LOGIN_PAGE_EXCEPTION;
+import static org.apache.catalina.LogFacade.LOGIN_CONFIG_REQUIRED_EXCEPTION;
+import static org.apache.catalina.LogFacade.MISS_PATH_OR_URL_PATTERN_EXCEPTION;
+import static org.apache.catalina.LogFacade.NO_WRAPPER_EXCEPTION;
+import static org.apache.catalina.LogFacade.NULL_EMPTY_FILTER_NAME_EXCEPTION;
+import static org.apache.catalina.LogFacade.NULL_EMPTY_SERVLET_NAME_EXCEPTION;
+import static org.apache.catalina.LogFacade.NULL_FILTER_INSTANCE_EXCEPTION;
+import static org.apache.catalina.LogFacade.NULL_SERVLET_INSTANCE_EXCEPTION;
+import static org.apache.catalina.LogFacade.RELOADING_STARTED;
+import static org.apache.catalina.LogFacade.REQUEST_DESTROY_EXCEPTION;
+import static org.apache.catalina.LogFacade.REQUEST_INIT_EXCEPTION;
+import static org.apache.catalina.LogFacade.RESETTING_CONTEXT_EXCEPTION;
+import static org.apache.catalina.LogFacade.RESOURCES_STARTED;
+import static org.apache.catalina.LogFacade.SECURITY_CONSTRAINT_PATTERN_EXCEPTION;
+import static org.apache.catalina.LogFacade.SERVLET_CONTEXT_ALREADY_INIT_EXCEPTION;
+import static org.apache.catalina.LogFacade.SERVLET_LOAD_EXCEPTION;
+import static org.apache.catalina.LogFacade.SERVLET_MAPPING_INVALID_URL_EXCEPTION;
+import static org.apache.catalina.LogFacade.SERVLET_MAPPING_UNKNOWN_NAME_EXCEPTION;
+import static org.apache.catalina.LogFacade.STARTING_CONTEXT_EXCEPTION;
+import static org.apache.catalina.LogFacade.STARTING_RESOURCES_EXCEPTION;
+import static org.apache.catalina.LogFacade.STARTING_RESOURCE_EXCEPTION_MESSAGE;
+import static org.apache.catalina.LogFacade.STARTUP_CONTEXT_FAILED_EXCEPTION;
+import static org.apache.catalina.LogFacade.STOPPING_CONTEXT_EXCEPTION;
+import static org.apache.catalina.LogFacade.STOPPING_RESOURCES_EXCEPTION;
+import static org.apache.catalina.LogFacade.WRAPPER_ERROR_EXCEPTION;
+import static org.apache.catalina.core.Constants.DEFAULT_SERVLET_NAME;
+import static org.apache.catalina.core.Constants.JSP_SERVLET_NAME;
+import static org.apache.catalina.startup.Constants.WebDtdPublicId_22;
+import static org.apache.catalina.util.RequestUtil.urlDecode;
+import static org.apache.naming.resources.ProxyDirContext.CONTEXT;
+import static org.apache.naming.resources.ProxyDirContext.HOST;
+import static org.glassfish.web.loader.ServletContainerInitializerUtil.getInitializerList;
+import static org.glassfish.web.loader.ServletContainerInitializerUtil.getInterestList;
+
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterConfig;
 import jakarta.servlet.FilterRegistration;
@@ -43,7 +121,6 @@ import jakarta.servlet.http.HttpSessionAttributeListener;
 import jakarta.servlet.http.HttpSessionIdListener;
 import jakarta.servlet.http.HttpSessionListener;
 import jakarta.servlet.http.HttpUpgradeHandler;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,7 +131,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -78,7 +154,6 @@ import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
-
 import javax.management.MBeanRegistrationException;
 import javax.management.MalformedObjectNameException;
 import javax.management.Notification;
@@ -87,7 +162,6 @@ import javax.management.ObjectName;
 import javax.naming.Binding;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
-
 import org.apache.catalina.Auditor;
 import org.apache.catalina.Authenticator;
 import org.apache.catalina.Container;
@@ -152,44 +226,6 @@ import org.glassfish.hk2.classmodel.reflect.Types;
 import org.glassfish.web.loader.ServletContainerInitializerUtil;
 import org.glassfish.web.loader.WebappClassLoader;
 import org.glassfish.web.valve.GlassFishValve;
-
-import static com.sun.enterprise.util.Utility.isAllNull;
-import static com.sun.enterprise.util.Utility.isEmpty;
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-import static jakarta.servlet.RequestDispatcher.ERROR_EXCEPTION;
-import static java.text.MessageFormat.format;
-import static java.util.Collections.synchronizedList;
-import static java.util.Collections.unmodifiableMap;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
-import static org.apache.catalina.ContainerEvent.AFTER_CONTEXT_DESTROYED;
-import static org.apache.catalina.ContainerEvent.AFTER_CONTEXT_INITIALIZED;
-import static org.apache.catalina.ContainerEvent.AFTER_CONTEXT_INITIALIZER_ON_STARTUP;
-import static org.apache.catalina.ContainerEvent.AFTER_REQUEST_DESTROYED;
-import static org.apache.catalina.ContainerEvent.AFTER_REQUEST_INITIALIZED;
-import static org.apache.catalina.ContainerEvent.BEFORE_CONTEXT_DESTROYED;
-import static org.apache.catalina.ContainerEvent.BEFORE_CONTEXT_INITIALIZED;
-import static org.apache.catalina.ContainerEvent.BEFORE_CONTEXT_INITIALIZER_ON_STARTUP;
-import static org.apache.catalina.ContainerEvent.BEFORE_REQUEST_DESTROYED;
-import static org.apache.catalina.ContainerEvent.BEFORE_REQUEST_INITIALIZED;
-import static org.apache.catalina.ContainerEvent.PRE_DESTROY;
-import static org.apache.catalina.Globals.ALTERNATE_RESOURCES_ATTR;
-import static org.apache.catalina.Globals.ALT_DD_ATTR;
-import static org.apache.catalina.Globals.FACES_INITIALIZER;
-import static org.apache.catalina.Globals.META_INF_RESOURCES;
-import static org.apache.catalina.Globals.RESOURCES_ATTR;
-import static org.apache.catalina.LogFacade.*;
-import static org.apache.catalina.core.Constants.DEFAULT_SERVLET_NAME;
-import static org.apache.catalina.core.Constants.JSP_SERVLET_NAME;
-import static org.apache.catalina.startup.Constants.WebDtdPublicId_22;
-import static org.apache.catalina.util.RequestUtil.urlDecode;
-import static org.apache.naming.resources.ProxyDirContext.CONTEXT;
-import static org.apache.naming.resources.ProxyDirContext.HOST;
-import static org.glassfish.web.loader.ServletContainerInitializerUtil.getInitializerList;
-import static org.glassfish.web.loader.ServletContainerInitializerUtil.getInterestList;
 
 /**
  * Standard implementation of the <b>Context</b> interface. Each child container must be a Wrapper implementation to
@@ -729,11 +765,6 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
      */
     private boolean isProgrammaticServletContextListenerRegistrationAllowed;
 
-    /**
-     * Security manager responsible for enforcing permission check on ServletContext#getClassLoader
-     */
-    private MySecurityManager mySecurityManager;
-
     /** Iterable over all ServletContainerInitializers that were discovered */
     private ServiceLoader<ServletContainerInitializer> servletContainerInitializers;
 
@@ -771,11 +802,7 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
     public StandardContext() {
         pipeline.setBasic(new StandardContextValve());
         namingResources.setContainer(this);
-        if (Globals.IS_SECURITY_ENABLED) {
-            mySecurityManager = AccessController.doPrivileged(new PrivilegedCreateSecurityManager());
-        }
     }
-
 
     @Override
     public String getEncodedPath() {
@@ -2490,9 +2517,7 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
         if (webappLoader == null) {
             return null;
         }
-        if (mySecurityManager != null) {
-            mySecurityManager.checkGetClassLoaderPermission(webappLoader);
-        }
+
         return webappLoader;
     }
 

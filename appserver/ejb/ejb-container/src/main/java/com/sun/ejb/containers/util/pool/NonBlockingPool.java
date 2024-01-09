@@ -23,18 +23,15 @@
 package com.sun.ejb.containers.util.pool;
 
 import static com.sun.enterprise.util.Utility.setContextClassLoader;
-import static java.security.AccessController.doPrivileged;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.WARNING;
 
-import java.security.PrivilegedAction;
+import com.sun.ejb.containers.EJBContextImpl;
+import com.sun.ejb.containers.EjbContainerUtilImpl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimerTask;
-
-import com.sun.ejb.containers.EJBContextImpl;
-import com.sun.ejb.containers.EjbContainerUtilImpl;
 
 /**
  * <p>
@@ -406,17 +403,7 @@ public class NonBlockingPool extends AbstractPool {
         long startTime = 0;
         boolean enteredResizeBlock = false;
         try {
-            if (System.getSecurityManager() == null) {
-                currentThread.setContextClassLoader(containerClassLoader);
-            } else {
-                doPrivileged(new PrivilegedAction<Object>() {
-                    @Override
-                    public Object run() {
-                        currentThread.setContextClassLoader(containerClassLoader);
-                        return null;
-                    }
-                });
-            }
+            currentThread.setContextClassLoader(containerClassLoader);
 
             _logger.log(FINE, () -> "[Pool-" + poolName + "]: Resize started at: " + (new Date()) + " steadyPoolSize ::"
                         + steadyPoolSize + " resizeQuantity ::" + resizeQuantity + " maxPoolSize ::" + maxPoolSize);
@@ -510,17 +497,7 @@ public class NonBlockingPool extends AbstractPool {
                 }
             }
 
-            if (System.getSecurityManager() == null) {
-                currentThread.setContextClassLoader(previousClassLoader);
-            } else {
-                doPrivileged(new PrivilegedAction<Object>() {
-                    @Override
-                    public Object run() {
-                        currentThread.setContextClassLoader(previousClassLoader);
-                        return null;
-                    }
-                });
-            }
+            currentThread.setContextClassLoader(previousClassLoader);
         }
 
         long endTime = System.currentTimeMillis();

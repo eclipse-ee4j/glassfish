@@ -18,23 +18,6 @@
 
 package org.glassfish.web.loader;
 
-import java.beans.Introspector;
-import java.lang.System.Logger;
-import java.lang.ref.Reference;
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.ResourceBundle;
-
-import org.glassfish.web.util.IntrospectionUtils;
-
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.TRACE;
@@ -43,6 +26,20 @@ import static java.text.MessageFormat.format;
 import static org.glassfish.web.loader.LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS;
 import static org.glassfish.web.loader.LogFacade.CHECK_THREAD_LOCALS_FOR_LEAKS_KEY;
 import static org.glassfish.web.loader.LogFacade.getString;
+
+import java.beans.Introspector;
+import java.lang.System.Logger;
+import java.lang.ref.Reference;
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.ResourceBundle;
+import org.glassfish.web.util.IntrospectionUtils;
 
 class ReferenceCleaner {
     private static final Logger LOG = LogFacade.getSysLogger(ReferenceCleaner.class);
@@ -343,16 +340,8 @@ class ReferenceCleaner {
     }
 
 
-    private static void setAccessible(final AccessibleObject acessible) {
-        if (System.getSecurityManager() == null) {
-            acessible.setAccessible(true);
-        } else {
-            PrivilegedAction<Void> action = () -> {
-                acessible.setAccessible(true);
-                return null;
-            };
-            AccessController.doPrivileged(action);
-        }
+    private static void setAccessible(final AccessibleObject accessible) {
+        accessible.setAccessible(true);
     }
 
 

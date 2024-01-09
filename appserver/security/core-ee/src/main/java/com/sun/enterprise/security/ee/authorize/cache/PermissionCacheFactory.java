@@ -16,7 +16,6 @@
 
 package com.sun.enterprise.security.ee.authorize.cache;
 
-import com.sun.enterprise.security.ee.J2EESecurityManager;
 import java.security.CodeSource;
 import java.security.Permission;
 import java.util.Hashtable;
@@ -143,13 +142,6 @@ public class PermissionCacheFactory {
      */
     public static synchronized void resetCaches() {
         supportsReuse = true;
-
-        java.lang.SecurityManager sm = System.getSecurityManager();
-        if (sm != null && sm instanceof J2EESecurityManager) {
-            if (!((J2EESecurityManager) sm).cacheEnabled()) {
-                ((J2EESecurityManager) sm).enablePermissionCache(securityManagerCache);
-            }
-        }
 
         Iterator iter = cacheMap.values().iterator();
         while (iter.hasNext()) {

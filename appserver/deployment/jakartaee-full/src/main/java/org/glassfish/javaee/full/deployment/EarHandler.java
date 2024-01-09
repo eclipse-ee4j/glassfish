@@ -17,8 +17,13 @@
 
 package org.glassfish.javaee.full.deployment;
 
+import static java.util.logging.Level.SEVERE;
+import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+import static org.glassfish.loader.util.ASClassLoaderUtil.getAppLibDirLibraries;
+
 import com.sun.enterprise.config.serverbeans.DasConfig;
-import com.sun.enterprise.connectors.connector.module.RarType;
 import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
 import com.sun.enterprise.deploy.shared.ArchiveFactory;
 import com.sun.enterprise.deploy.shared.FileArchive;
@@ -29,17 +34,11 @@ import com.sun.enterprise.deployment.deploy.shared.JarArchive;
 import com.sun.enterprise.deployment.deploy.shared.Util;
 import com.sun.enterprise.deployment.io.DescriptorConstants;
 import com.sun.enterprise.deployment.util.DOLUtils;
-import com.sun.enterprise.security.ee.perms.EarEEPermissionsProcessor;
-import com.sun.enterprise.security.ee.perms.PermsArchiveDelegate;
-import com.sun.enterprise.security.ee.perms.SMGlobalPolicyUtil;
-import com.sun.enterprise.security.integration.DDPermissionsLoader;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.io.FileUtils;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -48,19 +47,12 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.security.AccessController;
 import java.security.PermissionCollection;
-import java.security.PrivilegedAction;
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
 import java.text.MessageFormat;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.deployment.DeployCommandParameters;
@@ -76,24 +68,16 @@ import org.glassfish.api.deployment.archive.RarArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WarArchiveType;
 import org.glassfish.api.deployment.archive.WritableArchive;
-import org.glassfish.appclient.server.connector.CarType;
 import org.glassfish.deployment.common.DeploymentContextImpl;
 import org.glassfish.deployment.common.DeploymentProperties;
 import org.glassfish.deployment.common.ModuleDescriptor;
-import org.glassfish.ejb.deployment.archive.EjbType;
 import org.glassfish.hk2.api.PreDestroy;
 import org.glassfish.internal.api.DelegatingClassLoader;
 import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.internal.deployment.ExtendedDeploymentContext;
 import org.glassfish.javaee.core.deployment.ApplicationHolder;
-import org.glassfish.loader.util.ASClassLoaderUtil;
-import org.glassfish.web.WarType;
 import org.jvnet.hk2.annotations.Service;
 import org.xml.sax.SAXException;
-
-import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 
 @Service(name = EarDetector.ARCHIVE_TYPE)
 public class EarHandler extends AbstractArchiveHandler implements CompositeHandler {
@@ -124,9 +108,6 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
     // declaredPermission
     protected PermissionCollection earDeclaredPC;
 
-    // ee permissions for all types
-    private Map<SMGlobalPolicyUtil.CommponentType, PermissionCollection> eeGarntsMap;
-
     @Override
     public String getArchiveType() {
         return EarDetector.ARCHIVE_TYPE;
@@ -136,13 +117,11 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
     public String getVersionIdentifier(ReadableArchive archive) {
         String versionIdentifier = null;
         try {
-            GFApplicationXmlParser gfApplicationXMLParser = new GFApplicationXmlParser(archive);
-            versionIdentifier = gfApplicationXMLParser.extractVersionIdentifierValue(archive);
-        } catch (XMLStreamException e) {
-            _logger.log(Level.SEVERE, e.getMessage());
-        } catch (IOException e) {
-            _logger.log(Level.SEVERE, e.getMessage());
+            versionIdentifier = new GFApplicationXmlParser(archive).extractVersionIdentifierValue(archive);
+        } catch (XMLStreamException | IOException e) {
+            _logger.log(SEVERE, e.getMessage());
         }
+
         return versionIdentifier;
     }
 
@@ -209,7 +188,7 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
                                 throw new RuntimeException(msg);
                             }
                         }
-// Keep the original submodule file because the app client deployer needs it.
+                        // Keep the original submodule file because the app client deployer needs it.
                         /*
                          * // delete the original module file File origSubArchiveFile = new File( target.getURI().getSchemeSpecificPart(),
                          * moduleUri); origSubArchiveFile.delete();
@@ -287,11 +266,13 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
         // ear lib classloader <- embedded rar classloader <-
         // ear classloader <- various module classloaders
         final DelegatingClassLoader embeddedConnCl;
-        final EarClassLoader cl;
-        // add the libraries packaged in the application library directory
+        final EarClassLoader earClassLoader;
+
+        // Add the libraries packaged in the application library directory
         try {
             String compatProp = context.getAppProps().getProperty(DeploymentProperties.COMPATIBILITY);
-            // if user does not specify the compatibility property
+
+            // If user does not specify the compatibility property
             // let's see if it's defined in glassfish-application.xml
             if (compatProp == null) {
                 GFApplicationXmlParser gfApplicationXmlParser = new GFApplicationXmlParser(context.getSource());
@@ -300,7 +281,8 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
                     context.getAppProps().put(DeploymentProperties.COMPATIBILITY, compatProp);
                 }
             }
-            // if user does not specify the compatibility property
+
+            // If user does not specify the compatibility property
             // let's see if it's defined in sun-application.xml
             if (compatProp == null) {
                 SunApplicationXmlParser sunApplicationXmlParser = new SunApplicationXmlParser(context.getSourceDir());
@@ -310,72 +292,24 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
                 }
             }
 
-            if (System.getSecurityManager() != null) {
-                // procee declared permissions
-                earDeclaredPC = PermsArchiveDelegate.getDeclaredPermissions(SMGlobalPolicyUtil.CommponentType.ear, context);
-
-                // process ee permissions
-                processEEPermissions(context);
-            }
-
-            final URL[] earLibURLs = ASClassLoaderUtil.getAppLibDirLibraries(context.getSourceDir(), holder.app.getLibraryDirectory(),
+            final URL[] earLibURLs = getAppLibDirLibraries(context.getSourceDir(), holder.app.getLibraryDirectory(),
                     compatProp);
-            final EarLibClassLoader earLibCl = AccessController.doPrivileged(new PrivilegedAction<EarLibClassLoader>() {
-                @Override
-                public EarLibClassLoader run() {
-                    return new EarLibClassLoader(earLibURLs, parent);
-                }
-            });
 
-            if (System.getSecurityManager() != null) {
-                addEEOrDeclaredPermissions(earLibCl, earDeclaredPC, false);
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.fine("added declaredPermissions to earlib: " + earDeclaredPC);
-                }
-                addEEOrDeclaredPermissions(earLibCl, eeGarntsMap.get(SMGlobalPolicyUtil.CommponentType.ear), true);
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.fine("added all ee permissions to earlib: " + eeGarntsMap.get(SMGlobalPolicyUtil.CommponentType.ear));
-                }
-            }
+            final EarLibClassLoader earLibClassLoader = new EarLibClassLoader(earLibURLs, parent);
 
-            embeddedConnCl = AccessController.doPrivileged(new PrivilegedAction<DelegatingClassLoader>() {
-                @Override
-                public DelegatingClassLoader run() {
-                    return new DelegatingClassLoader(earLibCl);
-                }
-            });
-
-            cl = AccessController.doPrivileged(new PrivilegedAction<EarClassLoader>() {
-                @Override
-                public EarClassLoader run() {
-                    return new EarClassLoader(embeddedConnCl);
-                }
-            });
+            embeddedConnCl = new DelegatingClassLoader(earLibClassLoader);
+            earClassLoader = new EarClassLoader(embeddedConnCl);
 
             // add ear lib to module classloader list so we can
             // clean it up later
-            cl.addModuleClassLoader(EAR_LIB, earLibCl);
-
-            if (System.getSecurityManager() != null) {
-                // push declared permissions to ear classloader
-                addEEOrDeclaredPermissions(cl, earDeclaredPC, false);
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.fine("declaredPermissions added: " + earDeclaredPC);
-                }
-                // push ejb permissions to ear classloader
-                addEEOrDeclaredPermissions(cl, eeGarntsMap.get(SMGlobalPolicyUtil.CommponentType.ejb), true);
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.fine("ee permissions added: " + eeGarntsMap.get(SMGlobalPolicyUtil.CommponentType.ejb));
-                }
-            }
-
+            earClassLoader.addModuleClassLoader(EAR_LIB, earLibClassLoader);
         } catch (Exception e) {
-            _logger.log(Level.SEVERE, strings.get("errAddLibs"), e);
+            _logger.log(SEVERE, strings.get("errAddLibs"), e);
             throw new RuntimeException(e);
         }
 
-        for (ModuleDescriptor<BundleDescriptor> md : holder.app.getModules()) {
-            String moduleUri = md.getArchiveUri();
+        for (ModuleDescriptor<BundleDescriptor> moduleDescriptor : holder.app.getModules()) {
+            String moduleUri = moduleDescriptor.getArchiveUri();
             try (ReadableArchive sub = archive.getSubArchive(moduleUri)) {
                 if (sub == null) {
                     throw new IllegalArgumentException(strings.get("noSubModuleArchiveFound", moduleUri));
@@ -385,7 +319,7 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
                 }
                 ArchiveHandler handler = context.getModuleArchiveHandlers().get(moduleUri);
                 if (handler == null) {
-                    handler = getArchiveHandlerFromModuleType(md.getModuleType());
+                    handler = getArchiveHandlerFromModuleType(moduleDescriptor.getModuleType());
                     if (handler == null) {
                         handler = deployment.getArchiveHandler(sub);
                     }
@@ -411,27 +345,21 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
                     subContext.setArchiveHandler(context.getArchiveHandler());
                     subContext.setParentContext((ExtendedDeploymentContext) context);
                     sub.setParentArchive(context.getSource());
-                    ClassLoader subCl = handler.getClassLoader(cl, subContext);
-                    if (System.getSecurityManager() != null && (subCl instanceof DDPermissionsLoader)) {
-                        addEEOrDeclaredPermissions(subCl, earDeclaredPC, false);
-                        if (_logger.isLoggable(Level.FINE)) {
-                            _logger.fine("added declared permissions to sub module of " + subCl);
-                        }
-                    }
+                    ClassLoader subCl = handler.getClassLoader(earClassLoader, subContext);
 
-                    if (md.getModuleType().equals(DOLUtils.ejbType())) {
+                    if (moduleDescriptor.getModuleType().equals(DOLUtils.ejbType())) {
                         // for ejb module, we just add the ejb urls
                         // to EarClassLoader and use that to load
                         // ejb module
                         URL[] moduleURLs = ((URLClassLoader) subCl).getURLs();
                         for (URL moduleURL : moduleURLs) {
-                            cl.addURL(moduleURL);
+                            earClassLoader.addURL(moduleURL);
                         }
-                        cl.addModuleClassLoader(moduleUri, cl);
+                        earClassLoader.addModuleClassLoader(moduleUri, earClassLoader);
                         PreDestroy.class.cast(subCl).preDestroy();
-                    } else if (md.getModuleType().equals(DOLUtils.rarType())) {
+                    } else if (moduleDescriptor.getModuleType().equals(DOLUtils.rarType())) {
                         embeddedConnCl.addDelegate((DelegatingClassLoader.ClassFinder) subCl);
-                        cl.addModuleClassLoader(moduleUri, subCl);
+                        earClassLoader.addModuleClassLoader(moduleUri, subCl);
                     } else {
                         Boolean isTempClassLoader = context.getTransientAppMetaData(ExtendedDeploymentContext.IS_TEMP_CLASSLOADER,
                                 Boolean.class);
@@ -440,58 +368,28 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
                             // urls to the top level EarClassLoader
                             URL[] moduleURLs = ((URLClassLoader) subCl).getURLs();
                             for (URL moduleURL : moduleURLs) {
-                                cl.addURL(moduleURL);
+                                earClassLoader.addURL(moduleURL);
                             }
                         }
-                        cl.addModuleClassLoader(moduleUri, subCl);
+                        earClassLoader.addModuleClassLoader(moduleUri, subCl);
                     }
                 }
             } catch (IOException e) {
-                _logger.log(Level.SEVERE, strings.get("noClassLoader", moduleUri), e);
+                _logger.log(SEVERE, strings.get("noClassLoader", moduleUri), e);
             }
         }
-        return cl;
-    }
 
-    protected void processEEPermissions(DeploymentContext dc) {
-        EarEEPermissionsProcessor eePp = new EarEEPermissionsProcessor(dc);
-        eeGarntsMap = eePp.getAllAdjustedEEPermission();
-    }
-
-    // set ee or declared permissions
-    private void addEEOrDeclaredPermissions(ClassLoader cloader, final PermissionCollection pc, final boolean isEEPermission) {
-
-        if (!(cloader instanceof DDPermissionsLoader)) {
-            return;
-        }
-
-        final DDPermissionsLoader ddpl = (DDPermissionsLoader) cloader;
-        try {
-            AccessController.doPrivileged(new PrivilegedExceptionAction<Object>() {
-                @Override
-                public Object run() throws SecurityException {
-                    if (isEEPermission) {
-                        ddpl.addEEPermissions(pc);
-                    } else {
-                        ddpl.addDeclaredPermissions(pc);
-                    }
-
-                    return null;
-                }
-            });
-        } catch (PrivilegedActionException e) {
-            throw new SecurityException(e.getException());
-        }
+        return earClassLoader;
     }
 
     @Override
     public boolean accept(ReadableArchive source, String entryName) {
-        // I am hiding everything but the metadata.
+        // Hide everything but the metadata.
         return entryName.startsWith("META-INF");
 
     }
 
-    // do any necessary meta data initialization for composite handler
+    // Do any necessary meta data initialization for composite handler
     @Override
     public void initCompositeMetaData(DeploymentContext context) {
         // populate ear level metadata
@@ -529,6 +427,7 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
         if (holder.app == null) {
             throw new RuntimeException(strings.get("errReadMetadata"));
         }
+
         return holder;
     }
 
@@ -538,15 +437,21 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
     private ArchiveHandler getArchiveHandlerFromModuleType(ArchiveType type) {
         if (type.equals(DOLUtils.warType())) {
             return habitat.getService(ArchiveHandler.class, WarArchiveType.ARCHIVE_TYPE);
-        } else if (type.equals(DOLUtils.rarType())) {
-            return habitat.getService(ArchiveHandler.class, RarArchiveType.ARCHIVE_TYPE);
-        } else if (type.equals(DOLUtils.ejbType())) {
-            return habitat.getService(ArchiveHandler.class, EjbArchiveType.ARCHIVE_TYPE);
-        } else if (type.equals(DOLUtils.carType())) {
-            return habitat.getService(ArchiveHandler.class, CarArchiveType.ARCHIVE_TYPE);
-        } else {
-            return null;
         }
+
+        if (type.equals(DOLUtils.rarType())) {
+            return habitat.getService(ArchiveHandler.class, RarArchiveType.ARCHIVE_TYPE);
+        }
+
+        if (type.equals(DOLUtils.ejbType())) {
+            return habitat.getService(ArchiveHandler.class, EjbArchiveType.ARCHIVE_TYPE);
+        }
+
+        if (type.equals(DOLUtils.carType())) {
+            return habitat.getService(ArchiveHandler.class, CarArchiveType.ARCHIVE_TYPE);
+        }
+
+        return null;
     }
 
     private static class GFApplicationXmlParser {
@@ -589,7 +494,6 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
         }
 
         protected String extractVersionIdentifierValue(ReadableArchive archive) throws XMLStreamException, IOException {
-
             InputStream input = null;
             String versionIdentifierValue = null;
 

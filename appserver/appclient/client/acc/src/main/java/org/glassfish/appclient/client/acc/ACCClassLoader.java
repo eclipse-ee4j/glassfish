@@ -18,17 +18,16 @@
 
 package org.glassfish.appclient.client.acc;
 
+import static java.security.AccessController.doPrivileged;
+
 import com.sun.enterprise.loader.ResourceLocator;
 import com.sun.enterprise.util.io.FileUtils;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.net.URL;
-import java.security.CodeSource;
-import java.security.PermissionCollection;
 import java.security.PrivilegedAction;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
@@ -36,12 +35,8 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.function.Consumer;
-
 import org.glassfish.appclient.common.ClassPathUtils;
-import org.glassfish.appclient.common.ClientClassLoaderDelegate;
 import org.glassfish.common.util.GlassfishUrlClassLoader;
-
-import static java.security.AccessController.doPrivileged;
 
 /**
  * Application client classloader
@@ -57,8 +52,6 @@ public class ACCClassLoader extends GlassfishUrlClassLoader {
     private boolean shouldTransform;
 
     private final List<ClassFileTransformer> transformers = Collections.synchronizedList(new ArrayList<ClassFileTransformer>());
-
-    private ClientClassLoaderDelegate clientCLDelegate;
 
     public static synchronized ACCClassLoader newInstance(ClassLoader parent, boolean shouldTransform) {
         if (instance != null) {
@@ -110,12 +103,10 @@ public class ACCClassLoader extends GlassfishUrlClassLoader {
     public ACCClassLoader(ClassLoader parent, final boolean shouldTransform) {
         super(new URL[0], parent);
         this.shouldTransform = shouldTransform;
-        clientCLDelegate = new ClientClassLoaderDelegate(this);
     }
 
     public ACCClassLoader(URL[] urls, ClassLoader parent) {
         super(urls, parent);
-        clientCLDelegate = new ClientClassLoaderDelegate(this);
     }
 
     private ACCClassLoader(URL[] urls, ClassLoader parent, boolean shouldTransform) {
@@ -190,26 +181,6 @@ public class ACCClassLoader extends GlassfishUrlClassLoader {
             return baos.toByteArray();
         } catch (IOException e) {
             throw new ClassNotFoundException(className, e);
-        }
-    }
-
-    @Override
-    protected PermissionCollection getPermissions(CodeSource codesource) {
-        if (System.getSecurityManager() == null) {
-            return super.getPermissions(codesource);
-        }
-
-        // When security manager is enabled, find the declared permissions
-        if (clientCLDelegate.getCachedPerms(codesource) != null) {
-            return clientCLDelegate.getCachedPerms(codesource);
-        }
-
-        return clientCLDelegate.getPermissions(codesource, super.getPermissions(codesource));
-    }
-
-    public void processDeclaredPermissions() throws IOException {
-        if (clientCLDelegate == null) {
-            clientCLDelegate = new ClientClassLoaderDelegate(this);
         }
     }
 

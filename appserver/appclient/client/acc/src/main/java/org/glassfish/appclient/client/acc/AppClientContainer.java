@@ -262,13 +262,6 @@ public class AppClientContainer {
 
     }
 
-    void processPermissions() throws IOException {
-        // need to process the permissions files
-        if (classLoader instanceof ACCClassLoader) {
-            ((ACCClassLoader) classLoader).processDeclaredPermissions();
-        }
-    }
-
     protected Class<?> loadClass(final String className) throws ClassNotFoundException {
         return Class.forName(className, true, classLoader);
     }

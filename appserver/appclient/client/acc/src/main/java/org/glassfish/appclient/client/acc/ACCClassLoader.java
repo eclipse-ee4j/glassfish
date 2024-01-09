@@ -1,7 +1,6 @@
 /*
- * Copyright (c) 2021, 2023 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +17,7 @@
 
 package org.glassfish.appclient.client.acc;
 
-import static java.security.AccessController.doPrivileged;
+import static org.glassfish.appclient.common.ClassPathUtils.getJavaClassPathForAppClient;
 
 import com.sun.enterprise.loader.ResourceLocator;
 import com.sun.enterprise.util.io.FileUtils;
@@ -28,14 +27,12 @@ import java.io.InputStream;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.net.URL;
-import java.security.PrivilegedAction;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.function.Consumer;
-import org.glassfish.appclient.common.ClassPathUtils;
 import org.glassfish.common.util.GlassfishUrlClassLoader;
 
 /**
@@ -62,11 +59,7 @@ public class ACCClassLoader extends GlassfishUrlClassLoader {
         boolean currentCLWasAgentCL = currentClassLoader.getClass().getName().equals(AGENT_LOADER_CLASS_NAME);
         ClassLoader parentForACCCL = currentCLWasAgentCL ? currentClassLoader.getParent() : currentClassLoader;
 
-        PrivilegedAction<ACCClassLoader> action = () -> {
-            URL[] classpath = ClassPathUtils.getJavaClassPathForAppClient();
-            return new ACCClassLoader(classpath, parentForACCCL, shouldTransform);
-        };
-        instance = doPrivileged(action);
+        instance = new ACCClassLoader(getJavaClassPathForAppClient(), parentForACCCL, shouldTransform);
 
         if (currentCLWasAgentCL) {
             try {
@@ -131,13 +124,7 @@ public class ACCClassLoader extends GlassfishUrlClassLoader {
 
     synchronized ACCClassLoader shadow() {
         if (shadow == null) {
-            shadow = doPrivileged(new PrivilegedAction<ACCClassLoader>() {
-                @Override
-                public ACCClassLoader run() {
-                    return new ACCClassLoader(getURLs(), getParent());
-                }
-
-            });
+            shadow = new ACCClassLoader(getURLs(), getParent());
         }
 
         return shadow;
@@ -186,8 +173,7 @@ public class ACCClassLoader extends GlassfishUrlClassLoader {
 
     @Override
     public Enumeration<URL> getResources(String name) throws IOException {
-        final ResourceLocator locator = new ResourceLocator(this, getParentClassLoader(), true);
-        return locator.getResources(name);
+        return new ResourceLocator(this, getParentClassLoader(), true).getResources(name);
     }
 
     private ClassLoader getParentClassLoader() {
@@ -195,6 +181,7 @@ public class ACCClassLoader extends GlassfishUrlClassLoader {
         if (parent == null) {
             return getSystemClassLoader();
         }
+
         return parent;
     }
 }

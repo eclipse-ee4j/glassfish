@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -361,7 +361,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
 
     @Override
     public void addTransformer(ClassFileTransformer transformer) {
-        transformers.add(new ReentrantClassFileTransformer(transformer));
+        transformers.add(transformer);
     }
 
 
@@ -1358,36 +1358,6 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader
         @Override
         protected Enumeration<URL> findResources(String name) throws IOException {
             return delegate.findResources(name);
-        }
-    }
-
-    private static class ReentrantClassFileTransformer implements ClassFileTransformer {
-
-        private final ThreadLocal<Boolean> bytecodeTransforming = new ThreadLocal<>();
-
-        private final ClassFileTransformer transformer;
-
-        private ReentrantClassFileTransformer(ClassFileTransformer transformer) {
-            this.transformer = transformer;
-        }
-
-        @Override
-        public byte[] transform(ClassLoader loader,
-                                String className,
-                                Class<?> classBeingRedefined,
-                                ProtectionDomain protectionDomain,
-                                byte[] classfileBuffer) throws IllegalClassFormatException {
-            // Skip if the transformation is in progress
-            if (bytecodeTransforming.get() != null) {
-                return classfileBuffer;
-            }
-
-            bytecodeTransforming.set(true);
-            try {
-                return transformer.transform(loader, className, classBeingRedefined, protectionDomain, classfileBuffer);
-            } finally {
-                bytecodeTransforming.remove();
-            }
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,11 +22,13 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 import java.io.File;
 import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
+import java.lang.instrument.IllegalClassFormatException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -89,7 +91,6 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
     ArchiveHandler archiveHandler;
     Properties props;
     Map<String, Object> modulesMetaData = new HashMap<>();
-    List<ClassFileTransformer> transformers = new ArrayList<>();
     Phase phase = Phase.UNKNOWN;
     ClassLoader sharableTemp;
     Map<String, Properties> modulePropsMap = new HashMap<>();
@@ -391,8 +392,9 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
     @Override
     public void addTransformer(ClassFileTransformer transformer) {
         InstrumentableClassLoader instrumentableClassLoader = InstrumentableClassLoader.class.cast(getFinalClassLoader());
-        String isComposite = getAppProps().getProperty(IS_COMPOSITE);
+        ClassFileTransformer reentrantTransformer = new ReentrantClassFileTransformer(transformer);
 
+        String isComposite = getAppProps().getProperty(IS_COMPOSITE);
         if (Boolean.valueOf(isComposite) && instrumentableClassLoader instanceof URLClassLoader) {
             @SuppressWarnings("resource")
             URLClassLoader urlClassLoader = (URLClassLoader) instrumentableClassLoader;
@@ -409,23 +411,13 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
                     libClassLoader = libClassLoader.getParent();
                 }
                 if (libClassLoader instanceof InstrumentableClassLoader) {
-                    InstrumentableClassLoader.class.cast(libClassLoader).addTransformer(transformer);
+                    InstrumentableClassLoader.class.cast(libClassLoader).addTransformer(reentrantTransformer);
                 }
 
             }
         }
 
-        instrumentableClassLoader.addTransformer(transformer);
-    }
-
-    /**
-     * Returns the list of transformers registered to this context.
-     *
-     * @return the transformers list
-     */
-    @Override
-    public List<ClassFileTransformer> getTransformers() {
-        return transformers;
+        instrumentableClassLoader.addTransformer(reentrantTransformer);
     }
 
     @Override
@@ -695,6 +687,35 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
     private void prepareScratchDir(File scratchDir) throws IOException {
         if (!scratchDir.isDirectory() && !scratchDir.mkdirs()) {
             throw new IOException("Cannot create scratch directory : " + scratchDir.getAbsolutePath());
+        }
+    }
+
+    static final class ReentrantClassFileTransformer implements ClassFileTransformer {
+
+        private final ThreadLocal<Boolean> bytecodeTransforming = ThreadLocal.withInitial(() -> false);
+        private final ClassFileTransformer transformer;
+
+        ReentrantClassFileTransformer(ClassFileTransformer transformer) {
+            this.transformer = transformer;
+        }
+
+        @Override
+        public byte[] transform(ClassLoader loader,
+                                String className,
+                                Class<?> classBeingRedefined,
+                                ProtectionDomain protectionDomain,
+                                byte[] classfileBuffer) throws IllegalClassFormatException {
+            // Skip if already transformation in progress
+            if (bytecodeTransforming.get()) {
+                return null;
+            }
+
+            bytecodeTransforming.set(true);
+            try {
+                return transformer.transform(loader, className, classBeingRedefined, protectionDomain, classfileBuffer);
+            } finally {
+                bytecodeTransforming.remove();
+            }
         }
     }
 }

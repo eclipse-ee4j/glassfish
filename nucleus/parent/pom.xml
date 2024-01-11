@@ -154,7 +154,6 @@
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
 
         <easymock.version>4.3</easymock.version>
-        <jmockit.version>1.49</jmockit.version>
         <junit.version>5.10.1</junit.version>
         <jmh.version>1.37</jmh.version>
         <osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
@@ -701,12 +700,6 @@
                 <groupId>org.easymock</groupId>
                 <artifactId>easymock</artifactId>
                 <version>${easymock.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.jmockit</groupId>
-                <artifactId>jmockit</artifactId>
-                <version>${jmockit.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>

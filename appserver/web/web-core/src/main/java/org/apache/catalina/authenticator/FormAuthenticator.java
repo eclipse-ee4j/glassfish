@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -41,6 +41,7 @@ import org.apache.catalina.HttpRequest;
 import org.apache.catalina.HttpResponse;
 import org.apache.catalina.Realm;
 import org.apache.catalina.Session;
+import org.apache.catalina.connector.Request;
 import org.apache.catalina.deploy.LoginConfig;
 import org.apache.catalina.deploy.SecurityConstraint;
 import org.glassfish.grizzly.http.util.ByteChunk;
@@ -100,12 +101,12 @@ public class FormAuthenticator extends AuthenticatorBase {
      */
     @Override
     public boolean authenticate(HttpRequest request, HttpResponse response, LoginConfig config) throws IOException {
-        HttpServletRequest httpServletRequest = (HttpServletRequest) request.getRequest();
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request.getRequest(true);
         HttpServletResponse httpServletResponse = (HttpServletResponse) response.getResponse();
         Session session = null;
 
         String contextPath = httpServletRequest.getContextPath();
-        String requestURI = request.getDecodedRequestURI();
+        String requestURI = ((Request) request).getDecodedRequestURI(true);
 
         // Is this the action request from the login page?
         boolean loginAction = requestURI.startsWith(contextPath) && requestURI.endsWith(FORM_ACTION);
@@ -287,7 +288,7 @@ public class FormAuthenticator extends AuthenticatorBase {
         }
 
         // Does the request URI match?
-        HttpServletRequest hreq = (HttpServletRequest) request.getRequest();
+        HttpServletRequest hreq = (HttpServletRequest) request.getRequest(true);
         String requestURI = hreq.getRequestURI();
         if (requestURI == null) {
             return false;
@@ -410,7 +411,7 @@ public class FormAuthenticator extends AuthenticatorBase {
                 }
             }
             RequestDispatcher disp = servletContext.getRequestDispatcher(loginPage);
-            disp.forward(request.getRequest(), response.getResponse());
+            disp.forward(request.getRequest(true), response.getResponse());
             // NOTE: is finishResponse necessary or is it unnecessary after forward
             response.finishResponse();
         } catch (Throwable t) {
@@ -444,7 +445,7 @@ public class FormAuthenticator extends AuthenticatorBase {
             }
 
             servletContext.getRequestDispatcher(errorPage)
-                          .forward(request.getRequest(), response.getResponse());
+                          .forward(request.getRequest(true), response.getResponse());
 
         } catch (Throwable t) {
             log.log(WARNING, UNEXPECTED_ERROR_FORWARDING_TO_LOGIN_PAGE, t);
@@ -459,7 +460,7 @@ public class FormAuthenticator extends AuthenticatorBase {
      */
     protected void saveRequest(HttpRequest request, Session session) throws IOException {
         // Create and populate a SavedRequest object for this request
-        HttpServletRequest hreq = (HttpServletRequest) request.getRequest();
+        HttpServletRequest hreq = (HttpServletRequest) request.getRequest(true);
         SavedRequest saved = new SavedRequest();
         Cookie cookies[] = hreq.getCookies();
         if (cookies != null) {

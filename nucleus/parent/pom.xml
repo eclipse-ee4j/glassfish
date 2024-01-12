@@ -1551,7 +1551,7 @@
             <id>jacoco</id>
             <properties>
                 <jacoco.report.outputDirectory>${project.build.directory}/jacoco</jacoco.report.outputDirectory>
-                <jacoco.version>0.8.10</jacoco.version>
+                <jacoco.version>0.8.11</jacoco.version>
                 <maven.test.failure.ignore>true</maven.test.failure.ignore>
                 <surefire.argLine>${maven.test.jvmoptions} @{argLine}</surefire.argLine>
             </properties>

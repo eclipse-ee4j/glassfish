@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -83,7 +84,7 @@ public abstract class GFLauncher {
      * parameters (GF DAS or Instance).
      *
      */
-    private GFLauncherInfo callerParameters;
+    private final GFLauncherInfo callerParameters;
 
     /**
      * Properties from asenv.conf, such as <code>AS_DEF_DOMAINS_PATH="../domains"</code>
@@ -119,7 +120,7 @@ public abstract class GFLauncher {
     /**
      * Same data as domainXMLjvmOptions, but as list
      */
-    private List<String> domainXMLJvmOptionsAsList = new ArrayList<>();
+    private final List<String> domainXMLJvmOptionsAsList = new ArrayList<>();
 
     /**
      * The <code>profiler<code> from <code>java-config</code> in domain.xml
@@ -160,7 +161,7 @@ public abstract class GFLauncher {
     /**
      * The full commandline string used to start GlassFish in process <code<>glassFishProcess</code>
      */
-    private List<String> commandLine = new ArrayList<>();
+    private final List<String> commandLine = new ArrayList<>();
 
     /**
      * Time when GlassFish was launched
@@ -469,6 +470,10 @@ public abstract class GFLauncher {
         // Run the glassFishProcess and attach Stream Drainers
         try {
             closeStandardStreamsMaybe();
+
+            // We have to abandon server.log file to avoid file locking issues on Windows.
+            // From now on the server.log file is owned by the server, not by launcher.
+            GFLauncherLogger.removeLogFileHandler();
 
             // Startup GlassFish
             glassFishProcess = processBuilder.start();
@@ -1108,7 +1113,7 @@ public abstract class GFLauncher {
     ///////////////////////////////////////////////////////////////////////////
     private static class ProcessWhacker implements Runnable {
 
-        private String message;
+        private final String message;
         private Process process;
 
         ProcessWhacker(Process p, String msg) {

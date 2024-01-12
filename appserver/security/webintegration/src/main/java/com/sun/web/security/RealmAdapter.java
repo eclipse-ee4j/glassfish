@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, 2023 Contributors to the Eclipse Foundation.
+ * Copyright 2021, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -1345,7 +1345,13 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
     }
 
     private boolean validate(HttpRequest request, HttpResponse response, LoginConfig config, Authenticator authenticator, boolean calledFromAuthenticate) throws IOException {
-        HttpServletRequest httpServletRequest = (HttpServletRequest) request.getRequest();
+        /*
+         * Create a request facade such that if the request was received at the root context, and the root context is mapped to
+         * a default-web-module, the default-web-module mapping is masked from the application code to which the request facade
+         * is being passed. For example, the request.facade's getContextPath() method will return "/", rather than the context
+         * root of the default-web-module, in this case.
+         */
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request.getRequest(true);
         HttpServletResponse httpServletResponse = (HttpServletResponse) response.getResponse();
 
         Subject subject = new Subject();

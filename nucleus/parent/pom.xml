@@ -153,7 +153,7 @@
 
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
 
-        <easymock.version>4.3</easymock.version>
+        <easymock.version>5.2.0</easymock.version>
         <junit.version>5.10.1</junit.version>
         <jmh.version>1.37</jmh.version>
         <osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>

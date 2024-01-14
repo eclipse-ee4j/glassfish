@@ -36,10 +36,10 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 import static org.glassfish.main.jul.env.LoggingSystemEnvironment.getOriginalStdErr;
 import static org.glassfish.main.jul.env.LoggingSystemEnvironment.getOriginalStdOut;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -143,14 +143,14 @@ public class GlassFishLogHandlerTest {
         assertAll(
             () -> assertTrue(handler.isReady(), "handler.ready"),
             () -> assertTrue(handler.getConfiguration().getLogFile().exists(), "file exists"),
-            () -> assertThat("size of file two", handler.getConfiguration().getLogFile().length(), equalTo(0L))
+            () -> assertThat("size of file two", handler.getConfiguration().getLogFile().length(), lessThan(260L))
         );
-        handler.publish(new GlassFishLogRecord(Level.SEVERE, "File two, line one"));
+        handler.publish(new GlassFishLogRecord(Level.SEVERE, "File two, line two"));
         Thread.sleep(MILLIS_FOR_PUMP);
         assertAll(
             () -> assertTrue(handler.isReady(), "handler.ready"),
             () -> assertTrue(handler.getConfiguration().getLogFile().exists(), "file exists"),
-            () -> assertThat("size of file two", handler.getConfiguration().getLogFile().length(), greaterThan(0L))
+            () -> assertThat("size of file two", handler.getConfiguration().getLogFile().length(), greaterThan(260L))
         );
     }
 

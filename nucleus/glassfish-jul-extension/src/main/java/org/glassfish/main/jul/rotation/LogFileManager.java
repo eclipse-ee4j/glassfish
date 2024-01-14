@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,26 +18,20 @@ package org.glassfish.main.jul.rotation;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.lang.System.Logger;
-import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.logging.StreamHandler;
-import java.util.zip.GZIPOutputStream;
 
 import org.glassfish.main.jul.tracing.GlassFishLoggingTracer;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.INFO;
 
 
 /**
@@ -56,16 +50,13 @@ public class LogFileManager {
     private static final Logger LOG = System.getLogger(LogFileManager.class.getName());
 
     private static final DateTimeFormatter SUFFIX_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH-mm-ss");
-    private static final String GZIP_EXTENSION = ".gz";
 
     private final File logFile;
+    private final LogFileArchiver archiver;
+    private final Charset fileEncoding;
     private final long maxFileSize;
-    private final boolean compressOldLogFiles;
-    private final int maxCountOfOldLogFiles;
-    private final HandlerSetStreamMethod streamSetter;
-    private final HandlerCloseStreamMethod streamCloser;
 
-    private MeteredStream meter;
+    private MeteredFileWriter writer;
 
 
     /**
@@ -73,27 +64,54 @@ public class LogFileManager {
      * does not enable the output. Call {@link #enableOutput()} for that.
      *
      * @param logFile - output logging file path
+     * @param fileEncoding
      * @param maxFileSize - if the size of the file crosses this value, the file is renamed to the
      *            logFile name with added suffix ie. <code>server.log_2020-05-01T16-28-27</code>
      * @param compressOldLogFiles - if true, rolled file is packed to GZIP (so the file will have a name
      *            ie. <code>server.log_2020-05-01T21-50-09.gz</code>)
      * @param maxCountOfOldLogFiles - if the count of rolled files with logFile's file name prefix
      *            crosses this value, old files will be permanently deleted.
-     * @param streamSetter - this should be a {@link StreamHandler#setOutputStream} method. This
-     *            method will be called when we enable ouput. Can be null.
-     * @param streamCloser - this should be a {@link StreamHandler#close()} method. This method will
-     *            be called when we disable output. Can be null.
      */
-    public LogFileManager(final File logFile, //
-        final long maxFileSize, final boolean compressOldLogFiles, final int maxCountOfOldLogFiles, //
-        final HandlerSetStreamMethod streamSetter, final HandlerCloseStreamMethod streamCloser //
+    public LogFileManager(final File logFile, Charset fileEncoding, //
+        final long maxFileSize, final boolean compressOldLogFiles, final int maxCountOfOldLogFiles //
     ) {
         this.logFile = logFile;
+        this.fileEncoding = fileEncoding;
         this.maxFileSize = maxFileSize;
-        this.compressOldLogFiles = compressOldLogFiles;
-        this.maxCountOfOldLogFiles = maxCountOfOldLogFiles;
-        this.streamSetter = streamSetter;
-        this.streamCloser = streamCloser;
+        this.archiver = new LogFileArchiver(logFile, compressOldLogFiles, maxCountOfOldLogFiles);
+    }
+
+
+    /**
+     * Writes the text to the log file.
+     *
+     * @param text
+     * @throws IllegalStateException if the output is disabled.
+     */
+    public synchronized void write(String text) throws IllegalStateException {
+        if (!isOutputEnabled()) {
+            throw new IllegalStateException("The file output is disabled!");
+        }
+        try {
+            writer.write(text);
+        } catch (Exception e) {
+            GlassFishLoggingTracer.error(getClass(), "Could not write to the output stream.", e);
+        }
+    }
+
+
+    /**
+     * Flushed the file writer and if the file is too large, rolls the file.
+     */
+    public synchronized void flush() {
+        if (isOutputEnabled()) {
+            try {
+                writer.flush();
+            } catch (IOException e) {
+                GlassFishLoggingTracer.error(getClass(), "Could not flush the writer.", e);
+            }
+        }
+        rollIfFileTooBig();
     }
 
 
@@ -101,15 +119,15 @@ public class LogFileManager {
      * @return the size of the logFile in bytes. The value is obtained from the outputstream, only
      *         if the output stream is closed, this method will check the file system.
      */
-    public long getFileSize() {
-        return this.meter == null ? this.logFile.length() : this.meter.getBytesWritten();
+    public synchronized long getFileSize() {
+        return this.writer == null ? this.logFile.length() : this.writer.getBytesWritten();
     }
 
 
     /**
      * Calls {@link #roll()} if the file is bigger than limit given in constructor.
      */
-    public void rollIfFileTooBig() {
+    public synchronized void rollIfFileTooBig() {
         if (isRollFileSizeLimitReached()) {
             roll();
         }
@@ -119,7 +137,7 @@ public class LogFileManager {
     /**
      * Calls {@link #roll()} if the file is not empty.
      */
-    public void rollIfFileNotEmpty() {
+    public synchronized void rollIfFileNotEmpty() {
         if (getFileSize() > 0) {
             roll();
         }
@@ -134,20 +152,19 @@ public class LogFileManager {
      * again.
      */
     public synchronized void roll() {
-        LOG.log(DEBUG, "roll(); {0}", this.logFile);
         final boolean wasOutputEnabled = isOutputEnabled();
+        LOG.log(DEBUG, "Rolling the file {0}; output was originally enabled: {1}", this.logFile, wasOutputEnabled);
         disableOutput();
+        LOG.log(DEBUG, "Output disabled for now.");
         final File archivedFile = rollToNewFile();
+        LOG.log(INFO, "Archived file: {0} - if null, action failed.", archivedFile);
         if (wasOutputEnabled) {
             enableOutput();
+            LOG.log(DEBUG, "Output to {0} enabled again.", this.logFile);
         }
-        if (archivedFile == null) {
-            // Rolling failed.
-            return;
+        if (archivedFile != null) {
+            archiver.archive(archivedFile);
         }
-        // There is no need to block processing of new log records with this time consuming action.
-        final Runnable cleanup = () -> cleanUpHistoryLogFiles(archivedFile);
-        new Thread(cleanup, "old-log-files-cleanup-" + this.logFile.getName()).start();
     }
 
 
@@ -155,7 +172,7 @@ public class LogFileManager {
      * @return true if the handler owning this instance can write to the outputstream.
      */
     public synchronized boolean isOutputEnabled() {
-        return this.meter != null;
+        return this.writer != null;
     }
 
 
@@ -168,7 +185,7 @@ public class LogFileManager {
      */
     public synchronized void enableOutput() {
         if (isOutputEnabled()) {
-            return;
+            throw new IllegalStateException("Output is already enabled!");
         }
         // check that the parent directory exists.
         final File parent = this.logFile.getParentFile();
@@ -179,10 +196,8 @@ public class LogFileManager {
         try {
             final FileOutputStream fout = new FileOutputStream(this.logFile, true);
             final BufferedOutputStream bout = new BufferedOutputStream(fout);
-            this.meter = new MeteredStream(bout, this.logFile.length());
-            if (this.streamSetter != null) {
-                this.streamSetter.setStream(this.meter);
-            }
+            final MeteredStream stream = new MeteredStream(bout, this.logFile.length());
+            this.writer = new MeteredFileWriter(stream, fileEncoding);
         } catch (Exception e) {
             throw new IllegalStateException("Could not open the log file for writing: " + this.logFile, e);
         }
@@ -195,17 +210,16 @@ public class LogFileManager {
      * Redundant calls do nothing.
      */
     public synchronized void disableOutput() {
-        if (isOutputEnabled()) {
-            if (streamCloser != null) {
-                this.streamCloser.close();
-            }
-            try {
-                this.meter.close();
-            } catch (final IOException e) {
-                GlassFishLoggingTracer.error(getClass(), "Could not close the output stream.", e);
-            }
-            this.meter = null;
+        if (!isOutputEnabled()) {
+            return;
         }
+        try {
+            LOG.log(DEBUG, "Closing writer: {0}", writer);
+            this.writer.close();
+        } catch (final IOException e) {
+            GlassFishLoggingTracer.error(getClass(), "Could not close the output stream.", e);
+        }
+        this.writer = null;
     }
 
 
@@ -247,7 +261,7 @@ public class LogFileManager {
         while (true) {
             final File archivedLogFile = new File(logFile.getParentFile(), archivedFileName);
             // We have to avoid collisions with archives too
-            final File archivedGzLogFile = getGzArchiveFile(archivedLogFile);
+            final File archivedGzLogFile = archiver.getGzArchiveFile(archivedLogFile);
             if (!archivedLogFile.exists() && !archivedGzLogFile.exists()) {
                 return archivedLogFile;
             }
@@ -273,134 +287,21 @@ public class LogFileManager {
         LOG.log(DEBUG, "moveFile(logFileToArchive={0}, target={1})", logFileToArchive, target);
         try {
             Files.move(logFileToArchive.toPath(), target.toPath(), StandardCopyOption.ATOMIC_MOVE);
-        } catch (UnsupportedOperationException | AtomicMoveNotSupportedException e) {
+        } catch (UnsupportedOperationException | IOException e) {
             // If we don't succeed with file rename which most likely can happen on
             // Windows because of multiple file handles opened. We go through Plan B to
             // copy bytes explicitly to a renamed file.
             // Can happen on some windows file systems - then we try non-atomic version at least.
             logError(String.format(
                 "File %s could not be renamed to %s atomically, now trying to move it without this request.",
-                logFileToArchive, target));
+                logFileToArchive, target), e);
             Files.move(logFileToArchive.toPath(), target.toPath());
         }
-    }
-
-
-    // synchronized - it is executed in separate thread!
-    private synchronized void cleanUpHistoryLogFiles(final File rotatedFile) {
-        if (this.compressOldLogFiles) {
-            compressFile(rotatedFile);
-        }
-        deleteOldLogFiles();
-    }
-
-
-    private void compressFile(final File rotatedFile) {
-        final long start = System.currentTimeMillis();
-        final File outFile = getGzArchiveFile(rotatedFile);
-        final boolean compressed = gzipFile(rotatedFile, outFile);
-        if (compressed) {
-            final long time = System.currentTimeMillis() - start;
-            LOG.log(DEBUG, "File {0} of size {1} has been archived to file {2} of size {3} in {4} ms",
-                rotatedFile, rotatedFile.length(), outFile, outFile.length(), time);
-            final boolean deleted = rotatedFile.delete();
-            if (!deleted) {
-                logError("Could not delete uncompressed log file: " + rotatedFile.getAbsolutePath());
-            }
-        } else {
-            logError("Could not compress log file: " + rotatedFile.getAbsolutePath());
-        }
-    }
-
-
-    private File getGzArchiveFile(final File rotatedFile) {
-        return new File(rotatedFile.getParentFile(), rotatedFile.getName() + GZIP_EXTENSION);
-    }
-
-
-    private void deleteOldLogFiles() {
-        if (this.maxCountOfOldLogFiles == 0) {
-            return;
-        }
-
-        final File dir = this.logFile.getParentFile();
-        final String logFileName = this.logFile.getName();
-        if (dir == null) {
-            return;
-        }
-        final FileFilter filter = f -> f.isFile() && !f.getName().equals(logFileName)
-            && f.getName().startsWith(logFileName);
-        Arrays.stream(dir.listFiles(filter)).sorted(Comparator.comparing(File::getName).reversed())
-            .skip(this.maxCountOfOldLogFiles).forEach(this::deleteFile);
-    }
-
-
-    private void deleteFile(final File file) {
-        final boolean delFile = file.delete();
-        if (!delFile) {
-            logError("Could not delete the log file: " + file);
-        }
-    }
-
-
-    private boolean gzipFile(final File inputFile, final File outputFile) {
-        try (
-            FileInputStream fis = new FileInputStream(inputFile);
-            FileOutputStream fos = new FileOutputStream(outputFile);
-            GZIPOutputStream gzos = new GZIPOutputStream(fos)
-        ) {
-            byte[] buffer = new byte[1024];
-            int len;
-            while ((len = fis.read(buffer)) != -1) {
-                gzos.write(buffer, 0, len);
-            }
-            gzos.finish();
-            return true;
-        } catch (IOException ix) {
-            logError("Error gzipping log file " + inputFile, ix);
-            return false;
-        }
-    }
-
-
-    private void logError(final String message) {
-        GlassFishLoggingTracer.error(getClass(), message);
-        LOG.log(ERROR, message);
     }
 
 
     private void logError(final String message, final Throwable t) {
         GlassFishLoggingTracer.error(getClass(), message, t);
         LOG.log(ERROR, message, t);
-    }
-
-    /**
-     * Method which sets the handler's output stream. <br>
-     * After this call handler is able to write to the output file.
-     */
-    @FunctionalInterface
-    public interface HandlerSetStreamMethod {
-
-        /**
-         * Method which sets the handler's output stream. <br>
-         * After this call handler is able to write to the output file.
-         *
-         * @param outputStream target output stream
-         */
-        void setStream(OutputStream outputStream);
-    }
-
-    /**
-     * Method which flushes and closes the handler's output stream. <br>
-     * After this call is not possible to write to the file.
-     */
-    @FunctionalInterface
-    public interface HandlerCloseStreamMethod {
-
-        /**
-         * Method which flushes and closes the handler's output stream. <br>
-         * After this call is not possible to write to the file.
-         */
-        void close();
     }
 }

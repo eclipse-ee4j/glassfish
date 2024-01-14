@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,14 +17,11 @@
 package org.glassfish.main.jul.rotation;
 
 import java.io.File;
-import java.io.OutputStream;
 import java.nio.file.Files;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.glassfish.main.jul.rotation.LogFileManager.HandlerSetStreamMethod;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -36,9 +33,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author David Matejcek
@@ -46,8 +43,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class LogFileManagerTest {
 
     private static File dir;
-    private OutputStream stream;
-    private AtomicBoolean closeCalled;
     private File file;
     private LogFileManager manager;
 
@@ -61,10 +56,8 @@ public class LogFileManagerTest {
 
     @BeforeEach
     public void init() throws Exception {
-        HandlerSetStreamMethod streamSetter = s -> stream = s;
-        closeCalled = new AtomicBoolean();
         file = new File(dir, "logFileManagerTest.log");
-        manager = new LogFileManager(file, 100L, true, 2, streamSetter, () -> closeCalled.set(true));
+        manager = new LogFileManager(file, UTF_8, 100L, true, 10);
     }
 
 
@@ -83,24 +76,15 @@ public class LogFileManagerTest {
         assertFalse(manager.isOutputEnabled());
         manager.disableOutput();
         assertFalse(manager.isOutputEnabled());
-        assertFalse(closeCalled.get());
-        assertNull(stream);
 
         manager.enableOutput();
         assertTrue(manager.isOutputEnabled());
-        assertFalse(closeCalled.get());
-        assertNotNull(stream);
 
-        manager.enableOutput();
+        assertThrows(IllegalStateException.class, manager::enableOutput);
         assertTrue(manager.isOutputEnabled());
-        assertFalse(closeCalled.get());
-        assertNotNull(stream);
 
         manager.disableOutput();
         assertFalse(manager.isOutputEnabled());
-        // why? StreamHandler doesn't allow to set null as the stream. So it is just closed.
-        assertNotNull(stream);
-        assertTrue(closeCalled.get());
 
         manager.disableOutput();
         assertFalse(manager.isOutputEnabled());
@@ -119,35 +103,54 @@ public class LogFileManagerTest {
     public void rolling() throws Exception {
         assertDoesNotThrow(manager::rollIfFileNotEmpty);
         assertDoesNotThrow(manager::rollIfFileTooBig);
+
+        // simplest test
         manager.enableOutput();
-        stream.write("Just a few bytes".getBytes(UTF_8));
-        stream.flush();
+        manager.write("Just a few bytes");
+        // this will flush output, but doesn't roll
+        manager.flush();
         assertEquals(16, manager.getFileSize());
         assertEquals(file.length(), manager.getFileSize());
-
         manager.rollIfFileNotEmpty();
         assertEquals(0, manager.getFileSize());
         assertEquals(file.length(), manager.getFileSize());
 
-        stream.write(RandomStringUtils.randomAlphabetic(101).getBytes(UTF_8));
-        stream.flush();
-        assertEquals(101, manager.getFileSize());
-        // disableOutput should not affect the result.
+        // limit is 100, so flush will roll.
+        manager.write(RandomStringUtils.randomAlphabetic(101));
+        manager.flush();
+        assertEquals(0, manager.getFileSize());
+
+        // disableOutput does not affect roll.
+        manager.write(RandomStringUtils.randomAlphabetic(101));
         manager.disableOutput();
-        manager.rollIfFileTooBig();
+        manager.flush();
         assertEquals(0, manager.getFileSize());
         assertEquals(file.length(), manager.getFileSize());
 
+        // enabling output should make writes possible again.
         manager.enableOutput();
         assertDoesNotThrow(() -> {
-            stream.write(8);
-            stream.flush();
+            manager.write("X");
+            manager.flush();
         });
+        assertEquals(1, manager.getFileSize());
+        manager.flush();
+        assertEquals(1, manager.getFileSize());
 
+        // forced roll
         manager.roll();
-        Thread.sleep(100L);
-        File[] files = dir.listFiles(File::isFile);
-        assertThat(toString(files), files, Matchers.arrayWithSize(3));
+
+        long start = System.currentTimeMillis();
+        while (true) {
+            File[] files = dir.listFiles(File::isFile);
+            if (files.length == 5) {
+                break;
+            }
+            if (System.currentTimeMillis() > start + 5000) {
+                fail("Incorrect numbe of files, expected 5, but found these:\n" + toString(files));
+            }
+            Thread.sleep(10);
+        }
     }
 
 
@@ -164,7 +167,7 @@ public class LogFileManagerTest {
         final String logFilename = "___logfile_garbage.log";
         try {
             final File logFile = new File(logFilename);
-            final LogFileManager mgr = new LogFileManager(logFile, 1000L, false, 2, null, null);
+            final LogFileManager mgr = new LogFileManager(logFile, UTF_8, 1000L, false, 2);
             mgr.enableOutput();
             assertTrue(mgr.isOutputEnabled());
             mgr.disableOutput();

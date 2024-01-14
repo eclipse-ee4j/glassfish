@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -45,6 +45,7 @@ import java.util.logging.Logger;
 
 import org.glassfish.api.VersionInfo;
 import org.glassfish.api.admin.FileMonitoring;
+import org.glassfish.api.admin.FileMonitoring.FileChangeListener;
 import org.glassfish.common.util.Constants;
 import org.glassfish.config.support.TranslatedConfigView;
 import org.glassfish.hk2.api.Rank;
@@ -121,9 +122,7 @@ public class LogManagerService implements org.glassfish.internal.api.LogManager 
 
         final File loggingPropertiesFile = getOrCreateLoggingProperties();
         reconfigure(loggingPropertiesFile);
-        LOG.config("Configuring change detection of the configuration file ...");
-        fileMonitoring.monitors(loggingPropertiesFile, new LoggingCfgFileChangeListener(this::reconfigure));
-
+        configureFileMonitoring(loggingPropertiesFile);
         LOG.config("LogManagerService completed successfuly ...");
         LOG.log(Level.INFO, LogFacade.GF_VERSION_INFO, Version.getProductIdInfo());
     }
@@ -349,6 +348,13 @@ public class LogManagerService implements org.glassfish.internal.api.LogManager 
     }
 
 
+    private void configureFileMonitoring(File loggingPropertiesFile) {
+        LOG.config("Configuring change detection of the configuration file ...");
+        fileMonitoring.monitors(loggingPropertiesFile,
+            new LoggingCfgFileChangeListener(this::reconfigure, this::configureFileMonitoring));
+    }
+
+
     private void reconfigureGlassFishLogHandler() {
         final GlassFishLogHandler handler = JULHelperFactory.getHelper().findGlassFishLogHandler();
         if (handler == null) {
@@ -433,26 +439,52 @@ public class LogManagerService implements org.glassfish.internal.api.LogManager 
     }
 
 
-    private static final class LoggingCfgFileChangeListener implements FileMonitoring.FileChangeListener {
+    private static final class LoggingCfgFileChangeListener implements FileChangeListener {
 
-        private final Consumer<File> action;
+        private final Consumer<File> reconfiguration;
+        private final Consumer<File> fileMonitoring;
 
 
-        LoggingCfgFileChangeListener(final Consumer<File> action) {
-            this.action = action;
+        LoggingCfgFileChangeListener(final Consumer<File> reconfiguration, final Consumer<File> fileMonitoring) {
+            this.reconfiguration = reconfiguration;
+            this.fileMonitoring = fileMonitoring;
         }
 
 
         @Override
         public void changed(File changedFile) {
             LOG.info(() -> "Detected change of file: " + changedFile);
-            action.accept(changedFile);
+            reconfiguration.accept(changedFile);
         }
 
 
         @Override
         public void deleted(File deletedFile) {
-            LOG.log(Level.WARNING, LogFacade.CONF_FILE_DELETED, deletedFile.getAbsolutePath());
+            LOG.log(Level.SEVERE, LogFacade.CONF_FILE_DELETED, deletedFile.getAbsolutePath());
+            final Runnable waitingJob = () -> this.waitUntilFileReappears(deletedFile);
+            final Thread thread = new Thread(waitingJob, "Wait-to-reappear-" + deletedFile.getName());
+            thread.setDaemon(true);
+            thread.start();
+        }
+
+
+        /**
+         * Ie. the Vim editor can quickly remove and create the file on saving changes.
+         * Sometimes GF monitoring notices that the file vanished, then stops
+         * the monitoring and notifies this listener.
+         * <p>
+         * If the file is back again, we do the reconfiguration and we also reset
+         * the monitoring again.
+         * <p>
+         * If the file is really lost, we have a serious problem.
+         */
+        private void waitUntilFileReappears(File deletedFile) {
+            while (!deletedFile.exists()) {
+                Thread.onSpinWait();
+            }
+            LOG.log(Level.INFO, LogFacade.CONF_FILE_REAPPEARED, deletedFile.getAbsolutePath());
+            reconfiguration.accept(deletedFile);
+            fileMonitoring.accept(deletedFile);
         }
     }
 }

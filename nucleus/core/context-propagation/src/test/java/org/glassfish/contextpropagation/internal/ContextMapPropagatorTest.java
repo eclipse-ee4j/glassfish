@@ -126,7 +126,6 @@ public class ContextMapPropagatorTest {
 
 
     @Test
-    @Disabled("Causes ConcurrentModificationException at SimpleMap.findNext:162")
     public void testSendRequestWithLocation() throws Exception {
         final Entry locationEntry = createLocationEntry();
 

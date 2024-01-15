@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -97,6 +98,7 @@ class ClusterCommandHelper {
             ParameterMap map,
             String  clusterName,
             AdminCommandContext context,
+            boolean debug,
             boolean verbose) throws CommandException {
 
         // When we started
@@ -182,6 +184,10 @@ class ClusterCommandHelper {
             ParameterMap instanceParameterMap = new ParameterMap(map);
             // Set the instance name as the operand for the commnd
             instanceParameterMap.set("DEFAULT", iname);
+            if (debug) {
+                instanceParameterMap.set("debug", "true");
+            }
+
 
             ActionReport instanceReport = runner.getActionReport("plain");
             instanceReport.setActionExitCode(ExitCode.SUCCESS);

@@ -4,7 +4,8 @@ NAME
        start-cluster - starts a cluster
 
 SYNOPSIS
-           start-cluster [--help] [--autohadboverride={true|false}]
+           start-cluster [--help] 
+           [--debug={false|true}] [--autohadboverride={true|false}]
            [--verbose={false|true}] cluster-name
 
 DESCRIPTION
@@ -38,6 +39,23 @@ DESCRIPTION
 OPTIONS
        --help, -?
            Displays the help text for the subcommand.
+       
+       --debug
+           Specifies whether each instance in the cluster is started with Java Platform
+           Debugger Architecture (JPDA)
+
+           (http://www.oracle.com/technetwork/java/javase/tech/jpda-141715.html)
+
+           debugging enabled.
+
+           Possible values are as follows:
+
+           true
+               Each instance is started with JPDA debugging enabled and the
+               port number for JPDA debugging is displayed.
+
+           false
+               Each instance is started with JPDA debugging disabled (default).
 
        --autohadboverride
            Do not specify this option. This option is retained for

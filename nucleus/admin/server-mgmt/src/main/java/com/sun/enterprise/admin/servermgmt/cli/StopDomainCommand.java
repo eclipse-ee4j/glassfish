@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,9 +25,10 @@ import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.HostAndPort;
 
 import java.io.File;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.time.Duration;
 import java.util.function.Supplier;
-import java.util.logging.Level;
 
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
@@ -45,6 +46,7 @@ import static com.sun.enterprise.admin.cli.CLIConstants.DEATH_TIMEOUT_MS;
 @Service(name = "stop-domain")
 @PerLookup
 public class StopDomainCommand extends LocalDomainCommand {
+    private static final Logger LOG = System.getLogger(StopDomainCommand.class.getName());
 
     @Param(name = "domain_name", primary = true, optional = true)
     private String userArgDomainName;
@@ -94,7 +96,7 @@ public class StopDomainCommand extends LocalDomainCommand {
             // cmd line has higher priority, but if not set, use domain.xml or defaults
             addr = getAdminAddress();
             programOpts.setHostAndPort(addr);
-            logger.log(Level.FINER, "Stopping local domain on port {0}", programOpts.getPort());
+            LOG.log(Level.DEBUG, "Stopping local domain on port {0}", programOpts.getPort());
 
             /*
              * If we're using the local password, we don't want to prompt
@@ -108,7 +110,7 @@ public class StopDomainCommand extends LocalDomainCommand {
                 return dasNotRunning();
             }
 
-            logger.finer("It's the correct DAS");
+            LOG.log(Level.DEBUG, "It's the correct DAS");
         } else {
             // remote
             // Verify that the DAS is running and reachable
@@ -116,7 +118,7 @@ public class StopDomainCommand extends LocalDomainCommand {
                 return dasNotRunning();
             }
 
-            logger.finer("DAS is running");
+            LOG.log(Level.DEBUG, "DAS is running");
             programOpts.setInteractive(false);
         }
 
@@ -136,7 +138,7 @@ public class StopDomainCommand extends LocalDomainCommand {
      * Print message and return exit code when we detect that the DAS is not running.
      */
     protected int dasNotRunning() throws CommandException {
-        logger.log(Level.FINE, "dasNotRunning()");
+        LOG.log(Level.DEBUG, "dasNotRunning()");
         if (kill) {
             if (isLocal()) {
                 try {
@@ -154,9 +156,10 @@ public class StopDomainCommand extends LocalDomainCommand {
         // by definition this is not an error
         // https://glassfish.dev.java.net/issues/show_bug.cgi?id=8387
         if (isLocal()) {
-            logger.warning(Strings.get("StopDomain.dasNotRunning", getDomainRootDir()));
+            LOG.log(Level.WARNING, "CLI306: Warning - The server located at {0} is not running.", getDomainRootDir());
         } else {
-            logger.warning(Strings.get("StopDomain.dasNotRunningRemotely"));
+            LOG.log(Level.WARNING, "CLI307: Warning - remote server is not running, unable to force it to stop.\n"
+                + "Try running stop-domain on the remote server.");
         }
         return 0;
     }
@@ -174,7 +177,7 @@ public class StopDomainCommand extends LocalDomainCommand {
         } catch (Exception e) {
             // The domain server may have died so fast we didn't have time to
             // get the (always successful!!) return data.  This is NOT AN ERROR!
-            logger.log(Level.CONFIG, "Remote stop-domain call failed.", e);
+            LOG.log(Level.DEBUG, "Remote stop-domain call failed.", e);
             if (kill && isLocal()) {
                 try {
                     File prevPid = getServerDirs().getLastPidFile();

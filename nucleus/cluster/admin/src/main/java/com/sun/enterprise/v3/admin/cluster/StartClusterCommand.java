@@ -62,7 +62,7 @@ public class StartClusterCommand implements AdminCommand {
 
     @Param(optional = false, primary = true)
     private String clusterName;
-    
+
     @Param(optional = true, defaultValue = "false")
     private boolean debug;
 

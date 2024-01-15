@@ -185,9 +185,9 @@ class ClusterCommandHelper {
             // Set the instance name as the operand for the commnd
             instanceParameterMap.set("DEFAULT", iname);
             if (debug) {
-            	instanceParameterMap.set("debug", "true");
+                instanceParameterMap.set("debug", "true");
             }
-            
+
 
             ActionReport instanceReport = runner.getActionReport("plain");
             instanceReport.setActionExitCode(ExitCode.SUCCESS);

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,11 +21,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -110,15 +113,17 @@ public class Utils {
         if (map != null) {
           ContextBootstrap.debug(MessageID.USING_WIRE_ADAPTER, "Writing to", wireAdapter);
           wireAdapter.prepareToWriteTo(out);
+          List<ContextLifecycle> contexts = new ArrayList<>();
           Iterator<Map.Entry<String, Entry>> items = map.iterator(filter, propagationMode);
           while (items.hasNext()) {
             Map.Entry<String, Entry> mapEntry = items.next();
             Entry entry = mapEntry.getValue();
             Object value = entry.getValue();
             if (value instanceof ContextLifecycle) {
-              ((ContextLifecycle) value).contextToPropagate();
+              contexts.add((ContextLifecycle) value);
             }
           }
+          contexts.forEach(ContextLifecycle::contextToPropagate);
           items = map.iterator(filter, propagationMode);
           while (items.hasNext()) {
             Map.Entry<String, Entry> mapEntry = items.next();

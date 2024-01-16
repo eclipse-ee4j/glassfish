@@ -127,7 +127,7 @@
         <glassfish-management-api.version>3.2.3</glassfish-management-api.version>
         <pfl.version>4.1.2</pfl.version>
         <gmbal.version>4.0.3</gmbal.version>
-        <shoal.version>3.0.1</shoal.version>
+        <shoal.version>3.1.0</shoal.version>
         <ha-api.version>3.1.13</ha-api.version>
         <logging-annotation-processor.version>1.9</logging-annotation-processor.version>
         <command.security.maven.plugin.isFailureFatal>true</command.security.maven.plugin.isFailureFatal>

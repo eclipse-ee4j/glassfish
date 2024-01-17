@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -374,7 +375,7 @@ public class GlassFishSingleSignOn
         if (isVersioningSupported() && versionCookie != null) {
             version = Long.parseLong(versionCookie.getValue());
         }
-        SingleSignOnEntry entry = lookup(cookie.getValue(), version);
+        SingleSignOnEntry entry = lookup(cookie.getValue(), version, request.getContext().getLoader().getClassLoader());
         if (entry != null) {
             if (logger.isLoggable(Level.FINE)) {
                 logger.log(Level.FINE, LogFacade.FOUND_CACHED_PRINCIPAL,
@@ -443,7 +444,7 @@ public class GlassFishSingleSignOn
         // Look up and remove the corresponding SingleSignOnEntry
         SingleSignOnEntry sso = null;
         synchronized (cache) {
-            sso = (SingleSignOnEntry) cache.remove(ssoId);
+            sso = cache.remove(ssoId);
         }
 
         if (sso == null)
@@ -492,7 +493,7 @@ public class GlassFishSingleSignOn
                 Iterator<String> it = cache.keySet().iterator();
                 while (it.hasNext()) {
                     String key = it.next();
-                    SingleSignOnEntry sso = (SingleSignOnEntry) cache.get(key);
+                    SingleSignOnEntry sso = cache.get(key);
                     if (sso.isEmpty() && sso.getLastAccessTime() < tooOld) {
                         removals.add(key);
                     }
@@ -581,6 +582,7 @@ public class GlassFishSingleSignOn
     /**
      * The background thread that checks for SSO timeouts and shutdown.
      */
+    @Override
     public void run() {
 
         // Loop until the termination semaphore is set
@@ -626,6 +628,7 @@ public class GlassFishSingleSignOn
      *
      * @return Number of sessions participating in SSO
      */
+    @Override
     public int getActiveSessionCount() {
         return cache.size();
     }
@@ -636,6 +639,7 @@ public class GlassFishSingleSignOn
      *
      * @return Number of SSO cache hits
      */
+    @Override
     public int getHitCount() {
         return hitCount.intValue();
     }
@@ -646,6 +650,7 @@ public class GlassFishSingleSignOn
      *
      * @return Number of SSO cache misses
      */
+    @Override
     public int getMissCount() {
         return missCount.intValue();
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -42,17 +43,18 @@ public class HASingleSignOnEntry extends SingleSignOnEntry {
 
     protected HASingleSignOnEntryMetadata metadata = null;
 
+    protected ClassLoader appClassLoader;
+
     // default constructor is required by backing store
     public HASingleSignOnEntry() {
-        this(null, null, null, null, null, 0, 0, 0, null, null);
+        this(null, null, null, null, null, 0, 0, 0, null, null, null);
     }
 
-    public HASingleSignOnEntry(Container container, HASingleSignOnEntryMetadata m,
-            JavaEEIOUtils ioUtils) {
+    public HASingleSignOnEntry(Container container, HASingleSignOnEntryMetadata m, JavaEEIOUtils ioUtils, ClassLoader appClassLoader) {
         this(m.getId(), null, m.getAuthType(),
                 m.getUserName(), m.getRealmName(),
                 m.getLastAccessTime(), m.getMaxIdleTime(), m.getVersion(),
-                ioUtils, m.getPrincipalBytes());
+                ioUtils, m.getPrincipalBytes(), appClassLoader);
 
         for (HASessionData data: m.getHASessionDataSet()) {
             StandardContext context = (StandardContext)container.findChild(data.getContextPath());
@@ -74,18 +76,19 @@ public class HASingleSignOnEntry extends SingleSignOnEntry {
             JavaEEIOUtils ioUtils) {
 
         this(id, principal, authType, username, realmName, lastAccessTime,
-            maxIdleTime, version, ioUtils, convertToByteArray(principal, ioUtils));
+            maxIdleTime, version, ioUtils, convertToByteArray(principal, ioUtils), null);
     }
 
     private HASingleSignOnEntry(String id, Principal principal, String authType,
             String username, String realmName,
             long lastAccessTime, long maxIdleTime, long version,
-            JavaEEIOUtils ioUtils, byte[] principalBytes) {
+            JavaEEIOUtils ioUtils, byte[] principalBytes, ClassLoader appClassLoader) {
 
         super(id, version, principal, authType, username, realmName);
         this.lastAccessTime = lastAccessTime;
         this.maxIdleTime = maxIdleTime;
         this.ioUtils = ioUtils;
+        this.appClassLoader = appClassLoader;
 
         if (principal == null && principalBytes != null) {
             this.principal = parse(principalBytes);
@@ -180,7 +183,25 @@ public class HASingleSignOnEntry extends SingleSignOnEntry {
             bais = new ByteArrayInputStream(pbytes);
             bis = new BufferedInputStream(bais);
             ois = ioUtils.createObjectInputStream(bis, true, this.getClass().getClassLoader());
-            return (Principal)ois.readObject();
+
+            if (appClassLoader == null) {
+                return (Principal) ois.readObject();
+            }
+
+            try {
+                return (Principal) ois.readObject();
+            }
+            catch (ClassNotFoundException e) {
+                closeSafely(bis);
+                closeSafely(ois);
+                closeSafely(ois);
+
+                bais = new ByteArrayInputStream(pbytes);
+                bis = new BufferedInputStream(bais);
+                ois = ioUtils.createObjectInputStream(bis, true, appClassLoader);
+
+                return (Principal) ois.readObject();
+            }
         } catch(Exception ex) {
             throw new IllegalStateException(ex);
         } finally {

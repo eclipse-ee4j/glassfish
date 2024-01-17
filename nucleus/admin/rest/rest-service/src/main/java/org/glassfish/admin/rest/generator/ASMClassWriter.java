@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,7 +36,31 @@ import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
-import static org.objectweb.asm.Opcodes.*;
+import static org.objectweb.asm.Opcodes.AASTORE;
+import static org.objectweb.asm.Opcodes.ACC_PROTECTED;
+import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
+import static org.objectweb.asm.Opcodes.ACC_SUPER;
+import static org.objectweb.asm.Opcodes.ALOAD;
+import static org.objectweb.asm.Opcodes.ANEWARRAY;
+import static org.objectweb.asm.Opcodes.ARETURN;
+import static org.objectweb.asm.Opcodes.ASTORE;
+import static org.objectweb.asm.Opcodes.BIPUSH;
+import static org.objectweb.asm.Opcodes.CHECKCAST;
+import static org.objectweb.asm.Opcodes.DUP;
+import static org.objectweb.asm.Opcodes.GETFIELD;
+import static org.objectweb.asm.Opcodes.ICONST_0;
+import static org.objectweb.asm.Opcodes.ICONST_1;
+import static org.objectweb.asm.Opcodes.ICONST_2;
+import static org.objectweb.asm.Opcodes.ICONST_3;
+import static org.objectweb.asm.Opcodes.ICONST_4;
+import static org.objectweb.asm.Opcodes.ICONST_5;
+import static org.objectweb.asm.Opcodes.INVOKEINTERFACE;
+import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
+import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
+import static org.objectweb.asm.Opcodes.NEW;
+import static org.objectweb.asm.Opcodes.POP;
+import static org.objectweb.asm.Opcodes.RETURN;
+import static org.objectweb.asm.Opcodes.V17;
 
 /**
  * @author Ludovic Champenois
@@ -70,7 +94,7 @@ public class ASMClassWriter implements ClassWriter {
         } else {
             baseClassName = "org/glassfish/admin/rest/resources/" + baseClassName;
         }
-        cw.visit(V11, ACC_PUBLIC + ACC_SUPER, generatedPath + className, null, baseClassName, null);
+        cw.visit(V17, ACC_PUBLIC + ACC_SUPER, generatedPath + className, null, baseClassName, null);
 
         if (resourcePath != null) {
             RestLogging.restLogger.log(Level.FINE, "Creating resource with path {0} (1)", resourcePath);
@@ -240,7 +264,7 @@ public class ASMClassWriter implements ClassWriter {
         }
         boolean isget = (httpMethod.equals("GET"));
 
-        cw.visit(V11, ACC_PUBLIC + ACC_SUPER, generatedPath + commandResourceClassName, null, baseClassName, null);
+        cw.visit(V17, ACC_PUBLIC + ACC_SUPER, generatedPath + commandResourceClassName, null, baseClassName, null);
         //     cw.visitInnerClass(generatedPath + commandResourceClassName +"$1", null, null, 0);
         MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
         mv.visitCode();

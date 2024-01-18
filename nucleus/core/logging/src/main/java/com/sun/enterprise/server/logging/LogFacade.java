@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -56,8 +57,16 @@ public class LogFacade {
     @LogMessageInfo(message = "Updated logger levels successfully.", level="INFO")
     public static final String UPDATED_LOG_LEVELS = "NCLS-LOGGING-00003";
 
-    @LogMessageInfo(message = "The logging configuration file {0} has been deleted.", level="WARNING")
+    @LogMessageInfo(
+        message = "The logging configuration file {0} has been deleted."
+        + " The server will wait until the file reappears.",
+        cause="The file was deleted.",
+        action="Create the file again using the Admin Console or asadmin command.",
+        level="SEVERE")
     public static final String CONF_FILE_DELETED = "NCLS-LOGGING-00004";
+
+    @LogMessageInfo(message = "The logging configuration file {0} has reappeared.", level="INFO")
+    public static final String CONF_FILE_REAPPEARED = "NCLS-LOGGING-00004-1";
 
     @LogMessageInfo(message = "Error executing query to fetch log records.", level="SEVERE",
             cause="There was an exception thrown while executing log query.",

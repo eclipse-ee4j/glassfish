@@ -127,7 +127,7 @@
         <glassfish-management-api.version>3.2.3</glassfish-management-api.version>
         <pfl.version>4.1.2</pfl.version>
         <gmbal.version>4.0.3</gmbal.version>
-        <shoal.version>3.0.1</shoal.version>
+        <shoal.version>3.1.0</shoal.version>
         <ha-api.version>3.1.13</ha-api.version>
         <logging-annotation-processor.version>1.9</logging-annotation-processor.version>
         <command.security.maven.plugin.isFailureFatal>true</command.security.maven.plugin.isFailureFatal>
@@ -154,7 +154,6 @@
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
 
         <easymock.version>5.2.0</easymock.version>
-        <jmockit.version>1.49</jmockit.version>
         <junit.version>5.10.1</junit.version>
         <jmh.version>1.37</jmh.version>
         <osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
@@ -701,12 +700,6 @@
                 <groupId>org.easymock</groupId>
                 <artifactId>easymock</artifactId>
                 <version>${easymock.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.jmockit</groupId>
-                <artifactId>jmockit</artifactId>
-                <version>${jmockit.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -1558,7 +1551,7 @@
             <id>jacoco</id>
             <properties>
                 <jacoco.report.outputDirectory>${project.build.directory}/jacoco</jacoco.report.outputDirectory>
-                <jacoco.version>0.8.10</jacoco.version>
+                <jacoco.version>0.8.11</jacoco.version>
                 <maven.test.failure.ignore>true</maven.test.failure.ignore>
                 <surefire.argLine>${maven.test.jvmoptions} @{argLine}</surefire.argLine>
             </properties>

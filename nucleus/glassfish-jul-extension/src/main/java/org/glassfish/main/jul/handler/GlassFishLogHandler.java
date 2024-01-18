@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,16 +17,17 @@
 
 package org.glassfish.main.jul.handler;
 
-import java.io.OutputStream;
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Timer;
+import java.util.logging.ErrorManager;
 import java.util.logging.Formatter;
+import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import java.util.logging.StreamHandler;
 
 import org.glassfish.main.jul.cfg.GlassFishLoggingConstants;
 import org.glassfish.main.jul.env.LoggingSystemEnvironment;
@@ -76,7 +77,7 @@ import static org.glassfish.main.jul.tracing.GlassFishLoggingTracer.trace;
  * @author Jerome Dochez (original concepts of GFFileHandler)
  * @author Carla Mott (original concepts of GFFileHandler)
  */
-public class GlassFishLogHandler extends StreamHandler implements ExternallyManagedLogHandler {
+public class GlassFishLogHandler extends Handler implements ExternallyManagedLogHandler {
 
     private static final String LOGGER_NAME_STDOUT = "jakarta.enterprise.logging.stdout";
     private static final String LOGGER_NAME_STDERR = "jakarta.enterprise.logging.stderr";
@@ -97,6 +98,8 @@ public class GlassFishLogHandler extends StreamHandler implements ExternallyMana
     private volatile GlassFishLogHandlerStatus status;
     private LoggingPump pump;
     private LogFileManager logFileManager;
+
+    private boolean doneHeader;
 
     /**
      * Creates the configuration object for this class or it's descendants.
@@ -196,10 +199,6 @@ public class GlassFishLogHandler extends StreamHandler implements ExternallyMana
         // stop pump. If reconfiguration would fail, it is better to leave it down.
         // records from the buffer will be processed if the last configuration was valid.
         stopPump();
-        if (this.logFileManager != null) {
-            this.logFileManager.disableOutput();
-            this.logFileManager = null;
-        }
         this.configuration = newConfiguration;
 
         try {
@@ -208,13 +207,6 @@ public class GlassFishLogHandler extends StreamHandler implements ExternallyMana
             this.status = GlassFishLogHandlerStatus.OFF;
             throw e;
         }
-    }
-
-
-    // this is only to be able to provide the handle to the LogFileManager
-    @Override
-    public void setOutputStream(final OutputStream out) throws SecurityException {
-        super.setOutputStream(out);
     }
 
 
@@ -253,9 +245,8 @@ public class GlassFishLogHandler extends StreamHandler implements ExternallyMana
 
     @Override
     public void flush() {
-        super.flush();
-        if (this.logFileManager != null) {
-            this.logFileManager.rollIfFileTooBig();
+        if (logFileManager != null) {
+            logFileManager.flush();
         }
     }
 
@@ -288,7 +279,6 @@ public class GlassFishLogHandler extends StreamHandler implements ExternallyMana
             this.rotationTimerTask = null;
         }
         this.rotationTimer.cancel();
-        stopPump();
         try {
             LoggingSystemEnvironment.resetStandardOutputs();
             if (this.stdoutStream != null) {
@@ -304,9 +294,7 @@ public class GlassFishLogHandler extends StreamHandler implements ExternallyMana
             error(GlassFishLogHandler.class, "close partially failed!", e);
         }
 
-        if (this.logFileManager != null) {
-            this.logFileManager.disableOutput();
-        }
+        stopPump();
     }
 
 
@@ -329,19 +317,17 @@ public class GlassFishLogHandler extends StreamHandler implements ExternallyMana
             return GlassFishLogHandlerStatus.ACCEPTING;
         }
 
-        this.logFileManager = new LogFileManager(this.configuration.getLogFile(),
+        this.logFileManager = new LogFileManager(this.configuration.getLogFile(), this.configuration.getEncoding(),
             this.configuration.getRotationSizeLimitBytes(), this.configuration.isCompressionOnRotation(),
-            this.configuration.getMaxArchiveFiles(), this::setOutputStream, super::close);
+            this.configuration.getMaxArchiveFiles());
 
         final Formatter formatter = configuration.getFormatterConfiguration();
-        if (configuration.getLogFile().length() > 0) {
-            final String detectedFormatterName = new LogFormatDetector().detectFormatter(configuration.getLogFile());
-            if (detectedFormatterName == null || !formatter.getClass().getName().equals(detectedFormatterName)) {
-                this.logFileManager.roll();
-            }
-        }
         setFormatter(formatter);
-        this.logFileManager.enableOutput();
+        if (isRollRequired(configuration.getLogFile(), formatter)) {
+            logFileManager.roll();
+        }
+        // Output is disabled after the creation of the LogFileManager.
+        logFileManager.enableOutput();
         updateRollSchedule();
 
         // enable only if everything else was ok to prevent situation when
@@ -364,16 +350,28 @@ public class GlassFishLogHandler extends StreamHandler implements ExternallyMana
             this.pump.interrupt();
             this.pump = null;
         }
+
+        if (logFileManager == null) {
+            return;
+        }
+
         // we cannot publish anything if we don't have the stream configured.
-        if (this.logFileManager != null && this.logFileManager.isOutputEnabled()) {
-            // This protects us from the risk that this thread will not be fast enough to process
-            // all records and more is still coming. Records which would come after this
-            // process started will not be processed.
-            long counter = this.logRecordBuffer.getSize();
-            while (counter-- >= 0) {
-                if (!publishRecord(this.logRecordBuffer.poll())) {
-                    return;
-                }
+        if (this.logFileManager.isOutputEnabled()) {
+            drainLogRecords();
+        }
+        this.logFileManager.disableOutput();
+        this.logFileManager = null;
+    }
+
+
+    private void drainLogRecords() {
+        // The counter protects us from the risk that this thread will not be fast enough to process
+        // all records and more are still coming. Records which would come after this process
+        // started will not be processed.
+        long counter = this.logRecordBuffer.getSize();
+        while (counter-- >= 0) {
+            if (!publishRecord(this.logRecordBuffer.poll())) {
+                return;
             }
         }
     }
@@ -408,7 +406,7 @@ public class GlassFishLogHandler extends StreamHandler implements ExternallyMana
     /**
      * If the file is not empty, rolls. Then updates the next roll schedule.
      */
-    private void scheduledRoll() {
+    private synchronized void scheduledRoll() {
         this.logFileManager.rollIfFileNotEmpty();
         updateRollSchedule();
     }
@@ -424,10 +422,35 @@ public class GlassFishLogHandler extends StreamHandler implements ExternallyMana
         if (record == null) {
             return false;
         }
-        super.publish(record);
+        if (!isLoggable(record)) {
+            return true;
+        }
+        final String msg;
+        try {
+            msg = getFormatter().format(record);
+        } catch (Exception ex) {
+            // We don't want to throw an exception here, but we
+            // report the exception to any registered ErrorManager.
+            reportError(null, ex, ErrorManager.FORMAT_FAILURE);
+            return true;
+        }
+
+        if (!doneHeader) {
+            logFileManager.write(getFormatter().getHead(this));
+            doneHeader = true;
+        }
+        logFileManager.write(msg);
         return true;
     }
 
+
+    private static boolean isRollRequired(final File logFile, final Formatter formatter) {
+        if (logFile.length() == 0) {
+            return false;
+        }
+        final String detectedFormatterName = new LogFormatDetector().detectFormatter(logFile);
+        return detectedFormatterName == null || !formatter.getClass().getName().equals(detectedFormatterName);
+    }
 
     private final class LoggingPump extends LoggingPumpThread {
 

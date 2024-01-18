@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -63,6 +64,9 @@ public class StartClusterCommand implements AdminCommand {
     private String clusterName;
 
     @Param(optional = true, defaultValue = "false")
+    private boolean debug;
+
+    @Param(optional = true, defaultValue = "false")
     private boolean verbose;
 
     @Override
@@ -88,7 +92,7 @@ public class StartClusterCommand implements AdminCommand {
         try {
             // Run start-instance against each instance in the cluster
             String commandName = "start-instance";
-            clusterHelper.runCommand(commandName, null, clusterName, context,
+            clusterHelper.runCommand(commandName, null, clusterName, context, debug,
                     verbose);
         }
         catch (CommandException e) {

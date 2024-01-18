@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -158,6 +159,14 @@ public class CachingFilter implements Filter, CacheManagerListener {
                          *  same cache entry, then all but the first thread will block.
                          */
                         waitForRefresh = waitForRefresh(request, key, index);
+
+                        // Recheck because other threads may already put entry to cache
+                        if (!waitForRefresh) {
+                            entry = (HttpCacheEntry) cache.get(key);
+                            if (entry != null && entry.isValid()) {
+                                entryReady = true;
+                            }
+                        }
                     }
                 } while (waitForRefresh);
             } else {

@@ -190,8 +190,7 @@ public class HASingleSignOnEntry extends SingleSignOnEntry {
 
             try {
                 return (Principal) ois.readObject();
-            }
-            catch (ClassNotFoundException e) {
+            } catch (ClassNotFoundException e) {
                 closeSafely(bais);
                 closeSafely(bis);
                 closeSafely(ois);

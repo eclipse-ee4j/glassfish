@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -269,4 +270,5 @@ public final class Globals {
     public static final String ISO_8859_1_ENCODING = "ISO-8859-1";
 
     public static final String FACES_INITIALIZER = "com.sun.faces.config.FacesInitializer";
+    public static final String WEBSOCKET_INITIALIZER = "org.glassfish.tyrus.servlet.TyrusServletContainerInitializer";
 }

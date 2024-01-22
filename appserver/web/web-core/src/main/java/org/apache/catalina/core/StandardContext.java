@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -66,6 +66,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -181,6 +182,7 @@ import static org.apache.catalina.Globals.ALT_DD_ATTR;
 import static org.apache.catalina.Globals.FACES_INITIALIZER;
 import static org.apache.catalina.Globals.META_INF_RESOURCES;
 import static org.apache.catalina.Globals.RESOURCES_ATTR;
+import static org.apache.catalina.Globals.WEBSOCKET_INITIALIZER;
 import static org.apache.catalina.LogFacade.*;
 import static org.apache.catalina.core.Constants.DEFAULT_SERVLET_NAME;
 import static org.apache.catalina.core.Constants.JSP_SERVLET_NAME;
@@ -4525,11 +4527,15 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
             // We have the list of initializers and the classes that satisfy
             // the condition. Time to call the initializers
             ServletContext ctxt = this.getServletContext();
-            for (var entry : initializerList.entrySet()) {
+
+            var initializerListOrdered = orderInitializers(initializerList);
+
+            for (var entry : initializerListOrdered) {
                 Class<? extends ServletContainerInitializer> initializer = entry.getKey();
                 if (isUseMyFaces() && FACES_INITIALIZER.equals(initializer.getName())) {
                     continue;
                 }
+
                 try {
                     log.log(FINE, "Calling ServletContainerInitializer [{0}] onStartup with classes {1} ",
                         new Object[] {initializer, entry.getValue()});
@@ -4549,6 +4555,40 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
         }
     }
 
+    private LinkedList<Entry<Class<? extends ServletContainerInitializer>, Set<Class<?>>>> orderInitializers(Map<Class<? extends ServletContainerInitializer>, Set<Class<?>>> initializerList) {
+        Entry<Class<? extends ServletContainerInitializer>, Set<Class<?>>> facesInitializerEntry = null;
+        var initializerListOrdered = new LinkedList<>(initializerList.entrySet());
+        for (var iterator = initializerListOrdered.listIterator(); iterator.hasNext();) {
+            var initializerEntry = iterator.next();
+            Class<? extends ServletContainerInitializer> initializer = initializerEntry.getKey();
+
+            // Make sure the WEBSOCKET_INITIALIZER gets a chance to run before the FACES_INITIALIZER.
+            // This is because of a complicated interaction, where the WEBSOCKET_INITIALIZER
+            // is also executed by the FACES_INITIALIZER.
+            // If both have classes to process, the WEBSOCKET_INITIALIZER called by the FACES_INITIALIZER
+            // will create a container that will be later overwritten by the direct call to the
+            // WEBSOCKET_INITIALIZER.
+            // Ultimately this should be fixed in the WebSocket and Faces specs.
+            if (FACES_INITIALIZER.equals(initializer.getName())) {
+                facesInitializerEntry = initializerEntry;
+                iterator.remove();
+            } else if (WEBSOCKET_INITIALIZER.equals(initializer.getName())) {
+                if (facesInitializerEntry != null) {
+                    iterator.add(facesInitializerEntry);
+                    facesInitializerEntry = null;
+                }
+                break;
+            }
+        }
+
+        // Gather for the potential problem that a Faces initializer would be present
+        // but no WebSocket one.
+        if (facesInitializerEntry != null) {
+            initializerListOrdered.add(facesInitializerEntry);
+        }
+
+        return initializerListOrdered;
+    }
 
     private List<ServletContainerInitializer> loadServletContainerInitializers() {
         List<ServletContainerInitializer> initializers = new ArrayList<>();

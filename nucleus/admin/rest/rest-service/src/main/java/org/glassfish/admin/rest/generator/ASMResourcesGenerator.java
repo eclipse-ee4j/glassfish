@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,6 +25,7 @@ import org.glassfish.hk2.api.ServiceLocator;
 public class ASMResourcesGenerator extends ResourcesGeneratorBase {
 
     protected final static String GENERATED_PATH = "org/glassfish/admin/rest/resources/generatedASM/";
+
     protected final static String GENERATED_PACKAGE = GENERATED_PATH.replace("/", ".");
 
     public ASMResourcesGenerator(ServiceLocator habitat) {
@@ -33,11 +35,10 @@ public class ASMResourcesGenerator extends ResourcesGeneratorBase {
     @Override
     public ClassWriter getClassWriter(String className, String baseClassName, String resourcePath) {
         try {
-            Class.forName(GENERATED_PACKAGE + "." + className);
+            Class.forName(GENERATED_PACKAGE + className);
             return null;
         } catch (ClassNotFoundException ex) {
-            ClassWriter writer = new ASMClassWriter(habitat, GENERATED_PATH, className, baseClassName, resourcePath);
-            return writer;
+            return new ASMClassWriter(habitat, GENERATED_PATH, className, baseClassName, resourcePath);
         }
     }
 

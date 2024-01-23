@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -586,7 +587,8 @@ public class StandardPipeline implements Pipeline, Contained, Lifecycle {
         // Calls the protocol handler's init method if the request is marked to be upgraded
         if (request instanceof org.apache.catalina.connector.Request) {
             org.apache.catalina.connector.Request connectorRequest = (org.apache.catalina.connector.Request) request;
-            if (connectorRequest.isUpgrade()) {
+
+            if (connectorRequest.getNote(AFTER_UPGRADE_HANDLER_INITIALIZED) == null && connectorRequest.isUpgrade()) {
                 HttpUpgradeHandler handler = connectorRequest.getHttpUpgradeHandler();
                 if (handler != null) {
                     WebConnectionImpl webConnectionImpl =
@@ -606,6 +608,7 @@ public class StandardPipeline implements Pipeline, Contained, Lifecycle {
                         handler.init(webConnectionImpl);
                     } finally {
                         context.fireContainerEvent(AFTER_UPGRADE_HANDLER_INITIALIZED, handler);
+                        connectorRequest.setNote(AFTER_UPGRADE_HANDLER_INITIALIZED, true);
                     }
                 } else {
                     log.log(SEVERE, PROTOCOL_HANDLER_REQUIRED_EXCEPTION);

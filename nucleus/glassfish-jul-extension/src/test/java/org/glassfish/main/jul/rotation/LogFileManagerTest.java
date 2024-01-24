@@ -147,7 +147,7 @@ public class LogFileManagerTest {
                 break;
             }
             if (System.currentTimeMillis() > start + 5000) {
-                fail("Incorrect numbe of files, expected 5, but found these:\n" + toString(files));
+                fail("Incorrect number of files, expected 5, but found these:\n" + toString(files));
             }
             Thread.sleep(10);
         }

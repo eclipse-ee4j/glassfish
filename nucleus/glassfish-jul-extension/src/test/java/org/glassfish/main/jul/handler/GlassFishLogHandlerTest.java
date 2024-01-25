@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,8 +38,6 @@ import static org.glassfish.main.jul.env.LoggingSystemEnvironment.getOriginalStd
 import static org.glassfish.main.jul.env.LoggingSystemEnvironment.getOriginalStdOut;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -63,6 +61,7 @@ public class GlassFishLogHandlerTest {
         LoggingSystemEnvironment.initialize();
         final GlassFishLogHandlerConfiguration cfg = new GlassFishLogHandlerConfiguration();
         final File logFile = File.createTempFile(GlassFishLogHandlerTest.class.getCanonicalName(), ".log");
+        logFile.delete();
         logFile.deleteOnExit();
         cfg.setLogFile(logFile);
         cfg.setFormatterConfiguration(new OneLineFormatter());
@@ -123,7 +122,10 @@ public class GlassFishLogHandlerTest {
                         GlassFishLogHandlerTest.class.getName() + "." + testInfo.getTestMethod().get().getName(),
                         "Some info message"),
                     stringContainsInOrder("SEVERE", "main", "Can you feel me near you?"),
-                    stringContainsInOrder("SEVERE", "main", "Příliš žluťoučký kůň úpěl ďábelské ódy"))));
+                    stringContainsInOrder("SEVERE", "main", "Příliš žluťoučký kůň úpěl ďábelské ódy")
+                )
+            )
+        );
     }
 
 
@@ -131,26 +133,43 @@ public class GlassFishLogHandlerTest {
     @Order(30)
     public void roll() throws Exception {
         assertTrue(handler.isReady(), "handler.ready");
-        handler.publish(new GlassFishLogRecord(Level.SEVERE, "File one, line one"));
+        handler.publish(new GlassFishLogRecord(Level.SEVERE, "File one, record one"));
         // pump is now to play
         Thread.sleep(MILLIS_FOR_PUMP);
         assertAll(
             () -> assertTrue(handler.isReady(), "handler.ready"),
             () -> assertTrue(handler.getConfiguration().getLogFile().exists(), "file one exists"),
-            () -> assertThat("size of file one", handler.getConfiguration().getLogFile().length(), greaterThan(0L))
+            () -> assertThat("file content", Files.readAllLines(handler.getConfiguration().getLogFile().toPath()),
+                contains(
+                    stringContainsInOrder("INFO", "main", "Tommy, can you hear me?"),
+                    stringContainsInOrder("INFO", "main", "Some info message"),
+                    stringContainsInOrder("SEVERE", "main", "Can you feel me near you?"),
+                    stringContainsInOrder("SEVERE", "main", "Příliš žluťoučký kůň úpěl ďábelské ódy"),
+                    stringContainsInOrder("SEVERE", "main", "File one, record one")
+                )
+            )
         );
         handler.roll();
         assertAll(
             () -> assertTrue(handler.isReady(), "handler.ready"),
             () -> assertTrue(handler.getConfiguration().getLogFile().exists(), "file exists"),
-            () -> assertThat("size of file two", handler.getConfiguration().getLogFile().length(), lessThan(260L))
+            () -> assertThat("file content", Files.readAllLines(handler.getConfiguration().getLogFile().toPath()),
+                contains(
+                    stringContainsInOrder("INFO", "main", "roll Archived file:", "if null, action failed.")
+                )
+            )
         );
         handler.publish(new GlassFishLogRecord(Level.SEVERE, "File two, line two"));
         Thread.sleep(MILLIS_FOR_PUMP);
         assertAll(
             () -> assertTrue(handler.isReady(), "handler.ready"),
             () -> assertTrue(handler.getConfiguration().getLogFile().exists(), "file exists"),
-            () -> assertThat("size of file two", handler.getConfiguration().getLogFile().length(), greaterThan(260L))
+            () -> assertThat("file content", Files.readAllLines(handler.getConfiguration().getLogFile().toPath()),
+                contains(
+                    stringContainsInOrder("INFO", "main", "roll Archived file:", "if null, action failed."),
+                    stringContainsInOrder("SEVERE", "main", "File two, line two")
+                )
+            )
         );
     }
 

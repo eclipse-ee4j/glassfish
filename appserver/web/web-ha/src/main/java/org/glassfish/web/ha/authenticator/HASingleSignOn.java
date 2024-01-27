@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -113,7 +114,7 @@ public class HASingleSignOn extends GlassFishSingleSignOn {
         if (debug >= 1)
             log("Associate sso id " + ssoId + " with session " + session);
 
-        HASingleSignOnEntry sso = (HASingleSignOnEntry)lookup(ssoId, ssoVersion);
+        HASingleSignOnEntry sso = (HASingleSignOnEntry)lookup(ssoId, ssoVersion, null);
         if (sso != null) {
             session.setSsoId(ssoId);
             sso.addSession(this, session);
@@ -127,8 +128,8 @@ public class HASingleSignOn extends GlassFishSingleSignOn {
     }
 
     @Override
-    protected SingleSignOnEntry lookup(String ssoId, long ssoVersion) {
-        SingleSignOnEntry ssoEntry = super.lookup(ssoId, ssoVersion);
+    protected SingleSignOnEntry lookup(String ssoId, long ssoVersion, ClassLoader appClassLoader) {
+        SingleSignOnEntry ssoEntry = super.lookup(ssoId, ssoVersion, appClassLoader);
         if (ssoEntry != null && ssoVersion > ssoEntry.getVersion()) {
             // clean the old cache
             synchronized(cache) {
@@ -142,7 +143,7 @@ public class HASingleSignOn extends GlassFishSingleSignOn {
                 HASingleSignOnEntryMetadata mdata =
                     ssoEntryMetadataBackingStore.load(ssoId, null);
                 if (mdata != null) {
-                    ssoEntry = new HASingleSignOnEntry(getContainer(), mdata, ioUtils);
+                    ssoEntry = new HASingleSignOnEntry(getContainer(), mdata, ioUtils, appClassLoader);
                     cache.put(ssoId, ssoEntry);
                 }
             } catch(BackingStoreException ex) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -251,7 +251,7 @@ public class SingleSignOn extends ValveBase implements SessionListener {
         if (isVersioningSupported() && versionCookie != null) {
             version = Long.parseLong(versionCookie.getValue());
         }
-        SingleSignOnEntry entry = lookup(cookie.getValue(), version);
+        SingleSignOnEntry entry = lookup(cookie.getValue(), version, request.getContext().getLoader().getClassLoader());
         if (entry != null) {
             if (debug >= 1) {
                 String msg = MessageFormat.format(rb.getString(LogFacade.FOUND_CACHED_PRINCIPAL_AUTH_TYPE_INFO),
@@ -314,7 +314,7 @@ public class SingleSignOn extends ValveBase implements SessionListener {
             log(rb.getString(ASSOCIATE_SSO_WITH_SESSION_INFO));
         }
 
-        SingleSignOnEntry sso = lookup(ssoId, ssoVersion);
+        SingleSignOnEntry sso = lookup(ssoId, ssoVersion, null);
         if (sso != null) {
             session.setSsoId(ssoId);
             session.setSsoVersion(ssoVersion);
@@ -417,7 +417,7 @@ public class SingleSignOn extends ValveBase implements SessionListener {
      * @param ssoId Single sign on identifier to look up
      * @param ssoVersion Single sign on version to look up
      */
-    protected SingleSignOnEntry lookup(String ssoId, long ssoVersion) {
+    protected SingleSignOnEntry lookup(String ssoId, long ssoVersion, ClassLoader appClassLoader) {
         return lookup(ssoId);
     }
 

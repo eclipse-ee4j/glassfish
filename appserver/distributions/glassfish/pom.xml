@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2023 Contributors to Eclipse Foundation.
+    Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -114,7 +114,7 @@
                                     destfile="${glassfish.modules}/microprofile-rest-client-api.jar"
                                 />
                                 
-                                 <!-- To support Expression Language 6  -->
+                                <!-- To support Expression Language 6  -->
                                 <jarupdate
                                     basedir="${patches}/jakarta.servlet.jsp.jstl-api" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/jakarta.servlet.jsp.jstl-api.jar"
@@ -150,6 +150,10 @@
                                     destfile="${glassfish.modules}/jakarta.enterprise.concurrent.jar"
                                 />
                                 
+                                <jarupdate
+                                    basedir="${patches}/tyrus-client" includes="META-INF/MANIFEST.MF"
+                                    destfile="${glassfish.modules}/tyrus-client.jar"
+                                />
                             </target>
                         </configuration>
                     </execution>

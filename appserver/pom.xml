@@ -86,7 +86,7 @@
 
         <!-- Jakarta WebSocket -->
         <jakarta.websocket-api.version>2.2.0-M1</jakarta.websocket-api.version>
-        <tyrus.version>2.1.4</tyrus.version>
+        <tyrus.version>2.1.5</tyrus.version>
 
         <!-- Jakarta Concurrency -->
         <jakarta.concurrent-api.version>3.0.3</jakarta.concurrent-api.version>
@@ -137,8 +137,8 @@
         <wasp.version>4.0.0-M1</wasp.version>
 
         <!-- Used for Jakarta SOAP (XML Web Services) -->
-        <xmlsec.version>4.0.0</xmlsec.version>
-        <woodstox.version>6.5.1</woodstox.version>
+        <xmlsec.version>4.0.1</xmlsec.version>
+        <woodstox.version>6.6.0</woodstox.version>
         <stax2-api.version>4.2.2</stax2-api.version>
 
         <!-- Jakarta CDI -->

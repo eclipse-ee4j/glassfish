@@ -1,7 +1,7 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 1995-1997 IBM Corp. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -111,7 +111,7 @@ public class RecoveryManager {
      * This attribute is used to block requests against RecoveryCoordinators or
      * CoordinatorResources before recovery has completed.
      */
-    private static volatile EventSemaphore recoveryInProgress = new EventSemaphore();
+    private static final EventSemaphore RECOVERY_IN_PROGRESS = new EventSemaphore();
 
     /**
      * This attribute is used by the Recovery Thread to know if the
@@ -194,7 +194,7 @@ public class RecoveryManager {
             // requiring resync.
 
             try {
-                recoveryInProgress.post(); // BUGFIX (Ram Jeyaraman)
+                RECOVERY_IN_PROGRESS.post(); // BUGFIX (Ram Jeyaraman)
                 resyncComplete(false, false);
             } catch (Throwable exc) {exc.printStackTrace();}
         }
@@ -422,7 +422,7 @@ public class RecoveryManager {
 
             // Post the recovery in progress event so that requests
             // waiting for recovery to complete may proceed.
-            recoveryInProgress.post();
+            RECOVERY_IN_PROGRESS.post();
 
             // And finish resync
             try {
@@ -466,7 +466,7 @@ public class RecoveryManager {
         // Post the recovery in progress event so that requests
         // waiting for recovery to complete may proceed.
 
-        recoveryInProgress.post();
+        RECOVERY_IN_PROGRESS.post();
 
         // If resync is not needed, then perform after-resync
         // tasks immediately.
@@ -1388,16 +1388,12 @@ public class RecoveryManager {
      * @see
      */
     public static void waitForRecovery() {
-
-        if (recoveryInProgress != null) {
-            try {
-                recoveryInProgress.waitEvent();
-            } catch (InterruptedException exc) {
-                _logger.log(Level.SEVERE,"jts.wait_for_resync_complete_interrupted");
-                String msg = LogFormatter.getLocalizedMessage(_logger,
-                    "jts.wait_for_resync_complete_interrupted");
-                throw  new org.omg.CORBA.INTERNAL(msg);
-            }
+        try {
+            RECOVERY_IN_PROGRESS.waitEvent();
+        } catch (InterruptedException exc) {
+            _logger.log(Level.SEVERE, "jts.wait_for_resync_complete_interrupted");
+            String msg = LogFormatter.getLocalizedMessage(_logger, "jts.wait_for_resync_complete_interrupted");
+            throw new org.omg.CORBA.INTERNAL(msg);
         }
     }
 

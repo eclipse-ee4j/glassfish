@@ -25,6 +25,7 @@ def dumpSysInfo() {
     \${JAVA_HOME}/bin/jcmd || true
     mvn -version || true
     ant -version || true
+    ps -e -o start,etime,pid,rss,drs,command || true
     cat /proc/cpuinfo || true
     cat /proc/meminfo || true
   """

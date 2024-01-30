@@ -30,7 +30,7 @@
 
     <groupId>org.glassfish.main</groupId>
     <artifactId>nucleus-parent</artifactId>
-    <version>7.0.12-SNAPSHOT</version>
+    <version>7.0.13-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Nucleus Parent</name>
@@ -172,7 +172,7 @@
         <javadoc.skip>false</javadoc.skip>
         <deploy.skip>false</deploy.skip>
         <!-- Overrides the value from parent and enables the one we generate. -->
-        <project.build.outputTimestamp>2023-12-04T13:17:33Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2024-01-29T11:48:47Z</project.build.outputTimestamp>
 
         <maven.test.jvmoptions.add-opens>--add-opens java.base/java.lang=ALL-UNNAMED --add-opens=java.naming/javax.naming.spi=ALL-UNNAMED</maven.test.jvmoptions.add-opens>
         <maven.test.jvmoptions.memory.sizes>-Xss512k -Xms256m -Xmx1g -XX:MaxDirectMemorySize=512m</maven.test.jvmoptions.memory.sizes>

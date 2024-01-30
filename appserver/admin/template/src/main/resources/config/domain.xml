@@ -104,10 +104,10 @@
           <property value="fileRealm" name="jaas-context" />
         </auth-realm>
         <auth-realm classname="com.sun.enterprise.security.auth.realm.certificate.CertificateRealm" name="certificate" />
-        <jacc-provider policy-configuration-factory-provider="org.glassfish.exousia.modules.def.DefaultPolicyConfigurationFactory" policy-provider="org.glassfish.exousia.modules.def.DefaultPolicy" name="default">
+        <jacc-provider policy-configuration-factory-provider="org.glassfish.exousia.modules.locked.SimplePolicyConfigurationFactory" policy-provider="org.glassfish.exousia.modules.locked.SimplePolicyProvider" name="default">
           <property value="${com.sun.aas.instanceRoot}/generated/policy" name="repository" />
         </jacc-provider>
-        <jacc-provider policy-configuration-factory-provider="org.glassfish.exousia.modules.def.DefaultPolicyConfigurationFactory" policy-provider="org.glassfish.exousia.modules.def.DefaultPolicy" name="simple" />
+        <jacc-provider policy-configuration-factory-provider="org.glassfish.exousia.modules.locked.SimplePolicyConfigurationFactory" policy-provider="org.glassfish.exousia.modules.locked.SimplePolicyProvider" name="simple" />
         <audit-module classname="com.sun.enterprise.security.ee.Audit" name="default">
           <property value="false" name="auditOn" />
         </audit-module>
@@ -311,10 +311,10 @@
                  <property name="jaas-context" value="fileRealm" />
              </auth-realm>
              <auth-realm classname="com.sun.enterprise.security.auth.realm.certificate.CertificateRealm" name="certificate" />
-             <jacc-provider policy-provider="org.glassfish.exousia.modules.def.DefaultPolicy" name="default" policy-configuration-factory-provider="org.glassfish.exousia.modules.def.DefaultPolicyConfigurationFactory">
+             <jacc-provider policy-provider="org.glassfish.exousia.modules.locked.SimplePolicyProvider" name="default" policy-configuration-factory-provider="org.glassfish.exousia.modules.locked.SimplePolicyConfigurationFactory">
                  <property name="repository" value="${com.sun.aas.instanceRoot}/generated/policy" />
              </jacc-provider>
-             <jacc-provider policy-provider="org.glassfish.exousia.modules.def.DefaultPolicy" name="simple" policy-configuration-factory-provider="org.glassfish.exousia.modules.def.DefaultPolicyConfigurationFactory" />
+             <jacc-provider policy-provider="org.glassfish.exousia.modules.locked.SimplePolicyProvider" name="simple" policy-configuration-factory-provider="org.glassfish.exousia.modules.locked.SimplePolicyConfigurationFactory" />
              <audit-module classname="com.sun.enterprise.security.ee.Audit" name="default">
                  <property value="false" name="auditOn" />
              </audit-module>

@@ -24,15 +24,18 @@
 package com.sun.ejb.containers.util.pool;
 
 import static com.sun.enterprise.util.Utility.setContextClassLoader;
+import static java.security.AccessController.doPrivileged;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.WARNING;
+
+import java.security.PrivilegedAction;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
 import com.sun.ejb.containers.EjbContainerUtilImpl;
 import com.sun.ejb.monitoring.probes.EjbPoolProbeProvider;
 import com.sun.ejb.monitoring.stats.EjbMonitoringUtils;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * <p>
@@ -343,7 +346,17 @@ public abstract class AbstractPool implements Pool {
             final ClassLoader previousClassLoader = currentThread.getContextClassLoader();
 
             try {
-                currentThread.setContextClassLoader(containerClassLoader);
+                if (System.getSecurityManager() == null) {
+                    currentThread.setContextClassLoader(containerClassLoader);
+                } else {
+                    doPrivileged(new PrivilegedAction<Object>() {
+                        @Override
+                        public Object run() {
+                            currentThread.setContextClassLoader(containerClassLoader);
+                            return null;
+                        }
+                    });
+                }
 
                 try {
                     if (pooledObjects.size() > steadyPoolSize) {
@@ -355,7 +368,17 @@ public abstract class AbstractPool implements Pool {
                     // removeIdleObjects would have logged the error
                 }
 
-                currentThread.setContextClassLoader(previousClassLoader);
+                if (System.getSecurityManager() == null) {
+                    currentThread.setContextClassLoader(previousClassLoader);
+                } else {
+                    doPrivileged(new PrivilegedAction<Object>() {
+                        @Override
+                        public Object run() {
+                            currentThread.setContextClassLoader(previousClassLoader);
+                            return null;
+                        }
+                    });
+                }
             } catch (Throwable th) {
                 _logger.log(FINE, "Exception in run()", th);
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to Eclipse Foundation.
+ * Copyright (c) 2022 Contributors to Eclipse Foundation.
  * Copyright (c) 2018, 2021 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -134,7 +134,7 @@ public class ConfigCdiExtension implements Extension {
             return;
         }
 
-        configBeans.put(annotatedType.getJavaClass(), ConfigBeanDescriptor.create(annotatedType, configProperties));
+        configBeans.put(annotatedType.getJavaClass(), ConfigBeanDescriptor.create(annotatedType.getJavaClass(), configProperties));
 
         // We must veto this annotated type, as we need to create a custom bean to create an instance
         event.veto();

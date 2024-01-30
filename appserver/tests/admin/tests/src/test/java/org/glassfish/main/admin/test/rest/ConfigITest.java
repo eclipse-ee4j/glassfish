@@ -21,7 +21,6 @@ import jakarta.ws.rs.core.MultivaluedHashMap;
 import jakarta.ws.rs.core.Response;
 
 import org.glassfish.main.itest.tools.RandomGenerator;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -30,7 +29,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 /**
  * @author jasonlee
  */
-@Disabled("TEMPORARY FOR GLASSFISH 8 M1 - Operation timed out")
 public class ConfigITest extends RestTestBase {
 
     @Test

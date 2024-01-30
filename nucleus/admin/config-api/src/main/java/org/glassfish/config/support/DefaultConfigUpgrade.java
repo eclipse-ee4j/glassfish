@@ -91,7 +91,7 @@ import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 
 /**
  * Upgrade service to add the default-config if it doesn't exist. 3.0.1 and v2.x developer profile do not have
- * default-config. The data to populate the default-config is taken from glassfish8\glassfish\lib\templates\domain.xml.
+ * default-config. The data to populate the default-config is taken from glassfish7\glassfish\lib\templates\domain.xml.
  * This class uses the StAX parser and depends on the exact order of the elements in the template, and the original
  * contents of the template when glassfish was installed. The DefaultConfigUpgrade may not work if the template has been
  * changed from its original.
@@ -353,7 +353,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
     }
 
     /*
-     * Creates the http-service object using data from glassfish8\glassfish\lib\templates\domain.xml
+     * Creates the http-service object using data from glassfish7\glassfish\lib\templates\domain.xml
      * <http-service>
      *  <access-log/>
      *  <virtual-server id="server" network-listeners="http-listener-1, http-listener-2">
@@ -424,7 +424,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
     }
 
     /*
-     * Creates the admin-service object using data from glassfish8\glassfish\lib\templates\domain.xml
+     * Creates the admin-service object using data from glassfish7\glassfish\lib\templates\domain.xml
      * <admin-service system-jmx-connector-name="system" type="server">
      *  <!-- JSR 160  "system-jmx-connector" -->
      *  <jmx-connector address="0.0.0.0" auth-realm-name="admin-realm" name="system" port="${JMX_SYSTEM_CONNECTOR_PORT}" protocol="rmi_jrmp" security-enabled="false"/>
@@ -484,7 +484,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
     }
 
     /*
-     * Creates the log-service object using data from glassfish8\glassfish\lib\templates\domain.xml
+     * Creates the log-service object using data from glassfish7\glassfish\lib\templates\domain.xml
      * <log-service log-rotation-limit-in-bytes="2000000" file="${com.sun.aas.instanceRoot}/logs/server.log">
      *      <module-log-levels/>
      * </log-service>
@@ -538,7 +538,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
     }
 
     /*
-     * Creates the security-service object using data from glassfish8\glassfish\lib\templates\domain.xml
+     * Creates the security-service object using data from glassfish7\glassfish\lib\templates\domain.xml
      * <security-service>
      *  <auth-realm classname="com.sun.enterprise.security.auth.realm.file.FileRealm" name="admin-realm">
      *      <property name="file" value="${com.sun.aas.instanceRoot}/config/admin-keyfile"/>
@@ -948,7 +948,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
     }
 
     /*
-     * Creates the diagnostic-service object using data from glassfish8\glassfish\lib\templates\domain.xml
+     * Creates the diagnostic-service object using data from glassfish7\glassfish\lib\templates\domain.xml
      * <diagnostic-service/>
      */
     private static class DiagnosticServiceConfigCode implements SingleConfigCode<Config> {
@@ -962,7 +962,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
     }
 
     /*
-     * Creates the java-config object using data from glassfish8\glassfish\lib\templates\domain.xml
+     * Creates the java-config object using data from glassfish7\glassfish\lib\templates\domain.xml
      * <java-config debug-options="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,
      * address=${JAVA_DEBUGGER_PORT}" system-classpath="" classpath-suffix="">
      */
@@ -1012,7 +1012,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
     }
 
     /*
-     * Creates the availability-service object using data from glassfish8\glassfish\lib\templates\domain.xml
+     * Creates the availability-service object using data from glassfish7\glassfish\lib\templates\domain.xml
      * <availability-service>
      *  <web-container-availability availability-enabled="true" persistence-frequency="web-method" persistence-scope="session" persistence-type="replicated" sso-failover-enabled="false"/>
      *  <ejb-container-availability availability-enabled="true" sfsb-store-pool-name="jdbc/hastore"/>
@@ -1035,7 +1035,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
     }
 
     /*
-     * Creates the network-config object using data from glassfish8\glassfish\lib\templates\domain.xml
+     * Creates the network-config object using data from glassfish7\glassfish\lib\templates\domain.xml
      * <network-config>
      */
     private class NetworkConfigCode implements SingleConfigCode<Config> {
@@ -1409,7 +1409,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
     }
 
     /*
-     * Creates the thread-pools object using data from glassfish8\glassfish\lib\templates\domain.xml
+     * Creates the thread-pools object using data from glassfish7\glassfish\lib\templates\domain.xml
      * <thread-pools>
      *   <thread-pool name="http-thread-pool"/>
      *   <thread-pool max-thread-pool-size="200" idle-thread-timeout-in-seconds="120" name="thread-pool-1"/>
@@ -1467,7 +1467,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
     }
 
     /*
-     * Creates the system-property elements using data from glassfish8\glassfish\lib\templates\domain.xml
+     * Creates the system-property elements using data from glassfish7\glassfish\lib\templates\domain.xml
      */
     private class SystemPropertyConfigCode implements SingleConfigCode<Config> {
 

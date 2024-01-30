@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -1202,7 +1202,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
             }
         }
         if (method.isDefault()) {
-            return InvocationHandler.invokeDefault(proxy, method, args);
+            return ProxyHelper.invokeDefault(proxy, method, args);
         }
         if (method.getAnnotation(ConfigExtensionMethod.class) != null) {
             final ConfigExtensionMethod cem = method.getAnnotation(ConfigExtensionMethod.class);

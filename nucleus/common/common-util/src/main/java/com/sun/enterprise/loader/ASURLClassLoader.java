@@ -17,12 +17,12 @@
 
 package com.sun.enterprise.loader;
 
-import static java.util.logging.Level.INFO;
-
 import com.sun.appserv.server.util.PreprocessorUtil;
+import com.sun.enterprise.security.integration.DDPermissionsLoader;
 import com.sun.enterprise.security.integration.PermsHolder;
 import com.sun.enterprise.util.CULoggerInfo;
 import com.sun.enterprise.util.i18n.StringManager;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -66,9 +66,12 @@ import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
+
 import org.glassfish.api.deployment.InstrumentableClassLoader;
 import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.PreDestroy;
+
+import static java.util.logging.Level.INFO;
 
 /**
  * Class loader used by the ejbs of an application or stand-alone module.
@@ -80,7 +83,8 @@ import org.glassfish.hk2.api.PreDestroy;
  * @author Sivakumar Thyagarajan
  * @since  JDK 1.4
  */
-public class ASURLClassLoader extends GlassfishUrlClassLoader implements JasperAdapter, InstrumentableClassLoader, PreDestroy {
+public class ASURLClassLoader extends GlassfishUrlClassLoader
+    implements JasperAdapter, InstrumentableClassLoader, PreDestroy, DDPermissionsLoader {
 
     /** logger for this class */
     private static final Logger _logger = CULoggerInfo.getLogger();
@@ -610,6 +614,27 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader implements JasperA
         };
         return AccessController.doPrivileged(action);
     }
+
+
+    @Override
+    public void addEEPermissions(PermissionCollection eePc) throws SecurityException {
+        // sm on
+        if (System.getSecurityManager() != null) {
+            System.getSecurityManager().checkSecurityAccess(DDPermissionsLoader.SET_EE_POLICY);
+
+            permissionsHolder.setEEPermissions(eePc);
+        }
+    }
+
+
+    @Override
+    public void addDeclaredPermissions(PermissionCollection declaredPc) throws SecurityException {
+        if (System.getSecurityManager() != null) {
+            System.getSecurityManager().checkSecurityAccess(DDPermissionsLoader.SET_EE_POLICY);
+            permissionsHolder.setDeclaredPermissions(declaredPc);
+        }
+    }
+
 
     @Override
     protected PermissionCollection getPermissions(CodeSource codeSource) {

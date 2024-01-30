@@ -52,7 +52,7 @@ public class ClientTestNG {
 
     }
 
-    // @Test // - TODO: ENABLE AGAIN WHEN CAUSE OF FAILURE ON ECLIPSE CI FOUND (works locally)
+    @Test
     public void testTransactionScopedJMSContextInjection() throws Exception {
         try {
             boolean result = test("transactionScope");

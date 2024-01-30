@@ -81,7 +81,7 @@ public interface GlassFishUserStore {
      * @throws InvalidOperationException thrown if the realm does not support this operation
      * @throws NoSuchUserException
      */
-    Enumeration<String> getGroupNames(String username) throws NoSuchUserException;
+    Enumeration<String> getGroupNames(String username) throws InvalidOperationException, NoSuchUserException;
 
     /**
      * Refreshes the realm data so that new users/groups are visible.

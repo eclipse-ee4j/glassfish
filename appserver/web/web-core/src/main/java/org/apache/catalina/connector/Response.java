@@ -33,15 +33,15 @@ import static org.glassfish.common.util.InputValidationUtil.getSafeHeaderName;
 import static org.glassfish.common.util.InputValidationUtil.getSafeHeaderValue;
 import static org.glassfish.web.util.HtmlEntityEncoder.encodeXSS;
 
-import com.sun.appserv.ProxyHandler;
-import jakarta.servlet.ServletOutputStream;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,18 +53,28 @@ import java.util.TimeZone;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.apache.catalina.Connector;
 import org.apache.catalina.Context;
 import org.apache.catalina.HttpResponse;
 import org.apache.catalina.LogFacade;
 import org.apache.catalina.Session;
 import org.apache.catalina.core.StandardContext;
+import org.apache.catalina.security.SecurityUtil;
 import org.apache.catalina.util.RequestUtil;
 import org.glassfish.grizzly.http.util.CharChunk;
 import org.glassfish.grizzly.http.util.CookieHeaderGenerator;
 import org.glassfish.grizzly.http.util.FastHttpDateFormat;
 import org.glassfish.grizzly.http.util.MimeHeaders;
 import org.glassfish.grizzly.http.util.UEncoder;
+
+import com.sun.appserv.ProxyHandler;
+
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+
+// END S1AS 6170450
 
 /**
  * Wrapper object for the Coyote response.
@@ -786,9 +796,15 @@ public class Response implements HttpResponse, HttpServletResponse {
                 while (index < len && Character.isWhitespace(type.charAt(index))) {
                     index++;
                 }
-                if (index + 7 < len && type.charAt(index) == 'c' && type.charAt(index + 1) == 'h' && type.charAt(index + 2) == 'a'
-                        && type.charAt(index + 3) == 'r' && type.charAt(index + 4) == 's' && type.charAt(index + 5) == 'e'
-                        && type.charAt(index + 6) == 't' && type.charAt(index + 7) == '=') {
+                if (index + 7 < len &&
+                    type.charAt(index)     == 'c' &&
+                    type.charAt(index + 1) == 'h' &&
+                    type.charAt(index + 2) == 'a' &&
+                    type.charAt(index + 3) == 'r' &&
+                    type.charAt(index + 4) == 's' &&
+                    type.charAt(index + 5) == 'e' &&
+                    type.charAt(index + 6) == 't' &&
+                    type.charAt(index + 7) == '=') {
                     isCharacterEncodingSet = true;
                 }
             }
@@ -1164,7 +1180,6 @@ public class Response implements HttpResponse, HttpServletResponse {
      * @throws IllegalStateException if this response has already been committed
      * @throws IOException if an input/output error occurs
      */
-    @Override
     public void sendRedirect(String location, boolean isTemporary) throws IOException {
         if (isCommitted()) {
             throw new IllegalStateException(rb.getString(CANNOT_CALL_SEND_REDIRECT_EXCEPTION));
@@ -1269,7 +1284,9 @@ public class Response implements HttpResponse, HttpServletResponse {
         }
 
         try {
-            grizzlyResponse.setHeader(getSafeHeaderName(name), getSafeHeaderValue(value));
+            grizzlyResponse.setHeader(
+                getSafeHeaderName(name),
+                getSafeHeaderValue(value));
         } catch (Exception e) {
             try {
                 grizzlyResponse.sendError(403, "Forbidden");
@@ -1358,7 +1375,16 @@ public class Response implements HttpResponse, HttpServletResponse {
             return false;
         }
 
-        return doIsEncodeable(connectorRequest, session, location);
+        if (SecurityUtil.isPackageProtectionEnabled()) {
+            return (AccessController.doPrivileged(new PrivilegedAction<Boolean>() {
+                @Override
+                public Boolean run() {
+                    return Boolean.valueOf(doIsEncodeable(connectorRequest, session, location));
+                }
+            })).booleanValue();
+        } else {
+            return doIsEncodeable(connectorRequest, session, location);
+        }
     }
 
     private boolean doIsEncodeable(Request hreq, Session session, String location) {
@@ -1472,7 +1498,25 @@ public class Response implements HttpResponse, HttpServletResponse {
                     String relativePath = connectorRequest.getDecodedRequestURI();
                     relativePath = relativePath.substring(0, relativePath.lastIndexOf('/'));
 
-                    String encodedURI = urlEncoder.encodeURL(relativePath);
+                    String encodedURI = null;
+                    final String frelativePath = relativePath;
+
+                    if (SecurityUtil.isPackageProtectionEnabled()) {
+                        try {
+                            encodedURI = AccessController.doPrivileged(new PrivilegedExceptionAction<String>() {
+                                @Override
+                                public String run() throws IOException {
+                                    return urlEncoder.encodeURL(frelativePath);
+                                }
+                            });
+                        } catch (PrivilegedActionException pae) {
+                            IllegalArgumentException iae = new IllegalArgumentException(location);
+                            iae.initCause(pae.getCause());
+                            throw iae;
+                        }
+                    } else {
+                        encodedURI = urlEncoder.encodeURL(relativePath);
+                    }
 
                     redirectURLCharChunk.append(encodedURI, 0, encodedURI.length());
                     redirectURLCharChunk.append('/');
@@ -1595,9 +1639,37 @@ public class Response implements HttpResponse, HttpServletResponse {
      * @return The cookie's string representation
      */
     protected String getCookieString(final Cookie cookie) {
-        return CookieHeaderGenerator.generateHeader(
-            cookie.getName(), cookie.getValue(), cookie.getMaxAge(), cookie.getDomain(),
-            cookie.getPath(), cookie.getSecure(), cookie.isHttpOnly(), cookie.getAttributes());
+        String cookieValue = null;
+
+        if (SecurityUtil.isPackageProtectionEnabled()) {
+            cookieValue = AccessController.doPrivileged(new PrivilegedAction<String>() {
+                @Override
+                public String run() {
+                    return CookieHeaderGenerator.generateHeader(
+                            cookie.getName(),
+                            cookie.getValue(),
+                            cookie.getMaxAge(),
+                            cookie.getDomain(),
+                            cookie.getPath(),
+                            cookie.getSecure(),
+                            cookie.isHttpOnly(),
+                            cookie.getAttributes());
+                }
+            });
+        } else {
+            cookieValue =
+                CookieHeaderGenerator.generateHeader(
+                    cookie.getName(),
+                    cookie.getValue(),
+                    cookie.getMaxAge(),
+                    cookie.getDomain(),
+                    cookie.getPath(),
+                    cookie.getSecure(),
+                    cookie.isHttpOnly(),
+                    cookie.getAttributes());
+        }
+
+        return cookieValue;
     }
 
     /**
@@ -1736,12 +1808,6 @@ public class Response implements HttpResponse, HttpServletResponse {
         } else {
             log.log(Level.WARNING, localName + " " + message, t);
         }
-    }
-
-    @Override
-    public void sendRedirect(String location, int sc, boolean clearBuffer) throws IOException {
-        // TODO TODO SERVLET 6.1
-        // TODO Auto-generated method stub
     }
 
 }

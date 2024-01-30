@@ -19,6 +19,7 @@ package com.acme.ejb.impl;
 import jakarta.ejb.*;
 import jakarta.annotation.*;
 
+
 @Singleton
 public class Singleton4 {
 
@@ -31,5 +32,7 @@ public class Singleton4 {
     public void destroy() {
         System.out.println("In SingletonBean4::destroy()");
     }
+
+
 
 }

@@ -18,12 +18,12 @@
 
 package org.apache.catalina.core;
 
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-
 import jakarta.servlet.ServletException;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
+import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -38,13 +38,16 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.naming.directory.DirContext;
+
 import org.apache.catalina.Container;
 import org.apache.catalina.ContainerEvent;
 import org.apache.catalina.ContainerListener;
 import org.apache.catalina.Context;
+import org.apache.catalina.Globals;
 import org.apache.catalina.Lifecycle;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleListener;
@@ -61,71 +64,85 @@ import org.apache.catalina.util.LifecycleSupport;
 import org.apache.naming.resources.ProxyDirContext;
 import org.glassfish.web.valve.GlassFishValve;
 
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
+
+
 /**
- * Abstract implementation of the <b>Container</b> interface, providing common functionality required by nearly every
- * implementation. Classes extending this base class must implement <code>getInfo()</code>, and may implement a
- * replacement for <code>invoke()</code>.
+ * Abstract implementation of the <b>Container</b> interface, providing common
+ * functionality required by nearly every implementation.  Classes extending
+ * this base class must implement <code>getInfo()</code>, and may implement
+ * a replacement for <code>invoke()</code>.
  * <p>
- * All subclasses of this abstract base class will include support for a Pipeline object that defines the processing to
- * be performed for each request received by the <code>invoke()</code> method of this class, utilizing the "Chain of
- * Responsibility" design pattern. A subclass should encapsulate its own processing functionality as a
- * <code>Valve</code>, and configure this Valve into the pipeline by calling <code>setBasic()</code>.
+ * All subclasses of this abstract base class will include support for a
+ * Pipeline object that defines the processing to be performed for each request
+ * received by the <code>invoke()</code> method of this class, utilizing the
+ * "Chain of Responsibility" design pattern.  A subclass should encapsulate its
+ * own processing functionality as a <code>Valve</code>, and configure this
+ * Valve into the pipeline by calling <code>setBasic()</code>.
  * <p>
- * This implementation fires property change events, per the JavaBeans design pattern, for changes in singleton
- * properties. In addition, it fires the following <code>ContainerEvent</code> events to listeners who register
+ * This implementation fires property change events, per the JavaBeans design
+ * pattern, for changes in singleton properties.  In addition, it fires the
+ * following <code>ContainerEvent</code> events to listeners who register
  * themselves with <code>addContainerListener()</code>:
  * <table border=1>
- * <tr>
- * <th>Type</th>
- * <th>Data</th>
- * <th>Description</th>
- * </tr>
- * <tr>
- * <td align=center><code>addChild</code></td>
- * <td align=center><code>Container</code></td>
- * <td>Child container added to this Container.</td>
- * </tr>
- * <tr>
- * <td align=center><code>addValve</code></td>
- * <td align=center><code>Valve</code></td>
- * <td>Valve added to this Container.</td>
- * </tr>
- * <tr>
- * <td align=center><code>removeChild</code></td>
- * <td align=center><code>Container</code></td>
- * <td>Child container removed from this Container.</td>
- * </tr>
- * <tr>
- * <td align=center><code>removeValve</code></td>
- * <td align=center><code>Valve</code></td>
- * <td>Valve removed from this Container.</td>
- * </tr>
- * <tr>
- * <td align=center><code>start</code></td>
- * <td align=center><code>null</code></td>
- * <td>Container was started.</td>
- * </tr>
- * <tr>
- * <td align=center><code>stop</code></td>
- * <td align=center><code>null</code></td>
- * <td>Container was stopped.</td>
- * </tr>
+ *   <tr>
+ *     <th>Type</th>
+ *     <th>Data</th>
+ *     <th>Description</th>
+ *   </tr>
+ *   <tr>
+ *     <td align=center><code>addChild</code></td>
+ *     <td align=center><code>Container</code></td>
+ *     <td>Child container added to this Container.</td>
+ *   </tr>
+ *   <tr>
+ *     <td align=center><code>addValve</code></td>
+ *     <td align=center><code>Valve</code></td>
+ *     <td>Valve added to this Container.</td>
+ *   </tr>
+ *   <tr>
+ *     <td align=center><code>removeChild</code></td>
+ *     <td align=center><code>Container</code></td>
+ *     <td>Child container removed from this Container.</td>
+ *   </tr>
+ *   <tr>
+ *     <td align=center><code>removeValve</code></td>
+ *     <td align=center><code>Valve</code></td>
+ *     <td>Valve removed from this Container.</td>
+ *   </tr>
+ *   <tr>
+ *     <td align=center><code>start</code></td>
+ *     <td align=center><code>null</code></td>
+ *     <td>Container was started.</td>
+ *   </tr>
+ *   <tr>
+ *     <td align=center><code>stop</code></td>
+ *     <td align=center><code>null</code></td>
+ *     <td>Container was stopped.</td>
+ *   </tr>
  * </table>
- * Subclasses that fire additional events should document them in the class comments of the implementation class.
+ * Subclasses that fire additional events should document them in the
+ * class comments of the implementation class.
  *
  * @author Craig R. McClanahan
  */
 
-public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
+public abstract class ContainerBase
+    implements Container, Lifecycle, Pipeline {
 
     protected static final Logger log = LogFacade.getLogger();
     protected static final ResourceBundle rb = log.getResourceBundle();
 
+
+
     /**
-     * Perform addChild with the permissions of this class. addChild can be called with the XML parser on the stack, this
-     * allows the XML parser to have fewer privileges than Tomcat.
+     * Perform addChild with the permissions of this class.
+     * addChild can be called with the XML parser on the stack,
+     * this allows the XML parser to have fewer privileges than
+     * Tomcat.
      */
-    protected class PrivilegedAddChild implements PrivilegedAction<Void> {
+    protected class PrivilegedAddChild
+        implements PrivilegedAction<Void> {
 
         private final Container child;
 
@@ -141,44 +158,54 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
 
     }
 
+
     // ----------------------------------------------------- Instance Variables
+
 
     /**
      * The child Containers belonging to this Container, keyed by name.
      */
     protected Map<String, Container> children = new LinkedHashMap<>();
 
+
     /**
      * The debugging detail level for this component.
      */
     protected int debug = 0;
+
 
     /**
      * The processor delay for this component.
      */
     protected int backgroundProcessorDelay = -1;
 
+
     /**
-     * Flag indicating whether a check to see if the request is secure is required before adding Pragma and Cache-Control
-     * headers when proxy caching has been disabled
+     * Flag indicating whether a check to see if the request is secure is
+     * required before adding Pragma and Cache-Control headers when proxy
+     * caching has been disabled
      */
-    protected boolean checkIfRequestIsSecure;
+    protected boolean checkIfRequestIsSecure = false;
+
 
     /**
      * The lifecycle event support for this component.
      */
     protected LifecycleSupport lifecycle = new LifecycleSupport(this);
 
+
     /**
      * The container event listeners for this Container.
      */
-    protected ArrayList<ContainerListener> listeners = new ArrayList<>();
+    protected ArrayList<ContainerListener> listeners =
+        new ArrayList<>();
     private ContainerListener[] listenersArray = new ContainerListener[0];
+
 
     /**
      * The Loader implementation with which this Container is associated.
      */
-    protected Loader loader;
+    protected Loader loader = null;
 
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     protected Lock readLock = lock.readLock();
@@ -187,82 +214,92 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
     /**
      * The Logger implementation with which this Container is associated.
      */
-    protected org.apache.catalina.Logger logger;
+    protected org.apache.catalina.Logger logger = null;
 
     /**
      * The Manager implementation with which this Container is associated.
      */
-    protected Manager manager;
+    protected Manager manager = null;
 
     /**
      * The human-readable name of this Container.
      */
-    protected String name;
+    protected String name = null;
+
 
     /**
      * The parent Container to which this Container is a child.
      */
-    protected Container parent;
+    protected Container parent = null;
+
 
     /**
      * The parent class loader to be configured when we install a Loader.
      */
-    protected ClassLoader parentClassLoader;
+    protected ClassLoader parentClassLoader = null;
+
 
     /**
      * The Pipeline object with which this Container is associated.
      */
     protected Pipeline pipeline = new StandardPipeline(this);
 
-    protected boolean hasCustomPipeline;
+
+    protected boolean hasCustomPipeline = false;
+
 
     /**
      * The Realm with which this Container is associated.
      */
-    protected Realm realm;
+    protected Realm realm = null;
 
     /**
      * The resources DirContext object with which this Container is associated.
      */
-    protected DirContext resources;
+    protected DirContext resources = null;
 
     /**
      * Has this component been started?
      */
-    protected volatile boolean started;
+    protected volatile boolean started = false;
 
-    protected boolean initialized;
+    protected boolean initialized=false;
 
     /**
      * The property change support for this component.
      */
     protected PropertyChangeSupport support = new PropertyChangeSupport(this);
 
+
     /**
      * The background thread.
      */
-    private Thread thread;
+    private Thread thread = null;
+
 
     /**
      * The background thread completion semaphore.
      */
-    private volatile boolean threadDone;
+    private volatile boolean threadDone = false;
+
 
     /**
-     * Indicates whether ContainerListener instances need to be notified of a particular configuration event.
+     * Indicates whether ContainerListener instances need to be notified
+     * of a particular configuration event.
      */
-    protected boolean notifyContainerListeners;
+    protected boolean notifyContainerListeners = true;
 
 
     // ------------------------------------------------------------- Properties
 
     /**
-     * @return true if ContainerListener instances need to be notified of a particular configuration event, and false
-     * otherwise
+     * @return true if ContainerListener instances need to be notified
+     * of a particular configuration event, and false otherwise
      */
     boolean isNotifyContainerListeners() {
         return notifyContainerListeners;
     }
+
 
     /**
      * Return the debugging detail level for this component.
@@ -273,6 +310,7 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
 
     }
 
+
     /**
      * Set the debugging detail level for this component.
      *
@@ -282,46 +320,59 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
 
         int oldDebug = this.debug;
         this.debug = debug;
-        support.firePropertyChange("debug", Integer.valueOf(oldDebug), Integer.valueOf(this.debug));
+        support.firePropertyChange("debug", Integer.valueOf(oldDebug),
+                                   Integer.valueOf(this.debug));
 
     }
 
+
     /**
-     * Get the delay between the invocation of the backgroundProcess method on this container and its children. Child
-     * containers will not be invoked if their delay value is not negative (which would mean they are using their own
-     * thread). Setting this to a positive value will cause a thread to be spawn. After waiting the specified amount of
-     * time, the thread will invoke the executePeriodic method on this container and all its children.
+     * Get the delay between the invocation of the backgroundProcess method on
+     * this container and its children. Child containers will not be invoked
+     * if their delay value is not negative (which would mean they are using
+     * their own thread). Setting this to a positive value will cause
+     * a thread to be spawn. After waiting the specified amount of time,
+     * the thread will invoke the executePeriodic method on this container
+     * and all its children.
      */
     @Override
     public int getBackgroundProcessorDelay() {
         return backgroundProcessorDelay;
     }
 
+
     /**
-     * Set the delay between the invocation of the execute method on this container and its children.
+     * Set the delay between the invocation of the execute method on this
+     * container and its children.
      *
-     * @param delay The delay in seconds between the invocation of backgroundProcess methods
+     * @param delay The delay in seconds between the invocation of
+     *              backgroundProcess methods
      */
     @Override
     public void setBackgroundProcessorDelay(int delay) {
         backgroundProcessorDelay = delay;
     }
 
+
     /**
-     * Return descriptive information about this Container implementation and the corresponding version number, in the
-     * format <code>&lt;description&gt;/&lt;version&gt;</code>.
+     * Return descriptive information about this Container implementation and
+     * the corresponding version number, in the format
+     * <code>&lt;description&gt;/&lt;version&gt;</code>.
      */
     @Override
     public String getInfo() {
         return this.getClass().getName();
     }
 
+
     /**
-     * Return the Loader with which this Container is associated. If there is no associated Loader, return the Loader
-     * associated with our parent Container (if any); otherwise, return <code>null</code>.
+     * Return the Loader with which this Container is associated.  If there is
+     * no associated Loader, return the Loader associated with our parent
+     * Container (if any); otherwise, return <code>null</code>.
      */
     @Override
     public Loader getLoader() {
+
         try {
             readLock.lock();
             if (loader != null) {
@@ -335,8 +386,9 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
             return (parent.getLoader());
         }
 
-        return null;
+        return (null);
     }
+
 
     /**
      * Set the Loader with which this Container is associated.
@@ -359,7 +411,8 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
             this.loader = loader;
 
             // Stop the old component if necessary
-            if (started && (oldLoader != null) && (oldLoader instanceof Lifecycle)) {
+            if (started && (oldLoader != null) &&
+                    (oldLoader instanceof Lifecycle)) {
                 try {
                     ((Lifecycle) oldLoader).stop();
                 } catch (LifecycleException e) {
@@ -371,7 +424,8 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
             if (loader != null) {
                 loader.setContainer(this);
             }
-            if (started && (loader != null) && (loader instanceof Lifecycle)) {
+            if (started && (loader != null) &&
+                (loader instanceof Lifecycle)) {
                 try {
                     ((Lifecycle) loader).start();
                 } catch (LifecycleException e) {
@@ -387,9 +441,11 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
 
     }
 
+
     /**
-     * Return the Logger with which this Container is associated. If there is no associated Logger, return the Logger
-     * associated with our parent Container (if any); otherwise return <code>null</code>.
+     * Return the Logger with which this Container is associated.  If there is
+     * no associated Logger, return the Logger associated with our parent
+     * Container (if any); otherwise return <code>null</code>.
      */
     @Override
     public org.apache.catalina.Logger getLogger() {
@@ -409,6 +465,7 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
 
         return (null);
     }
+
 
     /**
      * Set the Logger with which this Container is associated.
@@ -430,7 +487,8 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
             this.logger = logger;
 
             // Stop the old component if necessary
-            if (started && (oldLogger != null) && (oldLogger instanceof Lifecycle)) {
+            if (started && (oldLogger != null) &&
+                    (oldLogger instanceof Lifecycle)) {
                 try {
                     ((Lifecycle) oldLogger).stop();
                 } catch (LifecycleException e) {
@@ -438,11 +496,13 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
                 }
             }
 
+
             // Start the new component if necessary
             if (logger != null) {
                 logger.setContainer(this);
             }
-            if (started && (logger != null) && (logger instanceof Lifecycle)) {
+            if (started && (logger != null) &&
+                (logger instanceof Lifecycle)) {
                 try {
                     ((Lifecycle) logger).start();
                 } catch (LifecycleException e) {
@@ -458,9 +518,11 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
 
     }
 
+
     /**
-     * Return the Manager with which this Container is associated. If there is no associated Manager, return the Manager
-     * associated with our parent Container (if any); otherwise return <code>null</code>.
+     * Return the Manager with which this Container is associated.  If there is
+     * no associated Manager, return the Manager associated with our parent
+     * Container (if any); otherwise return <code>null</code>.
      */
     @Override
     public Manager getManager() {
@@ -480,6 +542,7 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
 
         return (null);
     }
+
 
     /**
      * Set the Manager with which this Container is associated.
@@ -501,7 +564,8 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
             this.manager = manager;
 
             // Stop the old component if necessary
-            if (started && (oldManager != null) && (oldManager instanceof Lifecycle)) {
+            if (started && (oldManager != null) &&
+                    (oldManager instanceof Lifecycle)) {
                 try {
                     ((Lifecycle) oldManager).stop();
                 } catch (LifecycleException e) {
@@ -513,7 +577,8 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
             if (manager != null) {
                 manager.setContainer(this);
             }
-            if (started && (manager != null) && (manager instanceof Lifecycle)) {
+            if (started && (manager != null) &&
+                    (manager instanceof Lifecycle)) {
                 try {
                     ((Lifecycle) manager).start();
                 } catch (LifecycleException e) {
@@ -528,6 +593,7 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
         support.firePropertyChange("manager", oldManager, this.manager);
     }
 
+
     /**
      * Return an object which may be utilized for mapping to this component.
      */
@@ -536,9 +602,11 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
         return this;
     }
 
+
     /**
-     * Return a name string (suitable for use by humans) that describes this Container. Within the set of child containers
-     * belonging to a particular parent, Container names must be unique.
+     * Return a name string (suitable for use by humans) that describes this
+     * Container.  Within the set of child containers belonging to a particular
+     * parent, Container names must be unique.
      */
     @Override
     public String getName() {
@@ -546,14 +614,17 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
         return (name);
     }
 
+
     /**
-     * Set a name string (suitable for use by humans) that describes this Container. Within the set of child containers
-     * belonging to a particular parent, Container names must be unique.
+     * Set a name string (suitable for use by humans) that describes this
+     * Container.  Within the set of child containers belonging to a particular
+     * parent, Container names must be unique.
      *
      * @param name New name of this container
      *
-     * @exception IllegalStateException if this Container has already been added to the children of a parent Container
-     * (after which the name may not be changed)
+     * @exception IllegalStateException if this Container has already been
+     *  added to the children of a parent Container (after which the name
+     *  may not be changed)
      */
     @Override
     public void setName(String name) {
@@ -563,9 +634,10 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
         support.firePropertyChange("name", oldName, this.name);
     }
 
+
     /**
-     * Return the Container for which this Container is a child, if there is one. If there is no defined parent, return
-     * <code>null</code>.
+     * Return the Container for which this Container is a child, if there is
+     * one.  If there is no defined parent, return <code>null</code>.
      */
     @Override
     public Container getParent() {
@@ -573,13 +645,17 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
         return (parent);
     }
 
+
     /**
-     * Set the parent Container to which this Container is being added as a child. This Container may refuse to become
-     * attached to the specified Container by throwing an exception.
+     * Set the parent Container to which this Container is being added as a
+     * child.  This Container may refuse to become attached to the specified
+     * Container by throwing an exception.
      *
-     * @param container Container to which this Container is being added as a child
+     * @param container Container to which this Container is being added
+     *  as a child
      *
-     * @exception IllegalArgumentException if this Container refuses to become attached to the specified Container
+     * @exception IllegalArgumentException if this Container refuses to become
+     *  attached to the specified Container
      */
     @Override
     public void setParent(Container container) {
@@ -589,9 +665,11 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
         support.firePropertyChange("parent", oldParent, this.parent);
     }
 
+
     /**
-     * Return the parent class loader (if any) for this web application. This call is meaningful only <strong>after</strong>
-     * a Loader has been configured.
+     * Return the parent class loader (if any) for this web application.
+     * This call is meaningful only <strong>after</strong> a Loader has
+     * been configured.
      */
     @Override
     public ClassLoader getParentClassLoader() {
@@ -604,10 +682,12 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
         return (ClassLoader.getSystemClassLoader());
     }
 
+
     /**
-     * Set the parent class loader (if any) for this web application. This call is meaningful only <strong>before</strong> a
-     * Loader has been configured, and the specified value (if non-null) should be passed as an argument to the class loader
-     * constructor.
+     * Set the parent class loader (if any) for this web application.
+     * This call is meaningful only <strong>before</strong> a Loader has
+     * been configured, and the specified value (if non-null) should be
+     * passed as an argument to the class loader constructor.
      *
      *
      * @param parent The new parent class loader
@@ -616,28 +696,35 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
     public void setParentClassLoader(ClassLoader parent) {
         ClassLoader oldParentClassLoader = this.parentClassLoader;
         this.parentClassLoader = parent;
-        support.firePropertyChange("parentClassLoader", oldParentClassLoader, this.parentClassLoader);
+        support.firePropertyChange("parentClassLoader", oldParentClassLoader,
+                                   this.parentClassLoader);
     }
 
+
     /**
-     * Return the Pipeline object that manages the Valves associated with this Container.
+     * Return the Pipeline object that manages the Valves associated with
+     * this Container.
      */
     @Override
     public Pipeline getPipeline() {
         return this.pipeline;
     }
 
+
     /**
-     * @return true if this container was configured with a custom pipeline, false otherwise
+     * @return true if this container was configured with a custom pipeline,
+     * false otherwise
      */
     @Override
     public boolean hasCustomPipeline() {
         return hasCustomPipeline;
     }
 
+
     /**
-     * Indicates whether the request will be checked to see if it is secure before adding Pragma and Cache-control headers
-     * when proxy caching has been disabled.
+     * Indicates whether the request will be checked to see if it is secure
+     * before adding Pragma and Cache-control headers when proxy caching has
+     * been disabled.
      *
      * @return true if the check is required; false otherwise.
      */
@@ -646,22 +733,27 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
         return checkIfRequestIsSecure;
     }
 
+
     /**
      * Sets the checkIfRequestIsSecure property of this Container.
      *
-     * Setting this property to true will check if the request is secure before adding Pragma and Cache-Control headers when
-     * proxy caching has been disabled.
+     * Setting this property to true will check if the request is secure
+     * before adding Pragma and Cache-Control headers when proxy caching has
+     * been disabled.
      *
-     * @param checkIfRequestIsSecure true if check is required, false otherwise
+     * @param checkIfRequestIsSecure true if check is required, false
+     * otherwise
      */
     @Override
     public void setCheckIfRequestIsSecure(boolean checkIfRequestIsSecure) {
         this.checkIfRequestIsSecure = checkIfRequestIsSecure;
     }
 
+
     /**
-     * Return the Realm with which this Container is associated. If there is no associated Realm, return the Realm
-     * associated with our parent Container (if any); otherwise return <code>null</code>.
+     * Return the Realm with which this Container is associated.  If there is
+     * no associated Realm, return the Realm associated with our parent
+     * Container (if any); otherwise return <code>null</code>.
      */
     @Override
     public Realm getRealm() {
@@ -680,6 +772,7 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
 
         return (null);
     }
+
 
     /**
      * Set the Realm with which this Container is associated.
@@ -701,7 +794,8 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
             this.realm = realm;
 
             // Stop the old component if necessary
-            if (started && (oldRealm != null) && (oldRealm instanceof Lifecycle)) {
+            if (started && (oldRealm != null) &&
+                    (oldRealm instanceof Lifecycle)) {
                 try {
                     ((Lifecycle) oldRealm).stop();
                 } catch (LifecycleException e) {
@@ -713,7 +807,8 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
             if (realm != null) {
                 realm.setContainer(this);
             }
-            if (started && (realm != null) && (realm instanceof Lifecycle)) {
+            if (started && (realm != null) &&
+                    (realm instanceof Lifecycle)) {
                 try {
                     ((Lifecycle) realm).start();
                 } catch (LifecycleException e) {
@@ -728,9 +823,12 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
         support.firePropertyChange("realm", oldRealm, this.realm);
     }
 
+
     /**
-     * Return the resources DirContext object with which this Container is associated. If there is no associated resources
-     * object, return the resources associated with our parent Container (if any); otherwise return <code>null</code>.
+      * Return the resources DirContext object with which this Container is
+      * associated.  If there is no associated resources object, return the
+      * resources associated with our parent Container (if any); otherwise
+      * return <code>null</code>.
      */
     @Override
     public DirContext getResources() {
@@ -751,16 +849,18 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
         return (null);
     }
 
+
     /**
-     * Set the resources DirContext object with which this Container is associated.
+     * Set the resources DirContext object with which this Container is
+     * associated.
      *
      * @param resources The newly associated DirContext
      */
     @Override
     public void setResources(DirContext resources) throws Exception {
         // Called from StandardContext.setResources()
-        // <- StandardContext.start()
-        // <- ContainerBase.addChildInternal()
+        //              <- StandardContext.start()
+        //              <- ContainerBase.addChildInternal()
 
         // Change components if necessary
         DirContext oldResources;
@@ -782,47 +882,61 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
             writeLock.unlock();
         }
 
-        support.firePropertyChange("resources", oldResources, this.resources);
+        support.firePropertyChange("resources", oldResources,
+                                   this.resources);
     }
+
 
     // ------------------------------------------------------ Container Methods
 
+
     /**
-     * Add a new child Container to those associated with this Container, if supported. Prior to adding this Container to
-     * the set of children, the child's <code>setParent()</code> method must be called, with this Container as an argument.
-     * This method may thrown an <code>IllegalArgumentException</code> if this Container chooses not to be attached to the
-     * specified Container, in which case it is not added
+     * Add a new child Container to those associated with this Container,
+     * if supported.  Prior to adding this Container to the set of children,
+     * the child's <code>setParent()</code> method must be called, with this
+     * Container as an argument.  This method may thrown an
+     * <code>IllegalArgumentException</code> if this Container chooses not
+     * to be attached to the specified Container, in which case it is not added
      *
      * @param child New child Container to be added
      *
-     * @exception IllegalArgumentException if this exception is thrown by the <code>setParent()</code> method of the child
-     * Container
-     * @exception IllegalArgumentException if the new child does not have a name unique from that of existing children of
-     * this Container
-     * @exception IllegalStateException if this Container does not support child Containers
+     * @exception IllegalArgumentException if this exception is thrown by
+     *  the <code>setParent()</code> method of the child Container
+     * @exception IllegalArgumentException if the new child does not have
+     *  a name unique from that of existing children of this Container
+     * @exception IllegalStateException if this Container does not support
+     *  child Containers
      */
     @Override
     public void addChild(Container child) {
-        addChildInternal(child);
+        if (Globals.IS_SECURITY_ENABLED) {
+            PrivilegedAction<Void> dp =
+                new PrivilegedAddChild(child);
+            AccessController.doPrivileged(dp);
+        } else {
+            addChildInternal(child);
+        }
     }
 
     private void addChildInternal(Container child) {
-        if (log.isLoggable(Level.FINEST)) {
+
+        if(log.isLoggable(Level.FINEST)) {
             log.log(Level.FINEST, "Add child " + child + " " + this);
         }
-
-        synchronized (children) {
+        synchronized(children) {
             if (children.get(child.getName()) != null) {
-                String msg = MessageFormat.format(rb.getString(LogFacade.DUPLICATE_CHILD_NAME_EXCEPTION), child.getName());
-                throw new IllegalArgumentException(msg);
+                String msg = MessageFormat.format(rb.getString(LogFacade.DUPLICATE_CHILD_NAME_EXCEPTION),
+                                                               child.getName());
+            throw new IllegalArgumentException(msg);
             }
-            child.setParent(this); // May throw IAE
+            child.setParent(this);  // May throw IAE
             if (started && (child instanceof Lifecycle)) {
                 try {
                     ((Lifecycle) child).start();
                 } catch (LifecycleException e) {
                     log.log(Level.SEVERE, LogFacade.CONTAINER_BASE_ADD_CHILD_START, e);
-                    throw new IllegalStateException(rb.getString(LogFacade.CONTAINER_BASE_ADD_CHILD_START) + e);
+                    throw new IllegalStateException
+                            (rb.getString(LogFacade.CONTAINER_BASE_ADD_CHILD_START) + e);
                 }
             }
             children.put(child.getName(), child);
@@ -834,6 +948,7 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
 
     }
 
+
     /**
      * Add a container event listener to this component.
      *
@@ -841,11 +956,15 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
      */
     @Override
     public void addContainerListener(ContainerListener listener) {
+
         synchronized (listeners) {
             listeners.add(listener);
-            listenersArray = listeners.toArray(new ContainerListener[listeners.size()]);
+            listenersArray = listeners.toArray(
+                new ContainerListener[listeners.size()]);
         }
+
     }
+
 
     /**
      * Add a property change listener to this component.
@@ -854,66 +973,85 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
      */
     @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
+
         support.addPropertyChangeListener(listener);
+
     }
 
+
     /**
-     * Return the child Container, associated with this Container, with the specified name (if any); otherwise, return
-     * <code>null</code>
+     * Return the child Container, associated with this Container, with
+     * the specified name (if any); otherwise, return <code>null</code>
      *
      * @param name Name of the child Container to be retrieved
      */
     @Override
     public Container findChild(String name) {
+
         if (name == null) {
             return (null);
         }
-
-        synchronized (children) { // Required by post-start changes
+        synchronized (children) {       // Required by post-start changes
             return children.get(name);
         }
+
     }
 
+
     /**
-     * Return the set of children Containers associated with this Container. If this Container has no children, a
-     * zero-length array is returned.
+     * Return the set of children Containers associated with this Container.
+     * If this Container has no children, a zero-length array is returned.
      */
     @Override
     public Container[] findChildren() {
+
         synchronized (children) {
             return children.values().toArray(new Container[children.size()]);
         }
+
     }
 
+
     /**
-     * Return the set of container listeners associated with this Container. If this Container has no registered container
-     * listeners, a zero-length array is returned.
+     * Return the set of container listeners associated with this Container.
+     * If this Container has no registered container listeners, a zero-length
+     * array is returned.
      */
     @Override
     public ContainerListener[] findContainerListeners() {
+
         synchronized (listeners) {
             return listenersArray;
         }
     }
 
+
     /**
-     * Process the specified Request, to produce the corresponding Response, by invoking the first Valve in our pipeline (if
-     * any), or the basic Valve otherwise.
+     * Process the specified Request, to produce the corresponding Response,
+     * by invoking the first Valve in our pipeline (if any), or the basic
+     * Valve otherwise.
      *
      * @param request Request to be processed
      * @param response Response to be produced
      *
-     * @exception IllegalStateException if neither a pipeline or a basic Valve have been configured for this Container
-     * @exception IOException if an input/output error occurred while processing
-     * @exception ServletException if a ServletException was thrown while processing this request
+     * @exception IllegalStateException if neither a pipeline or a basic
+     *  Valve have been configured for this Container
+     * @exception IOException if an input/output error occurred while
+     *  processing
+     * @exception ServletException if a ServletException was thrown
+     *  while processing this request
      */
     @Override
-    public void invoke(Request request, Response response) throws IOException, ServletException {
+    public void invoke(Request request, Response response)
+        throws IOException, ServletException {
+
         pipeline.invoke(request, response);
     }
 
+
     /**
-     * Remove an existing child Container from association with this parent Container.
+     * Remove an existing child Container from association with this parent
+     * Container.
      *
      * @param child Existing child Container to be removed
      */
@@ -923,7 +1061,7 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
             return;
         }
 
-        synchronized (children) {
+        synchronized(children) {
             if (children.get(child.getName()) == null) {
                 return;
             }
@@ -932,8 +1070,8 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
 
         if (started && (child instanceof Lifecycle)) {
             try {
-                if (child instanceof ContainerBase) {
-                    if (((ContainerBase) child).started) {
+                if( child instanceof ContainerBase ) {
+                    if( ((ContainerBase)child).started ) {
                         ((Lifecycle) child).stop();
                     }
                 } else {
@@ -951,6 +1089,7 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
         // child.setParent(null);
     }
 
+
     /**
      * Remove a container event listener from this component.
      *
@@ -958,11 +1097,14 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
      */
     @Override
     public void removeContainerListener(ContainerListener listener) {
+
         synchronized (listeners) {
             listeners.remove(listener);
-            listenersArray = listeners.toArray(new ContainerListener[listeners.size()]);
+            listenersArray = listeners.toArray(
+                new ContainerListener[listeners.size()]);
         }
     }
+
 
     /**
      * Remove a property change listener from this component.
@@ -971,10 +1113,13 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
      */
     @Override
     public void removePropertyChangeListener(PropertyChangeListener listener) {
+
         support.removePropertyChangeListener(listener);
     }
 
+
     // ------------------------------------------------------ Lifecycle Methods
+
 
     /**
      * Add a lifecycle event listener to this component.
@@ -986,13 +1131,16 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
         lifecycle.addLifecycleListener(listener);
     }
 
+
     /**
-     * Gets the (possibly empty) list of lifecycle listeners associated with this Container.
+     * Gets the (possibly empty) list of lifecycle listeners associated
+     * with this Container.
      */
     @Override
     public List<LifecycleListener> findLifecycleListeners() {
         return lifecycle.findLifecycleListeners();
     }
+
 
     /**
      * Removes the given lifecycle event listener from this Container.
@@ -1004,6 +1152,7 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
         lifecycle.removeLifecycleListener(listener);
     }
 
+
     /**
      * Removes any lifecycle event listeners from this Container.
      */
@@ -1011,10 +1160,12 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
         lifecycle.removeLifecycleListeners();
     }
 
+
     /**
      * Prepare for active use of the public methods of this Component.
      *
-     * @exception LifecycleException if this component detects a fatal error that prevents it from being started
+     * @exception LifecycleException if this component detects a fatal error
+     *  that prevents it from being started
      */
     @Override
     public synchronized void start() throws LifecycleException {
@@ -1067,10 +1218,12 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
         lifecycle.fireLifecycleEvent(AFTER_START_EVENT, null);
     }
 
+
     /**
      * Gracefully shut down active use of the public methods of this Component.
      *
-     * @exception LifecycleException if this component detects a fatal error that needs to be reported
+     * @exception LifecycleException if this component detects a fatal error
+     *  that needs to be reported
      */
     @Override
     public synchronized void stop() throws LifecycleException {
@@ -1138,17 +1291,19 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
         lifecycle.fireLifecycleEvent(AFTER_STOP_EVENT, null);
     }
 
-    /**
-     * Init method, part of the MBean lifecycle. If the container was added via JMX, it'll register itself with the parent,
-     * using the ObjectName conventions to locate the parent.
+
+    /** Init method, part of the MBean lifecycle.
+     *  If the container was added via JMX, it'll register itself with the
+     * parent, using the ObjectName conventions to locate the parent.
      *
-     * If the container was added directly and it doesn't have an ObjectName, it'll create a name and register itself with
-     * the JMX console. On destroy(), the object will unregister.
+     *  If the container was added directly and it doesn't have an ObjectName,
+     * it'll create a name and register itself with the JMX console. On destroy(),
+     * the object will unregister.
      *
      * @throws Exception
      */
     public void init() throws Exception {
-        initialized = true;
+        initialized=true;
     }
 
     public ObjectName getParentName() throws MalformedObjectNameException {
@@ -1156,20 +1311,20 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
     }
 
     public void destroy() throws Exception {
-        if (started) {
+        if( started ) {
             stop();
         }
-        initialized = false;
+        initialized=false;
 
         // unregister this component
-        if (oname != null) {
+        if( oname != null ) {
             try {
-                if (controller == oname) {
+                if( controller == oname ) {
                     if (log.isLoggable(Level.FINE)) {
                         log.log(Level.FINE, "unregistering " + oname);
                     }
                 }
-            } catch (Throwable t) {
+            } catch( Throwable t ) {
                 log.log(Level.SEVERE, LogFacade.ERROR_UNREGISTERING, t);
             }
         }
@@ -1180,7 +1335,7 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
 
         // Stop our child containers, if any
         Container children[] = findChildren();
-        for (Container aChildren : children) {
+        for(Container aChildren : children) {
             removeChild(aChildren);
         }
 
@@ -1194,17 +1349,24 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
 
     // ------------------------------------------------------- Pipeline Methods
 
+
     /**
-     * Add a new Valve to the end of the pipeline associated with this Container. Prior to adding the Valve, the Valve's
-     * <code>setContainer</code> method must be called, with this Container as an argument. The method may throw an
-     * <code>IllegalArgumentException</code> if this Valve chooses not to be associated with this Container, or
-     * <code>IllegalStateException</code> if it is already associated with a different Container.
+     * Add a new Valve to the end of the pipeline associated with this
+     * Container.  Prior to adding the Valve, the Valve's
+     * <code>setContainer</code> method must be called, with this Container
+     * as an argument.  The method may throw an
+     * <code>IllegalArgumentException</code> if this Valve chooses not to
+     * be associated with this Container, or <code>IllegalStateException</code>
+     * if it is already associated with a different Container.
      *
      * @param valve Valve to be added
      *
-     * @exception IllegalArgumentException if this Container refused to accept the specified Valve
-     * @exception IllegalArgumentException if the specified Valve refuses to be associated with this Container
-     * @exception IllegalStateException if the specified Valve is already associated with a different Container
+     * @exception IllegalArgumentException if this Container refused to
+     *  accept the specified Valve
+     * @exception IllegalArgumentException if the specified Valve refuses to be
+     *  associated with this Container
+     * @exception IllegalStateException if the specified Valve is already
+     *  associated with a different Container
      */
     @Override
     public synchronized void addValve(GlassFishValve valve) {
@@ -1215,6 +1377,7 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
             fireContainerEvent(ADD_VALVE_EVENT, valve);
         }
     }
+
 
     /**
      * Add Tomcat-style valve.
@@ -1229,38 +1392,45 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
         }
     }
 
+
     public ObjectName[] getValveObjectNames() {
-        return ((StandardPipeline) pipeline).getValveObjectNames();
+        return ((StandardPipeline)pipeline).getValveObjectNames();
     }
 
     /**
-     * <p>
-     * Return the Valve instance that has been distinguished as the basic Valve for this Pipeline (if any).
+     * <p>Return the Valve instance that has been distinguished as the basic
+     * Valve for this Pipeline (if any).
      */
     @Override
     public GlassFishValve getBasic() {
         return (pipeline.getBasic());
     }
 
+
     /**
-     * Return the set of Valves in the pipeline associated with this Container, including the basic Valve (if any). If there
-     * are no such Valves, a zero-length array is returned.
+     * Return the set of Valves in the pipeline associated with this
+     * Container, including the basic Valve (if any).  If there are no
+     * such Valves, a zero-length array is returned.
      */
     @Override
     public GlassFishValve[] getValves() {
         return (pipeline.getValves());
     }
 
+
     /**
-     * @return true if this pipeline has any non basic valves, false otherwise
+     * @return true if this pipeline has any non basic valves, false
+     * otherwise
      */
     @Override
     public boolean hasNonBasicValves() {
         return pipeline.hasNonBasicValves();
     }
 
+
     /**
-     * Remove the specified Valve from the pipeline associated with this Container, if it is found; otherwise, do nothing.
+     * Remove the specified Valve from the pipeline associated with this
+     * Container, if it is found; otherwise, do nothing.
      *
      * @param valve Valve to be removed
      */
@@ -1274,14 +1444,16 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
         }
     }
 
+
     /**
-     * <p>
-     * Set the Valve instance that has been distinguished as the basic Valve for this Pipeline (if any). Prior to setting
-     * the basic Valve, the Valve's <code>setContainer()</code> will be called, if it implements <code>Contained</code>,
-     * with the owning Container as an argument. The method may throw an <code>IllegalArgumentException</code> if this Valve
-     * chooses not to be associated with this Container, or <code>IllegalStateException</code> if it is already associated
-     * with a different Container.
-     * </p>
+     * <p>Set the Valve instance that has been distinguished as the basic
+     * Valve for this Pipeline (if any).  Prior to setting the basic Valve,
+     * the Valve's <code>setContainer()</code> will be called, if it
+     * implements <code>Contained</code>, with the owning Container as an
+     * argument.  The method may throw an <code>IllegalArgumentException</code>
+     * if this Valve chooses not to be associated with this Container, or
+     * <code>IllegalStateException</code> if it is already associated with
+     * a different Container.</p>
      *
      * @param valve Valve to be distinguished as the basic Valve
      */
@@ -1292,19 +1464,24 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
 
     }
 
+
     /**
-     * Execute a periodic task, such as reloading, etc. This method will be invoked inside the classloading context of this
-     * container. Unexpected throwables will be caught and logged.
+     * Execute a periodic task, such as reloading, etc. This method will be
+     * invoked inside the classloading context of this container. Unexpected
+     * throwables will be caught and logged.
      */
     @Override
     public void backgroundProcess() {
     }
 
+
     // ------------------------------------------------------ Protected Methods
 
+
     /**
-     * Notify all container event listeners that a particular event has occurred for this Container. The default
-     * implementation performs this notification synchronously using the calling thread.
+     * Notify all container event listeners that a particular event has
+     * occurred for this Container.  The default implementation performs
+     * this notification synchronously using the calling thread.
      *
      * @param type Event type
      * @param data Event data
@@ -1326,6 +1503,7 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
             listener.containerEvent(event);
         }
     }
+
 
     /**
      * Starts the children of this container.
@@ -1350,22 +1528,25 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
         }
     }
 
+
     /**
      * Log the specified message to our current Logger (if any).
      *
      * @param message Message to be logged
      */
     protected void log(String message) {
-        message = neutralizeForLog(message);
+            message = neutralizeForLog(message);
 //         Logger logger = getLogger();
 //         if (logger != null)
 //             logger.log(logName() + ": " + message);
 //         else
-        log.log(Level.INFO, message);
+            log.log(Level.INFO, message);
     }
 
+
     /**
-     * Log the specified message and exception to our current Logger (if any).
+     * Log the specified message and exception to our current Logger
+     * (if any).
      *
      * @param message Message to be logged
      * @param throwable Related exception
@@ -1381,6 +1562,7 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
 
     }
 
+
     /**
      * Return the abbreviated name of this container for logging messages
      */
@@ -1395,7 +1577,7 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
 
     }
 
-    // -------------------- JMX and Registration --------------------
+    // -------------------- JMX and Registration  --------------------
     protected String domain;
     protected ObjectName oname;
     protected ObjectName controller;
@@ -1415,39 +1597,43 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
     }
 
     public String getDomain() {
-        if (domain == null) {
-            Container parent = this;
-            while (parent != null && !(parent instanceof StandardEngine)) {
-                parent = parent.getParent();
+        if( domain==null ) {
+            Container parent=this;
+            while( parent != null &&
+                    !( parent instanceof StandardEngine) ) {
+                parent=parent.getParent();
             }
-            if (parent != null) {
+            if( parent != null ) {
                 // parent will always be an instanceof StandardEngine unless it is null
-                domain = ((StandardEngine) parent).getDomain();
+                domain=((StandardEngine)parent).getDomain();
             }
         }
         return domain;
     }
 
     public void setDomain(String domain) {
-        this.domain = domain;
+        this.domain=domain;
     }
 
+
     public ObjectName[] getChildren() {
-        synchronized (children) {
-            ObjectName result[] = new ObjectName[children.size()];
-            Iterator<Container> it = children.values().iterator();
-            int i = 0;
-            while (it.hasNext()) {
-                Object next = it.next();
-                if (next instanceof ContainerBase) {
-                    result[i++] = ((ContainerBase) next).getJmxName();
+        synchronized(children) {
+            ObjectName result[]=new ObjectName[children.size()];
+            Iterator<Container> it=children.values().iterator();
+            int i=0;
+            while( it.hasNext() ) {
+                Object next=it.next();
+                if( next instanceof ContainerBase ) {
+                    result[i++]=((ContainerBase)next).getJmxName();
                 }
             }
             return result;
         }
     }
 
-    public ObjectName createObjectName(String domain, ObjectName parent) throws Exception {
+    public ObjectName createObjectName(String domain, ObjectName parent)
+        throws Exception
+    {
         if (log.isLoggable(Level.FINE)) {
             log.log(Level.FINE, neutralizeForLog("Create ObjectName " + domain + " " + parent));
         }
@@ -1455,29 +1641,29 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
     }
 
     public String getContainerSuffix() {
-        Container container = this;
-        Container context = null;
-        Container host = null;
-        Container servlet = null;
+        Container container=this;
+        Container context=null;
+        Container host=null;
+        Container servlet=null;
 
-        StringBuilder suffix = new StringBuilder();
+        StringBuilder suffix=new StringBuilder();
 
-        if (container instanceof StandardHost) {
-            host = container;
-        } else if (container instanceof StandardContext) {
-            host = container.getParent();
-            context = container;
-        } else if (container instanceof StandardWrapper) {
-            context = container.getParent();
-            host = context.getParent();
-            servlet = container;
+        if( container instanceof StandardHost ) {
+            host=container;
+        } else if( container instanceof StandardContext ) {
+            host=container.getParent();
+            context=container;
+        } else if( container instanceof StandardWrapper ) {
+            context=container.getParent();
+            host=context.getParent();
+            servlet=container;
         }
-        if (context != null) {
-            String path = ((StandardContext) context).getEncodedPath();
+        if( context!=null ) {
+            String path=((StandardContext)context).getEncodedPath();
             suffix.append(",path=").append((path.equals("")) ? "/" : path);
         }
-        if (host != null) {
-            suffix.append(",host=").append(host.getName());
+        if( host!=null ) {
+            suffix.append(",host=").append( host.getName() );
         }
         if (servlet != null) {
             String containerName = container.getName();
@@ -1487,8 +1673,10 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
         return suffix.toString();
     }
 
+
     /**
-     * Start the background thread that will periodically check for session timeouts.
+     * Start the background thread that will periodically check for
+     * session timeouts.
      */
     protected void threadStart() {
 
@@ -1507,8 +1695,10 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
 
     }
 
+
     /**
-     * Stop the background thread that is periodically checking for session timeouts.
+     * Stop the background thread that is periodically checking for
+     * session timeouts.
      */
     protected void threadStop() {
 
@@ -1528,10 +1718,13 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
 
     }
 
+
     // -------------------------------------- ContainerExecuteDelay Inner Class
 
+
     /**
-     * Private thread class to invoke the backgroundProcess method of this container and its children after a fixed delay.
+     * Private thread class to invoke the backgroundProcess method
+     * of this container and its children after a fixed delay.
      */
     protected class ContainerBackgroundProcessor implements Runnable {
 
@@ -1545,7 +1738,8 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
                 }
                 if (!threadDone) {
                     Container parent = (Container) getMappingObject();
-                    ClassLoader cl = Thread.currentThread().getContextClassLoader();
+                    ClassLoader cl =
+                        Thread.currentThread().getContextClassLoader();
                     if (parent.getLoader() != null) {
                         cl = parent.getLoader().getClassLoader();
                     }
@@ -1557,7 +1751,8 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
         protected void processChildren(Container container, ClassLoader cl) {
             try {
                 if (container.getLoader() != null) {
-                    Thread.currentThread().setContextClassLoader(container.getLoader().getClassLoader());
+                    Thread.currentThread().setContextClassLoader
+                        (container.getLoader().getClassLoader());
                 }
                 container.backgroundProcess();
             } catch (Throwable t) {

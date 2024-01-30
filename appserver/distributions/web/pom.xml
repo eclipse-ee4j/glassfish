@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.distributions</groupId>
         <artifactId>distributions</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>7.0.13-SNAPSHOT</version>
     </parent>
 
     <artifactId>web</artifactId>
@@ -33,8 +33,7 @@
     <name>Glassfish Web Profile Distribution</name>
 
     <properties>
-        <patch.classes>${project.build.directory}/dependency</patch.classes>
-        <glassfish.modules>${project.build.directory}/stage/glassfish8/glassfish/modules</glassfish.modules>
+        <glassfish.modules>${project.build.directory}/stage/glassfish7/glassfish/modules</glassfish.modules>
         <patches>${basedir}/src/main/patches</patches>
     </properties>
 
@@ -110,38 +109,9 @@
                                     </sequential>
                                 </macrodef>
 
-                               
-                                
-                                 <!-- To support Expression Language 6  -->
                                 <jarupdate
-                                    basedir="${patches}/jakarta.servlet.jsp.jstl-api" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/jakarta.servlet.jsp.jstl-api.jar"
-                                />
-                                
-                                <!-- To support Expression Language 6 and Expressly 6-->
-                                <jarupdate
-                                    basedir="${patches}/hibernate-validator" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/hibernate-validator.jar"
-                                />
-                                
-                                <jarupdate
-                                    basedir="${patches}/jakarta.enterprise.cdi-el-api" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/jakarta.enterprise.cdi-el-api.jar"
-                                />
-                                
-                                
-                                <!-- To support Jakarta Annotations 3 -->
-                                <jarupdate
-                                    basedir="${patches}/parsson-media" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/parsson-media.jar"
-                                />
-                                <jarupdate
-                                    basedir="${patches}/hibernate-validator-cdi" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/hibernate-validator-cdi.jar"
-                                />
-                                <jarupdate
-                                    basedir="${patches}/jakarta.enterprise.concurrent" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/jakarta.enterprise.concurrent.jar"
+                                    basedir="${patches}/jersey-hk2" includes="META-INF/MANIFEST.MF"
+                                    destfile="${glassfish.modules}/jersey-hk2.jar"
                                 />
                                 <jarupdate
                                     basedir="${patches}/tyrus-client" includes="META-INF/MANIFEST.MF"

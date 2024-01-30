@@ -63,7 +63,7 @@ asadmin-options::
 `--installdir`::
   The full path to the parent of the base installation directory of the
   {productName} software on the host, for example,
-  `/export/glassfish8/`. The default is the parent of the default base
+  `/export/glassfish7/`. The default is the parent of the default base
   installation directory of the {productName} software for the DAS.
   This default is useful only if {productName} is installed in the
   same location on all hosts.
@@ -169,13 +169,13 @@ node-name::
 
 This example creates the node `adc` for the host `adc.example.com`. By
 default, the parent of the base installation directory of the
-{productName} software is `/export/glassfish8`.
+{productName} software is `/export/glassfish7`.
 
 [source]
 ----
 asadmin> create-node-ssh
 --nodehost adc.example.com
---installdir /export/glassfish8 adc
+--installdir /export/glassfish7 adc
 
 Command create-node-ssh executed successfully.
 ----

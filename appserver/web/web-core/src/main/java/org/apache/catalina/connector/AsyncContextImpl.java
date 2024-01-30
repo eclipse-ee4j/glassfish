@@ -30,6 +30,7 @@ import jakarta.servlet.ServletRequestListener;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.EventListener;
@@ -45,6 +46,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.apache.catalina.ContainerEvent;
 import org.apache.catalina.Globals;
 import org.apache.catalina.LogFacade;
@@ -299,15 +301,31 @@ class AsyncContextImpl implements AsyncContext {
 
     @Override
     public void start(Runnable run) {
-        ClassLoader oldCL = Thread.currentThread().getContextClassLoader();
+        ClassLoader oldCL = null;
+        if (Globals.IS_SECURITY_ENABLED) {
+            PrivilegedAction<ClassLoader> pa = new PrivilegedGetTccl();
+            oldCL = AccessController.doPrivileged(pa);
+        } else {
+            oldCL = Thread.currentThread().getContextClassLoader();
+        }
 
         try {
             ClassLoader newCL = origRequest.getContext().getLoader().getClassLoader();
-            Thread.currentThread().setContextClassLoader(newCL);
+            if (Globals.IS_SECURITY_ENABLED) {
+                PrivilegedAction<Void> pa = new PrivilegedSetTccl(newCL);
+                AccessController.doPrivileged(pa);
+            } else {
+                Thread.currentThread().setContextClassLoader(newCL);
+            }
 
             pool.execute(run);
         } finally {
-            Thread.currentThread().setContextClassLoader(oldCL);
+            if (Globals.IS_SECURITY_ENABLED) {
+                PrivilegedAction<Void> pa = new PrivilegedSetTccl(oldCL);
+                AccessController.doPrivileged(pa);
+            } else {
+                Thread.currentThread().setContextClassLoader(oldCL);
+            }
         }
     }
 
@@ -485,11 +503,22 @@ class AsyncContextImpl implements AsyncContext {
             origRequest.setAttribute(Globals.DISPATCHER_TYPE_ATTR, DispatcherType.ASYNC);
             origRequest.setAsyncStarted(false);
             int startAsyncCurrent = asyncContext.startAsyncCounter.get();
-            ClassLoader oldCL = Thread.currentThread().getContextClassLoader();
+            ClassLoader oldCL;
+            if (Globals.IS_SECURITY_ENABLED) {
+                PrivilegedAction<ClassLoader> pa = new PrivilegedGetTccl();
+                oldCL = AccessController.doPrivileged(pa);
+            } else {
+                oldCL = Thread.currentThread().getContextClassLoader();
+            }
 
             try {
                 ClassLoader newCL = origRequest.getContext().getLoader().getClassLoader();
-                Thread.currentThread().setContextClassLoader(newCL);
+                if (Globals.IS_SECURITY_ENABLED) {
+                    PrivilegedAction<Void> pa = new PrivilegedSetTccl(newCL);
+                    AccessController.doPrivileged(pa);
+                } else {
+                    Thread.currentThread().setContextClassLoader(newCL);
+                }
 
                 asyncContext.setDelayAsyncDispatchAndComplete(true);
                 dispatcher.dispatch(asyncContext.getRequest(), asyncContext.getResponse(), DispatcherType.ASYNC);
@@ -516,7 +545,12 @@ class AsyncContextImpl implements AsyncContext {
                 origRequest.errorDispatchAndComplete(t);
             } finally {
                 asyncContext.isStartAsyncInScope.set(Boolean.FALSE);
-                Thread.currentThread().setContextClassLoader(oldCL);
+                if (Globals.IS_SECURITY_ENABLED) {
+                    PrivilegedAction<Void> pa = new PrivilegedSetTccl(oldCL);
+                    AccessController.doPrivileged(pa);
+                } else {
+                    Thread.currentThread().setContextClassLoader(oldCL);
+                }
             }
         }
     }
@@ -540,11 +574,22 @@ class AsyncContextImpl implements AsyncContext {
             }
         }
 
-        final ClassLoader oldCL = Thread.currentThread().getContextClassLoader();
+        final ClassLoader oldCL;
+        if (Globals.IS_SECURITY_ENABLED) {
+            PrivilegedAction<ClassLoader> pa = new PrivilegedGetTccl();
+            oldCL = AccessController.doPrivileged(pa);
+        } else {
+            oldCL = Thread.currentThread().getContextClassLoader();
+        }
 
         try {
             final ClassLoader newCL = origRequest.getContext().getLoader().getClassLoader();
-            Thread.currentThread().setContextClassLoader(newCL);
+            if (Globals.IS_SECURITY_ENABLED) {
+                PrivilegedAction<Void> pa = new PrivilegedSetTccl(newCL);
+                AccessController.doPrivileged(pa);
+            } else {
+                Thread.currentThread().setContextClassLoader(newCL);
+            }
 
             ServletRequestListener weldListener = getWeldListener();
             if (weldListener != null) {
@@ -596,7 +641,12 @@ class AsyncContextImpl implements AsyncContext {
             }
 
         } finally {
-            Thread.currentThread().setContextClassLoader(oldCL);
+            if (Globals.IS_SECURITY_ENABLED) {
+                PrivilegedAction<Void> action = new PrivilegedSetTccl(oldCL);
+                AccessController.doPrivileged(action);
+            } else {
+                Thread.currentThread().setContextClassLoader(oldCL);
+            }
         }
     }
 

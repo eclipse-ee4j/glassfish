@@ -121,7 +121,7 @@ Source Domain Directory::
   new version (for example, `c:\glassfish\domains\domain1`).
 Target Root Domain's Directory::
   The directory where domains are created on the server to which you are
-  upgrading (for example, `c:\glassfish8\glassfish\domains`).
+  upgrading (for example, `c:\glassfish7\glassfish\domains`).
 Master Password::
   The SSL certificate database password used in operations such as
   {productName} startup. This term refers to the master password of
@@ -617,7 +617,7 @@ following command should be entered on a single line.
 [source]
 ----
 asupgrade -c -s /home/glassfish/domains/domain1 -f /root/mypassword
--t /home/glassfish8/glassfish/domains
+-t /home/glassfish7/glassfish/domains
 ----
 
 asupgrade Command-Line Options
@@ -732,7 +732,7 @@ For example, you might type `c:\glassfish\domains\domain1`.
 configuration, or click Browse. +
 The default is the full path name of the `domains` directory of your
 {productName} 7 installation (for example,
-`c:\glassfish8\glassfish\domains`).
+`c:\glassfish7\glassfish\domains`).
 
 6. Provide the master password of the source application server. +
 The domain will be upgraded using these credentials. If you do not
@@ -1370,7 +1370,7 @@ The default values of the following items in a node's configuration data
 might not meet your requirements for the upgraded installation of {productName}:
 
 * The parent of the base installation directory of the {productName}
-software on the host, for example, `/export/glassfish8`. +
+software on the host, for example, `/export/glassfish7`. +
 The default is the parent of the default base installation directory of
 the {productName} 7 software on the DAS host. If the {productName} software is installed under a different directory on the node
 host, you must update the node's configuration to specify the correct directory.
@@ -1435,7 +1435,7 @@ node-update-subcommand::
 as-install-parent::
   The full path to the parent of the base installation directory of the
   {productName} software on the host, for example,
-  `/export/glassfish8`.
+  `/export/glassfish7`.
 node-dir::
   The path to the directory that will contain {productName} instances
   that are to reside on the node. If a relative path is specified, the

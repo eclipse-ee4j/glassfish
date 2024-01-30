@@ -69,7 +69,7 @@ def generateAntPodTemplate(job) {
               sh """
                 mkdir -p ${WORKSPACE}/appserver/tests
                 tar -xzf ${WORKSPACE}/bundles/appserv_tests.tar.gz -C ${WORKSPACE}/appserver/tests
-                export CLASSPATH=${WORKSPACE}/glassfish8/javadb
+                export CLASSPATH=${WORKSPACE}/glassfish7/javadb
                 ${WORKSPACE}/appserver/tests/gftest.sh run_test ${job}
               """
             }
@@ -94,7 +94,7 @@ kind: Pod
 spec:
   containers:
   - name: maven
-    image: maven:3.9.4-eclipse-temurin-21
+    image: maven:3.9.4-eclipse-temurin-17
     command:
     - cat
     tty: true
@@ -151,7 +151,7 @@ spec:
   }
 
   environment {
-    S1AS_HOME = "${WORKSPACE}/glassfish8/glassfish"
+    S1AS_HOME = "${WORKSPACE}/glassfish7/glassfish"
     APS_HOME = "${WORKSPACE}/appserver/tests/appserv-tests"
     TEST_RUN_LOG = "${WORKSPACE}/tests-run.log"
     GF_INTERNAL_ENV = credentials('gf-internal-env')
@@ -228,7 +228,7 @@ spec:
         }
       }
       tools {
-        jdk 'temurin-jdk21-latest'
+        jdk 'temurin-jdk17-latest'
         maven 'apache-maven-3.9.5'
       }
       steps {

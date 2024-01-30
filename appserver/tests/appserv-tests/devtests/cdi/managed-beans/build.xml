@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+
+    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<project name="managedbeans-test" default="usage" basedir=".">
+
+    <property name="managedbeans-target" value="all"/>
+
+    <target name="run-test">
+        <antcall target="managedbeans">
+        <param name="managedbeans-target" value="run-test"/>
+        </antcall>
+    </target>
+
+    <target name="all">
+        <antcall target="managedbeans">
+        <param name="managedbeans-target" value="all"/>
+        </antcall>
+    </target>
+
+    <target name="clean">
+        <antcall target="managedbeans">
+        <param name="managedbeans-target" value="clean"/>
+        </antcall>
+    </target>
+
+    <target name="build">
+        <antcall target="managedbeans">
+        <param name="managedbeans-target" value="build"/>
+        </antcall>
+    </target>
+
+    <target name="setup">
+        <antcall target="managedbeans">
+        <param name="managedbeans-target" value="setup"/>
+        </antcall>
+    </target>
+
+    <target name="deploy">
+        <antcall target="managedbeans">
+        <param name="managedbeans-target" value="deploy"/>
+        </antcall>
+    </target>
+
+    <target name="undeploy">
+        <antcall target="managedbeans">
+        <param name="managedbeans-target" value="undeploy"/>
+        </antcall>
+    </target>
+
+    <target name="unsetup">
+        <antcall target="managedbeans">
+        <param name="managedbeans-target" value="unsetup"/>
+        </antcall>
+    </target>
+
+    <target name="run">
+        <antcall target="managedbeans">
+        <param name="managedbeans-target" value="run"/>
+        </antcall>
+    </target>
+
+    <target name="managedbeans">
+        <record name="managedbeans.output" action="start" />
+<!--
+        <ant dir="managed-bean-via-resource-injection" target="${managedbeans-target}"/>
+-->
+        <ant dir="managed-bean-lifecycle-polymorphism" target="${managedbeans-target}"/>
+
+        <record name="managedbeans.output" action="stop" />
+    </target>
+
+    <target name="usage">
+        <echo> Usage:
+                ant all (Executes all the managedbeans tests)
+                ant clean (cleans all the managedbeans tests)
+                ant build (builds all the managedbeans tests)
+                ant setup (sets up all resources for managedbeans tests)
+                ant deploy (deploys all the managedbeans apps)
+                ant run (Executes all the managedbeans tests)
+                ant undeploy (undeploys all the  managedbeans apps)
+                ant unsetup (unsets all resources for managedbeans tests)
+        </echo>
+    </target>
+</project>

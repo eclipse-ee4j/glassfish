@@ -25,6 +25,7 @@ import static java.util.logging.Level.INFO;
 import com.sun.enterprise.security.SecurityLoggerInfo;
 import com.sun.enterprise.security.auth.realm.exceptions.BadRealmException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
+import com.sun.enterprise.util.LocalStringManagerImpl;
 import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.Properties;

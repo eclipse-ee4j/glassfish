@@ -159,7 +159,9 @@ public final class EJBSecurityManager implements SecurityManager {
         authorizationService = new AuthorizationService(
             getContextID(ejbDescriptor),
             () -> SecurityContext.getCurrent().getSubject(),
-            () -> new GlassFishPrincipalMapper(contextId));
+            null);
+
+        authorizationService.setProtectionDomainCreator(principalSet -> getCachedProtectionDomain(principalSet, true));
 
         authorizationService.addPermissionsToPolicy(
             convertEJBMethodPermissions(ejbDescriptor, contextId));

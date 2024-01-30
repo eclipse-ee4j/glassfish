@@ -68,16 +68,16 @@ The default {productName} 7 installation directories are as follows:
 Solaris, Linux, and Mac OS X systems::
 [source]
 ----
-user-home-directory/glassfish8
+user-home-directory/glassfish7
 ----
 Windows systems::
 [source]
 ----
-SystemDrive\glassfish8
+SystemDrive\glassfish7
 ----
 
 In {productName} 3.0.1 and Enterprise Server v3, the default
-installation root directory was `glassfish8`.
+installation root directory was `glassfish7`.
 
 [[changes-to-group-management-service-settings]]
 

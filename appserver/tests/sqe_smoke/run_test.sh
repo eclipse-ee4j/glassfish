@@ -29,7 +29,7 @@ test_run_sqe_smoke(){
   # CLEANUPS
   kill_clean `ps -ef |grep jre|grep -v grep|cut -f4,5 -d" "`
   kill_clean `jps |grep Main |grep -v grep |cut -f1 -d" "`
-  kill_clean `ps -ef | grep ${WORKSPACE}/glassfish8/glassfish|grep -v grep`
+  kill_clean `ps -ef | grep ${WORKSPACE}/glassfish7/glassfish|grep -v grep`
 
   curl --noproxy '*' ${INTERNAL_RELEASE_REPO}/com/oracle/glassfish/sqe-smoke/1.0/sqe-smoke-1.0.zip > bundles/sqe-smoke.zip
   unzip bundles/sqe-smoke.zip

@@ -47,9 +47,11 @@ import java.util.logging.Logger;
 public class PermissionCache extends Object {
 
     private static final Logger LOG = LogDomains.getLogger(PermissionCache.class, LogDomains.SECURITY_LOGGER, false);
+    private static Policy policy = Policy.getPolicy();
     private static AllPermission allPermission = new AllPermission();
 
     private Permissions cache;
+    private CodeSource codesource;
     private final Permission[] protoPerms;
     private Class[] classes;
     private final String name;
@@ -81,6 +83,11 @@ public class PermissionCache extends Object {
      * does not factor into the permission caching.
      */
     public PermissionCache(Integer key, String pcID, CodeSource codesource, Class clazz, String name) {
+        if (codesource == null) {
+            this.codesource = new CodeSource(null, (java.security.cert.Certificate[]) null);
+        } else {
+            this.codesource = codesource;
+        }
         this.factoryKey = key;
         this.cache = null;
         this.pcID = pcID;
@@ -115,7 +122,12 @@ public class PermissionCache extends Object {
      * value matches the name parameter will be included in the cache. This value may be null, in which case permission name
      * does not factor into the permission caching.
      */
-    public PermissionCache(Integer key, String pcID, Permission[] perms, String name) {
+    public PermissionCache(Integer key, String pcID, CodeSource codesource, Permission[] perms, String name) {
+        if (codesource == null) {
+            this.codesource = new CodeSource(null, (java.security.cert.Certificate[]) null);
+        } else {
+            this.codesource = codesource;
+        }
         this.factoryKey = key;
         this.cache = null;
         this.pcID = pcID;
@@ -219,7 +231,7 @@ public class PermissionCache extends Object {
                 setPolicyContextID(this.pcID);
             }
 
-            // pc = policy.getPermissions(this.codesource);
+            pc = policy.getPermissions(this.codesource);
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "JACC: Unexpected security exception on access decision", ex);
             return false;

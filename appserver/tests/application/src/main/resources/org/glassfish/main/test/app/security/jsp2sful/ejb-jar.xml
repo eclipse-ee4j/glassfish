@@ -21,7 +21,6 @@
 
 <ejb-jar>
     <display-name>Ejb1</display-name>
-    
     <enterprise-beans>
         <session>
             <display-name>jsp2sful</display-name>
@@ -48,7 +47,6 @@
             </security-identity>
         </session>
     </enterprise-beans>
-
     <assembly-descriptor>
         <security-role>
             <role-name>employee</role-name>
@@ -59,7 +57,6 @@
         <security-role>
             <role-name>manager</role-name>
         </security-role>
-
         <method-permission>
             <role-name>staff</role-name>
             <role-name>manager</role-name>
@@ -69,7 +66,6 @@
                 <method-name>getCallerInfo</method-name>
             </method>
         </method-permission>
-
         <method-permission>
             <role-name>manager</role-name>
             <method>

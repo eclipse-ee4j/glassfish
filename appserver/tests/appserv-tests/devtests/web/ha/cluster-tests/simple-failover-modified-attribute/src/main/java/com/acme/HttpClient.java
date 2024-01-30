@@ -22,7 +22,7 @@ import java.util.StringTokenizer;
 
 public class HttpClient {
 
-    private static final String ASADMIN = "/home/rajiv/Software/glassfish8/glassfish/bin/asadmin";
+    private static final String ASADMIN = "/home/rajiv/Software/glassfish7/glassfish/bin/asadmin";
     private static String appName = "SFSBModifiedAttribute";
     private static String servletName = "SFSBDriverServlet";
 

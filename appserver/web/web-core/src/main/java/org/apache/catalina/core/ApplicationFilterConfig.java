@@ -17,18 +17,28 @@
 
 package org.apache.catalina.core;
 
+
+import org.apache.catalina.ContainerEvent;
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.deploy.FilterDef;
+import org.apache.catalina.security.SecurityUtil;
+
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import java.io.Serializable;
 import java.util.Enumeration;
-import org.apache.catalina.ContainerEvent;
-import org.apache.catalina.deploy.FilterDef;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.ResourceBundle;
+
+
 
 /**
- * Implementation of a <code>jakarta.servlet.FilterConfig</code> useful in managing the filter instances instantiated
- * when a web application is first started.
+ * Implementation of a <code>jakarta.servlet.FilterConfig</code> useful in
+ * managing the filter instances instantiated when a web application
+ * is first started.
  *
  * @author Craig R. McClanahan
  * @version $Revision: 1.6 $ $Date: 2007/03/22 18:04:04 $
@@ -36,112 +46,132 @@ import org.apache.catalina.deploy.FilterDef;
 
 final class ApplicationFilterConfig implements FilterConfig, Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final Logger log = LogFacade.getLogger();
+    private static final ResourceBundle rb = log.getResourceBundle();
 
     // ----------------------------------------------------------- Constructors
 
+
     /**
-     * Construct a new ApplicationFilterConfig for the specified filter definition.
+     * Construct a new ApplicationFilterConfig for the specified filter
+     * definition.
      *
      * @param context The context with which we are associated
-     * @param filterDef Filter definition for which a FilterConfig is to be constructed
+     * @param filterDef Filter definition for which a FilterConfig is to be
+     *  constructed
      *
-     * @exception ClassCastException if the specified class does not implement the <code>jakarta.servlet.Filter</code>
-     * interface
+     * @exception ClassCastException if the specified class does not implement
+     *  the <code>jakarta.servlet.Filter</code> interface
      * @exception ClassNotFoundException if the filter class cannot be found
-     * @exception IllegalAccessException if the filter class cannot be publicly instantiated
-     * @exception InstantiationException if an exception occurs while instantiating the filter object
+     * @exception IllegalAccessException if the filter class cannot be
+     *  publicly instantiated
+     * @exception InstantiationException if an exception occurs while
+     *  instantiating the filter object
      * @exception ServletException if thrown by the filter's init() method
      */
-    public ApplicationFilterConfig(StandardContext context, FilterDef filterDef) throws ClassCastException, ClassNotFoundException, IllegalAccessException, InstantiationException, ServletException {
+    public ApplicationFilterConfig(StandardContext context,
+                                   FilterDef filterDef)
+        throws ClassCastException, ClassNotFoundException,
+               IllegalAccessException, InstantiationException,
+               ServletException {
         super();
         this.context = context;
         setFilterDef(filterDef);
         // init the filter
         try {
             getFilter();
-        } catch (InstantiationException iex) {
+        } catch(InstantiationException iex) {
             throw iex;
-        } catch (Exception ex) {
+        } catch(Exception ex) {
             InstantiationException iex = new InstantiationException();
             iex.initCause(ex);
             throw iex;
         }
     }
 
+
     // ----------------------------------------------------- Instance Variables
+
 
     /**
      * The Context with which we are associated.
      */
     private transient StandardContext context = null;
 
+
     /**
      * The application Filter we are configured for.
      */
     private transient Filter filter = null;
+
 
     /**
      * The <code>FilterDef</code> that defines our associated Filter.
      */
     private FilterDef filterDef = null;
 
+
     /**
      * Does the filter instance need to be initialized?
      */
     private boolean needInitialize = true;
 
+
     // --------------------------------------------------- FilterConfig Methods
+
 
     /**
      * Return the name of the filter we are configuring.
      */
-    @Override
     public String getFilterName() {
         return (filterDef.getFilterName());
     }
 
+
     /**
-     * Checks if this filter has been annotated or flagged in the deployment descriptor as being able to support
-     * asynchronous operations.
+     * Checks if this filter has been annotated or flagged in the deployment
+     * descriptor as being able to support asynchronous operations.
      *
-     * @return true if this filter supports async operations, and false otherwise
+     * @return true if this filter supports async operations, and false
+     * otherwise
      */
     public boolean isAsyncSupported() {
         return filterDef.isAsyncSupported();
     }
 
+
     /**
-     * Return a <code>String</code> containing the value of the named initialization parameter, or <code>null</code> if the
-     * parameter does not exist.
+     * Return a <code>String</code> containing the value of the named
+     * initialization parameter, or <code>null</code> if the parameter
+     * does not exist.
      *
      * @param name Name of the requested initialization parameter
      */
-    @Override
     public String getInitParameter(String name) {
         return filterDef.getInitParameter(name);
     }
 
+
     /**
-     * Return an <code>Enumeration</code> of the names of the initialization parameters for this Filter.
+     * Return an <code>Enumeration</code> of the names of the initialization
+     * parameters for this Filter.
      */
-    @Override
     public Enumeration<String> getInitParameterNames() {
         return filterDef.getInitParameterNames();
     }
 
+
     /**
      * Return the ServletContext of our associated web application.
      */
-    @Override
     public ServletContext getServletContext() {
         return (this.context.getServletContext());
     }
 
+
     /**
      * Return a String representation of this object.
      */
-    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("ApplicationFilterConfig[");
         sb.append("name=");
@@ -152,7 +182,9 @@ final class ApplicationFilterConfig implements FilterConfig, Serializable {
         return (sb.toString());
     }
 
+
     // -------------------------------------------------------- Package Methods
+
 
     /**
      * Return the application Filter we are configured for.
@@ -183,23 +215,33 @@ final class ApplicationFilterConfig implements FilterConfig, Serializable {
             this.filter = context.createFilterInstance(clazz);
         }
 
+        // START PWC 1.2
         if (context != null) {
-            context.fireContainerEvent(ContainerEvent.BEFORE_FILTER_INITIALIZED, filter);
+            context.fireContainerEvent(
+                ContainerEvent.BEFORE_FILTER_INITIALIZED,
+                filter);
         }
+        // END PWC 1.2
 
         filter.init(this);
         needInitialize = false;
 
+        // START PWC 1.2
         if (context != null) {
-            context.fireContainerEvent(ContainerEvent.AFTER_FILTER_INITIALIZED, filter);
+            context.fireContainerEvent(ContainerEvent.AFTER_FILTER_INITIALIZED,
+                                       filter);
         }
+        // END PWC 1.2
+
         return (this.filter);
     }
 
     @SuppressWarnings("unchecked")
-    private Class<? extends Filter> loadFilterClass(ClassLoader classLoader, String filterClassName) throws ClassNotFoundException {
-        return (Class<? extends Filter>) classLoader.loadClass(filterClassName);
+    private Class<? extends Filter> loadFilterClass(ClassLoader classLoader,
+            String filterClassName) throws ClassNotFoundException {
+        return (Class<? extends Filter>)classLoader.loadClass(filterClassName);
     }
+
 
     /**
      * Return the filter definition we are configured for.
@@ -208,20 +250,41 @@ final class ApplicationFilterConfig implements FilterConfig, Serializable {
         return (this.filterDef);
     }
 
+
     /**
-     * Release the Filter instance associated with this FilterConfig, if there is one.
+     * Release the Filter instance associated with this FilterConfig,
+     * if there is one.
      */
     void release() {
-        if (this.filter != null) {
+
+        if (this.filter != null){
 
             if (context != null) {
-                context.fireContainerEvent(ContainerEvent.BEFORE_FILTER_DESTROYED, filter);
+                context.fireContainerEvent(
+                    ContainerEvent.BEFORE_FILTER_DESTROYED,
+                    filter);
             }
 
-            filter.destroy();
+            // START SJS WS 7.0 6236329
+            //if( System.getSecurityManager() != null) {
+            if ( SecurityUtil.executeUnderSubjectDoAs() ){
+            // END OF SJS WS 7.0 6236329
+                try{
+                    SecurityUtil.doAsPrivilege("destroy",
+                                               filter);
+                    SecurityUtil.remove(filter);
+                } catch(java.lang.Exception ex){
+                    String msg = rb.getString(LogFacade.DO_AS_PRIVILEGE);
+                    log.log(Level.SEVERE, msg, ex);
+                }
+            } else {
+                filter.destroy();
+            }
 
             if (context != null) {
-                context.fireContainerEvent(ContainerEvent.AFTER_FILTER_DESTROYED, filter);
+                context.fireContainerEvent(
+                    ContainerEvent.AFTER_FILTER_DESTROYED,
+                    filter);
                 // See GlassFish IT 7071
                 context = null;
             }
@@ -230,30 +293,51 @@ final class ApplicationFilterConfig implements FilterConfig, Serializable {
 
         this.filter = null;
         needInitialize = true;
-    }
+     }
+
 
     /**
-     * Set the filter definition we are configured for. This has the side effect of instantiating an instance of the
-     * corresponding filter class.
+     * Set the filter definition we are configured for.  This has the side
+     * effect of instantiating an instance of the corresponding filter class.
      *
      * @param filterDef The new filter definition
      *
-     * @exception ClassCastException if the specified class does not implement the <code>jakarta.servlet.Filter</code>
-     * interface
+     * @exception ClassCastException if the specified class does not implement
+     *  the <code>jakarta.servlet.Filter</code> interface
      * @exception ClassNotFoundException if the filter class cannot be found
-     * @exception IllegalAccessException if the filter class cannot be publicly instantiated
-     * @exception InstantiationException if an exception occurs while instantiating the filter object
+     * @exception IllegalAccessException if the filter class cannot be
+     *  publicly instantiated
+     * @exception InstantiationException if an exception occurs while
+     *  instantiating the filter object
      * @exception ServletException if thrown by the filter's init() method
      */
-    void setFilterDef(FilterDef filterDef) throws ClassCastException, ClassNotFoundException, IllegalAccessException, InstantiationException, ServletException {
-        this.filterDef = filterDef;
+    void setFilterDef(FilterDef filterDef)
+        throws ClassCastException, ClassNotFoundException,
+               IllegalAccessException, InstantiationException,
+               ServletException {
 
+        this.filterDef = filterDef;
         if (filterDef == null) {
+
             // Release any previously allocated filter instance
-            if (filter != null) {
-                filter.destroy();
+            if (this.filter != null){
+                // START SJS WS 7.0 6236329
+                //if( System.getSecurityManager() != null) {
+                if ( SecurityUtil.executeUnderSubjectDoAs() ){
+                // END OF SJS WS 7.0 6236329
+                    try{
+                        SecurityUtil.doAsPrivilege("destroy",
+                                                   filter);
+                        SecurityUtil.remove(filter);
+                    } catch(java.lang.Exception ex){
+                        String msg = rb.getString(LogFacade.DO_AS_PRIVILEGE);
+                        log.log(Level.SEVERE, msg, ex);
+                    }
+                } else {
+                    filter.destroy();
+                }
             }
-            filter = null;
+            this.filter = null;
 
         } else {
             filter = filterDef.getFilter();

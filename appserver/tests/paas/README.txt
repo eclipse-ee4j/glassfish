@@ -3,7 +3,7 @@ Steps to run these automated tests:
 
 1. Unzip latest version of glassfish.zip and set S1AS_HOME enviroment variable to point to the extracted GlassFish location.
 
-  For example: export S1AS_HOME=/tmp/glassfish8/glassfish
+  For example: export S1AS_HOME=/tmp/glassfish7/glassfish
 
 2. Also set PAAS_TESTS_HOME environment variable to point to the location where paas tests are checked out.
 

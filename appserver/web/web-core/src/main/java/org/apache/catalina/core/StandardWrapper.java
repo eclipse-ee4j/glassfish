@@ -18,6 +18,52 @@
 
 package org.apache.catalina.core;
 
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.UnavailableException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.security.AccessController;
+import java.security.Principal;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+
+import javax.management.Notification;
+import javax.management.NotificationBroadcasterSupport;
+import javax.management.ObjectName;
+
+import org.apache.catalina.Container;
+import org.apache.catalina.ContainerServlet;
+import org.apache.catalina.Context;
+import org.apache.catalina.InstanceListener;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.Loader;
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.Wrapper;
+import org.apache.catalina.security.SecurityUtil;
+import org.apache.catalina.util.Enumerator;
+import org.apache.catalina.util.InstanceSupport;
+import org.glassfish.web.valve.GlassFishValve;
+
 import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 import static java.text.MessageFormat.format;
 import static java.util.Collections.emptySet;
@@ -36,44 +82,6 @@ import static org.apache.catalina.LogFacade.ERROR_LOADING_INFO;
 import static org.apache.catalina.LogFacade.PARENT_CONTAINER_MUST_BE_CONTEXT_EXCEPTION;
 import static org.apache.catalina.LogFacade.WRAPPER_CONTAINER_NO_CHILD_EXCEPTION;
 import static org.apache.catalina.core.Constants.JSP_SERVLET_CLASS;
-
-import jakarta.servlet.Servlet;
-import jakarta.servlet.ServletConfig;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
-import jakarta.servlet.UnavailableException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import javax.management.Notification;
-import javax.management.NotificationBroadcasterSupport;
-import javax.management.ObjectName;
-import org.apache.catalina.Container;
-import org.apache.catalina.ContainerServlet;
-import org.apache.catalina.Context;
-import org.apache.catalina.InstanceListener;
-import org.apache.catalina.LifecycleException;
-import org.apache.catalina.Loader;
-import org.apache.catalina.LogFacade;
-import org.apache.catalina.Wrapper;
-import org.apache.catalina.util.Enumerator;
-import org.apache.catalina.util.InstanceSupport;
-import org.glassfish.web.valve.GlassFishValve;
 
 /**
  * Standard implementation of the <b>Wrapper</b> interface that represents an individual servlet definition. No child
@@ -1201,7 +1209,27 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
         // Load the specified servlet class from the appropriate class loader
         Class<?> clazz = null;
         try {
-            clazz = classLoader == null ? Class.forName(actualClassName) : classLoader.loadClass(actualClassName);
+            if (SecurityUtil.isPackageProtectionEnabled()) {
+                try {
+                    PrivilegedExceptionAction<Class<?>> action = () -> {
+                        if (classLoader == null) {
+                            return Class.forName(actualClassName);
+                        }
+                        return classLoader.loadClass(actualClassName);
+                    };
+                    clazz = AccessController.doPrivileged(action);
+                } catch (PrivilegedActionException pax) {
+                    Exception ex = pax.getException();
+                    if (ex instanceof ClassNotFoundException) {
+                        throw (ClassNotFoundException) ex;
+                    }
+
+                    getServletContext()
+                        .log(format(rb.getString(ERROR_LOADING_INFO), new Object[] {classLoader, actualClassName}), ex);
+                }
+            } else {
+                clazz = classLoader == null ? Class.forName(actualClassName) : classLoader.loadClass(actualClassName);
+            }
         } catch (ClassNotFoundException e) {
             unavailable(null);
             String msgErrorLoadingInfo = format(rb.getString(ERROR_LOADING_INFO),
@@ -1223,7 +1251,6 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
         if (servletClassName != null || jspFile == null) {
             return servletClassName;
         }
-
         Wrapper jspWrapper = (Wrapper) ((Context) getParent()).findChild(Constants.JSP_SERVLET_NAME);
         if (jspWrapper == null) {
             return servletClassName;
@@ -1252,7 +1279,14 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
 
         try {
             instanceSupport.fireInstanceEvent(BEFORE_INIT_EVENT, servlet);
-            servlet.init(facade);
+            if (SecurityUtil.executeUnderSubjectDoAs()) {
+                Object[] initType = new Object[1];
+                initType[0] = facade;
+                SecurityUtil.doAsPrivilege("init", servlet, classType, initType);
+                initType = null;
+            } else {
+                servlet.init(facade);
+            }
 
             instanceInitialized = true;
 
@@ -1273,7 +1307,14 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
 
                 DummyResponse res = new DummyResponse();
 
-                servlet.service(req, res);
+                if (SecurityUtil.executeUnderSubjectDoAs()) {
+                    Object[] serviceType = new Object[2];
+                    serviceType[0] = req;
+                    serviceType[1] = res;
+                    SecurityUtil.doAsPrivilege("service", servlet, classTypeUsedInService, serviceType);
+                } else {
+                    servlet.service(req, res);
+                }
             }
             instanceSupport.fireInstanceEvent(AFTER_INIT_EVENT, servlet);
 
@@ -1298,11 +1339,12 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
         }
     }
 
-    void service(ServletRequest request, ServletResponse response, Servlet servlet) throws IOException, ServletException {
+    // START IASRI 4665318
+    void service(ServletRequest request, ServletResponse response, Servlet serv) throws IOException, ServletException {
         InstanceSupport supp = getInstanceSupport();
 
         try {
-            supp.fireInstanceEvent(BEFORE_SERVICE_EVENT, servlet, request, response);
+            supp.fireInstanceEvent(BEFORE_SERVICE_EVENT, serv, request, response);
             if (!isAsyncSupported()) {
                 RequestFacadeHelper reqFacHelper = RequestFacadeHelper.getInstance(request);
                 if (reqFacHelper != null) {
@@ -1310,26 +1352,43 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
                 }
             }
 
-            servlet.service(request, response);
+            if ((request instanceof HttpServletRequest) && (response instanceof HttpServletResponse)) {
 
-            supp.fireInstanceEvent(AFTER_SERVICE_EVENT, servlet, request, response);
+                if (SecurityUtil.executeUnderSubjectDoAs()) {
+                    final ServletRequest req = request;
+                    final ServletResponse res = response;
+                    Principal principal = ((HttpServletRequest) req).getUserPrincipal();
+
+                    Object[] serviceType = new Object[2];
+                    serviceType[0] = req;
+                    serviceType[1] = res;
+
+                    SecurityUtil.doAsPrivilege("service", serv, classTypeUsedInService, serviceType, principal);
+                } else {
+                    serv.service(request, response);
+                }
+            } else {
+                serv.service(request, response);
+            }
+            supp.fireInstanceEvent(AFTER_SERVICE_EVENT, serv, request, response);
         } catch (IOException | ServletException | RuntimeException | Error e) {
             log.log(Level.FINE, "Seen throwable, firing instance event and rethrowing ...", e);
             // Set response status before firing event, see IT 10022
             if (response instanceof HttpServletResponse) {
                 ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
-            supp.fireInstanceEvent(AFTER_SERVICE_EVENT, servlet, request, response, e);
+            supp.fireInstanceEvent(AFTER_SERVICE_EVENT, serv, request, response, e);
             throw e;
         } catch (Throwable e) {
             log.log(Level.FINE, "Seen throwable, firing instance event and throwing a servlet exception ...", e);
             // Set response status before firing event, see IT 10022
             ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            supp.fireInstanceEvent(AFTER_SERVICE_EVENT, servlet, request, response, e);
+            supp.fireInstanceEvent(AFTER_SERVICE_EVENT, serv, request, response, e);
             throw new ServletException(rb.getString(LogFacade.SERVLET_EXECUTION_EXCEPTION), e);
         }
 
     }
+    // END IASRI 4665318
 
     /**
      * Remove the specified initialization parameter from this servlet.
@@ -1476,7 +1535,12 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
             instanceSupport.fireInstanceEvent(BEFORE_DESTROY_EVENT, instance);
 
             Thread.currentThread().setContextClassLoader(classLoader);
-            instance.destroy();
+            if (SecurityUtil.executeUnderSubjectDoAs()) {
+                SecurityUtil.doAsPrivilege("destroy", instance);
+                SecurityUtil.remove(instance);
+            } else {
+                instance.destroy();
+            }
 
             instanceSupport.fireInstanceEvent(AFTER_DESTROY_EVENT, instance);
         } catch (Throwable t) {
@@ -1502,7 +1566,12 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
             try {
                 Thread.currentThread().setContextClassLoader(classLoader);
                 while (!instancePool.isEmpty()) {
-                    instancePool.pop().destroy();
+                    if (SecurityUtil.executeUnderSubjectDoAs()) {
+                        SecurityUtil.doAsPrivilege("destroy", instancePool.pop());
+                        SecurityUtil.remove(instance);
+                    } else {
+                        instancePool.pop().destroy();
+                    }
                 }
             } catch (Throwable t) {
                 instancePool = null;

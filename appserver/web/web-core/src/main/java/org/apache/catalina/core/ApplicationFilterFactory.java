@@ -30,7 +30,8 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Factory for the creation and caching of Filters and creation of Filter Chains.
+ * Factory for the creation and caching of Filters and creation
+ * of Filter Chains.
  *
  * @author Greg Murray
  * @author Remy Maucherat
@@ -39,11 +40,14 @@ import java.util.Locale;
 
 public final class ApplicationFilterFactory {
 
+
     // -------------------------------------------------------------- Constants
 
     private static ApplicationFilterFactory factory = new ApplicationFilterFactory();
 
+
     // ----------------------------------------------------------- Constructors
+
 
     /*
      * Prevent instantiation outside of the getInstanceMethod().
@@ -51,7 +55,9 @@ public final class ApplicationFilterFactory {
     private ApplicationFilterFactory() {
     }
 
+
     // --------------------------------------------------------- Public Methods
+
 
     /**
      * Return the factory instance.
@@ -60,20 +66,42 @@ public final class ApplicationFilterFactory {
         return factory;
     }
 
+
     /**
-     * Construct and return a FilterChain implementation that will wrap the execution of the specified servlet instance. If
-     * we should not execute a filter chain at all, return <code>null</code>.
+     * Construct and return a FilterChain implementation that will wrap the
+     * execution of the specified servlet instance.  If we should not execute
+     * a filter chain at all, return <code>null</code>.
      *
      * @param request The servlet request we are processing
      * @param servlet The servlet instance to be wrapped
      */
-    public ApplicationFilterChain createFilterChain(ServletRequest request, Wrapper wrapper, Servlet servlet) {
+    public ApplicationFilterChain createFilterChain
+        (ServletRequest request, Wrapper wrapper, Servlet servlet) {
+
         // If there is no servlet to execute, return null
         if (servlet == null)
-            return null;
+            return (null);
 
         // Create and initialize a filter chain object
         ApplicationFilterChain filterChain = null;
+        /** IASRI 4665318
+        if ((securityManager == null) && (request instanceof Request)) {
+            Request req = (Request) request;
+            filterChain = (ApplicationFilterChain) req.getFilterChain();
+            if (filterChain == null) {
+                filterChain = new ApplicationFilterChain();
+                req.setFilterChain(filterChain);
+            }
+        } else {
+            // Security: Do not recycle
+            filterChain = new ApplicationFilterChain();
+        }
+
+        filterChain.setServlet(servlet);
+
+        filterChain.setSupport
+            (((StandardWrapper)wrapper).getInstanceSupport());
+        */
 
         // Acquire the filter mappings for this Context
         StandardContext context = (StandardContext) wrapper.getParent();
@@ -87,8 +115,9 @@ public final class ApplicationFilterFactory {
         // get the dispatcher type
         DispatcherType dispatcher = request.getDispatcherType();
         String requestPath = null;
-        Object attribute = request.getAttribute(Globals.DISPATCHER_REQUEST_PATH_ATTR);
-        if (attribute != null) {
+        Object attribute = request.getAttribute(
+            Globals.DISPATCHER_REQUEST_PATH_ATTR);
+        if (attribute != null){
             requestPath = attribute.toString();
         }
 
@@ -104,14 +133,17 @@ public final class ApplicationFilterFactory {
             if (!filterMap.getDispatcherTypes().contains(dispatcher)) {
                 continue;
             }
-            /*
-             * SJSWS 6324431 if (!matchFiltersURL(filterMaps[i], requestPath)) continue;
-             */
+            /* SJSWS 6324431
+            if (!matchFiltersURL(filterMaps[i], requestPath))
+                continue;
+            */
             // START SJSWS 6324431
-            if (!matchFiltersURL(filterMap, requestPath, context.isCaseSensitiveMapping()))
+            if (!matchFiltersURL(filterMap, requestPath,
+                                 context.isCaseSensitiveMapping()))
                 continue;
             // END SJSWS 6324431
-            ApplicationFilterConfig filterConfig = (ApplicationFilterConfig) context.findFilterConfig(filterMap.getFilterName());
+            ApplicationFilterConfig filterConfig = (ApplicationFilterConfig)
+                context.findFilterConfig(filterMap.getFilterName());
             if (filterConfig == null) {
                 // FIXME - log configuration problem
                 continue;
@@ -119,7 +151,8 @@ public final class ApplicationFilterFactory {
             // START IASRI 4665318
             // Create a filter chain only when there are filters to add
             if (filterChain == null)
-                filterChain = internalCreateFilterChain(request, wrapper, servlet);
+                filterChain = internalCreateFilterChain(request, wrapper,
+                                                        servlet);
             // END IASRI 4665318
             filterChain.addFilter(filterConfig);
             n++;
@@ -134,7 +167,8 @@ public final class ApplicationFilterFactory {
             }
             if (!matchFiltersServlet(filterMap, servletName))
                 continue;
-            ApplicationFilterConfig filterConfig = (ApplicationFilterConfig) context.findFilterConfig(filterMap.getFilterName());
+            ApplicationFilterConfig filterConfig = (ApplicationFilterConfig)
+                context.findFilterConfig(filterMap.getFilterName());
             if (filterConfig == null) {
                 // FIXME - log configuration problem
                 continue;
@@ -142,7 +176,8 @@ public final class ApplicationFilterFactory {
             // START IASRI 4665318
             // Create a filter chain only when there are filters to add
             if (filterChain == null)
-                filterChain = internalCreateFilterChain(request, wrapper, servlet);
+                filterChain = internalCreateFilterChain(request, wrapper,
+                                                        servlet);
             // END IASRI 4665318
             filterChain.addFilter(filterConfig);
             n++;
@@ -153,21 +188,25 @@ public final class ApplicationFilterFactory {
 
     }
 
+
     // -------------------------------------------------------- Private Methods
 
+
     /**
-     * Return <code>true</code> if the context-relative request path matches the requirements of the specified filter
-     * mapping; otherwise, return <code>null</code>.
+     * Return <code>true</code> if the context-relative request path
+     * matches the requirements of the specified filter mapping;
+     * otherwise, return <code>null</code>.
      *
      * @param filterMap Filter mapping being checked
      * @param requestPath Context-relative request path of this request
      */
-    /*
-     * SJSWS 6324431 private boolean matchFiltersURL(FilterMap filterMap, String requestPath) {
-     */
+    /* SJSWS 6324431
+    private boolean matchFiltersURL(FilterMap filterMap, String requestPath) {
+    */
     // START SJSWS 6324431
-    private boolean matchFiltersURL(FilterMap filterMap, String requestPath, boolean caseSensitiveMapping) {
-        // END SJSWS 6324431
+    private boolean matchFiltersURL(FilterMap filterMap, String requestPath,
+                                    boolean caseSensitiveMapping) {
+    // END SJSWS 6324431
 
         if (requestPath == null)
             return (false);
@@ -192,7 +231,8 @@ public final class ApplicationFilterFactory {
         if (testPath.equals("/*"))
             return (true);
         if (testPath.endsWith("/*")) {
-            if (testPath.regionMatches(0, requestPath, 0, testPath.length() - 2)) {
+            if (testPath.regionMatches(0, requestPath, 0,
+                                       testPath.length() - 2)) {
                 if (requestPath.length() == (testPath.length() - 2)) {
                     return (true);
                 } else if ('/' == requestPath.charAt(testPath.length() - 2)) {
@@ -206,9 +246,12 @@ public final class ApplicationFilterFactory {
         if (testPath.startsWith("*.")) {
             int slash = requestPath.lastIndexOf('/');
             int period = requestPath.lastIndexOf('.');
-            if ((slash >= 0) && (period > slash) && (period != requestPath.length() - 1)
-                    && ((requestPath.length() - period) == (testPath.length() - 1))) {
-                return (testPath.regionMatches(2, requestPath, period + 1, testPath.length() - 2));
+            if ((slash >= 0) && (period > slash)
+                && (period != requestPath.length() - 1)
+                && ((requestPath.length() - period)
+                    == (testPath.length() - 1))) {
+                return (testPath.regionMatches(2, requestPath, period + 1,
+                                               testPath.length() - 2));
             }
         }
 
@@ -217,29 +260,36 @@ public final class ApplicationFilterFactory {
 
     }
 
+
     /**
-     * Return <code>true</code> if the specified servlet name matches the requirements of the specified filter mapping;
-     * otherwise return <code>false</code>.
+     * Return <code>true</code> if the specified servlet name matches
+     * the requirements of the specified filter mapping; otherwise
+     * return <code>false</code>.
      *
      * @param filterMap Filter mapping being checked
      * @param servletName Servlet name being checked
      */
-    private boolean matchFiltersServlet(FilterMap filterMap, String servletName) {
+    private boolean matchFiltersServlet(FilterMap filterMap,
+                                        String servletName) {
 
         if (servletName == null) {
             return (false);
+        } else {
+            if (servletName.equals(filterMap.getServletName())
+                    || "*".equals(filterMap.getServletName())) {
+                return (true);
+            } else {
+                return false;
+            }
         }
 
-        if (servletName.equals(filterMap.getServletName()) || "*".equals(filterMap.getServletName())) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
+
+    // START IASRI 4665318
     private ApplicationFilterChain internalCreateFilterChain(ServletRequest request, Wrapper wrapper, Servlet servlet) {
         ApplicationFilterChain filterChain = null;
-        if (request instanceof Request) {
+        if (!Globals.IS_SECURITY_ENABLED && (request instanceof Request)) {
             Request req = (Request) request;
             filterChain = (ApplicationFilterChain) req.getFilterChain();
             if (filterChain == null) {
@@ -252,9 +302,11 @@ public final class ApplicationFilterFactory {
         }
 
         filterChain.setServlet(servlet);
-        filterChain.setWrapper((StandardWrapper) wrapper);
+        filterChain.setWrapper((StandardWrapper)wrapper);
 
         return filterChain;
     }
+    // END IASRI 4665318
+
 
 }

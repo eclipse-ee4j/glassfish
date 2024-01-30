@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -59,7 +59,7 @@ import static org.objectweb.asm.Opcodes.IRETURN;
 import static org.objectweb.asm.Opcodes.NEW;
 import static org.objectweb.asm.Opcodes.PUTFIELD;
 import static org.objectweb.asm.Opcodes.RETURN;
-import static org.objectweb.asm.Opcodes.V17;
+import static org.objectweb.asm.Opcodes.V11;
 
 public class EjbOptionalIntfGenerator extends BeanGeneratorBase {
 
@@ -106,7 +106,7 @@ public class EjbOptionalIntfGenerator extends BeanGeneratorBase {
 
         ClassWriter cw = new ClassWriter(0);
 
-        cw.visit(V17,
+        cw.visit(V11,
                 ACC_PUBLIC + ACC_ABSTRACT + ACC_INTERFACE,
                 intfClassName.replace('.', '/'),
                 null,
@@ -169,7 +169,7 @@ public class EjbOptionalIntfGenerator extends BeanGeneratorBase {
             interfaceNames[i + 1] = Type.getInternalName(interfaces[i]);
         }
 
-        cw.visit(V17, ACC_PUBLIC, subClassInternalName, null, Type.getInternalName(superClass), interfaceNames);
+        cw.visit(V11, ACC_PUBLIC, subClassInternalName, null, Type.getInternalName(superClass), interfaceNames);
 
         generateDelegateField(cw, fieldDesc);
 

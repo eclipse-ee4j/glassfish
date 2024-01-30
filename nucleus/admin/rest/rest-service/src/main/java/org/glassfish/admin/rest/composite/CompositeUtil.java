@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,6 +19,31 @@ package org.glassfish.admin.rest.composite;
 
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.v3.common.ActionReporter;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.annotation.Annotation;
+import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Array;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.net.URL;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.logging.Level;
+import javax.security.auth.Subject;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -30,30 +55,6 @@ import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.annotation.Annotation;
-import java.lang.invoke.MethodHandles;
-import java.lang.reflect.Array;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.net.URL;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.logging.Level;
-
-import javax.security.auth.Subject;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -75,27 +76,14 @@ import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.utilities.BuilderHelper;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.jersey.media.sse.EventOutput;
+
+import static org.objectweb.asm.Opcodes.*;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.MessageInterpolatorImpl;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
-
-import static java.util.Collections.emptySet;
-import static org.objectweb.asm.Opcodes.ACC_PRIVATE;
-import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
-import static org.objectweb.asm.Opcodes.ACC_SUPER;
-import static org.objectweb.asm.Opcodes.ALOAD;
-import static org.objectweb.asm.Opcodes.ARETURN;
-import static org.objectweb.asm.Opcodes.DUP;
-import static org.objectweb.asm.Opcodes.GETFIELD;
-import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
-import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
-import static org.objectweb.asm.Opcodes.NEW;
-import static org.objectweb.asm.Opcodes.PUTFIELD;
-import static org.objectweb.asm.Opcodes.RETURN;
-import static org.objectweb.asm.Opcodes.V17;
 
 /**
  * @author jdlee
@@ -357,7 +345,7 @@ public class CompositeUtil {
 
         Set<ConstraintViolation<T>> constraintViolations = beanValidator.validate(model);
         if (constraintViolations == null || constraintViolations.isEmpty()) {
-            return emptySet();
+            return Collections.EMPTY_SET;
         }
 
         return constraintViolations;
@@ -736,7 +724,7 @@ public class CompositeUtil {
             ifaceNames[i++] = iface.getName().replace(".", "/");
         }
         className = getInternalName(className);
-        classWriter.visit(V17, ACC_PUBLIC + ACC_SUPER, className, null, "org/glassfish/admin/rest/composite/RestModelImpl", ifaceNames);
+        classWriter.visit(V11, ACC_PUBLIC + ACC_SUPER, className, null, "org/glassfish/admin/rest/composite/RestModelImpl", ifaceNames);
 
         // Add @XmlRootElement
         classWriter.visitAnnotation("Ljakarta/xml/bind/annotation/XmlRootElement;", true).visitEnd();
@@ -833,9 +821,9 @@ public class CompositeUtil {
     /**
      * Add the field to the class, adding the @XmlAttribute annotation for marshalling purposes.
      */
-    private void createField(ClassWriter classWriter, String name, Class<?> type) {
+    private void createField(ClassWriter cw, String name, Class<?> type) {
         String internalType = getInternalTypeString(type);
-        FieldVisitor field = classWriter.visitField(ACC_PRIVATE, getPropertyName(name), internalType, null, null);
+        FieldVisitor field = cw.visitField(ACC_PRIVATE, getPropertyName(name), internalType, null, null);
         field.visitAnnotation("Ljakarta/xml/bind/annotation/XmlAttribute;", true).visitEnd();
         field.visitEnd();
     }
@@ -843,20 +831,19 @@ public class CompositeUtil {
     /**
      * Create getters and setters for the given field
      */
-    private void createGettersAndSetters(ClassWriter classWriter, Class<?> clazz, String className, String name, Map<String, Object> props) {
+    private void createGettersAndSetters(ClassWriter cw, Class c, String className, String name, Map<String, Object> props) {
         Class<?> type = (Class<?>) props.get("type");
         String internalType = getInternalTypeString(type);
         className = getInternalName(className);
 
         // Create the getter
-        MethodVisitor getter = classWriter.visitMethod(ACC_PUBLIC, "get" + name, "()" + internalType, null, null);
+        MethodVisitor getter = cw.visitMethod(ACC_PUBLIC, "get" + name, "()" + internalType, null, null);
         getter.visitCode();
         getter.visitVarInsn(ALOAD, 0);
         getter.visitFieldInsn(GETFIELD, className, getPropertyName(name), internalType);
         getter.visitInsn(type.isPrimitive() ? Primitive.getPrimitive(internalType).getReturnOpcode() : ARETURN);
         getter.visitMaxs(0, 0);
         getter.visitEnd();
-
         Map<String, Map<String, Object>> annotations = (Map<String, Map<String, Object>>) props.get("annotations");
         if (annotations != null) {
             for (Map.Entry<String, Map<String, Object>> entry : annotations.entrySet()) {
@@ -879,7 +866,7 @@ public class CompositeUtil {
         }
 
         // Create the setter
-        MethodVisitor setter = classWriter.visitMethod(ACC_PUBLIC, "set" + name, "(" + internalType + ")V", null, null);
+        MethodVisitor setter = cw.visitMethod(ACC_PUBLIC, "set" + name, "(" + internalType + ")V", null, null);
         setter.visitCode();
         setter.visitVarInsn(ALOAD, 0);
         setter.visitVarInsn(type.isPrimitive() ? Primitive.getPrimitive(internalType).getSetOpCode() : ALOAD, 1);
@@ -901,7 +888,6 @@ public class CompositeUtil {
 
     private Class<?> defineClass(Class<?> similarClass, String className, byte[] classBytes) throws Exception {
         RestLogging.restLogger.log(Level.FINEST, "Loading bytecode for {0}", className);
-
         return MethodHandles.privateLookupIn(similarClass, MethodHandles.lookup()).defineClass(classBytes);
     }
 
@@ -909,8 +895,13 @@ public class CompositeUtil {
         if (beanValidator != null) {
             return;
         }
-
-        ClassLoader existingClassLoader = Thread.currentThread().getContextClassLoader();
+        ClassLoader cl = System.getSecurityManager() == null ? Thread.currentThread().getContextClassLoader()
+                : AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+                    @Override
+                    public ClassLoader run() {
+                        return Thread.currentThread().getContextClassLoader();
+                    }
+                });
         try {
             Thread.currentThread().setContextClassLoader(Validation.class.getClassLoader());
             ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
@@ -918,7 +909,7 @@ public class CompositeUtil {
             validatorContext.messageInterpolator(new MessageInterpolatorImpl());
             beanValidator = validatorContext.getValidator();
         } finally {
-            Thread.currentThread().setContextClassLoader(existingClassLoader);
+            Thread.currentThread().setContextClassLoader(cl);
         }
     }
 }

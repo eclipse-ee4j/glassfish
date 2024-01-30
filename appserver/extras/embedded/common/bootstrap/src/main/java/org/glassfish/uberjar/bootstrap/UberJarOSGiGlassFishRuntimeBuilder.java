@@ -197,11 +197,11 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
     }
 
     private String getDefaultInstallRoot() {
-        return new File(USER_HOME, ".glassfish8-embedded").getAbsolutePath();
+        return new File(USER_HOME, ".glassfish7-embedded").getAbsolutePath();
     }
 
     private String getDefaultInstanceRoot() {
-        return USER_HOME.toPath().resolve(Path.of(".glassfish8-embedded", "domains", "domain1")).toFile()
+        return USER_HOME.toPath().resolve(Path.of(".glassfish7-embedded", "domains", "domain1")).toFile()
             .getAbsolutePath();
     }
 

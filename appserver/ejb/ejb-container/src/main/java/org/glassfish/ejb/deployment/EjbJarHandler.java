@@ -17,28 +17,33 @@
 
 package org.glassfish.ejb.deployment;
 
-import static java.util.logging.Level.SEVERE;
-import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-
 import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
 import com.sun.enterprise.deployment.io.DescriptorConstants;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.loader.ASURLClassLoader;
+import com.sun.enterprise.security.ee.perms.PermsArchiveDelegate;
+import com.sun.enterprise.security.ee.perms.SMGlobalPolicyUtil;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.security.PrivilegedActionException;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ArchiveDetector;
 import org.glassfish.api.deployment.archive.EjbArchiveType;
@@ -47,6 +52,10 @@ import org.glassfish.deployment.common.DeploymentProperties;
 import org.glassfish.ejb.LogFacade;
 import org.glassfish.loader.util.ASClassLoaderUtil;
 import org.jvnet.hk2.annotations.Service;
+
+import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 
 
 /**
@@ -79,22 +88,25 @@ public class EjbJarHandler extends AbstractArchiveHandler {
     public String getVersionIdentifier(ReadableArchive archive) {
         String versionIdentifier = null;
         try {
-            versionIdentifier = new GFEjbJarXMLParser(archive).extractVersionIdentifierValue(archive);
-        } catch (XMLStreamException | IOException e) {
-            LOG.log(SEVERE, e.getMessage());
+            GFEjbJarXMLParser gfXMLParser = new GFEjbJarXMLParser(archive);
+            versionIdentifier = gfXMLParser.extractVersionIdentifierValue(archive);
+        } catch (XMLStreamException e) {
+            LOG.log(Level.SEVERE, e.getMessage());
+        } catch (IOException e) {
+            LOG.log(Level.SEVERE, e.getMessage());
         }
-
         return versionIdentifier;
     }
 
 
     @Override
     public ClassLoader getClassLoader(final ClassLoader parent, DeploymentContext context) {
-        ASURLClassLoader cloader = new ASURLClassLoader(parent);
+        PrivilegedAction<ASURLClassLoader> action = () -> new ASURLClassLoader(parent);
+        ASURLClassLoader cloader = AccessController.doPrivileged(action);
 
         try {
             String compatProp = context.getAppProps().getProperty(DeploymentProperties.COMPATIBILITY);
-            // If user does not specify the compatibility property
+            // if user does not specify the compatibility property
             // let's see if it's defined in glassfish-ejb-jar.xml
             if (compatProp == null) {
                 GFEjbJarXMLParser gfEjbJarXMLParser = new GFEjbJarXMLParser(context.getSource());
@@ -104,7 +116,7 @@ public class EjbJarHandler extends AbstractArchiveHandler {
                 }
             }
 
-            // If user does not specify the compatibility property
+            // if user does not specify the compatibility property
             // let's see if it's defined in sun-ejb-jar.xml
             if (compatProp == null) {
                 SunEjbJarXMLParser sunEjbJarXMLParser = new SunEjbJarXMLParser(context.getSourceDir());
@@ -114,7 +126,7 @@ public class EjbJarHandler extends AbstractArchiveHandler {
                 }
             }
 
-            // If the compatibility property is set to "v2", we should add
+            // if the compatibility property is set to "v2", we should add
             // all the jars under the ejb module root to maintain backward
             // compatibility of v2 jar visibility
             if (compatProp != null && compatProp.equals("v2")) {
@@ -127,15 +139,25 @@ public class EjbJarHandler extends AbstractArchiveHandler {
 
             cloader.addURL(context.getSource().getURI().toURL());
             cloader.addURL(context.getScratchDir("ejb").toURI().toURL());
-            // Add libraries referenced from manifest
+            // add libraries referenced from manifest
             for (URL url : getManifestLibraries(context)) {
                 cloader.addURL(url);
             }
+
+            try {
+                final DeploymentContext dc = context;
+                final ClassLoader cl = cloader;
+
+                AccessController.doPrivileged(
+                    new PermsArchiveDelegate.SetPermissionsAction(SMGlobalPolicyUtil.CommponentType.ejb, dc, cl));
+            } catch (PrivilegedActionException e) {
+                throw new SecurityException(e.getException());
+            }
+
         } catch (Exception e) {
-            LOG.log(SEVERE, e.getMessage());
+            LOG.log(Level.SEVERE, e.getMessage());
             throw new RuntimeException(e);
         }
-
         return cloader;
     }
 

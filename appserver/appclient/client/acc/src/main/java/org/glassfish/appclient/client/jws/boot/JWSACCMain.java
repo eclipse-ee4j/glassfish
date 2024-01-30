@@ -36,9 +36,11 @@ import java.security.Policy;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import java.util.Vector;
+
 import javax.swing.SwingUtilities;
+
 import org.glassfish.appclient.client.acc.AppClientContainer;
-import org.glassfish.common.util.GlassfishUrlClassLoader;
+import org.glassfish.appclient.client.acc.JWSACCClassLoader;
 
 /**
  * Alternate main class for ACC, used when launched by Java Web Start.
@@ -392,7 +394,8 @@ public class JWSACCMain implements Runnable {
      *@return the class loader
      */
     private static ClassLoader prepareClassLoader(File downloadedAppclientJarFile) throws IOException, URISyntaxException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        return new GlassfishUrlClassLoader(downloadedJarURLs, classPathManager.getParentClassLoader());
+        ClassLoader ldr = new JWSACCClassLoader(downloadedJarURLs, classPathManager.getParentClassLoader());
+        return ldr;
     }
 
     /*

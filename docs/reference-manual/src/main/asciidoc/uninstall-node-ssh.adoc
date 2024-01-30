@@ -78,7 +78,7 @@ asadmin-options::
 `--installdir`::
   The absolute path to the parent of the base installation directory
   where the {productName} software is installed on each host, for
-  example, `/export/glassfish8/`. +
+  example, `/export/glassfish7/`. +
   The user that is running this subcommand must have write access to the
   specified directory. Otherwise, an error occurs. +
   The specified directory must contain the installation of the
@@ -158,22 +158,22 @@ This example uninstalls {productName} software on the host
 `sj02.example.com`.
 
 The software is uninstalled even if a user-defined node resides on the
-host. The entire content of the `/export/glassfish8` directory is
+host. The entire content of the `/export/glassfish7` directory is
 removed.
 
 Some lines of output are omitted from this example for readability.
 
 [source]
 ----
-asadmin> uninstall-node-ssh --force --installdir /export/glassfish8 sj02.example.com
+asadmin> uninstall-node-ssh --force --installdir /export/glassfish7 sj02.example.com
 Successfully connected to gfuser@sj02.example.com using keyfile /home/gfuser
 /.ssh/id_rsa
-Force removing file /export/glassfish8/mq/lib/help/en/add_overrides.htm
-Force removing file /export/glassfish8/mq/lib/help/en/add_connfact.htm
+Force removing file /export/glassfish7/mq/lib/help/en/add_overrides.htm
+Force removing file /export/glassfish7/mq/lib/help/en/add_connfact.htm
 ...
-Force removing directory /export/glassfish8/glassfish/lib/appclient
-Force removing directory /export/glassfish8/glassfish/lib
-Force removing directory /export/glassfish8/glassfish
+Force removing directory /export/glassfish7/glassfish/lib/appclient
+Force removing directory /export/glassfish7/glassfish/lib
+Force removing directory /export/glassfish7/glassfish
 Command uninstall-node-ssh executed successfully.
 ----
 

@@ -1,6 +1,7 @@
 /*
- * Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2023 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,23 +18,30 @@
 
 package org.glassfish.appclient.client.acc;
 
-import static org.glassfish.appclient.common.ClassPathUtils.getJavaClassPathForAppClient;
-
 import com.sun.enterprise.loader.ResourceLocator;
 import com.sun.enterprise.util.io.FileUtils;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.net.URL;
+import java.security.CodeSource;
+import java.security.PermissionCollection;
+import java.security.PrivilegedAction;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.function.Consumer;
+
+import org.glassfish.appclient.common.ClassPathUtils;
+import org.glassfish.appclient.common.ClientClassLoaderDelegate;
 import org.glassfish.common.util.GlassfishUrlClassLoader;
+
+import static java.security.AccessController.doPrivileged;
 
 /**
  * Application client classloader
@@ -50,6 +58,8 @@ public class ACCClassLoader extends GlassfishUrlClassLoader {
 
     private final List<ClassFileTransformer> transformers = Collections.synchronizedList(new ArrayList<ClassFileTransformer>());
 
+    private ClientClassLoaderDelegate clientCLDelegate;
+
     public static synchronized ACCClassLoader newInstance(ClassLoader parent, boolean shouldTransform) {
         if (instance != null) {
             throw new IllegalStateException("already set");
@@ -59,7 +69,11 @@ public class ACCClassLoader extends GlassfishUrlClassLoader {
         boolean currentCLWasAgentCL = currentClassLoader.getClass().getName().equals(AGENT_LOADER_CLASS_NAME);
         ClassLoader parentForACCCL = currentCLWasAgentCL ? currentClassLoader.getParent() : currentClassLoader;
 
-        instance = new ACCClassLoader(getJavaClassPathForAppClient(), parentForACCCL, shouldTransform);
+        PrivilegedAction<ACCClassLoader> action = () -> {
+            URL[] classpath = ClassPathUtils.getJavaClassPathForAppClient();
+            return new ACCClassLoader(classpath, parentForACCCL, shouldTransform);
+        };
+        instance = doPrivileged(action);
 
         if (currentCLWasAgentCL) {
             try {
@@ -96,10 +110,12 @@ public class ACCClassLoader extends GlassfishUrlClassLoader {
     public ACCClassLoader(ClassLoader parent, final boolean shouldTransform) {
         super(new URL[0], parent);
         this.shouldTransform = shouldTransform;
+        clientCLDelegate = new ClientClassLoaderDelegate(this);
     }
 
     public ACCClassLoader(URL[] urls, ClassLoader parent) {
         super(urls, parent);
+        clientCLDelegate = new ClientClassLoaderDelegate(this);
     }
 
     private ACCClassLoader(URL[] urls, ClassLoader parent, boolean shouldTransform) {
@@ -124,7 +140,13 @@ public class ACCClassLoader extends GlassfishUrlClassLoader {
 
     synchronized ACCClassLoader shadow() {
         if (shadow == null) {
-            shadow = new ACCClassLoader(getURLs(), getParent());
+            shadow = doPrivileged(new PrivilegedAction<ACCClassLoader>() {
+                @Override
+                public ACCClassLoader run() {
+                    return new ACCClassLoader(getURLs(), getParent());
+                }
+
+            });
         }
 
         return shadow;
@@ -172,8 +194,29 @@ public class ACCClassLoader extends GlassfishUrlClassLoader {
     }
 
     @Override
+    protected PermissionCollection getPermissions(CodeSource codesource) {
+        if (System.getSecurityManager() == null) {
+            return super.getPermissions(codesource);
+        }
+
+        // When security manager is enabled, find the declared permissions
+        if (clientCLDelegate.getCachedPerms(codesource) != null) {
+            return clientCLDelegate.getCachedPerms(codesource);
+        }
+
+        return clientCLDelegate.getPermissions(codesource, super.getPermissions(codesource));
+    }
+
+    public void processDeclaredPermissions() throws IOException {
+        if (clientCLDelegate == null) {
+            clientCLDelegate = new ClientClassLoaderDelegate(this);
+        }
+    }
+
+    @Override
     public Enumeration<URL> getResources(String name) throws IOException {
-        return new ResourceLocator(this, getParentClassLoader(), true).getResources(name);
+        final ResourceLocator locator = new ResourceLocator(this, getParentClassLoader(), true);
+        return locator.getResources(name);
     }
 
     private ClassLoader getParentClassLoader() {
@@ -181,7 +224,6 @@ public class ACCClassLoader extends GlassfishUrlClassLoader {
         if (parent == null) {
             return getSystemClassLoader();
         }
-
         return parent;
     }
 }

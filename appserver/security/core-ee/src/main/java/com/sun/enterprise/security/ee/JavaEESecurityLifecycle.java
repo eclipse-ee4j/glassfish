@@ -18,27 +18,31 @@
 package com.sun.enterprise.security.ee;
 
 import static jakarta.security.auth.message.config.AuthConfigFactory.DEFAULT_FACTORY_SECURITY_PROPERTY;
+import static java.util.logging.Level.WARNING;
 import static org.glassfish.epicyro.config.factory.file.AuthConfigFileFactory.DEFAULT_FACTORY_DEFAULT_PROVIDERS;
 
-import com.sun.enterprise.security.ContainerSecurityLifecycle;
-import com.sun.enterprise.security.ee.authorize.PolicyLoader;
-import com.sun.enterprise.security.ee.jmac.AuthMessagePolicy;
-import com.sun.enterprise.security.ee.jmac.ConfigDomainParser;
-import com.sun.enterprise.security.ee.jmac.WebServicesDelegate;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-import jakarta.security.auth.message.MessageInfo;
-import jakarta.security.auth.message.MessagePolicy;
 import java.security.Provider;
 import java.security.Security;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import org.glassfish.epicyro.config.factory.file.AuthConfigFileFactory;
-import org.glassfish.epicyro.config.module.configprovider.GFServerConfigProvider;
+import java.util.logging.Logger;
+
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.Service;
+import org.glassfish.epicyro.config.factory.file.AuthConfigFileFactory;
+import org.glassfish.epicyro.config.module.configprovider.GFServerConfigProvider;
+
+import com.sun.enterprise.security.ContainerSecurityLifecycle;
+import com.sun.enterprise.security.ee.jmac.AuthMessagePolicy;
+import com.sun.enterprise.security.ee.jmac.ConfigDomainParser;
+import com.sun.enterprise.security.ee.jmac.WebServicesDelegate;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Singleton;
+import jakarta.security.auth.message.MessageInfo;
+import jakarta.security.auth.message.MessagePolicy;
 
 /**
  * @author vbkumarjayanti
@@ -47,8 +51,7 @@ import org.jvnet.hk2.annotations.Service;
 @Singleton
 public class JavaEESecurityLifecycle implements ContainerSecurityLifecycle, PostConstruct {
 
-    @Inject
-    PolicyLoader policyLoader;
+    private static final Logger LOG = LogDomains.getLogger(JavaEESecurityLifecycle.class, LogDomains.SECURITY_LOGGER, false);
 
     @Override
     public void postConstruct() {
@@ -57,9 +60,20 @@ public class JavaEESecurityLifecycle implements ContainerSecurityLifecycle, Post
 
     @Override
     public void onInitialization() {
-        initializeJakartaAuthentication();
+        java.lang.SecurityManager securityManager = System.getSecurityManager();
 
-        policyLoader.loadPolicy();
+        // TODO: need someway to not override the SecMgr if the EmbeddedServer was
+        // run with a different non-default SM.
+        // right now there seems no way to find out if the SM is the VM's default SM.
+        if (securityManager != null && !J2EESecurityManager.class.equals(securityManager.getClass())) {
+            try {
+                System.setSecurityManager(new J2EESecurityManager());
+            } catch (SecurityException ex) {
+                LOG.log(WARNING, "Could not override SecurityManager");
+            }
+        }
+
+        initializeJakartaAuthentication();
     }
 
     private void initializeJakartaAuthentication() {
@@ -102,5 +116,6 @@ public class JavaEESecurityLifecycle implements ContainerSecurityLifecycle, Post
 
         System.setProperty("config.parser", ConfigDomainParser.class.getName());
     }
+
 
 }

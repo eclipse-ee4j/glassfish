@@ -17,18 +17,17 @@
 
 package org.glassfish.appclient.client.acc;
 
-import static com.sun.enterprise.util.Utility.isEmpty;
+import com.sun.enterprise.container.common.spi.util.InjectionException;
+import com.sun.enterprise.module.bootstrap.BootException;
+import com.sun.enterprise.util.LocalStringManager;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import static java.util.logging.Level.CONFIG;
 import static org.glassfish.internal.api.ORBLocator.OMG_ORB_INIT_HOST_PROPERTY;
 import static org.glassfish.internal.api.ORBLocator.OMG_ORB_INIT_PORT_PROPERTY;
 import static org.glassfish.internal.api.ORBLocator.ORB_SSL_CLIENT_REQUIRED;
 
-import com.sun.enterprise.container.common.spi.util.InjectionException;
-import com.sun.enterprise.module.bootstrap.BootException;
-import com.sun.enterprise.util.LocalStringManager;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLClassLoader;
@@ -36,7 +35,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
+
 import javax.security.auth.callback.CallbackHandler;
+
 import org.glassfish.appclient.client.acc.config.AuthRealm;
 import org.glassfish.appclient.client.acc.config.ClientCredential;
 import org.glassfish.appclient.client.acc.config.MessageSecurityConfig;
@@ -158,6 +159,8 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
 
         AppClientContainer container = ACCModulesManager.getService(AppClientContainer.class);
 
+        // process the packaged permissions.xml
+        container.processPermissions();
         container.setClient(client);
         container.setBuilder(this);
         CallbackHandler callbackHandler = (callerSuppliedCallbackHandler != null ? callerSuppliedCallbackHandler
@@ -168,12 +171,11 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
         return container;
     }
 
-    private CallbackHandler getCallbackHandlerFromDescriptor(final String callbackHandlerName) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-        if (!isEmpty(callbackHandlerName)) {
-            return (CallbackHandler)
-                Class.forName(callbackHandlerName, true, classLoader)
-                     .getDeclaredConstructor()
-                     .newInstance();
+    private CallbackHandler getCallbackHandlerFromDescriptor(final String callbackHandlerName)
+            throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+        if (callbackHandlerName != null && !callbackHandlerName.equals("")) {
+            Class<CallbackHandler> callbackHandlerClass = (Class<CallbackHandler>) Class.forName(callbackHandlerName, true, classLoader);
+            return callbackHandlerClass.newInstance();
         }
 
         return null;

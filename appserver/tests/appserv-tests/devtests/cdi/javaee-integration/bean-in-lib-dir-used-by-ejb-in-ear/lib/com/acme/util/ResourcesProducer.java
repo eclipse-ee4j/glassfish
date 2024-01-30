@@ -32,7 +32,7 @@ public class ResourcesProducer {
     @Inject
     TestDependentBeanInLib foo;
 
-    public boolean isInjectionSuccessful() {
-        return foo != null;
+    public boolean isInjectionSuccessful(){
+        return (foo != null);
     }
 }

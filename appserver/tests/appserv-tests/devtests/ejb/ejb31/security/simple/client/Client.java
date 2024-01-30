@@ -38,6 +38,15 @@ public class Client {
     @EJB
     static Hello hello;
 
+    @Resource
+    static FooManagedBean2 fooMb2;
+
+    @Resource(lookup = "java:module/FooManagedBean")
+    static FooManagedBean fooMb;
+
+    @Resource(lookup = "java:comp/env/com.acme.Client/fooMb2")
+    static FooManagedBean2 fooMb3;
+
     @Resource(lookup = "java:module/ModuleName")
     static String moduleName;
 
@@ -83,6 +92,10 @@ public class Client {
             System.out.println("AppName = " + appNameL);
             System.out.println("ModuleName = " + moduleName);
 
+            fooMb.hello();
+            fooMb2.hello();
+            fooMb3.hello();
+
             Integer envEntry = (Integer) new InitialContext().lookup("java:app/env/value1");
             System.out.println("java:app/env/value1 = " + envEntry);
 
@@ -97,6 +110,13 @@ public class Client {
             if ((envEntry4 == null) || envEntry4.intValue() != 18338) {
                 throw new RuntimeException("invalid enventry4 value");
             }
+
+            FooManagedBean fmbl = (FooManagedBean) new InitialContext().lookup("java:module/FooManagedBean");
+            fmbl.hello();
+
+            FooManagedBean fmbl2 = (FooManagedBean) new InitialContext().lookup("java:app/ejb-ejb31-security-simple-client/FooManagedBean");
+            fmbl2.hello();
+
         } catch (NamingException e) {
             throw new RuntimeException(e);
         }

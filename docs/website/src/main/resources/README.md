@@ -9,6 +9,22 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
+
+## January 30, 2024 -- Eclipse GlassFish 7.0.12 Available
+
+We are very happy to bring you Eclipse GlassFish 7.0.12. 
+
+Download links are available from the [GlassFish Download page](download.md).
+
+This release we focused on finding and fixing the root cause of several "strange" WebSocket related bugs that we witnessed in the past. We also did a similar thing related to several issues with running apps on the default context root, especially where after authentication redirects happened to another URL. 
+
+Furthermore we looked into problems with authentication and SSO in a cluster and did some initial fixes. Handling and processing of logging was looked at once again, something we have been improving a lot step by step through various iterations of releases. 
+
+Finally but not least a nasty ConcurrentModificationException was fixed, and a memory leak (via HK2) was solved.
+
+Download links are available from the [GlassFish Download page](download.md).
+
+
 ## November 30, 2023 -- Eclipse GlassFish 7.0.11 Available
 
 We are happy to announce the release of Eclipse GlassFish 7.0.11. 

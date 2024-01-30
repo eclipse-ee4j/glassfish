@@ -1737,13 +1737,13 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
                      * Standalone webapps inherit the realm referenced by the virtual server on which they are being deployed, unless they
                      * specify their own
                      */
-                    if (realm != null && realm instanceof RealmInitializer) {
-                        ((RealmInitializer) realm).initializeRealm(wbd, isSystem, vs.getAuthRealmName());
+                    if (realm instanceof RealmInitializer) {
+                        ((RealmInitializer) realm).initializeRealm(wbd, vs.getAuthRealmName());
                         ctx.setRealm(realm);
                     }
                 } else {
-                    if (realm != null && realm instanceof RealmInitializer) {
-                        ((RealmInitializer) realm).initializeRealm(wbd, isSystem, null);
+                    if (realm instanceof RealmInitializer) {
+                        ((RealmInitializer) realm).initializeRealm(wbd, null);
                         ctx.setRealm(realm);
                     }
                 }

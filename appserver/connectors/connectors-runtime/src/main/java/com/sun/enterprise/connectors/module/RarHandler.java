@@ -17,32 +17,27 @@
 
 package com.sun.enterprise.connectors.module;
 
+import static java.util.logging.Level.FINEST;
+import static org.glassfish.loader.util.ASClassLoaderUtil.getLibDirectoryJarURIs;
+
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsClassLoaderUtil;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
-import com.sun.enterprise.security.ee.perms.PermsArchiveDelegate;
-import com.sun.enterprise.security.ee.perms.SMGlobalPolicyUtil;
 import com.sun.logging.LogDomains;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.security.AccessController;
-import java.security.PrivilegedActionException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ArchiveDetector;
 import org.glassfish.api.deployment.archive.RarArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.loader.util.ASClassLoaderUtil;
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -55,6 +50,8 @@ public class RarHandler extends AbstractArchiveHandler {
     // This class should be moved to connector runtime along with ConnectorClassLoaderUtil.
     // We should also consider merging connectors-connector with connectors-internal-api
 
+    private final Logger _logger = LogDomains.getLogger(RarHandler.class, LogDomains.RSR_LOGGER);
+
     @Inject
     private ConnectorsClassLoaderUtil loader;
 
@@ -62,27 +59,16 @@ public class RarHandler extends AbstractArchiveHandler {
     @Named(RarArchiveType.ARCHIVE_TYPE)
     private ArchiveDetector detector;
 
-    private final Logger _logger = LogDomains.getLogger(RarHandler.class, LogDomains.RSR_LOGGER);
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getArchiveType() {
         return RarArchiveType.ARCHIVE_TYPE;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean handles(ReadableArchive archive) throws IOException {
         return detector.handles(archive);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public ClassLoader getClassLoader(ClassLoader parent, DeploymentContext context) {
         try {
@@ -92,8 +78,8 @@ public class RarHandler extends AbstractArchiveHandler {
             List<URI> appLibs = null;
             try {
                 appLibs = context.getAppLibs();
-                if(_logger.isLoggable(Level.FINEST)){
-                    _logger.log(Level.FINEST, "installed libraries (--applibs and EXTENSTION_LIST) for rar " +
+                if(_logger.isLoggable(FINEST)){
+                    _logger.log(FINEST, "installed libraries (--applibs and EXTENSTION_LIST) for rar " +
                         "[ "+moduleName+" ] :  " + appLibs);
                 }
             } catch (URISyntaxException e) {
@@ -113,16 +99,6 @@ public class RarHandler extends AbstractArchiveHandler {
                 carCL = loader.createRARClassLoader(moduleDir, null, moduleName, appLibs);
             }
 
-            try {
-                final DeploymentContext dc = context;
-                final ClassLoader cl = carCL;
-
-                AccessController.doPrivileged(
-                    new PermsArchiveDelegate.SetPermissionsAction(SMGlobalPolicyUtil.CommponentType.rar, dc, cl));
-            } catch (PrivilegedActionException e) {
-                throw new SecurityException(e.getException());
-            }
-
             return carCL;
 
         } catch (ConnectorRuntimeException e) {
@@ -137,7 +113,7 @@ public class RarHandler extends AbstractArchiveHandler {
      */
     private boolean isEmbedded(DeploymentContext context) {
         ReadableArchive archive = context.getSource();
-        return (archive != null && archive.getParentArchive() != null);
+        return archive != null && archive.getParentArchive() != null;
     }
 
     /**
@@ -153,11 +129,12 @@ public class RarHandler extends AbstractArchiveHandler {
             File archiveFile = new File(archive.getURI());
             if (archiveFile.exists() && archiveFile.isDirectory()) {
                 // add top level jars
-                uris.addAll(ASClassLoaderUtil.getLibDirectoryJarURIs(archiveFile));
+                uris.addAll(getLibDirectoryJarURIs(archiveFile));
             }
         } catch (Exception e) {
             _logger.log(Level.WARNING, e.getMessage(), e);
         }
+
         return uris;
     }
 }

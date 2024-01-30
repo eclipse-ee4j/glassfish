@@ -6,7 +6,7 @@ EXPOSE 4848 9009 8080 8181 7676 8686 3700 3820 3920 6666
 
 # You should use own credentials and own files! These are just defaults.
 ARG PATH_GF_PASSWORD_FILE_FOR_CHANGE=/password-change.txt
-ENV PATH_GF_HOME=/opt/glassfish7
+ENV PATH_GF_HOME=/opt/glassfish8
 ENV AS_USER=admin \
     AS_ADMIN_PASSWORD=admin \
     AS_PASSWORD_FILE=/password.txt \

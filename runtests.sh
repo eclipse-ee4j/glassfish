@@ -90,9 +90,9 @@ else
 fi
 
 export JACOCO_ENABLED="true"
-export WORKSPACE="$(pwd)/target"
+export WORKSPACE="$(pwd)"
 export TEST_RUN_LOG="${WORKSPACE}/tests-run.log"
-export GLASSFISH_HOME="${WORKSPACE}/glassfish7"
+export GLASSFISH_HOME="${WORKSPACE}/glassfish8"
 export CLASSPATH="${GLASSFISH_HOME}/javadb"
 export S1AS_HOME="${GLASSFISH_HOME}/glassfish"
 

@@ -20,22 +20,16 @@
  */
 package com.sun.enterprise.security;
 
-import java.util.logging.Logger;
-
+import com.sun.enterprise.security.audit.AuditManager;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import javax.security.auth.callback.CallbackHandler;
-
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.admin.ProcessEnvironment.ProcessType;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.security.audit.AuditManager;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 
 @Service
 @Singleton
@@ -56,6 +50,10 @@ public class SecurityServicesUtil {
     private CallbackHandler callbackHandler;
 
     public ServiceLocator getHabitat() {
+        return serviceLocator;
+    }
+
+    public ServiceLocator getServiceLocator() {
         return serviceLocator;
     }
 

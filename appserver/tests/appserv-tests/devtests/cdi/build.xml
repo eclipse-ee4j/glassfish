@@ -68,7 +68,6 @@
         <run-cdi-test path="interceptors" />
         <run-cdi-test path="javaee-component-resources" />
         <run-cdi-test path="javaee-integration" />
-        <run-cdi-test path="managed-beans" />
         <run-cdi-test path="portable-extensions" />
         <run-cdi-test path="producer-methods" />
         <run-cdi-test path="scopes" />

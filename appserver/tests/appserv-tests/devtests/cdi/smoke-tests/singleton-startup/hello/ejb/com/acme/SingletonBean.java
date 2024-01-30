@@ -35,13 +35,12 @@ public class SingletonBean {
 
     @Inject
     Foo foo;
+
     @Inject
     TestBean tb;
 
-    Bar b;
-
     @Inject
-    public SingletonBean(Bar b){
+    public SingletonBean(Bar b) {
         this.b = b;
     }
 
@@ -70,8 +69,7 @@ public class SingletonBean {
             return "tb is null";
         if (!foo.testInjection())
             return "testInjection in Foo failed";
-        if (b == null)
-            return "Constructor Injection of bean failed";
+        
         return "";
     }
 

@@ -18,6 +18,7 @@
 
 package org.apache.catalina.connector;
 
+import static com.sun.enterprise.util.Utility.isAnyNull;
 import static com.sun.logging.LogCleanerUtil.getSafeHeaderValue;
 import static jakarta.servlet.DispatcherType.REQUEST;
 import static jakarta.servlet.RequestDispatcher.ERROR_EXCEPTION;
@@ -64,9 +65,31 @@ import static org.apache.catalina.authenticator.Constants.REQ_SSO_VERSION_NOTE;
 import static org.apache.catalina.connector.Constants.AUTHORIZATION_HEADER;
 import static org.apache.catalina.connector.Constants.JROUTE_COOKIE;
 
+import com.sun.appserv.ProxyHandler;
+import jakarta.servlet.AsyncContext;
+import jakarta.servlet.DispatcherType;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletConnection;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletRequestAttributeEvent;
+import jakarta.servlet.ServletRequestAttributeListener;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.SessionCookieConfig;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletMapping;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpUpgradeHandler;
+import jakarta.servlet.http.Part;
+import jakarta.servlet.http.PushBuilder;
+import jakarta.servlet.http.WebConnection;
 import java.io.BufferedReader;
 import java.io.CharConversionException;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -75,11 +98,7 @@ import java.net.Socket;
 import java.net.URLDecoder;
 import java.net.UnknownHostException;
 import java.nio.charset.UnsupportedCharsetException;
-import java.security.AccessController;
 import java.security.Principal;
-import java.security.PrivilegedAction;
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -96,9 +115,7 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
-
 import javax.security.auth.Subject;
-
 import org.apache.catalina.Context;
 import org.apache.catalina.Globals;
 import org.apache.catalina.Host;
@@ -117,7 +134,6 @@ import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.core.StandardHost;
 import org.apache.catalina.core.StandardWrapper;
 import org.apache.catalina.fileupload.Multipart;
-import org.apache.catalina.security.SecurityUtil;
 import org.apache.catalina.session.PersistentManagerBase;
 import org.apache.catalina.session.StandardSession;
 import org.apache.catalina.util.Enumerator;
@@ -141,31 +157,6 @@ import org.glassfish.grizzly.http2.Http2Stream;
 import org.glassfish.grizzly.memory.Buffers;
 import org.glassfish.grizzly.utils.Charsets;
 import org.glassfish.web.valve.GlassFishValve;
-
-import com.sun.appserv.ProxyHandler;
-
-import jakarta.servlet.AsyncContext;
-import jakarta.servlet.DispatcherType;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletConnection;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletInputStream;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletRequestAttributeEvent;
-import jakarta.servlet.ServletRequestAttributeListener;
-import jakarta.servlet.ServletResponse;
-import jakarta.servlet.SessionCookieConfig;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletMapping;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.HttpUpgradeHandler;
-import jakarta.servlet.http.Part;
-import jakarta.servlet.http.PushBuilder;
-import jakarta.servlet.http.WebConnection;
 
 /**
  * Wrapper object for the Coyote request.
@@ -1694,25 +1685,6 @@ public class Request implements HttpRequest, HttpServletRequest {
 
         boolean replaced = false;
 
-        // Do the security check before any updates are made
-        if (Globals.IS_SECURITY_ENABLED && name.equals("org.apache.tomcat.sendfile.filename")) {
-            // Use the canonical file name to avoid any possible symlink and
-            // relative path issues
-            String canonicalPath;
-            try {
-                canonicalPath = new File(value.toString()).getCanonicalPath();
-            } catch (IOException e) {
-                String msg = MessageFormat.format(rb.getString(LogFacade.UNABLE_DETERMINE_CANONICAL_NAME), value);
-                throw new SecurityException(msg, e);
-            }
-            // Sendfile is performed in Tomcat's security context so need to
-            // check if the web app is permitted to access the file while still
-            // in the web app's security context
-            System.getSecurityManager().checkRead(canonicalPath);
-            // Update the value so the canonical path is used
-            value = canonicalPath;
-        }
-
         Object oldValue = attributes.put(name, value);
         if (oldValue != null) {
             replaced = true;
@@ -1781,23 +1753,7 @@ public class Request implements HttpRequest, HttpServletRequest {
         byte buffer[] = new byte[1];
         buffer[0] = (byte) 'a';
 
-        final byte[] finalBuffer = buffer;
-        final String finalEnc = enc;
-        if (Globals.IS_SECURITY_ENABLED) {
-            try {
-                AccessController.doPrivileged(new PrivilegedExceptionAction<String>() {
-
-                    @Override
-                    public String run() throws UnsupportedEncodingException {
-                        return new String(finalBuffer, RequestUtil.lookupCharset(finalEnc));
-                    }
-                });
-            } catch (PrivilegedActionException pae) {
-                throw (UnsupportedEncodingException) pae.getCause();
-            }
-        } else {
-            new String(buffer, RequestUtil.lookupCharset(enc));
-        }
+        new String(buffer, RequestUtil.lookupCharset(enc));
 
         // Save the validated encoding
         grizzlyRequest.setCharacterEncoding(enc);
@@ -1836,6 +1792,7 @@ public class Request implements HttpRequest, HttpServletRequest {
     }
 
     // ---------------------------------------------------- HttpRequest Methods
+
     @Override
     public boolean authenticate(HttpServletResponse response) throws IOException, ServletException {
         if (context == null) {
@@ -1867,23 +1824,9 @@ public class Request implements HttpRequest, HttpServletRequest {
                 if (realm == null) {
                     throw new ServletException("Internal error: realm null");
                 }
+
                 try {
-                    if (Globals.IS_SECURITY_ENABLED) {
-                        Boolean ret = AccessController.doPrivileged(new PrivilegedAction<Boolean>() {
-                            @Override
-                            public Boolean run() {
-                                try {
-                                    return Boolean.valueOf(
-                                            realm.invokeAuthenticateDelegate(req, (HttpResponse) getResponse(), context, authBase, true));
-                                } catch (IOException ex) {
-                                    throw new RuntimeException("Exception thrown while attempting to authenticate", ex);
-                                }
-                            }
-                        });
-                        return ret.booleanValue();
-                    } else {
-                        return realm.invokeAuthenticateDelegate(req, (HttpResponse) getResponse(), context, authBase, true);
-                    }
+                    return realm.invokeAuthenticateDelegate(req, (HttpResponse) getResponse(), context, authBase, true);
 
                 } catch (Exception ex) {
                     throw new ServletException("Exception thrown while attempting to authenticate", ex);
@@ -2165,9 +2108,9 @@ public class Request implements HttpRequest, HttpServletRequest {
         try {
             if (maskDefaultContextMapping || !isDefaultContext) {
                 return grizzlyRequest.getDecodedRequestURI();
-            } else {
-                return getContextPath() + grizzlyRequest.getDecodedRequestURI();
             }
+
+            return getContextPath() + grizzlyRequest.getDecodedRequestURI();
         } catch (CharConversionException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -2192,19 +2135,6 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     @Override
     public void setUserPrincipal(Principal principal) {
-        if (SecurityUtil.isPackageProtectionEnabled()) {
-            HttpSession session = getSession(false);
-            if (subject != null && !subject.getPrincipals().contains(principal)) {
-                subject.getPrincipals().add(principal);
-            } else if (session != null && session.getAttribute(Globals.SUBJECT_ATTR) == null) {
-                subject = new Subject();
-                subject.getPrincipals().add(principal);
-            }
-            if (session != null) {
-                session.setAttribute(Globals.SUBJECT_ATTR, subject);
-            }
-        }
-
         this.userPrincipal = principal;
     }
 
@@ -2591,7 +2521,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     @Override
     public boolean isRequestedSessionIdValid() {
-        if ((requestedSessionId == null) || (context == null)) {
+        if (isAnyNull(requestedSessionId, context == null)) {
             return false;
         }
 
@@ -2630,15 +2560,13 @@ public class Request implements HttpRequest, HttpServletRequest {
     @Override
     public boolean isUserInRole(String role) {
 
-        /*
-         * Must get userPrincipal through getUserPrincipal(), can't assume it has already been set since it may be coming from
-         * core.
-         */
+        // Must get userPrincipal through getUserPrincipal(), can't assume it has already been set since it
+        // may be coming from core.
         Principal userPrincipal = getUserPrincipal();
 
         // Have we got an authenticated principal at all?
         // Identify the Realm we will use for checking role assignments
-        if (userPrincipal == null || context == null) {
+        if (isAnyNull(userPrincipal, context)) {
             return false;
         }
 
@@ -3533,6 +3461,11 @@ public class Request implements HttpRequest, HttpServletRequest {
         }
 
         return asyncContext;
+    }
+
+    @Override
+    public String toString() {
+        return getMethod() + " " + getRequestURI() + (getQueryString() != null? "?" + getQueryString() : "") ;
     }
 
     /*

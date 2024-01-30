@@ -120,9 +120,9 @@ communication over DCOM in a domain in long format.
 ----
 asadmin> list-nodes-dcom --long=true
 NODE NAME    TYPE   NODE HOST            INSTALL DIRECTORY   REFERENCED BY
-xkyd         DCOM   xkyd.example.com     C:\glassfish7
-wpmdl2       DCOM   wpmdl2.example.com   C:\glassfish7       wdi2
-wpmdl1       DCOM   wpmdl1.example.com   C:\glassfish7       wdi1
+xkyd         DCOM   xkyd.example.com     C:\glassfish8
+wpmdl2       DCOM   wpmdl2.example.com   C:\glassfish8       wdi2
+wpmdl1       DCOM   wpmdl1.example.com   C:\glassfish8       wdi1
 Command list-nodes-dcom executed successfully.
 ----
 

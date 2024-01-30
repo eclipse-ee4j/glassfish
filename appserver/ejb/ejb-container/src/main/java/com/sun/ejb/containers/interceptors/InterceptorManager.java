@@ -17,6 +17,12 @@
 
 package com.sun.ejb.containers.interceptors;
 
+import static com.sun.ejb.EJBUtils.loadGeneratedSerializableClass;
+import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.POST_ACTIVATE;
+import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.PRE_PASSIVATE;
+import static java.util.logging.Level.CONFIG;
+import static java.util.logging.Level.FINE;
+
 import com.sun.ejb.containers.BaseContainer;
 import com.sun.ejb.containers.EJBContextImpl;
 import com.sun.enterprise.container.common.spi.util.InterceptorInfo;
@@ -25,14 +31,14 @@ import com.sun.enterprise.deployment.InterceptorDescriptor;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
 import com.sun.enterprise.deployment.MethodDescriptor;
-
 import jakarta.annotation.PostConstruct;
 import jakarta.ejb.EJBException;
 import jakarta.interceptor.InvocationContext;
-
 import java.io.Serializable;
 import java.lang.reflect.InaccessibleObjectException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.PrivilegedActionException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -42,15 +48,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 import org.glassfish.ejb.deployment.descriptor.EjbSessionDescriptor;
-
-import static com.sun.ejb.EJBUtils.loadGeneratedSerializableClass;
-import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.POST_ACTIVATE;
-import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.PRE_PASSIVATE;
-import static java.util.logging.Level.CONFIG;
-import static java.util.logging.Level.FINE;
 
 /**
  * UserInterceptorsManager manages UserInterceptors. There is one instance of InterceptorManager per container.
@@ -727,20 +726,8 @@ class AroundInvokeInterceptor {
 
         try {
             final Method finalM = method;
-            if (System.getSecurityManager() == null) {
-                if (!finalM.trySetAccessible()) {
-                    throw new InaccessibleObjectException("Unable to make accessible: "+ finalM);
-                }
-            } else {
-                java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
-                    @Override
-                    public java.lang.Object run() throws Exception {
-                        if (!finalM.trySetAccessible()) {
-                            throw new InaccessibleObjectException("Unable to make accessible: " + finalM);
-                        }
-                        return null;
-                    }
-                });
+            if (!finalM.trySetAccessible()) {
+                throw new InaccessibleObjectException("Unable to make accessible: "+ finalM);
             }
         } catch (Exception e) {
             throw new EJBException(e);
@@ -750,30 +737,9 @@ class AroundInvokeInterceptor {
 
     Object intercept(final InterceptorManager.AroundInvokeContext invCtx) throws Throwable {
         try {
-            final Object[] interceptors = invCtx.getInterceptorInstances();
-
-            if (System.getSecurityManager() != null) {
-                // Wrap actual value insertion in doPrivileged to
-                // allow for private/protected field access.
-                return java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
-                    @Override
-                    public java.lang.Object run() throws Exception {
-                        return method.invoke(interceptors[index], invCtx);
-                    }
-                });
-            } else {
-
-                return method.invoke(interceptors[index], invCtx);
-
-            }
-        } catch (java.lang.reflect.InvocationTargetException invEx) {
+            return method.invoke(invCtx.getInterceptorInstances()[index], invCtx);
+        } catch (InvocationTargetException invEx) {
             throw invEx.getCause();
-        } catch (java.security.PrivilegedActionException paEx) {
-            Throwable th = paEx.getCause();
-            if (th.getCause() != null) {
-                throw th.getCause();
-            }
-            throw th;
         }
     }
 
@@ -794,27 +760,9 @@ class BeanAroundInvokeInterceptor extends AroundInvokeInterceptor {
     @Override
     Object intercept(final InterceptorManager.AroundInvokeContext invCtx) throws Throwable {
         try {
-
-            if (System.getSecurityManager() != null) {
-                // Wrap actual value insertion in doPrivileged to
-                // allow for private/protected field access.
-                return java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
-                    @Override
-                    public java.lang.Object run() throws Exception {
-                        return method.invoke(invCtx.getTarget(), invCtx);
-                    }
-                });
-            } else {
-                return method.invoke(invCtx.getTarget(), invCtx);
-            }
-        } catch (java.lang.reflect.InvocationTargetException invEx) {
+            return method.invoke(invCtx.getTarget(), invCtx);
+        } catch (InvocationTargetException invEx) {
             throw invEx.getCause();
-        } catch (java.security.PrivilegedActionException paEx) {
-            Throwable th = paEx.getCause();
-            if (th.getCause() != null) {
-                throw th.getCause();
-            }
-            throw th;
         }
     }
 }
@@ -828,21 +776,8 @@ class CallbackInterceptor {
         this.method = method;
 
         try {
-            final Method finalM = method;
-            if (System.getSecurityManager() == null) {
-                if (!finalM.trySetAccessible()) {
-                    throw new InaccessibleObjectException("Unable to make accessible: " + finalM);
-                }
-            } else {
-                java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
-                    @Override
-                    public java.lang.Object run() throws Exception {
-                        if (!finalM.trySetAccessible()) {
-                            throw new InaccessibleObjectException("Unable to make accessible: " + finalM);
-                        }
-                        return null;
-                    }
-                });
+            if (!method.trySetAccessible()) {
+                throw new InaccessibleObjectException("Unable to make accessible: " + method);
             }
         } catch (Exception e) {
             throw new EJBException(e);
@@ -852,30 +787,9 @@ class CallbackInterceptor {
 
     Object intercept(final CallbackInvocationContext invContext) throws Throwable {
         try {
-
-            final Object[] interceptors = invContext.getInterceptorInstances();
-
-            if (System.getSecurityManager() != null) {
-                // Wrap actual value insertion in doPrivileged to
-                // allow for private/protected field access.
-                return java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
-                    @Override
-                    public java.lang.Object run() throws Exception {
-                        return method.invoke(interceptors[index], invContext);
-                    }
-                });
-            } else {
-                return method.invoke(interceptors[index], invContext);
-
-            }
+            return method.invoke(invContext.getInterceptorInstances()[index], invContext);
         } catch (java.lang.reflect.InvocationTargetException invEx) {
             throw invEx.getCause();
-        } catch (java.security.PrivilegedActionException paEx) {
-            Throwable th = paEx.getCause();
-            if (th.getCause() != null) {
-                throw th.getCause();
-            }
-            throw th;
         }
     }
 
@@ -899,28 +813,11 @@ class BeanCallbackInterceptor extends CallbackInterceptor {
     @Override
     Object intercept(final CallbackInvocationContext invContext) throws Throwable {
         try {
-
-            if (System.getSecurityManager() != null) {
-                // Wrap actual value insertion in doPrivileged to
-                // allow for private/protected field access.
-                java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
-                    @Override
-                    public java.lang.Object run() throws Exception {
-
-                        method.invoke(invContext.getTarget(), NULL_ARGS);
-                        return null;
-
-                    }
-                });
-            } else {
-                method.invoke(invContext.getTarget(), NULL_ARGS);
-            }
-
+            method.invoke(invContext.getTarget(), NULL_ARGS);
             return invContext.proceed();
-
-        } catch (java.lang.reflect.InvocationTargetException invEx) {
+        } catch (InvocationTargetException invEx) {
             throw invEx.getCause();
-        } catch (java.security.PrivilegedActionException paEx) {
+        } catch (PrivilegedActionException paEx) {
             Throwable th = paEx.getCause();
             if (th.getCause() != null) {
                 throw th.getCause();

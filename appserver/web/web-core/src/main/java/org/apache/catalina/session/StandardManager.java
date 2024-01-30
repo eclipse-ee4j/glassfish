@@ -20,58 +20,64 @@
 
 package org.apache.catalina.session;
 
-import org.apache.catalina.*;
-import org.apache.catalina.core.StandardContext;
-import org.apache.catalina.security.SecurityUtil;
-import org.apache.catalina.util.LifecycleSupport;
-
 import jakarta.servlet.ServletContext;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.*;
-import java.security.AccessController;
-import java.security.PrivilegedActionException;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.security.PrivilegedExceptionAction;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.logging.Level;
+import org.apache.catalina.Container;
+import org.apache.catalina.Context;
+import org.apache.catalina.Lifecycle;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.LifecycleListener;
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.Session;
+import org.apache.catalina.core.StandardContext;
+import org.apache.catalina.util.LifecycleSupport;
 
 /**
- * Standard implementation of the <b>Manager</b> interface that provides
- * simple session persistence across restarts of this component (such as
- * when the entire server is shut down and restarted, or when a particular
- * web application is reloaded.
+ * Standard implementation of the <b>Manager</b> interface that provides simple session persistence across restarts of
+ * this component (such as when the entire server is shut down and restarted, or when a particular web application is
+ * reloaded.
  * <p>
- * <b>IMPLEMENTATION NOTE</b>:  Correct behavior of session storing and
- * reloading depends upon external calls to the <code>start()</code> and
- * <code>stop()</code> methods of this class at the correct times.
+ * <b>IMPLEMENTATION NOTE</b>: Correct behavior of session storing and reloading depends upon external calls to the
+ * <code>start()</code> and <code>stop()</code> methods of this class at the correct times.
  *
  * @author Craig R. McClanahan
  * @author Jean-Francois Arcand
  * @version $Revision: 1.14.6.2 $ $Date: 2008/04/17 18:37:20 $
  */
 
-public class StandardManager
-    extends ManagerBase
-    implements Lifecycle, PropertyChangeListener {
+public class StandardManager extends ManagerBase implements Lifecycle, PropertyChangeListener {
 
     // ---------------------------------------------------- Security Classes
-    private class PrivilegedDoLoadFromFile
-        implements PrivilegedExceptionAction<Void> {
+    private class PrivilegedDoLoadFromFile implements PrivilegedExceptionAction<Void> {
 
         PrivilegedDoLoadFromFile() {
             // NOOP
         }
 
         @Override
-        public Void run() throws Exception{
-           doLoadFromFile();
-           return null;
+        public Void run() throws Exception {
+            doLoadFromFile();
+            return null;
         }
     }
 
-    private class PrivilegedDoUnload
-        implements PrivilegedExceptionAction<Void> {
+    private class PrivilegedDoUnload implements PrivilegedExceptionAction<Void> {
 
         private final boolean expire;
         private final boolean isShutdown;
@@ -82,74 +88,60 @@ public class StandardManager
         }
 
         @Override
-        public Void run() throws Exception{
+        public Void run() throws Exception {
             doUnload(expire, isShutdown);
             return null;
         }
 
     }
 
-
     // ----------------------------------------------------- Instance Variables
-
 
     /**
      * The descriptive information about this implementation.
      */
     private static final String info = "StandardManager/1.0";
 
-
     /**
      * The lifecycle event support for this component.
      */
     protected LifecycleSupport lifecycle = new LifecycleSupport(this);
-
 
     /**
      * The maximum number of active Sessions allowed, or -1 for no limit.
      */
     private int maxActiveSessions = -1;
 
-
     /**
      * The descriptive name of this Manager implementation (for logging).
      */
     protected static final String name = "StandardManager";
 
-
     /**
-     * Path name of the disk file in which active sessions are saved
-     * when we stop, and from which these sessions are loaded when we start.
-     * A <code>null</code> value indicates that no persistence is desired.
-     * If this pathname is relative, it will be resolved against the
-     * temporary working directory provided by our context, available via
-     * the <code>jakarta.servlet.context.tempdir</code> context attribute.
+     * Path name of the disk file in which active sessions are saved when we stop, and from which these sessions are loaded
+     * when we start. A <code>null</code> value indicates that no persistence is desired. If this pathname is relative, it
+     * will be resolved against the temporary working directory provided by our context, available via the
+     * <code>jakarta.servlet.context.tempdir</code> context attribute.
      */
     private String pathname = "SESSIONS.ser";
-
 
     /**
      * Has this component been started yet?
      */
     private boolean started = false;
 
-    // START SJSAS 6359401
     /*
      * The absolute path name of the file where sessions are persisted.
      */
     private String absPathName;
-    // END SJSAS 6359401
 
-    long processingTime=0;
-
+    long processingTime = 0;
 
     // ------------------------------------------------------------- Properties
 
-
     /**
-     * Set the Container with which this Manager has been associated.  If
-     * it is a Context (the usual case), listen for changes to the session
-     * timeout property.
+     * Set the Container with which this Manager has been associated. If it is a Context (the usual case), listen for
+     * changes to the session timeout property.
      *
      * @param container The associated Container
      */
@@ -166,17 +158,14 @@ public class StandardManager
 
         // Register with the new Container (if any)
         if ((this.container != null) && (this.container instanceof Context)) {
-            setMaxInactiveIntervalSeconds
-                ( ((Context) this.container).getSessionTimeout()*60 );
+            setMaxInactiveIntervalSeconds(((Context) this.container).getSessionTimeout() * 60);
             ((Context) this.container).addPropertyChangeListener(this);
         }
 
     }
 
-
     /**
-     * Return descriptive information about this Manager implementation and
-     * the corresponding version number, in the format
+     * Return descriptive information about this Manager implementation and the corresponding version number, in the format
      * <code>&lt;description&gt;/&lt;version&gt;</code>.
      */
     @Override
@@ -184,40 +173,31 @@ public class StandardManager
         return info;
     }
 
-
     /**
-     * Return the maximum number of active Sessions allowed, or -1 for
-     * no limit.
+     * Return the maximum number of active Sessions allowed, or -1 for no limit.
      */
     public int getMaxActiveSessions() {
         return maxActiveSessions;
     }
 
-
     public long getProcessingTime() {
         return processingTime;
     }
-
 
     public void setProcessingTime(long processingTime) {
         this.processingTime = processingTime;
     }
 
-
     /**
-     * Set the maximum number of active Sessions allowed, or -1 for
-     * no limit.
+     * Set the maximum number of active Sessions allowed, or -1 for no limit.
      *
      * @param max The new maximum number of sessions
      */
     public void setMaxActiveSessions(int max) {
         int oldMaxActiveSessions = this.maxActiveSessions;
         this.maxActiveSessions = max;
-        support.firePropertyChange("maxActiveSessions",
-                                   Integer.valueOf(oldMaxActiveSessions),
-                                   Integer.valueOf(this.maxActiveSessions));
+        support.firePropertyChange("maxActiveSessions", Integer.valueOf(oldMaxActiveSessions), Integer.valueOf(this.maxActiveSessions));
     }
-
 
     /**
      * Return the descriptive short name of this Manager implementation.
@@ -227,7 +207,6 @@ public class StandardManager
         return name;
     }
 
-
     /**
      * Return the session persistence pathname, if any.
      */
@@ -235,10 +214,9 @@ public class StandardManager
         return pathname;
     }
 
-
     /**
-     * Set the session persistence pathname to the specified value.  If no
-     * persistence support is desired, set the pathname to <code>null</code>.
+     * Set the session persistence pathname to the specified value. If no persistence support is desired, set the pathname
+     * to <code>null</code>.
      *
      * @param pathname New session persistence pathname
      */
@@ -248,28 +226,21 @@ public class StandardManager
         support.firePropertyChange("pathname", oldPathname, this.pathname);
     }
 
-
     // --------------------------------------------------------- Public Methods
 
     /**
-     * Construct and return a new session object, based on the default
-     * settings specified by this Manager's properties.  The session
-     * id will be assigned by this method, and available via the getId()
-     * method of the returned session.  If a new session cannot be created
-     * for any reason, return <code>null</code>.
+     * Construct and return a new session object, based on the default settings specified by this Manager's properties. The
+     * session id will be assigned by this method, and available via the getId() method of the returned session. If a new
+     * session cannot be created for any reason, return <code>null</code>.
      *
-     * @exception IllegalStateException if a new session cannot be
-     *  instantiated for any reason
+     * @exception IllegalStateException if a new session cannot be instantiated for any reason
      */
     @Override
     public Session createSession() {
-        if ((maxActiveSessions >= 0) &&
-                (sessions.size() >= maxActiveSessions)) {
+        if ((maxActiveSessions >= 0) && (sessions.size() >= maxActiveSessions)) {
             rejectedSessions++;
-            ((StandardContext)container).sessionRejectedEvent(
-                maxActiveSessions);
-            throw new IllegalStateException
-                (rb.getString(LogFacade.TOO_MANY_ACTIVE_SESSION_EXCEPTION));
+            ((StandardContext) container).sessionRejectedEvent(maxActiveSessions);
+            throw new IllegalStateException(rb.getString(LogFacade.TOO_MANY_ACTIVE_SESSION_EXCEPTION));
         }
 
         return (super.createSession());
@@ -277,28 +248,22 @@ public class StandardManager
 
     // START S1AS8PE 4817642
     /**
-     * Construct and return a new session object, based on the default
-     * settings specified by this Manager's properties, using the specified
-     * session id.
+     * Construct and return a new session object, based on the default settings specified by this Manager's properties,
+     * using the specified session id.
      *
-     * IMPLEMENTATION NOTE: This method must be kept in sync with the
-     * createSession method that takes no arguments.
+     * IMPLEMENTATION NOTE: This method must be kept in sync with the createSession method that takes no arguments.
      *
      * @param sessionId the session id to assign to the new session
      *
-     * @exception IllegalStateException if a new session cannot be
-     *  instantiated for any reason
+     * @exception IllegalStateException if a new session cannot be instantiated for any reason
      *
-     * @return the new session, or <code>null</code> if a session with the
-     * requested id already exists
+     * @return the new session, or <code>null</code> if a session with the requested id already exists
      */
     @Override
     public Session createSession(String sessionId) {
-        if ((maxActiveSessions >= 0) &&
-                (sessions.size() >= maxActiveSessions)) {
+        if ((maxActiveSessions >= 0) && (sessions.size() >= maxActiveSessions)) {
             rejectedSessions++;
-            throw new IllegalStateException
-                (rb.getString(LogFacade.TOO_MANY_ACTIVE_SESSION_EXCEPTION));
+            throw new IllegalStateException(rb.getString(LogFacade.TOO_MANY_ACTIVE_SESSION_EXCEPTION));
         }
 
         return (super.createSession(sessionId));
@@ -314,7 +279,6 @@ public class StandardManager
         clearStore();
     }
 
-
     // START SJSAS 6359401
     /*
      * Deletes the persistent session storage file.
@@ -325,47 +289,23 @@ public class StandardManager
             deleteFile(file);
         }
     }
-    // END SJSAS 6359401
-
 
     /**
-     * Loads any currently active sessions that were previously unloaded
-     * to the appropriate persistence mechanism, if any.  If persistence is not
-     * supported, this method returns without doing anything.
+     * Loads any currently active sessions that were previously unloaded to the appropriate persistence mechanism, if any.
+     * If persistence is not supported, this method returns without doing anything.
      *
-     * @exception ClassNotFoundException if a serialized class cannot be
-     * found during the reload
+     * @exception ClassNotFoundException if a serialized class cannot be found during the reload
      * @exception IOException if a read error occurs
      */
     @Override
     public void load() throws ClassNotFoundException, IOException {
-        if (SecurityUtil.isPackageProtectionEnabled()){
-            try{
-                AccessController.doPrivileged(new PrivilegedDoLoadFromFile());
-            } catch (PrivilegedActionException ex){
-                Exception exception = ex.getException();
-                if (exception instanceof ClassNotFoundException){
-                    throw (ClassNotFoundException)exception;
-                } else if (exception instanceof IOException) {
-                    throw (IOException)exception;
-                }
-                if (log.isLoggable(Level.FINE)) {
-                    log.log(Level.FINE, "Unreported exception in load() "
-                            + exception);
-                }
-            }
-        } else {
-            doLoadFromFile();
-        }
+        doLoadFromFile();
     }
 
-
     /**
-     * Loads any currently active sessions that were previously unloaded
-     * to file
+     * Loads any currently active sessions that were previously unloaded to file
      *
-     * @exception ClassNotFoundException if a serialized class cannot be
-     * found during the reload
+     * @exception ClassNotFoundException if a serialized class cannot be found during the reload
      * @exception IOException if a read error occurs
      */
     private void doLoadFromFile() throws ClassNotFoundException, IOException {
@@ -413,17 +353,15 @@ public class StandardManager
     }
 
     /*
-     * Reads any sessions from the given input stream, and initializes the
-     * cache of active sessions with them.
+     * Reads any sessions from the given input stream, and initializes the cache of active sessions with them.
      *
      * @param is the input stream from which to read the sessions
      *
-     * @exception ClassNotFoundException if a serialized class cannot be
-     * found during the reload
+     * @exception ClassNotFoundException if a serialized class cannot be found during the reload
+     *
      * @exception IOException if a read error occurs
      */
-    public void readSessions(InputStream is)
-            throws ClassNotFoundException, IOException {
+    public void readSessions(InputStream is) throws ClassNotFoundException, IOException {
 
         // Initialize our internal data structures
         sessions.clear();
@@ -432,20 +370,19 @@ public class StandardManager
         try {
             BufferedInputStream bis = new BufferedInputStream(is);
             if (container != null) {
-                ois = ((StandardContext)container).createObjectInputStream(bis);
+                ois = ((StandardContext) container).createObjectInputStream(bis);
             } else {
                 ois = new ObjectInputStream(bis);
             }
         } catch (IOException ioe) {
-            String msg = MessageFormat.format(rb.getString(LogFacade.LOADING_PERSISTED_SESSION_IO_EXCEPTION),
-                                              ioe);
+            String msg = MessageFormat.format(rb.getString(LogFacade.LOADING_PERSISTED_SESSION_IO_EXCEPTION), ioe);
 
             log.log(Level.SEVERE, msg, ioe);
             if (ois != null) {
                 try {
                     ois.close();
                 } catch (IOException f) {
-                     // Ignore
+                    // Ignore
                 }
                 ois = null;
             }
@@ -460,15 +397,13 @@ public class StandardManager
                     log.log(Level.FINE, "Loading " + n + " persisted sessions");
                 }
                 for (int i = 0; i < n; i++) {
-                    StandardSession session =
-                        StandardSession.deserialize(ois, this);
+                    StandardSession session = StandardSession.deserialize(ois, this);
                     session.setManager(this);
                     sessions.put(session.getIdInternal(), session);
                     session.activate();
                 }
             } catch (ClassNotFoundException e) {
-                String msg = MessageFormat.format(rb.getString(LogFacade.CLASS_NOT_FOUND_EXCEPTION),
-                                                  e);
+                String msg = MessageFormat.format(rb.getString(LogFacade.CLASS_NOT_FOUND_EXCEPTION), e);
                 log.log(Level.SEVERE, msg, e);
                 if (ois != null) {
                     try {
@@ -480,9 +415,8 @@ public class StandardManager
                 }
                 throw e;
             } catch (IOException e) {
-                String msg = MessageFormat.format(rb.getString(LogFacade.LOADING_PERSISTED_SESSION_IO_EXCEPTION),
-                                                  e);
-              log.log(Level.SEVERE, msg, e);
+                String msg = MessageFormat.format(rb.getString(LogFacade.LOADING_PERSISTED_SESSION_IO_EXCEPTION), e);
+                log.log(Level.SEVERE, msg, e);
                 if (ois != null) {
                     try {
                         ois.close();
@@ -505,11 +439,9 @@ public class StandardManager
         }
     }
 
-
     /**
-     * Save any currently active sessions in the appropriate persistence
-     * mechanism, if any.  If persistence is not supported, this method
-     * returns without doing anything.
+     * Save any currently active sessions in the appropriate persistence mechanism, if any. If persistence is not supported,
+     * this method returns without doing anything.
      *
      * @exception IOException if an input/output error occurs
      */
@@ -517,7 +449,6 @@ public class StandardManager
     public void unload() throws IOException {
         unload(true, false);
     }
-
 
     /**
      * Writes all active sessions to the given output stream.
@@ -530,72 +461,52 @@ public class StandardManager
         writeSessions(os, true);
     }
 
-
     /**
-     * Save any currently active sessions in the appropriate persistence
-     * mechanism, if any.  If persistence is not supported, this method
-     * returns without doing anything.
+     * Save any currently active sessions in the appropriate persistence mechanism, if any. If persistence is not supported,
+     * this method returns without doing anything.
      *
-     * @doExpire true if the unloaded sessions are to be expired, false
-     * otherwise
-     * @param isShutdown true if this manager is being stopped as part of a
-     * domain shutdown (as opposed to an undeployment), and false otherwise
+     * @doExpire true if the unloaded sessions are to be expired, false otherwise
+     * @param isShutdown true if this manager is being stopped as part of a domain shutdown (as opposed to an undeployment),
+     * and false otherwise
      *
      * @exception IOException if an input/output error occurs
      */
     protected void unload(boolean doExpire, boolean isShutdown) throws IOException {
-        if (SecurityUtil.isPackageProtectionEnabled()){
-            try {
-                AccessController.doPrivileged(
-                    new PrivilegedDoUnload(doExpire, isShutdown));
-            } catch (PrivilegedActionException ex){
-                Exception exception = ex.getException();
-                if (exception instanceof IOException){
-                    throw (IOException)exception;
-                }
-                if (log.isLoggable(Level.FINE)) {
-                    log.log(Level.FINE, "Unreported exception in unLoad() " + exception);
-                }
-            }
-        } else {
-            doUnload(doExpire, isShutdown);
-        }
+        doUnload(doExpire, isShutdown);
     }
-
 
     /**
      * Saves any currently active sessions to file.
      *
-     * @doExpire true if the unloaded sessions are to be expired, false
-     * otherwise
+     * @doExpire true if the unloaded sessions are to be expired, false otherwise
      *
      * @exception IOException if an input/output error occurs
      */
     private void doUnload(boolean doExpire, boolean isShutdown) throws IOException {
-        if(isShutdown) {
-            if(log.isLoggable(Level.FINE)) {
+        if (isShutdown) {
+            if (log.isLoggable(Level.FINE)) {
                 log.log(Level.FINE, "Unloading persisted sessions");
             }
             // Open an output stream to the specified pathname, if any
             File file = file();
-            if(file == null || !isDirectoryValidFor(file.getAbsolutePath())) {
+            if (file == null || !isDirectoryValidFor(file.getAbsolutePath())) {
                 return;
             }
-            if(log.isLoggable(Level.FINE)) {
+            if (log.isLoggable(Level.FINE)) {
                 log.log(Level.FINE, LogFacade.SAVING_PERSISTED_SESSION_PATH, pathname);
             }
             FileOutputStream fos = null;
             try {
                 fos = new FileOutputStream(file.getAbsolutePath());
                 writeSessions(fos, doExpire);
-                if(log.isLoggable(Level.FINE)) {
+                if (log.isLoggable(Level.FINE)) {
                     log.log(Level.FINE, "Unloading complete");
                 }
-            } catch(IOException ioe) {
-                if(fos != null) {
+            } catch (IOException ioe) {
+                if (fos != null) {
                     try {
                         fos.close();
-                    } catch(IOException f) {
+                    } catch (IOException f) {
 
                     }
                     fos = null;
@@ -603,10 +514,10 @@ public class StandardManager
                 throw ioe;
             } finally {
                 try {
-                    if(fos != null) {
+                    if (fos != null) {
                         fos.close();
                     }
-                } catch(IOException f) {
+                } catch (IOException f) {
                     // ignore
                 }
             }
@@ -656,7 +567,6 @@ public class StandardManager
         }
     }
 
-
     private ObjectOutputStream wrapStream(OutputStream os) throws IOException {
         if (container == null) {
             return new ObjectOutputStream(new BufferedOutputStream(os));
@@ -665,25 +575,20 @@ public class StandardManager
         }
     }
 
-
     /**
-     * Check if the directory for this full qualified file
-     * exists and is valid
-     * Hercules: added method
+     * Check if the directory for this full qualified file exists and is valid Hercules: added method
      */
     private boolean isDirectoryValidFor(String fullPathFileName) {
         int lastSlashIdx = fullPathFileName.lastIndexOf(File.separator);
-        if(lastSlashIdx == -1) {
+        if (lastSlashIdx == -1) {
             return false;
         }
         String result = fullPathFileName.substring(0, lastSlashIdx);
-        //System.out.println("PATH name = " + result);
+        // System.out.println("PATH name = " + result);
         return new File(result).isDirectory();
     }
 
-
     // ------------------------------------------------------ Lifecycle Methods
-
 
     /**
      * Add a lifecycle event listener to this component.
@@ -695,16 +600,13 @@ public class StandardManager
         lifecycle.addLifecycleListener(listener);
     }
 
-
     /**
-     * Gets the (possibly empty) list of lifecycle listeners
-     * associated with this StandardManager.
+     * Gets the (possibly empty) list of lifecycle listeners associated with this StandardManager.
      */
     @Override
     public List<LifecycleListener> findLifecycleListeners() {
         return lifecycle.findLifecycleListeners();
     }
-
 
     /**
      * Remove a lifecycle event listener from this component.
@@ -717,17 +619,15 @@ public class StandardManager
     }
 
     /**
-     * Prepare for the beginning of active use of the public methods of this
-     * component.  This method should be called after <code>configure()</code>,
-     * and before any of the public methods of the component are utilized.
+     * Prepare for the beginning of active use of the public methods of this component. This method should be called after
+     * <code>configure()</code>, and before any of the public methods of the component are utilized.
      *
-     * @exception LifecycleException if this component detects a fatal error
-     *  that prevents this component from being used
+     * @exception LifecycleException if this component detects a fatal error that prevents this component from being used
      */
     @Override
     public void start() throws LifecycleException {
 
-        if( ! initialized ) {
+        if (!initialized) {
             init();
         }
 
@@ -754,8 +654,7 @@ public class StandardManager
         try {
             load();
         } catch (Throwable t) {
-            log.log(Level.SEVERE,
-                    LogFacade.LOADING_SESSIONS_EXCEPTION, t);
+            log.log(Level.SEVERE, LogFacade.LOADING_SESSIONS_EXCEPTION, t);
         }
 
     }
@@ -767,14 +666,11 @@ public class StandardManager
         return started;
     }
 
-
     /**
-     * Gracefully terminate the active use of the public methods of this
-     * component.  This method should be the last one called on a given
-     * instance of this component.
+     * Gracefully terminate the active use of the public methods of this component. This method should be the last one
+     * called on a given instance of this component.
      *
-     * @exception LifecycleException if this component detects a fatal error
-     *  that needs to be reported
+     * @exception LifecycleException if this component detects a fatal error that needs to be reported
      */
     @Override
     public void stop() throws LifecycleException {
@@ -782,15 +678,13 @@ public class StandardManager
     }
 
     /**
-     * Gracefully terminate the active use of the public methods of this
-     * component.  This method should be the last one called on a given
-     * instance of this component.
+     * Gracefully terminate the active use of the public methods of this component. This method should be the last one
+     * called on a given instance of this component.
      *
-     * @param isShutdown true if this manager is being stopped as part of a
-     * domain shutdown (as opposed to an undeployment), and false otherwise
+     * @param isShutdown true if this manager is being stopped as part of a domain shutdown (as opposed to an undeployment),
+     * and false otherwise
      *
-     * @exception LifecycleException if this component detects a fatal error
-     *  that needs to be reported
+     * @exception LifecycleException if this component detects a fatal error that needs to be reported
      */
     public void stop(boolean isShutdown) throws LifecycleException {
 
@@ -832,14 +726,12 @@ public class StandardManager
         // Require a new random number generator if we are restarted
         resetRandom();
 
-        if( initialized ) {
+        if (initialized) {
             destroy();
         }
     }
 
-
     // ----------------------------------------- PropertyChangeListener Methods
-
 
     /**
      * Process property change events from our associated Context.
@@ -857,31 +749,23 @@ public class StandardManager
         // Process a relevant property change
         if ("sessionTimeout".equals(event.getPropertyName())) {
             try {
-                setMaxInactiveIntervalSeconds
-                    ((Integer) event.getNewValue() *60 );
+                setMaxInactiveIntervalSeconds((Integer) event.getNewValue() * 60);
             } catch (NumberFormatException e) {
-                log.log(Level.SEVERE, LogFacade.INVALID_SESSION_TIMEOUT_SETTING_EXCEPTION,
-                        event.getNewValue().toString());
+                log.log(Level.SEVERE, LogFacade.INVALID_SESSION_TIMEOUT_SETTING_EXCEPTION, event.getNewValue().toString());
             }
         }
 
     }
 
-
     // -------------------------------------------------------- Private Methods
 
-
     /**
-     * Return a File object representing the pathname to our
-     * persistence file, if any.
+     * Return a File object representing the pathname to our persistence file, if any.
      */
     private File file() {
-
-        // START SJSAS 6359401
         if (absPathName != null) {
             return new File(absPathName);
         }
-        // END SJSAS 6359401
 
         if ((pathname == null) || (pathname.length() == 0)) {
             return (null);
@@ -889,32 +773,25 @@ public class StandardManager
         File file = new File(pathname);
         if (!file.isAbsolute()) {
             if (container instanceof Context) {
-                ServletContext servletContext =
-                    ((Context) container).getServletContext();
-                File tempdir = (File)
-                    servletContext.getAttribute(ServletContext.TEMPDIR);
+                ServletContext servletContext = ((Context) container).getServletContext();
+                File tempdir = (File) servletContext.getAttribute(ServletContext.TEMPDIR);
                 if (tempdir != null) {
                     file = new File(tempdir, pathname);
                 }
             }
         }
 
-        // START SJSAS 6359401
         if (file != null) {
             absPathName = file.getAbsolutePath();
         }
-        // END SJSAS 6359401
 
-        return (file);
-
+        return file;
     }
-
 
     /**
      * Invalidate all sessions that have expired.
      */
     public void processExpires() {
-
         long timeNow = System.currentTimeMillis();
 
         Session[] sessions = findSessions();
@@ -932,7 +809,7 @@ public class StandardManager
         }
 
         long timeEnd = System.currentTimeMillis();
-        processingTime += ( timeEnd - timeNow );
+        processingTime += (timeEnd - timeNow);
     }
 
 }

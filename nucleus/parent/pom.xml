@@ -24,13 +24,13 @@
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
-        <version>1.0.8</version>
+        <version>1.0.9</version>
         <relativePath />
     </parent>
 
     <groupId>org.glassfish.main</groupId>
     <artifactId>nucleus-parent</artifactId>
-    <version>7.0.13-SNAPSHOT</version>
+    <version>8.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Nucleus Parent</name>
@@ -70,14 +70,14 @@
     </issueManagement>
     <properties>
         <!-- Jakarta Expression Language -->
-        <jakarta.el-api.version>5.0.1</jakarta.el-api.version>
-        <expressly.version>5.0.0</expressly.version>
+        <jakarta.el-api.version>6.0.0-M1</jakarta.el-api.version>
+        <expressly.version>6.0.0-M1</expressly.version>
 
         <!-- Jakarta Servlet -->
-        <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
+        <jakarta.servlet-api.version>6.1.0-M1</jakarta.servlet-api.version>
 
         <!-- Jakarta Validation -->
-        <jakarta.validation-api.version>3.0.2</jakarta.validation-api.version>
+        <jakarta.validation-api.version>3.1.0-M1</jakarta.validation-api.version>
         <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
 
         <!-- Jakarta Web Services -->
@@ -92,8 +92,8 @@
 
         <!-- Jakarta Inject -->
         <jakarta.inject-api.version>2.0.1.MR</jakarta.inject-api.version>
-        <hk2.version>3.0.6</hk2.version>
-        <hk2.plugin.version>3.0.6</hk2.plugin.version>
+        <hk2.version>4.0.0-M1</hk2.version>
+        <hk2.plugin.version>4.0.0-M1</hk2.plugin.version>
 
         <!-- Jakarta XML Binding -->
         <jakarta.xml.bind-api.version>4.0.1</jakarta.xml.bind-api.version>
@@ -101,7 +101,7 @@
 
         <!-- Jakarta REST -->
         <jakarta.rest-api.version>3.1.0</jakarta.rest-api.version>
-        <jersey.version>3.1.5</jersey.version>
+        <jersey.version>4.0-M1-GF1</jersey.version>
 
         <!-- Jakarta Mail -->
         <jakarta.mail-api.version>2.1.2</jakarta.mail-api.version>
@@ -112,11 +112,11 @@
         <angus.activation.version>2.0.1</angus.activation.version>
 
         <!-- Jakarta Annotations -->
-        <jakarta.annotation-api.version>2.1.1</jakarta.annotation-api.version>
+        <jakarta.annotation-api.version>3.0.0-M1</jakarta.annotation-api.version>
 
-        <jakarta.security-api.version>3.0.0</jakarta.security-api.version>
-        <jakarta.authorization-api.version>2.1.0</jakarta.authorization-api.version>
-        <jakarta.authentication-api.version>3.0.0</jakarta.authentication-api.version>
+        <jakarta.security-api.version>4.0.0-M1</jakarta.security-api.version>
+        <jakarta.authorization-api.version>3.0.0-M1</jakarta.authorization-api.version>
+        <jakarta.authentication-api.version>3.1.0-M1</jakarta.authentication-api.version>
 
 
         <!-- GlassFish Components -->
@@ -172,7 +172,7 @@
         <javadoc.skip>false</javadoc.skip>
         <deploy.skip>false</deploy.skip>
         <!-- Overrides the value from parent and enables the one we generate. -->
-        <project.build.outputTimestamp>2024-01-29T11:48:47Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2023-12-04T13:17:33Z</project.build.outputTimestamp>
 
         <maven.test.jvmoptions.add-opens>--add-opens java.base/java.lang=ALL-UNNAMED --add-opens=java.naming/javax.naming.spi=ALL-UNNAMED</maven.test.jvmoptions.add-opens>
         <maven.test.jvmoptions.memory.sizes>-Xss512k -Xms256m -Xmx1g -XX:MaxDirectMemorySize=512m</maven.test.jvmoptions.memory.sizes>
@@ -800,8 +800,8 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.11.0</version>
                     <configuration>
-                        <source>11</source>
-                        <target>11</target>
+                        <source>21</source>
+                        <target>21</target>
                         <excludes>
                             <exclude>**/.ade_path/**</exclude>
                         </excludes>

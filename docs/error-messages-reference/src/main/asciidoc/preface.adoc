@@ -291,22 +291,22 @@ In configuration files, as-install is represented as follows:
 a|* Installations on the Oracle Solaris operating system, Linux operating
 system, and Mac OS operating system:
 +
-user's-home-directory``/glassfish7/glassfish``
+user's-home-directory``/glassfish8/glassfish``
 +
 * Installations on the Windows operating system:
 +
-SystemDrive``:\glassfish7\glassfish``
+SystemDrive``:\glassfish8\glassfish``
 
 |as-install-parent
 |Represents the parent of the base installation directory for {productName}.
 a|* Installations on the Oracle Solaris operating system, Linux operating
 system, and Mac operating system:
 +
-user's-home-directory``/glassfish7``
+user's-home-directory``/glassfish8``
 +
 * Installations on the Windows operating system:
 +
-SystemDrive``:\glassfish7``
+SystemDrive``:\glassfish8``
 
 |domain-root-dir
 |Represents the directory in which a domain is created by default.

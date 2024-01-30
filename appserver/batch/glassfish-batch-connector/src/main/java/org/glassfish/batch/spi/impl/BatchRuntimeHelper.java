@@ -240,18 +240,7 @@ public class BatchRuntimeHelper
             if (executorService == null) {
                 synchronized (this) {
                     if (executorService == null) {
-                        if (System.getSecurityManager() == null)
-                            executorService = lookupExecutorService();
-                        else {
-                            java.security.AccessController.doPrivileged(
-                                    new java.security.PrivilegedAction() {
-                                        public java.lang.Object run() {
-                                            executorService = lookupExecutorService();
-                                            return null;
-                                        }
-                                    }
-                            );
-                        }
+                        executorService = lookupExecutorService();
                     }
                 }
             }

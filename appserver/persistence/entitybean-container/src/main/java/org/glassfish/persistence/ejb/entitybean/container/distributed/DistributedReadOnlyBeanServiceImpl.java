@@ -128,17 +128,7 @@ class DistributedReadOnlyBeanServiceImpl
         final ClassLoader prevClassLoader = currentThread.getContextClassLoader();
 
         try {
-            if(System.getSecurityManager() == null) {
-                currentThread.setContextClassLoader(info.loader);
-            } else {
-                java.security.AccessController.doPrivileged(
-                        new java.security.PrivilegedAction() {
-                    public java.lang.Object run() {
-                        currentThread.setContextClassLoader(info.loader);
-                        return null;
-                    }
-                });
-            }
+            currentThread.setContextClassLoader(info.loader);
 
             if (! refreshAll) {
                 ByteArrayInputStream bis = null;

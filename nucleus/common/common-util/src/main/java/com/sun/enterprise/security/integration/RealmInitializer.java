@@ -22,7 +22,7 @@ package com.sun.enterprise.security.integration;
  */
 public interface RealmInitializer {
 
-    void initializeRealm(Object bundledescriptor, boolean isSystemApp, String realmName);
+    void initializeRealm(Object bundledescriptor, String realmName);
 
     //TODO: FIXME, dilution parameter type from Container to Object
     void setVirtualServer(Object container);

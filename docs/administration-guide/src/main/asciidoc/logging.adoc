@@ -486,7 +486,7 @@ the Oracle Diagnostic Loggging Format (ODL).
 
 ----
 [2022-08-01T19:43:29.952291+02:00] [GlassFish 7.0] [INFO] [] [com.sun.enterprise.server.logging.LogManagerService] [tid: _ThreadID=1 _ThreadName=main] [levelValue: 800] [[
-Using property file: /app/appservers/glassfish7/glassfish/domains/domain1/config/logging.properties]]
+Using property file: /app/appservers/glassfish8/glassfish/domains/domain1/config/logging.properties]]
 
 [2022-08-01T19:43:29.986871+02:00] [GlassFish 7.0] [INFO] [NCLS-LOGGING-00009] [com.sun.enterprise.server.logging.LogManagerService] [tid: _ThreadID=1 _ThreadName=main] [levelValue: 800] [[
 Running GlassFish Version: Eclipse GlassFish  7.0.0  (build master-b827-g71a6150 2022-08-01T11:18:51+0200)]]
@@ -512,7 +512,7 @@ the Uniform Loggging Format.
 
 ----
 [#|2022-08-02T18:16:29.677628+02:00|INFO|GlassFish 7.0|com.sun.enterprise.server.logging.LogManagerService|_ThreadID=1;_ThreadName=main;_LevelValue=800;|
-Using property file: /app/appservers/glassfish7/glassfish/domains/domain1/config/logging.properties|#]
+Using property file: /app/appservers/glassfish8/glassfish/domains/domain1/config/logging.properties|#]
 
 [#|2022-08-02T18:16:29.755356+02:00|INFO|GlassFish 7.0|com.sun.enterprise.server.logging.LogManagerService|_ThreadID=1;_ThreadName=main;_LevelValue=800;_MessageID=NCLS-LOGGING-00009;|
 Running GlassFish Version: Eclipse GlassFish  7.0.0  (build master-b827-g71a6150 2022-08-01T11:18:51+0200)|#]
@@ -537,7 +537,7 @@ Default is `https://en.wikipedia.org/wiki/ISO_8601[ISO-8601]` timestamp with mic
 The `org.glassfish.main.jul.formatter.OneLineFormatter` logs records in the following simple format:
 
 ----
-22:50:43.174228    INFO                 main          com.sun.enterprise.server.logging.LogManagerService Using property file: /app/appservers/glassfish7/glassfish/domains/domain1/config/logging.properties
+22:50:43.174228    INFO                 main          com.sun.enterprise.server.logging.LogManagerService Using property file: /app/appservers/glassfish8/glassfish/domains/domain1/config/logging.properties
 22:50:43.266648    INFO                 main          com.sun.enterprise.server.logging.LogManagerService Running GlassFish Version: Eclipse GlassFish  7.0.0  (build master-b827-g71a6150 2022-08-01T11:18:51+0200)
 ----
 

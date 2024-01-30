@@ -81,8 +81,14 @@ public class GlassFishTestEnvironment {
             // START_DOMAIN_TIMEOUT for us waiting for the end of the asadmin start-domain process.
             asadmin.withEnv("AS_START_TIMEOUT", Integer.toString(ASADMIN_START_DOMAIN_TIMEOUT - 5000));
         }
+
+        String debug = "--debug";
+        if (System.getProperty("glassfish.suspend") != null) {
+            debug = "--suspend";
+        }
+
         // This is the absolutely first start - if it fails, all other starts will fail too.
-        assertThat(asadmin.exec(ASADMIN_START_DOMAIN_TIMEOUT, "start-domain", "--debug"), asadminOK());
+        assertThat(asadmin.exec(ASADMIN_START_DOMAIN_TIMEOUT, "start-domain", debug), asadminOK());
     }
 
 
@@ -179,8 +185,13 @@ public class GlassFishTestEnvironment {
         final String protocol = secured ? "https" : "http";
         @SuppressWarnings("unchecked")
         final T connection = (T) new URL(protocol + "://localhost:" + port + context).openConnection();
-        connection.setReadTimeout(15000);
-        connection.setConnectTimeout(100);
+        if (System.getProperty("glassfish.suspend") != null) {
+            connection.setReadTimeout(0);
+            connection.setConnectTimeout(0);
+        } else {
+            connection.setReadTimeout(15000);
+            connection.setConnectTimeout(100);
+        }
         connection.setRequestProperty("X-Requested-By", "JUnit5Test");
         return connection;
     }
@@ -245,7 +256,7 @@ public class GlassFishTestEnvironment {
 
 
     private static File resolveGlassFishRoot() {
-        final File gfDir = BASEDIR.toPath().resolve(Path.of("target", "glassfish7", "glassfish")).toFile();
+        final File gfDir = BASEDIR.toPath().resolve(Path.of("target", "glassfish8", "glassfish")).toFile();
         if (gfDir == null || !gfDir.exists()) {
             throw new IllegalStateException("The expected GlassFish home directory doesn't exist: " + gfDir);
         }

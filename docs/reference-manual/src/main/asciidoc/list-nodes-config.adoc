@@ -117,8 +117,8 @@ remote communication in the domain `domain1` in long format.
 ----
 asadmin> list-nodes-config --long=true
 NODE NAME           TYPE     NODE HOST   INSTALL DIRECTORY    REFERENCED BY
-localhost-domain1   CONFIG   localhost   /export/glassfish7
-devnode             CONFIG   localhost   /export/glassfish7   pmdsa1
+localhost-domain1   CONFIG   localhost   /export/glassfish8
+devnode             CONFIG   localhost   /export/glassfish8   pmdsa1
 Command list-nodes-config executed successfully.
 ----
 

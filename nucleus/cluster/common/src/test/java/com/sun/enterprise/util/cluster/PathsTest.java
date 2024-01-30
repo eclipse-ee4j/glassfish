@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author wnevins
  */
 public class PathsTest {
-    private static final String SPECIFIED_INSTALL_DIR = "D:/glassfish7";
+    private static final String SPECIFIED_INSTALL_DIR = "D:/glassfish8";
     private static final String NODE_NAME = "thenode";
     private static final String SPECIFIED_NODES_DIR = SPECIFIED_INSTALL_DIR + "/glassfish/mynodes";
     private static final String SPECIFIED_NODE_DIR = SPECIFIED_NODES_DIR + "/" + NODE_NAME;

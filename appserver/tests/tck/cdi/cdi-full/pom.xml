@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>glassfish-external-tck-cdi-parent</artifactId>
-        <version>7.0.13-SNAPSHOT</version>
+        <version>8.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>glassfish-external-tck-cdi</artifactId>
@@ -43,7 +43,7 @@
 
         <glassfish.version>${project.version}</glassfish.version>
         <glassfish.root>${project.build.directory}</glassfish.root>
-        <glassfish.home>${glassfish.root}/glassfish7</glassfish.home>
+        <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
     </properties>
 
     <dependencies>
@@ -368,7 +368,7 @@
                                     <version>${cdi.tck-4-0.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${glassfish.root}/glassfish7/glassfish/domains/domain1/lib/applibs</outputDirectory>
+                                    <outputDirectory>${glassfish.root}/glassfish8/glassfish/domains/domain1/lib/applibs</outputDirectory>
                                     <destFileName>cdi-tck-ext-lib.jar</destFileName>
                                 </artifactItem>
                             </artifactItems>
@@ -400,7 +400,7 @@
                     <forkMode>once</forkMode>
                     <!-- System Properties -->
                     <systemPropertyVariables>
-                        <glassfish.home>${glassfish.root}/glassfish7</glassfish.home>
+                        <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
                         <glassfish.enableDerby>true</glassfish.enableDerby>
                         <glassfish.maxHeapSize>2048m</glassfish.maxHeapSize>
                         <glassfish.enableAssertions>:org.jboss.cdi.tck...</glassfish.enableAssertions>
@@ -477,6 +477,12 @@
                     <artifactId>jakarta.enterprise.lang-model</artifactId>
                     <scope>system</scope>
                     <systemPath>${glassfish.home}/glassfish/modules/jakarta.enterprise.lang-model.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>jakarta.enterprise</groupId>
+                    <artifactId>jakarta.enterprise.cdi-el-api</artifactId>
+                    <scope>system</scope>
+                    <systemPath>${glassfish.home}/glassfish/modules/jakarta.enterprise.cdi-el-api.jar</systemPath>
                 </dependency>
                 <dependency>
                     <groupId>jakarta.enterprise</groupId>

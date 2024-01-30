@@ -47,7 +47,7 @@ You are receiving a copy of the Javassist (Java Programming Assistant)
 Library in source form at
 `https://github.com/jboss-javassist/javassist/archive/rel_3_22_0_cr2.zip`
 and in object code form in the jar file
-`glassfish7/glassfish/modules/javassist.jar` included with the
+`glassfish8/glassfish/modules/javassist.jar` included with the
 distribution. The terms of the Oracle license do NOT apply to the
 Javassist (Java Programming Assistant) program; it is licensed under the
 following license, separately from the Oracle programs you receive. If
@@ -836,8 +836,8 @@ glassfish-5.0.zip
 +
 Unzip using your favorite file compression utility.
 +
-{productName} 7 is extracted into a new `glassfish7` directory
-under your current directory. This `glassfish7` directory is referred to
+{productName} 7 is extracted into a new `glassfish8` directory
+under your current directory. This `glassfish8` directory is referred to
 throughout the {productName} documentation set as as-install-parent.
 
 4. Start {productName} using the instructions in the

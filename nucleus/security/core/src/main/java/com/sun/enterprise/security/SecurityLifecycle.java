@@ -59,9 +59,6 @@ public class SecurityLifecycle implements PostConstruct, PreDestroy {
     private ServerContext serverContext;
 
     @Inject
-    private PolicyLoader policyLoader;
-
-    @Inject
     private SecurityServicesUtil securityServicesUtil;
 
     @Inject
@@ -122,9 +119,6 @@ public class SecurityLifecycle implements PostConstruct, PreDestroy {
             // TODO:V3 LoginContextDriver has a static variable dependency on BaseAuditManager
             // And since LoginContextDriver has too many static methods that use BaseAuditManager
             // we have to make this workaround here.
-
-            // Init Jakarta Authorization
-            policyLoader.loadPolicy();
 
             realmsManager.createRealms();
 

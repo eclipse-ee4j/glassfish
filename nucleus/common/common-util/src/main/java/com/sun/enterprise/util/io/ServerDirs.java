@@ -35,14 +35,14 @@ import java.io.IOException;
  *
  * examples:
  * DAS
- * domainDir = getServerDir() == C:/glassfish7/glassfish/domains/domain1
- * domainsDir = getServerParentDir() == C:/glassfish7/glassfish/domains
+ * domainDir = getServerDir() == C:/glassfish8/glassfish/domains/domain1
+ * domainsDir = getServerParentDir() == C:/glassfish8/glassfish/domains
  * grandparent-dir is meaningless
  *
  * Instance
- * instanceDir = getServerDir() == C:/glassfish7/glassfish/nodes/mymachine/instance1
- * agentDir = getServerParentDir() == C:/glassfish7/glassfish/nodes/mymachine
- * agentsDir = getServerGrandParentDir() == C:/glassfish7/glassfish/nodes
+ * instanceDir = getServerDir() == C:/glassfish8/glassfish/nodes/mymachine/instance1
+ * agentDir = getServerParentDir() == C:/glassfish8/glassfish/nodes/mymachine
+ * agentsDir = getServerGrandParentDir() == C:/glassfish8/glassfish/nodes
  *
  * Currently in all cases the name of the serverDir is the name of the server --
  * by our definition.

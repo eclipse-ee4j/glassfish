@@ -333,23 +333,23 @@ the future. )
 
 [source]
 ----
-D:\glassfish7\glassfish\bin>asadmin enable-secure-admin
+D:\glassfish8\glassfish\bin>asadmin enable-secure-admin
 Command enable-secure-admin executed successfully.
 
 
-D:\glassfish7\glassfish\bin>asadmin stop-domain domain1
+D:\glassfish8\glassfish\bin>asadmin stop-domain domain1
 Waiting for the domain to stop .......
 Command stop-domain executed successfully.
 
-D:\glassfish7\glassfish\bin>asadmin start-domain domain1
+D:\glassfish8\glassfish\bin>asadmin start-domain domain1
 Waiting for domain1 to start ..............................
 Successfully started the domain : domain1
-domain  Location: D:\glassfish7\glassfish\domains\domain1
-Log File: D:\glassfish7\glassfish\domains\domain1\logs\server.log
+domain  Location: D:\glassfish8\glassfish\domains\domain1
+Log File: D:\glassfish8\glassfish\domains\domain1\logs\server.log
 Admin Port: 4848
 Command start-domain executed successfully.
 
-D:\glassfish7\glassfish\bin>asadmin list-domains
+D:\glassfish8\glassfish\bin>asadmin list-domains
 [
 [
   Version: V3

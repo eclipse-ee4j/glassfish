@@ -1,6 +1,30 @@
 # Eclipse GlassFish 7.x Downloads
 
 
+### GlassFish 7.0.12
+
+GlassFish 7.0.12 is a final release, containing final Jakarta EE 10 APIs. It compiles and runs on JDK 11 to JDK 21. MicroProfile support requires JDK 17 or higher.
+
+GlassFish 7.0.12 compiles and passes all internal tests using OpenJDK 21. Several Jakarta EE 10 TCKs passed on JDK 21 as well. The Jakarta EE 10 TCK as a whole is not JDK 21 compatible and it's not possible to run all the Jakarta EE TCK tests. 
+
+This release we focused on finding and fixing the root cause of several "strange" WebSocket related bugs that we witnessed in the past. We also did a similar thing related to several issues with running apps on the default context root, especially where after authentication redirects happened to another URL. 
+
+Furthermore we looked into problems with authentication and SSO in a cluster and did some initial fixes. Handling and processing of logging was looked at once again, something we have been improving a lot step by step through various iterations of releases. 
+
+Finally but not least a nasty ConcurrentModificationException was fixed, and a memory leak (via HK2) was solved.
+
+Download:
+
+* [Eclipse GlassFish 7.0.12, Jakarta EE Platform, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-7.0.12.zip)
+* [Eclipse GlassFish 7.0.12, Jakarta EE Web Profile, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-7.0.12.zip)
+* [Eclipse GlassFish Embedded 7.0.12, Jakarta EE Full Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-all/7.0.12/jar)
+* [Eclipse GlassFish Embedded 7.0.12, Jakarta EE Web Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-web/7.0.12/jar)
+
+More details:
+
+* [Eclipse GlassFish 7.0.12 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.12)
+* [Jakarte EE Platform Specification Project](https://jakartaee.github.io/jakartaee-platform/) for more info about Jakarta EE 10
+
 ### GlassFish 7.0.11
 
 GlassFish 7.0.11 is a final release, containing final Jakarta EE 10 APIs. It compiles and runs on JDK 11 to JDK 21. MicroProfile support requires JDK 17 or higher.

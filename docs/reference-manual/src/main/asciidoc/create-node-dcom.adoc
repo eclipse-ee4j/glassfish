@@ -68,7 +68,7 @@ asadmin-options::
   must be specified. Otherwise, an error occurs.
 `--installdir`::
   The full path to the parent of the base installation directory of the
-  {productName} software on the host, for example, `C:\glassfish8`.
+  {productName} software on the host, for example, `C:\glassfish7`.
   The default is the parent of the default base installation directory
   of the {productName} software for the DAS. This default is useful
   only if {productName} is installed in the same location on all
@@ -149,7 +149,7 @@ node-name::
 
 This example creates the node `wpmdl1` for the host
 `wpmdl1.example.com`. By default, the parent of the base installation
-directory of the {productName} software is `C:\glassfish8`.
+directory of the {productName} software is `C:\glassfish7`.
 
 [source]
 ----
@@ -162,11 +162,11 @@ Command create-node-dcom executed successfully.
 
 This example creates the node `wyml1` for the host `wyml1.example.com`.
 The parent of the base installation directory of the {productName}
-software on this host is `C:\middleware\glassfish8`.
+software on this host is `C:\middleware\glassfish7`.
 
 [source]
 ----
-asadmin> create-node-dcom --installdir C:\middleware\glassfish8
+asadmin> create-node-dcom --installdir C:\middleware\glassfish7
 --nodehost wyml1.example.com wyml1
 Command create-node-dcom executed successfully.
 ----

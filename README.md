@@ -59,7 +59,7 @@ They are quite old and have high technical debt, but at this moment they still p
 
 ### QuickLook
 
-`mvn -f appserver/tests/quicklook/pom.xml test -Dglassfish.home=$(pwd)/appserver/distributions/glassfish/target/stage/glassfish8/glassfish`
+`mvn -f appserver/tests/quicklook/pom.xml test -Dglassfish.home=$(pwd)/appserver/distributions/glassfish/target/stage/glassfish7/glassfish`
 
 * Usual time: 3 minutes
 * see [QuickLook_Test_Instructions](https://github.com/eclipse-ee4j/glassfish/blob/master/appserver/tests/quicklook/QuickLook_Test_Instructions.html)
@@ -96,9 +96,9 @@ They are quite old and have high technical debt, but at this moment they still p
 
 ## Basic Usage
 
-* Starting Eclipse GlassFish: `glassfish8/bin/asadmin start-domain`
+* Starting Eclipse GlassFish: `glassfish7/bin/asadmin start-domain`
 * Visit [http://localhost:4848](http://localhost:4848)
-* Stopping Eclipse GlassFish: `glassfish8/bin/asadmin stop-domain`
+* Stopping Eclipse GlassFish: `glassfish7/bin/asadmin stop-domain`
 
 ## Professional Services and Enterprise Support
 

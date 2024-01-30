@@ -18,8 +18,25 @@
 
 package org.apache.catalina.connector;
 
+import static org.apache.catalina.Globals.IS_SECURITY_ENABLED;
+import static org.apache.catalina.security.SecurityUtil.isPackageProtectionEnabled;
 
 import com.sun.enterprise.security.ee.web.integration.WebPrincipal;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.security.AccessControlException;
+import java.security.AccessController;
+import java.security.Principal;
+import java.security.PrivilegedAction;
+import java.security.SecurityPermission;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.core.RequestFacadeHelper;
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.RequestDispatcher;
@@ -37,17 +54,6 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpUpgradeHandler;
 import jakarta.servlet.http.Part;
 import jakarta.servlet.http.PushBuilder;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.security.Principal;
-import java.security.SecurityPermission;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
-import org.apache.catalina.LogFacade;
-import org.apache.catalina.core.RequestFacadeHelper;
 
 /**
  * Facade class that wraps a Catalina connector request object. All methods are delegated to the wrapped request.
@@ -144,12 +150,20 @@ public class RequestFacade implements HttpServletRequest {
     public Enumeration<String> getAttributeNames() {
         checkRequestNull();
 
+        if (isPackageProtectionEnabled()) {
+            return AccessController.doPrivileged(new GetAttributePrivilegedAction());
+        }
+
         return catalinaConnectorReqest.getAttributeNames();
     }
 
     @Override
     public String getCharacterEncoding() {
         checkRequestNull();
+
+        if (isPackageProtectionEnabled()) {
+            return AccessController.doPrivileged(new GetCharacterEncodingPrivilegedAction());
+        }
 
         return catalinaConnectorReqest.getCharacterEncoding();
     }
@@ -200,12 +214,20 @@ public class RequestFacade implements HttpServletRequest {
     public String getParameter(String name) {
         checkRequestNull();
 
+        if (isPackageProtectionEnabled()) {
+            return AccessController.doPrivileged(new GetParameterPrivilegedAction(name));
+        }
+
         return catalinaConnectorReqest.getParameter(name);
     }
 
     @Override
     public Enumeration<String> getParameterNames() {
         checkRequestNull();
+
+        if (isPackageProtectionEnabled()) {
+            return AccessController.doPrivileged(new GetParameterNamesPrivilegedAction());
+        }
 
         return catalinaConnectorReqest.getParameterNames();
     }
@@ -214,12 +236,31 @@ public class RequestFacade implements HttpServletRequest {
     public String[] getParameterValues(String name) {
         checkRequestNull();
 
-        return catalinaConnectorReqest.getParameterValues(name);
+        String[] ret = null;
+
+        /*
+         * Clone the returned array only if there is a security manager in place, so that performance won't suffer in the
+         * non-secure case
+         */
+        if (isPackageProtectionEnabled()) {
+            ret = AccessController.doPrivileged(new GetParameterValuePrivilegedAction(name));
+            if (ret != null) {
+                ret = ret.clone();
+            }
+        } else {
+            ret = catalinaConnectorReqest.getParameterValues(name);
+        }
+
+        return ret;
     }
 
     @Override
     public Map<String, String[]> getParameterMap() {
         checkRequestNull();
+
+        if (isPackageProtectionEnabled()) {
+            return AccessController.doPrivileged(new GetParameterMapPrivilegedAction());
+        }
 
         return catalinaConnectorReqest.getParameterMap();
     }
@@ -291,6 +332,10 @@ public class RequestFacade implements HttpServletRequest {
     public Locale getLocale() {
         checkRequestNull();
 
+        if (isPackageProtectionEnabled()) {
+            return AccessController.doPrivileged(new GetLocalePrivilegedAction());
+        }
+
         return catalinaConnectorReqest.getLocale();
     }
 
@@ -298,7 +343,11 @@ public class RequestFacade implements HttpServletRequest {
     public Enumeration<Locale> getLocales() {
         checkRequestNull();
 
-        return catalinaConnectorReqest.getLocales();
+        if (isPackageProtectionEnabled()) {
+            return AccessController.doPrivileged(new GetLocalesPrivilegedAction());
+        } else {
+            return catalinaConnectorReqest.getLocales();
+        }
     }
 
     @Override
@@ -311,6 +360,10 @@ public class RequestFacade implements HttpServletRequest {
     @Override
     public RequestDispatcher getRequestDispatcher(String path) {
         checkRequestNull();
+
+        if (isPackageProtectionEnabled()) {
+            return AccessController.doPrivileged(new GetRequestDispatcherPrivilegedAction(path));
+        }
 
         return catalinaConnectorReqest.getRequestDispatcher(path);
     }
@@ -326,7 +379,22 @@ public class RequestFacade implements HttpServletRequest {
     public Cookie[] getCookies() {
         checkRequestNull();
 
-        return catalinaConnectorReqest.getCookies();
+        Cookie[] ret = null;
+
+        /*
+         * Clone the returned array only if there is a security manager in place, so that performance won't suffer in the
+         * non-secure case
+         */
+        if (isPackageProtectionEnabled()) {
+            ret = AccessController.doPrivileged(new GetCookiesPrivilegedAction());
+            if (ret != null) {
+                ret = ret.clone();
+            }
+        } else {
+            ret = catalinaConnectorReqest.getCookies();
+        }
+
+        return ret;
     }
 
     @Override
@@ -347,12 +415,20 @@ public class RequestFacade implements HttpServletRequest {
     public Enumeration<String> getHeaders(String name) {
         checkRequestNull();
 
+        if (isPackageProtectionEnabled()) {
+            return AccessController.doPrivileged(new GetHeadersPrivilegedAction(name));
+        }
+
         return catalinaConnectorReqest.getHeaders(name);
     }
 
     @Override
     public Enumeration<String> getHeaderNames() {
         checkRequestNull();
+
+        if (isPackageProtectionEnabled()) {
+            return AccessController.doPrivileged(new GetHeaderNamesPrivilegedAction());
+        }
 
         return catalinaConnectorReqest.getHeaderNames();
     }
@@ -497,6 +573,10 @@ public class RequestFacade implements HttpServletRequest {
     public HttpSession getSession(boolean create) {
         checkRequestNull();
 
+        if (isPackageProtectionEnabled()) {
+            return AccessController.doPrivileged(new GetSessionPrivilegedAction(create));
+        }
+
         return catalinaConnectorReqest.getSession(create);
     }
 
@@ -510,6 +590,10 @@ public class RequestFacade implements HttpServletRequest {
     @Override
     public String changeSessionId() {
         checkRequestNull();
+
+        if (isPackageProtectionEnabled()) {
+            return AccessController.doPrivileged(new ChangeSessionIdPrivilegedAction());
+        }
 
         return catalinaConnectorReqest.changeSessionId();
     }
@@ -670,7 +754,13 @@ public class RequestFacade implements HttpServletRequest {
     /**
      * Return the original <code>CoyoteRequest</code> object.
      */
-    public Request getUnwrappedCoyoteRequest() {
+    public Request getUnwrappedCoyoteRequest() throws AccessControlException {
+        // Tomcat does not have any Permission types so instead of
+        // creating a TomcatPermission for this, use SecurityPermission.
+        if (IS_SECURITY_ENABLED) {
+            AccessController.checkPermission(GET_UNWRAPPED_COYOTE_REQUEST_PERMISSION);
+        }
+
         return catalinaConnectorReqest;
     }
 
@@ -701,4 +791,147 @@ public class RequestFacade implements HttpServletRequest {
         }
     }
 
+    // ----------------------------------------------------------- DoPrivileged
+
+    private final class GetAttributePrivilegedAction implements PrivilegedAction<Enumeration<String>> {
+
+        @Override
+        public Enumeration<String> run() {
+            return catalinaConnectorReqest.getAttributeNames();
+        }
+    }
+
+    private final class GetParameterMapPrivilegedAction implements PrivilegedAction<Map<String, String[]>> {
+
+        @Override
+        public Map<String, String[]> run() {
+            return catalinaConnectorReqest.getParameterMap();
+        }
+    }
+
+    private final class GetRequestDispatcherPrivilegedAction implements PrivilegedAction<RequestDispatcher> {
+
+        private String path;
+
+        public GetRequestDispatcherPrivilegedAction(String path) {
+            this.path = path;
+        }
+
+        @Override
+        public RequestDispatcher run() {
+            return catalinaConnectorReqest.getRequestDispatcher(path);
+        }
+    }
+
+    private final class GetParameterPrivilegedAction implements PrivilegedAction<String> {
+
+        public String name;
+
+        public GetParameterPrivilegedAction(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String run() {
+            return catalinaConnectorReqest.getParameter(name);
+        }
+    }
+
+    private final class GetParameterNamesPrivilegedAction implements PrivilegedAction<Enumeration<String>> {
+
+        @Override
+        public Enumeration<String> run() {
+            return catalinaConnectorReqest.getParameterNames();
+        }
+    }
+
+    private final class GetParameterValuePrivilegedAction implements PrivilegedAction<String[]> {
+
+        public String name;
+
+        public GetParameterValuePrivilegedAction(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String[] run() {
+            return catalinaConnectorReqest.getParameterValues(name);
+        }
+    }
+
+    private final class GetCookiesPrivilegedAction implements PrivilegedAction<Cookie[]> {
+
+        @Override
+        public Cookie[] run() {
+            return catalinaConnectorReqest.getCookies();
+        }
+    }
+
+    private final class GetCharacterEncodingPrivilegedAction implements PrivilegedAction<String> {
+
+        @Override
+        public String run() {
+            return catalinaConnectorReqest.getCharacterEncoding();
+        }
+    }
+
+    private final class GetHeadersPrivilegedAction implements PrivilegedAction<Enumeration<String>> {
+
+        private String name;
+
+        public GetHeadersPrivilegedAction(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public Enumeration<String> run() {
+            return catalinaConnectorReqest.getHeaders(name);
+        }
+    }
+
+    private final class GetHeaderNamesPrivilegedAction implements PrivilegedAction<Enumeration<String>> {
+
+        @Override
+        public Enumeration<String> run() {
+            return catalinaConnectorReqest.getHeaderNames();
+        }
+    }
+
+    private final class GetLocalePrivilegedAction implements PrivilegedAction<Locale> {
+
+        @Override
+        public Locale run() {
+            return catalinaConnectorReqest.getLocale();
+        }
+    }
+
+    private final class GetLocalesPrivilegedAction implements PrivilegedAction<Enumeration<Locale>> {
+
+        @Override
+        public Enumeration<Locale> run() {
+            return catalinaConnectorReqest.getLocales();
+        }
+    }
+
+    private final class GetSessionPrivilegedAction implements PrivilegedAction<HttpSession> {
+
+        private boolean create;
+
+        public GetSessionPrivilegedAction(boolean create) {
+            this.create = create;
+        }
+
+        @Override
+        public HttpSession run() {
+            return catalinaConnectorReqest.getSession(create);
+        }
+    }
+
+    private final class ChangeSessionIdPrivilegedAction implements PrivilegedAction<String> {
+
+        @Override
+        public String run() {
+            return catalinaConnectorReqest.changeSessionId();
+        }
+    }
 }

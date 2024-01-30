@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,28 +17,32 @@
 
 package org.glassfish.flashlight.impl.client;
 
-import com.sun.enterprise.util.SystemPropertyConstants;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.Collection;
-
-import org.glassfish.flashlight.provider.FlashlightProbe;
-import org.glassfish.flashlight.provider.ProbeRegistry;
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.commons.GeneratorAdapter;
-import org.objectweb.asm.commons.Method;
-
-import static org.objectweb.asm.Opcodes.V17;
-
 /**
  * @author Mahesh Kannan
  * Started: Jul 20, 2008
  * @author Byron Nevins, August 2009
  */
+import com.sun.enterprise.util.SystemPropertyConstants;
+import org.glassfish.flashlight.provider.FlashlightProbe;
+import org.glassfish.flashlight.provider.ProbeRegistry;
+import org.objectweb.asm.AnnotationVisitor;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
+import org.objectweb.asm.commons.GeneratorAdapter;
+import org.objectweb.asm.commons.Method;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
+import java.security.PrivilegedActionException;
+import java.security.ProtectionDomain;
+import java.util.Collection;
+
+import static org.objectweb.asm.Opcodes.V11;
+
 public class BtraceClientGenerator {
     private BtraceClientGenerator() {
         // all static class -- no instances allowed
@@ -53,7 +57,7 @@ public class BtraceClientGenerator {
 
         //Define the access identifiers for the BTrace Client class
         int access = Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL;
-        cw.visit(V17, access, generatedClassName, null,
+        cw.visit(V11, access, generatedClassName, null,
                 "java/lang/Object", null);
         //Need a @OnMethod annotation, so prepare your Annotation Visitor for that
         cw.visitAnnotation("Lcom/sun/btrace/annotations/BTrace;", true);
@@ -146,7 +150,7 @@ public class BtraceClientGenerator {
                     fos.close();
                 }
                 catch(Exception e) {
-                    // can't do anything...
+                // can't do anything...
                 }
             }
         }
@@ -162,6 +166,7 @@ public class BtraceClientGenerator {
         gen.endMethod();
     }
 }
+
 
 /****  Example generated class (bnevins, August 2009)
  *

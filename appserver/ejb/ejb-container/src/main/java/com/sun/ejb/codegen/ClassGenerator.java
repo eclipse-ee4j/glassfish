@@ -16,9 +16,8 @@
 
 package com.sun.ejb.codegen;
 
-import static java.util.logging.Level.CONFIG;
-
 import com.sun.enterprise.loader.ASURLClassLoader;
+
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.reflect.Method;
@@ -29,6 +28,8 @@ import java.security.PrivilegedExceptionAction;
 import java.security.ProtectionDomain;
 import java.util.Objects;
 import java.util.logging.Logger;
+
+import static java.util.logging.Level.CONFIG;
 
 /**
  * This class serves to generate classes, because ...
@@ -91,9 +92,11 @@ public final class ClassGenerator {
         final String targetPackageName, final String className,  final byte[] classData) {
         if (useMethodHandles(loader, anchorClass, targetPackageName)) {
             return defineClass(anchorClass, className, classData);
+        } else if (System.getSecurityManager() == null) {
+            return defineClass(loader, className, classData, anchorClass.getProtectionDomain());
+        } else {
+            return defineClass(loader, className, classData);
         }
-
-        return defineClass(loader, className, classData, anchorClass.getProtectionDomain());
     }
 
 

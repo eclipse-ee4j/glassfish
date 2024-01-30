@@ -22,9 +22,11 @@ import static java.util.logging.Level.SEVERE;
 import com.sun.enterprise.security.PrincipalGroupFactory;
 import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
 import com.sun.enterprise.security.auth.realm.Realm;
+import com.sun.enterprise.security.auth.realm.exceptions.InvalidOperationException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
 import com.sun.logging.LogDomains;
+
 import java.security.Principal;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -32,10 +34,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
+
 import org.glassfish.internal.api.Globals;
 import org.glassfish.security.common.Group;
 import org.glassfish.security.common.UserPrincipal;
@@ -166,7 +170,7 @@ public class DigestLoginModule implements LoginModule {
     protected Enumeration<String> getGroups(String username) {
         try {
             return getRealm().getGroupNames(username);
-        } catch (NoSuchUserException ex) {
+        } catch (InvalidOperationException | NoSuchUserException ex) {
             _logger.log(SEVERE, null, ex);
         }
 

@@ -17,11 +17,17 @@
 
 package org.apache.catalina.connector;
 
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.security.SecurityUtil;
+
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletInputStream;
 import java.io.IOException;
+import java.security.AccessController;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 import java.util.ResourceBundle;
-import org.apache.catalina.LogFacade;
+
 
 /**
  * This class handles reading bytes.
@@ -29,31 +35,39 @@ import org.apache.catalina.LogFacade;
  * @author Remy Maucherat
  * @author Jean-Francois Arcand
  */
-public class CoyoteInputStream extends ServletInputStream {
+public class CoyoteInputStream
+    extends ServletInputStream {
 
     private static final ResourceBundle rb = LogFacade.getLogger().getResourceBundle();
 
     // ----------------------------------------------------- Instance Variables
 
+
     protected InputBuffer ib;
 
+
     // ----------------------------------------------------------- Constructors
+
 
     public CoyoteInputStream(InputBuffer ib) {
         this.ib = ib;
     }
 
+
     // --------------------------------------------------------- Public Methods
 
+
     /**
-     * Prevent cloning the facade.
-     */
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
+    * Prevent cloning the facade.
+    */
+    protected Object clone()
+        throws CloneNotSupportedException {
         throw new CloneNotSupportedException();
     }
 
+
     // -------------------------------------------------------- Package Methods
+
 
     /**
      * Clear facade.
@@ -62,50 +76,148 @@ public class CoyoteInputStream extends ServletInputStream {
         ib = null;
     }
 
+
     // --------------------------------------------- ServletInputStream Methods
 
-    @Override
-    public int read() throws IOException {
+
+    public int read()
+        throws IOException {
+
         // Disallow operation if the object has gone out of scope
         if (ib == null) {
             throw new IllegalStateException(rb.getString(LogFacade.OBJECT_INVALID_SCOPE_EXCEPTION));
 
         }
 
-        return ib.readByte();
+        if (SecurityUtil.isPackageProtectionEnabled()){
+
+            try{
+                Integer result =
+                    AccessController.doPrivileged(
+                        new PrivilegedExceptionAction<Integer>(){
+
+                            public Integer run() throws IOException{
+                                Integer integer = Integer.valueOf(ib.readByte());
+                                return integer;
+                            }
+
+                });
+                return result.intValue();
+            } catch(PrivilegedActionException pae){
+                Exception e = pae.getException();
+                if (e instanceof IOException){
+                    throw (IOException)e;
+                } else {
+                    throw new RuntimeException(e.getMessage());
+                }
+            }
+        } else {
+            return ib.readByte();
+        }
     }
 
-    @Override
     public int available() throws IOException {
         // Disallow operation if the object has gone out of scope
         if (ib == null) {
             throw new IllegalStateException(rb.getString(LogFacade.OBJECT_INVALID_SCOPE_EXCEPTION));
         }
 
-        return ib.available();
+        if (SecurityUtil.isPackageProtectionEnabled()){
+            try{
+                Integer result =
+                    AccessController.doPrivileged(
+                        new PrivilegedExceptionAction<Integer>(){
+
+                            public Integer run() throws IOException{
+                                Integer integer = Integer.valueOf(ib.available());
+                                return integer;
+                            }
+
+                });
+                return result.intValue();
+            } catch(PrivilegedActionException pae){
+                Exception e = pae.getException();
+                if (e instanceof IOException){
+                    throw (IOException)e;
+                } else {
+                    throw new RuntimeException(e.getMessage());
+                }
+            }
+        } else {
+           return ib.available();
+        }
     }
 
-    @Override
     public int read(final byte[] b) throws IOException {
         // Disallow operation if the object has gone out of scope
         if (ib == null) {
             throw new IllegalStateException(rb.getString(LogFacade.OBJECT_INVALID_SCOPE_EXCEPTION));
         }
 
-        return ib.read(b, 0, b.length);
+        if (SecurityUtil.isPackageProtectionEnabled()){
+            try{
+                Integer result =
+                    AccessController.doPrivileged(
+                        new PrivilegedExceptionAction<Integer>(){
+
+                            public Integer run() throws IOException{
+                                Integer integer =
+                                    Integer.valueOf(ib.read(b, 0, b.length));
+                                return integer;
+                            }
+
+                });
+                return result.intValue();
+            } catch(PrivilegedActionException pae){
+                Exception e = pae.getException();
+                if (e instanceof IOException){
+                    throw (IOException)e;
+                } else {
+                    throw new RuntimeException(e.getMessage());
+                }
+            }
+        } else {
+            return ib.read(b, 0, b.length);
+        }
     }
 
-    @Override
-    public int read(final byte[] b, final int off, final int len) throws IOException {
+
+    public int read(final byte[] b, final int off, final int len)
+        throws IOException {
+
         // Disallow operation if the object has gone out of scope
         if (ib == null) {
             throw new IllegalStateException(rb.getString(LogFacade.OBJECT_INVALID_SCOPE_EXCEPTION));
         }
 
-        return ib.read(b, off, len);
+        if (SecurityUtil.isPackageProtectionEnabled()){
+            try{
+                Integer result =
+                    AccessController.doPrivileged(
+                        new PrivilegedExceptionAction<Integer>(){
+
+                            public Integer run() throws IOException{
+                                Integer integer =
+                                    Integer.valueOf(ib.read(b, off, len));
+                                return integer;
+                            }
+
+                });
+                return result.intValue();
+            } catch(PrivilegedActionException pae){
+                Exception e = pae.getException();
+                if (e instanceof IOException){
+                    throw (IOException)e;
+                } else {
+                    throw new RuntimeException(e.getMessage());
+                }
+            }
+        } else {
+            return ib.read(b, off, len);
+        }
     }
 
-    @Override
+
     public int readLine(byte[] b, int off, int len) throws IOException {
         // Disallow operation if the object has gone out of scope
         if (ib == null) {
@@ -115,7 +227,7 @@ public class CoyoteInputStream extends ServletInputStream {
         return super.readLine(b, off, len);
     }
 
-    @Override
+
     public boolean isFinished() {
         if (ib == null) {
             throw new IllegalStateException(rb.getString(LogFacade.OBJECT_INVALID_SCOPE_EXCEPTION));
@@ -124,7 +236,7 @@ public class CoyoteInputStream extends ServletInputStream {
         return ib.isFinished();
     }
 
-    @Override
+
     public boolean isReady() {
         if (ib == null) {
             throw new IllegalStateException(rb.getString(LogFacade.OBJECT_INVALID_SCOPE_EXCEPTION));
@@ -133,7 +245,7 @@ public class CoyoteInputStream extends ServletInputStream {
         return ib.isReady();
     }
 
-    @Override
+
     public void setReadListener(ReadListener readListener) {
         if (ib == null) {
             throw new IllegalStateException(rb.getString(LogFacade.OBJECT_INVALID_SCOPE_EXCEPTION));
@@ -146,16 +258,39 @@ public class CoyoteInputStream extends ServletInputStream {
         ib.setReadListener(readListener);
     }
 
+
     /**
-     * Close the stream Since we re-cycle, we can't allow the call to super.close() which would permanently disable us.
+     * Close the stream
+     * Since we re-cycle, we can't allow the call to super.close()
+     * which would permanently disable us.
      */
-    @Override
     public void close() throws IOException {
         // Disallow operation if the object has gone out of scope
         if (ib == null) {
             throw new IllegalStateException(rb.getString(LogFacade.OBJECT_INVALID_SCOPE_EXCEPTION));
         }
 
-        ib.close();
+        if (SecurityUtil.isPackageProtectionEnabled()){
+            try{
+                AccessController.doPrivileged(
+                    new PrivilegedExceptionAction<Void>(){
+
+                        public Void run() throws IOException{
+                            ib.close();
+                            return null;
+                        }
+
+                });
+            } catch(PrivilegedActionException pae){
+                Exception e = pae.getException();
+                if (e instanceof IOException){
+                    throw (IOException)e;
+                } else {
+                    throw new RuntimeException(e.getMessage());
+                }
+            }
+        } else {
+             ib.close();
+        }
     }
 }

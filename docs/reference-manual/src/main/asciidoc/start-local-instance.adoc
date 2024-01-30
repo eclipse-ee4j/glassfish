@@ -189,8 +189,8 @@ subcommand is run.
 asadmin> start-local-instance --node sj01 yml-i-sj01
 Waiting for the server to start .................................
 Successfully started the instance: yml-i-sj01
-instance Location: /export/glassfish8/glassfish/nodes/sj01/yml-i-sj01
-Log File: /export/glassfish8/glassfish/nodes/sj01/yml-i-sj01/logs/server.log
+instance Location: /export/glassfish7/glassfish/nodes/sj01/yml-i-sj01
+Log File: /export/glassfish7/glassfish/nodes/sj01/yml-i-sj01/logs/server.log
 Admin Port: 24849
 Command start-local-instance executed successfully.
 ----

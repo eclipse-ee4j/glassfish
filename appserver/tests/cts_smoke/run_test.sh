@@ -261,7 +261,7 @@ cts_to_junit(){
 
 delete_workspace(){
   printf "\n%s \n\n" "===== DELETE WORKSPACE ====="
-    rm -rf ${WORKSPACE}/glassfish8 > /dev/null || true
+    rm -rf ${WORKSPACE}/glassfish7 > /dev/null || true
     rm -rf ${WORKSPACE}/servlettck > /dev/null  || true
     rm ${WORKSPACE}/servlettck.zip > /dev/null || true
     rm -rf ${WORKSPACE}/javaee-smoke > /dev/null || true

@@ -22,8 +22,26 @@ import static com.sun.enterprise.security.ee.authorize.cache.PermissionCacheFact
 import static com.sun.enterprise.security.ee.web.integration.GlassFishToExousiaConverter.getConstraintsFromBundle;
 import static com.sun.enterprise.security.ee.web.integration.GlassFishToExousiaConverter.getSecurityRoleRefsFromBundle;
 import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
 import static java.util.stream.Collectors.toSet;
 import static org.glassfish.api.web.Constants.ADMIN_VS;
+
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.security.CodeSource;
+import java.security.Permission;
+import java.security.Principal;
+import java.security.cert.Certificate;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Logger;
+
+import org.glassfish.exousia.AuthorizationService;
+import org.glassfish.internal.api.ServerContext;
+import org.glassfish.security.common.Group;
+import org.glassfish.security.common.UserNameAndPassword;
 
 import com.sun.enterprise.config.serverbeans.ApplicationRef;
 import com.sun.enterprise.config.serverbeans.Server;
@@ -39,7 +57,6 @@ import com.sun.enterprise.security.SecurityServicesUtil;
 import com.sun.enterprise.security.audit.AuditManager;
 import com.sun.enterprise.security.ee.SecurityUtil;
 import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
-import com.sun.enterprise.security.ee.authorize.GlassFishPrincipalMapper;
 import com.sun.enterprise.security.ee.authorize.PolicyContextHandlerImpl;
 import com.sun.enterprise.security.ee.authorize.cache.CachedPermission;
 import com.sun.enterprise.security.ee.authorize.cache.CachedPermissionImpl;
@@ -50,18 +67,9 @@ import jakarta.security.jacc.PolicyContextException;
 import jakarta.security.jacc.WebResourcePermission;
 import jakarta.security.jacc.WebUserDataPermission;
 import jakarta.servlet.http.HttpServletRequest;
-import java.security.Permission;
-import java.security.Principal;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Logger;
-import org.glassfish.exousia.AuthorizationService;
-import org.glassfish.internal.api.ServerContext;
-import org.glassfish.security.common.Group;
-import org.glassfish.security.common.UserNameAndPassword;
 
 /**
- * The class provides support for Jakarta Authorization. This class is a companion class of
+ * The class implements the JSR 115 - JavaTM Authorization Contract for Containers. This class is a companion class of
  * EJBSecurityManager.
  *
  * All the security decisions required to allow access to a resource are defined in that class.
@@ -86,8 +94,12 @@ public class WebSecurityManager {
     private final String contextId;
     private String codebase;
 
+    protected CodeSource codesource;
+
     private static final WebResourcePermission allResources = new WebResourcePermission("/*", (String) null);
+
     private static final WebUserDataPermission allConnections = new WebUserDataPermission("/*", null);
+
     private static Permission[] protoPerms = { allResources, allConnections };
 
     // permissions tied to unchecked permission cache, and used
@@ -127,10 +139,10 @@ public class WebSecurityManager {
         authorizationService = new AuthorizationService(
             getContextID(webBundleDescriptor),
             () -> SecurityContext.getCurrent().getSubject(),
-            () -> new GlassFishPrincipalMapper(contextId));
+            null);
 
         authorizationService.setConstrainedUriRequestAttribute(CONSTRAINT_URI);
-        authorizationService.setRequestSupplier(contextId,
+        authorizationService.setRequestSupplier(
             () -> (HttpServletRequest) webSecurityManagerFactory.pcHandlerImpl.getHandlerData().get(HTTP_SERVLET_REQUEST));
 
         authorizationService.addConstraintsToPolicy(
@@ -335,7 +347,6 @@ public class WebSecurityManager {
 
     public void destroy() throws PolicyContextException {
         authorizationService.refresh();
-        authorizationService.destroy();
 
         PermissionCacheFactory.removePermissionCache(uncheckedPermissionCache);
         uncheckedPermissionCache = null;
@@ -355,6 +366,9 @@ public class WebSecurityManager {
             handleAdminVirtualServer();
         }
 
+        // Will require stuff in hash format for reference later on.
+        codesource = createCodeSource();
+
         if (logger.isLoggable(FINE)) {
             logger.log(FINE, "[Web-Security] Context id (id under which  WEB component in application will be created) = {0}", contextId);
             logger.log(FINE, "[Web-Security] Codebase (module id for web component) {0}", codebase);
@@ -363,10 +377,29 @@ public class WebSecurityManager {
         initPermissionCache();
     }
 
+    private CodeSource createCodeSource() {
+        try {
+            try {
+                if (logger.isLoggable(FINE)) {
+                    logger.log(FINE, "[Web-Security] Creating a Codebase URI with = {0}", codebase);
+                }
+                return codesource = new CodeSource(new URL(new URI("file:///" + codebase).toString()), (Certificate[]) null);
+            } catch (URISyntaxException use) {
+                // manually create the URL
+                logger.log(FINE, "[Web-Security] Error Creating URI ", use);
+                throw new RuntimeException(use);
+            }
+
+        } catch (MalformedURLException mue) {
+            logger.log(SEVERE, LogUtils.EJBSM_CODSOURCEERROR, mue);
+            throw new RuntimeException(mue);
+        }
+    }
+
     private void initPermissionCache() {
         if (uncheckedPermissionCache == null) {
             if (register) {
-                uncheckedPermissionCache = createPermissionCache(contextId, protoPerms, null);
+                uncheckedPermissionCache = createPermissionCache(contextId, codesource, protoPerms, null);
                 allResourcesCachedPermission = new CachedPermissionImpl(uncheckedPermissionCache, allResources);
                 allConnectionsCachedPermission = new CachedPermissionImpl(uncheckedPermissionCache, allConnections);
             }

@@ -17,22 +17,26 @@
 
 package org.glassfish.appclient.server.core;
 
-import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-
 import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
 import com.sun.enterprise.loader.ASURLClassLoader;
+import com.sun.enterprise.security.ee.perms.PermsArchiveDelegate;
+import com.sun.enterprise.security.ee.perms.SMGlobalPolicyUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.security.PrivilegedActionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ArchiveDetector;
 import org.glassfish.api.deployment.archive.CarArchiveType;
@@ -40,20 +44,22 @@ import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.appclient.server.core.jws.JavaWebStartInfo;
 import org.jvnet.hk2.annotations.Service;
 
+import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+
 /**
  * @author sanjeeb.sahoo@oracle.com
  */
 @Service(name = CarArchiveType.ARCHIVE_TYPE)
 public class CarHandler extends AbstractArchiveHandler {
 
-    private static final Logger LOG = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER,
-            JavaWebStartInfo.APPCLIENT_SERVER_LOGMESSAGE_RESOURCE);
-
     @Inject
     @Named(CarArchiveType.ARCHIVE_TYPE)
     private ArchiveDetector detector;
 
-
+    private static final Logger LOG = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER,
+                JavaWebStartInfo.APPCLIENT_SERVER_LOGMESSAGE_RESOURCE);
 
     @Override
     public String getArchiveType() {
@@ -82,18 +88,30 @@ public class CarHandler extends AbstractArchiveHandler {
 
     @Override
     public ClassLoader getClassLoader(final ClassLoader parent, DeploymentContext context) {
-        ASURLClassLoader cloader = new ASURLClassLoader(parent);
+        PrivilegedAction<ASURLClassLoader> action = () -> new ASURLClassLoader(parent);
+        ASURLClassLoader cloader = AccessController.doPrivileged(action);
         try {
             cloader.addURL(context.getSource().getURI().toURL());
-
-            // Add libraries referenced from manifest
+            // add libraries referenced from manifest
             for (URL url : getManifestLibraries(context)) {
                 cloader.addURL(url);
             }
+
+            try {
+                final DeploymentContext dc = context;
+                final ClassLoader cl = cloader;
+
+                AccessController.doPrivileged(
+                        new PermsArchiveDelegate.SetPermissionsAction(
+                                SMGlobalPolicyUtil.CommponentType.car, dc, cl));
+            } catch (PrivilegedActionException e) {
+                throw new SecurityException(e.getException());
+            }
+
+
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
-
         return cloader;
     }
 

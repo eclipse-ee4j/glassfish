@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>glassfish-external-tck-cdi-parent</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>7.0.13-SNAPSHOT</version>
     </parent>
 
     <artifactId>glassfish-external-tck-cdi-model</artifactId>
@@ -43,7 +43,7 @@
 
         <glassfish.version>${project.version}</glassfish.version>
         <glassfish.root>${project.build.directory}</glassfish.root>
-        <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
+        <glassfish.home>${glassfish.root}/glassfish7</glassfish.home>
     </properties>
 
     <dependencyManagement>
@@ -208,7 +208,7 @@
                     <forkMode>once</forkMode>
                     <!-- System Properties -->
                     <systemPropertyVariables>
-                        <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
+                        <glassfish.home>${glassfish.root}/glassfish7</glassfish.home>
                         <glassfish.enableAssertions>:org.jboss.cdi...</glassfish.enableAssertions>
                     </systemPropertyVariables>
                 </configuration>

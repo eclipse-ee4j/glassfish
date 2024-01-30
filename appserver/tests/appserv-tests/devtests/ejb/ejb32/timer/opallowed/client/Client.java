@@ -135,6 +135,14 @@ public class Client {
                 t.printStackTrace();
                 stat.addStatus("opallowed pojo: ", stat.FAIL);
             }
+        } else if ("managedbean".equals(args[0])) {
+            // the managedbean is injected to servlet
+            // and the TimerHandle/Timer invocation from a managedbean is permitted
+            if ("RESULT: PASS".equals(c.execute("managedbean", args[1]))) {
+                stat.addStatus("opallowed managedbean: ", stat.PASS);
+            } else {
+                stat.addStatus("opallowed managedbean: ", stat.FAIL);
+            }
         } else {
             // no other case
         }

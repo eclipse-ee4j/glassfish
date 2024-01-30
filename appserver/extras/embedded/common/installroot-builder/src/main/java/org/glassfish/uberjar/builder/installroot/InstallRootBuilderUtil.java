@@ -34,7 +34,7 @@ import java.util.logging.Logger;
 public class InstallRootBuilderUtil {
 
     private static final Logger logger = Logger.getLogger("embedded-glassfish");
-    private static String resourceroot = "glassfish8/glassfish/";
+    private static String resourceroot = "glassfish7/glassfish/";
 
     public static void buildInstallRoot(String installRoot) throws Exception {
         ClassLoader cl = InstallRootBuilderUtil.class.getClassLoader();

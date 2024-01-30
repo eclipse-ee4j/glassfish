@@ -23,15 +23,18 @@
 package com.sun.ejb.containers.util.pool;
 
 import static com.sun.enterprise.util.Utility.setContextClassLoader;
+import static java.security.AccessController.doPrivileged;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.WARNING;
 
-import com.sun.ejb.containers.EJBContextImpl;
-import com.sun.ejb.containers.EjbContainerUtilImpl;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimerTask;
+
+import com.sun.ejb.containers.EJBContextImpl;
+import com.sun.ejb.containers.EjbContainerUtilImpl;
 
 /**
  * <p>
@@ -403,7 +406,17 @@ public class NonBlockingPool extends AbstractPool {
         long startTime = 0;
         boolean enteredResizeBlock = false;
         try {
-            currentThread.setContextClassLoader(containerClassLoader);
+            if (System.getSecurityManager() == null) {
+                currentThread.setContextClassLoader(containerClassLoader);
+            } else {
+                doPrivileged(new PrivilegedAction<Object>() {
+                    @Override
+                    public Object run() {
+                        currentThread.setContextClassLoader(containerClassLoader);
+                        return null;
+                    }
+                });
+            }
 
             _logger.log(FINE, () -> "[Pool-" + poolName + "]: Resize started at: " + (new Date()) + " steadyPoolSize ::"
                         + steadyPoolSize + " resizeQuantity ::" + resizeQuantity + " maxPoolSize ::" + maxPoolSize);
@@ -497,7 +510,17 @@ public class NonBlockingPool extends AbstractPool {
                 }
             }
 
-            currentThread.setContextClassLoader(previousClassLoader);
+            if (System.getSecurityManager() == null) {
+                currentThread.setContextClassLoader(previousClassLoader);
+            } else {
+                doPrivileged(new PrivilegedAction<Object>() {
+                    @Override
+                    public Object run() {
+                        currentThread.setContextClassLoader(previousClassLoader);
+                        return null;
+                    }
+                });
+            }
         }
 
         long endTime = System.currentTimeMillis();

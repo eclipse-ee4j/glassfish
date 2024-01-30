@@ -16,8 +16,14 @@
 
 package com.acme.util;
 
+
 public class TestDependentBeanInLib {
-    public String foo() {
+    public TestDependentBeanInLib() {
+        super();
+    }
+
+    public String foo(){
         return "foo!";
     }
+
 }

@@ -18,19 +18,14 @@
 
 package org.glassfish.web.loader;
 
-import static java.lang.System.Logger.Level.DEBUG;
-import static java.lang.System.Logger.Level.ERROR;
-import static java.lang.System.Logger.Level.INFO;
-import static java.lang.System.Logger.Level.TRACE;
-import static java.lang.System.Logger.Level.WARNING;
-import static org.glassfish.web.loader.LogFacade.UNABLE_TO_LOAD_CLASS;
-import static org.glassfish.web.loader.LogFacade.UNSUPPORTED_VERSION;
-import static org.glassfish.web.loader.LogFacade.getString;
-
 import com.sun.enterprise.loader.ResourceLocator;
+import com.sun.enterprise.security.integration.DDPermissionsLoader;
+import com.sun.enterprise.security.integration.PermsHolder;
 import com.sun.enterprise.util.io.FileUtils;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FilePermission;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.System.Logger;
@@ -39,11 +34,13 @@ import java.lang.instrument.IllegalClassFormatException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.security.AccessControlException;
 import java.security.AccessController;
 import java.security.CodeSource;
 import java.security.Permission;
 import java.security.PermissionCollection;
 import java.security.Permissions;
+import java.security.Policy;
 import java.security.PrivilegedAction;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -55,13 +52,19 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
+import java.util.jar.Attributes;
+import java.util.jar.Attributes.Name;
 import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 import java.util.stream.Collectors;
+
 import javax.naming.Binding;
 import javax.naming.NameClassPair;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
+
+import org.apache.naming.JndiPermission;
 import org.apache.naming.resources.DirContextURLStreamHandler;
 import org.apache.naming.resources.JarFileResourcesProvider;
 import org.apache.naming.resources.ProxyDirContext;
@@ -72,6 +75,15 @@ import org.glassfish.api.deployment.InstrumentableClassLoader;
 import org.glassfish.common.util.GlassfishUrlClassLoader;
 import org.glassfish.hk2.api.PreDestroy;
 import org.glassfish.web.loader.RepositoryManager.RepositoryResource;
+
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.System.Logger.Level.WARNING;
+import static org.glassfish.web.loader.LogFacade.UNABLE_TO_LOAD_CLASS;
+import static org.glassfish.web.loader.LogFacade.UNSUPPORTED_VERSION;
+import static org.glassfish.web.loader.LogFacade.getString;
 
 /**
  * Specialized web application class loader.
@@ -110,7 +122,8 @@ import org.glassfish.web.loader.RepositoryManager.RepositoryResource;
  * @author Craig R. McClanahan
  * @since 2007/08/17 15:46:27 $
  */
-public final class WebappClassLoader extends GlassfishUrlClassLoader implements Reloader, InstrumentableClassLoader, JarFileResourcesProvider, PreDestroy {
+public final class WebappClassLoader extends GlassfishUrlClassLoader
+    implements Reloader, InstrumentableClassLoader, DDPermissionsLoader, JarFileResourcesProvider, PreDestroy {
 
     static {
         registerAsParallelCapable();
@@ -141,6 +154,9 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
     );
     private static final Set<String> DELEGATED_RESOURCE_PATHS = DELEGATED_PACKAGES.stream()
         .map(PACKAGE_TO_PATH).collect(Collectors.toUnmodifiableSet());
+
+    /** Instance of the SecurityManager installed. */
+    private static final SecurityManager SECURITY_MANAGER = System.getSecurityManager();
 
     private final ReferenceCleaner cleaner;
 
@@ -186,11 +202,16 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
      */
     private List<String> jarNames = new ArrayList<>();
 
+    private boolean packageDefinitionSecurityEnabled;
+
     /**
      * A list of read File and Jndi Permission's required if this loader
      * is for a web application context.
      */
     private final ConcurrentLinkedQueue<Permission> permissionList = new ConcurrentLinkedQueue<>();
+
+    /** holder for declared and ee permissions */
+    private PermsHolder permissionsHolder;
 
     /** Path where resources loaded from JARs will be extracted. */
     private File loaderDir;
@@ -249,6 +270,10 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
         super(new URL[0], parent);
         this.cleaner = new ReferenceCleaner(this);
         this.system = WebappClassLoader.class.getClassLoader();
+        if (SECURITY_MANAGER != null) {
+            refreshPolicy();
+        }
+        this.permissionsHolder = new PermsHolder();
     }
 
 
@@ -303,6 +328,95 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
     public void setAntiJARLocking(boolean enable) {
         checkStatus(LifeCycleStatus.NEW);
         this.antiJARLocking = enable;
+    }
+
+
+    /**
+     * Enables checks for the package definition permissions.
+     *
+     * @param enable
+     */
+    public void setPackageDefinitionSecurityEnabled(boolean enable) {
+        if (enable && SECURITY_MANAGER == null) {
+            throw new IllegalArgumentException("The Security Manager is disabled.");
+        }
+        LOG.log(DEBUG, "setPackageDefinitionSecurityEnabled(enable={0})", enable);
+        this.packageDefinitionSecurityEnabled = enable;
+    }
+
+
+    /**
+     * If there is a Java SecurityManager create a read FilePermission
+     * or JndiPermission for URL.
+     *
+     * @param url URL for a file or directory on local system
+     */
+    public void addPermission(URL url) {
+        checkStatus(LifeCycleStatus.NEW, LifeCycleStatus.RUNNING);
+        if (url != null) {
+            addPermission(url.toString());
+        }
+    }
+
+
+    /**
+     * If there is a Java SecurityManager create a read FilePermission
+     * or JndiPermission for the file directory path.
+     *
+     * @param path file directory path
+     */
+    public void addPermission(final String path) {
+        checkStatus(LifeCycleStatus.NEW, LifeCycleStatus.RUNNING);
+        if (path == null || SECURITY_MANAGER == null) {
+            return;
+        }
+        SECURITY_MANAGER.checkSecurityAccess(DDPermissionsLoader.SET_EE_POLICY);
+        if (path.startsWith("jndi:") || path.startsWith("jar:jndi:")) {
+            final String jndiPath = path.endsWith("/") ? path : path + "/";
+            permissionList.add(new JndiPermission(jndiPath + "*"));
+        } else {
+            final String filePath;
+            if (path.endsWith(File.separator)) {
+                filePath = path;
+            } else {
+                permissionList.add(new FilePermission(path, "read"));
+                filePath = path + File.separator;
+            }
+            permissionList.add(new FilePermission(filePath + "-", "read"));
+        }
+    }
+
+
+    /**
+     * If there is a Java SecurityManager create a Permission.
+     *
+     * @param permission permission to add
+     */
+    public void addPermission(Permission permission) {
+        checkStatus(LifeCycleStatus.NEW, LifeCycleStatus.RUNNING);
+        if (SECURITY_MANAGER != null && permission != null) {
+            SECURITY_MANAGER.checkSecurityAccess(DDPermissionsLoader.SET_EE_POLICY);
+            permissionList.add(permission);
+        }
+    }
+
+
+    @Override
+    public void addDeclaredPermissions(PermissionCollection declaredPc) throws SecurityException {
+        checkStatus(LifeCycleStatus.NEW, LifeCycleStatus.RUNNING);
+        if (SECURITY_MANAGER != null) {
+            SECURITY_MANAGER.checkSecurityAccess(DDPermissionsLoader.SET_EE_POLICY);
+            permissionsHolder.setDeclaredPermissions(declaredPc);
+        }
+    }
+
+    @Override
+    public void addEEPermissions(PermissionCollection eePc) throws SecurityException {
+        checkStatus(LifeCycleStatus.NEW, LifeCycleStatus.RUNNING);
+        if (SECURITY_MANAGER != null) {
+            SECURITY_MANAGER.checkSecurityAccess(DDPermissionsLoader.SET_EE_POLICY);
+            permissionsHolder.setEEPermissions(eePc);
+        }
     }
 
 
@@ -438,6 +552,18 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
         LOG.log(DEBUG, "findClass(name={0})", name);
         checkStatus(LifeCycleStatus.RUNNING);
 
+        // (1) Permission to define this class when using a SecurityManager
+        if (packageDefinitionSecurityEnabled) {
+            int i = name.lastIndexOf('.');
+            if (i >= 0) {
+                try {
+                    SECURITY_MANAGER.checkPackageDefinition(name.substring(0, i));
+                } catch (Exception se) {
+                    throw new ClassNotFoundException(name, se);
+                }
+            }
+        }
+
         // Ask our superclass to locate this class, if possible
         // (throws ClassNotFoundException if it is not found)
         Class<?> clazz = null;
@@ -481,6 +607,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
                 }
             } catch (UnsupportedClassVersionError ucve) {
                 throw new UnsupportedClassVersionError(getString(UNSUPPORTED_VERSION, name, getJavaVersion()));
+            } catch (AccessControlException ace) {
+                throw new ClassNotFoundException(name, ace);
             } catch (RuntimeException | Error e) {
                 throw e;
             } catch (Throwable t) {
@@ -489,6 +617,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
             if (clazz == null && hasExternalRepositories) {
                 try {
                     clazz = super.findClass(name);
+                } catch (AccessControlException ace) {
+                    throw new ClassNotFoundException(name, ace);
                 } catch (RuntimeException e) {
                     throw e;
                 }
@@ -762,6 +892,20 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
                 return resolveIfRequired(resolve, clazz);
             }
 
+            // (0.5) Permission to access this class when using a SecurityManager
+            if (packageDefinitionSecurityEnabled) {
+                int i = name.lastIndexOf('.');
+                if (i >= 0) {
+                    try {
+                        SECURITY_MANAGER.checkPackageAccess(name.substring(0, i));
+                    } catch (SecurityException se) {
+                        String error = getString(LogFacade.SECURITY_EXCEPTION, name);
+                        LOG.log(INFO, error, se);
+                        throw new ClassNotFoundException(error, se);
+                    }
+                }
+            }
+
             final ClassLoader delegateLoader = getDelegateClassLoader();
             boolean delegateLoad = isDelegateFirstClass(name);
 
@@ -843,6 +987,15 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
             pc.add(p);
         }
 
+        // get the declared and EE perms
+        PermissionCollection pc1 = permissionsHolder.getPermissions(codeSource, null);
+        if (pc1 != null) {
+            Enumeration<Permission> dperms = pc1.elements();
+            while (dperms.hasMoreElements()) {
+                Permission p = dperms.nextElement();
+                pc.add(p);
+            }
+        }
         PermissionCollection tmpPc = loaderPC.putIfAbsent(codeUrl, pc);
         return tmpPc == null ? pc : tmpPc;
     }
@@ -999,6 +1152,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
         repositoryManager.close();
 
         permissionList.clear();
+        permissionsHolder = null;
         loaderPC.clear();
         jarFiles.close();
 
@@ -1021,6 +1175,8 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
         sb.append(", context=").append(contextName);
         sb.append(", status=").append(status);
         sb.append(", antiJARLocking=").append(antiJARLocking);
+        sb.append(", securityManager=").append(SECURITY_MANAGER != null);
+        sb.append(", packageDefinitionSecurityEnabled=").append(packageDefinitionSecurityEnabled);
         sb.append(", repositories=").append(repositoryManager);
         sb.append(", notFound.size=").append(notFoundResources.size());
         sb.append(", pathTimestamps.size=").append(pathTimestamps.size());
@@ -1030,7 +1186,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
     }
 
 
-    @Override
     public void preDestroy() {
         LOG.log(TRACE, "preDestroy()");
         try {
@@ -1099,6 +1254,21 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
                 }
             }
 
+            if (SECURITY_MANAGER != null) {
+                // Checking sealing
+                if (pkg != null) {
+                    final boolean sealCheck;
+                    if (pkg.isSealed()) {
+                        sealCheck = pkg.isSealed(entry.codeBase);
+                    } else {
+                        sealCheck = entry.manifest == null || !isPackageSealed(packageName, entry.manifest);
+                    }
+                    if (!sealCheck) {
+                        throw new SecurityException(
+                            "Sealing violation loading " + name + ": Package " + packageName + " is sealed.");
+                    }
+                }
+            }
             return entry;
         }
     }
@@ -1191,7 +1361,13 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
 
 
     private ResourceEntry toResourceEntry(String name, RepositoryResource repoResource, ResourceAttributes attributes) {
-        final ResourceEntry entry = new ResourceEntry(toURL(repoResource.file));
+        final ResourceEntry entry;
+        if (SECURITY_MANAGER == null) {
+            entry = new ResourceEntry(toURL(repoResource.file));
+        } else {
+            PrivilegedAction<ResourceEntry> action = () -> new ResourceEntry(toURL(repoResource.file));
+            entry = AccessController.doPrivileged(action);
+        }
         entry.lastModified = attributes.getLastModified();
         pathTimestamps.add(new PathTimestamp(repoResource.name, entry.lastModified));
         return entry;
@@ -1200,6 +1376,26 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
 
     private ResourceAttributes getResourceAttributes(String fullPath) throws NamingException {
         return (ResourceAttributes) jndiResources.getAttributes(fullPath);
+    }
+
+
+    /**
+     * @return true if the specified package name is sealed according to the given manifest.
+     */
+    private boolean isPackageSealed(String name, Manifest man) {
+        String path = name.replace('.', '/') + '/';
+        Attributes attr = man.getAttributes(path);
+        String sealed = null;
+        if (attr != null) {
+            sealed = attr.getValue(Name.SEALED);
+        }
+        if (sealed == null) {
+            attr = man.getMainAttributes();
+            if (attr != null) {
+                sealed = attr.getValue(Name.SEALED);
+            }
+        }
+        return "true".equalsIgnoreCase(sealed);
     }
 
 
@@ -1218,7 +1414,6 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
                 return new ByteArrayInputStream(entry.binaryContent);
             }
         }
-
         return null;
     }
 
@@ -1237,6 +1432,25 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
         }
         return null;
     }
+
+
+    /**
+     * Refresh the system policy file, to pick up eventual changes.
+     */
+    private void refreshPolicy() {
+        try {
+            // The policy file may have been modified to adjust
+            // permissions, so we're reloading it when loading or
+            // reloading a Context
+            Policy policy = Policy.getPolicy();
+            policy.refresh();
+        } catch (AccessControlException e) {
+            // Some policy files may restrict this, even for the core,
+            // so this exception is ignored
+            LOG.log(TRACE, "The policy refresh failed.", e);
+        }
+    }
+
 
     /**
      * Validate a classname. As per SRV.9.7.2, we must restrict loading of
@@ -1303,7 +1517,11 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
 
 
     private String getJavaVersion() {
-        return System.getProperty("java.version");
+        if (SECURITY_MANAGER == null) {
+            return System.getProperty("java.version");
+        }
+        PrivilegedAction<String> action = () -> System.getProperty("java.version");
+        return AccessController.doPrivileged(action);
     }
 
 

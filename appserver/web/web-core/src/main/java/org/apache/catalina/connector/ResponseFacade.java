@@ -20,20 +20,26 @@ package org.apache.catalina.connector;
 
 import static org.apache.catalina.LogFacade.NULL_RESPONSE_OBJECT;
 
-import jakarta.servlet.ServletOutputStream;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.UnsupportedCharsetException;
+import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Supplier;
+
 import org.apache.catalina.LogFacade;
+import org.apache.catalina.security.SecurityUtil;
+
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Facade class that wraps a Coyote response object. All methods are delegated to the wrapped response.
@@ -180,7 +186,11 @@ public class ResponseFacade implements HttpServletResponse {
             return;
         }
 
-        response.setContentType(type);
+        if (SecurityUtil.isPackageProtectionEnabled()) {
+            AccessController.doPrivileged(new SetContentTypePrivilegedAction(type));
+        } else {
+            response.setContentType(type);
+        }
     }
 
     @Override
@@ -206,8 +216,28 @@ public class ResponseFacade implements HttpServletResponse {
             return;
         }
 
-        response.setAppCommitted(true);
-        response.flushBuffer();
+        if (SecurityUtil.isPackageProtectionEnabled()) {
+            try {
+                AccessController.doPrivileged(new PrivilegedExceptionAction<Void>() {
+
+                    @Override
+                    public Void run() throws IOException {
+                        response.setAppCommitted(true);
+
+                        response.flushBuffer();
+                        return null;
+                    }
+                });
+            } catch (PrivilegedActionException e) {
+                Exception ex = e.getException();
+                if (ex instanceof IOException) {
+                    throw (IOException) ex;
+                }
+            }
+        } else {
+            response.setAppCommitted(true);
+            response.flushBuffer();
+        }
     }
 
     @Override
@@ -453,12 +483,6 @@ public class ResponseFacade implements HttpServletResponse {
         if (isCommitted()) {
             throw new IllegalStateException();
         }
-    }
-
-    @Override
-    public void sendRedirect(String location, int sc, boolean clearBuffer) throws IOException {
-        // TODO TODO SERVLET 6.1
-        // TODO Auto-generated method stub
     }
 
 }

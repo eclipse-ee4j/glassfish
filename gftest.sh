@@ -17,7 +17,7 @@
 #!/bin/bash -e
 
 export WORKSPACE=`pwd`
-export S1AS_HOME="${WORKSPACE}/glassfish8/glassfish"
+export S1AS_HOME="${WORKSPACE}/glassfish7/glassfish"
 export APS_HOME="${WORKSPACE}/appserver/tests/appserv-tests"
 export TEST_RUN_LOG="${WORKSPACE}/tests-run.log"
 export LANG="en_US.UTF-8"

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +17,10 @@
 
 package org.glassfish.flashlight.impl.core;
 
+/**
+ * @author Mahesh Kannan
+ *         Date: Jul 20, 2008
+ */
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.io.FileUtils;
 
@@ -36,12 +40,8 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 
-import static org.objectweb.asm.Opcodes.V17;
+import static org.objectweb.asm.Opcodes.V11;
 
-/**
- * @author Mahesh Kannan
- *         Date: Jul 20, 2008
- */
 public class ProviderImplGenerator {
     private static final Logger logger = FlashlightLoggerInfo.getLogger();
 
@@ -76,7 +76,7 @@ public class ProviderImplGenerator {
 
         int access = Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL;
         String[] interfaces = new String[]{providerClazz.getName().replace('.', '/')};
-        cw.visit(V17, access, generatedClassName, null, "java/lang/Object", interfaces);
+        cw.visit(V11, access, generatedClassName, null, "java/lang/Object", interfaces);
 
 
         for (FlashlightProbe probe : provider.getProbes()) {

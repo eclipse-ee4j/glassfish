@@ -30,6 +30,7 @@ import jakarta.persistence.PersistenceUnit;
 import com.acme.ejb.api.Hello;
 import com.acme.util.TestDatabase;
 import com.acme.util.TestDependentBeanInLib;
+import com.acme.util.TestManagedBean;
 import com.acme.util.TestSessionScopedBeanInLib;
 import com.acme.util.UtilInLibDir;
 
@@ -46,10 +47,14 @@ public class HelloSingleton implements Hello {
     private EntityManagerFactory emf;
 
     @Inject
+    TestManagedBean tmb;
+
+    @Inject
     TestDependentBeanInLib tdbil;
 
     @Inject
     TestSessionScopedBeanInLib tssil;
+
 
     @PostConstruct
     private void init() {
@@ -66,13 +71,9 @@ public class HelloSingleton implements Hello {
     public String hello() {
         System.out.println("HelloSingleton::hello()");
         String res = testEMF();
-        if (!res.equals(""))
-            return res;
-        
+        if (!res.equals("")) return res;
         res = testInjectionOfBeansInLibDir();
-        if (!res.equals(""))
-            return res;
-        
+        if (!res.equals("")) return res;
         UtilInLibDir uilb = new UtilInLibDir();
         if (!(uilb.add(1, 2) == 3)) {
             return "Can't use utility class in library directory";
@@ -81,22 +82,15 @@ public class HelloSingleton implements Hello {
     }
 
     private String testInjectionOfBeansInLibDir() {
-        if (tdbil == null)
-            return "Injection of Dependent Bean in lib into an EJB in that ear failed";
-        
-        if (tssil == null)
-            return "Injection of SessionScoped Bean in lib into an EJB in that ear failed";
-        
+        if (tmb == null) return "Injection of Managed Bean in lib into an EJB in that ear failed";
+        if (tdbil == null) return "Injection of Dependent Bean in lib into an EJB in that ear failed";
+        if (tssil == null) return "Injection of SessionScoped Bean in lib into an EJB in that ear failed";
         return "";
     }
 
     private String testEMF() {
-        if (emf == null)
-            return "EMF injection failed, is null in Singleton EJB";
-        
-        if (emf.createEntityManager() == null)
-            return "Usage of EMF failed in Singleton EJB";
-        
+        if (emf == null) return "EMF injection failed, is null in Singleton EJB";
+        if (emf.createEntityManager() == null) return "Usage of EMF failed in Singleton EJB";
         return "";
     }
 

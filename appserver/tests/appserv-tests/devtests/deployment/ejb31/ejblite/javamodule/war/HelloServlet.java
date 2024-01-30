@@ -33,17 +33,17 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.annotation.Resource;
 import javax.naming.*;
 
-@WebServlet(urlPatterns = "/HelloServlet", loadOnStartup = 1)
-@EJB(name = "java:module/ES1", beanName = "SingletonBean", beanInterface = SingletonBean.class)
+@WebServlet(urlPatterns="/HelloServlet", loadOnStartup=1)
+@EJB(name="java:module/ES1", beanName="SingletonBean", beanInterface=SingletonBean.class)
 public class HelloServlet extends HttpServlet {
 
-    @EJB(name = "java:module/env/ES2")
+    @EJB(name="java:module/env/ES2")
     private SingletonBean simpleSingleton;
 
-    @EJB(name = "java:app/EL1")
+    @EJB(name="java:app/EL1")
     private StatelessBean simpleStateless;
 
-    @EJB(name = "java:app/env/EL2")
+    @EJB(name="java:app/env/EL2")
     private StatelessBean simpleStateless2;
 
     private SingletonBean sb2;
@@ -55,6 +55,19 @@ public class HelloServlet extends HttpServlet {
     private StatelessBean slsb3;
     private StatelessBean slsb4;
     private StatelessBean slsb5;
+
+    @Resource
+    private FooManagedBean foo;
+
+    @Resource(name="foo2ref", mappedName="java:module/foomanagedbean")
+    private FooManagedBean foo2;
+
+    @Resource(mappedName="java:app/ejb-ejb31-ejblite-javamodule-web/foomanagedbean")
+    private FooManagedBean foo3;
+
+    private FooManagedBean foo4;
+    private FooManagedBean foo5;
+    private FooManagedBean foo6;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -77,23 +90,37 @@ public class HelloServlet extends HttpServlet {
             slsb4 = (StatelessBean) ic.lookup("java:app/EL1");
             slsb5 = (StatelessBean) ic.lookup("java:app/env/EL2");
 
-            System.out.println("My AppName = " + ic.lookup("java:app/AppName"));
+            foo4 = (FooManagedBean)
+                ic.lookup("java:module/foomanagedbean");
 
-            System.out.println("My ModuleName = " + ic.lookup("java:module/ModuleName"));
+            foo5 = (FooManagedBean)
+                ic.lookup("java:app/ejb-ejb31-ejblite-javamodule-web/foomanagedbean");
 
-        } catch (Exception e) {
+            foo6 = (FooManagedBean)
+                ic.lookup("java:comp/env/foo2ref");
+
+            System.out.println("My AppName = " +
+                               ic.lookup("java:app/AppName"));
+
+            System.out.println("My ModuleName = " +
+                               ic.lookup("java:module/ModuleName"));
+
+        } catch(Exception e) {
             e.printStackTrace();
             throw new ServletException(e);
         }
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+    throws ServletException, IOException {
 
         resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
 
         System.out.println("In HelloServlet::doGet");
+
+        foo.foobar("foobar");
 
         simpleSingleton.hello();
 
@@ -118,13 +145,22 @@ public class HelloServlet extends HttpServlet {
 
         slsb5.hello();
 
+        foo.foo();
+        foo.foobar("foobar");
+        foo2.foo();
+        foo3.foo();
+        foo4.foo();
+        foo5.foo();
+        foo6.foo();
+
         out.println("<HTML> <HEAD> <TITLE> JMS Servlet Output </TITLE> </HEAD> <BODY BGCOLOR=white>");
-        out.println("<CENTER> <FONT size=+1 COLOR=blue>DatabaseServelt :: All information I can give </FONT> </CENTER> <p> ");
-        out.println("<FONT size=+1 color=red> Context Path :  </FONT> " + req.getContextPath() + "<br>");
-        out.println("<FONT size=+1 color=red> Servlet Path :  </FONT> " + req.getServletPath() + "<br>");
-        out.println("<FONT size=+1 color=red> Path Info :  </FONT> " + req.getPathInfo() + "<br>");
-        out.println("</BODY> </HTML> ");
+            out.println("<CENTER> <FONT size=+1 COLOR=blue>DatabaseServelt :: All information I can give </FONT> </CENTER> <p> " );
+            out.println("<FONT size=+1 color=red> Context Path :  </FONT> " + req.getContextPath() + "<br>" );
+            out.println("<FONT size=+1 color=red> Servlet Path :  </FONT> " + req.getServletPath() + "<br>" );
+            out.println("<FONT size=+1 color=red> Path Info :  </FONT> " + req.getPathInfo() + "<br>" );
+            out.println("</BODY> </HTML> ");
 
     }
+
 
 }

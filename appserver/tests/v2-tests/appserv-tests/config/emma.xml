@@ -179,7 +179,7 @@
     <!-- restore original EJB jar files -->
     <unzip src="${glassfish-zip-file}" dest="${tmp.gf.exploded.dir}"/>
     <copy todir="${glassfish.server.dir}/modules" overwrite="true">
-      <fileset dir="${tmp.gf.exploded.dir}/glassfish8/glassfish/modules/">
+      <fileset dir="${tmp.gf.exploded.dir}/glassfish7/glassfish/modules/">
         <include name="**/*.jar"/>
       </fileset>
     </copy>

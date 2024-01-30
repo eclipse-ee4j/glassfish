@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.main.distributions</groupId>
         <artifactId>distributions</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>7.0.13-SNAPSHOT</version>
     </parent>
 
     <artifactId>docker</artifactId>
@@ -103,7 +103,7 @@
                                                 <includes>
                                                     <include>run-glassfish.sh</include>
                                                 </includes>
-                                                <outputDirectory>glassfish8/bin</outputDirectory>
+                                                <outputDirectory>glassfish7/bin</outputDirectory>
                                                 <fileMode>0770</fileMode>
                                             </fileSet>
                                         </fileSets>

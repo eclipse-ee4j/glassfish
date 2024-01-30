@@ -19,5 +19,7 @@ package com.acme;
 import jakarta.ejb.Remote;
 
 public interface Hello {
-    String hello();
+
+    public String hello();
+
 }

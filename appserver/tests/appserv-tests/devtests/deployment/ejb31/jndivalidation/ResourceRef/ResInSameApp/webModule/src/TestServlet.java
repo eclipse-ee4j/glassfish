@@ -20,6 +20,9 @@ import jakarta.annotation.Resource;
 import jakarta.jms.Queue;
 
 public class TestServlet {
+    @Resource
+    BarManagedBean bmb;
+
     @Resource(name="servletQueue", lookup="jms/deployment_jndivalidation_queue")
     Queue q;
 }

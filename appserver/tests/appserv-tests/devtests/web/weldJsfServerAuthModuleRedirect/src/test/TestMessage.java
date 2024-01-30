@@ -19,10 +19,12 @@ package test;
 import java.io.Serializable;
 
 import jakarta.enterprise.context.SessionScoped;
+//import jakarta.faces.bean.ManagedBean;
 import jakarta.inject.Named;
 
 @Named
 @SessionScoped
+//@ManagedBean
 public class TestMessage implements Serializable {
     private static final long serialVersionUID = 1L;
 

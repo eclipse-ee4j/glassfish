@@ -62,6 +62,8 @@ import org.jboss.weld.lite.extension.translator.LiteExtensionTranslator;
 import static com.sun.enterprise.util.Utility.isAnyEmpty;
 import static com.sun.enterprise.util.Utility.isAnyNull;
 import static com.sun.enterprise.util.Utility.isEmpty;
+import static java.lang.System.getSecurityManager;
+import static java.security.AccessController.doPrivileged;
 import static java.util.Collections.emptyList;
 import static java.util.logging.Level.FINE;
 import static java.util.stream.Collectors.toList;
@@ -270,7 +272,13 @@ public class DeploymentImpl implements CDI11Deployment {
 
         if (!buildExtensions.isEmpty()) {
             try {
-                extensionsList.add(new MetadataImpl<>(new LiteExtensionTranslator(buildExtensions, Thread.currentThread().getContextClassLoader())));
+                LiteExtensionTranslator extension = getSecurityManager() != null ? doPrivileged(new PrivilegedAction<LiteExtensionTranslator>() {
+                    @Override
+                    public LiteExtensionTranslator run() {
+                        return new LiteExtensionTranslator(buildExtensions, Thread.currentThread().getContextClassLoader());
+                    }
+                }) : new LiteExtensionTranslator(buildExtensions, Thread.currentThread().getContextClassLoader());
+                extensionsList.add(new MetadataImpl<>(extension));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -755,7 +763,7 @@ public class DeploymentImpl implements CDI11Deployment {
 
         try {
             // Each appLib in context.getAppLibs is a URI of the form
-            // "file:/glassfish/runtime/trunk/glassfish8/glassfish/domains/domain1/lib/applibs/mylib.jar"
+            // "file:/glassfish/runtime/trunk/glassfish7/glassfish/domains/domain1/lib/applibs/mylib.jar"
             // parentArchiveAppLibs are the app libs in the manifest of the root archive and any embedded
             // archives.
             List<URI> rootArchiveAppLibs = context.getAppLibs();

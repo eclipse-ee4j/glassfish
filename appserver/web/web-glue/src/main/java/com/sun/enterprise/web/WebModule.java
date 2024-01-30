@@ -107,7 +107,6 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.classmodel.reflect.Types;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.security.common.Role;
-import org.glassfish.soteria.servlet.SamRegistrationInstaller;
 import org.glassfish.wasp.servlet.JspServlet;
 import org.glassfish.web.LogFacade;
 import org.glassfish.web.admin.monitor.ServletProbeProvider;
@@ -635,9 +634,6 @@ public class WebModule extends PwcWebModule implements Context {
 
     @Override
     protected void callServletContainerInitializers() throws LifecycleException {
-
-        SamRegistrationInstaller foo = new SamRegistrationInstaller();
-
         super.callServletContainerInitializers();
 
         if (!isJsfApplication() && !contextListeners.isEmpty()) {
@@ -2133,7 +2129,7 @@ public class WebModule extends PwcWebModule implements Context {
         }
 
         if (realm instanceof RealmInitializer) {
-            ((RealmInitializer) realm).initializeRealm(this.getWebBundleDescriptor(), ((VirtualServer) parent).getAuthRealmName());
+            ((RealmInitializer) realm).initializeRealm(this.getWebBundleDescriptor(), false, ((VirtualServer) parent).getAuthRealmName());
             ((RealmInitializer) realm).setVirtualServer(getParent());
             ((RealmInitializer) realm).updateWebSecurityManager();
             setRealm(realm);
@@ -2217,26 +2213,23 @@ class WebServletRegistrationImpl extends ServletRegistrationImpl {
  */
 class DynamicWebServletRegistrationImpl extends DynamicServletRegistrationImpl {
 
-    private final WebBundleDescriptor webBundleDescriptor;
-    private WebComponentDescriptor webComponentDescriptor;
+    private final WebBundleDescriptor wbd;
+    private WebComponentDescriptor wcd;
     private final WebModule webModule;
 
-    private String runAsRoleName;
-    private ServletSecurityElement servletSecurityElement;
+    private String runAsRoleName = null;
+    private ServletSecurityElement servletSecurityElement = null;
 
     public DynamicWebServletRegistrationImpl(StandardWrapper wrapper, WebModule webModule) {
         super(wrapper, webModule);
         this.webModule = webModule;
-
-        webBundleDescriptor = webModule.getWebBundleDescriptor();
-        if (webBundleDescriptor == null) {
+        wbd = webModule.getWebBundleDescriptor();
+        if (wbd == null) {
             throw new IllegalStateException("Missing WebBundleDescriptor for " + getContext().getName());
         }
-
-        webBundleDescriptor.setPolicyModified(true);
-
-        webComponentDescriptor = webBundleDescriptor.getWebComponentByCanonicalName(wrapper.getName());
-        if (webComponentDescriptor == null) {
+        wbd.setPolicyModified(true);
+        wcd = wbd.getWebComponentByCanonicalName(wrapper.getName());
+        if (wcd == null) {
             /*
              * Servlet not present in the WebBundleDescriptor provided by the deployment backend, which means we are dealing with
              * the dynamic registration for a programmtically added Servlet, as opposed to the dynamic registration for a Servlet
@@ -2245,11 +2238,10 @@ class DynamicWebServletRegistrationImpl extends DynamicServletRegistrationImpl {
              * Propagate the new Servlet to the WebBundleDescriptor, so that corresponding security constraints may be calculated by
              * the security subsystem, which uses the WebBundleDescriptor as its input.
              */
-            webComponentDescriptor = new WebComponentDescriptorImpl();
-            webComponentDescriptor.setName(wrapper.getName());
-            webComponentDescriptor.setCanonicalName(wrapper.getName());
-            webBundleDescriptor.addWebComponentDescriptor(webComponentDescriptor);
-
+            wcd = new WebComponentDescriptorImpl();
+            wcd.setName(wrapper.getName());
+            wcd.setCanonicalName(wrapper.getName());
+            wbd.addWebComponentDescriptor(wcd);
             String servletClassName = wrapper.getServletClassName();
             if (servletClassName != null) {
                 Class<? extends Servlet> clazz = wrapper.getServletClass();
@@ -2265,7 +2257,7 @@ class DynamicWebServletRegistrationImpl extends DynamicServletRegistrationImpl {
                     }
                     wrapper.setServletClass(clazz);
                 }
-                processServletAnnotations(clazz, webBundleDescriptor, webComponentDescriptor, wrapper);
+                processServletAnnotations(clazz, wbd, wcd, wrapper);
             } else if (wrapper.getJspFile() == null) {
                 // Should never happen
                 throw new RuntimeException("Programmatic servlet registration without any " + "supporting servlet class or jsp file");
@@ -2283,7 +2275,7 @@ class DynamicWebServletRegistrationImpl extends DynamicServletRegistrationImpl {
              * its input
              */
             for (String urlPattern : urlPatterns) {
-                webComponentDescriptor.addUrlPattern(urlPattern);
+                wcd.addUrlPattern(urlPattern);
             }
         }
         return conflicts;
@@ -2300,8 +2292,8 @@ class DynamicWebServletRegistrationImpl extends DynamicServletRegistrationImpl {
     public Set<String> setServletSecurity(ServletSecurityElement constraint) {
         this.servletSecurityElement = constraint;
 
-        Set<String> conflictUrls = new HashSet<>(webComponentDescriptor.getUrlPatternsSet());
-        conflictUrls.removeAll(ServletSecurityHandler.getUrlPatternsWithoutSecurityConstraint(webComponentDescriptor));
+        Set<String> conflictUrls = new HashSet<>(wcd.getUrlPatternsSet());
+        conflictUrls.removeAll(ServletSecurityHandler.getUrlPatternsWithoutSecurityConstraint(wcd));
         conflictUrls.addAll(super.setServletSecurity(constraint));
         return conflictUrls;
     }
@@ -2316,7 +2308,7 @@ class DynamicWebServletRegistrationImpl extends DynamicServletRegistrationImpl {
         try {
             Class<? extends Servlet> clazz = loadServletClass(className);
             super.setServletClass(clazz);
-            processServletAnnotations(clazz, webBundleDescriptor, webComponentDescriptor, wrapper);
+            processServletAnnotations(clazz, wbd, wcd, wrapper);
         } catch (Exception ex) {
             throw new IllegalArgumentException(ex);
         }
@@ -2328,7 +2320,7 @@ class DynamicWebServletRegistrationImpl extends DynamicServletRegistrationImpl {
     @Override
     protected void setServletClass(Class<? extends Servlet> clazz) {
         super.setServletClass(clazz);
-        processServletAnnotations(clazz, webBundleDescriptor, webComponentDescriptor, wrapper);
+        processServletAnnotations(clazz, wbd, wcd, wrapper);
     }
 
     private void processServletAnnotations(Class<? extends Servlet> clazz, WebBundleDescriptor webBundleDescriptor,
@@ -2359,7 +2351,7 @@ class DynamicWebServletRegistrationImpl extends DynamicServletRegistrationImpl {
         }
 
         // Process RunAs
-        if (webComponentDescriptor.getRunAsIdentity() == null) {
+        if (wcd.getRunAsIdentity() == null) {
             String roleName = runAsRoleName;
             if (roleName == null && clazz.isAnnotationPresent(RunAs.class)) {
                 RunAs runAs = clazz.getAnnotation(RunAs.class);
@@ -2368,10 +2360,10 @@ class DynamicWebServletRegistrationImpl extends DynamicServletRegistrationImpl {
             if (roleName != null) {
                 super.setRunAsRole(roleName);
 
-                webBundleDescriptor.addRole(new Role(roleName));
+                wbd.addRole(new Role(roleName));
                 RunAsIdentityDescriptor runAsDesc = new RunAsIdentityDescriptor();
                 runAsDesc.setRoleName(roleName);
-                webComponentDescriptor.setRunAsIdentity(runAsDesc);
+                wcd.setRunAsIdentity(runAsDesc);
             }
         }
 
@@ -2383,7 +2375,7 @@ class DynamicWebServletRegistrationImpl extends DynamicServletRegistrationImpl {
         }
 
         if (ssElement != null) {
-            webModule.processServletSecurityElement(ssElement, webBundleDescriptor, webComponentDescriptor);
+            webModule.processServletSecurityElement(ssElement, wbd, wcd);
         }
     }
 

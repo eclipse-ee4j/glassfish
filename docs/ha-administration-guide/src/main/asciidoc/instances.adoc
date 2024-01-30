@@ -550,8 +550,8 @@ asadmin> start-instance pmd-i2
 CLI801 Instance is already synchronized
 Waiting for pmd-i2 to start ............
 Successfully started the instance: pmd-i2
-instance Location: /export/glassfish8/glassfish/nodes/sj02/pmd-i2
-Log File: /export/glassfish8/glassfish/nodes/sj02/pmd-i2/logs/server.log
+instance Location: /export/glassfish7/glassfish/nodes/sj02/pmd-i2
+Log File: /export/glassfish7/glassfish/nodes/sj02/pmd-i2/logs/server.log
 Admin Port: 24851
 Command start-local-instance executed successfully.
 The instance, pmd-i2, was started on host sj02.example.com
@@ -874,7 +874,7 @@ These commands are not required to create the instance.
 ----
 $ asadmin --host dashost.example.com list-nodes --long
 NODE NAME          TYPE    NODE HOST         INSTALL DIRECTORY   REFERENCED BY
-localhost-domain1  CONFIG  localhost         /export/glassfish8
+localhost-domain1  CONFIG  localhost         /export/glassfish7
 Command list-nodes executed successfully.
 $ asadmin --host dashost.example.com
 create-local-instance --cluster kuicluster kui-i1
@@ -893,8 +893,8 @@ IIOP_SSL_MUTUALAUTH_PORT=23920
 Command create-local-instance executed successfully.
 $ asadmin --host dashost.example.com list-nodes --long
 NODE NAME          TYPE    NODE HOST         INSTALL DIRECTORY   REFERENCED BY
-localhost-domain1  CONFIG  localhost         /export/glassfish8
-xk01               CONFIG  xk01.example.com  /export/glassfish8  kui-i1
+localhost-domain1  CONFIG  localhost         /export/glassfish7
+xk01               CONFIG  xk01.example.com  /export/glassfish7  kui-i1
 Command list-nodes executed successfully.
 ----
 
@@ -1081,8 +1081,8 @@ on the node `sj01`.
 $ asadmin start-local-instance --node sj01 yml-i1
 Waiting for yml-i1 to start ...............
 Successfully started the instance: yml-i1
-instance Location: /export/glassfish8/glassfish/nodes/sj01/yml-i1
-Log File: /export/glassfish8/glassfish/nodes/sj01/yml-i1/logs/server.log
+instance Location: /export/glassfish7/glassfish/nodes/sj01/yml-i1
+Log File: /export/glassfish7/glassfish/nodes/sj01/yml-i1/logs/server.log
 Admin Port: 24849
 Command start-local-instance executed successfully.
 ----
@@ -1476,8 +1476,8 @@ $ asadmin start-local-instance --node sj01 --sync full yml-i1
 Removing all cached state for instance yml-i1.
 Waiting for yml-i1 to start ...............
 Successfully started the instance: yml-i1
-instance Location: /export/glassfish8/glassfish/nodes/sj01/yml-i1
-Log File: /export/glassfish8/glassfish/nodes/sj01/yml-i1/logs/server.log
+instance Location: /export/glassfish7/glassfish/nodes/sj01/yml-i1
+Log File: /export/glassfish7/glassfish/nodes/sj01/yml-i1/logs/server.log
 Admin Port: 24849
 Command start-local-instance executed successfully.
 ----
@@ -1731,7 +1731,7 @@ resynchronizes an instance with the DAS.
 
 Put the files in a subdirectory under the domain directory that is not
 defined by {productName}, for example,
-`/export/glassfish8/glassfish/domains/domain1/myapp/myfile`.
+`/export/glassfish7/glassfish/domains/domain1/myapp/myfile`.
 
 [[to-resynchronize-an-instance-and-the-das-offline]]
 

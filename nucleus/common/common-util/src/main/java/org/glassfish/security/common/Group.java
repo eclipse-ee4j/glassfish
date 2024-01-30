@@ -64,13 +64,17 @@ public class Group implements Principal, Serializable {
         return false;
     }
 
+
     @Override
     public int hashCode() {
         return getName().hashCode();
     }
 
+    /**
+     * @return same as {@link #getName()}
+     */
     @Override
     public String toString() {
-        return "Group[" + this.name + "]";
+        return getName();
     }
 }

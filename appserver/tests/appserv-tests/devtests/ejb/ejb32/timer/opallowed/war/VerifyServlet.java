@@ -28,29 +28,31 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.annotation.WebServlet;
 
-@WebServlet(urlPatterns = "/VerifyServlet", loadOnStartup = 1)
+@WebServlet(urlPatterns="/VerifyServlet", loadOnStartup=1)
 public class VerifyServlet extends HttpServlet {
 
-    @EJB
-    private SingletonTimeoutLocal sgltTimerBeanLocal;
-    
-    @EJB
-    private SingletonTimeout sgltTimerBean;
+    @EJB private SingletonTimeoutLocal sgltTimerBeanLocal;
+    @EJB private SingletonTimeout sgltTimerBean;
+
+    @Resource(lookup = "java:module/MngBean") MngTimeoutBean mngBean;
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+    throws ServletException, IOException {
         String type = req.getQueryString();
 
         PrintWriter out = resp.getWriter();
-        resp.setContentType("text/html");
+            resp.setContentType("text/html");
 
         out.println("<html>");
-        out.println("<head>");
-        out.println("<title>Servlet VerifyServlet</title>");
-        out.println("</head>");
-        out.println("<body>");
+            out.println("<head>");
+            out.println("<title>Servlet VerifyServlet</title>");
+            out.println("</head>");
+            out.println("<body>");
         try {
             if ("managedbean".equals(type)) {
+                mngBean.cancelTimer();
+                out.println("RESULT: PASS" );
             } else {
                 // this is to test the APIs allowed to be invoked
                 // the return values are not interested
@@ -66,15 +68,15 @@ public class VerifyServlet extends HttpServlet {
                 t.cancel();
 
                 // this is blocked by JIRA19546 now
-                // boolean remoteSuc = testRemoteInterface(out);
+                //boolean remoteSuc = testRemoteInterface(out);
                 boolean remoteSuc = true;
-                if (remoteSuc) {
-                    out.println("RESULT: PASS");
+                if(remoteSuc) {
+                    out.println("RESULT: PASS" );
                 } else {
-                    out.println("RESULT: FAIL");
+                    out.println("RESULT: FAIL" );
                 }
             }
-        } catch (Throwable e) {
+        } catch(Throwable e){
             out.println("got exception");
             out.println(e);
             e.printStackTrace();
@@ -84,7 +86,9 @@ public class VerifyServlet extends HttpServlet {
 
             out.close();
             out.flush();
+
         }
+
     }
 
     private boolean testRemoteInterface(PrintWriter out) {
@@ -94,7 +98,6 @@ public class VerifyServlet extends HttpServlet {
             return false;
         } catch (Exception e) {
         }
-        
         return true;
     }
 

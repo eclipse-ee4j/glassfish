@@ -94,7 +94,7 @@ server.
 [source]
 ----
 asadmin> collect-log-files
-Created Zip file under /space/gf/glassfish8/glassfish/domains/domain1/\
+Created Zip file under /space/gf/glassfish7/glassfish/domains/domain1/\
 collected-logs/log_2021-12-15_15-46-23.zip.
 Command collect-log-files executed successfully.
 ----
@@ -111,7 +111,7 @@ named `cluster1` and the two server instances running in the cluster.
 asadmin> collect-log-files --target cluster1
 Log files are downloaded for instance1.
 Log files are downloaded for instance2.
-Created Zip file under /space/gfv/glassfish8/glassfish/domains/domain1/\
+Created Zip file under /space/gfv/glassfish7/glassfish/domains/domain1/\
 collected-logs/log_2021-12-15_15-54-06.zip.
 Command collect-log-files executed successfully.
 ----

@@ -16,6 +16,9 @@
 
 package com.acme;
 
+
 public interface Foo {
-    void foo();
+
+    public void foo();
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -135,7 +135,7 @@ public class WriteableView implements InvocationHandler, Transactor, ConfigView 
         }
 
         if (method.isDefault()) {
-            return InvocationHandler.invokeDefault(proxy, method, args);
+            return ProxyHelper.invokeDefault(proxy, method, args);
         }
 
         ConfigModel.Property property = bean.model.toProperty(method);

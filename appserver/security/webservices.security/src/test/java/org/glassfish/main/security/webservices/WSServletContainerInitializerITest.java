@@ -22,7 +22,7 @@ import jakarta.servlet.ServletContainerInitializer;
 
 import java.util.ServiceLoader;
 import java.util.Set;
-import org.glassfish.soteria.servlet.SamRegistrationInstaller;
+
 import org.glassfish.sse.impl.ServerSentEventServletContainerInitializer;
 import org.glassfish.wasp.runtime.TldScanner;
 import org.junit.jupiter.api.Test;
@@ -44,8 +44,7 @@ public class WSServletContainerInitializerITest {
         assertThat(initializers, containsInAnyOrder(
             instanceOf(WSServletContainerInitializer.class),
             instanceOf(ServerSentEventServletContainerInitializer.class),
-            instanceOf(TldScanner.class),
-            instanceOf(SamRegistrationInstaller.class)
+            instanceOf(TldScanner.class)
         ));
     }
 }

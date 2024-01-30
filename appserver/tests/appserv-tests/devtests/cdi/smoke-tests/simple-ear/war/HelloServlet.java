@@ -32,18 +32,19 @@ import javax.naming.*;
 @EJB(name = "java:module/m1", beanName = "HelloSingleton", beanInterface = Hello.class)
 public class HelloServlet extends HttpServlet {
 
+    @Resource(mappedName = "java:module/foobarmanagedbean")
+    private FooBarManagedBean fbmb;
+    @Resource
+    private FooBarManagedBean fbmb2;
+
     @EJB(name = "java:module/env/m2")
     private Hello m1;
-
     @EJB(name = "java:app/a1")
     private HelloRemote a1;
-
     @EJB(name = "java:app/env/a2")
     private HelloRemote a2;
-
     @Resource(name = "java:app/env/myString")
     protected String myString;
-
     private Hello singleton1;
     private Hello singleton2;
     private Hello singleton3;
@@ -51,6 +52,18 @@ public class HelloServlet extends HttpServlet {
     private Hello singleton5;
     private HelloRemote stateless1;
     private HelloRemote stateless2;
+
+    @Resource
+    private Foo2ManagedBean foo;
+    @Resource(name = "foo2ref", mappedName = "java:module/somemanagedbean")
+    private Foo2ManagedBean foo2;
+    @Resource(name = "foo3ref", mappedName = "java:app/cdi-full-ear-ejb/somemanagedbean")
+    private Foo foo3;
+    private Foo2ManagedBean foo4;
+    private Foo2ManagedBean foo5;
+    private Foo foo6;
+    private Foo2ManagedBean foo7;
+    private Foo foo8;
 
     private String msg = "";
 
@@ -68,9 +81,13 @@ public class HelloServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
         System.out.println("In HelloServlet::doGet");
         resp.setContentType("text/html");
+        checkForNull(foo, "@Resource lookup of ManagedBean failed");
+        checkForNull(foo2, "@Resource lookup of module-level ManagedBean failed");
+        checkForNull(foo3, "@Resource lookup of app-level ManagedBean through a super-interface failed");
 
         PrintWriter out = resp.getWriter();
         try {
@@ -91,6 +108,19 @@ public class HelloServlet extends HttpServlet {
                 System.out.println("binding : " + bindings.next().getName());
             }
 
+
+            foo4 = (Foo2ManagedBean) ic.lookup("java:module/somemanagedbean");
+            checkForNull(foo4, "programmatic lookup of module-level managedbean failed");
+            foo5 = (Foo2ManagedBean) ic.lookup("java:app/" + moduleName
+                    + "/somemanagedbean");
+            checkForNull(foo5, "programmatic lookup of module-level managedbean through application context failed");
+            foo6 = (Foo) ic.lookup("java:app/cdi-full-ear-ejb/somemanagedbean");
+            checkForNull(foo6, "programmatic lookup of application-level managedbean failed");
+            foo7 = (Foo2ManagedBean) ic.lookup("java:comp/env/foo2ref");
+            checkForNull(foo7, "programmatic lookup of module-level managedbean through a component reference failed");
+            foo8 = (Foo) ic.lookup("java:comp/env/foo3ref");
+            checkForNull(foo8, "programmatic lookup of module-level managedbean through a component reference failed");
+
             singleton1 = (Hello) ic.lookup("java:module/m1");
             checkForNull(singleton1, "programmatic lookup of module-level singleton EJB failed");
 
@@ -104,7 +134,6 @@ public class HelloServlet extends HttpServlet {
             // lookup some java:app defined by ejb-jar
             singleton4 = (Hello) ic.lookup("java:app/env/AS1");
             checkForNull(singleton4, "programmatic lookup of module-level singleton EJB through EJB name failed");
-
             // global dependency
             singleton5 = (Hello) ic.lookup("java:global/GS1");
             checkForNull(singleton5, "programmatic lookup of singleton EJB through global name failed");
@@ -112,9 +141,13 @@ public class HelloServlet extends HttpServlet {
             stateless1 = (HelloRemote) ic.lookup("java:app/env/AS2");
             checkForNull(stateless1, "programmatic lookup of app-level stateless EJB failed");
 
-            System.out.println("My AppName = " + ic.lookup("java:app/AppName"));
+            System.out.println("My AppName = "
+                    + ic.lookup("java:app/AppName"));
 
-            System.out.println("My ModuleName = " + ic.lookup("java:module/ModuleName"));
+            System.out.println("My ModuleName = "
+                    + ic.lookup("java:module/ModuleName"));
+
+
 
             try {
                 org.omg.CORBA.ORB orb = (org.omg.CORBA.ORB) ic.lookup("java:module/MORB1");
@@ -129,6 +162,16 @@ public class HelloServlet extends HttpServlet {
             e.printStackTrace();
         }
 
+        foo.foo();
+        foo2.foo();
+        foo3.foo();
+
+        foo4.foo();
+        foo5.foo();
+        foo6.foo();
+        foo7.foo();
+        foo8.foo();
+
         m1.hello();
         a1.hello();
         a2.hello();
@@ -142,10 +185,10 @@ public class HelloServlet extends HttpServlet {
         stateless2.hello();
 
         out.println(msg);
+
     }
 
-    protected void checkForNull(Object o, String errorMessage) {
-        if (o == null)
-            msg += " " + errorMessage;
+    protected void checkForNull(Object o, String errorMessage){
+        if (o == null) msg += " " + errorMessage;
     }
 }

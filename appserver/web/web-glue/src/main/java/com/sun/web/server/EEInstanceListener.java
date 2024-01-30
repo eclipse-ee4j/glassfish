@@ -171,6 +171,12 @@ public final class EEInstanceListener implements InstanceListener {
                 if (principal != null && principal == basePrincipal && principal.getClass().getName().equals(WEB_PRINCIPAL_CLASS)) {
                     securityContext.setSecurityContextWithPrincipal(principal);
                 } else if (principal != basePrincipal && principal != getCurrentCallerPrincipal()) {
+
+                    // The wrapper has overridden getUserPrincipal
+                    // reject the request if the wrapper does not have
+                    // the necessary permission.
+
+                    checkObjectForDoAsPermission(httpServletRequest);
                     securityContext.setSecurityContextWithPrincipal(principal);
                 }
             }
@@ -250,6 +256,21 @@ public final class EEInstanceListener implements InstanceListener {
         }
 
         return currentSecurityContext.getCallerPrincipal();
+    }
+
+    private static void checkObjectForDoAsPermission(final Object o) throws AccessControlException {
+        if (System.getSecurityManager() != null) {
+            AccessController.doPrivileged(new PrivilegedAction<Void>() {
+                @Override
+                public Void run() {
+                    if (!getPolicy().implies(o.getClass().getProtectionDomain(), doAsPrivilegedPerm)) {
+                        throw new AccessControlException("permission required to override getUserPrincipal", doAsPrivilegedPerm);
+                    }
+
+                    return null;
+                }
+            });
+        }
     }
 
     private void handleAfterEvent(InstanceEvent event, InstanceEvent.EventType eventType) {

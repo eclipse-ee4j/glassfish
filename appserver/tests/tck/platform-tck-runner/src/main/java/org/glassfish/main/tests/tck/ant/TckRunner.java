@@ -146,11 +146,11 @@ public class TckRunner {
         Path viPath = cfg.getTargetDir().toPath().resolve("vi");
 
         // We don't care about the result here
-        startBash(viPath.resolve(Path.of("glassfish8", "bin", "asadmin")) + " stop-database").waitFor(1, MINUTES);
-        startBash(viPath.resolve(Path.of("glassfish8", "bin", "asadmin")) + " stop-domain").waitFor(1, MINUTES);
-        startBash(riPath.resolve(Path.of("glassfish8", "bin", "asadmin")) + " stop-domain").waitFor(1, MINUTES);
+        startBash(viPath.resolve(Path.of("glassfish7", "bin", "asadmin")) + " stop-database").waitFor(1, MINUTES);
+        startBash(viPath.resolve(Path.of("glassfish7", "bin", "asadmin")) + " stop-domain").waitFor(1, MINUTES);
+        startBash(riPath.resolve(Path.of("glassfish7", "bin", "asadmin")) + " stop-domain").waitFor(1, MINUTES);
 
-        Path derbyDir = viPath.resolve(Path.of("glassfish8", "javadb"));
+        Path derbyDir = viPath.resolve(Path.of("glassfish7", "javadb"));
         startBash(cfg.getJdkDirectory().toPath().resolve(Path.of("bin", "java"))
             + " -Dderby.system.home=" + derbyDir.resolve("databases")
             + " -classpath " + derbyDir.resolve(Path.of("lib", "derbynet.jar"))
@@ -212,8 +212,8 @@ public class TckRunner {
         env.put("TS_HOME", cfg.getJakartaeeDir().getAbsolutePath());
         env.put("GF_BUNDLE_ZIP", this.glassfishZip.getAbsolutePath());
         env.put("GF_VI_BUNDLE_ZIP", this.glassfishZip.getAbsolutePath());
-        env.put("GF_HOME_RI", cfg.getTargetDir().getAbsolutePath() + "/ri/glassfish8");
-        env.put("GF_HOME_VI", cfg.getTargetDir().getAbsolutePath() + "/vi/glassfish8");
+        env.put("GF_HOME_RI", cfg.getTargetDir().getAbsolutePath() + "/ri/glassfish7");
+        env.put("GF_HOME_VI", cfg.getTargetDir().getAbsolutePath() + "/vi/glassfish7");
         env.put("GF_LOGGING_CFG_RI", cfg.getServerLoggingProperties().getAbsolutePath());
         env.put("GF_LOGGING_CFG_VI", cfg.getServerLoggingProperties().getAbsolutePath());
         env.put("DATABASE", "JavaDB");

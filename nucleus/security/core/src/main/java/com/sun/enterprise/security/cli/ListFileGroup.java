@@ -43,7 +43,6 @@ import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Configs;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.security.auth.realm.GlassFishUserStore;
 import com.sun.enterprise.security.auth.realm.RealmsManager;
 import com.sun.enterprise.security.auth.realm.exceptions.BadRealmException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
@@ -139,7 +138,7 @@ public class ListFileGroup implements AdminCommand, AdminCommandSecurity.Preauth
         try {
             // Get all users of this file realm. If a username has
             // been passed in through the --name CLI option use that
-            GlassFishUserStore fr = getFileRealm(securityService, fileAuthRealm, report);
+            FileRealm fr = getFileRealm(securityService, fileAuthRealm, report);
 
             if (fr == null) {
                 // the getFileRealm method would have filled

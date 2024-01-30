@@ -58,6 +58,9 @@ public class SingletonBean2 {
     @Inject
     StatelessLocal2 sl2;
 
+    @Resource(lookup = "java:module/FooManagedBean")
+    private FooManagedBean fmb;
+
     @Resource
     private BeanManager beanManagerInject;
 
@@ -81,6 +84,8 @@ public class SingletonBean2 {
     public void hello() {
         System.out.println("In SingletonBean2::hello() " + foo);
         statelessEE.hello();
+
+        fmb.hello();
 
         BeanManager beanMgr = (BeanManager) sesCtx.lookup("java:comp/BeanManager");
 
@@ -107,12 +112,17 @@ public class SingletonBean2 {
             // Test InjectionManager managed bean functionality
             Object injectionMgr = new InitialContext().lookup("com.sun.enterprise.container.common.spi.util.InjectionManager");
             Method createManagedMethod = injectionMgr.getClass().getMethod("createManagedObject", java.lang.Class.class);
+            System.out.println("create managed object method = " + createManagedMethod);
+            FooManagedBean f2 = (FooManagedBean) createManagedMethod.invoke(injectionMgr, FooManagedBean.class);
+            f2.hello();
+
+            Method destroyManagedMethod = injectionMgr.getClass().getMethod("destroyManagedObject", java.lang.Object.class);
+            System.out.println("destroy managed object method = " + destroyManagedMethod);
+            destroyManagedMethod.invoke(injectionMgr, f2);
 
             FooNonManagedBean nonF = (FooNonManagedBean) createManagedMethod.invoke(injectionMgr, FooNonManagedBean.class);
             System.out.println("FooNonManagedBean = " + nonF);
             nonF.hello();
-            
-            Method destroyManagedMethod = injectionMgr.getClass().getMethod("destroyManagedObject", java.lang.Object.class);
             destroyManagedMethod.invoke(injectionMgr, nonF);
 
         } catch (Exception e) {

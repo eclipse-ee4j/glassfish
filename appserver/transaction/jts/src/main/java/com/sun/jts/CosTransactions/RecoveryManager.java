@@ -117,7 +117,7 @@ public class RecoveryManager {
      * This attribute is used by the Recovery Thread to know if the
      * xaResource list is ready in case manual recovery is attempted.
      */
-    private static volatile EventSemaphore uniqueRMSetReady = new EventSemaphore();
+    private static final EventSemaphore UNIQUE_RMS_READY = new EventSemaphore();
 
     private static Hashtable coordsByGlobalTID = new Hashtable();
     private static Hashtable coordsByLocalTID = new Hashtable();
@@ -800,13 +800,7 @@ public class RecoveryManager {
         }
 
         synchronized (lockObject) {
-
-            if (uniqueRMSetReady.isPosted() == false) {
-                RecoveryManager.uniqueRMSet = getUniqueRMSet(xaResources);
-                uniqueRMSetReady.post();
-                waitForResync();
-                return;
-            } else {
+            if (UNIQUE_RMS_READY.isPosted()) {
                 RecoveryManager.waitForResync();
                 RecoveryManager.uniqueRMSet = getUniqueRMSet(xaResources);
                 // the following call is meant to induce recovery. But
@@ -816,7 +810,11 @@ public class RecoveryManager {
                 // from the coordinator to be able to support recovery
                 // during TP processing.
                 proceedWithXARecovery();
+                return;
             }
+            RecoveryManager.uniqueRMSet = getUniqueRMSet(xaResources);
+            UNIQUE_RMS_READY.post();
+            waitForResync();
         }
     }
 
@@ -904,18 +902,15 @@ public class RecoveryManager {
         }
 
         if (Thread.currentThread().getName().equals("JTS Resync Thread"/*#Frozen*/)) {
-
-            if (uniqueRMSetReady != null) {
-                try {
-                    uniqueRMSetReady.waitEvent();
-                    txRecoveryFence.raiseFence();
-                    xaResources = RecoveryManager.uniqueRMSet;
-                } catch (InterruptedException exc) {
-                    _logger.log(Level.SEVERE,"jts.wait_for_resync_complete_interrupted");
-                    String msg = LogFormatter.getLocalizedMessage(_logger,
-                        "jts.wait_for_resync_complete_interrupted");
-                    throw  new org.omg.CORBA.INTERNAL(msg);
-                }
+            try {
+                UNIQUE_RMS_READY.waitEvent();
+                txRecoveryFence.raiseFence();
+                xaResources = RecoveryManager.uniqueRMSet;
+            } catch (InterruptedException exc) {
+                _logger.log(Level.SEVERE,"jts.wait_for_resync_complete_interrupted");
+                String msg = LogFormatter.getLocalizedMessage(_logger,
+                    "jts.wait_for_resync_complete_interrupted");
+                throw  new org.omg.CORBA.INTERNAL(msg);
             }
         }
 
@@ -1095,17 +1090,15 @@ public class RecoveryManager {
         }
 
         if (Thread.currentThread().getName().equals("JTS Resync Thread"/*#Frozen*/)) {
-            if (uniqueRMSetReady != null) {
-                try {
-                    _logger.fine("dbXArecovery()");
-                    uniqueRMSetReady.waitEvent();
-                    xaResources = RecoveryManager.uniqueRMSet;
-                } catch (InterruptedException exc) {
-                    _logger.log(Level.SEVERE,"jts.wait_for_resync_complete_interrupted");
-                    String msg = LogFormatter.getLocalizedMessage(_logger,
-                        "jts.wait_for_resync_complete_interrupted");
-                    throw  new org.omg.CORBA.INTERNAL(msg);
-                }
+            try {
+                _logger.fine("dbXArecovery()");
+                UNIQUE_RMS_READY.waitEvent();
+                xaResources = RecoveryManager.uniqueRMSet;
+            } catch (InterruptedException exc) {
+                _logger.log(Level.SEVERE,"jts.wait_for_resync_complete_interrupted");
+                String msg = LogFormatter.getLocalizedMessage(_logger,
+                    "jts.wait_for_resync_complete_interrupted");
+                throw  new org.omg.CORBA.INTERNAL(msg);
             }
         }
 

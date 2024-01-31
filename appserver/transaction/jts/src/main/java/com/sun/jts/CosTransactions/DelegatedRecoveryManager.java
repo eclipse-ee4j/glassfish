@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,24 +17,33 @@
 
 package com.sun.jts.CosTransactions;
 
-import java.util.*;
-import java.io.*;
-
-import org.omg.CORBA.*;
-import org.omg.CosTransactions.*;
-
-import com.sun.jts.jtsxa.*;
-import com.sun.jts.codegen.jtsxa.*;
-
-import javax.transaction.xa.*;
-import com.sun.jts.jta.TransactionManagerImpl;
-
-import com.sun.jts.trace.*;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import com.sun.logging.LogDomains;
+import com.sun.jts.codegen.jtsxa.OTSResource;
+import com.sun.jts.jtsxa.OTSResourceImpl;
 import com.sun.jts.utils.LogFormatter;
 import com.sun.jts.utils.RecoveryHooks.FailureInducer;
+import com.sun.logging.LogDomains;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Set;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.transaction.xa.XAException;
+import javax.transaction.xa.XAResource;
+import javax.transaction.xa.Xid;
+
+import org.omg.CORBA.COMM_FAILURE;
+import org.omg.CORBA.SystemException;
+import org.omg.CORBA.TRANSIENT;
+import org.omg.CosTransactions.Status;
 
 /**
  * This class manages information required for Delegated recovery. This class supports
@@ -741,16 +750,13 @@ public class DelegatedRecoveryManager {
 
     public static void waitForRecovery(String logPath) {
         RecoveryStateHolder state = (RecoveryStateHolder)recoveryStatetable.get(logPath);
-
-        if (state.recoveryInProgress != null) {
-            try {
-                state.recoveryInProgress.waitEvent();
-            } catch (InterruptedException exc) {
-                _logger.log(Level.SEVERE,"jts.wait_for_resync_complete_interrupted");
-                String msg = LogFormatter.getLocalizedMessage(_logger,
-                "jts.wait_for_resync_complete_interrupted");
-                throw  new org.omg.CORBA.INTERNAL(msg);
-            }
+        try {
+            state.recoveryInProgress.waitEvent();
+        } catch (InterruptedException exc) {
+            _logger.log(Level.SEVERE,"jts.wait_for_resync_complete_interrupted");
+            String msg = LogFormatter.getLocalizedMessage(_logger,
+            "jts.wait_for_resync_complete_interrupted");
+            throw  new org.omg.CORBA.INTERNAL(msg);
         }
     }
 
@@ -803,7 +809,7 @@ class RecoveryStateHolder {
      * This attribute is used to block requests against RecoveryCoordinators or
      * CoordinatorResources before recovery has completed.
      */
-    EventSemaphore recoveryInProgress = new EventSemaphore();
+    final EventSemaphore recoveryInProgress = new EventSemaphore();
 
     Hashtable coordsByGlobalTID = new Hashtable();
     Hashtable coordsByLocalTID = new Hashtable();

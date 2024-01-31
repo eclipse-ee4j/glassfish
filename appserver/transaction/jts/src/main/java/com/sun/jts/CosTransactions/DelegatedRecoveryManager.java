@@ -411,9 +411,9 @@ public class DelegatedRecoveryManager {
         }
 
         // Post the resync in progress event semaphore.
-
-        state.resyncInProgress.post();
+        final EventSemaphore semaphore = state.resyncInProgress;
         state.resyncInProgress = null;
+        semaphore.post();
     }
 
     /**
@@ -486,10 +486,10 @@ public class DelegatedRecoveryManager {
             } else {
 
                 // Otherwise ensure that resync has completed.
-
-                if (state.resyncInProgress != null) {
+                final EventSemaphore semaphore = state.resyncInProgress;
+                if (semaphore != null) {
                     try {
-                        state.resyncInProgress.waitEvent();
+                        semaphore.waitEvent();
                     } catch (InterruptedException exc) {}
                 }
             }
@@ -770,10 +770,11 @@ public class DelegatedRecoveryManager {
      * @see
      */
     public static void waitForResync(String logPath) {
-        RecoveryStateHolder state = (RecoveryStateHolder)recoveryStatetable.get(logPath);
-        if (state.resyncInProgress != null) {
+        final RecoveryStateHolder state = (RecoveryStateHolder)recoveryStatetable.get(logPath);
+        final EventSemaphore semaphore = state.resyncInProgress;
+        if (semaphore != null) {
             try {
-                state.resyncInProgress.waitEvent();
+                semaphore.waitEvent();
             } catch (InterruptedException exc) {
                 _logger.log(Level.SEVERE,"jts.wait_for_resync_complete_interrupted");
                 String msg = LogFormatter.getLocalizedMessage(_logger,

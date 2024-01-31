@@ -31,6 +31,12 @@
 
 package com.sun.jts.CosTransactions;
 
+import com.sun.enterprise.transaction.jts.api.TransactionRecoveryFence;
+import com.sun.jts.codegen.jtsxa.OTSResource;
+import com.sun.jts.jtsxa.OTSResourceImpl;
+import com.sun.jts.utils.LogFormatter;
+import com.sun.logging.LogDomains;
+
 import java.io.File;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -52,12 +58,6 @@ import org.omg.CORBA.COMM_FAILURE;
 import org.omg.CORBA.SystemException;
 import org.omg.CORBA.TRANSIENT;
 import org.omg.CosTransactions.Status;
-
-import com.sun.enterprise.transaction.jts.api.TransactionRecoveryFence;
-import com.sun.jts.codegen.jtsxa.OTSResource;
-import com.sun.jts.jtsxa.OTSResourceImpl;
-import com.sun.jts.utils.LogFormatter;
-import com.sun.logging.LogDomains;
 /**
  * This class manages information required for recovery, and also general
  * state regarding transactions in a process.
@@ -656,10 +656,10 @@ public class RecoveryManager {
         }
 
         // Post the resync in progress event semaphore.
-
-        if (resyncInProgress != null) {
-            resyncInProgress.post();
+        final EventSemaphore semaphore = resyncInProgress;
+        if (semaphore != null) {
             resyncInProgress = null;
+            semaphore.post();
         }
     }
 
@@ -722,9 +722,10 @@ public class RecoveryManager {
 
         // Otherwise ensure that resync has completed.
 
-        if (resyncInProgress != null) {
+        final EventSemaphore semaphore = resyncInProgress;
+        if (semaphore != null) {
             try {
-                resyncInProgress.waitEvent();
+                semaphore.waitEvent();
                 if (resyncThread != null) {
                     resyncThread.join();
                 }
@@ -1404,11 +1405,12 @@ public class RecoveryManager {
      *
      * @see
      */
-    public static void waitForResyncWithTimeout(){
-        if (resyncInProgress != null) {
+    public static void waitForResyncWithTimeout() {
+        final EventSemaphore semaphore = resyncInProgress;
+        if (semaphore != null) {
             int resyncTimeout = Integer.getInteger("org.glassfish.jts.CosTransactions.resyncTimeoutInSeconds", 120);
             try {
-                resyncInProgress.waitTimeoutEvent(resyncTimeout);
+                semaphore.waitTimeoutEvent(resyncTimeout);
             } catch (InterruptedException exc) {
                 _logger.log(Level.SEVERE,"jts.wait_for_resync_complete_interrupted");
                 String msg = LogFormatter.getLocalizedMessage(_logger,
@@ -1429,9 +1431,10 @@ public class RecoveryManager {
      */
     public static void waitForResync() {
 
-        if (resyncInProgress != null) {
+        final EventSemaphore semaphore = resyncInProgress;
+        if (semaphore != null) {
             try {
-                resyncInProgress.waitEvent();
+                semaphore.waitEvent();
             } catch (InterruptedException exc) {
                 _logger.log(Level.SEVERE,"jts.wait_for_resync_complete_interrupted");
                 String msg = LogFormatter.getLocalizedMessage(_logger,

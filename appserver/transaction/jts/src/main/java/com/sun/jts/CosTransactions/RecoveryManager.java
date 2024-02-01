@@ -1,7 +1,7 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 1995-1997 IBM Corp. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,6 +31,12 @@
 
 package com.sun.jts.CosTransactions;
 
+import com.sun.enterprise.transaction.jts.api.TransactionRecoveryFence;
+import com.sun.jts.codegen.jtsxa.OTSResource;
+import com.sun.jts.jtsxa.OTSResourceImpl;
+import com.sun.jts.utils.LogFormatter;
+import com.sun.logging.LogDomains;
+
 import java.io.File;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -52,12 +58,6 @@ import org.omg.CORBA.COMM_FAILURE;
 import org.omg.CORBA.SystemException;
 import org.omg.CORBA.TRANSIENT;
 import org.omg.CosTransactions.Status;
-
-import com.sun.enterprise.transaction.jts.api.TransactionRecoveryFence;
-import com.sun.jts.codegen.jtsxa.OTSResource;
-import com.sun.jts.jtsxa.OTSResourceImpl;
-import com.sun.jts.utils.LogFormatter;
-import com.sun.logging.LogDomains;
 /**
  * This class manages information required for recovery, and also general
  * state regarding transactions in a process.
@@ -111,13 +111,13 @@ public class RecoveryManager {
      * This attribute is used to block requests against RecoveryCoordinators or
      * CoordinatorResources before recovery has completed.
      */
-    private static volatile EventSemaphore recoveryInProgress = new EventSemaphore();
+    private static final EventSemaphore RECOVERY_IN_PROGRESS = new EventSemaphore();
 
     /**
      * This attribute is used by the Recovery Thread to know if the
      * xaResource list is ready in case manual recovery is attempted.
      */
-    private static volatile EventSemaphore uniqueRMSetReady = new EventSemaphore();
+    private static final EventSemaphore UNIQUE_RMS_READY = new EventSemaphore();
 
     private static Hashtable coordsByGlobalTID = new Hashtable();
     private static Hashtable coordsByLocalTID = new Hashtable();
@@ -194,7 +194,7 @@ public class RecoveryManager {
             // requiring resync.
 
             try {
-                recoveryInProgress.post(); // BUGFIX (Ram Jeyaraman)
+                RECOVERY_IN_PROGRESS.post(); // BUGFIX (Ram Jeyaraman)
                 resyncComplete(false, false);
             } catch (Throwable exc) {exc.printStackTrace();}
         }
@@ -422,7 +422,7 @@ public class RecoveryManager {
 
             // Post the recovery in progress event so that requests
             // waiting for recovery to complete may proceed.
-            recoveryInProgress.post();
+            RECOVERY_IN_PROGRESS.post();
 
             // And finish resync
             try {
@@ -466,7 +466,7 @@ public class RecoveryManager {
         // Post the recovery in progress event so that requests
         // waiting for recovery to complete may proceed.
 
-        recoveryInProgress.post();
+        RECOVERY_IN_PROGRESS.post();
 
         // If resync is not needed, then perform after-resync
         // tasks immediately.
@@ -656,10 +656,10 @@ public class RecoveryManager {
         }
 
         // Post the resync in progress event semaphore.
-
-        if (resyncInProgress != null) {
-            resyncInProgress.post();
+        final EventSemaphore semaphore = resyncInProgress;
+        if (semaphore != null) {
             resyncInProgress = null;
+            semaphore.post();
         }
     }
 
@@ -722,9 +722,10 @@ public class RecoveryManager {
 
         // Otherwise ensure that resync has completed.
 
-        if (resyncInProgress != null) {
+        final EventSemaphore semaphore = resyncInProgress;
+        if (semaphore != null) {
             try {
-                resyncInProgress.waitEvent();
+                semaphore.waitEvent();
                 if (resyncThread != null) {
                     resyncThread.join();
                 }
@@ -799,13 +800,7 @@ public class RecoveryManager {
         }
 
         synchronized (lockObject) {
-
-            if (uniqueRMSetReady.isPosted() == false) {
-                RecoveryManager.uniqueRMSet = getUniqueRMSet(xaResources);
-                uniqueRMSetReady.post();
-                waitForResync();
-                return;
-            } else {
+            if (UNIQUE_RMS_READY.isPosted()) {
                 RecoveryManager.waitForResync();
                 RecoveryManager.uniqueRMSet = getUniqueRMSet(xaResources);
                 // the following call is meant to induce recovery. But
@@ -815,7 +810,11 @@ public class RecoveryManager {
                 // from the coordinator to be able to support recovery
                 // during TP processing.
                 proceedWithXARecovery();
+                return;
             }
+            RecoveryManager.uniqueRMSet = getUniqueRMSet(xaResources);
+            UNIQUE_RMS_READY.post();
+            waitForResync();
         }
     }
 
@@ -903,18 +902,15 @@ public class RecoveryManager {
         }
 
         if (Thread.currentThread().getName().equals("JTS Resync Thread"/*#Frozen*/)) {
-
-            if (uniqueRMSetReady != null) {
-                try {
-                    uniqueRMSetReady.waitEvent();
-                    txRecoveryFence.raiseFence();
-                    xaResources = RecoveryManager.uniqueRMSet;
-                } catch (InterruptedException exc) {
-                    _logger.log(Level.SEVERE,"jts.wait_for_resync_complete_interrupted");
-                    String msg = LogFormatter.getLocalizedMessage(_logger,
-                        "jts.wait_for_resync_complete_interrupted");
-                    throw  new org.omg.CORBA.INTERNAL(msg);
-                }
+            try {
+                UNIQUE_RMS_READY.waitEvent();
+                txRecoveryFence.raiseFence();
+                xaResources = RecoveryManager.uniqueRMSet;
+            } catch (InterruptedException exc) {
+                _logger.log(Level.SEVERE,"jts.wait_for_resync_complete_interrupted");
+                String msg = LogFormatter.getLocalizedMessage(_logger,
+                    "jts.wait_for_resync_complete_interrupted");
+                throw  new org.omg.CORBA.INTERNAL(msg);
             }
         }
 
@@ -1094,17 +1090,15 @@ public class RecoveryManager {
         }
 
         if (Thread.currentThread().getName().equals("JTS Resync Thread"/*#Frozen*/)) {
-            if (uniqueRMSetReady != null) {
-                try {
-                    _logger.fine("dbXArecovery()");
-                    uniqueRMSetReady.waitEvent();
-                    xaResources = RecoveryManager.uniqueRMSet;
-                } catch (InterruptedException exc) {
-                    _logger.log(Level.SEVERE,"jts.wait_for_resync_complete_interrupted");
-                    String msg = LogFormatter.getLocalizedMessage(_logger,
-                        "jts.wait_for_resync_complete_interrupted");
-                    throw  new org.omg.CORBA.INTERNAL(msg);
-                }
+            try {
+                _logger.fine("dbXArecovery()");
+                UNIQUE_RMS_READY.waitEvent();
+                xaResources = RecoveryManager.uniqueRMSet;
+            } catch (InterruptedException exc) {
+                _logger.log(Level.SEVERE,"jts.wait_for_resync_complete_interrupted");
+                String msg = LogFormatter.getLocalizedMessage(_logger,
+                    "jts.wait_for_resync_complete_interrupted");
+                throw  new org.omg.CORBA.INTERNAL(msg);
             }
         }
 
@@ -1388,16 +1382,12 @@ public class RecoveryManager {
      * @see
      */
     public static void waitForRecovery() {
-
-        if (recoveryInProgress != null) {
-            try {
-                recoveryInProgress.waitEvent();
-            } catch (InterruptedException exc) {
-                _logger.log(Level.SEVERE,"jts.wait_for_resync_complete_interrupted");
-                String msg = LogFormatter.getLocalizedMessage(_logger,
-                    "jts.wait_for_resync_complete_interrupted");
-                throw  new org.omg.CORBA.INTERNAL(msg);
-            }
+        try {
+            RECOVERY_IN_PROGRESS.waitEvent();
+        } catch (InterruptedException exc) {
+            _logger.log(Level.SEVERE, "jts.wait_for_resync_complete_interrupted");
+            String msg = LogFormatter.getLocalizedMessage(_logger, "jts.wait_for_resync_complete_interrupted");
+            throw new org.omg.CORBA.INTERNAL(msg);
         }
     }
 
@@ -1408,11 +1398,12 @@ public class RecoveryManager {
      *
      * @see
      */
-    public static void waitForResyncWithTimeout(){
-        if (resyncInProgress != null) {
+    public static void waitForResyncWithTimeout() {
+        final EventSemaphore semaphore = resyncInProgress;
+        if (semaphore != null) {
             int resyncTimeout = Integer.getInteger("org.glassfish.jts.CosTransactions.resyncTimeoutInSeconds", 120);
             try {
-                resyncInProgress.waitTimeoutEvent(resyncTimeout);
+                semaphore.waitTimeoutEvent(resyncTimeout);
             } catch (InterruptedException exc) {
                 _logger.log(Level.SEVERE,"jts.wait_for_resync_complete_interrupted");
                 String msg = LogFormatter.getLocalizedMessage(_logger,
@@ -1433,9 +1424,10 @@ public class RecoveryManager {
      */
     public static void waitForResync() {
 
-        if (resyncInProgress != null) {
+        final EventSemaphore semaphore = resyncInProgress;
+        if (semaphore != null) {
             try {
-                resyncInProgress.waitEvent();
+                semaphore.waitEvent();
             } catch (InterruptedException exc) {
                 _logger.log(Level.SEVERE,"jts.wait_for_resync_complete_interrupted");
                 String msg = LogFormatter.getLocalizedMessage(_logger,

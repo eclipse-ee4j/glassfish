@@ -112,7 +112,7 @@ public final class ServerLifecycleModule {
                 classLoader = ctx.getLifecycleParentClassLoader();
             } else {
                 URL[] urls = getURLs();
-                _logger.log(Level.FINE, "Lifecycle module = {0} has classpath URLs = {1}", new Object[] {getName(), urls});
+                _logger.log(Level.FINE, "Lifecycle module = {0} has classpath URLs = {1}", new Object[] { getName(), urls });
                 this.urlClassLoader = new GlassfishUrlClassLoader(urls, ctx.getLifecycleParentClassLoader());
                 classLoader = this.urlClassLoader;
             }
@@ -120,10 +120,10 @@ public final class ServerLifecycleModule {
             Class<LifecycleListener> clazz = (Class<LifecycleListener>) Class.forName(className, true, classLoader);
             slcl = clazz.getDeclaredConstructor().newInstance();
         } catch (Exception ee) {
-            _logger.log(Level.SEVERE, KernelLoggerInfo.exceptionLoadingLifecycleModule, new Object[] {this.name, ee});
+            _logger.log(Level.SEVERE, KernelLoggerInfo.exceptionLoadingLifecycleModule, new Object[] { this.name, ee });
             if (isFatal) {
                 throw new ServerLifecycleException(localStrings.getLocalString("lifecyclemodule.loadExceptionIsFatal",
-                    "Treating failure loading the lifecycle module as fatal", this.name));
+                        "Treating failure loading the lifecycle module as fatal", this.name));
             }
         }
 
@@ -132,16 +132,15 @@ public final class ServerLifecycleModule {
 
     private URL[] getURLs() {
         List<URL> urlList = ASClassLoaderUtil.getURLsFromClasspath(
-            this.classpath, File.pathSeparator, "");
+                this.classpath, File.pathSeparator, "");
         return ASClassLoaderUtil.convertURLListToArray(urlList);
     }
-
 
     private void postEvent(int eventType, Object data) throws ServerLifecycleException {
         if (slcl == null) {
             if (isFatal) {
                 throw new ServerLifecycleException(localStrings.getLocalString("lifecyclemodule.loadExceptionIsFatal",
-                    "Treating failure loading the lifecycle module as fatal", this.name));
+                        "Treating failure loading the lifecycle module as fatal", this.name));
             }
             return;
         }
@@ -150,47 +149,42 @@ public final class ServerLifecycleModule {
             setClassLoader();
         }
 
-        LifecycleEvent slcEvent= new LifecycleEvent(this, eventType, data, this.leContext);
+        LifecycleEvent slcEvent = new LifecycleEvent(this, eventType, data, this.leContext);
         try {
             slcl.handleEvent(slcEvent);
         } catch (ServerLifecycleException sle) {
-            _logger.log(Level.WARNING, KernelLoggerInfo.serverLifecycleException, new Object[] {this.name, sle});
+            _logger.log(Level.WARNING, KernelLoggerInfo.serverLifecycleException, new Object[] { this.name, sle });
             if (isFatal) {
                 throw sle;
             }
         } catch (Exception ee) {
-            _logger.log(Level.WARNING, KernelLoggerInfo.lifecycleModuleException, new Object[] {this.name, ee});
+            _logger.log(Level.WARNING, KernelLoggerInfo.lifecycleModuleException, new Object[] { this.name, ee });
             if (isFatal) {
-                throw new ServerLifecycleException(localStrings.getLocalString("lifecyclemodule.event_exceptionIsFatal", "Treating the exception from lifecycle module event handler as fatal"), ee);
+                throw new ServerLifecycleException(localStrings.getLocalString("lifecyclemodule.event_exceptionIsFatal",
+                        "Treating the exception from lifecycle module event handler as fatal"), ee);
             }
         }
     }
-
 
     public void onInitialization() throws ServerLifecycleException {
         postEvent(LifecycleEvent.INIT_EVENT, props);
     }
 
-
     public void onStartup() throws ServerLifecycleException {
         postEvent(LifecycleEvent.STARTUP_EVENT, props);
     }
-
 
     public void onReady() throws ServerLifecycleException {
         postEvent(LifecycleEvent.READY_EVENT, props);
     }
 
-
     public void onShutdown() throws ServerLifecycleException {
         postEvent(LifecycleEvent.SHUTDOWN_EVENT, props);
     }
 
-
     public void onTermination() throws ServerLifecycleException {
         postEvent(LifecycleEvent.TERMINATION_EVENT, props);
     }
-
 
     private void setClassLoader() {
         // set the url class loader as the thread context class loader

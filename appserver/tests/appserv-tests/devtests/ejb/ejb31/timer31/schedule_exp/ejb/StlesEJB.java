@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Date;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Stateless
 public class StlesEJB implements Stles {
@@ -36,9 +37,9 @@ public class StlesEJB implements Stles {
     @Resource
     private TimerService timerSvc;
 
-    private static Map<String, ScheduleExpression> hm = new HashMap<String, ScheduleExpression>();
-    private static Set<String> callers = new HashSet<String>();
-    private static Set<String> expected_callers = new HashSet<String>();
+    private static final Map<String, ScheduleExpression> hm = new HashMap<String, ScheduleExpression>();
+    private static final Set<String> callers = ConcurrentHashMap.newKeySet();
+    private static final Set<String> expected_callers = ConcurrentHashMap.newKeySet();
 
     public void createTimers() throws Exception {
 

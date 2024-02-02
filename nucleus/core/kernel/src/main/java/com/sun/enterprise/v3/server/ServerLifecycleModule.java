@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,6 +36,7 @@ import com.sun.appserv.server.LifecycleEventContext;
 import com.sun.appserv.server.LifecycleListener;
 import com.sun.appserv.server.ServerLifecycleException;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+import org.glassfish.api.logging.LogHelper;
 
 /**
  * @author Sridatta Viswanath
@@ -120,7 +121,7 @@ public final class ServerLifecycleModule {
             Class<LifecycleListener> clazz = (Class<LifecycleListener>) Class.forName(className, true, classLoader);
             slcl = clazz.getDeclaredConstructor().newInstance();
         } catch (Exception ee) {
-            _logger.log(Level.SEVERE, KernelLoggerInfo.exceptionLoadingLifecycleModule, new Object[] { this.name, ee });
+            LogHelper.log(_logger, Level.SEVERE, KernelLoggerInfo.exceptionLoadingLifecycleModule, ee, new Object[] { this.name, ee });
             if (isFatal) {
                 throw new ServerLifecycleException(localStrings.getLocalString("lifecyclemodule.loadExceptionIsFatal",
                         "Treating failure loading the lifecycle module as fatal", this.name));
@@ -153,12 +154,12 @@ public final class ServerLifecycleModule {
         try {
             slcl.handleEvent(slcEvent);
         } catch (ServerLifecycleException sle) {
-            _logger.log(Level.WARNING, KernelLoggerInfo.serverLifecycleException, new Object[] { this.name, sle });
+            LogHelper.log(_logger, Level.WARNING, KernelLoggerInfo.serverLifecycleException, sle, new Object[] { this.name, sle });
             if (isFatal) {
                 throw sle;
             }
         } catch (Exception ee) {
-            _logger.log(Level.WARNING, KernelLoggerInfo.lifecycleModuleException, new Object[] { this.name, ee });
+            LogHelper.log(_logger, Level.WARNING, KernelLoggerInfo.lifecycleModuleException, ee, new Object[] { this.name, ee });
             if (isFatal) {
                 throw new ServerLifecycleException(localStrings.getLocalString("lifecyclemodule.event_exceptionIsFatal",
                         "Treating the exception from lifecycle module event handler as fatal"), ee);

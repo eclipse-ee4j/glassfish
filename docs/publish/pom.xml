@@ -104,9 +104,8 @@
                             <excludes>META-INF/**</excludes>
                             <artifactItems>
                                 <artifactItem>
-                                    <!-- TODO: 2/2 Update groupId+artifactId after 7.0.11 -->
                                     <groupId>org.glassfish.docs</groupId>
-                                    <artifactId>distribution</artifactId>
+                                    <artifactId>glassfish-documentation</artifactId>
                                     <version>${glassfish.version.7x.artifact}</version>
                                     <outputDirectory>${docs.7x.dir}</outputDirectory>
                                 </artifactItem>

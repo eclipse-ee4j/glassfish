@@ -381,10 +381,10 @@ If there already is a file with the same name, the implementation tries to add a
 with a counter until it finds a name which doesn't exist yet.
 
 ----
-drwxrwxr-x 14 admin admin   4096 cec 29 21:21 ../
--rw-rw-r--  1 admin admin   2521 srp  3 18:18 server.log
--rw-rw-r--  1 admin admin 191391 cec 29 21:21 server.log_2022-07-29T21-21-54
--rw-rw-r--  1 admin admin  24920 srp  3 18:18 server.log_2022-08-03T18-18-38
+drwxrwxr-x 14 admin admin   4096 jul 29 21:21 ../
+-rw-rw-r--  1 admin admin   2521 aug  3 18:18 server.log
+-rw-rw-r--  1 admin admin 191391 jul 29 21:21 server.log_2022-07-29T21-21-54
+-rw-rw-r--  1 admin admin  24920 aug  3 18:18 server.log_2022-08-03T18-18-38
 ----
 
 You can configure the logging service to change the default settings for

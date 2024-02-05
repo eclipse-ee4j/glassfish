@@ -60,7 +60,6 @@
                 <excludes>
                     <exclude>**/.ade_path/**</exclude>
                 </excludes>
-                <targetPath>${project.build.outputDirectory}</targetPath>
             </resource>
         </resources>
     </build>

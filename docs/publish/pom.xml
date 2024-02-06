@@ -104,7 +104,7 @@
                             <excludes>META-INF/**</excludes>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.glassfish.docs</groupId>
+                                    <groupId>org.glassfish.main.docs</groupId>
                                     <artifactId>glassfish-documentation</artifactId>
                                     <version>${glassfish.version.7x.artifact}</version>
                                     <outputDirectory>${docs.7x.dir}</outputDirectory>

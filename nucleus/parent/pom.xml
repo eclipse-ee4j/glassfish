@@ -92,8 +92,8 @@
 
         <!-- Jakarta Inject -->
         <jakarta.inject-api.version>2.0.1.MR</jakarta.inject-api.version>
-        <hk2.version>4.0.0-M1</hk2.version>
-        <hk2.plugin.version>4.0.0-M1</hk2.plugin.version>
+        <hk2.version>4.0.0-M1.1</hk2.version>
+        <hk2.plugin.version>4.0.0-M1.1</hk2.plugin.version>
 
         <!-- Jakarta XML Binding -->
         <jakarta.xml.bind-api.version>4.0.1</jakarta.xml.bind-api.version>

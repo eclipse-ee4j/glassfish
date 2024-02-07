@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -65,10 +65,6 @@ public final class AMXStartupService
         implements org.glassfish.hk2.api.PostConstruct,
         org.glassfish.hk2.api.PreDestroy,
         AMXStartupServiceMBean {
-
-    private static void debug(final String s) {
-        System.out.println(s);
-    }
 
     @Inject
     ServiceLocator mHabitat;

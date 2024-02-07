@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -42,10 +43,6 @@ import org.jvnet.hk2.config.VariableResolver;
  */
 @Taxonomy( stability = Stability.UNCOMMITTED)
 public class AttributeResolverHelper extends VariableResolver {
-
-    private static void debug(final String s) {
-        System.out.println("##### " + s);
-    }
 
     public AttributeResolverHelper(final AMXConfigProxy amx) {
     }

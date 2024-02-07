@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -50,10 +51,6 @@ import static org.glassfish.external.amx.AMX.TYPE_KEY;
 public final class Util {
 
     private static final String QUOTE_CHAR = "\"";
-
-    private static void debug(final String s) {
-        System.out.println(s);
-    }
 
     public static String quoteIfNeeded(String name) {
         if(name.indexOf(":") > 1) {

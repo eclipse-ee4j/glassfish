@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -105,8 +105,8 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
     AdminService adminService;
     private String contextRoot;
     private File warFile;    // GF Admin Console War File Location
-    private AdapterState stateMsg = AdapterState.UNINITIAZED;
-    private boolean installing = false;
+    private volatile AdapterState stateMsg = AdapterState.UNINITIAZED;
+    private volatile boolean installing;
     private boolean isOK = false;  // FIXME: initialize this with previous user choice
     private AdminConsoleConfigUpgrade adminConsoleConfigUpgrade = null;
     private final CountDownLatch latch = new CountDownLatch(1);
@@ -134,8 +134,8 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
     private static final String RESOURCE_PACKAGE = "com/sun/enterprise/v3/admin/adapter";
     private static final String INSTALL_ROOT = "com.sun.aas.installRoot";
     static final String ADMIN_APP_NAME = ServerEnvironmentImpl.DEFAULT_ADMIN_CONSOLE_APP_NAME;
-    private boolean isRestStarted = false;
-    private boolean isRestBeingStarted = false;
+    private volatile boolean isRestStarted;
+    private volatile boolean isRestBeingStarted;
 
     /**
      * Constructor.
@@ -317,7 +317,7 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
      * then close the stream and move on.
      */
     private void forceRestModuleLoad(final Request req) {
-        if (isRestBeingStarted==true){
+        if (isRestBeingStarted) {
             return;
         }
         isRestBeingStarted = true;

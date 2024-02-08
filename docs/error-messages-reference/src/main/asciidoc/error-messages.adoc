@@ -20,7 +20,7 @@ and troubleshooting information.
 
 Error messages can also be viewed in the Administration Console Log
 Viewer. For more information about logging, see
-”xref:administration-guide.adoc#administering-the-logging-service[Administering the Logging Service”] in {productName} Administration Guide.
+xref:administration-guide.adoc#administering-the-logging-service[Administering the Logging Service] in {productName} Administration Guide.
 
 For additional troubleshooting information, see the
 xref:troubleshooting-guide.adoc#GSTSG[{productName} Troubleshooting Guide].

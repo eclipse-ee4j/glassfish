@@ -26,6 +26,7 @@ import static java.util.logging.Level.WARNING;
 import static java.util.stream.Collectors.toSet;
 
 import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.security.auth.login.DistinguishedPrincipalCredential;
 import com.sun.logging.LogDomains;
 import java.io.Serializable;
 import java.security.Principal;
@@ -379,11 +380,17 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
     @Override
     public Principal getCallerPrincipal(Subject subject) {
         return
-            subject.getPrincipals()
+            subject.getPublicCredentials()
                    .stream()
-                   .filter(e -> e instanceof UserNameAndPassword)
+                   .filter(DistinguishedPrincipalCredential.class::isInstance)
+                   .map(DistinguishedPrincipalCredential.class::cast)
+                   .map(e -> e.getPrincipal())
                    .findAny()
-                   .orElse(null);
+                   .orElse(subject.getPrincipals()
+                       .stream()
+                       .filter(UserPrincipal.class::isInstance)
+                       .findAny()
+                       .orElse(null));
     }
 
     private Set<String> getCallerPrincipalNames(Subject subject) {

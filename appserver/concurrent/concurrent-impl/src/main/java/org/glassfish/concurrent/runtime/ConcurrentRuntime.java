@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -432,7 +432,7 @@ public class ConcurrentRuntime {
     class HungTasksLogger implements Runnable {
 
         private final Boolean logOnce;
-        private final Map<String, Collection<AbstractManagedThread>> cachedHungThreadsMap = new HashMap<>();
+        private final Map<String, Collection<Thread>> cachedHungThreadsMap = new HashMap<>();
 
         HungTasksLogger(Boolean logOnce) {
             this.logOnce = logOnce;
@@ -456,17 +456,17 @@ public class ConcurrentRuntime {
                 }
             }
             for (ManagedExecutorServiceImpl mes: executorServices) {
-                Collection<AbstractManagedThread> hungThreads = mes.getHungThreads();
+                Collection<Thread> hungThreads = mes.getHungThreads();
                 logHungThreads(hungThreads, mes.getManagedThreadFactory(), mes.getName());
             }
             for (ManagedScheduledExecutorServiceImpl mses: scheduledExecutorServices) {
-                Collection<AbstractManagedThread> hungThreads = mses.getHungThreads();
+                Collection<Thread> hungThreads = mses.getHungThreads();
                 logHungThreads(hungThreads, mses.getManagedThreadFactory(), mses.getName());
             }
         }
 
 
-        private void logHungThreads(Collection<AbstractManagedThread> hungThreads, ManagedThreadFactoryImpl mtf,
+        private void logHungThreads(Collection<Thread> hungThreads, ManagedThreadFactoryImpl mtf,
             String mesName) {
             if (!logOnce) {
                 logRawHungThreads(hungThreads, mtf, mesName);
@@ -476,9 +476,9 @@ public class ConcurrentRuntime {
                 cachedHungThreadsMap.remove(mesName);
                 return;
             }
-            Collection<AbstractManagedThread> targetHungThreads = new HashSet<>();
+            Collection<Thread> targetHungThreads = new HashSet<>();
             targetHungThreads.addAll(hungThreads);
-            Collection<AbstractManagedThread> cachedHungThreads = cachedHungThreadsMap.get(mesName);
+            Collection<Thread> cachedHungThreads = cachedHungThreadsMap.get(mesName);
             if (cachedHungThreads != null) {
                 targetHungThreads.removeAll(cachedHungThreads);
             }
@@ -487,12 +487,20 @@ public class ConcurrentRuntime {
         }
 
 
-        private void logRawHungThreads(Collection<AbstractManagedThread> hungThreads, ManagedThreadFactoryImpl mtf,
+        private void logRawHungThreads(Collection<Thread> hungThreads, ManagedThreadFactoryImpl mtf,
             String mesName) {
             if (hungThreads != null) {
-                for (AbstractManagedThread hungThread : hungThreads) {
-                    Object[] params = {hungThread.getTaskIdentityName(), hungThread.getName(),
-                        hungThread.getTaskRunTime(System.currentTimeMillis()) / 1000, mtf.getHungTaskThreshold() / 1000,
+                for (Thread hungThread : hungThreads) {
+
+                    String taskIdentityName = "virtual";
+                    long taskRunTime = 0l;
+                    if (hungThread instanceof AbstractManagedThread managedThread) {
+                        taskIdentityName = managedThread.getTaskIdentityName();
+                        taskRunTime = managedThread.getTaskRunTime(System.currentTimeMillis()) / 1000;
+                    }
+
+                    Object[] params = {taskIdentityName, hungThread.getName(),
+                            taskRunTime, mtf.getHungTaskThreshold() / 1000,
                         mesName};
                     LOG.log(Level.WARNING, LogFacade.UNRESPONSIVE_TASK, params);
                 }
@@ -510,7 +518,7 @@ public class ConcurrentRuntime {
 
 
         @Override
-        protected AbstractManagedThread createThread(Runnable runnable, ContextHandle contextHandleForSetup) {
+        protected Thread createThread(Runnable runnable, ContextHandle contextHandleForSetup) {
             LOG.log(Level.FINE, "createThread(runnable={0}, contextHandleForSetup={1})",
                 new Object[] {runnable, contextHandleForSetup});
             Thread thread = Thread.currentThread();

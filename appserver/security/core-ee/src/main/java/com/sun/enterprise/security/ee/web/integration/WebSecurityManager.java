@@ -55,6 +55,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
+import javax.security.auth.Subject;
 import org.glassfish.exousia.AuthorizationService;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.security.common.Group;
@@ -176,7 +177,7 @@ public class WebSecurityManager {
 
     public boolean permitAll(HttpServletRequest httpServletRequest) {
         setSecurityInfo(httpServletRequest);
-        return authorizationService.checkWebResourcePermission(httpServletRequest, null);
+        return authorizationService.checkWebResourcePermission(httpServletRequest, (Subject) null);
     }
 
     /**
@@ -257,14 +258,12 @@ public class WebSecurityManager {
         return isGranted;
     }
 
-    /*
+    /**
      * Return <code>true</code> if the specified servletName has the specified security role, within the context of the
      * WebRoleRefPermission; otherwise return <code>false</code>.
      *
      * @param principal servletName the resource's name.
-     *
      * @param principal Principal for whom the role is to be checked
-     *
      * @param role Security role to be checked
      *
      * @return true is the resource is granted, false if denied
@@ -273,7 +272,7 @@ public class WebSecurityManager {
         boolean isGranted = authorizationService.checkWebRoleRefPermission(
             servletName,
             role,
-            getSecurityContext(callerPrincipal).getPrincipalSet());
+            getSecurityContext(callerPrincipal).getSubject());
 
         if (logger.isLoggable(FINE)) {
             logger.log(FINE, "[Web-Security] hasRoleRef perm: {0}", servletName + " " + role);

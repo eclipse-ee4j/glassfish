@@ -89,15 +89,15 @@
         <tyrus.version>2.1.5</tyrus.version>
 
         <!-- Jakarta Concurrency -->
-        <jakarta.concurrent-api.version>3.0.3</jakarta.concurrent-api.version>
-        <concurrent.version>3.0.0</concurrent.version>
+        <jakarta.concurrent-api.version>3.1.0-M1</jakarta.concurrent-api.version>
+        <concurro.version>3.1.0-M1</concurro.version>
 
         <!-- Jakarta Interceptors -->
         <jakarta.interceptor-api.version>2.2.0-M1</jakarta.interceptor-api.version>
 
         <!-- Jakarta Security + Authentication/Authorization -->
         <soteria.version>4.0.0-M1</soteria.version>
-        <exousia.version>3.0.0-M1</exousia.version>
+        <exousia.version>3.0.0-M1.1</exousia.version>
         <epicyro.version>3.1.0-M1</epicyro.version>
         <nimbus.version>9.37</nimbus.version>
         <jcip.version>1.0.2</jcip.version>
@@ -230,7 +230,7 @@
             <dependency>
                 <groupId>org.glassfish</groupId>
                 <artifactId>jakarta.enterprise.concurrent</artifactId>
-                <version>${concurrent.version}</version>
+                <version>${concurro.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.main.concurrent</groupId>

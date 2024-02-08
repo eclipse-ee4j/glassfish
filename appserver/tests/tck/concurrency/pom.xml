@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,19 +33,12 @@
     <description>Aggregates dependencies and runs the Concurrency TCK on GlassFish</description>
 
     <properties>
-        <maven.compiler.release>11</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-        <concurrency.tck-3-0.version>3.0.2</concurrency.tck-3-0.version>
 
         <glassfish.version>${project.version}</glassfish.version>
         <glassfish.root>${project.build.directory}</glassfish.root>
         <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
-
-        <jcommander.version>1.82</jcommander.version>
-        <sigtest.version>1.7</sigtest.version>
-        <testng.version>7.7.0</testng.version>
     </properties>
 
     <dependencyManagement>
@@ -53,7 +46,7 @@
             <dependency>
                 <groupId>org.jboss.arquillian</groupId>
                 <artifactId>arquillian-bom</artifactId>
-                <version>1.7.0.Final</version>
+                <version>1.8.0.Final</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -66,72 +59,59 @@
             <groupId>jakarta.enterprise.concurrent</groupId>
             <artifactId>jakarta.enterprise.concurrent-api</artifactId>
         </dependency>
-
+        
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
-
-
+        <dependency>
+            <groupId>jakarta.ejb</groupId>
+            <artifactId>jakarta.ejb-api</artifactId>
+        </dependency>
+        
         <!--  The TCK  -->
         <dependency>
             <groupId>jakarta.enterprise.concurrent</groupId>
             <artifactId>jakarta.enterprise.concurrent-tck</artifactId>
-            <version>${concurrency.tck-3-0.version}</version>
-            <scope>test</scope>
+            <version>3.1.0-M1</version>
         </dependency>
-
-        <!-- Utility classes for TestNG and Arquillian, used in suite.xml -->
-        <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>cdi-tck-core-impl</artifactId>
-            <version>4.0.7</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.jboss.test-audit</groupId>
-                    <artifactId>jboss-test-audit-impl</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jboss.test-audit</groupId>
-                    <artifactId>jboss-test-audit-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jakarta.el</groupId>
-                    <artifactId>jakarta.el-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jakarta.faces</groupId>
-                    <artifactId>jakarta.faces-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>container-se-api</artifactId>
-                    <groupId>org.jboss.arquillian.container</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-
+        
+       
         <!--
             The Arquillian connector that starts GlassFish and deploys archives to it.
         -->
         <dependency>
             <groupId>org.omnifaces.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-managed</artifactId>
-            <version>1.2</version>
+            <version>1.4</version>
         </dependency>
-
+        
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>${testng.version}</version>
+            <groupId>org.jboss.arquillian.junit5</groupId>
+            <artifactId>arquillian-junit5-container</artifactId>
+            <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.jboss.shrinkwrap.resolver</groupId>
+            <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        
         <!--  Signature Test Plugin  -->
         <dependency>
             <groupId>org.netbeans.tools</groupId>
             <artifactId>sigtest-maven-plugin</artifactId>
-            <version>${sigtest.version}</version>
+            <version>1.7</version>
         </dependency>
     </dependencies>
 
@@ -140,10 +120,10 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <!-- Disable annotation processor for test sources -->
-                    <testCompilerArgument>-proc:none</testCompilerArgument>
+                    <release>17</release>
                 </configuration>
             </plugin>
+            
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
@@ -167,105 +147,43 @@
                             </artifactItems>
                         </configuration>
                      </execution>
-                     <execution>
-                        <id>copy</id>
-                        <phase>process-test-classes</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.testng</groupId>
-                                    <artifactId>testng</artifactId>
-                                    <version>${testng.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${glassfish.root}/glassfish8/glassfish/lib</outputDirectory>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>com.beust</groupId>
-                                    <artifactId>jcommander</artifactId>
-                                    <version>${jcommander.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${glassfish.root}/glassfish8/glassfish/lib</outputDirectory>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.netbeans.tools</groupId>
-                                    <artifactId>sigtest-maven-plugin</artifactId>
-                                    <version>${sigtest.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${glassfish.root}/glassfish8/glassfish/lib</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
-
+            
             <plugin>
-                <artifactId>maven-failsafe-plugin</artifactId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                
                 <configuration>
                     <argLine>-Xmx768m</argLine>
-
-                    <!-- Surefire / TestNG Properties -->
-                    <!-- The suite, the exclude and the test dependencies together determine which tests are being run -->
-                    <suiteXmlFiles>
-                        <suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
-                    </suiteXmlFiles>
+                    
                     <dependenciesToScan>
                         <dependency>jakarta.enterprise.concurrent:jakarta.enterprise.concurrent-tck</dependency>
                     </dependenciesToScan>
-                    <properties>
-                        <property>
-                            <name>surefire.testng.verbose</name>
-                            <value>1</value>
-                        </property>
-                    </properties>
-                    <!-- System Properties -->
+                    
                     <systemPropertyVariables>
                         <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
                         <glassfish.enableDerby>true</glassfish.enableDerby>
                         <glassfish.maxHeapSize>2048m</glassfish.maxHeapSize>
-
-                        <!-- Remove comments for logging to file. Following logging with e.g. tail -f ConcurrentTCK00.log -->
-                        <!--
-                        <java.util.logging.config.file>${project.build.directory}/test-classes/logging.properties</java.util.logging.config.file>
-
-                        -->
+                        
                         <glassfish.systemProperties>
                             jimage.dir=${project.build.directory}/jimage
                         </glassfish.systemProperties>
-
+                        
                         <glassfish.postBootCommands>
                             create-file-user --groups staff:mgr --passwordfile ${project.build.directory}/test-classes/j2ee.pass j2ee
                             create-file-user --groups Manager --passwordfile ${project.build.directory}/test-classes/javajoe.pass javajoe
                         </glassfish.postBootCommands>
                     </systemPropertyVariables>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-surefire-report-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>generate-test-report</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>report-only</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <outputDirectory>${project.build.directory}/surefire-reports</outputDirectory>
-                    <outputName>test-report</outputName>
+                    
+                    <!-- Groups to include i.e. web/full -->
+                    <groups>${jakarta.tck.platform}</groups> 
+                    <reportNameSuffix>${jakarta.tck.platform}</reportNameSuffix>
+                    <testSourceDirectory>${basedir}/src/main/java/</testSourceDirectory>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
+    
     <profiles>
         <profile>
             <id>full</id>
@@ -274,16 +192,15 @@
             </activation>
             <properties>
                 <glassfish-artifact-id>glassfish</glassfish-artifact-id>
-                <suiteXmlFile>suite.xml</suiteXmlFile>
+                <jakarta.tck.platform>full</jakarta.tck.platform>
             </properties>
         </profile>
         <profile>
             <id>web</id>
             <properties>
                 <glassfish-artifact-id>web</glassfish-artifact-id>
-                <suiteXmlFile>suite-web.xml</suiteXmlFile>
+                <jakarta.tck.platform.tck.platform>web</jakarta.tck.platform.tck.platform>
             </properties>
         </profile>
     </profiles>
-
 </project>

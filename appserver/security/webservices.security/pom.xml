@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.security</groupId>
         <artifactId>securitymodule</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>8.0.0-M1.1</version>
     </parent>
 
     <artifactId>webservices.security</artifactId>

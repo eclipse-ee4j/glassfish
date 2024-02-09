@@ -82,7 +82,7 @@ public class EventsImpl implements Events {
                 logger.log(Level.SEVERE, KernelLoggerInfo.exceptionSendEvent, ex);
             }
             if (m!=null) {
-                RestrictTo fooBar = m.getParameterTypes()[0].getAnnotation(RestrictTo.class);
+                RestrictTo fooBar = m.getParameters()[0].getAnnotation(RestrictTo.class);
                 if (fooBar!=null) {
                     EventTypes interested = EventTypes.create(fooBar.value());
                     if (!event.is(interested)) {

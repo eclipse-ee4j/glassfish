@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +18,8 @@
 package org.glassfish.config.support;
 
 import java.lang.reflect.Proxy;
+import java.util.StringJoiner;
+
 import javax.xml.stream.XMLStreamReader;
 
 import org.glassfish.hk2.api.ServiceLocator;
@@ -96,7 +99,10 @@ public final class GlassFishConfigBean extends ConfigBean {
     }
 
     public String toString() {
-        //final Set<String> attrNames = getAttributeNames();
-        return "GlassFishConfigBean." + getProxyType().getName();
+        StringJoiner attributeJoiner = new StringJoiner(",");
+        for (String attributeName : getAttributeNames()) {
+            attributeJoiner.add(attributeName + "=" + attribute(attributeName));
+        }
+        return "GlassFishConfigBean." + getProxyType().getName() + "(" + attributeJoiner.toString() + ")";
     }
 }

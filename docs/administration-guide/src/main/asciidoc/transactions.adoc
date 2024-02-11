@@ -27,10 +27,8 @@ Instructions for accomplishing the tasks in this chapter by using the
 Administration Console are contained in the Administration Console
 online help.
 
-For more information about the Java Transaction API (JTA) and Java
-Transaction Service (JTS), see the following sites:
-`http://www.oracle.com/technetwork/java/javaee/tech/jta-138684.html` and
-`http://www.oracle.com/technetwork/java/javaee/tech/jts-140022.html`.
+For more information about the Java Transaction API (JTA) see the following site:
+`https://jakarta.ee/specifications/transactions/`.
 
 You might also want to read
 "https://eclipse-ee4j.github.io/jakartaee-tutorial/#transactions[Transactions]"

@@ -37,7 +37,7 @@ Issues]" in {productName} Release Notes for known
 issues related to installation.
 
 * On Solaris, Linux, macOS and Windows systems, JDK software is available from the
-http://www.oracle.com/technetwork/java/javase/downloads/index.html[Java SE downloads page].
+https://www.oracle.com/java/technologies/downloads/[Java SE downloads page].
 
 [[javassist-library-license-notice]]
 
@@ -578,13 +578,13 @@ The following topics are addressed here:
 
 Installation files for {productName} 7 are
 available by download from the
-https://github.com/eclipse-ee4j/glassfishdownload[{productName} Downloads]
+https://glassfish.org/download.html[{productName} Downloads]
 page.
 
 {productName} 7 is also part of the Jakarta EE SDK
-distributions. The SDK distributions are available from the
-http://www.oracle.com/technetwork/java/javaee/downloads/index.html[Java
-EE downloads page] and are not described in this document.
+distributions. The specifications are available from
+https://jakarta.ee/specifications/[Jakarta EE specifications page]
+and are not described in this document.
 
 [[glassfish-server-installation-methods]]
 

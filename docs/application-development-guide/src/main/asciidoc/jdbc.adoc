@@ -16,10 +16,10 @@ also provides high level JDBC implementation instructions for servlets
 and EJB components using the {productName}.
 
 The JDBC specifications are available at
-`http://www.oracle.com/technetwork/java/javase/jdbc/index.html`.
+`https://www.oracle.com/java/technologies/javase/javase-tech-database.html`.
 
 A useful JDBC tutorial is located at
-`http://docs.oracle.com/javase/tutorial/jdbc/index.html`.
+`https://docs.oracle.com/javase/tutorial/jdbc/index.html`.
 
 
 [NOTE]

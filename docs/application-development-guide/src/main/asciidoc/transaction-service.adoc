@@ -23,12 +23,9 @@ The following topics are addressed here:
 * xref:#the-transaction-manager-the-transaction-synchronization-registry-and-usertransaction[The Transaction Manager, the Transaction Synchronization
 Registry, and `UserTransaction`]
 
-For more information about the Java Transaction API (JTA) and Java
-Transaction Service (JTS), see "xref:administration-guide.adoc#administering-transactions[Administering
-Transactions]" in {productName} Administration
-Guide and the following sites:
-`http://www.oracle.com/technetwork/java/javaee/jta/index.html` and
-`http://www.oracle.com/technetwork/java/javaee/tech/index.html`.
+For more information about the Java Transaction API (JTA), see "xref:administration-guide.adoc#administering-transactions[Administering Transactions]" in {productName} Administration
+Guide and the following site:
+`https://jakarta.ee/specifications/transactions/`.
 
 You might also want to read
 "https://eclipse-ee4j.github.io/jakartaee-tutorial/#transactions[Transactions]"

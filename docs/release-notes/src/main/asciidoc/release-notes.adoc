@@ -612,10 +612,6 @@ the `domain.xml` file to remove the line
 chooses the appropriate kind of VM for the given platform. Note that
 server instances use the Server VM by default.
 
-For more information about platform support, see
-http://www.oracle.com/technetwork/java/ergo5-140223.html[Ergonomics in
-the 5.1 Java Virtual Machine].
-
 [[metro-reliable-messaging-in-inorder-delivery-mode]]
 
 ==== Metro Reliable Messaging in `InOrder` Delivery Mode
@@ -939,10 +935,4 @@ Useful information can be found at the following locations:
 
 * https://github.com/eclipse-ee4j/glassfish[{productName} Community]
 (`https://github.com/eclipse-ee4j/glassfish`)
-* http://www.oracle.com/technetwork/index.html[Oracle Developer
-Information] (`http://www.oracle.com/technetwork/index.html`)
-* http://www.oracle.com/technetwork/indexes/documentation/index.html[Oracle
-product documentation]
-(`http://www.oracle.com/technetwork/indexes/documentation/index.html`)
-
 

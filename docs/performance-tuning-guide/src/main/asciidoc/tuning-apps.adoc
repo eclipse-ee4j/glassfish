@@ -26,11 +26,7 @@ The following topics are addressed here:
 
 This section covers issues related to Java coding and performance. The
 guidelines outlined are not specific to {productName}, but are
-general rules that are useful in many situations. For a complete
-discussion of Java coding best practices, see the
-http://www.oracle.com/technetwork/java/javaee/blueprints/index.html[Java
-Blueprints]
-(`http://www.oracle.com/technetwork/java/javaee/blueprints/index.html`).
+general rules that are useful in many situations.
 
 The following topics are addressed here:
 

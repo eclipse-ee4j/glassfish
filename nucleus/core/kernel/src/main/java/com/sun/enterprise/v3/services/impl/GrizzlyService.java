@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -470,7 +471,7 @@ public class GrizzlyService implements RequestDispatcher, PostConstruct, PreDest
      * Method is invoked each time Glassfish state changes.
      */
     @Override
-    public void event(@RestrictTo(EventTypes.SERVER_READY_NAME) EventListener.Event event) {
+    public void event(@RestrictTo(EventTypes.SERVER_READY_NAME) Event<?> event) {
         if (event.is(SERVER_READY)) {
             serverReadyFuture.result(Boolean.TRUE);
 

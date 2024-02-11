@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -770,7 +770,7 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
      * config for persisting it in domain.xml
      */
     @Override
-    public void event(Event event) {
+    public void event(Event<?> event) {
         if (event.is(Deployment.DEPLOYMENT_BEFORE_CLASSLOADER_CREATION)) {
             DeploymentContext dc = (DeploymentContext) event.hook();
             final DeployCommandParameters deployParams = dc.getCommandParameters(DeployCommandParameters.class);

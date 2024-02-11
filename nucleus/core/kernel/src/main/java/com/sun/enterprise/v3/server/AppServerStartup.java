@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -325,7 +325,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
         LinkedList<Future<Result<Thread>>> futures = appInstanceListener.getFutures();
 
         serverEnvironment.setStatus(ServerEnvironment.Status.starting);
-        events.send(new Event(EventTypes.SERVER_STARTUP), false);
+        events.send(new Event<>(EventTypes.SERVER_STARTUP), false);
 
         // finally let's calculate our starting times
         long nowTime = System.currentTimeMillis();
@@ -353,7 +353,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
                     if (future.get(3, SECONDS).isFailure()) {
                         final Throwable t = future.get().exception();
                         logger.log(Level.SEVERE, KernelLoggerInfo.startupFatalException, t);
-                        events.send(new Event(SERVER_SHUTDOWN), false);
+                        events.send(new Event<>(SERVER_SHUTDOWN), false);
                         shutdown();
                         return false;
                     }
@@ -366,7 +366,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
         }
 
         serverEnvironment.setStatus(ServerEnvironment.Status.started);
-        events.send(new Event(EventTypes.SERVER_READY), false);
+        events.send(new Event<>(EventTypes.SERVER_READY), false);
         pidWriter.writePidFile();
 
         return true;
@@ -443,7 +443,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
         serverEnvironment.setStatus(stopping);
 
         try {
-            events.send(new Event(EventTypes.PREPARE_SHUTDOWN), false);
+            events.send(new Event<>(EventTypes.PREPARE_SHUTDOWN), false);
         } catch (Exception e) {
             logger.log(Level.SEVERE, KernelLoggerInfo.exceptionDuringShutdown, e);
         }
@@ -458,7 +458,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
         // first send the shutdown event synchronously
         serverEnvironment.setStatus(stopped);
         try {
-            events.send(new Event(SERVER_SHUTDOWN), false);
+            events.send(new Event<>(SERVER_SHUTDOWN), false);
         } catch (Exception e) {
             logger.log(Level.SEVERE, KernelLoggerInfo.exceptionDuringShutdown, e);
         }
@@ -680,7 +680,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
 
             if (controller.getCurrentRunLevel() >= InitRunLevel.VAL) {
                 logger.log(Level.SEVERE, KernelLoggerInfo.startupFailure, info.getError());
-                events.send(new Event(SERVER_SHUTDOWN), false);
+                events.send(new Event<>(SERVER_SHUTDOWN), false);
             }
 
             forcedShutdown = true;

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,9 +22,7 @@ import static org.glassfish.api.event.EventTypes.SERVER_SHUTDOWN;
 
 import java.util.logging.Logger;
 
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.api.event.EventListener;
-import org.glassfish.api.event.EventTypes;
+import org.glassfish.api.event.EventListener.Event;
 import org.glassfish.api.event.Events;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
@@ -61,7 +60,7 @@ public class DomainCreationStartup implements ModuleStartup {
     public void stop() {
         try {
             serverEnvironment.setStatus(stopped);
-            events.send(new EventListener.Event(SERVER_SHUTDOWN), false);
+            events.send(new Event<>(SERVER_SHUTDOWN), false);
         } catch (Exception ex) {
             Logger.getAnonymousLogger().warning(ex.getMessage());
         }

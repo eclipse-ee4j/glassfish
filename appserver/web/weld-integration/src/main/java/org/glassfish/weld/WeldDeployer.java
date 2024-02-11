@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -333,7 +333,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
      * <code>BeanDeploymentArchive</code>s.
      */
     @Override
-    public void event(Event event) {
+    public void event(Event<?> event) {
         if (event.is(APPLICATION_LOADED)) {
             ApplicationInfo appInfo = (ApplicationInfo) event.hook();
             WeldBootstrap bootstrap = appInfo.getTransientAppMetaData(WELD_BOOTSTRAP, WeldBootstrap.class);

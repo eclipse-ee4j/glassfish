@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -205,7 +205,7 @@ public class ModuleInfo {
             }
 
             if (events != null) {
-                events.send(new Event<ModuleInfo>(Deployment.MODULE_LOADED, this), false);
+                events.send(new Event<>(Deployment.MODULE_LOADED, this), false);
             }
             if (tracing != null) {
                 tracing.addMark(DeploymentTracing.Mark.LOADED);
@@ -275,7 +275,7 @@ public class ModuleInfo {
             }
             started = true;
             if (events != null) {
-                events.send(new Event<ModuleInfo>(Deployment.MODULE_STARTED, this), false);
+                events.send(new Event<>(Deployment.MODULE_STARTED, this), false);
             }
         } finally {
             Thread.currentThread().setContextClassLoader(currentClassLoader);
@@ -300,7 +300,7 @@ public class ModuleInfo {
             }
             started = false;
             if (events != null) {
-                events.send(new Event<ModuleInfo>(Deployment.MODULE_STOPPED, this), false);
+                events.send(new Event<>(Deployment.MODULE_STOPPED, this), false);
             }
         } finally {
             Thread.currentThread().setContextClassLoader(currentClassLoader);
@@ -331,7 +331,7 @@ public class ModuleInfo {
                 classLoaders.add(moduleClassLoader);
             }
             if (events != null) {
-                events.send(new Event<ModuleInfo>(Deployment.MODULE_UNLOADED, this), false);
+                events.send(new Event<>(Deployment.MODULE_UNLOADED, this), false);
             }
         } finally {
             Thread.currentThread().setContextClassLoader(currentClassLoader);
@@ -344,7 +344,7 @@ public class ModuleInfo {
             ref.clean(context);
         }
         if (events != null) {
-            events.send(new Event<DeploymentContext>(Deployment.MODULE_CLEANED, context), false);
+            events.send(new Event<>(Deployment.MODULE_CLEANED, context), false);
         }
 
     }

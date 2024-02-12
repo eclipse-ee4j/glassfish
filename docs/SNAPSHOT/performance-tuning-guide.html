@@ -1444,11 +1444,7 @@ EE applications is beyond the scope of this document.</p>
 <div class="paragraph">
 <p>This section covers issues related to Java coding and performance. The
 guidelines outlined are not specific to Eclipse GlassFish, but are
-general rules that are useful in many situations. For a complete
-discussion of Java coding best practices, see the
-<a href="http://www.oracle.com/technetwork/java/javaee/blueprints/index.html">Java
-Blueprints</a>
-(<code><a href="http://www.oracle.com/technetwork/java/javaee/blueprints/index.html" class="bare">http://www.oracle.com/technetwork/java/javaee/blueprints/index.html</a></code>).</p>
+general rules that are useful in many situations.</p>
 </div>
 <div class="paragraph">
 <p>The following topics are addressed here:</p>
@@ -6029,14 +6025,14 @@ increased CPU usage, consider using the CMS collector.</p>
 <div class="sect4">
 <h5 id="additional-information"><a class="anchor" href="#additional-information"></a>Additional Information</h5>
 <div class="paragraph">
-<p>Use the <code>jvmstat</code> utility to monitor HotSpot garbage collection. (See
+<p>Use the <code>jstat</code> utility to monitor Java Virtual Machine statistics. (See
 <a href="#further-information">Further Information</a>.)</p>
 </div>
 <div class="paragraph">
 <p>For detailed information on tuning the garbage collector, see
-<a href="http://www.oracle.com/technetwork/java/javase/gc-tuning-6-140523.html">Java
-SE 6 HotSpot Virtual Machine Garbage Collection Tuning</a>
-(<code><a href="http://www.oracle.com/technetwork/java/javase/gc-tuning-6-140523.html" class="bare">http://www.oracle.com/technetwork/java/javase/gc-tuning-6-140523.html</a></code>).</p>
+<a href="https://docs.oracle.com/en/java/javase/17/gctuning/introduction-garbage-collection-tuning.html">Java
+ Garbage Collection Tuning</a>
+(` <a href="https://docs.oracle.com/en/java/javase/17/gctuning/introduction-garbage-collection-tuning.html`" class="bare">https://docs.oracle.com/en/java/javase/17/gctuning/introduction-garbage-collection-tuning.html`</a>).</p>
 </div>
 </div>
 </div>
@@ -6345,9 +6341,9 @@ generation.</p>
 </div>
 <div class="paragraph">
 <p>For up-to-date defaults, see
-<a href="http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html">Java
+<a href="https://www.oracle.com/java/technologies/javase/vmoptions-jsp.html">Java
 HotSpot VM Options</a>
-(<code><a href="http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html" class="bare">http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html</a></code>).</p>
+(<code><a href="https://www.oracle.com/java/technologies/javase/vmoptions-jsp.html" class="bare">https://www.oracle.com/java/technologies/javase/vmoptions-jsp.html</a></code>).</p>
 </div>
 <div id="fxxpw" class="paragraph">
 <p>Example 4-1 Heap Configuration on Solaris</p>
@@ -6504,22 +6500,14 @@ documentation for rebase utility</a>
 <div class="sect2">
 <h3 id="further-information"><a class="anchor" href="#further-information"></a>Further Information</h3>
 <div class="paragraph">
-<p>For more information on tuning the JVM, see:</p>
+<p>For more information on the jstat command, see:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html">
-Java HotSpot VM Options</a>
-(<code><a href="http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html" class="bare">http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html</a></code>)</p>
-</li>
-<li>
-<p><a href="http://www.oracle.com/technetwork/java/hotspotfaq-138619.html">
-Frequently Asked Questions About the Java HotSpot Virtual Machine</a>
-(<code><a href="http://www.oracle.com/technetwork/java/hotspotfaq-138619.html" class="bare">http://www.oracle.com/technetwork/java/hotspotfaq-138619.html</a></code>)</p>
-</li>
-<li>
-<p><a href="http://www.oracle.com/technetwork/java/javase/tech/index-jsp-136373.html" class="bare">http://www.oracle.com/technetwork/java/javase/tech/index-jsp-136373.html</a>[</p>
+<p><a href="https://docs.oracle.com/en/java/javase/17/docs/specs/man/jstat.html">
+The jstat Command</a>
+(<code><a href="https://docs.oracle.com/en/java/javase/17/docs/specs/man/jstat.html" class="bare">https://docs.oracle.com/en/java/javase/17/docs/specs/man/jstat.html</a></code>)</p>
 </li>
 </ul>
 </div>
@@ -7805,7 +7793,7 @@ $ifconfig ipge1 group webserver</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-02-11 00:02:36 UTC
+Last updated 2024-02-12 11:51:44 UTC
 </div>
 </div>
 </body>

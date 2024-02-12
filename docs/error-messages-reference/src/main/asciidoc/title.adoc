@@ -14,7 +14,7 @@ Error Message Reference
 
 Release 7
 
-Contributed 2018 - 2022
+Contributed 2018 - 2024
 
 This book describes error messages that you might encounter when using
 {productName} 7.

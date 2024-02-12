@@ -404,9 +404,9 @@ JAAS is a set of APIs that enable services to authenticate and enforce
 access controls upon users. JAAS provides a pluggable and extensible
 framework for programmatic user authentication and authorization. JAAS
 is a core API and an underlying technology for Jakarta EE security
-mechanisms. For more information about JAAS, refer to the JAAS
-specification for Java SDK, available at
-`http://www.oracle.com/technetwork/java/javase/tech/index-jsp-136007.html`.
+mechanisms. For more information about JAAS, refer to the specification, 
+available at `https://jakarta.ee/specifications/authentication/` and 
+`https://jakarta.ee/specifications/authorization/`.
 
 For general information about realms and login modules, see the section
 about working with realms, users, groups, and roles in
@@ -1545,9 +1545,9 @@ or in a directory of your choice. For easy reference throughout the rest
 of this section, this directory is referred to as simply app-dir.
 
 1. Go to the
-http://www.oracle.com/technetwork/java/javaee/download-141771.html[J2EE
+https://www.oracle.com/java/technologies/java-archive-eesdk-downloads.html[J2EE
 1.4 download URL]
-(`http://www.oracle.com/technetwork/java/javaee/download-141771.html`)
+(`https://www.oracle.com/java/technologies/java-archive-eesdk-downloads.html`)
 in your browser.
 2. Click on the Download button for the Samples Bundle.
 3. Click on Accept License Agreement.

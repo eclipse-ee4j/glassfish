@@ -15,8 +15,8 @@ objects. The Jakarta EE naming service is based on the Java Naming and
 Directory Interface (JNDI) API. The JNDI API allows application
 components and clients to look up distributed resources, services, and
 EJB components. For general information about the JNDI API, see
-`http://www.oracle.com/technetwork/java/jndi/index.html`. You can also
-see the JNDI tutorial at `http://docs.oracle.com/javase/jndi/tutorial/`.
+`https://docs.oracle.com/javase/tutorial/jndi/overview/index.html`. You can also
+see the JNDI tutorial at `https://docs.oracle.com/javase/jndi/tutorial/`.
 
 The following topics are addressed here:
 

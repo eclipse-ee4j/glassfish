@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -140,7 +140,7 @@ public class PEORBConfigurator implements ORBConfigurator {
         } catch (NoSuchWorkQueueException ex) {
             Logger.getLogger(PEORBConfigurator.class.getName()).log(Level.SEVERE, null, ex);
         }
-        }
+    }
 
     private static void configureCopiers(ORB orb) {
         CopierManager cpm = orb.getCopierManager();

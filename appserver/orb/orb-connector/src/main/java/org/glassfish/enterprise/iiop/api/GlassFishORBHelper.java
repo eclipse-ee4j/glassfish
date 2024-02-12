@@ -60,16 +60,18 @@ public class GlassFishORBHelper implements ORBLocator {
     private ProcessEnvironment processEnv;
 
     @Inject
-    Provider<ProtocolManager> protocolManagerProvider;
+    private Provider<ProtocolManager> protocolManagerProvider;
 
     @Inject
-    Provider<GlassfishNamingManager> glassfishNamingManagerProvider;
+    private Provider<GlassfishNamingManager> glassfishNamingManagerProvider;
 
-    private volatile ORB orb;
     private ProtocolManager protocolManager;
     private SelectableChannelDelegate selectableChannelDelegate;
     private GlassFishORBFactory orbFactory;
-    private boolean destroyed;
+
+    // volatile is enough for sync, just one thread can write
+    private volatile ORB orb;
+    private volatile boolean destroyed;
 
     @PostConstruct
     public void postConstruct() {
@@ -87,6 +89,7 @@ public class GlassFishORBHelper implements ORBLocator {
         }
     }
 
+    // Called by PEORBConfigurator executed from glassfish-corba-orb.jar
     public synchronized void setORB(ORB orb) {
         this.orb = orb;
     }
@@ -100,55 +103,54 @@ public class GlassFishORBHelper implements ORBLocator {
         // Use a volatile double-checked locking idiom here so that we can publish
         // a partly-initialized ORB early, so that lazy init can come into getORB()
         // and allow an invocation to the transport to complete.
-        if (orb == null && !destroyed) {
-
-            synchronized (this) {
-                if (orb == null) {
-                    try {
-                        boolean isServer = processEnv.getProcessType().isServer();
-
-                        Properties props = new Properties();
-                        props.setProperty(GlassFishORBFactory.ENV_IS_SERVER_PROPERTY, Boolean.toString(isServer));
-
-                        // Create orb and make it visible.
-                        //
-                        // This will allow loopback calls to getORB() from portable interceptors activated as a
-                        // side-effect of the remaining initialization.
-                        //
-                        // If it's a server, there's a small time window during which the ProtocolManager won't be available.
-                        // Any callbacks that result from the protocol manager initialization itself cannot depend on having
-                        // access to the protocol manager.
-                        orb = orbFactory.createORB(props);
-
-                        if (isServer) {
-                            if (protocolManager == null) {
-                                ProtocolManager tempProtocolManager = protocolManagerProvider.get();
-
-                                tempProtocolManager.initialize(orb);
-
-                                // Move startup of naming to PEORBConfigurator so it runs before interceptors.
-                                tempProtocolManager.initializePOAs();
-
-                                // Now make protocol manager visible.
-                                protocolManager = tempProtocolManager;
-
-                                GlassfishNamingManager namingManager = glassfishNamingManagerProvider.get();
-
-                                Remote remoteSerialProvider = namingManager.initializeRemoteNamingSupport(orb);
-
-                                protocolManager.initializeRemoteNaming(remoteSerialProvider);
-                            }
-                        }
-                    } catch (Exception e) {
-                        orb = null;
-                        protocolManager = null;
-                        throw new RuntimeException("Orb initialization erorr", e);
-                    }
-                }
-            }
+        if (orb != null || destroyed) {
+            return orb;
         }
 
-        return orb;
+        synchronized (this) {
+            if (orb != null) {
+                return orb;
+            }
+            try {
+                final boolean isServer = processEnv.getProcessType().isServer();
+
+                final Properties props = new Properties();
+                props.setProperty(GlassFishORBFactory.ENV_IS_SERVER_PROPERTY, Boolean.toString(isServer));
+
+                // Create orb and make it visible.
+                //
+                // This will allow loopback calls to getORB() from portable interceptors activated as a
+                // side-effect of the remaining initialization.
+                //
+                // If it's a server, there's a small time window during which the ProtocolManager won't be available.
+                // Any callbacks that result from the protocol manager initialization itself cannot depend on having
+                // access to the protocol manager.
+                orb = orbFactory.createORB(props);
+
+                if (isServer) {
+                    if (protocolManager == null) {
+                        final ProtocolManager tempProtocolManager = protocolManagerProvider.get();
+
+                        tempProtocolManager.initialize(orb);
+
+                        // Move startup of naming to PEORBConfigurator so it runs before interceptors.
+                        tempProtocolManager.initializePOAs();
+
+                        // Now make protocol manager visible.
+                        protocolManager = tempProtocolManager;
+
+                        final GlassfishNamingManager namingManager = glassfishNamingManagerProvider.get();
+                        final Remote remoteSerialProvider = namingManager.initializeRemoteNamingSupport(orb);
+                        protocolManager.initializeRemoteNaming(remoteSerialProvider);
+                    }
+                }
+                return orb;
+            } catch (Exception e) {
+                orb = null;
+                protocolManager = null;
+                throw new RuntimeException("Orb initialization erorr", e);
+            }
+        }
     }
 
     public void setSelectableChannelDelegate(SelectableChannelDelegate d) {
@@ -159,27 +161,22 @@ public class GlassFishORBHelper implements ORBLocator {
         return this.selectableChannelDelegate;
     }
 
-    public interface SelectableChannelDelegate {
-        void handleRequest(SelectableChannel channel);
-    }
 
     /**
-     * Get a protocol manager for creating remote references. ProtocolManager is only available in the server. Otherwise,
-     * this method returns null.
-     *
-     * If it's the server and the orb hasn't been already created, calling this method has the side effect of creating the
-     * orb.
+     * Get a protocol manager for creating remote references.
+     * ProtocolManager is only available in the server.
+     * Otherwise, this method returns null.
+     * If it's the server and the orb hasn't been already created, calling this method has the side
+     * effect of creating the orb.
      */
     public ProtocolManager getProtocolManager() {
         if (!processEnv.getProcessType().isServer() || destroyed) {
             return null;
         }
-
         synchronized (this) {
             if (protocolManager == null) {
                 getORB();
             }
-
             return protocolManager;
         }
     }
@@ -222,4 +219,7 @@ public class GlassFishORBHelper implements ORBLocator {
         return orbFactory.isEjbCall(sri);
     }
 
+    public interface SelectableChannelDelegate {
+        void handleRequest(SelectableChannel channel);
+    }
 }

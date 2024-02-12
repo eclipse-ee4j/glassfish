@@ -17,8 +17,8 @@
 
 package org.glassfish.api.event;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.glassfish.api.event.EventListener.Event;
 
@@ -33,7 +33,7 @@ import org.glassfish.api.event.EventListener.Event;
  */
 public final class EventTypes<T> {
 
-    private final static Map<String, EventTypes<?>> EVENTS = new HashMap<>();
+    private final static Map<String, EventTypes<?>> EVENTS = new ConcurrentHashMap<>();
 
     // Stock events.
     public static final String SERVER_STARTUP_NAME = "server_startup";
@@ -60,12 +60,7 @@ public final class EventTypes<T> {
 
     @SuppressWarnings("unchecked")
     public static <T> EventTypes<T> create(String name, Class<T> hookType) {
-        synchronized (EVENTS) {
-            if (!EVENTS.containsKey(name)) {
-                EVENTS.put(name, new EventTypes<>(name, hookType));
-            }
-        }
-        return (EventTypes<T>) EVENTS.get(name);
+        return (EventTypes<T>) EVENTS.computeIfAbsent(name, key -> new EventTypes<>(key, hookType));
     }
 
     public String type() {

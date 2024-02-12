@@ -20,9 +20,8 @@ package org.glassfish.kernel.event;
 import jakarta.inject.Inject;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,10 +48,10 @@ public class EventsImpl implements Events {
     @Inject
     private ExecutorService executor;
 
-    private final List<EventListener> listeners = Collections.synchronizedList(new ArrayList<>());
+    private final Queue<EventListener> listeners = new ConcurrentLinkedQueue<>();
 
     @Override
-    public synchronized void register(EventListener listener) {
+    public void register(EventListener listener) {
         listeners.add(listener);
     }
 
@@ -63,8 +62,7 @@ public class EventsImpl implements Events {
 
     @Override
     public void send(final Event<?> event, boolean asynchronously) {
-        List<EventListener> eventListeners = new ArrayList<>(listeners);
-        for (final EventListener listener : eventListeners) {
+        for (final EventListener listener : listeners) {
             Method eventMethod = null;
             try {
                 // Check if the listener is interested with his event.
@@ -114,7 +112,7 @@ public class EventsImpl implements Events {
     }
 
     @Override
-    public synchronized boolean unregister(EventListener listener) {
+    public boolean unregister(EventListener listener) {
         return listeners.remove(listener);
     }
 }

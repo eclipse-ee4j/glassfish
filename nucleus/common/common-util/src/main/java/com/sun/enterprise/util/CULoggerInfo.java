@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,10 +26,12 @@ import org.glassfish.logging.annotation.LoggerInfo;
 
 /**
  * Logger information for the common-util module.
+ *
  * @author Tom Mueller
  */
 /* Module private */
 public class CULoggerInfo {
+
     private static final String LOGMSG_PREFIX = "NCLS-COMUTIL";
 
     @LogMessagesResourceBundle
@@ -37,6 +39,7 @@ public class CULoggerInfo {
 
     @LoggerInfo(subsystem = "COMMON", description = "Common Utilities", publish = true)
     private static final String UTIL_LOGGER = "jakarta.enterprise.system.util";
+
     private static final Logger utilLogger = Logger.getLogger(UTIL_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
 
     public static Logger getLogger() {
@@ -54,58 +57,56 @@ public class CULoggerInfo {
     @LogMessageInfo(
             message = "Failed to process class {0} with bytecode preprocessor {1}",
             cause = "Unknown",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String preprocessFailed = LOGMSG_PREFIX + "-00001";
 
     @LogMessageInfo(
             message = "Class {0} is being reset to its original state",
             cause = "Unknown",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String resettingOriginal = LOGMSG_PREFIX + "-00002";
 
     @LogMessageInfo(
             message = "Class {0} is being reset to the last successful preprocessor",
             cause = "Unknown",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String resettingLastGood = LOGMSG_PREFIX + "-00003";
 
     @LogMessageInfo(
             message = "The supplied preprocessor class {0} is not an instance of org.glassfish.api.BytecodePreprocessor",
             cause = "Unknown",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String invalidType = LOGMSG_PREFIX + "-00004";
 
     @LogMessageInfo(
             message = "Bytecode preprocessor disabled",
             cause = "Unknown",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String disabled = LOGMSG_PREFIX + "-00005";
 
     @LogMessageInfo(
             message = "Initialization failed for bytecode preprocessor {0}",
             cause = "Unknown",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String failedInit = LOGMSG_PREFIX + "-00006";
 
     @LogMessageInfo(
             message = "Error setting up preprocessor",
             cause = "Unknown",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String setupEx = LOGMSG_PREFIX + "-00007";
 
-    @LogMessageInfo(
-            message = "Illegal max-entries [{0}]; please check your cache configuration.")
+    @LogMessageInfo(message = "Illegal max-entries [{0}]; please check your cache configuration.")
     public static final String illegalMaxEntries = LOGMSG_PREFIX + "-00008";
 
-    @LogMessageInfo(
-            message = "Illegal MaxSize value [{0}]")
+    @LogMessageInfo(message = "Illegal MaxSize value [{0}]")
     public static final String boundedMultiLruCacheIllegalMaxSize = LOGMSG_PREFIX + "-00009";
 
     @LogMessageInfo(
@@ -116,12 +117,12 @@ public class CULoggerInfo {
     @LogMessageInfo(
             message = "An error occurred while adding URL [{0}] to the EJB class loader. Please check the content of this URL.",
             cause = "An unexpected exception occurred while processing a URL.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String badUrlEntry = LOGMSG_PREFIX + "-00011";
 
     @LogMessageInfo(
-            message = "The URL entry is missing while contructing the classpath.",
+            message = "The URL entry is missing while constructing the classpath.",
             level = "INFO")
     public static final String missingURLEntry = LOGMSG_PREFIX + "-00012";
 
@@ -163,14 +164,14 @@ public class CULoggerInfo {
     @LogMessageInfo(
             message = "Error processing file with path {0} in {1}",
             cause = "An unexpected exception occurred while processing a file.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String exceptionProcessingFile = LOGMSG_PREFIX + "-00020";
 
     @LogMessageInfo(
             message = "Error checking for existing of {0} in {1}",
             cause = "An unexpected exception occurred while checking for the existence of a file.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String exceptionCheckingFile = LOGMSG_PREFIX + "-00021";
 
@@ -187,54 +188,54 @@ public class CULoggerInfo {
     @LogMessageInfo(
             message = "Unable to create client data directory: {0}",
             cause = "An unexpected failure occurred while creating the directory for the file.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String errorCreatingDirectory = LOGMSG_PREFIX + "-00024";
 
     @LogMessageInfo(
             message = "Exception in invokeApplicationMain [{0}].",
             cause = "An unexpected exception occurred.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String exceptionInUtility = LOGMSG_PREFIX + "-00025";
 
     @LogMessageInfo(
             message = "The main method signature is invalid.",
             cause = "While invoking a main class, an invalid method was found.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String mainNotValid = LOGMSG_PREFIX + "-00026";
 
     @LogMessageInfo(
             message = "Error while caching the local string manager - package name may be null.",
             cause = "An unexpected exception occurred.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String exceptionCachingStringManager = LOGMSG_PREFIX + "-00027";
 
     @LogMessageInfo(
             message = "Error while constructing the local string manager object.",
             cause = "An unexpected exception occurred.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String exceptionConstructingStringManager = LOGMSG_PREFIX + "-00028";
 
     @LogMessageInfo(
             message = "Error in local string manager - resource bundle is probably missing.",
             cause = "An unexpected exception occurred.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String exceptionResourceBundle = LOGMSG_PREFIX + "-00029";
 
     @LogMessageInfo(
-            message = "Error while formating the local string.",
+            message = "Error while formatting the local string.",
             level = "WARNING")
     public static final String exceptionWhileFormating = LOGMSG_PREFIX + "-00030";
 
     @LogMessageInfo(
             message = "Some IOException occurred",
             cause = "An unexpected exception occurred.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String exceptionIO = LOGMSG_PREFIX + "-00031";
 
@@ -284,15 +285,14 @@ public class CULoggerInfo {
     public static final String fileLockNotReleased = LOGMSG_PREFIX + "-00040";
 
     @LogMessageInfo(
-            message = "Bad Network Configuration.  DNS can not resolve the "
-            + "hostname: \n{0}",
+            message = "Bad Network Configuration.  DNS can not resolve the hostname: \n{0}",
             cause = "The hostname can't be resolved.",
             action = "Set the hostname correctly.",
             level = "WARNING")
     public static final String badNetworkConfig = LOGMSG_PREFIX + "-00041";
 
-    @LogMessageInfo(message = "BundleTracker.removedBundle null bundleID for {0}",
-                    level="WARNING")
+    @LogMessageInfo(
+            message = "BundleTracker.removedBundle null bundleID for {0}",
+            level="WARNING")
     public static final String NULL_BUNDLE = LOGMSG_PREFIX + "-00042";
-
 }

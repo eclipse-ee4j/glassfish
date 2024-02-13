@@ -129,11 +129,9 @@ public class GlassFishORBHelper implements ORBLocator {
                 // Any callbacks that result from the protocol manager initialization itself cannot
                 // depend on having access to the protocol manager.
                 orb = orbFactory.createORB(props);
-
-                if (!isServer || protocolManager != null) {
-                    return orb;
+                if (isServer && protocolManager == null) {
+                    protocolManager = initProtocolManager(orb);
                 }
-                protocolManager = initProtocolManager(orb);
                 return orb;
             } catch (Exception e) {
                 orb = null;

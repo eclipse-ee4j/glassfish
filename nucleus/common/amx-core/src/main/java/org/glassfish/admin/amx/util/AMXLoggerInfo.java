@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,16 +18,19 @@
 package org.glassfish.admin.amx.util;
 
 import java.util.logging.Logger;
+
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
 
 /**
  * Logger information for the amx-core module.
+ *
  * @author Tom Mueller
  */
 /* Module private */
 public class AMXLoggerInfo {
+
     public static final String LOGMSG_PREFIX = "NCLS-COM";
 
     @LogMessagesResourceBundle
@@ -34,8 +38,8 @@ public class AMXLoggerInfo {
 
     @LoggerInfo(subsystem = "COMMON", description = "AMX Services", publish = true)
     public static final String AMX_LOGGER = "jakarta.enterprise.system.tools.amx";
-    private static final Logger amxLogger = Logger.getLogger(
-                AMX_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
+
+    private static final Logger amxLogger = Logger.getLogger(AMX_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
 
     public static Logger getLogger() {
         return amxLogger;
@@ -94,7 +98,7 @@ public class AMXLoggerInfo {
     @LogMessageInfo(
             message = "AMX ComplianceMonitor thread has unexpectedly quit {0}",
             cause = "A JMX validation thread has unexpectedly terminated due to an exception.",
-            action = "Check the server logs and contact Oracle support.",
+            action = "Check the server logs.",
             level = "SEVERE")
     public static final String aMXComplianceMonitorThreadquit = LOGMSG_PREFIX + "-00022";
 
@@ -121,14 +125,14 @@ public class AMXLoggerInfo {
     @LogMessageInfo(
             message = "Attribute {0} not found for object {1}",
             cause = "An attempt to resolve an attribute failed.",
-            action = "Check the server logs and contact Oracle support.",
+            action = "Check the server logs.",
             level = "SEVERE")
     public static final String attributeNotfound = LOGMSG_PREFIX + "-00030";
 
     @LogMessageInfo(
             message = "Can't find child of type {0}",
             cause = "While removing a child, the child was not found.",
-            action = "Check the server logs and contact Oracle support.",
+            action = "Check the server logs.",
             level = "SEVERE")
     public static final String childNotfound = LOGMSG_PREFIX + "-00031";
 
@@ -145,7 +149,7 @@ public class AMXLoggerInfo {
     @LogMessageInfo(
             message = "Unexpected thread death of AMXConfigLoaderThread",
             cause = "The AMX configuration loader thread received an unexpected exception.",
-            action = "Check the server logs and contact Oracle support.",
+            action = "Check the server logs.",
             level = "SEVERE")
     public static final String unexpectedDeath = LOGMSG_PREFIX + "-00034";
 
@@ -228,6 +232,4 @@ public class AMXLoggerInfo {
             message = "MBeanInfoSupport: @ManagedAttribute not a getter or setter: {0}.{1}()",
             level = "WARNING")
     public static final String attributeNotGetterSetter = LOGMSG_PREFIX + "-00050";
-
-
 }

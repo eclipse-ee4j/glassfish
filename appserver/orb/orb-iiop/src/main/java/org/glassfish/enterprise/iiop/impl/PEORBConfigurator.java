@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,51 +17,44 @@
 
 package org.glassfish.enterprise.iiop.impl;
 
-// import org.glassfish.pfl.dynamic.copyobject.spi.CopyobjectDefaults ;
-import com.sun.corba.ee.spi.copyobject.CopyobjectDefaults ;
-import org.glassfish.pfl.dynamic.copyobject.spi.ObjectCopierFactory ;
+import com.sun.corba.ee.impl.naming.cosnaming.TransientNameService;
 import com.sun.corba.ee.spi.copyobject.CopierManager;
+import com.sun.corba.ee.spi.copyobject.CopyobjectDefaults ;
 import com.sun.corba.ee.spi.orb.DataCollector;
 import com.sun.corba.ee.spi.orb.ORB;
 import com.sun.corba.ee.spi.orb.ORBConfigurator;
-import com.sun.corba.ee.spi.threadpool.NoSuchWorkQueueException;
-import com.sun.corba.ee.spi.threadpool.ThreadPoolManager;
 import com.sun.corba.ee.spi.presentation.rmi.InvocationInterceptor;
-import com.sun.corba.ee.spi.transport.TransportManager;
+import com.sun.corba.ee.spi.threadpool.NoSuchWorkQueueException;
+import com.sun.corba.ee.spi.threadpool.ThreadPool;
+import com.sun.corba.ee.spi.threadpool.ThreadPoolManager;
 import com.sun.corba.ee.spi.transport.Acceptor;
 import com.sun.corba.ee.spi.transport.TransportDefault;
+import com.sun.corba.ee.spi.transport.TransportManager;
 import com.sun.logging.LogDomains;
-import org.glassfish.orb.admin.config.IiopListener;
-import org.glassfish.grizzly.config.dom.Ssl;
-import java.util.logging.Logger;
-import org.glassfish.enterprise.iiop.api.IIOPConstants;
-import org.glassfish.enterprise.iiop.util.S1ASThreadPoolManager;
-import org.glassfish.enterprise.iiop.util.IIOPUtils;
 
-import java.nio.channels.SocketChannel;
 import java.net.Socket;
-import java.util.List;
-
-import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
-
-import com.sun.corba.ee.impl.naming.cosnaming.TransientNameService;
-
-// TODO import org.omg.CORBA.TSIdentification;
-
-// TODO import com.sun.corba.ee.impl.txpoa.TSIdentificationImpl;
-
-import com.sun.corba.ee.spi.threadpool.ThreadPool;
-import java.util.logging.Level;
-import java.util.Set;
-import java.util.HashSet;
+import java.nio.channels.SelectableChannel;
+import java.nio.channels.SocketChannel;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.nio.channels.SelectableChannel;
+
+import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
+import org.glassfish.enterprise.iiop.api.IIOPConstants;
+import org.glassfish.enterprise.iiop.util.IIOPUtils;
+import org.glassfish.enterprise.iiop.util.S1ASThreadPoolManager;
 import org.glassfish.enterprise.iiop.util.ThreadPoolStats;
 import org.glassfish.enterprise.iiop.util.ThreadPoolStatsImpl;
 import org.glassfish.external.probe.provider.PluginPoint;
 import org.glassfish.external.probe.provider.StatsProviderManager;
+import org.glassfish.grizzly.config.dom.Ssl;
+import org.glassfish.orb.admin.config.IiopListener;
+import org.glassfish.pfl.dynamic.copyobject.spi.ObjectCopierFactory ;
 
 public class PEORBConfigurator implements ORBConfigurator {
     private static final java.util.logging.Logger logger =
@@ -74,9 +67,7 @@ public class PEORBConfigurator implements ORBConfigurator {
     private static final String DEFAULT_ORB_INIT_HOST = "localhost";
 
     // TODO private static TSIdentification tsIdent;
-    private static ORB theORB;
     private static ThreadPoolManager threadpoolMgr = null;
-    private static boolean txServiceInitialized = false;
 
     static {
         // TODO tsIdent = new TSIdentificationImpl();
@@ -84,10 +75,10 @@ public class PEORBConfigurator implements ORBConfigurator {
 
     private GlassFishORBHelper getHelper() {
         IIOPUtils iiopUtils = IIOPUtils.getInstance();
-        return iiopUtils.getHabitat().getService(
-            GlassFishORBHelper.class);
+        return iiopUtils.getHabitat().getService(GlassFishORBHelper.class);
     }
 
+    @Override
     public void configure(DataCollector dc, ORB orb) {
         try {
             //begin temp fix for bug 6320008
@@ -149,7 +140,7 @@ public class PEORBConfigurator implements ORBConfigurator {
         } catch (NoSuchWorkQueueException ex) {
             Logger.getLogger(PEORBConfigurator.class.getName()).log(Level.SEVERE, null, ex);
         }
-        }
+    }
 
     private static void configureCopiers(ORB orb) {
         CopierManager cpm = orb.getCopierManager();
@@ -217,7 +208,7 @@ public class PEORBConfigurator implements ORBConfigurator {
         return acceptor;
     }
 
-    private static final Set<String> ANY_ADDRS = new HashSet<String>(
+    private static final Set<String> ANY_ADDRS = new HashSet<>(
         Arrays.asList( "0.0.0.0", "::", "::ffff:0.0.0.0" ) ) ;
 
     private String handleAddrAny( String hostAddr )  {
@@ -242,12 +233,12 @@ public class PEORBConfigurator implements ORBConfigurator {
         }
 
         var lazyListeners = Stream.of(iiopListenerBeans)
-                .filter(ilb -> Boolean.valueOf(ilb.getLazyInit())).collect(Collectors.toList());
+                .filter(ilb -> Boolean.parseBoolean(ilb.getLazyInit())).collect(Collectors.toList());
 
         if (lazyListeners.size() > 1) {
             throw new IllegalStateException(
                     "Only one iiop-listener can be configured with lazy-init=true. "
-                            + lazyListeners.stream().map(ilb -> ilb.getId()).collect(Collectors.toList()));
+                            + lazyListeners.stream().map(IiopListener::getId).collect(Collectors.toList()));
         }
 
         var lazySslListeners = lazyListeners.stream()
@@ -257,7 +248,7 @@ public class PEORBConfigurator implements ORBConfigurator {
         if (lazySslListeners.size() > 0) {
             throw new IllegalStateException(
                     "Lazy-init not supported for SSL iiop-listeners. "
-                            + lazySslListeners.stream().map(ilb -> ilb.getId()).collect(Collectors.toList()));
+                            + lazySslListeners.stream().map(IiopListener::getId).collect(Collectors.toList()));
         }
 
         for (IiopListener ilb : iiopListenerBeans) {
@@ -265,14 +256,14 @@ public class PEORBConfigurator implements ORBConfigurator {
                 continue;
             }
 
-            boolean isLazy = Boolean.valueOf(ilb.getLazyInit());
+            boolean isLazy = Boolean.parseBoolean(ilb.getLazyInit());
             int port = Integer.parseInt(ilb.getPort());
             String host = handleAddrAny(ilb.getAddress());
 
             boolean isSslListener = Boolean.valueOf(ilb.getSecurityEnabled()) && ilb.getSsl() != null;
             if (isSslListener) {
                 Ssl sslBean = ilb.getSsl();
-                boolean clientAuth = Boolean.valueOf(
+                boolean clientAuth = Boolean.parseBoolean(
                         sslBean.getClientAuthEnabled());
                 String type = clientAuth ? SSL_MUTUALAUTH : SSL;
                 addAcceptor(orb, isLazy, host, type, port);
@@ -290,7 +281,7 @@ public class PEORBConfigurator implements ORBConfigurator {
     private static class AcceptorDelegateImpl
         implements GlassFishORBHelper.SelectableChannelDelegate {
 
-        private Acceptor acceptor;
+        private final Acceptor acceptor;
 
         AcceptorDelegateImpl(Acceptor lazyAcceptor) {
             acceptor = lazyAcceptor;

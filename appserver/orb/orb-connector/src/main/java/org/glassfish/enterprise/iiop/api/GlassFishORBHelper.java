@@ -45,7 +45,7 @@ import static com.sun.logging.LogDomains.CORBA_LOGGER;
  * This class exposes any orb/iiop functionality needed by modules in the app server.
  * This prevents modules from needing any direct dependencies on the orb-iiop module.
  *
- * @author Mahesh Kannan Date: Jan 17, 2009
+ * @author Mahesh Kannan, Jan 17, 2009
  */
 @Service
 @Singleton
@@ -103,13 +103,15 @@ public class GlassFishORBHelper implements ORBLocator {
         // Use a volatile double-checked locking idiom here so that we can publish
         // a partly-initialized ORB early, so that lazy init can come into getORB()
         // and allow an invocation to the transport to complete.
-        if (orb != null || destroyed) {
-            return orb;
+        {
+            final ORB orbInstance = this.orb;
+            if (orbInstance != null || destroyed) {
+                return orbInstance;
+            }
         }
-
         synchronized (this) {
-            if (orb != null) {
-                return orb;
+            if (this.orb != null) {
+                return this.orb;
             }
             try {
                 final boolean isServer = processEnv.getProcessType().isServer();
@@ -119,31 +121,19 @@ public class GlassFishORBHelper implements ORBLocator {
 
                 // Create orb and make it visible.
                 //
-                // This will allow loopback calls to getORB() from portable interceptors activated as a
-                // side-effect of the remaining initialization.
+                // This will allow loopback calls to getORB() from portable interceptors activated
+                // as a side-effect of the remaining initialization.
                 //
-                // If it's a server, there's a small time window during which the ProtocolManager won't be available.
-                // Any callbacks that result from the protocol manager initialization itself cannot depend on having
-                // access to the protocol manager.
+                // If it's a server, there's a small time window during which the ProtocolManager
+                // won't be available.
+                // Any callbacks that result from the protocol manager initialization itself cannot
+                // depend on having access to the protocol manager.
                 orb = orbFactory.createORB(props);
 
-                if (isServer) {
-                    if (protocolManager == null) {
-                        final ProtocolManager tempProtocolManager = protocolManagerProvider.get();
-
-                        tempProtocolManager.initialize(orb);
-
-                        // Move startup of naming to PEORBConfigurator so it runs before interceptors.
-                        tempProtocolManager.initializePOAs();
-
-                        // Now make protocol manager visible.
-                        protocolManager = tempProtocolManager;
-
-                        final GlassfishNamingManager namingManager = glassfishNamingManagerProvider.get();
-                        final Remote remoteSerialProvider = namingManager.initializeRemoteNamingSupport(orb);
-                        protocolManager.initializeRemoteNaming(remoteSerialProvider);
-                    }
+                if (!isServer || protocolManager != null) {
+                    return orb;
                 }
+                protocolManager = initProtocolManager(orb);
                 return orb;
             } catch (Exception e) {
                 orb = null;
@@ -151,6 +141,20 @@ public class GlassFishORBHelper implements ORBLocator {
                 throw new RuntimeException("Orb initialization erorr", e);
             }
         }
+    }
+
+
+    private ProtocolManager initProtocolManager(final ORB orbInstance) throws Exception {
+        final ProtocolManager manager = protocolManagerProvider.get();
+        manager.initialize(orbInstance);
+
+        // Move startup of naming to PEORBConfigurator so it runs before interceptors.
+        manager.initializePOAs();
+
+        final GlassfishNamingManager namingManager = glassfishNamingManagerProvider.get();
+        final Remote remoteSerialProvider = namingManager.initializeRemoteNamingSupport(orbInstance);
+        manager.initializeRemoteNaming(remoteSerialProvider);
+        return manager;
     }
 
     public void setSelectableChannelDelegate(SelectableChannelDelegate d) {

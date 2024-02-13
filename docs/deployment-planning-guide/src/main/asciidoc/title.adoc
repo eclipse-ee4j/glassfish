@@ -14,7 +14,7 @@ Deployment Planning Guide
 
 Release 7
 
-Contributed 2018 - 2022
+Contributed 2018 - 2024
 
 This book explains how to build a production deployment of {productName}.
 

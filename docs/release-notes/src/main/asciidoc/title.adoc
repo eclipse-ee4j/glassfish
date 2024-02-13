@@ -14,7 +14,7 @@ Release Notes
 
 Release 7
 
-Contributed 2018 - 2022
+Contributed 2018 - 2024
 
 These Release Notes provide late-breaking information about {productName} 7
 software and documentation. Also included are a summary of

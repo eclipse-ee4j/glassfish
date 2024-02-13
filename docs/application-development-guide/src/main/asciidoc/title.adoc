@@ -14,7 +14,7 @@ Application Development Guide
 
 Release 7
 
-Contributed 2018 - 2022
+Contributed 2018 - 2024
 
 This Application Development Guide describes how to create and run Java
 Platform, Enterprise Edition (Jakarta EE platform) applications that follow

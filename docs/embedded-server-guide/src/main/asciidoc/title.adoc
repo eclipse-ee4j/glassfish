@@ -14,7 +14,7 @@ Embedded Server Guide
 
 Release 7
 
-Contributed 2018 - 2022
+Contributed 2018 - 2024
 
 This document explains how to run applications in embedded {productName} and to develop applications in which
 {productName} is embedded. This document is for software developers

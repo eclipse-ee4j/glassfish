@@ -14,7 +14,7 @@ High Availability Administration Guide
 
 Release 7
 
-Contributed 2018 - 2022
+Contributed 2018 - 2024
 
 This book describes thehigh-availability features in {productName},
 including converged load balancing, HTTP load balancing, clusters,

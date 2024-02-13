@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,6 +19,9 @@ package org.glassfish.enterprise.iiop.api;
 
 import com.sun.logging.LogDomains;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.ejb.Singleton;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -29,10 +32,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.admin.ProcessEnvironment;
-import org.glassfish.api.event.EventListener;
-import org.glassfish.api.event.Events;
 import org.glassfish.api.naming.GlassfishNamingManager;
-import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.ORBLocator;
 import org.jvnet.hk2.annotations.Service;
@@ -40,16 +40,16 @@ import org.omg.CORBA.ORB;
 import org.omg.PortableInterceptor.ServerRequestInfo;
 
 import static com.sun.logging.LogDomains.CORBA_LOGGER;
-import static org.glassfish.api.event.EventTypes.SERVER_SHUTDOWN;
 
 /**
- * This class exposes any orb/iiop functionality needed by modules in the app server. This prevents modules from needing
- * any direct dependencies on the orb-iiop module.
+ * This class exposes any orb/iiop functionality needed by modules in the app server.
+ * This prevents modules from needing any direct dependencies on the orb-iiop module.
  *
  * @author Mahesh Kannan Date: Jan 17, 2009
  */
 @Service
-public class GlassFishORBHelper implements PostConstruct, ORBLocator {
+@Singleton
+public class GlassFishORBHelper implements ORBLocator {
 
     private static final Logger LOG = LogDomains.getLogger(GlassFishORBHelper.class, CORBA_LOGGER, false);
 
@@ -65,38 +65,30 @@ public class GlassFishORBHelper implements PostConstruct, ORBLocator {
     @Inject
     Provider<GlassfishNamingManager> glassfishNamingManagerProvider;
 
-    @Inject
-    private Provider<Events> eventsProvider;
-
     private volatile ORB orb;
-
     private ProtocolManager protocolManager;
-
     private SelectableChannelDelegate selectableChannelDelegate;
-
     private GlassFishORBFactory orbFactory;
+    private boolean destroyed;
 
-    @Override
+    @PostConstruct
     public void postConstruct() {
         orbFactory = services.getService(GlassFishORBFactory.class);
     }
 
+    @PreDestroy
     public void onShutdown() {
-        LOG.log(Level.FINE, "ORB Shutdown started");
-        orb.destroy();
+        // FIXME: getORB is able to create another, it should be refactored and simplified.
+        destroyed = true;
+        LOG.log(Level.CONFIG, "ORB Shutdown started");
+        if (orb != null) {
+            orb.destroy();
+            orb = null;
+        }
     }
 
     public synchronized void setORB(ORB orb) {
         this.orb = orb;
-
-        if (orb != null) {
-            EventListener glassfishEventListener = event -> {
-                if (event.is(SERVER_SHUTDOWN)) {
-                    onShutdown();
-                }
-            };
-            eventsProvider.get().register(glassfishEventListener);
-        }
     }
 
     /**
@@ -108,7 +100,7 @@ public class GlassFishORBHelper implements PostConstruct, ORBLocator {
         // Use a volatile double-checked locking idiom here so that we can publish
         // a partly-initialized ORB early, so that lazy init can come into getORB()
         // and allow an invocation to the transport to complete.
-        if (orb == null) {
+        if (orb == null && !destroyed) {
 
             synchronized (this) {
                 if (orb == null) {
@@ -116,7 +108,7 @@ public class GlassFishORBHelper implements PostConstruct, ORBLocator {
                         boolean isServer = processEnv.getProcessType().isServer();
 
                         Properties props = new Properties();
-                        props.setProperty(GlassFishORBFactory.ENV_IS_SERVER_PROPERTY, Boolean.valueOf(isServer).toString());
+                        props.setProperty(GlassFishORBFactory.ENV_IS_SERVER_PROPERTY, Boolean.toString(isServer));
 
                         // Create orb and make it visible.
                         //
@@ -179,7 +171,7 @@ public class GlassFishORBHelper implements PostConstruct, ORBLocator {
      * orb.
      */
     public ProtocolManager getProtocolManager() {
-        if (!processEnv.getProcessType().isServer()) {
+        if (!processEnv.getProcessType().isServer() || destroyed) {
             return null;
         }
 
@@ -193,7 +185,7 @@ public class GlassFishORBHelper implements PostConstruct, ORBLocator {
     }
 
     public boolean isORBInitialized() {
-        return (orb != null);
+        return orb != null;
     }
 
     public int getOTSPolicyType() {

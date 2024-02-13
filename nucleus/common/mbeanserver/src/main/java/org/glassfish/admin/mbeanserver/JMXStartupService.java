@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -135,7 +136,7 @@ public final class JMXStartupService implements PostConstruct {
 
     private final class ShutdownListener implements EventListener {
 
-        public void event(EventListener.Event event) {
+        public void event(Event<?> event) {
             if (event.is(EventTypes.PREPARE_SHUTDOWN)) {
                 shutdown();
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -74,16 +74,13 @@ public class TransactionLifecycleService implements PostConstruct, PreDestroy {
 
     @Override
     public void postConstruct() {
-        EventListener glassfishEventListener = new EventListener() {
-            @Override
-            public void event(Event event) {
-                if (event.is(EventTypes.SERVER_READY)) {
-                    LOG.fine("TM LIFECYCLE SERVICE - ON READY");
-                    onReady();
-                } else if (event.is(EventTypes.PREPARE_SHUTDOWN)) {
-                    LOG.fine("TM LIFECYCLE SERVICE - ON SHUTDOWN");
-                    onShutdown();
-                }
+        EventListener glassfishEventListener = event -> {
+            if (event.is(EventTypes.SERVER_READY)) {
+                LOG.fine("TM LIFECYCLE SERVICE - ON READY");
+                onReady();
+            } else if (event.is(EventTypes.PREPARE_SHUTDOWN)) {
+                LOG.fine("TM LIFECYCLE SERVICE - ON SHUTDOWN");
+                onShutdown();
             }
         };
         events.register(glassfishEventListener);

@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -836,28 +836,27 @@ public class GMSAdapterImpl implements GMSAdapter, PostConstruct, CallBack {
                     registerFailureRecoveryListener("GlassfishFailureRecoveryHandlerTest", this);
                 }
 
-                glassfishEventListener = new org.glassfish.api.event.EventListener() {
-                    public void event(Event event) {
-                        if (gms == null) {
-                            // handle cases where gms is not set and for some reason this handler did not get unregistered.
-                            return;
-                        }
-                        if (event.is(EventTypes.SERVER_SHUTDOWN)) {
-                            GMS_LOGGER.log(LogLevel.INFO, GMS_SERVER_SHUTDOWN_RECEIVED,
-                                       new Object[]{gms.getInstanceName(), gms.getGroupName(), event.name()});
+                glassfishEventListener = event -> {
+                    if (gms == null) {
+                        // handle cases where gms is not set and for some reason this handler did not get unregistered.
+                        return;
+                    }
+                    if (event.is(EventTypes.SERVER_SHUTDOWN)) {
+                        GMS_LOGGER.log(LogLevel.INFO, GMS_SERVER_SHUTDOWN_RECEIVED,
+                                   new Object[]{gms.getInstanceName(), gms.getGroupName(), event.name()});
 
-                            // todo: remove these when removing the test register ones above.
-                            removeJoinedAndReadyNotificationListener(GMSAdapterImpl.this);
-                            removeJoinNotificationListener(GMSAdapterImpl.this);
-                            removeFailureNotificationListener(GMSAdapterImpl.this);
-                            removeFailureSuspectedListener(GMSAdapterImpl.this);
-                            gms.shutdown(GMSConstants.shutdownType.INSTANCE_SHUTDOWN);
-                            removePlannedShutdownListener(GMSAdapterImpl.this);
-                            events.unregister(glassfishEventListener);
-                        } else if (event.is(EventTypes.SERVER_READY)) {
-                             // consider putting following, includding call to joinedAndReady into a timertask.
-                              // this time would give instance time to get its heartbeat cache updated by all running
-                              // READY cluster memebrs
+                        // todo: remove these when removing the test register ones above.
+                        removeJoinedAndReadyNotificationListener(GMSAdapterImpl.this);
+                        removeJoinNotificationListener(GMSAdapterImpl.this);
+                        removeFailureNotificationListener(GMSAdapterImpl.this);
+                        removeFailureSuspectedListener(GMSAdapterImpl.this);
+                        gms.shutdown(GMSConstants.shutdownType.INSTANCE_SHUTDOWN);
+                        removePlannedShutdownListener(GMSAdapterImpl.this);
+                        events.unregister(glassfishEventListener);
+                    } else if (event.is(EventTypes.SERVER_READY)) {
+                         // consider putting following, includding call to joinedAndReady into a timertask.
+                          // this time would give instance time to get its heartbeat cache updated by all running
+                          // READY cluster memebrs
 //                            final long MAX_WAIT_DURATION = 4000;
 //
 //                            long elapsedDuration = (joinTime == 0L) ? 0 : System.currentTimeMillis() - joinTime;
@@ -869,8 +868,7 @@ public class GMSAdapterImpl implements GMSAdapter, PostConstruct, CallBack {
 //                                } catch(Throwable t) {}
 //                            }
 //                          validateCoreMembers();
-                            gms.reportJoinedAndReadyState();
-                        }
+                        gms.reportJoinedAndReadyState();
                     }
                 };
                 events.register(glassfishEventListener);

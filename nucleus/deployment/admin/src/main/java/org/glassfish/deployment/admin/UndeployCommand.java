@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -337,7 +337,7 @@ public class UndeployCommand extends UndeployCommandParameters implements AdminC
             deploymentContext.setModulePropsMap(
                 application.getModulePropertiesMap());
 
-            events.send(new Event<DeploymentContext>(Deployment.UNDEPLOYMENT_VALIDATION, deploymentContext), false);
+            events.send(new Event<>(Deployment.UNDEPLOYMENT_VALIDATION, deploymentContext), false);
 
             if (report.getActionExitCode()==ActionReport.ExitCode.FAILURE) {
                 // if one of the validation listeners sets the action report

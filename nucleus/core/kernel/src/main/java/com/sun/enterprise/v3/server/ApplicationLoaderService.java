@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -279,13 +280,10 @@ public class ApplicationLoaderService implements org.glassfish.hk2.api.PreDestro
                         }
                         File tmpDir = new File(path);
                         tmpDir.deleteOnExit();
-                        events.register(new org.glassfish.api.event.EventListener() {
-                            @Override
-                            public void event(Event event) {
-                                if (event.is(EventTypes.SERVER_SHUTDOWN)) {
-                                    if (tmpFile.exists()) {
-                                        FileUtils.whack(tmpFile);
-                                    }
+                        events.register(event -> {
+                            if (event.is(EventTypes.SERVER_SHUTDOWN)) {
+                                if (tmpFile.exists()) {
+                                    FileUtils.whack(tmpFile);
                                 }
                             }
                         });

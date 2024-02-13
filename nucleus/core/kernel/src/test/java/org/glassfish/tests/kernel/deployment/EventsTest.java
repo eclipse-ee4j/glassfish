@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -61,12 +61,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ExtendWith(KernelJUnitExtension.class)
 public class EventsTest {
 
-    private static List<Event> allEvents = new ArrayList<>();
+    private static final List<Event<?>> allEvents = new ArrayList<>();
 
     @Inject
     private ServiceLocator locator;
     private File application;
-    private final EventListener listener = event -> allEvents.add(event);
+    private final EventListener listener = allEvents::add;
 
 
     @BeforeEach
@@ -94,7 +94,7 @@ public class EventsTest {
     @Test
     @Order(1)
     public void deployUndeployTest() throws Exception {
-        final List<EventTypes> myTestEvents = getSingletonModuleSuccessfullDeploymentEvents();
+        final List<EventTypes<?>> myTestEvents = getSingletonModuleSuccessfullDeploymentEvents();
         Events events = locator.getService(Events.class);
         EventListener listenerRemovingEvents = event -> {
             if (myTestEvents.contains(event.type())) {
@@ -112,7 +112,7 @@ public class EventsTest {
         events.unregister(listenerRemovingEvents);
         assertThat(myTestEvents.toString(), myTestEvents, hasSize(6));
 
-        final List<EventTypes> myTestEvents2 = getSingletonModuleSuccessfullUndeploymentEvents();
+        final List<EventTypes<?>> myTestEvents2 = getSingletonModuleSuccessfullUndeploymentEvents();
         EventListener listener2 = event -> {
             if (myTestEvents2.contains(event.type())) {
                 myTestEvents2.remove(event.type());
@@ -143,14 +143,14 @@ public class EventsTest {
     @Test
     @Order(3)
     public void asynchronousEvents() {
-        List<EventTypes> remaining = asynchonousEvents().stream()
+        List<EventTypes<?>> remaining = asynchonousEvents().stream()
             .filter(et -> allEvents.stream().anyMatch(event -> event.is(et))).collect(Collectors.toList());
         assertThat(remaining.toString(), remaining, hasSize(2));
     }
 
 
-    private static List<EventTypes> getSingletonModuleSuccessfullDeploymentEvents() {
-        ArrayList<EventTypes> events = new ArrayList<>();
+    private static List<EventTypes<?>> getSingletonModuleSuccessfullDeploymentEvents() {
+        ArrayList<EventTypes<?>> events = new ArrayList<>();
         events.add(Deployment.MODULE_PREPARED);
         events.add(Deployment.MODULE_LOADED);
         events.add(Deployment.MODULE_STARTED);
@@ -160,8 +160,8 @@ public class EventsTest {
         return events;
     }
 
-    private static List<EventTypes> getSingletonModuleSuccessfullUndeploymentEvents() {
-        ArrayList<EventTypes> events = new ArrayList<>();
+    private static List<EventTypes<?>> getSingletonModuleSuccessfullUndeploymentEvents() {
+        ArrayList<EventTypes<?>> events = new ArrayList<>();
         events.add(Deployment.MODULE_STOPPED);
         events.add(Deployment.MODULE_UNLOADED);
         events.add(Deployment.MODULE_CLEANED);
@@ -171,8 +171,8 @@ public class EventsTest {
         return events;
     }
 
-    private static List<EventTypes> asynchonousEvents() {
-        ArrayList<EventTypes> events = new ArrayList<>();
+    private static List<EventTypes<?>> asynchonousEvents() {
+        ArrayList<EventTypes<?>> events = new ArrayList<>();
         events.add(Deployment.DEPLOYMENT_START);
         events.add(Deployment.DEPLOYMENT_SUCCESS);
         events.add(Deployment.UNDEPLOYMENT_START);

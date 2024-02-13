@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -193,7 +194,7 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
         }
     }
 
-    public void event(Event event) {
+    public void event(Event<?> event) {
         if (event.is(EventTypes.SERVER_READY)) {
             // Process the XMLProviders in lib/monitor dir. Should be the last thing to do in server startup.
             if (logger.isLoggable(Level.FINE))

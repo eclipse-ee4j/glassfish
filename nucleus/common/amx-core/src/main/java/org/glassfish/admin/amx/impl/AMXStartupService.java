@@ -91,7 +91,7 @@ public final class AMXStartupService
 
     private final class ShutdownListener implements EventListener {
 
-        public void event(EventListener.Event event) {
+        public void event(Event<?> event) {
             if (event.is(EventTypes.SERVER_SHUTDOWN)) {
                 shutdown();
             }

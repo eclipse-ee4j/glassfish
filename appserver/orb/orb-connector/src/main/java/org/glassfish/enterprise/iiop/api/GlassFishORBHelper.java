@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -89,15 +90,10 @@ public class GlassFishORBHelper implements PostConstruct, ORBLocator {
         this.orb = orb;
 
         if (orb != null) {
-            EventListener glassfishEventListener = new EventListener() {
-
-                @Override
-                public void event(EventListener.Event event) {
-                    if (event.is(SERVER_SHUTDOWN)) {
-                        onShutdown();
-                    }
+            EventListener glassfishEventListener = event -> {
+                if (event.is(SERVER_SHUTDOWN)) {
+                    onShutdown();
                 }
-
             };
             eventsProvider.get().register(glassfishEventListener);
         }

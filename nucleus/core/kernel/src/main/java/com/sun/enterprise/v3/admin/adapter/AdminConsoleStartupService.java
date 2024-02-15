@@ -16,8 +16,6 @@
 
 package com.sun.enterprise.v3.admin.adapter;
 
-
-
 import com.sun.enterprise.config.serverbeans.*;
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +30,6 @@ import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.types.Property;
-
 
 @Service(name = "AdminConsoleStartupService")
 @RunLevel(PostStartupRunLevel.VAL)
@@ -66,36 +63,33 @@ public class AdminConsoleStartupService implements  PostConstruct {
         if (!env.isDas())
             return;
 
-        // FIXME : Use ServerTags, when this is finalized.
-        Property initProp = adminService.getProperty("adminConsoleStartup");
-        String initPropVal = "DEFAULT";
-        if (initProp != null) {
-            initPropVal = initProp.getValue();
-            if ( !(initPropVal.equals("ALWAYS") || initPropVal.equals("NEVER") || initPropVal.equals("DEFAULT"))){
-                initPropVal="DEFAULT";
-            }
-        }
+        ConsoleLoadingOption loadingOption = adminConsoleAdapter.getLoadingOption();
 
         if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "AdminConsoleStartupService, console loading option is {0}", initPropVal);
+            logger.log(Level.FINE, "AdminConsoleStartupService: Console loading option is {0}", loadingOption);
         }
 
-        if (initPropVal.equalsIgnoreCase("DEFAULT")) {
-            handleDefault();
-        } else if (initPropVal.equalsIgnoreCase("ALWAYS")) {
-            handleHigh();
+        switch (loadingOption) {
+            case ALWAYS:
+                handleAlways();
+                break;
+            case RECENT:
+                handleRecent();
+                break;
+            case NEVER:
+            case DEFAULT:
+                handleDefault();
+                break;
+            default:
+                break;
         }
     }
 
     private void handleDefault() {
-        /* if there are servers other than DAS */
-        if ((domain.getServers().getServer().size() > 1)) {
-            if (logger.isLoggable(Level.FINER)) {
-                logger.log(Level.FINER, "AdminConsoleStartup DAS usecase");
-            }
-            handleHigh();
-            return;
-        }
+        // Do nothing
+    }
+
+    private void handleRecent() {
         // if last access was within a day
         long currentTime = System.currentTimeMillis();
         try {
@@ -104,20 +98,15 @@ public class AdminConsoleStartupService implements  PostConstruct {
                 if (logger.isLoggable(Level.FINER)) {
                     logger.log(Level.FINER, "AdminConsoleStartup frequent user, lastTime =  ", lastTime);
                 }
-                handleHigh();
+                handleAlways();
             }
         } catch (IOException ex) {
-                logger.fine(ex.getMessage());
+            logger.fine(ex.getMessage());
         }
     }
 
-    private void handleLow() {
+    private void handleAlways() {
         adminConsoleAdapter.initRest();
-    }
-
-
-    private void handleHigh() {
-        handleLow();
         synchronized(this) {
             if (!adminConsoleAdapter.isInstalling() && !adminConsoleAdapter.isApplicationLoaded()) {
                 adminConsoleAdapter.loadConsole();
@@ -131,6 +120,4 @@ public class AdminConsoleStartupService implements  PostConstruct {
             return 0L;
         return f.lastModified();
     }
-
-
 }

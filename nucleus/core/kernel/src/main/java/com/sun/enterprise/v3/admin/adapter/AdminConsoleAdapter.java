@@ -136,6 +136,7 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
     static final String ADMIN_APP_NAME = ServerEnvironmentImpl.DEFAULT_ADMIN_CONSOLE_APP_NAME;
     private volatile boolean isRestStarted;
     private volatile boolean isRestBeingStarted;
+    private ConsoleLoadingOption loadingOption = ConsoleLoadingOption.DEFAULT;
 
     /**
      * Constructor.
@@ -438,12 +439,17 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
         return stateMsg;
     }
 
+    ConsoleLoadingOption getLoadingOption() {
+        return loadingOption;
+    }
+
     /**
      *
      */
     @Override
     public void postConstruct() {
         events.register(this);
+
         //set up the environment properly
         init();
     }
@@ -463,6 +469,20 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
      *
      */
     private void init() {
+        // Get loading option
+        // FIXME : Use ServerTags, when this is finalized.
+        Property loadingOptionProperty = adminService.getProperty("adminConsoleStartup");
+        if (loadingOptionProperty != null) {
+            String loadingOptionValue = loadingOptionProperty.getValue();
+            if (loadingOptionValue != null) {
+                try {
+                    loadingOption = ConsoleLoadingOption.valueOf(loadingOptionValue.toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    logger.log(Level.WARNING, "AdminConsoleAdapter: Illegal console loading option \"{0}\"", loadingOptionValue);
+                }
+            }
+        }
+
         Property locProp = adminService.getProperty(ServerTags.ADMIN_CONSOLE_DOWNLOAD_LOCATION);
         if (locProp == null || locProp.getValue() == null || locProp.getValue().equals("")) {
             String iRoot = System.getProperty(INSTALL_ROOT) + "/lib/install/applications/admingui.war";

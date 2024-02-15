@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -72,7 +72,7 @@ public class GlassFishTestEnvironment {
         LOG.log(Level.INFO, "Expected GlassFish directory: {0}", GF_ROOT);
         changePassword();
         Thread hook = new Thread(() -> {
-            getAsadmin().exec(10_000, "stop-domain", "--kill", "--force");
+            getAsadmin().exec(30_000, "stop-domain", "--kill", "--force");
         });
         Runtime.getRuntime().addShutdownHook(hook);
         Asadmin asadmin = getAsadmin().withEnv(ADMIN_USER, ADMIN_PASSWORD);

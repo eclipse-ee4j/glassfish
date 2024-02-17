@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,16 +18,19 @@
 package org.glassfish.internal.api;
 
 import java.util.logging.Logger;
+
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
 
 /**
  * Logger information for the internal-api module.
+ *
  * @author Tom Mueller
  */
 /* Module private */
 public class InternalLoggerInfo {
+
     public static final String LOGMSG_PREFIX = "NCLS-COM";
 
     @LogMessagesResourceBundle
@@ -34,8 +38,8 @@ public class InternalLoggerInfo {
 
     @LoggerInfo(subsystem = "COMMON", description = "Internal API", publish = true)
     public static final String INT_LOGGER = "jakarta.enterprise.system.tools.util";
-    private static final Logger intLogger = Logger.getLogger(
-                INT_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
+
+    private static final Logger intLogger = Logger.getLogger(INT_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
 
     public static Logger getLogger() {
         return intLogger;
@@ -49,7 +53,7 @@ public class InternalLoggerInfo {
     @LogMessageInfo(
             message = "Unknown property {0} found unresolving {1}.",
             cause = "No value was found for a property. This indicates a software problem.",
-            action = "Check the server logs and contact Oracle support.",
+            action = "Check the server logs.",
             level = "SEVERE")
     public static final String unknownProperty = LOGMSG_PREFIX + "-01002";
 
@@ -66,5 +70,4 @@ public class InternalLoggerInfo {
             action = "Check the domain.xml file for an invalid system property reference.",
             level = "SEVERE")
     public static final String referenceMissingStartingDelim = LOGMSG_PREFIX + "-01004";
-
 }

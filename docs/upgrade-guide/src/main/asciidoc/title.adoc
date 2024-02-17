@@ -14,7 +14,7 @@ Upgrade Guide
 
 Release 7
 
-Contributed 2018 - 2022
+Contributed 2018 - 2024
 
 This guide explains how to upgrade to {productName} 7
 from previous {productName} and Sun GlassFish Enterprise

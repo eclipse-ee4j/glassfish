@@ -1629,13 +1629,10 @@ Maven with the EJB 3.1 Embeddable API and Embedded {productName}].
 
 The EJB 3.1 Embeddable API is described in
 http://jcp.org/en/jsr/detail?id=318[Java Specification Request (JSR) 318]
-(`http://jcp.org/en/jsr/detail?id=318`). An `ejb-embedded` sample
-is included in the samples available at
-http://www.oracle.com/technetwork/java/javaee/downloads/index.html[Java EE 7 Downloads]
-(`http://www.oracle.com/technetwork/java/javaee/downloads/index.html`)
-or
-http://www.oracle.com/technetwork/java/javaee/documentation/index.html[Code Samples]
-(`http://www.oracle.com/technetwork/java/javaee/documentation/index.html`).
+(`http://jcp.org/en/jsr/detail?id=318`). An `ejb-embedded` example
+is available at
+https://jakarta.ee/learn/docs/jakartaee-tutorial/9.1/entbeans/ejb-embedded/ejb-embedded.html[Code Samples]
+(`https://jakarta.ee/learn/docs/jakartaee-tutorial/9.1/entbeans/ejb-embedded/ejb-embedded.html`).
 
 The EJB 3.1 Embeddable API supports all EJB 3.1 Lite features with
 addition of the EJB timer service and testing of EJB modules packaged in

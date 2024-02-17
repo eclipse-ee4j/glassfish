@@ -14,7 +14,7 @@ Troubleshooting Guide
 
 Release 7
 
-Contributed 2018 - 2022
+Contributed 2018 - 2024
 
 This guide describes common problems that you might encounter when using
 {productName} and how to solve them.

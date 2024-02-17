@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -66,10 +66,6 @@ public final class AMXStartupService
         org.glassfish.hk2.api.PreDestroy,
         AMXStartupServiceMBean {
 
-    private static void debug(final String s) {
-        System.out.println(s);
-    }
-
     @Inject
     ServiceLocator mHabitat;
     @Inject
@@ -95,7 +91,7 @@ public final class AMXStartupService
 
     private final class ShutdownListener implements EventListener {
 
-        public void event(EventListener.Event event) {
+        public void event(Event<?> event) {
             if (event.is(EventTypes.SERVER_SHUTDOWN)) {
                 shutdown();
             }

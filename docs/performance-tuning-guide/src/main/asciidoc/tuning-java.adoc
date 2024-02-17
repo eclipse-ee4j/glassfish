@@ -147,13 +147,13 @@ To do this, add the following JVM options:
 
 ===== Additional Information
 
-Use the `jvmstat` utility to monitor HotSpot garbage collection. (See
+Use the `jstat` utility to monitor Java Virtual Machine statistics. (See
 xref:#further-information[Further Information].)
 
 For detailed information on tuning the garbage collector, see
-http://www.oracle.com/technetwork/java/javase/gc-tuning-6-140523.html[Java
-SE 6 HotSpot Virtual Machine Garbage Collection Tuning]
-(`http://www.oracle.com/technetwork/java/javase/gc-tuning-6-140523.html`).
+https://docs.oracle.com/en/java/javase/17/gctuning/introduction-garbage-collection-tuning.html[Java
+ Garbage Collection Tuning]
+(` https://docs.oracle.com/en/java/javase/17/gctuning/introduction-garbage-collection-tuning.html`).
 
 [[tracing-garbage-collection]]
 
@@ -374,9 +374,9 @@ the maximum heap size. The old generation must be larger than the new
 generation.
 
 For up-to-date defaults, see
-http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html[Java
+https://www.oracle.com/java/technologies/javase/vmoptions-jsp.html[Java
 HotSpot VM Options]
-(`http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html`).
+(`https://www.oracle.com/java/technologies/javase/vmoptions-jsp.html`).
 
 [[fxxpw]]
 Example 4-1 Heap Configuration on Solaris
@@ -498,12 +498,8 @@ documentation for rebase utility]
 
 === Further Information
 
-For more information on tuning the JVM, see:
+For more information on the jstat command, see:
 
-* http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html[
-Java HotSpot VM Options]
-(`http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html`)
-* http://www.oracle.com/technetwork/java/hotspotfaq-138619.html[
-Frequently Asked Questions About the Java HotSpot Virtual Machine]
-(`http://www.oracle.com/technetwork/java/hotspotfaq-138619.html`)
-* http://www.oracle.com/technetwork/java/javase/tech/index-jsp-136373.html[
+* https://docs.oracle.com/en/java/javase/17/docs/specs/man/jstat.html[
+The jstat Command]
+(`https://docs.oracle.com/en/java/javase/17/docs/specs/man/jstat.html`)

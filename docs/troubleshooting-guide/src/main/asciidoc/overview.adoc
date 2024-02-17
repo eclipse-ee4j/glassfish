@@ -58,9 +58,9 @@ in {productName} Release Notes for known issues related to installation.
 If necessary, download and install the required JDK software.
 
 On Solaris, Linux, and Windows systems, JDK software is available from the
-http://www.oracle.com/technetwork/java/javase/downloads/index.html[
+https://www.oracle.com/java/technologies/downloads/[
 Java SE downloads page]
-(`http://www.oracle.com/technetwork/java/javase/downloads/index.html`).
+(`https://www.oracle.com/java/technologies/downloads/`).
 
 For Mac OS X systems, {productName} uses the JDK
 that is part of the Macintosh operating system. If necessary, obtain the

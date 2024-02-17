@@ -317,9 +317,7 @@ Application Client Using the `appclient` Script].
 ==== Using Java Web Start
 
 Java Web Start allows your application client to be easily launched and
-automatically downloaded and updated. General information about Java Web
-Start is available at
-`http://www.oracle.com/technetwork/java/javase/tech/index-jsp-136112.html`.
+automatically downloaded and updated.
 
 The following topics are addressed here:
 

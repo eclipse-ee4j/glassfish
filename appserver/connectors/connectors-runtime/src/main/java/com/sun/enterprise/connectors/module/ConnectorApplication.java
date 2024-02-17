@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -263,7 +263,7 @@ public class ConnectorApplication implements ApplicationContainer<ConnectorDescr
      * @param event Event
      */
     @Override
-    public void event(Event event) {
+    public void event(Event<?> event) {
         if (Deployment.UNDEPLOYMENT_VALIDATION.equals(event.type())) {
             // this is an application undeploy event
             DeploymentContext dc = (DeploymentContext) event.hook();

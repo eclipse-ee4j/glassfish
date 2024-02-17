@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -1601,12 +1601,6 @@ class ConfigBeanJMXSupport
         }
         return m;
     }
-
-    private static void debug(final String s)
-    {
-        System.out.println("### " + s);
-    }
-
 }
 
 

@@ -452,7 +452,7 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
      *
      */
     @Override
-    public void event(@RestrictTo(EventTypes.SERVER_READY_NAME) Event event) {
+    public void event(@RestrictTo(EventTypes.SERVER_READY_NAME) Event<?> event) {
         latch.countDown();
         if (logger != null) {
             logger.log(Level.FINE, "AdminConsoleAdapter is ready.");

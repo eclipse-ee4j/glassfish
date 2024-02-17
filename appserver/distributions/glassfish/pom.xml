@@ -82,6 +82,24 @@
 
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.ant</groupId>
+                        <artifactId>ant</artifactId>
+                        <version>${ant.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>ant-contrib</groupId>
+                        <artifactId>ant-contrib</artifactId>
+                        <version>1.0b2</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>ant</groupId>
+                                <artifactId>ant</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                </dependencies>
                 <executions>
                     <execution>
                         <id>do stuff</id>
@@ -90,12 +108,24 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <target>
+                            <target xmlns:if="ant:if" xmlns:unless="ant:unless">
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
+                                
+                                <if>
+                                    <bool>
+                                        <isgreaterthan arg1="${ant.java.version}" arg2="16"/>
+                                    </bool>
+                                    <then>
+                                        <property name="java17orGreater" value="true"/>
+                                    </then>
+                                </if>
+                                
                                 <macrodef name="jarupdate">
                                     <attribute name="basedir"/>
                                     <attribute name="includes"/>
                                     <attribute name="destfile"/>
                                     <sequential>
+                                        <echo>PATCHING</echo>
                                         <zip destfile="@{destfile}.tmp">
                                             <zipfileset src="@{destfile}" excludes="@{includes}"/>
                                         </zip>
@@ -103,13 +133,12 @@
                                         <zip update="true" basedir="@{basedir}" includes="@{includes}" destfile="@{destfile}" />
                                     </sequential>
                                 </macrodef>
-
-                               
-                                <jarupdate
+                                
+                                <jarupdate if:set="java17orGreater"
                                     basedir="${patches}/microprofile-jwt-auth-api" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/microprofile-jwt-auth-api.jar"
                                 />
-                                <jarupdate
+                                <jarupdate if:set="java17orGreater"
                                     basedir="${patches}/microprofile-rest-client-api" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/microprofile-rest-client-api.jar"
                                 />

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -233,7 +233,7 @@ public class DeployCommand extends DeployCommandParameters implements AdminComma
                 initialContext.addModuleMetaData(tracing);
                 tracing.addMark(DeploymentTracing.Mark.INITIAL_CONTEXT_CREATED);
             }
-            events.send(new Event<DeploymentContext>(Deployment.INITIAL_CONTEXT_CREATED, initialContext), false);
+            events.send(new Event<>(Deployment.INITIAL_CONTEXT_CREATED, initialContext), false);
             if (name == null) {
                 name = archiveHandler.getDefaultApplicationName(initialContext.getSource(), initialContext);
             } else {
@@ -886,7 +886,7 @@ public class DeployCommand extends DeployCommandParameters implements AdminComma
     }
 
     @Override
-    public void event(Event event) {
+    public void event(Event<?> event) {
         if (event.is(Deployment.DEPLOYMENT_BEFORE_CLASSLOADER_CREATION)) {
             // this is where we have processed metadata and
             // haven't created the application classloader yet

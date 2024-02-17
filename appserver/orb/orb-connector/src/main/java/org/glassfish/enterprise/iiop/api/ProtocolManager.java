@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,48 +17,40 @@
 
 package org.glassfish.enterprise.iiop.api;
 
-import java.rmi.*;
-
-import org.glassfish.enterprise.iiop.spi.EjbContainerFacade;
-import org.glassfish.enterprise.iiop.spi.EjbService;
-
 import com.sun.enterprise.deployment.EjbDescriptor;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+import org.glassfish.enterprise.iiop.spi.EjbContainerFacade;
 import org.jvnet.hk2.annotations.Contract;
 import org.omg.CORBA.ORB;
-import java.rmi.Remote;
 
 
 /**
- * The ProtocolManager interface specifies the functionality of the
- * remote communication layer, which provides the support for
- * distribution described in Chapter 13 of the EJB spec.
- * Possible implementations of the ProtocolManager include RMI/IIOP,
- * RMI/JRMP, RMI/DCOM, RMI/HTTP ....
+ * The ProtocolManager interface specifies the functionality of the remote communication layer,
+ * which provides the support for distribution described in Chapter 13 of the EJB spec.
+ * Possible implementations of the ProtocolManager include RMI/IIOP, RMI/JRMP, RMI/DCOM, RMI/HTTP,
+ * etc.
+ *
  * @author Vivek Nagar
  */
-
 @Contract
 public interface ProtocolManager {
 
     void initialize(ORB o);
 
+    void initializePOAs() throws Exception;
 
-    public void initializePOAs() throws Exception;
+    void initializeNaming() throws Exception;
 
-
-    public void initializeNaming() throws Exception;
-
-    public void initializeRemoteNaming(Remote remoteNamingProvider) throws Exception;
+    void initializeRemoteNaming(Remote remoteNamingProvider) throws Exception;
 
     /**
      * Return a factory that can be used to create/destroy remote
      * references for a particular EJB type.
      */
-    RemoteReferenceFactory getRemoteReferenceFactory(EjbContainerFacade container,
-                                                     boolean remoteHomeView,
-                                                     String id);
-
+    RemoteReferenceFactory getRemoteReferenceFactory(EjbContainerFacade container, boolean remoteHomeView, String id);
 
     /**
      * Return true if the two object references refer to the same
@@ -91,9 +84,5 @@ public interface ProtocolManager {
      */
     void connectObject(Remote remoteObj) throws RemoteException;
 
-
     EjbDescriptor getEjbDescriptor(byte[] ejbKey);
-
 }
-
-

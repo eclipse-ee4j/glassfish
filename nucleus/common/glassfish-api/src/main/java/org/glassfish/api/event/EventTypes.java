@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,43 +17,34 @@
 
 package org.glassfish.api.event;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.glassfish.api.event.EventListener.Event;
 
 /**
- * Extensible list of event types. EventTypes are created through the create method and not directly.
+ * Extensible list of event types.
  *
- * Events can be compared using == or equals although == is recommended.
+ * <p>{@code EventTypes} are created through one of the {@code create} methods and not directly.
+ *
+ * <p>Events can be compared using {@code ==} or {@link #equals} although {@code ==} is recommended.
  *
  * @author dochez
  */
 public final class EventTypes<T> {
 
-    private final static Map<String, EventTypes> EVENTS = new HashMap<>();
+    private final static Map<String, EventTypes<?>> EVENTS = new ConcurrentHashMap<>();
 
-    // stock events.
+    // Stock events.
     public static final String SERVER_STARTUP_NAME = "server_startup";
     public static final String SERVER_READY_NAME = "server_ready";
     public static final String PREPARE_SHUTDOWN_NAME = "prepare_shutdown";
     public static final String SERVER_SHUTDOWN_NAME = "server_shutdown";
 
-    public static final EventTypes SERVER_STARTUP = create(SERVER_STARTUP_NAME);
-    public static final EventTypes SERVER_READY = create(SERVER_READY_NAME);
-    public static final EventTypes SERVER_SHUTDOWN = create(SERVER_SHUTDOWN_NAME);
-    public static final EventTypes PREPARE_SHUTDOWN = create(PREPARE_SHUTDOWN_NAME);
-
-    public static EventTypes create(String name) {
-        return create(name, null);
-    }
-
-    public static <T> EventTypes<T> create(String name, Class<T> hookType) {
-        synchronized (EVENTS) {
-            if (!EVENTS.containsKey(name)) {
-                EVENTS.put(name, new EventTypes(name, hookType));
-            }
-        }
-        return EVENTS.get(name);
-    }
+    public static final EventTypes<?> SERVER_STARTUP = create(SERVER_STARTUP_NAME);
+    public static final EventTypes<?> SERVER_READY = create(SERVER_READY_NAME);
+    public static final EventTypes<?> SERVER_SHUTDOWN = create(SERVER_SHUTDOWN_NAME);
+    public static final EventTypes<?> PREPARE_SHUTDOWN = create(PREPARE_SHUTDOWN_NAME);
 
     private final String name;
     private final Class<T> hookType;
@@ -60,6 +52,15 @@ public final class EventTypes<T> {
     private EventTypes(String name, Class<T> hookType) {
         this.name = name;
         this.hookType = hookType;
+    }
+
+    public static EventTypes<?> create(String name) {
+        return create(name, null);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> EventTypes<T> create(String name, Class<T> hookType) {
+        return (EventTypes<T>) EVENTS.computeIfAbsent(name, key -> new EventTypes<>(key, hookType));
     }
 
     public String type() {
@@ -70,41 +71,33 @@ public final class EventTypes<T> {
         return hookType;
     }
 
-    public T getHook(EventListener.Event<T> e) {
-        if (e.is(this)) {
-            return e.hook();
+    public T getHook(Event<T> event) {
+        if (event.is(this)) {
+            return event.hook();
         }
         return null;
     }
 
     /**
-     * {@inheritDoc}
-     * <p/>
      * Considers only {@link #name} for equality.
      */
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
+    public boolean equals(final Object obj) {
+        if (obj == this) {
             return true;
         }
-        if (null == o) {
-            return false;
-        }
-        if (getClass() != o.getClass()) {
+        if (!(obj instanceof EventTypes)) {
             return false;
         }
 
-        return name.equals(((EventTypes) o).name);
+        return name.equals(((EventTypes<?>) obj).name);
     }
 
     /**
-     * {@inheritDoc}
-     * <p/>
      * Returns {@link #name} as the hash code.
      */
     @Override
     public int hashCode() {
         return name.hashCode();
     }
-
 }

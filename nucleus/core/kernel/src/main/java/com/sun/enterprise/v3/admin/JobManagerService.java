@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -508,9 +508,9 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
     }
 
     @Override
-    public void event(@RestrictTo(EventTypes.SERVER_READY_NAME) Event event) {
+    public void event(@RestrictTo(EventTypes.SERVER_READY_NAME) Event<?> event) {
         if (event.is(EventTypes.SERVER_READY)) {
-            if (retryableJobsInfo.size() > 0) {
+            if (!retryableJobsInfo.isEmpty()) {
                 Runnable runnable = new Runnable() {
                     @Override
                     public void run() {
@@ -520,7 +520,7 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
                         }
                     }
                 };
-                (new Thread(runnable)).start();
+                new Thread(runnable).start();
             } else {
                 logger.fine("No retryable job found");
             }

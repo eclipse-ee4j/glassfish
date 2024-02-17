@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -13,12 +14,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.glassfish.admin.amx.impl.config;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,7 +30,6 @@ import org.jvnet.hk2.config.Dom;
  */
 @Taxonomy( stability=Stability.NOT_AN_INTERFACE )
 public final class ConfigBeanRegistry {
-    private static void debug( final String s ) { System.out.println(s); }
 
     public static final class MBeanInstance
     {

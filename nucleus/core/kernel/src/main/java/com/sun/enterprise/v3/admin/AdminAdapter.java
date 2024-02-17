@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -658,7 +659,7 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
     }
 
     @Override
-    public void event(@RestrictTo(EventTypes.SERVER_READY_NAME) Event event) {
+    public void event(@RestrictTo(EventTypes.SERVER_READY_NAME) Event<?> event) {
         if (event.is(EventTypes.SERVER_READY)) {
             latch.countDown();
             aalogger.fine("Ready to receive administrative commands");

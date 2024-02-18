@@ -38,6 +38,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -164,7 +165,6 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
      */
     @Override
     public void service(Request req, Response res) {
-
         bundle = getResourceBundle(req.getLocale());
 
         Method method = req.getMethod();
@@ -174,8 +174,14 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
             res.setHeader("Allow", getAllowedHttpMethodsAsString());
             return;
         }
+
         if (!env.isDas()) {
             sendStatusNotDAS(req, res);
+            return;
+        }
+
+        if (loadingOption == ConsoleLoadingOption.NEVER) {
+            sendStatusDisabled(req, res);
             return;
         }
 
@@ -712,6 +718,19 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
             ob.flush();
         } catch (IOException ex) {
             throw new RuntimeException(ex);
+        }
+    }
+
+    private void sendStatusDisabled(Request request, Response response) {
+        try {
+            String html = Utils.packageResource2String("statusDisabled.html");
+            OutputBuffer outputBuffer = getOutputBuffer(response);
+            byte[] page = replaceTokens(html, bundle).getBytes(StandardCharsets.UTF_8);
+            response.setContentLength(page.length);
+            outputBuffer.write(page);
+            outputBuffer.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

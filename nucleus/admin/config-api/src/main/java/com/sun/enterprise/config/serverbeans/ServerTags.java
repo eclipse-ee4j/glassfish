@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -768,6 +768,7 @@ public class ServerTags {
     public static final String ADMIN_CONSOLE_DOWNLOAD_LOCATION = "adminConsoleDownloadLocation";
     public static final String IPS_ROOT = "ipsRoot";
     public static final String ADMIN_CONSOLE_VERSION = "adminConsoleVersion";
+    public static final String ADMIN_CONSOLE_STARTUP = "adminConsoleStartup";
     public static final String ADMIN_LISTENER_ID = "admin-listener";
     public final static String SEC_ADMIN_LISTENER_PROTOCOL_NAME = "sec-admin-listener";
     public final static String REDIRECT_PROTOCOL_NAME = "admin-http-redirect";

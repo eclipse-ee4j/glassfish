@@ -24,6 +24,7 @@ import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.SecureAdmin;
 import com.sun.enterprise.config.serverbeans.ServerTags;
+import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.v3.admin.AdminConsoleConfigUpgrade;
 
 import jakarta.inject.Inject;
@@ -61,6 +62,7 @@ import org.glassfish.grizzly.http.io.OutputBuffer;
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.Request;
 import org.glassfish.grizzly.http.server.Response;
+import org.glassfish.grizzly.http.util.HttpStatus;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.data.ApplicationRegistry;
@@ -133,7 +135,7 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
     private static final String STATUS_TOKEN = "%%%STATUS%%%";
     private static final String REDIRECT_TOKEN = "%%%LOCATION%%%";
     private static final String RESOURCE_PACKAGE = "com/sun/enterprise/v3/admin/adapter";
-    private static final String INSTALL_ROOT = "com.sun.aas.installRoot";
+    private static final String INSTALL_ROOT = SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
     static final String ADMIN_APP_NAME = ServerEnvironmentImpl.DEFAULT_ADMIN_CONSOLE_APP_NAME;
     private volatile boolean isRestStarted;
     private volatile boolean isRestBeingStarted;
@@ -477,7 +479,7 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
     private void init() {
         // Get loading option
         // FIXME : Use ServerTags, when this is finalized.
-        Property loadingOptionProperty = adminService.getProperty("adminConsoleStartup");
+        Property loadingOptionProperty = adminService.getProperty(ServerTags.ADMIN_CONSOLE_STARTUP);
         if (loadingOptionProperty != null) {
             String loadingOptionValue = loadingOptionProperty.getValue();
             if (loadingOptionValue != null) {
@@ -663,7 +665,7 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
      *
      */
     private OutputBuffer getOutputBuffer(Response res) {
-        res.setStatus(202);
+        res.setStatus(HttpStatus.ACCEPTED_202);
         res.setContentType("text/html");
         res.setCharacterEncoding("UTF-8");
         return res.getOutputBuffer();

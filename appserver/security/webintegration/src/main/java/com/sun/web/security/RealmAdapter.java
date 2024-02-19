@@ -1428,7 +1428,12 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
                     Principal glassFishCallerPrincipal = getGlassFishCallerPrincipal(caller);
 
                     toSubject(subject, glassFishCallerPrincipal);
-                    toSubjectCredential(subject, new DistinguishedPrincipalCredential(glassFishCallerPrincipal));
+                    DistinguishedPrincipalCredential distinguishedPrincipal = new DistinguishedPrincipalCredential(glassFishCallerPrincipal);
+
+                    // Credentials don't serialize, so for now, also add to the subject principals
+                    // For next version, see if we can only use principals
+                    toSubject(subject, distinguishedPrincipal);
+                    toSubjectCredential(subject, distinguishedPrincipal);
 
                     for (String group : caller.getGroups()) {
                         toSubject(subject, new Group(group));
@@ -1616,6 +1621,18 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
                         }
                     }
                 }
+
+                if (!hasObject) {
+                    Set<DistinguishedPrincipalCredential> distinguishedPrincipals = securityContextSubject.getPrincipals(DistinguishedPrincipalCredential.class);
+                    if (distinguishedPrincipals.size() == 1) {
+                        for (DistinguishedPrincipalCredential cred : distinguishedPrincipals) {
+                            if (cred.getPrincipal().equals(callerPrincipal)) {
+                                hasObject = true;
+                            }
+                        }
+                    }
+                }
+
 
                 /**
                  * 2. Subject within SecurityContext must contain a single DistinguishedPrincipalCredential that identifies the Caller Principal

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,9 +17,12 @@
 
 package com.sun.enterprise.security.auth.login;
 
+import java.io.Serializable;
 import java.security.Principal;
 
-public class DistinguishedPrincipalCredential {
+public class DistinguishedPrincipalCredential implements Principal, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final Principal principal;
 
@@ -34,5 +37,14 @@ public class DistinguishedPrincipalCredential {
     @Override
     public String toString() {
         return "DistingushedPrincipal[" + principal + "]";
+    }
+
+    @Override
+    public String getName() {
+        if (principal == null) {
+            return null;
+        }
+
+        return principal.getName();
     }
 }

@@ -3,6 +3,7 @@
 <head>
 <!--
 
+    Copyright (c) 2024 Contributors to the Eclipse Foundation.
     Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -45,10 +46,6 @@ h4 {font-style:normal;font-size:.9em;color:#666;}
 
     <body onLoad="document.getElementById('spin').src = '/asynch-1F.gif';">
         <script type="text/javascript">
-            if (document.getElementById('layout-doc') != null) {
-                window.location = '%%%LOCATION%%%';
-            }
-            
            
             var feedbackZoneId = 'feedbackZone';
             
@@ -65,21 +62,21 @@ h4 {font-style:normal;font-size:.9em;color:#666;}
             }
             function loaded(i,f) {
                 if (document.getElementById && document.getElementById(i) != null) {
-                    f(); 
-                    
+                    f();
+
                 }
-                else 
-                    if (!pageLoaded) 
+                else
+                    if (!pageLoaded)
                         setTimeout('loaded(\''+i+'\','+f+')',100);
-            } 
-            
-            String.prototype.startsWith = function(s) { 
-                if( this.indexOf(s) == 0 ) 
-                    return true; 
-                return false; 
             }
-                      
-            function displayCount(countdn,cd) 
+
+            String.prototype.startsWith = function(s) {
+                if( this.indexOf(s) == 0 )
+                    return true;
+                return false;
+            }
+
+            function displayCount(countdn,cd)
             {
                 if (window.XMLHttpRequest)
                 {// code for IE7+, Firefox, Chrome, Opera, Safari
@@ -105,7 +102,7 @@ h4 {font-style:normal;font-size:.9em;color:#666;}
                         }else {
                             location.reload(true);
                         }
-                       }
+                    }
                 }              
                 xmlhttp.open("GET","/testifbackendisready.html",true);
                 xmlhttp.send();
@@ -121,7 +118,6 @@ h4 {font-style:normal;font-size:.9em;color:#666;}
 	    <p> 
 		<br><span id="WELCOME"> </span></p>
 	    <!-- don't change the names -->
-	    <form id="form1" name="form1" method="post" action="%%%MYURL%%%">
 		<p> 
                     <table border="0">
                         <tbody>
@@ -132,9 +128,7 @@ h4 {font-style:normal;font-size:.9em;color:#666;}
                             </tr>
                         </tbody>
                     </table>
-
                     </p>
-	    </form>
             	    <p> 
 		<br>%%%status.text%%%</p>
             <span id="feedbackZone"></span>

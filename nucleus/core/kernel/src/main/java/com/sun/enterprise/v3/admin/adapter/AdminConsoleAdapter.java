@@ -65,7 +65,6 @@ import org.glassfish.grizzly.http.server.Response;
 import org.glassfish.grizzly.http.util.HttpStatus;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.data.ApplicationRegistry;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
@@ -110,11 +109,8 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
     private File warFile;    // GF Admin Console War File Location
     private volatile AdapterState stateMsg = AdapterState.UNINITIAZED;
     private volatile boolean installing;
-    private boolean isOK = false;  // FIXME: initialize this with previous user choice
     private AdminConsoleConfigUpgrade adminConsoleConfigUpgrade = null;
     private final CountDownLatch latch = new CountDownLatch(1);
-    @Inject
-    ApplicationRegistry appRegistry;
     @Inject
     Domain domain;
     @Inject
@@ -127,13 +123,10 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
     AdminEndpointDecider epd;
     private static final Logger logger = KernelLoggerInfo.getLogger();
     private String statusHtml;
-    private String initHtml;
     private boolean isRegistered = false;
     private ResourceBundle bundle;
     //don't change the following without changing the html pages
-    private static final String MYURL_TOKEN = "%%%MYURL%%%";
     private static final String STATUS_TOKEN = "%%%STATUS%%%";
-    private static final String REDIRECT_TOKEN = "%%%LOCATION%%%";
     private static final String RESOURCE_PACKAGE = "com/sun/enterprise/v3/admin/adapter";
     private static final String INSTALL_ROOT = SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
     static final String ADMIN_APP_NAME = ServerEnvironmentImpl.DEFAULT_ADMIN_CONSOLE_APP_NAME;
@@ -145,7 +138,6 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
      * Constructor.
      */
     public AdminConsoleAdapter() throws IOException {
-        initHtml = Utils.packageResource2String("downloadgui.html");
         statusHtml = Utils.packageResource2String("status.html");
     }
 
@@ -478,7 +470,6 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
      */
     private void init() {
         // Get loading option
-        // FIXME : Use ServerTags, when this is finalized.
         Property loadingOptionProperty = adminService.getProperty(ServerTags.ADMIN_CONSOLE_STARTUP);
         if (loadingOptionProperty != null) {
             String loadingOptionValue = loadingOptionProperty.getValue();
@@ -557,14 +548,12 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
     private void initState() {
         // It is a given that the application is NOT loaded to begin with
         if (appExistsInConfig()) {
-            isOK = true; // FIXME: I don't think this is good enough
             setStateMsg(AdapterState.APPLICATION_INSTALLED_BUT_NOT_LOADED);
         } else if (new File(warFile.getParentFile(), ADMIN_APP_NAME).exists() || warFile.exists()) {
             // The exploded dir, or the .war exists... mark as downloded
             if (logger.isLoggable(Level.FINE)) {
                 setStateMsg(AdapterState.DOWNLOADED);
             }
-            isOK = true;
         } else {
             setStateMsg(AdapterState.APPLICATION_NOT_INSTALLED);
         }
@@ -604,66 +593,10 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
     /**
      *
      */
-    enum InteractionResult {
-
-        OK,
-        CANCEL,
-        FIRST_TIMER;
-    }
-
-    /**
-     * <p> Determines if the user has permission.</p>
-     */
-    private boolean hasPermission(InteractionResult ir) {
-        //do this quickly as this is going to block the grizzly worker thread!
-        //check for returning user?
-        if (ir == InteractionResult.OK) {
-            isOK = true;
-        }
-        return isOK;
-    }
-
-    /**
-     *
-     */
     private void startThread() {
         new InstallerThread(this, habitat, domain, env, contextRoot, epd.getGuiHosts()).start();
     }
 
-    /**
-     *
-     */
-    /*
-    private synchronized InteractionResult getUserInteractionResult(GrizzlyRequest req) {
-        if (req.getParameter(OK_PARAM) != null) {
-            proxyHost = req.getParameter(PROXY_HOST_PARAM);
-            if ((proxyHost != null) && !proxyHost.equals("")) {
-                String ps = req.getParameter(PROXY_PORT_PARAM);
-                try {
-                    proxyPort = Integer.parseInt(ps);
-                } catch (NumberFormatException nfe) {
-                    throw new IllegalArgumentException(
-                            "The specified proxy port (" + ps
-                                    + ") must be a valid port integer!", nfe);
-                }
-            }
-// FIXME: I need to "remember" this answer in a persistent way!! Or it will popup this message EVERY time after the server restarts.
-            setStateMsg(AdapterState.PERMISSION_GRANTED);
-            isOK = true;
-            return InteractionResult.OK;
-        } else if (req.getParameter(CANCEL_PARAM) != null) {
-            // Canceled
-// FIXME: I need to "remember" this answer in a persistent way!! Or it will popup this message EVERY time after the server restarts.
-            setStateMsg(AdapterState.CANCELED);
-            isOK = false;
-            return InteractionResult.CANCEL;
-        }
-
-        // This is a first-timer
-        return InteractionResult.FIRST_TIMER;
-    }
-     *
-     */
     private OutputBuffer getOutputBuffer(Response res) {
         res.setStatus(HttpStatus.ACCEPTED_202);
         res.setContentType("text/html");
@@ -693,7 +626,6 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
             String locationUrl = req.getScheme()
                     + "://" + req.getServerName()
                     + ':' + req.getServerPort() + "/login.jsf";
-            localHtml = localHtml.replace(REDIRECT_TOKEN, locationUrl);
             bytes = localHtml.replace(STATUS_TOKEN, status).getBytes("UTF-8");
             res.setContentLength(bytes.length);
             ob.write(bytes, 0, bytes.length);
@@ -805,10 +737,6 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
         return buf.toString();
     }
 
-    public AdminService getAdminService() {
-        return adminService;
-    }
-
     private void writeAdminServiceProp(final String propName, final String propValue) {
         try {
             ConfigSupport.apply(new SingleConfigCode<AdminService>() {
@@ -835,7 +763,6 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
 //System.out.println(" Handle Loaded State!!");
         // do nothing
         statusHtml = null;
-        initHtml = null;
     }
 
     @Override
@@ -852,35 +779,7 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
     public List<String> getVirtualServers() {
         return epd.getGuiHosts();
     }
-//    enum HttpMethod {
-//        OPTIONS ("OPTIONS"),
-//        GET ("GET"),
-//        HEAD ("HEAD"),
-//        POST ("POST"),
-//        PUT ("PUT"),
-//        DELETE ("DELETE"),
-//        TRACE ("TRACE"),
-//        CONNECT ("CONNECT");
-//
-//        private String method;
-//
-//        HttpMethod(String method) {
-//            this.method = method;
-//        }
-//
-//        static HttpMethod getHttpMethod(String httpMethod) {
-//            for (HttpMethod hh: HttpMethod.values()) {
-//                if (hh.method.equalsIgnoreCase(httpMethod)) {
-//                    return hh;
-//                }
-//            }
-//            return null;
-//        }
-//
-//        String method() {
-//            return method;
-//        }
-//    }
+
     private final Method[] allowedHttpMethods = {Method.GET, Method.POST, Method.HEAD,
         Method.DELETE, Method.PUT};
 

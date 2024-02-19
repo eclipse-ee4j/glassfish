@@ -17,7 +17,6 @@
 
 package com.sun.enterprise.v3.admin.adapter;
 
-import com.sun.enterprise.config.serverbeans.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -35,17 +34,11 @@ import org.jvnet.hk2.annotations.Service;
 @RunLevel(PostStartupRunLevel.VAL)
 public class AdminConsoleStartupService implements  PostConstruct {
 
-    @Inject
-    private AdminService adminService;
-
     @Inject @Optional
     private AdminConsoleAdapter adminConsoleAdapter = null;
 
     @Inject
     private ServerEnvironmentImpl env;
-
-    @Inject
-    private Domain domain;
 
     private static final Logger logger = KernelLoggerInfo.getLogger();
     private final long ONE_DAY = 24 * 60 * 60 * 1000;

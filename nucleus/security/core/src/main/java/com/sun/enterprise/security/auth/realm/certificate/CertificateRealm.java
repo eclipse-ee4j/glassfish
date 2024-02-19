@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -139,7 +139,9 @@ public final class CertificateRealm extends Realm {
         }
 
         if (!subject.getPrincipals().isEmpty()) {
-            subject.getPublicCredentials().add(new DistinguishedPrincipalCredential(principal));
+            DistinguishedPrincipalCredential distinguishedPrincipal = new DistinguishedPrincipalCredential(principal);
+            subject.getPrincipals().add(distinguishedPrincipal);
+            subject.getPublicCredentials().add(distinguishedPrincipal);
         }
 
         SecurityContext.setCurrent(new SecurityContext(name, subject));

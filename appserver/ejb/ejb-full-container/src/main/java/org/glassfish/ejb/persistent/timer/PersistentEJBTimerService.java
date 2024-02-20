@@ -321,7 +321,7 @@ public class PersistentEJBTimerService extends EJBTimerService {
         try{
             String str=System.getProperty( strDBReadBeforeTimeout );
             if( null != str) {
-                performDBReadBeforeTimeout = Boolean.valueOf(str).booleanValue();
+                performDBReadBeforeTimeout = Boolean.parseBoolean(str);
 
                 if( logger.isLoggable(Level.FINE) ) {
                     logger.log(Level.FINE, "EJB Timer Service property : " +
@@ -1390,8 +1390,7 @@ public class PersistentEJBTimerService extends EJBTimerService {
         logger.log (Level.INFO, "Loading EJBTimerService. Please wait.");
         File app = null;
         try {
-            app = FileUtils.getManagedFile(TIMER_SERVICE_APP_NAME + ".war",
-                    new File(root, "lib/install/applications/"));
+            app = FileUtils.copyResource(root, "lib", "install", "applications", TIMER_SERVICE_APP_NAME + ".war");
         } catch (Exception e) {
             logger.log (Level.WARNING, "Caught unexpected exception", e);
         }

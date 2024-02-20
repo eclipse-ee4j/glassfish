@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -125,6 +125,13 @@ public class DeployerImpl implements Deployer {
             return deploy(createFile(is), params);
         } catch (IOException e) {
             throw new GlassFishException(e);
+        } finally {
+            try {
+                // Declared in the javadoc
+                is.close();
+            } catch (IOException e) {
+                throw new IllegalStateException("Could not close the input stream!", e);
+            }
         }
     }
 
@@ -157,26 +164,18 @@ public class DeployerImpl implements Deployer {
     }
 
     private File convertToFile(URI archive) throws IOException {
-        File file;
         if ("file".equalsIgnoreCase(archive.getScheme())) {
-            file = new File(archive);
-        } else {
-            file = createFile(archive.toURL().openStream());
+            return new File(archive);
         }
-        return file;
+        try (InputStream openStream = archive.toURL().openStream()) {
+            return createFile(openStream);
+        }
     }
 
     private File createFile(InputStream in) throws IOException {
-        File file;
-        file = File.createTempFile("app", "tmp");
+        File file = File.createTempFile("app", "tmp");
         file.deleteOnExit();
-        try (FileOutputStream out = new FileOutputStream(file)) {
-            FileUtils.copy(in, out);
-        } finally {
-            if (in != null) {
-                in.close();
-            }
-        }
+        FileUtils.copy(in, file);
         return file;
     }
 
@@ -190,10 +189,7 @@ public class DeployerImpl implements Deployer {
     private void extractPayload(Payload.Outbound outboundPayload, ActionReport actionReport, File retrieveDir) {
         File payloadZip = null;
         try {
-            /*
-            * Add the report to the payload to mimic what the normal
-            * non-embedded server does.
-            */
+            // Add the report to the payload to mimic what the normal non-embedded server does.
             final ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
             actionReport.writeReport(baos);
             final ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
@@ -201,26 +197,22 @@ public class DeployerImpl implements Deployer {
             reportProps.setProperty("data-request-type", "report");
             outboundPayload.addPart(0, actionReport.getContentType(), "report", reportProps, bais);
 
-            /*
-            * Now process the payload as an *inbound* payload as the non-embedded
-            * admin client does, by writing the *outbound* payload to a temporary file
-            * then reading from that file.
-            */
+            // Now process the payload as an *inbound* payload as the non-embedded
+            // admin client does, by writing the *outbound* payload to a temporary file
+            // then reading from that file.
             payloadZip = File.createTempFile("appclient", ".zip");
             try (FileOutputStream payloadOutputStream = new FileOutputStream(payloadZip)) {
                 outboundPayload.writeTo(payloadOutputStream);
             }
-            /*
-            * Use the temp file's contents as the inbound payload to
-            * correctly process the downloaded files.
-            */
+
+            // Use the temp file's contents as the inbound payload to
+            // correctly process the downloaded files.
             final PayloadFilesManager pfm = new PayloadFilesManager.Perm(retrieveDir, null, logger);
             try (FileInputStream payloadInputStream = new FileInputStream(payloadZip)) {
                 PayloadImpl.Inbound inboundPayload = PayloadImpl.Inbound.newInstance("application/zip", payloadInputStream);
                 pfm.processParts(inboundPayload); // explodes the payloadZip.
             }
         } catch (Exception ex) {
-            // Log error and ignore exception.
             logger.log(Level.WARNING, ex.getMessage(), ex);
         } finally {
             if (payloadZip != null) {

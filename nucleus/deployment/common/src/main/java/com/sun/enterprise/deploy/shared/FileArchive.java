@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation. All rights reserved.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation. All rights reserved.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -99,27 +99,21 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
     @Inject
     private ArchiveFactory archiveFactory;
 
-    // the archive abstraction directory.
+    /** the archive abstraction directory. */
     private File archive;
     private URI uri;
 
-    /*
-     * tracks stale files in the archive and filters the archive's contents to exclude stale entries
+    /**
+     * Tracks stale files in the archive and filters the archive's contents to exclude stale entries
      */
     private StaleFileManager staleFileManager;
 
-    /*
-     * Records whether open or create has been invoked. Otherwise we can't be sure that the staleFileManager field has been
-     * set.
+    /**
+     * Records whether open or create has been invoked. Otherwise we can't be sure that
+     * the staleFileManager field has been set.
      */
     private boolean isOpenedOrCreated;
 
-    /**
-     * Used just by HK2
-     *
-     * @deprecated
-     */
-    @Deprecated
     public FileArchive() {
     }
 

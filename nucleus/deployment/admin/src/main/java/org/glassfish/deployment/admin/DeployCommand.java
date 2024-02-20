@@ -359,8 +359,10 @@ public class DeployCommand extends DeployCommandParameters implements AdminComma
                         File existrepos = new File(new URI(app.getLocation()));
                         String appname = app.getName();
                         if (!appname.equals(name) && existrepos.getAbsoluteFile().equals(reposDir.getAbsoluteFile())) {
-                            report.failure(logger, localStrings.getLocalString("deploy.dupdeployment",
-                                    "Application {0} is trying to use the same repository directory as application {1}, please choose a different application name to deploy",
+                            report.failure(logger,
+                                localStrings.getLocalString("deploy.dupdeployment",
+                                    "Application {0} is trying to use the same repository directory as application {1},"
+                                        + " please choose a different application name to deploy",
                                     name, appname));
                             return;
                         }

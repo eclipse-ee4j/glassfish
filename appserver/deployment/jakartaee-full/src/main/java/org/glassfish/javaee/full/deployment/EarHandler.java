@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +18,6 @@
 package org.glassfish.javaee.full.deployment;
 
 import com.sun.enterprise.config.serverbeans.DasConfig;
-import com.sun.enterprise.connectors.connector.module.RarType;
 import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
 import com.sun.enterprise.deploy.shared.ArchiveFactory;
 import com.sun.enterprise.deploy.shared.FileArchive;
@@ -76,18 +75,15 @@ import org.glassfish.api.deployment.archive.RarArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WarArchiveType;
 import org.glassfish.api.deployment.archive.WritableArchive;
-import org.glassfish.appclient.server.connector.CarType;
 import org.glassfish.deployment.common.DeploymentContextImpl;
 import org.glassfish.deployment.common.DeploymentProperties;
 import org.glassfish.deployment.common.ModuleDescriptor;
-import org.glassfish.ejb.deployment.archive.EjbType;
 import org.glassfish.hk2.api.PreDestroy;
 import org.glassfish.internal.api.DelegatingClassLoader;
 import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.internal.deployment.ExtendedDeploymentContext;
 import org.glassfish.javaee.core.deployment.ApplicationHolder;
 import org.glassfish.loader.util.ASClassLoaderUtil;
-import org.glassfish.web.WarType;
 import org.jvnet.hk2.annotations.Service;
 import org.xml.sax.SAXException;
 

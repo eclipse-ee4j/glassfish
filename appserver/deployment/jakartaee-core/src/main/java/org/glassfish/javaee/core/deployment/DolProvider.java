@@ -21,7 +21,6 @@ import com.sun.enterprise.config.serverbeans.DasConfig;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Module;
 import com.sun.enterprise.deploy.shared.ArchiveFactory;
-import com.sun.enterprise.deploy.shared.FileArchive;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.archivist.ApplicationArchivist;
@@ -42,6 +41,8 @@ import jakarta.inject.Provider;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
@@ -270,67 +271,88 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
      * @param archive the archive for the application
      */
     public Application processDeploymentMetaData(ReadableArchive archive) throws Exception {
-        File tmpFile = null;
-        ExtendedDeploymentContext context = null;
-        Logger logger = Logger.getAnonymousLogger();
-        ClassLoader cl = null;
+        final ArchiveHandler archiveHandler = deployment.getArchiveHandler(archive);
+        if (archiveHandler == null) {
+            throw new IllegalArgumentException(localStrings.getLocalString("deploy.unknownarchivetype",
+                "Archive type of {0} was not recognized", archive.getURI()));
+        }
+
+        final DeployCommandParameters parameters = new DeployCommandParameters(new File(archive.getURI()));
+        final ActionReport report = new HTMLActionReporter();
+        final ExtendedDeploymentContext context = new DeploymentContextImpl(report, archive, parameters, env);
         try {
-            String archiveName = Util.getURIName(archive.getURI());
-            ArchiveHandler archiveHandler = deployment.getArchiveHandler(archive);
-            if (archiveHandler==null) {
-                throw new IllegalArgumentException(localStrings.getLocalString("deploy.unknownarchivetype",
-                    "Archive type of {0} was not recognized", archiveName));
-            }
-
-            DeployCommandParameters parameters = new DeployCommandParameters(new File(archive.getURI()));
-            ActionReport report = new HTMLActionReporter();
-            context = new DeploymentContextImpl(report, archive, parameters, env);
             context.setArchiveHandler(archiveHandler);
-            String appName = archiveHandler.getDefaultApplicationName(archive, context);
-            parameters.name = appName;
+            parameters.name = archiveHandler.getDefaultApplicationName(archive, context);
+            return processDeployment(archive, archiveHandler, context);
+        } finally {
+            context.postDeployClean(true);
+        }
+    }
 
-            if (archive instanceof InputJarArchive) {
-                // we need to expand the archive first in this case
-                tmpFile = File.createTempFile(archiveName, "");
-                String path = tmpFile.getAbsolutePath();
-                if (!tmpFile.delete()) {
-                    logger.log(Level.WARNING, "cannot.delete.temp.file", new Object[] {path});
-                }
-                File tmpDir = new File(path);
-                tmpDir.deleteOnExit();
 
-                if (!tmpDir.exists() && !tmpDir.mkdirs()) {
-                  throw new IOException("Unable to create directory " + tmpDir.getAbsolutePath());
-                }
-                try (FileArchive expandedArchive = (FileArchive)archiveFactory.createArchive(tmpDir)) {
-                    archiveHandler.expand(archive, expandedArchive, context);
-                    context.setSource(expandedArchive);
+    private Application processDeployment(ReadableArchive archive, final ArchiveHandler archiveHandler,
+        final ExtendedDeploymentContext context) throws IOException, URISyntaxException, MalformedURLException {
+        final File tmpDirectory = prepareTmpDir(archive);
+        try {
+            if (tmpDirectory != null) {
+                final WritableArchive expandedArchive = archiveFactory.createArchive(tmpDirectory);
+                archiveHandler.expand(archive, expandedArchive, context);
+                context.setSource((ReadableArchive) expandedArchive);
+            }
+            context.setPhase(DeploymentContextImpl.Phase.PREPARE);
+            context.createDeploymentClassLoader(clhProvider.get(), archiveHandler);
+            return processDeployment(archiveHandler, context);
+        } finally {
+            if (context.getSource() != null) {
+                context.getSource().close();
+            }
+            if (tmpDirectory != null) {
+                try {
+                    FileUtils.whack(tmpDirectory);
+                } catch (Exception e) {
+                    Logger.getAnonymousLogger().log(Level.WARNING,
+                        "Could not delete the temporary directory " + tmpDirectory, e);
                 }
             }
+        }
+    }
 
-            context.setPhase(DeploymentContextImpl.Phase.PREPARE);
-            ClassLoaderHierarchy clh = clhProvider.get();
-            context.createDeploymentClassLoader(clh, archiveHandler);
-            cl = context.getClassLoader();
+
+    private File prepareTmpDir(final ReadableArchive archive) throws IOException {
+        if (!(archive instanceof InputJarArchive)) {
+            return null;
+        }
+        // we need to expand the archive first in this case
+        final String archiveName = Util.getURIName(archive.getURI());
+        final File tmpFile = File.createTempFile(archiveName, "");
+        final String path = tmpFile.getAbsolutePath();
+        if (!tmpFile.delete()) {
+            Logger.getAnonymousLogger().log(Level.WARNING, "cannot.delete.temp.file", path);
+        }
+        final File tmpDir = new File(path);
+        tmpDir.deleteOnExit();
+
+        if (!tmpDir.exists() && !tmpDir.mkdirs()) {
+            throw new IOException("Unable to create directory " + tmpDir.getAbsolutePath());
+        }
+        return tmpDir;
+    }
+
+
+    private Application processDeployment(final ArchiveHandler archiveHandler, final ExtendedDeploymentContext context)
+        throws IOException {
+        final ClassLoader cl = context.getClassLoader();
+        try {
             deployment.getDeployableTypes(context);
             deployment.getSniffers(archiveHandler, null, context);
             return processDOL(context);
-        } finally  {
-            if (cl != null && cl instanceof PreDestroy) {
+        } finally {
+            if (cl instanceof PreDestroy) {
                 try {
                     PreDestroy.class.cast(cl).preDestroy();
                 } catch (Exception e) {
-                    // ignore
-                }
-            }
-            if (context != null) {
-                context.postDeployClean(true);
-            }
-            if (tmpFile != null && tmpFile.exists()) {
-                try {
-                    FileUtils.whack(tmpFile);
-                } catch (Exception e) {
-                    // ignore
+                    Logger.getAnonymousLogger().log(Level.WARNING,
+                        "ClassLoader preDestroy failed for " + cl, e);
                 }
             }
         }

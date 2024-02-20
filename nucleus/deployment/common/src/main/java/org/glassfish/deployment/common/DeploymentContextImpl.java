@@ -247,15 +247,14 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
 
         // we are out of the prepare phase, destroy the shareableTemp and
         // return the final classloader
-        if (sharableTemp != null) {
+        if (sharableTemp instanceof PreDestroy) {
             try {
                 PreDestroy.class.cast(sharableTemp).preDestroy();
             } catch (Exception e) {
-                // ignore, the classloader does not need to be destroyed
+                getLogger().log(Level.WARNING, "ClassLoader preDestroy failed for " + sharableTemp, e);
             }
-            sharableTemp = null;
         }
-
+        sharableTemp = null;
         return cloader;
     }
 

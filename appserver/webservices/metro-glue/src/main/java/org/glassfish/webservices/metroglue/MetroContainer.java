@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -75,7 +75,6 @@ public class MetroContainer implements PostConstruct, Container, WebServiceDeplo
     private static final ResourceBundle rb = logger.getResourceBundle();
     //
     private static final String WSTX_SERVICES_APP_NAME = "wstx-services";
-    private static final String METRO_APPS_INSTALL_ROOT = "lib/install/applications/metro";
     private static final Object lock = new Object();
     private final AtomicBoolean wstxServicesDeployed = new AtomicBoolean(false);
     private final AtomicBoolean wstxServicesDeploying = new AtomicBoolean(false);
@@ -169,7 +168,8 @@ public class MetroContainer implements PostConstruct, Container, WebServiceDeplo
                 File root = serverContext.getInstallRoot();
                 File app = null;
                 try {
-                    app = FileUtils.getManagedFile(WSTX_SERVICES_APP_NAME + ".war", new File(root, METRO_APPS_INSTALL_ROOT));
+                    app = FileUtils.copyResource(root, "lib", "install", "applications", "metro",
+                        WSTX_SERVICES_APP_NAME + ".war");
                 } catch (Exception e) {
                     logger.log(Level.WARNING, LogUtils.WSTX_SERVICE_UNEXPECTED_EXCEPTION, e);
                 }
@@ -238,7 +238,7 @@ public class MetroContainer implements PostConstruct, Container, WebServiceDeplo
     private boolean isHaEnabled() {
         boolean haEnabled = false;
         if (availabilityService != null) {
-            haEnabled = Boolean.valueOf(availabilityService.getAvailabilityEnabled());
+            haEnabled = Boolean.parseBoolean(availabilityService.getAvailabilityEnabled());
         }
 
 //        if (haEnabled) {

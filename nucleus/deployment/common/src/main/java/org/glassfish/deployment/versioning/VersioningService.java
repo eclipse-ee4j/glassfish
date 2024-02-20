@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -265,20 +265,13 @@ public class VersioningService {
      * @return the name of the version currently using the directory, else null
      * @throws VersioningSyntaxException     *
     */
-    public String getVersionFromSameDir(File dir)
-            throws VersioningSyntaxException{
-
+    public String getVersionFromSameDir(File directory) throws VersioningSyntaxException {
         try {
-            Application app = null;
-
             // check if directory deployment exist
-            for (Application element : domain.getApplications().getApplications()) {
-                app = element;
-                /*
-                 * A lifecycle module appears as an application but has a null location.
-                 */
-                if (dir.toURI().toString().equals(app.getLocation())) {
-                    if(!VersioningUtils.getUntaggedName(app.getName()).equals(app.getName())){
+            for (Application app : domain.getApplications().getApplications()) {
+                // A lifecycle module appears as an application but has a null location.
+                if (directory.toURI().toString().equals(app.getLocation())) {
+                    if (!VersioningUtils.getUntaggedName(app.getName()).equals(app.getName())) {
                         return app.getName();
                     }
                 }

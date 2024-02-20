@@ -24,6 +24,7 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FilenameFilter;
@@ -40,6 +41,7 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Collection;
 import java.util.Locale;
@@ -612,14 +614,14 @@ public final class FileUtils {
      * @param work the RetriableWork implementation to be run
      * @return the number of retries performed; 0 indicates the work succeeded without having to
      *         retry
-     * @deprecated The situation usually means there's an IO leak. It can be used also on Windows OS
-     *             when many threads are trying to access the same file.
+     * @deprecated The situation usually means there's an IO leak. The only practical usage is
+     *             on Windows OS when many threads/processes are trying to access the same file.
      */
     @Deprecated
     private static int doWithRetry(RetriableWork work) {
         int retries = 0;
 
-        // Try the work the first time.  Ideally this will work.
+        // Try the work the first time. Ideally this will work.
         work.run();
 
         // If the work failed and this is Windows - on which running gc may
@@ -741,6 +743,20 @@ public final class FileUtils {
         return s != null && !s.isEmpty();
     }
 
+    /**
+     * This method should be used instead of {@link #copy(InputStream, File, long)} if you don't
+     * know the size of the input stream.
+     *
+     * @param in It will NOT be closed after processing. That is caller's responsibility.
+     * @param out Target output file. If the file already exists, it will be overwritten!
+     * @throws IOException
+     */
+    public static void copy(File in, OutputStream out) throws IOException {
+        try (FileInputStream input  = new FileInputStream(in)) {
+            input.transferTo(out);
+        }
+    }
+
 
     /**
      * Fast method using NIO to copy data from the input to the output file, when you already do
@@ -852,7 +868,8 @@ public final class FileUtils {
      * file to be read is <code> small </code>.
      *
      * @param file Absolute path of the file
-     * @return String representing the contents of the file, empty String for an empty file
+     * @return String representing the contents of the file. Lines are separated by
+     *         {@link System#lineSeparator()}.
      * @throws java.io.IOException if there is an i/o error.
      * @throws java.io.FileNotFoundException if the file could not be found
      */
@@ -872,33 +889,28 @@ public final class FileUtils {
     /**
      * If the path dir/file does not exist, look for it in the classpath.
      * If found in classpath, create dir/file.
+     * <p>
+     * Existing file will not be overwritten.
      *
-     * @param file - path to look for
-     * @param dir - directory where the path file should exist
+     * @param dir - directory where the path file should exist (including resource path)
+     * @param resourcePath - resource loadable by the thread context classloader.
      * @return the File representing dir/file. If that does not exist, return null.
      * @throws IOException
      */
-    public static File getManagedFile(String file, File dir) throws IOException {
-        File f = new File(dir, file);
+    public static File copyResource(File dir, String... resourcePath) throws IOException {
+        File f = new File(dir, String.join(File.separator, resourcePath));
         if (f.exists()) {
             return f;
         }
-        try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(file)) {
+        try (InputStream is = Thread.currentThread().getContextClassLoader()
+            .getResourceAsStream(String.join("/", resourcePath))) {
             if (is == null) {
                 return null;
             }
-            try (InputStream bis = new BufferedInputStream(is)) {
-                if (!mkdirsMaybe(f.getParentFile())) {
-                    throw new IOException("Can't create parent dir of output file: " + f);
-                }
-                try (OutputStream os = new BufferedOutputStream(FileUtils.openFileOutputStream(f))) {
-                    byte buf[] = new byte[10240];
-                    int len = 0;
-                    while ((len = bis.read(buf)) > 0) {
-                        os.write(buf, 0, len);
-                    }
-                }
+            if (!mkdirsMaybe(f.getParentFile())) {
+                throw new IOException("Can't create parent dir of output file: " + f);
             }
+            copy(is, f);
             return f;
         }
     }

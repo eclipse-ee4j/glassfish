@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -139,11 +139,8 @@ public class ZipFile {
 
                 bos = new BufferedOutputStream(getOutputStream(f), BUFFER_SIZE);
 
-                int totalBytes = 0;
-
                 for (int numBytes = zin.read(buffer); numBytes > 0; numBytes = zin.read(buffer)) {
                     bos.write(buffer, 0, numBytes);
-                    totalBytes += numBytes;
                 }
                 bos.close();
                 bos = null;

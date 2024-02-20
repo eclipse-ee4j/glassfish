@@ -34,6 +34,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -430,7 +431,7 @@ public abstract class GFLauncher {
 
     abstract void internalLaunch() throws GFLauncherException;
 
-    void launchInstance() throws GFLauncherException, MiniXmlParserException {
+    void launchInstance() throws GFLauncherException {
         if (isFakeLaunch()) {
             return;
         }
@@ -947,7 +948,7 @@ public abstract class GFLauncher {
             Path source = callerParameters.installDir.toPath().resolve(Path.of("lib", "templates", "server.policy"));
             Path target = callerParameters.getConfigDir().toPath().resolve("server.policy");
             try {
-                Files.copy(source, target);
+                Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException ioe) {
                 // the actual error is wrapped differently depending on
                 // whether the problem was with the source or target
@@ -969,10 +970,10 @@ public abstract class GFLauncher {
             File osgiCacheDir = new File(callerParameters.getDomainRootDir(), "osgi-cache");
             File backupOsgiCacheDir = new File(callerParameters.getDomainRootDir(), "osgi-cache-" + System.currentTimeMillis());
             if (osgiCacheDir.exists() && !backupOsgiCacheDir.exists()) {
-                if (!FileUtils.renameFile(osgiCacheDir, backupOsgiCacheDir)) {
-                    throw new GFLauncherException(strings.get("rename_osgi_cache_failed", osgiCacheDir, backupOsgiCacheDir));
-                } else {
+                if (FileUtils.renameFile(osgiCacheDir, backupOsgiCacheDir)) {
                     GFLauncherLogger.fine("rename_osgi_cache_succeeded", osgiCacheDir, backupOsgiCacheDir);
+                } else {
+                    throw new GFLauncherException(strings.get("rename_osgi_cache_failed", osgiCacheDir, backupOsgiCacheDir));
                 }
             }
         }

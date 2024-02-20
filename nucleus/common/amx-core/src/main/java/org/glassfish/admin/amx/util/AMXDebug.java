@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -260,7 +260,7 @@ public final class AMXDebug
         if (value == null)
         {
             final String instanceRoot = System.getProperty("com.sun.aas.instanceRoot");
-            File parentDir = instanceRoot != null ? new File(instanceRoot) : FileUtils.USER_HOME;
+            File parentDir = instanceRoot == null ? FileUtils.USER_HOME : new File(instanceRoot);
             debugDir = new File(parentDir, AMX_DEBUG_SUBDIR);
         }
         else

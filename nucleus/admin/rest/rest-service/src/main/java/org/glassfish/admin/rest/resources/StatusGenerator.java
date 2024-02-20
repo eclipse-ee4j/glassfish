@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -72,7 +72,7 @@ import org.jvnet.hk2.config.DomDocument;
 @Path("/status/")
 public class StatusGenerator extends AbstractResource {
 
-    // FIXME: Wouldn't be better to send it to the client?
+    // FIXME: Wouldn't be better to send messages to the client?
     private static final File FILE = new File(FileUtils.USER_HOME, "GlassFishI18NData.properties");
 
     private final Set<String> commandsUsed = new TreeSet<>();

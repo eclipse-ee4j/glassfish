@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,16 +30,15 @@ import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.deploy.shared.ArchiveFactory;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.util.io.FileUtils;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 
 import java.beans.PropertyVetoException;
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -1967,7 +1966,6 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
          */
         final File generatedContentZip = createGeneratedContentZip();
 
-        ZipOutputStream zipOS = null;
 
         /*
          * We want the ZIP file to contain xml/(appname), ejb/(appname), etc. directories, even if those directories don't
@@ -1976,16 +1974,26 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
          */
         final File baseDir = dc.getScratchDir("xml").getParentFile().getParentFile();
 
-        for (String scratchType : UPLOADED_GENERATED_DIRS) {
-
-            zipOS = addScratchContentIfPresent(dc, baseDir, zipOS, generatedContentZip, scratchType);
+        ZipOutputStream zipOS = null;
+        try {
+            for (String scratchType : UPLOADED_GENERATED_DIRS) {
+                final File genDir = dc.getScratchDir(scratchType);
+                if (genDir.isDirectory()) {
+                    if (zipOS == null) {
+                        zipOS = new ZipOutputStream(
+                            new BufferedOutputStream(new FileOutputStream(generatedContentZip)));
+                    }
+                    addFileToZip(zipOS, baseDir, genDir);
+                }
+            }
+        } finally {
+            if (zipOS != null) {
+                zipOS.close();
+            }
         }
 
         if (zipOS != null) {
-            /*
-             * Because we did zip up some generated content, add the just-generated zip file as a parameter to the param map.
-             */
-            zipOS.close();
+            // Because we did zip up some generated content, add the just-generated zip file as a parameter to the param map.
             // set the generated content param
             paramMap.set("generatedcontent", generatedContentZip.getAbsolutePath());
         }
@@ -1995,18 +2003,6 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
         final File tempFile = File.createTempFile("gendContent", ".zip");
         tempFile.deleteOnExit();
         return tempFile;
-    }
-
-    private ZipOutputStream addScratchContentIfPresent(final DeploymentContext dc, final File baseDir, ZipOutputStream zipOS,
-            final File generatedContentZip, final String scratchDirName) throws IOException {
-        final File genDir = dc.getScratchDir(scratchDirName);
-        if (genDir.isDirectory()) {
-            if (zipOS == null) {
-                zipOS = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(generatedContentZip)));
-            }
-            addFileToZip(zipOS, baseDir, genDir);
-        }
-        return zipOS;
     }
 
     private void addFileToZip(final ZipOutputStream zipOS, final File baseDir, final File f) throws IOException {
@@ -2020,15 +2016,8 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                 addFileToZip(zipOS, baseDir, subFile);
             }
         } else {
-            final byte[] buffer = new byte[1024];
-            try (final InputStream is = new BufferedInputStream(new FileInputStream(f))) {
-                int bytesRead;
-                while ((bytesRead = is.read(buffer)) != -1) {
-                    zipOS.write(buffer, 0, bytesRead);
-                }
-            } finally {
-                zipOS.closeEntry();
-            }
+            FileUtils.copy(f, zipOS);
+            zipOS.closeEntry();
         }
     }
 

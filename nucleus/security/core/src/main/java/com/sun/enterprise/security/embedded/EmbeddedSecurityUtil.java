@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,6 +22,7 @@ import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.security.EmbeddedSecurity;
 import com.sun.enterprise.security.SecurityLoggerInfo;
 import com.sun.enterprise.util.StringUtils;
+import com.sun.enterprise.util.io.FileUtils;
 
 import jakarta.inject.Singleton;
 
@@ -29,7 +30,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -110,7 +110,7 @@ public class EmbeddedSecurityUtil implements EmbeddedSecurity {
 
             //Copy files into new directory
             for (String fileName : fileNames) {
-                Files.copy(new File(fileName).toPath(), new File(toConfigDir, parseFileName(fileName)).toPath());
+                FileUtils.copy(new File(fileName), new File(toConfigDir, parseFileName(fileName)));
             }
         } catch (IOException e) {
             _logger.log(Level.WARNING, SecurityLoggerInfo.ioError, e);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,6 +21,7 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
 import com.sun.enterprise.config.serverbeans.Node;
 import com.sun.enterprise.util.cluster.RemoteType;
+import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -29,7 +30,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -398,7 +398,7 @@ public abstract class SecureAdminBootstrapHelper {
             for (String relativePathToFile : SECURE_ADMIN_FILE_REL_URIS_TO_COPY) {
                 final File origin = new File(existingInstanceDirURI.resolve(relativePathToFile));
                 final File dest = new File(newInstanceDirURI.resolve(relativePathToFile));
-                Files.copy(origin.toPath(), dest.toPath());
+                FileUtils.copy(origin, dest);
             }
         }
 

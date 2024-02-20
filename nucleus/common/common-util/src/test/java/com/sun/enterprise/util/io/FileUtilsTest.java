@@ -65,6 +65,17 @@ public class FileUtilsTest {
 
 
     @Test
+    public void testCopyFileToStream() throws Exception {
+        File outputFile = new File(tempDir, "outputFile");
+        File testFile = new File(FileUtilsTest.class.getResource("/adminport.xml").toURI());
+        try (FileOutputStream os = new FileOutputStream(outputFile)) {
+            FileUtils.copy(testFile, os);
+        }
+        assertEquals(testFile.length(), outputFile.length());
+    }
+
+
+    @Test
     public void testCopyFiles() throws Exception {
         File outputFile = new File(tempDir, "outputFile");
         File testFile = new File(FileUtilsTest.class.getResource("/adminport.xml").toURI());

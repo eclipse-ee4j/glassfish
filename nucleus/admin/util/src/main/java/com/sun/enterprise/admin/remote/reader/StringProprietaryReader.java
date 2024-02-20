@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -41,15 +41,10 @@ public final class StringProprietaryReader implements ProprietaryReader<String> 
     public String readFrom(final InputStream is, final String contentType) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
-            byte[] buff = new byte[512];
-            int count;
-            while ((count = is.read(buff)) > 0) {
-                baos.write(buff, 0, count);
-            }
+            is.transferTo(baos);
         } finally {
             is.close();
         }
         return baos.toString(StandardCharsets.UTF_8);
     }
-
 }

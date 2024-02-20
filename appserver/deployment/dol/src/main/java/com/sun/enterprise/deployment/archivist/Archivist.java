@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -1297,12 +1297,12 @@ public abstract class Archivist<T extends BundleDescriptor> {
      * @param archive abstraction to use when adding the file
      * @param filePath to the file to add
      * @param entryName the entry name in the archive
+     * @throws IOException
      */
     protected static void addFileToArchive(WritableArchive archive, String filePath, String entryName)
         throws IOException {
-        try (FileInputStream is = new FileInputStream(new File(filePath));
-            WritableArchiveEntry os = archive.putNextEntry(entryName)) {
-            FileUtils.copy(is, os);
+        try (WritableArchiveEntry os = archive.putNextEntry(entryName)) {
+            FileUtils.copy(new File(filePath), os);
         }
     }
 
@@ -1313,6 +1313,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
      * @param in  jar file
      * @param out jar file
      * @param ignored entry names to not copy from to source jar file
+     * @throws IOException
      */
     protected void copyJarElements(ReadableArchive in, WritableArchive out, Set<String> ignored) throws IOException {
         Enumeration<String> entries = in.entries();

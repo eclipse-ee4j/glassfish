@@ -742,16 +742,22 @@ public final class FileUtils {
 
 
     /**
-     * @param in It will be closed after processing, doesn't need to be buffered as this method uses
-     *            own 8K buffer.
+     * FIXME: Document and write test with large zip file to see if it wouldn't be better to use
+     * BufferedInputStream and BufferedOutputStream.
+     * FIXME: Usually used with JarFile and it's entry. Add API.
+     * <p>
+     * WARNING: Don't use it when you don't know the byteCount value.
+     *
+     * @param in It will be closed after processing.
      * @param out Target output file.
-     * @param bytes Maximal count of bytes to be transferred
+     * @param byteCount count of bytes to be transferred.
      * @throws IOException
      */
-    public static void copy(InputStream in, File out, long bytes) throws IOException {
-        try (ReadableByteChannel inputChannel = Channels.newChannel(in);
+    public static void copy(InputStream in, File out, long byteCount) throws IOException {
+        try (
+            ReadableByteChannel inputChannel = Channels.newChannel(in);
             FileOutputStream output = new FileOutputStream(out)) {
-            output.getChannel().transferFrom(inputChannel, 0, bytes);
+            output.getChannel().transferFrom(inputChannel, 0, byteCount);
         }
     }
 

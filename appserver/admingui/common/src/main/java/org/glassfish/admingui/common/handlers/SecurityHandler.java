@@ -278,7 +278,7 @@ public class SecurityHandler {
                 continue;
             }
             sb.append(oneProp.get("name")).append("=");
-            String value = ((String) oneProp.get("value"));
+            String value = (String) oneProp.get("value");
             value = UtilHandlers.escapePropertyValue(value);
             sb.append(value).append(":");
         }

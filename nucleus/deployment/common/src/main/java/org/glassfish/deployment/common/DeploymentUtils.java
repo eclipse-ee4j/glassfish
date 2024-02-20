@@ -27,7 +27,6 @@ import static java.util.logging.Level.WARNING;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -67,17 +66,16 @@ import com.sun.enterprise.util.io.FileUtils;
 /**
  * Utility methods for deployment.
  */
-
 public class DeploymentUtils {
 
-    public static final Logger deplLogger = DeploymentContextImpl.deplLogger;
+    private static final Logger deplLogger = DeploymentContextImpl.deplLogger;
 
     @LogMessageInfo(message = "Exception caught {0}", level = "WARNING")
     private static final String EXCEPTION_CAUGHT = "NCLS-DEPLOYMENT-00010";
 
     public static final String DEPLOYMENT_PROPERTY_JAVA_WEB_START_ENABLED = "java-web-start-enabled";
 
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeploymentUtils.class);
+    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeploymentUtils.class);
 
     private static final String V2_COMPATIBILITY = "v2";
 
@@ -319,7 +317,7 @@ public class DeploymentUtils {
         // Last is manifest if exists
         Manifest manifest = source.getManifest();
         if (manifest != null) {
-            try (OutputStream entry = target.putNextEntry(MANIFEST_NAME)) {
+            try (WritableArchiveEntry entry = target.putNextEntry(MANIFEST_NAME)) {
                 manifest.write(entry);
             }
         }
@@ -465,13 +463,5 @@ public class DeploymentUtils {
         }
 
         return virtualServers.toString();
-    }
-
-    public static void copyStream(InputStream in, OutputStream out) throws IOException {
-        byte[] buf = new byte[4096];
-        int len;
-        while ((len = in.read(buf)) >= 0) {
-            out.write(buf, 0, len);
-        }
     }
 }

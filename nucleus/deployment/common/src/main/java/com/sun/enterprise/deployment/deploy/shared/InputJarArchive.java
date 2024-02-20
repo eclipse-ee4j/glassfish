@@ -84,7 +84,18 @@ public class InputJarArchive extends JarArchive implements ReadableArchive {
     private InputJarArchive parentArchive;
 
     // track entry enumerations to close them if needed when the archive is closed
-    private final WeakHashMap<EntryEnumeration, Object> entryEnumerations = new WeakHashMap<EntryEnumeration, Object>();
+    private final WeakHashMap<EntryEnumeration, Object> entryEnumerations = new WeakHashMap<>();
+
+    public InputJarArchive(File file) throws IOException {
+        open(file.toURI());
+    }
+
+    /**
+     * Used also by HK2
+     */
+    public InputJarArchive() {
+        // see getSubArchive
+    }
 
     /**
      * Open an abstract archive
@@ -122,7 +133,7 @@ public class InputJarArchive extends JarArchive implements ReadableArchive {
      */
     @Override
     public Collection<String> getDirectories() throws IOException {
-        return new CollectionWrappedEnumeration<String>(new CollectionWrappedEnumeration.EnumerationFactory<String>() {
+        return new CollectionWrappedEnumeration<>(new CollectionWrappedEnumeration.EnumerationFactory<String>() {
 
             @Override
             public Enumeration<String> enumeration() {
@@ -566,9 +577,9 @@ public class InputJarArchive extends JarArchive implements ReadableArchive {
      */
     private static class ArchiveJarEntrySource implements JarEntrySource {
 
-        private JarFile sourceJarFile;
+        private final JarFile sourceJarFile;
 
-        private Enumeration<JarEntry> jarEntries;
+        private final Enumeration<JarEntry> jarEntries;
 
         private ArchiveJarEntrySource(final URI archiveURI) throws IOException {
             sourceJarFile = getJarFile(archiveURI);
@@ -594,7 +605,7 @@ public class InputJarArchive extends JarArchive implements ReadableArchive {
      */
     private static class SubarchiveJarEntrySource implements JarEntrySource {
 
-        private JarInputStream jis;
+        private final JarInputStream jis;
 
         private SubarchiveJarEntrySource(final JarFile jf, final URI uri) throws IOException {
             final JarEntry subarchiveJarEntry = jf.getJarEntry(uri.getSchemeSpecificPart());
@@ -701,8 +712,8 @@ public class InputJarArchive extends JarArchive implements ReadableArchive {
 
         private Enumeration<T> e;
 
-        static interface EnumerationFactory<T> {
-            public Enumeration<T> enumeration();
+        interface EnumerationFactory<T> {
+            Enumeration<T> enumeration();
         }
 
         CollectionWrappedEnumeration(final EnumerationFactory<T> factory) {
@@ -712,7 +723,7 @@ public class InputJarArchive extends JarArchive implements ReadableArchive {
 
         @Override
         public Iterator<T> iterator() {
-            return new Iterator<T>() {
+            return new Iterator<>() {
 
                 @Override
                 public boolean hasNext() {
@@ -746,12 +757,11 @@ public class InputJarArchive extends JarArchive implements ReadableArchive {
             if (entries == null) {
                 populateEntries();
             }
-            ;
             return entries.size();
         }
 
         private void populateEntries() {
-            entries = new ArrayList<T>();
+            entries = new ArrayList<>();
             /*
              * Fill up the with data from a new enumeration.
              */

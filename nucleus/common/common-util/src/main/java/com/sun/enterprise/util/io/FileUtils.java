@@ -657,6 +657,7 @@ public final class FileUtils {
             throw new RuntimeException("Can't create parent dir of output file: " + fout);
         }
         Files.copy(fin.toPath(), fout.toPath());
+        LOG.log(Level.DEBUG, "Successfully copyied file {0} to {1}", fin, fout);
     }
 
 
@@ -748,7 +749,7 @@ public final class FileUtils {
      * @throws IOException
      */
     public static void copy(InputStream in, File out, long bytes) throws IOException {
-        try (ReadableByteChannel inputChannel = Channels.newChannel(new BufferedInputStream(in));
+        try (ReadableByteChannel inputChannel = Channels.newChannel(in);
             FileOutputStream output = new FileOutputStream(out)) {
             output.getChannel().transferFrom(inputChannel, 0, bytes);
         }
@@ -769,26 +770,29 @@ public final class FileUtils {
         if (outputChannel instanceof FileChannel) {
             // Can be optimized by the operating system
             FileChannel foch = (FileChannel) outputChannel;
-            foch.transferFrom(inputChannel, 0, Long.MAX_VALUE);
+            long transferred = foch.transferFrom(inputChannel, 0, Long.MAX_VALUE);
+            LOG.log(Level.TRACE, "Copyied {0} B via {1}", transferred, foch);
+            os.flush();
             return;
         }
-        ByteBuffer byteBuffer = ByteBuffer.allocate(8192);
+        final ByteBuffer byteBuffer = ByteBuffer.allocate(8192);
+        long transferred = 0;
         int read;
         do {
             read = inputChannel.read(byteBuffer);
-            if (read > 0) {
+            if (read >= 0) {
                 byteBuffer.flip();
                 outputChannel.write(byteBuffer);
                 byteBuffer.clear();
+                transferred += read;
             }
         } while (read != -1);
+        LOG.log(Level.TRACE, "Copyied {0} B via {1}", transferred, outputChannel);
+        os.flush();
     }
 
 
     private static WritableByteChannel getChannel(final OutputStream stream) {
-        if (stream instanceof FileOutputStream) {
-            return ((FileOutputStream) stream).getChannel();
-        }
         if (stream instanceof WritableArchiveEntry) {
             return ((WritableArchiveEntry) stream).getChannel();
         }

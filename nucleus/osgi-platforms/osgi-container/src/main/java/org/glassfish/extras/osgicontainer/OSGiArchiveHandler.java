@@ -222,7 +222,6 @@ public class OSGiArchiveHandler extends GenericHandler implements CompositeHandl
                 logger.logp(Level.FINER, "OSGiArchiveHandler", "expandJar", "Writing jar entry name = {0}, size = {1}",
                     new Object[] {entryName, entrySize});
                 try (WritableArchiveEntry os = target.putNextEntry(entryName)) {
-                    // passing 0 will force it to read until EOS
                     FileUtils.copy(jis, os);
                 }
             } finally {

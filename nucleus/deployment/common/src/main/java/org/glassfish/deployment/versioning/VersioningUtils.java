@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,10 +18,9 @@
 package org.glassfish.deployment.versioning;
 
 import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.util.LocalStringManagerImpl;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -30,11 +30,8 @@ import java.util.StringTokenizer;
  *
  * @author Romain GRECOURT - SERLI (romain.grecourt@serli.com)
  */
-
 public class VersioningUtils {
 
-    public static final LocalStringManagerImpl LOCALSTRINGS =
-            new LocalStringManagerImpl(VersioningUtils.class);
     public static final String EXPRESSION_SEPARATOR = ":";
     public static final String EXPRESSION_WILDCARD = "*";
     public static final String REPOSITORY_DASH = "~";
@@ -64,13 +61,13 @@ public class VersioningUtils {
                 if (colonIndex == 0) {
                     // if appName is starting with a colon
                     throw new VersioningSyntaxException(
-                            LOCALSTRINGS.getLocalString("versioning.deployment.invalid.appname1",
+                            MessageFormat.format(
                             "excepted application name before colon: {0}",
                             appName));
                 } else if (colonIndex == (appName.length() - 1)) {
                     // if appName is ending with a colon
                     throw new VersioningSyntaxException(
-                            LOCALSTRINGS.getLocalString("versioning.deployment.invalid.appname2",
+                        MessageFormat.format(
                             "excepted version identifier after colon: {0}",
                             appName));
                 }
@@ -104,13 +101,13 @@ public class VersioningUtils {
                 if (colonIndex == 0) {
                     // if appName is starting with a colon
                     throw new VersioningSyntaxException(
-                            LOCALSTRINGS.getLocalString("versioning.deployment.invalid.appname1",
+                        MessageFormat.format(
                             "excepted application name before colon: {0}",
                             appName));
                 } else if (colonIndex == (appName.length() - 1)) {
                     // if appName is ending with a colon
                     throw new VersioningSyntaxException(
-                            LOCALSTRINGS.getLocalString("versioning.deployment.invalid.appname2",
+                        MessageFormat.format(
                             "excepted version identifier after colon: {0}",
                             appName));
                 }
@@ -139,9 +136,7 @@ public class VersioningUtils {
 
         String identifier = getExpression(appName);
         if (identifier != null && identifier.contains(EXPRESSION_WILDCARD)) {
-            throw new VersioningWildcardException(
-                    LOCALSTRINGS.getLocalString("versioning.deployment.wildcard.not.allowed",
-                    "Wildcard character(s) are not allowed in a version identifier."));
+            throw new VersioningWildcardException("Wildcard character(s) are not allowed in a version identifier.");
         }
     }
 
@@ -158,12 +153,8 @@ public class VersioningUtils {
     public static final List<String> getVersions(String untaggedName,
             List<Application> allApplications) {
 
-        List<String> allVersions = new ArrayList<String>();
-        Iterator<Application> it = allApplications.iterator();
-
-        while (it.hasNext()) {
-            Application app = it.next();
-
+        List<String> allVersions = new ArrayList<>();
+        for (Application app : allApplications) {
             // if a tagged version or untagged version of the app
             if (app.getName().startsWith(untaggedName + EXPRESSION_SEPARATOR)
                     || app.getName().equals(untaggedName)) {
@@ -198,10 +189,7 @@ public class VersioningUtils {
                 return listVersion.subList(listVersion.indexOf(appName),
                         listVersion.indexOf(appName) + 1);
             } else {
-                throw new VersioningException(
-                        LOCALSTRINGS.getLocalString("versioning.deployment.version.notreg",
-                        "version {0} not registered",
-                        appName));
+                throw new VersioningException(MessageFormat.format("version {0} not registered", appName));
             }
         }
 
@@ -212,24 +200,18 @@ public class VersioningUtils {
                 return listVersion.subList(listVersion.indexOf(appName),
                         listVersion.indexOf(appName) + 1);
             } else {
-                throw new VersioningException(
-                        LOCALSTRINGS.getLocalString("versioning.deployment.version.notreg",
-                        "Version {0} not registered",
-                        appName));
+                throw new VersioningException(MessageFormat.format("Version {0} not registered", appName));
             }
         }
 
         StringTokenizer st = new StringTokenizer(expressionVersion,
                 EXPRESSION_WILDCARD);
         String lastToken = null;
-        List<String> matchedVersions = new ArrayList<String>(listVersion);
+        List<String> matchedVersions = new ArrayList<>(listVersion);
 
         while (st.hasMoreTokens()) {
             String token = st.nextToken();
-            Iterator it = listVersion.iterator();
-
-            while (it.hasNext()) {
-                String app = (String) it.next();
+            for (String app : listVersion) {
                 String identifier = getExpression(app);
 
                 // get the position of the last token in the current identifier

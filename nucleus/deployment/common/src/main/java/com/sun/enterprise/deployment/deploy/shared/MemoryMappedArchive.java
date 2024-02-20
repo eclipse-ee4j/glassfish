@@ -18,6 +18,7 @@
 package com.sun.enterprise.deployment.deploy.shared;
 
 import com.sun.enterprise.util.io.FileUtils;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -26,6 +27,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -34,8 +37,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 
 import org.glassfish.api.deployment.archive.ReadableArchive;
@@ -48,6 +49,7 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 @PerLookup
 public class MemoryMappedArchive extends JarArchive implements ReadableArchive {
+    private static final Logger LOG = System.getLogger(MemoryMappedArchive.class.getName());
 
     private URI uri;
     private byte[] file;
@@ -65,6 +67,24 @@ public class MemoryMappedArchive extends JarArchive implements ReadableArchive {
 
     public MemoryMappedArchive(byte[] bits) {
         file = bits;
+    }
+
+    // copy constructor
+    public MemoryMappedArchive(ReadableArchive source) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try (JarOutputStream jos = new JarOutputStream(baos)) {
+            for (Enumeration<String> elements = source.entries(); elements.hasMoreElements();) {
+                String elementName = elements.nextElement();
+                try (InputStream is = source.getEntry(elementName)) {
+                    jos.putNextEntry(new ZipEntry(elementName));
+                    FileUtils.copy(is, jos);
+                } finally {
+                    jos.flush();
+                    jos.closeEntry();
+                }
+            }
+        }
+        file = baos.toByteArray();
     }
 
     public byte[] getByteArray() {
@@ -86,24 +106,6 @@ public class MemoryMappedArchive extends JarArchive implements ReadableArchive {
         try (FileInputStream is = new FileInputStream(in)) {
             read(is);
         }
-    }
-
-    // copy constructor
-    public MemoryMappedArchive(ReadableArchive source) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try (JarOutputStream jos = new JarOutputStream(baos)) {
-            for (Enumeration<String> elements = source.entries(); elements.hasMoreElements();) {
-                String elementName = elements.nextElement();
-                try (InputStream is = source.getEntry(elementName)) {
-                    jos.putNextEntry(new ZipEntry(elementName));
-                    FileUtils.copy(is, jos);
-                } finally {
-                    jos.flush();
-                    jos.closeEntry();
-                }
-            }
-        }
-        file = baos.toByteArray();
     }
 
     /**
@@ -137,33 +139,31 @@ public class MemoryMappedArchive extends JarArchive implements ReadableArchive {
     }
 
     private Vector<String> entries(boolean directory) {
-
-        Vector entries = new Vector();
-        try {
-            JarInputStream jis = new JarInputStream(new ByteArrayInputStream(file));
+        Vector<String> entries = new Vector<>();
+        try (JarInputStream jis = new JarInputStream(new ByteArrayInputStream(file))) {
             ZipEntry ze;
             while ((ze=jis.getNextEntry())!=null) {
                 if (ze.isDirectory()==directory) {
                     entries.add(ze.getName());
                 }
             }
-            jis.close();
-        } catch(IOException ioe) {
-            Logger.getAnonymousLogger().log(Level.WARNING,
-                ioe.getMessage(), ioe);
+        } catch (IOException ioe) {
+            LOG.log(Level.WARNING, ioe.getMessage(), ioe);
         }
         return entries;
     }
 
-        /**
-         *  @return an @see java.util.Enumeration of entries in this abstract
-         * archive, providing the list of embedded archive to not count their
-         * entries as part of this archive
-         */
-         public Enumeration entries(Enumeration embeddedArchives) {
+
+    /**
+     * @return an @see java.util.Enumeration of entries in this abstract
+     *         archive, providing the list of embedded archive to not count their
+     *         entries as part of this archive
+     */
+    public Enumeration entries(Enumeration embeddedArchives) {
         // jar file are not recursive
         return entries();
-        }
+    }
+
 
     /**
      * @return true if this archive exists
@@ -186,7 +186,7 @@ public class MemoryMappedArchive extends JarArchive implements ReadableArchive {
      */
     @Override
     public long getArchiveSize() throws NullPointerException, SecurityException {
-        return(file.length);
+        return file.length;
     }
 
     @Override
@@ -205,11 +205,11 @@ public class MemoryMappedArchive extends JarArchive implements ReadableArchive {
      */
     @Override
     public ReadableArchive getSubArchive(String name) throws IOException {
-        InputStream is = getEntry(name);
-        if (is!=null) {
-            ReadableArchive archive = new MemoryMappedArchive(is);
-            is.close();
-            return archive;
+        try (InputStream is = getEntry(name)) {
+            if (is != null) {
+                ReadableArchive archive = new MemoryMappedArchive(is);
+                return archive;
+            }
         }
         return null;
     }
@@ -226,16 +226,17 @@ public class MemoryMappedArchive extends JarArchive implements ReadableArchive {
         return (getEntry(name) != null);
     }
 
+
     /**
-     * @return a @see java.io.InputStream for an existing entry in
-     * the current abstract archive
      * @param name the entry name
+     * @return an {@link InputStream} for an existing entry in the current abstract archive.
+     *         The caller is responsible for closing. Can be null.
      */
     @Override
     public InputStream getEntry(String name) throws IOException {
         JarInputStream jis = new JarInputStream(new ByteArrayInputStream(file));
         ZipEntry ze;
-        while ((ze=jis.getNextEntry())!=null) {
+        while ((ze = jis.getNextEntry()) != null) {
             if (ze.getName().equals(name)) {
                 return new BufferedInputStream(jis);
             }
@@ -245,15 +246,14 @@ public class MemoryMappedArchive extends JarArchive implements ReadableArchive {
 
     @Override
     public JarEntry getJarEntry(String name) {
-        try {
-            JarInputStream jis = new JarInputStream(new ByteArrayInputStream(file));
+        try (JarInputStream jis = new JarInputStream(new ByteArrayInputStream(file))) {
             JarEntry ze;
-            while ((ze=jis.getNextJarEntry())!=null) {
+            while ((ze = jis.getNextJarEntry()) != null) {
                 if (ze.getName().equals(name)) {
                     return ze;
                 }
             }
-        } catch(IOException e) {
+        } catch (IOException e) {
             return null;
         }
         return null;
@@ -267,16 +267,15 @@ public class MemoryMappedArchive extends JarArchive implements ReadableArchive {
      */
     @Override
     public long getEntrySize(String name) {
-        try {
-            JarInputStream jis = new JarInputStream(new ByteArrayInputStream(file));
+        try (JarInputStream jis = new JarInputStream(new ByteArrayInputStream(file))) {
             ZipEntry ze;
             while ((ze=jis.getNextEntry())!=null) {
                 if (ze.getName().equals(name)) {
                     return ze.getSize();
                 }
             }
-        } catch(IOException e) {
-            return 0;
+        } catch (IOException e) {
+            LOG.log(Level.WARNING, "Couldn't get entry size for " + name + " in " + file, e);
         }
         return 0;
     }
@@ -286,10 +285,9 @@ public class MemoryMappedArchive extends JarArchive implements ReadableArchive {
      */
     @Override
     public Manifest getManifest() throws IOException {
-        JarInputStream jis = new JarInputStream(new ByteArrayInputStream(file));
-        Manifest m = jis.getManifest();
-        jis.close();
-        return m;
+        try (JarInputStream jis = new JarInputStream(new ByteArrayInputStream(file))) {
+            return jis.getManifest();
+        }
     }
 
     /**

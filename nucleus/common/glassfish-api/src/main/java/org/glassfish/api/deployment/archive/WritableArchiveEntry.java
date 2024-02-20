@@ -16,58 +16,66 @@
 
 package org.glassfish.api.deployment.archive;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
-import java.util.zip.ZipOutputStream;
+import java.util.function.Supplier;
 
 
 /**
+ * Archive entry used for the output.
+ *
  * @author David Matejcek
  */
 public class WritableArchiveEntry extends OutputStream {
 
-    private final ZipOutputStream archive;
-    private final OutputStream output;
+    private final Supplier<OutputStream> output;
+    private final CloseAction closeAction;
 
 
     /**
-     * @param archive owner of the archive entry
-     * @param output output stream to write to
+     * @param output provider of the output stream to write to
+     * @param closeAction what should do the entry when it is closing.
      */
-    public WritableArchiveEntry(final ZipOutputStream archive, final OutputStream output) {
-        this.archive = archive;
+    public WritableArchiveEntry(Supplier<OutputStream> output, CloseAction closeAction) {
         this.output = output;
+        this.closeAction = closeAction;
     }
 
 
     @Override
     public void write(int b) throws IOException {
-        output.write(b);
+        output.get().write(b);
     }
 
 
     /**
-     * @return output channel. No need to close it, it will be closed with this object.
+     * @return output channel. No need to close it, it will be closed by the original provider.
      */
     public WritableByteChannel getChannel() {
-        if (output instanceof FileOutputStream) {
-            return ((FileOutputStream) output).getChannel();
-        }
-        return Channels.newChannel(output);
+        OutputStream out = output.get();
+        return Channels.newChannel(out);
     }
 
 
     @Override
     public void close() throws IOException {
-        if (archive == null) {
-            this.output.close();
-        } else {
-            this.archive.flush();
-            this.archive.finish();
-            this.archive.closeEntry();
-        }
+        closeAction.close();
+    }
+
+
+    /**
+     * Action to close the entry.
+     */
+    @FunctionalInterface
+    public interface CloseAction {
+
+        /**
+         * Action to close the entry.
+         *
+         * @throws IOException
+         */
+        void close() throws IOException;
     }
 }

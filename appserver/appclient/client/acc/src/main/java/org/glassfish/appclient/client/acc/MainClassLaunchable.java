@@ -27,6 +27,8 @@ import com.sun.enterprise.deployment.util.DOLUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.net.URI;
 import java.net.URLClassLoader;
 import java.security.AccessController;
@@ -48,14 +50,14 @@ import org.xml.sax.SAXException;
  * @author tjquinn
  */
 public class MainClassLaunchable implements Launchable {
+    private static final Logger LOG = System.getLogger(MainClassLaunchable.class.getName());
 
     private final Class<?> mainClass;
     private ApplicationClientDescriptor acDesc;
     private ClassLoader classLoader;
     private AppClientArchivist archivist;
 
-    MainClassLaunchable(final ServiceLocator habitat, final Class mainClass) {
-        super();
+    MainClassLaunchable(final ServiceLocator habitat, final Class<?> mainClass) {
         this.mainClass = mainClass;
     }
 
@@ -66,20 +68,11 @@ public class MainClassLaunchable implements Launchable {
 
     @Override
     public ApplicationClientDescriptor getDescriptor(final URLClassLoader loader) throws IOException, SAXException {
-        /*
-         * There is no developer-provided descriptor possible so just
-         * use a default one.
-         */
+        // There is no developer-provided descriptor possible so just use a default one.
         if (acDesc == null) {
             ReadableArchive tempArchive = null;
-            final ACCClassLoader tempLoader = AccessController.doPrivileged(
-                    new PrivilegedAction<ACCClassLoader>() {
-
-                        @Override
-                        public ACCClassLoader run() {
-                            return new ACCClassLoader(loader.getURLs(), loader.getParent());
-                        }
-                    });
+            PrivilegedAction<ACCClassLoader> action = () -> new ACCClassLoader(loader.getURLs(), loader.getParent());
+            final ACCClassLoader tempLoader = AccessController.doPrivileged(action);
             tempArchive = createArchive(tempLoader, mainClass);
             final AppClientArchivist acArchivist = getArchivist(tempArchive, tempLoader);
             archivist.setClassLoader(tempLoader);
@@ -97,34 +90,9 @@ public class MainClassLaunchable implements Launchable {
         return c.getName();
     }
 
-//    private ReadableArchive createArchive(final ClassLoader loader,
-//            final Class mainClass) throws IOException, URISyntaxException {
-//        Manifest mf = new Manifest();
-//        mf.getMainAttributes().put(Attributes.Name.MAIN_CLASS, mainClass.getName());
-//        final File tempFile = File.createTempFile("acc", ".jar");
-//        tempFile.deleteOnExit();
-//        JarOutputStream jos = new JarOutputStream(
-//                new BufferedOutputStream(new FileOutputStream(tempFile)), mf);
-//        final String mainClassResourceName = mainClass.getName().replace('.', '/') + ".class";
-//        final ZipEntry mainClassEntry = new ZipEntry(mainClassResourceName);
-//        jos.putNextEntry(mainClassEntry);
-//        InputStream is = loader.getResourceAsStream(mainClassResourceName);
-//        int bytesRead;
-//        byte[] buffer = new byte[1024];
-//        while ( (bytesRead = is.read(buffer)) != -1) {
-//            jos.write(buffer, 0, bytesRead);
-//        }
-//        is.close();
-//        jos.closeEntry();
-//        jos.close();
-//
-//        final InputJarArchive result = new InputJarArchive();
-//        result.open(new URI("jar", tempFile.toURI().toASCIIString(), null));
-//        return result;
-//    }
 
-    private ReadableArchive createArchive(final ClassLoader loader,
-            final Class mainClass) throws IOException {
+    private ReadableArchive createArchive(final ClassLoader loader, final Class<?> mainClass) throws IOException {
+        LOG.log(Level.DEBUG, "createArchive(loader, mainClass={0})", mainClass);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         Manifest mf = new Manifest();

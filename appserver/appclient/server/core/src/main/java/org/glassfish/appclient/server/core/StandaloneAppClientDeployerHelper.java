@@ -21,8 +21,8 @@ import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 import com.sun.enterprise.deployment.archivist.AppClientArchivist;
 import com.sun.enterprise.deployment.deploy.shared.OutputJarArchive;
+import com.sun.enterprise.util.io.FileUtils;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -42,6 +42,7 @@ import java.util.logging.Logger;
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.api.deployment.archive.WritableArchiveEntry;
 import org.glassfish.appclient.server.core.jws.JavaWebStartInfo;
 import org.glassfish.appclient.server.core.jws.servedcontent.DynamicContent;
 import org.glassfish.appclient.server.core.jws.servedcontent.FixedContent;
@@ -139,13 +140,9 @@ public class StandaloneAppClientDeployerHelper extends AppClientDeployerHelper {
     }
 
     private void copyToArchive(final File inputFile, final OutputJarArchive outputArchive, final String pathInJar) throws IOException {
-        try (OutputStream os = outputArchive.putNextEntry(pathInJar);
-            InputStream is = new BufferedInputStream(new FileInputStream(inputFile))) {
-            final byte[] buffer = new byte[512];
-            int bytesRead;
-            while ((bytesRead = is.read(buffer)) != -1) {
-                os.write(buffer, 0, bytesRead);
-            }
+        try (WritableArchiveEntry os = outputArchive.putNextEntry(pathInJar);
+            InputStream is = new FileInputStream(inputFile)) {
+            FileUtils.copy(is, os);
         }
     }
 
@@ -343,7 +340,7 @@ public class StandaloneAppClientDeployerHelper extends AppClientDeployerHelper {
                 try (OutputStream os = target.putNextEntry(JarFile.MANIFEST_NAME)) {
                     originalManifest.write(os);
                 }
-                copyArchive(originalSource, target, Collections.EMPTY_SET);
+                copyArchive(originalSource, target, Collections.emptySet());
             }
         }
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,27 +17,29 @@
 
 package org.glassfish.deployment.versioning;
 
-import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Domain;
+
+import jakarta.inject.Inject;
+
 import java.io.File;
-import java.util.ArrayList;
+import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.security.auth.Subject;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.deployment.common.DeploymentUtils;
-import jakarta.inject.Inject;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * This service provides methods to handle application names
@@ -89,11 +92,8 @@ public class VersioningService {
         Map<String,Set<String>> enabledVersionsInTargets = Collections.EMPTY_MAP;
         List<String> matchedVersions = getMatchedVersions(versionExpression, "domain");
 
-        // foreach matched version
-        Iterator it = matchedVersions.iterator();
-        while(it.hasNext()){
+        for (String matchedVersion : matchedVersions) {
 
-            String matchedVersion = (String) it.next();
             // retrieved all the enabled version on the referenced target on each matched version
             Map<String,Set<String>> tempMap =
                     getEnabledVersionsInReferencedTargets(matchedVersion);
@@ -131,14 +131,12 @@ public class VersioningService {
             throws VersioningSyntaxException {
 
         Map<String,Set<String>> enabledVersionsInTargets =
-                new HashMap<String, Set<String>>();
+                new HashMap<>();
 
         List<String> allTargets =
                 domain.getAllReferencedTargetsForApplication(versionIdentifier);
 
-        Iterator it = allTargets.iterator();
-        while(it.hasNext()){
-            String target = (String)it.next();
+        for (String target : allTargets) {
             String enabledVersion = getEnabledVersion(versionIdentifier, target);
             if(enabledVersion != null){
                 // the key already exists, we just add the new target into the list
@@ -146,7 +144,7 @@ public class VersioningService {
                     enabledVersionsInTargets.get(enabledVersion).add(target);
                 } else {
                     // we have to create the list associated with the key
-                    Set<String> setTargets = new HashSet<String>();
+                    Set<String> setTargets = new HashSet<>();
                     setTargets.add(target);
                     enabledVersionsInTargets.put(enabledVersion, setTargets);
                 }
@@ -171,11 +169,7 @@ public class VersioningService {
         List<String> allVersions = getAllversions(untaggedName, target);
 
         if (allVersions != null) {
-            Iterator it = allVersions.iterator();
-
-            while (it.hasNext()) {
-                String app = (String) it.next();
-
+            for (String app : allVersions) {
                 // if a version of the app is enabled
                 if (domain.isAppEnabledInTarget(app, target)) {
                     return app;
@@ -205,11 +199,9 @@ public class VersioningService {
             // if versionned
             if(!name.equals(untagged)){
                 throw new VersioningException(
-                        VersioningUtils.LOCALSTRINGS.getLocalString("versioning.deployment.application.noversion",
-                        "Application {0} has no version registered",
-                        untagged));
+                    MessageFormat.format("Application {0} has no version registered", untagged));
             }
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
 
         return VersioningUtils.matchExpression(allVersions, name);
@@ -228,7 +220,7 @@ public class VersioningService {
     public void handleDisable(final String appName, final String target,
             final ActionReport report, final Subject subject) throws VersioningSyntaxException {
 
-        Set<String> versionsToDisable = Collections.EMPTY_SET;
+        Set<String> versionsToDisable = Collections.emptySet();
 
         if (DeploymentUtils.isDomainTarget(target)) {
             // retrieve the enabled versions on each target in the domain
@@ -244,14 +236,12 @@ public class VersioningService {
 
             if (enabledVersion != null
                     && !enabledVersion.equals(appName)) {
-                versionsToDisable = new HashSet<String>();
+                versionsToDisable = new HashSet<>();
                 versionsToDisable.add(enabledVersion);
             }
         }
 
-        Iterator<String> it = versionsToDisable.iterator();
-        while (it.hasNext()) {
-            String currentVersion = it.next();
+        for (String currentVersion : versionsToDisable) {
             // invoke disable if the currently enabled version is not itself
             if (currentVersion != null
                     && !currentVersion.equals(appName)) {
@@ -279,12 +269,11 @@ public class VersioningService {
             throws VersioningSyntaxException{
 
         try {
-            Iterator it = domain.getApplications().getApplications().iterator();
             Application app = null;
 
             // check if directory deployment exist
-            while ( it.hasNext() ) {
-                app = (Application) it.next();
+            for (Application element : domain.getApplications().getApplications()) {
+                app = element;
                 /*
                  * A lifecycle module appears as an application but has a null location.
                  */

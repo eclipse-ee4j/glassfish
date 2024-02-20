@@ -198,7 +198,6 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
             // an application-ref is being created on DAS. Process the app
             if (!deployCommandParameters.origin.isCreateAppRef() || isTargetDas(deployCommandParameters)) {
                 Map<String, ExtendedDeploymentContext> deploymentContexts = context.getModuleDeploymentContexts();
-
                 for (DeploymentContext deploymentContext : deploymentContexts.values()) {
                     // bundle level pus
                     iterateInitializedPUsAtApplicationPrepare(deploymentContext);
@@ -302,7 +301,7 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
                     // Provide users an option to disable weaving by passing the flag.
                     // Note that we enable weaving if not explicitly disabled by user
                     boolean weavingEnabled = Boolean
-                            .valueOf(startupContext.getArguments().getProperty("org.glassfish.persistence.embedded.weaving.enabled", "true"));
+                            .parseBoolean(startupContext.getArguments().getProperty("org.glassfish.persistence.embedded.weaving.enabled", "true"));
 
                     ProviderContainerContractInfo providerContainerContractInfo = weavingEnabled
                             ? new ServerProviderContainerContractInfo(context, connectorRuntime, isDas)

@@ -17,29 +17,41 @@
 
 package com.sun.enterprise.util.io;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
-
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.nio.file.Files;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- *
  * @author wnevins
+ * @author David Matejcek
  */
 public class FileUtilsTest {
+    private static File tempDir;
 
-    /**
-     * Test of mkdirsMaybe method, of class FileUtils.
-     */
+    @BeforeAll
+    public static void init() throws Exception {
+        tempDir = Files.createTempDirectory(FileUtilsTest.class.getSimpleName()).toFile();
+    }
+
     @Test
     public void testMkdirsMaybe() {
         assertFalse(FileUtils.mkdirsMaybe(null));
         File f = new File(".").getAbsoluteFile();
         assertFalse(FileUtils.mkdirsMaybe(null));
         File d1 = new File("junk" + System.currentTimeMillis());
+        d1.deleteOnExit();
         File d2 = new File("gunk" + System.currentTimeMillis());
+        d2.deleteOnExit();
 
         assertTrue(d1.mkdirs());
         assertFalse(d1.mkdirs());
@@ -48,13 +60,55 @@ public class FileUtilsTest {
         assertTrue(FileUtils.mkdirsMaybe(d2));
         assertTrue(FileUtils.mkdirsMaybe(d2));
         assertFalse(d2.mkdirs());
+    }
 
-        if (!d1.delete()) {
-            d1.deleteOnExit();
-        }
 
-        if (!d2.delete()) {
-            d2.deleteOnExit();
-        }
+    @Test
+    public void testCopyFiles() throws Exception {
+        File outputFile = new File(tempDir, "outputFile");
+        File testFile = new File(FileUtilsTest.class.getResource("/adminport.xml").toURI());
+        FileUtils.copy(testFile, outputFile);
+        assertEquals(testFile.length(), outputFile.length());
+    }
+
+
+    @Test
+    public void testCopyDirectoriesFiles() throws Exception {
+        File outputDir = new File(tempDir, "outputDir");
+        File testDir = new File(FileUtilsTest.class.getResource("/process").toURI());
+        FileUtils.copy(testDir, outputDir);
+        assertEquals(testDir.length(), outputDir.length());
+    }
+
+
+    @Test
+    public void testCopyStreamToFile() throws Exception {
+        File outputFile = new File(tempDir, "outputFile");
+        File testFile = new File(FileUtilsTest.class.getResource("/adminport.xml").toURI());
+        FileInputStream stream = new FileInputStream(testFile);
+        FileUtils.copy(stream, outputFile, Long.MAX_VALUE);
+        assertEquals(testFile.length(), outputFile.length());
+    }
+
+
+    @Test
+    public void testCopyFileStreamToFileStream() throws Exception {
+        File outputFile = new File(tempDir, "outputFile");
+        FileOutputStream output = new FileOutputStream(outputFile);
+        File testFile = new File(FileUtilsTest.class.getResource("/adminport.xml").toURI());
+        FileInputStream inputStream = new FileInputStream(testFile);
+        FileUtils.copy(inputStream, output);
+        assertEquals(testFile.length(), outputFile.length());
+    }
+
+
+    @Test
+    public void testCopyCLStreamToStream() throws Exception {
+        File outputFile = new File(tempDir, "outputFile");
+        BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(outputFile));
+        File testFile = new File(FileUtilsTest.class.getResource("/adminport.xml").toURI());
+        InputStream inputStream = new BufferedInputStream(FileUtilsTest.class.getResourceAsStream("/adminport.xml"));
+        FileUtils.copy(inputStream, output);
+        assertEquals(testFile.length(), outputFile.length());
     }
 }

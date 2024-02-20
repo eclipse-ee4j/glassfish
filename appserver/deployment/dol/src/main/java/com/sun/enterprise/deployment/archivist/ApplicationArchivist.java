@@ -104,9 +104,7 @@ public class ApplicationArchivist extends Archivist<Application> {
     protected void writeContents(ReadableArchive in, WritableArchive out) throws IOException {
 
         Set<String> filesToSkip = new HashSet<>();
-        if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-            DOLUtils.getDefaultLogger().fine("Write " + out.getURI() + " with " + this);
-        }
+        logger.log(Level.FINE, "writeContents(in={0}, out={1})", new Object[] {in, out});
 
         // any files already written to the output should never be rewritten
         for (Enumeration<String> alreadyWritten = out.entries(); alreadyWritten.hasMoreElements();) {
@@ -120,17 +118,13 @@ public class ApplicationArchivist extends Archivist<Application> {
             subArchivist.initializeContext(this);
             subArchivist.setModuleDescriptor(aModule);
             String archiveUri = aModule.getArchiveUri();
-            if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-                DOLUtils.getDefaultLogger().fine("Write " + archiveUri + " with " + subArchivist);
-            }
-
-            // Create a new jar file inside the application .ear
-            final WritableArchive internalJar = out.createSubArchive(archiveUri);
+            logger.log(Level.FINE, "Writing {0} with {1}", new Object[] {archiveUri, subArchivist});
 
             // we need to copy the old archive to a temp file so
             // the save method can copy its original contents from
             File tmpFile = null;
-            try (InputStream is = in.getEntry(archiveUri)) {
+            try (InputStream is = in.getEntry(archiveUri);
+                WritableArchive internalJar = out.createSubArchive(archiveUri)) {
                 if (in instanceof WritableArchive) {
                     subArchivist.setArchiveUri(internalJar.getURI().getSchemeSpecificPart());
                 } else {
@@ -142,7 +136,6 @@ public class ApplicationArchivist extends Archivist<Application> {
                 }
                 subArchivist.writeContents(internalJar);
             } finally {
-                out.closeEntry(internalJar);
                 if (tmpFile != null) {
                     boolean ok = tmpFile.delete();
                     if (!ok) {
@@ -770,13 +763,12 @@ public class ApplicationArchivist extends Archivist<Application> {
         Set<String> entriesToSkip = new HashSet<>();
         for (ModuleDescriptor<?> aModule : a.getModules()) {
             entriesToSkip.add(aModule.getArchiveUri());
-            try (ReadableArchive subSource = source.getSubArchive(aModule.getArchiveUri())) {
-                WritableArchive subTarget = target.createSubArchive(aModule.getArchiveUri());
+            try (ReadableArchive subSource = source.getSubArchive(aModule.getArchiveUri());
+                WritableArchive subTarget = target.createSubArchive(aModule.getArchiveUri())) {
                 Archivist<?> newArchivist = archivistFactory.get().getArchivist(aModule.getModuleType());
                 try (ReadableArchive subArchive = archiveFactory.openArchive(subTarget.getURI())) {
                     subSource.setParentArchive(subArchive);
                     newArchivist.copyInto(subSource, subTarget, overwriteManifest);
-                    target.closeEntry(subTarget);
                     String subModulePath = subSource.getURI().getSchemeSpecificPart();
                     String parentPath = source.getURI().getSchemeSpecificPart();
                     if (subModulePath.startsWith(parentPath)) {

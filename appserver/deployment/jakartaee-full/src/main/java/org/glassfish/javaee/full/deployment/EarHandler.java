@@ -407,9 +407,7 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
                     ClassLoader subCl = handler.getClassLoader(cl, subContext);
                     if (System.getSecurityManager() != null && (subCl instanceof DDPermissionsLoader)) {
                         addEEOrDeclaredPermissions(subCl, earDeclaredPC, false);
-                        if (_logger.isLoggable(Level.FINE)) {
-                            _logger.fine("added declared permissions to sub module of " + subCl);
-                        }
+                        _logger.log(Level.FINE, "added declared permissions to sub module of {0}", subCl);
                     }
 
                     if (md.getModuleType().equals(DOLUtils.ejbType())) {

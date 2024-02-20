@@ -239,8 +239,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
      * @param archive the archive file path
      * @return the deployment descriptor for this archive
      */
-    public T open(ReadableArchive archive)
-            throws IOException, SAXException {
+    public T open(ReadableArchive archive) throws IOException, SAXException {
         return open(archive, (Application) null);
     }
 
@@ -269,6 +268,8 @@ public abstract class Archivist<T extends BundleDescriptor> {
             final ReadableArchive contentArchive,
             final Application app)
             throws IOException, SAXException {
+        logger.log(Level.FINE, "open(descriptorArchive={0}, contentArchive={1}, app={2})",
+            new Object[] {descriptorArchive, contentArchive, app});
         setManifest(contentArchive.getManifest());
 
         T descriptor = readDeploymentDescriptors(descriptorArchive, contentArchive, app);
@@ -862,7 +863,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
     public void writeStandardDeploymentDescriptors(WritableArchive out) throws IOException {
 
         getStandardDDFile().setArchiveType(getModuleType());
-        try (OutputStream os = out.putNextEntry(getDeploymentDescriptorPath())) {
+        try (WritableArchiveEntry os = out.putNextEntry(getDeploymentDescriptorPath())) {
             standardDD.write(getDescriptor(), os);
         }
     }
@@ -889,7 +890,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
         }
         for (ConfigurationDeploymentDescriptorFile ddFile : confDDFilesToWrite) {
             ddFile.setArchiveType(getModuleType());
-            try (OutputStream os = out.putNextEntry(ddFile.getDeploymentDescriptorPath())) {
+            try (WritableArchiveEntry os = out.putNextEntry(ddFile.getDeploymentDescriptorPath())) {
                 ddFile.write(desc, os);
             }
         }

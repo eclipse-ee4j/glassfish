@@ -38,14 +38,6 @@ public interface WritableArchive extends Archive {
     void create(URI uri) throws IOException;
 
     /**
-     * Close a previously returned sub archive
-     *
-     * @param subArchive output stream to close
-     * @see WritableArchive#createSubArchive(String)
-     */
-    void closeEntry(WritableArchive subArchive) throws IOException;
-
-    /**
      * Create a new entry in the archive. Caller is responsible for closing the entry.
      *
      * @param name the entry name

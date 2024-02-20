@@ -177,7 +177,6 @@ public class ArchiveFactory {
                 deplLogger.log(SEVERE, IMPLEMENTATION_NOT_FOUND, provider);
                 throw new MalformedURLException("Protocol not supported : " + provider);
             }
-
             archive.open(path);
             return archive;
         } catch (MultiException e) {

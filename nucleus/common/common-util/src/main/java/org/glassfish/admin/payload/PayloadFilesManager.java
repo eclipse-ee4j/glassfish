@@ -20,13 +20,10 @@ package org.glassfish.admin.payload;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.io.FileUtils;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -267,25 +264,13 @@ public abstract class PayloadFilesManager {
      */
     public static class Temp extends PayloadFilesManager {
 
-//        /*
-//         * regex to match colons and backslashes on Windows and slashes on non-Windows
-//         */
-//        private static final String DIR_PATH_TO_FLAT_NAME_PATTERN = (File.separatorChar == '\\') ?
-//                "[:\\\\]" : "/";
-
         private boolean isCleanedUp = false;
 
-//        /** maps payload part name paths (excluding name and type) to temp file subdirs */
-//        private Map<String,File> pathToTempSubdir = new HashMap<String,File>();
-
-        public Temp(final File parentDir, final ActionReport report,
-                final Logger logger) throws IOException {
-            super(createTempFolder(
-                      parentDir,
-                      logger),
-                  report,
-                  logger);
+        public Temp(final File parentDir, final ActionReport report, final Logger logger) throws IOException {
+            super(createTempFolder(parentDir, logger), report, logger);
         }
+
+
         /**
          * Creates a new PayloadFilesManager for temporary files.
          * @param report results report to which extraction results will be appended
@@ -330,52 +315,6 @@ public abstract class PayloadFilesManager {
         protected void postProcessParts() {
             // no-op
         }
-
-
-//        private String getParentPath(String partName) {
-//            if (partName.endsWith("/")) {
-//                partName = partName.substring(0, partName.length() - 1);
-//            }
-//            int lastSlash = partName.lastIndexOf('/');
-//            if (lastSlash != -1) {
-//                return partName.substring(0, lastSlash);
-//            }
-//            return null;
-//        }
-
-//        URI getTempSubDirForPath(String path) throws IOException {
-//            /*
-//             * Convert the path (which is currently in URI form) to
-//             * the local file system form.
-//             */
-//            path = path.replace('/', File.separatorChar);
-//            File tempSubDir = pathToTempSubdir.get(path);
-//            if (tempSubDir == null) {
-//                /*
-//                 * Replace slashes (forward or backward) that are directory
-//                 * separators and replace colons (from Windows devices) with single
-//                 * dashes.  This technique generates unique but flat directory
-//                 * names so same-named files in different directories will
-//                 * go to different directories.
-//                 *
-//                 * The extra dashes make sure the prefix meets createTempFile's reqts.
-//                 *
-//                 */
-//                String tempDirPrefix = path.replaceAll(DIR_PATH_TO_FLAT_NAME_PATTERN, "-") + "---";
-//                tempSubDir = createTempFolder(getTargetDir(), tempDirPrefix, super.logger);
-//                pathToTempSubdir.put(path, tempSubDir);
-//            }
-//            return tempSubDir.toURI();
-//        }
-
-//        private String getNameAndType(String path) {
-//            if (path.endsWith("/")) {
-//                path = path.substring(0, path.length() - 1);
-//            }
-//            final int lastSlash = path.lastIndexOf('/');
-//            return path.substring(lastSlash + 1);
-//        }
-
     }
 
     protected abstract void postExtract(final File extractedFile);
@@ -463,105 +402,72 @@ public abstract class PayloadFilesManager {
      * @throws java.io.IOException
      */
     private File extractFile(final Payload.Part part, final String outputName) throws IOException {
-        final boolean isFine = logger.isLoggable(Level.FINE);
-        OutputStream os = null;
-        InputStream is = null;
-        /*
-         * Look in the Part's properties first for the URI of the target
-         * directory for the file.  If there is none there then use the
-         * target directory for this manager.
-         */
-
-
+        // Look in the Part's properties first for the URI of the target
+        // directory for the file.  If there is none there then use the
+        // target directory for this manager.
         try {
             File extractedFile = new File(getOutputFileURI(part, outputName));
 
-            /*
-             * Create the required directory tree under the target directory.
-             */
+            // Create the required directory tree under the target directory.
             File immediateParent = extractedFile.getParentFile();
-            if ( ! immediateParent.exists() && ! immediateParent.mkdirs()) {
+            if (!immediateParent.exists() && !immediateParent.mkdirs()) {
                 logger.log(Level.WARNING, strings.getLocalString(
                         "payload.mkdirsFailed",
                         "Attempt to create directories for {0} failed; no further information is available. Continuing.",
-                        immediateParent.getAbsolutePath()));
+                        immediateParent));
             }
             if (extractedFile.exists()) {
-                if (!extractedFile.delete() && ! extractedFile.isDirectory()) {
-                    /*
-                     * Don't warn if we cannot delete the directory - there
-                     * are likely to be files in it preventing its removal.
-                     */
-                      logger.warning(strings.getLocalString(
-                            "payload.overwrite",
-                            "Overwriting previously-uploaded file because the attempt to delete it failed: {0}",
-                            extractedFile.getAbsolutePath()));
-                } else if (isFine) {
-                    logger.log(Level.FINER, "Deleted pre-existing file {0} before extracting transferred file", extractedFile.getAbsolutePath());
+                if (!extractedFile.delete() && !extractedFile.isDirectory()) {
+                    // Don't warn if we cannot delete the directory - there
+                    // are likely to be files in it preventing its removal.
+                    logger.warning(strings.getLocalString("payload.overwrite",
+                        "Overwriting previously-uploaded file because the attempt to delete it failed: {0}",
+                        extractedFile));
+                } else {
+                    logger.log(Level.FINER, "Deleted pre-existing file {0} before extracting transferred file", extractedFile);
                 }
             }
 
-            /*
-             * If we are extracting a directory, then we need to consume the
-             * Part's body but we won't write anything into the directory
-             * file.
-             */
+            // If we are extracting a directory, then we need to consume the
+            // Part's body but we won't write anything into the directory file.
             if (outputName.endsWith("/")) {
-                if ( ! extractedFile.exists() && ! extractedFile.mkdir()) {
-                    logger.log(Level.WARNING,
-                            strings.getLocalString("payload.mkdirsFailed",
-                            "Attempt to create directories for {0} failed; no further information is available. Continuing.",
-                            extractedFile.getAbsolutePath()));
+                if (!extractedFile.exists() && !extractedFile.mkdir()) {
+                    logger.log(Level.WARNING, strings.getLocalString("payload.mkdirsFailed",
+                        "Attempt to create directories for {0} failed; no further information is available. Continuing.",
+                        extractedFile));
                 }
             }
 
-            final boolean isDir = extractedFile.isDirectory();
-
-            os = isDir ? null :new BufferedOutputStream(new FileOutputStream(extractedFile));
-            is = part.getInputStream();
-            int bytesRead;
-            byte[] buffer = new byte[1024 * 64];
-            while ((bytesRead = is.read(buffer)) != -1) {
-                if (os != null) {
-                    os.write(buffer, 0, bytesRead);
+            if (!extractedFile.isDirectory()) {
+                try (InputStream is = part.getInputStream()) {
+                    FileUtils.copy(is, extractedFile, Long.MAX_VALUE);
                 }
             }
-            if (os != null) {
-                os.close();
-            }
-            /* This is because some commands need to process also stream payload
-             * parts more then ones. We have to tell that it was extracted to
-             * some file
-             */
+
+            // This is because some commands need to process also stream payload
+            // parts more then ones. We have to tell that it was extracted to some file
             part.setExtracted(extractedFile);
 
             final String lastModifiedString = part.getProperties().getProperty("last-modified");
-            final long lastModified = (lastModifiedString != null ?
-                Long.parseLong(lastModifiedString) :
-                System.currentTimeMillis());
+            final long lastModified = lastModifiedString == null ? System.currentTimeMillis() : Long.parseLong(lastModifiedString);
 
-            if ( ! extractedFile.setLastModified(lastModified)) {
-                logger.log(Level.WARNING, strings.getLocalString(
-                        "payload.setLatModifiedFailed",
+            if (!extractedFile.setLastModified(lastModified)) {
+                logger.log(Level.WARNING,
+                    strings.getLocalString("payload.setLatModifiedFailed",
                         "Attempt to set lastModified for {0} failed; no further information is available.  Continuing.",
-                        extractedFile.getAbsolutePath()));
+                        extractedFile));
             }
             if (extractedFile.isDirectory()) {
                 dirTimestamps.put(extractedFile, lastModified);
             }
             postExtract(extractedFile);
-            logger.log(Level.FINER, "Extracted transferred entry {0} to {1}", new Object[]{part.getName(), extractedFile.getAbsolutePath()});
+            logger.log(Level.CONFIG, "Extracted transferred entry {0} of size {1} B to {2}",
+                new Object[] {part.getName(), extractedFile.length(), extractedFile});
             reportExtractionSuccess();
             return extractedFile;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             reportExtractionFailure(part.getName(), e);
             throw new IOException(e.getMessage(), e);
-        } finally {
-            if (os != null) {
-                os.close();
-                os = null;
-            }
         }
     }
 
@@ -577,7 +483,7 @@ public abstract class PayloadFilesManager {
             final Payload.Inbound inboundPayload) throws Exception {
 
         if (inboundPayload == null) {
-            return Collections.EMPTY_MAP;
+            return Collections.emptyMap();
         }
 
         final Map<File,Properties> result = new LinkedHashMap<>();

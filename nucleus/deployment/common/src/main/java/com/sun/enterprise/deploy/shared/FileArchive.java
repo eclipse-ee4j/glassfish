@@ -115,6 +115,21 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
     private boolean isOpenedOrCreated;
 
     /**
+     * Used just by HK2
+     *
+     * @deprecated
+     */
+    @Deprecated
+    public FileArchive() {
+    }
+
+
+    public FileArchive(URI uri) throws IOException {
+        open(uri);
+    }
+
+
+    /**
      * Open an abstract archive
      *
      * @param uri path to the archive
@@ -177,18 +192,6 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
     }
 
     /**
-     * Close a previously returned sub archive
-     *
-     * @param subArchive output stream to close
-     * @link Archive.getSubArchive}
-     */
-    @Override
-    public void closeEntry(WritableArchive subArchive) throws IOException {
-        subArchive.close();
-
-    }
-
-    /**
      * close the abstract archive
      */
     @Override
@@ -223,10 +226,9 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
      * @return an @see java.util.Enumeration of entries in this abstract archive
      */
     @Override
-    public Enumeration entries() {
-        final List namesList = new ArrayList();
+    public Enumeration<String> entries() {
+        final List<String> namesList = new ArrayList<>();
         getListOfFiles(archive, namesList, null);
-
         return Collections.enumeration(namesList);
     }
 
@@ -372,10 +374,9 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
      */
     @Override
     public InputStream getEntry(String name) throws IOException {
-
+        // If name corresponds to directory, return null as it can not be opened
         File input = getEntryFile(name);
-        if (!input.exists() || input.isDirectory() || !isEntryValid(input)) { // If name corresponds to directory, return null as it can not
-                                                                              // be opened
+        if (!input.exists() || input.isDirectory() || !isEntryValid(input)) {
             return null;
         }
         FileInputStream fis = new FileInputStream(input);
@@ -383,12 +384,11 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
             BufferedInputStream bis = new BufferedInputStream(fis);
             return bis;
         } catch (Throwable tx) {
-            if (fis != null) {
-                try {
-                    fis.close();
-                } catch (Throwable thr) {
-                    throw new IOException("Error closing FileInputStream after error opening BufferedInputStream for entry " + name, thr);
-                }
+            try {
+                fis.close();
+            } catch (Throwable thr) {
+                throw new IOException(
+                    "Error closing FileInputStream after error opening BufferedInputStream for entry " + name, thr);
             }
             throw new IOException("Error opening BufferedInputStream for entry " + name, tx);
         }
@@ -471,7 +471,8 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
             }
         }
         staleFileManager().recordValidEntry(newFile);
-        return new WritableArchiveEntry(null, new FileOutputStream(newFile));
+        FileOutputStream outputStream = new FileOutputStream(newFile);
+        return new WritableArchiveEntry(() -> outputStream, outputStream::close);
     }
 
     /**
@@ -492,11 +493,6 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
     @Override
     public String getName() {
         return Util.getURIName(getURI());
-    }
-
-    @Override
-    public String toString() {
-        return getName();
     }
 
     /**
@@ -655,7 +651,7 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
      * utility method for getting contents of directory and sub directories
      */
 
-    private void getListOfFiles(File directory, List<String> files, List embeddedArchives) {
+    private void getListOfFiles(File directory, List<String> files, List<String> embeddedArchives) {
         getListOfFiles(directory, files, embeddedArchives, deplLogger);
     }
 
@@ -668,7 +664,7 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
      * @param embeddedArchives collection of embedded archives in the current archive
      * @param logger logger to which to report inability to get the list of files from the directory
      */
-    void getListOfFiles(File directory, List<String> files, List embeddedArchives, final Logger logger) {
+    void getListOfFiles(File directory, List<String> files, List<String> embeddedArchives, final Logger logger) {
         if (archive == null || directory == null || !directory.isDirectory()) {
             return;
         }

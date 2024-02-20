@@ -410,7 +410,7 @@ public class UpgradeStartup implements ModuleStartup {
                     subModuleEntries.add(directoryEntry);
                     File moduleJar = processModule(new File(appDir, directoryEntry), targetParentDir, null);
                     try (InputStream is = new FileInputStream(moduleJar);
-                        OutputStream os = target.putNextEntry(moduleJar.getName())) {
+                        WritableArchiveEntry os = target.putNextEntry(moduleJar.getName())) {
                         FileUtils.copy(is, os);
                     }
                 }

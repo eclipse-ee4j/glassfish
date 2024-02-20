@@ -27,7 +27,6 @@ import com.sun.enterprise.util.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.MessageFormat;
@@ -56,7 +55,6 @@ import org.glassfish.appclient.server.core.jws.servedcontent.FixedContent;
 import org.glassfish.appclient.server.core.jws.servedcontent.StaticContent;
 import org.glassfish.appclient.server.core.jws.servedcontent.TokenHelper;
 import org.glassfish.deployment.common.Artifacts;
-import org.glassfish.deployment.common.DeploymentUtils;
 import org.glassfish.deployment.versioning.VersioningSyntaxException;
 import org.glassfish.deployment.versioning.VersioningUtils;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -339,21 +337,20 @@ public abstract class AppClientDeployerHelper {
      * if the classPathElement is for a submodule; null otherwise
      */
     File JAROfExpandedSubmodule(final URI candidateSubmoduleURI) throws IOException {
-        ReadableArchive source = new FileArchive();
-        source.open(dc().getSource().getParentArchive().getURI().resolve(expandedDirURI(candidateSubmoduleURI)));
-        OutputJarArchive target = new OutputJarArchive();
-        target.create(dc().getScratchDir("xml").toURI().resolve(candidateSubmoduleURI));
-        /*
-         * Copy the manifest explicitly because the ReadableArchive
-         * entries() method omits it.
-         */
-        Manifest mf = source.getManifest();
-        try (OutputStream os = target.putNextEntry(JarFile.MANIFEST_NAME)) {
-            mf.write(os);
+        URI uri = dc().getSource().getParentArchive().getURI().resolve(expandedDirURI(candidateSubmoduleURI));
+        try (FileArchive source = new FileArchive(uri); OutputJarArchive target = new OutputJarArchive()) {
+            target.create(dc().getScratchDir("xml").toURI().resolve(candidateSubmoduleURI));
+            /*
+             * Copy the manifest explicitly because the ReadableArchive
+             * entries() method omits it.
+             */
+            Manifest mf = source.getManifest();
+            try (WritableArchiveEntry os = target.putNextEntry(JarFile.MANIFEST_NAME)) {
+                mf.write(os);
+            }
+            copyArchive(source, target, Collections.emptySet());
+            return new File(target.getURI());
         }
-        copyArchive(source, target, Collections.emptySet());
-        target.close();
-        return new File(target.getURI());
     }
 
     private URI expandedDirURI(final URI submoduleURI) {
@@ -527,7 +524,7 @@ public abstract class AppClientDeployerHelper {
             /*
              * Write the manifest to the facade.
              */
-            try (OutputStream os = facadeArchive.putNextEntry(JarFile.MANIFEST_NAME)) {
+            try (WritableArchiveEntry os = facadeArchive.putNextEntry(JarFile.MANIFEST_NAME)) {
                 facadeManifest.write(os);
             }
             /*
@@ -595,8 +592,8 @@ public abstract class AppClientDeployerHelper {
 
     private void copyClass(final WritableArchive facadeArchive, final String classResourcePath) throws IOException {
         try (InputStream is = openByteCodeStream(classResourcePath);
-            OutputStream os = facadeArchive.putNextEntry(classResourcePath)) {
-            DeploymentUtils.copyStream(is, os);
+            WritableArchiveEntry os = facadeArchive.putNextEntry(classResourcePath)) {
+            FileUtils.copy(is, os);
         }
     }
 
@@ -611,8 +608,8 @@ public abstract class AppClientDeployerHelper {
             if (persistenceXMLStream == null) {
                 return;
             }
-            try (OutputStream os = facadeArchive.putNextEntry(PERSISTENCE_XML_PATH)) {
-                DeploymentUtils.copyStream(persistenceXMLStream, os);
+            try (WritableArchiveEntry os = facadeArchive.putNextEntry(PERSISTENCE_XML_PATH)) {
+                FileUtils.copy(persistenceXMLStream, os);
             }
         }
     }

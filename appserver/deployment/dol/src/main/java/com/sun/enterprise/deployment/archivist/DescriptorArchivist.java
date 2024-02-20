@@ -60,8 +60,8 @@ public class DescriptorArchivist {
             // let's start by writing out all submodules deployment descriptors
             for (ModuleDescriptor<BundleDescriptor> aModule : application.getModules()) {
                 Archivist<?> moduleArchivist = archivistFactory.getArchivist(aModule.getModuleType());
-                WritableArchive moduleArchive = out.createSubArchive(aModule.getArchiveUri());
-                try (ReadableArchive moduleArchive2 = in.getSubArchive(aModule.getArchiveUri())) {
+                try (WritableArchive moduleArchive = out.createSubArchive(aModule.getArchiveUri());
+                    ReadableArchive moduleArchive2 = in.getSubArchive(aModule.getArchiveUri())) {
                     write(aModule.getDescriptor(), moduleArchivist, moduleArchive2, moduleArchive);
                 }
             }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,10 +19,17 @@ package org.glassfish.appclient.server.core;
 
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.BundleDescriptor;
-import org.glassfish.deployment.common.ModuleDescriptor;
-import java.io.*;
+import com.sun.enterprise.util.io.FileUtils;
+
+import jakarta.inject.Inject;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
@@ -29,20 +37,19 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.inject.Inject;
+
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.deployment.common.ClientArtifactsManager;
-import org.glassfish.deployment.common.DeploymentException;
-import org.glassfish.deployment.versioning.VersioningSyntaxException;
 import org.glassfish.appclient.server.connector.CarType;
 import org.glassfish.appclient.server.core.jws.JavaWebStartInfo;
-import org.glassfish.deployment.common.DeploymentUtils;
+import org.glassfish.deployment.common.ClientArtifactsManager;
+import org.glassfish.deployment.common.DeploymentException;
+import org.glassfish.deployment.common.ModuleDescriptor;
+import org.glassfish.deployment.versioning.VersioningSyntaxException;
 import org.glassfish.deployment.versioning.VersioningUtils;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Generates the app client group (EAR-level) facade JAR.
@@ -61,8 +68,6 @@ public class AppClientGroupFacadeGenerator {
             "org.glassfish.appclient.client.AppClientGroupFacade";
 
     private static final Attributes.Name GLASSFISH_APPCLIENT_GROUP = new Attributes.Name("GlassFish-AppClient-Group");
-    private static final String GF_CLIENT_MODULE_NAME = "org.glassfish.main.appclient.gf-client-module";
-
     private static final String GROUP_FACADE_ALREADY_GENERATED = "groupFacadeAlreadyGenerated";
     private static final String PERMISSIONS_XML_PATH = "META-INF/permissions.xml";
 
@@ -111,8 +116,7 @@ public class AppClientGroupFacadeGenerator {
          * For each app client, get its facade's URI to include in the
          * generated EAR facade's client group listing.
          */
-        for (Iterator<ModuleDescriptor<BundleDescriptor>> it = appClients.iterator(); it.hasNext(); ) {
-            ModuleDescriptor<BundleDescriptor> md = it.next();
+        for (ModuleDescriptor<BundleDescriptor> md : appClients) {
             appClientGroupListSB.append((appClientGroupListSB.length() > 0) ? " " : "")
                     .append(earDirUserURIText(dc)).append(appClientFacadeUserURI(md.getArchiveUri()));
         }
@@ -190,14 +194,10 @@ public class AppClientGroupFacadeGenerator {
 
         //Now manifest is ready to be written.
         final File manifestFile = File.createTempFile("groupMF", ".MF");
-        final OutputStream manifestOutputStream = new BufferedOutputStream(new FileOutputStream(manifestFile)); //facadeArchive.putNextEntry(JarFile.MANIFEST_NAME);
-        try {
-          manifest.write(manifestOutputStream);
-        } finally {
-          manifestOutputStream.close();
+        try (OutputStream manifestOutputStream = new BufferedOutputStream(new FileOutputStream(manifestFile))) {
+            manifest.write(manifestOutputStream);
         }
         clientArtifactsManager.add(manifestFile, JarFile.MANIFEST_NAME, true /* isTemp */);
-
 
         writeMainClass(clientArtifactsManager);
 
@@ -228,39 +228,19 @@ public class AppClientGroupFacadeGenerator {
     }
 
     private void writeMainClass(final ClientArtifactsManager clientArtifactsManager) throws IOException {
-        final String mainClassResourceName =
-                GLASSFISH_APPCLIENT_GROUP_FACADE_CLASS_NAME.replace('.', '/') +
-                ".class";
-        final File mainClassJAR = new File(
-                AppClientDeployerHelper.getModulesDir(serviceLocator),
-                AppClientDeployerHelper.GF_CLIENT_MODULE_PATH);
+        final String mainClassResourceName = GLASSFISH_APPCLIENT_GROUP_FACADE_CLASS_NAME.replace('.', '/') + ".class";
+        final File mainClassJAR = new File(AppClientDeployerHelper.getModulesDir(serviceLocator),
+            AppClientDeployerHelper.GF_CLIENT_MODULE_PATH);
         final File mainClassFile = File.createTempFile("main", ".class");
-        final OutputStream os = new BufferedOutputStream(new FileOutputStream(mainClassFile));
-        InputStream is = null;
-        JarFile jf = null;
-        try {
-            jf = new JarFile(mainClassJAR);
-            final JarEntry entry = jf.getJarEntry(mainClassResourceName);
-            is = jf.getInputStream(entry);
-            DeploymentUtils.copyStream(is, os);
-            is.close();
-            clientArtifactsManager.add(mainClassFile, mainClassResourceName, true);
-        } catch (Exception e) {
-            throw new DeploymentException(e);
-        } finally {
-            try {
-                os.close();
-            } finally {
-                try {
-                    if (is != null) {
-                        is.close();
-                    }
-                } finally {
-                    if (jf != null) {
-                        jf.close();
-                    }
-                }
+        try (OutputStream os = new FileOutputStream(mainClassFile);
+            JarFile jf = new JarFile(mainClassJAR)) {
+            JarEntry entry = jf.getJarEntry(mainClassResourceName);
+            try (InputStream is = jf.getInputStream(entry)) {
+                FileUtils.copy(is, os);
+            } catch (Exception e) {
+                throw new DeploymentException(e);
             }
         }
+        clientArtifactsManager.add(mainClassFile, mainClassResourceName, true);
     }
 }

@@ -25,7 +25,6 @@ import com.sun.enterprise.deployment.util.DOLUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,6 +32,7 @@ import java.util.logging.Logger;
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
+import org.glassfish.api.deployment.archive.WritableArchiveEntry;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.jvnet.hk2.annotations.Contract;
 import org.xml.sax.SAXException;
@@ -205,7 +205,7 @@ public abstract class ExtensionsArchivist<T extends RootDeploymentDescriptor>  {
     public void writeStandardDeploymentDescriptors(Archivist main, BundleDescriptor descriptor, WritableArchive out) throws IOException {
 
         getStandardDDFile(descriptor).setArchiveType(main.getModuleType());
-        try (OutputStream os = out.putNextEntry(standardDD.getDeploymentDescriptorPath())) {
+        try (WritableArchiveEntry os = out.putNextEntry(standardDD.getDeploymentDescriptorPath())) {
             standardDD.write(descriptor, os);
         }
     }
@@ -228,7 +228,7 @@ public abstract class ExtensionsArchivist<T extends RootDeploymentDescriptor>  {
         }
         for (ConfigurationDeploymentDescriptorFile<BundleDescriptor> ddFile : confDDFilesToWrite) {
             ddFile.setArchiveType(main.getModuleType());
-            try (OutputStream os = out.putNextEntry(ddFile.getDeploymentDescriptorPath())) {
+            try (WritableArchiveEntry os = out.putNextEntry(ddFile.getDeploymentDescriptorPath())) {
                 ddFile.write(descriptor, os);
             }
         }

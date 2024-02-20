@@ -55,13 +55,6 @@ public class CULoggerInfo {
     }
 
     @LogMessageInfo(
-            message = "Some IOException occurred",
-            cause = "An unexpected exception occurred.",
-            action = "Check the system logs and contact Oracle support.",
-            level = "SEVERE")
-    public static final String exceptionIO = LOGMSG_PREFIX + "-00031";
-
-    @LogMessageInfo(
             message = "Failed to process class {0} with bytecode preprocessor {1}",
             cause = "Unknown",
             action = "Check the system logs and contact support.",

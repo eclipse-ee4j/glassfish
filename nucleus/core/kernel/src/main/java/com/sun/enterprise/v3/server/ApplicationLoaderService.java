@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +16,22 @@
  */
 
 package com.sun.enterprise.v3.server;
+
+import com.sun.enterprise.config.serverbeans.AppTenant;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.ApplicationRef;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.ServerTags;
+import com.sun.enterprise.config.serverbeans.SystemApplications;
+import com.sun.enterprise.deploy.shared.ArchiveFactory;
+import com.sun.enterprise.util.io.FileUtils;
+import com.sun.enterprise.v3.common.HTMLActionReporter;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Provider;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,10 +52,10 @@ import org.glassfish.api.ActionReport;
 import org.glassfish.api.StartupRunLevel;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.deployment.DeployCommandParameters;
-import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.UndeployCommandParameters;
 import org.glassfish.api.deployment.archive.ArchiveHandler;
 import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.api.deployment.archive.WritableArchive;
 import org.glassfish.api.event.EventListener.Event;
 import org.glassfish.api.event.EventTypes;
 import org.glassfish.api.event.Events;
@@ -67,22 +83,6 @@ import org.glassfish.kernel.KernelLoggerInfo;
 import org.glassfish.security.services.impl.AuthenticationServiceImpl;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.config.serverbeans.AppTenant;
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.config.serverbeans.ApplicationRef;
-import com.sun.enterprise.config.serverbeans.Applications;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.config.serverbeans.ServerTags;
-import com.sun.enterprise.config.serverbeans.SystemApplications;
-import com.sun.enterprise.deploy.shared.ArchiveFactory;
-import com.sun.enterprise.util.io.FileUtils;
-import com.sun.enterprise.v3.common.HTMLActionReporter;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.inject.Provider;
 
 /**
  * This service is responsible for loading all deployed applications...
@@ -144,7 +144,7 @@ public class ApplicationLoaderService implements org.glassfish.hk2.api.PreDestro
 
     private String deploymentTracingEnabled = null;
 
-    private Map<String,Integer> appOrderInfoMap = new HashMap<>();
+    private final Map<String,Integer> appOrderInfoMap = new HashMap<>();
     private int appOrder = 0;
 
     /**
@@ -200,7 +200,7 @@ public class ApplicationLoaderService implements org.glassfish.hk2.api.PreDestro
 
         for (Application systemApp : systemApplications.getApplications()) {
             // check to see if we need to load up this system application
-            if (Boolean.valueOf(systemApp.getDeployProperties().getProperty
+            if (Boolean.parseBoolean(systemApp.getDeployProperties().getProperty
                 (ServerTags.LOAD_SYSTEM_APP_ON_STARTUP))) {
                 if (deployment.isAppEnabled(systemApp) || loadAppOnDAS(systemApp.getName())) {
                   Integer order = appOrderInfoMap.get(systemApp.getName());
@@ -291,9 +291,10 @@ public class ApplicationLoaderService implements org.glassfish.hk2.api.PreDestro
                             ArchiveHandler handler = deployment.getArchiveHandler(sourceArchive);
                             final String appName = handler.getDefaultApplicationName(sourceArchive);
                             DeploymentContextImpl dummyContext = new DeploymentContextImpl(report, logger, sourceArchive, parameters, env);
-                            handler.expand(sourceArchive, archiveFactoryProvider.get().createArchive(tmpDir), dummyContext);
-                            sourceArchive =
-                                    archiveFactoryProvider.get().openArchive(tmpDir);
+                            try (WritableArchive output = archiveFactoryProvider.get().createArchive(tmpDir)) {
+                                handler.expand(sourceArchive, output, dummyContext);
+                            }
+                            sourceArchive = archiveFactoryProvider.get().openArchive(tmpDir);
                             logger.log(Level.INFO, KernelLoggerInfo.sourceNotDirectory, tmpDir.getAbsolutePath());
                             parameters.name = appName;
                         }
@@ -353,7 +354,7 @@ public class ApplicationLoaderService implements org.glassfish.hk2.api.PreDestro
         final String appName = app.getName();
 
         // lifecycle modules are loaded separately
-        if (Boolean.valueOf(app.getDeployProperties().getProperty
+        if (Boolean.parseBoolean(app.getDeployProperties().getProperty
             (ServerTags.IS_LIFECYCLE))) {
             return;
         }

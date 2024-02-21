@@ -17,13 +17,21 @@
 
 package org.glassfish.admin.payload;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Properties;
+
 import org.glassfish.api.admin.Payload;
 
 /**
@@ -37,7 +45,7 @@ public class PayloadImpl implements Payload {
         /**
          * Partial implementation of the Outbound Payload.
          */
-        private final ArrayList<Payload.Part> parts = new ArrayList<Payload.Part>();
+        private final ArrayList<Payload.Part> parts = new ArrayList<>();
 
         private boolean dirty = false;
 
@@ -125,8 +133,7 @@ public class PayloadImpl implements Payload {
             enhancedProps.setProperty("data-request-type", "file-xfer");
             enhancedProps.setProperty("data-request-name", dataRequestName);
             enhancedProps.setProperty("data-request-is-recursive", Boolean.toString(isRecursive));
-            enhancedProps.setProperty("last-modified", Long.toString(file.lastModified())
-                    );
+            enhancedProps.setProperty("last-modified", Long.toString(file.lastModified()));
 
             if (file.isDirectory() && isRecursive) {
                 String relativeURIPath = fileURI.getRawPath();
@@ -370,23 +377,27 @@ public class PayloadImpl implements Payload {
 
         @Override
         public String getContentType() {
-            return (isComplex()) ? getComplexContentType() : getSinglePartContentType();
+            return isComplex() ? getComplexContentType() : getSinglePartContentType();
         }
 
         public ArrayList<Payload.Part> getParts() {
             return parts;
         }
 
+
         /**
          * Writes the Parts in this Outbound Payload to the specified output
-         * stream; concrete implementations will implement this abstract method.
+         * stream and closes it.
+         * <p>
+         * Concrete implementations will implement this abstract method.
+         *
          * @param os the OutputStream to which the Parts should be written
          * @throws java.io.IOException
          */
         protected abstract void writePartsTo(final OutputStream os) throws IOException;
 
         /**
-         * Writes the Payload to the specified output stream.
+         * Writes the Payload to the specified output stream and closes it.
          *
          * @param os the OutputStream to which the Payload should be written
          * @throws java.io.IOException
@@ -508,10 +519,10 @@ public class PayloadImpl implements Payload {
      * Partial implementation of Part.
      */
     public static abstract class Part implements Payload.Part {
-        private String name;
-        private String contentType;
-        private Properties props;
-        private boolean isRecursive;
+        private final String name;
+        private final String contentType;
+        private final Properties props;
+        private final boolean isRecursive;
         private File extractedFile;
 
         /**
@@ -531,7 +542,7 @@ public class PayloadImpl implements Payload {
             if (props != null) {
                 this.props.putAll(props);
             }
-            isRecursive = Boolean.valueOf(this.props.getProperty("data-request-is-recursive"));
+            isRecursive = Boolean.parseBoolean(this.props.getProperty("data-request-is-recursive"));
         }
 
         @Override
@@ -571,13 +582,12 @@ public class PayloadImpl implements Payload {
 
         protected InputStream getExtractedInputStream() {
             File file = getExtracted();
-            if (file != null) {
-                try {
-                    return new FileInputStream(file);
-                } catch (FileNotFoundException ex) {
-                    return null;
-                }
-            } else {
+            if (file == null) {
+                return null;
+            }
+            try {
+                return new FileInputStream(file);
+            } catch (FileNotFoundException ex) {
                 return null;
             }
         }
@@ -670,13 +680,8 @@ public class PayloadImpl implements Payload {
             @Override
             public InputStream getInputStream() {
                 InputStream extrIS = getExtractedInputStream();
-                if (extrIS == null) {
-                    return is;
-                } else {
-                    return extrIS;
-                }
+                return extrIS == null ? is : extrIS;
             }
-
         }
 
         /**
@@ -684,7 +689,7 @@ public class PayloadImpl implements Payload {
          */
         static class Buffered extends PayloadImpl.Part {
             private final String content;
-            private InputStream is = null;
+            private ByteArrayInputStream is = null;
 
             /**
              * Creates a new buffer-based Part.
@@ -704,13 +709,10 @@ public class PayloadImpl implements Payload {
             }
 
             @Override
-            public InputStream getInputStream() {
+            public ByteArrayInputStream getInputStream() {
                 if (is == null) {
-                    /*
-                     * Some parts might not have content.
-                     */
-                    final byte[] data = (content != null) ?
-                        content.getBytes() : new byte[0];
+                    // Some parts might not have content.
+                    final byte[] data = content == null ? new byte[0] : content.getBytes();
                     is = new ByteArrayInputStream(data);
                 }
                 return is;
@@ -745,11 +747,8 @@ public class PayloadImpl implements Payload {
             @Override
             public InputStream getInputStream() {
                 try {
-                    return (file != null
-                            ? new SelfClosingInputStream(
-                                new BufferedInputStream(
-                                    new FileInputStream(file)))
-                            : dummyStream());
+                    return file == null ? dummyStream()
+                        : new SelfClosingInputStream(new BufferedInputStream(new FileInputStream(file)));
                 } catch (FileNotFoundException ex) {
                     /*
                      * Silently return null; validateFile has already logged a message

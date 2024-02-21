@@ -37,9 +37,9 @@ public abstract class JarArchive implements Archive {
 
     protected ReadableArchive parentArchive;
 
-    protected Map<Class<?>, Object> extraData = new HashMap<Class<?>, Object>();
+    protected Map<Class<?>, Object> extraData = new HashMap<>();
 
-    protected Map<String, Object> archiveMetaData = new HashMap<String, Object>();
+    protected Map<String, Object> archiveMetaData = new HashMap<>();
 
     /**
      * Returns an enumeration of the module file entries with the specified prefix. All elements in the enumeration are of
@@ -51,7 +51,7 @@ public abstract class JarArchive implements Archive {
     @Override
     public Enumeration<String> entries(String prefix) {
         Enumeration<String> allEntries = entries();
-        Vector<String> entries = new Vector<String>();
+        Vector<String> entries = new Vector<>();
         while (allEntries.hasMoreElements()) {
             String name = allEntries.nextElement();
             if (name != null && name.startsWith(prefix)) {
@@ -167,5 +167,10 @@ public abstract class JarArchive implements Archive {
 
     public void removeArchiveMetaData(String metaDataKey) {
         archiveMetaData.remove(metaDataKey);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "[" + getName() + "]";
     }
 }

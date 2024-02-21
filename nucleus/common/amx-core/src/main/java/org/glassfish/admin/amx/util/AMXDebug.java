@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,6 +16,8 @@
  */
 
 package org.glassfish.admin.amx.util;
+
+import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.File;
 import java.util.HashSet;
@@ -167,7 +170,7 @@ public final class AMXDebug
 
     private AMXDebug()
     {
-        ILLEGAL_CHARS = new HashSet<Character>();
+        ILLEGAL_CHARS = new HashSet<>();
         for (final char c : ILLEGAL_CHARS_ARRAY)
         {
             ILLEGAL_CHARS.add(c);
@@ -191,7 +194,7 @@ public final class AMXDebug
         value = System.getProperty(AMX_DEBUG_APPEND_SPROP);
         mAppend = (value != null) && Boolean.parseBoolean(value);
 
-        mOutputs = new ConcurrentHashMap<String, WrapOutput>();
+        mOutputs = new ConcurrentHashMap<>();
 
         mDir = getDir();
         mMadeDebugDir = false;
@@ -257,9 +260,7 @@ public final class AMXDebug
         if (value == null)
         {
             final String instanceRoot = System.getProperty("com.sun.aas.instanceRoot");
-
-            File parentDir = instanceRoot != null ?
-                new File(instanceRoot) : new File(System.getProperty("user.home"));
+            File parentDir = instanceRoot == null ? FileUtils.USER_HOME : new File(instanceRoot);
             debugDir = new File(parentDir, AMX_DEBUG_SUBDIR);
         }
         else

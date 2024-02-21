@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -57,8 +57,7 @@ import org.glassfish.internal.api.RelativePathResolver;
 public class NodeUtils {
     public static final String NODE_DEFAULT_SSH_PORT = "22";
     public static final String NODE_DEFAULT_REMOTE_USER = "${user.name}";
-    static final String NODE_DEFAULT_INSTALLDIR =
-            "${com.sun.aas.productRoot}";
+    static final String NODE_DEFAULT_INSTALLDIR = "${com.sun.aas.productRoot}";
     // Command line option parameter names
     static final String PARAM_NODEHOST = "nodehost";
     static final String PARAM_INSTALLDIR = "installdir";
@@ -350,11 +349,12 @@ public class NodeUtils {
             // Those aliases are handled by sshLauncher
             String resolvedInstallDir = resolver.resolve(installdir);
 
+            String keyFile = resolver.resolve(sshkeyfile);
             sshL.validate(resolver.resolve(nodehost),
                     port,
                     resolver.resolve(sshuser),
                     sshpassword,
-                    resolver.resolve(sshkeyfile),
+                    keyFile == null ? null : new File(keyFile),
                     sshkeypassphrase,
                     resolvedInstallDir,
                     // Landmark file to ensure valid GF install

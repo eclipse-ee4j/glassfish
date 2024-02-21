@@ -35,7 +35,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -59,6 +58,7 @@ import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.admin.config.ApplicationName;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.api.deployment.archive.WritableArchiveEntry;
 import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.connectors.config.AdminObjectResource;
 import org.glassfish.connectors.config.ConnectorConnectionPool;
@@ -818,9 +818,9 @@ public class ConnectorsUtil {
                 LOG.log(Level.INFO, "could not find RAR [ " + rarName + " ] in the archive, skipping .rar extraction");
                 return false;
             }
-            try (FileArchive fa = new FileArchive(); OutputStream os = fa.putNextEntry(fileName)) {
-                FileUtils.copy(is, os, 0);
-                fa.closeEntry();
+            try (FileArchive fa = new FileArchive();
+                WritableArchiveEntry os = fa.putNextEntry(fileName)) {
+                FileUtils.copy(is, os);
             } catch (IOException e) {
                 LOG.log(Level.SEVERE, "Exception while extracting RAR " + rarName + " from archive " + fileName, e);
                 return false;

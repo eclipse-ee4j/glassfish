@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,15 @@
 
 package com.sun.enterprise.universal.io;
 
-import java.io.*;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
+import com.sun.enterprise.util.StringUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A class for sanitizing Files.
@@ -77,37 +80,41 @@ public class SmartFile {
      * @return The sanitized paths
      */
     public static String sanitizePaths(String pathsString) {
-        if (!ok(pathsString))
+        if (!ok(pathsString)) {
             return pathsString;
+        }
 
         try {
             String[] paths = pathsString.split(File.pathSeparator);
             StringBuilder sb = new StringBuilder();
-            Set<String> pathsSet = new HashSet<String>();
-            List<String> pathsList = new LinkedList<String>();
+            Set<String> pathsSet = new HashSet<>();
+            List<String> pathsList = new LinkedList<>();
 
-            for (int i = 0; i < paths.length; i++) {
-                String path = paths[i];
+            for (String path2 : paths) {
+                String path = path2;
 
                 // ignore empty path elements.  E.g. "c:/foo;;;;;;;" should become "C:/foo"
                 // not "c:/foo;thisdir;thisdir;thisdir etc"
-                if (!ok(path))
+                if (!ok(path)) {
                     continue;
+                }
 
                 // pathsSet is only here for removing duplicates.  We need the
                 // List to maintain the original order!
                 path = SmartFile.sanitize(path);
 
-                if (pathsSet.add(path))
+                if (pathsSet.add(path)) {
                     pathsList.add(path);
+                }
             }
 
             boolean firstElement = true;
             for (String path : pathsList) {
-                if (firstElement)
+                if (firstElement) {
                     firstElement = false;
-                else
+                } else {
                     sb.append(File.pathSeparator);
+                }
 
                 sb.append(path);
             }
@@ -119,15 +126,17 @@ public class SmartFile {
     }
 
     private SmartFile(File f) {
-        if (f == null)
+        if (f == null) {
             throw new NullPointerException();
+        }
 
         convert(f.getAbsolutePath());
     }
 
     private SmartFile(String s) {
-        if (s == null)
+        if (s == null) {
             throw new NullPointerException();
+        }
 
         // note that "" is a valid filename
         // IT 7500 get rid of quotes!!!
@@ -136,10 +145,11 @@ public class SmartFile {
     }
 
     private void convert(String oldPath) {
-        if (GFLauncherUtils.isWindows())
+        if (GFLauncherUtils.isWindows()) {
             convertWindows(oldPath);
-        else
+        } else {
             convertNix(oldPath);
+        }
     }
 
     /*
@@ -149,8 +159,9 @@ public class SmartFile {
     private void convertWindows(String oldPath) {
         try {
             path = new File(oldPath).getCanonicalPath();
-            if (!path.startsWith("\\")) // network address...
+            if (!path.startsWith("\\")) { // network address...
                 path = path.replace('\\', '/');
+            }
         }
         catch (IOException ex) {
             // what to do?  This has never happened to me and I use File I/O
@@ -170,9 +181,10 @@ public class SmartFile {
                 ((from + 3 < p.length &&
                   p[from+1] == '.' && p[from+2] == '.' && p[from+3] == '/') ||
                  (from + 3 == p.length &&
-                  p[from+1] == '.' && p[from+2] == '.'))) {
+                 p[from+1] == '.' && p[from+2] == '.'))) {
                 // remove the previous directory due to /../
-                while (to > 0 && p[--to] != '/');
+                while (to > 0 && p[--to] != '/') {
+                }
                 from += 2;
             }
             else if (p[from] == '/' &&
@@ -187,7 +199,9 @@ public class SmartFile {
                 p[to++] = p[from];
             }
         }
-        if (to > 0 && p[to-1] == '/') to -= 1;
+        if (to > 0 && p[to-1] == '/') {
+            to -= 1;
+        }
         path = new String(p, 0, to);
     }
 

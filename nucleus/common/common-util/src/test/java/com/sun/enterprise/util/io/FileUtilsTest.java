@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,34 +17,42 @@
 
 package com.sun.enterprise.util.io;
 
-import com.sun.enterprise.universal.io.SmartFile;
-
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.DynamicTest.stream;
 
 /**
- *
  * @author wnevins
+ * @author David Matejcek
  */
 public class FileUtilsTest {
 
-    /**
-     * Test of mkdirsMaybe method, of class FileUtils.
-     */
+    @TempDir
+    private static File tempDir;
+
+
     @Test
     public void testMkdirsMaybe() {
         assertFalse(FileUtils.mkdirsMaybe(null));
         File f = new File(".").getAbsoluteFile();
         assertFalse(FileUtils.mkdirsMaybe(null));
         File d1 = new File("junk" + System.currentTimeMillis());
+        d1.deleteOnExit();
         File d2 = new File("gunk" + System.currentTimeMillis());
+        d2.deleteOnExit();
 
         assertTrue(d1.mkdirs());
         assertFalse(d1.mkdirs());
@@ -53,78 +61,91 @@ public class FileUtilsTest {
         assertTrue(FileUtils.mkdirsMaybe(d2));
         assertTrue(FileUtils.mkdirsMaybe(d2));
         assertFalse(d2.mkdirs());
+    }
 
-        if (!d1.delete()) {
-            d1.deleteOnExit();
+
+    @Test
+    public void testCopyFileToStream() throws Exception {
+        File outputFile = new File(tempDir, "outputFile");
+        File testFile = new File(FileUtilsTest.class.getResource("/adminport.xml").toURI());
+        try (FileOutputStream os = new FileOutputStream(outputFile)) {
+            FileUtils.copy(testFile, os);
         }
+        assertEquals(testFile.length(), outputFile.length());
+    }
 
-        if (!d2.delete()) {
-            d2.deleteOnExit();
+
+    @Test
+    public void testCopyFiles() throws Exception {
+        File outputFile = new File(tempDir, "outputFile");
+        File testFile = new File(FileUtilsTest.class.getResource("/adminport.xml").toURI());
+        FileUtils.copy(testFile, outputFile);
+        assertEquals(testFile.length(), outputFile.length());
+    }
+
+
+    @Test
+    public void testCopyDirectoriesFiles() throws Exception {
+        File outputDir = new File(tempDir, "outputDir");
+        File testDir = new File(FileUtilsTest.class.getResource("/process").toURI());
+        FileUtils.copy(testDir, outputDir);
+        assertEquals(testDir.length(), outputDir.length());
+    }
+
+
+    @Test
+    public void testCopyStreamWithKnownSizeToFile() throws Exception {
+        File outputFile = new File(tempDir, "outputFile");
+        File testFile = new File(FileUtilsTest.class.getResource("/adminport.xml").toURI());
+        long length = testFile.length();
+        try (FileInputStream stream = new FileInputStream(testFile)) {
+            FileUtils.copy(stream, outputFile, length);
+            assertEquals(testFile.length(), outputFile.length());
+            assertThrows(IOException.class, () -> stream.available());
         }
-
+        // do that once again to verify that the file was not appended or the operation blocked.
+        try (FileInputStream stream = new FileInputStream(testFile)) {
+            FileUtils.copy(stream, outputFile, length);
+            assertEquals(testFile.length(), outputFile.length());
+            assertThrows(IOException.class, () -> stream.available());
+        }
     }
 
 
     @Test
-    public void testParent() {
-        File f = null;
-        assertNull(FileUtils.getParentFile(f));
-        f = new File("/foo/././././.");
-        File wrongGrandParent = f.getParentFile().getParentFile();
-        File correctParent = FileUtils.getParentFile(f);
-        File sanitizedChild = SmartFile.sanitize(f);
-        File sanitizedWrongGrandParent = SmartFile.sanitize(wrongGrandParent);
-        File shouldBeSameAsChild = new File(correctParent, "foo");
-
-        // check this out -- surprise!!!!
-        assertEquals(sanitizedWrongGrandParent, sanitizedChild);
-        assertEquals(shouldBeSameAsChild, sanitizedChild);
+    public void testCopyStreamToFile() throws Exception {
+        File outputFile = new File(tempDir, "outputFile");
+        File testFile = new File(FileUtilsTest.class.getResource("/adminport.xml").toURI());
+        try (FileInputStream stream = new FileInputStream(testFile)) {
+            FileUtils.copy(stream, outputFile);
+            assertEquals(testFile.length(), outputFile.length());
+            assertEquals(0, stream.available(), "available bytes");
+        }
     }
 
 
     @Test
-    public void testResourceToString() {
-        String resname = "simplestring.txt";
-        String contents = "Simple String Here!";
-        String fetched = FileUtils.resourceToString(resname);
-        assertEquals(contents, fetched);
+    public void testCopyFileStreamToFileStream() throws Exception {
+        File outputFile = new File(tempDir, "outputFile");
+        File testFile = new File(FileUtilsTest.class.getResource("/adminport.xml").toURI());
+        try (FileOutputStream output = new FileOutputStream(outputFile);
+            FileInputStream inputStream = new FileInputStream(testFile)) {
+            FileUtils.copy(inputStream, output);
+            assertEquals(testFile.length(), outputFile.length());
+            assertEquals(0, inputStream.available(), "available bytes");
+        }
     }
 
 
     @Test
-    public void testEmptyButExistingResourceToString() {
-        String resname = "empty.txt";
-        String fetched = FileUtils.resourceToString(resname);
-        assertNotNull(fetched);
-        assertTrue(fetched.length() == 0);
-    }
-
-
-    @Test
-    public void testNonExistingResourceToString() {
-        String resname = "doesnotexist.txt";
-        String fetched = FileUtils.resourceToString(resname);
-        assertNull(fetched);
-    }
-
-
-    @Test
-    public void testNonExistingResourceToBytes() {
-        String resname = "doesnotexist.txt";
-        byte[] fetched = FileUtils.resourceToBytes(resname);
-        // null -- not an empty array!
-        assertNull(fetched);
-    }
-
-
-    @Test
-    public void testResourceToBytes() {
-        String resname = "verysimplestring.txt";
-        byte[] fetched = FileUtils.resourceToBytes(resname);
-
-        assertEquals(fetched[0], 65);
-        assertEquals(fetched[1], 66);
-        assertEquals(fetched[2], 67);
-        assertEquals(fetched.length, 3);
+    public void testCopyCLStreamToStream() throws Exception {
+        File outputFile = new File(tempDir, "outputFile");
+        File testFile = new File(FileUtilsTest.class.getResource("/adminport.xml").toURI());
+        try (BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(outputFile));
+        InputStream inputStream = new BufferedInputStream(FileUtilsTest.class.getResourceAsStream("/adminport.xml"))) {
+            FileUtils.copy(inputStream, output);
+            assertEquals(testFile.length(), outputFile.length());
+            assertEquals(0, inputStream.available(), "available bytes");
+        }
     }
 }

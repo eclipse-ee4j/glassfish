@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -42,6 +42,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.ConnectException;
@@ -62,11 +63,13 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.net.ssl.SSLException;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.glassfish.admin.payload.PayloadFilesManager;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.ExitCode;
 import org.glassfish.api.admin.AdminCommandState;
@@ -78,7 +81,6 @@ import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.api.admin.InvalidCommandException;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.Payload;
-import org.glassfish.admin.payload.PayloadFilesManager;
 import org.glassfish.common.util.admin.AuthTokenManager;
 
 /**
@@ -158,7 +160,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
     private int connectTimeout = -1;
     private boolean interactive = true;
 
-    private List<Header> requestHeaders = new ArrayList<Header>();
+    private final List<Header> requestHeaders = new ArrayList<>();
     private boolean closeSse = false;
 
     private boolean enableCommandModelCache = true;
@@ -217,7 +219,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
          *
          * @param urlConnection the connection to be configured
          */
-        public void prepareConnection(HttpURLConnection urlConnection) throws IOException;
+        void prepareConnection(HttpURLConnection urlConnection) throws IOException;
 
         /**
          * Uses the configured and connected connection to read data, process it, etc.
@@ -226,7 +228,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
          * @throws CommandException
          * @throws IOException
          */
-        public void useConnection(HttpURLConnection urlConnection) throws CommandException, IOException;
+        void useConnection(HttpURLConnection urlConnection) throws CommandException, IOException;
     }
 
     public RemoteRestAdminCommand(String name, String host, int port) throws CommandException {
@@ -565,7 +567,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
                 }
                 String paramName = opt.getName();
 
-                List<String> paramValues = new ArrayList<String>(options.get(paramName.toLowerCase(Locale.ENGLISH)));
+                List<String> paramValues = new ArrayList<>(options.get(paramName.toLowerCase(Locale.ENGLISH)));
                 if (!opt.getParam().alias().isEmpty() && !paramName.equalsIgnoreCase(opt.getParam().alias())) {
                     paramValues.addAll(options.get(opt.getParam().alias().toLowerCase(Locale.ENGLISH)));
                 }
@@ -733,23 +735,19 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
                     try {
                         logger.log(Level.FINEST, "Response is SSE - about to read events");
                         closeSse = false;
-                        ProprietaryReader<GfSseEventReceiver> reader = new GfSseEventReceiverProprietaryReader();
-                        GfSseEventReceiver eventReceiver = reader.readFrom(urlConnection.getInputStream(), resultMediaType);
+                        final ProprietaryReader<GfSseEventReceiver> reader = new GfSseEventReceiverProprietaryReader();
+                        final GfSseEventReceiver eventReceiver = reader.readFrom(urlConnection.getInputStream(), resultMediaType);
                         GfSseInboundEvent event;
                         do {
                             event = eventReceiver.readEvent();
                             if (event != null) {
-                                if (logger.isLoggable(Level.FINEST)) {
-                                    logger.log(Level.FINEST, "Event: {0}", event.getName());
-                                }
+                                logger.log(Level.FINEST, "Event: {0}", event.getName());
                                 fireEvent(event.getName(), event);
                                 if (AdminCommandState.EVENT_STATE_CHANGED.equals(event.getName())) {
                                     AdminCommandState acs = event.getData(AdminCommandState.class, MEDIATYPE_JSON);
                                     if (acs.getId() != null) {
                                         instanceId = acs.getId();
-                                        if (logger.isLoggable(Level.FINEST)) {
-                                            logger.log(Level.FINEST, "Command instance ID: {0}", instanceId);
-                                        }
+                                        logger.log(Level.FINEST, "Command instance ID: {0}", instanceId);
                                     }
                                     if (acs.getState() == AdminCommandState.State.COMPLETED
                                             || acs.getState() == AdminCommandState.State.RECORDED
@@ -925,8 +923,9 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
                 && aReport.getFailureCause().getMessage().length() != 0) {
             failMsg = aReport.getFailureCause().getMessage();
             if (!failMsg.equals(mainMsg)) {
-                if (sb.length() > 0)
+                if (sb.length() > 0) {
                     sb.append(EOL);
+                }
             }
             sb.append(failMsg);
         }
@@ -1262,9 +1261,10 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
             throw new CommandValidationException("Code: " + HttpURLConnection.HTTP_PRECON_FAILED + ": Cached CommandModel is invalid.");
         }
         if (code == HttpURLConnection.HTTP_NOT_FOUND) {
-            try {
-                throw new InvalidCommandException(ProprietaryReaderFactory.<String>getReader(String.class, urlConnection.getContentType())
-                        .readFrom(urlConnection.getErrorStream(), urlConnection.getContentType()));
+            try (InputStream errorStream = urlConnection.getErrorStream()) {
+                throw new InvalidCommandException(
+                    ProprietaryReaderFactory.<String> getReader(String.class, urlConnection.getContentType())
+                        .readFrom(errorStream, urlConnection.getContentType()));
             } catch (IOException ioex) {
                 throw new InvalidCommandException(urlConnection.getResponseMessage());
             }
@@ -1440,18 +1440,19 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
     }
 
     private Class<?> typeOf(String type) {
-        if (type.equals("STRING"))
+        if (type.equals("STRING")) {
             return String.class;
-        else if (type.equals("BOOLEAN"))
+        } else if (type.equals("BOOLEAN")) {
             return Boolean.class;
-        else if (type.equals("FILE"))
+        } else if (type.equals("FILE")) {
             return File.class;
-        else if (type.equals("PASSWORD"))
+        } else if (type.equals("PASSWORD")) {
             return String.class;
-        else if (type.equals("PROPERTIES"))
+        } else if (type.equals("PROPERTIES")) {
             return Properties.class;
-        else
+        } else {
             return String.class;
+        }
     }
 
     /**
@@ -1468,8 +1469,9 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
 
         for (Map.Entry<String, List<String>> param : options.entrySet()) {
             String paramName = param.getKey();
-            if (paramName.equals("DEFAULT")) // operands handled below
+            if (paramName.equals("DEFAULT")) { // operands handled below
                 continue;
+            }
             ParamModel opt = commandModel.getModelFor(paramName);
             if (opt != null && (opt.getType() == File.class || opt.getType() == File[].class)) {
                 sawFile = true;
@@ -1514,8 +1516,9 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
             // XXX - no remove method, have to copy it
             ParameterMap noptions = new ParameterMap();
             for (Map.Entry<String, List<String>> e : options.entrySet()) {
-                if (!e.getKey().equals("upload"))
+                if (!e.getKey().equals("upload")) {
                     noptions.set(e.getKey(), e.getValue());
+                }
             }
             options = noptions;
         }
@@ -1527,8 +1530,9 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
      * Does the given hostname represent the local host?
      */
     private static boolean isLocal(String hostname) {
-        if (hostname.equalsIgnoreCase("localhost")) // the common case
+        if (hostname.equalsIgnoreCase("localhost")) { // the common case
             return true;
+        }
         try {
             // let NetUtils do the hard work
             InetAddress ia = InetAddress.getByName(hostname);
@@ -1548,8 +1552,9 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
      */
     private ParamModel getOperandModel() {
         for (ParamModel pm : commandModel.getParameters()) {
-            if (pm.getParam().primary())
+            if (pm.getParam().primary()) {
                 return pm;
+            }
         }
         return null;
     }

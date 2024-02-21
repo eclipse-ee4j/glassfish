@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,12 +17,6 @@
 
 package org.glassfish.javaee.full.deployment;
 
-import static java.util.logging.Level.SEVERE;
-import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-import static org.glassfish.loader.util.ASClassLoaderUtil.getAppLibDirLibraries;
-
 import com.sun.enterprise.config.serverbeans.DasConfig;
 import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
 import com.sun.enterprise.deploy.shared.ArchiveFactory;
@@ -37,8 +31,10 @@ import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.io.FileUtils;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -51,8 +47,10 @@ import java.security.PermissionCollection;
 import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.deployment.DeployCommandParameters;
@@ -78,6 +76,12 @@ import org.glassfish.internal.deployment.ExtendedDeploymentContext;
 import org.glassfish.javaee.core.deployment.ApplicationHolder;
 import org.jvnet.hk2.annotations.Service;
 import org.xml.sax.SAXException;
+
+import static java.util.logging.Level.SEVERE;
+import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+import static org.glassfish.loader.util.ASClassLoaderUtil.getAppLibDirLibraries;
 
 @Service(name = EarDetector.ARCHIVE_TYPE)
 public class EarHandler extends AbstractArchiveHandler implements CompositeHandler {
@@ -149,7 +153,6 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
             for (ModuleDescriptor<?> md : holder.app.getModules()) {
                 String moduleUri = md.getArchiveUri();
                 ReadableArchive subArchive = null;
-                WritableArchive subTarget = null;
                 ReadableArchive subArchiveToExpand = null;
                 try {
                     subArchive = source2.getSubArchive(moduleUri);
@@ -164,8 +167,10 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
                         subHandler = deployment.getArchiveHandler(subArchive);
                     }
                     context.getModuleArchiveHandlers().put(moduleUri, subHandler);
-                    if (subHandler != null) {
-                        subTarget = target.createSubArchive(FileUtils.makeFriendlyFilenameExtension(moduleUri));
+                    if (subHandler == null) {
+                        return;
+                    }
+                    try (WritableArchive subTarget = target.createSubArchive(FileUtils.makeFriendlyFilenameExtension(moduleUri))) {
                         /*
                          * A subarchive might be packaged as a subdirectory (instead of a nested JAR) in an EAR. If so and if it has the
                          * same name as the directory into which we'll expand the submodule, make sure it is also of the correct archive
@@ -183,16 +188,11 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
                              */
                             if (!areSameStorageType(subTarget, subArchive)) {
                                 final String msg = MessageFormat.format(
-                                        _logger.getResourceBundle().getString("enterprise.deployment.backend.badSubModPackaging"),
-                                        subArchive.getURI().toASCIIString(), subArchive.getClass().getName());
+                                    _logger.getResourceBundle().getString("enterprise.deployment.backend.badSubModPackaging"),
+                                    subArchive.getURI().toASCIIString(), subArchive.getClass().getName());
                                 throw new RuntimeException(msg);
                             }
                         }
-                        // Keep the original submodule file because the app client deployer needs it.
-                        /*
-                         * // delete the original module file File origSubArchiveFile = new File( target.getURI().getSchemeSpecificPart(),
-                         * moduleUri); origSubArchiveFile.delete();
-                         */
                     }
                 } catch (IOException ioe) {
                     _logger.log(Level.FINE, "Exception while processing " + moduleUri, ioe);
@@ -200,9 +200,6 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
                     try {
                         if (subArchive != null) {
                             subArchive.close();
-                        }
-                        if (subTarget != null) {
-                            subTarget.close();
                         }
                         if (subArchiveToExpand != null) {
                             subArchiveToExpand.close();

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,73 +25,78 @@ import java.util.List;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import com.sun.enterprise.util.io.FileUtils;
 import org.glassfish.api.admin.CommandException;
+
 /**
  * @author Rajiv Mordani
  */
 public class SSHUtil {
-    private static final List<Session> activeConnections = new ArrayList<Session>();
-    private static final String NL = System.getProperty("line.separator");
 
-   /**
-       * Registers a connection for cleanup when the plugin is stopped.
-       *
-       * @param session The connection.
-       */
-      public static synchronized void register(Session session) {
-          if (!activeConnections.contains(session)) {
-              activeConnections.add(session);
-          }
-      }
+    private static final List<Session> activeConnections = new ArrayList<>();
+    private static final String NL = System.lineSeparator();
 
-   /**
-       * Unregisters a connection for cleanup when the plugin is stopped.
-       *
-       * @param session The connection.
-       */
-      public static synchronized void unregister(Session session) {
-          session.disconnect();
-          activeConnections.remove(session);
-      }
+    /**
+     * Registers a connection for cleanup when the plugin is stopped.
+     *
+     * @param session The connection.
+     */
+    public static synchronized void register(Session session) {
+        if (!activeConnections.contains(session)) {
+            activeConnections.add(session);
+        }
+    }
 
-   /**
-       * Convert empty string to null.
-       */
-      public static String checkString(String s) {
-          if(s==null || s.length()==0)    return null;
-          return s;
-      }
 
-      public static String getExistingKeyFile() {
-        String key = null;
-        for (String keyName : Arrays.asList("id_rsa","id_dsa",
-                                                "identity"))
-        {
-            String h = System.getProperty("user.home") + File.separator;
-            File f = new File(h+".ssh"+File.separator+keyName);
+    /**
+     * Unregisters a connection for cleanup when the plugin is stopped.
+     *
+     * @param session The connection.
+     */
+    public static synchronized void unregister(Session session) {
+        session.disconnect();
+        activeConnections.remove(session);
+    }
+
+
+    /**
+     * Convert empty string to null.
+     */
+    public static String checkString(String s) {
+        if (s == null || s.isEmpty()) {
+            return null;
+        }
+        return s;
+    }
+
+
+    /**
+     * @return null or id_rsa/id_dsa/identity at user's home directory
+     */
+    public static File getExistingKeyFile() {
+        Path h = FileUtils.USER_HOME.toPath();
+        for (String keyName : Arrays.asList("id_rsa", "id_dsa", "identity")) {
+            File f = h.resolve(Path.of(".ssh", keyName)).toFile();
             if (f.exists()) {
-                key =  h  + ".ssh"+File.separator + keyName;
-                break;
+                return f;
             }
         }
-        return key;
-      }
+        return null;
+    }
 
-      public static String getDefaultKeyFile() {
-          String k = System.getProperty("user.home") + File.separator
-          //String k = System.getenv("HOME") + File.separator
-                          + ".ssh" + File.separator + "id_rsa";
-          return k;
-      }
+
+    public static File getDefaultKeyFile() {
+        return FileUtils.USER_HOME.toPath().resolve(Path.of(".ssh", "id_rsa")).toFile();
+    }
 
     /**
      * Simple method to validate an encrypted key file
      * @return true|false
      * @throws CommandException
      */
-    public static boolean isEncryptedKey(String keyFile) throws CommandException {
+    public static boolean isEncryptedKey(File keyFile) throws CommandException {
         boolean res = false;
         try {
             String f = FileUtils.readSmallFile(keyFile);
@@ -100,7 +106,7 @@ public class SSHUtil {
             }
         }
         catch (IOException ioe) {
-            throw new CommandException(Strings.get("error.parsing.key", keyFile, ioe.getMessage()));
+            throw new CommandException(Strings.get("error.parsing.key", keyFile, ioe.getMessage()), ioe);
         }
         return res;
     }
@@ -112,28 +118,21 @@ public class SSHUtil {
      * @param  file the key file
      * @return success if file exists, false otherwise
      */
-    public static boolean validateKeyFile(String file) throws CommandException {
-        boolean ret = false;
-        //if key exists, set prompt flag
-        File f = new File(file);
-        if (f.exists()) {
-            if (!f.getName().endsWith(".pub")) {
-                String key = null;
-                try {
-                    key = FileUtils.readSmallFile(file);
-                }
-                catch (IOException ioe) {
-                    throw new CommandException(Strings.get("unable.to.read.key", file, ioe.getMessage()));
-                }
-                if (!key.startsWith("-----BEGIN ") && !key.endsWith(" PRIVATE KEY-----" + NL)) {
-                    throw new CommandException(Strings.get("invalid.key.file", file));
-                }
-            }
-            ret = true;
-        }
-        else {
+    public static boolean validateKeyFile(File file) throws CommandException {
+        if (!file.exists()) {
             throw new CommandException(Strings.get("key.does.not.exist", file));
         }
-        return ret;
+        if (!file.getName().endsWith(".pub")) {
+            String key = null;
+            try {
+                key = FileUtils.readSmallFile(file);
+            } catch (IOException ioe) {
+                throw new CommandException(Strings.get("unable.to.read.key", file, ioe.getMessage()));
+            }
+            if (!key.startsWith("-----BEGIN ") && !key.endsWith(" PRIVATE KEY-----" + NL)) {
+                throw new CommandException(Strings.get("invalid.key.file", file));
+            }
+        }
+        return true;
     }
 }

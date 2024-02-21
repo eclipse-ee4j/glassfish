@@ -164,7 +164,7 @@ public class ACCClassLoader extends GlassfishUrlClassLoader {
                 throw new ClassNotFoundException(className);
             }
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            FileUtils.copy(is, baos, is.available());
+            FileUtils.copy(is, baos);
             return baos.toByteArray();
         } catch (IOException e) {
             throw new ClassNotFoundException(className, e);

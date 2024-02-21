@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,10 +18,12 @@
 package com.sun.enterprise.admin.util.cache;
 
 import com.sun.enterprise.util.io.FileUtils;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -44,7 +47,7 @@ public class ByteArrayDataProvider implements DataProvider {
     @Override
     public Object toInstance(InputStream stream, Class clazz) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        FileUtils.copy(stream, baos, 0);
+        FileUtils.copy(stream, baos);
         return baos.toByteArray();
     }
 

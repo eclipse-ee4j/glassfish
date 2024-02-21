@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,10 +23,9 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 
 /**
- *
  * @author martinmares
  */
-public class ParamsWithPayloadJsonProprietaryReader implements ProprietaryReader<ParamsWithPayload> {
+public final class ParamsWithPayloadJsonProprietaryReader implements ProprietaryReader<ParamsWithPayload> {
 
     private final ActionReportJsonProprietaryReader delegate;
 

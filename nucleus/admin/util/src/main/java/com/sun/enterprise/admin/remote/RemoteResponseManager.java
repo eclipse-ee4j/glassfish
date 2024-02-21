@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,17 @@
 
 package com.sun.enterprise.admin.remote;
 
-import java.io.*;
-import java.util.*;
-import java.util.jar.*;
-import java.util.logging.Logger;
-
-import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+import com.sun.enterprise.util.io.FileUtils;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collections;
+import java.util.Map;
+import java.util.jar.Manifest;
+import java.util.logging.Logger;
 
 import static com.sun.enterprise.util.StringUtils.ok;
 
@@ -37,7 +42,16 @@ import static com.sun.enterprise.util.StringUtils.ok;
  * @author bnevins
  */
 public class RemoteResponseManager implements ResponseManager {
+
     private static final LocalStringsImpl strings = new LocalStringsImpl(RemoteResponseManager.class);
+    private static final int HTTP_SUCCESS_CODE = 200;
+
+    private final int code;
+    private final Logger logger;
+    private final InputStream responseStream;
+    private final String response;
+    private Manifest m;
+    private Map<String, String> mainAtts = Collections.emptyMap();
 
     public RemoteResponseManager(InputStream in, int code, Logger logger) throws RemoteException, IOException {
         this.code = code;
@@ -46,19 +60,21 @@ public class RemoteResponseManager implements ResponseManager {
         // make a copy of the stream.  O/w if Manifest.read() blows up -- the
         // data would be gone!
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        FileUtils.copy(in, baos, 0);
+        FileUtils.copy(in, baos);
 
         responseStream = new ByteArrayInputStream(baos.toByteArray());
         response = baos.toString();
 
-        if (!ok(response))
+        if (!ok(response)) {
             throw new RemoteFailureException(strings.get("emptyResponse"));
+        }
 
         logger.finer("------- RAW RESPONSE  ---------");
         logger.finer(response);
         logger.finer("------- RAW RESPONSE  ---------");
     }
 
+    @Override
     public void process() throws RemoteException {
         checkCode(); // Exception == Goodbye!
         try {
@@ -94,12 +110,4 @@ public class RemoteResponseManager implements ResponseManager {
         PlainTextManager mgr = new PlainTextManager(response);
         mgr.process();
     }
-
-    private int code;
-    private Logger logger;
-    final InputStream responseStream;
-    final String response;
-    private static final int HTTP_SUCCESS_CODE = 200;
-    private Manifest m;
-    private Map<String, String> mainAtts = Collections.emptyMap();
 }

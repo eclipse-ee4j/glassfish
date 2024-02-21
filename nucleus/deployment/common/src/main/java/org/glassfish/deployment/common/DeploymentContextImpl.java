@@ -19,6 +19,7 @@ package org.glassfish.deployment.common;
 
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
@@ -36,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.ActionReport;
@@ -63,7 +65,6 @@ import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINEST;
 
 /**
- *
  * @author dochez
  */
 public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDestroy {
@@ -82,23 +83,23 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
     private static final String INTERNAL_DIR_NAME = "__internal";
     private static final String APP_TENANTS_SUBDIR_NAME = "__app-tenants";
 
-    ReadableArchive source;
-    ReadableArchive originalSource;
-    final OpsParams parameters;
-    ActionReport actionReport;
-    final ServerEnvironment env;
-    ClassLoader cloader;
-    ArchiveHandler archiveHandler;
-    Properties props;
-    Map<String, Object> modulesMetaData = new HashMap<>();
-    Phase phase = Phase.UNKNOWN;
-    ClassLoader sharableTemp;
-    Map<String, Properties> modulePropsMap = new HashMap<>();
-    Map<String, Object> transientAppMetaData = new HashMap<>();
-    Map<String, ArchiveHandler> moduleArchiveHandlers = new HashMap<>();
-    Map<String, ExtendedDeploymentContext> moduleDeploymentContexts = new HashMap<>();
-    ExtendedDeploymentContext parentContext;
-    String moduleUri;
+    private ReadableArchive source;
+    private final ReadableArchive originalSource;
+    private final OpsParams parameters;
+    private ActionReport actionReport;
+    private final ServerEnvironment env;
+    private ClassLoader cloader;
+    private ArchiveHandler archiveHandler;
+    private Properties props;
+    private final Map<String, Object> modulesMetaData = new HashMap<>();
+    private Phase phase = Phase.UNKNOWN;
+    private ClassLoader sharableTemp;
+    private Map<String, Properties> modulePropsMap = new HashMap<>();
+    private final Map<String, Object> transientAppMetaData = new HashMap<>();
+    private final Map<String, ArchiveHandler> moduleArchiveHandlers = new HashMap<>();
+    private final Map<String, ExtendedDeploymentContext> moduleDeploymentContexts = new HashMap<>();
+    private ExtendedDeploymentContext parentContext;
+    private String moduleUri;
     private String tenant;
     private String originalAppName;
     private File tenantDir;
@@ -157,6 +158,8 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
 
     @Override
     public synchronized void preDestroy() {
+        deplLogger.log(Level.FINEST, "preDestroy()");
+        // FIXME: Is this really required?
         try {
             PreDestroy.class.cast(sharableTemp).preDestroy();
         } catch (Exception e) {
@@ -218,7 +221,6 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
     @Override
     public void createApplicationClassLoader(ClassLoaderHierarchy classLoaderHierarchy, ArchiveHandler handler) throws URISyntaxException, MalformedURLException {
         addTransientAppMetaData(IS_TEMP_CLASSLOADER, FALSE);
-
         if (cloader == null) {
             cloader = createClassLoader(classLoaderHierarchy, handler, parameters.name());
         }
@@ -245,15 +247,14 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
 
         // we are out of the prepare phase, destroy the shareableTemp and
         // return the final classloader
-        if (sharableTemp != null) {
+        if (sharableTemp instanceof PreDestroy) {
             try {
                 PreDestroy.class.cast(sharableTemp).preDestroy();
             } catch (Exception e) {
-                // ignore, the classloader does not need to be destroyed
+                getLogger().log(Level.WARNING, "ClassLoader preDestroy failed for " + sharableTemp, e);
             }
-            sharableTemp = null;
         }
-
+        sharableTemp = null;
         return cloader;
     }
 
@@ -298,6 +299,7 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
 
     @Override
     public void addModuleMetaData(Object metaData) {
+        deplLogger.log(Level.FINEST, "addModuleMetaData(metaData={0})", metaData);
         if (metaData != null) {
             modulesMetaData.put(metaData.getClass().getName(), metaData);
         }
@@ -332,6 +334,7 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
 
     @Override
     public void addTransientAppMetaData(String metaDataKey, Object metaData) {
+        deplLogger.log(Level.FINEST, "addTransientAppMetaData(metaDataKey={0}, metaData)", metaDataKey);
         if (metaData != null) {
             transientAppMetaData.put(metaDataKey, metaData);
         }
@@ -627,12 +630,21 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
 
     @Override
     public void postDeployClean(boolean isFinalClean) {
+        deplLogger.log(Level.FINEST, "postDeployClean(isFinalClean={0})", isFinalClean);
         if (transientAppMetaData != null) {
             if (isFinalClean) {
+                for (Object value : transientAppMetaData.values()) {
+                    if (value instanceof Closeable) {
+                        try {
+                            ((Closeable) value).close();
+                        } catch (IOException e) {
+                            deplLogger.log(Level.WARNING, "Close failed for " + value, e);
+                        }
+                    }
+                }
                 transientAppMetaData.clear();
             } else {
                 final String[] classNamesToClean = { Types.class.getName(), Parser.class.getName() };
-
                 for (String className : classNamesToClean) {
                     transientAppMetaData.remove(className);
                 }
@@ -644,7 +656,7 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
 
     @Override
     public String toString() {
-        return (source == null ? "" : source.toString()) + " " + (originalSource == null ? "" : originalSource.getURI());
+        return (source == null ? "" : source) + " " + (originalSource == null ? "" : originalSource.getURI());
     }
 
     /**
@@ -658,22 +670,17 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
     }
 
 
-    // ### Private methods
-
     private File initTenantDir() {
         if (tenant == null || originalAppName == null) {
             return null;
         }
 
-        File tenantDir = new File(getRootTenantDirForApp(originalAppName), tenant);
-        if (!tenantDir.exists() && !tenantDir.mkdirs()) {
-            if (deplLogger.isLoggable(FINEST)) {
-                deplLogger.log(FINEST, "Unable to create directory " + tenantDir.getAbsolutePath());
-            }
-
+        File tenantDirectory = new File(getRootTenantDirForApp(originalAppName), tenant);
+        if (!tenantDirectory.exists() && !tenantDirectory.mkdirs()) {
+            deplLogger.log(FINEST, "Unable to create directory {0}", tenantDirectory.getAbsolutePath());
         }
 
-        return tenantDir;
+        return tenantDirectory;
     }
 
     private File getRootTenantDirForApp(String appName) {

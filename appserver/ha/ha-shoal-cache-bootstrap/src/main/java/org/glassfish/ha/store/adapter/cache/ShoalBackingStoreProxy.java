@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -68,14 +69,11 @@ public class ShoalBackingStoreProxy
     public void postConstruct() {
         BackingStoreFactoryRegistry.register("replicated", this);
         Logger.getLogger(ShoalBackingStoreProxy.class.getName()).log(Level.FINE, "Registered SHOAL BackingStore Proxy with persistence-type = replicated");
-        EventListener glassfishEventListener = new EventListener() {
-            @Override
-            public void event(Event event) {
-                if (event.is(EventTypes.SERVER_SHUTDOWN)) {
-                    BackingStoreFactoryRegistry.unregister("replicated");
-                    Logger.getLogger(ShoalBackingStoreProxy.class.getName()).log(Level.FINE, "Unregistered SHOAL BackingStore Proxy with persistence-type = replicated");
-                } // else if (event.is(EventTypes.SERVER_READY)) {  }
-            }
+        EventListener glassfishEventListener = event -> {
+            if (event.is(EventTypes.SERVER_SHUTDOWN)) {
+                BackingStoreFactoryRegistry.unregister("replicated");
+                Logger.getLogger(ShoalBackingStoreProxy.class.getName()).log(Level.FINE, "Unregistered SHOAL BackingStore Proxy with persistence-type = replicated");
+            } // else if (event.is(EventTypes.SERVER_READY)) {  }
         };
         events.register(glassfishEventListener);
     }

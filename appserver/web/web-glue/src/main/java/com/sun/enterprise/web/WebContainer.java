@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -551,7 +551,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
     }
 
     @Override
-    public void event(Event event) {
+    public void event(Event<?> event) {
         if (event.is(Deployment.ALL_APPLICATIONS_PROCESSED)) {
             // configure default web modules for virtual servers after all
             // applications are processed

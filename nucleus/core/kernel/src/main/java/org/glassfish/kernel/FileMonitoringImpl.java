@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -72,13 +73,10 @@ public class FileMonitoringImpl implements FileMonitoring, PostConstruct {
 
             }
         }, 0, 500, TimeUnit.MILLISECONDS);
-        events.register(new org.glassfish.api.event.EventListener() {
-            @Override
-            public void event(Event event) {
-                if (event.is(EventTypes.PREPARE_SHUTDOWN)) {
-                    System.out.println("FileMonitoring shutdown");
-                    future.cancel(false);
-                }
+        events.register(event -> {
+            if (event.is(EventTypes.PREPARE_SHUTDOWN)) {
+                System.out.println("FileMonitoring shutdown");
+                future.cancel(false);
             }
         });
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,10 +25,12 @@ import org.glassfish.logging.annotation.LoggerInfo;
 
 /**
  * Logger information for the internal-api module.
+ *
  * @author Tom Mueller
  */
 /* Module private */
 public class KernelLoggerInfo {
+
     private static final String LOGMSG_PREFIX = "NCLS-CORE";
 
     @LogMessagesResourceBundle
@@ -36,8 +38,8 @@ public class KernelLoggerInfo {
 
     @LoggerInfo(subsystem = "CORE", description = "Core Kernel", publish = true)
     private static final String CORE_LOGGER = "jakarta.enterprise.system.core";
-    private static final Logger coreLogger = Logger.getLogger(
-                CORE_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
+
+    private static final Logger coreLogger = Logger.getLogger(CORE_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
 
     public static Logger getLogger() {
         return coreLogger;
@@ -51,14 +53,14 @@ public class KernelLoggerInfo {
     @LogMessageInfo(
             message = "Cannot instantiate model for command {0}",
             cause = "The service that implements the command could not be loaded.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String cantInstantiateCommand = LOGMSG_PREFIX + "-00002";
 
     @LogMessageInfo(
             message = "Exception while running a command",
             cause = "An unexpected exception occurred while running a command.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String invocationException = LOGMSG_PREFIX + "-00003";
 
@@ -80,21 +82,21 @@ public class KernelLoggerInfo {
     @LogMessageInfo(
             message = "Timeout occurred when processing Admin Console request.",
             cause = "A request for a lock timed out while processing an admin console request.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String consoleRequestTimeout = LOGMSG_PREFIX + "-00007";
 
     @LogMessageInfo(
             message = "Cannot process admin console request.",
             cause = "InterruptedException occurred while the service thread is running.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String consoleCannotProcess = LOGMSG_PREFIX + "-00008";
 
     @LogMessageInfo(
             message = "Unable to serve resource: {0}. Cause: {1}",
             cause = "An I/O error occurred while serving a resource request.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String consoleResourceError = LOGMSG_PREFIX + "-00009";
 
@@ -120,8 +122,8 @@ public class KernelLoggerInfo {
 
     @LogMessageInfo(
             message = "Shutdown required",
-            cause = "An unexpected exception occurred while changing run levels.  A shutdown is required.",
-            action = "Check the system logs and contact Oracle support.",
+            cause = "An unexpected exception occurred while changing run levels. A shutdown is required.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String shutdownRequired = LOGMSG_PREFIX + "-00014";
 
@@ -132,8 +134,8 @@ public class KernelLoggerInfo {
 
     @LogMessageInfo(
             message = "Startup service failed to start",
-            cause = "An unexpected exception occurred while starting the startup service.  A shutdown is required.",
-            action = "Check the system logs and contact Oracle support.",
+            cause = "An unexpected exception occurred while starting the startup service. A shutdown is required.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String startupFailure = LOGMSG_PREFIX + "-00016";
 
@@ -149,8 +151,8 @@ public class KernelLoggerInfo {
 
     @LogMessageInfo(
             message = "Shutting down server due to startup exception",
-            cause = "An unexpected exception occurred while starting the server.  A shutdown is required.",
-            action = "Check the system logs and contact Oracle support.",
+            cause = "An unexpected exception occurred while starting the server. A shutdown is required.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String startupFatalException = LOGMSG_PREFIX + "-00019";
 
@@ -162,7 +164,7 @@ public class KernelLoggerInfo {
     @LogMessageInfo(
             message = "Unexpected exception during startup",
             cause = "An unexpected exception occurred while starting the server.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String startupException = LOGMSG_PREFIX + "-00021";
 
@@ -179,21 +181,21 @@ public class KernelLoggerInfo {
     @LogMessageInfo(
             message = "Error during enabling",
             cause = "An unexpected exception occurred while enabling an application.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String loadingApplicationErrorEnable = LOGMSG_PREFIX + "-00024";
 
     @LogMessageInfo(
             message = "Error during disabling",
             cause = "An unexpected exception occurred while disabling an application.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String loadingApplicationErrorDisable = LOGMSG_PREFIX + "-00025";
 
     @LogMessageInfo(
             message = "Exception during lifecycle processing",
             cause = "An unexpected exception occurred during lifecycle processing.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String lifecycleException = LOGMSG_PREFIX + "-00026";
 
@@ -205,14 +207,14 @@ public class KernelLoggerInfo {
     @LogMessageInfo(
             message = "Inconsistent state - nothing is providing {0} yet it passed validation",
             cause = "An unexpected condition during lifecycle processing.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String inconsistentLifecycleState = LOGMSG_PREFIX + "-00028";
 
     @LogMessageInfo(
             message = "Cannot start container {0}, exception: {1}",
             cause = "An unexpected condition during lifecycle processing.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String cantStartContainer = LOGMSG_PREFIX + "-00029";
 
@@ -224,28 +226,28 @@ public class KernelLoggerInfo {
     @LogMessageInfo(
             message = "Error while closing deployable artifact {0}, exception: {1}",
             cause = "An unexpected exception occurred during lifecycle processing.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String errorClosingArtifact = LOGMSG_PREFIX + "-00031";
 
     @LogMessageInfo(
             message = "Error while expanding archive file",
             cause = "An unexpected exception occurred during lifecycle processing.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String errorExpandingFile = LOGMSG_PREFIX + "-00032";
 
     @LogMessageInfo(
             message = "Cannot find sniffer for module type: {0}",
             cause = "An unexpected condition occurred during lifecycle processing.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String cantFindSniffer = LOGMSG_PREFIX + "-00033";
 
     @LogMessageInfo(
             message = "Cannot find any sniffer for deployed app: {0}",
             cause = "An unexpected condition occurred during lifecycle processing.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String cantFindSnifferForApp = LOGMSG_PREFIX + "-00034";
 
@@ -267,14 +269,14 @@ public class KernelLoggerInfo {
     @LogMessageInfo(
             message = "Cannot find the application type for the artifact at: {0}. Was the container or sniffer removed?",
             cause = "An unexpected condition occurred while loading an application.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String cantFindApplicationInfo = LOGMSG_PREFIX + "-00038";
 
     @LogMessageInfo(
             message = "Exception during application deployment",
             cause = "An unexpected exception occurred while deploying an application.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String deployException = LOGMSG_PREFIX + "-00039";
 
@@ -295,7 +297,7 @@ public class KernelLoggerInfo {
     @LogMessageInfo(
             message = "IOException while opening deployed artifact",
             cause = "An unexpected exception occurred while deploying an application.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String exceptionOpenArtifact = LOGMSG_PREFIX + "-00042";
 
@@ -329,35 +331,35 @@ public class KernelLoggerInfo {
     @LogMessageInfo(
             message = "Invalid InputStream returned for {0}",
             cause = "Unable to retrieve an entry from the archive.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String invalidInputStream = LOGMSG_PREFIX + "-00048";
 
     @LogMessageInfo(
             message = "Exception while processing {0} inside {1} of size {2}, exception: {3}",
             cause = "An unexpected exception occurred while processing an archive.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String exceptionWhileParsing = LOGMSG_PREFIX + "-00049";
 
     @LogMessageInfo(
             message = "Cannot open sub-archive {0} from {1}",
             cause = "An unexpected exception occurred while processing an archive.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String cantOpenSubArchive = LOGMSG_PREFIX + "-00050";
 
     @LogMessageInfo(
             message = "Cannot close sub archive {0}, exception: {1}",
             cause = "An unexpected exception occurred while closing an archive.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String exceptionWhileClosing = LOGMSG_PREFIX + "-00051";
 
     @LogMessageInfo(
             message = "Exception loading lifecycle module [{0}]; [{1}]",
             cause = "An unexpected exception occurred while loading a lifecycle module.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String exceptionLoadingLifecycleModule = LOGMSG_PREFIX + "-00052";
 
@@ -379,14 +381,14 @@ public class KernelLoggerInfo {
     @LogMessageInfo(
             message = "Unable to start the server. Closing all ports",
             cause = "An unexpected exception occurred while starting the grizzly service.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String grizzlyCantStart = LOGMSG_PREFIX + "-00056";
 
     @LogMessageInfo(
             message = "Exception closing port: {0}, exception: {1}",
             cause = "An unexpected exception occurred while closing a port.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String grizzlyCloseException = LOGMSG_PREFIX + "-00057";
 
@@ -425,7 +427,7 @@ public class KernelLoggerInfo {
     @LogMessageInfo(
             message = "Exception while starting container {0}, exception: {1}",
             cause = "An exception occurred while attempting to start the container.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String snifferAdapterExceptionStarting = LOGMSG_PREFIX + "-00064";
 
@@ -439,21 +441,21 @@ public class KernelLoggerInfo {
     @LogMessageInfo(
             message = "Cannot add new configuration to the Config element",
             cause = "An exception occurred while adding the container configuration to the domain.xml.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String exceptionAddContainer = LOGMSG_PREFIX + "-00066";
 
     @LogMessageInfo(
             message = "Exception while enabling or disabling the autodeployment of applications",
             cause = "An exception occurred while enabling or disabling the autodeployment of applications.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String exceptionAutodeployment = LOGMSG_PREFIX + "-00067";
 
     @LogMessageInfo(
             message = "Exception while sending an event.",
             cause = "An exception occurred while sending an event.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String exceptionSendEvent = LOGMSG_PREFIX + "-00068";
 
@@ -465,7 +467,7 @@ public class KernelLoggerInfo {
     @LogMessageInfo(
             message = "An exception occurred while stopping the server, continuing.",
             cause = "An exception occurred while stopping the server.",
-            action = "Check the system logs and contact Oracle support.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String exceptionDuringShutdown = LOGMSG_PREFIX + "-00070";
 
@@ -475,8 +477,8 @@ public class KernelLoggerInfo {
     public static final String changeManagedJobConfig = LOGMSG_PREFIX + "-00071";
 
     @LogMessageInfo(
-                message = "Cleaning Job {0}",
-                level = "FINE")
+            message = "Cleaning Job {0}",
+            level = "FINE")
     public static final String cleaningJob = LOGMSG_PREFIX + "-00072";
 
     @LogMessageInfo(
@@ -485,8 +487,8 @@ public class KernelLoggerInfo {
     public static final String initializingJobCleanup = LOGMSG_PREFIX + "-00073";
 
     @LogMessageInfo(
-                message = "Initializing Managed Config bean",
-                level = "FINE")
+            message = "Initializing Managed Config bean",
+            level = "FINE")
     public static final String initializingManagedConfigBean = LOGMSG_PREFIX + "-00074";
 
     @LogMessageInfo(
@@ -496,15 +498,15 @@ public class KernelLoggerInfo {
 
     @LogMessageInfo(
             message = "Exception when cleaning jobs caused",
-            cause="An exception occured when cleaning the managed jobs",
-            action="Check the system logs and contact Oracle support.",
+            cause = "An exception occurred when cleaning the managed jobs",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String exceptionCleaningJobs = LOGMSG_PREFIX + "-00076";
 
     @LogMessageInfo(
             message = "-passwordfile specified, but the actual file was not, ignoring ...",
-            cause="A software error is causing an incorrect argument sequence.",
-            action="No action necessary.",
+            cause = "A software error is causing an incorrect argument sequence.",
+            action = "No action necessary.",
             level = "WARNING")
     public static final String optionButNoArg = LOGMSG_PREFIX + "-00077";
 
@@ -520,15 +522,15 @@ public class KernelLoggerInfo {
 
     @LogMessageInfo(
             message = "Failed to configure the ManagedJobConfig bean",
-            cause="While running the configure-managed-jobs command, a write transaction to the ManagedJobConfig bean failed.",
-            action="Check the system logs and contact Oracle support.",
+            cause = "While running the configure-managed-jobs command, a write transaction to the ManagedJobConfig bean failed.",
+            action = "Check the system logs and contact support.",
             level = "WARNING")
     public static final String configFailManagedJobConfig = LOGMSG_PREFIX + "-00080";
 
     @LogMessageInfo(
             message = "Unable to get the ManagedJobConfig bean.",
-            cause="While running the configure-managed-jobs command, access to the ManagedJobConfig bean failed.",
-            action="Check the system logs and contact Oracle support.",
+            cause = "While running the configure-managed-jobs command, access to the ManagedJobConfig bean failed.",
+            action = "Check the system logs and contact support.",
             level = "WARNING")
     public static final String getFailManagedJobConfig = LOGMSG_PREFIX + "-00081";
 
@@ -539,62 +541,62 @@ public class KernelLoggerInfo {
 
     @LogMessageInfo(
             message = "Exception while attempting to shutdown after upgrade",
-            cause="An exception occured when shutting down the server after an upgrade.",
-            action="Check the system logs and contact Oracle support.",
+            cause = "An exception occurred when shutting down the server after an upgrade.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String exceptionUpgrade = LOGMSG_PREFIX + "-00083";
 
     @LogMessageInfo(
             message = "Cannot find port information from domain.xml",
-            cause="No port value is available in the NetworkListener config bean",
-            action="Check the system logs and contact Oracle support.",
+            cause = "No port value is available in the NetworkListener config bean",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String noPort = LOGMSG_PREFIX + "-00084";
 
     @LogMessageInfo(
             message = "Cannot parse port value: {0}, using port 8080",
-            cause="There is an invalid port value in the domain.xml file.",
-            action="Check the system logs and contact Oracle support.",
+            cause = "There is an invalid port value in the domain.xml file.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String badPort = LOGMSG_PREFIX + "-00085";
 
     @LogMessageInfo(
             message = "Unknown address {0}",
-            cause="There is an invalid address value in the domain.xml file.",
-            action="Check the system logs and contact Oracle support.",
+            cause = "There is an invalid address value in the domain.xml file.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String badAddress = LOGMSG_PREFIX + "-00086";
 
     @LogMessageInfo(
-            message = "Grizzly Framework {0} started in: {1}ms - bound to [{2}]",
+            message = "Grizzly Framework {0} started in: {1} ms - bound to [{2}]",
             level = "INFO")
     public static final String grizzlyStarted = LOGMSG_PREFIX + "-00087";
 
     @LogMessageInfo(
             message = "Exception during postConstruct of DynamicReloadService",
-            cause="An unexpected exception occured.",
-            action="Check the system logs and contact Oracle support.",
+            cause = "An unexpected exception occurred.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String exceptionDRS = LOGMSG_PREFIX + "-00088";
 
     @LogMessageInfo(
             message = "Cannot determine host name, will use localhost exclusively",
-            cause="An unexpected exception occured.",
-            action="Check the system logs and contact Oracle support.",
+            cause = "An unexpected exception occurred.",
+            action = "Check the system logs and contact support.",
             level = "SEVERE")
     public static final String exceptionHostname = LOGMSG_PREFIX + "-00089";
 
     @LogMessageInfo(
             message = "Internal Server error: {0}",
-            cause="An unexpected exception occured.",
-            action="Check the system logs and contact Oracle support.",
+            cause = "An unexpected exception occurred.",
+            action = "Check the system logs and contact support.",
             level = "WARNING")
     public static final String exceptionMapper = LOGMSG_PREFIX + "-00090";
 
     @LogMessageInfo(
             message = "Unable to set customized error page",
-            cause="An unexpected exception occured.",
-            action="Check the system logs and contact Oracle support.",
+            cause = "An unexpected exception occurred.",
+            action = "Check the system logs and contact support.",
             level = "WARNING")
     public static final String exceptionMapper2 = LOGMSG_PREFIX + "-00091";
 
@@ -610,8 +612,8 @@ public class KernelLoggerInfo {
 
     @LogMessageInfo(
             message = "Unable to load checkpoint",
-            cause="An unexpected exception occured.",
-            action="Check the system logs and contact Oracle support.",
+            cause = "An unexpected exception occurred.",
+            action = "Check the system logs and contact support.",
             level = "WARNING")
     public static final String exceptionLoadCheckpoint = LOGMSG_PREFIX + "-00094";
 
@@ -624,5 +626,4 @@ public class KernelLoggerInfo {
             message = "Automatically resumed command {0} finished with exit code {1}. \nMessage: {2}",
             level = "INFO")
     public static final String checkpointAutoResumeDone = LOGMSG_PREFIX + "-00096";
-
 }

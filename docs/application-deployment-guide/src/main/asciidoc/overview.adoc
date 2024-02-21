@@ -149,9 +149,9 @@ The Jakarta EE specification permits the use of alternate top-level
 standard deployment descriptors that reside outside of the application
 archive using the `alt-dd` mechanism (alternate module-level deployment
 descriptors were permitted prior to Jakarta EE 7). Alternate deployment
-descriptors are described in the Jakarta EE 7 specification. You can find
+descriptors are described in the Jakarta EE specification. You can find
 the specification at
-`http://www.oracle.com/technetwork/java/javaee/tech/`. Alternate
+`https://jakarta.ee/specifications/platform/`. Alternate
 deployment descriptors override the top-level deployment descriptors
 packaged in an application archive. For example, for EAR files, an
 alternate deployment descriptor overrides `application.xml`. For
@@ -696,17 +696,14 @@ xref:reference-manual.adoc#asadmin[`asadmin`(1M)] help page.
 ==== NetBeans IDE
 
 You can use the NetBeans Integrated Development Environment (IDE), or
-another IDE, to assemble Jakarta EE applications and modules. The NetBeans
-IDE is included in the tools bundle of the Jakarta EE Software Development
-Kit (SDK). To download, see
-`http://www.oracle.com/technetwork/java/javaee/downloads/index.html`.
-For additional information, see `http://www.netbeans.org`.
+another IDE, to assemble Jakarta EE applications and modules.
+For additional information, see `https://netbeans.apache.org/`.
 
 [[eclipse-ide]]
 
 ==== Eclipse IDE
 
-In addition to the bundled NetBeans IDE, a plug-in for the Eclipse IDE
+In addition to the NetBeans IDE, a plug-in for the Eclipse IDE
 extends GlassFish to the Eclipse community.
 
 [[jsr-88-client]]

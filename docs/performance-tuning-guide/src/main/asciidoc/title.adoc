@@ -14,7 +14,7 @@ Performance Tuning Guide
 
 Release 7
 
-Contributed 2018 - 2022
+Contributed 2018 - 2024
 
 This book describes how to get the best performance with {productName} 7.
 

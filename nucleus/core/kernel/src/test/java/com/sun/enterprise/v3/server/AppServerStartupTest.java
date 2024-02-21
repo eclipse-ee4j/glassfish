@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -406,7 +406,7 @@ public class AppServerStartupTest {
         /**
          * List of server events.
          */
-        private final List<EventTypes> listEvents = new LinkedList<>();
+        private final List<EventTypes<?>> listEvents = new LinkedList<>();
 
         /**
          * The run level service.
@@ -444,12 +444,12 @@ public class AppServerStartupTest {
             return recLevel != null && recLevel.equals(runLevel);
         }
 
-        public List<EventTypes> getListEvents() {
+        public List<EventTypes<?>> getListEvents() {
             return listEvents;
         }
 
         @Override
-        public void event(Event event) {
+        public void event(Event<?> event) {
             listEvents.add(event.type());
         }
     }

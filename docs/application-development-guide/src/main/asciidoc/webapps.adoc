@@ -53,7 +53,7 @@ modification or recompilation.
 
 To develop servlets, use the Java Servlet API. For information about
 using the Java Servlet API, see the documentation at
-`http://www.oracle.com/technetwork/java/javaee/servlet/index.html`.
+`https://jakarta.ee/specifications/servlet/`.
 
 The {productName} provides the `wscompile` and `wsdeploy` tools to
 help you implement a web service endpoint as a servlet. For more
@@ -317,10 +317,7 @@ servers
 * JSP tag libraries and standard portable tags
 
 For information about creating JSP files, see the JavaServer Pages web
-site at `http://www.oracle.com/technetwork/java/javaee/jsp/index.html`.
-
-For information about Java Beans, see the JavaBeans web page at
-`http://www.oracle.com/technetwork/java/javase/tech/index-jsp-138795.html`.
+site at `https://jakarta.ee/specifications/pages/`.
 
 This section describes how to use JavaServer Pages (JSP files) as page
 templates in a {productName} web application.
@@ -337,7 +334,7 @@ The following topics are addressed here:
 
 {productName} supports tag libraries and standard portable tags. For
 more information, see the JavaServer Pages Standard Tag Library (JSTL)
-page at `http://www.oracle.com/technetwork/java/index-jsp-135995.html`.
+page at `https://jakarta.ee/specifications/tags/`.
 
 Web applications don't need to bundle copies of the `jsf-impl.jar` or
 `appserv-jstl.jar` JSP tag libraries (in as-install``/lib``) to use

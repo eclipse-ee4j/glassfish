@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,10 +24,6 @@ import org.glassfish.admin.amx.core.AMXProxy;
 import org.glassfish.admin.amx.core.proxy.ProxyFactory;
 
 public final class ImplUtil {
-
-    private static void debug(final String s) {
-        System.out.println(s);
-    }
 
     /**
     Unload this AMX MBean and all its children.

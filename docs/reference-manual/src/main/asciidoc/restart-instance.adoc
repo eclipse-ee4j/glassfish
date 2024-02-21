@@ -78,7 +78,7 @@ asadmin-options::
   Specifies whether the instance is restarted with
   http://java.sun.com/javase/technologies/core/toolsapis/jpda/[Java
   Platform Debugger Architecture
-  (JPDA)](http://www.oracle.com/technetwork/java/javase/tech/jpda-141715.html)
+  (JPDA)](https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html)
   debugging enabled. Possible values are as follows:
 
   `true`;;
@@ -137,6 +137,6 @@ xref:stop-instance.adoc#stop-instance[`stop-instance`(1)],
 xref:stop-local-instance.adoc#stop-local-instance[`stop-local-instance`(1)]
 
 Java Platform Debugger Architecture (JPDA)
-(http://www.oracle.com/technetwork/java/javase/tech/jpda-141715.html)
+(https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html)
 
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -53,9 +54,6 @@ Responsible for loading ConfigBeanProxy MBeans (com.sun.enterprise.config.server
 public final class AMXConfigLoader
         implements TransactionListener {
 
-    private static void debug(final String s) {
-        System.out.println(s);
-    }
     private volatile AMXConfigLoaderThread mLoaderThread;
     private final Transactions mTransactions;
     private final Logger mLogger = AMXLoggerInfo.getLogger();
@@ -209,7 +207,7 @@ public final class AMXConfigLoader
                         issueAttributeChange(cb, propertyName, oldValue, newValue, whenChanged);
                     }
                 } else {
-                    debug("AMXConfigLoader.sortAndDispatch: WARNING: source is not a ConfigBean");
+                    mLogger.fine("AMXConfigLoader.sortAndDispatch: WARNING: source is not a ConfigBean");
                 }
             }
         }
@@ -482,8 +480,7 @@ public final class AMXConfigLoader
             //System.out.println( "AMXConfigLoader.createAndRegister(): REGISTERED: " + objectName + " at " + System.currentTimeMillis() );
             //System.out.println( JMXUtil.toString( mServer.getMBeanInfo(objectName) ) );
         } catch (final JMException e) {
-            debug(ExceptionUtil.toString(e));
-
+            mLogger.log(Level.WARNING, AMXLoggerInfo.cantRegister, new Object[]{getType(cb), getKey(cb), e});
             objectName = null;
         }
         return objectName;

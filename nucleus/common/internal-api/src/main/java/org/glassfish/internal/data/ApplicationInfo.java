@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -579,12 +579,12 @@ public class ApplicationInfo extends ModuleInfo {
         }
 
         @Override
-        public void event(@RestrictTo(Deployment.DEPLOYMENT_FAILURE_NAME) Event event) {
+        public void event(@RestrictTo(Deployment.DEPLOYMENT_FAILURE_NAME) Event<?> event) {
             if (!event.is(Deployment.DEPLOYMENT_FAILURE)) {
                 return;
             }
 
-            DeploymentContext dc = Deployment.DEPLOYMENT_FAILURE.getHook(event);
+            DeploymentContext dc = (DeploymentContext) event.hook();
 
             if (!archive.equals(dc.getSource())) {
                 return;

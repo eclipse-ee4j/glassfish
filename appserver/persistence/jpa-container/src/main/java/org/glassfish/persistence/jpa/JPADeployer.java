@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -177,7 +177,7 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
     }
 
     @Override
-    public void event(@SuppressWarnings("rawtypes") Event event) {
+    public void event(Event<?> event) {
         if (logger.isLoggable(Level.FINEST)) {
             logger.finest("JpaDeployer.event():" + event.name());
         }

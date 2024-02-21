@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -594,7 +594,7 @@ public class ConnectorDeployer extends JavaEEDeployer<ConnectorContainer, Connec
     }
 
     @Override
-    public void event(Event event) {
+    public void event(Event<?> event) {
 
         // added this pre-check so as to validate whether connector-resources referring
         // the application (that has rar or is an standalone rar) are present.

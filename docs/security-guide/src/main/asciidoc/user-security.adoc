@@ -79,12 +79,7 @@ Certificate realm::
   the HTTPS protocol to authenticate web clients.
 LDAP realm::
   {productName} can get user credentials from a Lightweight Directory
-  Access Protocol (LDAP) server such as Oracle Virtual Directory (OVD)
-  (`http://www.oracle.com/technetwork/middleware/id-mgmt/overview/index.html`),
-  Oracle Internet Directory (OID)
-  (`http://www.oracle.com/technetwork/indexes/products/index.html`), and
-  Oracle Directory Server Enterprise Edition
-  (`http://www.oracle.com/us/products/middleware/identity-management/oracle-directory-services/index.html`).
+  Access Protocol (LDAP) server.
   LDAP is a protocol for enabling anyone to locate organizations,
   individuals, and other resources such as files and devices in a
   network, whether on the public Internet or on a corporate intranet. +

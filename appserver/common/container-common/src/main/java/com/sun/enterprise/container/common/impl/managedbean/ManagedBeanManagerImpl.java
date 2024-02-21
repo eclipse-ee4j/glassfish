@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -55,6 +55,7 @@ import javax.naming.NamingException;
 
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.admin.ProcessEnvironment.ProcessType;
+import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.Events;
 import org.glassfish.api.naming.GlassfishNamingManager;
@@ -117,17 +118,17 @@ public class ManagedBeanManagerImpl implements ManagedBeanManager, PostConstruct
     }
 
     @Override
-    public void event(Event event) {
+    public void event(Event<?> event) {
         if (event.is(APPLICATION_LOADED)) {
-            ApplicationInfo info = APPLICATION_LOADED.getHook(event);
-
+            ApplicationInfo info = (ApplicationInfo) event.hook();
             loadManagedBeans(info);
             registerAppLevelDependencies(info);
-
         } else if (event.is(APPLICATION_UNLOADED)) {
-            doCleanup(APPLICATION_UNLOADED.getHook(event).getMetaData(Application.class));
+            ApplicationInfo info = (ApplicationInfo) event.hook();
+            doCleanup(info.getMetaData(Application.class));
         } else if (event.is(DEPLOYMENT_FAILURE)) {
-            doCleanup(DEPLOYMENT_FAILURE.getHook(event).getModuleMetaData(Application.class));
+            DeploymentContext context = (DeploymentContext) event.hook();
+            doCleanup(context.getModuleMetaData(Application.class));
         }
     }
 

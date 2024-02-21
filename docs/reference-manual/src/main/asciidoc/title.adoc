@@ -14,7 +14,7 @@ Reference Manual
 
 Release 7
 
-Contributed 2018 - 2022
+Contributed 2018 - 2024
 
 This reference manual describes administration commands and utility
 commands that are available with {productName} 7.

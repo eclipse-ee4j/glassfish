@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -60,10 +61,6 @@ public final class AMXJ2EEStartupService
         implements org.glassfish.hk2.api.PostConstruct,
         org.glassfish.hk2.api.PreDestroy,
         AMXLoader, ConfigListener {
-
-    private static void debug(final String s) {
-        System.out.println(s);
-    }
 
     @Inject
     private MBeanServer mMBeanServer;

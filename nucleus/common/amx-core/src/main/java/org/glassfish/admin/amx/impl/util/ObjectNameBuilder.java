@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -53,11 +54,6 @@ public final class ObjectNameBuilder {
 
         mParent = parent;
         mJMXDomain = parent.getDomain();
-    }
-
-    private static void debug(final Object o) {
-        System.out.println("" + o);
-        //AMXDebug.getInstance().getOutput( "org.glassfish.admin.amx.support.ObjectNameBuilder" ).println( o );
     }
 
     public String getJMXDomain() {

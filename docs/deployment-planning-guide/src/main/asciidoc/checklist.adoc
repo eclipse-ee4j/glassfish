@@ -135,8 +135,6 @@ a|
 a|
 * Initially set the minimum and maximum heap sizes to be the same, and
   at least one GB for each instance.
-* See http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html[
-  Java Hotspot VM Options] for more information.
 * When running multiple instances of {productName}, consider creating
   a processor set and bind {productName} to it. This helps in cases
   where the CMS collector is used to sweep the old generation.

@@ -17,12 +17,14 @@
 
 package com.sun.enterprise.v3.admin.adapter;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.inject.Inject;
-import org.glassfish.hk2.api.PostConstruct;
+
 import org.glassfish.hk2.runlevel.RunLevel;
 import org.glassfish.internal.api.PostStartupRunLevel;
 import org.glassfish.kernel.KernelLoggerInfo;
@@ -32,35 +34,35 @@ import org.jvnet.hk2.annotations.Service;
 
 @Service(name = "AdminConsoleStartupService")
 @RunLevel(PostStartupRunLevel.VAL)
-public class AdminConsoleStartupService implements  PostConstruct {
-
-    @Inject @Optional
-    private AdminConsoleAdapter adminConsoleAdapter = null;
-
-    @Inject
-    private ServerEnvironmentImpl env;
+public class AdminConsoleStartupService {
 
     private static final Logger logger = KernelLoggerInfo.getLogger();
-    private final long ONE_DAY = 24 * 60 * 60 * 1000;
 
-    @Override
+    private static final long ONE_DAY = 24 * 60 * 60 * 1000;
+
+    @Inject
+    @Optional
+    private AdminConsoleAdapter adminConsoleAdapter;
+
+    @Inject
+    private ServerEnvironmentImpl serverEnvironment;
+
+    @PostConstruct
     public void postConstruct() {
-
-        if (adminConsoleAdapter == null) { // there may be no console in this environment.
+        // There may be no console in this environment.
+        if (adminConsoleAdapter == null) {
             return;
         }
 
-        /* This service must run only on the server where the console should run. Currently, that server is DAS. If and when
-         *  the console becomes dis-associated with DAS, this logic will need to be modified.
-         */
-        if (!env.isDas())
+        // This service must run only on the server where the console should run. Currently, that server is DAS.
+        // If and when the console becomes disassociated with DAS, this logic will need to be modified.
+        if (!serverEnvironment.isDas()) {
             return;
+        }
 
         ConsoleLoadingOption loadingOption = adminConsoleAdapter.getLoadingOption();
 
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "AdminConsoleStartupService: Console loading option is {0}", loadingOption);
-        }
+        logger.log(Level.FINE, () -> "AdminConsoleStartupService: Console loading option is " + loadingOption);
 
         switch (loadingOption) {
             case ALWAYS:
@@ -82,14 +84,12 @@ public class AdminConsoleStartupService implements  PostConstruct {
     }
 
     private void handleRecent() {
-        // if last access was within a day
+        // If last access was within a day
         long currentTime = System.currentTimeMillis();
         try {
             long lastTime = getTimeStamp();
             if (currentTime  - lastTime < ONE_DAY) {
-                if (logger.isLoggable(Level.FINER)) {
-                    logger.log(Level.FINER, "AdminConsoleStartup frequent user, lastTime =  ", lastTime);
-                }
+                logger.log(Level.FINER, () -> "AdminConsoleStartup: Recent user, lastTime =  " + lastTime);
                 handleAlways();
             }
         } catch (IOException ex) {
@@ -99,7 +99,7 @@ public class AdminConsoleStartupService implements  PostConstruct {
 
     private void handleAlways() {
         adminConsoleAdapter.initRest();
-        synchronized(this) {
+        synchronized (this) {
             if (!adminConsoleAdapter.isInstalling() && !adminConsoleAdapter.isApplicationLoaded()) {
                 adminConsoleAdapter.loadConsole();
             }
@@ -107,9 +107,10 @@ public class AdminConsoleStartupService implements  PostConstruct {
     }
 
     private long getTimeStamp() throws IOException {
-        File f = new File(env.getConfigDirPath(), ".consolestate");
-        if (!f.exists())
+        File stateFile = new File(serverEnvironment.getConfigDirPath(), ".consolestate");
+        if (!stateFile.exists()) {
             return 0L;
-        return f.lastModified();
+        }
+        return stateFile.lastModified();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -66,7 +66,7 @@ public final class SetupSshKey extends NativeRemoteCommandsBase {
         if (sshkeyfile == null) {
             // if user hasn't specified a key file and there is no key file at default
             // location, then generate one
-            File existingKey = SSHUtil.getExistingKeyFile();
+            final File existingKey = SSHUtil.getExistingKeyFile();
             if (existingKey == null) {
                 sshkeyfile = SSHUtil.getDefaultKeyFile().getAbsolutePath();
                 if (promptForKeyGeneration()) {
@@ -81,9 +81,9 @@ public final class SetupSshKey extends NativeRemoteCommandsBase {
                 }
             }
         } else {
-            File keyFile = new File(sshkeyfile);
+            final File keyFile = new File(sshkeyfile);
             promptPass = SSHUtil.validateKeyFile(keyFile);
-            if (SSHUtil.isEncryptedKey(new File(sshkeyfile))) {
+            if (SSHUtil.isEncryptedKey(keyFile)) {
                 sshkeypassphrase = getSSHPassphrase(false);
             }
         }
@@ -101,7 +101,7 @@ public final class SetupSshKey extends NativeRemoteCommandsBase {
         String previousPassword = null;
         boolean status = false;
         for (String node : hosts) {
-            File keyFile = sshkeyfile == null ? null : new File(sshkeyfile);
+            final File keyFile = sshkeyfile == null ? null : new File(sshkeyfile);
             sshL.init(getRemoteUser(), node, getRemotePort(), sshpassword, keyFile, sshkeypassphrase, logger);
             if (generatekey || promptPass) {
                 //prompt for password iff required

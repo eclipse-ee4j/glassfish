@@ -233,43 +233,6 @@ public class CULoggerInfo {
     public static final String exceptionWhileFormating = LOGMSG_PREFIX + "-00030";
 
     @LogMessageInfo(
-            message = "Some IOException occurred",
-            cause = "An unexpected exception occurred.",
-            action = "Check the system logs and contact support.",
-            level = "SEVERE")
-    public static final String exceptionIO = LOGMSG_PREFIX + "-00031";
-
-    @LogMessageInfo(
-            message = "Attempt to delete {0} failed; the file is reported as non-existent",
-            level = "FINE")
-    public static final String deleteFailedAbsent = LOGMSG_PREFIX + "-00032";
-
-    @LogMessageInfo(
-            message = "Error attempting to delete {0}",
-            level = "FINE")
-    public static final String deleteFailed = LOGMSG_PREFIX + "-00033";
-
-    @LogMessageInfo(
-            message = "Performing gc to try to force file closures",
-            level = "FINE")
-    public static final String performGC = LOGMSG_PREFIX + "-00034";
-
-    @LogMessageInfo(
-            message = "Attempt to rename {0} to {1} succeeded after {2} retries",
-            level = "FINE")
-    public static final String retryRenameSuccess = LOGMSG_PREFIX + "-00035";
-
-    @LogMessageInfo(
-            message = "Attempt to rename {0} to {1} succeeded without any retries",
-            level = "FINE")
-    public static final String renameInitialSuccess = LOGMSG_PREFIX + "-00036";
-
-    @LogMessageInfo(
-            message = "Attempt to rename {0} to {1} failed after {2} retries",
-            level = "WARNING")
-    public static final String retryRenameFailure = LOGMSG_PREFIX + "-00037";
-
-    @LogMessageInfo(
             message = "Failed to open jar file: {0}",
             level = "WARNING")
     public static final String exceptionJarOpen = LOGMSG_PREFIX + "-00038";

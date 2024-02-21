@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,16 @@
 
 package com.sun.enterprise.security.common;
 
+import com.sun.enterprise.util.io.FileUtils;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.List;
 
 import javax.security.auth.callback.CallbackHandler;
@@ -31,11 +38,7 @@ import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.embedded.Server;
 import org.jvnet.hk2.annotations.Service;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
 /**
- *
  * @author venu TODO: need to change this class, it needs to be similar to SecurityServicesUtil
  */
 @Service
@@ -116,45 +119,27 @@ public class Util {
             }
 
         } else {
-            /*
-             * File parent directory does not exist - so create parent directory as user.home/.glassfish-{embedded}/config
-             */
-            String userHome = System.getProperty("user.home");
-
             String embeddedServerName = getCurrentEmbeddedServerName();
-            File tempDir = new File(userHome + File.separator + ".glassfish7-" + embeddedServerName + File.separator + "config");
+            File tempDir = FileUtils.USER_HOME.toPath().resolve(Path.of(".glassfish7-" + embeddedServerName, "config"))
+                .toFile();
             boolean mkDirSuccess = true;
             if (!tempDir.exists()) {
                 mkDirSuccess = tempDir.mkdirs();
+                tempDir.deleteOnExit();
             }
-
-            localFile = new File(tempDir.getAbsolutePath() + File.separator + fileName);
-
+            localFile = new File(tempDir, fileName);
             if (mkDirSuccess && !localFile.exists()) {
                 localFile.createNewFile();
+                localFile.deleteOnExit();
             }
         }
-        FileOutputStream oStream = null;
-        InputStream iStream = null;
-        try {
-            oStream = new FileOutputStream(localFile);
-            iStream = Util.class.getResourceAsStream("/config/" + fileName);
-
+        try (FileOutputStream oStream = new FileOutputStream(localFile);
+            InputStream iStream = Util.class.getResourceAsStream("/config/" + fileName)) {
             while (iStream != null && iStream.available() > 0) {
                 oStream.write(iStream.read());
             }
-        } finally {
-            if (oStream != null) {
-                oStream.close();
-            }
-            if (iStream != null) {
-                iStream.close();
-            }
-
         }
-
         return localFile;
-
     }
 
     public static String getCurrentEmbeddedServerName() {

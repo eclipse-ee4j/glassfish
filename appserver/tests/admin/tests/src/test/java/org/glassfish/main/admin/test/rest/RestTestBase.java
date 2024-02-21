@@ -17,12 +17,13 @@
 
 package org.glassfish.main.admin.test.rest;
 
+import com.sun.enterprise.util.io.FileUtils;
+
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -45,7 +46,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInfo;
 
-import static com.sun.enterprise.util.io.FileUtils.copy;
 import static com.sun.enterprise.util.io.FileUtils.ensureWritableDir;
 import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN;
 import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getTargetDirectory;
@@ -95,7 +95,9 @@ public class RestTestBase {
             ensureWritableDir(reportDir);
 
             File reportFile = new File(reportDir, testInfo.getTestClass().orElseThrow().getName() + "-server.log");
-            copy(response.readEntity(InputStream.class), new FileOutputStream(reportFile), Long.MAX_VALUE);
+            try (InputStream readEntity = response.readEntity(InputStream.class)) {
+                FileUtils.copy(readEntity, reportFile);
+            }
         }
     }
 

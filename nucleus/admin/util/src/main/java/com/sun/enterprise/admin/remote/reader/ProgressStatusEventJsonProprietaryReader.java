@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,14 @@
 
 package com.sun.enterprise.admin.remote.reader;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+
 import org.glassfish.api.admin.progress.ProgressStatusEvent;
 import org.glassfish.api.admin.progress.ProgressStatusEventComplete;
 import org.glassfish.api.admin.progress.ProgressStatusEventCreateChild;
@@ -29,10 +32,9 @@ import org.glassfish.api.admin.progress.ProgressStatusEventProgress;
 import org.glassfish.api.admin.progress.ProgressStatusEventSet;
 
 /**
- *
  * @author mmares
  */
-public class ProgressStatusEventJsonProprietaryReader implements ProprietaryReader<ProgressStatusEvent> {
+public final class ProgressStatusEventJsonProprietaryReader implements ProprietaryReader<ProgressStatusEvent> {
 
     private static final JsonFactory factory = new JsonFactory();
 
@@ -47,7 +49,7 @@ public class ProgressStatusEventJsonProprietaryReader implements ProprietaryRead
 
     @Override
     public ProgressStatusEvent readFrom(final InputStream is, final String contentType) throws IOException {
-        JsonParser jp = factory.createJsonParser(is);
+        JsonParser jp = factory.createParser(is);
         try {
             JsonToken token = jp.nextToken(); //sorounding object
             jp.nextToken(); //Name progress-status-event
@@ -59,6 +61,7 @@ public class ProgressStatusEventJsonProprietaryReader implements ProprietaryRead
             return readProgressStatusEvent(jp);
         } finally {
             jp.close();
+            is.close();
         }
     }
 

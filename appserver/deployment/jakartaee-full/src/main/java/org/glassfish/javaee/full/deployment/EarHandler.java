@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +18,6 @@
 package org.glassfish.javaee.full.deployment;
 
 import com.sun.enterprise.config.serverbeans.DasConfig;
-import com.sun.enterprise.connectors.connector.module.RarType;
 import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
 import com.sun.enterprise.deploy.shared.ArchiveFactory;
 import com.sun.enterprise.deploy.shared.FileArchive;
@@ -76,18 +75,15 @@ import org.glassfish.api.deployment.archive.RarArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WarArchiveType;
 import org.glassfish.api.deployment.archive.WritableArchive;
-import org.glassfish.appclient.server.connector.CarType;
 import org.glassfish.deployment.common.DeploymentContextImpl;
 import org.glassfish.deployment.common.DeploymentProperties;
 import org.glassfish.deployment.common.ModuleDescriptor;
-import org.glassfish.ejb.deployment.archive.EjbType;
 import org.glassfish.hk2.api.PreDestroy;
 import org.glassfish.internal.api.DelegatingClassLoader;
 import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.internal.deployment.ExtendedDeploymentContext;
 import org.glassfish.javaee.core.deployment.ApplicationHolder;
 import org.glassfish.loader.util.ASClassLoaderUtil;
-import org.glassfish.web.WarType;
 import org.jvnet.hk2.annotations.Service;
 import org.xml.sax.SAXException;
 
@@ -170,7 +166,6 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
             for (ModuleDescriptor<?> md : holder.app.getModules()) {
                 String moduleUri = md.getArchiveUri();
                 ReadableArchive subArchive = null;
-                WritableArchive subTarget = null;
                 ReadableArchive subArchiveToExpand = null;
                 try {
                     subArchive = source2.getSubArchive(moduleUri);
@@ -185,8 +180,10 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
                         subHandler = deployment.getArchiveHandler(subArchive);
                     }
                     context.getModuleArchiveHandlers().put(moduleUri, subHandler);
-                    if (subHandler != null) {
-                        subTarget = target.createSubArchive(FileUtils.makeFriendlyFilenameExtension(moduleUri));
+                    if (subHandler == null) {
+                        return;
+                    }
+                    try (WritableArchive subTarget = target.createSubArchive(FileUtils.makeFriendlyFilenameExtension(moduleUri))) {
                         /*
                          * A subarchive might be packaged as a subdirectory (instead of a nested JAR) in an EAR. If so and if it has the
                          * same name as the directory into which we'll expand the submodule, make sure it is also of the correct archive
@@ -204,16 +201,11 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
                              */
                             if (!areSameStorageType(subTarget, subArchive)) {
                                 final String msg = MessageFormat.format(
-                                        _logger.getResourceBundle().getString("enterprise.deployment.backend.badSubModPackaging"),
-                                        subArchive.getURI().toASCIIString(), subArchive.getClass().getName());
+                                    _logger.getResourceBundle().getString("enterprise.deployment.backend.badSubModPackaging"),
+                                    subArchive.getURI().toASCIIString(), subArchive.getClass().getName());
                                 throw new RuntimeException(msg);
                             }
                         }
-// Keep the original submodule file because the app client deployer needs it.
-                        /*
-                         * // delete the original module file File origSubArchiveFile = new File( target.getURI().getSchemeSpecificPart(),
-                         * moduleUri); origSubArchiveFile.delete();
-                         */
                     }
                 } catch (IOException ioe) {
                     _logger.log(Level.FINE, "Exception while processing " + moduleUri, ioe);
@@ -221,9 +213,6 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
                     try {
                         if (subArchive != null) {
                             subArchive.close();
-                        }
-                        if (subTarget != null) {
-                            subTarget.close();
                         }
                         if (subArchiveToExpand != null) {
                             subArchiveToExpand.close();
@@ -414,9 +403,7 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
                     ClassLoader subCl = handler.getClassLoader(cl, subContext);
                     if (System.getSecurityManager() != null && (subCl instanceof DDPermissionsLoader)) {
                         addEEOrDeclaredPermissions(subCl, earDeclaredPC, false);
-                        if (_logger.isLoggable(Level.FINE)) {
-                            _logger.fine("added declared permissions to sub module of " + subCl);
-                        }
+                        _logger.log(Level.FINE, "added declared permissions to sub module of {0}", subCl);
                     }
 
                     if (md.getModuleType().equals(DOLUtils.ejbType())) {

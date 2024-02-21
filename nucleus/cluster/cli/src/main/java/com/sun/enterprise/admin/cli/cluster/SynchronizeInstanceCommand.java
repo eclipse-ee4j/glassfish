@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,8 +26,8 @@ import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ConnectException;
 import java.text.DateFormat;
 import java.util.Date;
@@ -466,34 +466,27 @@ public class SynchronizeInstanceCommand extends LocalInstanceCommand {
      */
     private static void expand(File dir, File archive) throws Exception {
         if (!dir.mkdir()) {
-            logger.warning(
-                Strings.get("Sync.cantCreateDirectory", dir));
+            logger.warning(Strings.get("Sync.cantCreateDirectory", dir));
         }
         long modtime = archive.lastModified();
-        ZipFile zf = new ZipFile(archive);
-        try {
+        try (ZipFile zf = new ZipFile(archive)) {
             Enumeration<? extends ZipEntry> e = zf.entries();
             while (e.hasMoreElements()) {
                 ZipEntry ze = e.nextElement();
                 File entry = new File(dir, ze.getName());
                 if (ze.isDirectory()) {
                     if (!entry.mkdir()) {
-                        logger.warning(
-                            Strings.get("Sync.cantCreateDirectory", dir));
+                        logger.warning(Strings.get("Sync.cantCreateDirectory", dir));
                     }
                 } else {
-                    FileUtils.copy(zf.getInputStream(ze),
-                                    new FileOutputStream(entry), 0);
+                    try (InputStream inputStream = zf.getInputStream(ze)) {
+                        FileUtils.copy(inputStream, entry, ze.getSize());
+                    }
                 }
             }
-        } finally {
-            try {
-                zf.close();
-            } catch (IOException ex) { }
         }
         if (!dir.setLastModified(modtime)) {
-            logger.warning(
-                Strings.get("Sync.cantSetModTime", dir));
+            logger.warning(Strings.get("Sync.cantSetModTime", dir));
         }
     }
 }

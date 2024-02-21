@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,27 +18,36 @@
 package org.glassfish.extras.osgicontainer;
 
 import com.sun.enterprise.util.io.FileUtils;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.Properties;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.jar.JarInputStream;
+import java.util.jar.Manifest;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.CompositeHandler;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
+import org.glassfish.api.deployment.archive.WritableArchiveEntry;
 import org.glassfish.internal.deployment.GenericHandler;
-import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-import java.io.*;
-import java.net.*;
-import java.util.Enumeration;
-import java.util.Properties;
-import java.util.jar.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Archive Handler for OSGi modules.
@@ -71,33 +81,39 @@ public class OSGiArchiveHandler extends GenericHandler implements CompositeHandl
 
     @Inject
     private OSGiArchiveDetector detector;
-    private String URI_SCHEME_PROP_NAME = "UriScheme";
-    private char QUERY_PARAM_SEP = '&';
-    private String QUERY_DELIM = "?";
-    private String SCHEME_SEP = ":";
+    private final String URI_SCHEME_PROP_NAME = "UriScheme";
+    private final char QUERY_PARAM_SEP = '&';
+    private final String QUERY_DELIM = "?";
+    private final String SCHEME_SEP = ":";
 
 
+    @Override
     public String getArchiveType() {
         return OSGiArchiveDetector.OSGI_ARCHIVE_TYPE;
     }
 
+    @Override
     public boolean accept(ReadableArchive source, String entryName) {
         // we hide everything so far.
         return false;
     }
 
+    @Override
     public void initCompositeMetaData(DeploymentContext context) {
         // nothing to initialize
     }
 
+    @Override
     public boolean handles(ReadableArchive archive) throws IOException {
         return detector.handles(archive);
     }
 
+    @Override
     public ClassLoader getClassLoader(ClassLoader parent, DeploymentContext context) {
         return parent;
     }
 
+    @Override
     public String getDefaultApplicationName(ReadableArchive archive,
                                             DeploymentContext context) {
         return getDefaultApplicationNameFromArchiveName(archive);
@@ -114,17 +130,16 @@ public class OSGiArchiveHandler extends GenericHandler implements CompositeHandl
      * @throws IOException when the archive is corrupted
      */
     @Override
-    public void expand(ReadableArchive source, WritableArchive target,
-                       DeploymentContext context) throws IOException {
-        Properties props = context
-                .getCommandParameters(DeployCommandParameters.class).properties;
+    public void expand(ReadableArchive source, WritableArchive target, DeploymentContext context) throws IOException {
+        Properties props = context.getCommandParameters(DeployCommandParameters.class).properties;
         if ((props != null) && (props.containsKey(URI_SCHEME_PROP_NAME))) {
             // if UriScheme is specified, we need to construct a new URL based on user's input
             // and souce parameter and call openConnection() and getInputStream() on it.
             URL url = prepareUrl(context, props);
-            logger.log(Level.INFO, DECORATED_URL, new Object[]{url});
-            final JarInputStream jis = new JarInputStream(url.openStream());
-            expandJar(jis, target);
+            logger.log(Level.INFO, DECORATED_URL, url);
+            try (JarInputStream jis = new JarInputStream(url.openStream())) {
+                expandJar(jis, target);
+            }
         } else {
             super.expand(source, target, context);
         }
@@ -188,54 +203,39 @@ public class OSGiArchiveHandler extends GenericHandler implements CompositeHandl
 
     /**
      * Populates a writable archive by reading the input JarInputStream.
-     * It closes both the input and output at the end.
+     *
      * @param jis
      * @param target
      * @throws IOException
      */
     private void expandJar(JarInputStream jis, WritableArchive target) throws IOException {
-        try {
-            JarEntry je;
-            while ((je = jis.getNextJarEntry()) != null) {
-                OutputStream os = null;
-                try {
-                    if (je.isDirectory()) {
-                        logger.logp(Level.FINER, "OSGiArchiveHandler", "expandJar",
-                                "Skipping jar entry = {0} since this is of directiry type", new Object[]{je});
-                        continue;
-                    }
-                    final String entryName = je.getName();
-                    final long entrySize = je.getSize();
-                    logger.logp(Level.FINER, "OSGiArchiveHandler", "expandJar", "Writing jar entry name = {0}, size = {1}",
-                            new Object[]{entryName, entrySize});
-                    os = target.putNextEntry(entryName);
-                    FileUtils.copy(jis, os, entrySize < 0 ? 0 : entrySize); // passing 0 will force it to read until EOS
-                } finally {
-                    if (os != null) {
-                        target.closeEntry();
-                    }
-                    jis.closeEntry();
+        JarEntry je;
+        while ((je = jis.getNextJarEntry()) != null) {
+            try {
+                if (je.isDirectory()) {
+                    logger.logp(Level.FINER, "OSGiArchiveHandler", "expandJar",
+                        "Skipping jar entry = {0} since this is of directiry type", new Object[] {je});
+                    continue;
                 }
+                final String entryName = je.getName();
+                final long entrySize = je.getSize();
+                logger.logp(Level.FINER, "OSGiArchiveHandler", "expandJar", "Writing jar entry name = {0}, size = {1}",
+                    new Object[] {entryName, entrySize});
+                try (WritableArchiveEntry os = target.putNextEntry(entryName)) {
+                    FileUtils.copy(jis, os);
+                }
+            } finally {
+                jis.closeEntry();
             }
+        }
 
-            //Add MANIFEST File To Target and Write the MANIFEST File To Target
-            Manifest m = jis.getManifest();
-            if (m != null) {
-                logger.logp(Level.FINER, "OSGiArchiveHandler", "expandJar", "Writing manifest entry");
-                OutputStream os = null;
-                try {
-                    os = target.putNextEntry(JarFile.MANIFEST_NAME);
-                    m.write(os);
-                } finally {
-                    if (os != null) {
-                        target.closeEntry();
-                    }
-                }
+        // Add MANIFEST File To Target and Write the MANIFEST File To Target
+        Manifest m = jis.getManifest();
+        if (m != null) {
+            logger.logp(Level.FINER, "OSGiArchiveHandler", "expandJar", "Writing manifest entry");
+            try (OutputStream os = target.putNextEntry(JarFile.MANIFEST_NAME)) {
+                m.write(os);
             }
-        } finally {
-            if (jis != null)
-                jis.close();
-            target.close();
         }
     }
 
@@ -245,6 +245,7 @@ public class OSGiArchiveHandler extends GenericHandler implements CompositeHandl
      * @param archive file
      * @return whether this archive requires annotation scanning
      */
+    @Override
     public boolean requiresAnnotationScanning(ReadableArchive archive) {
         return false;
     }

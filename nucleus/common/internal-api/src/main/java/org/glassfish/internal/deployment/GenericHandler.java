@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,30 +17,25 @@
 
 package org.glassfish.internal.deployment;
 
-import com.sun.enterprise.module.ModulesRegistry;
-import org.glassfish.api.deployment.archive.ArchiveHandler;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.api.deployment.archive.WritableArchive;
-import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.hk2.api.ServiceLocator;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.BufferedInputStream;
-import java.io.OutputStream;
-import java.util.Enumeration;
-import java.util.jar.Manifest;
-import java.util.jar.JarFile;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.List;
-import java.util.ArrayList;
-import java.net.URI;
-import java.net.URL;
-
 import com.sun.enterprise.util.io.FileUtils;
 
 import jakarta.inject.Inject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
+
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.deployment.archive.ArchiveHandler;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.api.deployment.archive.WritableArchive;
+import org.glassfish.api.deployment.archive.WritableArchiveEntry;
+import org.glassfish.hk2.api.ServiceLocator;
 
 /**
  * Pretty generic implementation of some ArchiveHandler methods
@@ -52,43 +48,35 @@ public abstract class GenericHandler implements ArchiveHandler {
     protected ServiceLocator habitat;
 
     /**
-     * Prepares the jar file to a format the ApplicationContainer is
-     * expecting. This could be just a pure unzipping of the jar or
-     * nothing at all.
+     * Prepares the jar file to a format the ApplicationContainer is expecting.
+     * This could be just a pure unzipping of the jar or nothing at all.
      *
      * @param source of the expanding
      * @param target of the expanding
      * @param context deployment context
      * @throws IOException when the archive is corrupted
      */
-    public void expand(ReadableArchive source, WritableArchive target,
-        DeploymentContext context) throws IOException {
-
+    @Override
+    public void expand(ReadableArchive source, WritableArchive target, DeploymentContext context) throws IOException {
         Enumeration<String> e = source.entries();
         while (e.hasMoreElements()) {
             String entryName = e.nextElement();
-            InputStream entry = source.getEntry(entryName);
-            if (entry != null) {
-              InputStream is = new BufferedInputStream(entry);
-              OutputStream os = null;
-              try {
-                  os = target.putNextEntry(entryName);
-                  FileUtils.copy(is, os, source.getEntrySize(entryName));
-              } finally {
-                  if (os!=null) {
-                      target.closeEntry();
-                  }
-                  is.close();
-              }
+            try (InputStream is = source.getEntry(entryName)) {
+                if (is == null) {
+                    continue;
+                }
+                try (WritableArchiveEntry output = target.putNextEntry(entryName)) {
+                    FileUtils.copy(is, output);
+                }
             }
         }
 
-        // last is manifest is existing.
-        Manifest m = source.getManifest();
-        if (m!=null) {
-            OutputStream os  = target.putNextEntry(JarFile.MANIFEST_NAME);
-            m.write(os);
-            target.closeEntry();
+        // last is manifest if exists.
+        Manifest manifest = source.getManifest();
+        if (manifest != null) {
+            try (WritableArchiveEntry output = target.putNextEntry(JarFile.MANIFEST_NAME)) {
+                manifest.write(output);
+            }
         }
     }
 
@@ -106,6 +94,7 @@ public abstract class GenericHandler implements ArchiveHandler {
      * @param context deployment context
      * @return the default application name for the specified archive
      */
+    @Override
     public String getDefaultApplicationName(ReadableArchive archive,
         DeploymentContext context) {
         // first try to get the name from ApplicationInfoProvider if
@@ -118,7 +107,7 @@ public abstract class GenericHandler implements ArchiveHandler {
             tracing = context.getModuleMetaData(DeploymentTracing.class);
         }
 
-        if (tracing!=null) {
+        if (tracing != null) {
             tracing.addMark(DeploymentTracing.Mark.APPINFO_PROVIDED);
         }
 
@@ -146,6 +135,7 @@ public abstract class GenericHandler implements ArchiveHandler {
         return appName;
     }
 
+    @Override
     public String getDefaultApplicationName(ReadableArchive archive) {
         return getDefaultApplicationName(archive, null);
     }
@@ -157,6 +147,7 @@ public abstract class GenericHandler implements ArchiveHandler {
      *
      * @return null
      */
+    @Override
     public String getVersionIdentifier(ReadableArchive archive){
         return null;
     }
@@ -169,6 +160,7 @@ public abstract class GenericHandler implements ArchiveHandler {
      * @param archive file
      * @return manifest instance or null if this archive has no manifest
      */
+    @Override
     public Manifest getManifest(ReadableArchive archive) throws IOException {
         return archive.getManifest();
     }
@@ -179,8 +171,9 @@ public abstract class GenericHandler implements ArchiveHandler {
      * @param archive file
      * @return classpath URIs for this archive
      */
+    @Override
     public List<URI> getClassPathURIs(ReadableArchive archive) {
-        List<URI> uris = new ArrayList<URI>();
+        List<URI> uris = new ArrayList<>();
         // add the archive itself
         uris.add(archive.getURI());
         return uris;
@@ -192,6 +185,7 @@ public abstract class GenericHandler implements ArchiveHandler {
      * @param archive file
      * @return whether this archive requires annotation scanning
      */
+    @Override
     public boolean requiresAnnotationScanning(ReadableArchive archive) {
         return true;
     }

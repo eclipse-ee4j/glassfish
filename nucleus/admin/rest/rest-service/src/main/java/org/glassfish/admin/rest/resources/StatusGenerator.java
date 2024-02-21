@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +18,7 @@
 package org.glassfish.admin.rest.resources;
 
 import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.util.io.FileUtils;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -71,7 +72,8 @@ import org.jvnet.hk2.config.DomDocument;
 @Path("/status/")
 public class StatusGenerator extends AbstractResource {
 
-    private static final File FILE = new File(System.getProperty("user.home"), "GlassFishI18NData.properties");
+    // FIXME: Wouldn't be better to send messages to the client?
+    private static final File FILE = new File(FileUtils.USER_HOME, "GlassFishI18NData.properties");
 
     private final Set<String> commandsUsed = new TreeSet<>();
     private final Set<String> allCommands = new TreeSet<>();
@@ -162,7 +164,6 @@ public class StatusGenerator extends AbstractResource {
             status.append(entry.getKey()).append("      :::      ").append(entry.getValue()).append('\n');
         }
 
-        // FIXME: Wouldn't be better to send it to the client?
         RestLogging.restLogger.log(Level.INFO, "Storing properties to the file {0}", FILE);
         try (FileOutputStream f = new FileOutputStream(FILE)) {
             propsI18N.store(f, "");
@@ -233,7 +234,6 @@ public class StatusGenerator extends AbstractResource {
         }
         status.append("</table>");
 
-        // FIXME: Wouldn't be better to send it to the client?
         RestLogging.restLogger.log(Level.INFO, "Storing properties to the file {0}", FILE);
         try (FileOutputStream f = new FileOutputStream(FILE)) {
             propsI18N.store(f, "");

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,25 +17,28 @@
 
 package com.sun.enterprise.v3.server;
 
-import static com.sun.enterprise.config.serverbeans.ServerTags.IS_COMPOSITE;
-import static com.sun.enterprise.util.Utility.isEmpty;
-import static java.util.Collections.emptyList;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
-import static org.glassfish.api.admin.ServerEnvironment.DEFAULT_INSTANCE_NAME;
-import static org.glassfish.deployment.common.DeploymentProperties.ALT_DD;
-import static org.glassfish.deployment.common.DeploymentProperties.RUNTIME_ALT_DD;
-import static org.glassfish.deployment.common.DeploymentProperties.SKIP_SCAN_EXTERNAL_LIB;
-import static org.glassfish.deployment.common.DeploymentUtils.getVirtualServers;
-import static org.glassfish.kernel.KernelLoggerInfo.inconsistentLifecycleState;
+import com.sun.enterprise.config.serverbeans.AppTenant;
+import com.sun.enterprise.config.serverbeans.AppTenants;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.ApplicationConfig;
+import com.sun.enterprise.config.serverbeans.ApplicationRef;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Engine;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.ServerTags;
+import com.sun.enterprise.deploy.shared.ArchiveFactory;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.util.io.FileUtils;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 
 import java.beans.PropertyVetoException;
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -127,24 +130,19 @@ import org.jvnet.hk2.config.Transaction;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
-import com.sun.enterprise.config.serverbeans.AppTenant;
-import com.sun.enterprise.config.serverbeans.AppTenants;
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.config.serverbeans.ApplicationConfig;
-import com.sun.enterprise.config.serverbeans.ApplicationRef;
-import com.sun.enterprise.config.serverbeans.Applications;
-import com.sun.enterprise.config.serverbeans.Cluster;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.Engine;
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.config.serverbeans.ServerTags;
-import com.sun.enterprise.deploy.shared.ArchiveFactory;
-import com.sun.enterprise.deploy.shared.FileArchive;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.inject.Singleton;
+import static com.sun.enterprise.config.serverbeans.ServerTags.IS_COMPOSITE;
+import static com.sun.enterprise.util.Utility.isEmpty;
+import static java.util.Collections.emptyList;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+import static org.glassfish.api.admin.ServerEnvironment.DEFAULT_INSTANCE_NAME;
+import static org.glassfish.deployment.common.DeploymentProperties.ALT_DD;
+import static org.glassfish.deployment.common.DeploymentProperties.RUNTIME_ALT_DD;
+import static org.glassfish.deployment.common.DeploymentProperties.SKIP_SCAN_EXTERNAL_LIB;
+import static org.glassfish.deployment.common.DeploymentUtils.getVirtualServers;
+import static org.glassfish.kernel.KernelLoggerInfo.inconsistentLifecycleState;
 
 /**
  * Application Loader is providing useful methods to load applications
@@ -654,7 +652,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
 
         String skipScanExternalLibProp = context.getAppProps().getProperty(SKIP_SCAN_EXTERNAL_LIB);
 
-        if (Boolean.valueOf(skipScanExternalLibProp)) {
+        if (Boolean.parseBoolean(skipScanExternalLibProp)) {
             // If we skip scanning external libraries, we should just
             // return an empty list here
             return emptyList();
@@ -1789,7 +1787,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
 
         DeploymentContextBuilder copy = new DeploymentContextBuidlerImpl(builder);
 
-        ReadableArchive archive = getArchive(copy);
+        final ReadableArchive archive = getArchive(copy);
         copy.source(archive);
 
         if (initial == null) {
@@ -1834,25 +1832,26 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                  * file in the earlier deployment had been locked. Warn but do not fail in such a case.
                  */
                 LOG.fine(localStrings.getLocalString("deploy.cannotcreateexpansiondir",
-                        "Error while creating directory for jar expansion: {0}", expansionDir));
+                    "Error while creating directory for jar expansion: {0}", expansionDir));
             }
             try {
                 Long start = System.currentTimeMillis();
-                final WritableArchive expandedArchive = archiveFactory.createArchive(expansionDir);
-                archiveHandler.expand(archive, expandedArchive, initial);
-                if (LOG.isLoggable(FINE)) {
-                    LOG.fine("Deployment expansion took " + (System.currentTimeMillis() - start));
-                }
+                try (WritableArchive expandedArchive = archiveFactory.createArchive(expansionDir)) {
+                    archiveHandler.expand(archive, expandedArchive, initial);
+                    if (LOG.isLoggable(FINE)) {
+                        LOG.fine("Deployment expansion took " + (System.currentTimeMillis() - start));
+                    }
 
-                // Close the JAR archive before losing the reference to it or else the JAR remains locked.
-                try {
-                    archive.close();
-                } catch (IOException e) {
-                    LOG.log(SEVERE, KernelLoggerInfo.errorClosingArtifact, new Object[] { archive.getURI().getSchemeSpecificPart(), e });
-                    throw e;
+                    // Close the JAR archive before losing the reference to it or else the JAR remains locked.
+                    try {
+                        // FIXME: There is no guarantee that the archive will be closed.
+                        archive.close();
+                    } catch (IOException e) {
+                        LOG.log(SEVERE, KernelLoggerInfo.errorClosingArtifact, new Object[] { archive.getURI().getSchemeSpecificPart(), e });
+                        throw e;
+                    }
+                    initial.setSource((ReadableArchive) expandedArchive);
                 }
-                archive = (FileArchive) expandedArchive;
-                initial.setSource(archive);
             } catch (IOException e) {
                 LOG.log(SEVERE, KernelLoggerInfo.errorExpandingFile, e);
                 throw e;
@@ -1967,7 +1966,6 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
          */
         final File generatedContentZip = createGeneratedContentZip();
 
-        ZipOutputStream zipOS = null;
 
         /*
          * We want the ZIP file to contain xml/(appname), ejb/(appname), etc. directories, even if those directories don't
@@ -1976,16 +1974,26 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
          */
         final File baseDir = dc.getScratchDir("xml").getParentFile().getParentFile();
 
-        for (String scratchType : UPLOADED_GENERATED_DIRS) {
-
-            zipOS = addScratchContentIfPresent(dc, baseDir, zipOS, generatedContentZip, scratchType);
+        ZipOutputStream zipOS = null;
+        try {
+            for (String scratchType : UPLOADED_GENERATED_DIRS) {
+                final File genDir = dc.getScratchDir(scratchType);
+                if (genDir.isDirectory()) {
+                    if (zipOS == null) {
+                        zipOS = new ZipOutputStream(
+                            new BufferedOutputStream(new FileOutputStream(generatedContentZip)));
+                    }
+                    addFileToZip(zipOS, baseDir, genDir);
+                }
+            }
+        } finally {
+            if (zipOS != null) {
+                zipOS.close();
+            }
         }
 
         if (zipOS != null) {
-            /*
-             * Because we did zip up some generated content, add the just-generated zip file as a parameter to the param map.
-             */
-            zipOS.close();
+            // Because we did zip up some generated content, add the just-generated zip file as a parameter to the param map.
             // set the generated content param
             paramMap.set("generatedcontent", generatedContentZip.getAbsolutePath());
         }
@@ -1997,42 +2005,19 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
         return tempFile;
     }
 
-    private ZipOutputStream addScratchContentIfPresent(final DeploymentContext dc, final File baseDir, ZipOutputStream zipOS,
-            final File generatedContentZip, final String scratchDirName) throws IOException {
-        final File genDir = dc.getScratchDir(scratchDirName);
-        if (genDir.isDirectory()) {
-            if (zipOS == null) {
-                zipOS = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(generatedContentZip)));
-            }
-            addFileToZip(zipOS, baseDir, genDir);
-        }
-        return zipOS;
-    }
-
     private void addFileToZip(final ZipOutputStream zipOS, final File baseDir, final File f) throws IOException {
         final String entryName = baseDir.toURI().relativize(f.toURI()).getPath();
         final ZipEntry entry = new ZipEntry(entryName);
         zipOS.putNextEntry(entry);
-        if (!f.isDirectory()) {
-            final byte[] buffer = new byte[1024];
-            final InputStream is = new BufferedInputStream(new FileInputStream(f));
-            int bytesRead;
-            try {
-                while ((bytesRead = is.read(buffer)) != -1) {
-                    zipOS.write(buffer, 0, bytesRead);
-                }
-            } finally {
-                is.close();
-                zipOS.closeEntry();
-            }
-        } else {
-            /*
-             * A directory entry has no content itself.
-             */
+        if (f.isDirectory()) {
+            // A directory entry has no content itself.
             zipOS.closeEntry();
             for (File subFile : f.listFiles()) {
                 addFileToZip(zipOS, baseDir, subFile);
             }
+        } else {
+            FileUtils.copy(f, zipOS);
+            zipOS.closeEntry();
         }
     }
 
@@ -2121,7 +2106,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
 
     @Override
     public boolean isAppEnabled(Application app) {
-        if (Boolean.valueOf(app.getEnabled())) {
+        if (Boolean.parseBoolean(app.getEnabled())) {
             ApplicationRef appRef = server.getApplicationRef(app.getName());
             if (appRef != null && Boolean.valueOf(appRef.getEnabled())) {
                 return true;

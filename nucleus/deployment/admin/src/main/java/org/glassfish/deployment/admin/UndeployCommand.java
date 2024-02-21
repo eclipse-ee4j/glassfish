@@ -17,46 +17,29 @@
 
 package org.glassfish.deployment.admin;
 
-import com.sun.enterprise.config.serverbeans.*;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import org.glassfish.internal.data.ApplicationInfo;
-import org.glassfish.internal.data.ApplicationRegistry;
-import org.glassfish.internal.deployment.Deployment;
-import org.glassfish.internal.deployment.ExtendedDeploymentContext;
-import org.glassfish.internal.deployment.DeploymentTargetResolver;
-import com.sun.enterprise.deploy.shared.ArchiveFactory;
 import com.sun.enterprise.admin.util.ClusterOperationUtil;
-import org.glassfish.deployment.common.DeploymentUtils;
-import org.glassfish.deployment.common.DeploymentProperties;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.I18n;
-import org.glassfish.api.event.Events;
-import org.glassfish.api.event.EventListener.Event;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.api.deployment.UndeployCommandParameters;
-import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.config.support.TargetType;
-import org.glassfish.config.support.CommandTarget;
-import org.glassfish.common.util.admin.ParameterMapExtractor;
-import jakarta.inject.Inject;
-import org.jvnet.hk2.annotations.Service;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.ApplicationRef;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.deploy.shared.ArchiveFactory;
+import com.sun.enterprise.util.LocalStringManagerImpl;
 
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.jvnet.hk2.config.TransactionFailure;
+import jakarta.inject.Inject;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Logger;
-import java.util.logging.Level;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
-import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.I18n;
 import org.glassfish.api.admin.AccessRequired;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
@@ -69,10 +52,27 @@ import org.glassfish.api.admin.RestEndpoint;
 import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.deployment.UndeployCommandParameters;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.api.event.EventListener.Event;
+import org.glassfish.api.event.Events;
+import org.glassfish.common.util.admin.ParameterMapExtractor;
+import org.glassfish.config.support.CommandTarget;
+import org.glassfish.config.support.TargetType;
 import org.glassfish.deployment.common.Artifacts;
-
-import org.glassfish.deployment.versioning.VersioningService;
+import org.glassfish.deployment.common.DeploymentProperties;
+import org.glassfish.deployment.common.DeploymentUtils;
 import org.glassfish.deployment.versioning.VersioningException;
+import org.glassfish.deployment.versioning.VersioningService;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.data.ApplicationInfo;
+import org.glassfish.internal.data.ApplicationRegistry;
+import org.glassfish.internal.deployment.Deployment;
+import org.glassfish.internal.deployment.DeploymentTargetResolver;
+import org.glassfish.internal.deployment.ExtendedDeploymentContext;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.TransactionFailure;
 
 /**
  * Undeploys applications.
@@ -211,15 +211,10 @@ public class UndeployCommand extends UndeployCommandParameters implements AdminC
                 domain, apps, target, matchedVersions, "delete", "delete");
     }
 
+    @Override
     public void execute(AdminCommandContext context) {
 
-
-
-        // for each matched version
-        Iterator it = matchedVersions.iterator();
-        while (it.hasNext()) {
-            String appName = (String)it.next();
-
+        for (String appName : matchedVersions) {
             if (target == null) {
                 target = deployment.getDefaultTarget(appName, origin, _classicstyle);
             }
@@ -352,7 +347,7 @@ public class UndeployCommand extends UndeployCommandParameters implements AdminC
 
                 try {
                     final ParameterMapExtractor extractor = new ParameterMapExtractor(this);
-                    final ParameterMap parameters = extractor.extract(Collections.EMPTY_LIST);
+                    final ParameterMap parameters = extractor.extract(Collections.emptyList());
                     parameters.set("DEFAULT", appName);
                     parameters.add(DeploymentProperties.IS_UNDEPLOY, Boolean.TRUE.toString());
                     inv.parameters(parameters).execute();
@@ -393,7 +388,7 @@ public class UndeployCommand extends UndeployCommandParameters implements AdminC
 
             // check if it's directory deployment
             boolean isDirectoryDeployed =
-                Boolean.valueOf(application.getDirectoryDeployed());
+                Boolean.parseBoolean(application.getDirectoryDeployed());
 
             // we should try to unregister the application for both success
             // and warning case
@@ -423,6 +418,7 @@ public class UndeployCommand extends UndeployCommandParameters implements AdminC
         }
     }
 
+    @Override
     public String getTarget(ParameterMap parameters) {
         return DeploymentCommandUtils.getTarget(parameters, origin, deployment);
     }

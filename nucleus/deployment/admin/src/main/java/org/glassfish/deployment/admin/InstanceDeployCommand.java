@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +19,7 @@ package org.glassfish.deployment.admin;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -57,7 +59,6 @@ import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.Applications;
 import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.Domain;
-import java.io.FileOutputStream;
 import java.util.Collection;
 import org.glassfish.api.admin.AccessRequired.AccessCheck;
 import org.glassfish.api.admin.AdminCommandSecurity;
@@ -108,7 +109,7 @@ public class InstanceDeployCommand extends InstanceDeployCommandParameters
 
     @Override
     public Collection<? extends AccessCheck> getAccessChecks() {
-        final List<AccessCheck> accessChecks = new ArrayList<AccessCheck>();
+        final List<AccessCheck> accessChecks = new ArrayList<>();
         accessChecks.add(new AccessCheck(DeploymentCommandUtils.getTargetResourceNameForNewAppRef(domain, target), "write"));
         return accessChecks;
     }
@@ -273,16 +274,14 @@ public class InstanceDeployCommand extends InstanceDeployCommandParameters
                 final URI outputFileURI = Util.resolve(baseURI, zipEntry.getName());
                 final File outputFile = new File(outputFileURI);
                 if (zipEntry.isDirectory()) {
-                    if ( ! outputFile.exists() && ! outputFile.mkdirs()) {
+                    if (!outputFile.exists() && !outputFile.mkdirs()) {
                         throw new IOException(localStrings.getLocalString("instancedeploy.command.errcredir",
-                            "Error creating directory {0}.  No further information about the failure is available.", baseDir.getAbsolutePath()));
+                            "Error creating directory {0}.  No further information about the failure is available.",
+                            baseDir.getAbsolutePath()));
                     }
                 } else {
-                    final FileOutputStream os = new FileOutputStream(outputFile);
-                    try {
-                        FileUtils.copy(zipFile.getInputStream(zipEntry), os, zipEntry.getSize());
-                    } catch (IOException e) {
-                        os.close();
+                    try (InputStream inputStream = zipFile.getInputStream(zipEntry)) {
+                        FileUtils.copy(inputStream, outputFile, zipEntry.getSize());
                     }
                 }
             }

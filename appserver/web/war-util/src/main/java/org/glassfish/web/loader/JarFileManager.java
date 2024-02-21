@@ -20,7 +20,6 @@ import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.Closeable;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.System.Logger;
@@ -292,9 +291,8 @@ class JarFileManager implements Closeable {
                 LOG.log(WARNING, UNABLE_TO_CREATE, resourceFile.getParentFile());
             }
 
-            try (InputStream is = jarFile.getInputStream(jarEntry);
-                FileOutputStream os = new FileOutputStream(resourceFile)) {
-                FileUtils.copy(is, os, Long.MAX_VALUE);
+            try (InputStream is = jarFile.getInputStream(jarEntry)) {
+                FileUtils.copy(is, resourceFile, jarEntry.getSize());
             } catch (IOException e) {
                 LOG.log(WARNING, "Failed to copy entry " + jarEntry, e);
             }

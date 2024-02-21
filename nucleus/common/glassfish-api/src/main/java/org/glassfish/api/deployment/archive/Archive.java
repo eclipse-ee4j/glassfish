@@ -74,7 +74,7 @@ public interface Archive extends AutoCloseable {
     /**
      * Returns the manifest information for this archive
      *
-     * @return the manifest info
+     * @return the manifest info or null
      */
     Manifest getManifest() throws IOException;
 

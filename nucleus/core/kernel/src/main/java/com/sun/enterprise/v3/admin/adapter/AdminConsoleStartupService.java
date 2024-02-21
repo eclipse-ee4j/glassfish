@@ -20,8 +20,6 @@ package com.sun.enterprise.v3.admin.adapter;
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,8 +35,6 @@ import org.jvnet.hk2.annotations.Service;
 public class AdminConsoleStartupService {
 
     private static final Logger logger = KernelLoggerInfo.getLogger();
-
-    private static final long ONE_DAY = 24 * 60 * 60 * 1000;
 
     @Inject
     @Optional
@@ -62,38 +58,10 @@ public class AdminConsoleStartupService {
 
         ConsoleLoadingOption loadingOption = adminConsoleAdapter.getLoadingOption();
 
-        logger.log(Level.FINE, () -> "AdminConsoleStartupService: Console loading option is " + loadingOption);
+        logger.log(Level.FINE, "AdminConsoleStartupService: Console loading option is {0}", loadingOption);
 
-        switch (loadingOption) {
-            case ALWAYS:
-                handleAlways();
-                break;
-            case RECENT:
-                handleRecent();
-                break;
-            case DEFAULT:
-                handleDefault();
-                break;
-            default:
-                break;
-        }
-    }
-
-    private void handleDefault() {
-        // Do nothing
-    }
-
-    private void handleRecent() {
-        // If last access was within a day
-        long currentTime = System.currentTimeMillis();
-        try {
-            long lastTime = getTimeStamp();
-            if (currentTime  - lastTime < ONE_DAY) {
-                logger.log(Level.FINER, () -> "AdminConsoleStartup: Recent user, lastTime =  " + lastTime);
-                handleAlways();
-            }
-        } catch (IOException ex) {
-            logger.fine(ex.getMessage());
+        if (loadingOption == ConsoleLoadingOption.ALWAYS) {
+            handleAlways();
         }
     }
 
@@ -104,13 +72,5 @@ public class AdminConsoleStartupService {
                 adminConsoleAdapter.loadConsole();
             }
         }
-    }
-
-    private long getTimeStamp() throws IOException {
-        File stateFile = new File(serverEnvironment.getConfigDirPath(), ".consolestate");
-        if (!stateFile.exists()) {
-            return 0L;
-        }
-        return stateFile.lastModified();
     }
 }

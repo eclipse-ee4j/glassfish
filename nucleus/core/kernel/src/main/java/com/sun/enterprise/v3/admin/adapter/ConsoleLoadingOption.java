@@ -21,8 +21,5 @@ package com.sun.enterprise.v3.admin.adapter;
  */
 enum ConsoleLoadingOption {
 
-    DEFAULT,
-    ALWAYS,
-    RECENT,
-    NEVER
+    DEFAULT, ALWAYS, NEVER
 }

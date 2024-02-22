@@ -20,24 +20,18 @@ package com.sun.enterprise.v3.admin.adapter;
 import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.ApplicationRef;
 import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.Engine;
-import com.sun.enterprise.config.serverbeans.Module;
 import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.config.serverbeans.SystemApplications;
 import com.sun.enterprise.v3.server.ApplicationLoaderService;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.glassfish.deployment.common.DeploymentProperties;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.glassfish.server.ServerEnvironmentImpl;
-import org.jvnet.hk2.config.ConfigCode;
 import org.jvnet.hk2.config.ConfigSupport;
 
 /**
@@ -96,7 +90,7 @@ final class InstallerThread extends Thread {
 
 
     /**
-     * Install the admingui.war file
+     * Install the Admin Console web application.
      */
     private void install() throws Exception {
         if (domain.getSystemApplicationReferencedFrom(serverEnvironment.getInstanceName(),
@@ -111,73 +105,15 @@ final class InstallerThread extends Thread {
 
         logger.log(Level.FINE, "Installing the Admin Console Application...");
 
-        // Create the application entry in domain.xml
-        ConfigCode code = proxies -> {
-            SystemApplications systemApplications = (SystemApplications) proxies[0];
-
-            Application application = systemApplications.createChild(Application.class);
-            systemApplications.getModules().add(application);
-
-            application.setName(ServerEnvironmentImpl.DEFAULT_ADMIN_CONSOLE_APP_NAME);
-            application.setEnabled(Boolean.TRUE.toString());
-            application.setObjectType(DeploymentProperties.SYSTEM_ADMIN);
-            application.setDirectoryDeployed("true");
-            application.setContextRoot(contextRoot);
-            try {
-                application.setLocation("${com.sun.aas.installRootURI}/lib/install/applications/"
-                        + ServerEnvironmentImpl.DEFAULT_ADMIN_CONSOLE_APP_NAME);
-            } catch (Exception e) {
-                // Can't do anything
-                throw new RuntimeException(e);
-            }
-
-            Module singleModule = application.createChild(Module.class);
-            application.getModule().add(singleModule);
-            singleModule.setName(application.getName());
-
-            Engine webEngine = singleModule.createChild(Engine.class);
-            webEngine.setSniffer("web");
-
-            Engine weldEngine = singleModule.createChild(Engine.class);
-            weldEngine.setSniffer("weld");
-
-            Engine securityEngine = singleModule.createChild(Engine.class);
-            securityEngine.setSniffer("security");
-
-            singleModule.getEngines().add(webEngine);
-            singleModule.getEngines().add(weldEngine);
-            singleModule.getEngines().add(securityEngine);
-
-            Server server = (Server) proxies[1];
-            ApplicationRef applicationRef = server.createChild(ApplicationRef.class);
-            applicationRef.setRef(application.getName());
-            applicationRef.setEnabled(Boolean.TRUE.toString());
-            applicationRef.setVirtualServers(getVirtualServerList());
-            server.getApplicationRef().add(applicationRef);
-
-            return true;
-        };
-
+        ConsoleConfigCode code = new ConsoleConfigCode(virtualServers, contextRoot);
         Server instance = domain.getServerNamed(serverEnvironment.getInstanceName());
+
         ConfigSupport.apply(code, domain.getSystemApplications(), instance);
 
         // Set the adapter state
         adapter.setStateMsg(AdapterState.APPLICATION_INSTALLED_BUT_NOT_LOADED);
 
         logger.log(Level.FINE, "Admin Console Application Installed.");
-    }
-
-    private String getVirtualServerList() {
-        if (virtualServers == null) {
-            return "";
-        }
-
-        String servers = Arrays.toString(virtualServers.toArray(String[]::new));
-        // Remove [] if present
-        if (servers.startsWith("[") && servers.endsWith("]")) {
-            servers = servers.substring(1, servers.length() - 1);
-        }
-        return servers;
     }
 
     /**

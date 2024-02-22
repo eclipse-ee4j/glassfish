@@ -152,7 +152,7 @@
 
         <!-- MicroProfile Config -->
         <microprofile.config-api.version>3.0.3</microprofile.config-api.version>
-        <helidon-config.version>3.2.5</helidon-config.version>
+        <helidon-config.version>3.2.6</helidon-config.version>
 
         <!-- MicroProfile JWT / JWT Authentication Mechanism for Jakarta Security -->
         <microprofile-jwt-auth-api.version>2.1</microprofile-jwt-auth-api.version>

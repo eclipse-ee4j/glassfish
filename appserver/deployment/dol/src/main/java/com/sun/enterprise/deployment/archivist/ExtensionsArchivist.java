@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,7 +25,6 @@ import com.sun.enterprise.deployment.util.DOLUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,6 +32,7 @@ import java.util.logging.Logger;
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
+import org.glassfish.api.deployment.archive.WritableArchiveEntry;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.jvnet.hk2.annotations.Contract;
 import org.xml.sax.SAXException;
@@ -205,9 +205,9 @@ public abstract class ExtensionsArchivist<T extends RootDeploymentDescriptor>  {
     public void writeStandardDeploymentDescriptors(Archivist main, BundleDescriptor descriptor, WritableArchive out) throws IOException {
 
         getStandardDDFile(descriptor).setArchiveType(main.getModuleType());
-        OutputStream os = out.putNextEntry(standardDD.getDeploymentDescriptorPath());
-        standardDD.write(descriptor, os);
-        out.closeEntry();
+        try (WritableArchiveEntry os = out.putNextEntry(standardDD.getDeploymentDescriptorPath())) {
+            standardDD.write(descriptor, os);
+        }
     }
 
     /**
@@ -228,9 +228,9 @@ public abstract class ExtensionsArchivist<T extends RootDeploymentDescriptor>  {
         }
         for (ConfigurationDeploymentDescriptorFile<BundleDescriptor> ddFile : confDDFilesToWrite) {
             ddFile.setArchiveType(main.getModuleType());
-            OutputStream os = out.putNextEntry(ddFile.getDeploymentDescriptorPath());
-            ddFile.write(descriptor, os);
-            out.closeEntry();
+            try (WritableArchiveEntry os = out.putNextEntry(ddFile.getDeploymentDescriptorPath())) {
+                ddFile.write(descriptor, os);
+            }
         }
     }
 

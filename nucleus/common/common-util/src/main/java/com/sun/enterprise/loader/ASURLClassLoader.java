@@ -149,8 +149,8 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader implements JasperA
     public void preDestroy() {
         try {
             close();
-        } catch(IOException ioe) {
-            _logger.log(INFO, CULoggerInfo.getString(CULoggerInfo.exceptionIO), ioe);
+        } catch (IOException ioe) {
+            _logger.log(Level.SEVERE, "Could not close the classloader " + this, ioe);
         }
     }
 

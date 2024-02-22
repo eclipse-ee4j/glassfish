@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,7 +20,14 @@ package org.glassfish.deployment.common;
 import com.sun.enterprise.deployment.deploy.shared.InputJarArchive;
 import com.sun.enterprise.deployment.deploy.shared.OutputJarArchive;
 import com.sun.enterprise.util.io.FileUtils;
-import java.io.*;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -35,14 +43,13 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.OpsParams;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.api.deployment.archive.WritableArchive;
-import org.glassfish.internal.deployment.ExtendedDeploymentContext;
+import org.glassfish.api.deployment.archive.WritableArchiveEntry;
+import org.glassfish.deployment.common.Artifacts.FullAndPartURIs;
 import org.glassfish.deployment.versioning.VersioningUtils;
-
-import org.glassfish.logging.annotation.LogMessageInfo;
+import org.glassfish.internal.deployment.ExtendedDeploymentContext;
 
 /**
  * Writes a client JAR file, if one is needed, suitable for downloading.
@@ -59,16 +66,12 @@ import org.glassfish.logging.annotation.LogMessageInfo;
  */
 public class ClientJarWriter {
 
-    public static final Logger deplLogger = org.glassfish.deployment.common.DeploymentContextImpl.deplLogger;
+    private static final Logger LOG = org.glassfish.deployment.common.DeploymentContextImpl.deplLogger;
 
-    @LogMessageInfo(message = "Exception caught:  {0}", level="WARNING")
-    private static final String EXCEPTION_CAUGHT = "NCLS-DEPLOYMENT-00004";
-
-    private final String LINE_SEP = System.getProperty("line.separator");
     private final ExtendedDeploymentContext deploymentContext;
     private final String name;
 
-    private Map<URI,JarFile> jarFiles = new HashMap<URI,JarFile>();
+    private final Map<URI,JarFile> jarFiles = new HashMap<>();
 
     public ClientJarWriter(final ExtendedDeploymentContext deploymentContext) {
         this.deploymentContext = deploymentContext;
@@ -76,23 +79,20 @@ public class ClientJarWriter {
     }
 
     public void run() throws IOException {
-        /*
-         * Only generate the JAR if we would not already have done so.
-         */
+        // Only generate the JAR if we would not already have done so.
         if (isArtifactsPresent()) {
-            deplLogger.log(Level.FINE, "Skipping possible client JAR generation because it would already have been done");
+            LOG.log(Level.FINE, "Skipping possible client JAR generation because it would already have been done");
             return;
         }
 
-        final Artifacts downloadableArtifacts =
-                DeploymentUtils.downloadableArtifacts(deploymentContext);
-        final Artifacts generatedArtifacts =
-                DeploymentUtils.generatedArtifacts(deploymentContext);
-        final File clientJarFile = createClientJARIfNeeded(deploymentContext, name);
+        final Artifacts downloadableArtifacts = DeploymentUtils.downloadableArtifacts(deploymentContext);
+        final Artifacts generatedArtifacts = DeploymentUtils.generatedArtifacts(deploymentContext);
+        final File clientJarFile = createClientJARIfNeeded(name);
         if (clientJarFile == null) {
-            deplLogger.log(Level.FINE, "No client JAR generation is needed.");
+            LOG.log(Level.FINE, "No client JAR generation is needed.");
         } else {
-            deplLogger.log(Level.FINE, "Generated client JAR {0} for possible download", clientJarFile.getAbsolutePath());
+            LOG.log(Level.INFO, "Generated client JAR {0} for possible download of size {1} B",
+                new Object[] {clientJarFile, clientJarFile.length()});
             downloadableArtifacts.addArtifact(clientJarFile.toURI(), clientJarFile.getName());
             generatedArtifacts.addArtifact(clientJarFile.toURI(), clientJarFile.getName());
         }
@@ -102,124 +102,102 @@ public class ClientJarWriter {
         return deploymentContext.getCommandParameters(OpsParams.class).origin.isArtifactsPresent();
     }
 
-    private File createClientJARIfNeeded(final ExtendedDeploymentContext deploymentContext,
-            final String appName) throws IOException {
-        final ClientArtifactsManager clientArtifactsManager =
-                ClientArtifactsManager.get(deploymentContext);
+
+    private File createClientJARIfNeeded(final String appName) throws IOException {
+        LOG.log(Level.FINEST, "createClientJARIfNeeded(appName={0})", appName);
+        final ClientArtifactsManager clientArtifactsManager = ClientArtifactsManager.get(deploymentContext);
         if (clientArtifactsManager.isEmpty()) {
             return null;
         }
 
-        /*
-         * Make sure the scratch directories are there.
-         */
+        // Make sure the scratch directories are there.
         deploymentContext.prepareScratchDirs();
 
         final String generatedClientJARName = generatedClientJARNameAndType(appName);
-        final File generatedClientJARFile = new File(deploymentContext.getScratchDir("xml"),
-                generatedClientJARName);
-        /*
-         * The app client deployer might have already created the generated JAR
-         * file.  In that case we need to merge its contents with what has been
-         * registered with the client artifacts manager.
-         */
-        File movedPreexistingFile = null;
+        final File generatedClientJARFile = new File(deploymentContext.getScratchDir("xml"), generatedClientJARName);
+
+        // The app client deployer might have already created the generated JAR file.
+        // In that case we need to merge its contents with what has been
+        // registered with the client artifacts manager.
+        final File movedPreexistingFile;
         if (generatedClientJARFile.exists()) {
             try {
                 movedPreexistingFile = mergeContentsToClientArtifactsManager(generatedClientJARFile, clientArtifactsManager);
+                LOG.log(Level.FINEST, "Moved preexisting file: {0}", movedPreexistingFile);
             } catch (URISyntaxException ex) {
                 throw new IOException(ex);
             }
+        } else {
+            movedPreexistingFile = null;
         }
 
-        /*
-         * We need our own copy of the artifacts collection because we might
-         * need to add the manifest to it if a manifst is not already in the collection.
-         * The client artifacts manager returns an unalterable collection.
-         */
-        final Collection<Artifacts.FullAndPartURIs> artifacts = new ArrayList<Artifacts.FullAndPartURIs>(clientArtifactsManager.artifacts());
-
-        OutputJarArchive generatedClientJAR = new OutputJarArchive();
-        try {
-            try {
-                generatedClientJAR.create(generatedClientJARFile.toURI());
-
-                if ( ! isManifestPresent(artifacts)) {
-                    /*
-                     * Add a simple manifest.
-                     */
-                    deplLogger.log(Level.FINER, "Adding a simple manifest; one was not already generated");
-                    addManifest(artifacts);
-                }
-
-                copyArtifactsToClientJAR(generatedClientJAR, artifacts);
-            } finally {
-                generatedClientJAR.close();
+        // We need our own copy of the artifacts collection because we might
+        // need to add the manifest to it if a manifst is not already in the collection.
+        // The client artifacts manager returns an unalterable collection.
+        final Collection<Artifacts.FullAndPartURIs> artifacts = new ArrayList<>(clientArtifactsManager.artifacts());
+        try (OutputJarArchive generatedClientJAR = new OutputJarArchive()) {
+            generatedClientJAR.create(generatedClientJARFile.toURI());
+            if (isManifestPresent(artifacts)) {
+                LOG.log(Level.FINEST, "The jar file already contains a manifest, no need to generate another.");
+            } else {
+                FullAndPartURIs manifest = generateManifest();
+                LOG.log(Level.CONFIG, "Generated manifest: {0}", manifest);
+                artifacts.add(manifest);
             }
-        } catch (IOException ex) {
-            if ( ! generatedClientJARFile.delete()) {
+            copyArtifactsToClientJAR(generatedClientJAR, artifacts);
+            return generatedClientJARFile;
+        } catch (IOException e) {
+            if (!generatedClientJARFile.delete()) {
                 generatedClientJARFile.deleteOnExit();
             }
+            throw e;
         } finally {
             if (movedPreexistingFile != null) {
                 FileUtils.deleteFileNowOrLater(movedPreexistingFile);
             }
         }
-        return generatedClientJARFile;
     }
 
     private File mergeContentsToClientArtifactsManager(
             final File generatedClientJARFile,
             final ClientArtifactsManager clientArtifactsManager) throws IOException, URISyntaxException {
-        /*
-         * First, move the existing JAR to another name so when the caller
-         * creates the generated client JAR it does not overwrite the existing
-         * file created by the app client deployer.
-         */
+        // First, move the existing JAR to another name so when the caller creates the generated
+        // client JAR it does not overwrite the existing file created by the app client deployer.
         final File movedGeneratedFile = File.createTempFile(generatedClientJARFile.getName(), ".tmp", generatedClientJARFile.getParentFile());
         FileUtils.renameFile(generatedClientJARFile, movedGeneratedFile);
-        final ReadableArchive existingGeneratedJAR = new InputJarArchive();
-        existingGeneratedJAR.open(movedGeneratedFile.toURI());
-        try {
-            for (Enumeration e = existingGeneratedJAR.entries(); e.hasMoreElements();) {
-                final String entryName = (String) e.nextElement();
+        try (InputJarArchive existingGeneratedJAR = new InputJarArchive(movedGeneratedFile)) {
+            for (Enumeration<String> e = existingGeneratedJAR.entries(); e.hasMoreElements();) {
+                final String entryName = e.nextElement();
                 final URI entryURI = new URI("jar", movedGeneratedFile.toURI().toASCIIString() + "!/" + entryName, null);
                 final Artifacts.FullAndPartURIs uris = new Artifacts.FullAndPartURIs(entryURI, entryName);
                 clientArtifactsManager.add(uris);
             }
-            /*
-             * Handle the manifest explicitly because the Archive entries()
-             * method consciously omits it.
-             */
+            // Handle the manifest explicitly because the Archive entries() method consciously omits it.
             final Artifacts.FullAndPartURIs manifestURIs = new Artifacts.FullAndPartURIs(
-                    new URI("jar", movedGeneratedFile.toURI().toASCIIString() + "!/" + JarFile.MANIFEST_NAME, null), JarFile.MANIFEST_NAME);
+                new URI("jar", movedGeneratedFile.toURI().toASCIIString() + "!/" + JarFile.MANIFEST_NAME, null),
+                JarFile.MANIFEST_NAME);
             clientArtifactsManager.add(manifestURIs);
             return movedGeneratedFile;
-        } finally {
-            existingGeneratedJAR.close();
         }
     }
 
     private boolean isManifestPresent(final Collection<Artifacts.FullAndPartURIs> artifacts) {
-        boolean isManifestPresent = false;
-
         for (Artifacts.FullAndPartURIs a : artifacts) {
-            isManifestPresent |= a.getPart().toASCIIString().equals(JarFile.MANIFEST_NAME);
+            if (a.getPart().toASCIIString().equals(JarFile.MANIFEST_NAME)) {
+                return true;
+            }
         }
-        return isManifestPresent;
+        return false;
     }
 
-    private void addManifest(final Collection<Artifacts.FullAndPartURIs> artifacts) throws IOException {
+    private Artifacts.FullAndPartURIs generateManifest() throws IOException {
         final File mfFile = File.createTempFile("clientmf", ".MF");
-        final OutputStream mfOS = new BufferedOutputStream(new FileOutputStream(mfFile));
-        try {
+        try (OutputStream mfOS = new BufferedOutputStream(new FileOutputStream(mfFile))) {
             final Manifest mf = new Manifest();
             mf.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
             mf.write(mfOS);
-        } finally {
-            mfOS.close();
         }
-        artifacts.add(new Artifacts.FullAndPartURIs(mfFile.toURI(), JarFile.MANIFEST_NAME, true /* isTemporary */));
+        return new Artifacts.FullAndPartURIs(mfFile.toURI(), JarFile.MANIFEST_NAME, true);
     }
 
     private static String generatedClientJARNameAndType(final String earName) {
@@ -231,74 +209,68 @@ public class ClientJarWriter {
     }
 
     private void copyArtifactsToClientJAR(
-            final WritableArchive generatedClientJARArchive,
+            final OutputJarArchive generatedJar,
             final Collection<Artifacts.FullAndPartURIs> artifacts) throws IOException {
-        final Set<String> pathsWrittenToJAR = new HashSet<String>();
-        StringBuilder copiedFiles = (deplLogger.isLoggable(Level.FINER)) ? new StringBuilder() : null;
+        final Set<String> pathsWrittenToJAR = new HashSet<>();
+        final StringBuilder copiedFiles = LOG.isLoggable(Level.CONFIG) ? new StringBuilder() : null;
         for (Artifacts.FullAndPartURIs artifact : artifacts) {
-            /*
-             * Make sure all ancestor directories are present in the JAR
-             * as empty entries.
-             */
+            // Make sure all ancestor directories are present in the JAR as empty entries.
             String artPath = artifact.getPart().getRawPath();
             int previousSlash = artPath.indexOf('/');
             while (previousSlash != -1) {
                 String partialAncestorPath = artPath.substring(0, previousSlash + 1);
-                if ( ! pathsWrittenToJAR.contains(partialAncestorPath)) {
-                    generatedClientJARArchive.putNextEntry(partialAncestorPath);
-                    generatedClientJARArchive.closeEntry();
+                if (!pathsWrittenToJAR.contains(partialAncestorPath)) {
+                    try (WritableArchiveEntry entry = generatedJar.putNextEntry(partialAncestorPath)) {
+                        // just an empty entry
+                    }
                     pathsWrittenToJAR.add(partialAncestorPath);
                 }
                 previousSlash = artPath.indexOf('/', previousSlash + 1);
             }
 
-            OutputStream os = generatedClientJARArchive.putNextEntry(artifact.getPart().toASCIIString());
-            InputStream is = null;
-            try {
-                final URI fullURI = artifact.getFull();
-                final String scheme = fullURI.getScheme();
-                if (scheme.equals("file")) {
-                    is = new BufferedInputStream(new FileInputStream(new File(artifact.getFull())));
-                } else if (scheme.equals("jar")) {
-                    final String ssp = fullURI.getSchemeSpecificPart();
-                    URI jarURI = new URI(ssp.substring(0, ssp.indexOf("!/")));
-                    JarFile jf = jarFiles.get(jarURI);
-                    if (jf == null) {
-                        jf = new JarFile(new File(jarURI));
-                        jarFiles.put(jarURI, jf);
-                    }
-                    final String entryName = ssp.substring(ssp.indexOf("!/") + 2);
-                    final JarEntry jarEntry = jf.getJarEntry(entryName);
-                    is = jf.getInputStream(jarEntry);
-                } else {
-                    throw new IllegalArgumentException(scheme + " != [file,jar]");
-                }
-                DeploymentUtils.copyStream(is, os);
+            try (WritableArchiveEntry entry = generatedJar.putNextEntry(artifact.getPart().toASCIIString());
+                InputStream is = openInputStream(artifact)) {
+                FileUtils.copy(is, entry);
                 if (copiedFiles != null) {
-                    copiedFiles.append(LINE_SEP).
-                            append("  ").
-                            append(artifact.getFull().toASCIIString()).
-                            append(" -> ").
-                            append(artifact.getPart().toASCIIString());
+                    copiedFiles.append(System.lineSeparator()).append("  ").append(artifact.getFull().toASCIIString())
+                        .append(" -> ").append(artifact.getPart().toASCIIString());
                 }
-            } catch (Exception ex) {
-                deplLogger.log(Level.WARNING, EXCEPTION_CAUGHT, ex.getLocalizedMessage());
+            } catch (Exception e) {
+                LOG.log(Level.WARNING, "Could not copy the entry " + artifact.getPart(), e);
             } finally {
-                if (is != null) {
-                    is.close();
-                }
-                generatedClientJARArchive.closeEntry();
                 if (artifact.isTemporary()) {
                     final File artifactFile = new File(artifact.getFull());
-                    if ( ! artifactFile.delete()) {
+                    if (!artifactFile.delete()) {
                         artifactFile.deleteOnExit();
                     }
                 }
             }
         }
         if (copiedFiles != null) {
-            deplLogger.log(Level.FINER, copiedFiles.toString());
+            LOG.log(Level.CONFIG, "Copied files: {0}", copiedFiles);
         }
     }
 
+
+    private InputStream openInputStream(Artifacts.FullAndPartURIs artifact) throws URISyntaxException, IOException {
+        LOG.log(Level.FINE, "openInputStream(artifact={0})", artifact);
+        final URI fullURI = artifact.getFull();
+        final String scheme = fullURI.getScheme();
+        if (scheme.equals("file")) {
+            return new FileInputStream(new File(fullURI));
+        } else if (scheme.equals("jar")) {
+            final String ssp = fullURI.getSchemeSpecificPart();
+            final URI jarURI = new URI(ssp.substring(0, ssp.indexOf("!/")));
+            JarFile jf = jarFiles.get(jarURI);
+            if (jf == null) {
+                jf = new JarFile(new File(jarURI));
+                jarFiles.put(jarURI, jf);
+            }
+            final String entryName = ssp.substring(ssp.indexOf("!/") + 2);
+            final JarEntry jarEntry = jf.getJarEntry(entryName);
+            return jf.getInputStream(jarEntry);
+        } else {
+            throw new IllegalArgumentException(scheme + " != [file,jar]");
+        }
+    }
 }

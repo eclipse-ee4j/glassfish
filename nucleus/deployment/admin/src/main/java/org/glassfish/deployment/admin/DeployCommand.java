@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,61 +17,75 @@
 
 package org.glassfish.deployment.admin;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.deploy.shared.ArchiveFactory;
 import com.sun.enterprise.deploy.shared.FileArchive;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
+import jakarta.inject.Inject;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.admin.payload.PayloadImpl;
 import org.glassfish.api.ActionReport;
+import org.glassfish.api.ActionReport.ExitCode;
 import org.glassfish.api.I18n;
+import org.glassfish.api.admin.AccessRequired.AccessCheck;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.AdminCommandSecurity;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.ParameterMap;
+import org.glassfish.api.admin.Payload;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RestParam;
 import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ArchiveHandler;
 import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.deployment.common.*;
-import org.glassfish.internal.data.ApplicationInfo;
-import org.glassfish.internal.deployment.*;
-import org.glassfish.config.support.TargetType;
-import org.glassfish.config.support.CommandTarget;
-import org.jvnet.hk2.annotations.Contract;
-import jakarta.inject.Inject;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.jvnet.hk2.config.Transaction;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.api.ActionReport.ExitCode;
-import org.glassfish.api.admin.AccessRequired;
-import org.glassfish.api.admin.AccessRequired.AccessCheck;
-import org.glassfish.api.admin.AdminCommandSecurity;
-import org.glassfish.api.admin.ParameterMap;
-import org.glassfish.api.admin.Payload;
-import org.glassfish.api.admin.RestEndpoint;
-import org.glassfish.api.admin.RestEndpoints;
-import org.glassfish.api.admin.RestParam;
 import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.Events;
+import org.glassfish.config.support.CommandTarget;
+import org.glassfish.config.support.TargetType;
+import org.glassfish.deployment.common.ApplicationConfigInfo;
+import org.glassfish.deployment.common.Artifacts;
+import org.glassfish.deployment.common.DeploymentContextImpl;
+import org.glassfish.deployment.common.DeploymentProperties;
+import org.glassfish.deployment.common.DeploymentUtils;
+import org.glassfish.deployment.versioning.VersioningService;
 import org.glassfish.deployment.versioning.VersioningSyntaxException;
 import org.glassfish.deployment.versioning.VersioningUtils;
-
-import org.glassfish.deployment.versioning.VersioningService;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.data.ApplicationInfo;
+import org.glassfish.internal.deployment.Deployment;
+import org.glassfish.internal.deployment.DeploymentTracing;
+import org.glassfish.internal.deployment.ExtendedDeploymentContext;
+import org.glassfish.internal.deployment.SnifferManager;
+import org.glassfish.internal.deployment.Verifier;
+import org.jvnet.hk2.annotations.Contract;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.Transaction;
 
 /**
  * Deploy command
@@ -95,7 +109,7 @@ import org.glassfish.deployment.versioning.VersioningService;
 public class DeployCommand extends DeployCommandParameters implements AdminCommand, EventListener,
         AdminCommandSecurity.Preauthorization, AdminCommandSecurity.AccessCheckProvider {
 
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeployCommand.class);
+    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeployCommand.class);
 
     @Inject
     Applications apps;
@@ -132,9 +146,9 @@ public class DeployCommand extends DeployCommandParameters implements AdminComma
     private File safeCopyOfAltDD = null;
     private File safeCopyOfRuntimeAltDD = null;
     private File originalPathValue;
-    private List<String> previousTargets = new ArrayList<String>();
-    private Properties previousVirtualServers = new Properties();
-    private Properties previousEnabledAttributes = new Properties();
+    private List<String> previousTargets = new ArrayList<>();
+    private final Properties previousVirtualServers = new Properties();
+    private final Properties previousEnabledAttributes = new Properties();
     private Logger logger;
     private ExtendedDeploymentContext initialContext;
     private ExtendedDeploymentContext deploymentContext;
@@ -249,9 +263,8 @@ public class DeployCommand extends DeployCommandParameters implements AdminComma
                 ActionReport.MessagePart msgPart = context.getActionReport().getTopMessagePart();
                 msgPart.setChildrenType("WARNING");
                 ActionReport.MessagePart childPart = msgPart.addChild();
-                childPart.setMessage(VersioningUtils.LOCALSTRINGS.getLocalString(
-                        "versioning.deployment.osgi.warning",
-                        "OSGi bundles will not use the GlassFish versioning, any version information embedded as part of the name option will be ignored"));
+                childPart.setMessage("OSGi bundles will not use the GlassFish versioning,"
+                    + " any version information embedded as part of the name option will be ignored");
                 name = VersioningUtils.getUntaggedName(name);
             }
 
@@ -288,7 +301,7 @@ public class DeployCommand extends DeployCommandParameters implements AdminComma
 
     @Override
     public Collection<? extends AccessCheck> getAccessChecks() {
-        final List<AccessCheck> accessChecks = new ArrayList<AccessCheck>();
+        final List<AccessCheck> accessChecks = new ArrayList<>();
         accessChecks.add(new AccessCheck(DeploymentCommandUtils.getResourceNameForApps(domain), "create"));
         accessChecks.add(new AccessCheck(DeploymentCommandUtils.getTargetResourceNameForNewAppRef(domain, target), "create"));
 
@@ -339,16 +352,17 @@ public class DeployCommand extends DeployCommandParameters implements AdminComma
             if (!keepreposdir.booleanValue()) {
                 final File reposDir = new File(env.getApplicationRepositoryPath(), VersioningUtils.getRepositoryName(name));
                 if (reposDir.exists()) {
-                    List<Application> applications = domain.getApplications().getApplications();
-                    for (Application app : applications) {
+                    for (Application app : domain.getApplications().getApplications()) {
                         if (app.isLifecycleModule()) {
                             continue;
                         }
                         File existrepos = new File(new URI(app.getLocation()));
                         String appname = app.getName();
                         if (!appname.equals(name) && existrepos.getAbsoluteFile().equals(reposDir.getAbsoluteFile())) {
-                            report.failure(logger, localStrings.getLocalString("deploy.dupdeployment",
-                                    "Application {0} is trying to use the same repository directory as application {1}, please choose a different application name to deploy",
+                            report.failure(logger,
+                                localStrings.getLocalString("deploy.dupdeployment",
+                                    "Application {0} is trying to use the same repository directory as application {1},"
+                                        + " please choose a different application name to deploy",
                                     name, appname));
                             return;
                         }
@@ -381,12 +395,10 @@ public class DeployCommand extends DeployCommandParameters implements AdminComma
                 // test if a version is already directory deployed from this dir
                 String versionFromSameDir = versioningService.getVersionFromSameDir(source);
                 if (!force && versionFromSameDir != null) {
-                    report.failure(logger,
-                            VersioningUtils.LOCALSTRINGS.getLocalString(
-                                    "versioning.deployment.dual.inplace",
-                                    "GlassFish do not support versioning for directory deployment when using the same directory. The directory {0} is already assigned to the version {1}.",
-                                    source.getPath(),
-                                    versionFromSameDir));
+                    report.failure(logger, MessageFormat.format(
+                        "GlassFish do not support versioning for directory deployment when using the same directory."
+                            + " The directory {0} is already assigned to the version {1}.",
+                        source.getPath(), versionFromSameDir));
                     return;
                 }
             }
@@ -671,7 +683,7 @@ public class DeployCommand extends DeployCommandParameters implements AdminComma
             ActionReport subReport = report.addSubActionsReport();
             subReport.setExtraProperties(new Properties());
 
-            List<String> propertyNames = new ArrayList<String>();
+            List<String> propertyNames = new ArrayList<>();
             propertyNames.add(DeploymentProperties.KEEP_SESSIONS);
             propertyNames.add(DeploymentProperties.PRESERVE_APP_SCOPED_RESOURCES);
             populatePropertiesToParameterMap(parameters, propertyNames);

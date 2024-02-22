@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -75,9 +76,9 @@ public class ModuleExploder {
                     if (!out.getParentFile().exists()) {
                         out.getParentFile().mkdirs();
                     }
-                    InputStream is = new BufferedInputStream(jarFile.getInputStream(entry));
-                    FileOutputStream fos = FileUtils.openFileOutputStream(out);
-                    FileUtils.copy(is, fos, entry.getSize());
+                    try (InputStream is = jarFile.getInputStream(entry)) {
+                        FileUtils.copy(is, out, entry.getSize());
+                    }
                 }
             }
         } catch(Throwable e) {

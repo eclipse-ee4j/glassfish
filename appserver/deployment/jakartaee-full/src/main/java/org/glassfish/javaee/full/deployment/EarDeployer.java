@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -111,10 +111,7 @@ public class EarDeployer implements Deployer {
     @LogMessageInfo(message = "Skipped processing for module {0} as its module type was not recognized", level = "WARNING")
     private static final String UNRECOGNIZED_MODULE_TYPE = "AS-DEPLOYMENT-02015";
 
-    @LogMessageInfo(message = "Error occurred", level = "WARNING")
-    private static final String ERROR_OCCURRED = "AS-DEPLOYMENT-02016";
-
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(EarDeployer.class);
+    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(EarDeployer.class);
 
     @Override
     public MetaData getMetaData() {
@@ -267,21 +264,16 @@ public class EarDeployer implements Deployer {
 
         List<EngineInfo<?, ?>> orderedContainers = null;
 
-        ProgressTracker tracker = bundleContext.getTransientAppMetaData(ExtendedDeploymentContext.TRACKER, ProgressTracker.class);
-
-        try {
-            // let's get the previously stored list of sniffers
-            Hashtable<String, Collection<Sniffer>> sniffersTable = bundleContext.getSource().getParentArchive()
-                    .getExtraData(Hashtable.class);
-            Collection<Sniffer> sniffers = sniffersTable.get(md.getArchiveUri());
-            // let's get the list of containers interested in this module
-            orderedContainers = deployment.setupContainerInfos(null, sniffers, bundleContext);
-            if (orderedContainers == null) {
-                return null;
-            }
-        } catch (Exception e) {
-            deplLogger.log(Level.WARNING, ERROR_OCCURRED, e);
-            throw e;
+        ProgressTracker tracker = bundleContext.getTransientAppMetaData(ExtendedDeploymentContext.TRACKER,
+            ProgressTracker.class);
+        // let's get the previously stored list of sniffers
+        Hashtable<String, Collection<Sniffer>> sniffersTable = bundleContext.getSource().getParentArchive()
+            .getExtraData(Hashtable.class);
+        Collection<Sniffer> sniffers = sniffersTable.get(md.getArchiveUri());
+        // let's get the list of containers interested in this module
+        orderedContainers = deployment.setupContainerInfos(null, sniffers, bundleContext);
+        if (orderedContainers == null) {
+            return null;
         }
         return deployment.prepareModule(orderedContainers, md.getArchiveUri(), bundleContext, tracker);
     }
@@ -312,13 +304,12 @@ public class EarDeployer implements Deployer {
             return moduleContext;
         }
 
-        // FIXME: never closed
         final ReadableArchive subArchive;
         try {
             subArchive = context.getSource().getSubArchive(moduleUri);
             subArchive.setParentArchive(context.getSource());
         } catch (IOException ioe) {
-            deplLogger.log(Level.WARNING, ERROR_OCCURRED, ioe);
+            deplLogger.log(Level.WARNING, "Could not work with subarchive for " + moduleUri, ioe);
             return null;
         }
 

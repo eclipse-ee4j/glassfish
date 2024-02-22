@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,18 @@
 
 package com.sun.enterprise.v3.admin;
 
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.util.io.FileUtils;
+
+import jakarta.inject.Inject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -51,11 +58,6 @@ import org.glassfish.common.util.ObjectInputOutputStreamFactory;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.security.services.api.authentication.AuthenticationService;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.io.FileUtils;
-
-import jakarta.inject.Inject;
 
 /**
  * This class is starting point for persistent CheckpointHelper, and currently only
@@ -369,7 +371,9 @@ public class CheckpointHelper {
         while (parts.hasNext()) {
             Part part = parts.next();
             File sourceFile = File.createTempFile("source", "", topDir);
-            FileUtils.copy(part.getInputStream(), new FileOutputStream(sourceFile), Long.MAX_VALUE);
+            try (InputStream inputStream = part.getInputStream()) {
+                FileUtils.copy(inputStream, sourceFile);
+            }
             outbound.addPart(part.getContentType(), part.getName(), part.getProperties(), new FileInputStream(sourceFile));
         }
 
@@ -396,14 +400,14 @@ public class CheckpointHelper {
     // ZipPayloadImpl
 
     private void writePartsTo(Iterator<Part> parts, OutputStream os) throws IOException {
-        ZipOutputStream zos = new ZipOutputStream(os);
-        while (parts.hasNext()) {
-            Part part = parts.next();
-            prepareEntry(part, zos);
-            part.copy(zos);
-            zos.closeEntry();
+        try (ZipOutputStream zos = new ZipOutputStream(os)) {
+            while (parts.hasNext()) {
+                Part part = parts.next();
+                prepareEntry(part, zos);
+                part.copy(zos);
+                zos.closeEntry();
+            }
         }
-        zos.close();
     }
 
     private void prepareEntry(final Payload.Part part, final ZipOutputStream zos) throws IOException {

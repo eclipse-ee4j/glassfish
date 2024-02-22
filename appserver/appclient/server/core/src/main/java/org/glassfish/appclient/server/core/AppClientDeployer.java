@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,40 +17,41 @@
 
 package org.glassfish.appclient.server.core;
 
-import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Applications;
-import com.sun.enterprise.module.HK2Module;
-import java.io.IOException;
+import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 import com.sun.enterprise.deployment.archivist.AppClientArchivist;
+import com.sun.enterprise.module.HK2Module;
 import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.logging.Logger;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
 
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.MetaData;
 import org.glassfish.api.deployment.UndeployCommandParameters;
-import org.glassfish.appclient.server.core.jws.servedcontent.ASJarSigner;
-import org.glassfish.deployment.common.DeploymentException;
-import org.glassfish.javaee.core.deployment.JavaEEDeployer;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PostConstruct;
-import jakarta.inject.Singleton;
-import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.appclient.server.core.jws.JWSAdapterManager;
 import org.glassfish.appclient.server.core.jws.JavaWebStartInfo;
+import org.glassfish.appclient.server.core.jws.servedcontent.ASJarSigner;
 import org.glassfish.deployment.common.Artifacts;
+import org.glassfish.deployment.common.DeploymentException;
 import org.glassfish.deployment.common.DeploymentUtils;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.javaee.core.deployment.JavaEEDeployer;
+import org.jvnet.hk2.annotations.Service;
+
 /**
  * AppClient module deployer.
  * <p>
@@ -160,14 +162,14 @@ public class AppClientDeployer
      * Maps the app name to the user-friendly context root for that app.
      */
     private final Map<String,String> appAndClientNameToUserFriendlyContextRoot =
-            new HashMap<String,String>();
+            new HashMap<>();
 
 
 
     /** the class loader which knows about the org.glassfish.main.appclient.gf-client-module */
     private ClassLoader gfClientModuleClassLoader;
 
-    /*
+    /**
      * Each app client server application will listen for config change
      * events - for creation, deletion, or change of java-web-start-enabled
      * property settings.  Because they are not handled as services hk2 will
@@ -177,8 +179,7 @@ public class AppClientDeployer
      * all app client server applications so the deployer can forward
      * notifications to each app client server app.
      */
-    final private Set<AppClientServerApplication> appClientApps =
-            new HashSet<AppClientServerApplication>();
+    private final Set<AppClientServerApplication> appClientApps = new HashSet<>();
 
     public AppClientDeployer() {
     }
@@ -282,8 +283,7 @@ public class AppClientDeployer
      * @param helper
      * @param dc
      */
-    private void recordUserFriendlyContextRoot(final AppClientDeployerHelper helper,
-            final DeploymentContext dc) {
+    private void recordUserFriendlyContextRoot(final AppClientDeployerHelper helper, final DeploymentContext dc) {
         final String path = JWSAdapterManager.userFriendlyContextRoot(helper.appClientDesc(), dc.getAppProps());
         dc.getModuleProps().put("jws.user.friendly.path", path);
     }
@@ -322,23 +322,17 @@ public class AppClientDeployer
         final String key = HELPER_KEY_NAME + moduleURI(dc);
         AppClientDeployerHelper h = null;
 
-        final AppClientDeployerHelper.Proxy p = dc.getTransientAppMetaData(key,
-                AppClientDeployerHelper.Proxy.class);
+        final AppClientDeployerHelper.Proxy p = dc.getTransientAppMetaData(key, AppClientDeployerHelper.Proxy.class);
         if (p != null) {
             h = p.helper();
         }
-
         if (h == null) {
-            h = dc.getTransientAppMetaData(key,
-                    StandaloneAppClientDeployerHelper.class);
+            h = dc.getTransientAppMetaData(key, StandaloneAppClientDeployerHelper.class);
         }
         if (h == null) {
-            /*
-             * We are probably loading a previously-deployed app client, so
-             * the helper has not be created yet.  Create it.
-             */
-            h = createAndSaveHelper(dc,
-                    gfClientModuleClassLoader);
+            // We are probably loading a previously-deployed app client, so
+            // the helper has not be created yet.  Create it.
+            h = createAndSaveHelper(dc, gfClientModuleClassLoader);
         }
         return h;
     }
@@ -348,19 +342,19 @@ public class AppClientDeployer
         return acd.getModuleDescriptor().getArchiveUri();
     }
 
-    public void recordContextRoot(final String appName,
-            final String clientURIWithinEAR,
-            final String userFriendlyContextRoot) {
-        appAndClientNameToUserFriendlyContextRoot.put(
-                keyToAppAndClientNameMap(appName, clientURIWithinEAR),
-                userFriendlyContextRoot);
+
+    public void recordContextRoot(final String appName, final String clientURIWithinEAR,
+        final String userFriendlyContextRoot) {
+        String key = keyToAppAndClientNameMap(appName, clientURIWithinEAR);
+        appAndClientNameToUserFriendlyContextRoot.put(key, userFriendlyContextRoot);
     }
 
-    public void removeContextRoot(final String appName,
-            final String clientURIWithinEAR) {
-            appAndClientNameToUserFriendlyContextRoot.remove(
-                keyToAppAndClientNameMap(appName, clientURIWithinEAR));
+
+    public void removeContextRoot(final String appName, final String clientURIWithinEAR) {
+        String key = keyToAppAndClientNameMap(appName, clientURIWithinEAR);
+        appAndClientNameToUserFriendlyContextRoot.remove(key);
     }
+
 
     /**
      * Returns the user-friendly context root for the specified app client.
@@ -371,19 +365,13 @@ public class AppClientDeployer
      * @param clientModuleURI
      * @return
      */
-    public String userFriendlyContextRoot(final String appName,
-            final String clientModuleURI) {
-        return appAndClientNameToUserFriendlyContextRoot.get(
-                keyToAppAndClientNameMap(appName, clientModuleURI));
+    public String userFriendlyContextRoot(final String appName, final String clientModuleURI) {
+        String key = keyToAppAndClientNameMap(appName, clientModuleURI);
+        return appAndClientNameToUserFriendlyContextRoot.get(key);
     }
 
 
-
-    private String keyToAppAndClientNameMap(final String appName,
-            final String moduleURIText) {
+    private String keyToAppAndClientNameMap(final String appName, final String moduleURIText) {
         return appName + "/" + (moduleURIText == null ? appName : moduleURIText);
     }
-
-
-
 }

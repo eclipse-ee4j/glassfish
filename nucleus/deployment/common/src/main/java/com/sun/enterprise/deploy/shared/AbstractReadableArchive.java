@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,17 +17,18 @@
 
 package com.sun.enterprise.deploy.shared;
 
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
+
+import org.glassfish.api.deployment.archive.ReadableArchive;
 
 /**
  * Common methods for ReadableArchive implementations
  */
 public abstract class AbstractReadableArchive implements ReadableArchive {
     protected ReadableArchive parentArchive;
-    protected Map<Class<?>, Object> extraData=new HashMap<Class<?>, Object>();
-    protected Map<String, Object> archiveMetaData = new HashMap<String, Object>();
+    protected Map<Class<?>, Object> extraData=new HashMap<>();
+    protected Map<String, Object> archiveMetaData = new HashMap<>();
 
 
     /**
@@ -34,6 +36,7 @@ public abstract class AbstractReadableArchive implements ReadableArchive {
      *
      * @param parentArchive the parent archive
      */
+    @Override
     public void setParentArchive(ReadableArchive parentArchive) {
         this.parentArchive = parentArchive;
     }
@@ -43,6 +46,7 @@ public abstract class AbstractReadableArchive implements ReadableArchive {
      *
      * @return the parent archive
      */
+    @Override
     public ReadableArchive getParentArchive() {
         return parentArchive;
     }
@@ -55,25 +59,30 @@ public abstract class AbstractReadableArchive implements ReadableArchive {
      * @return the extra data or null if there are not an instance of
      * type dataType registered.
      */
+    @Override
     public synchronized <U> U getExtraData(Class<U> dataType) {
         return dataType.cast(extraData.get(dataType));
     }
 
+    @Override
     public synchronized <U> void setExtraData(Class<U> dataType, U instance) {
         extraData.put(dataType, instance);
     }
 
+    @Override
     public synchronized <U> void removeExtraData(Class<U> dataType) {
         extraData.remove(dataType);
     }
 
 
+    @Override
     public void addArchiveMetaData(String metaDataKey, Object metaData) {
         if (metaData!=null) {
             archiveMetaData.put(metaDataKey, metaData);
         }
     }
 
+    @Override
     public <T> T getArchiveMetaData(String metaDataKey, Class<T> metadataType) {
         Object metaData = archiveMetaData.get(metaDataKey);
         if (metaData != null) {
@@ -82,7 +91,13 @@ public abstract class AbstractReadableArchive implements ReadableArchive {
         return null;
     }
 
+    @Override
     public void removeArchiveMetaData(String metaDataKey) {
         archiveMetaData.remove(metaDataKey);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "[" + getName() + "]";
     }
 }

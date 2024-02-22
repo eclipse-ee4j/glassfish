@@ -36,6 +36,7 @@ import java.util.logging.Logger;
 
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
+import org.glassfish.api.deployment.archive.WritableArchiveEntry;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.main.jul.handler.LogCollectorHandler;
 import org.glassfish.main.jul.record.GlassFishLogRecord;
@@ -165,29 +166,28 @@ public class FileArchiveTest {
 
 
     private ReadableArchive createAndPopulateArchive(final Set<String> entryNames) throws Exception {
-        WritableArchive instance = archiveFactory.createArchive(archiveDir.toURI());
-        instance.create(archiveDir.toURI());
-
-        // Add some entries.
-        for (String entryName : entryNames) {
-            instance.putNextEntry(entryName);
-            instance.closeEntry();
+        try (WritableArchive instance = archiveFactory.createArchive(archiveDir.toURI())) {
+            instance.create(archiveDir.toURI());
+            // Add some entries.
+            for (String entryName : entryNames) {
+                try (WritableArchiveEntry entry = instance.putNextEntry(entryName)) {
+                    // just an empty entry
+                }
+            }
         }
-        instance.close();
         return archiveFactory.openArchive(archiveDir);
     }
 
-    private ReadableArchive createAndPopulateSubarchive(
-            final WritableArchive parent,
-            final String subarchiveName,
-            final Set<String> entryNames) throws Exception {
-        final WritableArchive result = parent.createSubArchive(subarchiveName);
-        for (String entryName : entryNames) {
-            result.putNextEntry(entryName);
-            result.closeEntry();
-        }
-        result.close();
 
+    private ReadableArchive createAndPopulateSubarchive(final WritableArchive parent, final String subarchiveName,
+        final Set<String> entryNames) throws Exception {
+        try (WritableArchive result = parent.createSubArchive(subarchiveName)) {
+            for (String entryName : entryNames) {
+                try (WritableArchiveEntry entry = result.putNextEntry(entryName)) {
+                    // just an empty entry
+                }
+            }
+        }
         final ReadableArchive readableParent = archiveFactory.openArchive(parent.getURI());
         return readableParent.getSubArchive(subarchiveName);
     }

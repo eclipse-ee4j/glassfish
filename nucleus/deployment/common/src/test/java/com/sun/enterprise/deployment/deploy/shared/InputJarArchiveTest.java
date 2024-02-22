@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -72,7 +72,7 @@ public class InputJarArchiveTest {
 
     @Test
     public void testCollectionWrappedEnumerationMiddleSize() {
-        CollectionWrappedEnumeration<String> cwe = new CollectionWrappedEnumeration<>(() -> testEnum());
+        CollectionWrappedEnumeration<String> cwe = new CollectionWrappedEnumeration<>(InputJarArchiveTest::testEnum);
         ArrayList<String> answer = new ArrayList<>();
         Iterator<String> it = cwe.iterator();
         answer.add(it.next());
@@ -86,7 +86,7 @@ public class InputJarArchiveTest {
 
     @Test
     public void testCollectionWrappedEnumerationEndSize() {
-        CollectionWrappedEnumeration<String> cwe = new CollectionWrappedEnumeration<>(() -> testEnum());
+        CollectionWrappedEnumeration<String> cwe = new CollectionWrappedEnumeration<>(InputJarArchiveTest::testEnum);
         List<String> answer = new ArrayList<>();
         Iterator<String> it = cwe.iterator();
         answer.add(it.next());
@@ -101,9 +101,7 @@ public class InputJarArchiveTest {
 
     private ReadableArchive getArchiveForTest() throws IOException {
         File tempJAR = createTestJAR();
-        final InputJarArchive arch = new InputJarArchive();
-        arch.open(tempJAR.toURI());
-        return arch;
+        return new InputJarArchive(tempJAR);
     }
 
     private void retireArchive(final ReadableArchive arch) throws IOException {

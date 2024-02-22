@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -39,7 +39,7 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 public class DescriptorArchivist {
     @Inject
-    protected ArchivistFactory archivistFactory;
+    private ArchivistFactory archivistFactory;
 
     @Inject
     private  Provider<ApplicationArchivist> archivistProvider;
@@ -53,15 +53,15 @@ public class DescriptorArchivist {
     public void write(Application application, ReadableArchive in, WritableArchive out) throws IOException {
         if (application.isVirtual()) {
             ModuleDescriptor<BundleDescriptor> aModule = application.getModules().iterator().next();
-            Archivist<?> moduleArchivist = archivistFactory.getArchivist(aModule.getModuleType());
+            Archivist<BundleDescriptor> moduleArchivist = archivistFactory.getArchivist(aModule.getModuleType());
             write(aModule.getDescriptor(), moduleArchivist, in, out);
         } else {
             // this is a real application.
             // let's start by writing out all submodules deployment descriptors
             for (ModuleDescriptor<BundleDescriptor> aModule : application.getModules()) {
-                Archivist<?> moduleArchivist = archivistFactory.getArchivist(aModule.getModuleType());
-                WritableArchive moduleArchive = out.createSubArchive(aModule.getArchiveUri());
-                try (ReadableArchive moduleArchive2 = in.getSubArchive(aModule.getArchiveUri())) {
+                Archivist<BundleDescriptor> moduleArchivist = archivistFactory.getArchivist(aModule.getModuleType());
+                try (WritableArchive moduleArchive = out.createSubArchive(aModule.getArchiveUri());
+                    ReadableArchive moduleArchive2 = in.getSubArchive(aModule.getArchiveUri())) {
                     write(aModule.getDescriptor(), moduleArchivist, moduleArchive2, moduleArchive);
                 }
             }
@@ -80,9 +80,10 @@ public class DescriptorArchivist {
      * @param archivist responsible for writing such bundle type
      * @param in archive to read from
      * @param out archive to write to
+     * @throws IOException
      */
-    protected void write(BundleDescriptor bundle, Archivist archivist, ReadableArchive in, WritableArchive out)
-        throws IOException {
+    protected void write(BundleDescriptor bundle, Archivist<BundleDescriptor> archivist, ReadableArchive in,
+        WritableArchive out) throws IOException {
         archivist.setDescriptor(bundle);
         archivist.writeDeploymentDescriptors(in, out);
     }

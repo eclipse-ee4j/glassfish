@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -52,7 +52,6 @@ import org.jvnet.hk2.config.types.Property;
  *
  * @author Nithya Subramanian
  */
-
 @Service
 @Singleton
 public class EmbeddedSecurityUtil implements EmbeddedSecurity {
@@ -111,7 +110,7 @@ public class EmbeddedSecurityUtil implements EmbeddedSecurity {
 
             //Copy files into new directory
             for (String fileName : fileNames) {
-                FileUtils.copyFile(new File(fileName), new File(toConfigDir, parseFileName(fileName)));
+                FileUtils.copy(new File(fileName), new File(toConfigDir, parseFileName(fileName)));
             }
         } catch (IOException e) {
             _logger.log(Level.WARNING, SecurityLoggerInfo.ioError, e);

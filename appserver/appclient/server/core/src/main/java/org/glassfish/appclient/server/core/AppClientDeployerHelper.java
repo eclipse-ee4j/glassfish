@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,16 @@
 
 package org.glassfish.appclient.server.core;
 
+import com.sun.enterprise.deploy.shared.FileArchive;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.ApplicationClientDescriptor;
+import com.sun.enterprise.deployment.archivist.AppClientArchivist;
+import com.sun.enterprise.deployment.deploy.shared.OutputJarArchive;
+import com.sun.enterprise.util.io.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.MessageFormat;
@@ -40,6 +47,7 @@ import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
+import org.glassfish.api.deployment.archive.WritableArchiveEntry;
 import org.glassfish.appclient.server.core.jws.JavaWebStartInfo;
 import org.glassfish.appclient.server.core.jws.servedcontent.ASJarSigner;
 import org.glassfish.appclient.server.core.jws.servedcontent.DynamicContent;
@@ -47,18 +55,10 @@ import org.glassfish.appclient.server.core.jws.servedcontent.FixedContent;
 import org.glassfish.appclient.server.core.jws.servedcontent.StaticContent;
 import org.glassfish.appclient.server.core.jws.servedcontent.TokenHelper;
 import org.glassfish.deployment.common.Artifacts;
-import org.glassfish.deployment.common.DeploymentUtils;
 import org.glassfish.deployment.versioning.VersioningSyntaxException;
 import org.glassfish.deployment.versioning.VersioningUtils;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.ServerContext;
-
-import com.sun.enterprise.deploy.shared.FileArchive;
-import com.sun.enterprise.deployment.Application;
-import com.sun.enterprise.deployment.ApplicationClientDescriptor;
-import com.sun.enterprise.deployment.archivist.AppClientArchivist;
-import com.sun.enterprise.deployment.deploy.shared.OutputJarArchive;
-import com.sun.enterprise.util.shared.ArchivistUtils;
 
 /**
  * Encapsulates the details of generating the required JAR file(s),
@@ -86,7 +86,7 @@ public abstract class AppClientDeployerHelper {
     private final String appName;
     private final String clientName;
 
-    private JarFile gfClientModuleJarFile;
+    private final JarFile gfClientModuleJarFile;
 
     private final Application application;
 
@@ -290,7 +290,7 @@ public abstract class AppClientDeployerHelper {
             throws IOException;
 
     public Map<String,Map<URI,StaticContent>> signingAliasToJar() {
-        return Collections.EMPTY_MAP;
+        return Collections.emptyMap();
     }
 
     public final DeploymentContext dc() {
@@ -337,21 +337,20 @@ public abstract class AppClientDeployerHelper {
      * if the classPathElement is for a submodule; null otherwise
      */
     File JAROfExpandedSubmodule(final URI candidateSubmoduleURI) throws IOException {
-        ReadableArchive source = new FileArchive();
-        source.open(dc().getSource().getParentArchive().getURI().resolve(expandedDirURI(candidateSubmoduleURI)));
-        OutputJarArchive target = new OutputJarArchive();
-        target.create(dc().getScratchDir("xml").toURI().resolve(candidateSubmoduleURI));
-        /*
-         * Copy the manifest explicitly because the ReadableArchive
-         * entries() method omits it.
-         */
-        Manifest mf = source.getManifest();
-        OutputStream os = target.putNextEntry(JarFile.MANIFEST_NAME);
-        mf.write(os);
-        target.closeEntry();
-        copyArchive(source, target, Collections.EMPTY_SET);
-        target.close();
-        return new File(target.getURI());
+        URI uri = dc().getSource().getParentArchive().getURI().resolve(expandedDirURI(candidateSubmoduleURI));
+        try (FileArchive source = new FileArchive(uri); OutputJarArchive target = new OutputJarArchive()) {
+            target.create(dc().getScratchDir("xml").toURI().resolve(candidateSubmoduleURI));
+            /*
+             * Copy the manifest explicitly because the ReadableArchive
+             * entries() method omits it.
+             */
+            Manifest mf = source.getManifest();
+            try (WritableArchiveEntry os = target.putNextEntry(JarFile.MANIFEST_NAME)) {
+                mf.write(os);
+            }
+            copyArchive(source, target, Collections.emptySet());
+            return new File(target.getURI());
+        }
     }
 
     private URI expandedDirURI(final URI submoduleURI) {
@@ -481,130 +480,114 @@ public abstract class AppClientDeployerHelper {
         }
     }
 
-    protected abstract void copyFileToTopLevelJAR(final OutputJarArchive clientFacadeArchive, final File f, final String path) throws IOException;
+    /**
+     * Copies a file's contents to the top-level JAR generated by this deployment.
+     *
+     * @param clientFacadeArchive
+     * @param inputFile
+     * @param pathInJar
+     * @throws IOException
+     */
+    protected abstract void copyFileToTopLevelJAR(final OutputJarArchive clientFacadeArchive, final File inputFile,
+        final String pathInJar) throws IOException;
+
 
     protected final void generateAppClientFacade() throws IOException, URISyntaxException {
-        OutputJarArchive facadeArchive = new OutputJarArchive();
-        /*
-         * Make sure the directory subtree to contain the facade exists.  If the
-         * client URI within the EAR contains a directory then that directory
-         * probably does not exist in the generated dir for this app...not yet
-         * anyway...it is about to exist.
-         */
-        final File facadeFile = new File(facadeServerURI(dc));
-        if ( ! facadeFile.getParentFile().exists()) {
-            if ( ! facadeFile.getParentFile().mkdirs()) {
-                final String msg = logger.getResourceBundle().getString("enterprise.deployment.appclient.errormkdirs");
-                throw new IOException(MessageFormat.format(msg, facadeFile.getAbsolutePath()));
+        try (OutputJarArchive facadeArchive = new OutputJarArchive()) {
+            /*
+             * Make sure the directory subtree to contain the facade exists. If the
+             * client URI within the EAR contains a directory then that directory
+             * probably does not exist in the generated dir for this app...not yet
+             * anyway...it is about to exist.
+             */
+            final File facadeFile = new File(facadeServerURI(dc));
+            if (!facadeFile.getParentFile().exists()) {
+                if (!facadeFile.getParentFile().mkdirs()) {
+                    final String msg = logger.getResourceBundle()
+                        .getString("enterprise.deployment.appclient.errormkdirs");
+                    throw new IOException(MessageFormat.format(msg, facadeFile.getAbsolutePath()));
+                }
             }
-        }
-        facadeArchive.create(facadeServerURI(dc));
-        ReadableArchive source = dc.getSource();
-        Manifest sourceManifest = source.getManifest();
-        if (sourceManifest == null) {
-            final String msg = logger.getResourceBundle().getString("enterprise.deployment.appclient.noManifest");
-            throw new IOException(MessageFormat.format(msg, source.getURI().toASCIIString()));
-        }
-        Manifest facadeManifest = facadeArchive.getManifest();
-        initGeneratedManifest(sourceManifest, facadeManifest,
-                facadeClassPath(), PUScanTargets(), application);
-        /*
-         * If the developer's app client JAR contains a splash screen, copy
-         * it from the original JAR to the facade so the Java launcher can
-         * display it when the app client is launched.
-         */
-        final Attributes srcMainAttrs = sourceManifest.getMainAttributes();
-        if (srcMainAttrs == null) {
-            final String msg = logger.getResourceBundle().getString("enterprise.deployment.appclient.noMainAttrs");
-            throw new IOException(MessageFormat.format(msg, source.getURI().toASCIIString()));
-        }
-        String splash = srcMainAttrs.getValue(AppClientDeployer.SPLASH_SCREEN_IMAGE);
-        if (splash != null) {
-            copy(source, facadeArchive, splash);
-        }
-        /*
-         * Write the manifest to the facade.
-         */
-        OutputStream os = facadeArchive.putNextEntry(JarFile.MANIFEST_NAME);
-        facadeManifest.write(os);
-        facadeArchive.closeEntry();
-        /*
-         * Write the updated descriptors to the facade.
-         */
-        writeUpdatedDescriptors(source, facadeArchive, appClientDesc);
+            facadeArchive.create(facadeServerURI(dc));
+            ReadableArchive source = dc.getSource();
+            Manifest sourceManifest = source.getManifest();
+            if (sourceManifest == null) {
+                final String msg = logger.getResourceBundle().getString("enterprise.deployment.appclient.noManifest");
+                throw new IOException(MessageFormat.format(msg, source.getURI().toASCIIString()));
+            }
+            Manifest facadeManifest = facadeArchive.getManifest();
+            initGeneratedManifest(sourceManifest, facadeManifest, facadeClassPath(), PUScanTargets(), application);
+            /*
+             * If the developer's app client JAR contains a splash screen, copy
+             * it from the original JAR to the facade so the Java launcher can
+             * display it when the app client is launched.
+             */
+            final Attributes srcMainAttrs = sourceManifest.getMainAttributes();
+            if (srcMainAttrs == null) {
+                final String msg = logger.getResourceBundle().getString("enterprise.deployment.appclient.noMainAttrs");
+                throw new IOException(MessageFormat.format(msg, source.getURI().toASCIIString()));
+            }
+            String splash = srcMainAttrs.getValue(AppClientDeployer.SPLASH_SCREEN_IMAGE);
+            if (splash != null) {
+                copy(source, facadeArchive, splash);
+            }
+            /*
+             * Write the manifest to the facade.
+             */
+            try (WritableArchiveEntry os = facadeArchive.putNextEntry(JarFile.MANIFEST_NAME)) {
+                facadeManifest.write(os);
+            }
+            /*
+             * Write the updated descriptors to the facade.
+             */
+            writeUpdatedDescriptors(source, facadeArchive, appClientDesc);
 
-        /*
-         * Because of how persistence units are discovered and added to the
-         * app client DOL object when the archivist reads the descriptor file,
-         * add any META-INF/persistence.xml file from the developer's client
-         * to the client facade.  (The generated descriptor and the
-         * persistence.xml files need to be in the same archive.)
-         */
-        copyPersistenceUnitXML(source, facadeArchive);
+            /*
+             * Because of how persistence units are discovered and added to the
+             * app client DOL object when the archivist reads the descriptor file,
+             * add any META-INF/persistence.xml file from the developer's client
+             * to the client facade. (The generated descriptor and the
+             * persistence.xml files need to be in the same archive.)
+             */
+            copyPersistenceUnitXML(source, facadeArchive);
 
-        copyMainClass(facadeArchive);
+            copyMainClass(facadeArchive);
 
-        addTopLevelContentToClientFacade(facadeArchive);
-
-        facadeArchive.close();
+            addTopLevelContentToClientFacade(facadeArchive);
+        }
     }
 
     /**
      * copy the entryName element from the source abstract archive into
      * the target abstract archive
      */
-    static void copy(
-            ReadableArchive source, WritableArchive target, String entryName)
-            throws IOException {
-
-        InputStream is = null;
-        OutputStream os = null;
-        try {
-            is = source.getEntry(entryName);
-            if (is != null) {
-                try {
-                    os = target.putNextEntry(entryName);
-                } catch (ZipException ze) {
-                    // this is a duplicate...
-                    return;
-                }
-                ArchivistUtils.copyWithoutClose(is, os);
-            } else {
+    static void copy(ReadableArchive source, WritableArchive target, String entryName) throws IOException {
+        try (InputStream is = source.getEntry(entryName)) {
+            if (is == null) {
                 // This may be a directory specification if there is no entry
                 // in the source for it...for example, a directory expression
                 // in the Class-Path entry from a JAR's manifest.
                 //
                 // Try to copy all entries from the source that have the
                 // entryName as a prefix.
-                for (Enumeration e = source.entries(entryName); e.hasMoreElements();) {
-                    copy(source, target, (String) e.nextElement());
+                for (Enumeration<String> e = source.entries(entryName); e.hasMoreElements();) {
+                    copy(source, target, e.nextElement());
                 }
-            }
-        } catch (IOException ioe) {
-            throw ioe;
-        } finally {
-            IOException closeEntryIOException = null;
-            if (os != null) {
-                try {
-                    target.closeEntry();
-                } catch (IOException ioe) {
-                    closeEntryIOException = ioe;
+            } else {
+                try (WritableArchiveEntry os = target.putNextEntry(entryName)) {
+                    FileUtils.copy(is, os);
+                } catch (ZipException ze) {
+                    // this is a duplicate...
+                    logger.log(Level.WARNING, "Putting of the entry failed for " + entryName, ze);
                 }
-            }
-            if (is != null) {
-                is.close();
-            }
-
-            if (closeEntryIOException != null) {
-                throw closeEntryIOException;
             }
         }
     }
 
-    static void copyArchive(
-            ReadableArchive source, WritableArchive target, Set excludeList) {
-        for (Enumeration e = source.entries(); e.hasMoreElements();) {
-            String entryName = String.class.cast(e.nextElement());
+
+    static void copyArchive(ReadableArchive source, WritableArchive target, Set<String> excludeList) {
+        for (Enumeration<String> e = source.entries(); e.hasMoreElements();) {
+            String entryName = e.nextElement();
             if (excludeList.contains(entryName)) {
                 continue;
             }
@@ -612,20 +595,16 @@ public abstract class AppClientDeployerHelper {
                 copy(source, target, entryName);
             } catch (IOException ioe) {
                 // duplicate, we ignore
+                logger.log(Level.WARNING, "Putting of the entry failed for " + entryName, ioe);
             }
         }
     }
 
-    private void copyClass(final WritableArchive facadeArchive,
-            final String classResourcePath) throws IOException {
-        OutputStream os = facadeArchive.putNextEntry(classResourcePath);
-        InputStream is = openByteCodeStream(classResourcePath);
 
-        DeploymentUtils.copyStream(is, os);
-        try {
-            is.close();
-            facadeArchive.closeEntry();
-        } catch (IOException ignore) {
+    private void copyClass(final WritableArchive facadeArchive, final String classResourcePath) throws IOException {
+        try (InputStream is = openByteCodeStream(classResourcePath);
+            WritableArchiveEntry os = facadeArchive.putNextEntry(classResourcePath)) {
+            FileUtils.copy(is, os);
         }
     }
 
@@ -636,14 +615,12 @@ public abstract class AppClientDeployerHelper {
 
     private void copyPersistenceUnitXML(final ReadableArchive sourceClient,
             final WritableArchive facadeArchive) throws IOException {
-        InputStream persistenceXMLStream = sourceClient.getEntry(PERSISTENCE_XML_PATH);
-        if (persistenceXMLStream != null) {
-            OutputStream os = facadeArchive.putNextEntry(PERSISTENCE_XML_PATH);
-            DeploymentUtils.copyStream(persistenceXMLStream, os);
-            try {
-                persistenceXMLStream.close();
-                facadeArchive.closeEntry();
-            } catch (IOException ignore) {
+        try (InputStream persistenceXMLStream = sourceClient.getEntry(PERSISTENCE_XML_PATH)) {
+            if (persistenceXMLStream == null) {
+                return;
+            }
+            try (WritableArchiveEntry os = facadeArchive.putNextEntry(PERSISTENCE_XML_PATH)) {
+                FileUtils.copy(persistenceXMLStream, os);
             }
         }
     }

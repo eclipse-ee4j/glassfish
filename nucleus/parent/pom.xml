@@ -145,7 +145,6 @@
         <ant.version>1.10.12</ant.version>
         <ant.external.version>1.10.2</ant.external.version>
         <jackson.version>2.16.1</jackson.version>
-        <jackson-databind.version>2.16.0</jackson-databind.version>
         <fasterxml.classmate.version>1.7.0</fasterxml.classmate.version>
         <stax-api.version>1.0-2</stax-api.version>
         <jettison.version>1.5.4</jettison.version>
@@ -653,7 +652,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>${jackson-databind.version}</version>
+                <version>${jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.module</groupId>

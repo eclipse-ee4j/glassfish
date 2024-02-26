@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,11 +31,9 @@ import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import jakarta.inject.Inject;
 
 import java.io.File;
-import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -64,6 +62,7 @@ import org.jline.reader.impl.completer.NullCompleter;
 import org.jline.reader.impl.completer.StringsCompleter;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
+import org.jline.terminal.impl.ExternalTerminal;
 import org.jvnet.hk2.annotations.Service;
 
 import static org.glassfish.hk2.utilities.BuilderHelper.createConstantDescriptor;
@@ -173,9 +172,12 @@ public class LocalOSGiShellCommand extends CLICommand {
         logger.log(Level.FINEST, "executeCommand: args {0}", Arrays.toString(args));
         shellType = cmd.executeAndReturnOutput(args).trim();
         try (Terminal terminal = createTerminal()) {
-            LineReader reader = LineReaderBuilder.builder().completer(getCommandCompleter()).appName(REMOTE_COMMAND)
-                .terminal(terminal).build();
-            return executeCommands(reader);
+            LineReaderBuilder builder  = LineReaderBuilder.builder().appName(REMOTE_COMMAND).terminal(terminal);
+            if (isInteractive()) {
+                builder.completer(getCommandCompleter());
+                builder.option(LineReader.Option.INSERT_TAB, false);
+            }
+            return executeCommands(builder.build());
         } catch (IOException e) {
             throw new CommandException(e);
         }
@@ -195,29 +197,18 @@ public class LocalOSGiShellCommand extends CLICommand {
 
 
     private Terminal createTerminal() throws IOException, CommandException {
-        InputStream inputStream;
-        OutputStream outputStream;
-        if (file != null) {
+        if (!isInteractive()) {
             if (!file.canRead()) {
                 throw new CommandException("File: " + file + " can not be read");
             }
-            inputStream = new FileInputStream(file);
-            outputStream = new EmptyOutputStream();
-        } else {
-            System.out.println(STRINGS.get("multimodeIntro"));
-            inputStream = new FileInputStream(FileDescriptor.in);
-            outputStream = System.out;
+
+            return new ExternalTerminal(REMOTE_COMMAND, "dumb", new FileInputStream(file), new EmptyOutputStream(),
+                encoding != null ? Charset.forName(encoding) : Charset.defaultCharset());
         }
 
-        TerminalBuilder builder = TerminalBuilder.builder().streams(inputStream, outputStream);
+        System.out.println(STRINGS.get("multimodeIntro"));
 
-        if (System.getenv("TERM") == null) {
-            Terminal terminal = builder.type("dumb").build();
-            terminal.echo(false);
-            return terminal;
-        }
-
-        return builder.build();
+        return TerminalBuilder.builder().system(true).build();
     }
 
 
@@ -321,7 +312,7 @@ public class LocalOSGiShellCommand extends CLICommand {
         try {
             while (true) {
                 try {
-                    if (isPromptPrinted()) {
+                    if (isInteractive()) {
                         line = reader.readLine(shellType + "$ ");
                     } else {
                         line = reader.readLine();
@@ -436,7 +427,7 @@ public class LocalOSGiShellCommand extends CLICommand {
     }
 
 
-    private boolean isPromptPrinted() {
+    private boolean isInteractive() {
         return file == null;
     }
 

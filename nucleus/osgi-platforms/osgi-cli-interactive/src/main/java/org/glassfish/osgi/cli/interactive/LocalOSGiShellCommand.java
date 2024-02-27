@@ -202,8 +202,10 @@ public class LocalOSGiShellCommand extends CLICommand {
                 throw new CommandException("File: " + file + " can not be read");
             }
 
-            return new ExternalTerminal(REMOTE_COMMAND, "dumb", new FileInputStream(file), new EmptyOutputStream(),
-                encoding != null ? Charset.forName(encoding) : Charset.defaultCharset());
+            Charset charset = encoding == null ? Charset.defaultCharset() : Charset.forName(encoding);
+
+            return new ExternalTerminal(REMOTE_COMMAND, "dumb",
+                new FileInputStream(file), new EmptyOutputStream(), charset);
         }
 
         System.out.println(STRINGS.get("multimodeIntro"));

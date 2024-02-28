@@ -17,12 +17,6 @@
 
 package org.glassfish.javaee.full.deployment;
 
-import static java.util.logging.Level.SEVERE;
-import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-import static org.glassfish.loader.util.ASClassLoaderUtil.getAppLibDirLibraries;
-
 import com.sun.enterprise.config.serverbeans.DasConfig;
 import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
 import com.sun.enterprise.deploy.shared.ArchiveFactory;
@@ -37,8 +31,10 @@ import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.io.FileUtils;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -51,8 +47,10 @@ import java.security.PermissionCollection;
 import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.deployment.DeployCommandParameters;
@@ -76,9 +74,14 @@ import org.glassfish.internal.api.DelegatingClassLoader;
 import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.internal.deployment.ExtendedDeploymentContext;
 import org.glassfish.javaee.core.deployment.ApplicationHolder;
-import org.glassfish.loader.util.ASClassLoaderUtil;
 import org.jvnet.hk2.annotations.Service;
 import org.xml.sax.SAXException;
+
+import static java.util.logging.Level.SEVERE;
+import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+import static org.glassfish.loader.util.ASClassLoaderUtil.getAppLibDirLibraries;
 
 @Service(name = EarDetector.ARCHIVE_TYPE)
 public class EarHandler extends AbstractArchiveHandler implements CompositeHandler {
@@ -340,7 +343,6 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
                     subContext.setParentContext((ExtendedDeploymentContext) context);
                     sub.setParentArchive(context.getSource());
                     ClassLoader subCl = handler.getClassLoader(earClassLoader, subContext);
-
 
                     if (moduleDescriptor.getModuleType().equals(DOLUtils.ejbType())) {
                         // for ejb module, we just add the ejb urls

@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>nucleus-parent</artifactId>
-        <version>7.0.13-SNAPSHOT</version>
+        <version>7.0.13</version>
         <relativePath>parent</relativePath>
     </parent>
 

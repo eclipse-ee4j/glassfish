@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,14 +32,11 @@ import com.sun.enterprise.deployment.util.ApplicationValidator;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.io.FileUtils;
-import com.sun.enterprise.util.shared.ArchivistUtils;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -107,9 +104,7 @@ public class ApplicationArchivist extends Archivist<Application> {
     protected void writeContents(ReadableArchive in, WritableArchive out) throws IOException {
 
         Set<String> filesToSkip = new HashSet<>();
-        if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-            DOLUtils.getDefaultLogger().fine("Write " + out.getURI() + " with " + this);
-        }
+        logger.log(Level.FINE, "writeContents(in={0}, out={1})", new Object[] {in, out});
 
         // any files already written to the output should never be rewritten
         for (Enumeration<String> alreadyWritten = out.entries(); alreadyWritten.hasMoreElements();) {
@@ -122,50 +117,36 @@ public class ApplicationArchivist extends Archivist<Application> {
             Archivist<BundleDescriptor> subArchivist = archivistFactory.get().getArchivist(aModule.getModuleType());
             subArchivist.initializeContext(this);
             subArchivist.setModuleDescriptor(aModule);
-            if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-                DOLUtils.getDefaultLogger().fine("Write " + aModule.getArchiveUri() + " with " + subArchivist);
-            }
-
-            // Create a new jar file inside the application .ear
-            WritableArchive internalJar = out.createSubArchive(aModule.getArchiveUri());
+            String archiveUri = aModule.getArchiveUri();
+            logger.log(Level.FINE, "Writing {0} with {1}", new Object[] {archiveUri, subArchivist});
 
             // we need to copy the old archive to a temp file so
             // the save method can copy its original contents from
-
             File tmpFile = null;
-            BufferedOutputStream bos = null;
-            try (InputStream is = in.getEntry(aModule.getArchiveUri())) {
+            try (InputStream is = in.getEntry(archiveUri);
+                WritableArchive internalJar = out.createSubArchive(archiveUri)) {
                 if (in instanceof WritableArchive) {
                     subArchivist.setArchiveUri(internalJar.getURI().getSchemeSpecificPart());
                 } else {
                     tmpFile = getTempFile(path);
-                    bos = new BufferedOutputStream(new FileOutputStream(tmpFile));
-                    ArchivistUtils.copy(is, bos);
+                    FileUtils.copy(is, tmpFile, in.getEntrySize(archiveUri));
 
                     // configure archivist
                     subArchivist.setArchiveUri(tmpFile.getAbsolutePath());
                 }
                 subArchivist.writeContents(internalJar);
-                out.closeEntry(internalJar);
             } finally {
                 if (tmpFile != null) {
                     boolean ok = tmpFile.delete();
                     if (!ok) {
                         logger.log(Level.WARNING, localStrings.getLocalString("enterprise.deployment.cantDelete",
-                            "Error deleting file {0}", new Object[] {tmpFile.getAbsolutePath()}));
-                    }
-                }
-                if (bos != null) {
-                    try {
-                        bos.close();
-                    } catch (IOException ioe) {
-                        // ignore
+                            "Error deleting file {0}", tmpFile));
                     }
                 }
             }
 
             // no need to copy the bundle from the original jar file
-            filesToSkip.add(aModule.getArchiveUri());
+            filesToSkip.add(archiveUri);
         }
 
         // now write the old contents and new descriptors
@@ -782,13 +763,12 @@ public class ApplicationArchivist extends Archivist<Application> {
         Set<String> entriesToSkip = new HashSet<>();
         for (ModuleDescriptor<?> aModule : a.getModules()) {
             entriesToSkip.add(aModule.getArchiveUri());
-            try (ReadableArchive subSource = source.getSubArchive(aModule.getArchiveUri())) {
-                WritableArchive subTarget = target.createSubArchive(aModule.getArchiveUri());
+            try (ReadableArchive subSource = source.getSubArchive(aModule.getArchiveUri());
+                WritableArchive subTarget = target.createSubArchive(aModule.getArchiveUri())) {
                 Archivist<?> newArchivist = archivistFactory.get().getArchivist(aModule.getModuleType());
                 try (ReadableArchive subArchive = archiveFactory.openArchive(subTarget.getURI())) {
                     subSource.setParentArchive(subArchive);
                     newArchivist.copyInto(subSource, subTarget, overwriteManifest);
-                    target.closeEntry(subTarget);
                     String subModulePath = subSource.getURI().getSchemeSpecificPart();
                     String parentPath = source.getURI().getSchemeSpecificPart();
                     if (subModulePath.startsWith(parentPath)) {

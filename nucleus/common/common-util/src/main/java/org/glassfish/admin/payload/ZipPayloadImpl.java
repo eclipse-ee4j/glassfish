@@ -72,13 +72,13 @@ class ZipPayloadImpl extends PayloadImpl {
 
         @Override
         public void writePartsTo(OutputStream os) throws IOException {
-            ZipOutputStream zos = new ZipOutputStream(os);
-            for (Payload.Part part : getParts()) {
-                prepareEntry(part, zos);
-                part.copy(zos);
-                zos.closeEntry();
+            try (ZipOutputStream zos = new ZipOutputStream(os)) {
+                for (Payload.Part part : getParts()) {
+                    prepareEntry(part, zos);
+                    part.copy(zos);
+                    zos.closeEntry();
+                }
             }
-            zos.close();
         }
 
         private Outbound() {
@@ -243,7 +243,7 @@ class ZipPayloadImpl extends PayloadImpl {
 
         @Override
         public Iterator<Payload.Part> parts() {
-            return new Iterator<Payload.Part>() {
+            return new Iterator<>() {
 
                 @Override
                 public boolean hasNext() {
@@ -292,6 +292,7 @@ class ZipPayloadImpl extends PayloadImpl {
             super(contentType, name, props);
             this.inboundPayload = inboundPayload;
         }
+
 
         @Override
         public InputStream getInputStream() {

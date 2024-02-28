@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+    Copyright (c) 2024 Contributors to the Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -208,9 +209,9 @@
                 <includes>
                     <include>com/sun/enterprise/deployment/backend/*.properties</include>
                     <include>com/sun/enterprise/v3/**/*.properties</include>
-                    <include>com/sun/enterprise/v3/**/downloadgui.html</include>
                     <include>com/sun/enterprise/v3/**/status.html</include>
                     <include>com/sun/enterprise/v3/**/statusNotDAS.html</include>
+                    <include>com/sun/enterprise/v3/**/statusDisabled.html</include>
                     <include>com/sun/enterprise/v3/**/asynch-1F.gif</include>
                     <include>com/sun/enterprise/v3/**/backimage.jpg</include>
                 </includes>

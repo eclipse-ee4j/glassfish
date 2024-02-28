@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +16,33 @@
  */
 
 package com.sun.enterprise.admin.launcher;
+
+import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
+import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
+import com.sun.enterprise.universal.glassfish.TokenResolver;
+import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+import com.sun.enterprise.universal.process.ProcessStreamDrainer;
+import com.sun.enterprise.universal.xml.MiniXmlParser;
+import com.sun.enterprise.universal.xml.MiniXmlParserException;
+import com.sun.enterprise.util.OS;
+import com.sun.enterprise.util.io.FileUtils;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import static com.sun.enterprise.admin.launcher.GFLauncher.LaunchType.fake;
 import static com.sun.enterprise.admin.launcher.GFLauncherConstants.DEFAULT_LOGFILE;
@@ -36,36 +63,11 @@ import static com.sun.enterprise.util.SystemPropertyConstants.DROP_INTERRUPTED_C
 import static com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.INSTANCE_ROOT_PROPERTY;
 import static com.sun.enterprise.util.SystemPropertyConstants.JAVA_ROOT_PROPERTY;
-import static com.sun.enterprise.util.io.FileUtils.copyFile;
 import static java.lang.Boolean.TRUE;
 import static java.util.Collections.emptyList;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.WARNING;
 import static java.util.stream.Collectors.toList;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
-import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
-import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
-import com.sun.enterprise.universal.glassfish.TokenResolver;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-import com.sun.enterprise.universal.process.ProcessStreamDrainer;
-import com.sun.enterprise.universal.xml.MiniXmlParser;
-import com.sun.enterprise.universal.xml.MiniXmlParserException;
-import com.sun.enterprise.util.OS;
-import com.sun.enterprise.util.io.FileUtils;
 
 /**
  * This is the main Launcher class designed for external and internal usage.
@@ -429,7 +431,7 @@ public abstract class GFLauncher {
 
     abstract void internalLaunch() throws GFLauncherException;
 
-    void launchInstance() throws GFLauncherException, MiniXmlParserException {
+    void launchInstance() throws GFLauncherException {
         if (isFakeLaunch()) {
             return;
         }
@@ -943,17 +945,15 @@ public abstract class GFLauncher {
         if (callerParameters.isUpgrade() && domainXMLjvmOptions.sysProps.containsKey("java.security.manager")) {
 
             GFLauncherLogger.info(GFLauncherLogger.copy_server_policy);
-
-            File source = new File(new File(new File(callerParameters.installDir, "lib"), "templates"), "server.policy");
-            File target = new File(callerParameters.getConfigDir(), "server.policy");
-
+            Path source = callerParameters.installDir.toPath().resolve(Path.of("lib", "templates", "server.policy"));
+            Path target = callerParameters.getConfigDir().toPath().resolve("server.policy");
             try {
-                copyFile(source, target);
+                Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException ioe) {
                 // the actual error is wrapped differently depending on
                 // whether the problem was with the source or target
                 Throwable cause = ioe.getCause() == null ? ioe : ioe.getCause();
-                throw new GFLauncherException(strings.get("copy_server_policy_error", cause.getMessage()));
+                throw new GFLauncherException(strings.get("copy_server_policy_error", cause.getMessage()), ioe);
             }
         }
     }
@@ -970,10 +970,10 @@ public abstract class GFLauncher {
             File osgiCacheDir = new File(callerParameters.getDomainRootDir(), "osgi-cache");
             File backupOsgiCacheDir = new File(callerParameters.getDomainRootDir(), "osgi-cache-" + System.currentTimeMillis());
             if (osgiCacheDir.exists() && !backupOsgiCacheDir.exists()) {
-                if (!FileUtils.renameFile(osgiCacheDir, backupOsgiCacheDir)) {
-                    throw new GFLauncherException(strings.get("rename_osgi_cache_failed", osgiCacheDir, backupOsgiCacheDir));
-                } else {
+                if (FileUtils.renameFile(osgiCacheDir, backupOsgiCacheDir)) {
                     GFLauncherLogger.fine("rename_osgi_cache_succeeded", osgiCacheDir, backupOsgiCacheDir);
+                } else {
+                    throw new GFLauncherException(strings.get("rename_osgi_cache_failed", osgiCacheDir, backupOsgiCacheDir));
                 }
             }
         }

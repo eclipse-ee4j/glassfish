@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -1094,19 +1095,7 @@ public class UtilHandlers {
                     builder.append(ch);
                     break;
                 default:
-                    // Check if we should unicode escape this...
-                    if ((ch > 0x7e) || (ch < 0x20)) {
-                        builder.append("\\u");
-                        chStr = Integer.toHexString(ch);
-                        len = chStr.length();
-                        for (int idx=4; idx > len; idx--) {
-                            // Add leading 0's
-                            builder.append('0');
-                        }
-                        builder.append(chStr);
-                    } else {
-                        builder.append(ch);
-                    }
+                    builder.append(ch);
                     break;
             }
             ch = it.next();

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,11 @@
 
 package org.glassfish.deployment.common;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.text.MessageFormat;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,6 +30,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.logging.annotation.LogMessageInfo;
 
@@ -63,11 +65,13 @@ import org.glassfish.logging.annotation.LogMessageInfo;
  * have been consumed and placed into the client JAR file, the <code>add</code> methods do not permit
  * further additions once the {@link #artifacts} method has been invoked.
  *
+ * FIXME This class is unable to control open resources and can cause IO leaks.
+ *
  * @author tjuinn
  */
-public class ClientArtifactsManager {
+public class ClientArtifactsManager implements Closeable {
 
-    public static final Logger deplLogger = org.glassfish.deployment.common.DeploymentContextImpl.deplLogger;
+    private static final Logger LOG = org.glassfish.deployment.common.DeploymentContextImpl.deplLogger;
 
     @LogMessageInfo(message = "Artifact {0} identified for inclusion in app clients after one or more app clients were generated.", level="SEVERE",
             cause = "The application might specify that modules are to be processed in the order they appear in the application and an app client module appears before a module that creates an artifact to be included in app clients.",
@@ -88,16 +92,15 @@ public class ClientArtifactsManager {
 
     private static final String CLIENT_ARTIFACTS_KEY = "ClientArtifacts";
 
-    private final Map<URI,Artifacts.FullAndPartURIs> artifacts =
-            new HashMap<URI,Artifacts.FullAndPartURIs>();
+    private final Map<URI, Artifacts.FullAndPartURIs> artifacts = new HashMap<>();
 
-    /*
+    /**
      * To verify sources that are JAR entries we need to make sure the
      * requested entry exists in the specified JAR file.  To optimize the
      * opening of JAR files we record the JARs previous checked
      * here.
      */
-    private final Map<URI,JarFile> jarFiles = new HashMap<URI,JarFile>();
+    private final Map<URI,JarFile> jarFiles = new HashMap<>();
 
     /**
      * Retrieves the client artifacts store from the provided deployment
@@ -110,14 +113,12 @@ public class ClientArtifactsManager {
      */
     public static ClientArtifactsManager get(final DeploymentContext dc) {
         synchronized (dc) {
-            ClientArtifactsManager result = dc.getTransientAppMetaData(
-                    CLIENT_ARTIFACTS_KEY, ClientArtifactsManager.class);
-
-            if (result == null) {
-                result = new ClientArtifactsManager();
-                dc.addTransientAppMetaData(CLIENT_ARTIFACTS_KEY, result);
+            ClientArtifactsManager manager = dc.getTransientAppMetaData(CLIENT_ARTIFACTS_KEY, ClientArtifactsManager.class);
+            if (manager == null) {
+                manager = new ClientArtifactsManager();
+                dc.addTransientAppMetaData(CLIENT_ARTIFACTS_KEY, manager);
             }
-            return result;
+            return manager;
         }
     }
 
@@ -188,53 +189,38 @@ public class ClientArtifactsManager {
      * @param artifact
      */
     public void add(Artifacts.FullAndPartURIs artifact) {
-        final boolean isLogAdditions = deplLogger.isLoggable(Level.FINE);
+        LOG.log(Level.FINEST, "add(artifact={0})", artifact);
         if (isArtifactSetConsumed) {
             throw new IllegalStateException(
-                    formattedString(CLIENT_ARTIFACT_OUT_OF_ORDER,
-                        artifact.getFull().toASCIIString())
-                    );
-        } else {
-            Artifacts.FullAndPartURIs existingArtifact =
-                    artifacts.get(artifact.getPart());
-            if (existingArtifact != null) {
-                throw new IllegalArgumentException(
-                        formattedString(CLIENT_ARTIFACT_COLLISION,
-                            artifact.getPart().toASCIIString(),
-                            artifact.getFull().toASCIIString(),
-                            existingArtifact.getFull().toASCIIString())
-                        );
-            }
-            /*
-             * Verify at add-time that we can read the specified source.
-             */
-            final String scheme = artifact.getFull().getScheme();
-            if (scheme.equals("file")) {
-                verifyFileArtifact(artifact);
-            } else if (scheme.equals("jar")) {
-                verifyJarEntryArtifact(artifact);
-            } else {
-                throw new IllegalArgumentException(artifact.getFull().toASCIIString() + " != [file,jar]");
-            }
-            if (isLogAdditions) {
-                final String stackTrace = (deplLogger.isLoggable(Level.FINER)) ?
-                    Arrays.toString(Thread.currentThread().getStackTrace()) : "";
-                deplLogger.log(Level.FINE, "ClientArtifactsManager added {0}\n{1}",
-                        new Object[] {artifact, stackTrace});
-            }
-            artifacts.put(artifact.getPart(), artifact);
+                formattedString(CLIENT_ARTIFACT_OUT_OF_ORDER, artifact.getFull().toASCIIString()));
         }
+        Artifacts.FullAndPartURIs existingArtifact = artifacts.get(artifact.getPart());
+        if (existingArtifact != null) {
+            throw new IllegalArgumentException(
+                    formattedString(CLIENT_ARTIFACT_COLLISION,
+                        artifact.getPart().toASCIIString(),
+                        artifact.getFull().toASCIIString(),
+                        existingArtifact.getFull().toASCIIString())
+                    );
+        }
+        // Verify at add-time that we can read the specified source.
+        final String scheme = artifact.getFull().getScheme();
+        if (scheme.equals("file")) {
+            verifyFileArtifact(artifact);
+        } else if (scheme.equals("jar")) {
+            verifyJarEntryArtifact(artifact);
+        } else {
+            throw new IllegalArgumentException(artifact.getFull().toASCIIString() + " != [file,jar]");
+        }
+        artifacts.put(artifact.getPart(), artifact);
     }
 
     private void verifyFileArtifact(final Artifacts.FullAndPartURIs artifact) {
         final URI fullURI = artifact.getFull();
         final File f = new File(fullURI);
-        if ( ! f.exists() || ! f.canRead()) {
+        if (!f.exists() || !f.canRead()) {
             throw new IllegalArgumentException(
-                    formattedString(CLIENT_ARTIFACT_MISSING,
-                        artifact.getPart().toASCIIString(),
-                        fullURI.toASCIIString())
-                    );
+                formattedString(CLIENT_ARTIFACT_MISSING, artifact.getPart().toASCIIString(), fullURI.toASCIIString()));
         }
     }
 
@@ -290,6 +276,7 @@ public class ClientArtifactsManager {
     public boolean contains(final File baseFile, final File artifactFile) {
         return contains(baseFile.toURI(), artifactFile.toURI());
     }
+
     /**
      * Returns the set (in unmodifiable form) of FullAndPartURIs for the
      * accumulated artifacts.
@@ -301,10 +288,18 @@ public class ClientArtifactsManager {
     public Collection<Artifacts.FullAndPartURIs> artifacts() {
         isArtifactSetConsumed = true;
         closeOpenedJARs();
-        if (deplLogger.isLoggable(Level.FINE)) {
-            deplLogger.log(Level.FINE, "ClientArtifactsManager returned artifacts");
-        }
+        LOG.log(Level.FINE, "ClientArtifactsManager returned artifacts");
         return Collections.unmodifiableCollection(artifacts.values());
+    }
+
+    @Override
+    public void close() {
+        closeOpenedJARs();
+    }
+
+    private String formattedString(final String key, final Object... args) {
+        final String format = LOG.getResourceBundle().getString(key);
+        return MessageFormat.format(format, args);
     }
 
     private void closeOpenedJARs() {
@@ -316,19 +311,6 @@ public class ClientArtifactsManager {
             }
         }
         jarFiles.clear();
-    }
-
-    private String formattedString(final String key, final Object... args) {
-        final String format = deplLogger.getResourceBundle().getString(key);
-        return MessageFormat.format(format, args);
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize(); //To change body of generated methods, choose Tools | Templates.
-        if ( ! isArtifactSetConsumed) {
-            closeOpenedJARs();
-        }
     }
 
     /**

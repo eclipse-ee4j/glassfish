@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,18 +19,22 @@ package com.sun.enterprise.admin.remote.reader;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 
 /**
- *
  * @author martinmares
  */
 public interface ProprietaryReader<T> {
 
-    public boolean isReadable(final Class<?> type, final String contentType);
+    boolean isReadable(final Class<?> type, final String contentType);
 
-    //    public T readFrom(final HttpURLConnection urlConnection) throws IOException;
-
-    public T readFrom(final InputStream is, final String contentType) throws IOException;
+    /**
+     * Reads and closes the stream, or can transfer both respnsibilities to a returned object.
+     *
+     * @param stream
+     * @param contentType
+     * @return T
+     * @throws IOException
+     */
+    T readFrom(final InputStream stream, final String contentType) throws IOException;
 
 }

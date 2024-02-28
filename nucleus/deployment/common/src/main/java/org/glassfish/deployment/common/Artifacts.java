@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,9 +23,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
-import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.api.deployment.DeploymentContext;
 
 /**
@@ -48,10 +49,10 @@ import org.glassfish.api.deployment.DeploymentContext;
  */
 public class Artifacts {
 
-    public static final Logger deplLogger = org.glassfish.deployment.common.DeploymentContextImpl.deplLogger;
+    private static final Logger deplLogger = org.glassfish.deployment.common.DeploymentContextImpl.deplLogger;
 
     /** the actual artifacts tracked - the part URI and the full URI */
-    private final Set<FullAndPartURIs> artifacts = new HashSet<FullAndPartURIs>();
+    private final Set<FullAndPartURIs> artifacts = new HashSet<>();
 
     /**
      * used as part of the key in getting/setting transient DC metadata and
@@ -59,28 +60,12 @@ public class Artifacts {
      */
     private final String keyPrefix;
 
-    /**
-     * Returns the Artifacts object from the deployment context with the
-     * sepcified key prefix, creating a new one and storing it in the DC if
-     * no matching Artifacts object already exists.
-     * @param dc the deployment context
-     * @param keyPrefix key prefix by which to look up or store the artifacts
-     * @return
-     */
-    public static Artifacts get(
-            final DeploymentContext dc,
-            final String keyPrefix) {
-        final String key = transientAppMetadataKey(keyPrefix);
-        synchronized (dc) {
-            Artifacts result = dc.getTransientAppMetaData(
-                    transientAppMetadataKey(keyPrefix), Artifacts.class);
+    private Artifacts(final String keyPrefix) {
+        this.keyPrefix = keyPrefix;
+    }
 
-            if (result == null) {
-                result = new Artifacts(keyPrefix);
-                dc.addTransientAppMetaData(key, result);
-            }
-            return result;
-        }
+    private String propNamePrefix() {
+        return propNamePrefix(keyPrefix);
     }
 
     /**
@@ -97,46 +82,32 @@ public class Artifacts {
         }
     }
 
+
     /**
-     * Gets the artifacts matching the key prefix from the application properties
-     * of the specified application.
-     * @param app the application of interest
-     * @param keyPrefix type of artifacts of interest (e.g., downloadable, generated)
-     * @return
+     * Adds an artifact.
+     *
+     * @param full the full URI to the file to be tracked
+     * @param part the (typically) relative URI, expressed as a String, to be
+     *            associated with the part
      */
-    public static Artifacts get(
-            final Properties props,
-            final String keyPrefix) {
-        final Artifacts result = new Artifacts(keyPrefix);
-
-        for (String propName : props.stringPropertyNames()) {
-            final String propNamePrefix = propNamePrefix(keyPrefix);
-            if (propName.startsWith(propNamePrefix)) {
-                /*
-                 * The part URI is in the property name, after the keyPrefix and
-                 * the separating dot.
-                 */
-                final URI fullURI = URI.create(props.getProperty(propName));
-                result.addArtifact(fullURI, propName.substring(propNamePrefix.length()));
-            }
-        }
-        return result;
+    public synchronized void addArtifact(URI full, String part) {
+        addArtifact(full, URI.create(part));
     }
 
-    private Artifacts(final String keyPrefix) {
-        this.keyPrefix = keyPrefix;
-    }
 
-    private static String propNamePrefix(final String keyPrefix) {
-        return keyPrefix + "Artifact.";
-    }
-
-    private String propNamePrefix() {
-        return propNamePrefix(keyPrefix);
+    /**
+     * Adds an artifact.
+     *
+     * @param full the full URI to the file to be tracked
+     * @param part the (typically) relative URI to be associated with the part
+     */
+    public synchronized void addArtifact(final URI full, final URI part) {
+        addArtifact(full, part, false);
     }
 
     /**
      * Adds an artifact.
+     *
      * @param full the full URI to the file to be tracked
      * @param part the (typically) relative URI to be associated with the part
      * @param isTemporary whether the artifact can be deleted once it is added to an output stream (typically for download)
@@ -146,34 +117,9 @@ public class Artifacts {
     public synchronized void addArtifact(URI full, URI part, boolean isTemporary) {
         FullAndPartURIs fullAndPart = new FullAndPartURIs(full, part, isTemporary);
         artifacts.add(fullAndPart);
-        if (deplLogger.isLoggable(Level.FINE)) {
-            deplLogger.log(Level.FINE, "Added {1} artifact: {0}",
-                           new Object[] {fullAndPart, keyPrefix});
-        }
+        deplLogger.log(Level.FINE, "Added {0} artifact: {1}", new Object[] {keyPrefix, fullAndPart});
     }
 
-    /**
-     * Adds an artifact.
-     * @param full the full URI to the file to be tracked
-     * @param part the (typically) relative URI, expressed as a String, to be
-     * associated with the part
-     */
-    public synchronized void addArtifact(URI full, String part) {
-        addArtifact(full, URI.create(part));
-    }
-
-    public synchronized void addArtifact(final URI full, final String part, final boolean isTemporary) {
-        addArtifact(full, URI.create(part), isTemporary);
-    }
-
-    /**
-     * Adds an artifact.
-     * @param full
-     * @param part
-     */
-    public synchronized void addArtifact(final URI full, final URI part) {
-        addArtifact(full, part, false);
-    }
 
     /**
      * Adds multiple artifacts at once.
@@ -181,13 +127,7 @@ public class Artifacts {
      */
     public synchronized void addArtifacts(Collection<FullAndPartURIs> urisCollection) {
         artifacts.addAll(urisCollection);
-        if (deplLogger.isLoggable(Level.FINE)) {
-            deplLogger.log(Level.FINE, "Added downloadable artifacts: {0}", urisCollection);
-        }
-    }
-
-    private static String transientAppMetadataKey(final String prefix) {
-        return prefix + "Artifacts";
+        deplLogger.log(Level.FINE, "Added downloadable artifacts: {0}", urisCollection);
     }
 
     private String transientAppMetadataKey() {
@@ -203,8 +143,7 @@ public class Artifacts {
     }
 
     /**
-     * Returns the URI pairs tracked by this Artifacts object.
-     * @return
+     * @return the actual artifacts tracked - the part URI and the full URI
      */
     public synchronized Set<FullAndPartURIs> getArtifacts() {
         return artifacts;
@@ -216,12 +155,9 @@ public class Artifacts {
      * @param props
      * @throws URISyntaxException
      */
-    public synchronized void record(
-            final Properties props) throws URISyntaxException {
+    public synchronized void record(final Properties props) throws URISyntaxException {
         for (Artifacts.FullAndPartURIs artifactInfo : artifacts) {
-            props.setProperty(
-                    propName(artifactInfo.getPart()),
-                    propValue(artifactInfo.getFull()));
+            props.setProperty(propName(artifactInfo.getPart()), propValue(artifactInfo.getFull()));
         }
     }
 
@@ -231,6 +167,58 @@ public class Artifacts {
     public synchronized void clearArtifacts() {
         artifacts.clear();
     }
+
+    /**
+     * Returns the Artifacts object from the deployment context with the
+     * sepcified key prefix, creating a new one and storing it in the DC if
+     * no matching Artifacts object already exists.
+     *
+     * @param dc the deployment context
+     * @param keyPrefix key prefix by which to look up or store the artifacts
+     * @return never null
+     */
+    public static Artifacts get(final DeploymentContext dc, final String keyPrefix) {
+        final String key = transientAppMetadataKey(keyPrefix);
+        synchronized (dc) {
+            Artifacts result = dc.getTransientAppMetaData(key, Artifacts.class);
+            if (result == null) {
+                result = new Artifacts(keyPrefix);
+                dc.addTransientAppMetaData(key, result);
+            }
+            return result;
+        }
+    }
+
+
+    /**
+     * Gets the artifacts matching the key prefix from the application properties
+     * of the specified application.
+     *
+     * @param props
+     * @param keyPrefix type of artifacts of interest (e.g., downloadable, generated)
+     * @return never null
+     */
+    public static Artifacts get(final Properties props, final String keyPrefix) {
+        final Artifacts artifacts = new Artifacts(keyPrefix);
+        for (String propName : props.stringPropertyNames()) {
+            final String propNamePrefix = propNamePrefix(keyPrefix);
+            if (propName.startsWith(propNamePrefix)) {
+                // The part URI is in the property name, after the keyPrefix and the separating dot.
+                final URI fullURI = URI.create(props.getProperty(propName));
+                artifacts.addArtifact(fullURI, propName.substring(propNamePrefix.length()));
+            }
+        }
+        return artifacts;
+    }
+
+    private static String propNamePrefix(final String keyPrefix) {
+        return keyPrefix + "Artifact.";
+    }
+
+    private static String transientAppMetadataKey(final String keyPrefix) {
+        return keyPrefix + "Artifacts";
+    }
+
 
     /**
      * Represents a file to be tracked (the full URI) and a relative URI to be

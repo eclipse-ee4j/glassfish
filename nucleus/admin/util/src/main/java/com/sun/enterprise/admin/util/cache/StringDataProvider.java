@@ -49,7 +49,7 @@ public class StringDataProvider implements DataProvider {
     @Override
     public Object toInstance(InputStream stream, Class clazz) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        FileUtils.copy(stream, baos, 0);
+        FileUtils.copy(stream, baos);
         return new String(baos.toByteArray(), StandardCharsets.UTF_8);
     }
 

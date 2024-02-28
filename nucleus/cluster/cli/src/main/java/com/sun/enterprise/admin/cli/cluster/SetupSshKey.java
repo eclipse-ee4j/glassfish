@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,21 +17,24 @@
 
 package com.sun.enterprise.admin.cli.cluster;
 
-import java.io.*;
+import jakarta.inject.Inject;
+
+import java.io.Console;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.logging.Level;
 
-import jakarta.inject.Inject;
-
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.CommandException;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.cluster.ssh.launcher.SSHLauncher;
+import org.glassfish.cluster.ssh.util.SSHUtil;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
-import org.glassfish.cluster.ssh.launcher.SSHLauncher;
-import org.glassfish.cluster.ssh.util.SSHUtil;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  *  This is a local command that distributes the SSH public key to remote node(s)
@@ -53,65 +57,55 @@ public final class SetupSshKey extends NativeRemoteCommandsBase {
     @Inject
     private ServiceLocator habitat;
 
-    public SetupSshKey() {
-    }
 
-    /**
-     */
     @Override
-    protected void validate()
-            throws CommandException {
+    protected void validate() throws CommandException {
         super.validate();
         Globals.setDefaultHabitat(habitat);
 
         if (sshkeyfile == null) {
-            //if user hasn't specified a key file and there is no key file at default
-            //location, then generate one
-            String existingKey = SSHUtil.getExistingKeyFile();
+            // if user hasn't specified a key file and there is no key file at default
+            // location, then generate one
+            final File existingKey = SSHUtil.getExistingKeyFile();
             if (existingKey == null) {
-                sshkeyfile = SSHUtil.getDefaultKeyFile();
+                sshkeyfile = SSHUtil.getDefaultKeyFile().getAbsolutePath();
                 if (promptForKeyGeneration()) {
                     generatekey = true;
                 }
-            }
-            else {
-                //there is a key that requires to be distributed, hence need password
+            } else {
+                // there is a key that requires to be distributed, hence need password
                 promptPass = true;
-                sshkeyfile = existingKey;
-
-                if (SSHUtil.isEncryptedKey(sshkeyfile)) {
+                sshkeyfile = existingKey.getAbsolutePath();
+                if (SSHUtil.isEncryptedKey(existingKey)) {
                     sshkeypassphrase = getSSHPassphrase(false);
                 }
             }
-        }
-        else {
-            promptPass = SSHUtil.validateKeyFile(sshkeyfile);
-            if (SSHUtil.isEncryptedKey(sshkeyfile)) {
+        } else {
+            final File keyFile = new File(sshkeyfile);
+            promptPass = SSHUtil.validateKeyFile(keyFile);
+            if (SSHUtil.isEncryptedKey(keyFile)) {
                 sshkeypassphrase = getSSHPassphrase(false);
             }
         }
 
         if (sshpublickeyfile != null) {
-            SSHUtil.validateKeyFile(sshpublickeyfile);
+            SSHUtil.validateKeyFile(new File(sshpublickeyfile));
         }
-
     }
 
-    /**
-     */
-    @Override
-    protected int executeCommand()
-            throws CommandException {
 
+    @Override
+    protected int executeCommand() throws CommandException {
         SSHLauncher sshL = habitat.getService(SSHLauncher.class);
 
         String previousPassword = null;
         boolean status = false;
         for (String node : hosts) {
-            sshL.init(getRemoteUser(), node, getRemotePort(), sshpassword, sshkeyfile, sshkeypassphrase, logger);
+            final File keyFile = sshkeyfile == null ? null : new File(sshkeyfile);
+            sshL.init(getRemoteUser(), node, getRemotePort(), sshpassword, keyFile, sshkeypassphrase, logger);
             if (generatekey || promptPass) {
                 //prompt for password iff required
-                if (sshkeyfile != null || SSHUtil.getExistingKeyFile() != null) {
+                if (keyFile != null || SSHUtil.getExistingKeyFile() != null) {
                     if (sshL.checkConnection()) {
                         logger.info(Strings.get("SSHAlreadySetup", getRemoteUser(), node));
                         continue;
@@ -128,16 +122,11 @@ public final class SetupSshKey extends NativeRemoteCommandsBase {
 
             try {
                 sshL.setupKey(node, sshpublickeyfile, generatekey, sshpassword);
-            }
-            catch (IOException ce) {
-                //logger.fine("SSH key setup failed: " + ce.getMessage());
+            } catch (IOException ce) {
+                // logger.fine("SSH key setup failed: " + ce.getMessage());
                 throw new CommandException(Strings.get("KeySetupFailed", ce.getMessage()));
-            }
-            catch (Exception e) {
-                //handle KeyStoreException
-                if (logger.isLoggable(Level.FINER)) {
-                    logger.log(Level.FINER, "Keystore error: ", e);
-                }
+            } catch (Exception e) {
+                logger.log(Level.WARNING, "Keystore error for node: " + node, e);
             }
 
             if (!sshL.checkConnection()) {
@@ -151,11 +140,13 @@ public final class SetupSshKey extends NativeRemoteCommandsBase {
      * Prompt for key generation
      */
     private boolean promptForKeyGeneration() {
-        if (generatekey)
+        if (generatekey) {
             return true;
+        }
 
-        if (!programOpts.isInteractive())
+        if (!programOpts.isInteractive()) {
             return false;
+        }
 
         Console cons = System.console();
 
@@ -179,8 +170,7 @@ public final class SetupSshKey extends NativeRemoteCommandsBase {
         return false;
     }
 
-    @Override
-    final String getRawRemoteUser() {
+    @Override String getRawRemoteUser() {
         return user;
     }
 

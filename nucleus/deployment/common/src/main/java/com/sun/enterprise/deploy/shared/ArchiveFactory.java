@@ -53,9 +53,12 @@ public class ArchiveFactory {
 
     public static final Logger deplLogger = org.glassfish.deployment.common.DeploymentContextImpl.deplLogger;
 
-    @LogMessageInfo(message = "Cannot find an archive implementation for {0}", cause = "The type of archive being created is not supported.", action = "Determine the type of archive requested to see whether another type can be used.", level = "SEVERE")
+    @LogMessageInfo(
+        message = "Cannot find an archive implementation for {0}",
+        cause = "The type of archive being created is not supported.",
+        action = "Determine the type of archive requested to see whether another type can be used.",
+        level = "SEVERE")
     private static final String IMPLEMENTATION_NOT_FOUND = "NCLS-DEPLOYMENT-00021";
-
 
     @Inject
     ServiceLocator serviceLocator;
@@ -174,7 +177,6 @@ public class ArchiveFactory {
                 deplLogger.log(SEVERE, IMPLEMENTATION_NOT_FOUND, provider);
                 throw new MalformedURLException("Protocol not supported : " + provider);
             }
-
             archive.open(path);
             return archive;
         } catch (MultiException e) {

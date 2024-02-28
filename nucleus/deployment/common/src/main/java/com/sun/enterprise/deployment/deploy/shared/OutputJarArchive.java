@@ -21,20 +21,21 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.Manifest;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.glassfish.api.deployment.archive.WritableArchive;
+import org.glassfish.api.deployment.archive.WritableArchiveEntry;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
@@ -47,12 +48,13 @@ import org.jvnet.hk2.annotations.Service;
 @Service(name="jar")
 @PerLookup
 public class OutputJarArchive extends JarArchive implements WritableArchive {
+    private static final Logger LOG = System.getLogger(OutputJarArchive.class.getName());
 
     // the path
     private URI uri;
 
     // the file we are currently mapped to (if open for writing)
-    protected ZipOutputStream jos;
+    private ZipOutputStream jos;
 
     private Manifest manifest;
 
@@ -75,8 +77,7 @@ public class OutputJarArchive extends JarArchive implements WritableArchive {
     @Override
     public void close() throws IOException {
         if (jos != null) {
-            jos.flush();
-            jos.finish();
+            LOG.log(Level.DEBUG, "close()");
             jos.close();
             jos = null;
         }
@@ -87,31 +88,17 @@ public class OutputJarArchive extends JarArchive implements WritableArchive {
         return null;
     }
 
-    /**
-     * creates a new abstract archive with the given path
-     *
-     * @param path the path to create the archive
-     */
     @Override
     public void create(URI path) throws IOException {
+        LOG.log(Level.DEBUG, "create(path={0})", path);
         this.uri = path;
         File file = new File(uri.getSchemeSpecificPart());
-        // if teh file exists, we delete it first
-        if (file.exists()) {
-            boolean isDeleted = file.delete();
-            if (!isDeleted) {
-                Logger.getAnonymousLogger().log(Level.WARNING, "Error in deleting file " + file.getAbsolutePath());
-            }
+        if (file.exists() && !file.delete()) {
+            LOG.log(Level.WARNING, "Could not delete the file {0}", file);
         }
-        FileOutputStream fos = new FileOutputStream(file);
-        BufferedOutputStream bos = new BufferedOutputStream(fos);
-        jos = new ZipOutputStream(bos);
+        jos = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
     }
 
-    /**
-     * @return an @see java.util.Enumeration of entries in this abstract
-     *         archive
-     */
     @Override
     public Enumeration<String> entries() {
         return entries.elements();
@@ -123,9 +110,6 @@ public class OutputJarArchive extends JarArchive implements WritableArchive {
     }
 
 
-    /**
-     * @return the manifest information for this abstract archive
-     */
     @Override
     public Manifest getManifest() throws IOException {
         if (manifest == null) {
@@ -134,11 +118,6 @@ public class OutputJarArchive extends JarArchive implements WritableArchive {
         return manifest;
     }
 
-    /**
-     * Returns the path used to create or open the underlyong archive
-     *
-     * @return the path for this archive.
-     */
     @Override
     public URI getURI() {
         return uri;
@@ -146,59 +125,48 @@ public class OutputJarArchive extends JarArchive implements WritableArchive {
 
     @Override
     public WritableArchive createSubArchive(String name) throws IOException {
-        OutputStream os = putNextEntry(name);
-        ZipOutputStream jos = new ZipOutputStream(os);
-        OutputJarArchive ja = new OutputJarArchive();
+        LOG.log(Level.DEBUG, "createSubArchive(name={0})", name);
+        checkOpen("Could not create subarchive {0}, because the output archive {1} is already closed.", name, getName());
+        ZipOutputStream zip = new ZipOutputStream(putNextEntry(name));
+        OutputJarArchive jar = new OutputJarArchive();
         try {
-            ja.uri = new URI("jar", name, null);
-        } catch(URISyntaxException e) {
-
+            jar.uri = new URI("jar", name, null);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Could not create a subarchive for name " + name, e);
         }
-        ja.jos = jos;
-        return ja;
+        jar.jos = zip;
+        return jar;
     }
 
-    /**
-     * Close a previously returned sub archive
-     *
-     * @param subArchive output stream to close
-     * @link Archive.getSubArchive}
-     */
+
     @Override
-    public void closeEntry(WritableArchive subArchive) throws IOException {
-        if (subArchive instanceof OutputJarArchive) {
-            ((OutputJarArchive) subArchive).jos.flush();
-            ((OutputJarArchive) subArchive).jos.finish();
-        }
+    public WritableArchiveEntry putNextEntry(String name) throws java.io.IOException {
+        LOG.log(Level.DEBUG, "putNextEntry(name={0})", name);
+        checkOpen("Could not put next entry {0}, because the output archive {1} is already closed.", name, getName());
+        ZipEntry ze = new ZipEntry(name);
+        jos.putNextEntry(ze);
+        entries.add(name);
+        return new WritableArchiveEntry(this::getZipOutputStream, this::closeEntry);
+    }
+
+
+    private void closeEntry() throws IOException {
+        LOG.log(Level.DEBUG, "closeEntry({0})", this.entries.get(this.entries.size() - 1));
+        checkOpen("The zip output stream to {0} is already closed.", getName());
+        jos.flush();
         jos.closeEntry();
     }
 
 
-    /**
-     * @param name the entry name
-     * @returns an @see java.io.OutputStream for a new entry in this
-     * current abstract archive.
-     */
-    @Override
-    public OutputStream putNextEntry(String name) throws java.io.IOException {
-        if (jos != null) {
-            ZipEntry ze = new ZipEntry(name);
-            jos.putNextEntry(ze);
-            entries.add(name);
-        }
+    private ZipOutputStream getZipOutputStream() {
+        checkOpen("The zip output stream to {0} is already closed.", getName());
         return jos;
     }
 
 
-    /**
-     * closes the current entry
-     */
-    @Override
-    public void closeEntry() throws IOException {
-        if (jos != null) {
-            jos.flush();
-            jos.closeEntry();
+    private void checkOpen(String message, Object... args) {
+        if (jos == null) {
+            throw new IllegalStateException(MessageFormat.format(message, args));
         }
     }
-
 }

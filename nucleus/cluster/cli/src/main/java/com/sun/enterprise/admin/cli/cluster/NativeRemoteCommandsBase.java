@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,11 +26,6 @@ import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.io.DomainDirs;
 import com.sun.enterprise.util.io.FileUtils;
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.CommandException;
-import org.glassfish.cluster.ssh.launcher.SSHLauncher;
-import org.glassfish.cluster.ssh.sftp.SFTPClient;
-import org.glassfish.internal.api.RelativePathResolver;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -38,6 +34,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
+
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.CommandException;
+import org.glassfish.cluster.ssh.launcher.SSHLauncher;
+import org.glassfish.cluster.ssh.sftp.SFTPClient;
+import org.glassfish.internal.api.RelativePathResolver;
 
 /**
  *  Base class for SSH provisioning commands.
@@ -96,8 +98,9 @@ abstract class NativeRemoteCommandsBase extends CLICommand {
 
         if (password != null) {
             String alias = RelativePathResolver.getAlias(password);
-            if (alias != null)
+            if (alias != null) {
                 password = expandPasswordAlias(node, alias, true);
+            }
         }
 
         //get password from user if not found in password file
@@ -122,8 +125,9 @@ abstract class NativeRemoteCommandsBase extends CLICommand {
         if (passphrase != null) {
             String alias = RelativePathResolver.getAlias(passphrase);
 
-            if (alias != null)
+            if (alias != null) {
                 passphrase = expandPasswordAlias(null, alias, verifyConn);
+            }
         }
 
         //get password from user if not found in password file
@@ -196,8 +200,9 @@ abstract class NativeRemoteCommandsBase extends CLICommand {
                 //only if file is present in DAS, it is targeted for removal on remote host
                 //using force deletes all files on remote host
                 if (force) {
-                    if (logger.isLoggable(Level.FINE))
+                    if (logger.isLoggable(Level.FINE)) {
                         logger.fine("Force removing directory " + f1);
+                    }
                     if (isRemoteDirectoryEmpty(sftpClient, f1)) {
                         sftpClient.getSftpChannel().rmdir(f1);
                     }
@@ -213,13 +218,15 @@ abstract class NativeRemoteCommandsBase extends CLICommand {
             else {
                 String f2 = dir + "/" + directoryEntry.getFilename();
                 if (force) {
-                    if (logger.isLoggable(Level.FINE))
+                    if (logger.isLoggable(Level.FINE)) {
                         logger.fine("Force removing file " + f2);
+                    }
                     sftpClient.getSftpChannel().rm(f2);
                 }
                 else {
-                    if (dasFiles.contains(f2))
+                    if (dasFiles.contains(f2)) {
                         sftpClient.getSftpChannel().rm(f2);
+                    }
                 }
             }
         }
@@ -234,9 +241,10 @@ abstract class NativeRemoteCommandsBase extends CLICommand {
      * @throws SftpException
      */
     boolean isRemoteDirectoryEmpty(SFTPClient sftp, String file) throws SftpException {
-        List<ChannelSftp.LsEntry> l = (List<ChannelSftp.LsEntry>) sftp.getSftpChannel().ls(file);
-        if (l.size() > 2)
+        List<ChannelSftp.LsEntry> l = sftp.getSftpChannel().ls(file);
+        if (l.size() > 2) {
             return false;
+        }
         return true;
     }
 
@@ -246,8 +254,9 @@ abstract class NativeRemoteCommandsBase extends CLICommand {
      * @return
      */
     String removeTrailingSlash(String s) {
-        if (!StringUtils.ok(s))
+        if (!StringUtils.ok(s)) {
             return s;
+        }
 
         if (s.endsWith("/")) {
             s = s.substring(0, s.length() - 1);
@@ -270,6 +279,7 @@ abstract class NativeRemoteCommandsBase extends CLICommand {
 
             //get the list of domains
             File[] files = domainsDirFile.listFiles(new FileFilter() {
+                @Override
                 public boolean accept(File f) {
                     return f.isDirectory();
                 }
@@ -307,7 +317,8 @@ abstract class NativeRemoteCommandsBase extends CLICommand {
                     else {
                         sshkeypassphrase = expandedPassword;
                         if (verifyConn) {
-                            sshL.init(getRemoteUser(), hosts[0], getRemotePort(), sshpassword, getSshKeyFile(), sshkeypassphrase, logger);
+                            File keyFile = getSshKeyFile() == null ? null : new File(getSshKeyFile());
+                            sshL.init(getRemoteUser(), hosts[0], getRemotePort(), sshpassword, keyFile, sshkeypassphrase, logger);
                             connStatus = sshL.checkConnection();
                             if (!connStatus) {
                                 logger.warning(Strings.get("PasswordAuthFailure", f.getName()));
@@ -340,14 +351,15 @@ abstract class NativeRemoteCommandsBase extends CLICommand {
     List<String> getListOfInstallFiles(String installDir) throws IOException {
         String ins = resolver.resolve("${com.sun.aas.productRoot}");
         Set files = FileUtils.getAllFilesAndDirectoriesUnder(new File(ins));
-        if (logger.isLoggable(Level.FINER))
+        if (logger.isLoggable(Level.FINER)) {
             logger.finer("Total number of files under " + ins + " = " +
                                                                 files.size());
+        }
         String remoteDir = installDir;
         if (!installDir.endsWith("/")) {
             remoteDir = remoteDir + "/";
         }
-        List<String> modList = new ArrayList<String>();
+        List<String> modList = new ArrayList<>();
         for (Object f : files) {
             modList.add(remoteDir + FileUtils.makeForwardSlashes(((File) f).getPath()));
         }

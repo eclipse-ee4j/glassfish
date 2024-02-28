@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,23 +20,28 @@ package com.sun.enterprise.admin.remote.reader;
 import com.sun.enterprise.admin.remote.ParamsWithPayload;
 import com.sun.enterprise.admin.remote.RestPayloadImpl;
 import com.sun.enterprise.util.StringUtils;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.Properties;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.ParameterMap;
 import org.jvnet.mimepull.MIMEConfig;
 import org.jvnet.mimepull.MIMEMessage;
 import org.jvnet.mimepull.MIMEPart;
 
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  *
  * @author martinmares
  */
-public class MultipartProprietaryReader implements ProprietaryReader<ParamsWithPayload> {
+public final class MultipartProprietaryReader implements ProprietaryReader<ParamsWithPayload> {
 
     private final ActionReportJsonProprietaryReader actionReportReader;
 
@@ -61,26 +67,30 @@ public class MultipartProprietaryReader implements ProprietaryReader<ParamsWithP
 
     @Override
     public ParamsWithPayload readFrom(final InputStream is, final String contentType) throws IOException {
-        RestPayloadImpl.Inbound payload = null;
-        ActionReport actionReport = null;
-        ParameterMap parameters = null;
         Properties mtProps = parseHeaderParams(contentType);
         final String boundary = mtProps.getProperty("boundary");
         if (!StringUtils.ok(boundary)) {
             throw new IOException("ContentType does not define boundary");
         }
+
+        // FIXME: Big refactoring required because of possible resource leaks:
+        // MIMEMessage produces MIMEPart objects based on the is parameter.
+        // All these objects are Closeable.
+        // The final result of this method is the payload, based on mimePart object.
+        // That is used later, and at least in one branch none of these objecs can be closed,
+        // because the payload's input stream would be closed too.
         final MIMEMessage mimeMessage = new MIMEMessage(is, boundary, new MIMEConfig());
-        //Parse
+        RestPayloadImpl.Inbound payload = null;
+        ActionReport actionReport = null;
+        ParameterMap parameters = null;
+        // Parse
         for (MIMEPart mimePart : mimeMessage.getAttachments()) {
             String cd = getFirst(mimePart.getHeader("Content-Disposition"));
-            if (!StringUtils.ok(cd)) {
-                cd = "file";
-            }
-            cd = cd.trim();
+            cd = StringUtils.ok(cd) ? cd.trim() : "file";
             Properties cdParams = parseHeaderParams(cd);
-            //3 types of content disposition
+            // 3 types of content disposition
             if (cd.startsWith("form-data")) {
-                //COMMAND PARAMETER
+                // COMMAND PARAMETER
                 if (!StringUtils.ok(cdParams.getProperty("name"))) {
                     throw new IOException("Form-data Content-Disposition does not contains name parameter.");
                 }
@@ -89,29 +99,30 @@ public class MultipartProprietaryReader implements ProprietaryReader<ParamsWithP
                 }
                 parameters.add(cdParams.getProperty("name"), stream2String(mimePart.readOnce()));
             } else if (mimePart.getContentType() != null && mimePart.getContentType().startsWith("application/json")) {
-                //ACTION REPORT
+                // ACTION REPORT
                 actionReport = actionReportReader.readFrom(mimePart.readOnce(), "application/json");
             } else {
-                //PAYLOAD
-                String name = "noname";
+                // PAYLOAD
+                final String name;
                 if (cdParams.containsKey("name")) {
-                    name = cdParams.getProperty("name");
-                    name = new String(name.getBytes("ISO8859-1"), "UTF-8");
+                    name = new String(cdParams.getProperty("name").getBytes(ISO_8859_1), UTF_8);
                 } else if (cdParams.containsKey("filename")) {
                     name = cdParams.getProperty("filename");
+                } else {
+                    name = "noname";
                 }
                 if (payload == null) {
                     payload = new RestPayloadImpl.Inbound();
                 }
-                String ct = mimePart.getContentType();
-                if (!StringUtils.ok(ct) || ct.trim().startsWith("text/plain")) {
-                    payload.add(name, stream2String(mimePart.readOnce()), mimePart.getAllHeaders());
-                } else {
+                final String ct = mimePart.getContentType();
+                if (StringUtils.ok(ct) && !ct.trim().startsWith("text/plain")) {
                     payload.add(name, mimePart.read(), ct, mimePart.getAllHeaders());
+                } else {
+                    payload.add(name, stream2String(mimePart.readOnce()), mimePart.getAllHeaders());
                 }
             }
         }
-        //Result
+        // Result
         return new ParamsWithPayload(payload, parameters, actionReport);
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,11 +24,9 @@ import static com.sun.enterprise.util.io.FileUtils.safeIsDirectory;
 import static java.util.jar.JarFile.MANIFEST_NAME;
 import static java.util.logging.Level.WARNING;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -48,6 +46,7 @@ import org.glassfish.api.deployment.archive.ArchiveDetector;
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
+import org.glassfish.api.deployment.archive.WritableArchiveEntry;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.loader.util.ASClassLoaderUtil;
 import org.glassfish.logging.annotation.LogMessageInfo;
@@ -67,17 +66,16 @@ import com.sun.enterprise.util.io.FileUtils;
 /**
  * Utility methods for deployment.
  */
-
 public class DeploymentUtils {
 
-    public static final Logger deplLogger = DeploymentContextImpl.deplLogger;
+    private static final Logger deplLogger = DeploymentContextImpl.deplLogger;
 
     @LogMessageInfo(message = "Exception caught {0}", level = "WARNING")
     private static final String EXCEPTION_CAUGHT = "NCLS-DEPLOYMENT-00010";
 
     public static final String DEPLOYMENT_PROPERTY_JAVA_WEB_START_ENABLED = "java-web-start-enabled";
 
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeploymentUtils.class);
+    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeploymentUtils.class);
 
     private static final String V2_COMPATIBILITY = "v2";
 
@@ -110,7 +108,7 @@ public class DeploymentUtils {
             throw new IllegalArgumentException(msg);
         }
 
-        final List<URI> uris = new ArrayList<URI>();
+        final List<URI> uris = new ArrayList<>();
         scanDirectory(directory.toURI(), directory, uris);
 
         /*
@@ -310,24 +308,18 @@ public class DeploymentUtils {
         Enumeration<String> e = source.entries();
         while (e.hasMoreElements()) {
             String entryName = e.nextElement();
-            InputStream is = new BufferedInputStream(source.getEntry(entryName));
-            OutputStream os = null;
-            try {
-                os = target.putNextEntry(entryName);
-                FileUtils.copy(is, os, source.getEntrySize(entryName));
-            } finally {
-                if (os != null) {
-                    target.closeEntry();
-                }
-                is.close();
+            try (InputStream is = source.getEntry(entryName);
+                WritableArchiveEntry os = target.putNextEntry(entryName)) {
+                FileUtils.copy(is, os);
             }
         }
 
         // Last is manifest if exists
         Manifest manifest = source.getManifest();
         if (manifest != null) {
-            manifest.write(target.putNextEntry(MANIFEST_NAME));
-            target.closeEntry();
+            try (WritableArchiveEntry entry = target.putNextEntry(MANIFEST_NAME)) {
+                manifest.write(entry);
+            }
         }
     }
 
@@ -384,7 +376,7 @@ public class DeploymentUtils {
     }
 
     public static List<URI> getExternalLibraries(ReadableArchive archive) {
-        List<URI> externalLibURIs = new ArrayList<URI>();
+        List<URI> externalLibURIs = new ArrayList<>();
         try {
             List<URL> manifestURLs = getManifestLibraries(archive);
             URI archiveURI = archive.getURI();
@@ -471,13 +463,5 @@ public class DeploymentUtils {
         }
 
         return virtualServers.toString();
-    }
-
-    public static void copyStream(InputStream in, OutputStream out) throws IOException {
-        byte[] buf = new byte[4096];
-        int len;
-        while ((len = in.read(buf)) >= 0) {
-            out.write(buf, 0, len);
-        }
     }
 }

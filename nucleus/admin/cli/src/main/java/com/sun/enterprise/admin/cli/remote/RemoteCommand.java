@@ -101,8 +101,8 @@ public class RemoteCommand extends CLICommand {
          * Construct a new remote command object. The command and arguments are supplied later using the execute method in the
          * superclass.
          */
-        public CLIRemoteAdminCommand(String name, String host, int port, boolean secure, String user, char[] password, Logger logger,
-                String authToken) throws CommandException {
+        public CLIRemoteAdminCommand(String name, String host, int port, boolean secure, String user, char[] password,
+            Logger logger, String authToken) throws CommandException {
             super(name, host, port, secure, user, password, logger, getCommandScope(), authToken, true /* prohibitDirectoryUploads */);
             sessionCache = AsadminSecurityUtil.getGfClientSessionFile(host, port);
         }

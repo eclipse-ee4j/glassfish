@@ -9,6 +9,20 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
+## February 30, 2024 -- Eclipse GlassFish 7.0.13 Available
+
+We are very happy to bring you Eclipse GlassFish 7.0.13. 
+
+Download links are available from the [GlassFish Download page](download.md).
+
+In the release for this month we replaced many synchronized blocks by reentrant locks (to accommodate JDK 21 virtual threads). 
+
+We also looked at SSO between clusters, and fixed a long standing bug there. 
+
+A long running investigation into potential resource leaks finally came to a conclusion, and resulted in many fixes throughout the code base. The admin console also saw various improvements, specifically with respect to loading.
+
+Download links are available from the [GlassFish Download page](download.md)
+
 
 ## January 30, 2024 -- Eclipse GlassFish 7.0.12 Available
 

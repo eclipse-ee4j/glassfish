@@ -30,7 +30,7 @@
 
     <groupId>org.glassfish.main</groupId>
     <artifactId>nucleus-parent</artifactId>
-    <version>7.0.13-SNAPSHOT</version>
+    <version>7.0.14-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Nucleus Parent</name>
@@ -92,8 +92,8 @@
 
         <!-- Jakarta Inject -->
         <jakarta.inject-api.version>2.0.1.MR</jakarta.inject-api.version>
-        <hk2.version>3.0.6</hk2.version>
-        <hk2.plugin.version>3.0.6</hk2.plugin.version>
+        <hk2.version>3.1.0</hk2.version>
+        <hk2.plugin.version>3.1.0</hk2.plugin.version>
 
         <!-- Jakarta XML Binding -->
         <jakarta.xml.bind-api.version>4.0.1</jakarta.xml.bind-api.version>
@@ -171,7 +171,7 @@
         <javadoc.skip>false</javadoc.skip>
         <deploy.skip>false</deploy.skip>
         <!-- Overrides the value from parent and enables the one we generate. -->
-        <project.build.outputTimestamp>2024-01-29T11:48:47Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2024-02-28T18:28:29Z</project.build.outputTimestamp>
 
         <maven.test.jvmoptions.add-opens>--add-opens java.base/java.lang=ALL-UNNAMED --add-opens=java.naming/javax.naming.spi=ALL-UNNAMED</maven.test.jvmoptions.add-opens>
         <maven.test.jvmoptions.memory.sizes>-Xss512k -Xms256m -Xmx1g -XX:MaxDirectMemorySize=512m</maven.test.jvmoptions.memory.sizes>

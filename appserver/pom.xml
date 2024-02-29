@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-nucleus-parent</artifactId>
-        <version>7.0.13-SNAPSHOT</version>
+        <version>7.0.14-SNAPSHOT</version>
         <relativePath>../nucleus/pom.xml</relativePath>
     </parent>
 
@@ -163,7 +163,7 @@
         <reactive-streams.version>1.0.4</reactive-streams.version>
 
         <!-- Admin console components -->
-        <jsftemplating.version>4.0.3</jsftemplating.version>
+        <jsftemplating.version>4.0.4</jsftemplating.version>
         <jsf-ext.version>0.2</jsf-ext.version>
         <woodstock.version>6.0.1</woodstock.version>
         <woodstock-dataprovider.version>1.0</woodstock-dataprovider.version>

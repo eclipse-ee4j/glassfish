@@ -9,7 +9,7 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
-## February 30, 2024 -- Eclipse GlassFish 7.0.13 Available
+## February 29, 2024 -- Eclipse GlassFish 7.0.13 Available
 
 We are very happy to bring you Eclipse GlassFish 7.0.13. 
 

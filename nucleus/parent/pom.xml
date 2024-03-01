@@ -70,11 +70,11 @@
     </issueManagement>
     <properties>
         <!-- Jakarta Expression Language -->
-        <jakarta.el-api.version>6.0.0-M2</jakarta.el-api.version>
+        <jakarta.el-api.version>6.0.0</jakarta.el-api.version>
         <expressly.version>6.0.0-M1</expressly.version>
 
         <!-- Jakarta Servlet -->
-        <jakarta.servlet-api.version>6.1.0-M1</jakarta.servlet-api.version>
+        <jakarta.servlet-api.version>6.1.0-M2</jakarta.servlet-api.version>
 
         <!-- Jakarta Validation -->
         <jakarta.validation-api.version>3.1.0-M1</jakarta.validation-api.version>
@@ -83,7 +83,7 @@
         <!-- Jakarta Web Services -->
 
         <!-- Jakarta XML Web Services -->
-        <jakarta.xml.ws-api.version>4.0.1</jakarta.xml.ws-api.version>
+        <jakarta.xml.ws-api.version>4.0.2</jakarta.xml.ws-api.version>
 
         <!-- Jakarta SOAP (with Attachments)
        <jakarta.xml.soap-api.version>3.0.0-RC2</jakarta.xml.soap-api.version>
@@ -96,7 +96,7 @@
         <hk2.plugin.version>4.0.0-M1.1</hk2.plugin.version>
 
         <!-- Jakarta XML Binding -->
-        <jakarta.xml.bind-api.version>4.0.1</jakarta.xml.bind-api.version>
+        <jakarta.xml.bind-api.version>4.0.2</jakarta.xml.bind-api.version>
         <jakarta.jaxb-impl.version>4.0.4</jakarta.jaxb-impl.version>
 
         <!-- Jakarta REST -->
@@ -112,7 +112,7 @@
         <angus.activation.version>2.0.2</angus.activation.version>
 
         <!-- Jakarta Annotations -->
-        <jakarta.annotation-api.version>3.0.0-M1</jakarta.annotation-api.version>
+        <jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
 
         <jakarta.security-api.version>4.0.0-M1</jakarta.security-api.version>
         <jakarta.authorization-api.version>3.0.0-M1</jakarta.authorization-api.version>

@@ -24,25 +24,28 @@ import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.SecureAdmin;
 import com.sun.enterprise.config.serverbeans.ServerTags;
+import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.v3.admin.AdminConsoleConfigUpgrade;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-import java.beans.PropertyVetoException;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -60,97 +63,96 @@ import org.glassfish.grizzly.http.io.OutputBuffer;
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.Request;
 import org.glassfish.grizzly.http.server.Response;
-import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.grizzly.http.util.Header;
+import org.glassfish.grizzly.http.util.HttpStatus;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.data.ApplicationRegistry;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.SingleConfigCode;
-import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
 /**
- * An HK-2 Service that provides the functionality so that admin console access
- * is handled properly. The general contract of this adapter is as follows: <ol>
- * <li>This adapter is *always* installed as a Grizzly adapter for a particular
- * URL designated as admin URL in domain.xml. This translates to context-root of
- * admin console application. </li> <li>When the control comes to the adapter for
- * the first time, user is asked to confirm if downloading the application is OK.
- * In that case, the admin console application is downloaded and expanded. While
- * the download and installation is happening, all the clients or browser
- * refreshes get a status message. No push from the server side is attempted
- * (yet). After the application is "installed", ApplicationLoaderService is
- * contacted, so that the application is loaded by the containers. This
- * application is available as a
- * <code> system-application </code> and is persisted as such in the domain.xml.
- * </li> <li>Even after this application is available, we don't load it on server
- * startup by default. It is always loaded
- * <code> on demand </code>. Hence, this adapter will always be available to
- * find out if application is loaded and load it in the container(s) if it is
- * not. If the application is already loaded, it simply exits. </li> </ol>
+ * An HK-2 Service that provides the functionality so that admin console access is handled properly.
+ *
+ * <p>The general contract of this adapter is as follows:
+ * <ol>
+ * <li>This adapter is <strong>always</strong> installed as a Grizzly adapter for a particular  URL designated
+ * as admin URL in {@code domain.xml}. This translates to {@code context-root} of admin console application.
+ * </li>
+ * <li>When the control comes to the adapter for the first time, the admin console application is downloaded
+ * and expanded. While the download and installation is happening, all the clients or browser refreshes get
+ * a status message. No push from the server side is attempted (yet). After the application is "installed",
+ * {@code ApplicationLoaderService} is contacted, so that the application is loaded by the containers. This
+ * application is available as a {@code system-application} and is persisted as such in the {@code domain.xml}.
+ * </li>
+ * <li>Even after this application is available, we don't load it on server startup by default. It is always
+ * loaded {@code on demand}. Hence, this adapter will always be available to find out if application is loaded
+ * and load it in the container(s) if it is not. If the application is already loaded, it simply exits.
+ * </li>
+ * </ol>
  *
  * @author &#2325;&#2375;&#2342;&#2366;&#2352; (km@dev.java.net)
  * @author Ken Paulsen (kenpaulsen@dev.java.net)
  * @author Siraj Ghaffar (sirajg@dev.java.net)
+ *
  * @since GlassFish V3 (March 2008)
  */
 @Service
-public final class AdminConsoleAdapter extends HttpHandler implements Adapter, PostConstruct, EventListener {
+public final class AdminConsoleAdapter extends HttpHandler implements Adapter, EventListener {
 
-    @Inject
-    ServerEnvironmentImpl env;
-    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
-    AdminService adminService;
-    private String contextRoot;
-    private File warFile;    // GF Admin Console War File Location
-    private volatile AdapterState stateMsg = AdapterState.UNINITIAZED;
-    private volatile boolean installing;
-    private boolean isOK = false;  // FIXME: initialize this with previous user choice
-    private AdminConsoleConfigUpgrade adminConsoleConfigUpgrade = null;
-    private final CountDownLatch latch = new CountDownLatch(1);
-    @Inject
-    ApplicationRegistry appRegistry;
-    @Inject
-    Domain domain;
-    @Inject
-    ServiceLocator habitat;
-    @Inject
-    Events events;
-    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
-    Config serverConfig;
-
-    AdminEndpointDecider epd;
     private static final Logger logger = KernelLoggerInfo.getLogger();
-    private String statusHtml;
-    private String initHtml;
-    private boolean isRegistered = false;
-    private ResourceBundle bundle;
-    //don't change the following without changing the html pages
-    private static final String MYURL_TOKEN = "%%%MYURL%%%";
+
+    private static final String TEST_BACKEND_IS_READY = "/testifbackendisready.html";
+
+    // Don't change the following without changing the html status page
     private static final String STATUS_TOKEN = "%%%STATUS%%%";
-    private static final String REDIRECT_TOKEN = "%%%LOCATION%%%";
+
     private static final String RESOURCE_PACKAGE = "com/sun/enterprise/v3/admin/adapter";
-    private static final String INSTALL_ROOT = "com.sun.aas.installRoot";
-    static final String ADMIN_APP_NAME = ServerEnvironmentImpl.DEFAULT_ADMIN_CONSOLE_APP_NAME;
+
+    private static final Set<Method> allowedHttpMethods = Set.of(Method.GET, Method.POST, Method.HEAD, Method.DELETE, Method.PUT);
+
+    @Inject
+    private ServerEnvironmentImpl serverEnvironment;
+
+    @Inject
+    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    private AdminService adminService;
+
+    @Inject
+    private Domain domain;
+
+    @Inject
+    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    private Config serverConfig;
+
+    @Inject
+    private Events events;
+
+    @Inject
+    private ServiceLocator serviceLocator;
+
+    private final CountDownLatch serverReady = new CountDownLatch(1);
+
+    private AdminConsoleConfigUpgrade adminConsoleConfigUpgrade;
+    private AdminEndpointDecider endpointDecider;
+    private ResourceBundle resourceBundle;
+    private String contextRoot;
+    private Path warFile; // GF Admin Console War File Location
+    private ConsoleLoadingOption loadingOption = ConsoleLoadingOption.DEFAULT;
+    private volatile AdapterState stateMsg = AdapterState.UNINITIALIZED;
+    private volatile boolean installing;
+    private boolean isRegistered;
     private volatile boolean isRestStarted;
     private volatile boolean isRestBeingStarted;
 
     /**
-     * Constructor.
-     */
-    public AdminConsoleAdapter() throws IOException {
-        initHtml = Utils.packageResource2String("downloadgui.html");
-        statusHtml = Utils.packageResource2String("status.html");
-    }
-
-    /**
-     *
+     *  Returns Admin console context root.
      */
     @Override
     public String getContextRoot() {
-        return epd.getGuiContextRoot(); //default is /admin
+        // Default is /admin
+        return endpointDecider.getGuiContextRoot();
     }
 
     @Override
@@ -162,129 +164,123 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
      *
      */
     @Override
-    public void service(Request req, Response res) {
+    public void service(Request request, Response response) {
+        resourceBundle = getResourceBundle(request.getLocale());
 
-        bundle = getResourceBundle(req.getLocale());
-
-        Method method = req.getMethod();
+        Method method = request.getMethod();
         if (!checkHttpMethodAllowed(method)) {
-            res.setStatus(java.net.HttpURLConnection.HTTP_BAD_METHOD,
-                    method.getMethodString() + " " + bundle.getString("http.bad.method"));
-            res.setHeader("Allow", getAllowedHttpMethodsAsString());
-            return;
-        }
-        if (!env.isDas()) {
-            sendStatusNotDAS(req, res);
+            response.setStatus(HttpStatus.METHOD_NOT_ALLOWED_405);
+            response.setHeader(Header.Allow, getAllowedHttpMethodsAsString());
             return;
         }
 
-        //This is needed to support the case where user update to 3.1 from previous release, and didn't run the upgrade tool.
+        if (!serverEnvironment.isDas()) {
+            sendStatusNotAvailable(response, "statusNotDAS.html");
+            return;
+        }
+
+        if (loadingOption == ConsoleLoadingOption.NEVER) {
+            sendStatusNotAvailable(response, "statusDisabled.html");
+            return;
+        }
+
+        //This is needed to support the case where user update from release prior to 3.1.
         if (adminConsoleConfigUpgrade == null) {
-            adminConsoleConfigUpgrade = habitat.getService(AdminConsoleConfigUpgrade.class);
+            adminConsoleConfigUpgrade = serviceLocator.getService(AdminConsoleConfigUpgrade.class);
         }
 
         try {
-            if (!latch.await(100L, TimeUnit.SECONDS)) {
-                // todo : better error reporting.
+            if (!serverReady.await(100L, TimeUnit.SECONDS)) {
                 logger.log(Level.SEVERE, KernelLoggerInfo.consoleRequestTimeout);
                 return;
             }
-        } catch (InterruptedException ex) {
+        } catch (InterruptedException e) {
             logger.log(Level.SEVERE, KernelLoggerInfo.consoleCannotProcess);
             return;
         }
-        logRequest(req);
-        if (isResourceRequest(req)) {
+
+        logRequest(request);
+
+        if (isResourceRequest(request)) {
             try {
-                handleResourceRequest(req, res);
-            } catch (IOException ioe) {
-                if (logger.isLoggable(Level.SEVERE)) {
-                    logger.log(Level.SEVERE, KernelLoggerInfo.consoleResourceError,
-                            new Object[]{req.getRequestURI(), ioe.toString()});
-                }
-                if (logger.isLoggable(Level.FINE)) {
-                    logger.log(Level.FINE,
-                            ioe.toString(),
-                            ioe);
-                }
+                handleResourceRequest(request, response);
+            } catch (IOException e) {
+                logger.log(Level.SEVERE, KernelLoggerInfo.consoleResourceError, new Object[] {request.getRequestURI(), e});
+                logger.log(Level.FINE, e, e::toString);
             }
             return;
         }
-        res.setContentType("text/html; charset=UTF-8");
 
-        // simple get request use via javascript to give back the console status (starting with :::)
-        // as a simple string.
-        // see usage in status.html
+        response.setContentType("text/html; charset=UTF-8");
 
+        // Simple get request use via javascript to give back the console status
+        // as a simple string (starting with :::).
+        // See usage in status.html
 
         String serverVersion = Version.getProductIdInfo();
 
-        if ("/testifbackendisready.html".equals(req.getRequestURI())) {
-
+        if (TEST_BACKEND_IS_READY.equals(request.getRequestURI())) {
             // Replace state token
-            String status = getStateMsg().getI18NKey();
+            String status;
             try {
                 // Try to get a localized version of this key
-                status = bundle.getString(status);
-            } catch (MissingResourceException ex) {
+                status = resourceBundle.getString(getStateMsg().getI18NKey());
+            } catch (MissingResourceException e) {
                 // Use the non-localized String version of the status
                 status = getStateMsg().toString();
             }
-            String wkey = AdapterState.WELCOME_TO.getI18NKey();
+
+            String welcomeKey = AdapterState.WELCOME_TO.getI18NKey();
             try {
                 // Try to get a localized version of this key
-                serverVersion = bundle.getString(wkey) + " " + serverVersion + ".";
-            } catch (MissingResourceException ex) {
+                serverVersion = resourceBundle.getString(welcomeKey) + " " + serverVersion + ".";
+            } catch (MissingResourceException e) {
                 // Use the non-localized String version of the status
-                serverVersion = AdapterState.WELCOME_TO.toString() + " " + serverVersion + ".";
+                serverVersion = AdapterState.WELCOME_TO + " " + serverVersion + ".";
             }
+
             status += "\n" + serverVersion;
+
             try {
-                OutputBuffer ob = getOutputBuffer(res);
+                OutputBuffer outputBuffer = getOutputBuffer(response);
 
-                byte[] bytes = (":::" + status).getBytes("UTF-8");
-                res.setContentLength(bytes.length);
-                ob.write(bytes, 0, bytes.length);
-                ob.flush();
-
-            } catch (IOException ex) {
-                logger.log(Level.SEVERE, KernelLoggerInfo.consoleResourceError, ex);
+                byte[] bytes = (":::" + status).getBytes(StandardCharsets.UTF_8);
+                response.setContentLength(bytes.length);
+                outputBuffer.write(bytes);
+                outputBuffer.flush();
+            } catch (IOException e) {
+                logger.log(Level.SEVERE, KernelLoggerInfo.consoleResourceError, e);
             }
-
 
             return;
         }
-        if (isApplicationLoaded()) {
-            // Let this pass to the admin console (do nothing)
-            handleLoadedState();
-        } else {
-            // if the admin console is not loaded, and someone use the REST access,
-            //browsers also request the favicon icon... Since we do not want to load
-            // the admin gui just to return a non existing icon,
-            //we just return without loading the entire console...
-            if ("/favicon.ico".equals(req.getRequestURI())) {
+
+        if (!isApplicationLoaded()) {
+            // If the admin console is not loaded, and someone use the REST access,
+            // browsers also request the favicon icon. Since we do not want to load
+            // the admin gui just to return a non-existing icon, we just return without
+            // loading the entire console...
+            if ("/favicon.ico".equals(request.getRequestURI())) {
                 return;
             }
+
             if (!isRestStarted) {
-                forceRestModuleLoad(req);
+                forceRestModuleLoad();
             }
+
             synchronized(this) {
                 if (isInstalling()) {
-                    sendStatusPage(req, res);
+                    sendStatusPage(response);
                 } else {
-                    if (isApplicationLoaded()) {
-                        // Double check here that it is not yet loaded (not
-                        // likely, but possible)
-                        handleLoadedState();
-                    }else {
+                    // Double check here that it is not yet loaded
+                    // (not likely, but possible)
+                    if (!isApplicationLoaded()) {
                         loadConsole();
-                        sendStatusPage(req, res);
+                        sendStatusPage(response);
                     }
                 }
             }
-
         }
-
     }
 
     void loadConsole() {
@@ -292,35 +288,37 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
             // We have permission and now we should install
             // (or load) the application.
             setInstalling(true);
-            startThread();  // Thread must set installing false
-        } catch (Exception ex) {
+            // Thread must set installing false
+            startThread();
+        } catch (Exception e) {
             // Ensure we haven't crashed with the installing
             // flag set to true (not likely).
             setInstalling(false);
-            throw new RuntimeException(
-                    "Unable to install Admin Console!", ex);
+            throw new RuntimeException("Unable to install Admin Console!", e);
         }
     }
 
     /**
-     * @param req the Request
-     * @return <code>true</code> if the request is for a resource with a known content
-     *  type otherwise <code>false</code>.
+     * Checks if the request is for a resource with a known content type.
+     *
+     * @param request the {@link Request}
+     * @return {@code true} if the request is for a resource with a known content type, {@code false} otherwise.
      */
-    private boolean isResourceRequest(Request req) {
-        return (getContentType(req.getRequestURI()) != null);
+    private boolean isResourceRequest(Request request) {
+        return getContentType(request.getRequestURI()) != null;
     }
 
     /**
-     * All that needs to happen for the REST module to be initialized is a request
-     * of some sort.  Here, we don't care about the response, so we make the request
-     * then close the stream and move on.
+     * All that needs to happen for the REST module to be initialized is a request of some sort.
+     * Here, we don't care about the response, so we make the request then close the stream and move on.
      */
-    private void forceRestModuleLoad(final Request req) {
+    private void forceRestModuleLoad() {
         if (isRestBeingStarted) {
             return;
         }
+
         isRestBeingStarted = true;
+
         Thread thread = new Thread("Force REST Module Load Thread") {
             @Override
             public void run() {
@@ -332,77 +330,66 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
     }
 
     private String getContentType(String resource) {
-
-        if (resource == null || resource.length() == 0) {
+        if (resource == null || resource.isEmpty()) {
             return null;
         }
-        // this may need to be expanded upon the future, in which case, the
-        // current implementation may not be worth maintaining
+
+        // This may need to be expanded upon the future, in which case,
+        // the current implementation may not be worth maintaining
+
         if (resource.endsWith(".gif")) {
             return "image/gif";
-        } else if (resource.endsWith(".jpg")) {
-            return "image/jpeg";
-        } else {
-            if (logger.isLoggable(Level.FINE)) {
-                logger.log(Level.FINE, "Unhandled content-type: {0}", resource);
-            }
-            return null;
         }
 
+        if (resource.endsWith(".jpg")) {
+            return "image/jpeg";
+        }
+
+        logger.log(Level.FINE, () -> "Unhandled content type: " + resource);
+
+        return null;
     }
 
-    private void handleResourceRequest(Request req, Response res)
-            throws IOException {
-
-        String resourcePath = RESOURCE_PACKAGE + req.getRequestURI();
-
+    private void handleResourceRequest(Request request, Response response) throws IOException {
+        String resourcePath = RESOURCE_PACKAGE + request.getRequestURI();
         ClassLoader loader = AdminConsoleAdapter.class.getClassLoader();
 
-        InputStream in = null;
-        try {
-            in = loader.getResourceAsStream(resourcePath);
-            if (in == null) {
+        try (InputStream resourceStream = loader.getResourceAsStream(resourcePath)) {
+            if (resourceStream == null) {
                 logger.log(Level.WARNING, KernelLoggerInfo.consoleResourceNotFound, resourcePath);
                 return;
             }
-            byte[] buf = new byte[512];
-            ByteArrayOutputStream baos = new ByteArrayOutputStream(512);
-            for (int i = in.read(buf); i != -1; i = in.read(buf)) {
-                baos.write(buf, 0, i);
-            }
+
+            byte[] bytes = resourceStream.readAllBytes();
+
             String contentType = getContentType(resourcePath);
             if (contentType != null) {
-                res.setContentType(contentType);
+                response.setContentType(contentType);
             }
-            res.setContentLength(baos.size());
-            OutputStream out = res.getOutputStream();
-            baos.writeTo(out);
+            response.setContentLength(bytes.length);
+
+            OutputStream out = response.getOutputStream();
+            out.write(bytes);
             out.flush();
-
-        } finally {
-            if (in != null) {
-                in.close();
-            }
         }
-
     }
 
     boolean isApplicationLoaded() {
-        return (stateMsg == AdapterState.APPLICATION_LOADED);
+        return stateMsg == AdapterState.APPLICATION_LOADED;
     }
 
     /**
-     *
+     *  Checks if admin console installation is in progress.
      */
     boolean isInstalling() {
         return installing;
     }
 
     /**
-     *
+     *  Sets {@code installing} flag.
      */
-    void setInstalling(boolean flag) {
-        installing = flag;
+    void setInstalling(boolean installing) {
+        this.installing = installing;
     }
 
     /**
@@ -414,8 +401,7 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
     }
 
     /**
-     * Marks this adapter as having been registered or unregistered as a
-     * network endpoint
+     * Marks this adapter as having been registered or unregistered as a network endpoint.
      */
     @Override
     public void setRegistered(boolean isRegistered) {
@@ -423,28 +409,30 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
     }
 
     /**
-     * <p> This method sets the current state.</p>
+     * Sets the current state.
      */
-    void setStateMsg(AdapterState msg) {
-        stateMsg = msg;
-        logger.log(Level.FINE, msg.toString());
+    void setStateMsg(AdapterState stateMsg) {
+        this.stateMsg = stateMsg;
+        logger.log(Level.FINE, stateMsg::toString);
     }
 
     /**
-     * <p> This method returns the current state, which will be one of the
-     * valid values defined by {@link AdapterState}.</p>
+     * This method returns the current state, which will be one of the valid values
+     * defined by {@link AdapterState}.
      */
     AdapterState getStateMsg() {
         return stateMsg;
     }
 
-    /**
-     *
-     */
-    @Override
+    ConsoleLoadingOption getLoadingOption() {
+        return loadingOption;
+    }
+
+    @PostConstruct
     public void postConstruct() {
         events.register(this);
-        //set up the environment properly
+
+        // Set up the environment properly
         init();
     }
 
@@ -453,72 +441,71 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
      */
     @Override
     public void event(@RestrictTo(EventTypes.SERVER_READY_NAME) Event<?> event) {
-        latch.countDown();
+        serverReady.countDown();
         if (logger != null) {
             logger.log(Level.FINE, "AdminConsoleAdapter is ready.");
         }
     }
 
     /**
-     *
+     *  Set up the environment.
      */
     private void init() {
-        Property locProp = adminService.getProperty(ServerTags.ADMIN_CONSOLE_DOWNLOAD_LOCATION);
-        if (locProp == null || locProp.getValue() == null || locProp.getValue().equals("")) {
-            String iRoot = System.getProperty(INSTALL_ROOT) + "/lib/install/applications/admingui.war";
-            warFile = new File(iRoot.replace('/', File.separatorChar));
-            writeAdminServiceProp(ServerTags.ADMIN_CONSOLE_DOWNLOAD_LOCATION, "${" + INSTALL_ROOT + "}/lib/install/applications/admingui.war");
-        } else {
-            //For any non-absolute path, we start from the installation, ie glassfish8
-            //eg, v3 prelude upgrade, where the location property was "glassfish/lib..."
-            String locValue = locProp.getValue();
-            warFile = new File(locValue);
-            if (!warFile.isAbsolute()) {
-                File tmp = new File(System.getProperty(INSTALL_ROOT), "..");
-                warFile = new File(tmp, locValue);
+        // Get loading option
+        Property loadingOptionProperty = adminService.getProperty(ServerTags.ADMIN_CONSOLE_STARTUP);
+        if (loadingOptionProperty != null) {
+            String loadingOptionValue = loadingOptionProperty.getValue();
+            if (loadingOptionValue != null) {
+                try {
+                    loadingOption = ConsoleLoadingOption.valueOf(loadingOptionValue.toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    logger.log(Level.WARNING, "AdminConsoleAdapter: Illegal console loading option \"{0}\"", loadingOptionValue);
+                }
             }
         }
 
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "Admin Console download location: {0}", warFile.getAbsolutePath());
+        Property locationProperty = adminService.getProperty(ServerTags.ADMIN_CONSOLE_DOWNLOAD_LOCATION);
+        if (locationProperty == null || locationProperty.getValue() == null || locationProperty.getValue().isEmpty()) {
+            warFile = Path.of(System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY),
+                    "lib/install/applications/admingui.war");
+            writeAdminServiceProperty(ServerTags.ADMIN_CONSOLE_DOWNLOAD_LOCATION,
+                    "${" + SystemPropertyConstants.INSTALL_ROOT_PROPERTY + "}/lib/install/applications/admingui.war");
+        } else {
+            // For any non-absolute path, we start from the installation, ie glassfish7
+            // eg, v3 prelude upgrade, where the location property was "glassfish/lib..."
+            String locationValue = locationProperty.getValue();
+            warFile = Path.of(locationValue);
+            if (!warFile.isAbsolute()) {
+                warFile = Path.of(System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY)).resolveSibling(locationValue);
+            }
         }
+
+        logger.log(Level.FINE, () -> "Admin Console download location: " + warFile.toAbsolutePath());
 
         initState();
 
         try {
-            epd = new AdminEndpointDecider(serverConfig);
-            contextRoot = epd.getGuiContextRoot();
-        } catch (Exception ex) {
-            logger.log(Level.INFO, KernelLoggerInfo.consoleCannotInitialize, ex);
-            return;
+            endpointDecider = new AdminEndpointDecider(serverConfig);
+            contextRoot = endpointDecider.getGuiContextRoot();
+        } catch (Exception e) {
+            logger.log(Level.INFO, KernelLoggerInfo.consoleCannotInitialize, e);
         }
     }
 
     void initRest() {
-        InputStream is = null;
         try {
-            NetworkListener nl = domain.getServerNamed("server").getConfig().getNetworkConfig()
-                    .getNetworkListener("admin-listener");
-            SecureAdmin secureAdmin = habitat.getService(SecureAdmin.class);
+            NetworkListener adminListener = domain.getServerNamed("server").getConfig().getNetworkConfig()
+                    .getNetworkListener(ServerTags.ADMIN_LISTENER_ID);
+            SecureAdmin secureAdmin = serviceLocator.getService(SecureAdmin.class);
 
-            URL url = new URL(
-                    (SecureAdmin.isEnabled(secureAdmin) ? "https" : "http"),
-                    nl.getAddress(),
-                    Integer.parseInt(nl.getPort()),
-                    "/management/domain");
-            URLConnection conn = url.openConnection();
-            is = conn.getInputStream();
-            isRestStarted = true;
-        } catch (Exception ex) {
-           logger.log(Level.FINE, null, ex);
-        } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException ex1) {
-                    logger.log(Level.FINE, null, ex1);
-                }
+            URL url = new URL(SecureAdmin.isEnabled(secureAdmin) ? "https" : "http",
+                    adminListener.getAddress(), Integer.parseInt(adminListener.getPort()), "/management/domain");
+            URLConnection connection = url.openConnection();
+            try (InputStream ignored = connection.getInputStream()) {
+                isRestStarted = true;
             }
+        } catch (Exception e) {
+           logger.log(Level.FINE, null, e);
         }
     }
 
@@ -529,206 +516,131 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
     private void initState() {
         // It is a given that the application is NOT loaded to begin with
         if (appExistsInConfig()) {
-            isOK = true; // FIXME: I don't think this is good enough
             setStateMsg(AdapterState.APPLICATION_INSTALLED_BUT_NOT_LOADED);
-        } else if (new File(warFile.getParentFile(), ADMIN_APP_NAME).exists() || warFile.exists()) {
-            // The exploded dir, or the .war exists... mark as downloded
-            if (logger.isLoggable(Level.FINE)) {
-                setStateMsg(AdapterState.DOWNLOADED);
-            }
-            isOK = true;
         } else {
-            setStateMsg(AdapterState.APPLICATION_NOT_INSTALLED);
+            Path explodedWar = warFile.resolveSibling(ServerEnvironmentImpl.DEFAULT_ADMIN_CONSOLE_APP_NAME);
+            if (Files.exists(explodedWar) || Files.exists(warFile)) {
+                // The exploded dir, or the .war exists. Mark as downloaded.
+                setStateMsg(AdapterState.DOWNLOADED);
+            } else {
+                setStateMsg(AdapterState.APPLICATION_NOT_INSTALLED);
+            }
         }
     }
 
     /**
-     *
+     *  Checks if console application exists in {@code domain.xml}
      */
     private boolean appExistsInConfig() {
-        return (getConfig() != null);
+        return getConfig() != null;
     }
 
-    /**
-     *
-     */
     Application getConfig() {
-        //no application-ref logic here -- that's on purpose for now
-        Application app = domain.getSystemApplicationReferencedFrom(env.getInstanceName(), ADMIN_APP_NAME);
-
-        return app;
+        // No application-ref logic here - that's on purpose for now
+        return domain.getSystemApplicationReferencedFrom(serverEnvironment.getInstanceName(),
+                ServerEnvironmentImpl.DEFAULT_ADMIN_CONSOLE_APP_NAME);
     }
 
-    /**
-     *
-     */
-    private void logRequest(Request req) {
+    private void logRequest(Request request) {
         if (logger.isLoggable(Level.FINE)) {
             logger.log(Level.FINE, "AdminConsoleAdapter''s STATE IS: {0}", getStateMsg());
             logger.log(Level.FINE, "Current Thread: {0}", Thread.currentThread().getName());
-            for (final String name : req.getParameterNames()) {
-                final String values = Arrays.toString(req.getParameterValues(name));
-                logger.log(Level.FINE, "Parameter name: {0} values: {1}", new Object[]{name, values});
+            for (final String name : request.getParameterNames()) {
+                final String values = Arrays.toString(request.getParameterValues(name));
+                logger.log(Level.FINE, "Parameter name: {0} values: {1}", new Object[] {name, values});
             }
         }
     }
 
     /**
-     *
-     */
-    enum InteractionResult {
-
-        OK,
-        CANCEL,
-        FIRST_TIMER;
-    }
-
-    /**
-     * <p> Determines if the user has permission.</p>
-     */
-    private boolean hasPermission(InteractionResult ir) {
-        //do this quickly as this is going to block the grizzly worker thread!
-        //check for returning user?
-        if (ir == InteractionResult.OK) {
-            isOK = true;
-        }
-        return isOK;
-    }
-
-    /**
-     *
+     * Starts console installation in the separate thread.
      */
     private void startThread() {
-        new InstallerThread(this, habitat, domain, env, contextRoot, epd.getGuiHosts()).start();
+        new InstallerThread(this, serviceLocator, domain,
+                serverEnvironment, contextRoot, endpointDecider.getGuiHosts()).start();
     }
 
-    /**
-     *
-     */
-    /*
-    private synchronized InteractionResult getUserInteractionResult(GrizzlyRequest req) {
-        if (req.getParameter(OK_PARAM) != null) {
-            proxyHost = req.getParameter(PROXY_HOST_PARAM);
-            if ((proxyHost != null) && !proxyHost.equals("")) {
-                String ps = req.getParameter(PROXY_PORT_PARAM);
-                try {
-                    proxyPort = Integer.parseInt(ps);
-                } catch (NumberFormatException nfe) {
-                    throw new IllegalArgumentException(
-                            "The specified proxy port (" + ps
-                                    + ") must be a valid port integer!", nfe);
-                }
-            }
-// FIXME: I need to "remember" this answer in a persistent way!! Or it will popup this message EVERY time after the server restarts.
-            setStateMsg(AdapterState.PERMISSION_GRANTED);
-            isOK = true;
-            return InteractionResult.OK;
-        } else if (req.getParameter(CANCEL_PARAM) != null) {
-            // Canceled
-// FIXME: I need to "remember" this answer in a persistent way!! Or it will popup this message EVERY time after the server restarts.
-            setStateMsg(AdapterState.CANCELED);
-            isOK = false;
-            return InteractionResult.CANCEL;
-        }
-
-        // This is a first-timer
-        return InteractionResult.FIRST_TIMER;
-    }
-     *
-     */
-    private OutputBuffer getOutputBuffer(Response res) {
-        res.setStatus(202);
-        res.setContentType("text/html");
-        res.setCharacterEncoding("UTF-8");
-        return res.getOutputBuffer();
+    private OutputBuffer getOutputBuffer(Response response) {
+        response.setStatus(HttpStatus.ACCEPTED_202);
+        response.setContentType("text/html");
+        response.setCharacterEncoding("UTF-8");
+        return response.getOutputBuffer();
     }
 
-    /**
-     *
-     */
-    private void sendStatusPage(Request req, Response res) {
-        byte[] bytes;
+    private void sendStatusPage(Response response) {
         try {
-            OutputBuffer ob = getOutputBuffer(res);
+            OutputBuffer outputBuffer = getOutputBuffer(response);
+
+            String html = Utils.packageResource2String("status.html");
             // Replace locale specific Strings
-            String localHtml = replaceTokens(statusHtml, bundle);
+            String localHtml = replaceTokens(html, resourceBundle);
 
             // Replace state token
             String status = getStateMsg().getI18NKey();
             try {
                 // Try to get a localized version of this key
-                status = bundle.getString(status);
-            } catch (MissingResourceException ex) {
+                status = resourceBundle.getString(status);
+            } catch (MissingResourceException e) {
                 // Use the non-localized String version of the status
                 status = getStateMsg().toString();
             }
-            String locationUrl = req.getScheme()
-                    + "://" + req.getServerName()
-                    + ':' + req.getServerPort() + "/login.jsf";
-            localHtml = localHtml.replace(REDIRECT_TOKEN, locationUrl);
-            bytes = localHtml.replace(STATUS_TOKEN, status).getBytes("UTF-8");
-            res.setContentLength(bytes.length);
-            ob.write(bytes, 0, bytes.length);
-            ob.flush();
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
+
+            byte[] bytes = localHtml.replace(STATUS_TOKEN, status).getBytes(StandardCharsets.UTF_8);
+            response.setContentLength(bytes.length);
+            outputBuffer.write(bytes);
+            outputBuffer.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    /**
-     *
-     */
-    private void sendStatusNotDAS(Request req, Response res) {
-        byte[] bytes;
+    private void sendStatusNotAvailable(Response response, String statusPage) {
         try {
-            String html = Utils.packageResource2String("statusNotDAS.html");
-            OutputBuffer ob = getOutputBuffer(res);
-            // Replace locale specific Strings
-            String localHtml = replaceTokens(html, bundle);
+            OutputBuffer outputBuffer = getOutputBuffer(response);
 
-            bytes = localHtml.getBytes("UTF-8");
-            res.setContentLength(bytes.length);
-            ob.write(bytes, 0, bytes.length);
-            ob.flush();
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
+            String html = Utils.packageResource2String(statusPage);
+            String localHtml = replaceTokens(html, resourceBundle);
+
+            byte[] bytes = localHtml.getBytes(StandardCharsets.UTF_8);
+            response.setContentLength(bytes.length);
+            outputBuffer.write(bytes);
+            outputBuffer.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
     /**
-     * <p> This method returns the resource bundle for localized Strings used
-     * by the AdminConsoleAdapter.</p>
+     * This method returns the resource bundle for localized strings used by the AdminConsoleAdapter.
      *
-     * @param    locale    The Locale to be used.
+     * @param locale the {@link Locale} to be used
      */
     private ResourceBundle getResourceBundle(Locale locale) {
-        return ResourceBundle.getBundle(
-                "com.sun.enterprise.v3.admin.adapter.LocalStrings", locale);
+        return ResourceBundle.getBundle("com.sun.enterprise.v3.admin.adapter.LocalStrings", locale);
     }
 
     /**
-     * <p> This method replaces all tokens in text with values from the given
-     * <code>ResourceBundle</code>.  A token starts and ends with 3
-     * percent (%) characters.  The value between the percent characters
-     * will be used as the key to the given <code>ResourceBundle</code>.
-     * If a key does not exist in the bundle, no substitution will take
-     * place for that token.</p>
+     * This method replaces all tokens in text with values from the given {@link ResourceBundle}.
      *
-     * @return The same text except with substituted tokens when available.
-     * @param    text    The text containing tokens to be replaced.
-     * @param    bundle    The <code>ResourceBundle</code> with keys for the value
+     * <p>A token starts and ends with 3 percent (%) characters.  The value between the percent characters
+     * will be used as the key to the given {@link ResourceBundle}. If a key does not exist in the bundle,
+     * no substitution will take place for that token.
+     *
+     * @param text the text containing tokens to be replaced
+     * @param bundle the {@link  ResourceBundle} with keys for the value
+     * @return the same text except with substituted tokens when available
      */
     private String replaceTokens(String text, ResourceBundle bundle) {
-        int start = 0, end = 0;
-        String newString = null;
-        StringBuilder buf = new StringBuilder("");
+        StringBuilder sb = new StringBuilder();
 
+        int start = 0;
+        int end = 0;
         while (start != -1) {
             // Find start of token
             start = text.indexOf("%%%", end);
             if (start != -1) {
                 // First copy the stuff before the start
-                buf.append(text.substring(end, start));
+                sb.append(text, end, start);
 
                 // Move past the %%%
                 start += 3;
@@ -738,18 +650,17 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
                 if (end != -1) {
                     try {
                         // Copy the token value to the buffer
-                        buf.append(
-                                bundle.getString(text.substring(start, end)));
-                    } catch (MissingResourceException ex) {
+                        sb.append(bundle.getString(text.substring(start, end)));
+                    } catch (MissingResourceException e) {
                         // Unable to find the resource, so we don't do anything
-                        buf.append("%%%").append(text.substring(start, end)).append("%%%");
+                        sb.append("%%%").append(text, start, end).append("%%%");
                     }
 
                     // Move past the %%%
                     end += 3;
                 } else {
                     // Add back the %%% because we didn't find a matching end
-                    buf.append("%%%");
+                    sb.append("%%%");
 
                     // Reset end so we can copy the remainder of the text
                     end = start;
@@ -758,104 +669,53 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
         }
 
         // Copy the remainder of the text
-        buf.append(text.substring(end));
+        sb.append(text.substring(end));
 
         // Return the new String
-        return buf.toString();
+        return sb.toString();
     }
 
-    public AdminService getAdminService() {
-        return adminService;
-    }
-
-    private void writeAdminServiceProp(final String propName, final String propValue) {
+    private void writeAdminServiceProperty(final String propertyName, final String propertyValue) {
         try {
-            ConfigSupport.apply(new SingleConfigCode<AdminService>() {
-
-                @Override
-                public Object run(AdminService adminService) throws PropertyVetoException, TransactionFailure {
-                    Property newProp = adminService.createChild(Property.class);
-                    adminService.getProperty().add(newProp);
-                    newProp.setName(propName);
-                    newProp.setValue(propValue);
-                    return newProp;
-                }
+            ConfigSupport.apply(adminService -> {
+                Property newProperty = adminService.createChild(Property.class);
+                adminService.getProperty().add(newProperty);
+                newProperty.setName(propertyName);
+                newProperty.setValue(propertyValue);
+                return newProperty;
             }, adminService);
-        } catch (Exception ex) {
+        } catch (Exception e) {
             logger.log(Level.WARNING, KernelLoggerInfo.consoleCannotWriteProperty,
-                    new Object[] {propName, propValue, ex});
+                    new Object[] {propertyName, propertyValue, e});
         }
-    }
-
-    /**
-     *
-     */
-    private void handleLoadedState() {
-//System.out.println(" Handle Loaded State!!");
-        // do nothing
-        statusHtml = null;
-        initHtml = null;
     }
 
     @Override
     public int getListenPort() {
-        return epd.getListenPort();
+        return endpointDecider.getListenPort();
     }
 
     @Override
     public InetAddress getListenAddress() {
-        return epd.getListenAddress();
+        return endpointDecider.getListenAddress();
     }
 
     @Override
     public List<String> getVirtualServers() {
-        return epd.getGuiHosts();
+        return endpointDecider.getGuiHosts();
     }
-//    enum HttpMethod {
-//        OPTIONS ("OPTIONS"),
-//        GET ("GET"),
-//        HEAD ("HEAD"),
-//        POST ("POST"),
-//        PUT ("PUT"),
-//        DELETE ("DELETE"),
-//        TRACE ("TRACE"),
-//        CONNECT ("CONNECT");
-//
-//        private String method;
-//
-//        HttpMethod(String method) {
-//            this.method = method;
-//        }
-//
-//        static HttpMethod getHttpMethod(String httpMethod) {
-//            for (HttpMethod hh: HttpMethod.values()) {
-//                if (hh.method.equalsIgnoreCase(httpMethod)) {
-//                    return hh;
-//                }
-//            }
-//            return null;
-//        }
-//
-//        String method() {
-//            return method;
-//        }
-//    }
-    private final Method[] allowedHttpMethods = {Method.GET, Method.POST, Method.HEAD,
-        Method.DELETE, Method.PUT};
 
-    private boolean checkHttpMethodAllowed(Method method) {
-        for (Method hh : allowedHttpMethods) {
-            if (hh.equals(method)) {
-                return true;
+    private static boolean checkHttpMethodAllowed(Method method) {
+        return allowedHttpMethods.contains(method);
+    }
+
+    private static String getAllowedHttpMethodsAsString() {
+        StringBuilder sb = new StringBuilder();
+        for (Method method : allowedHttpMethods) {
+            if (sb.length() > 0) {
+                sb.append(", ");
             }
-        }
-        return false;
-    }
-
-    private String getAllowedHttpMethodsAsString() {
-        StringBuilder sb = new StringBuilder(allowedHttpMethods[0].getMethodString());
-        for (int i = 1; i < allowedHttpMethods.length; i++) {
-            sb.append(", ").append(allowedHttpMethods[i].getMethodString());
+            sb.append(method.getMethodString());
         }
         return sb.toString();
     }

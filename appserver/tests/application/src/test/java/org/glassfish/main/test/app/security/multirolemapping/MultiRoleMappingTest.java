@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -231,7 +232,7 @@ public class MultiRoleMappingTest {
         try {
             assertThat(connection.getResponseCode(), equalTo(200));
             final String text = readResponseBody(connection);
-            assertThat(text, equalTo("Hello " + relativePath + "\n"));
+            assertThat(text, equalTo("Hello " + relativePath + System.lineSeparator()));
         } finally {
             connection.disconnect();
         }

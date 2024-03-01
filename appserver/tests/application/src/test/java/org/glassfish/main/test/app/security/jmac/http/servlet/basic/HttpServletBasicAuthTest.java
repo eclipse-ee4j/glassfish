@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -67,9 +68,10 @@ public class HttpServletBasicAuthTest {
     @BeforeAll
     public static void prepareDeployment() {
         keyFile = getDomain1Directory().resolve(Path.of("config", "keyfile123.txt")).toFile();
-        assertThat(ASADMIN.exec("create-auth-realm", "--classname",
-            "com.sun.enterprise.security.auth.realm.file.FileRealm", "--property",
-            "file=" + keyFile.getAbsolutePath() + ":jaas-context=fileRealm", "--target", "server", FILE_REALM_NAME),
+        assertThat(ASADMIN.exec("create-auth-realm",
+            "--classname", "com.sun.enterprise.security.auth.realm.file.FileRealm",
+            "--property", "file=" + keyFile.getAbsolutePath().replaceAll("([\\\\:])", "\\\\$1") + ":jaas-context=fileRealm",
+            "--target", "server", FILE_REALM_NAME),
             asadminOK());
         createFileUser(FILE_REALM_NAME, USER_NAME, USER_PASSWORD, "mygroup");
 

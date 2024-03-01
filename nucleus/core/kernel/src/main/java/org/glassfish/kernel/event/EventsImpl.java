@@ -20,6 +20,7 @@ package org.glassfish.kernel.event;
 import jakarta.inject.Inject;
 
 import java.lang.reflect.Method;
+import java.util.Iterator;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
@@ -62,8 +63,11 @@ public class EventsImpl implements Events {
 
     @Override
     public void send(final Event<?> event, boolean asynchronously) {
-        for (final EventListener listener : listeners) {
-            Method eventMethod = null;
+        Iterator<EventListener> iterator = listeners.iterator();
+        while (iterator.hasNext()) {
+            EventListener listener = iterator.next();
+
+            Method eventMethod;
             try {
                 // Check if the listener is interested with his event.
                 eventMethod = listener.getClass().getMethod("event", Event.class);
@@ -78,14 +82,15 @@ public class EventsImpl implements Events {
                 // As a result, an exception like NoClassDefFoundError is thrown
                 // from getMethod.
                 logger.log(Level.SEVERE, KernelLoggerInfo.exceptionSendEvent, t);
+                iterator.remove();
+                continue;
             }
-            if (eventMethod != null) {
-                RestrictTo restrictTo = eventMethod.getParameters()[0].getAnnotation(RestrictTo.class);
-                if (restrictTo != null) {
-                    EventTypes<?> interested = EventTypes.create(restrictTo.value());
-                    if (!event.is(interested)) {
-                        continue;
-                    }
+
+            RestrictTo restrictTo = eventMethod.getParameters()[0].getAnnotation(RestrictTo.class);
+            if (restrictTo != null) {
+                EventTypes<?> interested = EventTypes.create(restrictTo.value());
+                if (!event.is(interested)) {
+                    continue;
                 }
             }
 

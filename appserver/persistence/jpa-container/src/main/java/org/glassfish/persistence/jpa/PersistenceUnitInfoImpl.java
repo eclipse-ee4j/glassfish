@@ -323,4 +323,18 @@ public class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
         return provider;
     }
 
+    // TODO IMPLEMENT!
+
+    @Override
+    public String getScopeAnnotationName() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<String> getQualifierAnnotationNames() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

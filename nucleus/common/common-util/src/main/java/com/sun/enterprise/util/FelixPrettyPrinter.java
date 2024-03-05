@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -35,7 +35,7 @@ public class FelixPrettyPrinter {
     private static final Pattern BUNDLE_PATTERN = Pattern.compile("\\[(\\d+)\\]", Pattern.MULTILINE);
 
     public static void main(String[] args) {
-        System.out.println(prettyPrintExceptionMessage("Unable to resolve org.glassfish.main.webservices.connector [220](R 220.0): missing requirement [org.glassfish.main.webservices.connector [220](R 220.0)] osgi.wiring.package; (&(osgi.wiring.package=org.glassfish.web.deployment.descriptor)(version>=7.0.0)(!(version>=8.0.0))) [caused by: Unable to resolve org.glassfish.main.web.glue [124](R 124.0): missing requirement [org.glassfish.main.web.glue [124](R 124.0)] osgi.wiring.package; (&(osgi.wiring.package=com.sun.web.security)(version>=7.0.0)(!(version>=8.0.0))) [caused by: Unable to resolve org.glassfish.main.security.websecurity [229](R 229.0): missing requirement [org.glassfish.main.security.websecurity [229](R 229.0)] osgi.wiring.package; (&(osgi.wiring.package=org.apache.catalina.realm)(version>=7.0.0)(!(version>=8.0.0))) [caused by: Unable to resolve org.glassfish.main.web.core [36](R 36.0): missing requirement [org.glassfish.main.web.core [36](R 36.0)] osgi.wiring.package; (&(osgi.wiring.package=org.hibernate.validator.cdi)(version>=8.0.0)(!(version>=9.0.0))) [caused by: Unable to resolve org.hibernate.validator.cdi [97](R 97.0): missing requirement [org.hibernate.validator.cdi [97](R 97.0)] osgi.wiring.host; (&(osgi.wiring.host=org.hibernate.validator)(bundle-version>=0.0.0))]]]] Unresolved requirements: [[org.glassfish.main.webservices.connector [220](R 220.0)] osgi.wiring.package; (&(osgi.wiring.package=org.glassfish.web.deployment.descriptor)(version>=7.0.0)(!(version>=8.0.0)))]"));
+        System.out.println(prettyPrintExceptionMessage("Unable to resolve org.glassfish.main.concurrent.impl [138](R 138.0): missing requirement [org.glassfish.main.concurrent.impl [138](R 138.0)] osgi.wiring.package; (&(osgi.wiring.package=org.glassfish.enterprise.concurrent.spi)(version>=2.0.0)(!(version>=3.0.0))) [caused by: Unable to resolve org.glassfish.jakarta.enterprise.concurrent [190](R 190.0): missing requirement [org.glassfish.jakarta.enterprise.concurrent [190](R 190.0)] osgi.wiring.package; (&(osgi.wiring.package=jakarta.annotation)(version>=2.1.0)(!(version>=3.0.0)))] Unresolved requirements: [[org.glassfish.main.concurrent.impl [138](R 138.0)] osgi.wiring.package; (&(osgi.wiring.package=org.glassfish.enterprise.concurrent.spi)(version>=2.0.0)(!(version>=3.0.0)))]"));
     }
 
     /**

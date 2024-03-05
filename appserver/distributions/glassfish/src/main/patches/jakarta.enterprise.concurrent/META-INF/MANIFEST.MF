@@ -11,12 +11,12 @@ Bundle-Name: org.glassfish.jakarta.enterprise.concurrent
 Bundle-SymbolicName: org.glassfish.jakarta.enterprise.concurrent
 Bundle-Vendor: Oracle Corporation
 Bundle-Version: 3.0.0
-Export-Package: org.glassfish.enterprise.concurrent;version="2.0";uses:=
+Export-Package: org.glassfish.concurro;version="2.0";uses:=
  "jakarta.annotation,jakarta.enterprise.concurrent,jakarta.interceptor,o
  rg.glassfish.enterprise.concurrent.internal,org.glassfish.enterprise.co
- ncurrent.spi",org.glassfish.enterprise.concurrent.internal;version="2.0
+ ncurrent.spi",org.glassfish.concurro.internal;version="2.0
  ";uses:="jakarta.enterprise.concurrent,org.glassfish.enterprise.concurr
- ent,org.glassfish.enterprise.concurrent.spi",org.glassfish.enterprise.c
+ ent,org.glassfish.concurro.spi",org.glassfish.enterprise.c
  oncurrent.spi;version="2.0";uses:="jakarta.enterprise.concurrent"
 Import-Package: jakarta.annotation;version="[2.1,4)",jakarta.enterprise.
  concurrent;version="[3.0,4)",jakarta.enterprise.event;version="[4.0,5)"

@@ -44,6 +44,7 @@
         <glassfish.home>${glassfish.root}/glassfish7</glassfish.home>
 
         <jcommander.version>1.82</jcommander.version>
+        <slf4j.version>1.7.29</slf4j.version>
         <sigtest.version>1.7</sigtest.version>
         <testng.version>7.7.0</testng.version>
     </properties>
@@ -176,6 +177,14 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
+                                    <groupId>org.slf4j</groupId>
+                                    <artifactId>slf4j-api</artifactId>
+                                    <version>${slf4j.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${glassfish.root}/glassfish7/glassfish/lib</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
                                     <groupId>org.testng</groupId>
                                     <artifactId>testng</artifactId>
                                     <version>${testng.version}</version>
@@ -228,7 +237,7 @@
                     <systemPropertyVariables>
                         <glassfish.home>${glassfish.root}/glassfish7</glassfish.home>
                         <glassfish.enableDerby>true</glassfish.enableDerby>
-                        <glassfish.maxHeapSize>2048m</glassfish.maxHeapSize>
+                        <glassfish.maxHeapSize>512m</glassfish.maxHeapSize>
 
                         <!-- Remove comments for logging to file. Following logging with e.g. tail -f ConcurrentTCK00.log -->
                         <!--

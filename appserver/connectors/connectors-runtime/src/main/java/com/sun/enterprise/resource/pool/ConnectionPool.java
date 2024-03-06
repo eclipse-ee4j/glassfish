@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -946,7 +946,11 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         }
 
         if (!state.isBusy()) {
-            throw new IllegalStateException("state.isBusy() : false");
+            // Do not throw exception, the current transaction should not fail if the state is already 'free'.
+            // This method is for example also called from putbackBadResourceToPool, which also
+            // does not throw the IllegalStateException anymore.
+            // throw new IllegalStateException("state.isBusy() : false");
+            LOG.log(WARNING, "resourceClosed - Expecting 'state.isBusy() : false', but was true for handle: " + handle);
         }
 
         // mark as not busy
@@ -1050,6 +1054,10 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         if (state == null) {
             throw new IllegalStateException();
         }
+
+        // mark as not busy
+        setResourceStateToFree(resourceHandle);
+        state.touchTimestamp();
 
         // changed order of commands
 

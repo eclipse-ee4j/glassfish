@@ -16,10 +16,6 @@
 
 package com.sun.jdo.api.persistence.enhancer.impl;
 
-import java.util.Map;
-import java.util.Enumeration;
-
-import com.sun.jdo.api.persistence.enhancer.classfile.ClassFile;
 import com.sun.jdo.api.persistence.enhancer.classfile.ClassField;
 import com.sun.jdo.api.persistence.enhancer.classfile.VMConstants;
 import com.sun.jdo.api.persistence.enhancer.classfile.Descriptor;

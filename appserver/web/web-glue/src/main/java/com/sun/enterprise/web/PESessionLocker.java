@@ -25,7 +25,6 @@ package com.sun.enterprise.web;
 import org.apache.catalina.Context;
 import org.apache.catalina.Manager;
 import org.apache.catalina.Session;
-import org.apache.catalina.SessionLocker;
 import org.apache.catalina.session.BaseSessionLocker;
 import org.apache.catalina.session.StandardSession;
 

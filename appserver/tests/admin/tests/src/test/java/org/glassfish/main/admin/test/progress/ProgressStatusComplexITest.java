@@ -29,7 +29,6 @@ import static org.glassfish.main.admin.test.progress.ProgressMessage.grepProgres
 import static org.glassfish.main.admin.test.progress.ProgressMessage.isIncreasing;
 import static org.glassfish.main.admin.test.progress.ProgressMessage.uniqueMessages;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
-import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;

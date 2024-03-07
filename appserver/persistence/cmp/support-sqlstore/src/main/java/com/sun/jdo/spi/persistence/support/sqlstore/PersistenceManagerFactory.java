@@ -22,9 +22,6 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore;
 
-
-import java.sql.*;
-
 /**
  */
 public interface PersistenceManagerFactory

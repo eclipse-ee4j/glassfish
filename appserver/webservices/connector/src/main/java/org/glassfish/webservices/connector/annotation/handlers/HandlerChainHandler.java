@@ -23,7 +23,6 @@ import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.enterprise.deployment.WebServiceHandler;
 import com.sun.enterprise.deployment.WebServiceHandlerChain;
-import com.sun.enterprise.deployment.WritableJndiNameEnvironment;
 import com.sun.enterprise.deployment.annotation.context.HandlerContext;
 import com.sun.enterprise.deployment.annotation.context.ResourceContainerContextImpl;
 import com.sun.enterprise.deployment.annotation.handlers.AbstractHandler;

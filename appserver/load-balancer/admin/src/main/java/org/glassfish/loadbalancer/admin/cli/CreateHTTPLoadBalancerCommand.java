@@ -25,7 +25,6 @@ import javax.security.auth.Subject;
 
 
 import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.component.*;
 import org.jvnet.hk2.config.*;
 import org.jvnet.hk2.config.types.Property;
 import org.glassfish.api.Param;

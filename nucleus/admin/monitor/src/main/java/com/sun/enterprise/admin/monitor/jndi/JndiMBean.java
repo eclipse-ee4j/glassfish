@@ -24,7 +24,6 @@ package com.sun.enterprise.admin.monitor.jndi;
 
 import javax.management.DynamicMBean;
 import javax.management.MBeanException;
-import javax.naming.NameClassPair;
 import javax.naming.NamingException;
 
 /**

@@ -26,8 +26,6 @@ import org.glassfish.web.valve.GlassFishValve;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import org.glassfish.grizzly.http.util.DataChunk;
-// END GlassFish 1343
 
 /**
  * Valve that implements the default basic behavior for the

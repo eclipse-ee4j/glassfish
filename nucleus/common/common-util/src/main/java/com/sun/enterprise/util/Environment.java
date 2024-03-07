@@ -16,9 +16,6 @@
 
 package com.sun.enterprise.util;
 
-import java.util.logging.*;
-import com.sun.logging.*;
-
 
 /**
  * Environment class that contains information about

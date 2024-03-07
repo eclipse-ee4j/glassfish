@@ -25,9 +25,6 @@ import java.io.File;
 //@olsen: added import
 import java.io.PrintWriter;
 
-import com.sun.jdo.api.persistence.enhancer.classfile.ClassFile;
-import com.sun.jdo.api.persistence.enhancer.classfile.ClassField;
-
 import com.sun.jdo.api.persistence.enhancer.util.ClassPath;
 import com.sun.jdo.api.persistence.enhancer.util.ClassFileSource;
 import com.sun.jdo.api.persistence.enhancer.util.Support;

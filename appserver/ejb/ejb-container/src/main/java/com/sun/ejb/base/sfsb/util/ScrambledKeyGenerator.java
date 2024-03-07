@@ -17,7 +17,6 @@
 package com.sun.ejb.base.sfsb.util;
 
 
-import org.glassfish.internal.api.SharedSecureRandom;
 import org.glassfish.security.common.SharedSecureRandomImpl;
 
 import com.sun.enterprise.util.Utility;

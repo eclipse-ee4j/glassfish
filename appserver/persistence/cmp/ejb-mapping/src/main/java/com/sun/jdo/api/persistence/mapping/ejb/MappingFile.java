@@ -35,8 +35,6 @@ import java.util.ResourceBundle;
 import java.util.Iterator;
 import java.io.IOException;
 
-import java.text.MessageFormat;
-
 import org.netbeans.modules.dbschema.*;
 
 import com.sun.jdo.api.persistence.mapping.ejb.beans.*;

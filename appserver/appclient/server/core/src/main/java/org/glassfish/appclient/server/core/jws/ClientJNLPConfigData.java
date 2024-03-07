@@ -16,7 +16,6 @@
 
 package org.glassfish.appclient.server.core.jws;
 
-import com.sun.logging.LogDomains;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;

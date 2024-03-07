@@ -27,7 +27,6 @@ import static org.apache.catalina.LogFacade.SERVICE_STARTED;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.text.MessageFormat;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;

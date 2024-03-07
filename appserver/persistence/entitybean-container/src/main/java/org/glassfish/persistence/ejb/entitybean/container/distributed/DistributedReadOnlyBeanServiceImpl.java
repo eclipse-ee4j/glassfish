@@ -26,7 +26,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.sun.ejb.containers.EjbContainerUtilImpl;
 import com.sun.logging.LogDomains;
 
 

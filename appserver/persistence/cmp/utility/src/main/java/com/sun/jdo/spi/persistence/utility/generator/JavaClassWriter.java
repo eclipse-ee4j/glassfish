@@ -23,7 +23,6 @@
 package com.sun.jdo.spi.persistence.utility.generator;
 
 import java.io.IOException;
-import java.lang.reflect.Modifier;
 
 /**
  * This interface can be used to describe a java class -- either

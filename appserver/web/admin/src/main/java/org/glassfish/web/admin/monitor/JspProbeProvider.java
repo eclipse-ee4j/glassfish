@@ -16,7 +16,6 @@
 
 package org.glassfish.web.admin.monitor;
 
-import jakarta.servlet.Servlet;
 import org.glassfish.external.probe.provider.annotations.Probe;
 import org.glassfish.external.probe.provider.annotations.ProbeParam;
 import org.glassfish.external.probe.provider.annotations.ProbeProvider;

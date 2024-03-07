@@ -18,7 +18,6 @@ package org.glassfish.jdbc.admin.cli;
 
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Resources;
-import com.sun.enterprise.util.SystemPropertyConstants;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;

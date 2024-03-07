@@ -16,7 +16,6 @@
 
 package com.sun.jdo.spi.persistence.utility.logging;
 
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import java.util.logging.Level;

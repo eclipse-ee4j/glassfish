@@ -50,7 +50,6 @@ import com.sun.enterprise.security.auth.realm.Realm;
 import com.sun.enterprise.security.common.ClientSecurityContext;
 import com.sun.enterprise.security.common.SecurityConstants;
 import com.sun.enterprise.security.ssl.SSLUtils;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.Utility;
 import com.sun.logging.LogDomains;
 

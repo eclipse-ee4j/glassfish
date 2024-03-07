@@ -20,8 +20,6 @@ import org.glassfish.admin.amx.util.AMXDebug;
 import org.glassfish.admin.amx.util.ObjectUtil;
 import org.glassfish.admin.amx.util.Output;
 import org.glassfish.admin.amx.util.StringUtil;
-import org.glassfish.admin.amx.util.ClassUtil;
-
 import javax.management.*;
 import java.io.IOException;
 import java.lang.reflect.Method;

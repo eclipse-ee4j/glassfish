@@ -39,7 +39,6 @@ import org.apache.catalina.LogFacade;
 import org.apache.catalina.connector.Request;
 
 import org.glassfish.grizzly.http.Cookie;
-import org.glassfish.grizzly.http.Method;
 import org.glassfish.grizzly.http.server.http2.PushEvent;
 import org.glassfish.grizzly.http2.Http2Stream;
 import org.glassfish.grizzly.http.util.Header;

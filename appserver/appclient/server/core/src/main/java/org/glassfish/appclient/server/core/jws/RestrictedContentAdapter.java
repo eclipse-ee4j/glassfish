@@ -24,7 +24,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jakarta.servlet.http.HttpServletResponse;
 
-import com.sun.logging.LogDomains;
 import java.net.URI;
 import org.glassfish.appclient.server.core.jws.servedcontent.Content;
 import org.glassfish.appclient.server.core.jws.servedcontent.StaticContent;

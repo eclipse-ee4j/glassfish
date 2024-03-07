@@ -20,7 +20,6 @@ import com.sun.enterprise.config.modularity.annotation.HasNoDefaultConfiguration
 import org.glassfish.api.admin.config.ConfigExtension;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.ConfiguredBy;
 
 /**
  * @author Masoud Kalali

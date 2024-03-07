@@ -23,7 +23,6 @@ import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleListener;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 

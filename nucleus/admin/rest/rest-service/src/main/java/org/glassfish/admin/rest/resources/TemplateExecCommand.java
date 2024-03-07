@@ -50,7 +50,6 @@ import org.glassfish.jersey.media.sse.EventOutput;
 import org.codehaus.jettison.json.JSONException;
 import org.glassfish.admin.rest.Constants;
 import org.glassfish.admin.rest.OptionsCapable;
-import org.glassfish.admin.rest.RestLogging;
 import org.glassfish.admin.rest.composite.CompositeUtil;
 import org.glassfish.admin.rest.composite.metadata.RestResourceMetadata;
 import org.glassfish.admin.rest.utils.Util;

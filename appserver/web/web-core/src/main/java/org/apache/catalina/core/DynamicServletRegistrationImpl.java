@@ -23,7 +23,6 @@ import jakarta.servlet.ServletSecurityElement;
 import java.util.Collections;
 import java.util.Set;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 import java.text.MessageFormat;
 
 import org.apache.catalina.LogFacade;

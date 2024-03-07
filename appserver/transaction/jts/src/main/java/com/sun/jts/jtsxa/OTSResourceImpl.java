@@ -22,7 +22,6 @@ import org.omg.PortableServer.*;
 
 import com.sun.jts.CosTransactions.*;
 
-import com.sun.jts.jta.*;
 import javax.transaction.xa.*;
 //import com.sun.jts.etsjdbc.odbc.NativeXAResourceImpl;
 import com.sun.jts.jta.TransactionState;

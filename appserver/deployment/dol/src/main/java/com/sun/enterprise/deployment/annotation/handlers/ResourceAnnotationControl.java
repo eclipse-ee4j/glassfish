@@ -35,8 +35,6 @@ import java.lang.System.Logger;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Collection;
-import java.util.List;
-
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 
 import static java.lang.System.Logger.Level.DEBUG;

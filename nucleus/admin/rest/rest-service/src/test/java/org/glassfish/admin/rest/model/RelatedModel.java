@@ -16,8 +16,6 @@
 
 package org.glassfish.admin.rest.model;
 
-import org.glassfish.admin.rest.composite.RestModel;
-
 public interface RelatedModel {
     public String getId();
     public void setId(String id);

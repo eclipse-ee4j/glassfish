@@ -29,7 +29,6 @@ import java.util.logging.Logger;
 import javax.management.*;
 import org.glassfish.admin.amx.base.DomainRoot;
 import org.glassfish.admin.amx.core.AMXValidator;
-import org.glassfish.admin.amx.impl.util.ImplUtil;
 import org.glassfish.admin.amx.util.AMXLoggerInfo;
 import org.glassfish.admin.amx.util.jmx.JMXUtil;
 

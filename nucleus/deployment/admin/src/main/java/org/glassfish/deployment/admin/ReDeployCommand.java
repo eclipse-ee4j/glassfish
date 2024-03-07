@@ -36,7 +36,6 @@ import org.jvnet.hk2.annotations.Service;
 import jakarta.inject.Inject;
 import org.glassfish.hk2.api.PerLookup;
 
-import java.util.Properties;
 import java.util.Collection;
 import java.util.ArrayList;
 import java.io.File;

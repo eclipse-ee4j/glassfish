@@ -24,7 +24,6 @@ import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.zip.ZipFileException;
 import com.sun.enterprise.util.zip.ZipWriter;
 import java.io.*;
-import java.net.*;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import jakarta.inject.Inject;
@@ -36,7 +35,6 @@ import org.glassfish.internal.api.Globals;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;

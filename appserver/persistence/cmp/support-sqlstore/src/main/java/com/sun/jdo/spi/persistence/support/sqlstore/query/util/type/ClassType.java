@@ -33,8 +33,6 @@ import java.security.PrivilegedAction;
 
 import com.sun.jdo.spi.persistence.utility.FieldTypeEnumeration;
 import com.sun.jdo.api.persistence.support.JDOFatalUserException;
-import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
-import com.sun.jdo.api.persistence.model.Model;
 import com.sun.jdo.api.persistence.model.jdo.PersistenceClassElement;
 import com.sun.jdo.api.persistence.model.jdo.PersistenceFieldElement;
 

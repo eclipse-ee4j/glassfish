@@ -21,7 +21,6 @@ import com.sun.enterprise.admin.util.CommandModelData;
 import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
 import java.io.*;
 import java.nio.charset.Charset;
-import javax.xml.stream.*;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandModel;
 import org.jvnet.hk2.annotations.Service;

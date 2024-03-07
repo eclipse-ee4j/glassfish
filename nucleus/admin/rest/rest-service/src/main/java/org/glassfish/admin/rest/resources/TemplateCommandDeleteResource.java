@@ -35,8 +35,6 @@ import org.glassfish.jersey.media.sse.SseFeature;
 import org.glassfish.admin.rest.utils.ResourceUtil;
 import org.glassfish.api.admin.ParameterMap;
 
-import static org.glassfish.admin.rest.resources.TemplateExecCommand.localStrings;
-
 /**
  *
  * @author ludovic champenois ludo@dev.java.net Code moved from generated classes to here. Gen code inherits from this

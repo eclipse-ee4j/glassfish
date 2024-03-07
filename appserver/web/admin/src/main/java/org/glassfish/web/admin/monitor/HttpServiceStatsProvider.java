@@ -34,7 +34,6 @@ import org.glassfish.gmbal.AMXMetadata;
 import org.glassfish.gmbal.ManagedAttribute;
 import org.glassfish.gmbal.ManagedObject;
 import org.glassfish.grizzly.config.dom.NetworkConfig;
-import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.web.admin.LogFacade;
 

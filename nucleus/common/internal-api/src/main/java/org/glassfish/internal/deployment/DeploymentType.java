@@ -18,9 +18,7 @@ package org.glassfish.internal.deployment;
 
 import java.util.Comparator;
 
-import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.ServerTags;
-import org.glassfish.api.admin.config.ApplicationName;
 
 /**
  * DeploymentType defines the various deployment entity types,

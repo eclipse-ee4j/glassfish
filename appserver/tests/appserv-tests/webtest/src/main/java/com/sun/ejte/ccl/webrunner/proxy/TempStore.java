@@ -16,8 +16,6 @@
 
 package com.sun.ejte.ccl.webrunner.proxy;
 
-import java.io.*;
-
 
         /**
         * This class is for copying array of bytes.

@@ -31,14 +31,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
 import java.text.DateFormat;
-import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Date;
 import java.util.ListIterator;
 import java.util.logging.Level;
 
-import org.glassfish.admingui.common.util.RestResponse;
 import org.glassfish.admingui.common.util.RestUtil;
 
 /**

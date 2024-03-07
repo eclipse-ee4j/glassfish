@@ -18,7 +18,6 @@ package org.glassfish.web.loader;
 
 import com.sun.enterprise.util.io.FileUtils;
 
-import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -26,16 +25,12 @@ import java.nio.file.Path;
 
 import org.apache.naming.resources.WebDirContext;
 import org.glassfish.common.util.GlassfishUrlClassLoader;
-import org.hamcrest.core.StringEndsWith;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.arrayContaining;
 import static org.hamcrest.Matchers.arrayWithSize;
-import static org.hamcrest.Matchers.hasLength;
-import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

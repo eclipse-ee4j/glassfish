@@ -18,7 +18,6 @@
 
 package org.apache.catalina.core;
 
-import jakarta.servlet.DispatcherType;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterRegistration;
 import jakarta.servlet.RequestDispatcher;
@@ -37,8 +36,6 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
-import java.util.Collection;
-import java.util.EnumSet;
 import java.util.Enumeration;
 import java.util.EventListener;
 import java.util.Map;

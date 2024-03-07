@@ -51,7 +51,6 @@ import org.glassfish.api.admin.RestEndpoint;
 import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.api.admin.RestParam;
 import org.glassfish.api.admin.RuntimeType;
-import org.glassfish.deployment.common.DeploymentUtils;
 
 /**
  * Create lifecycle modules.

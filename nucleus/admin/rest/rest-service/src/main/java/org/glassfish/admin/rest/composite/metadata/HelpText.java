@@ -22,7 +22,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import jakarta.inject.Qualifier;
-import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Any property for which help text needs to be specified should be marked with this annotation. The help text will be

@@ -25,9 +25,7 @@ package com.sun.jdo.spi.persistence.support.ejb.ejbc;
 import java.io.*;
 
 import java.text.MessageFormat;
-import java.util.HashMap;
 import java.util.Properties;
-import java.util.StringTokenizer;
 
 /*
  * This is the helper class for JDO specific generation of

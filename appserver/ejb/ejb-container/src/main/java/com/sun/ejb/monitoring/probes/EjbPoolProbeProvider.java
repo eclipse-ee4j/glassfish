@@ -17,7 +17,6 @@
 package com.sun.ejb.monitoring.probes;
 
 import org.glassfish.external.probe.provider.annotations.*;
-import org.glassfish.gmbal.Description;
 
 /**
  * Probe emitter for the Ejb Pool monitoring events.

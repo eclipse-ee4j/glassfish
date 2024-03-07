@@ -24,7 +24,6 @@ import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
 
 import jakarta.inject.Inject;
-import jakarta.inject.Provider;
 
 /**
  *

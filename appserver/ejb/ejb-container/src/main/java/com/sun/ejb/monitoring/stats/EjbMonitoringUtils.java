@@ -23,10 +23,6 @@ import java.util.logging.Logger;
 import org.glassfish.external.probe.provider.StatsProviderManager;
 import org.glassfish.external.probe.provider.PluginPoint;
 import com.sun.ejb.containers.EjbContainerUtilImpl;
-import com.sun.enterprise.util.StringUtils;
-
-import org.glassfish.external.statistics.*;
-import org.glassfish.external.statistics.impl.*;
 
 /**
  * Utility class for Ejb monitoring.

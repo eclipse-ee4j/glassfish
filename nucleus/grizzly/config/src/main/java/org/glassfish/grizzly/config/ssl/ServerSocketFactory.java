@@ -22,7 +22,6 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 import javax.net.ssl.SSLContext;
 

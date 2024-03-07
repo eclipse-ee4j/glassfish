@@ -18,8 +18,6 @@
 package com.sun.enterprise.tests.progress;
 
 import com.sun.enterprise.util.StringUtils;
-import com.sun.logging.LogDomains;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;

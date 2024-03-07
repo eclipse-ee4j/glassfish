@@ -30,7 +30,6 @@ import jakarta.resource.ResourceException;
 import jakarta.resource.cci.IndexedRecord;
 import jakarta.resource.cci.Interaction;
 import jakarta.resource.cci.InteractionSpec;
-import jakarta.resource.cci.Record;
 import jakarta.resource.cci.ResourceWarning;
 
 /**

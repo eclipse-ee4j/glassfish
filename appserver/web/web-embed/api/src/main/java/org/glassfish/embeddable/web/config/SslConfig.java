@@ -16,7 +16,6 @@
 
 package org.glassfish.embeddable.web.config;
 
-import java.io.File;
 import java.util.Set;
 
 /**

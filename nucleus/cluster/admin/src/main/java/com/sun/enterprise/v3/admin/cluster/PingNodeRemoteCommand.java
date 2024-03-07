@@ -20,14 +20,11 @@ import com.sun.enterprise.config.serverbeans.Nodes;
 import com.sun.enterprise.config.serverbeans.Node;
 import com.sun.enterprise.util.StringUtils;
 import org.glassfish.api.ActionReport;
-import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.*;
 import jakarta.inject.Inject;
 import java.util.logging.Logger;
 
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 
 /**

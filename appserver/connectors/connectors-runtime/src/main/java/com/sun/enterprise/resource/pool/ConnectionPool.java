@@ -946,11 +946,8 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         }
 
         if (!state.isBusy()) {
-            // Do not throw exception, the current transaction should not fail if the state is already 'free'.
-            // This method is for example also called from putbackBadResourceToPool, which also
-            // does not throw the IllegalStateException anymore.
-            // throw new IllegalStateException("state.isBusy() : false");
-            LOG.log(WARNING, "resourceClosed - Expecting 'state.isBusy() : false', but was true for handle: " + handle);
+            // Do not throw an exception, the current transaction should not fail if the state is already 'free'.
+            LOG.log(WARNING, "resourceClosed - Expecting 'state.isBusy(): false', but was true for handle: {0}", handle);
         }
 
         // mark as not busy
@@ -1039,18 +1036,15 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         }
 
         ResourceState state = getResourceState(resourceHandle);
-        // The reason is that normally connection error is expected
+        // Normally a connection error is expected
         // to occur only when the connection is in use by the application.
-        // When there is connection validation involved, the connection
+        // When there is a connection validation involved, the connection
         // can be checked for validity "before" it is passed to the
         // application i.e. when the resource is still free. Since,
         // the connection error can occur when the resource
-        // is free, the following is being commented out.
-
-        /*
-         * if (state == null || state.isBusy() == false) { throw new IllegalStateException(); }
-         */
-
+        // is free, the state could still be 'isBusy: false', therefore
+        // no exception is thrown based on the isBusy state, and only
+        // if the state object is missing.
         if (state == null) {
             throw new IllegalStateException();
         }

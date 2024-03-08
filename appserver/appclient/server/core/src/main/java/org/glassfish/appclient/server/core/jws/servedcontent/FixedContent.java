@@ -16,7 +16,6 @@
 
 package org.glassfish.appclient.server.core.jws.servedcontent;
 
-import com.sun.logging.LogDomains;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;

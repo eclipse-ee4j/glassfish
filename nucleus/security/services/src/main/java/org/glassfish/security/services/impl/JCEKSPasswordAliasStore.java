@@ -18,15 +18,10 @@ package org.glassfish.security.services.impl;
 
 import com.sun.enterprise.security.store.PasswordAdapter;
 import com.sun.enterprise.util.Utility;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;

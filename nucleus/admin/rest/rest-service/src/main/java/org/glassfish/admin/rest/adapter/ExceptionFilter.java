@@ -20,12 +20,9 @@ import java.io.IOException;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerResponseContext;
 import jakarta.ws.rs.container.ContainerResponseFilter;
-import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.ext.Provider;
 import org.glassfish.admin.rest.Constants;
-import org.glassfish.admin.rest.composite.CompositeResource;
 import org.glassfish.admin.rest.model.ResponseBody;
-import org.glassfish.admin.rest.utils.Util;
 
 /**
  * This filter reformats string entities from non-success responses into arrays of message entities (when not using the

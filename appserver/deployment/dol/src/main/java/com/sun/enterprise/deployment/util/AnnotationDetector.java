@@ -24,21 +24,15 @@ import org.glassfish.hk2.classmodel.reflect.*;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.File;
-import java.io.FileFilter;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.Enumeration;
-import java.util.jar.JarFile;
-import java.util.jar.JarEntry;
 import java.util.Collection;
 import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.net.URI;
-import java.net.URL;
 
 /**
  * Abstract superclass for specific types of annotation detectors.

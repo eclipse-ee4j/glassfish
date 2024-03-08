@@ -16,7 +16,6 @@
 
 package com.sun.enterprise.util.cluster;
 
-import java.io.*;
 import java.util.*;
 
 import jakarta.xml.bind.annotation.*;

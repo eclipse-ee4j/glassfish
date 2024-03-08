@@ -30,7 +30,6 @@ import jakarta.ejb.ObjectNotFoundException;
 
 import com.sun.jdo.api.persistence.support.JDOHelper;
 import com.sun.jdo.api.persistence.support.JDOException;
-import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
 import com.sun.jdo.api.persistence.support.PersistenceCapable;
 import com.sun.jdo.api.persistence.support.PersistenceManager;
 

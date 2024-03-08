@@ -26,11 +26,6 @@ import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.embeddable.web.WebContainer;
 import org.glassfish.embeddable.web.HttpListener;
 import org.glassfish.embeddable.web.WebListener;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.io.BufferedReader;

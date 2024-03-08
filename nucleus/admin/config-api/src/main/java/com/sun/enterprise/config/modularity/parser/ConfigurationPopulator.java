@@ -17,9 +17,6 @@
 package com.sun.enterprise.config.modularity.parser;
 
 import com.sun.enterprise.config.util.ConfigApiLoggerInfo;
-import com.sun.enterprise.util.LocalStringManager;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.ConfigParser;
 import org.jvnet.hk2.config.Dom;

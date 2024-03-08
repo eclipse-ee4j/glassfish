@@ -23,9 +23,6 @@
 
 package com.sun.enterprise.admin.monitor.callflow;
 
-import java.util.List;
-import java.util.Map;
-
 /**
  * This interface provides access to the thread local call flow data.
  *

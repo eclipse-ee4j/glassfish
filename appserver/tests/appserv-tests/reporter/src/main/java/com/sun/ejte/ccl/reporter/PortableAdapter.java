@@ -16,13 +16,5 @@
 
 package com.sun.ejte.ccl.reporter;
 
-import java.io.Serializable;
-import java.rmi.Remote;
-import java.rmi.RemoteException;
-import jakarta.ejb.EJBHome;
-import jakarta.ejb.CreateException;
-import jakarta.ejb.FinderException;
-import java.util.ArrayList;
-
 public interface PortableAdapter{
 }

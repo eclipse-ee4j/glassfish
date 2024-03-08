@@ -67,7 +67,6 @@ import com.sun.enterprise.ee.cms.core.FailureSuspectedActionFactory;
 import com.sun.enterprise.ee.cms.core.GMSConstants;
 import com.sun.enterprise.ee.cms.core.GMSException;
 import com.sun.enterprise.ee.cms.core.GMSFactory;
-import com.sun.enterprise.ee.cms.core.GroupLeadershipNotificationActionFactory;
 import com.sun.enterprise.ee.cms.core.GroupManagementService;
 import com.sun.enterprise.ee.cms.core.JoinNotificationActionFactory;
 import com.sun.enterprise.ee.cms.core.JoinedAndReadyNotificationActionFactory;
@@ -87,7 +86,6 @@ import com.sun.enterprise.ee.cms.impl.client.PlannedShutdownActionFactoryImpl;
 import com.sun.enterprise.mgmt.transport.NetworkUtility;
 import com.sun.enterprise.mgmt.transport.grizzly.GrizzlyConfigConstants;
 import com.sun.enterprise.util.io.ServerDirs;
-import com.sun.logging.LogDomains;
 
 /**
  * @author Sheetal.Vartak@Sun.COM

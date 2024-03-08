@@ -17,14 +17,10 @@
 package com.sun.jdo.api.persistence.model;
 
 import java.util.List;
-import java.net.URL;
 import java.io.IOException;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.InputStream;
-import java.lang.reflect.Modifier;
-
-import com.sun.jdo.api.persistence.model.jdo.PersistenceClassElement;
 import com.sun.jdo.api.persistence.model.jdo.PersistenceFieldElement;
 
 /**

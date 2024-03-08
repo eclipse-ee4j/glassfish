@@ -35,7 +35,6 @@ import org.glassfish.deployment.versioning.VersioningUtils;
 
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.hk2.api.PostConstruct;
 
 /**
  *

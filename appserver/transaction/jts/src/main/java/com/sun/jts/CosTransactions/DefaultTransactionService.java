@@ -39,20 +39,15 @@ import java.net.UnknownHostException;
 import org.omg.CORBA.*;
 import org.omg.CORBA.ORBPackage.InvalidName;
 import org.omg.CosTransactions.*;
-import org.omg.CORBA.Policy.*;
 import org.omg.CosNaming.*;
-import org.omg.CosNaming.NamingContextPackage.*;
 import org.omg.PortableServer.*;
 import org.omg.CORBA.LocalObject;
 
 import com.sun.corba.ee.spi.presentation.rmi.StubAdapter;
 
-import com.sun.jts.codegen.otsidl.*;
-
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import com.sun.logging.LogDomains;
-import com.sun.jts.utils.LogFormatter;
 
 /**The DefaultTransactionService is our implemention of the
  * com.sun.CosTransactions.TransactionService class.

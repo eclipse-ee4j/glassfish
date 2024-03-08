@@ -16,7 +16,6 @@
 
 package org.glassfish.admingui.common.handlers;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.List;
 

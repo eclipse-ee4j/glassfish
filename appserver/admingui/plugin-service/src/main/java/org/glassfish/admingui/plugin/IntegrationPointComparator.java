@@ -19,12 +19,7 @@ package org.glassfish.admingui.plugin;
 import java.io.Serializable;
 import java.util.Comparator;
 
-import org.glassfish.admingui.connector.TOC;
-import org.glassfish.admingui.connector.TOCItem;
-import org.glassfish.admingui.connector.Index;
-import org.glassfish.admingui.connector.IndexItem;
 import org.glassfish.admingui.connector.IntegrationPoint;
-import org.glassfish.admingui.connector.ConsoleConfig;
 
 /**
  *  <p>        This class compares two {@link IntegrationPoint} Objects.  See

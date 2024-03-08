@@ -16,7 +16,6 @@
 
 package org.glassfish.admin.amx.impl.j2ee;
 
-import java.lang.reflect.Constructor;
 import javax.management.Notification;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;

@@ -18,8 +18,6 @@ package org.glassfish.admin.rest.utils;
 
 import java.util.Stack;
 
-import org.glassfish.admin.rest.model.ResponseBody;
-
 /**
  * @author tmoreau
  */

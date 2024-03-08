@@ -32,8 +32,6 @@ import org.glassfish.grizzly.http.server.util.AlternateDocBase;
 import org.glassfish.grizzly.http.util.Header;
 import org.glassfish.grizzly.http.util.HttpStatus;
 
-import static org.glassfish.grizzly.http.server.StaticHttpHandlerBase.sendFile;
-
 /**
  * {@link StaticHttpHandler}, which additionally can check registered
  * {@link AlternateDocBase}s to serve requested resources.

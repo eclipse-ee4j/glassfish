@@ -21,7 +21,6 @@ import com.sun.xml.ws.api.server.Adapter;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.text.MessageFormat;
 
 /**
  * Registry of JAXWS Adapter of endpoints.

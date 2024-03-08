@@ -18,7 +18,6 @@ package org.glassfish.tests.embedded.web;
 
 import java.io.*;
 import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 //@WebServlet(urlPatterns={"/new"})

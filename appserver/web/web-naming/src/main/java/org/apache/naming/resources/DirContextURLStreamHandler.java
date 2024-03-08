@@ -22,7 +22,6 @@ import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.io.IOException;
 import java.util.Hashtable;
-import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
 /**

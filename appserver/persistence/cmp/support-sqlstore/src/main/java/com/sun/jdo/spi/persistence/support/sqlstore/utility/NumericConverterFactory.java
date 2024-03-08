@@ -22,9 +22,6 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.utility;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-
 /**
  * This is a factory class for NumericConverter.
  *

@@ -20,8 +20,6 @@
  */
 package com.sun.enterprise.security;
 
-import java.util.logging.Logger;
-
 import javax.security.auth.callback.CallbackHandler;
 
 import org.glassfish.api.admin.ProcessEnvironment;
@@ -32,8 +30,6 @@ import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.Service;
 
 import com.sun.enterprise.security.audit.AuditManager;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

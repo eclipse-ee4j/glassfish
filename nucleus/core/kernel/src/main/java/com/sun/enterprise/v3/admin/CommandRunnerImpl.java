@@ -116,7 +116,6 @@ import com.sun.enterprise.universal.glassfish.AdminCommandResponse;
 import com.sun.enterprise.util.AnnotationUtil;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.StringUtils;
-import com.sun.enterprise.util.Utility;
 import com.sun.enterprise.v3.common.XMLContentActionReporter;
 
 import jakarta.inject.Inject;

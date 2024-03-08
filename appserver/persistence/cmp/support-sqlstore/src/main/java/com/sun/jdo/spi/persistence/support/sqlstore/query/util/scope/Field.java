@@ -24,7 +24,6 @@ package com.sun.jdo.spi.persistence.support.sqlstore.query.util.scope;
 
 import org.glassfish.persistence.common.I18NHelper;
 
-import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.Type;
 import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.FieldInfo;
 
 /**

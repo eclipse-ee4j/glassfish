@@ -25,7 +25,6 @@ import java.util.Enumeration;
 import jakarta.mail.Session;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
-import jakarta.mail.internet.MimePart;
 import jakarta.mail.internet.MimePartDataSource;
 import javax.naming.Name;
 import javax.naming.Context;

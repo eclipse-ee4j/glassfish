@@ -18,15 +18,9 @@ package com.sun.ejb.monitoring.stats;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.external.probe.provider.annotations.*;
 import org.glassfish.external.statistics.*;
 import org.glassfish.external.statistics.impl.*;
 import org.glassfish.gmbal.*;
-
-import com.sun.ejb.containers.EjbContainerUtilImpl;
 
 /**
  * Event listener for the Ejb monitoring events. Used by the probe framework

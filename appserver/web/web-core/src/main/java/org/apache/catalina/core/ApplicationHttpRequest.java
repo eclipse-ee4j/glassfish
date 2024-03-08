@@ -36,8 +36,6 @@ import jakarta.servlet.http.PushBuilder;
 import java.io.IOException;
 import java.util.*;
 import jakarta.servlet.http.HttpServletMapping;
-import org.apache.catalina.connector.MappingImpl;
-// END GlassFish 896
 
 /**
  * Wrapper around a <code>jakarta.servlet.http.HttpServletRequest</code>

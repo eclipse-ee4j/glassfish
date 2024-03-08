@@ -43,7 +43,6 @@ import com.sun.jdo.spi.persistence.generator.database.MappingPolicy;
 
 import org.netbeans.modules.dbschema.*;
 import org.netbeans.modules.dbschema.jdbcimpl.SchemaElementImpl;
-import org.netbeans.modules.dbschema.util.NameUtil;
 
 import org.netbeans.modules.schema2beans.Schema2BeansException;
 

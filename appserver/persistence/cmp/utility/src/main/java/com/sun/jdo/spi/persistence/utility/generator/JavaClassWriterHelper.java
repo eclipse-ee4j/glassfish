@@ -26,7 +26,6 @@ import java.io.IOException;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import com.sun.jdo.spi.persistence.utility.JavaTypeHelper;

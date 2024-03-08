@@ -16,7 +16,6 @@
 
 package com.sun.enterprise.transaction.api;
 
-import javax.sql.*;
 import javax.transaction.xa.*;
 import javax.security.auth.Subject;
 import jakarta.resource.spi.ManagedConnection;

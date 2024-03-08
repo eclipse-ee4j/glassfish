@@ -30,9 +30,7 @@ import org.jvnet.hk2.annotations.Service;
 import jakarta.servlet.annotation.WebInitParam;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
-import java.lang.annotation.Annotation;
 import java.util.Arrays;
-import java.util.Set;
 import java.util.logging.Level;
 
 /**

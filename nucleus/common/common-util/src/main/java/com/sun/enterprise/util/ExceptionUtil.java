@@ -17,9 +17,6 @@
 package com.sun.enterprise.util;
 
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
 
 /**
  * Useful utilities for Exceptions

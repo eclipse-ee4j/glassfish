@@ -19,7 +19,6 @@ package org.glassfish.internal.deployment;
 import org.glassfish.api.deployment.*;
 import org.glassfish.api.container.Container;
 import org.jvnet.hk2.annotations.Service;
-import com.sun.enterprise.module.HK2Module;
 
 /**
  * Generic implementation of the deployer contract, enough to get started with adding a container to

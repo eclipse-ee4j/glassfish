@@ -18,7 +18,6 @@ package org.glassfish.gms.admin;
 
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.ee.cms.core.GMSConstants;
-import com.sun.logging.LogDomains;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.*;

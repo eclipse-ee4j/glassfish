@@ -41,7 +41,6 @@ import org.glassfish.persistence.common.I18NHelper;
 
 import com.sun.jdo.spi.persistence.support.sqlstore.connection.ConnectionImpl;
 
-import com.sun.jdo.spi.persistence.support.sqlstore.utility.*;
 import com.sun.jdo.spi.persistence.support.sqlstore.ejb.EJBHelper;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
 import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperTransaction;

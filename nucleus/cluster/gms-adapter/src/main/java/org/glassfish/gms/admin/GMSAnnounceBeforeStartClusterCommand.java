@@ -16,7 +16,6 @@
 
 package org.glassfish.gms.admin;
 
-import com.sun.logging.LogDomains;
 import org.glassfish.gms.bootstrap.GMSAdapterService;
 import org.glassfish.gms.bootstrap.GMSAdapter;
 import com.sun.enterprise.config.serverbeans.*;

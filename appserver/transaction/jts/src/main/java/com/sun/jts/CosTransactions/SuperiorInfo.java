@@ -30,11 +30,7 @@
 
 package com.sun.jts.CosTransactions;
 
-import java.io.*;
-
-import org.omg.CORBA.*;
 import org.omg.CosTransactions.*;
-import com.sun.corba.ee.spi.presentation.rmi.StubAdapter;
 
 /**
  * The SuperiorInfo interface provides operations that record the local

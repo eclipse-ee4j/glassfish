@@ -23,8 +23,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import jakarta.inject.Scope;
 
-import org.glassfish.hk2.api.Proxiable;
-
 /**
  * Scope used by security services that enables a flexible binding to service instances.
  */

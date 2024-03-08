@@ -18,7 +18,6 @@ package org.glassfish.admin.rest.adapter;
 
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.v3.admin.adapter.AdminEndpointDecider;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.Collections;

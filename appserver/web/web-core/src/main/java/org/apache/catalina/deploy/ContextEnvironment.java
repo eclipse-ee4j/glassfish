@@ -17,8 +17,6 @@
 
 package org.apache.catalina.deploy;
 
-import java.io.Serializable;
-
 
 /**
  * Representation of an application environment entry, as represented in

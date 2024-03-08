@@ -24,8 +24,6 @@ package com.sun.jdo.api.persistence.support;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Hashtable;
-
 import jakarta.transaction.Synchronization;
 
 /** This class allows for multiple instances to be called at transaction

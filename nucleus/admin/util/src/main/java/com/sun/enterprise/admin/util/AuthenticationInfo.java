@@ -16,8 +16,6 @@
 
 package com.sun.enterprise.admin.util;
 
-import com.sun.enterprise.util.StringUtils;
-
 /**
  * A class that holds the user and password for the connection to the server. Used by the HttpConnectorAddress class.
  * Instances of this class are immutable.

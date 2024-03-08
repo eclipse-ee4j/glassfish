@@ -17,8 +17,6 @@
 package com.sun.enterprise.security;
 
 import java.util.Arrays;
-import java.util.logging.Logger;
-
 import com.sun.enterprise.security.common.ClientSecurityContext;
 
 /**

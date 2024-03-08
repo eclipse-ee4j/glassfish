@@ -16,8 +16,6 @@
 
 package com.sun.enterprise.web.session;
 
-import org.apache.catalina.Globals;
-
 import java.net.URLEncoder;
 
 /**

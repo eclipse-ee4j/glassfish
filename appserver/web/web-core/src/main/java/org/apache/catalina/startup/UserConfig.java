@@ -20,9 +20,6 @@ package org.apache.catalina.startup;
 import org.apache.catalina.*;
 import org.apache.catalina.Logger;
 import org.apache.catalina.core.StandardContext;
-import org.apache.catalina.util.StringManager;
-import org.apache.tomcat.util.digester.ObjectParamRule;
-
 import java.io.File;
 import java.text.MessageFormat;
 import java.util.Enumeration;

@@ -18,13 +18,7 @@ package com.sun.jdo.api.persistence.enhancer.impl;
 
 import java.io.*;
 
-import java.util.Map;
-import java.util.Hashtable;
-import java.util.Iterator;
-
 import com.sun.jdo.api.persistence.enhancer.classfile.ClassFile;
-import com.sun.jdo.api.persistence.enhancer.classfile.ClassField;
-import com.sun.jdo.api.persistence.enhancer.classfile.ClassMethod;
 import com.sun.jdo.api.persistence.enhancer.classfile.ConstClass;
 
 import com.sun.jdo.api.persistence.enhancer.util.Support;

@@ -16,9 +16,6 @@
 
 package com.sun.jts.jtsxa;
 
-import java.io.*;
-import java.util.*;
-
 import org.omg.CosTransactions.*;
 import com.sun.jts.codegen.otsidl.*;
 import com.sun.jts.CosTransactions.*;

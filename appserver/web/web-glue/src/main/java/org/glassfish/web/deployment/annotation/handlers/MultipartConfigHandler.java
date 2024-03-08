@@ -24,7 +24,6 @@ import org.glassfish.apf.*;
 import org.jvnet.hk2.annotations.Service;
 
 import jakarta.servlet.annotation.MultipartConfig;
-import jakarta.servlet.annotation.WebServlet;
 import java.lang.annotation.Annotation;
 
 /**

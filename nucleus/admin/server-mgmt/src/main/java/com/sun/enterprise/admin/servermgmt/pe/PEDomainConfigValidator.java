@@ -25,7 +25,6 @@ import com.sun.enterprise.admin.servermgmt.StringValidator;
 import com.sun.enterprise.util.i18n.StringManager;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map.Entry;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;

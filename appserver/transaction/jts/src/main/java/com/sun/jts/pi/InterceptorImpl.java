@@ -16,8 +16,6 @@
 
 package com.sun.jts.pi;
 
-import java.lang.reflect.Method;
-
 import org.omg.IOP.Codec;
 import org.omg.IOP.ServiceContext;
 import org.omg.IOP.TaggedComponent;
@@ -53,11 +51,6 @@ import org.omg.CosTSInteroperation.TAG_OTS_POLICY;
 
 import com.sun.jts.CosTransactions.CurrentTransaction;
 import com.sun.corba.ee.impl.txpoa.TSIdentificationImpl;
-import com.sun.corba.ee.spi.ior.IOR;
-import com.sun.corba.ee.spi.ior.ObjectKeyTemplate;
-import com.sun.corba.ee.spi.ior.ObjectAdapterId;
-import com.sun.corba.ee.spi.ior.iiop.IIOPProfile;
-import com.sun.corba.ee.spi.orb.ORBVersionFactory;
 import com.sun.corba.ee.spi.oa.rfm.ReferenceFactoryManager;
 import com.sun.corba.ee.spi.misc.ORBConstants;
 

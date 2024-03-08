@@ -19,8 +19,6 @@ package org.glassfish.config.support;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.Charset;
-import java.util.*;
-import java.util.logging.*;
 import javax.xml.stream.*;
 
 /**

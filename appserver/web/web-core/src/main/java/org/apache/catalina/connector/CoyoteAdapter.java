@@ -34,7 +34,6 @@ import static org.apache.catalina.connector.Constants.USE_CUSTOM_STATUS_MSG_IN_H
 import static org.glassfish.internal.api.Globals.getDefaultHabitat;
 
 import java.io.CharConversionException;
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -43,7 +42,6 @@ import java.util.Collection;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-import jakarta.servlet.http.HttpServletResponse;
 import org.apache.catalina.Container;
 import org.apache.catalina.Context;
 import org.apache.catalina.Globals;

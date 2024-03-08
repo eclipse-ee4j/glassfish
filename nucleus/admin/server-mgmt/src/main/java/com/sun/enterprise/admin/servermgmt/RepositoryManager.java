@@ -20,7 +20,6 @@ package com.sun.enterprise.admin.servermgmt;
 import com.sun.enterprise.admin.servermgmt.pe.PEDomainsManager;
 import com.sun.enterprise.admin.servermgmt.pe.PEFileLayout;
 import com.sun.enterprise.admin.util.LineTokenReplacer;
-import com.sun.enterprise.admin.util.TokenValue;
 import com.sun.enterprise.admin.util.TokenValueSet;
 import com.sun.enterprise.security.store.PasswordAdapter;
 import com.sun.enterprise.util.OS;
@@ -38,8 +37,6 @@ import com.sun.enterprise.util.OS;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.enterprise.util.io.FileUtils;
-import com.sun.enterprise.util.zip.ZipFile;
-
 //import com.sun.enterprise.admin.common.Status;
 //import com.sun.enterprise.util.system.GFSystem;
 import java.io.File;

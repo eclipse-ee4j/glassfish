@@ -16,7 +16,6 @@
 
 package org.glassfish.enterprise.iiop.impl;
 
-import com.sun.enterprise.ee.cms.core.GroupManagementService;
 import org.glassfish.enterprise.iiop.api.GlassFishORBFactory;
 import org.glassfish.enterprise.iiop.util.IIOPUtils;
 import jakarta.inject.Inject;
@@ -27,7 +26,6 @@ import org.omg.CORBA.ORB;
 import org.omg.PortableInterceptor.ServerRequestInfo;
 
 import java.util.Properties;
-import org.glassfish.gms.bootstrap.GMSAdapterService;
 
 /**
  * @author Mahesh Kannan

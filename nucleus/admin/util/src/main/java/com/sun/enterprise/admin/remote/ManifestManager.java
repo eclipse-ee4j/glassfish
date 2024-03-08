@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 import com.sun.enterprise.util.StringUtils;
-import com.sun.enterprise.universal.NameValue;
 import com.sun.enterprise.universal.glassfish.AdminCommandResponse;
 
 /**

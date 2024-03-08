@@ -16,9 +16,6 @@
 
 package org.glassfish.persistence.ejb.entitybean.container;
 
-import java.util.logging.*;
-import com.sun.logging.*;
-
 /**
  * @author Mahesh Kannan
  */

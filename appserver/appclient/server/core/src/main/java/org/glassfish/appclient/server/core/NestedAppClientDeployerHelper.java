@@ -25,7 +25,6 @@ import com.sun.enterprise.deployment.archivist.AppClientArchivist;
 import com.sun.enterprise.deployment.deploy.shared.OutputJarArchive;
 import com.sun.enterprise.deployment.deploy.shared.Util;
 import org.glassfish.deployment.common.ModuleDescriptor;
-import com.sun.logging.LogDomains;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;

@@ -21,8 +21,6 @@ import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 
 import java.beans.PropertyVetoException;
-import java.io.Serializable;
-
 import jakarta.validation.constraints.NotNull;
 
 /**

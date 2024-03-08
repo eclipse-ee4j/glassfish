@@ -33,8 +33,6 @@ import java.beans.PropertyVetoException;
 import org.glassfish.config.support.datatypes.PositiveInteger;
 import org.glassfish.api.admin.config.PropertyDesc;
 import org.glassfish.api.admin.config.PropertiesDesc;
-
-import jakarta.validation.constraints.Min;
 /**
  * Configuration for Transaction Manager
  */

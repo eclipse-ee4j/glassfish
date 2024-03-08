@@ -21,7 +21,6 @@ import org.junit.Assert;
 import org.glassfish.internal.embedded.*;
 import org.glassfish.api.deployment.*;
 
-import javax.naming.*;
 import java.io.*;
 import java.util.*;
 

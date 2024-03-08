@@ -20,7 +20,6 @@ import com.sun.enterprise.admin.remote.AdminCommandStateImpl;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.v3.admin.JobManagerService;
 import com.sun.enterprise.v3.common.PropsFileActionReporter;
-import com.sun.logging.LogDomains;
 import java.io.IOException;
 import java.util.logging.Level;
 import jakarta.ws.rs.core.MediaType;

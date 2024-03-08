@@ -19,8 +19,6 @@ package org.glassfish.admin.rest.results;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
-
 import org.glassfish.admin.rest.provider.MethodMetaData;
 
 /**

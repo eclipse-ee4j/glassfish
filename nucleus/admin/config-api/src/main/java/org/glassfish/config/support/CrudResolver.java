@@ -24,7 +24,6 @@ import org.glassfish.api.admin.AdminCommandContext;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import java.lang.annotation.Annotation;
 
 /**
  * A config resolver is responsible for finding the target object of a specified type on which a creation command

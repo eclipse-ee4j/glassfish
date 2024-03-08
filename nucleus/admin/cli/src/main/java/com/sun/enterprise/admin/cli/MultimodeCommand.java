@@ -16,7 +16,6 @@
 
 package com.sun.enterprise.admin.cli;
 
-import static com.sun.enterprise.admin.cli.CLICommand.ERROR;
 import java.io.*;
 import java.util.*;
 

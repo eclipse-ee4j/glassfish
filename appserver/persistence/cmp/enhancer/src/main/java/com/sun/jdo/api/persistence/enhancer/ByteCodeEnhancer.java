@@ -19,9 +19,6 @@ package com.sun.jdo.api.persistence.enhancer;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
-
 
 /**
  * A JDO enhancer, or byte-code enhancer, modifies the byte-codes of

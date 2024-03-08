@@ -62,8 +62,6 @@ import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.api.PostStartupRunLevel;
 
 import org.glassfish.logging.annotation.LogMessageInfo;
-import org.glassfish.logging.annotation.LoggerInfo;
-import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 
 /**
  * Responsible for creating the {@link BootAMXMBean}, and starting JMXConnectors,

@@ -78,8 +78,13 @@ public class SSLConfigurator extends SSLEngineConfigurator {
 
         sslImplementation = sslImplementationLocal;
 
-        setNeedClientAuth(isNeedClientAuth(ssl));
-        setWantClientAuth(isWantClientAuth(ssl));
+        if (isWantClientAuth(ssl)) {
+            setWantClientAuth(true);
+        }
+
+        if (isNeedClientAuth(ssl)) {
+            setNeedClientAuth(true);
+        }
 
         clientMode = false;
         sslContextConfiguration = new InternalSSLContextConfigurator();

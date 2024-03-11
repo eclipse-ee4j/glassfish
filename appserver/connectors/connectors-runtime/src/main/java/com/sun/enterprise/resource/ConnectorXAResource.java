@@ -124,9 +124,7 @@ public class ConnectorXAResource implements XAResource {
                 if (handle != null) { // not needed, just to be sure.
                     ManagedConnection associatedConnection = (ManagedConnection) handle.getResource();
                     associatedConnection.associateConnection(userHandle);
-                    if (_logger.isLoggable(FINE)) {
-                        _logger.log(FINE, "connection_sharing_reset_association", userHandle);
-                    }
+                    _logger.log(FINE, "connection_sharing_reset_association", userHandle);
                 }
             }
         } catch (Exception e) {
@@ -241,9 +239,7 @@ public class ConnectorXAResource implements XAResource {
                 ResourceHandle associatedHandle = (ResourceHandle) userHandleEntry.getValue();
                 ManagedConnection associatedConnection = (ManagedConnection) associatedHandle.getResource();
                 associatedConnection.associateConnection(userHandleEntry.getKey());
-                if (_logger.isLoggable(FINE)) {
-                    _logger.log(FINE, "connection_sharing_reset_association", userHandleEntry.getKey());
-                }
+                _logger.log(FINE, "connection_sharing_reset_association", userHandleEntry.getKey());
             }
         } catch (Exception ex) {
             handleResourceException(ex);

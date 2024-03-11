@@ -127,7 +127,7 @@ public class LocalTxConnectionEventListener extends ConnectionEventListener {
     }
 
     /**
-     * Removes the Map entory for the given userHandle key.
+     * Removes the Map entry for the given userHandle key.
      *
      * @param userHandle The userHandle key to be removed from the map.
      * @return the associated ResourceHandle that is removed from the map or null if no association was found. A null return

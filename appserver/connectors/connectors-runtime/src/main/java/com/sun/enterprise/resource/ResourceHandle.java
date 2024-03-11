@@ -52,7 +52,7 @@ public class ResourceHandle implements com.sun.appserv.connectors.internal.api.R
 
     private final long id;
     private final ClientSecurityInfo info;
-    private final Object resource; // represents MC
+    private final Object resource; // represents ManagedConnection
     private ResourceSpec spec;
     private XAResource xaRes;
     private Object userConnection; // represents connection-handle to user

@@ -177,7 +177,7 @@
                                 <tck-setting key="jaspic.home" value="${glassfish.home}/glassfish"/>
                                 <tck-setting key="harness.log.traceflag" value="true"/>
                                 <tck-setting key="s1as.jvm.options" value="-Dj2eelogin.name=${user}:-Dj2eelogin.password=${password}"/>
-                                
+
                                 <tck-setting key="vendor.authconfig.factory" value="org.glassfish.epicyro.config.factory.file.AuthConfigFileFactory"/>
 
                                 <tck-setting key="webServerHost" value="localhost"/>
@@ -189,7 +189,7 @@
                                 <tck-setting key="database.port" value="${port.derby}"/>
                                 <tck-setting key="harness.log.port" value="${port.harness.log}"/>
 
-                                <tck-setting key="report.dir" value="${tck.home}/authenticationreport/authentication"/>
+                                <tck-setting key="report.dir" value="${tck.home}/authenticationtckreport/authentication"/>
                                 <tck-setting key="work.dir" value="${tck.home}/authenticationwork/authentication"/>
 
                                 <!--
@@ -281,7 +281,7 @@
                                 <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin">
                                     <arg value="enable.jaspic"  />
                                 </exec>
-                                
+
                                 <!-- Restart GlassFish in debug mode if so requested -->
                                 <sequential if:set="glassfish.suspend">
                                     <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
@@ -308,7 +308,6 @@
                             <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
                                          classpathref="maven.plugin.classpath" />
-                                
                                 <echo level="info" message="Start running all tests" />
                                 <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin" resultproperty="testResult">
                                     <arg value="-Dmultiple.tests=${run.test}" if:set="run.test" />

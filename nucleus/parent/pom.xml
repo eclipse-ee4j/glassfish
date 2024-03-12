@@ -97,7 +97,7 @@
 
         <!-- Jakarta XML Binding -->
         <jakarta.xml.bind-api.version>4.0.2</jakarta.xml.bind-api.version>
-        <jakarta.jaxb-impl.version>4.0.4</jakarta.jaxb-impl.version>
+        <jakarta.jaxb-impl.version>4.0.5</jakarta.jaxb-impl.version>
 
         <!-- Jakarta REST -->
         <jakarta.rest-api.version>3.1.0</jakarta.rest-api.version>
@@ -424,7 +424,7 @@
             <dependency>
                 <groupId>org.jboss.shrinkwrap.resolver</groupId>
                 <artifactId>shrinkwrap-resolver-impl-maven-archive</artifactId>
-                <version>3.2.1</version>
+                <version>3.3.0</version>
                 <scope>test</scope>
             </dependency>
 
@@ -487,7 +487,7 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.webconsole</artifactId>
-                <version>4.8.12</version>
+                <version>5.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -924,7 +924,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>10.14.0</version>
+                            <version>10.14.1</version>
                         </dependency>
                     </dependencies>
                     <executions>
@@ -945,7 +945,7 @@
                 <plugin>
                     <groupId>com.googlecode.maven-download-plugin</groupId>
                     <artifactId>download-maven-plugin</artifactId>
-                    <version>1.8.0</version>
+                    <version>1.8.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-release-plugin</artifactId>
@@ -962,7 +962,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>3.2.0</version>
                     <configuration>
                         <environmentVariables>
                             <AS_JAVA>${java.home}</AS_JAVA>

@@ -18,15 +18,6 @@ package com.sun.enterprise.security.ee;
 
 import static org.glassfish.deployment.versioning.VersioningUtils.getRepositoryName;
 
-import java.security.Policy;
-import java.util.Collection;
-import java.util.logging.Logger;
-
-import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.api.deployment.OpsParams;
-import org.glassfish.deployment.common.SecurityRoleMapperFactory;
-import org.glassfish.deployment.versioning.VersioningUtils;
-
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
@@ -34,10 +25,16 @@ import com.sun.enterprise.security.SecurityRoleMapperFactoryGen;
 import com.sun.enterprise.security.util.IASSecurityException;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.logging.LogDomains;
-
 import jakarta.security.jacc.PolicyConfiguration;
 import jakarta.security.jacc.PolicyConfigurationFactory;
 import jakarta.security.jacc.PolicyContextException;
+import jakarta.security.jacc.PolicyFactory;
+import java.util.Collection;
+import java.util.logging.Logger;
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.deployment.OpsParams;
+import org.glassfish.deployment.common.SecurityRoleMapperFactory;
+import org.glassfish.deployment.versioning.VersioningUtils;
 
 /**
  * This utility class encloses all the calls to a ejb method in a specified subject
@@ -108,7 +105,7 @@ public class SecurityUtil {
             pc.delete();
             // Only do refresh policy if the deleted context was in service
             if (wasInService) {
-                Policy.getPolicy().refresh();
+                PolicyFactory.getPolicyFactory().getPolicy().refresh();
             }
 
         } catch (ClassNotFoundException cnfe) {

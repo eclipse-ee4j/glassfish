@@ -31,8 +31,8 @@
 
     <properties>
         <maven.site.skip>true</maven.site.skip>
-        <asciidoctor.maven.plugin.version>2.2.6</asciidoctor.maven.plugin.version>
-        <asciidoctorj.pdf.version>2.3.13</asciidoctorj.pdf.version>
+        <asciidoctor.maven.plugin.version>3.0.0</asciidoctor.maven.plugin.version>
+        <asciidoctorj.pdf.version>2.3.14</asciidoctorj.pdf.version>
         <!-- status: DRAFT, BETA, etc., or blank for final -->
         <status>DRAFT</status>
         <productName>Eclipse GlassFish</productName>

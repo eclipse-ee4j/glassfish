@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,15 +20,12 @@ package com.sun.enterprise.security.ee.authorize.cache;
 import com.sun.enterprise.security.common.AppservAccessController;
 import com.sun.enterprise.security.ee.authorize.cache.CachedPermissionImpl.Epoch;
 import com.sun.logging.LogDomains;
-
 import jakarta.security.jacc.PolicyContext;
-
 import java.security.AllPermission;
 import java.security.CodeSource;
 import java.security.Permission;
 import java.security.PermissionCollection;
 import java.security.Permissions;
-import java.security.Policy;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.Enumeration;

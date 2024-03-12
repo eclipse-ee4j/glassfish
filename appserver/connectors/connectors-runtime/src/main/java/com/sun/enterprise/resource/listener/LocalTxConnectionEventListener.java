@@ -61,10 +61,7 @@ public class LocalTxConnectionEventListener extends ConnectionEventListener {
     @Override
     public synchronized void connectionClosed(ConnectionEvent evt) {
         Object connectionHandle = evt.getConnectionHandle();
-        ResourceHandle handle = resource;
-        if (associatedHandles.containsKey(connectionHandle)) {
-            handle = associatedHandles.get(connectionHandle);
-        }
+        ResourceHandle handle = associatedHandles.getOrDefault(connectionHandle, resource);
         // ManagedConnection instance is still valid and put back in the pool: do not remove the event listener.
         poolManager.resourceClosed(handle);
     }
@@ -88,10 +85,7 @@ public class LocalTxConnectionEventListener extends ConnectionEventListener {
     @Override
     public synchronized void badConnectionClosed(ConnectionEvent evt) {
         Object connectionHandle = evt.getConnectionHandle();
-        ResourceHandle handle = resource;
-        if (associatedHandles.containsKey(connectionHandle)) {
-            handle = associatedHandles.get(connectionHandle);
-        }
+        ResourceHandle handle = associatedHandles.getOrDefault(connectionHandle, resource);
 
         // TODO: Explain why event listener needs to be removed.
         // There is no documentation mentioning: ManagedConnection instance is now invalid and unusable.

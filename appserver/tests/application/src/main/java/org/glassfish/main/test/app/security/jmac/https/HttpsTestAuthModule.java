@@ -99,7 +99,7 @@ public class HttpsTestAuthModule implements ServerAuthModule {
 
     @Override
     public AuthStatus secureResponse(final MessageInfo messageInfo, final Subject serviceSubject) throws AuthException {
-        return AuthStatus.SUCCESS;
+        return AuthStatus.SEND_SUCCESS;
     }
 
 

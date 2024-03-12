@@ -16,11 +16,9 @@
 
 package org.glassfish.admin.monitor;
 
-import org.glassfish.api.monitoring.ContainerMonitoring;
 import org.glassfish.flashlight.client.ProbeClientMethodHandle;
 
 import java.util.Collection;
-import java.util.logging.Level;
 
 public class StatsProviderUtil {
 

@@ -16,8 +16,6 @@
 
 package org.glassfish.embeddable.web.config;
 
-import org.glassfish.embeddable.web.WebListener;
-
 /**
  * Class that is used for configuring WebListener instances.
  *

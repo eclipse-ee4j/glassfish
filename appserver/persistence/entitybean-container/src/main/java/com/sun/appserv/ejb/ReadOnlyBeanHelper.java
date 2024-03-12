@@ -16,7 +16,6 @@
 
 package com.sun.appserv.ejb;
 
-import java.rmi.RemoteException;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.rmi.PortableRemoteObject;

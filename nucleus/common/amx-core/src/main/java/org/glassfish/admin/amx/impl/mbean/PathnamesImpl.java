@@ -33,7 +33,6 @@ import org.glassfish.admin.amx.core.AMXProxy;
 import org.glassfish.admin.amx.core.PathnameParser;
 import org.glassfish.admin.amx.core.Util;
 import org.glassfish.admin.amx.core.proxy.AMXProxyHandler;
-import org.glassfish.admin.amx.impl.util.ImplUtil;
 import org.glassfish.admin.amx.util.AMXLoggerInfo;
 import org.glassfish.admin.amx.util.CollectionUtil;
 import org.glassfish.admin.amx.util.ExceptionUtil;

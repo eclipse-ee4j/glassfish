@@ -23,8 +23,6 @@ import org.apache.catalina.Context;
 import org.apache.catalina.Globals;
 import org.apache.catalina.LogFacade;
 import org.apache.catalina.Wrapper;
-import org.apache.catalina.util.StringManager;
-
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.Servlet;
 import jakarta.servlet.ServletException;

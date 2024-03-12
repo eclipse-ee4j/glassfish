@@ -19,7 +19,6 @@ package org.glassfish.web.deployment.node;
 import java.util.Map;
 
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
-import com.sun.enterprise.deployment.node.DescriptorFactory;
 import com.sun.enterprise.deployment.node.XMLElement;
 import org.glassfish.web.deployment.descriptor.OrderingOrderingDescriptor;
 import org.glassfish.web.deployment.xml.WebTagNames;

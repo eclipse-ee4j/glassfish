@@ -23,23 +23,19 @@
 package com.sun.jdo.spi.persistence.generator.database;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.ResourceBundle;
 
 import org.netbeans.modules.dbschema.*;
-import org.netbeans.modules.dbschema.util.NameUtil;
 import com.sun.jdo.api.persistence.model.mapping.*;
 import com.sun.jdo.api.persistence.model.mapping.impl.*;
 import com.sun.jdo.api.persistence.model.jdo.*;
-import com.sun.jdo.api.persistence.model.jdo.impl.*;
 import com.sun.jdo.api.persistence.model.Model;
 import com.sun.jdo.api.persistence.model.ModelException;
 import com.sun.jdo.spi.persistence.utility.JavaTypeHelper;

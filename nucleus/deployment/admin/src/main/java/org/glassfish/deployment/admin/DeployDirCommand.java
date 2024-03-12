@@ -16,7 +16,6 @@
 
 package org.glassfish.deployment.admin;
 
-import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;

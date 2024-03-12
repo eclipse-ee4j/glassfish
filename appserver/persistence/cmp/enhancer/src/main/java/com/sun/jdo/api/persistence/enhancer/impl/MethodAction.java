@@ -16,14 +16,6 @@
 
 package com.sun.jdo.api.persistence.enhancer.impl;
 
-import java.util.Map;
-//@olsen: disabled feature
-/*
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Enumeration;
-*/
-
 import com.sun.jdo.api.persistence.enhancer.classfile.*;
 
 import com.sun.jdo.api.persistence.enhancer.util.Support;

@@ -16,7 +16,6 @@
 
 package com.sun.jts.utils.RecoveryHooks;
 
-import java.text.MessageFormat;
 import java.util.Hashtable;
 import java.util.ResourceBundle;
 import com.sun.jts.jtsxa.Utility;
@@ -30,7 +29,6 @@ import org.omg.CosTransactions.Coordinator;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import com.sun.logging.LogDomains;
-import com.sun.jts.utils.LogFormatter;
 /**
  * This class defines API's for the test harness to induce
  * recovery by setting crash points (in the case of TM crashes)

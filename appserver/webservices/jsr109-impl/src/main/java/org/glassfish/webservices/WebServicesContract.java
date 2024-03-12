@@ -16,10 +16,7 @@
 
 package org.glassfish.webservices;
 
-import jakarta.inject.Inject;
-import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.annotations.Contract;
-import org.glassfish.hk2.api.PostConstruct;
 import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
 import java.util.logging.Logger;
 

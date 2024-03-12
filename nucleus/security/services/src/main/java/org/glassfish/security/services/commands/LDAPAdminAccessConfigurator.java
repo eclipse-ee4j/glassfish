@@ -24,7 +24,6 @@ import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import org.glassfish.security.services.impl.ServiceLogging;
-import java.beans.PropertyChangeEvent;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
@@ -32,8 +31,6 @@ import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.internal.api.Target;
 import jakarta.inject.Inject;
 import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 

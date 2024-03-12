@@ -18,8 +18,6 @@ package org.apache.catalina.session;
 
 import org.apache.catalina.LogFacade;
 import org.apache.catalina.Session;
-import org.apache.catalina.core.StandardContext;
-
 import java.io.*;
 import java.text.MessageFormat;
 import java.util.*;

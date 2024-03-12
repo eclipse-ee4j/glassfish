@@ -17,7 +17,6 @@
 package org.glassfish.config.support;
 
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.config.serverbeans.CopyConfig;
 import com.sun.enterprise.config.util.ConfigApiLoggerInfo;
 import com.sun.enterprise.util.AnnotationUtil;
 
@@ -27,7 +26,6 @@ import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.*;
 import org.glassfish.common.util.admin.GenericCommandModel;
 import org.glassfish.hk2.api.PerLookup;
-import org.jvnet.hk2.component.*;
 import org.jvnet.hk2.config.*;
 
 import jakarta.inject.Inject;

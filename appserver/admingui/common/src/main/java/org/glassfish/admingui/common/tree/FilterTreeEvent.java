@@ -18,7 +18,6 @@ package org.glassfish.admingui.common.tree;
 //
 
 import com.sun.jsftemplating.layout.event.EventObjectBase;
-import com.sun.jsftemplating.layout.event.UIComponentHolder;
 import java.util.List;
 import jakarta.faces.component.UIComponent;
 

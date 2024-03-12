@@ -36,7 +36,6 @@ import org.glassfish.contextpropagation.spi.ContextMapPropagator;
 import org.glassfish.contextpropagation.wireadapters.WireAdapter;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 

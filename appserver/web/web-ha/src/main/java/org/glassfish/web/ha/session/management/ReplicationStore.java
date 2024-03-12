@@ -25,7 +25,6 @@ package org.glassfish.web.ha.session.management;
 
 import com.sun.appserv.util.cache.BaseCache;
 import com.sun.enterprise.container.common.spi.util.JavaEEIOUtils;
-import com.sun.enterprise.web.ServerConfigLookup;
 import org.apache.catalina.Container;
 import org.apache.catalina.Session;
 import org.apache.catalina.LifecycleException;

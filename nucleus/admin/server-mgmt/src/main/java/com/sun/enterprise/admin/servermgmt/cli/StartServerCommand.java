@@ -17,7 +17,6 @@
 package com.sun.enterprise.admin.servermgmt.cli;
 
 import com.sun.enterprise.admin.launcher.GFLauncherException;
-import com.sun.enterprise.admin.launcher.GFLauncherFactory;
 import com.sun.enterprise.universal.xml.MiniXmlParserException;
 import java.util.List;
 import org.glassfish.api.admin.RuntimeType;

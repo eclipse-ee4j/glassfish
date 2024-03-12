@@ -18,7 +18,6 @@ package org.glassfish.admin.cli;
 
 import com.sun.enterprise.admin.cli.AdminMain;
 import com.sun.enterprise.admin.cli.Environment;
-import com.sun.enterprise.admin.remote.Metrix;
 
 /**
  * The asadmin main program.

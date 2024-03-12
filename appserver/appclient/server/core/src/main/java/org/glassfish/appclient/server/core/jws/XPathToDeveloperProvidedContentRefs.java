@@ -16,11 +16,8 @@
 
 package org.glassfish.appclient.server.core.jws;
 
-import com.sun.logging.LogDomains;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLConnection;
@@ -40,7 +37,6 @@ import org.glassfish.appclient.server.core.NestedAppClientDeployerHelper;
 import org.glassfish.appclient.server.core.StandaloneAppClientDeployerHelper;
 import org.glassfish.appclient.server.core.jws.servedcontent.Content;
 import org.glassfish.appclient.server.core.jws.servedcontent.DynamicContent;
-import org.glassfish.appclient.server.core.jws.servedcontent.FixedContent;
 import org.glassfish.appclient.server.core.jws.servedcontent.SimpleDynamicContentImpl;
 import org.glassfish.appclient.server.core.jws.servedcontent.StaticContent;
 import org.glassfish.logging.annotation.LogMessageInfo;

@@ -20,12 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import jakarta.inject.Provider;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.DELETE;
@@ -44,7 +40,6 @@ import org.glassfish.admin.rest.utils.xml.RestActionReporter;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import org.glassfish.admin.rest.utils.ResourceUtil;
 import org.glassfish.admin.rest.utils.Util;
-import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.config.Dom;
 
 import static org.glassfish.admin.rest.utils.Util.decode;

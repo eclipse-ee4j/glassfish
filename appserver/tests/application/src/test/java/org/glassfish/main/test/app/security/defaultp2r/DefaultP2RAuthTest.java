@@ -40,7 +40,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-
 public class DefaultP2RAuthTest {
 
     private static final Logger LOG = System.getLogger(DefaultP2RAuthTest.class.getName());

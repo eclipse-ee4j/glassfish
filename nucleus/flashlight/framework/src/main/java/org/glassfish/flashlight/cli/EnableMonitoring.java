@@ -32,7 +32,6 @@ import org.jvnet.hk2.annotations.Service;
 
 import org.glassfish.hk2.api.PerLookup;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import java.io.File;
 import com.sun.enterprise.config.serverbeans.MonitoringService;
 
 import jakarta.inject.Inject;

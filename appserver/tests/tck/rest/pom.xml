@@ -38,7 +38,7 @@ mvn clean install -Drun.test="JAXRSBasicClientIT#basicAuthorizationAdminTest"
 
 Run single test and suspend on port 9009:
 
-mvn clean install -Drun.test="JAXRSBasicClientIT#basicAuthorizationAdminTest" -Dglassfish.suspend  
+mvn clean install -Drun.test="JAXRSBasicClientIT#basicAuthorizationAdminTest" -Dglassfish.suspend
 
 
 Run a specified group:
@@ -66,59 +66,57 @@ mvn clean install -Dgroups=security
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <tck.version>3.1.1</tck.version>
-        
+
         <glassfish.version>${project.version}</glassfish.version>
         <glassfish.root>${project.build.directory}</glassfish.root>
         <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
     </properties>
-    
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.junit</groupId>
-                <artifactId>junit-bom</artifactId>
-                <version>5.9.1</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-    
     <dependencies>
-        
-        <!--  The TCK itself -->
         <dependency>
             <groupId>jakarta.ws.rs</groupId>
             <artifactId>jakarta-restful-ws-tck</artifactId>
             <version>${tck.version}</version>
             <scope>test</scope>
         </dependency>
-        
-        
-        <!--
-            The Arquillian connector that starts GlassFish and deploys archives to it.
-        -->
+
+        <!-- The Arquillian connector that starts GlassFish and deploys archives to it. -->
         <dependency>
             <groupId>org.omnifaces.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-managed</artifactId>
-            <version>1.2</version>
+            <version>1.4</version>
         </dependency>
-        
-        <!-- 
-            Client libs for doing HTTP requests, specifically done via the REST Client
-        -->
+        <dependency>
+            <groupId>org.jboss.arquillian.junit5</groupId>
+            <artifactId>arquillian-junit5-container</artifactId>
+            <version>1.8.0.Final</version>
+        </dependency>
+
+        <!-- Client libs for doing HTTP requests, specifically done via the REST Client -->
         <dependency>
             <groupId>org.omnifaces.arquillian</groupId>
             <artifactId>glassfish-client-ee10</artifactId>
-            <version>1.2</version>
+            <version>1.4</version>
         </dependency>
-        
-        <!--  Signature Test Plugin  -->
+
         <dependency>
             <groupId>org.netbeans.tools</groupId>
             <artifactId>sigtest-maven-plugin</artifactId>
-            <version>1.6</version>
+            <version>1.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
         </dependency>
     </dependencies>
 
@@ -149,7 +147,7 @@ mvn clean install -Dgroups=security
                     </execution>
                 </executions>
             </plugin>
-            
+
             <!-- Configuring and running the TCK -->
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
@@ -164,37 +162,37 @@ mvn clean install -Dgroups=security
                             <excludes>
                                 <exclude>**/SeBootstrapIT.java</exclude>
                             </excludes>
-                            
+
                             <test>${run.test}</test>
-                            
+
                             <dependenciesToScan>jakarta.ws.rs:jakarta-restful-ws-tck</dependenciesToScan>
-                            
+
                             <systemPropertyVariables>
                                 <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
                                 <glassfish.maxHeapSize>2048m</glassfish.maxHeapSize>
-                                
+
                                 <glassfish.postBootCommands>
                                     create-file-user --groups staff:mgr:DIRECTOR --passwordfile ${project.build.directory}/test-classes/j2ee.pass j2ee
                                     create-file-user --groups guest:OTHERROLE --passwordfile ${project.build.directory}/test-classes/javajoe.pass javajoe
                                     set server-config.network-config.protocols.protocol.http-listener-1.http.trace-enabled=true
                                 </glassfish.postBootCommands>
-                                
-                                <!-- 
+
+                                <!--
                                     Strangely, this TCK allows (even requires) the expected user names and passwords that are defined above
-                                    to be set as variables as well. For some reason the groups however are not set as variables. 
+                                    to be set as variables as well. For some reason the groups however are not set as variables.
                                     This has puzzled developers forever, but nobody seems to know the reason for this.
                                  -->
                                 <user>j2ee</user>
                                 <password>j2ee</password>
                                 <authuser>javajoe</authuser>
                                 <authpassword>javajoe</authpassword>
-                                
-                                
+
+
                                 <!-- Remnants from ancient TCK -->
                                 <webServerHost>localhost</webServerHost>
                                 <webServerPort>8080</webServerPort>
-                               
-                            
+
+
                                 <servlet_adaptor>org.glassfish.jersey.servlet.ServletContainer</servlet_adaptor>
                                 <porting.ts.url.class.1>ee.jakarta.tck.ws.rs.lib.implementation.sun.common.SunRIURL</porting.ts.url.class.1>
                                 <jimage.dir>${project.build.directory}/jdk-bundle</jimage.dir>
@@ -218,7 +216,7 @@ mvn clean install -Dgroups=security
                 <glassfish-artifact-id>glassfish</glassfish-artifact-id>
             </properties>
         </profile>
-        
+
         <profile>
             <id>web</id>
             <properties>

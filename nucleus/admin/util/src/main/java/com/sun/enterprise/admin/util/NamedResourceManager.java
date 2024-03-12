@@ -27,8 +27,6 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import jakarta.inject.Singleton;
 import org.glassfish.api.admin.NamedResource;
-import org.glassfish.logging.annotation.LogMessagesResourceBundle;
-import org.glassfish.logging.annotation.LoggerInfo;
 import org.jvnet.hk2.annotations.Service;
 
 /**

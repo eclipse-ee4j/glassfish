@@ -24,7 +24,6 @@ import com.sun.enterprise.config.serverbeans.Applications;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.Server;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.logging.Logger;
@@ -44,10 +43,8 @@ import java.net.UnknownHostException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import org.glassfish.api.admin.AccessRequired;
-import org.glassfish.deployment.common.DeploymentUtils;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 
 /**

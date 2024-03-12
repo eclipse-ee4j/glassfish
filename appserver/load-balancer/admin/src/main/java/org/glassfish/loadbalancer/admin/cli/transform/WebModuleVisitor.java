@@ -17,7 +17,6 @@
 package org.glassfish.loadbalancer.admin.cli.transform;
 
 import org.glassfish.loadbalancer.admin.cli.reader.api.BaseReader;
-import org.glassfish.loadbalancer.admin.cli.reader.api.LbReaderException;
 import org.glassfish.loadbalancer.admin.cli.reader.api.WebModuleReader;
 import org.glassfish.loadbalancer.admin.cli.reader.api.IdempotentUrlPatternReader;
 

@@ -16,8 +16,6 @@
 
 package org.glassfish.main.admin.test;
 
-import java.time.Instant;
-
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
@@ -33,7 +31,6 @@ import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadmi
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.hamcrest.Matchers.stringContainsInOrder;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 /**
  * @author David Matejcek

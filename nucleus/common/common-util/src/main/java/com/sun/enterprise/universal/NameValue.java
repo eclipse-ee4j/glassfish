@@ -16,8 +16,6 @@
 
 package com.sun.enterprise.universal;
 
-import java.util.*;
-
 /**
  * This class is needed so often in so many places.  It is centralized once and
  * for all here.

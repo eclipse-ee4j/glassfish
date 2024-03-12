@@ -19,10 +19,6 @@ package org.jvnet.hk2.config;
 
 import org.jvnet.hk2.config.provider.internal.Creator;
 
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-
 /**
  * {@link org.jvnet.hk2.component.Creator} that returns a typed proxy to {@link Dom}.
  *

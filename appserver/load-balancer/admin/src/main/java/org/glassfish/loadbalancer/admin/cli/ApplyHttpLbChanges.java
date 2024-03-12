@@ -24,8 +24,6 @@ import java.net.UnknownHostException;
 import org.glassfish.loadbalancer.admin.cli.connection.ConnectionManager;
 import org.glassfish.loadbalancer.admin.cli.reader.api.LoadbalancerReader;
 
-import org.netbeans.modules.schema2beans.Schema2BeansException;
-
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
 import org.jvnet.hk2.annotations.Service;

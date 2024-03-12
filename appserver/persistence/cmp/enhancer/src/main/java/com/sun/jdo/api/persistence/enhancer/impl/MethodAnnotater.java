@@ -20,14 +20,10 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Vector;
 import java.util.Stack;
-import java.util.Enumeration;
-
 import com.sun.jdo.api.persistence.enhancer.classfile.*;
 
 import com.sun.jdo.api.persistence.enhancer.util.Support;
 import com.sun.jdo.api.persistence.enhancer.util.InternalError;
-import com.sun.jdo.api.persistence.enhancer.util.ClassFileSource;
-
 //@olsen: added import
 import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaData;
 

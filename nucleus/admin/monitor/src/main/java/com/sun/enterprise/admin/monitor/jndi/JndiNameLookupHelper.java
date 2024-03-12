@@ -24,7 +24,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.ArrayList;
 import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.logging.LogDomains;
 import static org.glassfish.admin.monitor.MLogger.*;
 
 public class JndiNameLookupHelper {

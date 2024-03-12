@@ -16,19 +16,10 @@
 
 package com.sun.enterprise.admin.cli.cluster;
 
-import java.io.File;
-import java.io.Console;
-import java.util.*;
-import jakarta.inject.Inject;
-
-
-import org.jvnet.hk2.component.*;
-import org.glassfish.api.Param;
 import org.glassfish.api.admin.*;
 import org.glassfish.hk2.api.PerLookup;
 
 import com.sun.enterprise.admin.cli.*;
-import com.sun.enterprise.util.SystemPropertyConstants;
 
 /**
  * This is a local command that creates a node agent.

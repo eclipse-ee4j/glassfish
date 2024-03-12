@@ -18,8 +18,6 @@
 package org.apache.naming.factory;
 
 import java.util.Hashtable;
-import java.sql.Driver;
-import java.sql.DriverManager;
 import javax.naming.Name;
 import javax.naming.Context;
 import javax.naming.NamingException;

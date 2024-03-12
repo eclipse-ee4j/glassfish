@@ -19,7 +19,6 @@ package org.glassfish.tests.embedded.web;
 import java.io.*;
 import java.util.*;
 import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 public class MyServlet extends HttpServlet {

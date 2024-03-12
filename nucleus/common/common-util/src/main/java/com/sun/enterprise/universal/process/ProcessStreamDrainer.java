@@ -23,9 +23,6 @@
 
 package com.sun.enterprise.universal.process;
 
-import java.io.*;
-import java.util.*;
-
 /**
  * If you don't drain a process' stdout and stderr it will cause a deadlock after a few hundred bytes of output.
  * At that point the Process is blocked because its stdout and/or stderr buffer is full and it is waiting for the Java caller

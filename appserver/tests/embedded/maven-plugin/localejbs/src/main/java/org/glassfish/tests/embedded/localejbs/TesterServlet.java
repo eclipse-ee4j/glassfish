@@ -17,9 +17,6 @@
 
 package org.glassfish.tests.embedded.localejbs;
 
-import org.junit.runner.JUnitCore;
-import org.junit.runner.Result;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;

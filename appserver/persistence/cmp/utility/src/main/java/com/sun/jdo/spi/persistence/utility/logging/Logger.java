@@ -16,9 +16,6 @@
 
 package com.sun.jdo.spi.persistence.utility.logging;
 
-import java.util.ResourceBundle;
-import java.security.SecurityPermission;
-
 /** This interface provides an isolation layer between the JDO components
  * that need logging services and the implementation of those services.
  * <P>

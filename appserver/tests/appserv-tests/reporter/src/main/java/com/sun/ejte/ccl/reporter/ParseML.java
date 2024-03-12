@@ -17,7 +17,6 @@
 package com.sun.ejte.ccl.reporter;
 
 import org.xml.sax.*;
-import org.xml.sax.ext.*;
 import org.xml.sax.helpers.*;
 import java.io.*;
 import java.util.*;

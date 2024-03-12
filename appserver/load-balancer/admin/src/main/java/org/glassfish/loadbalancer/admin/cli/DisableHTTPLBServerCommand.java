@@ -25,7 +25,6 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.internal.api.Target;
 
 import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.component.*;
 import org.jvnet.hk2.config.*;
 import org.glassfish.api.Param;
 import org.glassfish.api.ActionReport;

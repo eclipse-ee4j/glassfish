@@ -22,17 +22,6 @@
 
 package com.sun.jdo.spi.persistence.support.ejb.ejbqlc;
 
-import java.util.Properties;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.FileOutputStream;
-import java.io.BufferedOutputStream;
-
 /**
  * An JDOQLElements instance represents the result of the EJBQLC compile step.
  *

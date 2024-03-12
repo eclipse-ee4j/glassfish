@@ -16,7 +16,6 @@
 
 package org.glassfish.admingui.connector;
 
-import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.Element;
 

@@ -26,7 +26,6 @@ import java.util.*;
 
 import org.glassfish.persistence.common.I18NHelper;
 
-import com.sun.jdo.api.persistence.support.JDOQueryException;
 import com.sun.jdo.api.persistence.support.JDOUnsupportedOptionException;
 import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
 

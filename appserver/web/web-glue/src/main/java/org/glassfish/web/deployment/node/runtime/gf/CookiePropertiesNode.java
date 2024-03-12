@@ -16,7 +16,6 @@
 
 package org.glassfish.web.deployment.node.runtime.gf;
 
-import com.sun.enterprise.deployment.node.runtime.RuntimeDescriptorNode;
 import org.glassfish.web.deployment.runtime.CookieProperties;
 
 /**

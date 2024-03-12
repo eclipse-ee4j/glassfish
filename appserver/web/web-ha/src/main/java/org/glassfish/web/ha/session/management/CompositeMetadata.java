@@ -18,8 +18,6 @@ package org.glassfish.web.ha.session.management;
 
 
 import org.glassfish.ha.store.api.Storeable;
-import org.glassfish.ha.store.spi.StorableMap;
-
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.*;

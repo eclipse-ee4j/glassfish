@@ -17,7 +17,6 @@
 
 package org.apache.catalina.startup;
 
-import com.sun.logging.LogDomains;
 import org.apache.catalina.LogFacade;
 import org.apache.tomcat.util.digester.Digester;
 import org.apache.tomcat.util.digester.RuleSet;

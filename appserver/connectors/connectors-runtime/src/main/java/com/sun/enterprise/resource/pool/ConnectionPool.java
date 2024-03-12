@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -946,7 +946,8 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         }
 
         if (!state.isBusy()) {
-            throw new IllegalStateException("state.isBusy() : false");
+            // Do not throw an exception, the current transaction should not fail if the state is already 'free'.
+            LOG.log(WARNING, "resourceClosed - Expecting 'state.isBusy(): false', but was true for handle: {0}", handle);
         }
 
         // mark as not busy
@@ -1035,21 +1036,22 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         }
 
         ResourceState state = getResourceState(resourceHandle);
-        // The reason is that normally connection error is expected
+        // Normally a connection error is expected
         // to occur only when the connection is in use by the application.
-        // When there is connection validation involved, the connection
+        // When there is a connection validation involved, the connection
         // can be checked for validity "before" it is passed to the
         // application i.e. when the resource is still free. Since,
         // the connection error can occur when the resource
-        // is free, the following is being commented out.
-
-        /*
-         * if (state == null || state.isBusy() == false) { throw new IllegalStateException(); }
-         */
-
+        // is free, the state could still be 'isBusy: false', therefore
+        // no exception is thrown based on the isBusy state, and only
+        // if the state object is missing.
         if (state == null) {
             throw new IllegalStateException();
         }
+
+        // mark as not busy
+        setResourceStateToFree(resourceHandle);
+        state.touchTimestamp();
 
         // changed order of commands
 

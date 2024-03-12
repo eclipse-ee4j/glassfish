@@ -29,7 +29,6 @@ import org.glassfish.api.monitoring.DTraceContract;
 import org.glassfish.external.probe.provider.annotations.Probe;
 import org.glassfish.external.probe.provider.annotations.ProbeParam;
 import org.glassfish.flashlight.impl.core.FlashlightProbeProvider;
-import org.glassfish.flashlight.provider.FlashlightProbe;
 import org.glassfish.hk2.api.ServiceLocator;
 
 /**

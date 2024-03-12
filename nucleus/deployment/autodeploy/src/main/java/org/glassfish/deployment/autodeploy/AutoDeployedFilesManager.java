@@ -28,8 +28,6 @@ import java.net.URI;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.logging.Level;
-import org.glassfish.deployment.common.DeploymentUtils;
-
 import org.glassfish.logging.annotation.LogMessageInfo;
 
 /**

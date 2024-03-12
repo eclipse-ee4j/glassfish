@@ -16,7 +16,6 @@
 
 package org.glassfish.admin.mbeanserver;
 
-import org.glassfish.grizzly.config.dom.Ssl;
 import org.glassfish.hk2.api.ServiceLocator;
 
 import javax.management.MBeanServer;
@@ -25,7 +24,6 @@ import javax.management.remote.JMXConnectorServer;
 import javax.management.remote.JMXServiceURL;
 import javax.security.auth.Subject;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**

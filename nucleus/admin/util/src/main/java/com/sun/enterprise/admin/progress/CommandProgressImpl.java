@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -123,7 +124,9 @@ public class CommandProgressImpl extends ProgressStatusImpl implements CommandPr
     public void setEventBroker(AdminCommandEventBroker eventBroker) {
         this.eventBroker = eventBroker;
         if (eventBroker != null) {
-            eventBroker.fireEvent(EVENT_PROGRESSSTATUS_STATE, this);
+            // Pass an empty progress status to prevent duplicate children creation
+            // on the client side. This status is only used to send a state event.
+            eventBroker.fireEvent(EVENT_PROGRESSSTATUS_STATE, new CommandProgressImpl(name, id));
         }
     }
 

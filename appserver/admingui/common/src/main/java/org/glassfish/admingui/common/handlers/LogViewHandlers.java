@@ -27,14 +27,10 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
-import jakarta.ws.rs.core.MultivaluedHashMap;
-
 import org.glassfish.admingui.common.util.GuiUtil;
 
 public class LogViewHandlers {

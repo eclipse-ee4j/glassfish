@@ -17,10 +17,8 @@
 
 package org.apache.naming;
 
-import java.util.Hashtable;
 import javax.naming.Reference;
 import javax.naming.Context;
-import javax.naming.StringRefAddr;
 
 /**
  * Represents a reference address to a resource environment.

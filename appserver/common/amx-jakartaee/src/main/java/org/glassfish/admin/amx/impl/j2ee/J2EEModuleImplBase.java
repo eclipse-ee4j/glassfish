@@ -16,11 +16,9 @@
 
 package org.glassfish.admin.amx.impl.j2ee;
 
-import javax.management.MBeanServer;
 import org.glassfish.admin.amx.j2ee.J2EEModule;
 
 import javax.management.ObjectName;
-import org.glassfish.admin.amx.core.Util;
 import org.glassfish.admin.amx.j2ee.J2EETypes;
 
 /**

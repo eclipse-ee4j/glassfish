@@ -19,7 +19,6 @@ package org.glassfish.appclient.server.core.jws.servedcontent;
 import java.util.LinkedList;
 import java.util.Properties;
 import org.glassfish.appclient.server.core.jws.Util;
-import org.glassfish.appclient.server.core.jws.servedcontent.DynamicContent.InstanceAdapter;
 
 /**
  *

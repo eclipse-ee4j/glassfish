@@ -46,7 +46,6 @@ import org.glassfish.flashlight.MonitoringRuntimeDataRegistry;
 import com.sun.enterprise.config.serverbeans.*;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
-import com.sun.logging.LogDomains;
 import com.sun.enterprise.util.StringUtils;
 import java.io.IOException;
 import java.text.MessageFormat;

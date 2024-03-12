@@ -36,7 +36,6 @@ import javax.transaction.xa.Xid;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import com.sun.logging.LogDomains;
-import com.sun.jts.utils.LogFormatter;
 
 /**
  * The XID class provides an implementation of the X/Open

@@ -18,8 +18,6 @@ package org.glassfish.admin.rest.adapter;
 
 import com.sun.enterprise.v3.common.PropsFileActionReporter;
 import java.util.Collections;
-import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;

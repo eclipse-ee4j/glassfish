@@ -22,12 +22,10 @@
 package org.glassfish.flashlight.impl.client;
 
 import java.lang.reflect.Method;
-import java.util.*;
 import java.util.logging.*;
 import org.glassfish.flashlight.FlashlightUtils;
 import org.glassfish.flashlight.client.ProbeClientInvoker;
 import org.glassfish.flashlight.provider.FlashlightProbe;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import org.glassfish.flashlight.FlashlightLoggerInfo;
 
 /**

@@ -22,7 +22,6 @@ import org.apache.catalina.deploy.FilterDef;
 import jakarta.servlet.FilterRegistration;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 
 public class DynamicFilterRegistrationImpl

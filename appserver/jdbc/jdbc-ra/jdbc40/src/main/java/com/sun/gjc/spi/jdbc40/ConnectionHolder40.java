@@ -19,7 +19,6 @@ package com.sun.gjc.spi.jdbc40;
 
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 
 import java.lang.reflect.InvocationHandler;

@@ -16,7 +16,6 @@
 
 package org.glassfish.distributions.test;
 
-import org.junit.Test;
 import org.glassfish.distributions.test.ejb.SampleEjb;
 
 import java.io.File;
@@ -26,7 +25,6 @@ import java.util.HashMap;
 import jakarta.ejb.*;
 import jakarta.ejb.embeddable.EJBContainer;
 import javax.naming.Context;
-import javax.naming.NamingException;
 
 public class UnitTest {
 

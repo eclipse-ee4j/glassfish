@@ -21,7 +21,6 @@ import java.io.PrintWriter;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
-import jakarta.annotation.Resource;
 
 
 @WebServlet(urlPatterns={"/hello"})

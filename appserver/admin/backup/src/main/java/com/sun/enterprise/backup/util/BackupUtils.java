@@ -19,7 +19,6 @@ package com.sun.enterprise.backup.util;
 import com.sun.enterprise.util.OS;
 
 import java.io.*;
-import java.util.*;
 
 public class BackupUtils {
 

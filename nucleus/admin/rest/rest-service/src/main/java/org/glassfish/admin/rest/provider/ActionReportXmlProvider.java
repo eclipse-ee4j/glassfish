@@ -17,7 +17,6 @@
 package org.glassfish.admin.rest.provider;
 
 import com.sun.enterprise.v3.common.ActionReporter;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.*;
 import jakarta.ws.rs.Produces;

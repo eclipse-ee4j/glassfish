@@ -16,7 +16,6 @@
 
 package org.glassfish.jdbc.admin.cli.internal;
 
-import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
 import com.sun.enterprise.config.serverbeans.Resources;
 import org.glassfish.jdbcruntime.service.JdbcAdminServiceImpl;
 import org.glassfish.api.ActionReport;

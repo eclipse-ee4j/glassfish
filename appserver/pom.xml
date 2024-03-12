@@ -81,27 +81,27 @@
         <!-- Jakarta API Versions -->
 
         <!-- Jakarta Faces -->
-        <jakarta.faces-api.version>4.1.0-SNAPSHOT</jakarta.faces-api.version>
+        <jakarta.faces-api.version>4.1.0-M2</jakarta.faces-api.version>
         <mojarra.version>4.1.0-M2</mojarra.version>
 
         <!-- Jakarta WebSocket -->
         <jakarta.websocket-api.version>2.2.0-M1</jakarta.websocket-api.version>
-        <tyrus.version>2.1.5</tyrus.version>
+        <tyrus.version>2.2-M1</tyrus.version>
 
         <!-- Jakarta Concurrency -->
         <jakarta.concurrent-api.version>3.1.0-M2</jakarta.concurrent-api.version>
-        <concurro.version>3.1.0-M2</concurro.version>
+        <concurro.version>3.1.0-M3</concurro.version>
 
         <!-- Jakarta Interceptors -->
         <jakarta.interceptor-api.version>2.2.0</jakarta.interceptor-api.version>
 
         <!-- Jakarta Security + Authentication/Authorization -->
         <!-- APIs -->
-        <jakarta.security-api.version>4.0.0-SNAPSHOT</jakarta.security-api.version>
+        <jakarta.security-api.version>4.0.0-M1</jakarta.security-api.version>
         <jakarta.authorization-api.version>3.0.0-M1</jakarta.authorization-api.version>
         <jakarta.authentication-api.version>3.1.0-M1</jakarta.authentication-api.version>
         <!-- Implementations -->
-        <soteria.version>4.0.0-SNAPSHOT</soteria.version>
+        <soteria.version>4.0.0-M1</soteria.version>
         <exousia.version>3.0.0-M1.1</exousia.version>
         <epicyro.version>3.1.0-M1</epicyro.version>
         <!-- Dependencies -->

@@ -42,13 +42,8 @@ import com.sun.enterprise.security.ee.web.integration.WebPrincipal;
 import com.sun.enterprise.security.ee.web.integration.WebSecurityManager;
 import com.sun.enterprise.security.ee.web.integration.WebSecurityManagerFactory;
 import com.sun.enterprise.security.integration.RealmInitializer;
-import org.glassfish.epicyro.config.helper.Caller;
-import org.glassfish.epicyro.config.helper.CallerPrincipal;
-import org.glassfish.epicyro.config.helper.HttpServletConstants;
-import org.glassfish.epicyro.config.helper.PriviledgedAccessController;
-import org.glassfish.epicyro.services.BaseAuthenticationService;
-import org.glassfish.epicyro.services.DefaultAuthenticationService;
 import com.sun.enterprise.util.net.NetUtils;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Provider;
@@ -105,6 +100,12 @@ import org.apache.catalina.realm.Constants;
 import org.apache.catalina.realm.RealmBase;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.epicyro.config.helper.Caller;
+import org.glassfish.epicyro.config.helper.CallerPrincipal;
+import org.glassfish.epicyro.config.helper.HttpServletConstants;
+import org.glassfish.epicyro.config.helper.PriviledgedAccessController;
+import org.glassfish.epicyro.services.BaseAuthenticationService;
+import org.glassfish.epicyro.services.DefaultAuthenticationService;
 import org.glassfish.grizzly.config.dom.NetworkConfig;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.NetworkListeners;
@@ -124,6 +125,10 @@ import static com.sun.enterprise.security.ee.web.integration.WebSecurityManager.
 import static com.sun.enterprise.util.Utility.isAnyNull;
 import static com.sun.enterprise.util.Utility.isEmpty;
 import static com.sun.web.security.WebSecurityResourceBundle.BUNDLE_NAME;
+import static com.sun.web.security.WebSecurityResourceBundle.MSG_FORBIDDEN;
+import static com.sun.web.security.WebSecurityResourceBundle.MSG_INVALID_REQUEST;
+import static com.sun.web.security.WebSecurityResourceBundle.MSG_MISSING_HOST_HEADER;
+import static com.sun.web.security.WebSecurityResourceBundle.MSG_NO_WEB_SECURITY_MGR;
 import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN;
 import static jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
@@ -144,10 +149,6 @@ import static org.apache.catalina.Globals.WRAPPED_REQUEST;
 import static org.apache.catalina.Globals.WRAPPED_RESPONSE;
 import static org.glassfish.epicyro.config.helper.HttpServletConstants.POLICY_CONTEXT;
 import static org.glassfish.epicyro.config.helper.HttpServletConstants.REGISTER_SESSION;
-import static com.sun.web.security.WebSecurityResourceBundle.MSG_FORBIDDEN;
-import static com.sun.web.security.WebSecurityResourceBundle.MSG_INVALID_REQUEST;
-import static com.sun.web.security.WebSecurityResourceBundle.MSG_MISSING_HOST_HEADER;
-import static com.sun.web.security.WebSecurityResourceBundle.MSG_NO_WEB_SECURITY_MGR;
 
 /**
  * This is the realm adapter used to authenticate users and authorize access to web resources. The authenticate method
@@ -657,7 +658,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
                         try {
                             context.fireContainerEvent(BEFORE_POST_AUTHENTICATION, null);
                             AuthStatus authStatus = serverAuthContext.secureResponse(messageInfo, null); // null serviceSubject
-                            result = AuthStatus.SUCCESS.equals(authStatus);
+                            result = AuthStatus.SEND_SUCCESS.equals(authStatus);
                         } finally {
                             context.fireContainerEvent(AFTER_POST_AUTHENTICATION, null);
                         }

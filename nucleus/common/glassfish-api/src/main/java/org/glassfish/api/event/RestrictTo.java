@@ -18,6 +18,7 @@
 package org.glassfish.api.event;
 
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -35,7 +36,15 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
+@Repeatable(RestrictTo.List.class)
 public @interface RestrictTo {
 
     String value();
+
+    @Target(ElementType.PARAMETER)
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface List {
+
+        RestrictTo[] value();
+    }
 }

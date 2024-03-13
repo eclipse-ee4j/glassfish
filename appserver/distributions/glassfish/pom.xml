@@ -167,11 +167,6 @@
                                     basedir="${patches}/hibernate-validator-cdi" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/hibernate-validator-cdi.jar"
                                 />
-                                
-                                <jarupdate
-                                    basedir="${patches}/tyrus-client" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/tyrus-client.jar"
-                                />
                             </target>
                         </configuration>
                     </execution>

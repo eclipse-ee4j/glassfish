@@ -93,7 +93,7 @@
                                 <if>
                                     <equals arg1="${start.wd.security}" arg2="true" />
                                     <then>
-                                        <ant dir="." antfile="build.xml" target="start_server_with_security_manager_enabled">
+                                        <ant dir="." antfile="build.xml" target="start_server">
                                             <property name="glassfish.home" value="${glassfish.home}"/>
                                         </ant>
                                     </then>
@@ -101,7 +101,7 @@
                                 <if>
                                     <equals arg1="${stop.wd.security}" arg2="true" />
                                     <then>
-                                        <ant dir="." antfile="build.xml" target="stop_server_with_security_manager_enabled">
+                                        <ant dir="." antfile="build.xml" target="stop_server">
                                             <property name="glassfish.home" value="${glassfish.home}"/>
                                         </ant>
                                     </then>

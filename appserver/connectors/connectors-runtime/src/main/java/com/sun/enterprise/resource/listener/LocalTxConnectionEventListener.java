@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,37 +32,48 @@ import jakarta.resource.spi.ManagedConnection;
  */
 public class LocalTxConnectionEventListener extends ConnectionEventListener {
 
-    private PoolManager poolManager;
+    /**
+     * A shortcut to the singleton PoolManager instance. Field could also be removed.
+     */
+    private final PoolManager poolManager = ConnectorRuntime.getRuntime().getPoolManager();
 
-    // connectionHandle -> ResourceHandle
-    // Whenever a connection is associated with a ManagedConnection,
-    // that connection and the resourcehandle associated with its
-    // original ManagedConnection will be put in this table.
-    private IdentityHashMap associatedHandles;
+    /**
+     * Map to store the relation: "userHandle/connectionHandle -> ResourceHandle" using reference-equality. Whenever a
+     * connection is associated with a ManagedConnection, that connection and the resourceHandle associated with its
+     * original ManagedConnection will be put in this table.
+     * <p>
+     * userHandle meaning: an object representing the "connection handle for the underlying physical connection". In some
+     * code also named connectionHandle.
+     * <p>
+     * All code altering associatedHandles must be synchronized.
+     */
+    private final IdentityHashMap<Object, ResourceHandle> associatedHandles = new IdentityHashMap<>(10);
 
-    private ResourceHandle resource;
+    /**
+     * The original resource for which this listener is created.
+     */
+    private final ResourceHandle resource;
 
     public LocalTxConnectionEventListener(ResourceHandle resource) {
         this.resource = resource;
-        this.associatedHandles = new IdentityHashMap(10);
-        this.poolManager = ConnectorRuntime.getRuntime().getPoolManager();
     }
 
     @Override
-    public void connectionClosed(ConnectionEvent evt) {
+    public synchronized void connectionClosed(ConnectionEvent evt) {
         Object connectionHandle = evt.getConnectionHandle();
-        ResourceHandle handle = resource;
-        if (associatedHandles.containsKey(connectionHandle)) {
-            handle = (ResourceHandle) associatedHandles.get(connectionHandle);
-        }
+        ResourceHandle handle = associatedHandles.getOrDefault(connectionHandle, resource);
+        // ManagedConnection instance is still valid and put back in the pool: do not remove the event listener.
         poolManager.resourceClosed(handle);
     }
 
     @Override
-    public void connectionErrorOccurred(ConnectionEvent evt) {
+    public synchronized void connectionErrorOccurred(ConnectionEvent evt) {
         resource.setConnectionErrorOccurred();
+
+        // ManagedConnection instance is now invalid and unusable. Remove this event listener.
         ManagedConnection mc = (ManagedConnection) evt.getSource();
         mc.removeConnectionEventListener(this);
+
         poolManager.resourceErrorOccurred(resource);
     }
 
@@ -72,12 +83,12 @@ public class LocalTxConnectionEventListener extends ConnectionEventListener {
      * @param evt ConnectionEvent
      */
     @Override
-    public void badConnectionClosed(ConnectionEvent evt) {
+    public synchronized void badConnectionClosed(ConnectionEvent evt) {
         Object connectionHandle = evt.getConnectionHandle();
-        ResourceHandle handle = resource;
-        if (associatedHandles.containsKey(connectionHandle)) {
-            handle = (ResourceHandle) associatedHandles.get(connectionHandle);
-        }
+        ResourceHandle handle = associatedHandles.getOrDefault(connectionHandle, resource);
+
+        // TODO: Explain why event listener needs to be removed.
+        // There is no documentation mentioning: ManagedConnection instance is now invalid and unusable.
         ManagedConnection mc = (ManagedConnection) evt.getSource();
         mc.removeConnectionEventListener(this);
 
@@ -99,16 +110,38 @@ public class LocalTxConnectionEventListener extends ConnectionEventListener {
         // no-op
     }
 
-    public void associateHandle(Object c, ResourceHandle h) {
-        associatedHandles.put(c, h);
+    /**
+     * Associate the given userHandle to the resourceHandle.
+     *
+     * @param userHandle the userHandle object to be associated with the new handle
+     * @param resourceHandle the original Handle
+     */
+    public synchronized void associateHandle(Object userHandle, ResourceHandle resourceHandle) {
+        associatedHandles.put(userHandle, resourceHandle);
     }
 
-    public ResourceHandle removeAssociation(Object c) {
-        return (ResourceHandle) associatedHandles.remove(c);
+    /**
+     * Removes the Map entry for the given userHandle key.
+     *
+     * @param userHandle The userHandle key to be removed from the map.
+     * @return the associated ResourceHandle that is removed from the map or null if no association was found. A null return
+     * can also indicate that the map previously associated null with userHandle.
+     */
+    public synchronized ResourceHandle removeAssociation(Object userHandle) {
+        return associatedHandles.remove(userHandle);
     }
 
-    public Map getAssociatedHandles() {
-        return associatedHandles;
-    }
+    /**
+     * Returns a clone of the whole associatedHandles map and clears the map in the listener.
+     * @return The clone of the associatedHandles map.
+     */
+    public synchronized Map<Object, ResourceHandle> getAssociatedHandlesAndClearMap() {
+        // Clone the associatedHandles, because we will clear the list in this method
+        IdentityHashMap<Object, ResourceHandle> result = (IdentityHashMap<Object, ResourceHandle>) associatedHandles.clone();
 
+        // Clear the associatedHandles
+        associatedHandles.clear();
+
+        return result;
+    }
 }

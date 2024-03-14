@@ -34,10 +34,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import static org.glassfish.api.event.EventTypes.PREPARE_SHUTDOWN;
 import static org.glassfish.api.event.EventTypes.PREPARE_SHUTDOWN_NAME;
 import static org.glassfish.api.event.EventTypes.SERVER_READY;
+import static org.glassfish.api.event.EventTypes.SERVER_READY_NAME;
 import static org.glassfish.api.event.EventTypes.SERVER_SHUTDOWN;
+import static org.glassfish.api.event.EventTypes.SERVER_SHUTDOWN_NAME;
 import static org.glassfish.api.event.EventTypes.SERVER_STARTUP;
+import static org.glassfish.api.event.EventTypes.SERVER_STARTUP_NAME;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -73,6 +77,85 @@ public class EventFilteringTest {
                 () -> assertThat(eventTypes, hasSize(1)),
                 () -> assertSame(eventTypes.get(0), PREPARE_SHUTDOWN)
         );
+
+        events.unregister(listener);
+    }
+
+    @Test
+    public void repeatableRestrictedEventListenerTest() {
+        Events events = serviceLocator.getService(Events.class);
+
+        List<EventTypes<?>> eventTypes = new ArrayList<>();
+
+        // Do not replace with lambda because annotations will be lost
+        EventListener listener = new EventListener() {
+
+            @Override
+            public void event(@RestrictTo(SERVER_STARTUP_NAME) @RestrictTo(SERVER_SHUTDOWN_NAME) Event<?> event) {
+                eventTypes.add(event.type());
+            }
+        };
+
+        events.register(listener);
+
+        events.send(new Event<>(SERVER_STARTUP), false);
+        events.send(new Event<>(SERVER_READY), false);
+        events.send(new Event<>(PREPARE_SHUTDOWN), false);
+        events.send(new Event<>(SERVER_SHUTDOWN), false);
+
+        assertAll(
+                () -> assertThat(eventTypes, hasSize(2)),
+                () -> assertThat(eventTypes, contains(SERVER_STARTUP, SERVER_SHUTDOWN))
+        );
+
+        events.unregister(listener);
+    }
+
+    @Test
+    public void nonMatchingEventListenerTest() {
+        Events events = serviceLocator.getService(Events.class);
+
+        List<EventTypes<?>> eventTypes = new ArrayList<>();
+
+        // Do not replace with lambda because annotation will be lost
+        EventListener listener = new EventListener() {
+
+            @Override
+            public void event(@RestrictTo(SERVER_STARTUP_NAME) Event<?> event) {
+                eventTypes.add(event.type());
+            }
+        };
+
+        events.register(listener);
+
+        events.send(new Event<>(SERVER_SHUTDOWN), false);
+
+        assertThat(eventTypes, empty());
+
+        events.unregister(listener);
+    }
+
+    @Test
+    public void nonMatchingRepeatableEventListenerTest() {
+        Events events = serviceLocator.getService(Events.class);
+
+        List<EventTypes<?>> eventTypes = new ArrayList<>();
+
+        // Do not replace with lambda because annotations will be lost
+        EventListener listener = new EventListener() {
+
+            @Override
+            public void event(@RestrictTo(SERVER_READY_NAME) @RestrictTo(PREPARE_SHUTDOWN_NAME) Event<?> event) {
+                eventTypes.add(event.type());
+            }
+        };
+
+        events.register(listener);
+
+        events.send(new Event<>(SERVER_STARTUP), false);
+        events.send(new Event<>(SERVER_SHUTDOWN), false);
+
+        assertThat(eventTypes, empty());
 
         events.unregister(listener);
     }

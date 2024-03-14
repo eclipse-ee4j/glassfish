@@ -28,9 +28,12 @@ import jakarta.persistence.Cache;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceUnitTransactionType;
 import jakarta.persistence.PersistenceUnitUtil;
 import jakarta.persistence.Query;
+import jakarta.persistence.SchemaManager;
 import jakarta.persistence.SynchronizationType;
+import jakarta.persistence.TypedQueryReference;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.metamodel.Metamodel;
 
@@ -39,6 +42,8 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.logging.Logger;
 
 import org.glassfish.api.invocation.ComponentInvocation;
@@ -159,6 +164,41 @@ public class EntityManagerFactoryWrapper
     @Override
     public <T> void addNamedEntityGraph(String graphName, EntityGraph<T> entityGraph) {
         getDelegate().addNamedEntityGraph(graphName, entityGraph);
+    }
+
+    @Override
+    public <R> R callInTransaction(Function<EntityManager, R> work) {
+        return getDelegate().callInTransaction(work);
+    }
+
+    @Override
+    public String getName() {
+        return getDelegate().getName();
+    }
+
+    @Override
+    public <E> Map<String, EntityGraph<? extends E>> getNamedEntityGraphs(Class<E> entityType) {
+        return getDelegate().getNamedEntityGraphs(entityType);
+    }
+
+    @Override
+    public <R> Map<String, TypedQueryReference<R>> getNamedQueries(Class<R> resultType) {
+        return getDelegate().getNamedQueries(resultType);
+    }
+
+    @Override
+    public SchemaManager getSchemaManager() {
+        return getDelegate().getSchemaManager();
+    }
+
+    @Override
+    public PersistenceUnitTransactionType getTransactionType() {
+        return getDelegate().getTransactionType();
+    }
+
+    @Override
+    public void runInTransaction(Consumer<EntityManager> work) {
+        getDelegate().runInTransaction(work);
     }
 
 

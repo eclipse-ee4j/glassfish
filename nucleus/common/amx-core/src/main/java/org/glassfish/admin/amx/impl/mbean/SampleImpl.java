@@ -22,24 +22,17 @@ import javax.management.AttributeNotFoundException;
 import javax.management.MBeanInfo;
 import javax.management.ObjectName;
 import javax.management.openmbean.*;
-import javax.management.remote.JMXServiceURL;
-
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.HashSet;
-
 import org.glassfish.admin.amx.base.Sample;
 import org.glassfish.admin.amx.util.jmx.JMXUtil;
 import org.glassfish.admin.amx.util.jmx.OpenMBeanUtil;
 import org.glassfish.admin.amx.util.MapUtil;
 import org.glassfish.admin.amx.util.ListUtil;
 import org.glassfish.admin.amx.util.SetUtil;
-import org.glassfish.admin.amx.util.StringUtil;
-
 import org.glassfish.admin.amx.util.CollectionUtil;
 import org.glassfish.admin.amx.core.Util;
 

@@ -20,7 +20,6 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.security.Principal;
 import java.security.PrivilegedAction;
 import java.util.*;
 import java.util.logging.Level;

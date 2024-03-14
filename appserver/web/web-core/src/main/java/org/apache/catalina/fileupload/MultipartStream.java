@@ -23,7 +23,6 @@ package org.apache.catalina.fileupload;
 import java.io.ByteArrayOutputStream;
 import java.io.*;
 
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

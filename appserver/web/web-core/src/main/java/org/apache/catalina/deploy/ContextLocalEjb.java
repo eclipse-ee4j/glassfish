@@ -17,8 +17,6 @@
 
 package org.apache.catalina.deploy;
 
-import java.io.Serializable;
-
 
 /**
  * Representation of a local EJB resource reference for a web application, as

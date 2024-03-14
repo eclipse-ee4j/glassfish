@@ -20,7 +20,6 @@ import com.sun.enterprise.config.modularity.ConfigModularityUtils;
 import com.sun.enterprise.config.modularity.RankedConfigBeanProxy;
 import com.sun.enterprise.config.modularity.annotation.HasNoDefaultConfiguration;
 import com.sun.enterprise.config.modularity.customization.ConfigBeanDefaultValue;
-import com.sun.enterprise.config.util.ConfigApiLoggerInfo;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 
 import org.glassfish.api.admin.ServerEnvironment;
@@ -39,7 +38,6 @@ import jakarta.inject.Inject;
 
 import java.beans.PropertyVetoException;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Containing shared functionalists between different derived classes like ConfigSnippetLoader and so on. Shared

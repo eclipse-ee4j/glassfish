@@ -17,21 +17,17 @@
 
 package org.apache.catalina.connector;
 
+import jakarta.servlet.ReadListener;
+import jakarta.servlet.http.WebConnection;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.channels.InterruptedByTimeoutException;
-import java.security.PrivilegedAction;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import jakarta.servlet.ReadListener;
-import jakarta.servlet.http.WebConnection;
-
 import org.apache.catalina.ContainerEvent;
 import org.apache.catalina.Context;
 import org.apache.catalina.LogFacade;
-import org.apache.catalina.Globals;
 import org.glassfish.grizzly.ReadHandler;
 import org.glassfish.grizzly.http.server.Request;
 import org.glassfish.grizzly.http.util.ByteChunk.ByteInputChannel;

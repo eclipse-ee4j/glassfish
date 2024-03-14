@@ -26,7 +26,6 @@ import java.util.*;
 import java.beans.PropertyVetoException;
 
 import org.netbeans.modules.dbschema.DBMemberElement;
-import org.netbeans.modules.dbschema.TableElement;
 import org.netbeans.modules.dbschema.util.NameUtil;
 
 import com.sun.jdo.api.persistence.model.*;

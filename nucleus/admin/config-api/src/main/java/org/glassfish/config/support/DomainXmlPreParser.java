@@ -20,7 +20,6 @@ import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.Utility;
 import java.io.*;
 import java.io.InputStream;
-import java.net.*;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.*;

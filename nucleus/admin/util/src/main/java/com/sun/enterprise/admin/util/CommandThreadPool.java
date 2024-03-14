@@ -31,8 +31,6 @@ import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.runlevel.RunLevel;
 
-import jakarta.inject.Singleton;
-
 import jakarta.inject.Inject;
 import java.util.List;
 import java.util.concurrent.*;

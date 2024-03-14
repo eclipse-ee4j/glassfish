@@ -30,9 +30,6 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * create the default ejb-container configbean when non exists and an injection point requires it.

@@ -140,10 +140,6 @@
                                     destfile="${glassfish.modules}/hibernate-validator-cdi.jar"
                                 />
                                 <jarupdate
-                                    basedir="${patches}/jakarta.enterprise.concurrent" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/jakarta.enterprise.concurrent.jar"
-                                />
-                                <jarupdate
                                     basedir="${patches}/tyrus-client" includes="META-INF/MANIFEST.MF"
                                     destfile="${glassfish.modules}/tyrus-client.jar"
                                 />

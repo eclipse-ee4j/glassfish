@@ -40,6 +40,24 @@ public class StoreProcedureQueryWrapper extends QueryWrapper<StoredProcedureQuer
     }
 
     @Override
+    public StoredProcedureQuery setCacheStoreMode(CacheStoreMode cacheStoreMode) {
+        super.setCacheStoreMode(cacheStoreMode);
+        return this;
+    }
+
+    @Override
+    public StoredProcedureQuery setCacheRetrieveMode(CacheRetrieveMode cacheRetrieveMode) {
+        super.setCacheRetrieveMode(cacheRetrieveMode);
+        return this;
+    }
+
+    @Override
+    public StoredProcedureQuery setTimeout(Integer timeout) {
+        super.setTimeout(timeout);
+        return this;
+    }
+
+    @Override
     public StoredProcedureQuery setHint(String hintName, Object value) {
         super.setHint(hintName, value);
         return this;

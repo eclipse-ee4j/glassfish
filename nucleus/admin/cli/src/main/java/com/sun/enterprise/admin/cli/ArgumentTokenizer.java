@@ -16,7 +16,6 @@
 
 package com.sun.enterprise.admin.cli;
 
-import java.io.*;
 import java.util.*;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 

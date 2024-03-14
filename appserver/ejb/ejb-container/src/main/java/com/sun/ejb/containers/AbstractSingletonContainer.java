@@ -19,8 +19,6 @@ package com.sun.ejb.containers;
 
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;

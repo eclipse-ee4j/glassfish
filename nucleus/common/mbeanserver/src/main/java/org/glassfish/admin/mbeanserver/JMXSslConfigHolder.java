@@ -17,18 +17,9 @@
 package org.glassfish.admin.mbeanserver;
 
 import org.glassfish.grizzly.config.dom.Ssl;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLException;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.X509KeyManager;
 import org.glassfish.grizzly.config.SSLConfigurator;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.Globals;
 
 /**
  * This class extends the SSLConfigHolder for the sole purpose of

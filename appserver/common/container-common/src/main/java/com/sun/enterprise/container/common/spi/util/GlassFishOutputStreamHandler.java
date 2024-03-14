@@ -17,8 +17,6 @@
 package com.sun.enterprise.container.common.spi.util;
 
 import java.io.IOException;
-import java.io.Serializable;
-
 import org.jvnet.hk2.annotations.Contract;
 
 /**

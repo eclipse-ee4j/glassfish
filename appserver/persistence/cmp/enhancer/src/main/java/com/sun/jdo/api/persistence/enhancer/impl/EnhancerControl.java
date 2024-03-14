@@ -16,24 +16,15 @@
 
 package com.sun.jdo.api.persistence.enhancer.impl;
 
-import java.util.Map;
-import java.util.Collection;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.ArrayList;
-import java.util.HashMap;
-
 //@olsen: added general support
 import com.sun.jdo.api.persistence.enhancer.util.Support;
-
-import com.sun.jdo.api.persistence.enhancer.util.ClassFileSource;
 
 //@olsen: disabled feature
 /*
 import com.sun.jdo.api.persistence.enhancer.classfile.ClassFile;
 */
-
-import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaData;
 
 //@olsen: disabled feature
 /*

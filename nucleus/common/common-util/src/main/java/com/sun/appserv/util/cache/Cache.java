@@ -16,7 +16,6 @@
 
 package com.sun.appserv.util.cache;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Enumeration;
 import java.util.Map;

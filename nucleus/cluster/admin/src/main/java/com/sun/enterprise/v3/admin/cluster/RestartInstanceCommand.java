@@ -24,7 +24,6 @@ import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.util.ObjectAnalyzer;
 import com.sun.enterprise.util.StringUtils;
-import java.util.Map;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import org.glassfish.api.*;

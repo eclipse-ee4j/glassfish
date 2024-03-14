@@ -33,8 +33,6 @@ import java.util.zip.GZIPOutputStream;
 import com.sun.enterprise.container.common.spi.util.JavaEEIOUtils;
 import org.apache.catalina.*;
 import org.apache.catalina.session.StoreBase;
-import com.sun.enterprise.web.ServerConfigLookup;
-
 import org.glassfish.web.ha.LogFacade;
 
 /**

@@ -24,7 +24,7 @@ package com.sun.ejte.ccl.reporter;
 */
 
 
-import java.util.Hashtable;
+
 
 public class TestCase
 {

@@ -74,7 +74,6 @@ import org.glassfish.admin.amx.j2ee.StatefulSessionBean;
 import org.glassfish.admin.amx.j2ee.StatelessSessionBean;
 import org.glassfish.admin.amx.j2ee.WebModule;
 import org.glassfish.admin.amx.util.ClassUtil;
-import org.glassfish.admin.amx.util.MapUtil;
 import org.glassfish.admin.amx.util.jmx.JMXUtil;
 import org.glassfish.api.admin.config.Named;
 import org.glassfish.internal.data.ApplicationInfo;

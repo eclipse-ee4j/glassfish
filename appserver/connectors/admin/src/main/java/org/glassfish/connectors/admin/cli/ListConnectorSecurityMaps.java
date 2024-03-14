@@ -41,7 +41,6 @@ import java.util.logging.Logger;
 import jakarta.inject.Inject;
 import org.glassfish.internal.api.RelativePathResolver;
 import org.jvnet.hk2.config.ConfigBean;
-import org.jvnet.hk2.config.Dom;
 
 /**
  * List Connector Security Maps

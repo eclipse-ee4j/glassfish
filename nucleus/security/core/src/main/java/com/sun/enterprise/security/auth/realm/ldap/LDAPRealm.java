@@ -27,7 +27,6 @@ import static javax.naming.Context.SECURITY_CREDENTIALS;
 import static javax.naming.Context.SECURITY_PRINCIPAL;
 import static javax.naming.directory.SearchControls.SUBTREE_SCOPE;
 
-import com.sun.enterprise.security.auth.realm.GlassFishUserStore;
 import com.sun.enterprise.security.auth.realm.Realm;
 import com.sun.enterprise.security.auth.realm.exceptions.BadRealmException;
 import com.sun.enterprise.security.auth.realm.exceptions.InvalidOperationException;

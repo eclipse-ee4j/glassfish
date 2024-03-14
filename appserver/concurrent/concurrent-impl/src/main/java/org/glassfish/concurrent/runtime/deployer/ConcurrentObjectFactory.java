@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,10 +32,10 @@ import org.glassfish.concurrent.runtime.deployer.cfg.ContextServiceCfg;
 import org.glassfish.concurrent.runtime.deployer.cfg.ManagedExecutorServiceCfg;
 import org.glassfish.concurrent.runtime.deployer.cfg.ManagedScheduledExecutorServiceCfg;
 import org.glassfish.concurrent.runtime.deployer.cfg.ManagedThreadFactoryCfg;
-import org.glassfish.enterprise.concurrent.ContextServiceImpl;
-import org.glassfish.enterprise.concurrent.ManagedExecutorServiceAdapter;
-import org.glassfish.enterprise.concurrent.ManagedScheduledExecutorServiceAdapter;
-import org.glassfish.enterprise.concurrent.ManagedThreadFactoryImpl;
+import org.glassfish.concurro.ContextServiceImpl;
+import org.glassfish.concurro.ManagedExecutorServiceAdapter;
+import org.glassfish.concurro.ManagedScheduledExecutorServiceAdapter;
+import org.glassfish.concurro.ManagedThreadFactoryImpl;
 
 import static org.glassfish.concurrent.runtime.ConcurrentRuntime.getRuntime;
 

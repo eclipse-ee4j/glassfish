@@ -17,7 +17,6 @@
 package org.shoal.ha.store;
 
 import org.glassfish.ha.common.HACookieManager;
-import org.jvnet.hk2.annotations.Service;
 import org.shoal.ha.mapper.DefaultKeyMapper;
 
 import org.glassfish.ha.common.GlassFishHAReplicaPredictor;

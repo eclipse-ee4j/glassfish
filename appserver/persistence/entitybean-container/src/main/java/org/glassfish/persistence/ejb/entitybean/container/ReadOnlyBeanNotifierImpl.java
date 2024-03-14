@@ -17,11 +17,6 @@
 package org.glassfish.persistence.ejb.entitybean.container;
 
 
-import javax.rmi.PortableRemoteObject;
-
-import java.util.logging.*;
-import com.sun.logging.*;
-
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.persistence.ejb.entitybean.container.spi.ReadOnlyEJBHome;
 

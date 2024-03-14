@@ -17,8 +17,6 @@
 
 package org.jvnet.hk2.config;
 
-import org.jvnet.hk2.annotations.Service;
-
 /** Represents a Java primitive (and its wrapper) data type. Not all Java primitives
  *  are relevant from a configuration standpoint.
  * @see DataType

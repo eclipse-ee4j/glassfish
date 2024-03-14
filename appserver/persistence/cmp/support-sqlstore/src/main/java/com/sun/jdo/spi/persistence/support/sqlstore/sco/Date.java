@@ -20,7 +20,6 @@ import java.io.ObjectStreamException;
 
 import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceCapable;
 import com.sun.jdo.spi.persistence.support.sqlstore.StateManager;
-import com.sun.jdo.spi.persistence.support.sqlstore.SCO;
 import com.sun.jdo.spi.persistence.support.sqlstore.SCODate;
 import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceManager;
 

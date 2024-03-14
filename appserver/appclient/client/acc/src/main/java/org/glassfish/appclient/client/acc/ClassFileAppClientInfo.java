@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 import org.glassfish.apf.AnnotationProcessorException;
-import org.glassfish.api.deployment.archive.ReadableArchive;
 
 /**
  * Represents an app client specified by a .class file on the command line.

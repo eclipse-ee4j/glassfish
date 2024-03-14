@@ -19,25 +19,15 @@ package org.glassfish.appclient.client.acc;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 import com.sun.enterprise.deployment.archivist.Archivist;
-import com.sun.enterprise.deployment.archivist.ApplicationArchivist;
-import org.glassfish.deployment.common.ModuleDescriptor;
 import com.sun.enterprise.util.io.FileUtils;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.jar.Attributes;
-import java.util.jar.JarFile;
-import java.util.jar.Manifest;
 import java.util.logging.Logger;
 import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.deployment.common.ModuleExploder;
 
 /**
  * Represents an app client that is nested inside an enterprise app.

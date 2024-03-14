@@ -35,7 +35,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Locale;
-import org.glassfish.grizzly.http.util.Constants;
 import org.glassfish.grizzly.utils.Charsets;
 
 /**

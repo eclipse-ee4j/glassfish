@@ -24,7 +24,6 @@ import org.glassfish.hk2.api.ServiceLocator;
 
 import java.net.InetAddress;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Base class for our implementation of Adapter proxies. To avoid early loading of adapter implentations, use a

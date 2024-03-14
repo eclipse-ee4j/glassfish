@@ -29,7 +29,6 @@ import jakarta.resource.spi.DissociatableManagedConnection;
 import jakarta.resource.spi.LazyEnlistableManagedConnection;
 import jakarta.transaction.Transaction;
 
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
 import javax.security.auth.Subject;

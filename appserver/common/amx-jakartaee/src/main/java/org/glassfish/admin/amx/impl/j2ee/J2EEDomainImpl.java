@@ -16,7 +16,6 @@
 
 package org.glassfish.admin.amx.impl.j2ee;
 
-import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
 
 import org.glassfish.admin.amx.core.Util;

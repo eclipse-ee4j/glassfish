@@ -16,14 +16,9 @@
 
 package org.glassfish.persistence.ejb.entitybean.container.stats;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.glassfish.persistence.ejb.entitybean.container.EntityContainer;
 
 import com.sun.ejb.monitoring.stats.EjbMonitoringStatsProvider;
-import org.glassfish.external.probe.provider.StatsProviderManager;
-import org.glassfish.external.probe.provider.annotations.*;
 import org.glassfish.external.statistics.*;
 import org.glassfish.external.statistics.impl.*;
 import org.glassfish.gmbal.*;

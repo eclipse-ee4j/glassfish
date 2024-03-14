@@ -16,7 +16,6 @@
 
 package com.sun.enterprise.universal.glassfish;
 
-import com.sun.enterprise.universal.collections.CollectionUtils;
 import java.util.*;
 
 /**

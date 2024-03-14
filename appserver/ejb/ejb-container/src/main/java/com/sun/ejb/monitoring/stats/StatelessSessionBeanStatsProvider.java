@@ -16,13 +16,8 @@
 
 package com.sun.ejb.monitoring.stats;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.sun.ejb.containers.StatelessSessionContainer;
 
-import org.glassfish.external.probe.provider.StatsProviderManager;
-import org.glassfish.external.probe.provider.annotations.*;
 import org.glassfish.external.statistics.*;
 import org.glassfish.external.statistics.impl.*;
 import org.glassfish.gmbal.*;

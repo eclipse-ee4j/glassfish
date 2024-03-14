@@ -25,7 +25,6 @@ import java.util.HashSet;
 
 import javax.management.MBeanInfo;
 import javax.management.ObjectName;
-import javax.management.InstanceNotFoundException;
 import org.glassfish.admin.amx.base.Pathnames;
 import org.glassfish.admin.amx.base.Tools;
 import org.glassfish.admin.amx.core.AMXValidator;

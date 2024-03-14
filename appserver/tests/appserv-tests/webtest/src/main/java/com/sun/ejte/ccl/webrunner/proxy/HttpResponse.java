@@ -16,8 +16,6 @@
 
 package com.sun.ejte.ccl.webrunner.proxy;
 
-import java.io.*;
-
 /*
  *
 * This class is a wrapper around everything associated with a reply from an HTTP server.This is used by

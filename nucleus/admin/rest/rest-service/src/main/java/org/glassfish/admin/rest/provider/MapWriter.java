@@ -16,9 +16,6 @@
 
 package org.glassfish.admin.rest.provider;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.logging.Level;
 import jakarta.ws.rs.Produces;

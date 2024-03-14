@@ -18,12 +18,6 @@ package com.sun.ejb.containers.util.cache;
 
 import com.sun.ejb.containers.StatefulSessionContainer;
 
-import java.util.*;
-import java.util.logging.*;
-import com.sun.logging.*;
-
-import java.util.TimerTask;
-
 public class UnBoundedSessionCache
     extends LruSessionCache
 {

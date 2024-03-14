@@ -17,18 +17,8 @@
 package test;
 
 import java.io.*;
-import java.net.*;
-import java.util.*;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
-
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import javax.naming.*;
-import javax.sql.*;
-import java.sql.*;
 
 public class ServletTest extends HttpServlet{
 

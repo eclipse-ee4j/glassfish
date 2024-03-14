@@ -16,7 +16,6 @@
 
 package com.sun.enterprise.admin.servermgmt;
 
-import java.util.Map;
 import java.util.Properties;
 
 /**

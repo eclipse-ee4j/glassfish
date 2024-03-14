@@ -50,7 +50,6 @@ import java.util.logging.Logger;
 import javax.management.ObjectName;
 import org.apache.catalina.Container;
 import org.apache.catalina.Engine;
-import org.apache.catalina.Globals;
 import org.apache.catalina.LogFacade;
 import org.apache.catalina.Manager;
 import org.apache.catalina.Session;

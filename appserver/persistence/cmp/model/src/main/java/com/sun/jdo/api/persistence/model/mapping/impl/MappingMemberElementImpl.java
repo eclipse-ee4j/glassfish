@@ -24,8 +24,6 @@ package com.sun.jdo.api.persistence.model.mapping.impl;
 
 import java.beans.PropertyVetoException;
 
-import com.sun.jdo.api.persistence.model.ModelException;
-import com.sun.jdo.api.persistence.model.ModelVetoException;
 import com.sun.jdo.api.persistence.model.mapping.*;
 
 /**

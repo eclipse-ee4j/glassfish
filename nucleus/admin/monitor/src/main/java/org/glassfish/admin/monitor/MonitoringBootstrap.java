@@ -64,7 +64,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import org.glassfish.external.amx.AMXGlassfish;

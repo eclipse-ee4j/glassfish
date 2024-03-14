@@ -36,7 +36,6 @@ import jakarta.servlet.annotation.WebListener;
 import jakarta.servlet.http.HttpSessionAttributeListener;
 import jakarta.servlet.http.HttpSessionIdListener;
 import jakarta.servlet.http.HttpSessionListener;
-import java.lang.annotation.Annotation;
 import java.util.logging.Level;
 
 /**

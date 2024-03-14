@@ -40,7 +40,6 @@ import org.omg.CosTransactions.*;
 
 import com.sun.jts.codegen.otsidl.*;
 
-import com.sun.jts.trace.*;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import com.sun.logging.LogDomains;

@@ -32,8 +32,6 @@ package com.sun.jts.CosTransactions;
 
 // Import required classes.
 
-import java.util.*;
-
 import org.omg.CORBA.*;
 import org.omg.PortableServer.*;
 import org.omg.CosTransactions.*;

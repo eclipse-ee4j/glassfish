@@ -18,8 +18,6 @@
 package org.apache.catalina.servlets;
 
 
-import org.apache.catalina.util.StringManager;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
 

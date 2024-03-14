@@ -1,5 +1,29 @@
 # Eclipse GlassFish 7.x Downloads
 
+### GlassFish 7.0.13
+
+GlassFish 7.0.13 is a final release, containing final Jakarta EE 10 APIs. It compiles and runs on JDK 11 to JDK 21. MicroProfile support requires JDK 17 or higher.
+
+GlassFish 7.0.13 compiles and passes all internal tests using OpenJDK 21. Several Jakarta EE 10 TCKs passed on JDK 21 as well. The Jakarta EE 10 TCK as a whole is not JDK 21 compatible and it's not possible to run all the Jakarta EE TCK tests. 
+
+In the release for this month we replaced many synchronized blocks by reentrant locks (to accommodate JDK 21 virtual threads). 
+
+We also looked at SSO between clusters, and fixed a long standing bug there. 
+
+A long running investigation into potential resource leaks finally came to a conclusion, and resulted in many fixes throughout the code base. The admin console also saw various improvements, specifically with respect to loading.
+
+Download:
+
+* [Eclipse GlassFish 7.0.13, Jakarta EE Platform, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-7.0.13.zip)
+* [Eclipse GlassFish 7.0.13, Jakarta EE Web Profile, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-7.0.13.zip)
+* [Eclipse GlassFish Embedded 7.0.13, Jakarta EE Full Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-all/7.0.13/jar)
+* [Eclipse GlassFish Embedded 7.0.13, Jakarta EE Web Profile, 10](https://search.maven.org/artifact/org.glassfish.main.extras/glassfish-embedded-web/7.0.13/jar)
+
+More details:
+
+* [Eclipse GlassFish 7.0.13 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.13)
+* [Jakarte EE Platform Specification Project](https://jakartaee.github.io/jakartaee-platform/) for more info about Jakarta EE 10
+
 
 ### GlassFish 7.0.12
 

@@ -17,7 +17,6 @@
 
 package org.jvnet.hk2.config;
 
-import java.beans.PropertyChangeListener;
 import java.beans.VetoableChangeListener;
 
 /**

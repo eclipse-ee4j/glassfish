@@ -38,7 +38,6 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 
 import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.logging.LogDomains;
 import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.*;
 
 /**

@@ -20,7 +20,6 @@ import com.sun.enterprise.admin.util.LineTokenReplacer;
 import com.sun.enterprise.admin.util.TokenValue;
 import com.sun.enterprise.admin.util.TokenValueSet;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.util.StringTokenizer;

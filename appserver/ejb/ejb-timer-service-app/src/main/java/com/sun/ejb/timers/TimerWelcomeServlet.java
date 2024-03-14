@@ -22,7 +22,6 @@
 package com.sun.ejb.timers;
 
 import java.io.*;
-import java.net.*;
 import java.util.Set;
 
 import jakarta.servlet.*;

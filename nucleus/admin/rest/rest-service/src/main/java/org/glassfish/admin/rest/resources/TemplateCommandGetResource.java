@@ -23,8 +23,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.glassfish.admin.rest.Constants;
-import org.glassfish.admin.rest.results.ActionReportResult;
-
 import org.glassfish.jersey.media.sse.SseFeature;
 
 /**

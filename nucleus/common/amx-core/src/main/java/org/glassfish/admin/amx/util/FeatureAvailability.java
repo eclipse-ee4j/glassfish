@@ -16,7 +16,6 @@
 
 package org.glassfish.admin.amx.util;
 
-import javax.management.MBeanServer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;

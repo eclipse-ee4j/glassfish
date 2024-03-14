@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,8 +18,8 @@
 package org.glassfish.concurrent.runtime;
 
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
-import org.glassfish.enterprise.concurrent.spi.TransactionHandle;
-import org.glassfish.enterprise.concurrent.spi.TransactionSetupProvider;
+import org.glassfish.concurro.spi.TransactionHandle;
+import org.glassfish.concurro.spi.TransactionSetupProvider;
 
 import jakarta.enterprise.concurrent.ManagedTask;
 import jakarta.transaction.InvalidTransactionException;

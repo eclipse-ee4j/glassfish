@@ -17,7 +17,6 @@
 package com.sun.jts.CosTransactions;
 
 import java.util.*;
-import org.omg.CosTransactions.*;
 
 /**
  * AdminUtil - Utility class for monitoring and administering jts.

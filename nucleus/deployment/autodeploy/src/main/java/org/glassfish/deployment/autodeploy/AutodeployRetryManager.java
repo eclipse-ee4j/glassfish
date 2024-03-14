@@ -25,9 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.ActionReport;
-import org.glassfish.api.Async;
 import org.glassfish.deployment.autodeploy.AutoDeployer.AutodeploymentStatus;
-import org.glassfish.deployment.common.DeploymentUtils;
 import jakarta.inject.Inject;
 
 import org.jvnet.hk2.annotations.Service;

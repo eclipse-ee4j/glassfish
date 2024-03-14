@@ -23,7 +23,6 @@ import java.util.Iterator;
 import java.beans.PropertyVetoException;
 
 import org.jvnet.hk2.annotations.*;
-import org.jvnet.hk2.component.*;
 import org.jvnet.hk2.config.*;
 import org.glassfish.api.Param;
 import org.glassfish.api.I18n;

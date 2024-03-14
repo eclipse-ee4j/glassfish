@@ -16,7 +16,6 @@
 
 package com.sun.ejb.containers;
 
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.security.SecurityManager;
 import jakarta.inject.Inject;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;

@@ -32,7 +32,6 @@ import org.glassfish.api.admin.CommandLock;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
-import org.glassfish.internal.api.Target;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 

@@ -18,7 +18,6 @@ package com.sun.ejte.ccl.webrunner.proxy;
 
 import java.net.*;
 import java.io.*;
-import java.text.*;
 import java.util.*;
 
 /**

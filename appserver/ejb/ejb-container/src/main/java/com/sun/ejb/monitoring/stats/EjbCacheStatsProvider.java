@@ -16,7 +16,6 @@
 
 package com.sun.ejb.monitoring.stats;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.sun.ejb.containers.EjbContainerUtilImpl;

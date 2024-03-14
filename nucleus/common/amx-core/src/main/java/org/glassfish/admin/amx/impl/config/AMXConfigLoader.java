@@ -35,7 +35,6 @@ import org.glassfish.admin.amx.impl.util.InjectedValues;
 import org.glassfish.admin.amx.impl.util.ObjectNameBuilder;
 import org.glassfish.admin.amx.impl.util.SingletonEnforcer;
 import org.glassfish.admin.amx.util.AMXLoggerInfo;
-import org.glassfish.admin.amx.util.ExceptionUtil;
 import org.glassfish.admin.amx.util.FeatureAvailability;
 import org.glassfish.admin.amx.util.MapUtil;
 import org.glassfish.admin.amx.util.TypeCast;

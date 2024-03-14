@@ -20,9 +20,6 @@ import org.jvnet.hk2.annotations.Contract;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.DeploymentContext;
 
-import java.net.URL;
-import java.util.List;
-
 @Contract
 public interface ApplicationInfoProvider {
 

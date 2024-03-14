@@ -22,7 +22,6 @@ import java.util.ResourceBundle;
 
 import org.netbeans.modules.schema2beans.BaseBean;
 import org.netbeans.modules.schema2beans.GraphManager;
-import org.netbeans.modules.schema2beans.BaseProperty;
 
 import com.sun.jdo.api.persistence.mapping.ejb.beans.*;
 

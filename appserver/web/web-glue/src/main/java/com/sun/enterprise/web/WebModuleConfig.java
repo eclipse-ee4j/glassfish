@@ -17,7 +17,6 @@
 package com.sun.enterprise.web;
 
 import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.util.io.FileUtils;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;

@@ -18,15 +18,12 @@ package org.glassfish.webservices;
 
 import java.util.Set;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.ws.handler.MessageContext.Scope;
-
 import com.sun.xml.ws.api.message.Messages;
 import com.sun.xml.ws.api.message.Message;
 import com.sun.xml.ws.api.message.Packet;

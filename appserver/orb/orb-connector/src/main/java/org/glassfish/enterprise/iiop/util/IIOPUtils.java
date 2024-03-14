@@ -23,7 +23,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.Configs;
 import org.glassfish.orb.admin.config.IiopListener;
 import org.glassfish.orb.admin.config.IiopService;
 import com.sun.enterprise.config.serverbeans.ServerRef;

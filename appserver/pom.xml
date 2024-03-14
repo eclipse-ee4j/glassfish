@@ -81,25 +81,31 @@
         <!-- Jakarta API Versions -->
 
         <!-- Jakarta Faces -->
-        <jakarta.faces-api.version>4.1.0-M1</jakarta.faces-api.version>
-        <mojarra.version>4.1.0-M1</mojarra.version>
+        <jakarta.faces-api.version>4.1.0-M2</jakarta.faces-api.version>
+        <mojarra.version>4.1.0-M2</mojarra.version>
 
         <!-- Jakarta WebSocket -->
         <jakarta.websocket-api.version>2.2.0-M1</jakarta.websocket-api.version>
-        <tyrus.version>2.1.5</tyrus.version>
+        <tyrus.version>2.2.0-M1</tyrus.version>
 
         <!-- Jakarta Concurrency -->
-        <jakarta.concurrent-api.version>3.1.0-M1</jakarta.concurrent-api.version>
-        <concurro.version>3.1.0-M1</concurro.version>
+        <jakarta.concurrent-api.version>3.1.0-M2</jakarta.concurrent-api.version>
+        <concurro.version>3.1.0-M3</concurro.version>
 
         <!-- Jakarta Interceptors -->
-        <jakarta.interceptor-api.version>2.2.0-M1</jakarta.interceptor-api.version>
+        <jakarta.interceptor-api.version>2.2.0</jakarta.interceptor-api.version>
 
         <!-- Jakarta Security + Authentication/Authorization -->
+        <!-- APIs -->
+        <jakarta.security-api.version>4.0.0-M1</jakarta.security-api.version>
+        <jakarta.authorization-api.version>3.0.0-M1</jakarta.authorization-api.version>
+        <jakarta.authentication-api.version>3.1.0-M1</jakarta.authentication-api.version>
+        <!-- Implementations -->
         <soteria.version>4.0.0-M1</soteria.version>
         <exousia.version>3.0.0-M1.1</exousia.version>
         <epicyro.version>3.1.0-M1</epicyro.version>
-        <nimbus.version>9.37</nimbus.version>
+        <!-- Dependencies -->
+        <nimbus.version>9.38-rc3</nimbus.version>
         <jcip.version>1.0.2</jcip.version>
 
         <!-- Jakarta Messaging -->
@@ -107,8 +113,8 @@
         <openmq.version>6.4.0</openmq.version>
 
         <!-- Jakarta Persistence -->
-        <jakarta.persistence-api.version>3.1.0</jakarta.persistence-api.version>
-        <eclipselink.version>4.0.2</eclipselink.version>
+        <jakarta.persistence-api.version>3.2.0-M2</jakarta.persistence-api.version>
+        <eclipselink.version>5.0.0-B01</eclipselink.version>
         <eclipselink.asm.version>9.6.0</eclipselink.asm.version>
 
         <!-- Jakarta Transactions -->
@@ -126,25 +132,25 @@
 
         <!-- Jakarta JSON -->
         <jakarta.jsonp-api.version>2.1.3</jakarta.jsonp-api.version>
-        <parsson.version>1.1.5</parsson.version>
-        <parsson-media.version>1.1.5</parsson-media.version>
-        <jakarta.json.bind-api.version>3.0.0</jakarta.json.bind-api.version>
+        <parsson.version>1.1.6</parsson.version>
+        <parsson-media.version>1.1.6</parsson-media.version>
+        <jakarta.json.bind-api.version>3.0.1</jakarta.json.bind-api.version>
         <yasson.version>3.0.3</yasson.version>
 
         <!-- Jakarta Pages and Jakarta Standard Tag Library -->
-        <jakarta.pages-api.version>4.0.0-M1</jakarta.pages-api.version>
+        <jakarta.pages-api.version>4.0.0-M2</jakarta.pages-api.version>
         <jstl-api.version>3.0.0</jstl-api.version>
         <wasp.version>4.0.0-M1</wasp.version>
 
         <!-- Used for Jakarta SOAP (XML Web Services) -->
         <xmlsec.version>4.0.2</xmlsec.version>
-        <woodstox.version>6.6.0</woodstox.version>
+        <woodstox.version>6.6.1</woodstox.version>
         <stax2-api.version>4.2.2</stax2-api.version>
 
         <!-- Jakarta CDI -->
-        <jakarta.cdi-api.version>4.1.0-M1</jakarta.cdi-api.version>
-        <weld.version>6.0.0.Alpha1</weld.version>
-        <jboss.classfilewriter.version>1.3.0.Final</jboss.classfilewriter.version>
+        <jakarta.cdi-api.version>4.1.0</jakarta.cdi-api.version>
+        <weld.version>6.0.0.Beta1</weld.version>
+        <jboss.classfilewriter.version>1.3.1.Final</jboss.classfilewriter.version>
 
         <!-- Jakarta MVC -->
         <jakarta.mvc-api.version>2.1.0</jakarta.mvc-api.version>
@@ -152,7 +158,7 @@
 
         <!-- MicroProfile Config -->
         <microprofile.config-api.version>3.1</microprofile.config-api.version>
-        <helidon-config.version>4.0.2</helidon-config.version>
+        <helidon-config.version>4.0.5</helidon-config.version>
 
         <!-- MicroProfile JWT / JWT Authentication Mechanism for Jakarta Security -->
         <microprofile-jwt-auth-api.version>2.1</microprofile-jwt-auth-api.version>
@@ -228,8 +234,8 @@
                 <version>${jakarta.concurrent-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>jakarta.enterprise.concurrent</artifactId>
+                <groupId>org.glassfish.concurro</groupId>
+                <artifactId>concurro</artifactId>
                 <version>${concurro.version}</version>
             </dependency>
             <dependency>
@@ -251,6 +257,27 @@
             </dependency>
 
             <!-- Jakarta EE Security + Authentication/Authorization -->
+            <dependency>
+                <groupId>jakarta.security.enterprise</groupId>
+                <artifactId>jakarta.security.enterprise-api</artifactId>
+                <version>${jakarta.security-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.authentication</groupId>
+                <artifactId>jakarta.authentication-api</artifactId>
+                <version>${jakarta.authentication-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.authorization</groupId>
+                <artifactId>jakarta.authorization-api</artifactId>
+                <version>${jakarta.authorization-api.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>jakarta.servlet</groupId>
+                        <artifactId>jakarta.servlet-api</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
             <dependency>
                 <groupId>org.glassfish.soteria</groupId>
                 <artifactId>jakarta.security.enterprise</artifactId>
@@ -522,8 +549,6 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-            
-            
             <dependency>
                 <groupId>org.jboss.weld</groupId>
                 <artifactId>weld-osgi-bundle</artifactId>
@@ -744,7 +769,7 @@
                 <configuration>
                     <dir>${stage.dir}/${install.dir.name}/glassfish/modules</dir>
                     <includes>jakarta*.jar</includes>
-                    <excludes>jakarta.inject-api.jar,jakarta.servlet.jsp.jstl.jar,wasp.jar,jakarta.enterprise.concurrent.jar,
+                    <excludes>jakarta.inject-api.jar,jakarta.servlet.jsp.jstl.jar,wasp.jar,concurro.jar,
                         jakarta.persistence.jar</excludes>
                     <specs>
                         <spec>

@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.glassfish.main.itest.tools.RandomGenerator;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;

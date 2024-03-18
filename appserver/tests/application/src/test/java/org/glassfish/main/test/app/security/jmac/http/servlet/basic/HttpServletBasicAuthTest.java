@@ -63,7 +63,7 @@ public class HttpServletBasicAuthTest {
     private static File warFile;
     private static File keyFile;
 
-    private static File loginModuleFile;
+    private static File serverAuthModuleFile;
 
     @BeforeAll
     public static void prepareDeployment() {
@@ -75,12 +75,15 @@ public class HttpServletBasicAuthTest {
             asadminOK());
         createFileUser(FILE_REALM_NAME, USER_NAME, USER_PASSWORD, "mygroup");
 
-        JavaArchive loginModule = ShrinkWrap.create(JavaArchive.class).addClass(MyHttpServletResponseWrapper.class)
-            .addClass(HttpServletTestAuthModule.class).addClass(MyPrintWriter.class);
-        LOG.log(INFO, loginModule.toString(true));
-        loginModuleFile = new File(getDomain1Directory().toAbsolutePath().resolve("../../lib").toFile(),
+        JavaArchive serverAuthModule = ShrinkWrap.create(JavaArchive.class)
+                .addClass(MyHttpServletResponseWrapper.class)
+                .addClass(HttpServletTestAuthModule.class)
+                .addClass(MyPrintWriter.class);
+
+        LOG.log(INFO, serverAuthModule.toString(true));
+        serverAuthModuleFile = new File(getDomain1Directory().toAbsolutePath().resolve("../../lib").toFile(),
             "testLoginModule.jar");
-        loginModule.as(ZipExporter.class).exportTo(loginModuleFile, true);
+        serverAuthModule.as(ZipExporter.class).exportTo(serverAuthModuleFile, true);
 
         assertThat(ASADMIN.exec("create-message-security-provider",
             "--classname", HttpServletTestAuthModule.class.getName(),
@@ -96,7 +99,7 @@ public class HttpServletBasicAuthTest {
 
         warFile = new File(tempDir, APP_NAME + ".war");
         webArchive.as(ZipExporter.class).exportTo(warFile, true);
-        assertThat(ASADMIN.exec("deploy", "--libraries", loginModuleFile.getAbsolutePath(), "--target", "server",
+        assertThat(ASADMIN.exec("deploy", "--libraries", serverAuthModuleFile.getAbsolutePath(), "--target", "server",
             warFile.getAbsolutePath()), asadminOK());
     }
 
@@ -109,7 +112,7 @@ public class HttpServletBasicAuthTest {
         ASADMIN.exec("delete-auth-realm", FILE_REALM_NAME);
         delete(warFile);
         delete(keyFile);
-        delete(loginModuleFile);
+        delete(serverAuthModuleFile);
     }
 
 
@@ -117,9 +120,12 @@ public class HttpServletBasicAuthTest {
     void test() throws Exception {
         HttpURLConnection connection = openConnection(8080, "/" + APP_NAME + "/index.jsp");
         connection.setRequestMethod("GET");
+
         String basicAuth = Base64.getEncoder().encodeToString((USER_NAME + ":" + USER_PASSWORD).getBytes(UTF_8));
         connection.setRequestProperty("Authorization", "Basic " + basicAuth);
+
         assertThat(connection.getResponseCode(), equalTo(200));
+
         try (InputStream is = connection.getInputStream()) {
             String text = new String(is.readAllBytes(), UTF_8);
             assertThat(text, stringContainsInOrder(

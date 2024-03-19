@@ -34,16 +34,16 @@
     <properties>
         <ant.home>${project.build.directory}/apache-ant-${ant.version}</ant.home>
         <ant.zip.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip</ant.zip.url>
-        
+
         <tck.home>${project.build.directory}/tags-tck</tck.home>
         <tck.tests.home>${tck.home}/src/com/sun/ts/tests</tck.tests.home> 
          
         <glassfish.home>${project.build.directory}/glassfish8</glassfish.home>
         <glassfish.version>${project.version}</glassfish.version>
         <glassfish.asadmin>${glassfish.home}/glassfish/bin/asadmin</glassfish.asadmin>
-       
+
         <jacoco.includes>org/glassfish/**\:com/sun/enterprise/**</jacoco.includes>
-        
+
         <port.admin>14848</port.admin>
         <port.derby>11527</port.derby>
         <port.http>18080</port.http>
@@ -155,7 +155,7 @@
                         <configuration>
                             <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
-                                         
+
                                 <macrodef name="tck-setting">
                                     <attribute name="key" /> <attribute name="value" />
                                     <sequential>
@@ -163,31 +163,31 @@
                                         match="@{key}=.*" replace="@{key}=@{value}" />
                                     </sequential>
                                 </macrodef>
-                                
+
 
                                 <!-- Change configuration -->
-                                
+
                                 <tck-setting key="webServerHome" value="${glassfish.home}/glassfish"/>
                                 <tck-setting key="webServerHost" value="localhost"/>
                                 <tck-setting key="webServerPort" value="${port.http}"/>
-                                
+
                                 <tck-setting key="securedWebServicePort" value="${port.https}"/>
                                 <tck-setting key="s1as.admin.port" value="${port.admin}"/>
                                 <tck-setting key="glassfish.admin.port" value="${port.admin}"/>
                                 <tck-setting key="orb.port" value="${port.orb}"/>
                                 <tck-setting key="database.port" value="${port.derby}"/>
                                 <tck-setting key="harness.log.port" value="${port.harness.log}"/>
-                                
-                                <tck-setting key="report.dir" value="${tck.home}/pagesreport/pages"/>
-                                <tck-setting key="work.dir" value="${tck.home}/pageswork/pages"/>
-                                
+
+                                <tck-setting key="report.dir" value="${tck.home}/tagsreport/tagstck"/>
+                                <tck-setting key="work.dir" value="${tck.home}/tagswork/tags"/>
+
                                 <tck-setting key="impl.vi" value="glassfish"/>
                                 <tck-setting key="impl.vi.deploy.dir" value="${webServerHome}/domains/domain1/autodeploy"/>
                                 <tck-setting key="impl.deploy.timeout.multiplier" value="30"/>
-                                
+
                                 <tck-setting key="jspservlet.classes" value="${webServerHome}/modules/jakarta.servlet-api.jar${pathsep}${webServerHome}/modules/wasp.jar${pathsep}${webServerHome}/modules/jakarta.servlet.jsp-api.jar"/>
                                 <tck-setting key="jstl.classes" value="${webServerHome}/modules/wasp.jar"/>
-                                
+
                                 <tck-setting key="jstl.db.server" value="localhost"/>
                                 <tck-setting key="jstl.db.port" value="1527"/>
                                 <tck-setting key="jstl.db.name" value="derbyDB"/>
@@ -195,8 +195,8 @@
                                 <tck-setting key="jstl.db.driver" value="org.apache.derby.jdbc.ClientDriver"/>
                                 <tck-setting key="jstl.db.user" value="cts1"/>
                                 <tck-setting key="jstl.db.password" value="cts1"/>
-								
-                          
+
+
                                 <limit maxwait="60">
                                     <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
                                         <arg value="delete-domain"/>
@@ -215,25 +215,25 @@
                                     <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
                                         <arg value="start-domain"/>
                                     </exec>
-                                    
+
                                     <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" if:set="glassfish.security.manager">
                                         <arg value="create-jvm-options" />
                                         <arg value="--port=${port.admin}" />
                                         <arg value="&quot;-Djava.security.manager&quot;" />
                                     </exec>
-                                    
+
                                     <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
                                         <arg value="create-jvm-options" />
                                         <arg value="--port=${port.admin}" />
                                         <arg value="&quot;-Djavax.xml.accessExternalStylesheet=all&quot;" />
                                     </exec>
-                                    
+
                                     <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
                                         <arg value="create-jvm-options" />
                                         <arg value="--port=${port.admin}" />
                                         <arg value="&quot;-Djavax.xml.accessExternalSchema=all&quot;" />
                                     </exec>
-                                    
+
                                     <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
                                         <arg value="create-jvm-options" />
                                         <arg value="--port=${port.admin}" />
@@ -255,15 +255,15 @@
                                         <arg value="domain1"/>
                                     </exec>
                                 </limit>
-                                <mkdir dir="${tck.home}/pagestagstckreport"/>
-                                <mkdir dir="${tck.home}/pagestagstckreport/pagestck"/>
-                                
+                                <mkdir dir="${tck.home}/tagsreport"/>
+                                <mkdir dir="${tck.home}/tagsreport/tagstck"/>
+
                                 <replace file="${tck.home}/bin/xml/ts.top.import.xml">
                                   <replacetoken><![CDATA[<jvmarg value="-Xmx512m"/>]]></replacetoken>
                                   <replacevalue><![CDATA[<jvmarg value="-Xmx512m"/>
                                 <jvmarg value="-Djavatest.security.noSecurityManager=true"/>]]></replacevalue>
                                 </replace>
-                                
+
                                 <replace file="${tck.home}/bin/xml/ts.top.import.xml" if:set="suspend-tck" >
                                   <replacetoken><![CDATA[<jvmarg value="-Xmx512m"/>]]></replacetoken>
                                   <replacevalue><![CDATA[<jvmarg value="-Xmx512m"/>
@@ -291,26 +291,26 @@
                                         <arg value="--suspend" if:set="glassfish.suspend"/>
                                     </exec>
                                 </limit>
-                                
+
                                 <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin">
                                     <arg value="init.javadb"  />
                                 </exec>
-                                
+
                                 <!-- Deploy single test -->
                                 <sequential if:set="run.test" >
-                                	<dirname property="test.dir" file="${tck.home}/src/${run.test}"/>
-                                	<echo>Deploying from ${test.dir}</echo>
-                                	
-                                	<exec executable="${ant.home}/bin/ant" dir="${test.dir}">
-                                    	<arg value="deploy"  />
-                                	</exec>
+                                  <dirname property="test.dir" file="${tck.home}/src/${run.test}"/>
+                                  <echo>Deploying from ${test.dir}</echo>
+
+                                  <exec executable="${ant.home}/bin/ant" dir="${test.dir}">
+                                      <arg value="deploy"  />
+                                  </exec>
                                 </sequential>
-                                
+
                                 <!-- Deploy all tests -->
                                 <sequential unless:set="run.test" >
-                                	<exec executable="${ant.home}/bin/ant" dir="${tck.tests.home}">
-                                    	<arg value="deploy.all"  />
-                                	</exec>
+                                  <exec executable="${ant.home}/bin/ant" dir="${tck.tests.home}">
+                                      <arg value="deploy.all"  />
+                                  </exec>
                                 </sequential>
                             </target>
                         </configuration>

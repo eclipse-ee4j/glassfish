@@ -97,12 +97,12 @@
 
         <!-- Jakarta Security + Authentication/Authorization -->
         <!-- APIs -->
-        <jakarta.security-api.version>4.0.0-M1</jakarta.security-api.version>
-        <jakarta.authorization-api.version>3.0.0-M1</jakarta.authorization-api.version>
+        <jakarta.security-api.version>4.0.0-M2</jakarta.security-api.version>
+        <jakarta.authorization-api.version>3.0.0-M2</jakarta.authorization-api.version>
         <jakarta.authentication-api.version>3.1.0-M1</jakarta.authentication-api.version>
         <!-- Implementations -->
-        <soteria.version>4.0.0-M1</soteria.version>
-        <exousia.version>3.0.0-M1.1</exousia.version>
+        <soteria.version>4.0.0-M2</soteria.version>
+        <exousia.version>3.0.0-M2</exousia.version>
         <epicyro.version>3.1.0-M1</epicyro.version>
         <!-- Dependencies -->
         <nimbus.version>9.38-rc3</nimbus.version>
@@ -158,7 +158,7 @@
 
         <!-- MicroProfile Config -->
         <microprofile.config-api.version>3.1</microprofile.config-api.version>
-        <helidon-config.version>4.0.5</helidon-config.version>
+        <helidon-config.version>4.0.6</helidon-config.version>
 
         <!-- MicroProfile JWT / JWT Authentication Mechanism for Jakarta Security -->
         <microprofile-jwt-auth-api.version>2.1</microprofile-jwt-auth-api.version>

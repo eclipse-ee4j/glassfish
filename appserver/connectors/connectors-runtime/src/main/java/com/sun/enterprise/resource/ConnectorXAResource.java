@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,7 +21,7 @@ import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import javax.transaction.xa.XAException;
@@ -46,8 +46,12 @@ import jakarta.transaction.SystemException;
  */
 public class ConnectorXAResource implements XAResource {
 
-    static Logger _logger = LogDomains.getLogger(ConnectorXAResource.class, LogDomains.RSR_LOGGER);
+    private static Logger _logger = LogDomains.getLogger(ConnectorXAResource.class, LogDomains.RSR_LOGGER);
 
+    /**
+     * userHandle meaning: an object representing the "connection handle for the underlying physical connection". In some
+     * code also named connectionHandle.
+     */
     private Object userHandle;
     private ResourceSpec spec;
     private ClientSecurityInfo info;
@@ -227,25 +231,16 @@ public class ConnectorXAResource implements XAResource {
     private void resetAssociation() throws XAException {
         try {
             ResourceHandle handle = getResourceHandle();
+            LocalTxConnectionEventListener listener = (LocalTxConnectionEventListener) handle.getListener();
 
-            LocalTxConnectionEventListener listerner = (LocalTxConnectionEventListener) handle.getListener();
-            // Get all associated Handles and reset their ManagedConnection association.
-            Map associatedHandles = listerner.getAssociatedHandles();
-            if (associatedHandles != null) {
-                Set<Map.Entry> userHandles = associatedHandles.entrySet();
-                for (Map.Entry userHandleEntry : userHandles) {
-                    ResourceHandle associatedHandle = (ResourceHandle) userHandleEntry.getValue();
-                    ManagedConnection associatedConnection = (ManagedConnection) associatedHandle.getResource();
-                    associatedConnection.associateConnection(userHandleEntry.getKey());
-                    if (_logger.isLoggable(FINE)) {
-                        _logger.log(FINE, "connection_sharing_reset_association", userHandleEntry.getKey());
-                    }
-                }
-
-                // All associated handles are mapped back to their actual Managed Connection. Clear the associations.
-                associatedHandles.clear();
+            // Clear the associations and Map all associated handles back to their actual Managed Connection.
+            Map<Object, ResourceHandle> associatedHandles = listener.getAssociatedHandlesAndClearMap();
+            for (Entry<Object, ResourceHandle> userHandleEntry : associatedHandles.entrySet()) {
+                ResourceHandle associatedHandle = (ResourceHandle) userHandleEntry.getValue();
+                ManagedConnection associatedConnection = (ManagedConnection) associatedHandle.getResource();
+                associatedConnection.associateConnection(userHandleEntry.getKey());
+                _logger.log(FINE, "connection_sharing_reset_association", userHandleEntry.getKey());
             }
-
         } catch (Exception ex) {
             handleResourceException(ex);
         }

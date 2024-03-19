@@ -86,10 +86,18 @@ public class EventsImpl implements Events {
                 continue;
             }
 
-            RestrictTo restrictTo = eventMethod.getParameters()[0].getAnnotation(RestrictTo.class);
-            if (restrictTo != null) {
-                EventTypes<?> interested = EventTypes.create(restrictTo.value());
-                if (!event.is(interested)) {
+            RestrictTo[] restrictTo = eventMethod.getParameters()[0].getAnnotationsByType(RestrictTo.class);
+            if (restrictTo.length > 0) {
+                boolean isInterested = false;
+                for (RestrictTo restrict : restrictTo) {
+                    EventTypes<?> interestedEvent = EventTypes.create(restrict.value());
+                    if (event.is(interestedEvent)) {
+                        isInterested = true;
+                        break;
+                    }
+                }
+
+                if (!isInterested) {
                     continue;
                 }
             }

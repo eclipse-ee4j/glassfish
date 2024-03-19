@@ -55,7 +55,7 @@ mvn clean install -Drun.test="com/sun/ts/tests/el/api/jakarta_el/methodexpressio
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>8.0.0-M3</version>
     </parent>
 
     <artifactId>glassfish-external-tck-expression-language</artifactId>

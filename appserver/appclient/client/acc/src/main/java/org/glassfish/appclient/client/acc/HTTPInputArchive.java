@@ -122,12 +122,12 @@ public class HTTPInputArchive extends AbstractReadableArchive {
         if (exists != null) {
             return exists.booleanValue();
         }
-        
+
         exists = Boolean.FALSE;
         try (InputStream is = archiveURL.openStream()) {
             exists = Boolean.TRUE;
         } catch (IOException e) {
-            // Ignore, exists is false. 
+            // Ignore, exists is false.
         }
         return exists.booleanValue();
     }

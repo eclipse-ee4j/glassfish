@@ -23,10 +23,11 @@
 
 package com.sun.jdo.spi.persistence.generator.database;
 
-import java.io.*;
-import java.sql.*;
-import java.util.ResourceBundle;
-import org.glassfish.persistence.common.I18NHelper;
+import java.io.OutputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 

@@ -17,7 +17,6 @@
 package org.glassfish.deployment.admin;
 
 import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;

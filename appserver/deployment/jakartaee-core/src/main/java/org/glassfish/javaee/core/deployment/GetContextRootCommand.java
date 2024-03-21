@@ -19,7 +19,6 @@ package org.glassfish.javaee.core.deployment;
 import org.glassfish.api.Param;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import org.glassfish.deployment.common.DeploymentProperties;

@@ -21,7 +21,6 @@ import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext
 import jakarta.enterprise.concurrent.ManagedScheduledExecutorDefinition;
 import jakarta.inject.Inject;
 
-import java.lang.System.Logger;
 import java.util.Set;
 
 import org.glassfish.apf.AnnotationHandlerFor;

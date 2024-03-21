@@ -16,7 +16,6 @@
 
 package org.glassfish.connectors.admin.cli;
 
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import org.glassfish.api.I18n;
 import org.glassfish.connectors.config.ConnectorConnectionPool;
 import org.glassfish.connectors.config.SecurityMap;

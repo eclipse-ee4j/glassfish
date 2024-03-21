@@ -96,9 +96,8 @@ public class Util {
     private static final String JARENTRY_PREFIX = "!/";
 
     public static List<URL> getModuleJarURLs(File modulesJarFile) {
-        List<URL> moduleJarURLs = new ArrayList();
-        try {
-            JarFile modulesJar = new JarFile(modulesJarFile);
+        List<URL> moduleJarURLs = new ArrayList<>();
+        try (JarFile modulesJar = new JarFile(modulesJarFile)) {
             Enumeration<JarEntry> entries = modulesJar.entries();
             while (entries.hasMoreElements()) {
                 JarEntry entry = entries.nextElement();

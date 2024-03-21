@@ -91,10 +91,6 @@ public final class OpenMBeanUtil
 
     }
 
-    private static final String[] EMPTY_STRING_ARRAY = new String[0];
-
-    private static final OpenType[] EMPTY_OPENTYPES = new OpenType[0];
-
     /**
     Get any non-null array element from the array.
      */

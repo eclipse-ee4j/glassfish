@@ -152,7 +152,6 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
     }
 
     private static final String STRING = String.class.getName();
-    private static final String[] EMPTY_SIG = new String[0];
     private static final String[] STRING_SIG = new String[]
     {
         STRING
@@ -272,7 +271,6 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
         return result;
     }
 
-    private static final Map<String, AMXProxy> EMPTY_String_AMX = Collections.emptyMap();
     private final static Class[] NOTIFICATION_LISTENER_SIG1 = new Class[]
     {
         NotificationListener.class
@@ -289,8 +287,6 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
     private static final String METHOD_NAME_PROP = "nameProp";
     private static final String METHOD_TYPE = "type";
     private static final String METHOD_PARENT_PATH = "parentPath";
-    /** proxy method */
-    private static final String METHOD_CHILDREN = "children";
     /** proxy method */
     private static final String METHOD_CHILDREN_MAP = "childrenMap";
     /** proxy method */

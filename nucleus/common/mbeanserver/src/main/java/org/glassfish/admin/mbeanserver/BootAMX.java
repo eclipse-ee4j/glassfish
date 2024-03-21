@@ -16,15 +16,14 @@
 
 package org.glassfish.admin.mbeanserver;
 
-import java.util.logging.Logger;
 import javax.management.JMException;
 import javax.management.MBeanServer;
-import javax.management.StandardMBean;
 import javax.management.ObjectName;
+import javax.management.StandardMBean;
 import javax.management.remote.JMXServiceURL;
 
-import org.glassfish.external.amx.BootAMXMBean;
 import org.glassfish.external.amx.AMXGlassfish;
+import org.glassfish.external.amx.BootAMXMBean;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.logging.annotation.LogMessageInfo;
 
@@ -35,19 +34,10 @@ Public API is the name of the booter MBean eg {@link BootAMXMBean.OBJECT_NAME}
  */
 final class BootAMX implements BootAMXMBean
 {
-    private static final Logger JMX_LOGGER = Util.JMX_LOGGER;
-
     private final MBeanServer mMBeanServer;
     private final ObjectName mObjectName;
     private final ServiceLocator mHabitat;
     private ObjectName mDomainRootObjectName;
-
-
-    private static void debug(final String s)
-    {
-        System.out.println(s);
-    }
-
 
     private BootAMX(
         final ServiceLocator habitat,

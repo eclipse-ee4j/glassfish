@@ -122,7 +122,6 @@ abstract public class JDOEJB20HelperImpl extends JDOEJB11HelperImpl
     public Collection convertCollectionPCToEJBLocalObject (Collection pcs, PersistenceManager pm){
         Collection rc = new java.util.ArrayList();
         Object o = null;
-        boolean debug = false;
 
         for (java.util.Iterator it = pcs.iterator(); it.hasNext();) {
             o = convertPCToEJBLocalObject((Object)it.next(), pm);
@@ -145,8 +144,6 @@ abstract public class JDOEJB20HelperImpl extends JDOEJB11HelperImpl
     public Set convertCollectionPCToEJBLocalObjectSet (Collection pcs, PersistenceManager pm) {
         java.util.Set rc = new java.util.HashSet();
         Object o = null;
-
-        boolean debug = false;
 
         for (java.util.Iterator it = pcs.iterator(); it.hasNext();) {
             o = convertPCToEJBLocalObject((Object)it.next(), pm);
@@ -173,8 +170,6 @@ abstract public class JDOEJB20HelperImpl extends JDOEJB11HelperImpl
                                                            boolean validate) {
         Collection rc = new java.util.ArrayList();
         Object o = null;
-
-        boolean debug = false;
 
         for (java.util.Iterator it = coll.iterator(); it.hasNext();) {
             o = convertEJBLocalObjectToPC((EJBLocalObject)it.next(), pm, validate);

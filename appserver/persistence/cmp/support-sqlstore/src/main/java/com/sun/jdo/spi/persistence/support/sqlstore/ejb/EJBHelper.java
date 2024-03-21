@@ -42,9 +42,6 @@ public class EJBHelper {
         "com.sun.jdo.spi.persistence.support.sqlstore.Bundle", // NOI18N
         EJBHelper.class.getClassLoader());
 
-    /** The logger */
-    private static Logger logger = LogHelperPersistenceManager.getLogger();
-
    /** Reference to a class that implements TransactionHelper interface for this
     * particular application server, or DefaultTransactionHelper for a non-managed
     * environment.

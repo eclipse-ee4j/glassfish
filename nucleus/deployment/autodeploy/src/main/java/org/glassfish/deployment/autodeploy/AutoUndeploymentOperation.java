@@ -73,8 +73,6 @@ public class AutoUndeploymentOperation extends AutoOperation {
         return o;
     }
 
-    private String name;
-
     private static final String COMMAND_NAME = "undeploy";
 
     @Inject
@@ -102,7 +100,6 @@ public class AutoUndeploymentOperation extends AutoOperation {
                 prepareUndeployActionProperties(name, target),
                 COMMAND_NAME,
                 undeployCommand);
-        this.name = name;
         return this;
     }
 

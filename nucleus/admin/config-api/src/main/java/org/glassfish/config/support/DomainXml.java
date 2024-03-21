@@ -299,6 +299,4 @@ public abstract class DomainXml implements Populator {
     }
 
     protected abstract DomDocument getDomDocument();
-
-    private final static LocalStringsImpl strings = new LocalStringsImpl(DomainXml.class);
 }

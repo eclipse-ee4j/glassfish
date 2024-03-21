@@ -441,9 +441,6 @@ public class EntityContainer
     {
         ObjectFactory entityCtxFactory = new EntityContextFactory(this);
 
-        int steadyPoolSize = 0;
-        int resizeQuantity = 10;
-        int idleTimeoutInSeconds = Integer.MAX_VALUE-1;
         poolProp = new PoolProperties(this);
 
         super.initializeHome();
@@ -2425,12 +2422,10 @@ public class EntityContainer
 
 
     protected void callEJBRemove(EntityBean ejb, EntityContextImpl context) throws Exception {
-        Exception exc = null;
         try {
             // TODO - check if it is needed: context.setInEjbRemove(true);
             ejb.ejbRemove();
-        } catch ( Exception ex ) {
-            exc = ex;
+        } catch (Exception ex) {
             throw ex;
         } finally {
             // TODO - check if it is needed: context.setInEjbRemove(false);
@@ -2702,7 +2697,6 @@ public class EntityContainer
     protected void createEJBObjectStores(int cacheSize,
         int numberOfVictimsToSelect, long idleTimeout) throws Exception {
 
-        EJBObjectCache lru = null;
         String ejbName = ejbDescriptor.getName();
         idleTimeout = (idleTimeout <= 0) ? -1 : idleTimeout;
 

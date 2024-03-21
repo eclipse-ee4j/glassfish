@@ -17,11 +17,6 @@
 
 package com.sun.enterprise.resource.pool;
 
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.enterprise.resource.ResourceHandle;
-import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.logging.LogDomains;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -31,6 +26,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.resourcebase.resources.api.PoolInfo;
+
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.resource.ResourceHandle;
+import com.sun.logging.LogDomains;
 
 /**
  * Connection leak detector, book keeps the caller stack-trace during getConnection()<br>
@@ -52,7 +51,6 @@ public class ConnectionLeakDetector {
     private final Object connectionLeakLock;
 
     private final static Logger _logger = LogDomains.getLogger(ConnectionLeakDetector.class, LogDomains.RSR_LOGGER);
-    private final static StringManager localStrings = StringManager.getManager(ConnectionPool.class);
 
     public ConnectionLeakDetector(PoolInfo poolInfo, boolean leakTracing, long leakTimeoutInMillis, boolean leakReclaim) {
         connectionPoolInfo = poolInfo;

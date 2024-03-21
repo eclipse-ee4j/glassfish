@@ -95,8 +95,8 @@ public class ContextImplUnitTest {
     public void testDelegationOfPut() {
         expect(view.put("KeyForString-Value1-true", "Value1", defaultSetOneway())).andReturn(null);
         expect(view.put("KeyForString-Value2-false", "Value2", EnumSet.of(LOCAL))).andReturn(null);
-        expect(view.put("KeyForNumber-5-true", 5, defaultSetOneway())).andReturn(null);
-        expect(view.put("KeyForNumber-7-false", 7, EnumSet.of(LOCAL))).andReturn(null);
+        expect(view.put("KeyForNumber-5-true", Integer.valueOf(5), defaultSetOneway())).andReturn(null);
+        expect(view.put("KeyForNumber-7-false", Integer.valueOf(7), EnumSet.of(LOCAL))).andReturn(null);
 
         replay(view, location);
 

@@ -254,8 +254,6 @@ public class Consistency extends org.netbeans.modules.schema2beans.BaseBean
         comparators.remove(c);
     }
     public void validate() throws org.netbeans.modules.schema2beans.ValidateException {
-        boolean restrictionFailure = false;
-        boolean restrictionPassed = false;
         // Validating property none
         if (isNone() != false) {
             if (isCheckModifiedAtCommit() != false) {
@@ -414,8 +412,6 @@ public class Consistency extends org.netbeans.modules.schema2beans.BaseBean
     // Dump the content of this bean returning it as a String
     @Override
     public void dump(StringBuffer str, String indent){
-        String s;
-        Object o;
         org.netbeans.modules.schema2beans.BaseBean n;
         str.append(indent);
         str.append("None");    // NOI18N

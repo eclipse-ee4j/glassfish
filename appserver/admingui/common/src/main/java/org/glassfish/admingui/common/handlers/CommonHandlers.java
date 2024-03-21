@@ -221,7 +221,6 @@ public class CommonHandlers {
     public static void removeListElement(HandlerContext handlerCtx) {
         List<String> list = (List) handlerCtx.getInputValue("list");
         String name = (String) handlerCtx.getInputValue("name");
-        String[] listItem = null;
         if (list != null) {
             list.remove(name);
         }

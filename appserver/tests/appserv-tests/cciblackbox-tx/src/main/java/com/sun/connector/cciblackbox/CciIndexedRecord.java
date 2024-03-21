@@ -58,7 +58,7 @@ public class CciIndexedRecord implements jakarta.resource.cci.IndexedRecord {
   }
 
   public void setRecordShortDescription(String description) {
-    description = description;
+    this.description = description;
   }
 
   public boolean equals(Object other) {

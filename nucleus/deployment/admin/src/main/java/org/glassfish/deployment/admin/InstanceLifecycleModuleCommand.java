@@ -61,8 +61,6 @@ import org.glassfish.api.admin.RestEndpoints;
 })
 public class InstanceLifecycleModuleCommand implements AdminCommand, AdminCommandSecurity.AccessCheckProvider {
 
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(InstanceLifecycleModuleCommand.class);
-
     @Param(primary=true)
     public String name = null;
 

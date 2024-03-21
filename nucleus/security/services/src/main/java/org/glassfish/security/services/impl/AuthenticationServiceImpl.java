@@ -76,9 +76,6 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
     @Inject
     private ImpersonationService impersonationService;
 
-    private static final Logger LOG = Logger.getLogger(AuthenticationServiceImpl.class.getName());
-
-
     // Authentication Service Configuration Information
     private String name = null;
     private String realmName = null;

@@ -82,8 +82,6 @@ public class GetHostAndPortCommand implements AdminCommand, AdminCommandSecurity
 
     private Config config;
 
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(GetHostAndPortCommand.class);
-
     @Override
     public Collection<? extends AccessCheck> getAccessChecks() {
         final List<AccessCheck> accessChecks = new ArrayList<AccessCheck>();

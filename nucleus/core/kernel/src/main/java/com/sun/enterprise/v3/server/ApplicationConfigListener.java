@@ -46,7 +46,6 @@ import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.module.bootstrap.StartupContext;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.v3.common.HTMLActionReporter;
 
 import jakarta.inject.Inject;
@@ -55,8 +54,6 @@ import jakarta.inject.Named;
 @Service
 @RunLevel(PostStartupRunLevel.VAL)
 public class ApplicationConfigListener implements TransactionListener, PostConstruct {
-
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ApplicationConfigListener.class);
 
     final private Logger logger = KernelLoggerInfo.getLogger();
 

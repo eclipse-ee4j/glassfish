@@ -83,9 +83,6 @@ public class ListAppRefsCommand implements AdminCommand, AdminCommandSecurity.Ac
     }
 
 
-
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListAppRefsCommand.class);
-
     public void execute(AdminCommandContext context) {
 
         final ActionReport report = context.getActionReport();

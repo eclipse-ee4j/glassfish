@@ -227,9 +227,8 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
         }
 
         boolean result = false;
-        try {
-            _logger.log(INFO, "Checking Lock File " + recoveryLockFile);
-            RandomAccessFile raf = new RandomAccessFile(recoveryLockFile, "rw");
+        _logger.log(INFO, "Checking Lock File " + recoveryLockFile);
+        try (RandomAccessFile raf = new RandomAccessFile(recoveryLockFile, "rw")) {
             FileLock lock = raf.getChannel().lock();
             try {
                 reader = new BufferedReader(new FileReader(recoveryLockFile));
@@ -297,8 +296,7 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
             return null;
         }
 
-        try {
-            RandomAccessFile raf = new RandomAccessFile(recoveryLockFile, "rw");
+        try (RandomAccessFile raf = new RandomAccessFile(recoveryLockFile, "rw")) {
             FileLock lock = raf.getChannel().lock();
             try {
                 reader = new BufferedReader(new FileReader(recoveryLockFile));
@@ -389,8 +387,7 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
             return;
         }
 
-        try {
-            RandomAccessFile raf = new RandomAccessFile(recoveryLockFile, "rw");
+        try (RandomAccessFile raf = new RandomAccessFile(recoveryLockFile, "rw")) {
             FileLock lock = raf.getChannel().lock();
             try {
                 writer = new FileWriter(recoveryLockFile, true);

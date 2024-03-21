@@ -223,8 +223,6 @@ public final class FeatureAvailability
         // if we had to create a CountDownLatch, calling thread must now await()
         if (latch != null)
         {
-            final long start = System.currentTimeMillis();
-
             try
             {
                 //debug( "waitForFeature: \"" + featureName + "\" by " + callerInfo );

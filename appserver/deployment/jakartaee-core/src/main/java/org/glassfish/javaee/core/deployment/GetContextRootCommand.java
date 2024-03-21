@@ -50,8 +50,6 @@ import org.glassfish.hk2.api.PerLookup;
 })
 public class GetContextRootCommand implements AdminCommand {
 
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(GetContextRootCommand.class);
-
     @Param(primary=true)
     private String modulename = null;
 

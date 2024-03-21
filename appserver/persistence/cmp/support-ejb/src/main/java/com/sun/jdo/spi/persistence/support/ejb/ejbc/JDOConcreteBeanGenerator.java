@@ -1141,9 +1141,6 @@ abstract class JDOConcreteBeanGenerator {
         String[] pcParamTypes = new String[] {CMPTemplateFormatter.Object_,
                     CMPTemplateFormatter.jdoPersistenceManagerClass_};
 
-        String[] collParamTypes = new String[] {CMPTemplateFormatter.Collection_,
-                    CMPTemplateFormatter.jdoPersistenceManagerClass_};
-
         // For PC - PK conversion.
         String[] body = null;
 

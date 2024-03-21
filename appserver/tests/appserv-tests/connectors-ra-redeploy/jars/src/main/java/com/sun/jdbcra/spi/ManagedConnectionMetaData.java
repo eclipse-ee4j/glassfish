@@ -39,7 +39,7 @@ public class ManagedConnectionMetaData implements jakarta.resource.spi.ManagedCo
     static {
         _logger = Logger.getAnonymousLogger();
     }
-    private final boolean debug = false;
+
     /**
      * Constructor for <code>ManagedConnectionMetaData</code>
      *

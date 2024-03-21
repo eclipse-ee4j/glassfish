@@ -50,7 +50,7 @@ public abstract class ManagedConnectionFactory implements jakarta.resource.spi.M
     static {
         _logger = Logger.getAnonymousLogger();
     }
-    private final boolean debug = false;
+
     /**
      * Creates a Connection Factory instance. The <code>ConnectionManager</code> implementation
      * of the resource adapter is used here.
@@ -311,7 +311,7 @@ public abstract class ManagedConnectionFactory implements jakarta.resource.spi.M
         }
 
         try {
-            java.sql.DatabaseMetaData dmd = con.getMetaData();
+            con.getMetaData();
         } catch(Exception sqle) {
             _logger.log(Level.SEVERE, "jdbc.exc_md");
             throw new ResourceException("The connection is not valid as "
@@ -336,7 +336,7 @@ public abstract class ManagedConnectionFactory implements jakarta.resource.spi.M
 
         try {
             java.sql.Statement stmt = con.createStatement();
-            java.sql.ResultSet rs = stmt.executeQuery("SELECT * FROM " + tableName);
+            stmt.executeQuery("SELECT * FROM " + tableName);
         } catch(Exception sqle) {
             _logger.log(Level.SEVERE, "jdbc.exc_execute");
             throw new ResourceException("The connection is not valid as "

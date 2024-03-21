@@ -40,10 +40,6 @@ public class DatabaseOutputStream extends OutputStream {
     private static final Logger logger =
             LogHelperDatabaseGenerator.getLogger();
 
-    /** I18N message handler */
-    private final static ResourceBundle messages =
-            I18NHelper.loadBundle(DatabaseOutputStream.class);
-
     /** Connection to the database. */
     // XXX FIXME S/b final; make it so if we can get rid of setConnection.
     private Connection conn_ = null;

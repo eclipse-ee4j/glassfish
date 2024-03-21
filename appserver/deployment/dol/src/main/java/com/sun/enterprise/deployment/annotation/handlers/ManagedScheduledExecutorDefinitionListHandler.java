@@ -33,7 +33,6 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 @AnnotationHandlerFor(ManagedScheduledExecutorDefinition.List.class)
 public class ManagedScheduledExecutorDefinitionListHandler extends AbstractResourceHandler {
-    private static final Logger LOG = System.getLogger(ManagedScheduledExecutorDefinitionListHandler.class.getName());
 
     @Inject
     private ManagedScheduledExecutorDefinitionConverter converter;

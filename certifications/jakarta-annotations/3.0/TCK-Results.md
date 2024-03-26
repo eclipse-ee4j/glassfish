@@ -20,7 +20,7 @@ following is a summary of the TCK results for releases of Jakarta Annotations.
 - Any Additional Specification Certification Requirements<br/>
   None
 - Java runtime used to run the implementation<br/>
-  Oracle JDK 21.0.2
+  Oracle JDK 17.0.2, Oracle JDK 21.0.2
 - Summary of the information for the certification environment, operating system, cloud, ...<br/>
   Linux
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2023, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -44,7 +44,6 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -59,8 +58,9 @@ import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadmi
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Disabled("Fails with GF 7.0.11, the attribute jakarta.servlet.request.X509Certificate is not set for some reason.")
 public class JmacHttpsTest {
     private static final String MYKS_PASSWORD = "httpspassword";
 
@@ -88,10 +88,12 @@ public class JmacHttpsTest {
             "-validity", "7", "-keypass", MYKS_PASSWORD, "-keystore", myKeyStore.getAbsolutePath(), "-storepass",
             MYKS_PASSWORD);
 
-        // TODO: Is it required? Or the client certificate should be completely checked just by the auth module?
         KEYTOOL.exec("-importkeystore", "-srckeystore", myKeyStore.getAbsolutePath(), "-srcstorepass", MYKS_PASSWORD,
             "-destkeystore", GlassFishTestEnvironment.getDomain1Directory().resolve(Paths.get("config", "cacerts.jks"))
                 .toFile().getAbsolutePath(), "-deststorepass", "changeit");
+
+        // Default is false, required to set the client certificate to the context.
+        ASADMIN.exec("set", "configs.config.server-config.network-config.protocols.protocol.http-listener-2.ssl.client-auth-enabled=true");
         ASADMIN.exec("restart-domain", "domain1");
 
         JavaArchive loginModule = ShrinkWrap.create(JavaArchive.class).addClass(HttpsTestAuthModule.class);
@@ -99,6 +101,8 @@ public class JmacHttpsTest {
         loginModuleFile = new File(getDomain1Directory().toAbsolutePath().resolve("../../lib").toFile(),
             "testLoginModule.jar");
         loginModule.as(ZipExporter.class).exportTo(loginModuleFile, true);
+        assertTrue(loginModuleFile.canRead(),
+            () -> "Login module file is readable: " + loginModuleFile.getAbsolutePath());
 
         assertThat(ASADMIN.exec("create-message-security-provider",
             "--classname", HttpsTestAuthModule.class.getName(),
@@ -123,6 +127,8 @@ public class JmacHttpsTest {
     public static void cleanup() {
         ASADMIN.exec("undeploy", APP_NAME);
         ASADMIN.exec("delete-message-security-provider", "--layer", "HttpServlet", AUTH_MODULE_NAME);
+        ASADMIN.exec("set", "configs.config.server-config.network-config.protocols.protocol.http-listener-2.ssl.client-auth-enabled=false");
+
         delete(warFile);
         delete(keyFile);
         delete(loginModuleFile);
@@ -132,7 +138,7 @@ public class JmacHttpsTest {
     @Test
     void test() throws Exception {
         HttpsURLConnection connection = openConnection(true, 8181, "/" + APP_NAME + "/index.jsp");
-        SSLContext sslContext = SSLContext.getInstance("TLS");
+        SSLContext sslContext = SSLContext.getInstance("TLSv1.3");
         KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
         keyManagerFactory.init(KeyTool.loadKeyStore(myKeyStore, MYKS_PASSWORD.toCharArray()), MYKS_PASSWORD.toCharArray());
         sslContext.init(keyManagerFactory.getKeyManagers(), new TrustManager[] {new TestTrustManager()}, null);
@@ -140,8 +146,12 @@ public class JmacHttpsTest {
         connection.setSSLSocketFactory(sslSocketFactory);
         connection.setHostnameVerifier(new NaiveHostnameVerifier());
         connection.setDoOutput(true);
+        connection.setDoInput(true);
         connection.setInstanceFollowRedirects(false);
-        assertThat(connection.getResponseCode(), equalTo(200));
+        assertAll(
+            () -> assertThat("HTTP response code", connection.getResponseCode(), equalTo(200)),
+            () -> assertThat("HTTP response content length", connection.getContentLength(), equalTo(-1))
+        );
         try (InputStream is = connection.getInputStream()) {
             String text = new String(is.readAllBytes(), UTF_8);
             assertThat(text, stringContainsInOrder("Hello World from 196 HttpServlet AuthModule Test!", //

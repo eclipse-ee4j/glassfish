@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,11 +17,12 @@
 
 package com.sun.enterprise.deployment.runtime.common;
 
+import com.sun.enterprise.deployment.node.runtime.common.DescriptorPrincipalName;
+
 import java.lang.reflect.Constructor;
 import java.security.Principal;
 
 import org.glassfish.deployment.common.Descriptor;
-import org.glassfish.security.common.UserNameAndPassword;
 
 /**
  * This is an in memory representation of the principal-name with its name of
@@ -53,7 +54,7 @@ public class PrincipalNameDescriptor extends Descriptor {
      */
     public String getClassName() {
         if (className == null) {
-            return UserNameAndPassword.class.getName();
+            return DescriptorPrincipalName.class.getName();
         }
         return className;
     }

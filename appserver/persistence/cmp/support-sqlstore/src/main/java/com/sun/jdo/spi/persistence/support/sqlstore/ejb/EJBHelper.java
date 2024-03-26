@@ -23,12 +23,17 @@ package com.sun.jdo.spi.persistence.support.sqlstore.ejb;
 
 import java.util.ResourceBundle;
 
-import jakarta.transaction.*;
 import org.glassfish.persistence.common.I18NHelper;
-import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
+
 import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
-import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperPersistenceManager;
+import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
+
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.Synchronization;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.Transaction;
+import jakarta.transaction.TransactionManager;
+import jakarta.transaction.UserTransaction;
 
   /** Provides helper methods for a Forte for Java implementation with the
    * application server specific information in the distributed transaction
@@ -41,9 +46,6 @@ public class EJBHelper {
     private final static ResourceBundle messages = I18NHelper.loadBundle(
         "com.sun.jdo.spi.persistence.support.sqlstore.Bundle", // NOI18N
         EJBHelper.class.getClassLoader());
-
-    /** The logger */
-    private static Logger logger = LogHelperPersistenceManager.getLogger();
 
    /** Reference to a class that implements TransactionHelper interface for this
     * particular application server, or DefaultTransactionHelper for a non-managed

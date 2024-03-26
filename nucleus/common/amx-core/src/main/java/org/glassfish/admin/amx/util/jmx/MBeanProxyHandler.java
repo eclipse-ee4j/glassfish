@@ -284,8 +284,6 @@ public class MBeanProxyHandler extends MBeanServerInvocationHandler
         return (results);
     }
 
-    private final String LOG_LEVEL_NAME = "LogLevel";
-
     protected void postGetAttributeHook(
             final String name,
             final Object value)

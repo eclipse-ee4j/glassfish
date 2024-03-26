@@ -573,7 +573,6 @@ public class JSONUtil {
         byte[] good = constant.getBytes();
         int len = good.length;
         char ch;
-        boolean match = true;
         for (int idx=1; idx<len; idx++) {
             ch = json.next();
             if (ch != good[idx]) {

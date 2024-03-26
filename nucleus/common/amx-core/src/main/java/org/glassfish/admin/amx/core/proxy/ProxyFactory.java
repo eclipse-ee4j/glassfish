@@ -169,7 +169,6 @@ public final class ProxyFactory implements NotificationListener {
             debug("ProxyFactory.handleNotification: UNKNOWN notification: ", notifIn);
         }
     }
-    private final static String DOMAIN_ROOT_KEY = "DomainRoot";
 
     public DomainRoot createDomainRoot()
             throws IOException {

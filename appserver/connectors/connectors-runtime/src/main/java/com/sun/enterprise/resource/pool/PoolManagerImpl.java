@@ -17,6 +17,27 @@
 
 package com.sun.enterprise.resource.pool;
 
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+import static javax.transaction.xa.XAResource.TMSUCCESS;
+
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.invocation.ComponentInvocationHandler;
+import org.glassfish.api.invocation.InvocationException;
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.jvnet.hk2.annotations.Service;
+
 import com.sun.appserv.connectors.internal.api.ConnectorConstants.PoolType;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
 import com.sun.appserv.connectors.internal.api.PoolingException;
@@ -36,7 +57,6 @@ import com.sun.enterprise.resource.rm.ResourceManagerImpl;
 import com.sun.enterprise.resource.rm.SystemResourceManagerImpl;
 import com.sun.enterprise.transaction.api.JavaEETransaction;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
-import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
@@ -49,27 +69,6 @@ import jakarta.resource.spi.RetryableUnavailableException;
 import jakarta.transaction.Synchronization;
 import jakarta.transaction.Transaction;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.api.invocation.ComponentInvocation;
-import org.glassfish.api.invocation.ComponentInvocationHandler;
-import org.glassfish.api.invocation.InvocationException;
-import org.glassfish.api.naming.SimpleJndiName;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.jvnet.hk2.annotations.Service;
-
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
-import static javax.transaction.xa.XAResource.TMSUCCESS;
-
 /**
  * @author Tony Ng, Aditya Gore
  */
@@ -77,7 +76,6 @@ import static javax.transaction.xa.XAResource.TMSUCCESS;
 public class PoolManagerImpl extends AbstractPoolManager implements ComponentInvocationHandler {
 
     private static final Logger LOG = LogDomains.getLogger(PoolManagerImpl.class, LogDomains.RSR_LOGGER);
-    private static final StringManager MESSAGES = StringManager.getManager(PoolManagerImpl.class);
 
     private final ConcurrentHashMap<PoolInfo, ResourcePool> poolTable;
     private final ResourceManager resourceManager;

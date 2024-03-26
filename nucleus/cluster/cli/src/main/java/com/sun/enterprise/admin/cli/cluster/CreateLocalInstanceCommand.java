@@ -16,25 +16,6 @@
 
 package com.sun.enterprise.admin.cli.cluster;
 
-import com.sun.enterprise.admin.cli.CLIConstants;
-import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
-import com.sun.enterprise.admin.servermgmt.KeystoreManager;
-import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
-import com.sun.enterprise.security.store.PasswordAdapter;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-import com.sun.enterprise.universal.glassfish.TokenResolver;
-import com.sun.enterprise.util.OS;
-import com.sun.enterprise.util.SystemPropertyConstants;
-import com.sun.enterprise.util.io.FileUtils;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.I18n;
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.CommandException;
-import org.glassfish.api.admin.CommandValidationException;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -42,6 +23,24 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.I18n;
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.CommandException;
+import org.glassfish.api.admin.CommandValidationException;
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
+
+import com.sun.enterprise.admin.cli.CLIConstants;
+import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
+import com.sun.enterprise.admin.servermgmt.KeystoreManager;
+import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
+import com.sun.enterprise.security.store.PasswordAdapter;
+import com.sun.enterprise.universal.glassfish.TokenResolver;
+import com.sun.enterprise.util.OS;
+import com.sun.enterprise.util.SystemPropertyConstants;
+import com.sun.enterprise.util.io.FileUtils;
 
 
 /**
@@ -56,8 +55,6 @@ import java.util.logging.Level;
 public final class CreateLocalInstanceCommand extends CreateLocalInstanceFilesystemCommand {
     private final String CONFIG = "config";
     private final String CLUSTER = "cluster";
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(CreateLocalInstanceCommand.class);
 
     @Param(name = CONFIG, optional = true)
     private String configName;

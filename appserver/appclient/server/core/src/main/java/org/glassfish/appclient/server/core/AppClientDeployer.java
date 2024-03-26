@@ -36,14 +36,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.jar.Attributes;
-import java.util.logging.Logger;
 
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.MetaData;
 import org.glassfish.api.deployment.UndeployCommandParameters;
 import org.glassfish.appclient.server.core.jws.JWSAdapterManager;
-import org.glassfish.appclient.server.core.jws.JavaWebStartInfo;
 import org.glassfish.appclient.server.core.jws.servedcontent.ASJarSigner;
 import org.glassfish.deployment.common.Artifacts;
 import org.glassfish.deployment.common.DeploymentException;
@@ -120,8 +118,6 @@ public class AppClientDeployer
         extends JavaEEDeployer<AppClientContainerStarter, AppClientServerApplication>
         implements PostConstruct {
 
-    private Logger logger;
-
     public static final String APPCLIENT_FACADE_CLASS_FILE =
             "org/glassfish/appclient/client/AppClientFacade.class";
     public static final String APPCLIENT_AGENT_MAIN_CLASS_FILE =
@@ -186,8 +182,6 @@ public class AppClientDeployer
 
     @Override
     public void postConstruct() {
-        logger = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER,
-                JavaWebStartInfo.APPCLIENT_SERVER_LOGMESSAGE_RESOURCE);
         for (HK2Module module : modulesRegistry.getModules(GF_CLIENT_MODULE_NAME)) {
             gfClientModuleClassLoader = module.getClassLoader();
         }

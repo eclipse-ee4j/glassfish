@@ -345,7 +345,6 @@ public final class RealmsImpl extends AMXImplBase
     }
 
     private static final String ADMIN_REALM = "admin-realm";
-    private static final String ANONYMOUS_USER = "anonymous";
     private static final String FILE_REALM_CLASSNAME = "com.sun.enterprise.security.auth.realm.file.FileRealm";
 
 

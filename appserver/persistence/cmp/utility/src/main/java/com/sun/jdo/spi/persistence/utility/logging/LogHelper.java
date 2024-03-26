@@ -78,7 +78,7 @@ public class LogHelper {
      */
     public static boolean isJDK14() {
         try {
-            Class logger = Class.forName("java.util.logging.Logger"); //NOI18N
+            Class.forName("java.util.logging.Logger"); //NOI18N
             return true;
         } catch (ClassNotFoundException ex) {
             return false;

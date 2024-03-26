@@ -204,7 +204,6 @@ public class FIFOEJBObjectCache
         CacheItem item, oldItem = null, overflow = null;
         EJBObjectCacheItem newItem = null;
         Object oldValue = null;
-        int oldSize = 0;
 
         // lookup the item
         synchronized (bucketLocks[index]) {

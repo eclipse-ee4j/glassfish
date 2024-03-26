@@ -16,38 +16,48 @@
 
 package org.glassfish.deployment.admin;
 
-import javax.security.auth.Subject;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.admin.AdminCommand;
-import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.api.admin.CommandLock;
-import org.glassfish.api.Param;
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.api.admin.ExecuteOn;
-import org.glassfish.api.admin.RuntimeType;
-import org.glassfish.deployment.common.DeploymentProperties;
-import org.glassfish.deployment.common.DeploymentUtils;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
-import jakarta.inject.Inject;
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.config.support.PropertyResolver;
-import com.sun.enterprise.util.StringUtils;
-import com.sun.enterprise.config.serverbeans.*;
-import org.glassfish.grizzly.config.dom.NetworkListener;
-import org.glassfish.grizzly.config.dom.Protocol;
-import org.glassfish.api.admin.RestEndpoints;
-import org.glassfish.api.admin.RestEndpoint;
-import java.util.List;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.net.URL;
-import java.util.Collection;
+
+import javax.security.auth.Subject;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.Param;
 import org.glassfish.api.admin.AccessRequired.AccessCheck;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.AdminCommandSecurity;
+import org.glassfish.api.admin.CommandLock;
 import org.glassfish.api.admin.CommandRunner;
+import org.glassfish.api.admin.ExecuteOn;
 import org.glassfish.api.admin.ParameterMap;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.config.support.PropertyResolver;
+import org.glassfish.deployment.common.DeploymentProperties;
+import org.glassfish.deployment.common.DeploymentUtils;
+import org.glassfish.grizzly.config.dom.NetworkListener;
+import org.glassfish.grizzly.config.dom.Protocol;
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
+
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.HttpService;
+import com.sun.enterprise.config.serverbeans.Node;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.VirtualServer;
+import com.sun.enterprise.util.StringUtils;
+
+import jakarta.inject.Inject;
 
 @Service(name="_get-application-launch-urls")
 @ExecuteOn(value={RuntimeType.DAS})
@@ -66,8 +76,6 @@ public class GetApplicationLaunchURLsCommand implements AdminCommand, AdminComma
 
     @Inject
     CommandRunner commandRunner;
-
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(GetApplicationLaunchURLsCommand.class);
 
     private List<Server> servers;
 

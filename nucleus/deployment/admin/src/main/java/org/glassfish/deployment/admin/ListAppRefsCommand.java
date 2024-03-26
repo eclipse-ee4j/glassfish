@@ -31,7 +31,6 @@ import com.sun.enterprise.config.serverbeans.Engine;
 import com.sun.enterprise.config.serverbeans.Module;
 import org.glassfish.api.admin.ExecuteOn;
 import org.glassfish.api.admin.RuntimeType;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import java.util.Collection;
 
 import jakarta.inject.Inject;
@@ -82,9 +81,6 @@ public class ListAppRefsCommand implements AdminCommand, AdminCommandSecurity.Ac
         return accessChecks;
     }
 
-
-
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListAppRefsCommand.class);
 
     public void execute(AdminCommandContext context) {
 

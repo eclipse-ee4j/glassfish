@@ -99,7 +99,6 @@ public class GadgetHandlers {
 // FIXME: Cache?
         // Get our parser...
         ConfigParser parser = new ConfigParser(GuiUtil.getHabitat());
-        String id = null;
 
         // Read the document...
         DomDocument doc = parser.parse(url);

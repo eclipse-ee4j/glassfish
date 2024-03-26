@@ -297,30 +297,14 @@ public class ExpandWar {
             if (fileSrc.isDirectory()) {
                 result = copy(fileSrc, fileDest);
             } else {
-                FileChannel ic = null;
-                FileChannel oc = null;
-                try {
-                    ic = (new FileInputStream(fileSrc)).getChannel();
-                    oc = (new FileOutputStream(fileDest)).getChannel();
+                try (FileChannel ic = (new FileInputStream(fileSrc)).getChannel();
+                        FileChannel oc = (new FileOutputStream(fileDest)).getChannel()) {
                     ic.transferTo(0, ic.size(), oc);
                 } catch (IOException e) {
                     String msg = MessageFormat.format(rb.getString(LogFacade.ERROR_COPYING_EXCEPTION),
                                                       new Object[] {fileSrc, fileDest});
                     log.log(Level.SEVERE, msg, e);
                     result = false;
-                } finally {
-                    if (ic != null) {
-                        try {
-                            ic.close();
-                        } catch (IOException e) {
-                        }
-                    }
-                    if (oc != null) {
-                        try {
-                            oc.close();
-                        } catch (IOException e) {
-                        }
-                    }
                 }
             }
         }

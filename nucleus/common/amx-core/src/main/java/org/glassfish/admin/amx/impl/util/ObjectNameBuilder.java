@@ -56,7 +56,6 @@ public final class ObjectNameBuilder {
     public String getJMXDomain() {
         return (mJMXDomain);
     }
-    private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
     public static String makeWild(String props) {
         return (Util.concatenateProps(props, JMXUtil.WILD_PROP));

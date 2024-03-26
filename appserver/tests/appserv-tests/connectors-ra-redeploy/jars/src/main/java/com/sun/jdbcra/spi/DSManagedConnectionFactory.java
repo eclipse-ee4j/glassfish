@@ -604,7 +604,7 @@ public class DSManagedConnectionFactory extends ManagedConnectionFactory {
             }
         }
 
-        if (user.equals(pc.getUserName()) && password.equals(pc.getPassword())) {
+        if (user.equals(pc.getUserName()) && password.equals(new String(pc.getPassword()))) {
             return true;
         }
 

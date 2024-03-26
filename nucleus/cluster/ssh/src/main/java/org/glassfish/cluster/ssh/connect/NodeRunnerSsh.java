@@ -35,8 +35,6 @@ import java.io.ByteArrayOutputStream;
 
 public class NodeRunnerSsh  {
 
-    private static final String NL = System.getProperty("line.separator");
-
     private ServiceLocator habitat;
     private Logger logger;
 

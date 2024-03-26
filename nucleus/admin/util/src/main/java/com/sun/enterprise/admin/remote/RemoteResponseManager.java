@@ -17,8 +17,7 @@
 
 package com.sun.enterprise.admin.remote;
 
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-import com.sun.enterprise.util.io.FileUtils;
+import static com.sun.enterprise.util.StringUtils.ok;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -26,10 +25,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.Map;
-import java.util.jar.Manifest;
 import java.util.logging.Logger;
 
-import static com.sun.enterprise.util.StringUtils.ok;
+import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+import com.sun.enterprise.util.io.FileUtils;
 
 /**
  * This class is responsible for handling the Remote Server response. Note that an unusul paradigm is used here. Success
@@ -50,7 +49,6 @@ public class RemoteResponseManager implements ResponseManager {
     private final Logger logger;
     private final InputStream responseStream;
     private final String response;
-    private Manifest m;
     private Map<String, String> mainAtts = Collections.emptyMap();
 
     public RemoteResponseManager(InputStream in, int code, Logger logger) throws RemoteException, IOException {

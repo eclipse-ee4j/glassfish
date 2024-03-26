@@ -17,7 +17,6 @@
 package org.glassfish.deployment.admin;
 
 import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
@@ -47,8 +46,6 @@ import org.glassfish.deployment.common.DeploymentProperties;
 })
 @AccessRequired(resource="domain/sniffers/$sniffername", action="read")
 public class IsSnifferUserVisibleCommand implements AdminCommand {
-
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(IsSnifferUserVisibleCommand.class);
 
     @Param(primary=true)
     public String sniffername = null;

@@ -75,7 +75,6 @@ abstract class BackupRestoreManager {
      * backupDir is set then it returns a path to backupDir + domainName.
      */
     protected File getBackupDirectory(BackupRequest request) {
-        File backupDir = null;
 
         // The v2 case.
         if (request.backupDir == null && request.backupConfig == null) {

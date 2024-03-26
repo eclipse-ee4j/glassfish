@@ -44,6 +44,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.Timer;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
 import javax.naming.NamingException;
@@ -67,20 +68,80 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     private static final Logger LOG = LogDomains.getLogger(ConnectionPool.class, LogDomains.RSR_LOGGER);
 
     // pool life-cycle config properties
+    /**
+     * Represents the "max-wait-time-in-millis" configuration value.<br>
+     * Specifies the maximum number of connections that can be created to satisfy client requests.<br>
+     * Default: 32
+     */
     protected int maxPoolSize;
+
+    /**
+     * Represents the " steady-pool-size" configuration value.<br>
+     * Specifies the initial and minimum number of connections maintained in the pool.<br>
+     * Default: 8
+     */
     protected int steadyPoolSize;
-    /** used by resizer to downsize the pool */
+
+    /**
+     * Represents the "pool-resize-quantity" configuration value.<br>
+     * Specifies the number of idle connections to be destroyed if the existing number of connections is above the
+     * steady-pool-size (subject to the max-pool-size limit).<br>
+     * This is enforced periodically at the idle-timeout-in-seconds interval. An idle connection is one that has not been
+     * used for a period of idle-timeout-in-seconds. When the pool size reaches steady-pool-size, connection removal
+     * stops.<br>
+     * Default: 2
+     */
     protected int resizeQuantity;
-    /** The total time a thread is willing to wait for a resource object. */
+
+    /**
+     * Represents the "max-wait-time-in-millis" configuration value.<br>
+     * Specifies the amount of time, in milliseconds, that the caller is willing to wait for a connection. If 0, the caller
+     * is blocked indefinitely until a resource is available or an error occurs.<br>
+     * Default: 60.000ms
+     */
     protected int maxWaitTime;
-    /** time (in ms) before destroying a free resource */
+
+    /**
+     * Represents the "idle-timeout-in-seconds" configuration value, but in millis.<br>
+     * Specifies the maximum time that a connection can remain idle in the pool. After this amount of time, the pool can
+     * close this connection.<br>
+     * Default: 300.000ms
+     */
     protected long idletime;
 
     // pool config properties
+    /**
+     * Represents the "fail-all-connections" configuration value.<br>
+     * If true, closes all connections in the pool if a single validation check fails.<br>
+     * Default: false
+     */
     protected boolean failAllConnections;
+
+    /**
+     * Represents the "match-connections" configuration value.<br>
+     * If true, enables connection matching. You can set to false if connections are homogeneous.<br>
+     * Default: true
+     */
     protected boolean matchConnections;
+    /**
+     * Represents the "is-connection-validation-required" configuration value.<br>
+     * Specifies whether connections have to be validated before being given to the application. If a resource’s validation
+     * fails, it is destroyed, and a new resource is created and returned.<br>
+     * Default: false
+     *
+     * TODO: rename to 'connectionValidationRequired'
+     */
     protected boolean validation;
+
+    /**
+     * Represents the "prefer-validate-over-recreate property" configuration value.<br>
+     * Specifies that validating idle connections is preferable to closing them. This property has no effect on non-idle
+     * connections. If set to true, idle connections are validated during pool resizing, and only those found to be invalid
+     * are destroyed and recreated. If false, all idle connections are destroyed and recreated during pool resizing.<br>
+     * Default: false.
+     */
     protected boolean preferValidateOverRecreate;
+
     // hold on to the resizer task so we can cancel/reschedule it.
     protected Resizer resizerTask;
 
@@ -88,17 +149,55 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     protected Timer timer;
 
     // advanced pool config properties
+    /**
+     * Represents the "connection-creation-retry-attempts" configuration value.<br>
+     * If the value connectionCreationRetryAttempts_ is > 0 then connectionCreationRetry_ is true, otherwise false.
+     */
     protected boolean connectionCreationRetry_;
+    /**
+     * Represents the "connection-creation-retry-attempts" configuration.<br>
+     * Specifies the number of attempts to create a new connection.<br>
+     * Default: 0
+     */
     protected int connectionCreationRetryAttempts_;
+
+    /**
+     * Represents the "connection-creation-retry-interval-in-seconds" configuration, but in millis.<br>
+     * Specifies the time interval between attempts to create a connection when connection-creation-retry-attempts is
+     * greater than 0.<br>
+     * Default: 10.000ms
+     */
     protected long conCreationRetryInterval_;
+
+    /**
+     * Represents the "validate-atmost-once-period-in-seconds" configuration, but in millis.<br>
+     * Specifies the time interval within which a connection is validated at most once. Minimizes the number of validation
+     * calls. A value of zero allows unlimited validation calls.<br>
+     * Default: 10.000ms.
+     */
     protected long validateAtmostPeriodInMilliSeconds_;
+
+    /**
+     * Represents the "max-connection-usage-count" configuration.<br>
+     * Specifies the number of times a connections is reused by the pool, after which it is closed. A zero value disables
+     * this feature.<br>
+     * Default: 0;
+     */
     protected int maxConnectionUsage_;
-    // To validate a Sun RA Pool Connection if it hasnot been validated
+
+    // To validate a Sun RA Pool Connection if it has not been validated
     // in the past x sec. (x=idle-timeout)
     // The property will be set from system property -
     // com.sun.enterprise.connectors.ValidateAtmostEveryIdleSecs=true
+    /**
+     * Represents the "validate-atmost-once-period-in-seconds" configuration.<br>
+     * Specifies the time interval within which a connection is validated at most once. Minimizes the number of validation
+     * calls. A value of zero allows unlimited validation calls.<br>
+     * Default: 0;
+     */
     private boolean validateAtmostEveryIdleSecs;
 
+    // TODO document
     protected String resourceSelectionStrategyClass;
 
     protected PoolLifeCycleListener poolLifeCycleListener;
@@ -128,6 +227,13 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     private boolean selfManaged_;
 
     private boolean blocked;
+
+    /**
+     * Reentrant lock to ensure calls to {@link #getResourceFromPool(ResourceAllocator, ResourceSpec)} and
+     * {@link #freeResource(ResourceHandle)} are not executed at the same time to solve issue 24843, because one is getting
+     * resources from the pool and possibly resizing the pool while the other is returning resources to the pool.
+     */
+    private final ReentrantLock getResourceFromPoolAndFreeResourceMethodsLock = new ReentrantLock(true);
 
     public ConnectionPool(PoolInfo poolInfo, Hashtable env) throws PoolingException {
         this.poolInfo = poolInfo;
@@ -675,50 +781,55 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
 
         ResourceHandle resourceHandle;
         List<ResourceHandle> freeResources = new ArrayList<>();
+
         try {
-            while ((resourceHandle = dataStructure.getResource()) != null) {
-
-                if (resourceHandle.hasConnectionErrorOccurred()) {
-                    dataStructure.removeResource(resourceHandle);
-                    continue;
-                }
-
-                if (matchConnection(resourceHandle, resourceAllocator)) {
-
-                    boolean isValid = isConnectionValid(resourceHandle, resourceAllocator);
-                    if (resourceHandle.hasConnectionErrorOccurred() || !isValid) {
-                        if (failAllConnections) {
-                            resourceFromPool = createSingleResourceAndAdjustPool(resourceAllocator, resourceSpec);
-                            // No need to match since the resource is created with the allocator of caller.
-                            break;
-                        }
+            getResourceFromPoolAndFreeResourceMethodsLock.lock();
+            try {
+                while ((resourceHandle = dataStructure.getResource()) != null) {
+                    if (resourceHandle.hasConnectionErrorOccurred()) {
                         dataStructure.removeResource(resourceHandle);
-                        // Resource is invalid, continue iteration.
                         continue;
                     }
-                    if (resourceHandle.isShareable() == resourceAllocator.shareableWithinComponent()) {
-                        // Got a matched, valid resource
-                        resourceFromPool = resourceHandle;
-                        break;
+
+                    if (matchConnection(resourceHandle, resourceAllocator)) {
+
+                        boolean isValid = isConnectionValid(resourceHandle, resourceAllocator);
+                        if (resourceHandle.hasConnectionErrorOccurred() || !isValid) {
+                            if (failAllConnections) {
+                                resourceFromPool = createSingleResourceAndAdjustPool(resourceAllocator, resourceSpec);
+                                // No need to match since the resource is created with the allocator of caller.
+                                break;
+                            }
+                            dataStructure.removeResource(resourceHandle);
+                            // Resource is invalid, continue iteration.
+                            continue;
+                        }
+                        if (resourceHandle.isShareable() == resourceAllocator.shareableWithinComponent()) {
+                            // Got a matched, valid resource
+                            resourceFromPool = resourceHandle;
+                            break;
+                        }
+                        freeResources.add(resourceHandle);
+                    } else {
+                        freeResources.add(resourceHandle);
                     }
-                    freeResources.add(resourceHandle);
-                } else {
-                    freeResources.add(resourceHandle);
                 }
+            } finally {
+                // Return all unmatched, free resources
+                for (ResourceHandle freeResource : freeResources) {
+                    dataStructure.returnResource(freeResource);
+                }
+                freeResources.clear();
+            }
+
+            if (resourceFromPool != null) {
+                // Set correct state
+                setResourceStateToBusy(resourceFromPool);
+            } else {
+                resourceFromPool = resizePoolAndGetNewResource(resourceAllocator);
             }
         } finally {
-            // Return all unmatched, free resources
-            for (ResourceHandle freeResource : freeResources) {
-                dataStructure.returnResource(freeResource);
-            }
-            freeResources.clear();
-        }
-
-        if (resourceFromPool != null) {
-            // Set correct state
-            setResourceStateToBusy(resourceFromPool);
-        } else {
-            resourceFromPool = resizePoolAndGetNewResource(resourceAllocator);
+            getResourceFromPoolAndFreeResourceMethodsLock.unlock();
         }
 
         return resourceFromPool;
@@ -734,26 +845,27 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
      * @throws PoolingException when not able to create resources
      */
     private ResourceHandle resizePoolAndGetNewResource(ResourceAllocator resourceAllocator) throws PoolingException {
+
         // Must be called from the thread holding the lock to this pool.
         ResourceHandle newResource = null;
 
         int numOfConnsToCreate = 0;
-        if (dataStructure.getResourcesSize() < steadyPoolSize) {
+        int dataStructureSize = dataStructure.getResourcesSize();
 
+        if (dataStructureSize < steadyPoolSize) {
             // May be all invalid resources are destroyed as
             // a result no free resource found and no. of resources is less than steady-pool-size
-            numOfConnsToCreate = steadyPoolSize - dataStructure.getResourcesSize();
-        } else if (dataStructure.getResourcesSize() + resizeQuantity <= maxPoolSize) {
-
+            numOfConnsToCreate = steadyPoolSize - dataStructureSize;
+        } else if (dataStructureSize + resizeQuantity <= maxPoolSize) {
             // Create and add resources of quantity "resizeQuantity"
             numOfConnsToCreate = resizeQuantity;
-        } else if (dataStructure.getResourcesSize() < maxPoolSize) {
-
+        } else if (dataStructureSize < maxPoolSize) {
             // This else if "test condition" is not needed. Just to be safe.
             // still few more connections (less than "resizeQuantity" and to reach the count of maxPoolSize)
             // can be added
-            numOfConnsToCreate = maxPoolSize - dataStructure.getResourcesSize();
+            numOfConnsToCreate = maxPoolSize - dataStructureSize;
         }
+
         if (numOfConnsToCreate > 0) {
             createResources(resourceAllocator, numOfConnsToCreate);
             newResource = getMatchedResourceFromPool(resourceAllocator);
@@ -962,7 +1074,9 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         if (poolLifeCycleListener != null && !handle.getDestroyByLeakTimeOut()) {
             poolLifeCycleListener.connectionReleased(handle.getId());
         }
-        LOG.log(FINE, "Resource was freed after it`s closure: {0}", handle);
+
+        // Note handle might already be altered by another thread before it is logged!
+        LOG.log(FINE, "Resource was freed after its closure: {0}", handle);
     }
 
     /**
@@ -994,23 +1108,29 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
     }
 
     protected void freeResource(ResourceHandle resourceHandle) {
-        if (cleanupResource(resourceHandle)) {
-            // Only when resource handle usage count is more than maxConnUsage
-            if (maxConnectionUsage_ > 0 && resourceHandle.getUsageCount() >= maxConnectionUsage_) {
-                performMaxConnectionUsageOperation(resourceHandle);
-            } else {
-                // Put it back to the free collection.
-                dataStructure.returnResource(resourceHandle);
-                // update the monitoring data
-                if (poolLifeCycleListener != null && !resourceHandle.getDestroyByLeakTimeOut()) {
-                    poolLifeCycleListener.decrementConnectionUsed(resourceHandle.getId());
-                    poolLifeCycleListener.incrementNumConnFree(false, steadyPoolSize);
+        try {
+            getResourceFromPoolAndFreeResourceMethodsLock.lock();
+            if (cleanupResource(resourceHandle)) {
+                // Only when resource handle usage count is more than maxConnUsage
+                if (maxConnectionUsage_ > 0 && resourceHandle.getUsageCount() >= maxConnectionUsage_) {
+                    performMaxConnectionUsageOperation(resourceHandle);
+                } else {
+                    // Put it back to the free collection.
+                    dataStructure.returnResource(resourceHandle);
+                    // update the monitoring data
+                    if (poolLifeCycleListener != null && !resourceHandle.getDestroyByLeakTimeOut()) {
+                        poolLifeCycleListener.decrementConnectionUsed(resourceHandle.getId());
+                        poolLifeCycleListener.incrementNumConnFree(false, steadyPoolSize);
+                    }
                 }
+                // For both the cases of free.add and maxConUsageOperation, a free resource is added.
+                // Hence notify waiting threads.
+                notifyWaitingThreads();
             }
-            // for both the cases of free.add and maxConUsageOperation, a free resource is added.
-            // Hence notify waiting threads
-            notifyWaitingThreads();
+        } finally {
+            getResourceFromPoolAndFreeResourceMethodsLock.unlock();
         }
+
     }
 
     protected boolean cleanupResource(ResourceHandle handle) {
@@ -1066,6 +1186,10 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         // removed in the next iteration of getUnenlistedResource
         // or internalGetResource
         dataStructure.removeResource(resourceHandle);
+
+        // Removing a resource, means a free resource is available for the pool.
+        // Hence notify waiting threads.
+        notifyWaitingThreads();
     }
 
     private void doFailAllConnectionsProcessing() {

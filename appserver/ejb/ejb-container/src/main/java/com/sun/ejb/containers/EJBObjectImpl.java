@@ -16,18 +16,18 @@
 
 package com.sun.ejb.containers;
 
-import java.rmi.RemoteException;
 import java.lang.reflect.Method;
-
-import jakarta.ejb.*;
-import com.sun.ejb.portable.*;
-
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
-import java.util.Map;
+import java.rmi.RemoteException;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
 
-import java.util.logging.*;
+import com.sun.ejb.portable.HandleImpl;
+
+import jakarta.ejb.EJBHome;
+import jakarta.ejb.EJBObject;
+import jakarta.ejb.Handle;
+import jakarta.ejb.RemoveException;
 
 /**
  * EJBObjectImpl implements EJBObject methods for EJBs.
@@ -44,8 +44,6 @@ public abstract class EJBObjectImpl
     implements EJBObject
 {
     private static Class[] NO_PARAMS = new Class[] {};
-    private static LocalStringManagerImpl localStrings =
-        new LocalStringManagerImpl(EJBObjectImpl.class);
     private static Method REMOVE_METHOD = null;
 
     static {

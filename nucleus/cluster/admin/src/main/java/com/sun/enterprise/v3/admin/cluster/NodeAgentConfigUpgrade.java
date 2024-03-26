@@ -78,7 +78,6 @@ public class NodeAgentConfigUpgrade implements ConfigurationUpgrade, PostConstru
                         return null;
 
                     for( NodeAgent na: agList){
-                        String host=null;
                         Node node = nodes.createChild(Node.class);
 
                         node.setName(na.getName());

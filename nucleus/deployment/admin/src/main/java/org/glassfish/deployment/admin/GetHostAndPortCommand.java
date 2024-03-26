@@ -28,7 +28,6 @@ import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.VirtualServer;
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.util.HostAndPort;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.StringUtils;
 import java.util.Collection;
 import org.glassfish.grizzly.config.dom.Http;
@@ -81,8 +80,6 @@ public class GetHostAndPortCommand implements AdminCommand, AdminCommandSecurity
     Domain domain;
 
     private Config config;
-
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(GetHostAndPortCommand.class);
 
     @Override
     public Collection<? extends AccessCheck> getAccessChecks() {

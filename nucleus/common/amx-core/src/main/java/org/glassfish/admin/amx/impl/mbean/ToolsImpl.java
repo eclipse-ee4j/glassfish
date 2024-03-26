@@ -37,8 +37,6 @@ import org.glassfish.admin.amx.core.Util;
 public class ToolsImpl extends AMXImplBase // implements Tools
 {
 
-    private static final String NL = StringUtil.NEWLINE();
-
     public ToolsImpl(final ObjectName parent) {
         super(parent, Tools.class);
     }

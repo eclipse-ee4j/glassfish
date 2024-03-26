@@ -384,8 +384,6 @@ final public class ClassFile implements VMConstants {
     }
 
     public void summarize () {
-        PrintStream os = System.out;
-
         constantPool.summarize();
         int codeSize = 0;
         for (int i=0; i<classMethods.size(); i++) {

@@ -296,9 +296,7 @@ public class DatabaseGenerator {
                         ColumnElement column =
                                 DBElementFactory.createAndAttachColumn(
                                         columnName, table, columnType);
-                        MappingFieldElement mappingField =
-                                createAndAttachMappingField(
-                                        fieldName, mappingClass, column);
+                        createAndAttachMappingField(fieldName, mappingClass, column);
 
                         if (field.isKey()) {
                             column.setNullable(false);

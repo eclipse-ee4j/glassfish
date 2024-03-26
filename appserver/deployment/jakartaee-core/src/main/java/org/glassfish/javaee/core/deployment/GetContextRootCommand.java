@@ -19,7 +19,6 @@ package org.glassfish.javaee.core.deployment;
 import org.glassfish.api.Param;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import org.glassfish.deployment.common.DeploymentProperties;
@@ -49,8 +48,6 @@ import org.glassfish.hk2.api.PerLookup;
         })
 })
 public class GetContextRootCommand implements AdminCommand {
-
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(GetContextRootCommand.class);
 
     @Param(primary=true)
     private String modulename = null;

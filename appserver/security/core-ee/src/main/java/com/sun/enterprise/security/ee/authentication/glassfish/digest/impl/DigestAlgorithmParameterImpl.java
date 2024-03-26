@@ -24,7 +24,7 @@ package com.sun.enterprise.security.ee.authentication.glassfish.digest.impl;
 
 public class DigestAlgorithmParameterImpl implements com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter {
 
-    private static byte[] delimeter = ":".getBytes();
+    private byte[] delimiter = ":".getBytes();
     private String algorithm = "";
     private byte[] data = null;
     private String name = "";
@@ -36,7 +36,7 @@ public class DigestAlgorithmParameterImpl implements com.sun.enterprise.security
 
     public DigestAlgorithmParameterImpl(String name, byte[] data, byte delimiter) {
         this.data = data;
-        DigestAlgorithmParameterImpl.delimeter = delimeter;
+        this.delimiter = new byte[] { delimiter };
         this.name = name;
     }
 
@@ -49,7 +49,7 @@ public class DigestAlgorithmParameterImpl implements com.sun.enterprise.security
     public DigestAlgorithmParameterImpl(String name, String algorithm, byte[] data, byte[] delimiter) {
         this.algorithm = algorithm;
         this.data = data;
-        DigestAlgorithmParameterImpl.delimeter = delimeter;
+        this.delimiter = delimiter;
         this.name = name;
     }
 
@@ -65,7 +65,7 @@ public class DigestAlgorithmParameterImpl implements com.sun.enterprise.security
 
     @Override
     public byte[] getDelimiter() {
-        return delimeter;
+        return delimiter;
     }
 
     @Override

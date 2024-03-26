@@ -151,8 +151,6 @@ public class FetchedWith extends org.netbeans.modules.schema2beans.BaseBean
         comparators.remove(c);
     }
     public void validate() throws org.netbeans.modules.schema2beans.ValidateException {
-        boolean restrictionFailure = false;
-        boolean restrictionPassed = false;
         // Validating property default
         if (isDefault() != false) {
             if (getValue(LEVEL) != null) {
@@ -210,7 +208,6 @@ public class FetchedWith extends org.netbeans.modules.schema2beans.BaseBean
     public void dump(StringBuffer str, String indent){
         String s;
         Object o;
-        org.netbeans.modules.schema2beans.BaseBean n;
         str.append(indent);
         str.append("Default");    // NOI18N
         str.append(indent+"\t");    // NOI18N

@@ -32,7 +32,6 @@ import jakarta.inject.Inject;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.config.Transaction;
 
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.config.serverbeans.Applications;
 import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.Domain;
@@ -60,8 +59,6 @@ import org.glassfish.api.admin.RestEndpoints;
         description="_lifecycle")
 })
 public class InstanceLifecycleModuleCommand implements AdminCommand, AdminCommandSecurity.AccessCheckProvider {
-
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(InstanceLifecycleModuleCommand.class);
 
     @Param(primary=true)
     public String name = null;

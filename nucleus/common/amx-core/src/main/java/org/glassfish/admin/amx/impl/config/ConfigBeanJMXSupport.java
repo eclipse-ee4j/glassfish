@@ -476,8 +476,6 @@ class ConfigBeanJMXSupport
 
     private static boolean isRemoteableDefaultMethod(final Method m)
     {
-        boolean isRemotable = true;
-
         final Class<?> returnType = m.getReturnType();
         if (!isRemoteableType(returnType))
         {

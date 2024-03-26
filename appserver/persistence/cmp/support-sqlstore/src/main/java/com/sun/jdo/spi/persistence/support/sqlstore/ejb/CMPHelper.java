@@ -23,21 +23,19 @@ package com.sun.jdo.spi.persistence.support.sqlstore.ejb;
 
 import java.util.ResourceBundle;
 
-import jakarta.ejb.EJBObject;
-import jakarta.ejb.EJBLocalObject;
-import jakarta.ejb.EJBContext;
-import jakarta.ejb.EntityContext;
+import org.glassfish.persistence.common.I18NHelper;
 
 import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
 import com.sun.jdo.api.persistence.support.PersistenceManager;
 import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
 import com.sun.jdo.api.persistence.support.Transaction;
-
-import org.glassfish.persistence.common.I18NHelper;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
-import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperPersistenceManager;
 import com.sun.jdo.spi.persistence.support.sqlstore.impl.PersistenceManagerImpl;
 import com.sun.jdo.spi.persistence.support.sqlstore.impl.PersistenceManagerWrapper;
+
+import jakarta.ejb.EJBContext;
+import jakarta.ejb.EJBLocalObject;
+import jakarta.ejb.EJBObject;
+import jakarta.ejb.EntityContext;
 
   /** Provides helper methods for CMP support implementation with the
    * application server specific information. Calls corresponding methods
@@ -49,9 +47,6 @@ public class CMPHelper {
     private final static ResourceBundle messages = I18NHelper.loadBundle(
         "com.sun.jdo.spi.persistence.support.sqlstore.Bundle", // NOI18N
         CMPHelper.class.getClassLoader());
-
-    /** The logger */
-    private static Logger logger = LogHelperPersistenceManager.getLogger();
 
    /** Reference to a class that implements ContainerHelper interface for this
     * particular application server. In a non-managed environment the

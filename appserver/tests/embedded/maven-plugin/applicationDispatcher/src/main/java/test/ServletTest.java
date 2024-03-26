@@ -22,7 +22,6 @@ import jakarta.servlet.http.*;
 
 public class ServletTest extends HttpServlet{
 
-    private ServletContext context;
     private static String status = "ApplicationDispatcher::PASS";
 
     public void init(ServletConfig config) throws ServletException {

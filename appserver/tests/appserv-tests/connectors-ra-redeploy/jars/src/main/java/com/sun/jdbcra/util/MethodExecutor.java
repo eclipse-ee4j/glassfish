@@ -37,7 +37,7 @@ public class MethodExecutor implements java.io.Serializable{
     static {
         _logger = Logger.getAnonymousLogger();
     }
-    private final boolean debug = false;
+
     /**
      * Exceute a simple set Method.
      *

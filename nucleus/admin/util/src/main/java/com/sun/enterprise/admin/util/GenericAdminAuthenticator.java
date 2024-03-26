@@ -17,20 +17,6 @@
 
 package com.sun.enterprise.admin.util;
 
-import com.sun.enterprise.config.serverbeans.AdminService;
-import com.sun.enterprise.config.serverbeans.AuthRealm;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.SecureAdmin;
-import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.security.SecurityContext;
-import com.sun.enterprise.security.auth.realm.file.FileRealm;
-import com.sun.enterprise.security.auth.realm.file.FileRealmUser;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.net.NetUtils;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-
 import java.io.File;
 import java.io.IOException;
 import java.rmi.server.RemoteServer;
@@ -40,27 +26,39 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.management.remote.JMXAuthenticator;
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;
-import javax.management.remote.JMXAuthenticator;
 
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.container.Sniffer;
 import org.glassfish.common.util.admin.AuthTokenManager;
 import org.glassfish.grizzly.http.server.Request;
-import org.glassfish.logging.annotation.LoggerInfo;
-import org.glassfish.security.services.api.authentication.AuthenticationService;
-import org.jvnet.hk2.annotations.ContractsProvided;
-import org.jvnet.hk2.annotations.Optional;
-import org.jvnet.hk2.annotations.Service;
-
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.security.common.Group;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.AdminAccessController;
 import org.glassfish.internal.api.LocalPassword;
 import org.glassfish.internal.api.RemoteAdminAccessException;
 import org.glassfish.internal.api.ServerContext;
+import org.glassfish.logging.annotation.LoggerInfo;
+import org.glassfish.security.common.Group;
+import org.glassfish.security.services.api.authentication.AuthenticationService;
+import org.jvnet.hk2.annotations.ContractsProvided;
+import org.jvnet.hk2.annotations.Optional;
+import org.jvnet.hk2.annotations.Service;
+
+import com.sun.enterprise.config.serverbeans.AdminService;
+import com.sun.enterprise.config.serverbeans.AuthRealm;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.SecureAdmin;
+import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.security.SecurityContext;
+import com.sun.enterprise.security.auth.realm.file.FileRealm;
+import com.sun.enterprise.security.auth.realm.file.FileRealmUser;
+import com.sun.enterprise.util.net.NetUtils;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * Implementation of {@link AdminAccessController} that delegates to LoginContextDriver.
@@ -122,8 +120,6 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
 
     @Inject
     private AuthenticationService authService;
-
-    private static LocalStringManagerImpl lsm = new LocalStringManagerImpl(GenericAdminAuthenticator.class);
 
     @Override
     public synchronized void postConstruct() {

@@ -45,7 +45,6 @@ public abstract class AbstractStaxProvider<T> extends BaseProvider<T> {
 
     private static final XMLOutputFactory XML_FACTORY = XMLOutputFactory.newInstance();
     private static final MappedNamespaceConvention JSON_CONVENTION = new MappedNamespaceConvention();
-    private static final MediaType ANY_XML_MEDIATYPE = new MediaType(MediaType.MEDIA_TYPE_WILDCARD, "xml");
 
     protected class PrePostFixedWriter {
         private String prefix;

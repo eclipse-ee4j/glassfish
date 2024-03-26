@@ -20,18 +20,9 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.state;
 
-import org.glassfish.persistence.common.I18NHelper;
 import com.sun.jdo.spi.persistence.support.sqlstore.ActionDesc;
 
-import java.util.ResourceBundle;
-
 public class PersistentNew extends LifeCycleState {
-    /**
-     * I18N message handler
-     */
-    private final static ResourceBundle messages = I18NHelper.loadBundle(
-            "com.sun.jdo.spi.persistence.support.sqlstore.Bundle", // NOI18N
-            PersistentNew.class.getClassLoader());
 
     public PersistentNew() {
         // these flags are set only in the constructor

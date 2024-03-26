@@ -2192,7 +2192,6 @@ public class ModelValidator
              */
             private void validateMethods () throws ModelValidationException
             {
-                Model model = getModel();
                 Object equalsMethod = getNonObjectMethod(keyClassName,
                     "equals", Model.getEqualsArgs()); //NOI18N
                 Object hashCodeMethod = getNonObjectMethod(keyClassName,

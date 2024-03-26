@@ -1520,9 +1520,6 @@ public class TransactionImpl
      * @return  String describing contents of this Transaction object.
      */
     public String toString() {
-        int        i;
-        Object    o;
-
         String    s = "  Transaction: \n   status        = " + this.statusString(this.status)+ "\n" // NOI18N
                   +    "   Transaction Object       = Transaction@" + this.hashCode() + "\n" // NOI18N
                   +    "   threads       = " + this.threads + "\n"; // NOI18N

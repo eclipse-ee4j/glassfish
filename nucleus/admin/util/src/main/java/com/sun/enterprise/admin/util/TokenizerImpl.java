@@ -51,8 +51,6 @@ public final class TokenizerImpl implements Tokenizer {
         this(input, delimiters, true, escapeChar, escapableChars);
     }
 
-    private static final char QUOTE_CHAR = '\"';
-
     public TokenizerImpl(String input, String delimiters, boolean multipleDelimsCountAsOne, char escapeChar, String escapableChars)
             throws TokenizerException {
         final TokenizerInternal worker = new TokenizerInternal(input, delimiters, escapeChar, escapableChars);
@@ -202,7 +200,6 @@ final class TokenizerInternal {
     }
 
     private static final char QUOTE_CHAR = '\"';
-    private static final char TAB_CHAR = '\t';
 
     char decodeUnicodeSequence() throws MalformedUnicodeSequenceException {
         int value = 0;

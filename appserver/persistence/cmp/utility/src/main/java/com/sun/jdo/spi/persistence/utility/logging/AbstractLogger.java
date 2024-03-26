@@ -131,7 +131,6 @@ abstract public class AbstractLogger implements Logger
             if (fileName != null)
             {
                 InputStream inputStream = null;
-                File file = null;
 
                 try
                 {

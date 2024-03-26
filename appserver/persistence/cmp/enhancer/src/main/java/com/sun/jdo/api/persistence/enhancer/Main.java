@@ -559,8 +559,7 @@ public class Main
     private void appendFileContents(String filename, ArrayList argVec) {
         try {
             FileReader inputFile = new FileReader(filename);
-            try {
-                BufferedReader input = new BufferedReader(inputFile);
+            try (BufferedReader input = new BufferedReader(inputFile)) {
                 String s = null;
                 while ((s = input.readLine()) != null) {
                     StringTokenizer parser = new StringTokenizer(s, " \t", false);//NOI18N
@@ -620,10 +619,8 @@ public class Main
             try
             {
                 String name = (String) names.next ();
-                int n = name.length ();
 
                 //if we have a class-files
-                InputStream in = null;
                 if (isClassFileName (name))
                 {
                     enhanceClassFile (openFileInputStream (name));

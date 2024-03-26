@@ -110,7 +110,6 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
 
     private static final LocalStringsImpl strings = new LocalStringsImpl(RemoteRestAdminCommand.class);
 
-    private static final String QUERY_STRING_SEPARATOR = "&";
     private static final String ADMIN_URI_PATH = "/command/";
     private static final String COMMAND_NAME_REGEXP = "^[a-zA-Z_][-a-zA-Z0-9_]*$";
     private static final String READ_TIMEOUT = "AS_ADMIN_READTIMEOUT";
@@ -165,7 +164,6 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
 
     private boolean enableCommandModelCache = true;
 
-    //TODO: Remove it
     private OutputStream userOut;
 
     /*

@@ -61,7 +61,6 @@ public class UpgradeService implements ConfigurationUpgrade, PostConstruct {
 
     private final static Logger logger = Logger.getAnonymousLogger();
 
-    private static final String MODULE_TYPE = "moduleType";
     private static final String APPCLIENT_SNIFFER_NAME = "appclient";
     private static final String V3_0_1_JAVA_WEB_START_ENABLED_PROPERTY_NAME = "javaWebStartEnabled";
     private static final String GF3_1_JAVA_WEB_START_ENABLED_PROPERTY_NAME = "java-web-start-enabled";

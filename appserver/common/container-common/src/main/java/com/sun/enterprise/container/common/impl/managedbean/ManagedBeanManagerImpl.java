@@ -335,7 +335,7 @@ public class ManagedBeanManagerImpl implements ManagedBeanManager, PostConstruct
                             + " with jndi name " + jndiName, ne);
                     }
                 } else {
-                    appClientManagedBeans.remove(jndiName);
+                    appClientManagedBeans.remove(jndiName.toString());
                 }
 
                 managedBeanDescriptor.clearAllBeanInstanceInfo();

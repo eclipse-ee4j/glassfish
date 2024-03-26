@@ -1056,8 +1056,6 @@ public class UtilHandlers {
 
     /* This is copied from within javaToJSON() */
     public static String escapePropertyValue(String str){
-        String chStr;
-        int len;
         StringCharacterIterator it = new StringCharacterIterator(str);
         char ch = it.first();
         StringBuilder builder =  new StringBuilder(str.length() << 2);

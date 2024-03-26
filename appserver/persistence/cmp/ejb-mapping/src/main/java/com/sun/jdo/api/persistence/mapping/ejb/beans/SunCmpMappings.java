@@ -246,8 +246,6 @@ public class SunCmpMappings extends org.netbeans.modules.schema2beans.BaseBean
     }
 
     public void validate() throws org.netbeans.modules.schema2beans.ValidateException {
-        boolean restrictionFailure = false;
-        boolean restrictionPassed = false;
         // Validating property sunCmpMapping
         if (sizeSunCmpMapping() == 0) {
             throw new org.netbeans.modules.schema2beans.ValidateException("sizeSunCmpMapping() == 0", org.netbeans.modules.schema2beans.ValidateException.FailureType.NULL_VALUE, "sunCmpMapping", this);    // NOI18N
@@ -304,8 +302,6 @@ public class SunCmpMappings extends org.netbeans.modules.schema2beans.BaseBean
 
     // Dump the content of this bean returning it as a String
     public void dump(StringBuffer str, String indent){
-        String s;
-        Object o;
         org.netbeans.modules.schema2beans.BaseBean n;
         str.append(indent);
         str.append("SunCmpMapping["+this.sizeSunCmpMapping()+"]");    // NOI18N

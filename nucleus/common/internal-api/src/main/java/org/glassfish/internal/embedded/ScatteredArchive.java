@@ -310,14 +310,15 @@ public class ScatteredArchive extends ReadableArchiveAdapter {
                     f = new File(url.getPath());
                 }
                 if (f.isFile()) {
-                    JarFile jar = new JarFile(f);
-                    Enumeration<JarEntry> jarEntries = jar.entries();
-                    while (jarEntries.hasMoreElements()) {
-                        JarEntry jarEntry = jarEntries.nextElement();
-                        if (jarEntry.isDirectory()) {
-                            continue;
+                    try (JarFile jar = new JarFile(f)) {
+                        Enumeration<JarEntry> jarEntries = jar.entries();
+                        while (jarEntries.hasMoreElements()) {
+                            JarEntry jarEntry = jarEntries.nextElement();
+                            if (jarEntry.isDirectory()) {
+                                continue;
+                            }
+                            entries.add(jarEntry.getName());
                         }
-                        entries.add(jarEntry.getName());
                     }
                 } else {
                     getListOfFiles(f, prefix, entries);

@@ -157,8 +157,6 @@ public class CmpFieldMapping extends org.netbeans.modules.schema2beans.BaseBean
         comparators.remove(c);
     }
     public void validate() throws org.netbeans.modules.schema2beans.ValidateException {
-        boolean restrictionFailure = false;
-        boolean restrictionPassed = false;
         // Validating property fieldName
         if (getFieldName() == null) {
             throw new org.netbeans.modules.schema2beans.ValidateException("getFieldName() == null", org.netbeans.modules.schema2beans.ValidateException.FailureType.NULL_VALUE, "fieldName", this);    // NOI18N
@@ -176,7 +174,6 @@ public class CmpFieldMapping extends org.netbeans.modules.schema2beans.BaseBean
 
     // Dump the content of this bean returning it as a String
     public void dump(StringBuffer str, String indent){
-        String s;
         Object o;
         org.netbeans.modules.schema2beans.BaseBean n;
         str.append(indent);

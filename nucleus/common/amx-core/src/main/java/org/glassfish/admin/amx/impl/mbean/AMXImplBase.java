@@ -350,7 +350,6 @@ public class AMXImplBase extends MBeanImplBase
     protected Object getAttributeInternal(final String name)
             throws AttributeNotFoundException, ReflectionException, MBeanException {
         Object result = null;
-        boolean handleManually = false;
         //cdebug( "AMXImplBase.getAttributeInternal: " + name );
 
         // A getter always takes priority
@@ -542,11 +541,8 @@ public class AMXImplBase extends MBeanImplBase
             throw new IllegalArgumentException("Attribute is read-only: " + attr.getName());
         }
 
-        boolean failure = true;
-
         try {
             setAttributeInternal(attr);
-            failure = false;
         } catch (AttributeNotFoundException e) {
             throw e;
         } catch (InvalidAttributeValueException e) {
@@ -572,7 +568,6 @@ public class AMXImplBase extends MBeanImplBase
             ReflectionException, MBeanException {
         trace("setAttribute: " + attr.getName() + " = " + attr.getValue());
 
-        boolean handleManually = false;
         final Method m = findSetter(attr);
 
         boolean shouldEmitNotifications = shouldEmitNotifications();
@@ -782,7 +777,6 @@ public class AMXImplBase extends MBeanImplBase
             String[] types)
             throws MBeanException, ReflectionException {
         Object result = null;
-        boolean unimplemented = false;
         final int numArgs = args != null ? args.length : 0;
         //cdebug("invoke: " + operationName + ", num args = " + numArgs );
 

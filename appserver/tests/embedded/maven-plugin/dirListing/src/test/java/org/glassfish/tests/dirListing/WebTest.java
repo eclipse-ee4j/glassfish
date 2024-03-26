@@ -51,8 +51,7 @@ public class WebTest {
             BufferedReader in = new BufferedReader(new InputStreamReader(
                     yc.getInputStream()));
             String line = null;
-            int index=0, lineNum=0;
-            String cookies = "";
+            int lineNum=0;
             while ((line = in.readLine()) != null) {
                 System.out.println(lineNum + ": " + line);
                 if (line.indexOf("Directory Listing") != -1){

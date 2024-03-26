@@ -70,7 +70,7 @@ public class PortImpl implements Port {
     private void removeListener() {
         try {
             ConfigSupport.apply(new ConfigCode() {
-                public Object run(ConfigBeanProxy[] params) throws PropertyVetoException, TransactionFailure {
+                public Object run(ConfigBeanProxy... params) throws PropertyVetoException, TransactionFailure {
                     final NetworkListeners nt = (NetworkListeners) params[0];
                     final VirtualServer vs = (VirtualServer) params[1];
                     final Protocols protocols = (Protocols) params[2];

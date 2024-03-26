@@ -16,13 +16,16 @@
 
 package test;
 
-import java.io.*;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
+import java.io.IOException;
+
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSessionListener;
 
 public class ServletTest extends HttpServlet implements HttpSessionListener {
-
-    private ServletContext context;
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);

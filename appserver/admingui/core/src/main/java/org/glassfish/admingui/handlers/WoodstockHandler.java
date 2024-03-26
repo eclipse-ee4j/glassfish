@@ -443,7 +443,6 @@ public class WoodstockHandler {
         String monitorURL = (String) handlerCtx.getInputValue("monitorURL");
         ArrayList menuList = new ArrayList();
         String firstItem = null;
-        String title = null;
         if (aList != null) {
             ListIterator al = aList.listIterator();
             while (al.hasNext()) {

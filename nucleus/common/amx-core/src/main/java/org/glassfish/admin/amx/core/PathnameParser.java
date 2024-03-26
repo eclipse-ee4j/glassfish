@@ -196,11 +196,6 @@ public final class PathnameParser
      */
     private static final Pattern TYPE_SEARCH_PATTERN = Pattern.compile(LEGAL_TYPE_PATTERN + ".*");
 
-    /**
-     * This pattern finds a name up to the terminating SUBSCRIPT_RIGHT.
-     */
-    private static final Pattern NAME_SEARCH_PATTERN = Pattern.compile("(" + LEGAL_NAME_PATTERN + ")" + SUBSCRIPT_RIGHT + ".*");
-
     /* a legal type, by itself */
     private static final Pattern LEGAL_TYPE_PATTERN_COMPILED = Pattern.compile( LEGAL_TYPE_PATTERN );
 

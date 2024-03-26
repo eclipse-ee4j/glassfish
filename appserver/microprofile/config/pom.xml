@@ -77,10 +77,8 @@
                         
                         <!-- A list of packages that are exposed to classes outside the bundle -->
                         <Export-Package>
-                            org.glassfish.microprofile.config,
-                            io.helidon.common.config,
+                            io.helidon.config,
                             io.helidon.config.mp,
-                            io.helidon.config
                         </Export-Package>
                         
                         <!-- A list of dependencies to include in the bundle (as they're not native OSGI bundles) -->
@@ -88,31 +86,14 @@
                             <!--
                                 The helidon MP config dependency tree, illustrating what we actually output to the GF bundle
                             -->
-                            groupId=io.helidon.microprofile.config,
-                                groupId=io.helidon.config;artifactId=helidon-config-mp,
-                                    groupId=io.helidon.common;artifactId=helidon-common,
-                                    groupId=io.helidon.common;artifactId=helidon-common-service-loader,
-                                    groupId=io.helidon.config;artifactId=helidon-config-yaml-mp,
-                                    groupId=io.helidon.config;artifactId=helidon-config,
-                                        groupId=io.helidon.inject;artifactId=helidon-inject-api,
-                                        groupId=io.helidon.logging;artifactId=helidon-logging-common,
-                                        groupId=io.helidon.common;artifactId=helidon-common-types,
-                                            groupId=io.helidon.builder;artifactId=helidon-builder-api,
-                                        groupId=io.helidon.common;artifactId=helidon-common-config,
-                                            groupId=io.helidon.common;artifactId=helidon-common-mapper,
-                                        <!--
-                                        groupId=io.helidon.common;artifactId=helidon-common-reactive,
-                                            groupId=io.helidon.common;artifactId=helidon-common-mapper, -->
-                                        groupId=io.helidon.common;artifactId=helidon-common-media-type,
+                            groupId=io.helidon.config;artifactId=helidon-config-mp,
+                            groupId=io.helidon.common;artifactId=helidon-common,
+                            groupId=io.helidon.common;artifactId=helidon-common-service-loader,
+                            groupId=io.helidon.config;artifactId=helidon-config-yaml-mp,
+                            groupId=io.helidon.config;artifactId=helidon-config,
+                            groupId=io.helidon.common;artifactId=helidon-common-media-type,
                             groupId=io.helidon.config;artifactId=helidon-config-yaml,
-                                artifactId=snakeyaml,
-                            <!--
-                            groupId=io.helidon.config;artifactId=helidon-config-encryption,
-                                groupId=io.helidon.common;artifactId=helidon-common-key-util,
-                                    groupId=io.helidon.common;artifactId=helidon-common-configurable,
-                                        groupId=io.helidon.common;artifactId=helidon-common-context,
-                                groupId=io.helidon.common;artifactId=helidon-common-crypto,
-                            groupId=io.helidon.config;artifactId=helidon-config-object-mapping, -->
+                            artifactId=snakeyaml,
                         </Embed-Dependency>
                         
                         <!--

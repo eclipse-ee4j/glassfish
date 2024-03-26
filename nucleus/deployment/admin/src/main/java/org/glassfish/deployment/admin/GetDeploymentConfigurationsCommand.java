@@ -17,11 +17,6 @@
 
 package org.glassfish.deployment.admin;
 
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
-import jakarta.inject.Inject;
-
 import java.io.IOException;
 import java.util.Map;
 
@@ -47,6 +42,10 @@ import org.glassfish.internal.data.EngineRef;
 import org.glassfish.internal.data.ModuleInfo;
 import org.jvnet.hk2.annotations.Service;
 
+import com.sun.enterprise.config.serverbeans.Application;
+
+import jakarta.inject.Inject;
+
 /**
  * Get deployment configurations command
  */
@@ -63,8 +62,6 @@ import org.jvnet.hk2.annotations.Service;
 })
 @AccessRequired(resource=DeploymentCommandUtils.APPLICATION_RESOURCE_NAME + "/$appname", action="read")
 public class GetDeploymentConfigurationsCommand implements AdminCommand {
-
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(GetDeploymentConfigurationsCommand.class);
 
     @Param(primary = true)
     private String appname;

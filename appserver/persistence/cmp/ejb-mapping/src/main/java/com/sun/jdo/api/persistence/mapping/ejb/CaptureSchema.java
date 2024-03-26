@@ -22,23 +22,22 @@
 
 package com.sun.jdo.api.persistence.mapping.ejb;
 
-import org.netbeans.modules.dbschema.*;
-import org.netbeans.modules.dbschema.jdbcimpl.*;
-import org.netbeans.modules.dbschema.util.*;
-
-import java.io.*;
-
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
-import java.sql.ResultSet;
-import java.sql.DatabaseMetaData;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Iterator;
-
-import java.text.MessageFormat;
+import org.netbeans.modules.dbschema.DBIdentifier;
+import org.netbeans.modules.dbschema.SchemaElement;
+import org.netbeans.modules.dbschema.jdbcimpl.ConnectionProvider;
+import org.netbeans.modules.dbschema.jdbcimpl.SchemaElementImpl;
 
 /**
  *

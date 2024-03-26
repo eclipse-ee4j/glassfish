@@ -17,8 +17,9 @@
 package org.glassfish.admin.amx.util.jmx;
 
 import java.io.Serializable;
+
 import javax.management.MBeanOperationInfo;
-import org.glassfish.admin.amx.util.jmx.stringifier.MBeanFeatureInfoStringifierOptions;
+
 import org.glassfish.admin.amx.util.jmx.stringifier.MBeanOperationInfoStringifier;
 
 /**
@@ -27,9 +28,6 @@ Caution: this Comparator may be inconsistent with equals() because it ignores th
 public final class MBeanOperationInfoComparator
         implements java.util.Comparator<MBeanOperationInfo>, Serializable
 {
-    private static final MBeanOperationInfoStringifier OPERATION_INFO_STRINGIFIER =
-            new MBeanOperationInfoStringifier(new MBeanFeatureInfoStringifierOptions(false, ","));
-
     public static final MBeanOperationInfoComparator INSTANCE = new MBeanOperationInfoComparator();
 
     private MBeanOperationInfoComparator()

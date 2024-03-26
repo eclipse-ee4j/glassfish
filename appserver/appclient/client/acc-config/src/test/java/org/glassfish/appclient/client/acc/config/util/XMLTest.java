@@ -137,7 +137,6 @@ public class XMLTest {
             }
         }
 
-        private static final String SYSTEM_ID_PREFIX = "http://glassfish.org/";
         private static final String LOCAL_PATH_PREFIX = "/glassfish/lib/";
 
         private static final Map<String, String> publicIdToLocalPathMap = initPublicIdToLocalPathMap();

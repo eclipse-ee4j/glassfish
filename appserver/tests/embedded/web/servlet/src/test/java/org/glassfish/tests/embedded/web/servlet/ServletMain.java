@@ -67,8 +67,8 @@ public class ServletMain {
             server.addContainer(server.createConfig(ContainerBuilder.Type.web));
             DeployCommandParameters dp = new DeployCommandParameters(f);
             String appName = server.getDeployer().deploy(war, dp);
-            WebClient webClient = new WebClient();
-            try {
+
+            try (WebClient webClient = new WebClient()) {
                 Page page =  webClient.getPage("http://localhost:8882/classes/hello");
                 System.out.println("Got response " + page.getWebResponse().getContentAsString());
                 Assert.assertTrue("Servlet returne wrong content", page.getWebResponse().getContentAsString().startsWith("Hello World"));

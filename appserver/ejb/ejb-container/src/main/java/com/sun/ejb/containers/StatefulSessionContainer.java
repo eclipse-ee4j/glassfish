@@ -3134,8 +3134,6 @@ public final class StatefulSessionContainer
 
         private transient EntityManagerFactory emf;
 
-        private int hc;
-
         EEMRefInfo(String emRefName, String uName, SynchronizationType synchronizationType, long containerID,
             Object instanceKey, EntityManager eem, EntityManagerFactory emf) {
             this.eemRefInfoKey = new EEMRefInfoKey(emRefName, containerID, instanceKey);

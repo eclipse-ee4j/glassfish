@@ -90,8 +90,6 @@ public class BatchRuntimeHelper
 
     private AtomicBoolean initialized = new AtomicBoolean(false);
 
-    private static final String CREATE_TABLE_DDL_NAME = "/jsr352-";
-
     public void checkAndInitializeBatchRuntime() {
         if (!initialized.get()) {
             synchronized (this) {

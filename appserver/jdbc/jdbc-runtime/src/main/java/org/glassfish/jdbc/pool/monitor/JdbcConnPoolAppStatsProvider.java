@@ -87,7 +87,7 @@ public class JdbcConnPoolAppStatsProvider {
     @ProbeListener(JDBC_APP_PROBE_LISTENER + "decrementConnectionUsedEvent")
     public void decrementConnectionUsedEvent(@ProbeParam("poolName") String poolName, @ProbeParam("appName") String appName) {
         // handle the num conn used decrement event
-        if ((poolName != null) && (poolName.equals(this.poolName))) {
+        if ((poolName != null) && (poolName.equals(this.poolName.toString()))) {
             if (appName != null && appName.equals(this.appName)) {
                 // Decrement numConnUsed counter
                 synchronized (numConnUsed) {
@@ -106,7 +106,7 @@ public class JdbcConnPoolAppStatsProvider {
     @ProbeListener(JDBC_APP_PROBE_LISTENER + "connectionUsedEvent")
     public void connectionUsedEvent(@ProbeParam("poolName") String poolName, @ProbeParam("appName") String appName) {
         // handle the connection used event
-        if ((poolName != null) && (poolName.equals(this.poolName))) {
+        if ((poolName != null) && (poolName.equals(this.poolName.toString()))) {
             if (appName != null && appName.equals(this.appName)) {
                 // increment numConnUsed
                 synchronized (numConnUsed) {
@@ -121,7 +121,7 @@ public class JdbcConnPoolAppStatsProvider {
      */
     @ProbeListener(JDBC_APP_PROBE_LISTENER + "connectionAcquiredEvent")
     public void connectionAcquiredEvent(@ProbeParam("poolName") String poolName, @ProbeParam("appName") String appName) {
-        if ((poolName != null) && (poolName.equals(this.poolName))) {
+        if ((poolName != null) && (poolName.equals(this.poolName.toString()))) {
             if (appName != null && appName.equals(this.appName)) {
                 numConnAcquired.increment();
             }
@@ -133,7 +133,7 @@ public class JdbcConnPoolAppStatsProvider {
      */
     @ProbeListener(JDBC_APP_PROBE_LISTENER + "connectionReleasedEvent")
     public void connectionReleasedEvent(@ProbeParam("poolName") String poolName, @ProbeParam("appName") String appName) {
-        if ((poolName != null) && (poolName.equals(this.poolName))) {
+        if ((poolName != null) && (poolName.equals(this.poolName.toString()))) {
             if (appName != null && appName.equals(this.appName)) {
                 numConnReleased.increment();
             }

@@ -61,6 +61,7 @@ public class LocalStringManagerImpl implements LocalStringManager {
      * @param defaultValue The default return value if not found
      * @return The localized value for the resource
      */
+    @Override
     public String getLocalString(
         Class callerClass,
         String key,
@@ -107,6 +108,7 @@ public class LocalStringManagerImpl implements LocalStringManager {
      * @param defaultValue The default return value if not found
      * @return The localized string
      */
+    @Override
     public String getLocalString(String key, String defaultValue) {
         return getLocalString(null, key, defaultValue);
     }
@@ -119,7 +121,7 @@ public class LocalStringManagerImpl implements LocalStringManager {
      * @param arguments The set of arguments to provide to the formatter
      * @return A formatted localized string
      */
-
+    @Override
     public String getLocalString(
         Class callerClass,
         String key,

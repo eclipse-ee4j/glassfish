@@ -55,8 +55,6 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
     public final static String GF_JWS_SESSION_CACHED_JNLP_NAME = "org.glassfish.jws.mainJNLP";
     public final static String GF_JWS_SESSION_IS_MAIN_PROCESSED_NAME = "org.glassfish.jws.isMainProcessed";
 
-    private final static String IF_UNMODIFIED_SINCE = "If-Unmodified-Since";
-
     private static final String ARG_QUERY_PARAM_NAME = "arg";
     private static final String PROP_QUERY_PARAM_NAME = "prop";
     private static final String VMARG_QUERY_PARAM_NAME = "vmarg";

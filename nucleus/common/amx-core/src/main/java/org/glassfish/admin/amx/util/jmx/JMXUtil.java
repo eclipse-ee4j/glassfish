@@ -1026,7 +1026,6 @@ public final class JMXUtil
     public static String getAttributeName(final Method method)
     {
         final String methodName = method.getName();
-        String attrName = null;
 
         int prefixLength;
 

@@ -104,10 +104,10 @@ public class PythonClientGenerator extends ClientGenerator {
     }
 
     private String getFileContents(String fileName) {
-        String contents = new Scanner(getClass().getClassLoader().getResourceAsStream("/client/python/" + fileName)).useDelimiter("\\Z")
-                .next();
-
-        return contents.replace("VERSION", Version.getVersionNumber());
+        try (Scanner scanner = new Scanner(getClass().getClassLoader().getResourceAsStream("/client/python/" + fileName))) {
+            String contents = scanner.useDelimiter("\\Z").next();
+            return contents.replace("VERSION", Version.getVersionNumber());
+        }
     }
 
     private void addFileFromClasspath(String targetDir, String fileName, ZipOutputStream zip) throws IOException {

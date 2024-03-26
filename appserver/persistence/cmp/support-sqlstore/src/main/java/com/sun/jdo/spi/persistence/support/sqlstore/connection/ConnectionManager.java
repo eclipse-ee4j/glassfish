@@ -2167,7 +2167,6 @@ public class ConnectionManager {
         int wait = this.msWait;
         int totalTime = 0;
         boolean done = false;
-        Thread t = Thread.currentThread();
         do {
             // If there are idle connections in the pool
             if (this.freeList.size > 0) {

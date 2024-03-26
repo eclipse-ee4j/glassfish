@@ -544,8 +544,7 @@ public class MappingFile {
                 PersistenceFieldElement pfe = createPersistenceField(mce,
                     fieldName);
                 pfe.setKey(true);
-                MappingFieldElement mfe = createMappingField(mce, fieldName,
-                    candidatePK);
+                createMappingField(mce, fieldName, candidatePK);
             }
             else {
                 // There is no column which meets primary key criteria.
@@ -621,8 +620,7 @@ public class MappingFile {
                 // Since 8.1 release only support one version column per bean,
                 // use prefix as the version  field name
                 String fieldName = helper.getGeneratedVersionFieldNamePrefix();
-                PersistenceFieldElement pfe = createPersistenceField(mce,
-                    fieldName);
+                createPersistenceField(mce, fieldName);
                 MappingFieldElement mfe = createMappingField(mce, fieldName,
                     versionCol);
                 mfe.setVersion(true);

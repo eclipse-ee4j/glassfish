@@ -153,9 +153,8 @@ public class JavaClientGenerator extends ClientGenerator {
 
     private void addPom(String versionString) {
         FileWriter writer = null;
-        try {
-            String pom = new Scanner(Thread.currentThread().getContextClassLoader().getResourceAsStream("/client/pom.template.xml"))
-                    .useDelimiter("\\Z").next();
+        try (Scanner scanner = new Scanner(Thread.currentThread().getContextClassLoader().getResourceAsStream("/client/pom.template.xml"))) {
+            String pom = scanner.useDelimiter("\\Z").next();
             pom = pom.replace("{{glassfish.version}}", versionString);
             File out = File.createTempFile("pom", "xml");
             out.deleteOnExit();

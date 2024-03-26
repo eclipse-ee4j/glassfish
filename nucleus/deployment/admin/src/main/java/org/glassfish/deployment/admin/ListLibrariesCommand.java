@@ -30,7 +30,6 @@ import org.jvnet.hk2.annotations.Service;
 
 import org.glassfish.hk2.api.PerLookup;
 import jakarta.inject.Inject;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.config.serverbeans.Domain;
 
@@ -52,8 +51,6 @@ public class ListLibrariesCommand implements AdminCommand {
 
     @Inject
     ServerEnvironment env;
-
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListLibrariesCommand.class);
 
     public void execute(AdminCommandContext context) {
 

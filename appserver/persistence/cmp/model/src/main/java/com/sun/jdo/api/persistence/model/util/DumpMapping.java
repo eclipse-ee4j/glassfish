@@ -302,7 +302,6 @@ public class DumpMapping
 
     static String getObjectIdentityTypeRepr(int objectIdentityType)
     {
-        String repr;
         switch (objectIdentityType)
         {
         case PersistenceClassElement.APPLICATION_IDENTITY:
@@ -318,7 +317,6 @@ public class DumpMapping
 
     static String getPersistenceTypeRepr(int persistenceType)
     {
-        String repr;
         switch (persistenceType)
         {
         case PersistenceFieldElement.PERSISTENT:

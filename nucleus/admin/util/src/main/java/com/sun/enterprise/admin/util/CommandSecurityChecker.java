@@ -70,7 +70,6 @@ public class CommandSecurityChecker implements PostConstruct {
     private static final String LOG_MESSAGES_RB = "com.sun.enterprise.admin.util.LogMessages";
 
     static final Logger ADMSEC_AUTHZ_LOGGER = Logger.getLogger(ADMSEC_AUTHZ_LOGGER_NAME, LOG_MESSAGES_RB);
-    private static final String RESOURCE_NAME_URL_ENCODING = "UTF-8";
 
     private static final Level PROGRESS_LEVEL = Level.FINE;
     private static final String LINE_SEP = System.getProperty("line.separator");

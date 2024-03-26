@@ -270,7 +270,7 @@ public class FileLockTest {
              Lock fl = managed.accessRead();
              try (FileReader fr = new FileReader(f)) {
                  char[] chars = new char[1024];
-                 int length = fr.read(chars);
+                 fr.read(chars);
              }
 
              fl.unlock();

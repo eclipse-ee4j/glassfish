@@ -23,13 +23,13 @@
 
 package org.glassfish.deployment.autodeploy;
 
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import java.io.File;
-import java.util.Set;
 import java.util.HashSet;
-import java.util.logging.Logger;
-import java.util.logging.LogRecord;
+import java.util.Set;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+
 import org.glassfish.logging.annotation.LogMessageInfo;
 
 /**
@@ -48,8 +48,6 @@ public class AutoDeployDirectoryScanner implements DirectoryScanner{
 
     @LogMessageInfo(message = "Error occurred: {0}", cause="An exception was caught when the operation was attempted", action="See the exception to determine how to fix the error", level="SEVERE")
     private static final String EXCEPTION_OCCURRED = "NCLS-DEPLOYMENT-00040";
-
-    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(AutoDeployDirectoryScanner.class);
 
     public AutoDeployDirectoryScanner() {
     }

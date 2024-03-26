@@ -465,16 +465,17 @@ public class SSHLauncher {
             logger.fine("Connection settings valid");
             String testPath = installDir;
             if (StringUtils.ok(testPath)) {
-                // Validate if installDir exists
-                SFTPClient sftpClient = new SFTPClient(session);
-                if (sftpClient.exists(testPath)) {
-                    // installDir exists. Now check for landmark if provided
-                    if (StringUtils.ok(landmarkPath)) {
-                        testPath = installDir + "/" + landmarkPath;
+                try (SFTPClient sftpClient = new SFTPClient(session)) {
+                    // Validate if installDir exists
+                    if (sftpClient.exists(testPath)) {
+                        // installDir exists. Now check for landmark if provided
+                        if (StringUtils.ok(landmarkPath)) {
+                            testPath = installDir + "/" + landmarkPath;
+                        }
+                        validInstallDir = sftpClient.exists(testPath);
+                    } else {
+                        validInstallDir = false;
                     }
-                    validInstallDir = sftpClient.exists(testPath);
-                } else {
-                    validInstallDir = false;
                 }
                 SSHUtil.unregister(session);
                 session = null;

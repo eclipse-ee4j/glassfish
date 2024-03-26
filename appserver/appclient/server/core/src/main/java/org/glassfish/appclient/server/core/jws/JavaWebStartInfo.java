@@ -81,8 +81,6 @@ import org.xml.sax.SAXException;
 @PerLookup
 public class JavaWebStartInfo implements ConfigListener {
 
-    private final static String GLASSFISH_DIRECTORY_PREFIX = "glassfish/";
-
     @Inject
     private JWSAdapterManager jwsAdapterManager;
 
@@ -190,7 +188,6 @@ public class JavaWebStartInfo implements ConfigListener {
 
     private String developerJNLPDoc;
 
-    private static LocalStringsImpl localStrings = new LocalStringsImpl(JavaWebStartInfo.class);
     private static LocalStringsImpl servedContentLocalStrings =
             new LocalStringsImpl(TokenHelper.class);
 

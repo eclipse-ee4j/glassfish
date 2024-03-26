@@ -23,10 +23,11 @@
 
 package com.sun.jdo.spi.persistence.generator.database;
 
-import java.io.*;
-import java.sql.*;
-import java.util.ResourceBundle;
-import org.glassfish.persistence.common.I18NHelper;
+import java.io.OutputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 
@@ -39,10 +40,6 @@ public class DatabaseOutputStream extends OutputStream {
      /** The logger */
     private static final Logger logger =
             LogHelperDatabaseGenerator.getLogger();
-
-    /** I18N message handler */
-    private final static ResourceBundle messages =
-            I18NHelper.loadBundle(DatabaseOutputStream.class);
 
     /** Connection to the database. */
     // XXX FIXME S/b final; make it so if we can get rid of setConnection.

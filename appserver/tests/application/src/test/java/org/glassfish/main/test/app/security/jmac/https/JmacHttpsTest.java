@@ -99,7 +99,7 @@ public class JmacHttpsTest {
         JavaArchive loginModule = ShrinkWrap.create(JavaArchive.class).addClass(HttpsTestAuthModule.class);
         LOG.log(INFO, loginModule.toString(true));
         loginModuleFile = new File(getDomain1Directory().toAbsolutePath().resolve("../../lib").toFile(),
-            "testLoginModule.jar");
+            AUTH_MODULE_NAME + ".jar");
         loginModule.as(ZipExporter.class).exportTo(loginModuleFile, true);
         assertTrue(loginModuleFile.canRead(),
             () -> "Login module file is readable: " + loginModuleFile.getAbsolutePath());

@@ -37,6 +37,7 @@ import javax.net.ssl.X509TrustManager;
 
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.KeyTool;
+import org.glassfish.main.itest.tools.TestUtilities;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
@@ -76,7 +77,6 @@ public class JmacHttpsTest {
     private static File tempDir;
     private static File myKeyStore;
     private static File warFile;
-    private static File keyFile;
     private static File loginModuleFile;
 
 
@@ -124,14 +124,11 @@ public class JmacHttpsTest {
 
 
     @AfterAll
-    public static void cleanup() {
+    public static void cleanup() throws Exception {
         ASADMIN.exec("undeploy", APP_NAME);
         ASADMIN.exec("delete-message-security-provider", "--layer", "HttpServlet", AUTH_MODULE_NAME);
         ASADMIN.exec("set", "configs.config.server-config.network-config.protocols.protocol.http-listener-2.ssl.client-auth-enabled=false");
-
-        delete(warFile);
-        delete(keyFile);
-        delete(loginModuleFile);
+        TestUtilities.delete(warFile, loginModuleFile);
     }
 
 
@@ -158,12 +155,6 @@ public class JmacHttpsTest {
                 "Hello, CN=", "from " + HttpsTestAuthModule.class.getName()));
         } finally {
             connection.disconnect();
-        }
-    }
-
-    private static void delete(File file) {
-        if (file != null && file.exists()) {
-            file.delete();
         }
     }
 

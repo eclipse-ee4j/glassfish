@@ -24,6 +24,8 @@ import java.util.jar.Manifest;
 
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.deployment.versioning.VersioningUtils;
+import org.jvnet.hk2.config.TranslationException;
+import org.jvnet.hk2.config.VariableResolver;
 
 /**
  * This class describes a module information for an applicaiton module
@@ -145,7 +147,13 @@ public class ModuleDescriptor<T extends RootDeploymentDescriptor> extends Descri
      * @param contextRoot the contextRoot
      */
     public void setContextRoot(String contextRoot) {
-        this.contextRoot = contextRoot;
+        VariableResolver resolver = new VariableResolver() {
+            @Override
+            protected String getVariableValue(String varName) throws TranslationException {
+                return System.getProperty(varName, "");
+            }
+        };
+        this.contextRoot = resolver.translate(contextRoot);
     }
 
     /**

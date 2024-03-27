@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2021-2022 Contributors to the Eclipse Foundation
- * Copyright (c) 2010-2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,6 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.net.ssl.SSLEngine;
+import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 
@@ -39,7 +40,7 @@ import org.glassfish.grizzly.ssl.SSLSupport;
  */
 public class GlassfishSSLSupport implements SSLSupport {
 
-    private final static Logger logger = SecurityLoggerInfo.getLogger();
+    private static final Logger LOG = SecurityLoggerInfo.getLogger();
 
     /**
      * A mapping table to determine the number of effective bits in the key when using a cipher suite containing the specified cipher
@@ -84,6 +85,7 @@ public class GlassfishSSLSupport implements SSLSupport {
     @Override
     public Certificate[] getPeerCertificates(boolean force) throws IOException {
         if (session == null) {
+            LOG.log(Level.FINEST, "SSL session is null, no certificates available.");
             return null;
         }
         Certificate[] certs = null;
@@ -156,9 +158,8 @@ public class GlassfishSSLSupport implements SSLSupport {
         Certificate[] certs = null;
         try {
             certs = session.getPeerCertificates();
-        } catch (Throwable ex) {
-            // Get rid of the warning in the logs when no Client-Cert is
-            // available
+        } catch (SSLPeerUnverifiedException e) {
+            LOG.log(Level.FINE, "Could not get peer certificates.", e);
         }
 
         if (certs == null) {
@@ -171,11 +172,9 @@ public class GlassfishSSLSupport implements SSLSupport {
                 CertificateFactory cf = CertificateFactory.getInstance("X.509");
                 ByteArrayInputStream stream = new ByteArrayInputStream(buffer);
                 x509Certs[i] = (X509Certificate) cf.generateCertificate(stream);
-                if (logger.isLoggable(Level.FINEST)) {
-                    logger.log(Level.FINE, "Cert #{0} = {1}", new Object[] { i, x509Certs[i] });
-                }
+                LOG.log(Level.FINE, "Cert #{0} = {1}", new Object[] {i, x509Certs[i]});
             } catch (Exception ex) {
-                logger.log(Level.INFO, SecurityLoggerInfo.convertingCertError, new Object[] { certs[i], ex.toString() });
+                LOG.log(Level.INFO, SecurityLoggerInfo.convertingCertError, new Object[] {certs[i], ex.toString()});
                 return null;
             }
         }

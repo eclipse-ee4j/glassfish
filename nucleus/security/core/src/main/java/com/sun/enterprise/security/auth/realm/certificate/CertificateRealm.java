@@ -17,10 +17,6 @@
 
 package com.sun.enterprise.security.auth.realm.certificate;
 
-import static com.sun.enterprise.util.Utility.isEmpty;
-import static java.util.Arrays.asList;
-import static java.util.Collections.enumeration;
-
 import com.sun.enterprise.security.SecurityContext;
 import com.sun.enterprise.security.auth.login.DistinguishedPrincipalCredential;
 import com.sun.enterprise.security.auth.realm.Realm;
@@ -28,6 +24,7 @@ import com.sun.enterprise.security.auth.realm.exceptions.BadRealmException;
 import com.sun.enterprise.security.auth.realm.exceptions.InvalidOperationException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
+
 import java.security.Principal;
 import java.util.Enumeration;
 import java.util.LinkedList;
@@ -35,11 +32,17 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
+
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.x500.X500Principal;
+
 import org.glassfish.security.common.Group;
 import org.jvnet.hk2.annotations.Service;
+
+import static com.sun.enterprise.util.Utility.isEmpty;
+import static java.util.Arrays.asList;
+import static java.util.Collections.enumeration;
 
 /**
  * Realm wrapper for supporting certificate authentication.
@@ -73,7 +76,7 @@ public final class CertificateRealm extends Realm {
 
     // Descriptive string of the authentication type of this realm.
     public static final String AUTH_TYPE = "certificate";
-    private List<String> defaultGroups = new LinkedList<>();
+    private final List<String> defaultGroups = new LinkedList<>();
 
     /**
      * Returns a short (preferably less than fifteen characters) description of the kind of authentication which is
@@ -110,26 +113,24 @@ public final class CertificateRealm extends Realm {
         }
     }
 
+
     /**
      * Complete authentication of certificate user.
-     *
-     * <P>
-     * As noted, the certificate realm does not do the actual authentication (signature and cert chain validation) for the
-     * user certificate, this is done earlier in NSS. This method simply sets up the security context for the user in order
-     * to properly complete the authentication processing.
-     *
-     * <P>
-     * If any groups have been assigned to cert-authenticated users through the assign-groups property these groups are
-     * added to the security context for the current user.
+     * <p>
+     * As noted, the certificate realm does not do the actual authentication (signature and cert
+     * chain validation) for the user certificate, this is done earlier in NSS.
+     * This method simply sets up the security context for the user in order to properly complete
+     * the authentication processing.
+     * <p>
+     * If any groups have been assigned to cert-authenticated users through the assign-groups
+     * property these groups are added to the security context for the current user.
      *
      * @param subject The Subject object for the authentication request.
      * @param principal The X500Principal object from the user certificate.
-     *
      */
     public void authenticate(Subject subject, X500Principal principal) {
         String name = principal.getName();
-
-        _logger.log(Level.FINE, () -> "Certificate realm setting up security context for: " + name);
+        _logger.log(Level.FINE, "Certificate realm setting up security context for principal name {0}", name);
 
         if (defaultGroups != null) {
             Set<Principal> principalSet = subject.getPrincipals();

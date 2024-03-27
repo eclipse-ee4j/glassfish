@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -45,6 +45,9 @@ import org.glassfish.security.common.Group;
 import org.glassfish.security.common.Role;
 import org.glassfish.security.common.UserNameAndPassword;
 import org.glassfish.security.common.UserPrincipal;
+
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
 
 /**
  * This Object maintains a mapping of users and groups to application specific Roles. Using this object this mapping
@@ -195,9 +198,7 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
     // The method that does the work for assignRole().
     private void internalAssignRole(Principal p, Role r) {
         String role = r.getName();
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "SECURITY:RoleMapper Assigning Role {0} to {1}", new Object[] {role, p});
-        }
+        LOG.log(FINE, "Assigning Role {0} to {1}", new Object[] {role, p});
         addRoleToPrincipal(p, role);
         if (p instanceof Group) {
             Set<Group> groups = roleToGroup.get(role);
@@ -307,9 +308,6 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
             }
             s.append(")");
         }
-        if (LOG.isLoggable(Level.FINER)) {
-            LOG.log(Level.FINER, s.toString());
-        }
         return s.toString();
     }
 
@@ -365,7 +363,7 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
             c.newInstance("anystring");
             return className;
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "pc.getDefaultP2RMappingClass: " + e);
+            LOG.log(Level.SEVERE, "pc.getDefaultP2RMappingClass: " + className, e);
             return null;
         }
     }
@@ -414,11 +412,8 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
 
             if (topLevelRoles != null && topLevelRoles.contains(r)) {
                 logConflictWarning();
-                if (LOG.isLoggable(Level.FINE)) {
-                    LOG.log(Level.FINE,
-                            "Role " + r + " from module " + currentMapping.owner + " is being overridden by top-level mapping.");
-                }
-
+                LOG.log(FINE, "Role {0} from module {1} is being overridden by top-level mapping.",
+                    new Object[] {r, currentMapping.owner});
                 continue;
             }
 
@@ -426,11 +421,8 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
                 topLevelRoles.add(r);
                 if (roleToSubject.keySet().contains(r.getName())) {
                     logConflictWarning();
-                    if (LOG.isLoggable(Level.FINE)) {
-                        LOG.log(Level.FINE,
-                                "Role " + r + " from top-level mapping descriptor is " + "overriding existing role in sub module.");
-                    }
-
+                    LOG.log(FINE,
+                        "Role {0} from top-level mapping descriptor is overriding existing role in sub module.", r);
                     unassignRole(r);
                 }
 
@@ -456,11 +448,8 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
 
         // check to see if there has been a previous conflict
         if (conflictedRoles != null && conflictedRoles.contains(r)) {
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.log(Level.FINE,
-                        "Role " + r + " from module " + currentMapping.owner + " has already had a conflict with other modules.");
-            }
-
+            LOG.log(FINE, "Role {0} from module {1} has already had a conflict with other modules.",
+                new Object[] {r, currentMapping.owner});
             return true;
         }
 
@@ -477,10 +466,8 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
         actualNum += pSet == null ? 0 : pSet.size();
         actualNum += gSet == null ? 0 : gSet.size();
         if (targetNumPrin != actualNum) {
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.log(Level.FINE, "Module " + currentMapping.owner + " has different number of mappings for role " + r.getName()
-                        + " than other mapping files");
-            }
+            LOG.log(FINE, "Module {0} has different number of mappings for role {1} than other mapping files",
+                new Object[] {currentMapping.owner, r.getName()});
 
             if (conflictedRoles == null) {
                 conflictedRoles = new HashSet<>();
@@ -503,9 +490,8 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
             }
 
             if (fail) {
-                if (LOG.isLoggable(Level.FINE)) {
-                    LOG.log(Level.FINE, "Role " + r + " in module " + currentMapping.owner + " is not included in other modules.");
-                }
+                LOG.log(FINE, "Role {0} in module {1} is not included in other modules.",
+                    new Object[] {r, currentMapping.owner});
 
                 if (conflictedRoles == null) {
                     conflictedRoles = new HashSet<>();
@@ -523,7 +509,8 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
 
     private void logConflictWarning() {
         if (!conflictLogged) {
-            LOG.log(Level.WARNING, "Role mapping conflicts found in application {0}. Some roles may not be mapped.", getName());
+            LOG.log(WARNING, "Role mapping conflicts found in application {0}. Some roles may not be mapped.",
+                getName());
             conflictLogged = true;
         }
     }
@@ -576,8 +563,7 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
                 Principal principal = (Principal) c.newInstance(arg);
                 return principal;
             } catch (Exception e) {
-                LOG.log(Level.SEVERE, "rm.getSameNamedPrincipal", new Object[] { roleName, e });
-                throw new RuntimeException("Unable to get principal by default p2r mapping");
+                throw new RuntimeException("Unable to get principal by default p2r mapping", e);
             }
         }
 

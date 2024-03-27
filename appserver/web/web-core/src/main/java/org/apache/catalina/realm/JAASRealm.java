@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997-2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -17,7 +18,9 @@
 
 package org.apache.catalina.realm;
 
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
+import com.sun.enterprise.security.GroupPrincipal;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.security.Principal;
 import java.text.MessageFormat;
@@ -33,10 +36,10 @@ import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 
 import org.apache.catalina.Container;
-import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LogFacade;
 
-import com.sun.enterprise.security.GroupPrincipal;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
 
 /**
  * <p>
@@ -86,7 +89,7 @@ import com.sun.enterprise.security.GroupPrincipal;
  * @version $Revision: 1.3 $ $Date: 2006/03/12 01:27:04 $
  */
 
-public class JAASRealm extends RealmBase {
+public final class JAASRealm extends RealmBase {
 
     // ----------------------------------------------------- Instance Variables
 
@@ -146,11 +149,21 @@ public class JAASRealm extends RealmBase {
         String name = container.getName();
         if (appName == null) {
             appName = name;
-            if (log.isLoggable(Level.INFO)) {
-                log.log(Level.INFO, LogFacade.SETTING_JAAS_INFO, appName);
-            }
+            log.log(Level.INFO, LogFacade.SETTING_JAAS_INFO, appName);
         }
     }
+
+    /**
+     * Unsupported.
+     *
+     * @throws UnsupportedOperationException
+     */
+    @Deprecated
+    @Override
+    public Principal authenticate(HttpServletRequest hreq) {
+        throw new UnsupportedOperationException();
+    }
+
 
     public String getRoleClassNames() {
         return (this.roleClassNames);
@@ -230,9 +243,7 @@ public class JAASRealm extends RealmBase {
                 appName = "Tomcat";
             }
 
-            if (log.isLoggable(Level.FINE)) {
-                log.log(Level.FINE, neutralizeForLog("Authenticating " + appName + " " + username));
-            }
+            log.log(FINE, "Authenticating {0} to application {1}", new Object[] {username, appName});
 
             // What if the LoginModule is in the container class loader ?
             //
@@ -241,21 +252,17 @@ public class JAASRealm extends RealmBase {
             try {
                 loginContext = new LoginContext(appName, new JAASCallbackHandler(this, username, credentials));
             } catch (Throwable e) {
-                if (log.isLoggable(Level.FINE)) {
-                    log.log(Level.FINE, "Error initializing JAAS: " + e.toString());
-
+                if (log.isLoggable(FINE)) {
                     String msg = MessageFormat.format(rb.getString(LogFacade.LOGIN_EXCEPTION_AUTHENTICATING_USERNAME),
-                            neutralizeForLog(username));
-                    log.log(Level.FINE, msg, e);
+                            username);
+                    log.log(FINE, msg, e);
                 }
-                return (null);
+                return null;
             } finally {
                 Thread.currentThread().setContextClassLoader(ocl);
             }
 
-            if (log.isLoggable(Level.FINE)) {
-                log.log(Level.FINE, "Login context created " + neutralizeForLog(username));
-            }
+            log.log(FINE, "Login context created {0}", username);
 
             // Negotiate a login via this LoginContext
             Subject subject = null;
@@ -263,55 +270,41 @@ public class JAASRealm extends RealmBase {
                 loginContext.login();
                 subject = loginContext.getSubject();
                 if (subject == null) {
-                    if (log.isLoggable(Level.FINE)) {
-                        log.log(Level.FINE, LogFacade.USERNAME_NOT_AUTHENTICATED_FAILED_LOGIN, neutralizeForLog(username));
-                    }
-                    return (null);
+                    log.log(FINE, LogFacade.USERNAME_NOT_AUTHENTICATED_FAILED_LOGIN, username);
+                    return null;
                 }
             } catch (AccountExpiredException e) {
-                if (log.isLoggable(Level.FINE)) {
-                    log.log(Level.FINE, LogFacade.USERNAME_NOT_AUTHENTICATED_EXPIRED_ACCOUNT, neutralizeForLog(username));
-                }
-                return (null);
+                log.log(FINE, LogFacade.USERNAME_NOT_AUTHENTICATED_EXPIRED_ACCOUNT, username);
+                return null;
             } catch (CredentialExpiredException e) {
-                if (log.isLoggable(Level.FINE)) {
-                    log.log(Level.FINE, LogFacade.USERNAME_NOT_AUTHENTICATED_EXPIRED_CREDENTIAL, neutralizeForLog(username));
-                }
-                return (null);
+                log.log(FINE, LogFacade.USERNAME_NOT_AUTHENTICATED_EXPIRED_CREDENTIAL, username);
+                return null;
             } catch (FailedLoginException e) {
-                if (log.isLoggable(Level.FINE)) {
-                    log.log(Level.FINE, LogFacade.USERNAME_NOT_AUTHENTICATED_FAILED_LOGIN, neutralizeForLog(username));
-                }
-                return (null);
+                log.log(FINE, LogFacade.USERNAME_NOT_AUTHENTICATED_FAILED_LOGIN, username);
+                return null;
             } catch (LoginException e) {
                 String msg = MessageFormat.format(rb.getString(LogFacade.LOGIN_EXCEPTION_AUTHENTICATING_USERNAME),
-                        neutralizeForLog(username));
-                log.log(Level.FINE, msg, e);
-                return (null);
+                    username);
+                log.log(FINE, msg, e);
+                return null;
             } catch (Throwable e) {
-                log.log(Level.FINE, "Unexpected error", e);
-                return (null);
+                log.log(FINE, "Unexpected error", e);
+                return null;
             }
 
-            if (log.isLoggable(Level.FINE)) {
-                log.log(Level.FINE, neutralizeForLog("Getting principal " + subject));
-            }
+            log.log(FINE, "Getting principal {0}", subject);
 
             // Return the appropriate Principal for this authenticated Subject
             Principal principal = createPrincipal(username, subject);
             if (principal == null) {
-                if (log.isLoggable(Level.FINE)) {
-                    log.log(Level.FINE, "Failed to authenticate username " + neutralizeForLog(username));
-                }
-                return (null);
+                log.log(FINE, "Failed to authenticate username {0}", username);
+                return null;
             }
-            if (log.isLoggable(Level.FINE)) {
-                log.log(Level.FINE, "Successful to authenticate username " + neutralizeForLog(username));
-            }
+            log.log(FINE, "Successful to authenticate username {0}", username);
 
             return (principal);
         } catch (Throwable t) {
-            log.log(Level.SEVERE, LogFacade.AUTHENTICATION_ERROR, t);
+            log.log(SEVERE, LogFacade.AUTHENTICATION_ERROR, t);
             return null;
         }
     }
@@ -320,16 +313,13 @@ public class JAASRealm extends RealmBase {
 
     // ------------------------------------------------------ Protected Methods
 
-    /**
-     * Return a short name for this Realm implementation.
-     */
     @Override
     protected String getName() {
         return name;
     }
 
     /**
-     * Return the password associated with the given principal's user name.
+     * @return always null
      */
     @Override
     protected char[] getPassword(String username) {
@@ -337,7 +327,7 @@ public class JAASRealm extends RealmBase {
     }
 
     /**
-     * Return the Principal associated with the given user name.
+     * @return always null
      */
     @Override
     protected Principal getPrincipal(String username) {
@@ -357,15 +347,11 @@ public class JAASRealm extends RealmBase {
         for (Principal principal : subject.getPrincipals()) {
             // No need to look further - that's our own stuff
             if (principal instanceof GenericPrincipal) {
-                if (log.isLoggable(Level.FINE)) {
-                    log.log(Level.FINE, "Found old GenericPrincipal " + principal);
-                }
+                log.log(FINE, "Found old GenericPrincipal {0}", principal);
                 return principal;
             }
             String principalClass = principal.getClass().getName();
-            if (log.isLoggable(Level.FINE)) {
-                log.log(Level.FINE, "Principal: " + principalClass + " " + principal);
-            }
+            log.log(FINE, "Principal: {0} {1}", new Object[] {principalClass, principal});
 
             if (userClasses.contains(principalClass)) {
                 // Override the default - which is the original user, accepted by
@@ -395,31 +381,4 @@ public class JAASRealm extends RealmBase {
             return null;
         }
     }
-
-
-    // ------------------------------------------------------ Lifecycle Methods
-
-    /**
-     *
-     * Prepare for active use of the public methods of this Component.
-     *
-     * @exception LifecycleException if this component detects a fatal error that prevents it from being started
-     */
-    @Override
-    public void start() throws LifecycleException {
-        // Perform normal superclass initialization
-        super.start();
-    }
-
-    /**
-     * Gracefully shut down active use of the public methods of this Component.
-     *
-     * @exception LifecycleException if this component detects a fatal error that needs to be reported
-     */
-    @Override
-    public void stop() throws LifecycleException {
-        // Perform normal superclass finalization
-        super.stop();
-    }
-
 }

@@ -69,14 +69,14 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
 
     // pool life-cycle config properties
     /**
-     * Represents the "max-wait-time-in-millis" configuration value.<br>
+     * Represents the "max-pool-size" configuration value.<br>
      * Specifies the maximum number of connections that can be created to satisfy client requests.<br>
      * Default: 32
      */
     protected int maxPoolSize;
 
     /**
-     * Represents the " steady-pool-size" configuration value.<br>
+     * Represents the "steady-pool-size" configuration value.<br>
      * Specifies the initial and minimum number of connections maintained in the pool.<br>
      * Default: 8
      */
@@ -138,7 +138,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
      * Specifies that validating idle connections is preferable to closing them. This property has no effect on non-idle
      * connections. If set to true, idle connections are validated during pool resizing, and only those found to be invalid
      * are destroyed and recreated. If false, all idle connections are destroyed and recreated during pool resizing.<br>
-     * Default: false.
+     * Default: false
      */
     protected boolean preferValidateOverRecreate;
 
@@ -181,7 +181,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
      * Represents the "max-connection-usage-count" configuration.<br>
      * Specifies the number of times a connections is reused by the pool, after which it is closed. A zero value disables
      * this feature.<br>
-     * Default: 0;
+     * Default: 0
      */
     protected int maxConnectionUsage_;
 
@@ -193,7 +193,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
      * Represents the "validate-atmost-once-period-in-seconds" configuration.<br>
      * Specifies the time interval within which a connection is validated at most once. Minimizes the number of validation
      * calls. A value of zero allows unlimited validation calls.<br>
-     * Default: 0;
+     * Default: 0
      */
     private boolean validateAtmostEveryIdleSecs;
 

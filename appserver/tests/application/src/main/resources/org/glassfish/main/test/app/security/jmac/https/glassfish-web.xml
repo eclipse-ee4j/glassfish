@@ -2,7 +2,7 @@
 <!DOCTYPE glassfish-web-app PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Servlet 3.0//EN" "http://glassfish.org/dtds/glassfish-web-app_3_0-1.dtd">
 <!--
 
-    Copyright (c) 2023 Contributors to the Eclipse Foundation.
+    Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
     Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -22,6 +22,6 @@
 <glassfish-web-app httpservlet-security-provider="httpsTestAuthModule">
     <security-role-mapping>
         <role-name>myrole</role-name>
-        <principal-name>CN=HTTPSTEST, OU=Eclipse GlassFish Tests, O=Eclipse Foundation, L=Brussels, ST=Belgium, C=Belgium</principal-name>
+        <principal-name>CN=HTTPSTEST,OU=Eclipse GlassFish Tests,O=Eclipse Foundation,L=Brussels,ST=Belgium,C=Belgium</principal-name>
     </security-role-mapping>
 </glassfish-web-app>

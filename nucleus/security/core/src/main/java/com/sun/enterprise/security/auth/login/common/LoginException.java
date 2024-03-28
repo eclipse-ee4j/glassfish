@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,49 +17,33 @@
 
 package com.sun.enterprise.security.auth.login.common;
 
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
 /**
- * LoginException is thrown by the LoginContext class whenever the following happens:
- * <UL>
- * <LI>If the client is unable to authenticate successfully with the
- * </UL>
+ * LoginException is thrown by the LoginContext class if the client is unable to authenticate successfully.
  *
- * @see com.sun.enterprise.security.auth.AuthenticationStatus
+ * @see jakarta.security.enterprise.AuthenticationStatus
  * @author Harish Prabandham
  * @author Harpreet Singh
  */
-
 public class LoginException extends SecurityException {
 
-    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(LoginException.class);
-
-    private boolean status = false;
+    private static final long serialVersionUID = -3371991085029706070L;
 
     /**
      * Create a new LoginException object with the given message
      *
-     * @param The message indicating why authentication failed.
+     * @param message indicating why authentication failed.
      */
     public LoginException(String message) {
         super(message);
     }
 
     /**
-     * Create a new LoginException object with the given authentication value.
+     * Create a new LoginException object with the given message
      *
-     * @param The AuthenticationStatus object
+     * @param message indicating why authentication failed.
+     * @param cause
      */
-    public LoginException(boolean as) {
-        super(localStrings.getLocalString("enterprise.security.login_failed", "Login Failed."));
-        status = as;
+    public LoginException(String message, Exception cause) {
+        super(message, cause);
     }
-
-    /**
-     * Returns the status of the Authentication.
-     */
-    public boolean getStatus() {
-        return status;
-    }
-
 }

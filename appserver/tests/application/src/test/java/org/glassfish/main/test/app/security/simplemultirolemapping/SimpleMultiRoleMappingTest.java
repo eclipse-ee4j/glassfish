@@ -23,6 +23,7 @@ import java.net.HttpURLConnection;
 import java.util.Base64;
 
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
+import org.glassfish.main.itest.tools.TestUtilities;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
@@ -92,11 +93,11 @@ public class SimpleMultiRoleMappingTest {
 
 
     @AfterAll
-    public static void cleanup() {
+    public static void cleanup() throws Exception {
         ASADMIN.exec("undeploy", APP_NAME);
         ASADMIN.exec("delete-file-user", "--authrealmname", FILE_REALM_NAME, "--target", "server", USER_WEBUSER_NAME);
         ASADMIN.exec("delete-file-user", "--authrealmname", FILE_REALM_NAME, "--target", "server", USER_BOBBY_NAME);
-        delete(earFile);
+        TestUtilities.delete(earFile);
     }
 
 
@@ -131,12 +132,5 @@ public class SimpleMultiRoleMappingTest {
         String basicAuth = Base64.getEncoder().encodeToString((user + ":" + password).getBytes(UTF_8));
         connection.setRequestProperty("Authorization", "Basic " + basicAuth);
         return connection;
-    }
-
-
-    private static void delete(File file) {
-        if (file != null && file.exists()) {
-            file.delete();
-        }
     }
 }

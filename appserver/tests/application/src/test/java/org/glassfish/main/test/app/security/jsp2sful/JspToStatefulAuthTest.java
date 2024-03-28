@@ -23,6 +23,7 @@ import java.net.URL;
 
 import org.glassfish.main.itest.tools.FormAuthHttpClient;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
+import org.glassfish.main.itest.tools.TestUtilities;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
@@ -110,13 +111,13 @@ public class JspToStatefulAuthTest {
 
 
     @AfterAll
-    public static void cleanup() {
+    public static void cleanup() throws Exception {
         ASADMIN.exec("undeploy", APP_NAME);
         ASADMIN.exec("delete-file-user", "--authrealmname", FILE_REALM_NAME, "--target", "server", USER_SHINGWAI_NAME);
         ASADMIN.exec("delete-file-user", "--authrealmname", FILE_REALM_NAME, "--target", "server", USER_SWCHAN_NAME);
         ASADMIN.exec("delete-file-user", "--authrealmname", FILE_REALM_NAME, "--target", "server", USER_WEBUSER_NAME);
         ASADMIN.exec("delete-file-user", "--authrealmname", FILE_REALM_NAME, "--target", "server", USER_NOAUTHUSER_NAME);
-        delete(earFile);
+        TestUtilities.delete(earFile);
     }
 
 
@@ -221,13 +222,6 @@ public class JspToStatefulAuthTest {
             ));
         } finally {
             connection.disconnect();
-        }
-    }
-
-
-    private static void delete(File file) {
-        if (file != null && file.exists()) {
-            file.delete();
         }
     }
 }

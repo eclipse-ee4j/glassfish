@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,10 +22,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-/*
-Util class for static methods for handling encoding of invalid string characters. Use recommendations from Open Web Application Security Project (see here
-http://www.owasp.org/index.php/Log_Forging)
+/**
+ * Util class for static methods for handling encoding of invalid string characters.
+ * Use recommendations from Open Web Application Security Project (see here
+ * https://owasp.org/www-community/attacks/Log_Injection)
+ *
+ * @deprecated This class is mostly deprecated as the logging framework must ensure proper encoding.
  */
+@Deprecated
 public final class LogCleanerUtil {
     private final static String  IMMUNE_HTML = ",.-_ ";
     private static final char REPLACEMENT_CHAR = '\ufffd';
@@ -68,7 +73,7 @@ public final class LogCleanerUtil {
         if (message == null) {
             return null;
         }
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(message.length());
         for(int offset  = 0; offset < message.length(); ){
             final int point = message.codePointAt(offset);
             if(Character.isValidCodePoint(point)){
@@ -99,7 +104,7 @@ public final class LogCleanerUtil {
         }
 
         // check if there's a defined entity
-        String entityName = (String) characterToEntityMap.get(codePoint);
+        String entityName = characterToEntityMap.get(codePoint);
         if (entityName != null) {
             return "&" + entityName + ";";
         }

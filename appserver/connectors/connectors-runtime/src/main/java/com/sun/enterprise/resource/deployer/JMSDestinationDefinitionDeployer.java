@@ -17,21 +17,13 @@
 
 package com.sun.enterprise.resource.deployer;
 
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.Resources;
-import com.sun.enterprise.deployment.JMSDestinationDefinitionDescriptor;
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.deriveResourceName;
 
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.connectors.config.AdminObjectResource;
@@ -43,7 +35,13 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.deriveResourceName;
+import com.sun.appserv.connectors.internal.api.ConnectorConstants;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.deployment.JMSDestinationDefinitionDescriptor;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 @Service
 @ResourceDeployerInfo(JMSDestinationDefinitionDescriptor.class)
@@ -52,7 +50,6 @@ public class JMSDestinationDefinitionDeployer implements ResourceDeployer<JMSDes
     @Inject
     private Provider<org.glassfish.resourcebase.resources.util.ResourceManagerFactory> resourceManagerFactoryProvider;
 
-    private static final Logger LOG = LogDomains.getLogger(JMSDestinationDefinitionDeployer.class, LogDomains.RSR_LOGGER);
     static final String PROPERTY_PREFIX = "org.glassfish.jms-destination.";
 
     @Override

@@ -21,7 +21,6 @@ import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext
 import jakarta.enterprise.concurrent.ManagedScheduledExecutorDefinition;
 import jakarta.inject.Inject;
 
-import java.lang.System.Logger;
 import java.util.Set;
 
 import org.glassfish.apf.AnnotationHandlerFor;
@@ -33,7 +32,6 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 @AnnotationHandlerFor(ManagedScheduledExecutorDefinition.List.class)
 public class ManagedScheduledExecutorDefinitionListHandler extends AbstractResourceHandler {
-    private static final Logger LOG = System.getLogger(ManagedScheduledExecutorDefinitionListHandler.class.getName());
 
     @Inject
     private ManagedScheduledExecutorDefinitionConverter converter;

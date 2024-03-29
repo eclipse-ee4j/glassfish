@@ -88,10 +88,9 @@ public class CommandProgressImpl extends ProgressStatusImpl implements CommandPr
     }
 
     private LastChangedMessage lastMessage;
-    private long eTag = 0;
     private Date startTime;
     private Date endTime;
-    //TODO: Set after resurection
+    //TODO: Set after resurrection
     private transient AdminCommandEventBroker eventBroker;
     private boolean spinner = false;
 
@@ -114,7 +113,6 @@ public class CommandProgressImpl extends ProgressStatusImpl implements CommandPr
         if (event instanceof ProgressStatusEventProgress) {
             this.spinner = ((ProgressStatusEventProgress) event).isSpinner();
         }
-        eTag++;
         if (eventBroker != null) {
             eventBroker.fireEvent(EVENT_PROGRESSSTATUS_CHANGE, event);
         }

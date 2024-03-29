@@ -751,7 +751,6 @@ class AroundInvokeInterceptor {
 }
 
 class BeanAroundInvokeInterceptor extends AroundInvokeInterceptor {
-    private static final Object[] NULL_ARGS = null;
 
     BeanAroundInvokeInterceptor(Method method) {
         super(-1, method);

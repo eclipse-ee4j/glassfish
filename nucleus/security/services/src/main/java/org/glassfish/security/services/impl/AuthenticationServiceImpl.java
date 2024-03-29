@@ -21,7 +21,6 @@ import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -75,9 +74,6 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
 
     @Inject
     private ImpersonationService impersonationService;
-
-    private static final Logger LOG = Logger.getLogger(AuthenticationServiceImpl.class.getName());
-
 
     // Authentication Service Configuration Information
     private String name = null;

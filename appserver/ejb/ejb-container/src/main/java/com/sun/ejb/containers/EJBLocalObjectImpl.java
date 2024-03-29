@@ -17,18 +17,19 @@
 
 package com.sun.ejb.containers;
 
-import com.sun.enterprise.container.common.spi.util.IndirectlySerializable;
-import com.sun.enterprise.container.common.spi.util.SerializableObjectFactory;
-import jakarta.ejb.EJBException;
-import jakarta.ejb.EJBLocalHome;
-import jakarta.ejb.EJBLocalObject;
-import jakarta.ejb.RemoveException;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.rmi.RemoteException;
 import java.util.HashMap;
-import java.util.logging.Logger;
+
+import com.sun.enterprise.container.common.spi.util.IndirectlySerializable;
+import com.sun.enterprise.container.common.spi.util.SerializableObjectFactory;
+
+import jakarta.ejb.EJBException;
+import jakarta.ejb.EJBLocalHome;
+import jakarta.ejb.EJBLocalObject;
+import jakarta.ejb.RemoveException;
 
 /**
  * Implementation of the EJBLocalObject interface.
@@ -42,7 +43,6 @@ import java.util.logging.Logger;
 public abstract class EJBLocalObjectImpl extends EJBLocalRemoteObject
     implements EJBLocalObject, IndirectlySerializable {
 
-    private static final Logger _logger = EjbContainerUtilImpl.getLogger();
     private static final Method REMOVE_METHOD = getRemoveMethod();
 
     private static Method getRemoveMethod() {

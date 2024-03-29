@@ -72,8 +72,6 @@ public final class SystemInfoImpl extends AMXImplBase {
     }
 
     public boolean supportsFeature(final String key) {
-        boolean supports = false;
-
         Boolean result = mFeatures.get(key);
         if (result == null) {
             result = Boolean.FALSE;

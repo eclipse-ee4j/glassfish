@@ -148,7 +148,6 @@ public final class AMXValidator
 
     private volatile boolean  mUnregisterNonCompliant;
     private volatile boolean  mLogInaccessibleAttributes;
-    private volatile String   mValidationLevel;
 
     public AMXValidator(
         final MBeanServerConnection conn,
@@ -161,7 +160,6 @@ public final class AMXValidator
         mProxyFactory = ProxyFactory.getInstance(conn);
         mDomainRoot = mProxyFactory.getDomainRootProxy(false);
 
-        mValidationLevel = validationLevel;
         mUnregisterNonCompliant = unregisterNonCompliant;
         mLogInaccessibleAttributes = logInaccessibleAttributes;
     }
@@ -519,7 +517,7 @@ public final class AMXValidator
         // test required attributes
         try
         {
-            final String name = proxy.getName();
+            proxy.getName();
         }
         catch (final Exception t)
         {
@@ -528,7 +526,7 @@ public final class AMXValidator
 
         try
         {
-            final ObjectName parent = proxy.getParent();
+            proxy.getParent();
         }
         catch (final Exception t)
         {
@@ -536,7 +534,7 @@ public final class AMXValidator
         }
         try
         {
-            final ObjectName[] children = proxy.getChildren();
+            proxy.getChildren();
         }
         catch (final Exception t)
         {

@@ -99,7 +99,7 @@ public class EmptyVisitor extends MethodVisitor {
     }
 
     @Override
-    public void visitTableSwitchInsn(int i, int i1, Label label, Label[] labels) {
+    public void visitTableSwitchInsn(int i, int i1, Label label, Label... labels) {
     }
 
     @Override

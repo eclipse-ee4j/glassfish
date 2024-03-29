@@ -100,8 +100,6 @@ public class ColumnPair extends org.netbeans.modules.schema2beans.BaseBean
         comparators.remove(c);
     }
     public void validate() throws org.netbeans.modules.schema2beans.ValidateException {
-        boolean restrictionFailure = false;
-        boolean restrictionPassed = false;
         // Validating property columnName
         if (sizeColumnName() == 0) {
             throw new org.netbeans.modules.schema2beans.ValidateException("sizeColumnName() == 0", org.netbeans.modules.schema2beans.ValidateException.FailureType.NULL_VALUE, "columnName", this);    // NOI18N
@@ -110,9 +108,7 @@ public class ColumnPair extends org.netbeans.modules.schema2beans.BaseBean
 
     // Dump the content of this bean returning it as a String
     public void dump(StringBuffer str, String indent){
-        String s;
         Object o;
-        org.netbeans.modules.schema2beans.BaseBean n;
         str.append(indent);
         str.append("ColumnName["+this.sizeColumnName()+"]");    // NOI18N
         for(int i=0; i<this.sizeColumnName(); i++)

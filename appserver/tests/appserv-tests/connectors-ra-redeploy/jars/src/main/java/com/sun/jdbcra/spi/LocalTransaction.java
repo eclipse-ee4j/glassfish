@@ -66,7 +66,6 @@ public class LocalTransaction implements jakarta.resource.spi.LocalTransaction {
      */
     @Override
     public void commit() throws ResourceException {
-        Exception e = null;
         try {
             mc.getActualConnection().commit();
             mc.getActualConnection().setAutoCommit(true);

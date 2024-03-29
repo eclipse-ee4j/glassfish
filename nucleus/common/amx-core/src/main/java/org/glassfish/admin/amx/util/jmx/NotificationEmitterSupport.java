@@ -121,8 +121,6 @@ public final class NotificationEmitterSupport
         return (resultCount);
     }
 
-    private static final String[] NO_TYPES = new String[0];
-
     private static final String WILDCARD_TYPE = "***";
 
     private static final String[] ALL_TYPES = new String[]

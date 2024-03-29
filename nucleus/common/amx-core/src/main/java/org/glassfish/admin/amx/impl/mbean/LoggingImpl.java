@@ -369,7 +369,7 @@ public final class LoggingImpl extends AMXImplBase {
     public Map<String, Number>[] getErrorInfo() {
         unimplemented();
 
-        final List<Map<String, Object>> infos = null; //getLogMBean().getErrorInformation();
+        final List<Map<String, Object>> infos = new ArrayList<>(); //getLogMBean().getErrorInformation();
 
         final Map<String, Number>[] results = TypeCast.asArray(new HashMap[infos.size()]);
 

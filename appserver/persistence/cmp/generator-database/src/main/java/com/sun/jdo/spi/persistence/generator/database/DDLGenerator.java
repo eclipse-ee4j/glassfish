@@ -110,7 +110,6 @@ public class DDLGenerator {
             MappingPolicy mappingPolicy = MappingPolicy.getMappingPolicy(
                     dbVendorName);
             DDLTemplateFormatter.reset(mappingPolicy);
-            String schemaName = schema.getName().getName();
             List createAllTblDDL = new ArrayList();
             // Added for Symfoware support as Symfoware does not automatically create
             // indexes for primary keys. Creating indexes is mandatory.

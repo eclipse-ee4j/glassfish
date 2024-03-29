@@ -33,7 +33,7 @@ public class TimerEjb {
         System.err.println("In SimpleEjb:createTimer()");
         TimerService timerSvc = (TimerService) new InitialContext().lookup(
                 "java:comp/TimerService");
-        Timer t = timerSvc.createTimer(2, "timer01");
+        timerSvc.createTimer(2, "timer01");
     }
 
     public boolean verifyTimer() {

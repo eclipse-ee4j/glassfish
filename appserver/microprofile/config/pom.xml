@@ -74,34 +74,36 @@
                         <Import-Package>
                             !io.helidon.inject.runtime,*
                         </Import-Package>
-                        
+
                         <!-- A list of packages that are exposed to classes outside the bundle -->
                         <Export-Package>
+                            io.helidon.common.config,
                             io.helidon.config,
                             io.helidon.config.mp,
                         </Export-Package>
-                        
+
                         <!-- A list of dependencies to include in the bundle (as they're not native OSGI bundles) -->
                         <Embed-Dependency>
                             <!--
                                 The helidon MP config dependency tree, illustrating what we actually output to the GF bundle
                             -->
-                            groupId=io.helidon.config;artifactId=helidon-config-mp,
                             groupId=io.helidon.common;artifactId=helidon-common,
-                            groupId=io.helidon.common;artifactId=helidon-common-service-loader,
-                            groupId=io.helidon.config;artifactId=helidon-config-yaml-mp,
-                            groupId=io.helidon.config;artifactId=helidon-config,
+                            groupId=io.helidon.common;artifactId=helidon-common-config,
                             groupId=io.helidon.common;artifactId=helidon-common-media-type,
+                            groupId=io.helidon.common;artifactId=helidon-common-service-loader,
+                            groupId=io.helidon.config;artifactId=helidon-config,
+                            groupId=io.helidon.config;artifactId=helidon-config-mp,
                             groupId=io.helidon.config;artifactId=helidon-config-yaml,
+                            groupId=io.helidon.config;artifactId=helidon-config-yaml-mp,
                             artifactId=snakeyaml,
                         </Embed-Dependency>
-                        
+
                         <!--
                             Include transitive dependencies (note that this only include compile scoped dependencies,
                             other scoped dependencies still need explicit inclusion)
                         -->
                         <Embed-Transitive>true</Embed-Transitive>
-                        
+
                         <Multi-Release>true</Multi-Release>
                         <Include-Resource>
                             {maven-resources},

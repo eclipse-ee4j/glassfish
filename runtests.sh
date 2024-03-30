@@ -16,11 +16,13 @@
 #
 
 set -e
+# Change to -x for echoing commands
+set +x
 
 catch() {
   if [ "$1" != "0" ]; then
-    "${S1AS_HOME}"/bin/asadmin stop-domain --kill=true --force=true domain1
-    echo "Error $1 occurred on $2"
+    "${S1AS_HOME}"/bin/asadmin stop-domain --kill=true --force=true domain1 || true;
+    echo "Error $1 occurred on $2";
     exit $1;
   fi
 }
@@ -29,7 +31,8 @@ install_glassfish() {
   mvn clean -N org.apache.maven.plugins:maven-dependency-plugin:3.2.0:copy \
   -Dartifact=org.glassfish.main.distributions:glassfish:${GF_VERSION}:zip \
   -Dmdep.stripVersion=true \
-  -DoutputDirectory=${WORKSPACE}/bundles
+  -DoutputDirectory=${WORKSPACE}/bundles \
+  -Pstaging
 }
 
 install_jacoco() {
@@ -37,7 +40,8 @@ install_jacoco() {
   -Dartifact=org.jacoco:org.jacoco.agent:0.8.8:jar:runtime \
   -Dmdep.stripVersion=true \
   -Dmdep.stripClassifier=true \
-  -DoutputDirectory=${WORKSPACE}/bundles
+  -DoutputDirectory=${WORKSPACE}/bundles \
+  -Pstaging
 }
 
 ####################################
@@ -66,7 +70,7 @@ if [ -z "${test}" ]; then
 fi
 
 if [ -z "${JAVA_HOME}" ]; then
-  export JAVA_HOME=/usr/lib/jvm/jdk11
+  export JAVA_HOME=/usr/lib/jvm/jdk17
 fi
 export PATH="${JAVA_HOME}/bin:${PATH}"
 
@@ -78,7 +82,7 @@ export M2_HOME="${M2_HOME=$(realpath $(dirname $(realpath $(which mvn)))/..)}"
 export APS_HOME="$(pwd)/appserver/tests/appserv-tests"
 
 if [ -z "${2}" ]; then
-  export GF_VERSION="$(mvn help:evaluate -f "${APS_HOME}/pom.xml" -Dexpression=project.version -q -DforceStdout)"
+  export GF_VERSION="$(mvn help:evaluate -f "${APS_HOME}/pom.xml" -Dexpression=project.version -q -DforceStdout -Pstaging)"
 else
   export GF_VERSION="$2"
 fi

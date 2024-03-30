@@ -381,8 +381,7 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
             subject.getPublicCredentials()
                    .stream()
                    .filter(DistinguishedPrincipalCredential.class::isInstance)
-                   .map(DistinguishedPrincipalCredential.class::cast)
-                   .map(e -> e.getPrincipal())
+                   .map(Principal.class::cast)
                    .findAny()
                    .orElse(subject.getPrincipals()
                        .stream()
@@ -395,8 +394,8 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
         return
             subject.getPrincipals()
                    .stream()
-                   .filter(e -> e instanceof UserNameAndPassword)
-                   .map(e -> e.getName())
+                   .filter(UserPrincipal.class::isInstance)
+                   .map(Principal::getName)
                    .collect(toSet());
     }
 
